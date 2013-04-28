@@ -5,2867 +5,2707 @@
     <name></name>
     <message>
         <source>Stereo</source>
-        <translation>立體聲</translation>
+        <translation type="obsolete">立體聲</translation>
     </message>
     <message>
         <source>Joint stereo</source>
-        <translation type="unfinished">聯合立體聲</translation>
+        <translation type="obsolete">聯合立體聲</translation>
     </message>
     <message>
         <source>Mono</source>
-        <translation>單音</translation>
+        <translation type="obsolete">單音</translation>
     </message>
     <message>
         <source>C_hannel mode:</source>
-        <translation type="unfinished">聲道模式(_H):</translation>
+        <translation type="obsolete">聲道模式(_H):</translation>
     </message>
     <message>
         <source>CBR</source>
-        <translation type="unfinished">CBR</translation>
+        <translation type="obsolete">CBR</translation>
     </message>
     <message>
         <source>ABR</source>
-        <translation type="unfinished">ABR</translation>
+        <translation type="obsolete">ABR</translation>
     </message>
     <message>
         <source>Extreme</source>
-        <translation type="unfinished">極致</translation>
+        <translation type="obsolete">極致</translation>
     </message>
     <message>
         <source>Bit_rate mode:</source>
-        <translation type="unfinished">位元率模式(_R):</translation>
+        <translation type="obsolete">位元率模式(_R):</translation>
     </message>
     <message>
         <source>_Bitrate:</source>
-        <translation type="unfinished">位元率(_B):</translation>
+        <translation type="obsolete">位元率(_B):</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation>品質(_Q):</translation>
+        <translation type="obsolete">品質(_Q):</translation>
     </message>
     <message>
         <source>_Disable reservoir</source>
-        <translation type="unfinished">停用儲存槽(_D)</translation>
+        <translation type="obsolete">停用儲存槽(_D)</translation>
     </message>
     <message>
         <source>LAME Configuration</source>
-        <translation type="unfinished">LAME 設定</translation>
+        <translation type="obsolete">LAME 設定</translation>
     </message>
     <message>
         <source>VBR</source>
-        <translation type="unfinished">VBR</translation>
+        <translation type="obsolete">VBR</translation>
     </message>
     <message>
         <source>Quality based</source>
-        <translation type="unfinished">基本品質</translation>
+        <translation type="obsolete">基本品質</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>Vorbis Configuration</source>
-        <translation type="unfinished">Vorbis 設定</translation>
+        <translation type="obsolete">Vorbis 設定</translation>
     </message>
     <message>
         <source>Codec Error</source>
-        <translation>編解碼器錯誤</translation>
+        <translation type="obsolete">編解碼器錯誤</translation>
     </message>
     <message>
         <source>The number of channels is greater than what the selected audio codec can do.
 Either change codec or use the mixer filter to have less channels.</source>
-        <translation>聲道數大於什麼選擇的音訊編解碼器可執行。
+        <translation type="obsolete">聲道數大於什麼選擇的音訊編解碼器可執行。
 改變編解碼器或使用混合式的濾鏡來擁有較少的聲道。</translation>
     </message>
     <message>
         <source>Avidemux detected VBR MP3 audio in this file. For keeping audio/video in sync, time map is needed. Build it now?
 
 You can do it later with &quot;Audio -&gt; Build VBR Time Map&quot;.</source>
-        <translation>Avidemux 偵測到這個檔案含有 VBR MP3 音訊。為了維持影音同步，時間對應是必須的。現在建立嗎？
+        <translation type="obsolete">Avidemux 偵測到這個檔案含有 VBR MP3 音訊。為了維持影音同步，時間對應是必須的。現在建立嗎？
 
 你可以稍候透過 \&quot;音訊 -&gt; 建立 VBR 時間對應\&quot; 來建立。</translation>
     </message>
     <message>
         <source>AVI</source>
-        <translation>AVI</translation>
+        <translation type="obsolete">AVI</translation>
     </message>
     <message>
         <source>AVI, dual audio</source>
-        <translation>AVI, 雙語</translation>
+        <translation type="obsolete">AVI, 雙語</translation>
     </message>
     <message>
         <source>AVI, pack VOP</source>
-        <translation>AVI, 打包好的 VOP</translation>
+        <translation type="obsolete">AVI, 打包好的 VOP</translation>
     </message>
     <message>
         <source>AVI, unpack VOP</source>
-        <translation>AVI, 拆開打包 VOP</translation>
+        <translation type="obsolete">AVI, 拆開打包 VOP</translation>
     </message>
     <message>
         <source>MPEG-PS (A+V)</source>
-        <translation>MPEG-PS (A+V)</translation>
+        <translation type="obsolete">MPEG-PS (A+V)</translation>
     </message>
     <message>
         <source>MPEG-TS (A+V)</source>
-        <translation>MPEG-TS (A+V)</translation>
+        <translation type="obsolete">MPEG-TS (A+V)</translation>
     </message>
     <message>
         <source>MPEG video</source>
-        <translation>MPEG 影片</translation>
+        <translation type="obsolete">MPEG 影片</translation>
     </message>
     <message>
         <source>MP4</source>
-        <translation>MP4</translation>
+        <translation type="obsolete">MP4</translation>
     </message>
     <message>
         <source>MP4 (PSP)</source>
-        <translation>MP4 (PSP)</translation>
+        <translation type="obsolete">MP4 (PSP)</translation>
     </message>
     <message>
         <source>OGM</source>
-        <translation>OGM</translation>
+        <translation type="obsolete">OGM</translation>
     </message>
     <message>
         <source>FLV</source>
-        <translation>FLV</translation>
+        <translation type="obsolete">FLV</translation>
     </message>
     <message>
         <source>MKV</source>
-        <translation>MKV</translation>
+        <translation type="obsolete">MKV</translation>
     </message>
     <message>
         <source>DUMMY</source>
-        <translation>虛擬</translation>
+        <translation type="obsolete">虛擬</translation>
     </message>
     <message>
         <source>YV12 (raw)</source>
-        <translation>YV12 (raw)</translation>
+        <translation type="obsolete">YV12 (raw)</translation>
     </message>
     <message>
         <source>MPEG-2 requant</source>
-        <translation>MPEG-2 requant</translation>
+        <translation type="obsolete">MPEG-2 requant</translation>
     </message>
     <message>
         <source>dummy</source>
-        <translation>虛擬</translation>
+        <translation type="obsolete">虛擬</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
     <message>
         <source>Crop</source>
-        <translation type="unfinished">剪裁</translation>
+        <translation type="obsolete">剪裁</translation>
     </message>
     <message>
         <source>Remove lines from top/bottom/left/right.</source>
-        <translation type="unfinished">由頂部/底部/左側/右側移除線。</translation>
+        <translation type="obsolete">由頂部/底部/左側/右側移除線。</translation>
     </message>
     <message>
         <source>MPlayer resize</source>
-        <translation type="unfinished">MPlayer 調整大小</translation>
+        <translation type="obsolete">MPlayer 調整大小</translation>
     </message>
     <message>
         <source>Change image size. Faster than Avisynth&apos;s Resize.</source>
-        <translation type="unfinished">改變圖像大小。比 Avisynth 的調整大小快。</translation>
+        <translation type="obsolete">改變圖像大小。比 Avisynth 的調整大小快。</translation>
     </message>
     <message>
         <source>Resize</source>
-        <translation type="unfinished">調整大小</translation>
+        <translation type="obsolete">調整大小</translation>
     </message>
     <message>
         <source>Add black borders</source>
-        <translation type="unfinished">加框</translation>
+        <translation type="obsolete">加框</translation>
     </message>
     <message>
         <source>Blacken borders</source>
-        <translation type="unfinished">邊框填黑</translation>
+        <translation type="obsolete">邊框填黑</translation>
     </message>
     <message>
         <source>Fill borders with pure black. Doesn&apos;t alter size.</source>
-        <translation type="unfinished">用黑色填入邊框。不變更大小。</translation>
+        <translation type="obsolete">用黑色填入邊框。不變更大小。</translation>
     </message>
     <message>
         <source>Vertical flip</source>
-        <translation type="unfinished">垂直翻轉</translation>
+        <translation type="obsolete">垂直翻轉</translation>
     </message>
     <message>
         <source>Vertically flip the picture.</source>
-        <translation type="unfinished">垂直翻轉圖像。</translation>
+        <translation type="obsolete">垂直翻轉圖像。</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">旋轉</translation>
+        <translation type="obsolete">旋轉</translation>
     </message>
     <message>
         <source>Rotate the picture by 90, 180 or 270 degrees.</source>
-        <translation type="unfinished">旋轉圖像 90、180 或 270 度。</translation>
+        <translation type="obsolete">旋轉圖像 90、180 或 270 度。</translation>
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="unfinished">重複取樣 fps</translation>
+        <translation type="obsolete">重複取樣 fps</translation>
     </message>
     <message>
         <source>Change framerate while keeping duration.</source>
-        <translation type="unfinished">維持連續時間時改變畫格率。</translation>
+        <translation type="obsolete">維持連續時間時改變畫格率。</translation>
     </message>
     <message>
         <source>Reverse</source>
-        <translation type="unfinished">反向</translation>
+        <translation type="obsolete">反向</translation>
     </message>
     <message>
         <source>Play video backward.</source>
-        <translation type="unfinished">倒帶播放影片。</translation>
+        <translation type="obsolete">倒帶播放影片。</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">淡化</translation>
+        <translation type="obsolete">淡化</translation>
     </message>
     <message>
         <source>Fade in/out.</source>
-        <translation type="unfinished">淡入/出。</translation>
+        <translation type="obsolete">淡入/出。</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
     <message>
         <source>Yet Another DeInterlacer. Ported from MPlayer.</source>
-        <translation type="unfinished">另一個去交錯器。從 MPlayer 移植而來。</translation>
+        <translation type="obsolete">另一個去交錯器。從 MPlayer 移植而來。</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeinterlace</translation>
+        <translation type="obsolete">mcDeinterlace</translation>
     </message>
     <message>
         <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
-        <translation type="unfinished">從 MPlayer 移植的動作補償去交錯器。</translation>
+        <translation type="obsolete">從 MPlayer 移植的動作補償去交錯器。</translation>
     </message>
     <message>
         <source>Deinterlace</source>
-        <translation type="unfinished">Deinterlace</translation>
+        <translation type="obsolete">Deinterlace</translation>
     </message>
     <message>
         <source>Mask interlacing artifacts. Port of Smart deinterlace.</source>
-        <translation type="unfinished">從智慧型去交錯移植的遮罩交錯加工。</translation>
+        <translation type="obsolete">從智慧型去交錯移植的遮罩交錯加工。</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
     <message>
         <source>Kernel deinterlacer by Donald Graft.</source>
-        <translation type="unfinished">內核去交錯器，作者為 Donald Graft。</translation>
+        <translation type="obsolete">內核去交錯器，作者為 Donald Graft。</translation>
     </message>
     <message>
         <source>TDeint</source>
-        <translation type="unfinished">TDeint</translation>
+        <translation type="obsolete">TDeint</translation>
     </message>
     <message>
         <source>Motion adaptative deinterlacer by Tritical.</source>
-        <translation type="unfinished">動作適應去交錯器，作者為 Tritical。</translation>
+        <translation type="obsolete">動作適應去交錯器，作者為 Tritical。</translation>
     </message>
     <message>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">libavcodec 去交錯器</translation>
+        <translation type="obsolete">libavcodec 去交錯器</translation>
     </message>
     <message>
         <source>All FFmpeg deinterlace filters (bicubic, median, ...).</source>
-        <translation type="unfinished">全部 FFmpeg 去交錯濾鏡 (雙立方、中位數、...)。</translation>
+        <translation type="obsolete">全部 FFmpeg 去交錯濾鏡 (雙立方、中位數、...)。</translation>
     </message>
     <message>
         <source>Decomb Telecide</source>
-        <translation type="unfinished">去除梳形雜訊電視電影</translation>
+        <translation type="obsolete">去除梳形雜訊電視電影</translation>
     </message>
     <message>
         <source>Great deinterlacing package including IVTC.</source>
-        <translation type="unfinished">生成包含 IVTC 的去交錯套件。</translation>
+        <translation type="obsolete">生成包含 IVTC 的去交錯套件。</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="unfinished">Decomb 成批編碼器</translation>
+        <translation type="obsolete">Decomb 成批編碼器</translation>
     </message>
     <message>
         <source>Useful to remove dupes left by Telecide.</source>
-        <translation type="unfinished">電視電影用於移除偽裝左面。</translation>
+        <translation type="obsolete">電視電影用於移除偽裝左面。</translation>
     </message>
     <message>
         <source>Pulldown</source>
-        <translation type="unfinished">Pulldown</translation>
+        <translation type="obsolete">Pulldown</translation>
     </message>
     <message>
         <source>Convert 24 fps to 30 fps by repeating fields.</source>
-        <translation type="unfinished">用重複圖場來將 24 fps 轉成 30 fps。</translation>
+        <translation type="obsolete">用重複圖場來將 24 fps 轉成 30 fps。</translation>
     </message>
     <message>
         <source>PAL field shift</source>
-        <translation type="unfinished">PAL 圖場位移</translation>
+        <translation type="obsolete">PAL 圖場位移</translation>
     </message>
     <message>
         <source>Shift fields by one. Useful for some PAL movies.</source>
-        <translation type="unfinished">根據一個圖場來移動圖場。用於一些 PAL 電影。</translation>
+        <translation type="obsolete">根據一個圖場來移動圖場。用於一些 PAL 電影。</translation>
     </message>
     <message>
         <source>PAL smart</source>
-        <translation type="unfinished">PAL 智慧型</translation>
+        <translation type="obsolete">PAL 智慧型</translation>
     </message>
     <message>
         <source>Smartly revert non constant PAL field shift.</source>
-        <translation type="unfinished">自動恢復非固定的 PAL 圖場移動。</translation>
+        <translation type="obsolete">自動恢復非固定的 PAL 圖場移動。</translation>
     </message>
     <message>
         <source>Drop</source>
-        <translation type="unfinished">降低</translation>
+        <translation type="obsolete">降低</translation>
     </message>
     <message>
         <source>Drop damaged fields (e.g. from VHS capture).</source>
-        <translation type="unfinished">降低損壞的圖場 (例如：由 VHS 抓取)。</translation>
+        <translation type="obsolete">降低損壞的圖場 (例如：由 VHS 抓取)。</translation>
     </message>
     <message>
         <source>Swap fields</source>
-        <translation type="unfinished">置換圖場</translation>
+        <translation type="obsolete">置換圖場</translation>
     </message>
     <message>
         <source>Swap top and bottom fields.</source>
-        <translation type="unfinished">置換圖場的頂部和底部。</translation>
+        <translation type="obsolete">置換圖場的頂部和底部。</translation>
     </message>
     <message>
         <source>Smart swap fields</source>
-        <translation type="unfinished">智慧型替換圖場</translation>
+        <translation type="obsolete">智慧型替換圖場</translation>
     </message>
     <message>
         <source>Smartly swap fields. Needed when field order changes.</source>
-        <translation type="unfinished">當圖場次序需要改變時自動置換圖場。</translation>
+        <translation type="obsolete">當圖場次序需要改變時自動置換圖場。</translation>
     </message>
     <message>
         <source>Keep even fields</source>
-        <translation type="unfinished">保留偶數圖場</translation>
+        <translation type="obsolete">保留偶數圖場</translation>
     </message>
     <message>
         <source>Keep odd fields</source>
-        <translation type="unfinished">保留奇數圖場</translation>
+        <translation type="obsolete">保留奇數圖場</translation>
     </message>
     <message>
         <source>Each field becomes full picture, half sized.</source>
-        <translation type="unfinished">每個圖場變為完整圖像，只有原來一半的大小。</translation>
+        <translation type="obsolete">每個圖場變為完整圖像，只有原來一半的大小。</translation>
     </message>
     <message>
         <source>Merge fields</source>
-        <translation type="unfinished">合併圖場</translation>
+        <translation type="obsolete">合併圖場</translation>
     </message>
     <message>
         <source>Merge two pictures as if they were two fields.</source>
-        <translation type="unfinished">合併兩個圖像就像是兩個圖場一樣。</translation>
+        <translation type="obsolete">合併兩個圖像就像是兩個圖場一樣。</translation>
     </message>
     <message>
         <source>Stack fields</source>
-        <translation type="unfinished">堆疊圖場</translation>
+        <translation type="obsolete">堆疊圖場</translation>
     </message>
     <message>
         <source>Put two fields on top of one another.</source>
-        <translation type="unfinished">把兩個圖場放在另一個上。</translation>
+        <translation type="obsolete">把兩個圖場放在另一個上。</translation>
     </message>
     <message>
         <source>Unstack fields</source>
-        <translation type="unfinished">非堆疊圖場</translation>
+        <translation type="obsolete">非堆疊圖場</translation>
     </message>
     <message>
         <source>Interleave top and bottom part of the picture.</source>
-        <translation type="unfinished">讓圖像的頂部和底部交錯。</translation>
+        <translation type="obsolete">讓圖像的頂部和底部交錯。</translation>
     </message>
     <message>
         <source>MPlayer eq2</source>
-        <translation type="unfinished">MPlayer eq2</translation>
+        <translation type="obsolete">MPlayer eq2</translation>
     </message>
     <message>
         <source>Adjust contrast, brightness, saturation and gamma.</source>
-        <translation type="unfinished">調整對比、亮度、飽和度和伽馬。</translation>
+        <translation type="obsolete">調整對比、亮度、飽和度和伽馬。</translation>
     </message>
     <message>
         <source>MPlayer hue</source>
-        <translation type="unfinished">MPlayer 色相</translation>
+        <translation type="obsolete">MPlayer 色相</translation>
     </message>
     <message>
         <source>Adjust hue and saturation.</source>
-        <translation type="unfinished">調整色相和飽和度。</translation>
+        <translation type="obsolete">調整色相和飽和度。</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation type="unfinished">對比</translation>
+        <translation type="obsolete">對比</translation>
     </message>
     <message>
         <source>Adjust contrast, brightness and colors.</source>
-        <translation type="unfinished">調整對比、亮度和色彩。</translation>
+        <translation type="obsolete">調整對比、亮度和色彩。</translation>
     </message>
     <message>
         <source>Luma equalizer</source>
-        <translation type="unfinished">明度量化</translation>
+        <translation type="obsolete">明度量化</translation>
     </message>
     <message>
         <source>Luma correction filter with histogram.</source>
-        <translation type="unfinished">分佈圖校正明度濾鏡。</translation>
+        <translation type="obsolete">分佈圖校正明度濾鏡。</translation>
     </message>
     <message>
         <source>Swap U and V</source>
-        <translation type="unfinished">置換 U 和 V</translation>
+        <translation type="obsolete">置換 U 和 V</translation>
     </message>
     <message>
         <source>Invert chroma U and chroma V.</source>
-        <translation type="unfinished">反相 U 和 V 的色度。</translation>
+        <translation type="obsolete">反相 U 和 V 的色度。</translation>
     </message>
     <message>
         <source>Chroma shift</source>
-        <translation type="unfinished">色度變化</translation>
+        <translation type="obsolete">色度變化</translation>
     </message>
     <message>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
-        <translation type="unfinished">改變色度 U/V 來修復糟糕的明度/色度同步。</translation>
+        <translation type="obsolete">改變色度 U/V 來修復糟糕的明度/色度同步。</translation>
     </message>
     <message>
         <source>Luma only</source>
-        <translation type="unfinished">只有明度</translation>
+        <translation type="obsolete">只有明度</translation>
     </message>
     <message>
         <source>Convert picture to greyscale (black and white).</source>
-        <translation type="unfinished">轉換圖片為灰階 (黑色和白色)。</translation>
+        <translation type="obsolete">轉換圖片為灰階 (黑色和白色)。</translation>
     </message>
     <message>
         <source>Luma delta</source>
-        <translation type="unfinished">明度差值</translation>
+        <translation type="obsolete">明度差值</translation>
     </message>
     <message>
         <source>Difference between current and previous picture.</source>
-        <translation type="unfinished">目前圖片與上一個圖片之間的差異。</translation>
+        <translation type="obsolete">目前圖片與上一個圖片之間的差異。</translation>
     </message>
     <message>
         <source>Avisynth ColorYUV</source>
-        <translation type="unfinished">Avisynth ColorYUV</translation>
+        <translation type="obsolete">Avisynth ColorYUV</translation>
     </message>
     <message>
         <source>Alter colors (auto white balance etc...). Ported from Avisynth.</source>
-        <translation type="unfinished">變更色彩 (自動白平衡等...)。從 Avisynth 移植而來。</translation>
+        <translation type="obsolete">變更色彩 (自動白平衡等...)。從 Avisynth 移植而來。</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
     <message>
         <source>Reduce noise, smooth image, increase compressibility.</source>
-        <translation type="unfinished">減少雜訊、平滑圖像、增加壓縮率。</translation>
+        <translation type="obsolete">減少雜訊、平滑圖像、增加壓縮率。</translation>
     </message>
     <message>
         <source>MPlayer hqdn3d</source>
-        <translation type="unfinished">MPlayer hqdn3d</translation>
+        <translation type="obsolete">MPlayer hqdn3d</translation>
     </message>
     <message>
         <source>High quality version of denoise3d. Slower but more precise.</source>
-        <translation type="unfinished">denoise3d 的高品質版本。 較慢但更精確。</translation>
+        <translation type="obsolete">denoise3d 的高品質版本。 較慢但更精確。</translation>
     </message>
     <message>
         <source>FluxSmooth</source>
-        <translation type="unfinished">融熔平滑</translation>
+        <translation type="obsolete">融熔平滑</translation>
     </message>
     <message>
         <source>Spatio-temporal cleaner by Ross Thomas.</source>
-        <translation type="unfinished">空間-時間清理器，作者為 Ross Thomas。</translation>
+        <translation type="obsolete">空間-時間清理器，作者為 Ross Thomas。</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="unfinished">時間清理器</translation>
+        <translation type="obsolete">時間清理器</translation>
     </message>
     <message>
         <source>Vlad59&apos;s Avisynth port of Jim Casaburi&apos;s denoiser.</source>
-        <translation type="unfinished">Vlad59 的 Avisynth 是從 Jim Casaburi 的去雜訊器移植而來。</translation>
+        <translation type="obsolete">Vlad59 的 Avisynth 是從 Jim Casaburi 的去雜訊器移植而來。</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">去雜訊</translation>
+        <translation type="obsolete">去雜訊</translation>
     </message>
     <message>
         <source>Port of Transcode DNR.</source>
-        <translation type="unfinished">從 DNR 轉碼移植而來。</translation>
+        <translation type="obsolete">從 DNR 轉碼移植而來。</translation>
     </message>
     <message>
         <source>Light denoiser.</source>
-        <translation type="unfinished">明亮去雜訊器。</translation>
+        <translation type="obsolete">明亮去雜訊器。</translation>
     </message>
     <message>
         <source>Cnr2</source>
-        <translation type="unfinished">Cnr2</translation>
+        <translation type="obsolete">Cnr2</translation>
     </message>
     <message>
         <source>MSmooth by Donald Graft</source>
-        <translation type="unfinished">MSmooth 平滑，作者為 Donald Graft</translation>
+        <translation type="obsolete">MSmooth 平滑，作者為 Donald Graft</translation>
     </message>
     <message>
         <source>Smooth the image, don&apos;t blur edges. Useful on anime.</source>
-        <translation type="unfinished">平滑此圖像但不模糊邊緣。用於動畫上。</translation>
+        <translation type="obsolete">平滑此圖像但不模糊邊緣。用於動畫上。</translation>
     </message>
     <message>
         <source>Soften</source>
-        <translation type="unfinished">柔化</translation>
+        <translation type="obsolete">柔化</translation>
     </message>
     <message>
         <source>A variant of stabilize.</source>
-        <translation type="unfinished">穩定的一個變體。</translation>
+        <translation type="obsolete">穩定的一個變體。</translation>
     </message>
     <message>
         <source>Sharpen</source>
-        <translation type="unfinished">銳利化</translation>
+        <translation type="obsolete">銳利化</translation>
     </message>
     <message>
         <source>Enhance difference between near pixels.</source>
-        <translation type="unfinished">加強像素間的差異。</translation>
+        <translation type="obsolete">加強像素間的差異。</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">MSharpen</translation>
+        <translation type="obsolete">MSharpen</translation>
     </message>
     <message>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
-        <translation type="unfinished">沒有放大雜訊下銳利化邊緣。作者為 Donald Graft。</translation>
+        <translation type="obsolete">沒有放大雜訊下銳利化邊緣。作者為 Donald Graft。</translation>
     </message>
     <message>
         <source>asharp</source>
-        <translation type="unfinished">asharp</translation>
+        <translation type="obsolete">asharp</translation>
     </message>
     <message>
         <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="unfinished">適性銳利化器，作者為 MarcFD。</translation>
+        <translation type="obsolete">適性銳利化器，作者為 MarcFD。</translation>
     </message>
     <message>
         <source>Gauss smooth</source>
-        <translation type="unfinished">高斯平滑</translation>
+        <translation type="obsolete">高斯平滑</translation>
     </message>
     <message>
         <source>Gaussian smooth. Blur the picture.</source>
-        <translation type="unfinished">高斯平滑。模糊圖片。</translation>
+        <translation type="obsolete">高斯平滑。模糊圖片。</translation>
     </message>
     <message>
         <source>Mean</source>
-        <translation type="unfinished">平均</translation>
+        <translation type="obsolete">平均</translation>
     </message>
     <message>
         <source>Mean (blur) kernel.</source>
-        <translation type="unfinished">平均(模糊)內核。</translation>
+        <translation type="obsolete">平均(模糊)內核。</translation>
     </message>
     <message>
         <source>Median</source>
-        <translation type="unfinished">中位數</translation>
+        <translation type="obsolete">中位數</translation>
     </message>
     <message>
         <source>Median kernel 3x3. Remove high frequency noise.</source>
-        <translation type="unfinished">中位數內核 3x3。移除高頻率雜訊。</translation>
+        <translation type="obsolete">中位數內核 3x3。移除高頻率雜訊。</translation>
     </message>
     <message>
         <source>Median (5x5)</source>
-        <translation type="unfinished">中位數 (5x5)</translation>
+        <translation type="obsolete">中位數 (5x5)</translation>
     </message>
     <message>
         <source>Median kernel 5x5. Good for reducing chroma noise.</source>
-        <translation type="unfinished">中位數內核 5x5。可有效減少色度雜訊。</translation>
+        <translation type="obsolete">中位數內核 5x5。可有效減少色度雜訊。</translation>
     </message>
     <message>
         <source>Forced postprocessing</source>
-        <translation type="unfinished">強制性後置處理</translation>
+        <translation type="obsolete">強制性後置處理</translation>
     </message>
     <message>
         <source>Subtitler</source>
-        <translation type="unfinished">Subtitler</translation>
+        <translation type="obsolete">Subtitler</translation>
     </message>
     <message>
         <source>Add srt/sub subtitles to the picture.</source>
-        <translation type="unfinished">加入 srt/sub 字幕到影片。</translation>
+        <translation type="obsolete">加入 srt/sub 字幕到影片。</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation type="obsolete">ASS</translation>
     </message>
     <message>
         <source>Add ASS/SSA subtitles to the picture.</source>
-        <translation type="unfinished">加入 ASS/SSA 字幕到影片。</translation>
+        <translation type="obsolete">加入 ASS/SSA 字幕到影片。</translation>
     </message>
     <message>
         <source>VobSub</source>
-        <translation>VobSub</translation>
+        <translation type="obsolete">VobSub</translation>
     </message>
     <message>
         <source>Embed VobSub subtitles into picture.</source>
-        <translation>嵌入 VobSub 字幕到影片中。</translation>
+        <translation type="obsolete">嵌入 VobSub 字幕到影片中。</translation>
     </message>
     <message>
         <source>DVB sub</source>
-        <translation>DVB sub</translation>
+        <translation type="obsolete">DVB sub</translation>
     </message>
     <message>
         <source>Embed DVB-T subtitle.</source>
-        <translation>嵌入 DVB-T 字幕。</translation>
+        <translation type="obsolete">嵌入 DVB-T 字幕。</translation>
     </message>
     <message>
         <source>Hard pulldown removal</source>
-        <translation type="unfinished">硬式去除 Pulldown</translation>
+        <translation type="obsolete">硬式去除 Pulldown</translation>
     </message>
     <message>
         <source>Remove IVTC that has been analog captured or resized.</source>
-        <translation type="unfinished">移除 IVTC 來模擬捕捉或調整大小。</translation>
+        <translation type="obsolete">移除 IVTC 來模擬捕捉或調整大小。</translation>
     </message>
     <message>
         <source>Whirl</source>
-        <translation type="unfinished">漩渦</translation>
+        <translation type="obsolete">漩渦</translation>
     </message>
     <message>
         <source>Useless whirlwind effect.</source>
-        <translation type="unfinished">無用的旋風效果。</translation>
+        <translation type="obsolete">無用的旋風效果。</translation>
     </message>
     <message>
         <source>Split the picture into tiny thumbnails.</source>
-        <translation type="unfinished">將圖像分割成一堆微小的圖片。</translation>
+        <translation type="obsolete">將圖像分割成一堆微小的圖片。</translation>
     </message>
     <message>
         <source>MPlayer delogo</source>
-        <translation type="unfinished">Mplayer 去圖標</translation>
+        <translation type="obsolete">Mplayer 去圖標</translation>
     </message>
     <message>
         <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished">利用插值它的包圍框來混合一個圖標。</translation>
+        <translation type="obsolete">利用插值它的包圍框來混合一個圖標。</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">圖標</translation>
+        <translation type="obsolete">圖標</translation>
     </message>
     <message>
         <source>Add a png as logo.</source>
-        <translation type="unfinished">加入一個 png 作為圖標。</translation>
+        <translation type="obsolete">加入一個 png 作為圖標。</translation>
     </message>
     <message>
         <source>Animated Menu</source>
-        <translation type="unfinished">動畫式選單</translation>
+        <translation type="obsolete">動畫式選單</translation>
     </message>
     <message>
         <source>Create a video made of 6 mini windows, very useful to do DVD menus.</source>
-        <translation type="unfinished">以 6 個小視窗建立一個影片，對於製作 DVD 選單非常有用。</translation>
+        <translation type="obsolete">以 6 個小視窗建立一個影片，對於製作 DVD 選單非常有用。</translation>
     </message>
     <message>
         <source>Compute Average</source>
-        <translation>計算平均值</translation>
+        <translation type="obsolete">計算平均值</translation>
     </message>
     <message>
         <source>Compute average luma value for each pixel throughout all frames, and save to file</source>
-        <translation>計算重頭到尾所有畫格的每個像素的平均明度值，並且儲存到檔案</translation>
+        <translation type="obsolete">計算重頭到尾所有畫格的每個像素的平均明度值，並且儲存到檔案</translation>
     </message>
     <message>
         <source>Eraser</source>
-        <translation>擦除器</translation>
+        <translation type="obsolete">擦除器</translation>
     </message>
     <message>
         <source>&quot;Erase&quot; arbitrary areas of each frame</source>
-        <translation>\&quot;擦除\&quot; 每個畫格的任意範圍</translation>
+        <translation type="obsolete">\&quot;擦除\&quot; 每個畫格的任意範圍</translation>
     </message>
     <message>
         <source>Swiss Army Knife</source>
-        <translation>瑞士軍刀</translation>
+        <translation type="obsolete">瑞士軍刀</translation>
     </message>
     <message>
         <source>Apply operation like P&apos;=P*A, P-A, P+A, etc. using a convolution, rolling average, image from file, or constant</source>
-        <translation>套用運算像 P&apos;=P*A, P-A, P+A 等。使用卷積、波動平均數、檔案的映像或常數</translation>
+        <translation type="obsolete">套用運算像 P&apos;=P*A, P-A, P+A 等。使用卷積、波動平均數、檔案的映像或常數</translation>
     </message>
     <message>
         <source>Threshold</source>
-        <translation>臨界值</translation>
+        <translation type="obsolete">臨界值</translation>
     </message>
     <message>
         <source>Force too-bright/too-dim pixels to 0 and the rest to 255 or vice-versa</source>
-        <translation>強制 過亮/過暗 的像素為 0 且重新設定成 255 或者反過來</translation>
+        <translation type="obsolete">強制 過亮/過暗 的像素為 0 且重新設定成 255 或者反過來</translation>
     </message>
     <message>
         <source>Particle List</source>
-        <translation>區段列表</translation>
+        <translation type="obsolete">區段列表</translation>
     </message>
     <message>
         <source>Identify &apos;particles&apos; (groups of pixels)</source>
-        <translation>識別 &apos;區段&apos; (像素的群組)</translation>
+        <translation type="obsolete">識別 &apos;區段&apos; (像素的群組)</translation>
     </message>
     <message>
         <source>Add Framenumber</source>
-        <translation>加入畫格數目</translation>
+        <translation type="obsolete">加入畫格數目</translation>
     </message>
     <message>
         <source>Print frame number directly in image</source>
-        <translation>直接將畫格數印在圖像上</translation>
+        <translation type="obsolete">直接將畫格數印在圖像上</translation>
     </message>
     <message>
         <source>Partial</source>
-        <translation>區段</translation>
+        <translation type="obsolete">區段</translation>
     </message>
     <message>
         <source>Problem reading XML filters</source>
-        <translation>讀取 XML 濾鏡時發生問題</translation>
+        <translation type="obsolete">讀取 XML 濾鏡時發生問題</translation>
     </message>
     <message>
         <source>No filter found</source>
-        <translation>沒有找到任何濾鏡</translation>
+        <translation type="obsolete">沒有找到任何濾鏡</translation>
     </message>
     <message>
         <source>Could not find a filter</source>
-        <translation>無法找到濾鏡</translation>
+        <translation type="obsolete">無法找到濾鏡</translation>
     </message>
     <message>
         <source>No tag found</source>
-        <translation>沒有找到任何標籤</translation>
+        <translation type="obsolete">沒有找到任何標籤</translation>
     </message>
     <message>
         <source>Node not found</source>
-        <translation>沒有找到節點</translation>
+        <translation type="obsolete">沒有找到節點</translation>
     </message>
     <message>
         <source>There is several mpeg file, append them ?</source>
-        <translation>有一些 mpeg 檔，添加它們嗎?</translation>
+        <translation type="obsolete">有一些 mpeg 檔，添加它們嗎?</translation>
     </message>
     <message>
         <source>Can&apos;t determine aspect ratio</source>
-        <translation>無法決定外觀比列</translation>
+        <translation type="obsolete">無法決定外觀比列</translation>
     </message>
     <message>
         <source>Wrong Colorspace</source>
-        <translation>錯誤的色彩空間</translation>
+        <translation type="obsolete">錯誤的色彩空間</translation>
     </message>
     <message>
         <source>Only YV12/I420 or YUY2/I422 JPegs are supported</source>
-        <translation>只支援 YV12/I420 或 YUY2/I422 JPEG</translation>
+        <translation type="obsolete">只支援 YV12/I420 或 YUY2/I422 JPEG</translation>
     </message>
     <message>
         <source>NTSC 4:3</source>
-        <translation>NTSC 4:3</translation>
+        <translation type="obsolete">NTSC 4:3</translation>
     </message>
     <message>
         <source>NTSC 16:9</source>
-        <translation>NTSC 16:9</translation>
+        <translation type="obsolete">NTSC 16:9</translation>
     </message>
     <message>
         <source>PAL 4:3</source>
-        <translation>PAL 4:3</translation>
+        <translation type="obsolete">PAL 4:3</translation>
     </message>
     <message>
         <source>PAL 16:9</source>
-        <translation>PAL 16:9</translation>
+        <translation type="obsolete">PAL 16:9</translation>
     </message>
     <message>
         <source>1:1</source>
-        <translation>1:1</translation>
+        <translation type="obsolete">1:1</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation>未知</translation>
+        <translation type="obsolete">未知</translation>
     </message>
     <message>
         <source>Output file error</source>
-        <translation>輸出檔案錯誤</translation>
+        <translation type="obsolete">輸出檔案錯誤</translation>
     </message>
     <message>
         <source>Could not open &quot;%s&quot; for writing.</source>
-        <translation>無法開啟 &quot;%s&quot; 進行寫入。</translation>
+        <translation type="obsolete">無法開啟 &quot;%s&quot; 進行寫入。</translation>
     </message>
     <message>
         <source>Input file error</source>
-        <translation>輸入檔案錯誤</translation>
+        <translation type="obsolete">輸入檔案錯誤</translation>
     </message>
     <message>
         <source>Unknown source type</source>
-        <translation>未知的來源類型</translation>
+        <translation type="obsolete">未知的來源類型</translation>
     </message>
     <message>
         <source>Bitmap source failed</source>
-        <translation>點陣圖來源失敗</translation>
+        <translation type="obsolete">點陣圖來源失敗</translation>
     </message>
     <message>
         <source>Problem loading sub</source>
-        <translation>載入 sub 時發生問題</translation>
+        <translation type="obsolete">載入 sub 時發生問題</translation>
     </message>
     <message>
         <source>No subs</source>
-        <translation>沒有 sub</translation>
+        <translation type="obsolete">沒有 sub</translation>
     </message>
     <message>
         <source>Ifo error</source>
-        <translation>Ifo 錯誤</translation>
+        <translation type="obsolete">Ifo 錯誤</translation>
     </message>
     <message>
         <source>Error reading ifo file, aborting.</source>
-        <translation>讀取 ifo 檔案時發生錯誤，正在中止。</translation>
+        <translation type="obsolete">讀取 ifo 檔案時發生錯誤，正在中止。</translation>
     </message>
     <message>
         <source>Cannot write .idx</source>
-        <translation>無法寫入 .idx</translation>
+        <translation type="obsolete">無法寫入 .idx</translation>
     </message>
     <message>
         <source>Cannot write .sub</source>
-        <translation>無法寫入 .sub</translation>
+        <translation type="obsolete">無法寫入 .sub</translation>
     </message>
     <message>
         <source>Problem opening the mpeg files</source>
-        <translation>開啟 mpeg 檔案時發生問題</translation>
+        <translation type="obsolete">開啟 mpeg 檔案時發生問題</translation>
     </message>
     <message>
         <source>Generating VobSub file</source>
-        <translation>正在生成 VobSub 檔</translation>
+        <translation type="obsolete">正在生成 VobSub 檔</translation>
     </message>
     <message>
         <source>Could not write the file</source>
-        <translation>無法寫入檔案</translation>
+        <translation type="obsolete">無法寫入檔案</translation>
     </message>
     <message>
         <source>File error</source>
-        <translation>檔案錯誤</translation>
+        <translation type="obsolete">檔案錯誤</translation>
     </message>
     <message>
         <source>Could not read &quot;%s&quot;.</source>
-        <translation>無法讀取 &quot;%s&quot;。</translation>
+        <translation type="obsolete">無法讀取 &quot;%s&quot;。</translation>
     </message>
     <message>
         <source>Load it</source>
-        <translation>載入它</translation>
+        <translation type="obsolete">載入它</translation>
     </message>
     <message>
         <source>Crash file</source>
-        <translation>損壞檔</translation>
+        <translation type="obsolete">損壞檔</translation>
     </message>
     <message>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation>偵測到一個損壞檔。
+        <translation type="obsolete">偵測到一個損壞檔。
 是否要載入 ?
 (在所有的案例都會偵測，若要保存它你必須執行儲存)</translation>
     </message>
     <message>
         <source>Oops</source>
-        <translation>Oops</translation>
+        <translation type="obsolete">Oops</translation>
     </message>
     <message>
         <source>Cannot open &quot;%s&quot;.</source>
-        <translation>無法開啟 &quot;%s&quot;。</translation>
+        <translation type="obsolete">無法開啟 &quot;%s&quot;。</translation>
     </message>
     <message>
         <source>%s already exists.
 
 Do you want to replace it?</source>
-        <translation>%s 已存在。
+        <translation type="obsolete">%s 已存在。
 
 要覆蓋它嗎?</translation>
     </message>
     <message>
         <source>It is possible that you are trying to overwrite an input file!</source>
-        <translation>你可能嘗試覆寫一個輸入檔!</translation>
+        <translation type="obsolete">你可能嘗試覆寫一個輸入檔!</translation>
     </message>
     <message>
         <source>Cannot write the file</source>
-        <translation>無法寫入檔案</translation>
+        <translation type="obsolete">無法寫入檔案</translation>
     </message>
     <message>
         <source>No write access to &quot;%s&quot;.</source>
-        <translation>沒有任何寫入動作存取到 &quot;%s&quot;。</translation>
+        <translation type="obsolete">沒有任何寫入動作存取到 &quot;%s&quot;。</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>一般</translation>
+        <translation type="obsolete">一般</translation>
     </message>
     <message>
         <source>Mux every N video frames</source>
-        <translation>合成每個 N 視訊畫格</translation>
+        <translation type="obsolete">合成每個 N 視訊畫格</translation>
     </message>
     <message>
         <source>Mux by packet size</source>
-        <translation>利用分組尺寸來合成</translation>
+        <translation type="obsolete">利用分組尺寸來合成</translation>
     </message>
     <message>
         <source>Muxing _type:</source>
-        <translation>合成方式(_T):</translation>
+        <translation type="obsolete">合成方式(_T):</translation>
     </message>
     <message>
         <source>_Split every MB:</source>
-        <translation>分割成每個檔案幾MB(_S):</translation>
+        <translation type="obsolete">分割成每個檔案幾MB(_S):</translation>
     </message>
     <message>
         <source>Mux _every x video frames:</source>
-        <translation>合成每個 x 視訊畫格(_E):</translation>
+        <translation type="obsolete">合成每個 x 視訊畫格(_E):</translation>
     </message>
     <message>
         <source>Mux in _blocks of x bytes:</source>
-        <translation>以 x 位元的區塊數來合成(_B):</translation>
+        <translation type="obsolete">以 x 位元的區塊數來合成(_B):</translation>
     </message>
     <message>
         <source>AVI Muxer Options</source>
-        <translation>AVI 合成器選項</translation>
+        <translation type="obsolete">AVI 合成器選項</translation>
     </message>
     <message>
         <source>DTS</source>
-        <translation>DTS</translation>
+        <translation type="obsolete">DTS</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation>PCM</translation>
+        <translation type="obsolete">PCM</translation>
     </message>
     <message>
         <source>MP2</source>
-        <translation>MP2</translation>
+        <translation type="obsolete">MP2</translation>
     </message>
     <message>
         <source>MP3</source>
-        <translation>MP3</translation>
+        <translation type="obsolete">MP3</translation>
     </message>
     <message>
         <source>WMA</source>
-        <translation>WMA</translation>
+        <translation type="obsolete">WMA</translation>
     </message>
     <message>
         <source>LPCM</source>
-        <translation>LPCM</translation>
+        <translation type="obsolete">LPCM</translation>
     </message>
     <message>
         <source>AC3</source>
-        <translation>AC3</translation>
+        <translation type="obsolete">AC3</translation>
     </message>
     <message>
         <source>Ogg Vorbis</source>
-        <translation>Ogg Vorbis</translation>
+        <translation type="obsolete">Ogg Vorbis</translation>
     </message>
     <message>
         <source>AAC</source>
-        <translation>AAC</translation>
+        <translation type="obsolete">AAC</translation>
     </message>
     <message>
         <source>QDM2</source>
-        <translation>QDM2</translation>
+        <translation type="obsolete">QDM2</translation>
     </message>
     <message>
         <source>AMR-NB</source>
-        <translation>AMR-NB</translation>
+        <translation type="obsolete">AMR-NB</translation>
     </message>
     <message>
         <source>MSADPCM</source>
-        <translation>MSADPCM</translation>
+        <translation type="obsolete">MSADPCM</translation>
     </message>
     <message>
         <source>ULAW</source>
-        <translation>ULAW</translation>
+        <translation type="obsolete">ULAW</translation>
     </message>
     <message>
         <source>IMA ADPCM</source>
-        <translation>IMA ADPCM</translation>
+        <translation type="obsolete">IMA ADPCM</translation>
     </message>
     <message>
         <source>8-bit PCM</source>
-        <translation>8位元 PCM</translation>
+        <translation type="obsolete">8位元 PCM</translation>
     </message>
     <message>
         <source>Unknown codec</source>
-        <translation>未知的編解碼器</translation>
+        <translation type="obsolete">未知的編解碼器</translation>
     </message>
     <message>
         <source>Cannot initialize the video stream</source>
-        <translation>無法初始化視訊流</translation>
+        <translation type="obsolete">無法初始化視訊流</translation>
     </message>
     <message>
         <source>Dummy</source>
-        <translation>虛擬</translation>
+        <translation type="obsolete">虛擬</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Filter init failed</source>
-        <translation>濾鏡初始化失敗</translation>
+        <translation type="obsolete">濾鏡初始化失敗</translation>
     </message>
     <message>
         <source>Encoding</source>
-        <translation>編碼中</translation>
+        <translation type="obsolete">編碼中</translation>
     </message>
     <message>
         <source>Error while encoding</source>
-        <translation>編碼時發生錯誤</translation>
+        <translation type="obsolete">編碼時發生錯誤</translation>
     </message>
     <message>
         <source>KeyFrame error</source>
-        <translation>關鍵畫格錯誤</translation>
+        <translation type="obsolete">關鍵畫格錯誤</translation>
     </message>
     <message>
         <source>The beginning frame is not a key frame.
 Please move the A marker.</source>
-        <translation>開始的畫格不是一個關鍵畫格。
+        <translation type="obsolete">開始的畫格不是一個關鍵畫格。
 請移動標記 A 。</translation>
     </message>
     <message>
         <source>Unsupported video</source>
-        <translation>未支援的視訊</translation>
+        <translation type="obsolete">未支援的視訊</translation>
     </message>
     <message>
         <source>Only FLV1 and VP6 video are supported</source>
-        <translation>只支援 FLV1 和 VP6 視訊</translation>
+        <translation type="obsolete">只支援 FLV1 和 VP6 視訊</translation>
     </message>
     <message>
         <source>Unsupported audio</source>
-        <translation>不支援的音訊</translation>
+        <translation type="obsolete">不支援的音訊</translation>
     </message>
     <message>
         <source>Audio must be mp3 for flv output.</source>
-        <translation>flv 輸出的音訊必須是 mp3。</translation>
+        <translation type="obsolete">flv 輸出的音訊必須是 mp3。</translation>
     </message>
     <message>
         <source>Frequency must be 44100, 22050 or 11025 Hz.</source>
-        <translation>頻率必須是 44100, 22050 或 11025 Hz。</translation>
+        <translation type="obsolete">頻率必須是 44100, 22050 或 11025 Hz。</translation>
     </message>
     <message>
         <source>Cannot initialize the audio stream</source>
-        <translation>無法初始化音訊流</translation>
+        <translation type="obsolete">無法初始化音訊流</translation>
     </message>
     <message>
         <source>PSP</source>
-        <translation>PSP</translation>
+        <translation type="obsolete">PSP</translation>
     </message>
     <message>
         <source>Invalid audio stream detected</source>
-        <translation>偵測到無效的音訊流</translation>
+        <translation type="obsolete">偵測到無效的音訊流</translation>
     </message>
     <message>
         <source>The audio stream may be invalid for this container.
 
 Continue anyway?</source>
-        <translation>對這個容器而言此音訊流可能是無效的。
+        <translation type="obsolete">對這個容器而言此音訊流可能是無效的。
 
 仍要繼續嗎?</translation>
     </message>
     <message>
         <source>1st Pass</source>
-        <translation>第一次運算</translation>
+        <translation type="obsolete">第一次運算</translation>
     </message>
     <message>
         <source>2nd Pass</source>
-        <translation>第二次運算</translation>
+        <translation type="obsolete">第二次運算</translation>
     </message>
     <message>
         <source>This is not MPEG compatible</source>
-        <translation>這個是不相容的 MPEG</translation>
+        <translation type="obsolete">這個是不相容的 MPEG</translation>
     </message>
     <message>
         <source>You can&apos;t use the Copy codec.</source>
-        <translation>無法使用複製的編解碼器。</translation>
+        <translation type="obsolete">無法使用複製的編解碼器。</translation>
     </message>
     <message>
         <source>There is no audio track</source>
-        <translation>沒有音軌</translation>
+        <translation type="obsolete">沒有音軌</translation>
     </message>
     <message>
         <source>The first frame is not intra frame</source>
-        <translation>此起始畫格不是內部畫格</translation>
+        <translation type="obsolete">此起始畫格不是內部畫格</translation>
     </message>
     <message>
         <source>Use the &amp;lt;&amp;lt; and the &amp;gt;&amp;gt; buttons to move using Intra frames.</source>
-        <translation>使用 &amp;lt;&amp;lt; 和 &amp;gt;&amp;gt; 按鈕來移動正在使用的內部畫格。</translation>
+        <translation type="obsolete">使用 &amp;lt;&amp;lt; 和 &amp;gt;&amp;gt; 按鈕來移動正在使用的內部畫格。</translation>
     </message>
     <message>
         <source>Audio track is not suitable</source>
-        <translation>音軌不合</translation>
+        <translation type="obsolete">音軌不合</translation>
     </message>
     <message>
         <source>For VCD, audio must be 44.1 kHz MP2.</source>
-        <translation>VCD 的音訊必須是 44.1 kHz MP2。</translation>
+        <translation type="obsolete">VCD 的音訊必須是 44.1 kHz MP2。</translation>
     </message>
     <message>
         <source>For DVD, audio must be 48 kHz MP2(stereo), AC3, DTS or LPCM (stereo).</source>
-        <translation>DVD 的音訊必須是 48 kHz MP2(立體聲)、AC3、DTS 或 LPCM (立體聲)。</translation>
+        <translation type="obsolete">DVD 的音訊必須是 48 kHz MP2(立體聲)、AC3、DTS 或 LPCM (立體聲)。</translation>
     </message>
     <message>
         <source>---</source>
-        <translation>---</translation>
+        <translation type="obsolete">---</translation>
     </message>
     <message>
         <source>Saving</source>
-        <translation>儲存中</translation>
+        <translation type="obsolete">儲存中</translation>
     </message>
     <message>
         <source>MPEG TS</source>
-        <translation>MPEG TS</translation>
+        <translation type="obsolete">MPEG TS</translation>
     </message>
     <message>
         <source>MPEG VCD</source>
-        <translation>MPEG VCD</translation>
+        <translation type="obsolete">MPEG VCD</translation>
     </message>
     <message>
         <source>MPEG SVCD</source>
-        <translation>MPEG SVCD</translation>
+        <translation type="obsolete">MPEG SVCD</translation>
     </message>
     <message>
         <source>MPEG DVD</source>
-        <translation>MPEG DVD</translation>
+        <translation type="obsolete">MPEG DVD</translation>
     </message>
     <message>
         <source>For DVD, audio must be 48 kHz MP2, AC3 or LPCM.</source>
-        <translation>DVD 的音訊必須是 48 kHz MP2、AC3 或 LPCM。</translation>
+        <translation type="obsolete">DVD 的音訊必須是 48 kHz MP2、AC3 或 LPCM。</translation>
     </message>
     <message>
         <source>MPEG Requantizer</source>
-        <translation>MPEG 重複量化編碼</translation>
+        <translation type="obsolete">MPEG 重複量化編碼</translation>
     </message>
     <message>
         <source>MPEG ES</source>
-        <translation>MPEG ES</translation>
+        <translation type="obsolete">MPEG ES</translation>
     </message>
     <message>
         <source>Pass 1/2</source>
-        <translation>運算 1/2</translation>
+        <translation type="obsolete">運算 1/2</translation>
     </message>
     <message>
         <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation>無法開啟 &quot;%s&quot; 進行寫入。</translation>
+        <translation type="obsolete">無法開啟 &quot;%s&quot; 進行寫入。</translation>
     </message>
     <message>
         <source>Pass 2/2</source>
-        <translation>運算 2/2</translation>
+        <translation type="obsolete">運算 2/2</translation>
     </message>
     <message>
         <source>Select a directory</source>
-        <translation>選擇一個資料夾</translation>
+        <translation type="obsolete">選擇一個資料夾</translation>
     </message>
     <message>
         <source>Uinteger</source>
-        <translation>非整數</translation>
+        <translation type="obsolete">非整數</translation>
     </message>
     <message>
         <source>Test uinteger</source>
-        <translation>測試非整數</translation>
+        <translation type="obsolete">測試非整數</translation>
     </message>
     <message>
         <source>Float</source>
-        <translation>浮動</translation>
+        <translation type="obsolete">浮動</translation>
     </message>
     <message>
         <source>Toggle</source>
-        <translation>目標</translation>
+        <translation type="obsolete">目標</translation>
     </message>
     <message>
         <source>No Strategy</source>
-        <translation>無策略</translation>
+        <translation type="obsolete">無策略</translation>
     </message>
     <message>
         <source>3:2 Pulldown</source>
-        <translation>3:2 Pulldown</translation>
+        <translation type="obsolete">3:2 Pulldown</translation>
     </message>
     <message>
         <source>Pal/Secam</source>
-        <translation>Pal/Secam</translation>
+        <translation type="obsolete">Pal/Secam</translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation>從 PAL 轉成 NTSC</translation>
+        <translation type="obsolete">從 PAL 轉成 NTSC</translation>
     </message>
     <message>
         <source>menu</source>
-        <translation>選單</translation>
+        <translation type="obsolete">選單</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation>低</translation>
+        <translation type="obsolete">低</translation>
     </message>
     <message>
         <source>High</source>
-        <translation>高</translation>
+        <translation type="obsolete">高</translation>
     </message>
     <message>
         <source>Failed</source>
-        <translation>已失敗</translation>
+        <translation type="obsolete">已失敗</translation>
     </message>
     <message>
         <source>_Background Image:</source>
-        <translation type="unfinished">背景圖像(_B):</translation>
+        <translation type="obsolete">背景圖像(_B):</translation>
     </message>
     <message>
         <source>Select background image</source>
-        <translation type="unfinished">選擇背景圖像</translation>
+        <translation type="obsolete">選擇背景圖像</translation>
     </message>
     <message>
         <source>_NTSC (default is PAL):</source>
-        <translation type="unfinished">_NTSC (預設為 PAL):</translation>
+        <translation type="obsolete">_NTSC (預設為 PAL):</translation>
     </message>
     <message>
         <source>Vignette _Width:</source>
-        <translation type="unfinished">小插曲寬(_W):</translation>
+        <translation type="obsolete">小插曲寬(_W):</translation>
     </message>
     <message>
         <source>Vignette _Height:</source>
-        <translation type="unfinished">小插曲高(_H):</translation>
+        <translation type="obsolete">小插曲高(_H):</translation>
     </message>
     <message>
         <source>Vignette frame number</source>
-        <translation type="unfinished">小插曲畫格數目</translation>
+        <translation type="obsolete">小插曲畫格數目</translation>
     </message>
     <message>
         <source>Timecode:</source>
-        <translation type="unfinished">時間碼:</translation>
+        <translation type="obsolete">時間碼:</translation>
     </message>
     <message>
         <source>_Dynamic range compression</source>
-        <translation>動態範圍壓縮(_D)</translation>
+        <translation type="obsolete">動態範圍壓縮(_D)</translation>
     </message>
     <message>
         <source>_Time shift (ms):</source>
-        <translation>時間位移 (ms)(_T):</translation>
+        <translation type="obsolete">時間位移 (ms)(_T):</translation>
     </message>
     <message>
         <source>Time shift value (ms)</source>
-        <translation>時間位移值 (ms)</translation>
+        <translation type="obsolete">時間位移值 (ms)</translation>
     </message>
     <message>
         <source>R_esampling (Hz):</source>
-        <translation>重複取樣(_E) (Hz):</translation>
+        <translation type="obsolete">重複取樣(_E) (Hz):</translation>
     </message>
     <message>
         <source>Resampling frequency (Hz)</source>
-        <translation>重複取樣頻率 (Hz)</translation>
+        <translation type="obsolete">重複取樣頻率 (Hz)</translation>
     </message>
     <message>
         <source>Film to PAL</source>
-        <translation>Film 轉成 PAL</translation>
+        <translation type="obsolete">Film 轉成 PAL</translation>
     </message>
     <message>
         <source>PAL to Film</source>
-        <translation>PAL 轉成 Film</translation>
+        <translation type="obsolete">PAL 轉成 Film</translation>
     </message>
     <message>
         <source>_Frame rate change:</source>
-        <translation>畫格率改變(_F):</translation>
+        <translation type="obsolete">畫格率改變(_F):</translation>
     </message>
     <message>
         <source>Automatic (max -3 dB)</source>
-        <translation>自動 (最大值 -3 dB)</translation>
+        <translation type="obsolete">自動 (最大值 -3 dB)</translation>
     </message>
     <message>
         <source>Manual</source>
-        <translation>手動</translation>
+        <translation type="obsolete">手動</translation>
     </message>
     <message>
         <source>_Gain mode:</source>
-        <translation>增益模式(_G):</translation>
+        <translation type="obsolete">增益模式(_G):</translation>
     </message>
     <message>
         <source>G_ain value:</source>
-        <translation>增益值(_A):</translation>
+        <translation type="obsolete">增益值(_A):</translation>
     </message>
     <message>
         <source>Gain</source>
-        <translation>增益</translation>
+        <translation type="obsolete">增益</translation>
     </message>
     <message>
         <source>No change</source>
-        <translation>沒有改變</translation>
+        <translation type="obsolete">沒有改變</translation>
     </message>
     <message>
         <source>Stereo+surround</source>
-        <translation>立體+環繞</translation>
+        <translation type="obsolete">立體+環繞</translation>
     </message>
     <message>
         <source>Stereo+center</source>
-        <translation>立體+中央</translation>
+        <translation type="obsolete">立體+中央</translation>
     </message>
     <message>
         <source>Stereo+center+surround</source>
-        <translation>立體+中央+環繞</translation>
+        <translation type="obsolete">立體+中央+環繞</translation>
     </message>
     <message>
         <source>Stereo front+stereo rear</source>
-        <translation>前段立體+後段立體</translation>
+        <translation type="obsolete">前段立體+後段立體</translation>
     </message>
     <message>
         <source>5 channels</source>
-        <translation>5 聲道</translation>
+        <translation type="obsolete">5 聲道</translation>
     </message>
     <message>
         <source>5.1</source>
-        <translation>5.1</translation>
+        <translation type="obsolete">5.1</translation>
     </message>
     <message>
         <source>Dolby Pro Logic</source>
-        <translation>杜比定向邏輯</translation>
+        <translation type="obsolete">杜比定向邏輯</translation>
     </message>
     <message>
         <source>Dolby Pro Logic II</source>
-        <translation>第二代杜比定向邏輯</translation>
+        <translation type="obsolete">第二代杜比定向邏輯</translation>
     </message>
     <message>
         <source>_Mixer:</source>
-        <translation>混合器(_M):</translation>
+        <translation type="obsolete">混合器(_M):</translation>
     </message>
     <message>
         <source>Audio Filters</source>
-        <translation>音訊濾鏡</translation>
+        <translation type="obsolete">音訊濾鏡</translation>
     </message>
     <message>
         <source>No data</source>
-        <translation>沒有資料</translation>
+        <translation type="obsolete">沒有資料</translation>
     </message>
     <message>
         <source>Max. bitrate:</source>
-        <translation>最大位元率:</translation>
+        <translation type="obsolete">最大位元率:</translation>
     </message>
     <message>
         <source>Average bitrate:</source>
-        <translation>平均位元率:</translation>
+        <translation type="obsolete">平均位元率:</translation>
     </message>
     <message>
         <source>Number of I frames:</source>
-        <translation>I 畫格數目:</translation>
+        <translation type="obsolete">I 畫格數目:</translation>
     </message>
     <message>
         <source>Number of P frames:</source>
-        <translation>P 畫格數目:</translation>
+        <translation type="obsolete">P 畫格數目:</translation>
     </message>
     <message>
         <source>Number of B frames:</source>
-        <translation>B 畫格數目:</translation>
+        <translation type="obsolete">B 畫格數目:</translation>
     </message>
     <message>
         <source>Max. B frames:</source>
-        <translation>最大 B 畫格數:</translation>
+        <translation type="obsolete">最大 B 畫格數:</translation>
     </message>
     <message>
         <source>Bitrate Histogram</source>
-        <translation>位元率分佈圖</translation>
+        <translation type="obsolete">位元率分佈圖</translation>
     </message>
     <message>
         <source>Fontconfig</source>
-        <translation>Fontconfig</translation>
+        <translation type="obsolete">Fontconfig</translation>
     </message>
     <message>
         <source>Gettext</source>
-        <translation>Gettext</translation>
+        <translation type="obsolete">Gettext</translation>
     </message>
     <message>
         <source>SDL</source>
-        <translation>SDL</translation>
+        <translation type="obsolete">SDL</translation>
     </message>
     <message>
         <source>XVideo</source>
-        <translation>XVideo</translation>
+        <translation type="obsolete">XVideo</translation>
     </message>
     <message>
         <source>AltiVec</source>
-        <translation>AltiVec</translation>
+        <translation type="obsolete">AltiVec</translation>
     </message>
     <message>
         <source>PowerPC</source>
-        <translation>PowerPC</translation>
+        <translation type="obsolete">PowerPC</translation>
     </message>
     <message>
         <source>x86</source>
-        <translation>x86</translation>
+        <translation type="obsolete">x86</translation>
     </message>
     <message>
         <source>x86-64</source>
-        <translation>x86-64</translation>
+        <translation type="obsolete">x86-64</translation>
     </message>
     <message>
         <source>Libraries</source>
-        <translation>函式庫</translation>
+        <translation type="obsolete">函式庫</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation>CPU</translation>
+        <translation type="obsolete">CPU</translation>
     </message>
     <message>
         <source>Built-in Support</source>
-        <translation>內建的支援</translation>
+        <translation type="obsolete">內建的支援</translation>
     </message>
     <message>
         <source>_Hours:</source>
-        <translation>小時(_H):</translation>
+        <translation type="obsolete">小時(_H):</translation>
     </message>
     <message>
         <source>_Minutes:</source>
-        <translation>分鐘(_M):</translation>
+        <translation type="obsolete">分鐘(_M):</translation>
     </message>
     <message>
         <source>_Seconds:</source>
-        <translation>秒(_S):</translation>
+        <translation type="obsolete">秒(_S):</translation>
     </message>
     <message>
         <source>Go to Time</source>
-        <translation>前往時間點</translation>
+        <translation type="obsolete">前往時間點</translation>
     </message>
     <message>
         <source>_Job name:</source>
-        <translation>工作名稱(_J):</translation>
+        <translation type="obsolete">工作名稱(_J):</translation>
     </message>
     <message>
         <source>Output _File:</source>
-        <translation>輸出檔案(_F):</translation>
+        <translation type="obsolete">輸出檔案(_F):</translation>
     </message>
     <message>
         <source>Select Video To Write</source>
-        <translation>選擇影片來寫入</translation>
+        <translation type="obsolete">選擇影片來寫入</translation>
     </message>
     <message>
         <source>Save Job</source>
-        <translation>儲存工作</translation>
+        <translation type="obsolete">儲存工作</translation>
     </message>
     <message>
         <source>_Swap U and V</source>
-        <translation>置換 U 和 V(_S)</translation>
+        <translation type="obsolete">置換 U 和 V(_S)</translation>
     </message>
     <message>
         <source>Show motion _vectors</source>
-        <translation>顯示動作向量(_V)</translation>
+        <translation type="obsolete">顯示動作向量(_V)</translation>
     </message>
     <message>
         <source>Decoder Options</source>
-        <translation>解碼器選項</translation>
+        <translation type="obsolete">解碼器選項</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation>使用介面</translation>
+        <translation type="obsolete">使用介面</translation>
     </message>
     <message>
         <source>Select idx file:</source>
-        <translation>選擇 idx 檔:</translation>
+        <translation type="obsolete">選擇 idx 檔:</translation>
     </message>
     <message>
         <source>Use GlyphSet (optional):</source>
-        <translation>使用字庫(選擇性):</translation>
+        <translation type="obsolete">使用字庫(選擇性):</translation>
     </message>
     <message>
         <source>Select GlyphSet file</source>
-        <translation>選擇字型檔</translation>
+        <translation type="obsolete">選擇字型檔</translation>
     </message>
     <message>
         <source>Output SRT file</source>
-        <translation>輸出 SRT 檔案</translation>
+        <translation type="obsolete">輸出 SRT 檔案</translation>
     </message>
     <message>
         <source>Save SRT file</source>
-        <translation>儲存 SRT 檔案</translation>
+        <translation type="obsolete">儲存 SRT 檔案</translation>
     </message>
     <message>
         <source>Select input and ouput files</source>
-        <translation>選擇輸入和輸出檔</translation>
+        <translation type="obsolete">選擇輸入和輸出檔</translation>
     </message>
     <message>
         <source>The idx/sub file does not exist.</source>
-        <translation>此 idx/sub 檔不存在。</translation>
+        <translation type="obsolete">此 idx/sub 檔不存在。</translation>
     </message>
     <message>
         <source>Please Select a valid output SRT file.</source>
-        <translation>請選擇一個有效的 SRT 輸出檔。</translation>
+        <translation type="obsolete">請選擇一個有效的 SRT 輸出檔。</translation>
     </message>
     <message>
         <source>Cannot load the glyphset file.</source>
-        <translation>無法載入此字庫檔。</translation>
+        <translation type="obsolete">無法載入此字庫檔。</translation>
     </message>
     <message>
         <source>GlyphSet filename</source>
-        <translation>字庫檔名</translation>
+        <translation type="obsolete">字庫檔名</translation>
     </message>
     <message>
         <source>Save GlyphSet file</source>
-        <translation>儲存字庫檔案</translation>
+        <translation type="obsolete">儲存字庫檔案</translation>
     </message>
     <message>
         <source>Save Glyph</source>
-        <translation>儲存字形</translation>
+        <translation type="obsolete">儲存字形</translation>
     </message>
     <message>
         <source>Input TS:</source>
-        <translation>輸入 TS:</translation>
+        <translation type="obsolete">輸入 TS:</translation>
     </message>
     <message>
         <source>Select TS file</source>
-        <translation>選擇 TS 檔案</translation>
+        <translation type="obsolete">選擇 TS 檔案</translation>
     </message>
     <message>
         <source>Subtitle PID:</source>
-        <translation>字幕 PID:</translation>
+        <translation type="obsolete">字幕 PID:</translation>
     </message>
     <message>
         <source>Please Select a valid TS file.</source>
-        <translation>請選擇有效的 TS 檔案。</translation>
+        <translation type="obsolete">請選擇有效的 TS 檔案。</translation>
     </message>
     <message>
         <source>Save GlyphSet</source>
-        <translation>儲存字庫</translation>
+        <translation type="obsolete">儲存字庫</translation>
     </message>
     <message>
         <source>_Filter strength:</source>
-        <translation>濾鏡強度(_F):</translation>
+        <translation type="obsolete">濾鏡強度(_F):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation>去除水平方向塊狀色斑(_H)</translation>
+        <translation type="obsolete">去除水平方向塊狀色斑(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation>去除垂直方向塊狀色斑(_V)</translation>
+        <translation type="obsolete">去除垂直方向塊狀色斑(_V)</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation>去除環狀色斑(_R)</translation>
+        <translation type="obsolete">去除環狀色斑(_R)</translation>
     </message>
     <message>
         <source>Postprocessing</source>
-        <translation>後置處理</translation>
+        <translation type="obsolete">後置處理</translation>
     </message>
     <message>
         <source>_Use systray while encoding</source>
-        <translation>編碼時使用工作欄(_U)</translation>
+        <translation type="obsolete">編碼時使用工作欄(_U)</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation>同意在 DVD 使用非標準的音訊頻率(_A)</translation>
+        <translation type="obsolete">同意在 DVD 使用非標準的音訊頻率(_A)</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation>建立 _OpenDML 檔案</translation>
+        <translation type="obsolete">建立 _OpenDML 檔案</translation>
     </message>
     <message>
         <source>Automatically _index MPEG files</source>
-        <translation>自動索引 MPEG 檔(_I)</translation>
+        <translation type="obsolete">自動索引 MPEG 檔(_I)</translation>
     </message>
     <message>
         <source>Automatically _swap A and B if A&gt;B</source>
-        <translation>如果 A&gt;B ，則自動置換 A 和 B(_S)</translation>
+        <translation type="obsolete">如果 A&gt;B ，則自動置換 A 和 B(_S)</translation>
     </message>
     <message>
         <source>_Disable NUV audio sync</source>
-        <translation>停用 NUV 音訊同步(_D)</translation>
+        <translation type="obsolete">停用 NUV 音訊同步(_D)</translation>
     </message>
     <message>
         <source>Automatically _build VBR map</source>
-        <translation>自動建立變動位元率(VBR)對應(_B)</translation>
+        <translation type="obsolete">自動建立變動位元率(VBR)對應(_B)</translation>
     </message>
     <message>
         <source>Automatically _rebuild index</source>
-        <translation>自動重新建立索引(_R)</translation>
+        <translation type="obsolete">自動重新建立索引(_R)</translation>
     </message>
     <message>
         <source>Automatically remove _packed bitstream</source>
-        <translation>自動地移除打包好的位元流(_P)</translation>
+        <translation type="obsolete">自動地移除打包好的位元流(_P)</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation>SIMD</translation>
+        <translation type="obsolete">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation>開啟所有 SIMD</translation>
+        <translation type="obsolete">開啟所有 SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation>開啟 MMX</translation>
+        <translation type="obsolete">開啟 MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation>開啟 MMXEXT</translation>
+        <translation type="obsolete">開啟 MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation>開啟 3DNOW</translation>
+        <translation type="obsolete">開啟 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation>開啟 3DNOWEXT</translation>
+        <translation type="obsolete">開啟 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation>開啟 SSE</translation>
+        <translation type="obsolete">開啟 SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation>開啟 SSE2</translation>
+        <translation type="obsolete">開啟 SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation>開啟 SSE3</translation>
+        <translation type="obsolete">開啟 SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation>開啟 SSSE3</translation>
+        <translation type="obsolete">開啟 SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation>_lavc 訊息串:</translation>
+        <translation type="obsolete">_lavc 訊息串:</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation>多執行緒</translation>
+        <translation type="obsolete">多執行緒</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation>高於一般</translation>
+        <translation type="obsolete">高於一般</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation>低於一般</translation>
+        <translation type="obsolete">低於一般</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation>編碼優先次序(_E):</translation>
+        <translation type="obsolete">編碼優先次序(_E):</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation>索引/拆開打包的優先次序(_I):</translation>
+        <translation type="obsolete">索引/拆開打包的優先次序(_I):</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation>倒帶優先次序(_P):</translation>
+        <translation type="obsolete">倒帶優先次序(_P):</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation>優化</translation>
+        <translation type="obsolete">優化</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation>在 .mp4 對 MP3 使用選擇對象標籤(_U)</translation>
+        <translation type="obsolete">在 .mp4 對 MP3 使用選擇對象標籤(_U)</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation>XVideo (最好)</translation>
+        <translation type="obsolete">XVideo (最好)</translation>
     </message>
     <message>
         <source>SDL (MS Windows GDI)</source>
-        <translation>SDL (MS Windows GDI)</translation>
+        <translation type="obsolete">SDL (MS Windows GDI)</translation>
     </message>
     <message>
         <source>SDL (MS Windows DirectX)</source>
-        <translation>SDL (MS Windows DirectX)</translation>
+        <translation type="obsolete">SDL (MS Windows DirectX)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation>SDL (好)</translation>
+        <translation type="obsolete">SDL (好)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation>視訊顯示(_D):</translation>
+        <translation type="obsolete">視訊顯示(_D):</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation>不顯示任何警告</translation>
+        <translation type="obsolete">不顯示任何警告</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation>只顯示錯誤警告</translation>
+        <translation type="obsolete">只顯示錯誤警告</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation>顯示所有警告</translation>
+        <translation type="obsolete">顯示所有警告</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation>訊息等級(_M):</translation>
+        <translation type="obsolete">訊息等級(_M):</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation>主要</translation>
+        <translation type="obsolete">主要</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation>音量控制(_V):</translation>
+        <translation type="obsolete">音量控制(_V):</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation>沒有降混</translation>
+        <translation type="obsolete">沒有降混</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation>定向邏輯</translation>
+        <translation type="obsolete">定向邏輯</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation>第二代定向邏輯</translation>
+        <translation type="obsolete">第二代定向邏輯</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation>局部倒帶降混(_L):</translation>
+        <translation type="obsolete">局部倒帶降混(_L):</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation>去除環狀色斑(_R)</translation>
+        <translation type="obsolete">去除環狀色斑(_R)</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation>強度(_S):</translation>
+        <translation type="obsolete">強度(_S):</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation>預設的後置處理</translation>
+        <translation type="obsolete">預設的後置處理</translation>
     </message>
     <message>
         <source>Use _Global GlyphSet</source>
-        <translation>使用整體字庫(_G)</translation>
+        <translation type="obsolete">使用整體字庫(_G)</translation>
     </message>
     <message>
         <source>Gl_yphSet:</source>
-        <translation>字庫(_Y):</translation>
+        <translation type="obsolete">字庫(_Y):</translation>
     </message>
     <message>
         <source>Automation</source>
-        <translation>自動化</translation>
+        <translation type="obsolete">自動化</translation>
     </message>
     <message>
         <source>Input</source>
-        <translation>輸入</translation>
+        <translation type="obsolete">輸入</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>輸出</translation>
+        <translation type="obsolete">輸出</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation>音訊</translation>
+        <translation type="obsolete">音訊</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>視訊</translation>
+        <translation type="obsolete">視訊</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation>執行緒</translation>
+        <translation type="obsolete">執行緒</translation>
     </message>
     <message>
         <source>Global GlyphSet</source>
-        <translation>整體字庫</translation>
+        <translation type="obsolete">整體字庫</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation>偏好設定</translation>
+        <translation type="obsolete">偏好設定</translation>
     </message>
     <message>
         <source>_Shrink Factor:</source>
-        <translation>收縮係數(_S):</translation>
+        <translation type="obsolete">收縮係數(_S):</translation>
     </message>
     <message>
         <source>Requant Configuration</source>
-        <translation>重複量化設定</translation>
+        <translation type="obsolete">重複量化設定</translation>
     </message>
     <message>
         <source>Arabic</source>
-        <translation type="unfinished">阿拉伯</translation>
+        <translation type="obsolete">阿拉伯</translation>
     </message>
     <message>
         <source>Baltic</source>
-        <translation type="unfinished">波羅地海</translation>
+        <translation type="obsolete">波羅地海</translation>
     </message>
     <message>
         <source>Chinese Simplified (GB2312)</source>
-        <translation type="unfinished">簡體中文 (GB2312)</translation>
+        <translation type="obsolete">簡體中文 (GB2312)</translation>
     </message>
     <message>
         <source>Chinese Traditional (Big5)</source>
-        <translation type="unfinished">繁體中文 (Big5)</translation>
+        <translation type="obsolete">繁體中文 (Big5)</translation>
     </message>
     <message>
         <source>Cyrillic</source>
-        <translation type="unfinished">斯拉夫字母</translation>
+        <translation type="obsolete">斯拉夫字母</translation>
     </message>
     <message>
         <source>Latin-1 (Western European)</source>
-        <translation type="unfinished">拉丁-1 (西歐)</translation>
+        <translation type="obsolete">拉丁-1 (西歐)</translation>
     </message>
     <message>
         <source>Latin-2 (Central European)</source>
-        <translation type="unfinished">拉丁-2 (中歐)</translation>
+        <translation type="obsolete">拉丁-2 (中歐)</translation>
     </message>
     <message>
         <source>Greek</source>
-        <translation type="unfinished">希臘</translation>
+        <translation type="obsolete">希臘</translation>
     </message>
     <message>
         <source>Hebrew</source>
-        <translation type="unfinished">希伯來</translation>
+        <translation type="obsolete">希伯來</translation>
     </message>
     <message>
         <source>Slovene</source>
-        <translation type="unfinished">斯洛凡尼亞</translation>
+        <translation type="obsolete">斯洛凡尼亞</translation>
     </message>
     <message>
         <source>Turkish</source>
-        <translation type="unfinished">土耳其</translation>
+        <translation type="obsolete">土耳其</translation>
     </message>
     <message>
         <source>UTF-8</source>
-        <translation type="unfinished">UTF-8</translation>
+        <translation type="obsolete">UTF-8</translation>
     </message>
     <message>
         <source>UTF-16</source>
-        <translation type="unfinished">UTF-16</translation>
+        <translation type="obsolete">UTF-16</translation>
     </message>
     <message>
         <source>_Subtitle file:</source>
-        <translation type="unfinished">字幕檔(_S):</translation>
+        <translation type="obsolete">字幕檔(_S):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">選擇字幕檔</translation>
+        <translation type="obsolete">選擇字幕檔</translation>
     </message>
     <message>
         <source>_Font (TTF):</source>
-        <translation type="unfinished">字型 (TT_F):</translation>
+        <translation type="obsolete">字型 (TT_F):</translation>
     </message>
     <message>
         <source>Select TTF file</source>
-        <translation type="unfinished">選擇 TTF 檔</translation>
+        <translation type="obsolete">選擇 TTF 檔</translation>
     </message>
     <message>
         <source>_Encoding:</source>
-        <translation type="unfinished">編碼(_E):</translation>
+        <translation type="obsolete">編碼(_E):</translation>
     </message>
     <message>
         <source>S_elect C_olor</source>
-        <translation type="unfinished">選擇顏色</translation>
+        <translation type="obsolete">選擇顏色</translation>
     </message>
     <message>
         <source>Set Size and _Position</source>
-        <translation type="unfinished">設定大小和位置(_P)</translation>
+        <translation type="obsolete">設定大小和位置(_P)</translation>
     </message>
     <message>
         <source>_Auto split</source>
-        <translation type="unfinished">自動分割(_A)</translation>
+        <translation type="obsolete">自動分割(_A)</translation>
     </message>
     <message>
         <source>_Delay (ms):</source>
-        <translation type="unfinished">延遲 (ms)(_D):</translation>
+        <translation type="obsolete">延遲 (ms)(_D):</translation>
     </message>
     <message>
         <source>Auto (might not work)</source>
-        <translation type="unfinished">自動 (可能無效)</translation>
+        <translation type="obsolete">自動 (可能無效)</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">頂部圖場開始</translation>
+        <translation type="obsolete">頂部圖場開始</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">底部圖場開始</translation>
+        <translation type="obsolete">底部圖場開始</translation>
     </message>
     <message>
         <source>Bottom field (keep top)</source>
-        <translation type="unfinished">底部圖場(保持頂部)</translation>
+        <translation type="obsolete">底部圖場(保持頂部)</translation>
     </message>
     <message>
         <source>Top field (keep bottom)</source>
-        <translation type="unfinished">頂部圖場(保持底部)</translation>
+        <translation type="obsolete">頂部圖場(保持底部)</translation>
     </message>
     <message>
         <source>Cubic interpolation</source>
-        <translation type="unfinished">立方內插法</translation>
+        <translation type="obsolete">立方內插法</translation>
     </message>
     <message>
         <source>Modified ELA</source>
-        <translation type="unfinished">改良的 ELA</translation>
+        <translation type="obsolete">改良的 ELA</translation>
     </message>
     <message>
         <source>Kernel interpolation</source>
-        <translation type="unfinished">內核內插法</translation>
+        <translation type="obsolete">內核內插法</translation>
     </message>
     <message>
         <source>Modified ELA-2</source>
-        <translation type="unfinished">改良的 ELA-2</translation>
+        <translation type="obsolete">改良的 ELA-2</translation>
     </message>
     <message>
         <source>4 fields check</source>
-        <translation type="unfinished">4 圖場檢查</translation>
+        <translation type="obsolete">4 圖場檢查</translation>
     </message>
     <message>
         <source>5 fields check</source>
-        <translation type="unfinished">5 圖場檢查</translation>
+        <translation type="obsolete">5 圖場檢查</translation>
     </message>
     <message>
         <source>4 fields check (no avg)</source>
-        <translation type="unfinished">4 圖場檢查 (沒有 avg)</translation>
+        <translation type="obsolete">4 圖場檢查 (沒有 avg)</translation>
     </message>
     <message>
         <source>5 fields check (no avg)</source>
-        <translation type="unfinished">5 圖場檢查 (沒有 avg)</translation>
+        <translation type="obsolete">5 圖場檢查 (沒有 avg)</translation>
     </message>
     <message>
         <source>No link</source>
-        <translation type="unfinished">沒有連結</translation>
+        <translation type="obsolete">沒有連結</translation>
     </message>
     <message>
         <source>Full link</source>
-        <translation type="unfinished">完整連結</translation>
+        <translation type="obsolete">完整連結</translation>
     </message>
     <message>
         <source>Y to UV</source>
-        <translation type="unfinished">Y 轉成 UV</translation>
+        <translation type="obsolete">Y 轉成 UV</translation>
     </message>
     <message>
         <source>UV to Y</source>
-        <translation type="unfinished">UV 轉成 Y</translation>
+        <translation type="obsolete">UV 轉成 Y</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished">0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation type="obsolete">1</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation type="obsolete">2</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">圖場優先順序(_F):</translation>
+        <translation type="obsolete">圖場優先順序(_F):</translation>
     </message>
     <message>
         <source>_Interpolate:</source>
-        <translation type="unfinished">插入(_I):</translation>
+        <translation type="obsolete">插入(_I):</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">類型(_T):</translation>
+        <translation type="obsolete">類型(_T):</translation>
     </message>
     <message>
         <source>_MntMode:</source>
-        <translation type="unfinished">_Mnt 模式:</translation>
+        <translation type="obsolete">_Mnt 模式:</translation>
     </message>
     <message>
         <source>_Link:</source>
-        <translation type="unfinished">連結(_L):</translation>
+        <translation type="obsolete">連結(_L):</translation>
     </message>
     <message>
         <source>_AP type:</source>
-        <translation type="unfinished">_AP 類型:</translation>
+        <translation type="obsolete">_AP 類型:</translation>
     </message>
     <message>
         <source>Use ch_roma to evalute</source>
-        <translation type="unfinished">使用色度來估算(_R)</translation>
+        <translation type="obsolete">使用色度來估算(_R)</translation>
     </message>
     <message>
         <source>Try _weave</source>
-        <translation type="unfinished">嘗試編排(_W)</translation>
+        <translation type="obsolete">嘗試編排(_W)</translation>
     </message>
     <message>
         <source>_Denoise</source>
-        <translation type="unfinished">減少雜訊(_D)</translation>
+        <translation type="obsolete">減少雜訊(_D)</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="unfinished">銳利(_S)</translation>
+        <translation type="obsolete">銳利(_S)</translation>
     </message>
     <message>
         <source>_Evalute all frames</source>
-        <translation type="unfinished">估算所有的畫格(_E)</translation>
+        <translation type="obsolete">估算所有的畫格(_E)</translation>
     </message>
     <message>
         <source>Motion threshold, l_uma:</source>
-        <translation type="unfinished">動作臨界值，明度(_U):</translation>
+        <translation type="obsolete">動作臨界值，明度(_U):</translation>
     </message>
     <message>
         <source>Motion threshold, c_hroma:</source>
-        <translation type="unfinished">動作臨界值，色度(_H):</translation>
+        <translation type="obsolete">動作臨界值，色度(_H):</translation>
     </message>
     <message>
         <source>Area com_bing threshold:</source>
-        <translation type="unfinished">範圍梳形濾波臨界值(_B):</translation>
+        <translation type="obsolete">範圍梳形濾波臨界值(_B):</translation>
     </message>
     <message>
         <source>Combe_d threshold:</source>
-        <translation type="unfinished">梳形濾波臨界值(_D):</translation>
+        <translation type="obsolete">梳形濾波臨界值(_D):</translation>
     </message>
     <message>
         <source>Artefact _protection threshold:</source>
-        <translation type="unfinished">人工保護臨界值(_P):</translation>
+        <translation type="obsolete">人工保護臨界值(_P):</translation>
     </message>
     <message>
         <source>Debug:</source>
-        <translation type="unfinished">除錯:</translation>
+        <translation type="obsolete">除錯:</translation>
     </message>
     <message>
         <source>_VOB file(s):</source>
-        <translation>_VOB 檔:</translation>
+        <translation type="obsolete">_VOB 檔:</translation>
     </message>
     <message>
         <source>Select VOB file(s)</source>
-        <translation>選擇 VOB 檔</translation>
+        <translation type="obsolete">選擇 VOB 檔</translation>
     </message>
     <message>
         <source>_IFO file:</source>
-        <translation>_IFO 檔:</translation>
+        <translation type="obsolete">_IFO 檔:</translation>
     </message>
     <message>
         <source>Select IFO file</source>
-        <translation>選擇 IFO 檔</translation>
+        <translation type="obsolete">選擇 IFO 檔</translation>
     </message>
     <message>
         <source>VobSub file:</source>
-        <translation>VobSub 檔:</translation>
+        <translation type="obsolete">VobSub 檔:</translation>
     </message>
     <message>
         <source>Select VobSub file</source>
-        <translation>選擇 VobSub 檔</translation>
+        <translation type="obsolete">選擇 VobSub 檔</translation>
     </message>
     <message>
         <source>VOB to VobSub</source>
-        <translation>VOB 轉成 VobSub</translation>
+        <translation type="obsolete">VOB 轉成 VobSub</translation>
     </message>
     <message>
         <source>The selected vobfile does not exist</source>
-        <translation>選擇的 vob 檔不存在</translation>
+        <translation type="obsolete">選擇的 vob 檔不存在</translation>
     </message>
     <message>
         <source>Please select a correct VobSub path/dir</source>
-        <translation>請選擇一個正確的 VobSub 路徑/資料夾</translation>
+        <translation type="obsolete">請選擇一個正確的 VobSub 路徑/資料夾</translation>
     </message>
     <message>
         <source>Width and height cannot be 0</source>
-        <translation type="unfinished">寬和高不能為 0</translation>
+        <translation type="obsolete">寬和高不能為 0</translation>
     </message>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished">寬和高不能為奇數</translation>
+        <translation type="obsolete">寬和高不能為奇數</translation>
     </message>
     <message>
         <source>Something very wrong happened when building joblist.</source>
-        <translation>建立工作列表時發生某些重大錯誤。</translation>
+        <translation type="obsolete">建立工作列表時發生某些重大錯誤。</translation>
     </message>
     <message>
         <source>There are no jobs stored</source>
-        <translation>沒有儲存任何工作</translation>
+        <translation type="obsolete">沒有儲存任何工作</translation>
     </message>
     <message>
         <source>Select ECMAScript to Run</source>
-        <translation>選擇 ECMAScript 來執行</translation>
+        <translation type="obsolete">選擇 ECMAScript 來執行</translation>
     </message>
     <message>
         <source>Obsolete</source>
-        <translation>丟棄</translation>
+        <translation type="obsolete">丟棄</translation>
     </message>
     <message>
         <source>Not coded in this version</source>
-        <translation>沒有編進這個版本</translation>
+        <translation type="obsolete">沒有編進這個版本</translation>
     </message>
     <message>
         <source>Select Video/Image File...</source>
-        <translation>選擇視訊/圖像檔案...</translation>
+        <translation type="obsolete">選擇視訊/圖像檔案...</translation>
     </message>
     <message>
         <source>Select Workbench to Save</source>
-        <translation>選擇工作台進行儲存</translation>
+        <translation type="obsolete">選擇工作台進行儲存</translation>
     </message>
     <message>
         <source>Select Raw File to Save</source>
-        <translation>選擇 RAW 檔進行儲存</translation>
+        <translation type="obsolete">選擇 RAW 檔進行儲存</translation>
     </message>
     <message>
         <source>Select AVI File...</source>
-        <translation>選擇 AVI 檔案...</translation>
+        <translation type="obsolete">選擇 AVI 檔案...</translation>
     </message>
     <message>
         <source>Select AVI File to Append...</source>
-        <translation>選擇 AVI 檔進行添加...</translation>
+        <translation type="obsolete">選擇 AVI 檔進行添加...</translation>
     </message>
     <message>
         <source>Select File to Save Audio</source>
-        <translation>選擇檔案來儲存音訊</translation>
+        <translation type="obsolete">選擇檔案來儲存音訊</translation>
     </message>
     <message>
         <source>Select JPEG Sequence to Save</source>
-        <translation>選擇 JPEG 順序進行儲存</translation>
+        <translation type="obsolete">選擇 JPEG 順序進行儲存</translation>
     </message>
     <message>
         <source>Select BMP to Save</source>
-        <translation>選擇 BMP 進行儲存</translation>
+        <translation type="obsolete">選擇 BMP 進行儲存</translation>
     </message>
     <message>
         <source>Select JPEG to Save</source>
-        <translation>選擇 JPG 進行儲存</translation>
+        <translation type="obsolete">選擇 JPG 進行儲存</translation>
     </message>
     <message>
         <source>Select File to Save</source>
-        <translation>選擇檔案進行儲存</translation>
+        <translation type="obsolete">選擇檔案進行儲存</translation>
     </message>
     <message>
         <source>Select MP3 to Load</source>
-        <translation>選擇 MP3 進行載入</translation>
+        <translation type="obsolete">選擇 MP3 進行載入</translation>
     </message>
     <message>
         <source>Select AC3 to Load</source>
-        <translation>選擇 AC3 進行載入</translation>
+        <translation type="obsolete">選擇 AC3 進行載入</translation>
     </message>
     <message>
         <source>Select WAV to Load</source>
-        <translation>選擇 WAV 進行載入</translation>
+        <translation type="obsolete">選擇 WAV 進行載入</translation>
     </message>
     <message>
         <source>Go to Frame</source>
-        <translation>前往畫格</translation>
+        <translation type="obsolete">前往畫格</translation>
     </message>
     <message>
         <source>_Go to frame:</source>
-        <translation>前往畫格(_G):</translation>
+        <translation type="obsolete">前往畫格(_G):</translation>
     </message>
     <message>
         <source>Out of bounds</source>
-        <translation>超過邊界</translation>
+        <translation type="obsolete">超過邊界</translation>
     </message>
     <message>
         <source>Marker A &gt; B</source>
-        <translation>標記 A &gt; B</translation>
+        <translation type="obsolete">標記 A &gt; B</translation>
     </message>
     <message>
         <source>An invalid frame range has been selected.  Make sure marker A is placed before marker B.</source>
-        <translation>選擇了一個無效的畫格範圍。  確認標記 A 位於標記 B 的前面。</translation>
+        <translation type="obsolete">選擇了一個無效的畫格範圍。  確認標記 A 位於標記 B 的前面。</translation>
     </message>
     <message>
         <source>Cannot copy.</source>
-        <translation>無法複製。</translation>
+        <translation type="obsolete">無法複製。</translation>
     </message>
     <message>
         <source>Something bad happened (II))</source>
-        <translation>不幸的事情發生 (II))</translation>
+        <translation type="obsolete">不幸的事情發生 (II))</translation>
     </message>
     <message>
         <source>Are you sure?</source>
-        <translation>確定嗎?</translation>
+        <translation type="obsolete">確定嗎?</translation>
     </message>
     <message>
         <source>Use custom value</source>
-        <translation>使用自訂值</translation>
+        <translation type="obsolete">使用自訂值</translation>
     </message>
     <message>
         <source>Frame Rate</source>
-        <translation>畫格率</translation>
+        <translation type="obsolete">畫格率</translation>
     </message>
     <message>
         <source>_Frames per second</source>
-        <translation>每秒畫格數(_F)</translation>
+        <translation type="obsolete">每秒畫格數(_F)</translation>
     </message>
     <message>
         <source>PAL - 25 FPS</source>
-        <translation>PAL - 25 FPS</translation>
+        <translation type="obsolete">PAL - 25 FPS</translation>
     </message>
     <message>
         <source>FILM - 24 FPS</source>
-        <translation>FILM - 24 FPS</translation>
+        <translation type="obsolete">FILM - 24 FPS</translation>
     </message>
     <message>
         <source>NTSC - 30 FPS</source>
-        <translation>NTSC - 30 FPS</translation>
+        <translation type="obsolete">NTSC - 30 FPS</translation>
     </message>
     <message>
         <source>Standard Frame Rate:</source>
-        <translation>標準畫格率:</translation>
+        <translation type="obsolete">標準畫格率:</translation>
     </message>
     <message>
         <source>Change Frame Rate</source>
-        <translation>改變畫格率</translation>
+        <translation type="obsolete">改變畫格率</translation>
     </message>
     <message>
         <source>Width is not a multiple of 8</source>
-        <translation>寬不是 8 的倍數</translation>
+        <translation type="obsolete">寬不是 8 的倍數</translation>
     </message>
     <message>
         <source>This will make trouble for AVI files.</source>
-        <translation>這將會對 AVI 檔造成故障。</translation>
+        <translation type="obsolete">這將會對 AVI 檔造成故障。</translation>
     </message>
     <message>
         <source>Rebuild all Keyframes?</source>
-        <translation>重新建立所有的關鍵畫格?</translation>
+        <translation type="obsolete">重新建立所有的關鍵畫格?</translation>
     </message>
     <message>
         <source>Permission error</source>
-        <translation>權限許可錯誤</translation>
+        <translation type="obsolete">權限許可錯誤</translation>
     </message>
     <message>
         <source>&quot;%s&quot; does not exist.</source>
-        <translation>&quot;%s&quot; 不存在。</translation>
+        <translation type="obsolete">&quot;%s&quot; 不存在。</translation>
     </message>
     <message>
         <source>Error opening file</source>
-        <translation>開啟檔案錯誤</translation>
+        <translation type="obsolete">開啟檔案錯誤</translation>
     </message>
     <message>
         <source>Error opening &quot;%s&quot;.</source>
-        <translation>開啟 &quot;%s&quot; 錯誤。</translation>
+        <translation type="obsolete">開啟 &quot;%s&quot; 錯誤。</translation>
     </message>
     <message>
         <source>Cannot open project using the video loader.</source>
-        <translation>使用視訊載入器時無法開啟專案。</translation>
+        <translation type="obsolete">使用視訊載入器時無法開啟專案。</translation>
     </message>
     <message>
         <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation>嘗試 &apos;檔案&apos; -&gt; &apos;載入/執行 專案...&apos;</translation>
+        <translation type="obsolete">嘗試 &apos;檔案&apos; -&gt; &apos;載入/執行 專案...&apos;</translation>
     </message>
     <message>
         <source>Could not open the file</source>
-        <translation>無法開啟此檔案</translation>
+        <translation type="obsolete">無法開啟此檔案</translation>
     </message>
     <message>
         <source>Multiple Audio Tracks</source>
-        <translation>多音軌</translation>
+        <translation type="obsolete">多音軌</translation>
     </message>
     <message>
         <source>The file you just loaded contains several audio tracks.
 Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation>這檔案剛剛載入包含一些音訊軌道。
+        <translation type="obsolete">這檔案剛剛載入包含一些音訊軌道。
 前往 音訊-&gt;主要軌道 來選擇作用中的軌道。</translation>
     </message>
     <message>
         <source>No audio decoder found for this file</source>
-        <translation>沒有找到可對應這個檔案的音訊解碼器</translation>
+        <translation type="obsolete">沒有找到可對應這個檔案的音訊解碼器</translation>
     </message>
     <message>
         <source>Save (A+V) will generate bad AVI. Save audio will work.</source>
-        <translation>儲存 (A+V) 將會生成壞的 AVI。儲存音訊將會進行。</translation>
+        <translation type="obsolete">儲存 (A+V) 將會生成壞的 AVI。儲存音訊將會進行。</translation>
     </message>
     <message>
         <source>Something failed when appending</source>
-        <translation>當添加時某些事情失敗</translation>
+        <translation type="obsolete">當添加時某些事情失敗</translation>
     </message>
     <message>
         <source>Something bad happened (II)</source>
-        <translation>不幸的事情發生 (II)</translation>
+        <translation type="obsolete">不幸的事情發生 (II)</translation>
     </message>
     <message>
         <source>Cannot save the audio in copy mode</source>
-        <translation>無法在複製模式儲存此音訊</translation>
+        <translation type="obsolete">無法在複製模式儲存此音訊</translation>
     </message>
     <message>
         <source>Select WAV PCM as the audio codec, otherwise the audio file would be raw PCM.</source>
-        <translation>選擇 WAV PCM 作為音訊編解碼器，另外音訊檔是未處理過的 PCM。</translation>
+        <translation type="obsolete">選擇 WAV PCM 作為音訊編解碼器，另外音訊檔是未處理過的 PCM。</translation>
     </message>
     <message>
         <source>Saving audio</source>
-        <translation>正在儲存音訊</translation>
+        <translation type="obsolete">正在儲存音訊</translation>
     </message>
     <message>
         <source>Get Frame</source>
-        <translation>取得畫格</translation>
+        <translation type="obsolete">取得畫格</translation>
     </message>
     <message>
         <source>Cannot get this frame to save</source>
-        <translation>無法取得此畫格進行儲存</translation>
+        <translation type="obsolete">無法取得此畫格進行儲存</translation>
     </message>
     <message>
         <source>Mark A &gt; B</source>
-        <translation>標記 A &gt; B</translation>
+        <translation type="obsolete">標記 A &gt; B</translation>
     </message>
     <message>
         <source>Set your markers correctly.</source>
-        <translation>正確地設定你的標記。</translation>
+        <translation type="obsolete">正確地設定你的標記。</translation>
     </message>
     <message>
         <source>Saving as set of jpegs</source>
-        <translation>正在另存為整套 jpeg 檔</translation>
+        <translation type="obsolete">正在另存為整套 jpeg 檔</translation>
     </message>
     <message>
         <source>Cannot decode frame</source>
-        <translation>無法解碼畫格</translation>
+        <translation type="obsolete">無法解碼畫格</translation>
     </message>
     <message>
         <source>Aborting.</source>
-        <translation>正在中止。</translation>
+        <translation type="obsolete">正在中止。</translation>
     </message>
     <message>
         <source>Done</source>
-        <translation>完成</translation>
+        <translation type="obsolete">完成</translation>
     </message>
     <message>
         <source>Saved %d images.</source>
-        <translation>已儲存 %d 個圖像。</translation>
+        <translation type="obsolete">已儲存 %d 個圖像。</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation>錯誤</translation>
+        <translation type="obsolete">錯誤</translation>
     </message>
     <message>
         <source>Could not save all images.</source>
-        <translation>無法儲存所有圖像。</translation>
+        <translation type="obsolete">無法儲存所有圖像。</translation>
     </message>
     <message>
         <source>Saved &quot;%s&quot;.</source>
-        <translation>已儲存 &quot;%s&quot;。</translation>
+        <translation type="obsolete">已儲存 &quot;%s&quot;。</translation>
     </message>
     <message>
         <source>BMP op failed</source>
-        <translation>BMP 運算失敗</translation>
+        <translation type="obsolete">BMP 運算失敗</translation>
     </message>
     <message>
         <source>Saving %s as a BMP file failed.</source>
-        <translation>另存 %s 為 BMP 檔失敗。</translation>
+        <translation type="obsolete">另存 %s 為 BMP 檔失敗。</translation>
     </message>
     <message>
         <source>Failed to open the file</source>
-        <translation>無法開啟此檔案</translation>
+        <translation type="obsolete">無法開啟此檔案</translation>
     </message>
     <message>
         <source>Not a WAV file?</source>
-        <translation>不是一個 WAV 檔?</translation>
+        <translation type="obsolete">不是一個 WAV 檔?</translation>
     </message>
     <message>
         <source>WAV open file failed...</source>
-        <translation>WAV 開啟檔案失敗...</translation>
+        <translation type="obsolete">WAV 開啟檔案失敗...</translation>
     </message>
     <message>
         <source>Cannot decompress audio frame</source>
-        <translation>無法解壓音訊框架</translation>
+        <translation type="obsolete">無法解壓音訊框架</translation>
     </message>
     <message>
         <source>Memory Error</source>
-        <translation>記憶體錯誤</translation>
+        <translation type="obsolete">記憶體錯誤</translation>
     </message>
     <message>
         <source>No frames to encode</source>
-        <translation>沒有畫格進行編碼</translation>
+        <translation type="obsolete">沒有畫格進行編碼</translation>
     </message>
     <message>
         <source>Please check markers. Is &quot;A&gt;&quot; == &quot;&gt;B&quot;?</source>
-        <translation>請檢查標記。 是 &quot;A&gt;&quot; == &quot;&gt;B&quot;?</translation>
+        <translation type="obsolete">請檢查標記。 是 &quot;A&gt;&quot; == &quot;&gt;B&quot;?</translation>
     </message>
     <message>
         <source>Saving raw video stream</source>
-        <translation>儲存待處理的視訊串流</translation>
+        <translation type="obsolete">儲存待處理的視訊串流</translation>
     </message>
     <message>
         <source>Checking video</source>
-        <translation>正在檢查視訊</translation>
+        <translation type="obsolete">正在檢查視訊</translation>
     </message>
     <message>
         <source>No error found</source>
-        <translation>沒有找到錯誤</translation>
+        <translation type="obsolete">沒有找到錯誤</translation>
     </message>
     <message>
         <source>Errors found in %u frames</source>
-        <translation>在 %u 畫格中發現錯誤</translation>
+        <translation type="obsolete">在 %u 畫格中發現錯誤</translation>
     </message>
     <message>
         <source>Cannot decompress the audio stream</source>
-        <translation>無法解壓此音訊串流</translation>
+        <translation type="obsolete">無法解壓此音訊串流</translation>
     </message>
     <message>
         <source>Switch audio codec to Copy.</source>
-        <translation>切換音訊編解碼器為複製。</translation>
+        <translation type="obsolete">切換音訊編解碼器為複製。</translation>
     </message>
     <message>
         <source>Cannot delete the selection.</source>
-        <translation>無法刪除此選取範圍。</translation>
+        <translation type="obsolete">無法刪除此選取範圍。</translation>
     </message>
     <message>
         <source>You can&apos;t remove all frames</source>
-        <translation>你不能移除所有的畫格</translation>
+        <translation type="obsolete">你不能移除所有的畫格</translation>
     </message>
     <message>
         <source>Something bad happened</source>
-        <translation>不幸的事情發生</translation>
+        <translation type="obsolete">不幸的事情發生</translation>
     </message>
     <message>
         <source>Could not get tracks info</source>
-        <translation>無法取得軌道資訊</translation>
+        <translation type="obsolete">無法取得軌道資訊</translation>
     </message>
     <message>
         <source>Take audio from video file</source>
-        <translation>從影片取得音訊</translation>
+        <translation type="obsolete">從影片取得音訊</translation>
     </message>
     <message>
         <source>No audio</source>
-        <translation>沒有音訊</translation>
+        <translation type="obsolete">沒有音訊</translation>
     </message>
     <message>
         <source>External AC3</source>
-        <translation>外部的 AC3</translation>
+        <translation type="obsolete">外部的 AC3</translation>
     </message>
     <message>
         <source>Take audio from external AC3 file</source>
-        <translation>從外部的 AC3 檔取得音訊</translation>
+        <translation type="obsolete">從外部的 AC3 檔取得音訊</translation>
     </message>
     <message>
         <source>External MP3</source>
-        <translation>外部的 MP3</translation>
+        <translation type="obsolete">外部的 MP3</translation>
     </message>
     <message>
         <source>Take audio from external MP3 file</source>
-        <translation>從外部的 MP3 檔取得音訊</translation>
+        <translation type="obsolete">從外部的 MP3 檔取得音訊</translation>
     </message>
     <message>
         <source>External WAV</source>
-        <translation>外部的 WAV</translation>
+        <translation type="obsolete">外部的 WAV</translation>
     </message>
     <message>
         <source>Take audio from external WAV file</source>
-        <translation>從外部的 WAV 檔取得音訊</translation>
+        <translation type="obsolete">從外部的 WAV 檔取得音訊</translation>
     </message>
     <message>
         <source>_Audio source:</source>
-        <translation>音訊來源(_A):</translation>
+        <translation type="obsolete">音訊來源(_A):</translation>
     </message>
     <message>
         <source>_External file:</source>
-        <translation>外部檔案(_E):</translation>
+        <translation type="obsolete">外部檔案(_E):</translation>
     </message>
     <message>
         <source>Select file</source>
-        <translation>選擇檔案</translation>
+        <translation type="obsolete">選擇檔案</translation>
     </message>
     <message>
         <source>Audio track %d (%s/%d channels/%d kbit per s/%d ms shift)</source>
-        <translation>音軌 %d (%s/%d 聲道每 s/%d ms 位移 /%d kbit )</translation>
+        <translation type="obsolete">音軌 %d (%s/%d 聲道每 s/%d ms 位移 /%d kbit )</translation>
     </message>
     <message>
         <source>_Track from video:</source>
-        <translation>影片中的軌道(_T):</translation>
+        <translation type="obsolete">影片中的軌道(_T):</translation>
     </message>
     <message>
         <source>Main Audio Track</source>
-        <translation>主要音軌</translation>
+        <translation type="obsolete">主要音軌</translation>
     </message>
     <message>
         <source>Cannot load</source>
-        <translation>無法載入</translation>
+        <translation type="obsolete">無法載入</translation>
     </message>
     <message>
         <source>The selected audio file does not exist.</source>
-        <translation>選取的音訊檔不存在。</translation>
+        <translation type="obsolete">選取的音訊檔不存在。</translation>
     </message>
     <message>
         <source>Second Audio Track</source>
-        <translation>第二音軌</translation>
+        <translation type="obsolete">第二音軌</translation>
     </message>
     <message>
         <source>Error loading the MP3 file</source>
-        <translation>載入 MP3 檔案錯誤</translation>
+        <translation type="obsolete">載入 MP3 檔案錯誤</translation>
     </message>
     <message>
         <source>Second track loaded</source>
-        <translation>已載入第二軌道</translation>
+        <translation type="obsolete">已載入第二軌道</translation>
     </message>
     <message>
         <source>Error loading the AC3 file</source>
-        <translation>載入 AC3 檔案錯誤</translation>
+        <translation type="obsolete">載入 AC3 檔案錯誤</translation>
     </message>
     <message>
         <source>Error loading the WAV file</source>
-        <translation>載入 WAV 檔案錯誤</translation>
+        <translation type="obsolete">載入 WAV 檔案錯誤</translation>
     </message>
     <message>
         <source>Saving failed</source>
-        <translation>儲存失敗</translation>
+        <translation type="obsolete">儲存失敗</translation>
     </message>
     <message>
         <source>Saving the job failed. Maybe you have permission issue with ~/.avidemux</source>
-        <translation>儲存工作失敗。可能你沒有權限寫入 ~/.avidemux</translation>
+        <translation type="obsolete">儲存工作失敗。可能你沒有權限寫入 ~/.avidemux</translation>
     </message>
     <message>
         <source>File %s has been successfully saved.</source>
-        <translation>檔案 %s 已經成功地儲存。</translation>
+        <translation type="obsolete">檔案 %s 已經成功地儲存。</translation>
     </message>
     <message>
         <source>File %s was NOT saved correctly.</source>
-        <translation>檔案 %s 儲存不正確。</translation>
+        <translation type="obsolete">檔案 %s 儲存不正確。</translation>
     </message>
     <message>
         <source>AvsProxy</source>
-        <translation>AvsProxy</translation>
+        <translation type="obsolete">AvsProxy</translation>
     </message>
     <message>
         <source>Failed to connect to avsproxy.
 Is it running ?</source>
-        <translation>無法連線到 avsproxy。
+        <translation type="obsolete">無法連線到 avsproxy。
 要繼續執行嗎?</translation>
     </message>
     <message>
         <source>avsproxy</source>
-        <translation>avsproxy</translation>
+        <translation type="obsolete">avsproxy</translation>
     </message>
     <message>
         <source>Frame type:</source>
-        <translation>畫格類型:</translation>
+        <translation type="obsolete">畫格類型:</translation>
     </message>
     <message>
         <source>Frame size:</source>
-        <translation>畫格大小:</translation>
+        <translation type="obsolete">畫格大小:</translation>
     </message>
     <message>
         <source>Frame Hex Dump</source>
-        <translation>畫格二位元轉出(_F)</translation>
+        <translation type="obsolete">畫格二位元轉出(_F)</translation>
     </message>
     <message>
         <source>Decompressing error</source>
-        <translation>解壓錯誤</translation>
+        <translation type="obsolete">解壓錯誤</translation>
     </message>
     <message>
         <source>Cannot decode next frame.</source>
-        <translation>無法解碼下一個畫格。</translation>
+        <translation type="obsolete">無法解碼下一個畫格。</translation>
     </message>
     <message>
         <source>Cannot decode keyframe.</source>
-        <translation>無法解碼關鍵畫格。</translation>
+        <translation type="obsolete">無法解碼關鍵畫格。</translation>
     </message>
     <message>
         <source>Seeking</source>
-        <translation>搜尋中</translation>
+        <translation type="obsolete">搜尋中</translation>
     </message>
     <message>
         <source>Finding black frames</source>
-        <translation>正在尋找黑畫面</translation>
+        <translation type="obsolete">正在尋找黑畫面</translation>
     </message>
     <message>
         <source>Cannot decode the frame.</source>
-        <translation>無法解碼此畫格。</translation>
+        <translation type="obsolete">無法解碼此畫格。</translation>
     </message>
     <message>
         <source>Dual audio can only be used in copy mode</source>
-        <translation>雙語只可以使用於複製模式</translation>
+        <translation type="obsolete">雙語只可以使用於複製模式</translation>
     </message>
     <message>
         <source>Select Copy as the video codec.</source>
-        <translation>選擇複製作為視訊編解碼器。</translation>
+        <translation type="obsolete">選擇複製作為視訊編解碼器。</translation>
     </message>
     <message>
         <source>Incompatible output format</source>
-        <translation>不相容的輸出格式</translation>
+        <translation type="obsolete">不相容的輸出格式</translation>
     </message>
     <message>
         <source>There is no second track</source>
-        <translation>沒有第二軌道</translation>
+        <translation type="obsolete">沒有第二軌道</translation>
     </message>
     <message>
         <source>Select a second audio track in the Audio menu.</source>
-        <translation>在音訊選單中選擇一的第二音軌。</translation>
+        <translation type="obsolete">在音訊選單中選擇一的第二音軌。</translation>
     </message>
     <message>
         <source>Select dual audio AVI to write</source>
-        <translation>選擇雙語 AVI 進行寫入</translation>
+        <translation type="obsolete">選擇雙語 AVI 進行寫入</translation>
     </message>
     <message>
         <source>This cannot have packed VOP</source>
-        <translation>這個無法包含打包好的 VOP</translation>
+        <translation type="obsolete">這個無法包含打包好的 VOP</translation>
     </message>
     <message>
         <source>It is not MPEG-4 video. File will not be saved.</source>
-        <translation>這不是 MPEG-4 影片。無法儲存檔案。</translation>
+        <translation type="obsolete">這不是 MPEG-4 影片。無法儲存檔案。</translation>
     </message>
     <message>
         <source>You may need smart copy.
 Enable it?</source>
-        <translation>您可能需要智慧型複製。(new line)
+        <translation type="obsolete">您可能需要智慧型複製。(new line)
 啟用它嗎?</translation>
     </message>
     <message>
         <source>Smart Copy</source>
-        <translation>智慧型複製</translation>
+        <translation type="obsolete">智慧型複製</translation>
     </message>
     <message>
         <source>_Q factor (set 4):</source>
-        <translation>_Q 係數 (設定為 4):</translation>
+        <translation type="obsolete">_Q 係數 (設定為 4):</translation>
     </message>
     <message>
         <source>Trouble initializing audio device</source>
-        <translation>音訊裝置初始化時發生問題</translation>
+        <translation type="obsolete">音訊裝置初始化時發生問題</translation>
     </message>
     <message>
         <source>[BuildChain] Encoder initialization failed</source>
-        <translation>[建立鏈] 編碼器初始化失敗</translation>
+        <translation type="obsolete">[建立鏈] 編碼器初始化失敗</translation>
     </message>
     <message>
         <source>Internal error finding codec</source>
-        <translation>尋找編解碼器時內部發生錯誤</translation>
+        <translation type="obsolete">尋找編解碼器時內部發生錯誤</translation>
     </message>
     <message>
         <source>AMR-WB</source>
-        <translation>AMR-WB</translation>
+        <translation type="obsolete">AMR-WB</translation>
     </message>
     <message>
         <source>Reuse the existing log file?</source>
-        <translation>重複使用現有的日誌檔?</translation>
+        <translation type="obsolete">重複使用現有的日誌檔?</translation>
     </message>
     <message>
         <source>Audio Plugins</source>
-        <translation>音訊外掛模組</translation>
+        <translation type="obsolete">音訊外掛模組</translation>
     </message>
     <message>
         <source>Video Encoder Plugins</source>
-        <translation>視訊編碼器外掛模組</translation>
+        <translation type="obsolete">視訊編碼器外掛模組</translation>
     </message>
     <message>
         <source>Video Encoder</source>
-        <translation>視訊編碼器</translation>
+        <translation type="obsolete">視訊編碼器</translation>
     </message>
     <message>
         <source>Audio Device Plugins</source>
-        <translation>音訊裝置外掛模組</translation>
+        <translation type="obsolete">音訊裝置外掛模組</translation>
     </message>
     <message>
         <source>Audio Device</source>
-        <translation>音訊裝置</translation>
+        <translation type="obsolete">音訊裝置</translation>
     </message>
     <message>
         <source>Audio Encoder Plugins</source>
-        <translation>音訊編碼器外掛模組</translation>
+        <translation type="obsolete">音訊編碼器外掛模組</translation>
     </message>
     <message>
         <source>Audio Encoders</source>
-        <translation>音訊編碼器</translation>
+        <translation type="obsolete">音訊編碼器</translation>
     </message>
     <message>
         <source>Plugins Info</source>
-        <translation>外掛模組資訊</translation>
+        <translation type="obsolete">外掛模組資訊</translation>
     </message>
     <message>
         <source>_AudioDevice</source>
-        <translation>音訊裝置(_A)</translation>
+        <translation type="obsolete">音訊裝置(_A)</translation>
     </message>
     <message>
         <source>Audio filters cannot be applied in Copy mode</source>
-        <translation>在複製模式無法套用音訊濾鏡</translation>
+        <translation type="obsolete">在複製模式無法套用音訊濾鏡</translation>
     </message>
     <message>
         <source>To apply filters the audio must be transcoded.</source>
-        <translation>音訊必須轉碼才能套用濾鏡。</translation>
+        <translation type="obsolete">音訊必須轉碼才能套用濾鏡。</translation>
     </message>
     <message>
         <source>Video filters cannot be applied in Copy mode</source>
-        <translation>在複製模式無法套用視訊濾鏡</translation>
+        <translation type="obsolete">在複製模式無法套用視訊濾鏡</translation>
     </message>
     <message>
         <source>To apply filters the video must be transcoded.</source>
-        <translation>視訊必須轉碼才能套用濾鏡。</translation>
+        <translation type="obsolete">視訊必須轉碼才能套用濾鏡。</translation>
     </message>
     <message>
         <source>Not activated, make sure number of channels and bitrate are compatible with encoder!</source>
-        <translation>沒有作用，請確認聲道數和位元率能與編碼器相容!</translation>
-    </message>
-    <message>
-        <source>Cannot cut.</source>
-        <translatorcomment>無法剪下。</translatorcomment>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For SVCD, audio must be 44.1 kHz MP2.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Aften Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TwoLame Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add pure black border(s).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Picture resizer ported from Avisynth (C Version, slow).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Avisynth script filter (avsfilter), ver 0.7a(internal)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use avisynth script as video filter.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">沒有作用，請確認聲道數和位元率能與編碼器相容!</translation>
     </message>
     <message>
         <source>Blend Removal</source>
-        <translation type="unfinished">去除混合</translation>
-    </message>
-    <message>
-        <source>Try to remove blending.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma noise reduction filter by MarcFD/Tritical..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep chroma U only.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep chroma V only.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Color Curve Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Color adjustment by color curves in YUV color space.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>DG Bob</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donald Graft Bob.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Apply blind postprocessing..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Horizontal Stack Field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Put both fields side by side.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Separate Fields</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>mosaic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep top fields. Gives a half height picture..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep bottom fields. Gives a half height picture..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TIsophote</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Port of TIsophote by tritical .</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unblend by Bach</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%u minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%u minute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%u second</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%u seconds</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">去除混合</translation>
     </message>
 </context>
 <context>
     <name>ADMImage</name>
     <message>
         <source>Memory error</source>
-        <translation>記憶體錯誤</translation>
+        <translation type="obsolete">記憶體錯誤</translation>
     </message>
     <message>
         <source>Error converting to BMP</source>
-        <translation>無法轉成 BMP</translation>
+        <translation type="obsolete">無法轉成 BMP</translation>
     </message>
     <message>
         <source>Something bad happened</source>
-        <translation>發生錯誤</translation>
+        <translation type="obsolete">發生錯誤</translation>
     </message>
     <message>
         <source>Cannot encode the frame</source>
-        <translation>此畫格無法編碼</translation>
+        <translation type="obsolete">此畫格無法編碼</translation>
     </message>
     <message>
         <source>File error</source>
-        <translation>檔案錯誤</translation>
+        <translation type="obsolete">檔案錯誤</translation>
     </message>
     <message>
         <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation>無法開啟 &quot;%s&quot; 進行寫入。</translation>
-    </message>
-    <message>
-        <source>Cannot initialise JPEG encoder</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoAVSfilter</name>
-    <message>
-        <source>_loader file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_avs file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_pipe timeout:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AvsFilter config</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">無法開啟 &quot;%s&quot; 進行寫入。</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoComputeAverage</name>
     <message>
         <source>_Start Frame (first frame # to include in average):</source>
-        <translation>起始畫格(在平均值包含第一個畫格 #)(_S):</translation>
+        <translation type="obsolete">起始畫格(在平均值包含第一個畫格 #)(_S):</translation>
     </message>
     <message>
         <source>_End Frame (last frame # to include), -1 = last:</source>
-        <translation>結束畫格 (包含最後一個畫格 #), -1 = 最後(_E):</translation>
+        <translation type="obsolete">結束畫格 (包含最後一個畫格 #), -1 = 最後(_E):</translation>
     </message>
     <message>
         <source>_Output File:</source>
-        <translation>輸出檔案(_O):</translation>
+        <translation type="obsolete">輸出檔案(_O):</translation>
     </message>
     <message>
         <source>Select output file</source>
-        <translation>選擇輸出檔案</translation>
+        <translation type="obsolete">選擇輸出檔案</translation>
     </message>
     <message>
         <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
-        <translation>偏向 (僅用於顯示；使用 0 於平均值，128 於畫格減去平均值)(_B):</translation>
+        <translation type="obsolete">偏向 (僅用於顯示；使用 0 於平均值，128 於畫格減去平均值)(_B):</translation>
     </message>
     <message>
         <source>Current frame minus average so far</source>
-        <translation>目前為止當前畫格的負差平均值</translation>
+        <translation type="obsolete">目前為止當前畫格的負差平均值</translation>
     </message>
     <message>
         <source>Average so far</source>
-        <translation>目前為止的平均值</translation>
+        <translation type="obsolete">目前為止的平均值</translation>
     </message>
     <message>
         <source>Display nothing (fast for batch processing)</source>
-        <translation>無任何顯示 (對批次處理而言是快速的)</translation>
+        <translation type="obsolete">無任何顯示 (對批次處理而言是快速的)</translation>
     </message>
     <message>
         <source>Display _Mode:</source>
-        <translation>顯示模式(_M):</translation>
+        <translation type="obsolete">顯示模式(_M):</translation>
     </message>
     <message>
         <source>ComputeAverage</source>
-        <translation>計算平均值</translation>
+        <translation type="obsolete">計算平均值</translation>
     </message>
 </context>
 <context>
@@ -2910,71 +2750,71 @@ Enable it?</source>
     <name>ADMVideoEraser</name>
     <message>
         <source>Erase</source>
-        <translation>擦除</translation>
+        <translation type="obsolete">擦除</translation>
     </message>
     <message>
         <source>Un-Erase</source>
-        <translation>未擦除</translation>
+        <translation type="obsolete">未擦除</translation>
     </message>
     <message>
         <source>1x1</source>
-        <translation>1x1</translation>
+        <translation type="obsolete">1x1</translation>
     </message>
     <message>
         <source>3x3</source>
-        <translation>3x3</translation>
+        <translation type="obsolete">3x3</translation>
     </message>
     <message>
         <source>5x5</source>
-        <translation>5x5</translation>
+        <translation type="obsolete">5x5</translation>
     </message>
     <message>
         <source>7x7</source>
-        <translation>7x7</translation>
+        <translation type="obsolete">7x7</translation>
     </message>
     <message>
         <source>9x9</source>
-        <translation>9x9</translation>
+        <translation type="obsolete">9x9</translation>
     </message>
     <message>
         <source>11x11</source>
-        <translation>11x11</translation>
+        <translation type="obsolete">11x11</translation>
     </message>
     <message>
         <source>15x15</source>
-        <translation>15x15</translation>
+        <translation type="obsolete">15x15</translation>
     </message>
     <message>
         <source>21x21</source>
-        <translation>21x21</translation>
+        <translation type="obsolete">21x21</translation>
     </message>
     <message>
         <source>Brush _Mode:</source>
-        <translation>筆刷模式(_M):</translation>
+        <translation type="obsolete">筆刷模式(_M):</translation>
     </message>
     <message>
         <source>Brush _Size:</source>
-        <translation>筆刷大小(_S):</translation>
+        <translation type="obsolete">筆刷大小(_S):</translation>
     </message>
     <message>
         <source>Output &quot;_Color&quot; for all masked pixels:</source>
-        <translation>對所有被遮罩的像素輸出 &quot;顏色&quot; (_C):</translation>
+        <translation type="obsolete">對所有被遮罩的像素輸出 &quot;顏色&quot; (_C):</translation>
     </message>
     <message>
         <source>Eraser _Data File:</source>
-        <translation>擦除器資料檔(_D):</translation>
+        <translation type="obsolete">擦除器資料檔(_D):</translation>
     </message>
     <message>
         <source>Select data file</source>
-        <translation>選擇資料檔</translation>
+        <translation type="obsolete">選擇資料檔</translation>
     </message>
     <message>
         <source>_Debugging settings (bits):</source>
-        <translation>除錯設定(bits)(_D):</translation>
+        <translation type="obsolete">除錯設定(bits)(_D):</translation>
     </message>
     <message>
         <source>Eraser Configuration</source>
-        <translation>擦除器設定</translation>
+        <translation type="obsolete">擦除器設定</translation>
     </message>
 </context>
 <context>
@@ -3023,140 +2863,136 @@ Enable it?</source>
     <name>ADMVideoKernelDeint</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">圖場優先次序(_F):</translation>
+        <translation type="obsolete">圖場優先次序(_F):</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">越小表示更多的去交錯</translation>
+        <translation type="obsolete">越小表示更多的去交錯</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="unfinished">銳利(_S)</translation>
+        <translation type="obsolete">銳利(_S)</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="unfinished">清晰化引擎(_S):</translation>
+        <translation type="obsolete">清晰化引擎(_S):</translation>
     </message>
     <message>
         <source>T_woway</source>
-        <translation type="unfinished">雙向(_W)</translation>
+        <translation type="obsolete">雙向(_W)</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="unfinished">推算較好的 (最好不使用它)</translation>
+        <translation type="obsolete">推算較好的 (最好不使用它)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="unfinished">對應(_M)</translation>
+        <translation type="obsolete">對應(_M)</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="unfinished">顯示交錯的範圍(測試用！)</translation>
+        <translation type="obsolete">顯示交錯的範圍(測試用！)</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoLargeMedian</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">處理明度(_P)</translation>
+        <translation type="obsolete">處理明度(_P)</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
+        <translation type="obsolete">處理明度平面</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">處理色度(_R)</translation>
+        <translation type="obsolete">處理色度(_R)</translation>
     </message>
     <message>
         <source>Large Median 5x5</source>
-        <translation type="unfinished">巨大中位數 5x5</translation>
+        <translation type="obsolete">巨大中位數 5x5</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoLavPPDeint</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Linear blend</source>
-        <translation type="unfinished">線性混合</translation>
+        <translation type="obsolete">線性混合</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="unfinished">線性插值</translation>
+        <translation type="obsolete">線性插值</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="unfinished">立方插值</translation>
+        <translation type="obsolete">立方插值</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="unfinished">中位插值</translation>
+        <translation type="obsolete">中位插值</translation>
     </message>
     <message>
         <source>FFmpeg deint</source>
-        <translation type="unfinished">FFmpeg deint</translation>
+        <translation type="obsolete">FFmpeg deint</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="unfinished">去交錯(_D):</translation>
+        <translation type="obsolete">去交錯(_D):</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="unfinished">自動色階(_A)</translation>
+        <translation type="obsolete">自動色階(_A)</translation>
     </message>
     <message>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">libavcodec 去交錯器</translation>
-    </message>
-    <message>
-        <source>Lowpass5 deint</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">libavcodec 去交錯器</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoLogo</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">圖標(_L)(jpg 檔):</translation>
+        <translation type="obsolete">圖標(_L)(jpg 檔):</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">選擇 JPEG 檔案</translation>
+        <translation type="obsolete">選擇 JPEG 檔案</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">_X 位置:</translation>
+        <translation type="obsolete">_X 位置:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">_Y 位置:</translation>
+        <translation type="obsolete">_Y 位置:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alpha:</translation>
+        <translation type="obsolete">_Alpha:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">圖標</translation>
+        <translation type="obsolete">圖標</translation>
     </message>
 </context>
 <context>
@@ -3171,11 +3007,19 @@ Enable it?</source>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">時間強度(_T):</translation>
+        <translation type="obsolete">時間強度(_T):</translation>
     </message>
     <message>
         <source>MPlayer hqdn3d</source>
-        <translation type="unfinished">MPlayer hqdn3d</translation>
+        <translation type="obsolete">MPlayer hqdn3d</translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -3254,117 +3098,117 @@ Enable it?</source>
     <name>ADMVideoParticle</name>
     <message>
         <source>New format, preferred, good for Tracker3D</source>
-        <translation>新格式，對 Tracker3D 來說是首選</translation>
+        <translation type="obsolete">新格式，對 Tracker3D 來說是首選</translation>
     </message>
     <message>
         <source>DG@UWA format (includes shape info &amp; bounding box)</source>
-        <translation>DG@UWA 格式 (包含形狀資訊 &amp; 範圍邊界)</translation>
+        <translation type="obsolete">DG@UWA 格式 (包含形狀資訊 &amp; 範圍邊界)</translation>
     </message>
     <message>
         <source>AB@ODU format (includes shape info)</source>
-        <translation>AB@ODU 格式 (包含形狀資訊)</translation>
+        <translation type="obsolete">AB@ODU 格式 (包含形狀資訊)</translation>
     </message>
     <message>
         <source>Old format that Tracker3D can&apos;t read directly</source>
-        <translation>舊格式無法正確讀取 Tracker3D</translation>
+        <translation type="obsolete">舊格式無法正確讀取 Tracker3D</translation>
     </message>
     <message>
         <source>Output _Format:</source>
-        <translation>輸出格式(_F):</translation>
+        <translation type="obsolete">輸出格式(_F):</translation>
     </message>
     <message>
         <source>Mi_nimum area for a particle to be detected:</source>
-        <translation>偵測一個區段的最小範圍(_N):</translation>
+        <translation type="obsolete">偵測一個區段的最小範圍(_N):</translation>
     </message>
     <message>
         <source>Ma_ximum area for a particle to be detected:</source>
-        <translation>偵測一個區段的最大範圍(_X):</translation>
+        <translation type="obsolete">偵測一個區段的最大範圍(_X):</translation>
     </message>
     <message>
         <source>_Left side crop (ignore particles in):</source>
-        <translation>剪裁左側 (忽略在區段中的)(_L):</translation>
+        <translation type="obsolete">剪裁左側 (忽略在區段中的)(_L):</translation>
     </message>
     <message>
         <source>_Right side crop (ignore particles in):</source>
-        <translation>剪裁右側 (忽略在區段中的)(_R):</translation>
+        <translation type="obsolete">剪裁右側 (忽略在區段中的)(_R):</translation>
     </message>
     <message>
         <source>_Top crop (ignore particles in):</source>
-        <translation>剪裁頂部 (忽略在區段中的)(_T):</translation>
+        <translation type="obsolete">剪裁頂部 (忽略在區段中的)(_T):</translation>
     </message>
     <message>
         <source>_Bottom crop (ignore particles in):</source>
-        <translation>剪裁底部 (忽略在區段中的)(_B):</translation>
+        <translation type="obsolete">剪裁底部 (忽略在區段中的)(_B):</translation>
     </message>
     <message>
         <source>_Output File:</source>
-        <translation>輸出檔案(_O):</translation>
+        <translation type="obsolete">輸出檔案(_O):</translation>
     </message>
     <message>
         <source>Select file</source>
-        <translation>選擇檔案</translation>
+        <translation type="obsolete">選擇檔案</translation>
     </message>
     <message>
         <source>_Camera number:</source>
-        <translation>攝影機數目(_C):</translation>
+        <translation type="obsolete">攝影機數目(_C):</translation>
     </message>
     <message>
         <source>_Debugging settings (bits):</source>
-        <translation>除錯設定(_D)(位元):</translation>
+        <translation type="obsolete">除錯設定(_D)(位元):</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoResampleFPS</name>
     <message>
         <source>_New frame rate:</source>
-        <translation type="unfinished">新畫格率(_N):</translation>
+        <translation type="obsolete">新畫格率(_N):</translation>
     </message>
     <message>
         <source>_Blend</source>
-        <translation type="unfinished">混合(_B)</translation>
+        <translation type="obsolete">混合(_B)</translation>
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="unfinished">重複取樣 fps</translation>
+        <translation type="obsolete">重複取樣 fps</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoRotate</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="unfinished">90 度</translation>
+        <translation type="obsolete">90 度</translation>
     </message>
     <message>
         <source>90Â°</source>
-        <translation type="unfinished">90Â°</translation>
+        <translation type="obsolete">90Â°</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="unfinished">180 度</translation>
+        <translation type="obsolete">180 度</translation>
     </message>
     <message>
         <source>180Â°</source>
-        <translation type="unfinished">180Â°</translation>
+        <translation type="obsolete">180Â°</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="unfinished">270 度</translation>
+        <translation type="obsolete">270 度</translation>
     </message>
     <message>
         <source>270Â°</source>
-        <translation type="unfinished">270Â°</translation>
+        <translation type="obsolete">270Â°</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="unfinished">角度(_A):</translation>
+        <translation type="obsolete">角度(_A):</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">旋轉</translation>
+        <translation type="obsolete">旋轉</translation>
     </message>
 </context>
 <context>
@@ -3382,31 +3226,31 @@ Enable it?</source>
     <name>ADMVideoSubASS</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">字幕檔(A_SS/SSA):</translation>
+        <translation type="obsolete">字幕檔(A_SS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">選擇字幕檔</translation>
+        <translation type="obsolete">選擇字幕檔</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">行距(_L):</translation>
+        <translation type="obsolete">行距(_L):</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">字體縮放(_F):</translation>
+        <translation type="obsolete">字體縮放(_F):</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">底部邊界(_M)</translation>
+        <translation type="obsolete">底部邊界(_M)</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation type="obsolete">ASS</translation>
     </message>
 </context>
 <context>
@@ -3424,143 +3268,143 @@ Enable it?</source>
     <name>ADMVideoSwissArmyKnife</name>
     <message>
         <source>P&apos; = A</source>
-        <translation>P&apos; = A</translation>
+        <translation type="obsolete">P&apos; = A</translation>
     </message>
     <message>
         <source>P&apos; = P</source>
-        <translation>P&apos; = P</translation>
+        <translation type="obsolete">P&apos; = P</translation>
     </message>
     <message>
         <source>P&apos; = P - A</source>
-        <translation>P&apos; = P - A</translation>
+        <translation type="obsolete">P&apos; = P - A</translation>
     </message>
     <message>
         <source>P&apos; = A - P</source>
-        <translation>P&apos; = A - P</translation>
+        <translation type="obsolete">P&apos; = A - P</translation>
     </message>
     <message>
         <source>P&apos; = P + A</source>
-        <translation>P&apos; = P + A</translation>
+        <translation type="obsolete">P&apos; = P + A</translation>
     </message>
     <message>
         <source>P&apos; = P * A</source>
-        <translation>P&apos; = P * A</translation>
+        <translation type="obsolete">P&apos; = P * A</translation>
     </message>
     <message>
         <source>P&apos; = P / A</source>
-        <translation>P&apos; = P / A</translation>
+        <translation type="obsolete">P&apos; = P / A</translation>
     </message>
     <message>
         <source>P&apos; = A / P</source>
-        <translation>P&apos; = A / P</translation>
+        <translation type="obsolete">P&apos; = A / P</translation>
     </message>
     <message>
         <source>P&apos; = min (P, A)</source>
-        <translation>P&apos; = 最小 (P, A)</translation>
+        <translation type="obsolete">P&apos; = 最小 (P, A)</translation>
     </message>
     <message>
         <source>P&apos; = max (P, A)</source>
-        <translation>P&apos; = 最大 (P, A)</translation>
+        <translation type="obsolete">P&apos; = 最大 (P, A)</translation>
     </message>
     <message>
         <source>A = convolve(P); Load convolution kernel from file</source>
-        <translation>A = 卷積(P); 從檔案載入卷積內核</translation>
+        <translation type="obsolete">A = 卷積(P); 從檔案載入卷積內核</translation>
     </message>
     <message>
         <source>A = pixel from image file as float; Load image from file</source>
-        <translation>A = 圖像檔的像素作為浮動的; 從檔案載入圖像</translation>
+        <translation type="obsolete">A = 圖像檔的像素作為浮動的; 從檔案載入圖像</translation>
     </message>
     <message>
         <source>A = pixel from image file as integer; Load image from file</source>
-        <translation>A = 圖像檔的像素作為整數; 從檔案載入圖像</translation>
+        <translation type="obsolete">A = 圖像檔的像素作為整數; 從檔案載入圖像</translation>
     </message>
     <message>
         <source>A = floating point constant value</source>
-        <translation>A = 浮動點固定值</translation>
+        <translation type="obsolete">A = 浮動點固定值</translation>
     </message>
     <message>
         <source>A = rolling average of pixel: A = A*(1-alpha)+(P*alpha)</source>
-        <translation>A = 像素的可變動範圍: A = A*(1-alpha)+(P*alpha)</translation>
+        <translation type="obsolete">A = 像素的可變動範圍: A = A*(1-alpha)+(P*alpha)</translation>
     </message>
     <message>
         <source>Select _Operation on each pixel P and input A:</source>
-        <translation>選擇在每個像素 P 的操作和輸入 A(_O):</translation>
+        <translation type="obsolete">選擇在每個像素 P 的操作和輸入 A(_O):</translation>
     </message>
     <message>
         <source>Input _Type:</source>
-        <translation>輸入類型(_T):</translation>
+        <translation type="obsolete">輸入類型(_T):</translation>
     </message>
     <message>
         <source>Input _File (image or convolution kernel):</source>
-        <translation>輸入檔 (圖像或卷積內核)(_F):</translation>
+        <translation type="obsolete">輸入檔 (圖像或卷積內核)(_F):</translation>
     </message>
     <message>
         <source>Select file</source>
-        <translation>選擇檔案</translation>
+        <translation type="obsolete">選擇檔案</translation>
     </message>
     <message>
         <source>_Load Bias (added to each pixel
 in file image when loaded):</source>
-        <translation>載入偏向(當載入時
+        <translation type="obsolete">載入偏向(當載入時
 在檔案映像增加至每個像素)(_L):</translation>
     </message>
     <message>
         <source>Load _Multiplier (each pixel in
 file image mult. by this when loaded):</source>
-        <translation>載入乘法器 (當載入時
+        <translation type="obsolete">載入乘法器 (當載入時
 在檔案圖像的每像素靠這個倍增)(_M):</translation>
     </message>
     <message>
         <source>Input _Constant:</source>
-        <translation>輸入固定值(_C):</translation>
+        <translation type="obsolete">輸入固定值(_C):</translation>
     </message>
     <message>
         <source>Memory constant _alpha
 (where A = (1-alpha)*A + alpha*(curr_frame + lookahead)):</source>
-        <translation>記憶體固定 _alpha 的分母
+        <translation type="obsolete">記憶體固定 _alpha 的分母
 (這裡 A = (1-alpha)*A + alpha*(目前畫格+預先看見的)):</translation>
     </message>
     <message>
         <source>Look ahead _N frames:</source>
-        <translation>預見的 _N 畫格:</translation>
+        <translation type="obsolete">預見的 _N 畫格:</translation>
     </message>
     <message>
         <source>Init _Start Frame (first frame # to use for head start):</source>
-        <translation>初始化起始畫格 (第一個畫格 # 使用在開端)(_S):</translation>
+        <translation type="obsolete">初始化起始畫格 (第一個畫格 # 使用在開端)(_S):</translation>
     </message>
     <message>
         <source>Init _End Frame (last frame # to use for head start):</source>
-        <translation>初始化結束畫格 (最後畫格 # 使用在開端)(_E):</translation>
+        <translation type="obsolete">初始化結束畫格 (最後畫格 # 使用在開端)(_E):</translation>
     </message>
     <message>
         <source>Init By _Rolling (compute head start using a rolling average rather than a straight average)</source>
-        <translation>依據變動初始化(計算開端使用一個波動平均數更精確於直接平均數)(_R)</translation>
+        <translation type="obsolete">依據變動初始化(計算開端使用一個波動平均數更精確於直接平均數)(_R)</translation>
     </message>
     <message>
         <source>_Bias (will be added to result):</source>
-        <translation>偏向 (將會加到結果)(_B):</translation>
+        <translation type="obsolete">偏向 (將會加到結果)(_B):</translation>
     </message>
     <message>
         <source>_Result Bias (added to each result pixel):</source>
-        <translation>產生偏向 (將會加到結果)(_R):</translation>
+        <translation type="obsolete">產生偏向 (將會加到結果)(_R):</translation>
     </message>
     <message>
         <source>Result _Multiplier (each result pixel
 multiplied by this):</source>
-        <translation>乘法器 (當載入時
+        <translation type="obsolete">乘法器 (當載入時
 在檔案圖像的每像素靠這個倍增)(_M):</translation>
     </message>
     <message>
         <source>_Histogram every N frames (0 to disable):</source>
-        <translation>每 N 個畫格的分佈圖 (0 為停用)(_H):</translation>
+        <translation type="obsolete">每 N 個畫格的分佈圖 (0 為停用)(_H):</translation>
     </message>
     <message>
         <source>_Debugging settings (bits):</source>
-        <translation>除錯設定 (bits)(_D):</translation>
+        <translation type="obsolete">除錯設定 (bits)(_D):</translation>
     </message>
     <message>
         <source>Swiss Army Knife Configuration</source>
-        <translation>瑞士軍刀設定</translation>
+        <translation type="obsolete">瑞士軍刀設定</translation>
     </message>
 </context>
 <context>
@@ -3614,124 +3458,124 @@ multiplied by this):</source>
     <name>ADMVideoThreshold</name>
     <message>
         <source>Mi_nimum value to be in-range:</source>
-        <translation>在範圍中的最小值(_N):</translation>
+        <translation type="obsolete">在範圍中的最小值(_N):</translation>
     </message>
     <message>
         <source>Ma_ximum value to be in-range:</source>
-        <translation>在範圍中的最大值(_X):</translation>
+        <translation type="obsolete">在範圍中的最大值(_X):</translation>
     </message>
     <message>
         <source>In-range values go white, out-of-range go black</source>
-        <translation>數值在範圍內會變白，在範圍外會變黑</translation>
+        <translation type="obsolete">數值在範圍內會變白，在範圍外會變黑</translation>
     </message>
     <message>
         <source>In-range values go black, out-of-range go white</source>
-        <translation>數值在範圍內會變黑，在範圍外會變白</translation>
+        <translation type="obsolete">數值在範圍內會變黑，在範圍外會變白</translation>
     </message>
     <message>
         <source>Output values:</source>
-        <translation>輸出值:</translation>
+        <translation type="obsolete">輸出值:</translation>
     </message>
     <message>
         <source>_Debugging settings (bits):</source>
-        <translation>除錯設定(位元)(_D):</translation>
+        <translation type="obsolete">除錯設定(位元)(_D):</translation>
     </message>
     <message>
         <source>Threshold Configuration</source>
-        <translation>臨界值設定</translation>
+        <translation type="obsolete">臨界值設定</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">上下來回，時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">略過空間時間檢查</translation>
+        <translation type="obsolete">略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
+        <translation type="obsolete">上下來回，略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">底部圖場先</translation>
+        <translation type="obsolete">底部圖場先</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">底部圖場先</translation>
+        <translation type="obsolete">底部圖場先</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">命令(_O):</translation>
+        <translation type="obsolete">命令(_O):</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 <context>
     <name>ADM_AudiocodecWMA</name>
     <message>
         <source>Internal error</source>
-        <translation>內部錯誤</translation>
+        <translation type="obsolete">內部錯誤</translation>
     </message>
     <message>
         <source>Cannot open WMA2 codec.</source>
-        <translation>無法開啟 WMA2 編解碼器。</translation>
+        <translation type="obsolete">無法開啟 WMA2 編解碼器。</translation>
     </message>
 </context>
 <context>
     <name>ADM_Composer</name>
     <message>
         <source>No video loaded</source>
-        <translation>沒有載入視訊</translation>
+        <translation type="obsolete">沒有載入視訊</translation>
     </message>
     <message>
         <source>Not indexable</source>
-        <translation>非可索引的</translation>
+        <translation type="obsolete">非可索引的</translation>
     </message>
     <message>
         <source>DivX 5 + packed?</source>
-        <translation>DivX 5 + 打包?</translation>
+        <translation type="obsolete">DivX 5 + 打包?</translation>
     </message>
     <message>
         <source>Rebuilding Frames</source>
-        <translation>重建畫格</translation>
+        <translation type="obsolete">重建畫格</translation>
     </message>
     <message>
         <source>Aborted</source>
-        <translation>已中止</translation>
+        <translation type="obsolete">已中止</translation>
     </message>
     <message>
         <source>Unsupported</source>
-        <translation>未支援的</translation>
+        <translation type="obsolete">未支援的</translation>
     </message>
     <message>
         <source>Old format project file</source>
-        <translation>舊格式的專案檔案</translation>
+        <translation type="obsolete">舊格式的專案檔案</translation>
     </message>
     <message>
         <source>No more supported.</source>
-        <translation>不再支援。</translation>
+        <translation type="obsolete">不再支援。</translation>
     </message>
     <message>
         <source>File type identified but no loader support detected...</source>
-        <translation>識別出檔案類型但沒有偵測到支援的載入器...</translation>
+        <translation type="obsolete">識別出檔案類型但沒有偵測到支援的載入器...</translation>
     </message>
     <message>
         <source>May be related to an old index file.</source>
-        <translation>可能被關聯至一個舊的索引檔。</translation>
+        <translation type="obsolete">可能被關聯至一個舊的索引檔。</translation>
     </message>
     <message>
         <source>Attempt to open %s failed!</source>
@@ -3739,83 +3583,126 @@ multiplied by this):</source>
     </message>
     <message>
         <source>Video dimensions don&apos;t match.</source>
-        <translation>視訊尺寸不符合。</translation>
+        <translation type="obsolete">視訊尺寸不符合。</translation>
     </message>
     <message>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later will not work around this problem. The workaround is:
 
 1) &quot;Resize&quot; / &quot;Add Border&quot; / &quot;Crop&quot; each stream to the same resolution
 2) Concatenate them together</source>
-        <translation>你還不能摻入不同的視訊大小。 隨後使用的區段性視訊濾鏡將會失效。 工作區為:
+        <translation type="obsolete">你還不能摻入不同的視訊大小。 隨後使用的區段性視訊濾鏡將會失效。 工作區為:
 
 1) &quot;調整大小&quot; / &quot;增加邊框&quot; / &quot;剪裁&quot; 每個串流對應相同的解析度
 2) 一起連結它們</translation>
     </message>
     <message>
         <source>Build Time Map</source>
-        <translation>建立時間對應</translation>
+        <translation type="obsolete">建立時間對應</translation>
     </message>
     <message>
         <source>Build VBR time map?</source>
-        <translation>建立 VBR 時間對應?</translation>
+        <translation type="obsolete">建立 VBR 時間對應?</translation>
     </message>
     <message>
         <source>Use safe mode</source>
-        <translation>使用安全模式</translation>
+        <translation type="obsolete">使用安全模式</translation>
     </message>
     <message>
         <source>H.264 detected</source>
-        <translation>偵測到 H.264</translation>
+        <translation type="obsolete">偵測到 H.264</translation>
     </message>
     <message>
         <source>If the file is using B-frames as reference it can lead to a crash or stuttering.
 Avidemux can use another mode which is safe but YOU WILL LOSE FRAME ACCURACY.
 Do you want to use that mode?</source>
-        <translation>假如這個檔案使用 B-畫格為參考，那麼會導致不正常關閉或影片斷斷續續。
+        <translation type="obsolete">假如這個檔案使用 B-畫格為參考，那麼會導致不正常關閉或影片斷斷續續。
 Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格的精確度&lt;/b&gt;。
 你要使用這個方式嗎 ?</translation>
     </message>
     <message>
         <source>Packed Bitstream detected</source>
-        <translation>偵測到打包好的位元流</translation>
+        <translation type="obsolete">偵測到打包好的位元流</translation>
     </message>
     <message>
         <source>Do you want me to unpack it ?</source>
-        <translation>要將它拆開打包嗎?</translation>
+        <translation type="obsolete">要將它拆開打包嗎?</translation>
     </message>
     <message>
         <source>Could not unpack the video</source>
-        <translation>無法拆開打包此視訊</translation>
+        <translation type="obsolete">無法拆開打包此視訊</translation>
     </message>
     <message>
         <source>Using backup decoder - not frame accurate.</source>
-        <translation>使用備份解碼器 - 非正確的畫格。</translation>
+        <translation type="obsolete">使用備份解碼器 - 非正確的畫格。</translation>
     </message>
     <message>
         <source>Weird</source>
-        <translation>奇特的</translation>
+        <translation type="obsolete">奇特的</translation>
     </message>
     <message>
         <source>The unpacking succeedeed but the index is still not up to date.</source>
-        <translation>拆開打包成功但索引仍然不是最新的。</translation>
+        <translation type="obsolete">拆開打包成功但索引仍然不是最新的。</translation>
     </message>
     <message>
         <source>Index is not up to date</source>
-        <translation>索引不是最新的</translation>
+        <translation type="obsolete">索引不是最新的</translation>
     </message>
     <message>
         <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
-        <translation>您應該使用 工具-&gt;重新建立畫格。要現在執行嗎?</translation>
+        <translation type="obsolete">您應該使用 工具-&gt;重新建立畫格。要現在執行嗎?</translation>
     </message>
     <message>
         <source>This looks like mpeg
  Do you want to index it?</source>
-        <translation>這個檔案像是 mpeg
+        <translation type="obsolete">這個檔案像是 mpeg
  要索引它嗎?</translation>
     </message>
     <message>
         <source>Indexing failed</source>
-        <translation>索引失敗</translation>
+        <translation type="obsolete">索引失敗</translation>
+    </message>
+    <message>
+        <source>Some timing information are incorrect.
+It happens with some capture software.
+If you re encode video we should drop these informations,
+ else it will cause dropped frame/jerky video.
+If you just copy the video without reencoding,
+ you should keep them.
+Drop timing informations ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot find a demuxer for %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
+1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
+2.) concatinate them together</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_Qt4CoreUIToolkit</name>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished">警告</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished">資訊</translation>
+    </message>
+    <message>
+        <source>Confirmation</source>
+        <translation type="unfinished">答覆</translation>
+    </message>
+    <message>
+        <source>Question</source>
+        <translation type="unfinished">問題</translation>
+    </message>
+    <message>
+        <source>Question?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3869,7 +3756,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <translation>-</translation>
     </message>
     <message>
-        <source>Quantiser</source>
+        <source>Quantizer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3877,96 +3764,96 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <name>ADM_Qt4Factory::ADM_QconfigMenu</name>
     <message>
         <source>Configuration:</source>
-        <translation>設定:</translation>
+        <translation type="obsolete">設定:</translation>
     </message>
     <message>
         <source>Save As</source>
-        <translation>另存新檔</translation>
+        <translation type="obsolete">另存新檔</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation type="obsolete">刪除</translation>
     </message>
     <message>
         <source>&lt;default&gt;</source>
-        <translation>&lt;預設&gt;</translation>
+        <translation type="obsolete">&lt;預設&gt;</translation>
     </message>
     <message>
         <source>&lt;custom&gt;</source>
-        <translation>&lt;自訂&gt;</translation>
+        <translation type="obsolete">&lt;自訂&gt;</translation>
     </message>
     <message>
         <source>Are you sure you wish to delete the selected configuration?</source>
-        <translation>確定要刪除所選的設定嗎?</translation>
+        <translation type="obsolete">確定要刪除所選的設定嗎?</translation>
     </message>
     <message>
         <source>Configuration File (*.xml)</source>
-        <translation>設定檔 (*.xml)</translation>
+        <translation type="obsolete">設定檔 (*.xml)</translation>
     </message>
 </context>
 <context>
     <name>ADM_ogmWrite</name>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
     <message>
         <source>File error</source>
-        <translation>檔案錯誤</translation>
+        <translation type="obsolete">檔案錯誤</translation>
     </message>
     <message>
         <source>Cannot open &quot;%s&quot; for writing.</source>
-        <translation>無法開啟 &quot;%s&quot; 進行寫入。</translation>
+        <translation type="obsolete">無法開啟 &quot;%s&quot; 進行寫入。</translation>
     </message>
     <message>
         <source>OGM</source>
-        <translation>OGM</translation>
+        <translation type="obsolete">OGM</translation>
     </message>
     <message>
         <source>Could not initialize video</source>
-        <translation>無法初始化視訊</translation>
+        <translation type="obsolete">無法初始化視訊</translation>
     </message>
     <message>
         <source>Could not initialize audio</source>
-        <translation>無法初始化音訊</translation>
+        <translation type="obsolete">無法初始化音訊</translation>
     </message>
 </context>
 <context>
     <name>ADM_ogmWriteCopy</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
     <message>
         <source>Saving...</source>
-        <translation>正在儲存...</translation>
+        <translation type="obsolete">正在儲存...</translation>
     </message>
 </context>
 <context>
     <name>ADM_ogmWriteProcess</name>
     <message>
         <source>Filter init failed</source>
-        <translation>濾鏡初始化失敗</translation>
+        <translation type="obsolete">濾鏡初始化失敗</translation>
     </message>
     <message>
         <source>Pass one</source>
-        <translation>運算 1</translation>
+        <translation type="obsolete">運算 1</translation>
     </message>
     <message>
         <source>Pass 2</source>
-        <translation>運算 2</translation>
+        <translation type="obsolete">運算 2</translation>
     </message>
     <message>
         <source>Encoding</source>
-        <translation>正在編碼</translation>
+        <translation type="obsolete">正在編碼</translation>
     </message>
     <message>
         <source>Reuse the existing log file?</source>
-        <translation>重複使用現有的日誌檔?</translation>
+        <translation type="obsolete">重複使用現有的日誌檔?</translation>
     </message>
 </context>
 <context>
@@ -3982,6 +3869,43 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Custom</source>
         <translation>自訂</translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::Editor</name>
+    <message>
+        <source>Unable to append %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video must contain an audio track to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::QtScriptObject</name>
+    <message>
+        <source>Parameter %1 must be a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be greater than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be less than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::SegmentCollectionPrototype</name>
+    <message>
+        <source>A video must be open to perform this operation.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4014,38 +3938,38 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <name>AVDMGenericAudioStream</name>
     <message>
         <source>Building VBR map</source>
-        <translation>正在建立 VBR 對應</translation>
+        <translation type="obsolete">正在建立 VBR 對應</translation>
     </message>
 </context>
 <context>
     <name>AVDMVideoAddBorder</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">左側邊界(_L):</translation>
+        <translation type="obsolete">左側邊界(_L):</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">右側邊界(_R):</translation>
+        <translation type="obsolete">右側邊界(_R):</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">底部邊界(_B):</translation>
+        <translation type="obsolete">底部邊界(_B):</translation>
     </message>
     <message>
         <source>Add Borders</source>
-        <translation type="unfinished">加入邊框</translation>
+        <translation type="obsolete">加入邊框</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">不正確的參數</translation>
+        <translation type="obsolete">不正確的參數</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+        <translation type="obsolete">所有參數必須是偶數且在範圍內。</translation>
     </message>
 </context>
 <context>
@@ -4090,36 +4014,40 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>mcDeinterlace</source>
         <translation type="unfinished">mcDeinterlace</translation>
     </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AVDMVideoStreamBSMear</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">左側邊界(_L):</translation>
+        <translation type="obsolete">左側邊界(_L):</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">右側邊界(_R):</translation>
+        <translation type="obsolete">右側邊界(_R):</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">底部邊界(_B):</translation>
+        <translation type="obsolete">底部邊界(_B):</translation>
     </message>
     <message>
         <source>Blacken Borders</source>
-        <translation type="unfinished">邊框填黑</translation>
+        <translation type="obsolete">邊框填黑</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">不正確的參數</translation>
+        <translation type="obsolete">不正確的參數</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+        <translation type="obsolete">所有參數必須是偶數且在範圍內。</translation>
     </message>
 </context>
 <context>
@@ -4182,6 +4110,18 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
         <translation type="unfinished">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4298,205 +4238,171 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>Video Bitrate:</source>
         <translation>視訊位元率:</translation>
     </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Cnr2Dialog</name>
     <message>
         <source>Chroma Noise Reducer 2</source>
-        <translation type="unfinished">色度雜訊去除器 2</translation>
+        <translation type="obsolete">色度雜訊去除器 2</translation>
     </message>
     <message>
         <source>Scene Change</source>
-        <translation type="unfinished">場景改變</translation>
+        <translation type="obsolete">場景改變</translation>
     </message>
     <message>
         <source>0%</source>
-        <translation type="unfinished">0%</translation>
+        <translation type="obsolete">0%</translation>
     </message>
     <message>
         <source>Scene Change Threshold</source>
-        <translation type="unfinished">場景改變臨界值</translation>
+        <translation type="obsolete">場景改變臨界值</translation>
     </message>
     <message>
         <source>100%</source>
-        <translation type="unfinished">100%</translation>
+        <translation type="obsolete">100%</translation>
     </message>
     <message>
         <source>Use chroma to also detect scene change</source>
-        <translation type="unfinished">也使用色度偵測場景改變</translation>
+        <translation type="obsolete">也使用色度偵測場景改變</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
+        <translation type="obsolete">設定</translation>
     </message>
     <message>
         <source>Wide</source>
-        <translation type="unfinished">廣泛</translation>
+        <translation type="obsolete">廣泛</translation>
     </message>
     <message>
         <source>Narrow</source>
-        <translation type="unfinished">狹道</translation>
+        <translation type="obsolete">狹道</translation>
     </message>
     <message>
         <source>Mode</source>
-        <translation type="unfinished">模式</translation>
+        <translation type="obsolete">模式</translation>
     </message>
     <message>
         <source>Luma Y:</source>
-        <translation type="unfinished">明度 Y:</translation>
+        <translation type="obsolete">明度 Y:</translation>
     </message>
     <message>
         <source>Chroma V:</source>
-        <translation type="unfinished">色度 V:</translation>
+        <translation type="obsolete">色度 V:</translation>
     </message>
     <message>
         <source>Maximum</source>
-        <translation type="unfinished">最大值</translation>
+        <translation type="obsolete">最大值</translation>
     </message>
     <message>
         <source>Chroma U:</source>
-        <translation type="unfinished">色度 U:</translation>
+        <translation type="obsolete">色度 U:</translation>
     </message>
     <message>
         <source>Sensibility</source>
-        <translation type="unfinished">靈敏度</translation>
+        <translation type="obsolete">靈敏度</translation>
     </message>
 </context>
 <context>
     <name>ColorYuvDialog</name>
     <message>
         <source>Avisynth ColorYUV</source>
-        <translation type="unfinished">Avisynth ColorYUV</translation>
+        <translation type="obsolete">Avisynth ColorYUV</translation>
     </message>
     <message>
         <source>Colour Correction Matrix</source>
-        <translation type="unfinished">色彩校正矩陣</translation>
+        <translation type="obsolete">色彩校正矩陣</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation type="unfinished">對比</translation>
+        <translation type="obsolete">對比</translation>
     </message>
     <message>
         <source>Chroma U:</source>
-        <translation type="unfinished">色度 U:</translation>
+        <translation type="obsolete">色度 U:</translation>
     </message>
     <message>
         <source>Chroma V:</source>
-        <translation type="unfinished">色度 V:</translation>
+        <translation type="obsolete">色度 V:</translation>
     </message>
     <message>
         <source>Luma Y:</source>
-        <translation type="unfinished">明度 Y:</translation>
+        <translation type="obsolete">明度 Y:</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="unfinished">亮度</translation>
+        <translation type="obsolete">亮度</translation>
     </message>
     <message>
         <source>Gain</source>
-        <translation type="unfinished">增益</translation>
+        <translation type="obsolete">增益</translation>
     </message>
     <message>
         <source>Gamma</source>
-        <translation type="unfinished">伽馬</translation>
+        <translation type="obsolete">伽馬</translation>
     </message>
     <message>
         <source>Note: all values are normalised to 256</source>
-        <translation type="unfinished">注意: 所有超過的數值將被標準化為 256</translation>
+        <translation type="obsolete">注意: 所有超過的數值將被標準化為 256</translation>
     </message>
     <message>
         <source>Parameters</source>
-        <translation type="unfinished">參數</translation>
+        <translation type="obsolete">參數</translation>
     </message>
     <message>
         <source>Matrix:</source>
-        <translation type="unfinished">矩陣:</translation>
+        <translation type="obsolete">矩陣:</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>TV -&gt; PC</source>
-        <translation type="unfinished">TV 轉成 PC</translation>
+        <translation type="obsolete">TV 轉成 PC</translation>
     </message>
     <message>
         <source>PC -&gt; TV</source>
-        <translation type="unfinished">PC 轉成 TV</translation>
+        <translation type="obsolete">PC 轉成 TV</translation>
     </message>
     <message>
         <source>PC -&gt; TV.Y</source>
-        <translation type="unfinished">PC 轉成 TV.Y</translation>
+        <translation type="obsolete">PC 轉成 TV.Y</translation>
     </message>
     <message>
         <source>Level:</source>
-        <translation type="unfinished">色階:</translation>
+        <translation type="obsolete">色階:</translation>
     </message>
     <message>
         <source>Rec.709</source>
-        <translation type="unfinished">Rec.709</translation>
+        <translation type="obsolete">Rec.709</translation>
     </message>
     <message>
         <source>Coring</source>
-        <translation type="unfinished">正在去核</translation>
+        <translation type="obsolete">正在去核</translation>
     </message>
     <message>
         <source>Opt:</source>
-        <translation type="unfinished">選擇:</translation>
+        <translation type="obsolete">選擇:</translation>
     </message>
     <message>
         <source>Auto Gain</source>
-        <translation type="unfinished">自動增益</translation>
+        <translation type="obsolete">自動增益</translation>
     </message>
     <message>
         <source>Display Colour Statistics</source>
-        <translation type="unfinished">顯示色彩狀態</translation>
+        <translation type="obsolete">顯示色彩狀態</translation>
     </message>
     <message>
         <source>Centre Colour Offsets</source>
-        <translation type="unfinished">中心色彩偏移</translation>
-    </message>
-</context>
-<context>
-    <name>CurveDialog</name>
-    <message>
-        <source>Curve Editor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Choose channel for editing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma (Y)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma (U)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma (V)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sets default curve</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CurveEditor</name>
-    <message>
-        <source>Control points count: Y:%d, U:%d, V:%d</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">中心色彩偏移</translation>
     </message>
 </context>
 <context>
@@ -4523,7 +4429,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">圖場優先順序(_F):</translation>
+        <translation type="obsolete">圖場優先順序(_F):</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -4545,27 +4451,46 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>DGBob</source>
         <translation type="unfinished">DGBob</translation>
     </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
-    <name>DVD</name>
+    <name>DIA_encodingQt4</name>
     <message>
-        <source>A video file must be open to use this Auto Wizard.</source>
+        <source>Shutting down</source>
+        <translation type="unfinished">正在關機</translation>
+    </message>
+    <message>
+        <source>The encoding is paused. Do you want to resume or abort?</source>
+        <translation type="unfinished">編碼已經暫停。您要繼續或中止?</translation>
+    </message>
+    <message>
+        <source>Resume</source>
+        <translation type="unfinished">繼續</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">中止</translation>
+    </message>
+</context>
+<context>
+    <name>DIA_progressIndexing</name>
+    <message>
+        <source># Images :%0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>DVD Auto Wizard</source>
+        <source>Time Left :%02d:%02d:%02d</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DVEncoder</name>
     <message>
-        <source>The DV encoder only accepts the following profiles:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Incompatible settings</source>
-        <translation type="unfinished">不相容的設定</translation>
+        <translation type="obsolete">不相容的設定</translation>
     </message>
 </context>
 <context>
@@ -4592,7 +4517,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
-        <translation type="unfinished">快 (部份明度和部份色度)</translation>
+        <translation type="obsolete">快 (部份明度和部份色度)</translation>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
@@ -4600,7 +4525,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
-        <translation type="unfinished">慢 (全部的明度和色度)</translation>
+        <translation type="obsolete">慢 (全部的明度和色度)</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -4625,6 +4550,60 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Decomb Decimate</source>
         <translation type="unfinished">去除梳形雜訊成批編碼器</translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Dialog</name>
+    <message>
+        <source>Indexing</source>
+        <translation type="unfinished">正在索引</translation>
+    </message>
+    <message>
+        <source>Time Left : Infinity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Images :</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DialogAudioTracks</name>
+    <message>
+        <source>Audio Tracks Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track 1</source>
+        <translation type="unfinished">軌道 2: {1?}</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure</source>
+        <translation type="unfinished">設定</translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">音訊濾鏡</translation>
+    </message>
+    <message>
+        <source>Track 2</source>
+        <translation type="unfinished">軌道 2: {2?}</translation>
+    </message>
+    <message>
+        <source>Track 3</source>
+        <translation type="unfinished">軌道 2: {3?}</translation>
+    </message>
+    <message>
+        <source>Track 4</source>
+        <translation type="unfinished">軌道 2: {4?}</translation>
     </message>
 </context>
 <context>
@@ -4675,118 +4654,144 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
 </context>
 <context>
+    <name>DialogProgress</name>
+    <message>
+        <source>Progress</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Current job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1/1</source>
+        <translation type="unfinished">1/1</translation>
+    </message>
+    <message>
+        <source>File being written </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
     <name>EncoderCopy</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
 </context>
 <context>
     <name>EncoderRequant</name>
     <message>
         <source>Requant</source>
-        <translation>重複量化</translation>
+        <translation type="obsolete">重複量化</translation>
     </message>
 </context>
 <context>
     <name>EncoderYV12</name>
     <message>
         <source>YV12</source>
-        <translation>YV12</translation>
+        <translation type="obsolete">YV12</translation>
     </message>
 </context>
 <context>
     <name>EqualiserDialog</name>
     <message>
         <source>Equaliser</source>
-        <translation type="unfinished">等化器</translation>
+        <translation type="obsolete">等化器</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
+        <translation type="obsolete">設定</translation>
     </message>
     <message>
         <source>Histogram</source>
-        <translation type="unfinished">分佈圖</translation>
+        <translation type="obsolete">分佈圖</translation>
     </message>
 </context>
 <context>
     <name>FLV1Encoder</name>
     <message>
         <source>_Bitrate (kb/s):</source>
-        <translation type="unfinished">位元率 (kb/s)(_B):</translation>
+        <translation type="obsolete">位元率 (kb/s)(_B):</translation>
     </message>
     <message>
         <source>_GOP size:</source>
-        <translation type="unfinished">_GOP 大小:</translation>
+        <translation type="obsolete">_GOP 大小:</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
+        <translation type="obsolete">設定</translation>
     </message>
+</context>
+<context>
+    <name>GUIPlayback</name>
     <message>
-        <source>avcodec Sorenson Spark Configuration</source>
-        <translation type="unfinished"></translation>
+        <source>Trouble initializing audio device</source>
+        <translation type="unfinished">音訊裝置初始化時發生問題</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSave</name>
     <message>
         <source>Error initalizing audio filters</source>
-        <translation>初始化音訊濾鏡發生錯誤</translation>
+        <translation type="obsolete">初始化音訊濾鏡發生錯誤</translation>
     </message>
     <message>
         <source>Error initalizing video filters</source>
-        <translation>初始化視訊濾鏡發生錯誤</translation>
+        <translation type="obsolete">初始化視訊濾鏡發生錯誤</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
     <message>
         <source>AVI</source>
-        <translation>AVI</translation>
+        <translation type="obsolete">AVI</translation>
     </message>
     <message>
         <source>Cannot initiate save</source>
-        <translation>無法開始儲存</translation>
+        <translation type="obsolete">無法開始儲存</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSaveCopy</name>
     <message>
         <source>Cannot initiate save</source>
-        <translation>無法開始儲存</translation>
+        <translation type="obsolete">無法開始儲存</translation>
     </message>
     <message>
         <source>Saving</source>
-        <translation>正在儲存</translation>
+        <translation type="obsolete">正在儲存</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSaveCopyPack</name>
     <message>
         <source>Cannot initiate save</source>
-        <translation>無法開始儲存</translation>
+        <translation type="obsolete">無法開始儲存</translation>
     </message>
     <message>
         <source>Saving</source>
-        <translation>正在儲存</translation>
+        <translation type="obsolete">正在儲存</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSaveCopyUnpack</name>
     <message>
         <source>Cannot initiate save</source>
-        <translation>無法開始儲存</translation>
+        <translation type="obsolete">無法開始儲存</translation>
     </message>
     <message>
         <source>Saving</source>
-        <translation>正在儲存</translation>
+        <translation type="obsolete">正在儲存</translation>
     </message>
 </context>
 <context>
@@ -4794,243 +4799,136 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Width is not a multiple of 8
  continue anyway ?</source>
-        <translation>寬度不是 8 的倍數
+        <translation type="obsolete">寬度不是 8 的倍數
  無論如何都繼續嗎 ?</translation>
     </message>
     <message>
         <source>Filter init failed</source>
-        <translation>濾鏡初始化失敗</translation>
+        <translation type="obsolete">濾鏡初始化失敗</translation>
     </message>
     <message>
         <source>1st Pass</source>
-        <translation>第一次運算</translation>
+        <translation type="obsolete">第一次運算</translation>
     </message>
     <message>
         <source>Aborting</source>
-        <translation>正在中止</translation>
+        <translation type="obsolete">正在中止</translation>
     </message>
     <message>
         <source>Encoding</source>
-        <translation>正在編碼</translation>
+        <translation type="obsolete">正在編碼</translation>
     </message>
     <message>
         <source>2nd Pass</source>
-        <translation>第二次運算</translation>
+        <translation type="obsolete">第二次運算</translation>
     </message>
     <message>
         <source>Reuse the existing log file?</source>
-        <translation>重複使用現有的日誌檔?</translation>
+        <translation type="obsolete">重複使用現有的日誌檔?</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSaveSmart</name>
     <message>
         <source>Smart Copy</source>
-        <translation>智慧型複製</translation>
+        <translation type="obsolete">智慧型複製</translation>
     </message>
 </context>
 <context>
     <name>GlyphEditorDialog</name>
     <message>
         <source>Glyph Editor</source>
-        <translation>字形編輯器</translation>
+        <translation type="obsolete">字形編輯器</translation>
     </message>
     <message>
         <source>Prev. Empty</source>
-        <translation>上一個是空的</translation>
+        <translation type="obsolete">上一個是空的</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation>家目錄</translation>
+        <translation type="obsolete">家目錄</translation>
     </message>
     <message>
         <source>Next</source>
-        <translation>下一個</translation>
+        <translation type="obsolete">下一個</translation>
     </message>
     <message>
         <source>Find</source>
-        <translation>尋找</translation>
+        <translation type="obsolete">尋找</translation>
     </message>
     <message>
         <source>Previous</source>
-        <translation>上一個</translation>
+        <translation type="obsolete">上一個</translation>
     </message>
     <message>
         <source>Next Empty</source>
-        <translation>下一個是空的</translation>
+        <translation type="obsolete">下一個是空的</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation type="obsolete">刪除</translation>
     </message>
 </context>
 <context>
     <name>GlyphEditorWindow</name>
     <message>
         <source>Head reached</source>
-        <translation>延伸最前的部分</translation>
+        <translation type="obsolete">延伸最前的部分</translation>
     </message>
     <message>
         <source>No more glyphs</source>
-        <translation>不能再多字形</translation>
+        <translation type="obsolete">不能再多字形</translation>
     </message>
     <message>
         <source>End reached</source>
-        <translation>已到結束點</translation>
+        <translation type="obsolete">已到結束點</translation>
     </message>
     <message>
         <source>String</source>
-        <translation>字串</translation>
+        <translation type="obsolete">字串</translation>
     </message>
     <message>
         <source>Search string</source>
-        <translation>搜尋字串</translation>
+        <translation type="obsolete">搜尋字串</translation>
     </message>
     <message>
         <source>Select GlyphFile to edit</source>
-        <translation type="unfinished">選擇字形檔進行編輯</translation>
+        <translation type="obsolete">選擇字形檔進行編輯</translation>
     </message>
 </context>
 <context>
     <name>H263Encoder</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Full</source>
-        <translation type="unfinished">全部</translation>
+        <translation type="obsolete">全部</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished">Log</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Log</translation>
     </message>
     <message>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation type="obsolete">EPZS</translation>
     </message>
     <message>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation type="obsolete">H.263</translation>
     </message>
     <message>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
-    </message>
-    <message>
-        <source>Sum of Absolute Differences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fewest Bits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rate Distortion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Motion Estimation Method:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4 _Motion Vector</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Quarter Pixel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Global Motion Compensation</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">MPEG</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="unfinished">動作估測</translation>
-    </message>
-    <message>
-        <source>_Quantisation Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Macroblock Decision Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mi_nimum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ma_ximum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser _Difference:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Quantiser Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser _Blur:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Trellis Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>avcodec H.263 Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The H.263 encoder only accepts the following resolutions:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">動作估測</translation>
     </message>
     <message>
         <source>Incompatible settings</source>
-        <translation type="unfinished">不相容的設定</translation>
-    </message>
-</context>
-<context>
-    <name>IndexDialog</name>
-    <message>
-        <source>Indexing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Time Left:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1:%2:%3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source># Images: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Time Left: %1:%2:%3</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">不相容的設定</translation>
     </message>
 </context>
 <context>
@@ -5048,27 +4946,27 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <name>MPDelogoDialog</name>
     <message>
         <source>MPlayer Delogo</source>
-        <translation type="unfinished">MPlayer 去圖標</translation>
+        <translation type="obsolete">MPlayer 去圖標</translation>
     </message>
     <message>
         <source>Band:</source>
-        <translation type="unfinished">波段:</translation>
+        <translation type="obsolete">波段:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished">高度:</translation>
+        <translation type="obsolete">高度:</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished">寬度:</translation>
+        <translation type="obsolete">寬度:</translation>
     </message>
     <message>
         <source>Y:</source>
-        <translation type="unfinished">Y:</translation>
+        <translation type="obsolete">Y:</translation>
     </message>
     <message>
         <source>X:</source>
-        <translation type="unfinished">X:</translation>
+        <translation type="obsolete">X:</translation>
     </message>
 </context>
 <context>
@@ -5079,7 +4977,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&lt;b&gt;Video&lt;/b&gt;</source>
-        <translation>&lt;b&gt;視訊&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;視訊&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -5095,7 +4993,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&lt;b&gt;Audio&lt;/b&gt;</source>
-        <translation>&lt;b&gt;音訊&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;音訊&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&amp;Shift:</source>
@@ -5107,7 +5005,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&lt;b&gt;Format&lt;/b&gt;</source>
-        <translation>&lt;b&gt;格式&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;格式&lt;/b&gt;</translation>
     </message>
     <message>
         <source>...</source>
@@ -5115,15 +5013,15 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Frame:</source>
-        <translation>畫格:</translation>
+        <translation type="obsolete">畫格:</translation>
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
         <source>/ 0</source>
-        <translation>/ 0</translation>
+        <translation type="obsolete">/ 0</translation>
     </message>
     <message>
         <source>Time:</source>
@@ -5139,7 +5037,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Frame Type:</source>
-        <translation>畫格類型:</translation>
+        <translation type="obsolete">畫格類型:</translation>
     </message>
     <message>
         <source>?</source>
@@ -5187,7 +5085,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&amp;Preview Mode</source>
-        <translation>預覽模式(&amp;P)</translation>
+        <translation type="obsolete">預覽模式(&amp;P)</translation>
     </message>
     <message>
         <source>&amp;Custom</source>
@@ -5199,7 +5097,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>A&amp;uto</source>
-        <translation>自動(&amp;U)</translation>
+        <translation type="obsolete">自動(&amp;U)</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -5207,11 +5105,11 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&amp;Recent Files</source>
-        <translation>最近開啟的檔案(&amp;R)</translation>
+        <translation type="obsolete">最近開啟的檔案(&amp;R)</translation>
     </message>
     <message>
         <source>&amp;Save</source>
-        <translation>儲存(&amp;S)</translation>
+        <translation type="obsolete">儲存(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
@@ -5219,63 +5117,63 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation type="obsolete">Ctrl+O</translation>
     </message>
     <message>
         <source>&amp;Append...</source>
-        <translation>添加(&amp;A)...</translation>
+        <translation type="obsolete">添加(&amp;A)...</translation>
     </message>
     <message>
         <source>Ctrl+Alt+A</source>
-        <translation>Ctrl+Alt+A</translation>
+        <translation type="obsolete">Ctrl+Alt+A</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation>剪下(&amp;T)</translation>
+        <translation type="obsolete">剪下(&amp;T)</translation>
     </message>
     <message>
         <source>Ctrl+X</source>
-        <translation>Ctrl+X</translation>
+        <translation type="obsolete">Ctrl+X</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>複製(&amp;C)</translation>
+        <translation type="obsolete">複製(&amp;C)</translation>
     </message>
     <message>
         <source>Ctrl+C</source>
-        <translation>Ctrl+C</translation>
+        <translation type="obsolete">Ctrl+C</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation>貼上(&amp;P)</translation>
+        <translation type="obsolete">貼上(&amp;P)</translation>
     </message>
     <message>
         <source>Ctrl+V</source>
-        <translation>Ctrl+V</translation>
+        <translation type="obsolete">Ctrl+V</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>刪除(&amp;D)</translation>
+        <translation type="obsolete">刪除(&amp;D)</translation>
     </message>
     <message>
         <source>Del</source>
-        <translation>Del</translation>
+        <translation type="obsolete">Del</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation>設定標記 A</translation>
+        <translation type="obsolete">設定標記 A</translation>
     </message>
     <message>
         <source>[</source>
-        <translation>[</translation>
+        <translation type="obsolete">[</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation>設定標記 B</translation>
+        <translation type="obsolete">設定標記 B</translation>
     </message>
     <message>
         <source>]</source>
-        <translation>]</translation>
+        <translation type="obsolete">]</translation>
     </message>
     <message>
         <source>&amp;Information...</source>
@@ -5295,23 +5193,23 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation type="obsolete">Ctrl+S</translation>
     </message>
     <message>
         <source>Save &amp;BMP Image...</source>
-        <translation>儲存 &amp;BMP 圖像...</translation>
+        <translation type="obsolete">儲存 &amp;BMP 圖像...</translation>
     </message>
     <message>
         <source>Save BMP Image</source>
-        <translation>儲存 BMP 圖像</translation>
+        <translation type="obsolete">儲存 BMP 圖像</translation>
     </message>
     <message>
         <source>Save &amp;JPEG Image...</source>
-        <translation>儲存 &amp;JPEG 圖像...</translation>
+        <translation type="obsolete">儲存 &amp;JPEG 圖像...</translation>
     </message>
     <message>
         <source>Save JPEG Image</source>
-        <translation>儲存 JPEG 圖像</translation>
+        <translation type="obsolete">儲存 JPEG 圖像</translation>
     </message>
     <message>
         <source>&amp;Load/Run Project...</source>
@@ -5331,95 +5229,95 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Save P&amp;roject As...</source>
-        <translation>另存專案(&amp;R)...</translation>
+        <translation type="obsolete">另存專案(&amp;R)...</translation>
     </message>
     <message>
         <source>Save Project As</source>
-        <translation>另存專案</translation>
+        <translation type="obsolete">另存專案</translation>
     </message>
     <message>
         <source>&amp;Zoom 1:4</source>
-        <translation>縮放為 1:4(&amp;Z)</translation>
+        <translation type="obsolete">縮放為 1:4(&amp;Z)</translation>
     </message>
     <message>
         <source>Ctrl+Shift+4</source>
-        <translation>Ctrl+Shift+4</translation>
+        <translation type="obsolete">Ctrl+Shift+4</translation>
     </message>
     <message>
         <source>Z&amp;oom 1:2</source>
-        <translation>縮放為 1:2(&amp;O)</translation>
+        <translation type="obsolete">縮放為 1:2(&amp;O)</translation>
     </message>
     <message>
         <source>Ctrl+Shift+2</source>
-        <translation>Ctrl+Shift+2</translation>
+        <translation type="obsolete">Ctrl+Shift+2</translation>
     </message>
     <message>
         <source>Zoom &amp;1:1</source>
-        <translation>縮放為 &amp;1:1</translation>
+        <translation type="obsolete">縮放為 &amp;1:1</translation>
     </message>
     <message>
         <source>Ctrl+Alt+1</source>
-        <translation>Ctrl+Alt+1</translation>
+        <translation type="obsolete">Ctrl+Alt+1</translation>
     </message>
     <message>
         <source>Zoom &amp;2:1</source>
-        <translation>縮放為 &amp;2:1</translation>
+        <translation type="obsolete">縮放為 &amp;2:1</translation>
     </message>
     <message>
         <source>Ctrl+Alt+2</source>
-        <translation>Ctrl+Alt+2</translation>
+        <translation type="obsolete">Ctrl+Alt+2</translation>
     </message>
     <message>
         <source>&amp;Decoder Options...</source>
-        <translation>解碼器選項(&amp;D)...</translation>
+        <translation type="obsolete">解碼器選項(&amp;D)...</translation>
     </message>
     <message>
         <source>Decoder Options</source>
-        <translation>解碼器選項</translation>
+        <translation type="obsolete">解碼器選項</translation>
     </message>
     <message>
         <source>F3</source>
-        <translation>F3</translation>
+        <translation type="obsolete">F3</translation>
     </message>
     <message>
         <source>&amp;Postprocessing...</source>
-        <translation>後置處理(&amp;P)...</translation>
+        <translation type="obsolete">後置處理(&amp;P)...</translation>
     </message>
     <message>
         <source>F4</source>
-        <translation>F4</translation>
+        <translation type="obsolete">F4</translation>
     </message>
     <message>
         <source>&amp;Frame Rate...</source>
-        <translation>畫格率(&amp;F)...</translation>
+        <translation type="obsolete">畫格率(&amp;F)...</translation>
     </message>
     <message>
         <source>Frame Rate</source>
-        <translation>畫格率</translation>
+        <translation type="obsolete">畫格率</translation>
     </message>
     <message>
         <source>Fil&amp;ters...</source>
-        <translation>濾鏡(&amp;T)...</translation>
+        <translation type="obsolete">濾鏡(&amp;T)...</translation>
     </message>
     <message>
         <source>Ctrl+Alt+F</source>
-        <translation>Ctrl+Alt+F</translation>
+        <translation type="obsolete">Ctrl+Alt+F</translation>
     </message>
     <message>
         <source>&amp;Main Track...</source>
-        <translation>主音軌(&amp;M)...</translation>
+        <translation type="obsolete">主音軌(&amp;M)...</translation>
     </message>
     <message>
         <source>&amp;Secondary Track...</source>
-        <translation>第二音軌(&amp;S)...</translation>
+        <translation type="obsolete">第二音軌(&amp;S)...</translation>
     </message>
     <message>
         <source>Build VBR Time Map</source>
-        <translation>建立 VBR 時間對應</translation>
+        <translation type="obsolete">建立 VBR 時間對應</translation>
     </message>
     <message>
         <source>S&amp;ave...</source>
-        <translation>儲存(&amp;A)...</translation>
+        <translation type="obsolete">儲存(&amp;A)...</translation>
     </message>
     <message>
         <source>Ctrl+Alt+S</source>
@@ -5427,7 +5325,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&amp;Filters</source>
-        <translation>濾鏡(&amp;F)</translation>
+        <translation type="obsolete">濾鏡(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;Calculator...</source>
@@ -5439,247 +5337,247 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&amp;Rebuild I &amp;&amp; B Frames</source>
-        <translation>重建 I &amp;&amp; B 畫格(&amp;R)</translation>
+        <translation type="obsolete">重建 I &amp;&amp; B 畫格(&amp;R)</translation>
     </message>
     <message>
         <source>Rebuild I &amp; B Frames</source>
-        <translation>重建 I &amp; B 畫格</translation>
+        <translation type="obsolete">重建 I &amp; B 畫格</translation>
     </message>
     <message>
         <source>&amp;Bitrate Histogram...</source>
-        <translation>位元率分佈圖(&amp;B)...</translation>
+        <translation type="obsolete">位元率分佈圖(&amp;B)...</translation>
     </message>
     <message>
         <source>Bitrate Histogram</source>
-        <translation>位元率分佈圖</translation>
+        <translation type="obsolete">位元率分佈圖</translation>
     </message>
     <message>
         <source>&amp;Scan for Black Frames...</source>
-        <translation>掃描黑畫面(&amp;S)...</translation>
+        <translation type="obsolete">掃描黑畫面(&amp;S)...</translation>
     </message>
     <message>
         <source>Scan for Black Frames</source>
-        <translation>掃描黑畫面</translation>
+        <translation type="obsolete">掃描黑畫面</translation>
     </message>
     <message>
         <source>&amp;VOB -&gt; VobSub...</source>
-        <translation>&amp;VOB 轉成 VobSub...</translation>
+        <translation type="obsolete">&amp;VOB 轉成 VobSub...</translation>
     </message>
     <message>
         <source>VOB -&gt; VobSub</source>
-        <translation>VOB 轉成 VobSub</translation>
+        <translation type="obsolete">VOB 轉成 VobSub</translation>
     </message>
     <message>
         <source>&amp;OCR (VobSub -&gt; srt)...</source>
-        <translation>&amp;OCR (VobSub 轉成 srt)...</translation>
+        <translation type="obsolete">&amp;OCR (VobSub 轉成 srt)...</translation>
     </message>
     <message>
         <source>OCR (VobSub -&gt; srt)</source>
-        <translation>OCR (VobSub 轉成 srt)</translation>
+        <translation type="obsolete">OCR (VobSub 轉成 srt)</translation>
     </message>
     <message>
         <source>P</source>
-        <translation>P</translation>
+        <translation type="obsolete">P</translation>
     </message>
     <message>
         <source>P&amp;revious Frame</source>
-        <translation>上一畫格(&amp;R)</translation>
+        <translation type="obsolete">上一畫格(&amp;R)</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation>←</translation>
+        <translation type="obsolete">←</translation>
     </message>
     <message>
         <source>&amp;Next Frame</source>
-        <translation>下一畫格(&amp;N)</translation>
+        <translation type="obsolete">下一畫格(&amp;N)</translation>
     </message>
     <message>
         <source>Right</source>
-        <translation>→</translation>
+        <translation type="obsolete">→</translation>
     </message>
     <message>
         <source>Pr&amp;evious Intra Frame</source>
-        <translation>上一內部畫格(&amp;E)</translation>
+        <translation type="obsolete">上一內部畫格(&amp;E)</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation>上一個內部畫格</translation>
+        <translation type="obsolete">上一個內部畫格</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation>↓</translation>
+        <translation type="obsolete">↓</translation>
     </message>
     <message>
         <source>Next &amp;Intra Frame</source>
-        <translation>下一內部畫格(&amp;I)</translation>
+        <translation type="obsolete">下一內部畫格(&amp;I)</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation>上一個內部畫格</translation>
+        <translation type="obsolete">上一個內部畫格</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation>↑</translation>
+        <translation type="obsolete">↑</translation>
     </message>
     <message>
         <source>Previou&amp;s Black Frame</source>
-        <translation>上一黑畫面(&amp;S)</translation>
+        <translation type="obsolete">上一黑畫面(&amp;S)</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
-        <translation>上一個黑畫面</translation>
+        <translation type="obsolete">上一個黑畫面</translation>
     </message>
     <message>
         <source>Ne&amp;xt Black Frame</source>
-        <translation>下一黑畫面(&amp;X)</translation>
+        <translation type="obsolete">下一黑畫面(&amp;X)</translation>
     </message>
     <message>
         <source>Next Black Frame</source>
-        <translation>下一個黑畫面</translation>
+        <translation type="obsolete">下一個黑畫面</translation>
     </message>
     <message>
         <source>&amp;First Frame</source>
-        <translation>起始畫格(&amp;F)</translation>
+        <translation type="obsolete">起始畫格(&amp;F)</translation>
     </message>
     <message>
         <source>Home</source>
-        <translation>Home</translation>
+        <translation type="obsolete">Home</translation>
     </message>
     <message>
         <source>&amp;Last Frame</source>
-        <translation>最後畫格(&amp;L)</translation>
+        <translation type="obsolete">最後畫格(&amp;L)</translation>
     </message>
     <message>
         <source>End</source>
-        <translation>End</translation>
+        <translation type="obsolete">End</translation>
     </message>
     <message>
         <source>Jump to Marker &amp;A</source>
-        <translation>跳至標記 &amp;A</translation>
+        <translation type="obsolete">跳至標記 &amp;A</translation>
     </message>
     <message>
         <source>Jump to Marker A</source>
-        <translation>跳至標記 A</translation>
+        <translation type="obsolete">跳至標記 A</translation>
     </message>
     <message>
         <source>Ctrl+[</source>
-        <translation>Ctrl+[</translation>
+        <translation type="obsolete">Ctrl+[</translation>
     </message>
     <message>
         <source>Jump to Marker &amp;B</source>
-        <translation>跳至標記 &amp;B</translation>
+        <translation type="obsolete">跳至標記 &amp;B</translation>
     </message>
     <message>
         <source>Jump to Marker B</source>
-        <translation>跳至標記 B</translation>
+        <translation type="obsolete">跳至標記 B</translation>
     </message>
     <message>
         <source>Ctrl+]</source>
-        <translation>Ctrl+]</translation>
+        <translation type="obsolete">Ctrl+]</translation>
     </message>
     <message>
         <source>Jump to Fra&amp;me...</source>
-        <translation>跳至畫格(&amp;M)...</translation>
+        <translation type="obsolete">跳至畫格(&amp;M)...</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
-        <translation>Ctrl+F</translation>
+        <translation type="obsolete">Ctrl+F</translation>
     </message>
     <message>
         <source>Jump to &amp;Time...</source>
-        <translation>跳至時間(&amp;T)...</translation>
+        <translation type="obsolete">跳至時間(&amp;T)...</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation type="obsolete">Ctrl+T</translation>
     </message>
     <message>
         <source>&amp;Built-in Support...</source>
-        <translation>內建的支援(&amp;B)...</translation>
+        <translation type="obsolete">內建的支援(&amp;B)...</translation>
     </message>
     <message>
         <source>Built-in Support</source>
-        <translation>內建的支援</translation>
+        <translation type="obsolete">內建的支援</translation>
     </message>
     <message>
         <source>&amp;About Avidemux...</source>
-        <translation>關於 &amp;Avidemux...</translation>
+        <translation type="obsolete">關於 &amp;Avidemux...</translation>
     </message>
     <message>
         <source>About Avidemux</source>
-        <translation>關於 Avidemux</translation>
+        <translation type="obsolete">關於 Avidemux</translation>
     </message>
     <message>
         <source>&amp;Play/Stop</source>
-        <translation>播放/停止(&amp;P)</translation>
+        <translation type="obsolete">播放/停止(&amp;P)</translation>
     </message>
     <message>
         <source>Play/Stop</source>
-        <translation>播放/停止</translation>
+        <translation type="obsolete">播放/停止</translation>
     </message>
     <message>
         <source>Recent0</source>
-        <translation>最近開啟的檔案0</translation>
+        <translation type="obsolete">最近開啟的檔案0</translation>
     </message>
     <message>
         <source>Recent1</source>
-        <translation>最近開啟的檔案1</translation>
+        <translation type="obsolete">最近開啟的檔案1</translation>
     </message>
     <message>
         <source>Recent2</source>
-        <translation>最近開啟的檔案2</translation>
+        <translation type="obsolete">最近開啟的檔案2</translation>
     </message>
     <message>
         <source>Recent3</source>
-        <translation>最近開啟的檔案3</translation>
+        <translation type="obsolete">最近開啟的檔案3</translation>
     </message>
     <message>
         <source>Add to &amp;Joblist...</source>
-        <translation>新增至工作列表(&amp;J)...</translation>
+        <translation type="obsolete">新增至工作列表(&amp;J)...</translation>
     </message>
     <message>
         <source>Add to Joblist</source>
-        <translation>新增至工作列表</translation>
+        <translation type="obsolete">新增至工作列表</translation>
     </message>
     <message>
         <source>View &amp;Joblist...</source>
-        <translation>檢視工作列表(&amp;J)...</translation>
+        <translation type="obsolete">檢視工作列表(&amp;J)...</translation>
     </message>
     <message>
         <source>View Joblist</source>
-        <translation>檢視工作列表</translation>
+        <translation type="obsolete">檢視工作列表</translation>
     </message>
     <message>
         <source>Ctrl+J</source>
-        <translation>Ctrl+J</translation>
+        <translation type="obsolete">Ctrl+J</translation>
     </message>
     <message>
         <source>Co&amp;nnect to avsproxy</source>
-        <translation>連線至 avsproxy(&amp;N)</translation>
+        <translation type="obsolete">連線至 avsproxy(&amp;N)</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
-        <translation>連線至 avsproxy</translation>
+        <translation type="obsolete">連線至 avsproxy</translation>
     </message>
     <message>
         <source>&amp;Reset Edits</source>
-        <translation>回復編輯(&amp;R)</translation>
+        <translation type="obsolete">回復編輯(&amp;R)</translation>
     </message>
     <message>
         <source>OCR (&amp;TS -&gt; srt)...</source>
-        <translation>OCR (&amp;TS 轉成 srt)...</translation>
+        <translation type="obsolete">OCR (&amp;TS 轉成 srt)...</translation>
     </message>
     <message>
         <source>OCR (TS -&gt; srt)</source>
-        <translation>OCR (TS 轉成 srt)</translation>
+        <translation type="obsolete">OCR (TS 轉成 srt)</translation>
     </message>
     <message>
         <source>Edit &amp;Glyphs...</source>
-        <translation>編輯字形(&amp;G)...</translation>
+        <translation type="obsolete">編輯字形(&amp;G)...</translation>
     </message>
     <message>
         <source>Edit Glyphs</source>
-        <translation>編輯字形</translation>
+        <translation type="obsolete">編輯字形</translation>
     </message>
     <message>
         <source>&amp;Input</source>
@@ -5703,410 +5601,330 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>&amp;Close</source>
-        <translation>關閉(&amp;C)</translation>
+        <translation type="obsolete">關閉(&amp;C)</translation>
     </message>
     <message>
         <source>Ctrl+W</source>
-        <translation>Ctrl+W</translation>
+        <translation type="obsolete">Ctrl+W</translation>
     </message>
     <message>
         <source>Save Selection as JPEG Images...</source>
-        <translation>選取另存為 JPEG 圖像...</translation>
+        <translation type="obsolete">選取另存為 JPEG 圖像...</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
-        <translation>偏好設定(&amp;P)...</translation>
+        <translation type="obsolete">偏好設定(&amp;P)...</translation>
     </message>
     <message>
         <source>&amp;Plugins...</source>
-        <translation>外掛模組(&amp;P)...</translation>
-    </message>
-    <message>
-        <source>Recent Projects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Recent4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Recent5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>RecentProject5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 (%2)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Optical Disc</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">外掛模組(&amp;P)...</translation>
     </message>
     <message>
         <source>DVD</source>
-        <translation type="unfinished">DVD</translation>
+        <translation type="obsolete">DVD</translation>
     </message>
     <message>
-        <source>Super Video CD</source>
+        <source>&amp;Toolbars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Video CD</source>
+        <source>&amp;Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Recent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XXXX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>   (0 track(s))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">畫格類型:</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Selection&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Metre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Codec Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+N</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Audio Metre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+M</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MjpegEncoder</name>
     <message>
-        <source>_Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
-    </message>
-    <message>
-        <source>avcodec M-JPEG Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">設定</translation>
     </message>
 </context>
 <context>
     <name>Mpeg1Encoder</name>
     <message>
         <source>4:3</source>
-        <translation type="unfinished">4:3</translation>
+        <translation type="obsolete">4:3</translation>
     </message>
     <message>
         <source>16:9</source>
-        <translation type="unfinished">16:9</translation>
+        <translation type="obsolete">16:9</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished">預設</translation>
+        <translation type="obsolete">預設</translation>
     </message>
     <message>
         <source>TMPGEnc</source>
-        <translation type="unfinished">TMPGEnc</translation>
+        <translation type="obsolete">TMPGEnc</translation>
     </message>
     <message>
         <source>Anime</source>
-        <translation type="unfinished">動畫</translation>
+        <translation type="obsolete">動畫</translation>
     </message>
     <message>
         <source>KVCD</source>
-        <translation type="unfinished">KVCD</translation>
+        <translation type="obsolete">KVCD</translation>
     </message>
     <message>
         <source>Progressive</source>
-        <translation type="unfinished">漸進的</translation>
+        <translation type="obsolete">漸進的</translation>
     </message>
     <message>
         <source>Interlaced BFF</source>
-        <translation type="unfinished">交錯的 BFF</translation>
+        <translation type="obsolete">交錯的 BFF</translation>
     </message>
     <message>
         <source>Interlaced TFF</source>
-        <translation type="unfinished">交錯的 TFF</translation>
+        <translation type="obsolete">交錯的 TFF</translation>
     </message>
     <message>
         <source>Ma_x. bitrate:</source>
-        <translation type="unfinished">最大位元率(_X):</translation>
+        <translation type="obsolete">最大位元率(_X):</translation>
     </message>
     <message>
         <source>Mi_n. bitrate:</source>
-        <translation type="unfinished">最小位元率(_N):</translation>
+        <translation type="obsolete">最小位元率(_N):</translation>
     </message>
     <message>
         <source>_Use Xvid rate control</source>
-        <translation type="unfinished">使用 Xvid 比率控制(_U)</translation>
+        <translation type="obsolete">使用 Xvid 比率控制(_U)</translation>
     </message>
     <message>
         <source>_Buffer size:</source>
-        <translation type="unfinished">緩衝大小(_B):</translation>
+        <translation type="obsolete">緩衝大小(_B):</translation>
     </message>
     <message>
         <source>Aspect _ratio:</source>
-        <translation type="unfinished">外觀比例(_R):</translation>
+        <translation type="obsolete">外觀比例(_R):</translation>
     </message>
     <message>
         <source>_Matrices:</source>
-        <translation type="unfinished">矩陣(_M):</translation>
+        <translation type="obsolete">矩陣(_M):</translation>
     </message>
     <message>
         <source>_GOP size:</source>
-        <translation type="unfinished">_GOP 大小:</translation>
+        <translation type="obsolete">_GOP 大小:</translation>
     </message>
     <message>
         <source>_Interlacing:</source>
-        <translation type="unfinished">交錯(_I):</translation>
+        <translation type="obsolete">交錯(_I):</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
-    </message>
-    <message>
-        <source>avcodec MPEG-1 Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New sequence every (MB):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>mpeg2enc Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">設定</translation>
     </message>
 </context>
 <context>
     <name>Mpeg2Encoder</name>
     <message>
         <source>4:3</source>
-        <translation type="unfinished">4:3</translation>
+        <translation type="obsolete">4:3</translation>
     </message>
     <message>
         <source>16:9</source>
-        <translation type="unfinished">16:9</translation>
+        <translation type="obsolete">16:9</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished">預設</translation>
+        <translation type="obsolete">預設</translation>
     </message>
     <message>
         <source>TMPGEnc</source>
-        <translation type="unfinished">TMPGEnc</translation>
+        <translation type="obsolete">TMPGEnc</translation>
     </message>
     <message>
         <source>Anime</source>
-        <translation type="unfinished">動畫</translation>
+        <translation type="obsolete">動畫</translation>
     </message>
     <message>
         <source>KVCD</source>
-        <translation type="unfinished">KVCD</translation>
+        <translation type="obsolete">KVCD</translation>
     </message>
     <message>
         <source>Progressive</source>
-        <translation type="unfinished">漸進的</translation>
+        <translation type="obsolete">漸進的</translation>
     </message>
     <message>
         <source>Interlaced BFF</source>
-        <translation type="unfinished">交錯的 BFF</translation>
+        <translation type="obsolete">交錯的 BFF</translation>
     </message>
     <message>
         <source>Interlaced TFF</source>
-        <translation type="unfinished">交錯的 TFF</translation>
+        <translation type="obsolete">交錯的 TFF</translation>
     </message>
     <message>
         <source>Ma_x. bitrate:</source>
-        <translation type="unfinished">最大位元率(_X):</translation>
+        <translation type="obsolete">最大位元率(_X):</translation>
     </message>
     <message>
         <source>Mi_n. bitrate:</source>
-        <translation type="unfinished">最小位元率(_N):</translation>
+        <translation type="obsolete">最小位元率(_N):</translation>
     </message>
     <message>
         <source>_Use Xvid rate control</source>
-        <translation type="unfinished">使用 Xvid 比率控制(_U)</translation>
+        <translation type="obsolete">使用 Xvid 比率控制(_U)</translation>
     </message>
     <message>
         <source>_Buffer size:</source>
-        <translation type="unfinished">緩衝大小(_B):</translation>
+        <translation type="obsolete">緩衝大小(_B):</translation>
     </message>
     <message>
         <source>Aspect _ratio:</source>
-        <translation type="unfinished">外觀比例(_R):</translation>
+        <translation type="obsolete">外觀比例(_R):</translation>
     </message>
     <message>
         <source>_Matrices:</source>
-        <translation type="unfinished">矩陣(_M):</translation>
+        <translation type="obsolete">矩陣(_M):</translation>
     </message>
     <message>
         <source>_GOP size:</source>
-        <translation type="unfinished">_GOP 大小:</translation>
+        <translation type="obsolete">_GOP 大小:</translation>
     </message>
     <message>
         <source>_Interlacing:</source>
-        <translation type="unfinished">交錯(_I):</translation>
+        <translation type="obsolete">交錯(_I):</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">設定</translation>
-    </message>
-    <message>
-        <source>avcodec MPEG-2 Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">設定</translation>
     </message>
     <message>
         <source>DVD</source>
-        <translation type="unfinished">DVD</translation>
-    </message>
-    <message>
-        <source>Super Video CD</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New sequence every (MB):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stream _type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>mpeg2enc Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DVD</translation>
     </message>
 </context>
 <context>
     <name>Mpeg4aspEncoder</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Full</source>
-        <translation type="unfinished">全部</translation>
+        <translation type="obsolete">全部</translation>
     </message>
     <message>
         <source>Log</source>
-        <translation type="unfinished">Log</translation>
-    </message>
-    <message>
-        <source>Phods</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Log</translation>
     </message>
     <message>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation type="obsolete">EPZS</translation>
     </message>
     <message>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation type="obsolete">H.263</translation>
     </message>
     <message>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
-    </message>
-    <message>
-        <source>Sum of Absolute Differences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fewest Bits</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rate Distortion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Motion Estimation Method:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4 _Motion Vector</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Quarter Pixel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Global Motion Compensation</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">MPEG</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="unfinished">動作估測</translation>
-    </message>
-    <message>
-        <source>_Quantisation Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Macroblock Decision Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mi_nimum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ma_ximum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser _Difference:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Quantiser Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser _Blur:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Trellis Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>avcodec H.263 Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">動作估測</translation>
     </message>
 </context>
 <context>
     <name>MpegMuxer</name>
     <message>
         <source>Incompatible audio</source>
-        <translation>不相容的音訊</translation>
+        <translation type="obsolete">不相容的音訊</translation>
     </message>
     <message>
         <source>For DVD, audio must be MP2 or AC3.</source>
-        <translation>DVD 的音訊必須是 MP2 或 AC3。</translation>
+        <translation type="obsolete">DVD 的音訊必須是 MP2 或 AC3。</translation>
     </message>
     <message>
         <source>lvemux init failed</source>
-        <translation>lvemux 初始化失敗</translation>
+        <translation type="obsolete">lvemux 初始化失敗</translation>
     </message>
 </context>
 <context>
@@ -6167,40 +5985,55 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Indexing</source>
-        <translation>正在索引</translation>
+        <translation type="obsolete">正在索引</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Alert</source>
-        <translation type="unfinished">警告</translation>
+        <translation type="obsolete">警告</translation>
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished">資訊</translation>
+        <translation type="obsolete">資訊</translation>
     </message>
     <message>
         <source>Confirmation</source>
-        <translation type="unfinished">答覆</translation>
+        <translation type="obsolete">答覆</translation>
     </message>
     <message>
         <source>Question</source>
         <translation type="unfinished">問題</translation>
     </message>
+</context>
+<context>
+    <name>QtScriptEngine</name>
     <message>
-        <source>Question?</source>
+        <source>Avidemux Script Debugger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>Super Video CD</name>
+    <name>SpiderMonkeyShell</name>
     <message>
-        <source>A video file must be open to use this Auto Wizard.</source>
+        <source>Shell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Super Video CD Auto Wizard</source>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Evaluate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+Return</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6334,488 +6167,102 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
 </context>
 <context>
-    <name>Video CD</name>
-    <message>
-        <source>A video file must be open to use this Auto Wizard.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video CD Auto Wizard</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>XvidConfigDialog</name>
     <message>
         <source>&lt;default&gt;</source>
-        <translation type="unfinished">&lt;預設&gt;</translation>
+        <translation type="obsolete">&lt;預設&gt;</translation>
     </message>
     <message>
         <source>&lt;custom&gt;</source>
-        <translation type="unfinished">&lt;自訂&gt;</translation>
+        <translation type="obsolete">&lt;自訂&gt;</translation>
     </message>
     <message>
         <source>Save As</source>
-        <translation type="unfinished">另存新檔</translation>
-    </message>
-    <message>
-        <source>Xvid Configuration File (*.xml)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">另存新檔</translation>
     </message>
     <message>
         <source>Are you sure you wish to delete the selected configuration?</source>
-        <translation type="unfinished">確定要刪除所選的設定嗎?</translation>
-    </message>
-    <message>
-        <source>Target Bitrate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">確定要刪除所選的設定嗎?</translation>
     </message>
     <message>
         <source>Quantiser:</source>
-        <translation type="unfinished">量化值:</translation>
-    </message>
-    <message>
-        <source>Target Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">量化值:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">平均位元率:</translation>
-    </message>
-    <message>
-        <source>Xvid Configuraton</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">平均位元率:</translation>
     </message>
     <message>
         <source>Configuration:</source>
-        <translation type="unfinished">設定:</translation>
+        <translation type="obsolete">設定:</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">刪除</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">刪除</translation>
     </message>
     <message>
         <source>Rate Control</source>
-        <translation type="unfinished">比率控制</translation>
-    </message>
-    <message>
-        <source>Constant Bitrate (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Quantiser (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Size (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average Bitrate (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1 (High Quality)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>31 (Low Quality)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">比率控制</translation>
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
-        <translation type="unfinished">像素外觀比例</translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">像素外觀比例</translation>
     </message>
     <message>
         <source>As Input</source>
-        <translation type="unfinished">另輸出為</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Predefined Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>16:15 (PAL 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>64:45 (PAL 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8:9 (NTSC 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>32:27 (NTSC 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Multithreading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">另輸出為</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="unfinished">自動偵測</translation>
+        <translation type="obsolete">自動偵測</translation>
     </message>
     <message>
         <source>Motion</source>
-        <translation type="unfinished">動作</translation>
+        <translation type="obsolete">動作</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="unfinished">動作估測</translation>
-    </message>
-    <message>
-        <source>Motion Estimation:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">動作估測</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished">低</translation>
+        <translation type="obsolete">低</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
+        <translation type="obsolete">中</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished">高</translation>
-    </message>
-    <message>
-        <source>Rate Distortion Optimisation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No Search (DCT only)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">高</translation>
     </message>
     <message>
         <source>Limited Search</source>
-        <translation type="unfinished">限度搜尋</translation>
+        <translation type="obsolete">限度搜尋</translation>
     </message>
     <message>
         <source>Medium Search</source>
-        <translation type="unfinished">中等搜尋</translation>
+        <translation type="obsolete">中等搜尋</translation>
     </message>
     <message>
         <source>Wide Search</source>
-        <translation type="unfinished">廣泛搜尋</translation>
-    </message>
-    <message>
-        <source>Rate Distortion Optimisation for B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Motion Estimation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quarter Pixel Motion Estimation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global Motion Compensation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Turbo Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame Encoding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Optimiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Four Motion Vectors per Macroblock</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cartoon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Greyscale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interlaced:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bottom Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum I-frame Interval:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame Drop Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frame Sensitivity:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Closed GOP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Packed Bitstream</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum B-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frame Quantiser Offset:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum P-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frame Quantiser Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum I-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum B-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum P-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum I-frame Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Trellis Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantisation Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>H.263 Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MPEG Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Single Pass</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Smoother:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Averaging Quantiser Period:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reaction Delay Factor:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">廣泛搜尋</translation>
     </message>
     <message>
         <source>Two Pass</source>
-        <translation type="unfinished">二次運算</translation>
-    </message>
-    <message>
-        <source>I-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frame Boost:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frame Bitrate Reduction Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum I-frame Bitrate Reduction:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>frame(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overflow Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Overflow Degradation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Overflow Improvement:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overflow Control Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">二次運算</translation>
     </message>
     <message>
         <source>Curve Compression</source>
-        <translation type="unfinished">曲線壓縮</translation>
-    </message>
-    <message>
-        <source>Above Average Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Below Average Curve Compression:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">曲線壓縮</translation>
     </message>
     <message>
         <source>Video Buffer Verifier</source>
-        <translation type="unfinished">視訊緩衝校對器</translation>
-    </message>
-    <message>
-        <source>bit/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bit(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>VBV Buffer Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum VBV Bitrate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Peak Bitrate Over 1 Second:</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>XvidCustomMatrixDialog</name>
-    <message>
-        <source>Select Matrix File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Read Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error reading custom matrix file.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Xvid Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">視訊緩衝校對器</translation>
     </message>
 </context>
 <context>
@@ -6841,8 +6288,70 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <translation>授權(&amp;L)</translation>
     </message>
     <message utf8="true">
-        <source>© 2001 - 2010  Mean</source>
+        <source>© 2001 - 2012  Mean</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>addBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished">左側邊界(_L):</translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished">右側邊界(_R):</translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished">頂部邊界(_T):</translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished">底部邊界(_B):</translation>
+    </message>
+    <message>
+        <source>Add Borders</source>
+        <translation type="unfinished">加入邊框</translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished">不正確的參數</translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+    </message>
+</context>
+<context>
+    <name>addLogopFilter</name>
+    <message>
+        <source>_Logo (jpg file):</source>
+        <translation type="unfinished">圖標(_L)(jpg 檔):</translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished">選擇 JPEG 檔案</translation>
+    </message>
+    <message>
+        <source>_X Position:</source>
+        <translation type="unfinished">_X 位置:</translation>
+    </message>
+    <message>
+        <source>_Y Position:</source>
+        <translation type="unfinished">_Y 位置:</translation>
+    </message>
+    <message>
+        <source>_Alpha:</source>
+        <translation type="unfinished">_Alpha:</translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished">圖標</translation>
     </message>
 </context>
 <context>
@@ -6864,27 +6373,104 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <translation type="unfinished">區塊適性</translation>
     </message>
     <message>
-        <source>High Quality Block Filtering</source>
+        <source>Unknown flag</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>autoWizard</name>
     <message>
-        <source>Resolution:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Source Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Destination Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Codec:</source>
-        <translation type="unfinished">編解碼器:</translation>
+        <translation type="obsolete">編解碼器:</translation>
+    </message>
+</context>
+<context>
+    <name>avsfilter</name>
+    <message>
+        <source>_wine app file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select wine filename[wine/cedega/etc.]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_loader file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select loader filename[avsload.exe]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_avs file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select avs filename[*.avs]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_pipe timeout:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AvsFilter config</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished">左側邊界(_L):</translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished">右側邊界(_R):</translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished">頂部邊界(_T):</translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished">底部邊界(_B):</translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="unfinished">邊框填黑</translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished">不正確的參數</translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+    </message>
+</context>
+<context>
+    <name>changeFps</name>
+    <message>
+        <source>Source Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6909,18 +6495,6 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <translation type="unfinished">對比</translation>
     </message>
     <message>
-        <source>Contrast:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Brightness:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colour Space</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Luma</source>
         <translation type="unfinished">明度</translation>
     </message>
@@ -6931,6 +6505,10 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>ChromaV</source>
         <translation type="unfinished">色度V</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished">亮度</translation>
     </message>
 </context>
 <context>
@@ -6968,15 +6546,15 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <name>dmxHeader</name>
     <message>
         <source>Out of memory</source>
-        <translation>記憶體外漏</translation>
+        <translation type="obsolete">記憶體外漏</translation>
     </message>
     <message>
         <source>Opening MPEG</source>
-        <translation>正在開啟 MPRG</translation>
+        <translation type="obsolete">正在開啟 MPRG</translation>
     </message>
     <message>
         <source>MPEG renumbering error</source>
-        <translation>MPEG 重新編號錯誤</translation>
+        <translation type="obsolete">MPEG 重新編號錯誤</translation>
     </message>
 </context>
 <context>
@@ -7003,11 +6581,11 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Container:</source>
-        <translation>容器:</translation>
+        <translation type="obsolete">容器:</translation>
     </message>
     <message>
         <source>Audio Codec:</source>
-        <translation>音訊編解碼器:</translation>
+        <translation type="obsolete">音訊編解碼器:</translation>
     </message>
     <message>
         <source>0</source>
@@ -7019,15 +6597,15 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Elapsed:</source>
-        <translation>已過時間:</translation>
+        <translation type="obsolete">已過時間:</translation>
     </message>
     <message>
         <source>Time Remaining:</source>
-        <translation>剩餘時間:</translation>
+        <translation type="obsolete">剩餘時間:</translation>
     </message>
     <message>
         <source>Frames/sec:</source>
-        <translation>畫格/秒:</translation>
+        <translation type="obsolete">畫格/秒:</translation>
     </message>
     <message>
         <source>0 MB</source>
@@ -7035,23 +6613,23 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Total Size:</source>
-        <translation>總大小:</translation>
+        <translation type="obsolete">總大小:</translation>
     </message>
     <message>
         <source>Audio Size:</source>
-        <translation>音訊大小:</translation>
+        <translation type="obsolete">音訊大小:</translation>
     </message>
     <message>
         <source>Video Size:</source>
-        <translation>視訊大小:</translation>
+        <translation type="obsolete">視訊大小:</translation>
     </message>
     <message>
         <source>Processed Frames:</source>
-        <translation>已處理的畫格數:</translation>
+        <translation type="obsolete">已處理的畫格數:</translation>
     </message>
     <message>
         <source>Total Frames:</source>
-        <translation>總畫格數:</translation>
+        <translation type="obsolete">總畫格數:</translation>
     </message>
     <message>
         <source>0 kB/s</source>
@@ -7059,11 +6637,11 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation>平均位元率:</translation>
+        <translation type="obsolete">平均位元率:</translation>
     </message>
     <message>
         <source>Quantiser:</source>
-        <translation>量化值:</translation>
+        <translation type="obsolete">量化值:</translation>
     </message>
     <message>
         <source>Shut down computer when finished</source>
@@ -7093,6 +6671,87 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>Low</source>
         <translation>低</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Codec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Average Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause / Abort</source>
+        <translation type="unfinished">暫停 / 停止</translation>
+    </message>
 </context>
 <context>
     <name>encodingWindow</name>
@@ -7106,46 +6765,34 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Pause / Abort</source>
-        <translation>暫停 / 停止</translation>
+        <translation type="obsolete">暫停 / 停止</translation>
     </message>
     <message>
         <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="unfinished">編碼已經暫停。您要繼續或中止?</translation>
+        <translation type="obsolete">編碼已經暫停。您要繼續或中止?</translation>
     </message>
     <message>
         <source>Resume</source>
-        <translation type="unfinished">繼續</translation>
+        <translation type="obsolete">繼續</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation type="unfinished">中止</translation>
+        <translation type="obsolete">中止</translation>
     </message>
     <message>
         <source>Shutting down</source>
-        <translation type="unfinished">正在關機</translation>
+        <translation type="obsolete">正在關機</translation>
     </message>
 </context>
 <context>
     <name>eq2Dialog</name>
     <message>
         <source>MPlayer eq2</source>
-        <translation type="unfinished">MPlayer eq2</translation>
-    </message>
-    <message>
-        <source>Contrast:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Brightness:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saturation:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">MPlayer eq2</translation>
     </message>
     <message>
         <source>Gamma</source>
-        <translation type="unfinished">伽馬</translation>
+        <translation type="obsolete">伽馬</translation>
     </message>
     <message>
         <source>Green</source>
@@ -7167,6 +6814,22 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>Initial</source>
         <translation type="unfinished">初始</translation>
     </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished">對比</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Gamma&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished">飽和度</translation>
+    </message>
+    <message>
+        <source>Brightness</source>
+        <translation type="unfinished">亮度</translation>
+    </message>
 </context>
 <context>
     <name>filtermainWindow</name>
@@ -7176,38 +6839,77 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Load set of filters</source>
-        <translation>載入濾鏡設定</translation>
+        <translation type="obsolete">載入濾鏡設定</translation>
     </message>
     <message>
         <source>Nothing to save</source>
-        <translation>沒有任何改變可儲存</translation>
+        <translation type="obsolete">沒有任何改變可儲存</translation>
     </message>
     <message>
         <source>Save set of filters</source>
-        <translation>儲存濾鏡設定</translation>
+        <translation type="obsolete">儲存濾鏡設定</translation>
     </message>
     <message>
         <source>Partial Start Frame:</source>
-        <translation type="unfinished">區段起始畫格:</translation>
+        <translation type="obsolete">區段起始畫格:</translation>
     </message>
     <message>
         <source>Partial End Frame:</source>
-        <translation type="unfinished">區段結束畫格:</translation>
+        <translation type="obsolete">區段結束畫格:</translation>
     </message>
     <message>
         <source>Configure child</source>
-        <translation type="unfinished">設定子項目</translation>
+        <translation type="obsolete">設定子項目</translation>
     </message>
     <message>
         <source>Partial Video Filter</source>
-        <translation type="unfinished">區段性視訊濾鏡</translation>
+        <translation type="obsolete">區段性視訊濾鏡</translation>
+    </message>
+</context>
+<context>
+    <name>glYadif</name>
+    <message>
+        <source>Temporal &amp; spatial check</source>
+        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+    </message>
+    <message>
+        <source>Bob, temporal &amp; spatial check</source>
+        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+    </message>
+    <message>
+        <source>Skip spatial temporal check</source>
+        <translation type="unfinished">略過空間時間檢查</translation>
+    </message>
+    <message>
+        <source>Bob, skip spatial temporal check</source>
+        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
+    </message>
+    <message>
+        <source>Bottom field first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top field first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_Order:</source>
+        <translation type="unfinished">命令(_O):</translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished">yadif</translation>
     </message>
 </context>
 <context>
     <name>h263Header</name>
     <message>
         <source>Size is not (s)QCIF</source>
-        <translation>大小不是 (s)QCIF</translation>
+        <translation type="obsolete">大小不是 (s)QCIF</translation>
     </message>
 </context>
 <context>
@@ -7219,6 +6921,41 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Saturation</source>
         <translation type="unfinished">飽和度</translation>
+    </message>
+</context>
+<context>
+    <name>jobs</name>
+    <message>
+        <source>Avidemux Jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run all pending jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete already executed jobs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cleanup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>If you use VDPAU you cannot use CLI version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>use QT4 version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7292,34 +7029,139 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Ready</source>
-        <translation type="unfinished">準備</translation>
+        <translation type="obsolete">準備</translation>
     </message>
     <message>
         <source>Succeeded</source>
-        <translation type="unfinished">已成功</translation>
+        <translation type="obsolete">已成功</translation>
     </message>
     <message>
         <source>Failed</source>
-        <translation type="unfinished">已失敗</translation>
+        <translation type="obsolete">已失敗</translation>
     </message>
     <message>
         <source>Deleted</source>
-        <translation type="unfinished">已刪除</translation>
+        <translation type="obsolete">已刪除</translation>
     </message>
     <message>
         <source>Running</source>
-        <translation type="unfinished">正在執行</translation>
+        <translation type="obsolete">正在執行</translation>
+    </message>
+</context>
+<context>
+    <name>kernelDeint</name>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished">頂部</translation>
     </message>
     <message>
-        <source>%1:%2:%3</source>
+        <source>Bottom</source>
+        <translation type="unfinished">底部</translation>
+    </message>
+    <message>
+        <source>_Field order:</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">臨界值(_T):</translation>
+    </message>
+    <message>
+        <source>Smaller means more deinterlacing</source>
+        <translation type="unfinished">越小表示更多的去交錯</translation>
+    </message>
+    <message>
+        <source>_Sharp</source>
+        <translation type="unfinished">銳利(_S)</translation>
+    </message>
+    <message>
+        <source>_Sharper engine:</source>
+        <translation type="unfinished">清晰化引擎(_S):</translation>
+    </message>
+    <message>
+        <source>T_woway</source>
+        <translation type="unfinished">雙向(_W)</translation>
+    </message>
+    <message>
+        <source>Extrapolate better (better not to use it)</source>
+        <translation type="unfinished">推算較好的 (最好不使用它)</translation>
+    </message>
+    <message>
+        <source>_Map</source>
+        <translation type="unfinished">對應(_M)</translation>
+    </message>
+    <message>
+        <source>Show interlaced areas (for test!)</source>
+        <translation type="unfinished">顯示交錯的範圍(測試用！)</translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="unfinished">KernelDeint</translation>
+    </message>
+</context>
+<context>
+    <name>largeMedian</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished">處理明度(_P)</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">處理明度平面</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished">處理色度(_R)</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished">快速卷積</translation>
+    </message>
+</context>
+<context>
+    <name>lavDeint</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Linear blend</source>
+        <translation type="unfinished">線性混合</translation>
+    </message>
+    <message>
+        <source>Linear interpolate</source>
+        <translation type="unfinished">線性插值</translation>
+    </message>
+    <message>
+        <source>Cubic interpolate</source>
+        <translation type="unfinished">立方插值</translation>
+    </message>
+    <message>
+        <source>Median interpolate</source>
+        <translation type="unfinished">中位插值</translation>
+    </message>
+    <message>
+        <source>FFmpeg deint</source>
+        <translation type="unfinished">FFmpeg deint</translation>
+    </message>
+    <message>
+        <source>_Deinterlacing:</source>
+        <translation type="unfinished">去交錯(_D):</translation>
+    </message>
+    <message>
+        <source>_Autolevel</source>
+        <translation type="unfinished">自動色階(_A)</translation>
+    </message>
+    <message>
+        <source>libavcodec deinterlacer</source>
+        <translation type="unfinished">libavcodec 去交錯器</translation>
     </message>
 </context>
 <context>
     <name>lavMuxer</name>
     <message>
         <source>Incompatible frame rate</source>
-        <translation>不相容的畫格率</translation>
+        <translation type="obsolete">不相容的畫格率</translation>
     </message>
 </context>
 <context>
@@ -7327,6 +7169,10 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>License</source>
         <translation>授權</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7365,7 +7211,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>External</source>
-        <translation>外部的</translation>
+        <translation type="obsolete">外部的</translation>
     </message>
     <message>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
@@ -7381,23 +7227,23 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Open Script</source>
-        <translation>開啟腳本</translation>
+        <translation type="obsolete">開啟腳本</translation>
     </message>
     <message>
         <source>Load</source>
-        <translation>載入</translation>
+        <translation type="obsolete">載入</translation>
     </message>
     <message>
         <source>Save Script As</source>
-        <translation>另存腳本為</translation>
+        <translation type="obsolete">另存腳本為</translation>
     </message>
     <message>
         <source>Save Script</source>
-        <translation>儲存腳本</translation>
+        <translation type="obsolete">儲存腳本</translation>
     </message>
     <message>
         <source>Move Filter Down</source>
-        <translation>下移濾鏡</translation>
+        <translation type="obsolete">下移濾鏡</translation>
     </message>
     <message>
         <source>Down</source>
@@ -7405,7 +7251,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Move Filter Up</source>
-        <translation>上移濾鏡</translation>
+        <translation type="obsolete">上移濾鏡</translation>
     </message>
     <message>
         <source>Up</source>
@@ -7413,7 +7259,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Remove Filter</source>
-        <translation>移除濾鏡</translation>
+        <translation type="obsolete">移除濾鏡</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -7421,7 +7267,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Add Filter</source>
-        <translation>加入濾鏡</translation>
+        <translation type="obsolete">加入濾鏡</translation>
     </message>
     <message>
         <source>Add</source>
@@ -7435,46 +7281,128 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>&amp;Preview</source>
         <translation>預覽(&amp;P)</translation>
     </message>
+    <message>
+        <source>OpenGl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Close</source>
+        <translation type="unfinished">關閉(&amp;C)</translation>
+    </message>
+</context>
+<context>
+    <name>mpdelogoDialog</name>
+    <message>
+        <source>Mplayer Delogo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerMP4</name>
+    <message>
+        <source>Saving mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving PSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerMkv</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffPS</name>
+    <message>
+        <source>Saving mpeg PS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffTS</name>
+    <message>
+        <source>Saving mpeg TS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>nuvHeader</name>
     <message>
         <source>Opening Nuppel video</source>
-        <translation>正在開啟 Nuppel 視訊</translation>
+        <translation type="obsolete">正在開啟 Nuppel 視訊</translation>
     </message>
     <message>
         <source>Sure you want to abort ?</source>
-        <translation>確定要中止?</translation>
+        <translation type="obsolete">確定要中止?</translation>
     </message>
     <message>
         <source>Size mismatch</source>
-        <translation>大小不相符</translation>
+        <translation type="obsolete">大小不相符</translation>
     </message>
     <message>
         <source>Expect a crash.</source>
-        <translation>預期的不正常關閉。</translation>
+        <translation type="obsolete">預期的不正常關閉。</translation>
     </message>
     <message>
         <source>Do you want to save an index ?</source>
-        <translation>要儲存索引嗎?</translation>
+        <translation type="obsolete">要儲存索引嗎?</translation>
     </message>
 </context>
 <context>
     <name>oggHeader</name>
     <message>
         <source>Take second track ?</source>
-        <translation>提取第二軌道?</translation>
+        <translation type="obsolete">提取第二軌道?</translation>
     </message>
     <message>
         <source>Scanning OGM</source>
-        <translation>正在掃描 OGM</translation>
+        <translation type="obsolete">正在掃描 OGM</translation>
+    </message>
+</context>
+<context>
+    <name>openGlResize</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glResize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>previewDialog</name>
     <message>
         <source>Preview</source>
-        <translation>預覽</translation>
+        <translation type="obsolete">預覽</translation>
     </message>
 </context>
 <context>
@@ -7489,42 +7417,26 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished">否</translation>
+        <translation type="obsolete">否</translation>
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished">是</translation>
+        <translation type="obsolete">是</translation>
     </message>
     <message>
-        <source>%1 x %2</source>
+        <source>%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 fps</source>
+        <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 frames</source>
+        <source>%02d:%02d:%02d.%03d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1:%2:%3.%4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 (%2:%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 Bps / %2 kbps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
+        <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7548,7 +7460,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Frame Count: </source>
-        <translation>畫格總計: </translation>
+        <translation type="obsolete">畫格總計: </translation>
     </message>
     <message>
         <source>Total Duration:</source>
@@ -7572,15 +7484,15 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Global Motion Compensation:</source>
-        <translation>整體動作補償:</translation>
+        <translation type="obsolete">整體動作補償:</translation>
     </message>
     <message>
         <source>Packed Bitstream:</source>
-        <translation>打包好的位元流:</translation>
+        <translation type="obsolete">打包好的位元流:</translation>
     </message>
     <message>
         <source>Quarter Pixel:</source>
-        <translation>1/4 像素:</translation>
+        <translation type="obsolete">1/4 像素:</translation>
     </message>
     <message>
         <source>Audio</source>
@@ -7588,7 +7500,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>File Size:</source>
-        <translation>檔案大小:</translation>
+        <translation type="obsolete">檔案大小:</translation>
     </message>
     <message>
         <source>Frequency:</source>
@@ -7609,6 +7521,64 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Codec:</source>
         <translation>編解碼器:</translation>
+    </message>
+    <message>
+        <source>ExtraDataSize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra data :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>removePlaneFilter</name>
+    <message>
+        <source>Keep Y Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">處理明度平面</translation>
+    </message>
+    <message>
+        <source>Keep U Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaU plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep V Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaV plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>resampleFps</name>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="unfinished">新畫格率(_N):</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="unfinished">重複取樣 fps</translation>
     </message>
 </context>
 <context>
@@ -7706,10 +7676,68 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
 </context>
 <context>
+    <name>rotateFilter</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>90 degrees</source>
+        <translation type="unfinished">90 度</translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="unfinished">90Â°</translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="unfinished">180 度</translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="unfinished">180Â°</translation>
+    </message>
+    <message>
+        <source>270 degrees</source>
+        <translation type="unfinished">270 度</translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="unfinished">270Â°</translation>
+    </message>
+    <message>
+        <source>_Angle:</source>
+        <translation type="unfinished">角度(_A):</translation>
+    </message>
+    <message>
+        <source>Rotate</source>
+        <translation type="unfinished">旋轉</translation>
+    </message>
+</context>
+<context>
+    <name>rotateGl</name>
+    <message>
+        <source>Angle (Â°):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glRotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>seekablePreviewDialog</name>
     <message>
         <source>Preview</source>
         <translation>預覽</translation>
+    </message>
+    <message>
+        <source>next</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>00:00:00.000</source>
+        <translation type="unfinished">00:00:00.000</translation>
     </message>
 </context>
 <context>
@@ -7721,6 +7749,87 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Font Size :</source>
         <translation type="unfinished">字型大小 :</translation>
+    </message>
+</context>
+<context>
+    <name>subAss</name>
+    <message>
+        <source>_Subtitle file (ASS/SSA):</source>
+        <translation type="unfinished">字幕檔(A_SS/SSA):</translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished">選擇字幕檔</translation>
+    </message>
+    <message>
+        <source>_Line spacing:</source>
+        <translation type="unfinished">行距(_L):</translation>
+    </message>
+    <message>
+        <source>_Font scale:</source>
+        <translation type="unfinished">字體縮放(_F):</translation>
+    </message>
+    <message>
+        <source>_Top margin:</source>
+        <translation type="unfinished">頂部邊界(_T):</translation>
+    </message>
+    <message>
+        <source>Botto_m margin</source>
+        <translation type="unfinished">底部邊界(_M)</translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished">ASS</translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilter</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilterDeint</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7760,6 +7869,97 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <message>
         <source>Blend Removal</source>
         <translation type="unfinished">去除混合</translation>
+    </message>
+</context>
+<context>
+    <name>vidColorYuv</name>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7813,19 +8013,39 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     <name>vobSubDialog</name>
     <message>
         <source>VobSub Settings</source>
-        <translation>VobSub 設定</translation>
+        <translation type="obsolete">VobSub 設定</translation>
     </message>
     <message>
         <source>Language:</source>
-        <translation>語言:</translation>
+        <translation type="obsolete">語言:</translation>
     </message>
     <message>
         <source>Idx File:</source>
-        <translation>Idx 檔案:</translation>
+        <translation type="obsolete">Idx 檔案:</translation>
     </message>
     <message>
         <source>Delay:</source>
-        <translation>延遲:</translation>
+        <translation type="obsolete">延遲:</translation>
+    </message>
+    <message>
+        <source>Subtitle Font Size and Position</source>
+        <translation type="unfinished">字幕字型大小和位置</translation>
+    </message>
+    <message>
+        <source>Delay :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Idx File :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7846,32 +8066,28 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
         <source>00:00:00</source>
         <translation>00:00:00</translation>
     </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>x264ConfigDialog</name>
     <message>
         <source>&lt;default&gt;</source>
-        <translation type="unfinished">&lt;預設&gt;</translation>
+        <translation type="obsolete">&lt;預設&gt;</translation>
     </message>
     <message>
         <source>&lt;custom&gt;</source>
-        <translation type="unfinished">&lt;自訂&gt;</translation>
+        <translation type="obsolete">&lt;自訂&gt;</translation>
     </message>
     <message>
         <source>Save As</source>
         <translation type="unfinished">另存新檔</translation>
     </message>
     <message>
-        <source>x264 Configuration File (*.xml)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Are you sure you wish to delete the selected configuration?</source>
-        <translation type="unfinished">確定要刪除所選的設定嗎?</translation>
-    </message>
-    <message>
-        <source>Target Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">確定要刪除所選的設定嗎?</translation>
     </message>
     <message>
         <source>kbit/s</source>
@@ -7879,11 +8095,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Quantiser:</source>
-        <translation type="unfinished">量化值:</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">量化值:</translation>
     </message>
     <message>
         <source>Target Video Size:</source>
@@ -7895,29 +8107,7 @@ Avidemux 能使用其他的方式來儲存，但是&lt;b&gt;你將失去畫格�
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">平均位元率:</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Trellis optimisation requires CABAC coding to be enabled.  CABAC coding will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to delete the selected zone?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">平均位元率:</translation>
     </message>
     <message>
         <source>x264 Configuraton</source>
@@ -8048,10 +8238,6 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>9 (Best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Motion Vector</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8074,14 +8260,6 @@ Do you wish to continue?</source>
     <message>
         <source>Disabled</source>
         <translation type="unfinished">停用</translation>
-    </message>
-    <message>
-        <source>Blind Offset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Smart Analysis</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Direct Prediction Mode:</source>
@@ -8160,14 +8338,6 @@ Do you wish to continue?</source>
         <translation type="unfinished">CABAC</translation>
     </message>
     <message>
-        <source>Pure Interlaced Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Loop Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Strength:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8220,15 +8390,7 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Maximum GOP Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>I-frame Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum GOP Size:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8361,11 +8523,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <source>Variance AQ</source>
-        <translation type="unfinished">適性量化變化量</translation>
-    </message>
-    <message>
-        <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">適性量化變化量</translation>
     </message>
     <message>
         <source>Video Buffer Verifier</source>
@@ -8425,15 +8583,15 @@ Do you wish to continue?</source>
     </message>
     <message>
         <source>1.1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1.1</translation>
     </message>
     <message>
         <source>1.2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1.2</translation>
     </message>
     <message>
         <source>1.3</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1.3</translation>
     </message>
     <message>
         <source>2</source>
@@ -8441,39 +8599,39 @@ Do you wish to continue?</source>
     </message>
     <message>
         <source>2.1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2.1</translation>
     </message>
     <message>
         <source>2.2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2.2</translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">3</translation>
     </message>
     <message>
         <source>3.1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">3.1</translation>
     </message>
     <message>
         <source>3.2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">3.2</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>4.1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4.1</translation>
     </message>
     <message>
         <source>4.2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">4.2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>5.1</source>
@@ -8493,15 +8651,15 @@ Do you wish to continue?</source>
     </message>
     <message>
         <source>7</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">7</translation>
     </message>
     <message>
         <source>15</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">15</translation>
     </message>
     <message>
         <source>31</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">31</translation>
     </message>
     <message>
         <source>Generate Access Unit Delimiters</source>
@@ -8660,12 +8818,6 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Trellis optimisation isn&apos;t possible without CABAC coding enabled.  Trellis optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Fast First Pass</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8687,21 +8839,113 @@ Do you wish to continue?</source>
         <comment>PAR</comment>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Maximum Constant Rate Factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References + Duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loop Filter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open GOP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blu-ray Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fake Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Psychovisual Trellis:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variance AQ:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished">一般</translation>
+    </message>
+    <message>
+        <source>Auto Variance AQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HRD Parameters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBR</source>
+        <translation type="unfinished">VBR</translation>
+    </message>
+    <message>
+        <source>CBR</source>
+        <translation type="unfinished">CBR</translation>
+    </message>
 </context>
 <context>
     <name>x264CustomMatrixDialog</name>
-    <message>
-        <source>Select Matrix File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Read Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Error reading custom matrix file.</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>x264 Custom Matrix</source>
         <translation type="unfinished"></translation>
@@ -8744,41 +8988,92 @@ Do you wish to continue?</source>
     </message>
 </context>
 <context>
-    <name>x264ZoneTableDelegate</name>
+    <name>x264Dialog</name>
     <message>
-        <source>Quantiser</source>
+        <source>Target Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Bitrate Factor</source>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="unfinished">量化值:</translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished">MB</translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished">平均位元率:</translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
+
+Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>x264ZoneTableModel</name>
     <message>
-        <source>Quantiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bitrate Factor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame Start</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame End</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Mode</source>
-        <translation type="unfinished">模式</translation>
+        <translation type="obsolete">模式</translation>
+    </message>
+</context>
+<context>
+    <name>yadifFilter</name>
+    <message>
+        <source>Temporal &amp; spatial check</source>
+        <translation type="unfinished">時間 &amp; 空間檢查</translation>
     </message>
     <message>
-        <source>Value</source>
+        <source>Bob, temporal &amp; spatial check</source>
+        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+    </message>
+    <message>
+        <source>Skip spatial temporal check</source>
+        <translation type="unfinished">略過空間時間檢查</translation>
+    </message>
+    <message>
+        <source>Bob, skip spatial temporal check</source>
+        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
+    </message>
+    <message>
+        <source>Bottom field first</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top field first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_Order:</source>
+        <translation type="unfinished">命令(_O):</translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished">yadif</translation>
     </message>
 </context>
 </TS>

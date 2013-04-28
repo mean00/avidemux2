@@ -32,20 +32,20 @@ typedef struct
 }MenuEntry;
 #ifdef MENU_DECLARE
 static const MenuEntry _myMenuFile[] = {
-            {MENU_ACTION,"Open",    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen), "Ctrl+O"},
-            {MENU_ACTION,"Append",  NULL,ACT_APPEND_VIDEO     ,NULL,             "Ctrl+A"},
-            {MENU_ACTION,"Save",    NULL,ACT_SAVE_VIDEO       ,MKICON(filesaveas),"Ctrl+S"},
-            {MENU_ACTION,"Queue",   NULL,ACT_SAVE_QUEUE       ,NULL              ,"Ctrl+U"},
-            {MENU_SUBMENU,"Save as Image",    NULL,ACT_DUMMY    ,NULL,NULL},
-            {MENU_SUBACTION,"Save as BMP",    NULL,ACT_SAVE_BMP ,NULL,"Ctrl+M"},
-            {MENU_SUBACTION,"Save as JPEG",   NULL,ACT_SAVE_JPG ,NULL,"Ctrl+E"},
-            {MENU_ACTION,"Close",   NULL,ACT_CLOSE          ,NULL,                "Ctrl+W"},
-            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
-            {MENU_ACTION,"Information",NULL,ACT_VIDEO_PROPERTIES,                 MKICON(info),NULL},
-            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
-            {MENU_ACTION,"Connect to avsproxy",NULL,ACT_AVS_PROXY,NULL},
-            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
-            {MENU_ACTION,"Quit",    NULL,ACT_EXIT           ,NULL,"Ctrl+Q"}
+            {MENU_ACTION,QT_TR_NOOP("Open"),    NULL,ACT_OPEN_VIDEO,       MKICON(fileopen), "Ctrl+O"},
+            {MENU_ACTION,QT_TR_NOOP("Append"),  NULL,ACT_APPEND_VIDEO     ,NULL,             "Ctrl+A"},
+            {MENU_ACTION,QT_TR_NOOP("Save"),    NULL,ACT_SAVE_VIDEO       ,MKICON(filesaveas),"Ctrl+S"},
+            {MENU_ACTION,QT_TR_NOOP("Queue"),   NULL,ACT_SAVE_QUEUE       ,NULL              ,"Ctrl+U"},
+            {MENU_SUBMENU,QT_TR_NOOP("Save as Image"),    NULL,ACT_DUMMY    ,NULL,NULL},
+            {MENU_SUBACTION,QT_TR_NOOP("Save as BMP"),    NULL,ACT_SAVE_BMP ,NULL,"Ctrl+M"},
+            {MENU_SUBACTION,QT_TR_NOOP("Save as JPEG"),   NULL,ACT_SAVE_JPG ,NULL,"Ctrl+E"},
+            {MENU_ACTION,QT_TR_NOOP("Close"),   NULL,ACT_CLOSE          ,NULL,                "Ctrl+W"},
+            {MENU_SEPARATOR,QT_TR_NOOP("-"),NULL,ACT_DUMMY             ,NULL,NULL},
+            {MENU_ACTION,QT_TR_NOOP("Information"),NULL,ACT_VIDEO_PROPERTIES,                 MKICON(info),NULL},
+            {MENU_SEPARATOR,QT_TR_NOOP("-"),NULL,ACT_DUMMY             ,NULL,NULL},
+            {MENU_ACTION,QT_TR_NOOP("Connect to avsproxy"),NULL,ACT_AVS_PROXY,NULL},
+            {MENU_SEPARATOR,QT_TR_NOOP("-"),NULL,ACT_DUMMY             ,NULL,NULL},
+            {MENU_ACTION,QT_TR_NOOP("Quit"),    NULL,ACT_EXIT           ,NULL,"Ctrl+Q"}
         };
 
 std::vector<MenuEntry> myMenuFile(_myMenuFile, _myMenuFile + sizeof(_myMenuFile) / sizeof(_myMenuFile[0]));
