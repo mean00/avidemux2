@@ -39,7 +39,7 @@ public:
 DECLARE_VIDEO_FILTER(   lumaOnlyFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
-                        VF_TRANSFORM,            // Category
+                        VF_COLORS,            // Category
                         "lumaonly",            // internal name (must be uniq!)
                         "GreyScale",            // Display name
                         "Remove color, only key grey image." // Description
