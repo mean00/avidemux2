@@ -50,7 +50,14 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
     codecId=id; 
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
-    _context->error_concealment=3; \
+    _context->error_concealment=3; 
+    // Hack
+    if(codecId==CODEC_ID_TSCC)
+    {
+        ADM_warning("Forcing bit per coded sample to %d\n",bpp);
+         _context->bits_per_coded_sample = bpp;
+    }
+    //
     if (avcodec_open(_context, codec) < 0)  
                       { 
                             printf("[lavc] Decoder init: %x video decoder failed!\n",fcc); 

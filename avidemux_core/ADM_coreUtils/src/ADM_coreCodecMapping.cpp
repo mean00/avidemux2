@@ -44,6 +44,7 @@ const ffVideoCodec ffCodec[]=
   {"WVC1", CODEC_ID_VC1,        true, false,    true},
   {"WMVA", CODEC_ID_VC1,        true, false,    true},
   {"VP8 ", CODEC_ID_VP8,        true, false,    false},
+  {"tscc", CODEC_ID_TSCC,       false,false,    false},
 
   
 // RefCopy
