@@ -2712,38 +2712,38 @@ Enable it?</source>
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="unfinished">明度鎖定(_L):</translation>
+        <translation type="obsolete">明度鎖定(_L):</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="unfinished">色度鎖定(_H):</translation>
+        <translation type="obsolete">色度鎖定(_H):</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">明度臨界值(_U):</translation>
+        <translation type="obsolete">明度臨界值(_U):</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">色度臨界值(_R):</translation>
+        <translation type="obsolete">色度臨界值(_R):</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="unfinished">場景變換(_S):</translation>
+        <translation type="obsolete">場景變換(_S):</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">減少雜訊</translation>
+        <translation type="obsolete">減少雜訊</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">脫離臨界值</translation>
+        <translation type="obsolete">脫離臨界值</translation>
     </message>
     <message>
         <source>Drop Out</source>
-        <translation type="unfinished">脫離</translation>
+        <translation type="obsolete">脫離</translation>
     </message>
 </context>
 <context>
@@ -2821,42 +2821,42 @@ Enable it?</source>
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">時間臨界值(_T):</translation>
+        <translation type="obsolete">時間臨界值(_T):</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">空間臨界值(_S):</translation>
+        <translation type="obsolete">空間臨界值(_S):</translation>
     </message>
     <message>
         <source>FluxSmooth</source>
-        <translation type="unfinished">融熔平滑</translation>
+        <translation type="obsolete">融熔平滑</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="unfinished">濾鏡強度(_F):</translation>
+        <translation type="obsolete">濾鏡強度(_F):</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="unfinished">量化值(_Q):</translation>
+        <translation type="obsolete">量化值(_Q):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">去除水平方向塊狀色斑(_H)</translation>
+        <translation type="obsolete">去除水平方向塊狀色斑(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">去除垂直方向塊狀色斑(_V)</translation>
+        <translation type="obsolete">去除垂直方向塊狀色斑(_V)</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="unfinished">去除環狀色斑(_D)</translation>
+        <translation type="obsolete">去除環狀色斑(_D)</translation>
     </message>
     <message>
         <source>Forced Postprocessing</source>
-        <translation type="unfinished">強制性後置處理</translation>
+        <translation type="obsolete">強制性後置處理</translation>
     </message>
 </context>
 <context>
@@ -2999,11 +2999,11 @@ Enable it?</source>
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">空間的明度強度(_S):</translation>
+        <translation type="obsolete">空間的明度強度(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">空間的色度強度(_P):</translation>
+        <translation type="obsolete">空間的色度強度(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
@@ -3014,84 +3014,80 @@ Enable it?</source>
         <translation type="obsolete">MPlayer hqdn3d</translation>
     </message>
     <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">空間的明度強度(_S):</translation>
+        <translation type="obsolete">空間的明度強度(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">空間的色度強度(_P):</translation>
+        <translation type="obsolete">空間的色度強度(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">時間強度(_T):</translation>
+        <translation type="obsolete">時間強度(_T):</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">明度臨界值(_L):</translation>
+        <translation type="obsolete">明度臨界值(_L):</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">色度臨界值(_H):</translation>
+        <translation type="obsolete">色度臨界值(_H):</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="unfinished">半徑(_R):</translation>
+        <translation type="obsolete">半徑(_R):</translation>
     </message>
     <message>
         <source>Soften</source>
-        <translation type="unfinished">柔化</translation>
+        <translation type="obsolete">柔化</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">水平層疊(_H):</translation>
+        <translation type="obsolete">水平層疊(_H):</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">垂直層疊(_V):</translation>
+        <translation type="obsolete">垂直層疊(_V):</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">收縮係數(_S):</translation>
+        <translation type="obsolete">收縮係數(_S):</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="unfinished">顯示畫格(_F)</translation>
+        <translation type="obsolete">顯示畫格(_F)</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation type="unfinished">馬賽克</translation>
+        <translation type="obsolete">馬賽克</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="unfinished">嘗試反轉(_T)</translation>
+        <translation type="obsolete">嘗試反轉(_T)</translation>
     </message>
     <message>
         <source>Pal Field Shift</source>
-        <translation type="unfinished">Pal 場移動</translation>
+        <translation type="obsolete">Pal 場移動</translation>
     </message>
 </context>
 <context>
@@ -3215,11 +3211,11 @@ Enable it?</source>
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="unfinished">穩定臨界值</translation>
+        <translation type="obsolete">穩定臨界值</translation>
     </message>
     <message>
         <source>Stabilize</source>
-        <translation type="unfinished">穩定</translation>
+        <translation type="obsolete">穩定</translation>
     </message>
 </context>
 <context>
@@ -3257,11 +3253,11 @@ Enable it?</source>
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="unfinished">無法開啟字幕檔</translation>
+        <translation type="obsolete">無法開啟字幕檔</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="unfinished">無法識別字幕格式</translation>
+        <translation type="obsolete">無法識別字幕格式</translation>
     </message>
 </context>
 <context>
@@ -3410,48 +3406,20 @@ multiplied by this):</source>
 <context>
     <name>ADMVideoTIsophote</name>
     <message>
-        <source>Simple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
-    </message>
-    <message>
-        <source>Slow</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">中</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">類型(_T):</translation>
-    </message>
-    <message>
-        <source>_Iterations:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">類型(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">越小表示更多的去交錯</translation>
-    </message>
-    <message>
-        <source>_Chroma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chroma.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Step.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">越小表示更多的去交錯</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
@@ -3579,7 +3547,7 @@ multiplied by this):</source>
     </message>
     <message>
         <source>Attempt to open %s failed!</source>
-        <translation>嘗試開啟 %s 失敗!</translation>
+        <translation type="unfinished">嘗試開啟 %s 失敗!</translation>
     </message>
     <message>
         <source>Video dimensions don&apos;t match.</source>
@@ -3709,51 +3677,51 @@ Drop timing informations ?</source>
     <name>ADM_Qt4Factory::ADM_Qbitrate</name>
     <message>
         <source>Constant Bitrate</source>
-        <translation>固定位元率</translation>
+        <translation type="unfinished">固定位元率</translation>
     </message>
     <message>
         <source>Constant Quantiser</source>
-        <translation>固定量化值</translation>
+        <translation type="unfinished">固定量化值</translation>
     </message>
     <message>
         <source>Same Quantiser as Input</source>
-        <translation>量化值與輸入來源相同</translation>
+        <translation type="unfinished">量化值與輸入來源相同</translation>
     </message>
     <message>
         <source>Constant Rate Factor</source>
-        <translation>固定數比率係數</translation>
+        <translation type="unfinished">固定數比率係數</translation>
     </message>
     <message>
         <source>Two Pass - Video Size</source>
-        <translation>二次運算 - 視訊大小</translation>
+        <translation type="unfinished">二次運算 - 視訊大小</translation>
     </message>
     <message>
         <source>Two Pass - Average Bitrate</source>
-        <translation>二次運算 - 平均位元率</translation>
+        <translation type="unfinished">二次運算 - 平均位元率</translation>
     </message>
     <message>
         <source>Encoding mode</source>
-        <translation>編碼模式</translation>
+        <translation type="unfinished">編碼模式</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation>位元率</translation>
+        <translation type="unfinished">位元率</translation>
     </message>
     <message>
         <source>Target bitrate (kb/s)</source>
-        <translation>目標位元率 (kb/s)</translation>
+        <translation type="unfinished">目標位元率 (kb/s)</translation>
     </message>
     <message>
         <source>Target video size (MB)</source>
-        <translation>目標視訊大小 (MB)</translation>
+        <translation type="unfinished">目標視訊大小 (MB)</translation>
     </message>
     <message>
         <source>Average bitrate (kb/s)</source>
-        <translation>平均位元率 (kb/s)</translation>
+        <translation type="unfinished">平均位元率 (kb/s)</translation>
     </message>
     <message>
         <source>-</source>
-        <translation>-</translation>
+        <translation type="unfinished">-</translation>
     </message>
     <message>
         <source>Quantizer</source>
@@ -3860,78 +3828,41 @@ Drop timing informations ?</source>
     <name>ADM_qt4Factory::ADM_QthreadCount</name>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation type="unfinished">停用</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation>自動偵測</translation>
+        <translation type="unfinished">自動偵測</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation>自訂</translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">自訂</translation>
     </message>
 </context>
 <context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
-        <translation>開啟 Avidemux</translation>
+        <translation type="unfinished">開啟 Avidemux</translation>
     </message>
 </context>
 <context>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">處理明度(_P)</translation>
+        <translation type="obsolete">處理明度(_P)</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
+        <translation type="obsolete">處理明度平面</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">處理色度(_R)</translation>
+        <translation type="obsolete">處理色度(_R)</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">快速卷積</translation>
+        <translation type="obsolete">快速卷積</translation>
     </message>
 </context>
 <context>
@@ -3976,47 +3907,43 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">快</translation>
+        <translation type="obsolete">快</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
+        <translation type="obsolete">中</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="unfinished">緩慢反覆的動作搜尋</translation>
+        <translation type="obsolete">緩慢反覆的動作搜尋</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished">特別慢 (同於3或3倍數以上的參考畫格數)</translation>
+        <translation type="obsolete">特別慢 (同於3或3倍數以上的參考畫格數)</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="unfinished">圖場控制(_F):</translation>
+        <translation type="obsolete">圖場控制(_F):</translation>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="unfinished">_Qp:</translation>
+        <translation type="obsolete">_Qp:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeinterlace</translation>
-    </message>
-    <message>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">mcDeinterlace</translation>
     </message>
 </context>
 <context>
@@ -4054,189 +3981,177 @@ Drop timing informations ?</source>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="unfinished">明度時間臨界值(_L):</translation>
+        <translation type="obsolete">明度時間臨界值(_L):</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished">色度時間臨界值(_R):</translation>
+        <translation type="obsolete">色度時間臨界值(_R):</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="unfinished">時間清理器</translation>
+        <translation type="obsolete">時間清理器</translation>
     </message>
 </context>
 <context>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="unfinished">出</translation>
+        <translation type="obsolete">出</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="unfinished">淡出</translation>
+        <translation type="obsolete">淡出</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">入</translation>
+        <translation type="obsolete">入</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="unfinished">淡入</translation>
+        <translation type="obsolete">淡入</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">淡化方式(_F):</translation>
+        <translation type="obsolete">淡化方式(_F):</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="unfinished">起始畫格(_S):</translation>
+        <translation type="obsolete">起始畫格(_S):</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="unfinished">結束畫格(_E):</translation>
+        <translation type="obsolete">結束畫格(_E):</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="unfinished">逐漸消失成黑色(_B)</translation>
+        <translation type="obsolete">逐漸消失成黑色(_B)</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">淡化</translation>
+        <translation type="obsolete">淡化</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="unfinished">參數錯誤</translation>
+        <translation type="obsolete">參數錯誤</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="unfinished">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
-    </message>
-    <message>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
     </message>
 </context>
 <context>
     <name>CalculatorDialog</name>
     <message>
         <source>Calculator</source>
-        <translation>計算機</translation>
+        <translation type="unfinished">計算機</translation>
     </message>
     <message>
         <source>Target</source>
-        <translation>目標</translation>
+        <translation type="unfinished">目標</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation>00:00:00</translation>
+        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>AVI</source>
-        <translation>AVI</translation>
+        <translation type="unfinished">AVI</translation>
     </message>
     <message>
         <source>OGM</source>
-        <translation>OGM</translation>
+        <translation type="unfinished">OGM</translation>
     </message>
     <message>
         <source>MPEG</source>
-        <translation>MPEG</translation>
+        <translation type="unfinished">MPEG</translation>
     </message>
     <message>
         <source>Medium:</source>
-        <translation>媒體:</translation>
+        <translation type="unfinished">媒體:</translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation>格式:</translation>
+        <translation type="unfinished">格式:</translation>
     </message>
     <message>
         <source>Duration:</source>
-        <translation>持續時間:</translation>
+        <translation type="unfinished">持續時間:</translation>
     </message>
     <message>
         <source>1 x 80 minute CD</source>
-        <translation>1 x 80 分鐘 CD</translation>
+        <translation type="unfinished">1 x 80 分鐘 CD</translation>
     </message>
     <message>
         <source>2 x 80 minute CD</source>
-        <translation>2 x 80 分鐘 CD</translation>
+        <translation type="unfinished">2 x 80 分鐘 CD</translation>
     </message>
     <message>
         <source>1 x 74 minute CD</source>
-        <translation>1 x 74 分鐘 CD</translation>
+        <translation type="unfinished">1 x 74 分鐘 CD</translation>
     </message>
     <message>
         <source>2 x 74 minute CD</source>
-        <translation>2 x 74 分鐘 CD</translation>
+        <translation type="unfinished">2 x 74 分鐘 CD</translation>
     </message>
     <message>
         <source>DVD-5</source>
-        <translation>DVD-5</translation>
+        <translation type="unfinished">DVD-5</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation>自訂</translation>
+        <translation type="unfinished">自訂</translation>
     </message>
     <message>
         <source>Custom Size:</source>
-        <translation>自訂大小:</translation>
+        <translation type="unfinished">自訂大小:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation>MB</translation>
+        <translation type="unfinished">MB</translation>
     </message>
     <message>
         <source>Audio Bitrate</source>
-        <translation>音訊位元率</translation>
+        <translation type="unfinished">音訊位元率</translation>
     </message>
     <message>
         <source>Track 1:</source>
-        <translation>軌道 1:</translation>
+        <translation type="unfinished">軌道 1:</translation>
     </message>
     <message>
         <source>kbps</source>
-        <translation>kbps</translation>
+        <translation type="unfinished">kbps</translation>
     </message>
     <message>
         <source>Track 2:</source>
-        <translation>軌道 2:</translation>
+        <translation type="unfinished">軌道 2:</translation>
     </message>
     <message>
         <source>Result</source>
-        <translation>結果</translation>
+        <translation type="unfinished">結果</translation>
     </message>
     <message>
         <source>Audio Size:</source>
-        <translation>音訊大小:</translation>
+        <translation type="unfinished">音訊大小:</translation>
     </message>
     <message>
         <source>Video Size:</source>
-        <translation>視訊大小:</translation>
+        <translation type="unfinished">視訊大小:</translation>
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>Total Size:</source>
-        <translation>總大小:</translation>
+        <translation type="unfinished">總大小:</translation>
     </message>
     <message>
         <source>Bits Per Pixel:</source>
-        <translation>每像素位元數:</translation>
+        <translation type="unfinished">每像素位元數:</translation>
     </message>
     <message>
         <source>Video Bitrate:</source>
-        <translation>視訊位元率:</translation>
+        <translation type="unfinished">視訊位元率:</translation>
     </message>
     <message>
         <source>OK</source>
@@ -4409,23 +4324,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">保持畫格和 fps 的數目</translation>
+        <translation type="obsolete">保持畫格和 fps 的數目</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">兩倍畫格和 fps 的數目</translation>
+        <translation type="obsolete">兩倍畫格和 fps 的數目</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">兩倍畫格的數量(慢動作)</translation>
+        <translation type="obsolete">兩倍畫格的數量(慢動作)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -4433,27 +4348,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="unfinished">額外(_E)</translation>
+        <translation type="obsolete">額外(_E)</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">額外檢查，避免正在使用它</translation>
+        <translation type="obsolete">額外檢查，避免正在使用它</translation>
     </message>
     <message>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
-    </message>
-    <message>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DGBob</translation>
     </message>
 </context>
 <context>
@@ -4497,23 +4408,23 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="unfinished">丟棄較靠近的</translation>
+        <translation type="obsolete">丟棄較靠近的</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished">取代 (插入)</translation>
+        <translation type="obsolete">取代 (插入)</translation>
     </message>
     <message>
         <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished">丟棄 longer dupe (animés)</translation>
+        <translation type="obsolete">丟棄 longer dupe (animés)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="unfinished">去除 Pulldown 偽裝</translation>
+        <translation type="obsolete">去除 Pulldown 偽裝</translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">最快 (沒有色度，部份的明度)</translation>
+        <translation type="obsolete">最快 (沒有色度，部份的明度)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -4521,7 +4432,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">中 (全部的明度，沒有色度)</translation>
+        <translation type="obsolete">中 (全部的明度，沒有色度)</translation>
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
@@ -4529,31 +4440,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="unfinished">品質(_Q):</translation>
+        <translation type="obsolete">品質(_Q):</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="unfinished">臨界值 1(_T):</translation>
+        <translation type="obsolete">臨界值 1(_T):</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished">臨界值 2(_H):</translation>
+        <translation type="obsolete">臨界值 2(_H):</translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="unfinished">循環(_Y):</translation>
+        <translation type="obsolete">循環(_Y):</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="unfinished">去除梳形雜訊成批編碼器</translation>
-    </message>
-    <message>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">去除梳形雜訊成批編碼器</translation>
     </message>
 </context>
 <context>
@@ -4574,16 +4481,8 @@ Drop timing informations ?</source>
 <context>
     <name>DialogAudioTracks</name>
     <message>
-        <source>Audio Tracks Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Track 1</source>
         <translation type="unfinished">軌道 2: {1?}</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Configure</source>
@@ -4605,56 +4504,72 @@ Drop timing informations ?</source>
         <source>Track 4</source>
         <translation type="unfinished">軌道 2: {4?}</translation>
     </message>
+    <message>
+        <source>Audio Tracks Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DialogOcr</name>
     <message>
         <source>Dialog</source>
-        <translation>對話窗</translation>
+        <translation type="unfinished">對話窗</translation>
     </message>
     <message>
         <source>Calibrate</source>
-        <translation>校準</translation>
+        <translation type="unfinished">校準</translation>
     </message>
     <message>
         <source>Skip All</source>
-        <translation>略過全部</translation>
+        <translation type="unfinished">略過全部</translation>
     </message>
     <message>
         <source>Skip Glyph</source>
-        <translation>略過字形</translation>
+        <translation type="unfinished">略過字形</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation>忽略</translation>
+        <translation type="unfinished">忽略</translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation>確定</translation>
+        <translation type="unfinished">確定</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation type="unfinished">關閉</translation>
     </message>
     <message>
         <source>00:00:00/000</source>
-        <translation>00:00:00/000</translation>
+        <translation type="unfinished">00:00:00/000</translation>
     </message>
     <message>
         <source>Timecode:</source>
-        <translation>時間碼:</translation>
+        <translation type="unfinished">時間碼:</translation>
     </message>
     <message>
         <source>0/0</source>
-        <translation>0/0</translation>
+        <translation type="unfinished">0/0</translation>
     </message>
     <message>
         <source>Nb Lines :</source>
-        <translation>線的數目 :</translation>
+        <translation type="unfinished">線的數目 :</translation>
     </message>
 </context>
 <context>
     <name>DialogProgress</name>
+    <message>
+        <source>1/1</source>
+        <translation type="unfinished">1/1</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
     <message>
         <source>Progress</source>
         <translation type="unfinished"></translation>
@@ -4664,16 +4579,8 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>1/1</source>
-        <translation type="unfinished">1/1</translation>
-    </message>
-    <message>
         <source>File being written </source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="unfinished">...</translation>
     </message>
 </context>
 <context>
@@ -4935,11 +4842,11 @@ Drop timing informations ?</source>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation>讀取 SVQ3 檔頭時發生問題</translation>
+        <translation type="obsolete">讀取 SVQ3 檔頭時發生問題</translation>
     </message>
     <message>
         <source>No stts table</source>
-        <translation>沒有 stts 表</translation>
+        <translation type="obsolete">沒有 stts 表</translation>
     </message>
 </context>
 <context>
@@ -4973,7 +4880,7 @@ Drop timing informations ?</source>
     <name>MainWindow</name>
     <message>
         <source>Avidemux</source>
-        <translation>Avidemux</translation>
+        <translation type="unfinished">Avidemux</translation>
     </message>
     <message>
         <source>&lt;b&gt;Video&lt;/b&gt;</source>
@@ -4981,15 +4888,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation type="unfinished">複製</translation>
     </message>
     <message>
         <source>Configure</source>
-        <translation>設定</translation>
+        <translation type="unfinished">設定</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>濾鏡</translation>
+        <translation type="unfinished">濾鏡</translation>
     </message>
     <message>
         <source>&lt;b&gt;Audio&lt;/b&gt;</source>
@@ -4997,11 +4904,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Shift:</source>
-        <translation>位移(&amp;S):</translation>
+        <translation type="unfinished">位移(&amp;S):</translation>
     </message>
     <message>
         <source>ms</source>
-        <translation>ms</translation>
+        <translation type="unfinished">ms</translation>
     </message>
     <message>
         <source>&lt;b&gt;Format&lt;/b&gt;</source>
@@ -5009,7 +4916,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="unfinished">...</translation>
     </message>
     <message>
         <source>Frame:</source>
@@ -5025,15 +4932,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Time:</source>
-        <translation>時間:</translation>
+        <translation type="unfinished">時間:</translation>
     </message>
     <message>
         <source>00:00:00.000</source>
-        <translation>00:00:00.000</translation>
+        <translation type="unfinished">00:00:00.000</translation>
     </message>
     <message>
         <source>/ 00:00:00.000</source>
-        <translation>/ 00:00:00.000</translation>
+        <translation type="unfinished">/ 00:00:00.000</translation>
     </message>
     <message>
         <source>Frame Type:</source>
@@ -5041,47 +4948,47 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>?</source>
-        <translation>?</translation>
+        <translation type="unfinished">?</translation>
     </message>
     <message>
         <source>Selection</source>
-        <translation>選取</translation>
+        <translation type="unfinished">選取</translation>
     </message>
     <message>
         <source>A:</source>
-        <translation>A:</translation>
+        <translation type="unfinished">A:</translation>
     </message>
     <message>
         <source>000000</source>
-        <translation>000000</translation>
+        <translation type="unfinished">000000</translation>
     </message>
     <message>
         <source>B:</source>
-        <translation>B:</translation>
+        <translation type="unfinished">B:</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>說明(&amp;H)</translation>
+        <translation type="unfinished">說明(&amp;H)</translation>
     </message>
     <message>
         <source>Vi&amp;deo</source>
-        <translation>視訊(&amp;D)</translation>
+        <translation type="unfinished">視訊(&amp;D)</translation>
     </message>
     <message>
         <source>&amp;Audio</source>
-        <translation>音訊(&amp;A)</translation>
+        <translation type="unfinished">音訊(&amp;A)</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation>工具(&amp;T)</translation>
+        <translation type="unfinished">工具(&amp;T)</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>編輯(&amp;E)</translation>
+        <translation type="unfinished">編輯(&amp;E)</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation>檢視(&amp;V)</translation>
+        <translation type="unfinished">檢視(&amp;V)</translation>
     </message>
     <message>
         <source>&amp;Preview Mode</source>
@@ -5089,11 +4996,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Custom</source>
-        <translation>自訂(&amp;C)</translation>
+        <translation type="unfinished">自訂(&amp;C)</translation>
     </message>
     <message>
         <source>&amp;Go</source>
-        <translation>前往(&amp;G)</translation>
+        <translation type="unfinished">前往(&amp;G)</translation>
     </message>
     <message>
         <source>A&amp;uto</source>
@@ -5101,7 +5008,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation>檔案(&amp;F)</translation>
+        <translation type="unfinished">檔案(&amp;F)</translation>
     </message>
     <message>
         <source>&amp;Recent Files</source>
@@ -5113,7 +5020,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation>開啟(&amp;O)...</translation>
+        <translation type="unfinished">開啟(&amp;O)...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -5177,19 +5084,19 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Information...</source>
-        <translation>資訊(&amp;I)...</translation>
+        <translation type="unfinished">資訊(&amp;I)...</translation>
     </message>
     <message>
         <source>Alt+Return</source>
-        <translation>Alt+Return</translation>
+        <translation type="unfinished">Alt+Return</translation>
     </message>
     <message>
         <source>Save &amp;Video...</source>
-        <translation>儲存影片(&amp;V)...</translation>
+        <translation type="unfinished">儲存影片(&amp;V)...</translation>
     </message>
     <message>
         <source>Save Video</source>
-        <translation>儲存影片</translation>
+        <translation type="unfinished">儲存影片</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
@@ -5213,19 +5120,19 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Load/Run Project...</source>
-        <translation>載入/執行專案(&amp;L)...</translation>
+        <translation type="unfinished">載入/執行專案(&amp;L)...</translation>
     </message>
     <message>
         <source>Load/Run Project</source>
-        <translation>載入/執行專案</translation>
+        <translation type="unfinished">載入/執行專案</translation>
     </message>
     <message>
         <source>Save &amp;Project</source>
-        <translation>儲存專案(&amp;P)</translation>
+        <translation type="unfinished">儲存專案(&amp;P)</translation>
     </message>
     <message>
         <source>Save Project</source>
-        <translation>儲存專案</translation>
+        <translation type="unfinished">儲存專案</translation>
     </message>
     <message>
         <source>Save P&amp;roject As...</source>
@@ -5321,7 +5228,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Ctrl+Alt+S</source>
-        <translation>Ctrl+Alt+S</translation>
+        <translation type="unfinished">Ctrl+Alt+S</translation>
     </message>
     <message>
         <source>&amp;Filters</source>
@@ -5329,11 +5236,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Calculator...</source>
-        <translation>計算機(&amp;C)...</translation>
+        <translation type="unfinished">計算機(&amp;C)...</translation>
     </message>
     <message>
         <source>F7</source>
-        <translation>F7</translation>
+        <translation type="unfinished">F7</translation>
     </message>
     <message>
         <source>&amp;Rebuild I &amp;&amp; B Frames</source>
@@ -5581,23 +5488,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Input</source>
-        <translation>輸入(&amp;I)</translation>
+        <translation type="unfinished">輸入(&amp;I)</translation>
     </message>
     <message>
         <source>&amp;Output</source>
-        <translation>輸出(&amp;O)</translation>
+        <translation type="unfinished">輸出(&amp;O)</translation>
     </message>
     <message>
         <source>Si&amp;de</source>
-        <translation>左右並排(&amp;D)</translation>
+        <translation type="unfinished">左右並排(&amp;D)</translation>
     </message>
     <message>
         <source>&amp;Top</source>
-        <translation>上下並排(&amp;T)</translation>
+        <translation type="unfinished">上下並排(&amp;T)</translation>
     </message>
     <message>
         <source>&amp;Separate</source>
-        <translation>分離視窗(&amp;S)</translation>
+        <translation type="unfinished">分離視窗(&amp;S)</translation>
     </message>
     <message>
         <source>&amp;Close</source>
@@ -5622,6 +5529,10 @@ Drop timing informations ?</source>
     <message>
         <source>DVD</source>
         <translation type="obsolete">DVD</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">畫格類型:</translation>
     </message>
     <message>
         <source>&amp;Toolbars</source>
@@ -5666,10 +5577,6 @@ Drop timing informations ?</source>
     <message>
         <source>Navigation</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="unfinished">畫格類型:</translation>
     </message>
     <message>
         <source>&lt;b&gt;Selection&lt;/b&gt;</source>
@@ -5931,57 +5838,57 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="unfinished">遮罩(_M)</translation>
+        <translation type="obsolete">遮罩(_M)</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="unfinished">高 Q(_H)</translation>
+        <translation type="obsolete">高 Q(_H)</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">強度(_S):</translation>
+        <translation type="obsolete">強度(_S):</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">MSharpen</translation>
+        <translation type="obsolete">MSharpen</translation>
     </message>
 </context>
 <context>
     <name>Msmooth</name>
     <message>
         <source>_High quality</source>
-        <translation type="unfinished">高品質(_H)</translation>
+        <translation type="obsolete">高品質(_H)</translation>
     </message>
     <message>
         <source>Show _mask</source>
-        <translation type="unfinished">顯示遮罩(_M)</translation>
+        <translation type="obsolete">顯示遮罩(_M)</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">強度(_S):</translation>
+        <translation type="obsolete">強度(_S):</translation>
     </message>
     <message>
         <source>MSmooth</source>
-        <translation type="unfinished">MSmooth</translation>
+        <translation type="obsolete">MSmooth</translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
         <source>Malformed header</source>
-        <translation>不正常的標頭</translation>
+        <translation type="obsolete">不正常的標頭</translation>
     </message>
     <message>
         <source>Unpacking bitstream</source>
-        <translation>拆開打包的位元流</translation>
+        <translation type="obsolete">拆開打包的位元流</translation>
     </message>
     <message>
         <source>Indexing</source>
@@ -6008,17 +5915,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>QtScriptEngine</name>
-    <message>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open script file %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SpiderMonkeyShell</name>
     <message>
         <source>Shell</source>
@@ -6041,129 +5937,129 @@ Drop timing informations ?</source>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="unfinished">無策略</translation>
+        <translation type="obsolete">無策略</translation>
     </message>
     <message>
         <source>3:2 pulldown</source>
-        <translation type="unfinished">3:2 pulldown</translation>
+        <translation type="obsolete">3:2 pulldown</translation>
     </message>
     <message>
         <source>PAL/SECAM</source>
-        <translation type="unfinished">PAL/SECAM</translation>
+        <translation type="obsolete">PAL/SECAM</translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation type="unfinished">從 PAL 轉成 NTSC</translation>
+        <translation type="obsolete">從 PAL 轉成 NTSC</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished">絕不</translation>
+        <translation type="obsolete">絕不</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="unfinished">如果仍然有梳形雜訊</translation>
+        <translation type="obsolete">如果仍然有梳形雜訊</translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="unfinished">總是</translation>
+        <translation type="obsolete">總是</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>None but compute</source>
-        <translation type="unfinished">無但計算</translation>
+        <translation type="obsolete">無但計算</translation>
     </message>
     <message>
         <source>Postproc on best match</source>
-        <translation type="unfinished">在最佳比對上執行後置處理</translation>
+        <translation type="obsolete">在最佳比對上執行後置處理</translation>
     </message>
     <message>
         <source>Postproc and show zones (debug)</source>
-        <translation type="unfinished">後置處理和顯示區域 (除錯)</translation>
+        <translation type="obsolete">後置處理和顯示區域 (除錯)</translation>
     </message>
     <message>
         <source>Process image (not fields)</source>
-        <translation type="unfinished">處理圖像 (非圖場)</translation>
+        <translation type="obsolete">處理圖像 (非圖場)</translation>
     </message>
     <message>
         <source>Process image (not fields), debug</source>
-        <translation type="unfinished">處理圖像 (非圖場)，除錯</translation>
+        <translation type="obsolete">處理圖像 (非圖場)，除錯</translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="unfinished">策略(_S):</translation>
+        <translation type="obsolete">策略(_S):</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">圖場優先次序(_F):</translation>
+        <translation type="obsolete">圖場優先次序(_F):</translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="unfinished">後置處理(_P):</translation>
+        <translation type="obsolete">後置處理(_P):</translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="unfinished">嘗試反向(_T):</translation>
+        <translation type="obsolete">嘗試反向(_T):</translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="unfinished">正向臨界值(_D):</translation>
+        <translation type="obsolete">正向臨界值(_D):</translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="unfinished">反向臨界值(_B):</translation>
+        <translation type="obsolete">反向臨界值(_B):</translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="unfinished">雜訊臨界值(_N):</translation>
+        <translation type="obsolete">雜訊臨界值(_N):</translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="unfinished">後置處理臨界值(_R):</translation>
+        <translation type="obsolete">後置處理臨界值(_R):</translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="unfinished">使用色度來判定(_U)</translation>
+        <translation type="obsolete">使用色度來判定(_U)</translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="unfinished">顯示資訊(_W)</translation>
+        <translation type="obsolete">顯示資訊(_W)</translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="unfinished">除錯(_G)</translation>
+        <translation type="obsolete">除錯(_G)</translation>
     </message>
     <message>
         <source>Bl_end</source>
-        <translation type="unfinished">混合(_E)</translation>
+        <translation type="obsolete">混合(_E)</translation>
     </message>
     <message>
         <source>Decomb Telecide</source>
-        <translation type="unfinished">去除梳形雜訊電視電影</translation>
+        <translation type="obsolete">去除梳形雜訊電視電影</translation>
     </message>
 </context>
 <context>
     <name>Ui_licenseWindow</name>
     <message>
         <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  version 2 as published by the Free Software Foundation&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux 是自由軟體；您可以遵照自由軟體基金會 (Free Software Foundation) 出版的 GNU 通用公共許可證條款 (GNU General Public License) 第二版來修改和重新發佈這一程式。&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="unfinished">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux 是自由軟體；您可以遵照自由軟體基金會 (Free Software Foundation) 出版的 GNU 通用公共許可證條款 (GNU General Public License) 第二版來修改和重新發佈這一程式。&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
     <name>Ui_vobsubWindow</name>
     <message>
         <source>Select Idx File</source>
-        <translation>選擇 Idx 檔案</translation>
+        <translation type="unfinished">選擇 Idx 檔案</translation>
     </message>
 </context>
 <context>
@@ -6269,23 +6165,23 @@ Drop timing informations ?</source>
     <name>aboutDialog</name>
     <message>
         <source>About Avidemux</source>
-        <translation>關於 Avidemux</translation>
+        <translation type="unfinished">關於 Avidemux</translation>
     </message>
     <message>
         <source>Avidemux </source>
-        <translation>Avidemux </translation>
+        <translation type="unfinished">Avidemux </translation>
     </message>
     <message>
         <source>Multi-platform Video Editor</source>
-        <translation>跨平台影片編輯工具</translation>
+        <translation type="unfinished">跨平台影片編輯工具</translation>
     </message>
     <message>
         <source>http://www.avidemux.org</source>
-        <translation>http://www.avidemux.org</translation>
+        <translation type="unfinished">http://www.avidemux.org</translation>
     </message>
     <message>
         <source>&amp;License</source>
-        <translation>授權(&amp;L)</translation>
+        <translation type="unfinished">授權(&amp;L)</translation>
     </message>
     <message utf8="true">
         <source>© 2001 - 2012  Mean</source>
@@ -6300,81 +6196,320 @@ Drop timing informations ?</source>
     <name>addBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">左側邊界(_L):</translation>
+        <translation type="obsolete">左側邊界(_L):</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">右側邊界(_R):</translation>
+        <translation type="obsolete">右側邊界(_R):</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">底部邊界(_B):</translation>
+        <translation type="obsolete">底部邊界(_B):</translation>
     </message>
     <message>
         <source>Add Borders</source>
-        <translation type="unfinished">加入邊框</translation>
+        <translation type="obsolete">加入邊框</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">不正確的參數</translation>
+        <translation type="obsolete">不正確的參數</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+        <translation type="obsolete">所有參數必須是偶數且在範圍內。</translation>
     </message>
 </context>
 <context>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">圖標(_L)(jpg 檔):</translation>
+        <translation type="obsolete">圖標(_L)(jpg 檔):</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">選擇 JPEG 檔案</translation>
+        <translation type="obsolete">選擇 JPEG 檔案</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">_X 位置:</translation>
+        <translation type="obsolete">_X 位置:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">_Y 位置:</translation>
+        <translation type="obsolete">_Y 位置:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alpha:</translation>
+        <translation type="obsolete">_Alpha:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">圖標</translation>
+        <translation type="obsolete">圖標</translation>
+    </message>
+</context>
+<context>
+    <name>adm</name>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use systray while encoding</source>
+        <translation type="unfinished">編碼時使用工作欄(_U)</translation>
+    </message>
+    <message>
+        <source>_Accept non-standard audio frequency for DVD</source>
+        <translation type="unfinished">同意在 DVD 使用非標準的音訊頻率(_A)</translation>
+    </message>
+    <message>
+        <source>Create _OpenDML files</source>
+        <translation type="unfinished">建立 _OpenDML 檔案</translation>
+    </message>
+    <message>
+        <source>SIMD</source>
+        <translation type="unfinished">SIMD</translation>
+    </message>
+    <message>
+        <source>Enable all SIMD</source>
+        <translation type="unfinished">開啟所有 SIMD</translation>
+    </message>
+    <message>
+        <source>Enable MMX</source>
+        <translation type="unfinished">開啟 MMX</translation>
+    </message>
+    <message>
+        <source>Enable MMXEXT</source>
+        <translation type="unfinished">開啟 MMXEXT</translation>
+    </message>
+    <message>
+        <source>Enable 3DNOW</source>
+        <translation type="unfinished">開啟 3DNOW</translation>
+    </message>
+    <message>
+        <source>Enable 3DNOWEXT</source>
+        <translation type="unfinished">開啟 3DNOWEXT</translation>
+    </message>
+    <message>
+        <source>Enable SSE</source>
+        <translation type="unfinished">開啟 SSE</translation>
+    </message>
+    <message>
+        <source>Enable SSE2</source>
+        <translation type="unfinished">開啟 SSE2</translation>
+    </message>
+    <message>
+        <source>Enable SSE3</source>
+        <translation type="unfinished">開啟 SSE3</translation>
+    </message>
+    <message>
+        <source>Enable SSSE3</source>
+        <translation type="unfinished">開啟 SSSE3</translation>
+    </message>
+    <message>
+        <source>_lavc threads:</source>
+        <translation type="unfinished">_lavc 訊息串:</translation>
+    </message>
+    <message>
+        <source>Multi-threading</source>
+        <translation type="unfinished">多執行緒</translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished">高</translation>
+    </message>
+    <message>
+        <source>Above normal</source>
+        <translation type="unfinished">高於一般</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished">一般</translation>
+    </message>
+    <message>
+        <source>Below normal</source>
+        <translation type="unfinished">低於一般</translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished">低</translation>
+    </message>
+    <message>
+        <source>_Encoding priority:</source>
+        <translation type="unfinished">編碼優先次序(_E):</translation>
+    </message>
+    <message>
+        <source>_Indexing/unpacking priority:</source>
+        <translation type="unfinished">索引/拆開打包的優先次序(_I):</translation>
+    </message>
+    <message>
+        <source>_Playback priority:</source>
+        <translation type="unfinished">倒帶優先次序(_P):</translation>
+    </message>
+    <message>
+        <source>Prioritisation</source>
+        <translation type="unfinished">優化</translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use alternative tag for MP3 in .mp4</source>
+        <translation type="unfinished">在 .mp4 對 MP3 使用選擇對象標籤(_U)</translation>
+    </message>
+    <message>
+        <source>XVideo (best)</source>
+        <translation type="unfinished">XVideo (最好)</translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL (good)</source>
+        <translation type="unfinished">SDL (好)</translation>
+    </message>
+    <message>
+        <source>Video _display:</source>
+        <translation type="unfinished">視訊顯示(_D):</translation>
+    </message>
+    <message>
+        <source>No alerts</source>
+        <translation type="unfinished">不顯示任何警告</translation>
+    </message>
+    <message>
+        <source>Display only error alerts</source>
+        <translation type="unfinished">只顯示錯誤警告</translation>
+    </message>
+    <message>
+        <source>Display all alerts</source>
+        <translation type="unfinished">顯示所有警告</translation>
+    </message>
+    <message>
+        <source>_Message level:</source>
+        <translation type="unfinished">訊息等級(_M):</translation>
+    </message>
+    <message>
+        <source>PCM</source>
+        <translation type="unfinished">PCM</translation>
+    </message>
+    <message>
+        <source>Master</source>
+        <translation type="unfinished">主要</translation>
+    </message>
+    <message>
+        <source>_Volume control:</source>
+        <translation type="unfinished">音量控制(_V):</translation>
+    </message>
+    <message>
+        <source>No downmixing</source>
+        <translation type="unfinished">沒有降混</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">立體聲</translation>
+    </message>
+    <message>
+        <source>Pro Logic</source>
+        <translation type="unfinished">定向邏輯</translation>
+    </message>
+    <message>
+        <source>Pro Logic II</source>
+        <translation type="unfinished">第二代定向邏輯</translation>
+    </message>
+    <message>
+        <source>_Local playback downmixing:</source>
+        <translation type="unfinished">局部倒帶降混(_L):</translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished">音訊裝置(_A)</translation>
+    </message>
+    <message>
+        <source>_Horizontal deblocking</source>
+        <translation type="unfinished">去除水平方向塊狀色斑(_H)</translation>
+    </message>
+    <message>
+        <source>_Vertical deblocking</source>
+        <translation type="unfinished">去除垂直方向塊狀色斑(_V)</translation>
+    </message>
+    <message>
+        <source>De_ringing</source>
+        <translation type="unfinished">去除環狀色斑(_R)</translation>
+    </message>
+    <message>
+        <source>_Strength:</source>
+        <translation type="unfinished">強度(_S):</translation>
+    </message>
+    <message>
+        <source>Default Postprocessing</source>
+        <translation type="unfinished">預設的後置處理</translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">使用介面</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">輸出</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished">音訊</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished">視訊</translation>
+    </message>
+    <message>
+        <source>CPU</source>
+        <translation type="unfinished">CPU</translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">執行緒</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">偏好設定</translation>
     </message>
 </context>
 <context>
     <name>asharpDialog</name>
     <message>
         <source>ASharp</source>
-        <translation type="unfinished">ASharp</translation>
+        <translation type="obsolete">ASharp</translation>
     </message>
     <message>
         <source>Strength</source>
-        <translation type="unfinished">強度</translation>
+        <translation type="obsolete">強度</translation>
     </message>
     <message>
         <source>Threshold</source>
-        <translation type="unfinished">臨界值</translation>
+        <translation type="obsolete">臨界值</translation>
     </message>
     <message>
         <source>Block Adaptative</source>
-        <translation type="unfinished">區塊適性</translation>
-    </message>
-    <message>
-        <source>Unknown flag</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">區塊適性</translation>
     </message>
 </context>
 <context>
@@ -6385,161 +6520,103 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>avsfilter</name>
-    <message>
-        <source>_wine app file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select wine filename[wine/cedega/etc.]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_loader file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_avs file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_pipe timeout:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AvsFilter config</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>blackenBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">左側邊界(_L):</translation>
+        <translation type="obsolete">左側邊界(_L):</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">右側邊界(_R):</translation>
+        <translation type="obsolete">右側邊界(_R):</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">底部邊界(_B):</translation>
+        <translation type="obsolete">底部邊界(_B):</translation>
     </message>
     <message>
         <source>Blacken Borders</source>
-        <translation type="unfinished">邊框填黑</translation>
+        <translation type="obsolete">邊框填黑</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">不正確的參數</translation>
+        <translation type="obsolete">不正確的參數</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
-    </message>
-</context>
-<context>
-    <name>changeFps</name>
-    <message>
-        <source>Source Fps:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Source frame rate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Destination Fps:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Destination frame rate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">所有參數必須是偶數且在範圍內。</translation>
     </message>
 </context>
 <context>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
-        <translation type="unfinished">色度位移</translation>
+        <translation type="obsolete">色度位移</translation>
     </message>
     <message>
         <source>V Shift</source>
-        <translation type="unfinished">V 位移</translation>
+        <translation type="obsolete">V 位移</translation>
     </message>
     <message>
         <source>U Shift</source>
-        <translation type="unfinished">U 位移</translation>
+        <translation type="obsolete">U 位移</translation>
     </message>
 </context>
 <context>
     <name>contrastDialog</name>
     <message>
         <source>Contrast</source>
-        <translation type="unfinished">對比</translation>
+        <translation type="obsolete">對比</translation>
     </message>
     <message>
         <source>Luma</source>
-        <translation type="unfinished">明度</translation>
+        <translation type="obsolete">明度</translation>
     </message>
     <message>
         <source>ChromaU</source>
-        <translation type="unfinished">色度U</translation>
+        <translation type="obsolete">色度U</translation>
     </message>
     <message>
         <source>ChromaV</source>
-        <translation type="unfinished">色度V</translation>
+        <translation type="obsolete">色度V</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="unfinished">亮度</translation>
+        <translation type="obsolete">亮度</translation>
     </message>
 </context>
 <context>
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
-        <translation type="unfinished">剪裁</translation>
+        <translation type="obsolete">剪裁</translation>
     </message>
     <message>
         <source>Right:</source>
-        <translation type="unfinished">右:</translation>
+        <translation type="obsolete">右:</translation>
     </message>
     <message>
         <source>Top:</source>
-        <translation type="unfinished">頂部:</translation>
+        <translation type="obsolete">頂部:</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished">重設</translation>
+        <translation type="obsolete">重設</translation>
     </message>
     <message>
         <source>Bottom:</source>
-        <translation type="unfinished">底部:</translation>
+        <translation type="obsolete">底部:</translation>
     </message>
     <message>
         <source>Left:</source>
-        <translation type="unfinished">左:</translation>
+        <translation type="obsolete">左:</translation>
     </message>
     <message>
         <source>Auto Crop</source>
-        <translation type="unfinished">自動剪裁</translation>
+        <translation type="obsolete">自動剪裁</translation>
     </message>
 </context>
 <context>
@@ -6561,23 +6638,23 @@ Drop timing informations ?</source>
     <name>encodingDialog</name>
     <message>
         <source>Encoding...</source>
-        <translation>正在編碼...</translation>
+        <translation type="unfinished">正在編碼...</translation>
     </message>
     <message>
         <source>Phase:</source>
-        <translation>階段:</translation>
+        <translation type="unfinished">階段:</translation>
     </message>
     <message>
         <source>Video Codec:</source>
-        <translation>視訊編解碼器:</translation>
+        <translation type="unfinished">視訊編解碼器:</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation type="unfinished">無</translation>
     </message>
     <message>
         <source>Unknown</source>
-        <translation>未知</translation>
+        <translation type="unfinished">未知</translation>
     </message>
     <message>
         <source>Container:</source>
@@ -6589,11 +6666,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>0</source>
-        <translation>0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation>00:00:00</translation>
+        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>Elapsed:</source>
@@ -6609,7 +6686,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>0 MB</source>
-        <translation>0 MB</translation>
+        <translation type="unfinished">0 MB</translation>
     </message>
     <message>
         <source>Total Size:</source>
@@ -6633,7 +6710,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>0 kB/s</source>
-        <translation>0 kB/s</translation>
+        <translation type="unfinished">0 kB/s</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
@@ -6645,31 +6722,35 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Shut down computer when finished</source>
-        <translation>完成時關閉電腦</translation>
+        <translation type="unfinished">完成時關閉電腦</translation>
     </message>
     <message>
         <source>Priority:</source>
-        <translation>優先權:</translation>
+        <translation type="unfinished">優先權:</translation>
     </message>
     <message>
         <source>High</source>
-        <translation>高</translation>
+        <translation type="unfinished">高</translation>
     </message>
     <message>
         <source>Above Normal</source>
-        <translation>高於一般</translation>
+        <translation type="unfinished">高於一般</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation>一般</translation>
+        <translation type="unfinished">一般</translation>
     </message>
     <message>
         <source>Below Normal</source>
-        <translation>低於一般</translation>
+        <translation type="unfinished">低於一般</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation>低</translation>
+        <translation type="unfinished">低</translation>
+    </message>
+    <message>
+        <source>Pause / Abort</source>
+        <translation type="unfinished">暫停 / 停止</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -6748,20 +6829,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="unfinished">暫停 / 停止</translation>
-    </message>
 </context>
 <context>
     <name>encodingWindow</name>
     <message>
         <source>Privileges Required</source>
-        <translation>需要特殊權限</translation>
+        <translation type="unfinished">需要特殊權限</translation>
     </message>
     <message>
         <source>Root privileges are required to perform this operation.</source>
-        <translation>需要 Root 權限來實行這項操作。</translation>
+        <translation type="unfinished">需要 Root 權限來實行這項操作。</translation>
     </message>
     <message>
         <source>Pause / Abort</source>
@@ -6796,46 +6873,42 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Green</source>
-        <translation type="unfinished">綠</translation>
+        <translation type="obsolete">綠</translation>
     </message>
     <message>
         <source>Red</source>
-        <translation type="unfinished">紅</translation>
+        <translation type="obsolete">紅</translation>
     </message>
     <message>
         <source>Blue</source>
-        <translation type="unfinished">藍</translation>
+        <translation type="obsolete">藍</translation>
     </message>
     <message>
         <source>Weight</source>
-        <translation type="unfinished">加重</translation>
+        <translation type="obsolete">加重</translation>
     </message>
     <message>
         <source>Initial</source>
-        <translation type="unfinished">初始</translation>
+        <translation type="obsolete">初始</translation>
     </message>
     <message>
         <source>Contrast</source>
-        <translation type="unfinished">對比</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Gamma&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">對比</translation>
     </message>
     <message>
         <source>Saturation</source>
-        <translation type="unfinished">飽和度</translation>
+        <translation type="obsolete">飽和度</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="unfinished">亮度</translation>
+        <translation type="obsolete">亮度</translation>
     </message>
 </context>
 <context>
     <name>filtermainWindow</name>
     <message>
         <source>The filter is already partial</source>
-        <translation>此濾鏡已經是區段性</translation>
+        <translation type="unfinished">此濾鏡已經是區段性</translation>
     </message>
     <message>
         <source>Load set of filters</source>
@@ -6870,39 +6943,31 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">上下來回，時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">略過空間時間檢查</translation>
+        <translation type="obsolete">略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">上下來回，略過空間時間檢查</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">命令(_O):</translation>
+        <translation type="obsolete">命令(_O):</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 <context>
@@ -6916,11 +6981,11 @@ p, li { white-space: pre-wrap; }
     <name>hueDialog</name>
     <message>
         <source>Hue</source>
-        <translation type="unfinished">色相</translation>
+        <translation type="obsolete">色相</translation>
     </message>
     <message>
         <source>Saturation</source>
-        <translation type="unfinished">飽和度</translation>
+        <translation type="obsolete">飽和度</translation>
     </message>
 </context>
 <context>
@@ -6962,70 +7027,70 @@ p, li { white-space: pre-wrap; }
     <name>jobsDialog</name>
     <message>
         <source>Jobs</source>
-        <translation>工作</translation>
+        <translation type="unfinished">工作</translation>
     </message>
     <message>
         <source>Delete Sel. Job</source>
-        <translation>刪除選擇的工作</translation>
+        <translation type="unfinished">刪除選擇的工作</translation>
     </message>
     <message>
         <source>Delete All Jobs</source>
-        <translation>刪除所有工作</translation>
+        <translation type="unfinished">刪除所有工作</translation>
     </message>
     <message>
         <source>Run All Jobs</source>
-        <translation>執行所有工作</translation>
+        <translation type="unfinished">執行所有工作</translation>
     </message>
     <message>
         <source>Run Selected Job</source>
-        <translation>執行選擇的工作</translation>
+        <translation type="unfinished">執行選擇的工作</translation>
     </message>
 </context>
 <context>
     <name>jobsWindow</name>
     <message>
         <source>Job Name</source>
-        <translation>工作名稱</translation>
+        <translation type="unfinished">工作名稱</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation>狀態</translation>
+        <translation type="unfinished">狀態</translation>
     </message>
     <message>
         <source>Start Time</source>
-        <translation>起始時間</translation>
+        <translation type="unfinished">起始時間</translation>
     </message>
     <message>
         <source>End Time</source>
-        <translation>終了時間</translation>
+        <translation type="unfinished">終了時間</translation>
     </message>
     <message>
         <source>Sure!</source>
-        <translation>確定!</translation>
+        <translation type="unfinished">確定!</translation>
     </message>
     <message>
         <source>Delete job</source>
-        <translation>刪除工作</translation>
+        <translation type="unfinished">刪除工作</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %s job?</source>
-        <translation>確定要刪除 %s 工作?</translation>
+        <translation type="unfinished">確定要刪除 %s 工作?</translation>
     </message>
     <message>
         <source>Delete *all* job</source>
-        <translation>刪除*所有*工作</translation>
+        <translation type="unfinished">刪除*所有*工作</translation>
     </message>
     <message>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation>確定要刪除所有工作?</translation>
+        <translation type="unfinished">確定要刪除所有工作?</translation>
     </message>
     <message>
         <source>Already done</source>
-        <translation>已經完成</translation>
+        <translation type="unfinished">已經完成</translation>
     </message>
     <message>
         <source>This script has already been successfully executed.</source>
-        <translation>這個腳本已經成功執行。</translation>
+        <translation type="unfinished">這個腳本已經成功執行。</translation>
     </message>
     <message>
         <source>Ready</source>
@@ -7052,109 +7117,105 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
-    </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">越小表示更多的去交錯</translation>
+        <translation type="obsolete">越小表示更多的去交錯</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="unfinished">銳利(_S)</translation>
+        <translation type="obsolete">銳利(_S)</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="unfinished">清晰化引擎(_S):</translation>
+        <translation type="obsolete">清晰化引擎(_S):</translation>
     </message>
     <message>
         <source>T_woway</source>
-        <translation type="unfinished">雙向(_W)</translation>
+        <translation type="obsolete">雙向(_W)</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="unfinished">推算較好的 (最好不使用它)</translation>
+        <translation type="obsolete">推算較好的 (最好不使用它)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="unfinished">對應(_M)</translation>
+        <translation type="obsolete">對應(_M)</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="unfinished">顯示交錯的範圍(測試用！)</translation>
+        <translation type="obsolete">顯示交錯的範圍(測試用！)</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">處理明度(_P)</translation>
+        <translation type="obsolete">處理明度(_P)</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
+        <translation type="obsolete">處理明度平面</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">處理色度(_R)</translation>
+        <translation type="obsolete">處理色度(_R)</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">快速卷積</translation>
+        <translation type="obsolete">快速卷積</translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Linear blend</source>
-        <translation type="unfinished">線性混合</translation>
+        <translation type="obsolete">線性混合</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="unfinished">線性插值</translation>
+        <translation type="obsolete">線性插值</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="unfinished">立方插值</translation>
+        <translation type="obsolete">立方插值</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="unfinished">中位插值</translation>
+        <translation type="obsolete">中位插值</translation>
     </message>
     <message>
         <source>FFmpeg deint</source>
-        <translation type="unfinished">FFmpeg deint</translation>
+        <translation type="obsolete">FFmpeg deint</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="unfinished">去交錯(_D):</translation>
+        <translation type="obsolete">去交錯(_D):</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="unfinished">自動色階(_A)</translation>
+        <translation type="obsolete">自動色階(_A)</translation>
     </message>
     <message>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">libavcodec 去交錯器</translation>
+        <translation type="obsolete">libavcodec 去交錯器</translation>
     </message>
 </context>
 <context>
@@ -7168,7 +7229,7 @@ p, li { white-space: pre-wrap; }
     <name>licenseDialog</name>
     <message>
         <source>License</source>
-        <translation>授權</translation>
+        <translation type="unfinished">授權</translation>
     </message>
     <message>
         <source>OK</source>
@@ -7179,35 +7240,35 @@ p, li { white-space: pre-wrap; }
     <name>mainFilterDialog</name>
     <message>
         <source>Video Filter Manager</source>
-        <translation>視訊濾鏡管理器</translation>
+        <translation type="unfinished">視訊濾鏡管理器</translation>
     </message>
     <message>
         <source>Transform</source>
-        <translation>變形</translation>
+        <translation type="unfinished">變形</translation>
     </message>
     <message>
         <source>Interlacing</source>
-        <translation>交錯</translation>
+        <translation type="unfinished">交錯</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation>色彩</translation>
+        <translation type="unfinished">色彩</translation>
     </message>
     <message>
         <source>Noise</source>
-        <translation>雜訊</translation>
+        <translation type="unfinished">雜訊</translation>
     </message>
     <message>
         <source>Sharpness</source>
-        <translation>銳利</translation>
+        <translation type="unfinished">銳利</translation>
     </message>
     <message>
         <source>Subtitles</source>
-        <translation>字幕</translation>
+        <translation type="unfinished">字幕</translation>
     </message>
     <message>
         <source>Miscellaneous</source>
-        <translation>其他</translation>
+        <translation type="unfinished">其他</translation>
     </message>
     <message>
         <source>External</source>
@@ -7215,15 +7276,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
-        <translation>&lt;big&gt;&lt;b&gt;作用中的濾鏡&lt;/b&gt;&lt;/big&gt;</translation>
+        <translation type="unfinished">&lt;big&gt;&lt;b&gt;作用中的濾鏡&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
         <source>C&amp;onfigure</source>
-        <translation>設定(&amp;O)</translation>
+        <translation type="unfinished">設定(&amp;O)</translation>
     </message>
     <message>
         <source>P&amp;artial</source>
-        <translation>局部性(&amp;A)</translation>
+        <translation type="unfinished">局部性(&amp;A)</translation>
     </message>
     <message>
         <source>Open Script</source>
@@ -7247,7 +7308,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Down</source>
-        <translation>↓</translation>
+        <translation type="unfinished">↓</translation>
     </message>
     <message>
         <source>Move Filter Up</source>
@@ -7255,7 +7316,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Up</source>
-        <translation>↑</translation>
+        <translation type="unfinished">↑</translation>
     </message>
     <message>
         <source>Remove Filter</source>
@@ -7263,7 +7324,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation type="unfinished">移除</translation>
     </message>
     <message>
         <source>Add Filter</source>
@@ -7271,81 +7332,193 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Add</source>
-        <translation>加入</translation>
+        <translation type="unfinished">加入</translation>
     </message>
     <message>
         <source>&lt;big&gt;&lt;b&gt;Available Filters&lt;/b&gt;&lt;/big&gt;</source>
-        <translation>&lt;big&gt;&lt;b&gt;可用的濾鏡&lt;/b&gt;&lt;/big&gt;</translation>
+        <translation type="unfinished">&lt;big&gt;&lt;b&gt;可用的濾鏡&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
         <source>&amp;Preview</source>
-        <translation>預覽(&amp;P)</translation>
-    </message>
-    <message>
-        <source>OpenGl</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">預覽(&amp;P)</translation>
     </message>
     <message>
         <source>&amp;Close</source>
         <translation type="unfinished">關閉(&amp;C)</translation>
     </message>
-</context>
-<context>
-    <name>mpdelogoDialog</name>
     <message>
-        <source>Mplayer Delogo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Width</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Border Width</source>
+        <source>OpenGl</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>muxerMP4</name>
+    <name>mainMenu</name>
     <message>
-        <source>Saving mp4</source>
+        <source>Close</source>
+        <translation type="unfinished">關閉</translation>
+    </message>
+    <message>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished">連線至 avsproxy</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">複製</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">刪除</translation>
+    </message>
+    <message>
+        <source>Set Marker A</source>
+        <translation type="unfinished">設定標記 A</translation>
+    </message>
+    <message>
+        <source>Set Marker B</source>
+        <translation type="unfinished">設定標記 B</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">偏好設定</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished">濾鏡</translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished">播放/停止</translation>
+    </message>
+    <message>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished">上一個內部畫格</translation>
+    </message>
+    <message>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished">上一個內部畫格</translation>
+    </message>
+    <message>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished">上一個黑畫面</translation>
+    </message>
+    <message>
+        <source>Next Black Frame</source>
+        <translation type="unfinished">下一個黑畫面</translation>
+    </message>
+    <message>
+        <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving PSP</source>
+        <source>Append</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerMkv</name>
     <message>
-        <source>Saving Mkv</source>
+        <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerffPS</name>
     <message>
-        <source>Saving mpeg PS (ff)</source>
+        <source>Queue</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerffTS</name>
     <message>
-        <source>Saving mpeg TS (ff)</source>
+        <source>Save as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as BMP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as JPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decoder Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Time</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7384,21 +7557,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>openGlResize</name>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>glResize</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>previewDialog</name>
     <message>
         <source>Preview</source>
@@ -7409,11 +7567,11 @@ p, li { white-space: pre-wrap; }
     <name>propWindow</name>
     <message>
         <source>Mono</source>
-        <translation>單音</translation>
+        <translation type="unfinished">單音</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation>立體聲</translation>
+        <translation type="unfinished">立體聲</translation>
     </message>
     <message>
         <source>No</source>
@@ -7444,19 +7602,19 @@ p, li { white-space: pre-wrap; }
     <name>propsDialog</name>
     <message>
         <source>Properties</source>
-        <translation>屬性</translation>
+        <translation type="unfinished">屬性</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>視訊</translation>
+        <translation type="unfinished">視訊</translation>
     </message>
     <message>
         <source>TextLabel</source>
-        <translation>文字標籤</translation>
+        <translation type="unfinished">文字標籤</translation>
     </message>
     <message>
         <source>Frame Rate:</source>
-        <translation>畫格率:</translation>
+        <translation type="unfinished">畫格率:</translation>
     </message>
     <message>
         <source>Frame Count: </source>
@@ -7464,23 +7622,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Total Duration:</source>
-        <translation>總持續時間:</translation>
+        <translation type="unfinished">總持續時間:</translation>
     </message>
     <message>
         <source>Aspect Ratio:</source>
-        <translation>外觀比例:</translation>
+        <translation type="unfinished">外觀比例:</translation>
     </message>
     <message>
         <source>Image Size:</source>
-        <translation>圖像大小:</translation>
+        <translation type="unfinished">圖像大小:</translation>
     </message>
     <message>
         <source>Codec 4CC:</source>
-        <translation>編解碼器 4CC:</translation>
+        <translation type="unfinished">編解碼器 4CC:</translation>
     </message>
     <message>
         <source>Extra Video Properties</source>
-        <translation>額外的視訊屬性</translation>
+        <translation type="unfinished">額外的視訊屬性</translation>
     </message>
     <message>
         <source>Global Motion Compensation:</source>
@@ -7496,7 +7654,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Audio</source>
-        <translation>音訊</translation>
+        <translation type="unfinished">音訊</translation>
     </message>
     <message>
         <source>File Size:</source>
@@ -7504,23 +7662,23 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Frequency:</source>
-        <translation>頻率:</translation>
+        <translation type="unfinished">頻率:</translation>
     </message>
     <message>
         <source>Variable Bitrate:</source>
-        <translation>變動位元率:</translation>
+        <translation type="unfinished">變動位元率:</translation>
     </message>
     <message>
         <source>Bitrate:</source>
-        <translation>位元率:</translation>
+        <translation type="unfinished">位元率:</translation>
     </message>
     <message>
         <source>Channels:</source>
-        <translation>聲道:</translation>
+        <translation type="unfinished">聲道:</translation>
     </message>
     <message>
         <source>Codec:</source>
-        <translation>編解碼器:</translation>
+        <translation type="unfinished">編解碼器:</translation>
     </message>
     <message>
         <source>ExtraDataSize:</source>
@@ -7538,475 +7696,306 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>removePlaneFilter</name>
     <message>
-        <source>Keep Y Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
-    </message>
-    <message>
-        <source>Keep U Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chromaU plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep V Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chromaV plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">處理明度平面</translation>
     </message>
 </context>
 <context>
     <name>resampleFps</name>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_New frame rate:</source>
-        <translation type="unfinished">新畫格率(_N):</translation>
+        <translation type="obsolete">新畫格率(_N):</translation>
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="unfinished">重複取樣 fps</translation>
+        <translation type="obsolete">重複取樣 fps</translation>
     </message>
 </context>
 <context>
     <name>resizeDialog</name>
     <message>
         <source>Resize</source>
-        <translation type="unfinished">調整大小</translation>
+        <translation type="obsolete">調整大小</translation>
     </message>
     <message>
         <source>Aspect Ratio</source>
-        <translation type="unfinished">外觀比例</translation>
+        <translation type="obsolete">外觀比例</translation>
     </message>
     <message>
         <source>Lock Aspect Ratio</source>
-        <translation type="unfinished">鎖定外觀比例</translation>
+        <translation type="obsolete">鎖定外觀比例</translation>
     </message>
     <message>
         <source>Source:</source>
-        <translation type="unfinished">來源:</translation>
+        <translation type="obsolete">來源:</translation>
     </message>
     <message>
         <source>1:1</source>
-        <translation type="unfinished">1:1</translation>
+        <translation type="obsolete">1:1</translation>
     </message>
     <message>
         <source>4:3</source>
-        <translation type="unfinished">4:3</translation>
+        <translation type="obsolete">4:3</translation>
     </message>
     <message>
         <source>16:9</source>
-        <translation type="unfinished">16:9</translation>
+        <translation type="obsolete">16:9</translation>
     </message>
     <message>
         <source>Destination:</source>
-        <translation type="unfinished">目的檔:</translation>
+        <translation type="obsolete">目的檔:</translation>
     </message>
     <message>
         <source>Resize Dimensions</source>
-        <translation type="unfinished">調整大小尺寸</translation>
+        <translation type="obsolete">調整大小尺寸</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished">寬度:</translation>
+        <translation type="obsolete">寬度:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished">高度:</translation>
+        <translation type="obsolete">高度:</translation>
     </message>
     <message>
         <source>Round to the Nearest Multiple of 16</source>
-        <translation type="unfinished">進展為最接近 16 的倍數</translation>
+        <translation type="obsolete">進展為最接近 16 的倍數</translation>
     </message>
     <message>
         <source>1%</source>
-        <translation type="unfinished">1%</translation>
+        <translation type="obsolete">1%</translation>
     </message>
     <message>
         <source>Percent</source>
-        <translation type="unfinished">百分比</translation>
+        <translation type="obsolete">百分比</translation>
     </message>
     <message>
         <source>200%</source>
-        <translation type="unfinished">200%</translation>
+        <translation type="obsolete">200%</translation>
     </message>
     <message>
         <source>Error X / Y:</source>
-        <translation type="unfinished">錯誤 X / Y:</translation>
+        <translation type="obsolete">錯誤 X / Y:</translation>
     </message>
     <message>
         <source>0.00 / 0.00</source>
-        <translation type="unfinished">0.00 / 0.00</translation>
+        <translation type="obsolete">0.00 / 0.00</translation>
     </message>
     <message>
         <source>Resize Method:</source>
-        <translation type="unfinished">調整大小方式:</translation>
+        <translation type="obsolete">調整大小方式:</translation>
     </message>
     <message>
         <source>Bilinear</source>
-        <translation type="unfinished">雙線性</translation>
+        <translation type="obsolete">雙線性</translation>
     </message>
     <message>
         <source>Bicubic</source>
-        <translation type="unfinished">雙立方</translation>
+        <translation type="obsolete">雙立方</translation>
     </message>
     <message>
         <source>Lanzcos3</source>
-        <translation type="unfinished">Lanzcos3</translation>
+        <translation type="obsolete">Lanzcos3</translation>
     </message>
 </context>
 <context>
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished">寬度與高度不可為奇數</translation>
+        <translation type="obsolete">寬度與高度不可為奇數</translation>
     </message>
 </context>
 <context>
     <name>rotateFilter</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="unfinished">90 度</translation>
+        <translation type="obsolete">90 度</translation>
     </message>
     <message>
         <source>90Â°</source>
-        <translation type="unfinished">90Â°</translation>
+        <translation type="obsolete">90Â°</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="unfinished">180 度</translation>
+        <translation type="obsolete">180 度</translation>
     </message>
     <message>
         <source>180Â°</source>
-        <translation type="unfinished">180Â°</translation>
+        <translation type="obsolete">180Â°</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="unfinished">270 度</translation>
+        <translation type="obsolete">270 度</translation>
     </message>
     <message>
         <source>270Â°</source>
-        <translation type="unfinished">270Â°</translation>
+        <translation type="obsolete">270Â°</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="unfinished">角度(_A):</translation>
+        <translation type="obsolete">角度(_A):</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">旋轉</translation>
-    </message>
-</context>
-<context>
-    <name>rotateGl</name>
-    <message>
-        <source>Angle (Â°):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>glRotate</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">旋轉</translation>
     </message>
 </context>
 <context>
     <name>seekablePreviewDialog</name>
     <message>
         <source>Preview</source>
-        <translation>預覽</translation>
-    </message>
-    <message>
-        <source>next</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">預覽</translation>
     </message>
     <message>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
+    </message>
+    <message>
+        <source>next</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>srtDialog</name>
     <message>
         <source>Subtitle Font Size and Position</source>
-        <translation type="unfinished">字幕字型大小和位置</translation>
+        <translation type="obsolete">字幕字型大小和位置</translation>
     </message>
     <message>
         <source>Font Size :</source>
-        <translation type="unfinished">字型大小 :</translation>
+        <translation type="obsolete">字型大小 :</translation>
     </message>
 </context>
 <context>
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">字幕檔(A_SS/SSA):</translation>
+        <translation type="obsolete">字幕檔(A_SS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">選擇字幕檔</translation>
+        <translation type="obsolete">選擇字幕檔</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">行距(_L):</translation>
+        <translation type="obsolete">行距(_L):</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">字體縮放(_F):</translation>
+        <translation type="obsolete">字體縮放(_F):</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">底部邊界(_M)</translation>
+        <translation type="obsolete">底部邊界(_M)</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
-    </message>
-</context>
-<context>
-    <name>vdpauVideoFilter</name>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>vdpauVideoFilterDeint</name>
-    <message>
-        <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Double framerate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Resize:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ASS</translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判。</translation>
+        <translation type="obsolete">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判。</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">雜訊(_N):</translation>
+        <translation type="obsolete">雜訊(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">如果像素太接近雜訊，它們被視為一樣</translation>
+        <translation type="obsolete">如果像素太接近雜訊，它們被視為一樣</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="unfinished">相同(_D):</translation>
+        <translation type="obsolete">相同(_D):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">如果量度少於等同的，圖像被視為完全相同</translation>
+        <translation type="obsolete">如果量度少於等同的，圖像被視為完全相同</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">顯示量度(_S)</translation>
+        <translation type="obsolete">顯示量度(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">圖像顯示量度 (除錯)</translation>
+        <translation type="obsolete">圖像顯示量度 (除錯)</translation>
     </message>
     <message>
         <source>Blend Removal</source>
-        <translation type="unfinished">去除混合</translation>
+        <translation type="obsolete">去除混合</translation>
     </message>
 </context>
 <context>
     <name>vidColorYuv</name>
     <message>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">無</translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="unfinished">量度</translation>
+        <translation type="obsolete">量度</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished">確定要將矩陣顯示在螢幕上?</translation>
+        <translation type="obsolete">確定要將矩陣顯示在螢幕上?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判</translation>
+        <translation type="obsolete">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">雜訊(_N):</translation>
+        <translation type="obsolete">雜訊(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">如果像素太接近雜訊，它們被視為一樣</translation>
+        <translation type="obsolete">如果像素太接近雜訊，它們被視為一樣</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="unfinished">相同(_I):</translation>
+        <translation type="obsolete">相同(_I):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">如果量度少於等同的，圖像被視為完全相同</translation>
+        <translation type="obsolete">如果量度少於等同的，圖像被視為完全相同</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">顯示量度(_S)</translation>
+        <translation type="obsolete">顯示量度(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">圖像顯示量度 (除錯)</translation>
+        <translation type="obsolete">圖像顯示量度 (除錯)</translation>
     </message>
     <message>
         <source>Hard IVTC Removal</source>
-        <translation type="unfinished">硬去除 IVTC</translation>
+        <translation type="obsolete">硬去除 IVTC</translation>
     </message>
 </context>
 <context>
@@ -8052,19 +8041,19 @@ p, li { white-space: pre-wrap; }
     <name>workingDialog</name>
     <message>
         <source>Processing</source>
-        <translation>處理中</translation>
+        <translation type="unfinished">處理中</translation>
     </message>
     <message>
         <source>Elapsed:</source>
-        <translation>已過時間:</translation>
+        <translation type="unfinished">已過時間:</translation>
     </message>
     <message>
         <source>Time Remaining:</source>
-        <translation>剩餘時間:</translation>
+        <translation type="unfinished">剩餘時間:</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation>00:00:00</translation>
+        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -8083,443 +8072,99 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Save As</source>
-        <translation type="unfinished">另存新檔</translation>
+        <translation type="obsolete">另存新檔</translation>
     </message>
     <message>
         <source>Are you sure you wish to delete the selected configuration?</source>
         <translation type="obsolete">確定要刪除所選的設定嗎?</translation>
     </message>
     <message>
-        <source>kbit/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Quantiser:</source>
         <translation type="obsolete">量化值:</translation>
     </message>
     <message>
-        <source>Target Video Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
         <translation type="obsolete">平均位元率:</translation>
     </message>
     <message>
-        <source>x264 Configuraton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Configuration:</source>
-        <translation type="unfinished">設定:</translation>
+        <translation type="obsolete">設定:</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">刪除</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">刪除</translation>
     </message>
     <message>
         <source>Rate Control</source>
-        <translation type="unfinished">比率控制</translation>
-    </message>
-    <message>
-        <source>Constant Bitrate (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Quantiser (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Rate Factor (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Size (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average Bitrate (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0 (High Quality)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>51 (Low Quality)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frametype Lookahead:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Multithreading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">比率控制</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="unfinished">自動偵測</translation>
-    </message>
-    <message>
-        <source>Enforce Repeatability</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slice-based Threading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom Threaded Lookahead Buffer:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">自動偵測</translation>
     </message>
     <message>
         <source>Motion</source>
-        <translation type="unfinished">動作</translation>
+        <translation type="obsolete">動作</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="unfinished">動作估測</translation>
-    </message>
-    <message>
-        <source>Motion Estimation Method:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">動作估測</translation>
     </message>
     <message>
         <source>Diamond Search</source>
-        <translation type="unfinished">菱形搜尋</translation>
+        <translation type="obsolete">菱形搜尋</translation>
     </message>
     <message>
         <source>Hexagonal Search</source>
-        <translation type="unfinished">六角形搜尋</translation>
-    </message>
-    <message>
-        <source>Uneven Multi-hexagonal Search</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">六角形搜尋</translation>
     </message>
     <message>
         <source>Exhaustive Search</source>
-        <translation type="unfinished">徹底搜尋</translation>
+        <translation type="obsolete">徹底搜尋</translation>
     </message>
     <message>
         <source>Hadamard Exhaustive Search</source>
-        <translation type="unfinished">哈達馬德徹底搜尋</translation>
-    </message>
-    <message>
-        <source>1 (Fast)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Subpixel Refinement</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Motion Vector</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Motion Vector Length:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum Buffer Between Threads:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Motion Vector Search Range:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Prediction</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">哈達馬德徹底搜尋</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">停用</translation>
-    </message>
-    <message>
-        <source>Direct Prediction Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted Prediction for P-frames:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">停用</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
+        <translation type="obsolete">無</translation>
     </message>
     <message>
         <source>Spatial</source>
-        <translation type="unfinished">空間性</translation>
+        <translation type="obsolete">空間性</translation>
     </message>
     <message>
         <source>Temporal</source>
-        <translation type="unfinished">時間性</translation>
+        <translation type="obsolete">時間性</translation>
     </message>
     <message>
         <source>Auto</source>
-        <translation type="unfinished">自動</translation>
-    </message>
-    <message>
-        <source>Weighted Prediction for B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constrained Intra Prediction</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Partition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Partition Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8 DCT Spatial Transform</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8, 8x16 and 16x8 P-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8, 8x16 and 16x8 B-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4x4, 4x8 and 8x4 P-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8 Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4x4 Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame Encoding</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">自動</translation>
     </message>
     <message>
         <source>CABAC</source>
-        <translation type="unfinished">CABAC</translation>
-    </message>
-    <message>
-        <source>Strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Reference Frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frames as References:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Strictly Hierarchical Pyramid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Non-strict (Not Blu-ray Compatible)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">CABAC</translation>
     </message>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">快</translation>
+        <translation type="obsolete">快</translation>
     </message>
     <message>
         <source>Optimal</source>
-        <translation type="unfinished">最理想化</translation>
-    </message>
-    <message>
-        <source>B-frame Bias:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Adaptive B-frame Decision:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frame Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Analysis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mixed References</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Motion Estimation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Trellis Quantization:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Final Macroblock Only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Always On</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fast Skip Detection on P-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>DCT Decimation on P-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Psychovisual Rate Distortion Optimisation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Noise Reduction:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma Quantisation Deadzone</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantisation Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flat Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JVT Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I and P-frame Quantiser Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>P and B-frame Quantiser Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average Bitrate Tolerance:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma to Luma Quantiser Offset:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Curve Compression</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reduce Fluctuation Before Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reduce Fluctuation After Curve Compression:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">最理想化</translation>
     </message>
     <message>
         <source>Adaptive Quantisation</source>
-        <translation type="unfinished">適性量化</translation>
+        <translation type="obsolete">適性量化</translation>
     </message>
     <message>
         <source>Variance AQ</source>
@@ -8527,507 +8172,130 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Video Buffer Verifier</source>
-        <translation type="unfinished">視訊緩衝校對器</translation>
-    </message>
-    <message>
-        <source>Maximum VBV Bitrate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Initial VBV Buffer Occupancy:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>kbit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>VBV Buffer Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slicing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slices per Frame:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Size per Slice:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Macroblocks per Slice:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">視訊緩衝校對器</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished">加入</translation>
+        <translation type="obsolete">加入</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished">輸出</translation>
+        <translation type="obsolete">輸出</translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation type="obsolete">1</translation>
     </message>
     <message>
         <source>1.1</source>
-        <translation type="unfinished">1.1</translation>
+        <translation type="obsolete">1.1</translation>
     </message>
     <message>
         <source>1.2</source>
-        <translation type="unfinished">1.2</translation>
+        <translation type="obsolete">1.2</translation>
     </message>
     <message>
         <source>1.3</source>
-        <translation type="unfinished">1.3</translation>
+        <translation type="obsolete">1.3</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation type="obsolete">2</translation>
     </message>
     <message>
         <source>2.1</source>
-        <translation type="unfinished">2.1</translation>
+        <translation type="obsolete">2.1</translation>
     </message>
     <message>
         <source>2.2</source>
-        <translation type="unfinished">2.2</translation>
+        <translation type="obsolete">2.2</translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished">3</translation>
+        <translation type="obsolete">3</translation>
     </message>
     <message>
         <source>3.1</source>
-        <translation type="unfinished">3.1</translation>
+        <translation type="obsolete">3.1</translation>
     </message>
     <message>
         <source>3.2</source>
-        <translation type="unfinished">3.2</translation>
+        <translation type="obsolete">3.2</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished">4</translation>
+        <translation type="obsolete">4</translation>
     </message>
     <message>
         <source>4.1</source>
-        <translation type="unfinished">4.1</translation>
+        <translation type="obsolete">4.1</translation>
     </message>
     <message>
         <source>4.2</source>
-        <translation type="unfinished">4.2</translation>
+        <translation type="obsolete">4.2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished">5</translation>
+        <translation type="obsolete">5</translation>
     </message>
     <message>
         <source>5.1</source>
-        <translation type="unfinished">5.1</translation>
-    </message>
-    <message>
-        <source>Sequence Parameter Set Identifer:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>IDC Level:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">5.1</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished">0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
         <source>7</source>
-        <translation type="unfinished">7</translation>
+        <translation type="obsolete">7</translation>
     </message>
     <message>
         <source>15</source>
-        <translation type="unfinished">15</translation>
+        <translation type="obsolete">15</translation>
     </message>
     <message>
         <source>31</source>
-        <translation type="unfinished">31</translation>
-    </message>
-    <message>
-        <source>Generate Access Unit Delimiters</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">31</translation>
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
-        <translation type="unfinished">像素外觀比例</translation>
+        <translation type="obsolete">像素外觀比例</translation>
     </message>
     <message>
         <source>As Input</source>
-        <translation type="unfinished">另輸出為</translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Predefined Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>16:15 (PAL 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>64:45 (PAL 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8:9 (NTSC 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>32:27 (NTSC 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Usability Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Undefined</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT709</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT470M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT470BG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Linear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LOG100</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LOG316</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTEL170M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTE240M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colour Primaries:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">另輸出為</translation>
     </message>
     <message>
         <source>Crop</source>
-        <translation type="unfinished">剪裁</translation>
-    </message>
-    <message>
-        <source>FCC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTE170M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GBR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>YCgCo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colour Matrix:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Component</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PAL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NTSC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SECAM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MAC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Film</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transfer Characteristics:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Sample Location:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Format:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overscan:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Full Range Samples</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fast First Pass</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-tree Rate Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <comment>multithreading</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Periodic Intra Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <comment>PAR</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>10 (Best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted References</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted References + Duplicates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Loop Filter:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open GOP:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Normal Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Blu-ray Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interlaced:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bottom Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fake Interlaced</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GOP Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Psychovisual Trellis:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Variance AQ:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">剪裁</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">一般</translation>
-    </message>
-    <message>
-        <source>Auto Variance AQ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Advanced 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Advanced 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HRD Parameters:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">一般</translation>
     </message>
     <message>
         <source>VBR</source>
-        <translation type="unfinished">VBR</translation>
+        <translation type="obsolete">VBR</translation>
     </message>
     <message>
         <source>CBR</source>
-        <translation type="unfinished">CBR</translation>
-    </message>
-</context>
-<context>
-    <name>x264CustomMatrixDialog</name>
-    <message>
-        <source>x264 Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra 4x4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma U/V:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter 4x4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">CBR</translation>
     </message>
 </context>
 <context>
     <name>x264Dialog</name>
     <message>
-        <source>Target Bitrate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>kbit/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Quantiser:</source>
-        <translation type="unfinished">量化值:</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Target Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">量化值:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">平均位元率:</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">平均位元率:</translation>
     </message>
 </context>
 <context>
@@ -9041,39 +8309,31 @@ Do you wish to continue?</source>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">上下來回，時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">略過空間時間檢查</translation>
+        <translation type="obsolete">略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">上下來回，略過空間時間檢查</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">命令(_O):</translation>
+        <translation type="obsolete">命令(_O):</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 </TS>

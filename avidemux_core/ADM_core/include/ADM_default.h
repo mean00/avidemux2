@@ -62,4 +62,8 @@ ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
 #define QT_TR_NOOP(x) x
 #endif
 
+#ifndef QT_TRANSLATE_NOOP
+#define QT_TRANSLATE_NOOP(a,x) x
+#endif
+
 #endif

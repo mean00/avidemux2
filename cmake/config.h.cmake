@@ -63,7 +63,12 @@ extern const char* translate(const char *__domainname, const char *__msgid);
 #endif
 
 #define QT_TR_NOOP(String) translate (PACKAGE, String)
-// FIXME - end
+#ifdef QT_TRANSLATE_NOOP
+#undef QT_TRANSLATE_NOOP
+#endif
+
+#define QT_TRANSLATE_NOOP(foo,String) translate (PACKAGE, String)
+/// FIXME - end
 #if ${CONFIG_HEADER_TYPE} == ADM_BUILD_QT4
 /* OpenGL detected */
 #cmakedefine USE_OPENGL

@@ -2760,38 +2760,38 @@ Włączyć ją?</translation>
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="unfinished">Blokada _luminancji:</translation>
+        <translation type="obsolete">Blokada _luminancji:</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="unfinished">Blokada c_hrominancji:</translation>
+        <translation type="obsolete">Blokada c_hrominancji:</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">Próg l_uminancji:</translation>
+        <translation type="obsolete">Próg l_uminancji:</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">Próg ch_rominancji:</translation>
+        <translation type="obsolete">Próg ch_rominancji:</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="unfinished">Zmiana _sceny:</translation>
+        <translation type="obsolete">Zmiana _sceny:</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">Usuń szum</translation>
+        <translation type="obsolete">Usuń szum</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">Próg pomijania</translation>
+        <translation type="obsolete">Próg pomijania</translation>
     </message>
     <message>
         <source>Drop Out</source>
-        <translation type="unfinished">Pomiń</translation>
+        <translation type="obsolete">Pomiń</translation>
     </message>
 </context>
 <context>
@@ -2869,42 +2869,42 @@ Włączyć ją?</translation>
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">Próg _czasowy:</translation>
+        <translation type="obsolete">Próg _czasowy:</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">Próg _przestrzenny:</translation>
+        <translation type="obsolete">Próg _przestrzenny:</translation>
     </message>
     <message>
         <source>FluxSmooth</source>
-        <translation type="unfinished">FluxSmooth</translation>
+        <translation type="obsolete">FluxSmooth</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="unfinished">Natężenie _filtra:</translation>
+        <translation type="obsolete">Natężenie _filtra:</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="unfinished">_Kwantyzator:</translation>
+        <translation type="obsolete">_Kwantyzator:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">Rozblokowanie _poziome</translation>
+        <translation type="obsolete">Rozblokowanie _poziome</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">Rozblokowanie pi_onowe</translation>
+        <translation type="obsolete">Rozblokowanie pi_onowe</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="unfinished">Usuwanie pie_rścienia</translation>
+        <translation type="obsolete">Usuwanie pie_rścienia</translation>
     </message>
     <message>
         <source>Forced Postprocessing</source>
-        <translation type="unfinished">Wymuszone przetwarzanie</translation>
+        <translation type="obsolete">Wymuszone przetwarzanie</translation>
     </message>
 </context>
 <context>
@@ -3051,11 +3051,11 @@ Włączyć ją?</translation>
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Natężenie luminancji prze_strzennej:</translation>
+        <translation type="obsolete">Natężenie luminancji prze_strzennej:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Natężenie _przestrzenne chrominancji:</translation>
+        <translation type="obsolete">Natężenie _przestrzenne chrominancji:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
@@ -3066,84 +3066,80 @@ Włączyć ją?</translation>
         <translation type="obsolete">MPlayer hqdn3d</translation>
     </message>
     <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Natężenie luminancji prze_strzennej:</translation>
+        <translation type="obsolete">Natężenie luminancji prze_strzennej:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Natężenie _przestrzenne chrominancji:</translation>
+        <translation type="obsolete">Natężenie _przestrzenne chrominancji:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">Natężenie _czasowe:</translation>
+        <translation type="obsolete">Natężenie _czasowe:</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">Próg _luminancji:</translation>
+        <translation type="obsolete">Próg _luminancji:</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">Próg c_hrominancji:</translation>
+        <translation type="obsolete">Próg c_hrominancji:</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="unfinished">_Promień:</translation>
+        <translation type="obsolete">_Promień:</translation>
     </message>
     <message>
         <source>Soften</source>
-        <translation type="unfinished">Rozmiękcz</translation>
+        <translation type="obsolete">Rozmiękcz</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">Warstwy p_oziome:</translation>
+        <translation type="obsolete">Warstwy p_oziome:</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">Warstwy _pionowe:</translation>
+        <translation type="obsolete">Warstwy _pionowe:</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">Współczynnik zmniej_szenia:</translation>
+        <translation type="obsolete">Współczynnik zmniej_szenia:</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="unfinished">Pokaż klatkę</translation>
+        <translation type="obsolete">Pokaż klatkę</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation type="unfinished">Mozaika</translation>
+        <translation type="obsolete">Mozaika</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="unfinished">_Spróbuj odwrócić</translation>
+        <translation type="obsolete">_Spróbuj odwrócić</translation>
     </message>
     <message>
         <source>Pal Field Shift</source>
-        <translation type="unfinished">Zmiana pola Pal</translation>
+        <translation type="obsolete">Zmiana pola Pal</translation>
     </message>
 </context>
 <context>
@@ -3255,11 +3251,11 @@ Włączyć ją?</translation>
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="unfinished">Próg stabilizacji</translation>
+        <translation type="obsolete">Próg stabilizacji</translation>
     </message>
     <message>
         <source>Stabilize</source>
-        <translation type="unfinished">Stabilizacja</translation>
+        <translation type="obsolete">Stabilizacja</translation>
     </message>
 </context>
 <context>
@@ -3297,11 +3293,11 @@ Włączyć ją?</translation>
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="unfinished">Nie udało się otworzyć pliku napisów</translation>
+        <translation type="obsolete">Nie udało się otworzyć pliku napisów</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="unfinished">Nie można określić formatu napisów</translation>
+        <translation type="obsolete">Nie można określić formatu napisów</translation>
     </message>
 </context>
 <context>
@@ -3451,47 +3447,47 @@ zostanie przez niego pomnożony):</translation>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Simple</source>
-        <translation type="unfinished">Prosty</translation>
+        <translation type="obsolete">Prosty</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Średni</translation>
+        <translation type="obsolete">Średni</translation>
     </message>
     <message>
         <source>Slow</source>
-        <translation type="unfinished">Wolne</translation>
+        <translation type="obsolete">Wolne</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">_Typ:</translation>
+        <translation type="obsolete">_Typ:</translation>
     </message>
     <message>
         <source>_Iterations:</source>
-        <translation type="unfinished">Powtórzen_ia:</translation>
+        <translation type="obsolete">Powtórzen_ia:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">Niższy oznacza większy przeplot</translation>
+        <translation type="obsolete">Niższy oznacza większy przeplot</translation>
     </message>
     <message>
         <source>_Chroma:</source>
-        <translation type="unfinished">_Chrominancja:</translation>
+        <translation type="obsolete">_Chrominancja:</translation>
     </message>
     <message>
         <source>Process chroma.</source>
-        <translation type="unfinished">Przetwarzanie chrominancji.</translation>
+        <translation type="obsolete">Przetwarzanie chrominancji.</translation>
     </message>
     <message>
         <source>_Step:</source>
-        <translation type="unfinished">_Krok:</translation>
+        <translation type="obsolete">_Krok:</translation>
     </message>
     <message>
         <source>Step.</source>
-        <translation type="unfinished">Krok.</translation>
+        <translation type="obsolete">Krok.</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
@@ -3738,6 +3734,14 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_Qt4Factory::ADM_Qbitrate</name>
     <message>
+        <source>Quantiser</source>
+        <translation type="obsolete">Kwantyzator</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished">-</translation>
+    </message>
+    <message>
         <source>Constant Bitrate</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3774,8 +3778,8 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Quantiser</source>
-        <translation type="obsolete">Kwantyzator</translation>
+        <source>Quantizer</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Target video size (MB)</source>
@@ -3783,14 +3787,6 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Average bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>Quantizer</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3902,43 +3898,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
@@ -3949,19 +3908,19 @@ Drop timing informations ?</source>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">_Przetwarzanie luminancji</translation>
+        <translation type="obsolete">_Przetwarzanie luminancji</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">Przetwarzaj obszar luminancji</translation>
+        <translation type="obsolete">Przetwarzaj obszar luminancji</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">P_rzetwarzanie chrominancji</translation>
+        <translation type="obsolete">P_rzetwarzanie chrominancji</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">Szybki splot</translation>
+        <translation type="obsolete">Szybki splot</translation>
     </message>
 </context>
 <context>
@@ -4006,47 +3965,43 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">Szybki</translation>
+        <translation type="obsolete">Szybki</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Średni</translation>
+        <translation type="obsolete">Średni</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="unfinished">Wolne wielokrotne przeszukiwanie ruchu</translation>
+        <translation type="obsolete">Wolne wielokrotne przeszukiwanie ruchu</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished">Bardzo wolne (takie sama jak 3+ wielokrotne klatki odniesienia)</translation>
+        <translation type="obsolete">Bardzo wolne (takie sama jak 3+ wielokrotne klatki odniesienia)</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Góra</translation>
+        <translation type="obsolete">Góra</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Dół</translation>
+        <translation type="obsolete">Dół</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="unfinished">Przewaga _pola:</translation>
+        <translation type="obsolete">Przewaga _pola:</translation>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="unfinished">_Qp:</translation>
+        <translation type="obsolete">_Qp:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeinterlace</translation>
-    </message>
-    <message>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">mcDeinterlace</translation>
     </message>
 </context>
 <context>
@@ -4084,74 +4039,62 @@ Drop timing informations ?</source>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="unfinished">Próg czasowy _luminancji:</translation>
+        <translation type="obsolete">Próg czasowy _luminancji:</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished">Czasowy próg ch_rominancji:</translation>
+        <translation type="obsolete">Czasowy próg ch_rominancji:</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="unfinished">Tymczasowe oczyszczanie</translation>
+        <translation type="obsolete">Tymczasowe oczyszczanie</translation>
     </message>
 </context>
 <context>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="unfinished">Zanikanie</translation>
+        <translation type="obsolete">Zanikanie</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="unfinished">Zanikanie</translation>
+        <translation type="obsolete">Zanikanie</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">Wyłanianie się</translation>
+        <translation type="obsolete">Wyłanianie się</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="unfinished">Wyłanianie się</translation>
+        <translation type="obsolete">Wyłanianie się</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">Typ _przenikania:</translation>
+        <translation type="obsolete">Typ _przenikania:</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="unfinished">_Początkowa klatka:</translation>
+        <translation type="obsolete">_Początkowa klatka:</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="unfinished">_Końcowa klatka:</translation>
+        <translation type="obsolete">_Końcowa klatka:</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="unfinished">Zanikanie do _czerni</translation>
+        <translation type="obsolete">Zanikanie do _czerni</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">Zanikanie</translation>
+        <translation type="obsolete">Zanikanie</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="unfinished">Błąd parametru</translation>
+        <translation type="obsolete">Błąd parametru</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="unfinished">Początek musi się znaleźć przed końcem a obydwa w obrazie o # klatek.</translation>
-    </message>
-    <message>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Początek musi się znaleźć przed końcem a obydwa w obrazie o # klatek.</translation>
     </message>
 </context>
 <context>
@@ -4159,10 +4102,6 @@ Drop timing informations ?</source>
     <message>
         <source>Calculator</source>
         <translation type="unfinished">Kalkulator</translation>
-    </message>
-    <message>
-        <source>Target</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>00:00:00</source>
@@ -4181,16 +4120,32 @@ Drop timing informations ?</source>
         <translation type="unfinished">MPEG</translation>
     </message>
     <message>
+        <source>Duration:</source>
+        <translation type="unfinished">Długość:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Własna</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished">MB</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation type="unfinished">0</translation>
+    </message>
+    <message>
+        <source>Target</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Medium:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Format:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Duration:</source>
-        <translation type="unfinished">Długość:</translation>
     </message>
     <message>
         <source>1 x 80 minute CD</source>
@@ -4213,16 +4168,8 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Custom</source>
-        <translation type="unfinished">Własna</translation>
-    </message>
-    <message>
         <source>Custom Size:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="unfinished">MB</translation>
     </message>
     <message>
         <source>Audio Bitrate</source>
@@ -4251,10 +4198,6 @@ Drop timing informations ?</source>
     <message>
         <source>Video Size:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>Total Size:</source>
@@ -4331,23 +4274,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Góra</translation>
+        <translation type="obsolete">Góra</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Dół</translation>
+        <translation type="obsolete">Dół</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">Zachowaj liczbę klatek i kl./s</translation>
+        <translation type="obsolete">Zachowaj liczbę klatek i kl./s</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">Podwój liczbę klatek i kl./s</translation>
+        <translation type="obsolete">Podwój liczbę klatek i kl./s</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">Podwój liczbę klatek (zwolnione tempo)</translation>
+        <translation type="obsolete">Podwój liczbę klatek (zwolnione tempo)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -4355,27 +4298,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="unfinished">Dodatkow_e</translation>
+        <translation type="obsolete">Dodatkow_e</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">Dodatkowe sprawdzanie, unikaj używania tej opcji</translation>
+        <translation type="obsolete">Dodatkowe sprawdzanie, unikaj używania tej opcji</translation>
     </message>
     <message>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
-    </message>
-    <message>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DGBob</translation>
     </message>
 </context>
 <context>
@@ -4385,16 +4324,16 @@ Drop timing informations ?</source>
         <translation type="unfinished">Już w trakcie zamykania.</translation>
     </message>
     <message>
-        <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Resume</source>
         <translation type="unfinished">Wznów</translation>
     </message>
     <message>
         <source>Abort</source>
         <translation type="unfinished">Przerwij</translation>
+    </message>
+    <message>
+        <source>The encoding is paused. Do you want to resume or abort?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4412,23 +4351,19 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="unfinished">Odrzuć bliższe</translation>
+        <translation type="obsolete">Odrzuć bliższe</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished">Zastąp (interpoluj)</translation>
-    </message>
-    <message>
-        <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Zastąp (interpoluj)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="unfinished">Usuwanie duplikatów z konwersji pulldown</translation>
+        <translation type="obsolete">Usuwanie duplikatów z konwersji pulldown</translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">Najszybszy (brak chrominancji, częściowa luminancja)</translation>
+        <translation type="obsolete">Najszybszy (brak chrominancji, częściowa luminancja)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -4436,7 +4371,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">Średni (pełna luminancja, brak chrominancji)</translation>
+        <translation type="obsolete">Średni (pełna luminancja, brak chrominancji)</translation>
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
@@ -4444,31 +4379,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="unfinished">_Jakość:</translation>
+        <translation type="obsolete">_Jakość:</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="unfinished">_Próg 1:</translation>
+        <translation type="obsolete">_Próg 1:</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished">Pró_g 2:</translation>
+        <translation type="obsolete">Pró_g 2:</translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="unfinished">C_ykl:</translation>
+        <translation type="obsolete">C_ykl:</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="unfinished">Decomb Decimate</translation>
-    </message>
-    <message>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Decomb Decimate</translation>
     </message>
 </context>
 <context>
@@ -4489,6 +4420,14 @@ Drop timing informations ?</source>
 <context>
     <name>DialogAudioTracks</name>
     <message>
+        <source>Configure</source>
+        <translation type="unfinished">Konfiguruj</translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Filtry dźwięku</translation>
+    </message>
+    <message>
         <source>Audio Tracks Configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4499,14 +4438,6 @@ Drop timing informations ?</source>
     <message>
         <source>Enabled</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="unfinished">Konfiguruj</translation>
-    </message>
-    <message>
-        <source>Audio Filters</source>
-        <translation type="unfinished">Filtry dźwięku</translation>
     </message>
     <message>
         <source>Track 2</source>
@@ -4524,18 +4455,6 @@ Drop timing informations ?</source>
 <context>
     <name>DialogOcr</name>
     <message>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Calibrate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Skip All</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Skip Glyph</source>
         <translation type="unfinished">Pomiń glif</translation>
     </message>
@@ -4546,10 +4465,6 @@ Drop timing informations ?</source>
     <message>
         <source>Ok</source>
         <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>00:00:00/000</source>
@@ -4564,6 +4479,22 @@ Drop timing informations ?</source>
         <translation type="unfinished">0/0</translation>
     </message>
     <message>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calibrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Nb Lines :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4571,16 +4502,16 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProgress</name>
     <message>
+        <source>1/1</source>
+        <translation type="unfinished">1/1</translation>
+    </message>
+    <message>
         <source>Progress</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Current job</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>1/1</source>
-        <translation type="unfinished">1/1</translation>
     </message>
     <message>
         <source>File being written </source>
@@ -4818,11 +4749,11 @@ chcesz kontynuować mimo to?</translation>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation type="unfinished">Wystąpił problem podczas czytania nagłówków SVQ3</translation>
+        <translation type="obsolete">Wystąpił problem podczas czytania nagłówków SVQ3</translation>
     </message>
     <message>
         <source>No stts table</source>
-        <translation type="unfinished">Brak tablicy statystyk</translation>
+        <translation type="obsolete">Brak tablicy statystyk</translation>
     </message>
 </context>
 <context>
@@ -4852,10 +4783,6 @@ chcesz kontynuować mimo to?</translation>
         <translation type="obsolete">&lt;b&gt;Dźwięk&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>&amp;Shift:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>ms</source>
         <translation type="unfinished">ms</translation>
     </message>
@@ -4864,32 +4791,12 @@ chcesz kontynuować mimo to?</translation>
         <translation type="obsolete">&lt;b&gt;Format&lt;/b&gt;</translation>
     </message>
     <message>
-        <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>0</source>
         <translation type="obsolete">0</translation>
     </message>
     <message>
-        <source>Time:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
-    </message>
-    <message>
-        <source>/ 00:00:00.000</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>A:</source>
@@ -4904,11 +4811,35 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished">B:</translation>
     </message>
     <message>
-        <source>Vi&amp;deo</source>
+        <source>Decoder Options</source>
+        <translation type="obsolete">Opcje dekodera</translation>
+    </message>
+    <message>
+        <source>Frame Rate</source>
+        <translation type="obsolete">Liczba klatek na sekundę</translation>
+    </message>
+    <message>
+        <source>Bitrate Histogram</source>
+        <translation type="obsolete">Histogram przepływności</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="obsolete">Wbudowane wsparcie</translation>
+    </message>
+    <message>
+        <source>DVD</source>
+        <translation type="obsolete">DVD</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Typ klatki:</translation>
+    </message>
+    <message>
+        <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Audio</source>
+        <source>Vi&amp;deo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4920,6 +4851,14 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;Toolbars</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;Custom</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4928,15 +4867,87 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Help</source>
+        <source>&amp;Recent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Tools</source>
+        <source>Codec Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XXXX</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>   (0 track(s))</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Shift:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>/ 00:00:00.000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Selection&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Volume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Metre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4976,18 +4987,6 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Decoder Options</source>
-        <translation type="obsolete">Opcje dekodera</translation>
-    </message>
-    <message>
-        <source>Frame Rate</source>
-        <translation type="obsolete">Liczba klatek na sekundę</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+S</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Calculator...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4996,95 +4995,11 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Bitrate Histogram</source>
-        <translation type="obsolete">Histogram przepływności</translation>
-    </message>
-    <message>
-        <source>Built-in Support</source>
-        <translation type="obsolete">Wbudowane wsparcie</translation>
-    </message>
-    <message>
         <source>&amp;Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Output</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Si&amp;de</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Top</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Separate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>DVD</source>
-        <translation type="obsolete">DVD</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Codec Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>XXXX</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>   (0 track(s))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Navigation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame type:</source>
-        <translation type="unfinished">Typ klatki:</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Selection&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Volume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio Metre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5108,6 +5023,10 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Ctrl+Alt+S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;Volume</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5121,6 +5040,18 @@ chcesz kontynuować mimo to?</translation>
     </message>
     <message>
         <source>Ctrl+Alt+M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Separate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Si&amp;de</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5324,57 +5255,57 @@ chcesz kontynuować mimo to?</translation>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="unfinished">_Maska</translation>
+        <translation type="obsolete">_Maska</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="unfinished">_Wysokie Q</translation>
+        <translation type="obsolete">_Wysokie Q</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Natężenie</translation>
+        <translation type="obsolete">_Natężenie</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">MSharpen</translation>
+        <translation type="obsolete">MSharpen</translation>
     </message>
 </context>
 <context>
     <name>Msmooth</name>
     <message>
         <source>_High quality</source>
-        <translation type="unfinished">_Wysoka jakość</translation>
+        <translation type="obsolete">_Wysoka jakość</translation>
     </message>
     <message>
         <source>Show _mask</source>
-        <translation type="unfinished">Pokaż _maskę</translation>
+        <translation type="obsolete">Pokaż _maskę</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Natężenie</translation>
+        <translation type="obsolete">_Natężenie</translation>
     </message>
     <message>
         <source>MSmooth</source>
-        <translation type="unfinished">MSmooth</translation>
+        <translation type="obsolete">MSmooth</translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
         <source>Malformed header</source>
-        <translation type="unfinished">Zdeformowany nagłówek</translation>
+        <translation type="obsolete">Zdeformowany nagłówek</translation>
     </message>
     <message>
         <source>Unpacking bitstream</source>
-        <translation type="unfinished">Rozpakowanie strumienia bitów</translation>
+        <translation type="obsolete">Rozpakowanie strumienia bitów</translation>
     </message>
     <message>
         <source>Indexing</source>
@@ -5389,17 +5320,6 @@ chcesz kontynuować mimo to?</translation>
     </message>
     <message>
         <source>Question</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QtScriptEngine</name>
-    <message>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5426,115 +5346,115 @@ chcesz kontynuować mimo to?</translation>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="unfinished">Brak strategii</translation>
+        <translation type="obsolete">Brak strategii</translation>
     </message>
     <message>
         <source>3:2 pulldown</source>
-        <translation type="unfinished">Konwersja telecine 3:2</translation>
+        <translation type="obsolete">Konwersja telecine 3:2</translation>
     </message>
     <message>
         <source>PAL/SECAM</source>
-        <translation type="unfinished">PAL/SECAM</translation>
+        <translation type="obsolete">PAL/SECAM</translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation type="unfinished">NTSC przekonwertowane z PAL</translation>
+        <translation type="obsolete">NTSC przekonwertowane z PAL</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Góra</translation>
+        <translation type="obsolete">Góra</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Dół</translation>
+        <translation type="obsolete">Dół</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished">Nigdy</translation>
+        <translation type="obsolete">Nigdy</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="unfinished">Jeśli wciąż grzebieniowane</translation>
+        <translation type="obsolete">Jeśli wciąż grzebieniowane</translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="unfinished">Zawsze</translation>
+        <translation type="obsolete">Zawsze</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">Brak</translation>
+        <translation type="obsolete">Brak</translation>
     </message>
     <message>
         <source>None but compute</source>
-        <translation type="unfinished">Brak ale przelicz</translation>
+        <translation type="obsolete">Brak ale przelicz</translation>
     </message>
     <message>
         <source>Postproc on best match</source>
-        <translation type="unfinished">Przetwarzanie na najlepszym dopasowaniu</translation>
+        <translation type="obsolete">Przetwarzanie na najlepszym dopasowaniu</translation>
     </message>
     <message>
         <source>Postproc and show zones (debug)</source>
-        <translation type="unfinished">Przetwarzaj i pokaż strefy (śledzenie)</translation>
+        <translation type="obsolete">Przetwarzaj i pokaż strefy (śledzenie)</translation>
     </message>
     <message>
         <source>Process image (not fields)</source>
-        <translation type="unfinished">Przetwórz obraz (brak pól)</translation>
+        <translation type="obsolete">Przetwórz obraz (brak pól)</translation>
     </message>
     <message>
         <source>Process image (not fields), debug</source>
-        <translation type="unfinished">Przetwarzaj obraz (nie pola), śledzenie</translation>
+        <translation type="obsolete">Przetwarzaj obraz (nie pola), śledzenie</translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="unfinished">_Strategia</translation>
+        <translation type="obsolete">_Strategia</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">Kolejność _pól:</translation>
+        <translation type="obsolete">Kolejność _pól:</translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="unfinished">_Przetwarzanie dodatkowe:</translation>
+        <translation type="obsolete">_Przetwarzanie dodatkowe:</translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="unfinished">Spróbuj ws_tecz:</translation>
+        <translation type="obsolete">Spróbuj ws_tecz:</translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="unfinished">Próg bezpośre_dni:</translation>
+        <translation type="obsolete">Próg bezpośre_dni:</translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="unfinished">Próg _wsteczny:</translation>
+        <translation type="obsolete">Próg _wsteczny:</translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="unfinished">Próg _szumu:</translation>
+        <translation type="obsolete">Próg _szumu:</translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="unfinished">Próg p_rzetwarzania dodatkowego:</translation>
+        <translation type="obsolete">Próg p_rzetwarzania dodatkowego:</translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="unfinished">Zdecyd_uj na podstawie chrominancji</translation>
+        <translation type="obsolete">Zdecyd_uj na podstawie chrominancji</translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="unfinished">P_okaż informacje</translation>
+        <translation type="obsolete">P_okaż informacje</translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="unfinished">Śle_dź</translation>
+        <translation type="obsolete">Śle_dź</translation>
     </message>
     <message>
         <source>Bl_end</source>
-        <translation type="unfinished">Gradi_ent</translation>
+        <translation type="obsolete">Gradi_ent</translation>
     </message>
     <message>
         <source>Decomb Telecide</source>
-        <translation type="unfinished">Decomb Telecide</translation>
+        <translation type="obsolete">Decomb Telecide</translation>
     </message>
 </context>
 <context>
@@ -5656,6 +5576,10 @@ chcesz kontynuować mimo to?</translation>
 <context>
     <name>aboutDialog</name>
     <message>
+        <source>Multi-platform Video Editor</source>
+        <translation type="unfinished">Wieloplatformowy edytor wideo</translation>
+    </message>
+    <message>
         <source>About Avidemux</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5663,9 +5587,9 @@ chcesz kontynuować mimo to?</translation>
         <source>Avidemux </source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Multi-platform Video Editor</source>
-        <translation type="unfinished">Wieloplatformowy edytor wideo</translation>
+    <message utf8="true">
+        <source>© 2001 - 2012  Mean</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>http://www.avidemux.org</source>
@@ -5673,10 +5597,6 @@ chcesz kontynuować mimo to?</translation>
     </message>
     <message>
         <source>&amp;License</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message utf8="true">
-        <source>© 2001 - 2012  Mean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5688,81 +5608,308 @@ chcesz kontynuować mimo to?</translation>
     <name>addBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">Obramowanie _lewe:</translation>
+        <translation type="obsolete">Obramowanie _lewe:</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">Obramowanie p_rawe:</translation>
+        <translation type="obsolete">Obramowanie p_rawe:</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">Obramowanie _górne:</translation>
+        <translation type="obsolete">Obramowanie _górne:</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">Obramowanie _dolne:</translation>
+        <translation type="obsolete">Obramowanie _dolne:</translation>
     </message>
     <message>
         <source>Add Borders</source>
-        <translation type="unfinished">Dodaj krawędzie</translation>
+        <translation type="obsolete">Dodaj krawędzie</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">Niepoprawne parametry</translation>
+        <translation type="obsolete">Niepoprawne parametry</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">Wszystkie parametry muszą być równe i znajdować się w zakresie</translation>
+        <translation type="obsolete">Wszystkie parametry muszą być równe i znajdować się w zakresie</translation>
     </message>
 </context>
 <context>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">_Logo (plik jpg):</translation>
+        <translation type="obsolete">_Logo (plik jpg):</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">Wybierz plik JPEG</translation>
+        <translation type="obsolete">Wybierz plik JPEG</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">Pozycja _X:</translation>
+        <translation type="obsolete">Pozycja _X:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">Pozycja _Y:</translation>
+        <translation type="obsolete">Pozycja _Y:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alfa:</translation>
+        <translation type="obsolete">_Alfa:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">Logo</translation>
+        <translation type="obsolete">Logo</translation>
+    </message>
+</context>
+<context>
+    <name>adm</name>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use systray while encoding</source>
+        <translation type="unfinished">Użyj tacki systemowej podczas kodowania</translation>
+    </message>
+    <message>
+        <source>_Accept non-standard audio frequency for DVD</source>
+        <translation type="unfinished">_Akceptuj niestandardową częstotliwość dźwięku dla DVD</translation>
+    </message>
+    <message>
+        <source>Create _OpenDML files</source>
+        <translation type="unfinished">Utwórz pliki _OpenDML</translation>
+    </message>
+    <message>
+        <source>SIMD</source>
+        <translation type="unfinished">SIMD</translation>
+    </message>
+    <message>
+        <source>Enable all SIMD</source>
+        <translation type="unfinished">Włącz obsługę wszystkich instrukcji SIMD procesora</translation>
+    </message>
+    <message>
+        <source>Enable MMX</source>
+        <translation type="unfinished">Włącz obsługę instrukcji MMX procesora</translation>
+    </message>
+    <message>
+        <source>Enable MMXEXT</source>
+        <translation type="unfinished">Włącz obsługę instrukcji MMXEXT procesora</translation>
+    </message>
+    <message>
+        <source>Enable 3DNOW</source>
+        <translation type="unfinished">Włącz obsługę instrukcji 3DNOW procesora</translation>
+    </message>
+    <message>
+        <source>Enable 3DNOWEXT</source>
+        <translation type="unfinished">Włącz obsługę instrukcji 3DNOWEXT procesora</translation>
+    </message>
+    <message>
+        <source>Enable SSE</source>
+        <translation type="unfinished">Włącz obsługę instrukcji SSE procesora</translation>
+    </message>
+    <message>
+        <source>Enable SSE2</source>
+        <translation type="unfinished">Włącz obsługę instrukcji SSE2 procesora</translation>
+    </message>
+    <message>
+        <source>Enable SSE3</source>
+        <translation type="unfinished">Włącz obsługę instrukcji SSE3 procesora</translation>
+    </message>
+    <message>
+        <source>Enable SSSE3</source>
+        <translation type="unfinished">Włącz obsługę instrukcji SSSE3 procesora</translation>
+    </message>
+    <message>
+        <source>_lavc threads:</source>
+        <translation type="unfinished">Wątki _lavc:</translation>
+    </message>
+    <message>
+        <source>Multi-threading</source>
+        <translation type="unfinished">Wielowątkowość</translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished">Wysoki</translation>
+    </message>
+    <message>
+        <source>Above normal</source>
+        <translation type="unfinished">Powyżej standardowej</translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished">Zwykły</translation>
+    </message>
+    <message>
+        <source>Below normal</source>
+        <translation type="unfinished">Poniżej standardowej</translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished">Niski</translation>
+    </message>
+    <message>
+        <source>_Encoding priority:</source>
+        <translation type="unfinished">Prioryt_et kodowania:</translation>
+    </message>
+    <message>
+        <source>_Indexing/unpacking priority:</source>
+        <translation type="unfinished">Priorytet _indeksowania/rozpakowywania:</translation>
+    </message>
+    <message>
+        <source>_Playback priority:</source>
+        <translation type="unfinished">_Priorytet odtwarzania:</translation>
+    </message>
+    <message>
+        <source>Prioritisation</source>
+        <translation type="unfinished">Priorytetyzacja</translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use alternative tag for MP3 in .mp4</source>
+        <translation type="unfinished">_Użyj alternatywnej etykiety dla pliku MP3 w .mp4</translation>
+    </message>
+    <message>
+        <source>XVideo (best)</source>
+        <translation type="unfinished">XVideo (najlepszy)</translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL (good)</source>
+        <translation type="unfinished">SDL (dobry)</translation>
+    </message>
+    <message>
+        <source>Video _display:</source>
+        <translation type="unfinished">Wyświetlanie _obrazu:</translation>
+    </message>
+    <message>
+        <source>No alerts</source>
+        <translation type="unfinished">Bez komunikatów</translation>
+    </message>
+    <message>
+        <source>Display only error alerts</source>
+        <translation type="unfinished">Wyświetlaj tylko komunikaty błędów</translation>
+    </message>
+    <message>
+        <source>Display all alerts</source>
+        <translation type="unfinished">Wyświetlaj wszystkie komunikaty</translation>
+    </message>
+    <message>
+        <source>_Message level:</source>
+        <translation type="unfinished">Pozio_m komunikatów:</translation>
+    </message>
+    <message>
+        <source>PCM</source>
+        <translation type="unfinished">PCM</translation>
+    </message>
+    <message>
+        <source>Master</source>
+        <translation type="unfinished">Główny</translation>
+    </message>
+    <message>
+        <source>_Volume control:</source>
+        <translation type="unfinished">_Kontrola głośności:</translation>
+    </message>
+    <message>
+        <source>No downmixing</source>
+        <translation type="unfinished">Bez redukcji kanałów</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">Stereo</translation>
+    </message>
+    <message>
+        <source>Pro Logic</source>
+        <translation type="unfinished">Pro Logic</translation>
+    </message>
+    <message>
+        <source>Pro Logic II</source>
+        <translation type="unfinished">Pro Logic II</translation>
+    </message>
+    <message>
+        <source>_Local playback downmixing:</source>
+        <translation type="unfinished">Redukcja kanałów dla odtwarzania _lokalnego:</translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished">_Urządzenie dźwięku</translation>
+    </message>
+    <message>
+        <source>_Horizontal deblocking</source>
+        <translation type="unfinished">Rozblokowanie _poziome</translation>
+    </message>
+    <message>
+        <source>_Vertical deblocking</source>
+        <translation type="unfinished">Rozblokowanie pi_onowe</translation>
+    </message>
+    <message>
+        <source>De_ringing</source>
+        <translation type="unfinished">Usuwanie pie_rścienia</translation>
+    </message>
+    <message>
+        <source>_Strength:</source>
+        <translation type="unfinished">_Natężenie</translation>
+    </message>
+    <message>
+        <source>Default Postprocessing</source>
+        <translation type="unfinished">Przetwarzanie domyślne</translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Interfejs użytkownika</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">Wyjscie</translation>
+    </message>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished">Dźwięk</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished">Obraz</translation>
+    </message>
+    <message>
+        <source>CPU</source>
+        <translation type="unfinished">Procesor</translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Wątkowanie</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">Preferencje</translation>
     </message>
 </context>
 <context>
     <name>asharpDialog</name>
     <message>
-        <source>ASharp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Strength</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Threshold</source>
-        <translation type="unfinished">Próg</translation>
-    </message>
-    <message>
-        <source>Block Adaptative</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unknown flag</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Próg</translation>
     </message>
 </context>
 <context>
@@ -5773,161 +5920,67 @@ chcesz kontynuować mimo to?</translation>
     </message>
 </context>
 <context>
-    <name>avsfilter</name>
-    <message>
-        <source>_wine app file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select wine filename[wine/cedega/etc.]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_loader file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_avs file:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_pipe timeout:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AvsFilter config</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>blackenBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="unfinished">Obramowanie _lewe:</translation>
+        <translation type="obsolete">Obramowanie _lewe:</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="unfinished">Obramowanie p_rawe:</translation>
+        <translation type="obsolete">Obramowanie p_rawe:</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="unfinished">Obramowanie _górne:</translation>
+        <translation type="obsolete">Obramowanie _górne:</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="unfinished">Obramowanie _dolne:</translation>
+        <translation type="obsolete">Obramowanie _dolne:</translation>
     </message>
     <message>
         <source>Blacken Borders</source>
-        <translation type="unfinished">Zaczernij krawędzie</translation>
+        <translation type="obsolete">Zaczernij krawędzie</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">Niepoprawne parametry</translation>
+        <translation type="obsolete">Niepoprawne parametry</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">Wszystkie parametry muszą być równe i znajdować się w zakresie</translation>
-    </message>
-</context>
-<context>
-    <name>changeFps</name>
-    <message>
-        <source>Source Fps:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Source frame rate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Destination Fps:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Destination frame rate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Change fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Wszystkie parametry muszą być równe i znajdować się w zakresie</translation>
     </message>
 </context>
 <context>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
-        <translation type="unfinished">Przesunięcie chrominancji</translation>
-    </message>
-    <message>
-        <source>V Shift</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Shift</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Przesunięcie chrominancji</translation>
     </message>
 </context>
 <context>
     <name>contrastDialog</name>
     <message>
         <source>Contrast</source>
-        <translation type="unfinished">Kontrast</translation>
+        <translation type="obsolete">Kontrast</translation>
     </message>
     <message>
         <source>Luma</source>
-        <translation type="unfinished">Luminancja</translation>
-    </message>
-    <message>
-        <source>ChromaU</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>ChromaV</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Luminancja</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="unfinished">Jasność</translation>
+        <translation type="obsolete">Jasność</translation>
     </message>
 </context>
 <context>
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
-        <translation type="unfinished">Kadrowanie</translation>
-    </message>
-    <message>
-        <source>Right:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bottom:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Left:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kadrowanie</translation>
     </message>
     <message>
         <source>Auto Crop</source>
-        <translation type="unfinished">Automatyczne kadrowanie</translation>
+        <translation type="obsolete">Automatyczne kadrowanie</translation>
     </message>
 </context>
 <context>
@@ -5950,14 +6003,6 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <source>Encoding...</source>
         <translation type="unfinished">Kodowanie...</translation>
-    </message>
-    <message>
-        <source>Phase:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Codec:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>None</source>
@@ -6018,6 +6063,18 @@ chcesz kontynuować mimo to?</translation>
     <message>
         <source>Low</source>
         <translation type="unfinished">Niski</translation>
+    </message>
+    <message>
+        <source>Pause / Abort</source>
+        <translation type="unfinished">Wstrzymaj / Przerwij</translation>
+    </message>
+    <message>
+        <source>Phase:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Codec:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -6096,10 +6153,6 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pause / Abort</source>
-        <translation type="unfinished">Wstrzymaj / Przerwij</translation>
-    </message>
 </context>
 <context>
     <name>encodingWindow</name>
@@ -6139,40 +6192,12 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Gamma</translation>
     </message>
     <message>
-        <source>Green</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Red</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Blue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weight</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Initial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Contrast</source>
-        <translation type="unfinished">Kontrast</translation>
-    </message>
-    <message>
-        <source>&lt;b&gt;Gamma&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Saturation</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kontrast</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="unfinished">Jasność</translation>
+        <translation type="obsolete">Jasność</translation>
     </message>
 </context>
 <context>
@@ -6198,39 +6223,39 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">Sprawdzanie czasowe i przestrzenne</translation>
+        <translation type="obsolete">Sprawdzanie czasowe i przestrzenne</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">Bob, sprawdzanie czasowe i przestrzenne</translation>
+        <translation type="obsolete">Bob, sprawdzanie czasowe i przestrzenne</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">Pomiń sprawdzanie przestrzenno-czasowe</translation>
+        <translation type="obsolete">Pomiń sprawdzanie przestrzenno-czasowe</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">Bob, pomiń sprawdzanie przestrzenno-czasowe</translation>
+        <translation type="obsolete">Bob, pomiń sprawdzanie przestrzenno-czasowe</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Najpierw obszar dolny</translation>
+        <translation type="obsolete">Najpierw obszar dolny</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Najpierw obszar górny</translation>
+        <translation type="obsolete">Najpierw obszar górny</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">_Kolejność:</translation>
+        <translation type="obsolete">_Kolejność:</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 <context>
@@ -6244,11 +6269,7 @@ p, li { white-space: pre-wrap; }
     <name>hueDialog</name>
     <message>
         <source>Hue</source>
-        <translation type="unfinished">Odcień</translation>
-    </message>
-    <message>
-        <source>Saturation</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Odcień</translation>
     </message>
 </context>
 <context>
@@ -6293,12 +6314,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Zadania</translation>
     </message>
     <message>
-        <source>Delete Sel. Job</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Delete All Jobs</source>
         <translation type="unfinished">Usuń wszystkie zadania</translation>
+    </message>
+    <message>
+        <source>Delete Sel. Job</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Run All Jobs</source>
@@ -6312,48 +6333,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>jobsWindow</name>
     <message>
-        <source>Job Name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Sure!</source>
         <translation type="unfinished">Na pewno!</translation>
     </message>
     <message>
         <source>Delete job</source>
         <translation type="unfinished">Usuń zadanie</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete *all* job</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Already done</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This script has already been successfully executed.</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Ready</source>
@@ -6375,114 +6360,150 @@ p, li { white-space: pre-wrap; }
         <source>Running</source>
         <translation type="obsolete">Uruchomiony</translation>
     </message>
+    <message>
+        <source>Job Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Góra</translation>
+        <translation type="obsolete">Góra</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Dół</translation>
+        <translation type="obsolete">Dół</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">Kolejność _pól:</translation>
+        <translation type="obsolete">Kolejność _pól:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">Niższy oznacza większy przeplot</translation>
+        <translation type="obsolete">Niższy oznacza większy przeplot</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="unfinished">O_stry</translation>
+        <translation type="obsolete">O_stry</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="unfinished">_Ostrzejszy silnik</translation>
+        <translation type="obsolete">_Ostrzejszy silnik</translation>
     </message>
     <message>
         <source>T_woway</source>
-        <translation type="unfinished">D_wustronny</translation>
+        <translation type="obsolete">D_wustronny</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="unfinished">Użyj lepszej ekstrapolacji (lepiej nie używać)</translation>
+        <translation type="obsolete">Użyj lepszej ekstrapolacji (lepiej nie używać)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="unfinished">_Mapa</translation>
+        <translation type="obsolete">_Mapa</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="unfinished">Pokaż obszary z przeplotem (do testu!)</translation>
+        <translation type="obsolete">Pokaż obszary z przeplotem (do testu!)</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">_Przetwarzanie luminancji</translation>
+        <translation type="obsolete">_Przetwarzanie luminancji</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">Przetwarzaj obszar luminancji</translation>
+        <translation type="obsolete">Przetwarzaj obszar luminancji</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">P_rzetwarzanie chrominancji</translation>
+        <translation type="obsolete">P_rzetwarzanie chrominancji</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">Szybki splot</translation>
+        <translation type="obsolete">Szybki splot</translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">Brak</translation>
+        <translation type="obsolete">Brak</translation>
     </message>
     <message>
         <source>Linear blend</source>
-        <translation type="unfinished">Przenikanie liniowe</translation>
+        <translation type="obsolete">Przenikanie liniowe</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="unfinished">Interpolacja liniowa</translation>
+        <translation type="obsolete">Interpolacja liniowa</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="unfinished">Interpolacja sześcienna</translation>
+        <translation type="obsolete">Interpolacja sześcienna</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="unfinished">Interpolacja mediana</translation>
+        <translation type="obsolete">Interpolacja mediana</translation>
     </message>
     <message>
         <source>FFmpeg deint</source>
-        <translation type="unfinished">FFmpeg deint</translation>
+        <translation type="obsolete">FFmpeg deint</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="unfinished">_Usuwanie przeplotu:</translation>
+        <translation type="obsolete">_Usuwanie przeplotu:</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="unfinished">_Automatyczny poziom</translation>
+        <translation type="obsolete">_Automatyczny poziom</translation>
     </message>
     <message>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">Narzędzie usuwania przeplotu libavcodec</translation>
+        <translation type="obsolete">Narzędzie usuwania przeplotu libavcodec</translation>
     </message>
 </context>
 <context>
@@ -6508,6 +6529,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Video Filter Manager</source>
         <translation type="unfinished">Zarządca filtrów obrazu wideo</translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="unfinished">Przeplot</translation>
+    </message>
+    <message>
+        <source>Colors</source>
+        <translation type="unfinished">Kolory</translation>
+    </message>
+    <message>
+        <source>Subtitles</source>
+        <translation type="unfinished">Napisy</translation>
+    </message>
+    <message>
+        <source>Miscellaneous</source>
+        <translation type="unfinished">Różne</translation>
     </message>
     <message>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
@@ -6538,16 +6575,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Transform</source>
+        <source>&lt;big&gt;&lt;b&gt;Available Filters&lt;/b&gt;&lt;/big&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Interlacing</source>
-        <translation type="unfinished">Przeplot</translation>
-    </message>
-    <message>
-        <source>Colors</source>
-        <translation type="unfinished">Kolory</translation>
+        <source>Transform</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Noise</source>
@@ -6558,23 +6591,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Subtitles</source>
-        <translation type="unfinished">Napisy</translation>
-    </message>
-    <message>
-        <source>Miscellaneous</source>
-        <translation type="unfinished">Różne</translation>
-    </message>
-    <message>
-        <source>&lt;big&gt;&lt;b&gt;Available Filters&lt;/b&gt;&lt;/big&gt;</source>
+        <source>OpenGl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Preview</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6583,61 +6604,173 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>mpdelogoDialog</name>
+    <name>mainMenu</name>
     <message>
-        <source>Mplayer Delogo</source>
+        <source>Copy</source>
+        <translation type="unfinished">Kopiuj</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Usuń</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="unfinished">Preferencje</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished">Filtry</translation>
+    </message>
+    <message>
+        <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>X</source>
+        <source>Append</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Y</source>
+        <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Width</source>
+        <source>Queue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Height</source>
+        <source>Save as Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Border Width</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>muxerMP4</name>
-    <message>
-        <source>Saving mp4</source>
+        <source>Save as BMP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving PSP</source>
+        <source>Save as JPEG</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerMkv</name>
     <message>
-        <source>Saving Mkv</source>
+        <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerffPS</name>
     <message>
-        <source>Saving mpeg PS (ff)</source>
+        <source>Information</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>muxerffTS</name>
     <message>
-        <source>Saving mpeg TS (ff)</source>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decoder Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Black Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>First Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Time</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6673,21 +6806,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Scanning OGM</source>
         <translation type="obsolete">Przeszukiwanie OGM</translation>
-    </message>
-</context>
-<context>
-    <name>openGlResize</name>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>glResize</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6743,10 +6861,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Obraz</translation>
     </message>
     <message>
-        <source>TextLabel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Frame Rate:</source>
         <translation type="unfinished">Liczba klatek na sekundę:</translation>
     </message>
@@ -6765,10 +6879,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Codec 4CC:</source>
         <translation type="unfinished">Kod 4CC kodeka:</translation>
-    </message>
-    <message>
-        <source>Extra Video Properties</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Global Motion Compensation:</source>
@@ -6811,6 +6921,14 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Kodek:</translation>
     </message>
     <message>
+        <source>TextLabel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra Video Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>ExtraDataSize:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6826,191 +6944,92 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>removePlaneFilter</name>
     <message>
-        <source>Keep Y Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">Przetwarzaj obszar luminancji</translation>
-    </message>
-    <message>
-        <source>Keep U Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chromaU plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep V Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chromaV plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Przetwarzaj obszar luminancji</translation>
     </message>
 </context>
 <context>
     <name>resampleFps</name>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_New frame rate:</source>
-        <translation type="unfinished">_Nowa liczba klatek na sekundę:</translation>
+        <translation type="obsolete">_Nowa liczba klatek na sekundę:</translation>
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="unfinished">Zmień liczbę kl./s</translation>
+        <translation type="obsolete">Zmień liczbę kl./s</translation>
     </message>
 </context>
 <context>
     <name>resizeDialog</name>
     <message>
         <source>Resize</source>
-        <translation type="unfinished">Zmień rozmiar</translation>
-    </message>
-    <message>
-        <source>Aspect Ratio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Lock Aspect Ratio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Zmień rozmiar</translation>
     </message>
     <message>
         <source>1:1</source>
-        <translation type="unfinished">1:1</translation>
+        <translation type="obsolete">1:1</translation>
     </message>
     <message>
         <source>4:3</source>
-        <translation type="unfinished">4:3</translation>
+        <translation type="obsolete">4:3</translation>
     </message>
     <message>
         <source>16:9</source>
-        <translation type="unfinished">16:9</translation>
-    </message>
-    <message>
-        <source>Destination:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Resize Dimensions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Round to the Nearest Multiple of 16</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">16:9</translation>
     </message>
     <message>
         <source>1%</source>
-        <translation type="unfinished">1%</translation>
-    </message>
-    <message>
-        <source>Percent</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">1%</translation>
     </message>
     <message>
         <source>200%</source>
-        <translation type="unfinished">200%</translation>
-    </message>
-    <message>
-        <source>Error X / Y:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0.00 / 0.00</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Resize Method:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">200%</translation>
     </message>
     <message>
         <source>Bilinear</source>
-        <translation type="unfinished">Dwuliniowy</translation>
+        <translation type="obsolete">Dwuliniowy</translation>
     </message>
     <message>
         <source>Bicubic</source>
-        <translation type="unfinished">Dwusześcienna</translation>
-    </message>
-    <message>
-        <source>Lanzcos3</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Dwusześcienna</translation>
     </message>
 </context>
 <context>
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished">Szerokość i wysokość nie mogą być nieparzyste</translation>
+        <translation type="obsolete">Szerokość i wysokość nie mogą być nieparzyste</translation>
     </message>
 </context>
 <context>
     <name>rotateFilter</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">Brak</translation>
+        <translation type="obsolete">Brak</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="unfinished">90 stopni</translation>
-    </message>
-    <message>
-        <source>90Â°</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">90 stopni</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="unfinished">180 stopni</translation>
-    </message>
-    <message>
-        <source>180Â°</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">180 stopni</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="unfinished">270 stopni</translation>
-    </message>
-    <message>
-        <source>270Â°</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">270 stopni</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="unfinished">_Kąt:</translation>
+        <translation type="obsolete">_Kąt:</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">Obróć</translation>
-    </message>
-</context>
-<context>
-    <name>rotateGl</name>
-    <message>
-        <source>Angle (Â°):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>glRotate</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Obróć</translation>
     </message>
 </context>
 <context>
@@ -7020,22 +7039,11 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Podgląd</translation>
     </message>
     <message>
-        <source>next</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>00:00:00.000</source>
         <translation type="unfinished">00:00:00.000</translation>
     </message>
-</context>
-<context>
-    <name>srtDialog</name>
     <message>
-        <source>Subtitle Font Size and Position</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Font Size :</source>
+        <source>next</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7043,258 +7051,124 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">Plik z _napisami (ASS/SSA):</translation>
+        <translation type="obsolete">Plik z _napisami (ASS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">Wybierz plik z napisami</translation>
+        <translation type="obsolete">Wybierz plik z napisami</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">Odstęp pomiędzy _liniami:</translation>
+        <translation type="obsolete">Odstęp pomiędzy _liniami:</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">Skalowanie _czcionki</translation>
+        <translation type="obsolete">Skalowanie _czcionki</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">Margines _górny</translation>
+        <translation type="obsolete">Margines _górny</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">Margines _dolny:</translation>
+        <translation type="obsolete">Margines _dolny:</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
-    </message>
-</context>
-<context>
-    <name>vdpauVideoFilter</name>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>vdpauVideoFilterDeint</name>
-    <message>
-        <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Double framerate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Resize:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Width :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Height :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ASS</translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished">Jeśli wartość jest niższa od progu, uważa się </translation>
+        <translation type="obsolete">Jeśli wartość jest niższa od progu, uważa się </translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">_Szum:</translation>
+        <translation type="obsolete">_Szum:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Jeśli piksele są bliżej od szumu uważane są za takie same</translation>
+        <translation type="obsolete">Jeśli piksele są bliżej od szumu uważane są za takie same</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="unfinished">I_dentyczny:</translation>
+        <translation type="obsolete">I_dentyczny:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Jeśli miary metryczne są poniżej identycznej obrazy są uważane za identyczne</translation>
+        <translation type="obsolete">Jeśli miary metryczne są poniżej identycznej obrazy są uważane za identyczne</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">_Wyświetl miary</translation>
+        <translation type="obsolete">_Wyświetl miary</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Pokazuj miary metryczne w obrazie (śledzenie)</translation>
+        <translation type="obsolete">Pokazuj miary metryczne w obrazie (śledzenie)</translation>
     </message>
     <message>
         <source>Blend Removal</source>
-        <translation type="unfinished">Usuwanie przenikania</translation>
+        <translation type="obsolete">Usuwanie przenikania</translation>
     </message>
 </context>
 <context>
     <name>vidColorYuv</name>
     <message>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>None</source>
-        <translation type="unfinished">Brak</translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Brak</translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Próg:</translation>
+        <translation type="obsolete">_Próg:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished">Jeśli wartość jest niższa od progu, uznaje się ją za prawidłową. Niższa wartość może oznaczać więcej błędnych dodatnich</translation>
+        <translation type="obsolete">Jeśli wartość jest niższa od progu, uznaje się ją za prawidłową. Niższa wartość może oznaczać więcej błędnych dodatnich</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">_Szum:</translation>
+        <translation type="obsolete">_Szum:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Jeśli piksele są bliżej od szumu uważane są za takie same</translation>
+        <translation type="obsolete">Jeśli piksele są bliżej od szumu uważane są za takie same</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="unfinished">_Identyczny:</translation>
+        <translation type="obsolete">_Identyczny:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Jeśli miary metryczne są poniżej identycznej obrazy są uważane za identyczne</translation>
+        <translation type="obsolete">Jeśli miary metryczne są poniżej identycznej obrazy są uważane za identyczne</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">_Wyświetl miary</translation>
+        <translation type="obsolete">_Wyświetl miary</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Pokazuj miary metryczne w obrazie (śledzenie)</translation>
+        <translation type="obsolete">Pokazuj miary metryczne w obrazie (śledzenie)</translation>
     </message>
     <message>
         <source>Hard IVTC Removal</source>
-        <translation type="unfinished">Usunięcie twardego IVTC</translation>
+        <translation type="obsolete">Usunięcie twardego IVTC</translation>
     </message>
     <message>
         <source>Metrics</source>
-        <translation type="unfinished">Matryce</translation>
+        <translation type="obsolete">Matryce</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished">Czy chcesz wyświetlić mary na ekranie ?</translation>
+        <translation type="obsolete">Czy chcesz wyświetlić mary na ekranie ?</translation>
     </message>
 </context>
 <context>
@@ -7331,16 +7205,16 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Przetwarzanie</translation>
     </message>
     <message>
+        <source>00:00:00</source>
+        <translation type="unfinished">00:00:00</translation>
+    </message>
+    <message>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Time Remaining:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -7359,7 +7233,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Save As</source>
-        <translation type="unfinished">Zapisz jako</translation>
+        <translation type="obsolete">Zapisz jako</translation>
     </message>
     <message>
         <source>x264 Configuration File (*.xml)</source>
@@ -7375,7 +7249,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>kbit/s</source>
-        <translation type="unfinished">kbit/s</translation>
+        <translation type="obsolete">kbit/s</translation>
     </message>
     <message>
         <source>Quantiser:</source>
@@ -7387,11 +7261,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Rozmiar docelowego obrazu wideo:</translation>
+        <translation type="obsolete">Rozmiar docelowego obrazu wideo:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
@@ -7402,838 +7276,152 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Na pewno chcesz usunąć wybraną strefę?</translation>
     </message>
     <message>
-        <source>x264 Configuraton</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Configuration:</source>
-        <translation type="unfinished">Konfiguracja:</translation>
+        <translation type="obsolete">Konfiguracja:</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Usuń</translation>
-    </message>
-    <message>
-        <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Usuń</translation>
     </message>
     <message>
         <source>Rate Control</source>
-        <translation type="unfinished">Kontrola przepływności</translation>
-    </message>
-    <message>
-        <source>Constant Bitrate (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Quantiser (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Rate Factor (Single Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Size (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average Bitrate (Two Pass)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>0 (High Quality)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kontrola przepływności</translation>
     </message>
     <message>
         <source>Quantiser</source>
-        <translation type="unfinished">Kwantyzator</translation>
-    </message>
-    <message>
-        <source>51 (Low Quality)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frametype Lookahead:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Multithreading</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kwantyzator</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished">Wyłącz</translation>
+        <translation type="obsolete">Wyłącz</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="unfinished">Automatyczne wykrycie</translation>
-    </message>
-    <message>
-        <source>Enforce Repeatability</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slice-based Threading</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom Threaded Lookahead Buffer:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Motion</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Automatyczne wykrycie</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="unfinished">Szacowanie ruchu</translation>
-    </message>
-    <message>
-        <source>Motion Estimation Method:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Diamond Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hexagonal Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Uneven Multi-hexagonal Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Exhaustive Search</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Szacowanie ruchu</translation>
     </message>
     <message>
         <source>Hadamard Exhaustive Search</source>
-        <translation type="unfinished">Rozszerzone wyszukiwanie metodą Hadamarda</translation>
-    </message>
-    <message>
-        <source>1 (Fast)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Subpixel Refinement</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Rozszerzone wyszukiwanie metodą Hadamarda</translation>
     </message>
     <message>
         <source>9 (Best)</source>
         <translation type="obsolete">9 (Najlepszy)</translation>
     </message>
     <message>
-        <source>Motion Vector</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Motion Vector Length:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum Buffer Between Threads:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Motion Vector Search Range:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Prediction</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Disabled</source>
-        <translation type="unfinished">Wyłączony</translation>
-    </message>
-    <message>
-        <source>Direct Prediction Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted Prediction for P-frames:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Wyłączony</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">Brak</translation>
-    </message>
-    <message>
-        <source>Spatial</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Temporal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted Prediction for B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constrained Intra Prediction</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Partition</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Partition Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8 DCT Spatial Transform</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8, 8x16 and 16x8 P-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8, 8x16 and 16x8 B-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4x4, 4x8 and 8x4 P-frame Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8x8 Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4x4 Intra-predicted Blocks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Frame Encoding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CABAC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Reference Frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frames as References:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Strictly Hierarchical Pyramid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Non-strict (Not Blu-ray Compatible)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Brak</translation>
     </message>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">Szybki</translation>
-    </message>
-    <message>
-        <source>Optimal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>B-frame Bias:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Consecutive B-frames:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Adaptive B-frame Decision:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I-frame Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Analysis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mixed References</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Motion Estimation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Trellis Quantization:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Final Macroblock Only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Always On</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fast Skip Detection on P-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>DCT Decimation on P-frames</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Psychovisual Rate Distortion Optimisation:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Noise Reduction:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma Quantisation Deadzone</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter Luma Quantisation Deadzone:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantisation Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flat Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>JVT Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>I and P-frame Quantiser Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Quantiser Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>P and B-frame Quantiser Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average Bitrate Tolerance:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma to Luma Quantiser Offset:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum Quantiser:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Curve Compression</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantiser Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reduce Fluctuation Before Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reduce Fluctuation After Curve Compression:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Adaptive Quantisation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Buffer Verifier</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum VBV Bitrate:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Initial VBV Buffer Occupancy:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>kbit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>VBV Buffer Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slicing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slices per Frame:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Size per Slice:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Macroblocks per Slice:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Szybki</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished">Wyjscie</translation>
+        <translation type="obsolete">Wyjscie</translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished">1</translation>
+        <translation type="obsolete">1</translation>
     </message>
     <message>
         <source>1.1</source>
-        <translation type="unfinished">1.1</translation>
+        <translation type="obsolete">1.1</translation>
     </message>
     <message>
         <source>1.2</source>
-        <translation type="unfinished">1.2</translation>
+        <translation type="obsolete">1.2</translation>
     </message>
     <message>
         <source>1.3</source>
-        <translation type="unfinished">1.3</translation>
+        <translation type="obsolete">1.3</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished">2</translation>
+        <translation type="obsolete">2</translation>
     </message>
     <message>
         <source>2.1</source>
-        <translation type="unfinished">2.1</translation>
+        <translation type="obsolete">2.1</translation>
     </message>
     <message>
         <source>2.2</source>
-        <translation type="unfinished">2.2</translation>
+        <translation type="obsolete">2.2</translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished">3</translation>
+        <translation type="obsolete">3</translation>
     </message>
     <message>
         <source>3.1</source>
-        <translation type="unfinished">3.1</translation>
+        <translation type="obsolete">3.1</translation>
     </message>
     <message>
         <source>3.2</source>
-        <translation type="unfinished">3.2</translation>
+        <translation type="obsolete">3.2</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished">4</translation>
+        <translation type="obsolete">4</translation>
     </message>
     <message>
         <source>4.1</source>
-        <translation type="unfinished">4.1</translation>
+        <translation type="obsolete">4.1</translation>
     </message>
     <message>
         <source>4.2</source>
-        <translation type="unfinished">4.2</translation>
+        <translation type="obsolete">4.2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished">5</translation>
+        <translation type="obsolete">5</translation>
     </message>
     <message>
         <source>5.1</source>
-        <translation type="unfinished">5.1</translation>
-    </message>
-    <message>
-        <source>Sequence Parameter Set Identifer:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>IDC Level:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">5.1</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished">0</translation>
+        <translation type="obsolete">0</translation>
     </message>
     <message>
         <source>7</source>
-        <translation type="unfinished">7</translation>
+        <translation type="obsolete">7</translation>
     </message>
     <message>
         <source>15</source>
-        <translation type="unfinished">15</translation>
+        <translation type="obsolete">15</translation>
     </message>
     <message>
         <source>31</source>
-        <translation type="unfinished">31</translation>
-    </message>
-    <message>
-        <source>Generate Access Unit Delimiters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pixel Aspect Ratio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>As Input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Predefined Aspect Ratio:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>16:15 (PAL 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>64:45 (PAL 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>8:9 (NTSC 4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>32:27 (NTSC 16:9)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Usability Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Undefined</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT709</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT470M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BT470BG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Linear</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LOG100</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>LOG316</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTEL170M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTE240M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colour Primaries:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">31</translation>
     </message>
     <message>
         <source>Crop</source>
-        <translation type="unfinished">Kadrowanie</translation>
-    </message>
-    <message>
-        <source>FCC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SMPTE170M</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GBR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>YCgCo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Colour Matrix:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Component</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PAL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>NTSC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>SECAM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MAC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Film</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Transfer Characteristics:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma Sample Location:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Format:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Overscan:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Full Range Samples</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fast First Pass</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-tree Rate Control</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <comment>multithreading</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Periodic Intra Refresh</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <comment>PAR</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Kadrowanie</translation>
     </message>
     <message>
         <source>10 (Best)</source>
-        <translation type="unfinished">9 (Najlepszy) {10 ?}</translation>
-    </message>
-    <message>
-        <source>Weighted References</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Weighted References + Duplicates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Loop Filter:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open GOP:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Normal Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Blu-ray Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Interlaced:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bottom Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top Field First</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fake Interlaced</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GOP Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Minimum:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Psychovisual Trellis:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Variance AQ:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">9 (Najlepszy) {10 ?}</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">Zwykły</translation>
-    </message>
-    <message>
-        <source>Auto Variance AQ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Advanced 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Advanced 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Output 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HRD Parameters:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Zwykły</translation>
     </message>
     <message>
         <source>VBR</source>
-        <translation type="unfinished">VBR</translation>
+        <translation type="obsolete">VBR</translation>
     </message>
     <message>
         <source>CBR</source>
-        <translation type="unfinished">CBR</translation>
+        <translation type="obsolete">CBR</translation>
     </message>
 </context>
 <context>
@@ -8250,88 +7438,36 @@ p, li { white-space: pre-wrap; }
         <source>Error reading custom matrix file.</source>
         <translation type="obsolete">Błąd podczas wczytywania własnego pliku matrycy.</translation>
     </message>
-    <message>
-        <source>x264 Custom Matrix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra 4x4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma U/V:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter 4x4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Intra 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Inter 8x8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Load File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>x264Dialog</name>
     <message>
         <source>Target Bitrate:</source>
-        <translation type="unfinished">Przepływność docelowa:</translation>
+        <translation type="obsolete">Przepływność docelowa:</translation>
     </message>
     <message>
         <source>kbit/s</source>
-        <translation type="unfinished">kbit/s</translation>
+        <translation type="obsolete">kbit/s</translation>
     </message>
     <message>
         <source>Quantiser:</source>
-        <translation type="unfinished">Kwantyzator:</translation>
+        <translation type="obsolete">Kwantyzator:</translation>
     </message>
     <message>
         <source>Quality:</source>
-        <translation type="unfinished">Jakość:</translation>
+        <translation type="obsolete">Jakość:</translation>
     </message>
     <message>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Rozmiar docelowego obrazu wideo:</translation>
+        <translation type="obsolete">Rozmiar docelowego obrazu wideo:</translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">Średnia przepływność:</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Średnia przepływność:</translation>
     </message>
 </context>
 <context>
@@ -8376,39 +7512,39 @@ Do you wish to continue?</source>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">Sprawdzanie czasowe i przestrzenne</translation>
+        <translation type="obsolete">Sprawdzanie czasowe i przestrzenne</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">Bob, sprawdzanie czasowe i przestrzenne</translation>
+        <translation type="obsolete">Bob, sprawdzanie czasowe i przestrzenne</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">Pomiń sprawdzanie przestrzenno-czasowe</translation>
+        <translation type="obsolete">Pomiń sprawdzanie przestrzenno-czasowe</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">Bob, pomiń sprawdzanie przestrzenno-czasowe</translation>
+        <translation type="obsolete">Bob, pomiń sprawdzanie przestrzenno-czasowe</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Najpierw obszar dolny</translation>
+        <translation type="obsolete">Najpierw obszar dolny</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Najpierw obszar górny</translation>
+        <translation type="obsolete">Najpierw obszar górny</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Tryb:</translation>
+        <translation type="obsolete">_Tryb:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">_Kolejność:</translation>
+        <translation type="obsolete">_Kolejność:</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 </TS>
