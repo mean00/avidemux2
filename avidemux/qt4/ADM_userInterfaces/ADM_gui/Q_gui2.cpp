@@ -294,9 +294,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
-    addScriptEnginesToFileMenu(myMenuFile);
+        addScriptEnginesToFileMenu(myMenuFile);
 	addScriptShellsToToolsMenu(myMenuTool);
-    buildMyMenu();
+        buildMyMenu();
 	buildCustomMenu();
 	addScriptReferencesToHelpMenu();
 
@@ -388,7 +388,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                 break;
             case MENU_SUBMENU:
                 {
-                    subMenu=root->addMenu(m->text.c_str());
+                    subMenu=root->addMenu(QT_TR_NOOP(m->text.c_str()));
                 }
                 break;
             case MENU_SUBACTION:
@@ -400,9 +400,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                         if(m->icon)
                         {
                             QIcon icon(m->icon);
-                            a=insert->addAction(icon,m->text.c_str());
+                            a=insert->addAction(icon,QT_TR_NOOP(m->text.c_str()));
                         }else
-                            a=insert->addAction(m->text.c_str());
+                            a=insert->addAction(QT_TR_NOOP(m->text.c_str()));
                         m->cookie=(void *)a;
                         if(m->shortCut)
                         {
