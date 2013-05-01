@@ -381,6 +381,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
+        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
         switch(m->type)
         {
             case MENU_SEPARATOR:
@@ -388,7 +389,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                 break;
             case MENU_SUBMENU:
                 {
-                    subMenu=root->addMenu(QT_TR_NOOP(m->text.c_str()));
+                    subMenu=root->addMenu(qs);
                 }
                 break;
             case MENU_SUBACTION:
@@ -400,9 +401,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                         if(m->icon)
                         {
                             QIcon icon(m->icon);
-                            a=insert->addAction(icon,QT_TR_NOOP(m->text.c_str()));
+                            a=insert->addAction(icon,qs);
                         }else
-                            a=insert->addAction(QT_TR_NOOP(m->text.c_str()));
+                            a=insert->addAction(qs);
                         m->cookie=(void *)a;
                         if(m->shortCut)
                         {

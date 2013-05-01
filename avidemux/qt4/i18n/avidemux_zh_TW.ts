@@ -6566,7 +6566,179 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="obsolete">偏好設定</translation>
+        <translation type="unfinished">偏好設定</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Append</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as BMP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as JPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">關閉</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished">-</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished">連線至 avsproxy</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">複製</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">刪除</translation>
+    </message>
+    <message>
+        <source>Set Marker A</source>
+        <translation type="unfinished">設定標記 A</translation>
+    </message>
+    <message>
+        <source>Set Marker B</source>
+        <translation type="unfinished">設定標記 B</translation>
+    </message>
+    <message>
+        <source>Decoder Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished">濾鏡</translation>
+    </message>
+    <message>
+        <source>Select Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished">播放/停止</translation>
+    </message>
+    <message>
+        <source>Previous Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished">上一個內部畫格</translation>
+    </message>
+    <message>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished">上一個內部畫格</translation>
+    </message>
+    <message>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished">上一個黑畫面</translation>
+    </message>
+    <message>
+        <source>Next Black Frame</source>
+        <translation type="unfinished">下一個黑畫面</translation>
+    </message>
+    <message>
+        <source>First Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Time</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7501,171 +7673,55 @@ p, li { white-space: pre-wrap; }
     <name>mainMenu</name>
     <message>
         <source>Close</source>
-        <translation type="unfinished">關閉</translation>
+        <translation type="obsolete">關閉</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished">連線至 avsproxy</translation>
+        <translation type="obsolete">連線至 avsproxy</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">複製</translation>
+        <translation type="obsolete">複製</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">刪除</translation>
+        <translation type="obsolete">刪除</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation type="unfinished">設定標記 A</translation>
+        <translation type="obsolete">設定標記 A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation type="unfinished">設定標記 B</translation>
+        <translation type="obsolete">設定標記 B</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">偏好設定</translation>
+        <translation type="obsolete">偏好設定</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">濾鏡</translation>
+        <translation type="obsolete">濾鏡</translation>
     </message>
     <message>
         <source>Play/Stop</source>
-        <translation type="unfinished">播放/停止</translation>
+        <translation type="obsolete">播放/停止</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">上一個內部畫格</translation>
+        <translation type="obsolete">上一個內部畫格</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">上一個內部畫格</translation>
+        <translation type="obsolete">上一個內部畫格</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">上一個黑畫面</translation>
+        <translation type="obsolete">上一個黑畫面</translation>
     </message>
     <message>
         <source>Next Black Frame</source>
-        <translation type="unfinished">下一個黑畫面</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Append</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Undo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cut</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select Track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Build Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application &amp;Log</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application Data &amp;Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Next Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>First Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Last Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">下一個黑畫面</translation>
     </message>
 </context>
 <context>

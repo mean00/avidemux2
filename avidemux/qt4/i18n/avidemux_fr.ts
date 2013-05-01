@@ -848,7 +848,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Annuler</translation>
     </message>
 </context>
 <context>
@@ -1946,6 +1946,229 @@ Drop timing informations ?</source>
         <source>_Vertical deblocking</source>
         <translation type="obsolete">Deblocking vertical</translation>
     </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="35"/>
+        <source>Open</source>
+        <translation type="unfinished">Ouvrir</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="36"/>
+        <source>Append</source>
+        <translation type="unfinished">Ajouter</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="37"/>
+        <source>Save</source>
+        <translation type="unfinished">Sauver</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="38"/>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="39"/>
+        <source>Save as Image</source>
+        <translation type="unfinished">Sauver comme image</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="40"/>
+        <source>Save as BMP</source>
+        <translation type="unfinished">Sauver comme BMP</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="41"/>
+        <source>Save as JPEG</source>
+        <translation type="unfinished">Sauver comme JPEG</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="42"/>
+        <source>Close</source>
+        <translation type="unfinished">Fermer</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="43"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="45"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="47"/>
+        <source>-</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="44"/>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="46"/>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished">Se connecter à avsproxy</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="48"/>
+        <source>Quit</source>
+        <translation type="unfinished">Quitter</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="54"/>
+        <source>Undo</source>
+        <translation type="unfinished">Défaire</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="55"/>
+        <source>Reset Edit</source>
+        <translation type="unfinished">Annuler toutes les éditions</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="56"/>
+        <source>Cut</source>
+        <translation type="unfinished">Couper</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="57"/>
+        <source>Copy</source>
+        <translation type="unfinished">Copier</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="58"/>
+        <source>Paste</source>
+        <translation type="unfinished">Coller</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="59"/>
+        <source>Delete</source>
+        <translation type="unfinished">Effacer</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="61"/>
+        <source>Set Marker A</source>
+        <translation type="unfinished">Mettre le marqueur A</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="62"/>
+        <source>Set Marker B</source>
+        <translation type="unfinished">Mettre le marqueur B</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="64"/>
+        <source>Preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="70"/>
+        <source>Decoder Option</source>
+        <translation type="unfinished">Option du décodeur</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="71"/>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="72"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="80"/>
+        <source>Filters</source>
+        <translation type="unfinished">Filtres</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="78"/>
+        <source>Select Track</source>
+        <translation type="unfinished">Choisir les pistes</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="79"/>
+        <source>Save audio</source>
+        <translation type="unfinished">Sauver la piste audio</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="86"/>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="87"/>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="90"/>
+        <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="91"/>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished">Ouvrir le fichier de log</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="92"/>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished">Ouvrir le dossier de l&apos;application</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="95"/>
+        <source>About</source>
+        <translation type="unfinished">A propos</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="102"/>
+        <source>Play/Stop</source>
+        <translation type="unfinished">Jouer/stopper</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="103"/>
+        <source>Previous Frame</source>
+        <translation type="unfinished">Image précédente</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="104"/>
+        <source>Next Frame</source>
+        <translation type="unfinished">Image suivante</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="105"/>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished">Image clé précédente</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="106"/>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished">Image clé suivante</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="107"/>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished">Image noire précédente</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="108"/>
+        <source>Next Black Frame</source>
+        <translation type="unfinished">Image noire suivante</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="109"/>
+        <source>First Frame</source>
+        <translation type="unfinished">Première image</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="110"/>
+        <source>Last Frame</source>
+        <translation type="unfinished">Dernière image</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="112"/>
+        <source>Go To Marker A</source>
+        <translation type="unfinished">Aller au marqueur A</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="113"/>
+        <source>Go To Marker B</source>
+        <translation type="unfinished">Aller au marqueur B</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="115"/>
+        <source>Go To Time</source>
+        <translation type="unfinished">Aller au temps</translation>
+    </message>
 </context>
 <context>
     <name>avsfilter</name>
@@ -2350,7 +2573,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="71"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quitter</translation>
     </message>
 </context>
 <context>
@@ -2688,215 +2911,148 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>mainMenu</name>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="7"/>
         <source>Open</source>
-        <translation type="unfinished">Ouvrir</translation>
+        <translation type="obsolete">Ouvrir</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="8"/>
         <source>Append</source>
-        <translation type="unfinished">Ajouter</translation>
+        <translation type="obsolete">Ajouter</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="9"/>
         <source>Save</source>
-        <translation type="unfinished">Sauver</translation>
+        <translation type="obsolete">Sauver</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="10"/>
-        <source>Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="11"/>
         <source>Save as Image</source>
-        <translation type="unfinished">Sauver comme image</translation>
+        <translation type="obsolete">Sauver comme image</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="12"/>
         <source>Save as BMP</source>
-        <translation type="unfinished">Sauver comme BMP</translation>
+        <translation type="obsolete">Sauver comme BMP</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="13"/>
         <source>Save as JPEG</source>
-        <translation type="unfinished">Sauver comme JPEG</translation>
+        <translation type="obsolete">Sauver comme JPEG</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="14"/>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation type="obsolete">Fermer</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="16"/>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="18"/>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished">Se connecter à avsproxy</translation>
+        <translation type="obsolete">Se connecter à avsproxy</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="20"/>
         <source>Quit</source>
-        <translation type="unfinished">Quitter</translation>
+        <translation type="obsolete">Quitter</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="25"/>
         <source>Undo</source>
-        <translation type="unfinished">Défaire</translation>
+        <translation type="obsolete">Défaire</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="26"/>
         <source>Reset Edit</source>
-        <translation type="unfinished">Annuler toutes les éditions</translation>
+        <translation type="obsolete">Annuler toutes les éditions</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="27"/>
         <source>Cut</source>
-        <translation type="unfinished">Couper</translation>
+        <translation type="obsolete">Couper</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="28"/>
         <source>Copy</source>
-        <translation type="unfinished">Copier</translation>
+        <translation type="obsolete">Copier</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="29"/>
         <source>Paste</source>
-        <translation type="unfinished">Coller</translation>
+        <translation type="obsolete">Coller</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="30"/>
         <source>Delete</source>
-        <translation type="unfinished">Effacer</translation>
+        <translation type="obsolete">Effacer</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="32"/>
         <source>Set Marker A</source>
-        <translation type="unfinished">Mettre le marqueur A</translation>
+        <translation type="obsolete">Mettre le marqueur A</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="33"/>
         <source>Set Marker B</source>
-        <translation type="unfinished">Mettre le marqueur B</translation>
+        <translation type="obsolete">Mettre le marqueur B</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="35"/>
-        <source>Preferences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="40"/>
         <source>Decoder Option</source>
-        <translation type="unfinished">Option du décodeur</translation>
+        <translation type="obsolete">Option du décodeur</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="41"/>
-        <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="42"/>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="49"/>
         <source>Filters</source>
-        <translation type="unfinished">Filtres</translation>
+        <translation type="obsolete">Filtres</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="47"/>
         <source>Select Track</source>
-        <translation type="unfinished">Choisir les pistes</translation>
+        <translation type="obsolete">Choisir les pistes</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="48"/>
         <source>Save audio</source>
-        <translation type="unfinished">Sauver la piste audio</translation>
+        <translation type="obsolete">Sauver la piste audio</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="54"/>
-        <source>Build Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="55"/>
-        <source>Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="59"/>
         <source>Open Application &amp;Log</source>
-        <translation type="unfinished">Ouvrir le fichier de log</translation>
+        <translation type="obsolete">Ouvrir le fichier de log</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="60"/>
         <source>Open Application Data &amp;Folder</source>
-        <translation type="unfinished">Ouvrir le dossier de l&apos;application</translation>
+        <translation type="obsolete">Ouvrir le dossier de l&apos;application</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="63"/>
         <source>About</source>
-        <translation type="unfinished">A propos</translation>
+        <translation type="obsolete">A propos</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="68"/>
         <source>Play/Stop</source>
-        <translation type="unfinished">Jouer/stopper</translation>
+        <translation type="obsolete">Jouer/stopper</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="69"/>
         <source>Previous Frame</source>
-        <translation type="unfinished">Image précédente</translation>
+        <translation type="obsolete">Image précédente</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="70"/>
         <source>Next Frame</source>
-        <translation type="unfinished">Image suivante</translation>
+        <translation type="obsolete">Image suivante</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="71"/>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">Image clé précédente</translation>
+        <translation type="obsolete">Image clé précédente</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="72"/>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">Image clé suivante</translation>
+        <translation type="obsolete">Image clé suivante</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="73"/>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">Image noire précédente</translation>
+        <translation type="obsolete">Image noire précédente</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="74"/>
         <source>Next Black Frame</source>
-        <translation type="unfinished">Image noire suivante</translation>
+        <translation type="obsolete">Image noire suivante</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="75"/>
         <source>First Frame</source>
-        <translation type="unfinished">Première image</translation>
+        <translation type="obsolete">Première image</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="76"/>
         <source>Last Frame</source>
-        <translation type="unfinished">Dernière image</translation>
+        <translation type="obsolete">Dernière image</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="78"/>
         <source>Go To Marker A</source>
-        <translation type="unfinished">Aller au marqueur A</translation>
+        <translation type="obsolete">Aller au marqueur A</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="79"/>
         <source>Go To Marker B</source>
-        <translation type="unfinished">Aller au marqueur B</translation>
+        <translation type="obsolete">Aller au marqueur B</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.cpp" line="81"/>
         <source>Go To Time</source>
-        <translation type="unfinished">Aller au temps</translation>
+        <translation type="obsolete">Aller au temps</translation>
     </message>
 </context>
 <context>

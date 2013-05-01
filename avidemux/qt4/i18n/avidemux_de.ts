@@ -7112,7 +7112,179 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="obsolete">Einstellungen</translation>
+        <translation type="unfinished">Einstellungen</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Append</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as BMP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as JPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Schließen</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished">-</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished">Verbinde mit avsproxy</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Marker A</source>
+        <translation type="unfinished">Setze Markierung A</translation>
+    </message>
+    <message>
+        <source>Set Marker B</source>
+        <translation type="unfinished">Setze Markierung B</translation>
+    </message>
+    <message>
+        <source>Decoder Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished">Filter</translation>
+    </message>
+    <message>
+        <source>Select Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished">Start/Stop</translation>
+    </message>
+    <message>
+        <source>Previous Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished">ein i-Bild zur&amp;ück</translation>
+    </message>
+    <message>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished">ein i-Frame vor</translation>
+    </message>
+    <message>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished">ein schwarzes Bild rückwärts suchen</translation>
+    </message>
+    <message>
+        <source>Next Black Frame</source>
+        <translation type="unfinished">ein schwarzes Bild vorwärts suchen</translation>
+    </message>
+    <message>
+        <source>First Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Time</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8076,171 +8248,47 @@ der Halbbilder (deinterlaceing)</translation>
     <name>mainMenu</name>
     <message>
         <source>Close</source>
-        <translation type="unfinished">Schließen</translation>
+        <translation type="obsolete">Schließen</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished">Verbinde mit avsproxy</translation>
+        <translation type="obsolete">Verbinde mit avsproxy</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation type="unfinished">Setze Markierung A</translation>
+        <translation type="obsolete">Setze Markierung A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation type="unfinished">Setze Markierung B</translation>
+        <translation type="obsolete">Setze Markierung B</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Einstellungen</translation>
+        <translation type="obsolete">Einstellungen</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">Filter</translation>
+        <translation type="obsolete">Filter</translation>
     </message>
     <message>
         <source>Play/Stop</source>
-        <translation type="unfinished">Start/Stop</translation>
+        <translation type="obsolete">Start/Stop</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">ein i-Bild zur&amp;ück</translation>
+        <translation type="obsolete">ein i-Bild zur&amp;ück</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">ein i-Frame vor</translation>
+        <translation type="obsolete">ein i-Frame vor</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">ein schwarzes Bild rückwärts suchen</translation>
+        <translation type="obsolete">ein schwarzes Bild rückwärts suchen</translation>
     </message>
     <message>
         <source>Next Black Frame</source>
-        <translation type="unfinished">ein schwarzes Bild vorwärts suchen</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Append</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Undo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cut</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select Track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Build Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application &amp;Log</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application Data &amp;Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Next Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>First Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Last Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ein schwarzes Bild vorwärts suchen</translation>
     </message>
 </context>
 <context>

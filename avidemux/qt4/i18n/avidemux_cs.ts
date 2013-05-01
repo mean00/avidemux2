@@ -12083,7 +12083,179 @@ Má se znovu použít log soubor?</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="obsolete">Předvolby</translation>
+        <translation type="unfinished">Předvolby</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Append</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Uložit</translation>
+    </message>
+    <message>
+        <source>Queue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as BMP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save as JPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished">Zavřít</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished">-</translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connect to avsproxy</source>
+        <translation type="unfinished">Připojit se k avsproxy</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Kopie</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set Marker A</source>
+        <translation type="unfinished">Nastavit značku A</translation>
+    </message>
+    <message>
+        <source>Set Marker B</source>
+        <translation type="unfinished">Nastavit značku B</translation>
+    </message>
+    <message>
+        <source>Decoder Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PostProcessing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished">Filtry</translation>
+    </message>
+    <message>
+        <source>Select Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build Option</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Advanced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application &amp;Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Application Data &amp;Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished">Přehrát/Zastavit</translation>
+    </message>
+    <message>
+        <source>Previous Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Next Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Previous Intra Frame</source>
+        <translation type="unfinished">Předchozí klíčový snímek</translation>
+    </message>
+    <message>
+        <source>Next Intra Frame</source>
+        <translation type="unfinished">Následující klíčový snímek</translation>
+    </message>
+    <message>
+        <source>Previous Black Frame</source>
+        <translation type="unfinished">Předchozí černý snímek</translation>
+    </message>
+    <message>
+        <source>Next Black Frame</source>
+        <translation type="unfinished">Následující černý snímek</translation>
+    </message>
+    <message>
+        <source>First Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Last Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go To Time</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13066,171 +13238,55 @@ p, li { white-space: pre-wrap; }
     <name>mainMenu</name>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Uložit</translation>
+        <translation type="obsolete">Uložit</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">Zavřít</translation>
+        <translation type="obsolete">Zavřít</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished">Připojit se k avsproxy</translation>
+        <translation type="obsolete">Připojit se k avsproxy</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Kopie</translation>
+        <translation type="obsolete">Kopie</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation type="unfinished">Nastavit značku A</translation>
+        <translation type="obsolete">Nastavit značku A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation type="unfinished">Nastavit značku B</translation>
+        <translation type="obsolete">Nastavit značku B</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Předvolby</translation>
+        <translation type="obsolete">Předvolby</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">Filtry</translation>
+        <translation type="obsolete">Filtry</translation>
     </message>
     <message>
         <source>Play/Stop</source>
-        <translation type="unfinished">Přehrát/Zastavit</translation>
+        <translation type="obsolete">Přehrát/Zastavit</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">Předchozí klíčový snímek</translation>
+        <translation type="obsolete">Předchozí klíčový snímek</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">Následující klíčový snímek</translation>
+        <translation type="obsolete">Následující klíčový snímek</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">Předchozí černý snímek</translation>
+        <translation type="obsolete">Předchozí černý snímek</translation>
     </message>
     <message>
         <source>Next Black Frame</source>
-        <translation type="unfinished">Následující černý snímek</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Append</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Queue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Undo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cut</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Select Track</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Build Option</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application &amp;Log</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Application Data &amp;Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Next Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>First Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Last Frame</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Následující černý snímek</translation>
     </message>
 </context>
 <context>

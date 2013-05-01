@@ -43,7 +43,7 @@ find . -iname 'avidemux_*.ts' -printf "\"%p\" \\\ \n" >> avidemux.pro2
 echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
 
-cat avidemux.pro2 | sed 's/"//g' | grep -v build | grep -v cmake | grep -v "myOwnMenu.h" | grep -v gtk >     avidemux.pro
+cat avidemux.pro2 | sed 's/"//g' | grep -v build | grep -v cmake  | grep -v gtk >     avidemux.pro
 #
 lupdate-qt4 -pro avidemux.pro 
 echo "DONE."
