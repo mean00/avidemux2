@@ -28,6 +28,7 @@ echo "Finding SOURCES..."
 echo "SOURCES = \\" >> avidemux.pro2
 findSource ..
 findSource ../../common
+findSource ../../../avidemux_plugins
 echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
 echo "Finding FORMS..."
@@ -42,7 +43,7 @@ find . -iname 'avidemux_*.ts' -printf "\"%p\" \\\ \n" >> avidemux.pro2
 echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
 
-cat avidemux.pro2 | sed 's/"//g' | grep -v build | grep -v cmake | grep -v "myOwnMenu.h" >     avidemux.pro
+cat avidemux.pro2 | sed 's/"//g' | grep -v build | grep -v cmake | grep -v "myOwnMenu.h" | grep -v gtk >     avidemux.pro
 #
 lupdate-qt4 -pro avidemux.pro 
 echo "DONE."

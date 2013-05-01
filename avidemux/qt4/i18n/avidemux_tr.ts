@@ -1904,34 +1904,38 @@ Do you want to load it  ?
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="obsolete">Par_laklık kilidi:</translation>
+        <translation type="unfinished">Par_laklık kilidi:</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="obsolete">Berra_klık kilidi:</translation>
+        <translation type="unfinished">Berra_klık kilidi:</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="obsolete">P_arlaklık eşiği:</translation>
+        <translation type="unfinished">P_arlaklık eşiği:</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="obsolete">Be_rraklık eşiği:</translation>
+        <translation type="unfinished">Be_rraklık eşiği:</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="obsolete">_Sahne değişimi:</translation>
+        <translation type="unfinished">_Sahne değişimi:</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="obsolete">Gürültü gider</translation>
+        <translation type="unfinished">Gürültü gider</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="obsolete">Düşürme Eşiği</translation>
+        <translation type="unfinished">Düşürme Eşiği</translation>
+    </message>
+    <message>
+        <source>Drop Out</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1943,26 +1947,45 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ADMVideoFlux</name>
+    <message>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="obsolete">_Süzgeç gücü:</translation>
+        <translation type="unfinished">_Süzgeç gücü:</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="obsolete">_Nicemleyici:</translation>
+        <translation type="unfinished">_Nicemleyici:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Yatay Blok Çözme</translation>
+        <translation type="unfinished">_Yatay Blok Çözme</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Dikey Blok Çözme</translation>
+        <translation type="unfinished">_Dikey Blok Çözme</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="obsolete">_Halka Azaltma</translation>
+        <translation type="unfinished">_Halka Azaltma</translation>
+    </message>
+    <message>
+        <source>Forced Postprocessing</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2074,72 +2097,96 @@ Do you want to load it  ?
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Uzamsal parlaklık gücü:</translation>
+        <translation type="unfinished">_Uzamsal parlaklık gücü:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Uza_msal berraklık gücü:</translation>
+        <translation type="unfinished">Uza_msal berraklık gücü:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
         <translation type="obsolete">_Zamansal güç:</translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Uzamsal parlaklık gücü:</translation>
+        <translation type="unfinished">_Uzamsal parlaklık gücü:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Uza_msal berraklık gücü:</translation>
+        <translation type="unfinished">Uza_msal berraklık gücü:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="obsolete">_Zamansal güç:</translation>
+        <translation type="unfinished">_Zamansal güç:</translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="obsolete">_Parlaklık eşiği:</translation>
+        <translation type="unfinished">_Parlaklık eşiği:</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="obsolete">_Berraklık eşiği:</translation>
+        <translation type="unfinished">_Berraklık eşiği:</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="obsolete">_Yarıçap:</translation>
+        <translation type="unfinished">_Yarıçap:</translation>
+    </message>
+    <message>
+        <source>Soften</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="obsolete">_Yatay yığma:</translation>
+        <translation type="unfinished">_Yatay yığma:</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="obsolete">_Dikey yığma:</translation>
+        <translation type="unfinished">_Dikey yığma:</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="obsolete">_Küçültme çarpanı:</translation>
+        <translation type="unfinished">_Küçültme çarpanı:</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="obsolete">Kareyi _göster</translation>
+        <translation type="unfinished">Kareyi _göster</translation>
+    </message>
+    <message>
+        <source>Mosaic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Pal Field Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2244,7 +2291,11 @@ Do you want to load it  ?
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="obsolete">Eşiği Dengele</translation>
+        <translation type="unfinished">Eşiği Dengele</translation>
+    </message>
+    <message>
+        <source>Stabilize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2279,11 +2330,11 @@ Do you want to load it  ?
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="obsolete">Altyazı dosyası açılamadı</translation>
+        <translation type="unfinished">Altyazı dosyası açılamadı</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Altyazı biçemi belirlenemedi</translation>
+        <translation type="unfinished">Altyazı biçemi belirlenemedi</translation>
     </message>
 </context>
 <context>
@@ -2430,16 +2481,48 @@ file image mult. by this when loaded):</source>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">Orta</translation>
+        <translation type="unfinished">Orta</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
+        <translation type="unfinished">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Iterations:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Chroma:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Step.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2786,9 +2869,65 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>ADM_qtScript::Editor</name>
+    <message>
+        <source>Unable to append %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video must contain an audio track to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::QtScriptObject</name>
+    <message>
+        <source>Parameter %1 must be a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be greater than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be less than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::SegmentCollectionPrototype</name>
+    <message>
+        <source>A video must be open to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AVDMFastVideoConvolution</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2804,95 +2943,123 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="obsolete">Hızlı</translation>
+        <translation type="unfinished">Hızlı</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">Orta</translation>
+        <translation type="unfinished">Orta</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="obsolete">Yavaş yinelemeli hareket tahmini</translation>
+        <translation type="unfinished">Yavaş yinelemeli hareket tahmini</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">İlave yavaş (3+çok başvurulu kare ile aynıdır)</translation>
+        <translation type="unfinished">İlave yavaş (3+çok başvurulu kare ile aynıdır)</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="obsolete">Üst</translation>
+        <translation type="unfinished">Üst</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
+        <translation type="unfinished">Alt</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="obsolete">A_lan hakimiyeti:</translation>
+        <translation type="unfinished">A_lan hakimiyeti:</translation>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
+        <translation type="unfinished">_Qp:</translation>
+    </message>
+    <message>
+        <source>mcDeinterlace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Temporal Cleaner</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="obsolete">Dışarı</translation>
+        <translation type="unfinished">Dışarı</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="obsolete">Dışarı doğru solma</translation>
+        <translation type="unfinished">Dışarı doğru solma</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="obsolete">İçeri</translation>
+        <translation type="unfinished">İçeri</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="obsolete">İçeri doğru solma</translation>
+        <translation type="unfinished">İçeri doğru solma</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="obsolete">So_lma tipi:</translation>
+        <translation type="unfinished">So_lma tipi:</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="obsolete">Başlama kare_si:</translation>
+        <translation type="unfinished">Başlama kare_si:</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="obsolete">Bitiş kar_esi:</translation>
+        <translation type="unfinished">Bitiş kar_esi:</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="obsolete">Si_yaha doğru sol</translation>
+        <translation type="unfinished">Si_yaha doğru sol</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="obsolete">Parametre Hatası</translation>
+        <translation type="unfinished">Parametre Hatası</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Başlangıç bitişten önce ve ikisi de videonun kare sayısı sınırları içinde olmalı.</translation>
+        <translation type="unfinished">Başlangıç bitişten önce ve ikisi de videonun kare sayısı sınırları içinde olmalı.</translation>
+    </message>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3064,23 +3231,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="obsolete">Üst</translation>
+        <translation type="unfinished">Üst</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
+        <translation type="unfinished">Alt</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">Kare sayısını ve sbk&apos;yi koru</translation>
+        <translation type="unfinished">Kare sayısını ve sbk&apos;yi koru</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="obsolete">Kare sayısını ve sbk (saniye başına kare) sayısını iki katına çıkar</translation>
+        <translation type="unfinished">Kare sayısını ve sbk (saniye başına kare) sayısını iki katına çıkar</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">Kare sayısını iki katına çıkar (yavaş gösterim)</translation>
+        <translation type="unfinished">Kare sayısını iki katına çıkar (yavaş gösterim)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -3088,19 +3255,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="obsolete">_Ek</translation>
+        <translation type="unfinished">_Ek</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Ek kontrol, kullanmaktan kaçın</translation>
+        <translation type="unfinished">Ek kontrol, kullanmaktan kaçın</translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3145,21 +3320,21 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="obsolete">Değiştir (aradeğerleme)</translation>
+        <translation type="unfinished">Değiştir (aradeğerleme)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">En hızlı (berraklık yok, kısmî parlaklık)</translation>
+        <translation type="unfinished">En hızlı (berraklık yok, kısmî parlaklık)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -3168,7 +3343,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -3177,22 +3352,38 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C_ycle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Decimate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3508,11 +3699,11 @@ Drop timing informations ?</source>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">SVQ3 başlıklarının okunmasında hata</translation>
+        <translation type="unfinished">SVQ3 başlıklarının okunmasında hata</translation>
     </message>
     <message>
         <source>No stts table</source>
-        <translation type="obsolete">Stts tablosu yok</translation>
+        <translation type="unfinished">Stts tablosu yok</translation>
     </message>
 </context>
 <context>
@@ -4038,41 +4229,57 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="obsolete">_Maskeleme</translation>
+        <translation type="unfinished">_Maskeleme</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="obsolete">_Yüksek Kalite</translation>
+        <translation type="unfinished">_Yüksek Kalite</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
+        <translation type="unfinished">_Güç:</translation>
+    </message>
+    <message>
+        <source>MSharpen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Msmooth</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
+        <translation type="unfinished">_Güç:</translation>
+    </message>
+    <message>
+        <source>_High quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show _mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSmooth</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
         <source>Malformed header</source>
-        <translation type="obsolete">Bozuk başlık</translation>
+        <translation type="unfinished">Bozuk başlık</translation>
     </message>
     <message>
         <source>Unpacking bitstream</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -4089,6 +4296,17 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Question</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QtScriptEngine</name>
+    <message>
+        <source>Avidemux Script Debugger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4115,127 +4333,131 @@ Drop timing informations ?</source>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>3:2 pulldown</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>PAL/SECAM</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PAL&apos;dan dönüştürülen NTSC</translation>
+        <translation type="unfinished">PAL&apos;dan dönüştürülen NTSC</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="obsolete">Üst</translation>
+        <translation type="unfinished">Üst</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
+        <translation type="unfinished">Alt</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="obsolete">Asla</translation>
+        <translation type="unfinished">Asla</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="obsolete">Eğer hâlâ taralıysa</translation>
+        <translation type="unfinished">Eğer hâlâ taralıysa</translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="obsolete">Her zaman</translation>
+        <translation type="unfinished">Her zaman</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
+        <translation type="unfinished">Hiçbiri</translation>
     </message>
     <message>
         <source>None but compute</source>
-        <translation type="obsolete">Asla (ama hesapla)</translation>
+        <translation type="unfinished">Asla (ama hesapla)</translation>
     </message>
     <message>
         <source>Postproc on best match</source>
-        <translation type="obsolete">En iyi uyana göre son işleme</translation>
+        <translation type="unfinished">En iyi uyana göre son işleme</translation>
     </message>
     <message>
         <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Process image (not fields)</source>
-        <translation type="obsolete">(Alanları değil) resmi işle</translation>
+        <translation type="unfinished">(Alanları değil) resmi işle</translation>
     </message>
     <message>
         <source>Process image (not fields), debug</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
+        <translation type="unfinished">Ala_n Sırası:</translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Bl_end</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Decomb Telecide</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4331,304 +4553,311 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>addBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>adm</name>
     <message>
-        <source>Decode video using VDPAU</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable openGl support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Use systray while encoding</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">Normal</translation>
+        <translation type="obsolete">Normal</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
-        <source>VDPAU (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI (SDL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows DirectX (SDL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>SDL (good)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="unfinished">Uyarı yok</translation>
+        <translation type="obsolete">Uyarı yok</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="unfinished">Sadece hata uyarılarını göster</translation>
+        <translation type="obsolete">Sadece hata uyarılarını göster</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="unfinished">Tüm uyarıları göster</translation>
+        <translation type="obsolete">Tüm uyarıları göster</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="unfinished">PCM</translation>
+        <translation type="obsolete">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="unfinished">Ana</translation>
+        <translation type="obsolete">Ana</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="unfinished">Kanal azaltma yok (çok kanallı)</translation>
+        <translation type="obsolete">Kanal azaltma yok (çok kanallı)</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">İki kanal</translation>
+        <translation type="obsolete">İki kanal</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
-        <source>_AudioDevice</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">_Yatay Blok Çözme</translation>
+        <translation type="obsolete">_Yatay Blok Çözme</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">_Dikey Blok Çözme</translation>
+        <translation type="obsolete">_Dikey Blok Çözme</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Güç:</translation>
+        <translation type="obsolete">_Güç:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="unfinished">Varsayılan Son İşleme</translation>
+        <translation type="obsolete">Varsayılan Son İşleme</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="unfinished">Kullanıcı Arayüzü</translation>
+        <translation type="obsolete">Kullanıcı Arayüzü</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished">Çıktı</translation>
+        <translation type="obsolete">Çıktı</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="unfinished">Ses</translation>
+        <translation type="obsolete">Ses</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished">Video</translation>
+        <translation type="obsolete">Video</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Tercihler</translation>
+        <translation type="obsolete">Tercihler</translation>
     </message>
 </context>
 <context>
@@ -4637,6 +4866,95 @@ Drop timing informations ?</source>
         <source>Codec:</source>
         <translation type="obsolete">
             </translation>
+    </message>
+</context>
+<context>
+    <name>avsfilter</name>
+    <message>
+        <source>_wine app file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select wine filename[wine/cedega/etc.]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_loader file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select loader filename[avsload.exe]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_avs file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select avs filename[*.avs]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_pipe timeout:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AvsFilter config</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>changeFps</name>
+    <message>
+        <source>Source Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4914,41 +5232,45 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Uzamsal zamansal kontrolü atla</translation>
+        <translation type="unfinished">Uzamsal zamansal kontrolü atla</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5095,82 +5417,109 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
-        <translation type="obsolete">Üst</translation>
+        <translation type="unfinished">Üst</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">Alt</translation>
+        <translation type="unfinished">Alt</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">Ala_n Sırası:</translation>
+        <translation type="unfinished">Ala_n Sırası:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
+        <translation type="unfinished">Daha küçük sayı daha fazla titreşim çöz demektir</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="obsolete">Ke_skin</translation>
+        <translation type="unfinished">Ke_skin</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="obsolete">Daha ke_skin motor:</translation>
+        <translation type="unfinished">Daha ke_skin motor:</translation>
     </message>
     <message>
         <source>T_woway</source>
-        <translation type="obsolete">İ_ki Yönlü</translation>
+        <translation type="unfinished">İ_ki Yönlü</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Daha iyi ek kutupla (kullanmamak daha iyi olur)</translation>
+        <translation type="unfinished">Daha iyi ek kutupla (kullanmamak daha iyi olur)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="obsolete">_Harita</translation>
+        <translation type="unfinished">_Harita</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Titreşimli bölgeleri göster (sadece test!)</translation>
+        <translation type="unfinished">Titreşimli bölgeleri göster (sadece test!)</translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>largeMedian</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
+        <translation type="unfinished">Hiçbiri</translation>
     </message>
     <message>
         <source>Linear blend</source>
-        <translation type="obsolete">Doğrusal karışım</translation>
+        <translation type="unfinished">Doğrusal karışım</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="obsolete">Doğrusal kutuplaştırma</translation>
+        <translation type="unfinished">Doğrusal kutuplaştırma</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="obsolete">Kübik kutuplaştırma</translation>
+        <translation type="unfinished">Kübik kutuplaştırma</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="obsolete">Medyan titreşim çözücü</translation>
+        <translation type="unfinished">Medyan titreşim çözücü</translation>
     </message>
     <message>
         <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg titreşim çözücü</translation>
+        <translation type="unfinished">FFmpeg titreşim çözücü</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Titreşim Çözme:</translation>
+        <translation type="unfinished">_Titreşim Çözme:</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="obsolete">_Otomatik Denge</translation>
+        <translation type="unfinished">_Otomatik Denge</translation>
+    </message>
+    <message>
+        <source>libavcodec deinterlacer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5450,6 +5799,38 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>muxerMP4</name>
+    <message>
+        <source>Saving mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving PSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerMkv</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffPS</name>
+    <message>
+        <source>Saving mpeg PS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffTS</name>
+    <message>
+        <source>Saving mpeg TS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>nuvHeader</name>
     <message>
         <source>Opening Nuppel video</source>
@@ -5482,6 +5863,21 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Scanning OGM</source>
         <translation type="obsolete">OGM taranıyor</translation>
+    </message>
+</context>
+<context>
+    <name>openGlResize</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glResize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5635,14 +6031,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>removePlaneFilter</name>
+    <message>
+        <source>Keep Y Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep U Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaU plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep V Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaV plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>resampleFps</name>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_New frame rate:</source>
-        <translation type="obsolete">_Yeni kare hızı:</translation>
+        <translation type="unfinished">_Yeni kare hızı:</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5684,36 +6115,59 @@ p, li { white-space: pre-wrap; }
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Genişlik ve yükseklik tekil olamaz</translation>
+        <translation type="unfinished">Genişlik ve yükseklik tekil olamaz</translation>
     </message>
 </context>
 <context>
     <name>rotateFilter</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
+        <translation type="unfinished">Hiçbiri</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="obsolete">90 derece</translation>
+        <translation type="unfinished">90 derece</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="obsolete">180 derece</translation>
+        <translation type="unfinished">180 derece</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="obsolete">270 derece</translation>
+        <translation type="unfinished">270 derece</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rotateGl</name>
+    <message>
+        <source>Angle (Â°):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glRotate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5735,115 +6189,265 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilter</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilterDeint</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">_Gürültü:</translation>
+        <translation type="unfinished">_Gürültü:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
+        <translation type="unfinished">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
+        <translation type="unfinished">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">Me_safe bilgilerini göster</translation>
+        <translation type="unfinished">Me_safe bilgilerini göster</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
+        <translation type="unfinished">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
+    </message>
+    <message>
+        <source>Blend Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Hiçbiri</translation>
+        <translation type="unfinished">Hiçbiri</translation>
+    </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="obsolete">Ölçüler</translation>
+        <translation type="unfinished">Ölçüler</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">Ölçülerin ekrana yazılmasını istiyor musunuz ?</translation>
+        <translation type="unfinished">Ölçülerin ekrana yazılmasını istiyor musunuz ?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Eşik:</translation>
+        <translation type="unfinished">_Eşik:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">Eğer değer eşikten daha düşükse geçerli kabul edilir, daha küçük değer daha yanlış artı nicelik anlamına gelebilir</translation>
+        <translation type="unfinished">Eğer değer eşikten daha düşükse geçerli kabul edilir, daha küçük değer daha yanlış artı nicelik anlamına gelebilir</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">_Gürültü:</translation>
+        <translation type="unfinished">_Gürültü:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
+        <translation type="unfinished">Eğer pikseller gürültü eşiğinden daha yakınsa, özdeş kabul edilirler</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="obsolete">_Özdeş:</translation>
+        <translation type="unfinished">_Özdeş:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
+        <translation type="unfinished">Eğer metrik özdeş&apos;den daha düşükse, resimler özdeş kabul edilirler</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">Me_safe bilgilerini göster</translation>
+        <translation type="unfinished">Me_safe bilgilerini göster</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
+        <translation type="unfinished">Resimde mesafe bilgilerini göster (tanılama amaçlı)</translation>
+    </message>
+    <message>
+        <source>Hard IVTC Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6048,44 +6652,91 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>x264Dialog</name>
+    <message>
+        <source>Target Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Uzamsal zamansal kontrolü atla</translation>
+        <translation type="unfinished">Uzamsal zamansal kontrolü atla</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Kip:</translation>
+        <translation type="unfinished">_Kip:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

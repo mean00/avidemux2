@@ -1744,34 +1744,38 @@ Do you want to load it  ?
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="obsolete">輝度ロック(_L):</translation>
+        <translation type="unfinished">輝度ロック(_L):</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="obsolete">彩度ロック(_H):</translation>
+        <translation type="unfinished">彩度ロック(_H):</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="obsolete">輝度閾値(_U):</translation>
+        <translation type="unfinished">輝度閾値(_U):</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="obsolete">彩度閾値(_H):</translation>
+        <translation type="unfinished">彩度閾値(_H):</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="obsolete">シーン変化(_S):</translation>
+        <translation type="unfinished">シーン変化(_S):</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="obsolete">ノイズ除去</translation>
+        <translation type="unfinished">ノイズ除去</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="obsolete">ドロップアウト閾値</translation>
+        <translation type="unfinished">ドロップアウト閾値</translation>
+    </message>
+    <message>
+        <source>Drop Out</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1783,26 +1787,45 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>ADMVideoFlux</name>
+    <message>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="obsolete">フィルタの強さ(_F):</translation>
+        <translation type="unfinished">フィルタの強さ(_F):</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="obsolete">量子化度(_Q):</translation>
+        <translation type="unfinished">量子化度(_Q):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">水平デブロック(_H)</translation>
+        <translation type="unfinished">水平デブロック(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">垂直デブロック(_V)</translation>
+        <translation type="unfinished">垂直デブロック(_V)</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="obsolete">デリング(_D)</translation>
+        <translation type="unfinished">デリング(_D)</translation>
+    </message>
+    <message>
+        <source>Forced Postprocessing</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1914,71 +1937,95 @@ Do you want to load it  ?
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">空間的輝度の強さ(_S):</translation>
+        <translation type="unfinished">空間的輝度の強さ(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">空間的彩度の強さ(_P):</translation>
+        <translation type="unfinished">空間的彩度の強さ(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
         <translation type="obsolete">時間的強さ(_T):</translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">空間的輝度の強さ(_S):</translation>
+        <translation type="unfinished">空間的輝度の強さ(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">空間的彩度の強さ(_P):</translation>
+        <translation type="unfinished">空間的彩度の強さ(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="obsolete">時間的強さ(_T):</translation>
+        <translation type="unfinished">時間的強さ(_T):</translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="obsolete">輝度閾値(_L) :</translation>
+        <translation type="unfinished">輝度閾値(_L) :</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="obsolete">彩度閾値(_H) :</translation>
+        <translation type="unfinished">彩度閾値(_H) :</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="obsolete">半径(_R):</translation>
+        <translation type="unfinished">半径(_R):</translation>
+    </message>
+    <message>
+        <source>Soften</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="obsolete">水平スタック(_H):</translation>
+        <translation type="unfinished">水平スタック(_H):</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="obsolete">垂直スタック(_V):</translation>
+        <translation type="unfinished">垂直スタック(_V):</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="obsolete">圧縮度(_S):</translation>
+        <translation type="unfinished">圧縮度(_S):</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="obsolete">フレームを示す(_F)</translation>
+        <translation type="unfinished">フレームを示す(_F)</translation>
+    </message>
+    <message>
+        <source>Mosaic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="obsolete">逆を試す(_T)</translation>
+        <translation type="unfinished">逆を試す(_T)</translation>
+    </message>
+    <message>
+        <source>Pal Field Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2081,7 +2128,11 @@ Do you want to load it  ?
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="obsolete">安定化閾値</translation>
+        <translation type="unfinished">安定化閾値</translation>
+    </message>
+    <message>
+        <source>Stabilize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2111,11 +2162,11 @@ Do you want to load it  ?
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="obsolete">字幕ファイルを開けません</translation>
+        <translation type="unfinished">字幕ファイルを開けません</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">字幕形式を特定できません</translation>
+        <translation type="unfinished">字幕形式を特定できません</translation>
     </message>
 </context>
 <context>
@@ -2262,15 +2313,47 @@ file image mult. by this when loaded):</source>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">中くらい</translation>
+        <translation type="unfinished">中くらい</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="obsolete">タイプ(_T):</translation>
+        <translation type="unfinished">タイプ(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">小さな値ほどより大きなデインタレースを意味する</translation>
+        <translation type="unfinished">小さな値ほどより大きなデインタレースを意味する</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Iterations:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Chroma:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Step.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2610,9 +2693,65 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>ADM_qtScript::Editor</name>
+    <message>
+        <source>Unable to append %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video must contain an audio track to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::QtScriptObject</name>
+    <message>
+        <source>Parameter %1 must be a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be greater than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be less than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::SegmentCollectionPrototype</name>
+    <message>
+        <source>A video must be open to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>AVDMFastVideoConvolution</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2627,93 +2766,121 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="obsolete">高速</translation>
+        <translation type="unfinished">高速</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">中くらい</translation>
+        <translation type="unfinished">中くらい</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="obsolete">低速, 繰返し動き検索</translation>
+        <translation type="unfinished">低速, 繰返し動き検索</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">特別低速 (低速+複数参照フレーム)</translation>
+        <translation type="unfinished">特別低速 (低速+複数参照フレーム)</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="obsolete">トップ</translation>
+        <translation type="unfinished">トップ</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
+        <translation type="unfinished">ボトム</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="obsolete">優先フィールド(_F):</translation>
+        <translation type="unfinished">優先フィールド(_F):</translation>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
+        <translation type="unfinished">_Qp:</translation>
+    </message>
+    <message>
+        <source>mcDeinterlace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">輝度時間的閾値(_L):</translation>
+        <translation type="unfinished">輝度時間的閾値(_L):</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">彩度時間的閾値(_R):</translation>
+        <translation type="unfinished">彩度時間的閾値(_R):</translation>
+    </message>
+    <message>
+        <source>Temporal Cleaner</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="obsolete">アウト</translation>
+        <translation type="unfinished">アウト</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="obsolete">フェードアウト</translation>
+        <translation type="unfinished">フェードアウト</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="obsolete">イン</translation>
+        <translation type="unfinished">イン</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="obsolete">フェードイン</translation>
+        <translation type="unfinished">フェードイン</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="obsolete">フェードタイプ(_F):</translation>
+        <translation type="unfinished">フェードタイプ(_F):</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="obsolete">開始フレーム(_S):</translation>
+        <translation type="unfinished">開始フレーム(_S):</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="obsolete">終了フレーム(_E):</translation>
+        <translation type="unfinished">終了フレーム(_E):</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="obsolete">黒にフェード(_B)</translation>
+        <translation type="unfinished">黒にフェード(_B)</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="obsolete">パラメータエラー</translation>
+        <translation type="unfinished">パラメータエラー</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">始点は終点より前でなければならないし, 両点とも映像フレーム数内でなければならない</translation>
+        <translation type="unfinished">始点は終点より前でなければならないし, 両点とも映像フレーム数内でなければならない</translation>
+    </message>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2886,23 +3053,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="obsolete">トップ</translation>
+        <translation type="unfinished">トップ</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
+        <translation type="unfinished">ボトム</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">フレーム数とFPSを保つ</translation>
+        <translation type="unfinished">フレーム数とFPSを保つ</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="obsolete">フレーム数とFPSを２倍にする</translation>
+        <translation type="unfinished">フレーム数とFPSを２倍にする</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">フレーム数を２倍にする(スローモーション)</translation>
+        <translation type="unfinished">フレーム数を２倍にする(スローモーション)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -2910,19 +3077,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="obsolete">特別(_E)</translation>
+        <translation type="unfinished">特別(_E)</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="obsolete">特別チェック, それを使うのを避けよ</translation>
+        <translation type="unfinished">特別チェック, それを使うのを避けよ</translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2966,19 +3141,19 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="obsolete">近いものを破棄</translation>
+        <translation type="unfinished">近いものを破棄</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="obsolete">置換(補間)</translation>
+        <translation type="unfinished">置換(補間)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="obsolete">プルダウンdupe除去</translation>
+        <translation type="unfinished">プルダウンdupe除去</translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">最速(彩度なし, 部分輝度)</translation>
+        <translation type="unfinished">最速(彩度なし, 部分輝度)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -2986,7 +3161,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">中くらい(完全輝度, 彩度なし)</translation>
+        <translation type="unfinished">中くらい(完全輝度, 彩度なし)</translation>
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
@@ -2994,19 +3169,35 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="obsolete">品質(_Q):</translation>
+        <translation type="unfinished">品質(_Q):</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="obsolete">閾値１ (_T):</translation>
+        <translation type="unfinished">閾値１ (_T):</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="obsolete">閾値２ (_H):</translation>
+        <translation type="unfinished">閾値２ (_H):</translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C_ycle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Decimate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3309,11 +3500,11 @@ Drop timing informations ?</source>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">SVQ3ヘッダ読取に問題</translation>
+        <translation type="unfinished">SVQ3ヘッダ読取に問題</translation>
     </message>
     <message>
         <source>No stts table</source>
-        <translation type="obsolete">stts テーブルがない</translation>
+        <translation type="unfinished">stts テーブルがない</translation>
     </message>
 </context>
 <context>
@@ -3813,41 +4004,57 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="obsolete">マスク(_M)</translation>
+        <translation type="unfinished">マスク(_M)</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="obsolete">高Q (_H)</translation>
+        <translation type="unfinished">高Q (_H)</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
+        <translation type="unfinished">強さ(_S):</translation>
+    </message>
+    <message>
+        <source>MSharpen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Msmooth</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
+        <translation type="unfinished">強さ(_S):</translation>
+    </message>
+    <message>
+        <source>_High quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show _mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MSmooth</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
         <source>Malformed header</source>
-        <translation type="obsolete">誤った形式のヘッダ</translation>
+        <translation type="unfinished">誤った形式のヘッダ</translation>
     </message>
     <message>
         <source>Unpacking bitstream</source>
-        <translation type="obsolete">ビットストリームをアンパック中</translation>
+        <translation type="unfinished">ビットストリームをアンパック中</translation>
     </message>
     <message>
         <source>Indexing</source>
@@ -3862,6 +4069,17 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Question</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QtScriptEngine</name>
+    <message>
+        <source>Avidemux Script Debugger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3888,111 +4106,115 @@ Drop timing informations ?</source>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="obsolete">ストラテジなし</translation>
+        <translation type="unfinished">ストラテジなし</translation>
     </message>
     <message>
         <source>3:2 pulldown</source>
-        <translation type="obsolete">3:2プルダウン</translation>
+        <translation type="unfinished">3:2プルダウン</translation>
     </message>
     <message>
         <source>PAL/SECAM</source>
-        <translation type="obsolete">PAL/SECAM</translation>
+        <translation type="unfinished">PAL/SECAM</translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation type="obsolete">PALから変換したNTSC</translation>
+        <translation type="unfinished">PALから変換したNTSC</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="obsolete">トップ</translation>
+        <translation type="unfinished">トップ</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
+        <translation type="unfinished">ボトム</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="obsolete">しない</translation>
+        <translation type="unfinished">しない</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="obsolete">なおコームされているなら</translation>
+        <translation type="unfinished">なおコームされているなら</translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="obsolete">必ず</translation>
+        <translation type="unfinished">必ず</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">なし</translation>
+        <translation type="unfinished">なし</translation>
     </message>
     <message>
         <source>None but compute</source>
-        <translation type="obsolete">なし, 計算だけ</translation>
+        <translation type="unfinished">なし, 計算だけ</translation>
     </message>
     <message>
         <source>Postproc on best match</source>
-        <translation type="obsolete">最善のマッチで後処理</translation>
+        <translation type="unfinished">最善のマッチで後処理</translation>
     </message>
     <message>
         <source>Postproc and show zones (debug)</source>
-        <translation type="obsolete">後処理してゾーンを表示 (デバッグ)</translation>
+        <translation type="unfinished">後処理してゾーンを表示 (デバッグ)</translation>
     </message>
     <message>
         <source>Process image (not fields)</source>
-        <translation type="obsolete">画像を処理(フィールドではない)</translation>
+        <translation type="unfinished">画像を処理(フィールドではない)</translation>
     </message>
     <message>
         <source>Process image (not fields), debug</source>
-        <translation type="obsolete">画像を処理(フィールドではない), デバッグ</translation>
+        <translation type="unfinished">画像を処理(フィールドではない), デバッグ</translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="obsolete">ストラテジ(_S):</translation>
+        <translation type="unfinished">ストラテジ(_S):</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
+        <translation type="unfinished">フィールドオーダー(_F):</translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="obsolete">後処理(_P):</translation>
+        <translation type="unfinished">後処理(_P):</translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="obsolete">逆方向を試す(_T):</translation>
+        <translation type="unfinished">逆方向を試す(_T):</translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="obsolete">直接閾値(_D):</translation>
+        <translation type="unfinished">直接閾値(_D):</translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="obsolete">逆方向閾値(_B):</translation>
+        <translation type="unfinished">逆方向閾値(_B):</translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="obsolete">ノイズ閾値(_N):</translation>
+        <translation type="unfinished">ノイズ閾値(_N):</translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">後処理閾値(_R):</translation>
+        <translation type="unfinished">後処理閾値(_R):</translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="obsolete">決定に彩度を使う(_U)</translation>
+        <translation type="unfinished">決定に彩度を使う(_U)</translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="obsolete">情報を表示(_W)</translation>
+        <translation type="unfinished">情報を表示(_W)</translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="obsolete">デバッグ(_G)</translation>
+        <translation type="unfinished">デバッグ(_G)</translation>
     </message>
     <message>
         <source>Bl_end</source>
-        <translation type="obsolete">ブレンド(_E)</translation>
+        <translation type="unfinished">ブレンド(_E)</translation>
+    </message>
+    <message>
+        <source>Decomb Telecide</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4086,287 +4308,294 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>addBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>adm</name>
     <message>
-        <source>Decode video using VDPAU</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable openGl support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Use systray while encoding</source>
-        <translation type="unfinished">エンコード中シストレーを使う(_U)</translation>
+        <translation type="obsolete">エンコード中シストレーを使う(_U)</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished">DVDに標準でない音声周波数を受け付ける(_A)</translation>
+        <translation type="obsolete">DVDに標準でない音声周波数を受け付ける(_A)</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="unfinished">OpenDMLファイルを作成する(_O)</translation>
+        <translation type="obsolete">OpenDMLファイルを作成する(_O)</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished">高い</translation>
+        <translation type="obsolete">高い</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="unfinished">普通以上</translation>
+        <translation type="obsolete">普通以上</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">普通</translation>
+        <translation type="obsolete">普通</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="unfinished">普通以下</translation>
+        <translation type="obsolete">普通以下</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished">低い</translation>
+        <translation type="obsolete">低い</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="unfinished">エンコードの優先度(_E):</translation>
+        <translation type="obsolete">エンコードの優先度(_E):</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="unfinished">インデックス付/アンパックの優先度(_I):</translation>
+        <translation type="obsolete">インデックス付/アンパックの優先度(_I):</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="unfinished">再生の優先度(_P):</translation>
+        <translation type="obsolete">再生の優先度(_P):</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
-    </message>
-    <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="unfinished">.mp4にmp3の代替タグを使う(_U)</translation>
+        <translation type="obsolete">.mp4にmp3の代替タグを使う(_U)</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
-        <source>VDPAU (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI (SDL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows DirectX (SDL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>SDL (good)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="unfinished">映像表示(_D):</translation>
+        <translation type="obsolete">映像表示(_D):</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="unfinished">警告しない</translation>
+        <translation type="obsolete">警告しない</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="unfinished">エラーの警告のみ表示する</translation>
+        <translation type="obsolete">エラーの警告のみ表示する</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="unfinished">すべての警告を表示する</translation>
+        <translation type="obsolete">すべての警告を表示する</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="unfinished">メッセージレベル(_M):</translation>
+        <translation type="obsolete">メッセージレベル(_M):</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="unfinished">音量制御(_V):</translation>
+        <translation type="obsolete">音量制御(_V):</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="unfinished">ダウンミックスなし</translation>
+        <translation type="obsolete">ダウンミックスなし</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">ステレオ</translation>
+        <translation type="obsolete">ステレオ</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="unfinished">ドルビープロロジック</translation>
+        <translation type="obsolete">ドルビープロロジック</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="unfinished">ドルビープロロジックII</translation>
+        <translation type="obsolete">ドルビープロロジックII</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished">ローカル再生ダウンミックス(_L):</translation>
-    </message>
-    <message>
-        <source>_AudioDevice</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">ローカル再生ダウンミックス(_L):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">水平デブロック(_H)</translation>
+        <translation type="obsolete">水平デブロック(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">垂直デブロック(_V)</translation>
+        <translation type="obsolete">垂直デブロック(_V)</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="unfinished">デリング(_R)</translation>
+        <translation type="obsolete">デリング(_R)</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">強さ(_S):</translation>
+        <translation type="obsolete">強さ(_S):</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="unfinished">デフォルトの後処理</translation>
+        <translation type="obsolete">デフォルトの後処理</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="unfinished">ユーザインタフェース</translation>
+        <translation type="obsolete">ユーザインタフェース</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished">出力</translation>
+        <translation type="obsolete">出力</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="unfinished">音声</translation>
+        <translation type="obsolete">音声</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished">映像</translation>
+        <translation type="obsolete">映像</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="unfinished">CPU</translation>
+        <translation type="obsolete">CPU</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">設定</translation>
+        <translation type="obsolete">設定</translation>
     </message>
 </context>
 <context>
@@ -4374,6 +4603,95 @@ Drop timing informations ?</source>
     <message>
         <source>Codec:</source>
         <translation type="obsolete">コーデック:</translation>
+    </message>
+</context>
+<context>
+    <name>avsfilter</name>
+    <message>
+        <source>_wine app file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select wine filename[wine/cedega/etc.]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_loader file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select loader filename[avsload.exe]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_avs file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select avs filename[*.avs]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_pipe timeout:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AvsFilter config</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>changeFps</name>
+    <message>
+        <source>Source Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4639,35 +4957,39 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">時間と空間チェック</translation>
+        <translation type="unfinished">時間と空間チェック</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, 時間と空間チェック</translation>
+        <translation type="unfinished">Bob, 時間と空間チェック</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="obsolete">空間-時間チェックをスキップ</translation>
+        <translation type="unfinished">空間-時間チェックをスキップ</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, 空間-時間チェックをスキップ</translation>
+        <translation type="unfinished">Bob, 空間-時間チェックをスキップ</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">ボトムフィールドが先</translation>
+        <translation type="unfinished">ボトムフィールドが先</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">トップフィールドが先</translation>
+        <translation type="unfinished">トップフィールドが先</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">オーダー(_O):</translation>
+        <translation type="unfinished">オーダー(_O):</translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4814,82 +5136,109 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
-        <translation type="obsolete">トップ</translation>
+        <translation type="unfinished">トップ</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="obsolete">ボトム</translation>
+        <translation type="unfinished">ボトム</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">フィールドオーダー(_F):</translation>
+        <translation type="unfinished">フィールドオーダー(_F):</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">小さな値ほどより大きなデインタレースを意味する</translation>
+        <translation type="unfinished">小さな値ほどより大きなデインタレースを意味する</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="obsolete">シャープ(_S)</translation>
+        <translation type="unfinished">シャープ(_S)</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="obsolete">よりシャープにするエンジン(_S):</translation>
+        <translation type="unfinished">よりシャープにするエンジン(_S):</translation>
     </message>
     <message>
         <source>T_woway</source>
-        <translation type="obsolete">２方向(_W)</translation>
+        <translation type="unfinished">２方向(_W)</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">より良く外挿する (それを使わないのがベター)</translation>
+        <translation type="unfinished">より良く外挿する (それを使わないのがベター)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="obsolete">マップ(_M)</translation>
+        <translation type="unfinished">マップ(_M)</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">インタレース領域を表示(テスト用!)</translation>
+        <translation type="unfinished">インタレース領域を表示(テスト用!)</translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>largeMedian</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">なし</translation>
+        <translation type="unfinished">なし</translation>
     </message>
     <message>
         <source>Linear blend</source>
-        <translation type="obsolete">線形ブレンド</translation>
+        <translation type="unfinished">線形ブレンド</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="obsolete">線形補間</translation>
+        <translation type="unfinished">線形補間</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="obsolete">Cubic 補間</translation>
+        <translation type="unfinished">Cubic 補間</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="obsolete">Median 補間</translation>
+        <translation type="unfinished">Median 補間</translation>
     </message>
     <message>
         <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg デインタレース</translation>
+        <translation type="unfinished">FFmpeg デインタレース</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="obsolete">デインタレース(_D):</translation>
+        <translation type="unfinished">デインタレース(_D):</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="obsolete">自動レベル(_A)</translation>
+        <translation type="unfinished">自動レベル(_A)</translation>
+    </message>
+    <message>
+        <source>libavcodec deinterlacer</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5169,6 +5518,38 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>muxerMP4</name>
+    <message>
+        <source>Saving mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving PSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerMkv</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffPS</name>
+    <message>
+        <source>Saving mpeg PS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffTS</name>
+    <message>
+        <source>Saving mpeg TS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>nuvHeader</name>
     <message>
         <source>Opening Nuppel video</source>
@@ -5200,6 +5581,21 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Scanning OGM</source>
         <translation type="obsolete">OGMをスキャン中</translation>
+    </message>
+</context>
+<context>
+    <name>openGlResize</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glResize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5336,14 +5732,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>removePlaneFilter</name>
+    <message>
+        <source>Keep Y Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep U Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaU plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep V Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaV plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>resampleFps</name>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_New frame rate:</source>
-        <translation type="obsolete">新規フレームレート(_N):</translation>
+        <translation type="unfinished">新規フレームレート(_N):</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5387,34 +5818,57 @@ p, li { white-space: pre-wrap; }
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="obsolete">幅や高さは 奇数にはできません</translation>
+        <translation type="unfinished">幅や高さは 奇数にはできません</translation>
     </message>
 </context>
 <context>
     <name>rotateFilter</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">なし</translation>
+        <translation type="unfinished">なし</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="obsolete">90 度</translation>
+        <translation type="unfinished">90 度</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="obsolete">180 度</translation>
+        <translation type="unfinished">180 度</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="obsolete">270 度</translation>
+        <translation type="unfinished">270 度</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="obsolete">角度(_A):</translation>
+        <translation type="unfinished">角度(_A):</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="obsolete">回転</translation>
+        <translation type="unfinished">回転</translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rotateGl</name>
+    <message>
+        <source>Angle (Â°):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glRotate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5436,108 +5890,258 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">字幕ファイル(_S) (ASS/SSA):</translation>
+        <translation type="unfinished">字幕ファイル(_S) (ASS/SSA):</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="obsolete">行スペーシング(_L):</translation>
+        <translation type="unfinished">行スペーシング(_L):</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="obsolete">フォントスケール(_F):</translation>
+        <translation type="unfinished">フォントスケール(_F):</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="obsolete">上余白(_T):</translation>
+        <translation type="unfinished">上余白(_T):</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="obsolete">下余白(_M)</translation>
+        <translation type="unfinished">下余白(_M)</translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilter</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilterDeint</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">値が閾値より小さいなら有効とみなす. 小さな値はより偽りのポジを意味するかも</translation>
+        <translation type="unfinished">値が閾値より小さいなら有効とみなす. 小さな値はより偽りのポジを意味するかも</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">ノイズ(_N):</translation>
+        <translation type="unfinished">ノイズ(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">ピクセルがノイズより近いなら, 同一とみなす</translation>
+        <translation type="unfinished">ピクセルがノイズより近いなら, 同一とみなす</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="obsolete">同一(_D):</translation>
+        <translation type="unfinished">同一(_D):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
+        <translation type="unfinished">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">計測値を表示(_S)</translation>
+        <translation type="unfinished">計測値を表示(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">画像中に計測値を表示する(デバッグ用)</translation>
+        <translation type="unfinished">画像中に計測値を表示する(デバッグ用)</translation>
+    </message>
+    <message>
+        <source>Blend Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">なし</translation>
+        <translation type="unfinished">なし</translation>
+    </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="obsolete">計測値</translation>
+        <translation type="unfinished">計測値</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">画面上の計測値を印刷しますか ?</translation>
+        <translation type="unfinished">画面上の計測値を印刷しますか ?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">閾値(_T):</translation>
+        <translation type="unfinished">閾値(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">値が閾値より小さいなら有効とみなす. より小さな値は誤診を意味するかもしれない</translation>
+        <translation type="unfinished">値が閾値より小さいなら有効とみなす. より小さな値は誤診を意味するかもしれない</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">ノイズ(_N):</translation>
+        <translation type="unfinished">ノイズ(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="obsolete">ピクセルがノイズより近いなら, 同一とみなす</translation>
+        <translation type="unfinished">ピクセルがノイズより近いなら, 同一とみなす</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="obsolete">同一(_I):</translation>
+        <translation type="unfinished">同一(_I):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
+        <translation type="unfinished">計測値が同一値より小さいなら, 画像は同一とみなす</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">計測値を表示(_S)</translation>
+        <translation type="unfinished">計測値を表示(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">画像中に計測値を表示する(デバッグ用)</translation>
+        <translation type="unfinished">画像中に計測値を表示する(デバッグ用)</translation>
+    </message>
+    <message>
+        <source>Hard IVTC Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5740,38 +6344,85 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>x264Dialog</name>
+    <message>
+        <source>Target Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">時間と空間チェック</translation>
+        <translation type="unfinished">時間と空間チェック</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Bob, 時間と空間チェック</translation>
+        <translation type="unfinished">Bob, 時間と空間チェック</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="obsolete">空間-時間チェックをスキップ</translation>
+        <translation type="unfinished">空間-時間チェックをスキップ</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Bob, 空間-時間チェックをスキップ</translation>
+        <translation type="unfinished">Bob, 空間-時間チェックをスキップ</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">ボトムフィールドが先</translation>
+        <translation type="unfinished">ボトムフィールドが先</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">トップフィールドが先</translation>
+        <translation type="unfinished">トップフィールドが先</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">モード(_M):</translation>
+        <translation type="unfinished">モード(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">オーダー(_O):</translation>
+        <translation type="unfinished">オーダー(_O):</translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

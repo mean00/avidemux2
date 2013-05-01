@@ -1833,18 +1833,38 @@ Is it running ?</source>
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Scene change:</source>
-        <translation type="obsolete">Без изменений</translation>
+        <translation type="unfinished">Без изменений</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="obsolete">Удаление шума   </translation>
+        <translation type="unfinished">Удаление шума   </translation>
+    </message>
+    <message>
+        <source>_Luma lock:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C_hroma lock:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L_uma threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ch_roma threshold:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="obsolete">Порог определения повреждённых кадров</translation>
+        <translation type="unfinished">Порог определения повреждённых кадров</translation>
+    </message>
+    <message>
+        <source>Drop Out</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1882,34 +1902,42 @@ Is it running ?</source>
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="obsolete">Временной порог:</translation>
+        <translation type="unfinished">Временной порог:</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="obsolete">Пространственный порог:</translation>
+        <translation type="unfinished">Пространственный порог:</translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="obsolete">Уровень фильтрации:</translation>
+        <translation type="unfinished">Уровень фильтрации:</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="obsolete">Квантователь:</translation>
+        <translation type="unfinished">Квантователь:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Горизонтальный деблокинг</translation>
+        <translation type="unfinished">Горизонтальный деблокинг</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">Вертикальный деблокинг</translation>
+        <translation type="unfinished">Вертикальный деблокинг</translation>
     </message>
     <message>
         <source>Forced Postprocessing</source>
-        <translation type="obsolete">Постпроцессинг</translation>
+        <translation type="unfinished">Постпроцессинг</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2022,57 +2050,93 @@ Is it running ?</source>
         <source>_Temporal strength:</source>
         <translation type="obsolete">Сила фильтра :</translation>
     </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="obsolete">Сила фильтра :</translation>
+        <translation type="unfinished">Сила фильтра :</translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="obsolete">Порог по яркости (luma):</translation>
+        <translation type="unfinished">Порог по яркости (luma):</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="obsolete">Порог по цвету (chroma):</translation>
+        <translation type="unfinished">Порог по цвету (chroma):</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="obsolete">Радиус:</translation>
+        <translation type="unfinished">Радиус:</translation>
+    </message>
+    <message>
+        <source>Soften</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="obsolete">Картинок по горизонтали:</translation>
+        <translation type="unfinished">Картинок по горизонтали:</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="obsolete">Картинок по вертикали:</translation>
+        <translation type="unfinished">Картинок по вертикали:</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="obsolete">Коэффициент уменьшения размера:</translation>
+        <translation type="unfinished">Коэффициент уменьшения размера:</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="obsolete">Показать номера кадров</translation>
+        <translation type="unfinished">Показать номера кадров</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation type="obsolete">Прочие</translation>
+        <translation type="unfinished">Прочие</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>Pal Field Shift</source>
-        <translation type="obsolete">Включить сдвиг</translation>
+        <translation type="unfinished">Включить сдвиг</translation>
+    </message>
+    <message>
+        <source>_Try reverse</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2149,6 +2213,17 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>ADMVideoStabilize</name>
+    <message>
+        <source>Stabilize Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stabilize</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADMVideoSubASS</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
@@ -2184,11 +2259,11 @@ Is it running ?</source>
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="obsolete">Ошибка открытия файла субтитров.</translation>
+        <translation type="unfinished">Ошибка открытия файла субтитров.</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="obsolete">Неопознанный формат субтитров.</translation>
+        <translation type="unfinished">Неопознанный формат субтитров.</translation>
     </message>
 </context>
 <context>
@@ -2202,19 +2277,47 @@ Is it running ?</source>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">Средне</translation>
+        <translation type="unfinished">Средне</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="obsolete">Тип:</translation>
+        <translation type="unfinished">Тип:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
+        <translation type="unfinished">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
+        <translation type="unfinished">Корневой деинтерлейс</translation>
+    </message>
+    <message>
+        <source>Simple</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Iterations:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Chroma:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Step.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2506,6 +2609,43 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>ADM_qtScript::Editor</name>
+    <message>
+        <source>Unable to append %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video must contain an audio track to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::QtScriptObject</name>
+    <message>
+        <source>Parameter %1 must be a number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be greater than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parameter %1 must be less than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ADM_qtScript::SegmentCollectionPrototype</name>
+    <message>
+        <source>A video must be open to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
@@ -2516,11 +2656,19 @@ Drop timing informations ?</source>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="obsolete">Обработать яркость (luma)</translation>
+        <translation type="unfinished">Обработать яркость (luma)</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="obsolete">Обработать цвет (chroma)</translation>
+        <translation type="unfinished">Обработать цвет (chroma)</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2565,31 +2713,47 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="obsolete">Быстро</translation>
+        <translation type="unfinished">Быстро</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="obsolete">Средне</translation>
+        <translation type="unfinished">Средне</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="obsolete">Медленно (последовательный поиск движения)</translation>
+        <translation type="unfinished">Медленно (последовательный поиск движения)</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">Очень медленно (то же, что и 3 + multiple reference frames)</translation>
+        <translation type="unfinished">Очень медленно (то же, что и 3 + multiple reference frames)</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="obsolete">Главное поле:</translation>
+        <translation type="unfinished">Главное поле:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="obsolete">mc Деинтерлейс</translation>
+        <translation type="unfinished">mc Деинтерлейс</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Qp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2627,50 +2791,74 @@ Drop timing informations ?</source>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="obsolete">Временной порог для яркости (luma):</translation>
+        <translation type="unfinished">Временной порог для яркости (luma):</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="obsolete">Временной порог для цвета (chroma):</translation>
+        <translation type="unfinished">Временной порог для цвета (chroma):</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="obsolete">Сила фильтра :</translation>
+        <translation type="unfinished">Сила фильтра :</translation>
     </message>
 </context>
 <context>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="obsolete">Вывод</translation>
+        <translation type="unfinished">Вывод</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="obsolete">Тип затемнения:</translation>
+        <translation type="unfinished">Тип затемнения:</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="obsolete">Начальный кадр:</translation>
+        <translation type="unfinished">Начальный кадр:</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="obsolete">Конечный кадр:</translation>
+        <translation type="unfinished">Конечный кадр:</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="obsolete">Затемнить до черного</translation>
+        <translation type="unfinished">Затемнить до черного</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="obsolete">Затемнение   </translation>
+        <translation type="unfinished">Затемнение   </translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="obsolete">Ошибка параметров</translation>
+        <translation type="unfinished">Ошибка параметров</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="obsolete">Начальный кадр должен быть меньше конечного и они не должны превышать общего количества кадров</translation>
+        <translation type="unfinished">Начальный кадр должен быть меньше конечного и они не должны превышать общего количества кадров</translation>
+    </message>
+    <message>
+        <source>Fade out</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2840,19 +3028,47 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="obsolete">Экстра</translation>
+        <translation type="unfinished">Экстра</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Экстра, избегайте использовать</translation>
+        <translation type="unfinished">Экстра, избегайте использовать</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep nb of frames and fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double nb of frames and fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double nb of frames (slow motion)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2896,17 +3112,17 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -2916,7 +3132,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -2926,28 +3142,40 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="obsolete">Качество:</translation>
+        <translation type="unfinished">Качество:</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="obsolete">Порог 1:</translation>
+        <translation type="unfinished">Порог 1:</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="obsolete">Порог 2:</translation>
+        <translation type="unfinished">Порог 2:</translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="obsolete">Цикл:</translation>
+        <translation type="unfinished">Цикл:</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Discard closer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3208,7 +3436,11 @@ Drop timing informations ?</source>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation type="obsolete">Ошибка чтения заголовков SVQ3</translation>
+        <translation type="unfinished">Ошибка чтения заголовков SVQ3</translation>
+    </message>
+    <message>
+        <source>No stts table</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3910,53 +4142,61 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="obsolete">Маска</translation>
+        <translation type="unfinished">Маска</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="obsolete">Высокое качество</translation>
+        <translation type="unfinished">Высокое качество</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
+        <translation type="unfinished">Уровень:</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="obsolete">Резкость</translation>
+        <translation type="unfinished">Резкость</translation>
     </message>
 </context>
 <context>
     <name>Msmooth</name>
     <message>
         <source>_High quality</source>
-        <translation type="obsolete">Высокое качество</translation>
+        <translation type="unfinished">Высокое качество</translation>
     </message>
     <message>
         <source>Show _mask</source>
-        <translation type="obsolete">Показать маску</translation>
+        <translation type="unfinished">Показать маску</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
+        <translation type="unfinished">Уровень:</translation>
+    </message>
+    <message>
+        <source>MSmooth</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
         <source>Unpacking bitstream</source>
-        <translation type="obsolete">Распаковка потока</translation>
+        <translation type="unfinished">Распаковка потока</translation>
     </message>
     <message>
         <source>Indexing</source>
         <translation type="obsolete">Индектирование</translation>
+    </message>
+    <message>
+        <source>Malformed header</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3967,6 +4207,17 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Question</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QtScriptEngine</name>
+    <message>
+        <source>Avidemux Script Debugger</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3993,67 +4244,115 @@ Drop timing informations ?</source>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="obsolete">Без стратегии</translation>
+        <translation type="unfinished">Без стратегии</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="obsolete">Никогда</translation>
+        <translation type="unfinished">Никогда</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="obsolete">Если &quot;расческа&quot; осталась</translation>
+        <translation type="unfinished">Если &quot;расческа&quot; осталась</translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="obsolete">Всегда</translation>
+        <translation type="unfinished">Всегда</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
+        <translation type="unfinished">Не нужно</translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="obsolete">Стратегия:</translation>
+        <translation type="unfinished">Стратегия:</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
+        <translation type="unfinished">Порядок полей:</translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="obsolete">Постобработка:</translation>
+        <translation type="unfinished">Постобработка:</translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="obsolete">В обратном направлении:</translation>
+        <translation type="unfinished">В обратном направлении:</translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="obsolete">Порог прямого направления:</translation>
+        <translation type="unfinished">Порог прямого направления:</translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="obsolete">Порог для обратного направления:</translation>
+        <translation type="unfinished">Порог для обратного направления:</translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="obsolete">Порог шума:</translation>
+        <translation type="unfinished">Порог шума:</translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="obsolete">Порог постобработки:</translation>
+        <translation type="unfinished">Порог постобработки:</translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="obsolete">Использовать цвет (chroma) для определения</translation>
+        <translation type="unfinished">Использовать цвет (chroma) для определения</translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="obsolete">Показать информацию</translation>
+        <translation type="unfinished">Показать информацию</translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="obsolete">Отладка</translation>
+        <translation type="unfinished">Отладка</translation>
+    </message>
+    <message>
+        <source>3:2 pulldown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL/SECAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC converted from PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None but compute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postproc on best match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Postproc and show zones (debug)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process image (not fields)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process image (not fields), debug</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bl_end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Telecide</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4156,297 +4455,245 @@ Drop timing informations ?</source>
     <name>addBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
+        <translation type="unfinished">Слева:</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
+        <translation type="unfinished">Справа:</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
+        <translation type="unfinished">Сверху:</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
+        <translation type="unfinished">Снизу:</translation>
     </message>
     <message>
         <source>Add Borders</source>
-        <translation type="obsolete">Добавление границ</translation>
+        <translation type="unfinished">Добавление границ</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
+        <translation type="unfinished">Неверные параметры</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
+        <translation type="unfinished">Все параметры должны быть четными и укладываться в границы</translation>
     </message>
 </context>
 <context>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="obsolete">Лого (JPG-файл)</translation>
+        <translation type="unfinished">Лого (JPG-файл)</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="obsolete">Выбор JPEG-файла</translation>
+        <translation type="unfinished">Выбор JPEG-файла</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="obsolete">Позиция X:</translation>
+        <translation type="unfinished">Позиция X:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="obsolete">Позиция Y:</translation>
+        <translation type="unfinished">Позиция Y:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="obsolete">Прозрачность (alpha):</translation>
+        <translation type="unfinished">Прозрачность (alpha):</translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>adm</name>
     <message>
-        <source>Decode video using VDPAU</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable openGl support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Use systray while encoding</source>
-        <translation type="unfinished">Минимизировать в трей во время кодирования</translation>
+        <translation type="obsolete">Минимизировать в трей во время кодирования</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished">Позволять нестрандартную частоту звука для DVD</translation>
+        <translation type="obsolete">Позволять нестрандартную частоту звука для DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="unfinished">Создавать файлы _OpenDML</translation>
-    </message>
-    <message>
-        <source>SIMD</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Создавать файлы _OpenDML</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="unfinished">Включить все SIMD</translation>
+        <translation type="obsolete">Включить все SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="unfinished">Включить MMX</translation>
+        <translation type="obsolete">Включить MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="unfinished">Включить MMXEXT</translation>
+        <translation type="obsolete">Включить MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="unfinished">Включить 3DNOW</translation>
+        <translation type="obsolete">Включить 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="unfinished">Включить 3DNOWEXT</translation>
+        <translation type="obsolete">Включить 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="unfinished">Включить SSE</translation>
+        <translation type="obsolete">Включить SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="unfinished">Включить SSE2</translation>
+        <translation type="obsolete">Включить SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="unfinished">Включить SSE3</translation>
+        <translation type="obsolete">Включить SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="unfinished">Включить SSSE3</translation>
+        <translation type="obsolete">Включить SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="unfinished">_lavc</translation>
+        <translation type="obsolete">_lavc</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="unfinished">Использовать многопоточность</translation>
+        <translation type="obsolete">Использовать многопоточность</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished">Высокий</translation>
+        <translation type="obsolete">Высокий</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="unfinished">Выше нормального</translation>
+        <translation type="obsolete">Выше нормального</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="unfinished">Нормальный</translation>
+        <translation type="obsolete">Нормальный</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="unfinished">Ниже нормального</translation>
+        <translation type="obsolete">Ниже нормального</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished">Низкий</translation>
+        <translation type="obsolete">Низкий</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="unfinished">Кодирования:</translation>
+        <translation type="obsolete">Кодирования:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="unfinished">Индексации/распаковки:</translation>
+        <translation type="obsolete">Индексации/распаковки:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="unfinished">Воспроизведения:</translation>
+        <translation type="obsolete">Воспроизведения:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="unfinished">Приоритет</translation>
-    </message>
-    <message>
-        <source>_Split MPEG files every (MB):</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Приоритет</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="unfinished">Использовать альтернативные тэги для MP3 в .MP4</translation>
+        <translation type="obsolete">Использовать альтернативные тэги для MP3 в .MP4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="unfinished">XVideo (лучше всего)</translation>
-    </message>
-    <message>
-        <source>VDPAU (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL (best)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI (SDL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows DirectX (SDL)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">XVideo (лучше всего)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="unfinished">SDL (хорошо)</translation>
+        <translation type="obsolete">SDL (хорошо)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="unfinished">Метод вывода видео:</translation>
+        <translation type="obsolete">Метод вывода видео:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="unfinished">Без сообщений</translation>
+        <translation type="obsolete">Без сообщений</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="unfinished">Только сообщения об ошибках</translation>
+        <translation type="obsolete">Только сообщения об ошибках</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="unfinished">Все сообщения</translation>
+        <translation type="obsolete">Все сообщения</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="unfinished">Уровень сообщений:</translation>
-    </message>
-    <message>
-        <source>PCM</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Уровень сообщений:</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="unfinished">Мастер</translation>
+        <translation type="obsolete">Мастер</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="unfinished">Громкость звука управляется:</translation>
+        <translation type="obsolete">Громкость звука управляется:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="obsolete">Оригинальный</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">Стерео</translation>
-    </message>
-    <message>
-        <source>Pro Logic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pro Logic II</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Стерео</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished">При проигрывании звук:</translation>
-    </message>
-    <message>
-        <source>_AudioDevice</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">При проигрывании звук:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">Горизонтальный деблокинг</translation>
+        <translation type="obsolete">Горизонтальный деблокинг</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">Вертикальный деблокинг</translation>
-    </message>
-    <message>
-        <source>De_ringing</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Вертикальный деблокинг</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">Уровень:</translation>
+        <translation type="obsolete">Уровень:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="unfinished">Постпроцессинг по-умолчанию</translation>
+        <translation type="obsolete">Постпроцессинг по-умолчанию</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="unfinished">Интерфейс</translation>
+        <translation type="obsolete">Интерфейс</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished">Вывод</translation>
+        <translation type="obsolete">Вывод</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="unfinished">Звук</translation>
+        <translation type="obsolete">Звук</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished">Видео</translation>
-    </message>
-    <message>
-        <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Видео</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="unfinished">Многопоточность</translation>
+        <translation type="obsolete">Многопоточность</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Свойства</translation>
+        <translation type="obsolete">Свойства</translation>
     </message>
 </context>
 <context>
@@ -4472,34 +4719,92 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
+    <name>avsfilter</name>
+    <message>
+        <source>_wine app file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select wine filename[wine/cedega/etc.]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_loader file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select loader filename[avsload.exe]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_avs file:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select avs filename[*.avs]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_pipe timeout:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AvsFilter config</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>blackenBorders</name>
     <message>
         <source>_Left border:</source>
-        <translation type="obsolete">Слева:</translation>
+        <translation type="unfinished">Слева:</translation>
     </message>
     <message>
         <source>_Right border:</source>
-        <translation type="obsolete">Справа:</translation>
+        <translation type="unfinished">Справа:</translation>
     </message>
     <message>
         <source>_Top border:</source>
-        <translation type="obsolete">Сверху:</translation>
+        <translation type="unfinished">Сверху:</translation>
     </message>
     <message>
         <source>_Bottom border:</source>
-        <translation type="obsolete">Снизу:</translation>
+        <translation type="unfinished">Снизу:</translation>
     </message>
     <message>
         <source>Blacken Borders</source>
-        <translation type="obsolete">Заполнение границ</translation>
+        <translation type="unfinished">Заполнение границ</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
-        <translation type="obsolete">Неверные параметры</translation>
+        <translation type="unfinished">Неверные параметры</translation>
     </message>
     <message>
         <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Все параметры должны быть четными и укладываться в границы</translation>
+        <translation type="unfinished">Все параметры должны быть четными и укладываться в границы</translation>
+    </message>
+</context>
+<context>
+    <name>changeFps</name>
+    <message>
+        <source>Source Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination Fps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination frame rate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4774,19 +5079,39 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">Нижнее поле первое</translation>
+        <translation type="unfinished">Нижнее поле первое</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">Верхнее поле первое</translation>
+        <translation type="unfinished">Верхнее поле первое</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">Порядок:</translation>
+        <translation type="unfinished">Порядок:</translation>
+    </message>
+    <message>
+        <source>Temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4929,81 +5254,109 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>_Field order:</source>
-        <translation type="obsolete">Порядок полей:</translation>
+        <translation type="unfinished">Порядок полей:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="obsolete">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
+        <translation type="unfinished">Чем меньше значение, тем сильнее деинтерлейсинг</translation>
     </message>
     <message>
         <source>_Sharp</source>
-        <translation type="obsolete">Резкость</translation>
+        <translation type="unfinished">Резкость</translation>
     </message>
     <message>
         <source>_Sharper engine:</source>
-        <translation type="obsolete">Включить механизм усиления резкости</translation>
+        <translation type="unfinished">Включить механизм усиления резкости</translation>
     </message>
     <message>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Улучшенная экстраполяция (лучше не использовать)</translation>
+        <translation type="unfinished">Улучшенная экстраполяция (лучше не использовать)</translation>
     </message>
     <message>
         <source>_Map</source>
-        <translation type="obsolete">Карта</translation>
+        <translation type="unfinished">Карта</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Показать области чрезстрочности (для тестирования!)</translation>
+        <translation type="unfinished">Показать области чрезстрочности (для тестирования!)</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="obsolete">Корневой деинтерлейс</translation>
+        <translation type="unfinished">Корневой деинтерлейс</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>T_woway</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
-        <translation type="obsolete">Обработать яркость (luma)</translation>
+        <translation type="unfinished">Обработать яркость (luma)</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="obsolete">Обработать цвет (chroma)</translation>
+        <translation type="unfinished">Обработать цвет (chroma)</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
+        <translation type="unfinished">Не нужно</translation>
     </message>
     <message>
         <source>Linear interpolate</source>
-        <translation type="obsolete">Линейная интерполяция</translation>
+        <translation type="unfinished">Линейная интерполяция</translation>
     </message>
     <message>
         <source>Cubic interpolate</source>
-        <translation type="obsolete">Кубическая интерполяция</translation>
+        <translation type="unfinished">Кубическая интерполяция</translation>
     </message>
     <message>
         <source>Median interpolate</source>
-        <translation type="obsolete">Средняя интерполяция</translation>
+        <translation type="unfinished">Средняя интерполяция</translation>
     </message>
     <message>
         <source>_Deinterlacing:</source>
-        <translation type="obsolete">Алгоритм:</translation>
+        <translation type="unfinished">Алгоритм:</translation>
     </message>
     <message>
         <source>_Autolevel</source>
-        <translation type="obsolete">Автоматический уровень</translation>
+        <translation type="unfinished">Автоматический уровень</translation>
     </message>
     <message>
         <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">libavcodec деинтерлейс</translation>
+        <translation type="unfinished">libavcodec деинтерлейс</translation>
+    </message>
+    <message>
+        <source>Linear blend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FFmpeg deint</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5283,6 +5636,38 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>muxerMP4</name>
+    <message>
+        <source>Saving mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving PSP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerMkv</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffPS</name>
+    <message>
+        <source>Saving mpeg PS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>muxerffTS</name>
+    <message>
+        <source>Saving mpeg TS (ff)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>nuvHeader</name>
     <message>
         <source>Opening Nuppel video</source>
@@ -5314,6 +5699,21 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Scanning OGM</source>
         <translation type="obsolete">Сканирование OGM</translation>
+    </message>
+</context>
+<context>
+    <name>openGlResize</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glResize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5450,18 +5850,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>removePlaneFilter</name>
+    <message>
+        <source>Keep Y Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep U Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaU plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep V Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process chromaV plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>resampleFps</name>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_New frame rate:</source>
-        <translation type="obsolete">Новая частота кадров:</translation>
+        <translation type="unfinished">Новая частота кадров:</translation>
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="obsolete">Изменить fps</translation>
+        <translation type="unfinished">Изменить fps</translation>
     </message>
 </context>
 <context>
@@ -5504,34 +5935,57 @@ p, li { white-space: pre-wrap; }
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="obsolete">Ширина и высота не могут быть нечетными</translation>
+        <translation type="unfinished">Ширина и высота не могут быть нечетными</translation>
     </message>
 </context>
 <context>
     <name>rotateFilter</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
+        <translation type="unfinished">Не нужно</translation>
     </message>
     <message>
         <source>90 degrees</source>
-        <translation type="obsolete">90 градусов</translation>
+        <translation type="unfinished">90 градусов</translation>
     </message>
     <message>
         <source>180 degrees</source>
-        <translation type="obsolete">180 градусов</translation>
+        <translation type="unfinished">180 градусов</translation>
     </message>
     <message>
         <source>270 degrees</source>
-        <translation type="obsolete">270 градусов</translation>
+        <translation type="unfinished">270 градусов</translation>
     </message>
     <message>
         <source>_Angle:</source>
-        <translation type="obsolete">Угол:</translation>
+        <translation type="unfinished">Угол:</translation>
     </message>
     <message>
         <source>Rotate</source>
-        <translation type="obsolete">Вращать</translation>
+        <translation type="unfinished">Вращать</translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>rotateGl</name>
+    <message>
+        <source>Angle (Â°):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glRotate</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5554,109 +6008,259 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">Файл субтитров (ASS/SSA):</translation>
+        <translation type="unfinished">Файл субтитров (ASS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="obsolete">Выбор файла субтитров</translation>
+        <translation type="unfinished">Выбор файла субтитров</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="obsolete">Межстрочный интервал:</translation>
+        <translation type="unfinished">Межстрочный интервал:</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="obsolete">Масштаб шрифта:</translation>
+        <translation type="unfinished">Масштаб шрифта:</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="obsolete">Верхняя граница:</translation>
+        <translation type="unfinished">Верхняя граница:</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="obsolete">Нижняя граница:</translation>
+        <translation type="unfinished">Нижняя граница:</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilter</name>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilterDeint</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="obsolete">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
+        <translation type="unfinished">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">Шум:</translation>
+        <translation type="unfinished">Шум:</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="obsolete">Идентичность:</translation>
+        <translation type="unfinished">Идентичность:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Если метрика меньше этого значения, картинки считаются идентичными</translation>
+        <translation type="unfinished">Если метрика меньше этого значения, картинки считаются идентичными</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">Показать метрики</translation>
+        <translation type="unfinished">Показать метрики</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Показать метрики в картинке (для отладки)</translation>
+        <translation type="unfinished">Показать метрики в картинке (для отладки)</translation>
+    </message>
+    <message>
+        <source>If pixels are closer than noise, they are considered to be the same</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blend Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="obsolete">Не нужно</translation>
+        <translation type="unfinished">Не нужно</translation>
+    </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="obsolete">Метрики</translation>
+        <translation type="unfinished">Метрики</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="obsolete">Хотите вывести метрики на экран?</translation>
+        <translation type="unfinished">Хотите вывести метрики на экран?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="obsolete">Порог:</translation>
+        <translation type="unfinished">Порог:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="obsolete">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
+        <translation type="unfinished">Если значение меньше порогового, то картинка считается правильной. Меньшее пороговое значение увеличивает вероятность неправильности.</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="obsolete">Шум:</translation>
+        <translation type="unfinished">Шум:</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="obsolete">Идентичность:</translation>
+        <translation type="unfinished">Идентичность:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="obsolete">Если метрика меньше этого значения, картинки считаются идентичными</translation>
+        <translation type="unfinished">Если метрика меньше этого значения, картинки считаются идентичными</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="obsolete">Показать метрики</translation>
+        <translation type="unfinished">Показать метрики</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="obsolete">Показать метрики в картинке (для отладки)</translation>
+        <translation type="unfinished">Показать метрики в картинке (для отладки)</translation>
+    </message>
+    <message>
+        <source>If pixels are closer than noise, they are considered to be the same</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hard IVTC Removal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5869,22 +6473,85 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>x264Dialog</name>
+    <message>
+        <source>Target Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>yadifFilter</name>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">Нижнее поле первое</translation>
+        <translation type="unfinished">Нижнее поле первое</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">Верхнее поле первое</translation>
+        <translation type="unfinished">Верхнее поле первое</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Режим:</translation>
+        <translation type="unfinished">_Режим:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">Порядок:</translation>
+        <translation type="unfinished">Порядок:</translation>
+    </message>
+    <message>
+        <source>Temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
