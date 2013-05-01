@@ -5268,183 +5268,183 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">Δημιουργία αρχείων _OpenDML</translation>
+        <translation type="unfinished">Δημιουργία αρχείων _OpenDML</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
+        <translation type="unfinished">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">Ενεργοποίηση όλων των SIMD</translation>
+        <translation type="unfinished">Ενεργοποίηση όλων των SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">Ενεργοποίηση MMX</translation>
+        <translation type="unfinished">Ενεργοποίηση MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">Ενεργοποίηση MMXEXT</translation>
+        <translation type="unfinished">Ενεργοποίηση MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">Ενεργοποίηση 3DNOW</translation>
+        <translation type="unfinished">Ενεργοποίηση 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Ενεργοποίηση 3DNOWEXT</translation>
+        <translation type="unfinished">Ενεργοποίηση 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">Ενεργοποίηση SSE</translation>
+        <translation type="unfinished">Ενεργοποίηση SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">Ενεργοποίηση SSE2</translation>
+        <translation type="unfinished">Ενεργοποίηση SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">Ενεργοποίηση SSE3</translation>
+        <translation type="unfinished">Ενεργοποίηση SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">Ενεργοποίηση SSSE3</translation>
+        <translation type="unfinished">Ενεργοποίηση SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">Ολόκληρα νήματα</translation>
+        <translation type="unfinished">Ολόκληρα νήματα</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">Multi-aterm</translation>
+        <translation type="unfinished">Multi-aterm</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">Υψηλή</translation>
+        <translation type="unfinished">Υψηλή</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">Πάνω από το κανονικό</translation>
+        <translation type="unfinished">Πάνω από το κανονικό</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Κανονικό</translation>
+        <translation type="unfinished">Κανονικό</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">Κάτω από το κανονικό</translation>
+        <translation type="unfinished">Κάτω από το κανονικό</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">Χαμηλή</translation>
+        <translation type="unfinished">Χαμηλή</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">_Προτεραιότητα κωδικοποίησης:</translation>
+        <translation type="unfinished">_Προτεραιότητα κωδικοποίησης:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Προτεραιότητα δημιουργίας ε_υρετηρίου/απο-πακεταρίσματος:</translation>
+        <translation type="unfinished">Προτεραιότητα δημιουργίας ε_υρετηρίου/απο-πακεταρίσματος:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">Προτεραιότητα _αναπαραγωγής:</translation>
+        <translation type="unfinished">Προτεραιότητα _αναπαραγωγής:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">Ορισμός Προτεραιοτήτων</translation>
+        <translation type="unfinished">Ορισμός Προτεραιοτήτων</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (καλύτερο)</translation>
+        <translation type="unfinished">XVideo (καλύτερο)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (καλό)</translation>
+        <translation type="unfinished">SDL (καλό)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">_Εμφάνιση βίντεο:</translation>
+        <translation type="unfinished">_Εμφάνιση βίντεο:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Χωρίς ειδοποιήσεις</translation>
+        <translation type="unfinished">Χωρίς ειδοποιήσεις</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Προβολή μόνο των ειδοποιήσεων σφάλματος</translation>
+        <translation type="unfinished">Προβολή μόνο των ειδοποιήσεων σφάλματος</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Προβολή όλων των ειδοποιήσεων</translation>
+        <translation type="unfinished">Προβολή όλων των ειδοποιήσεων</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">Το παραπάνω μήνυμα έχει άγνωστο επίπεδο καταγραφής συμβάντων</translation>
+        <translation type="unfinished">Το παραπάνω μήνυμα έχει άγνωστο επίπεδο καταγραφής συμβάντων</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Πρωτεύων</translation>
+        <translation type="unfinished">Πρωτεύων</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">_Έλεγχος Έντασης Ήχου:</translation>
+        <translation type="unfinished">_Έλεγχος Έντασης Ήχου:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">(χωρίς όνομα)</translation>
+        <translation type="unfinished">(χωρίς όνομα)</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">Στέρεο</translation>
+        <translation type="unfinished">Στέρεο</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
+        <translation type="unfinished">Pro Logic</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
+        <translation type="unfinished">Pro Logic II</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">Η τοπική αναπαραγωγή NMM απέτυχε.</translation>
+        <translation type="unfinished">Η τοπική αναπαραγωγή NMM απέτυχε.</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">Δια&amp;γραφή</translation>
+        <translation type="unfinished">Δια&amp;γραφή</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Ισχύς:</translation>
+        <translation type="unfinished">_Ισχύς:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Προεπιλεγμένη Μετεπεξεργασία</translation>
+        <translation type="unfinished">Προεπιλεγμένη Μετεπεξεργασία</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Περιβάλλον Εργασίας</translation>
+        <translation type="unfinished">Περιβάλλον Εργασίας</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Έξοδος</translation>
+        <translation type="unfinished">Έξοδος</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Ήχος</translation>
+        <translation type="unfinished">Ήχος</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Βίντεο</translation>
+        <translation type="unfinished">Βίντεο</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -5621,6 +5621,578 @@ Drop timing informations ?</source>
     <message>
         <source>Go To Time</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">Ε_παναδειγματοληψία (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">Συχνότητα επανακωδικοποίησης (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Καμία</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">Από Film σε PAL</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">Από PAL σε Film</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">Αλλαγή _ταχύτητας καρέ:</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Καμία αλαγή</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Μονοφωνικό</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">Στέρεο+περιμετρικός</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">Στέρεο+κέντρο</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">Στέρεο+κέντρο+περιμετρικός</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">Στέρεο εμπρός + στέρεο πίσω</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 κανάλια</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">Dolby Pro Logic</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">Dolby Pro Logic II</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">Αυτόματο (μέγιστο -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">Λειτουργία αποσφαλμάτωσης</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">Τιμή _κέρδους:</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">_Μίκτης: </translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Φίλτρα Ήχου</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Ρύθμιση γραμματοσειράς (Fontconfig)</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished">Gettext</translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">Βιβλιοθήκες</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">Ενσωματωμένη Υποστήριξη</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">_Όνομα διαδικασίας:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Αποθήκευση διαδικασίας</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use systray while encoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Accept non-standard audio frequency for DVD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Use alternative tag for MP3 in .mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Horizontal deblocking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Vertical deblocking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Σφάλμα Κώδικα</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Δεν κωδικοποιήθηκε σε αυτή την έκδοση</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">Επιλέξτε αρχείο AVI...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">Επιλέξτε ένα αρχείο AVI για προσκόλληση...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">Είσαι σίγουρος/η;</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">Σφάλμα δικαιωμάτων   </translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">Αδύνατο το άνοιγμα του
+ &quot;%s&quot;</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Σφάλμα αρχείου</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished" variants="yes">
+            <lengthvariant>Δεν υπάρχει το αρχείο
+ &quot;%s&quot;</lengthvariant>
+            <lengthvariant></lengthvariant>
+        </translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Αδύνατο το άνοιγμα της εργασίας με τη χρήση του φορτωτή βίντεο.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">Δοκίμασε «Αρχείο» -&gt; «Φόρτωση/Εκτέλεση Εργασίας...»</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Αδύνατο το άνοιγμα του αρχείου</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Πολλαπλά Κανάλια Ήχου</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Το αρχείο που μόλις φορτώθηκε περιέχει διάφορα κανάλια ήχου.
+Πήγαινε στο «Ήχος» -&gt; «Κύριο Κανάλι» για να επιλέξεις πιο θα είναι ενεργό.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Κάτι απέτυχε στην προσκόληση</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">Κάτι στραβό συνέβη (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">Έλεγχος βίντεο</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Δεν βρέθηκαν σφάλματα</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">Βρέθηκαν σφάλματα σε %u καρέ</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">Δείκτης Α &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Αδύνατη η διαγραφή της επιλογής.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Δεν μπορείς να μετακινήσεις όλα τα καρέ</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Κάτι στραβό έγινε</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">_Κανάλι από το βίντεο</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">Κύριο Κανάλι Ήχου</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">Αποτυχία σύνδεσης με το avsproxy.
+Είναι σε κατάσταση λειτουργίας;</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Τύπος καρέ:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">Μέγεθος καρέ:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished">Μετάβαση στο Χρόνο</translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">Ένταση _φίλτρου:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">_Εναλλαγή U και V</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">Επέλεξε Workbench για Αποθήκευση</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">Επέλεξε Αρχείο για την Αποθήκευση του Ήχου</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">Επέλεξε την Ακολουθία JPEG για Αποθήκευση</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">Επιλογή BMP για να Φορτωθεί</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">Επέλεξε JPEG για Αποθήκευση</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">Επιλογή αρχείου για να Φορτωθεί</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Αποθήκευση ήχου</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Αποθήκευση ως μια ομάδα από jpeg</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Αδύνατη η αποκωδικοποίηση του καρέ</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">Εγκατάλειψη.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Έγινε</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">Αποθήκευση %d εικόνων</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Σφάλμα</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Δεν ήταν δυνατή η αποθήκευση όλων των εικόνων.</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">Η BMP op απέτυχε</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">Η αποθήκευση του %s ως BMP απέτυχε.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">Το αρχείο %s αποθηκεύτηκε με επιτυχία.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Αποτυχεία</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">Το αρχείο %s ΔΕΝ αποθηκεύτηκε σωστά.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
+        <translation type="unfinished">Πρόσφατες Εργασίες</translation>
     </message>
 </context>
 <context>

@@ -315,24 +315,29 @@ If you re encode video we should drop these informations,
 If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Les informations de timings sur les images sont incorrectes.
+Cela arrive avec certains logiciels de capture.
+Si vous re-encoder ces videos, il vaut mieux ignorer ces informations,
+sinon cela va provoquer des saccades.
+Si vous copiez la piste sans re-encoder, il vaut mieux conserver ces informations de timing.
+Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="178"/>
         <source>Cannot find a demuxer for %s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible de trouver un demuxer pour lire %s</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="200"/>
         <source>Attempt to open %s failed!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Echec de l&apos;ouverture de %s!</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatinate them together</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vous ne pouvez pas mélanger des videos avec des dimensions différentes. Pour ce faire editer les vidéos avec les filtres resize/etc.. afin qu&apos;elles aient toutes la même taille, puis les ajouter</translation>
     </message>
 </context>
 <context>
@@ -340,14 +345,14 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="32"/>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alerte</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="38"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="63"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="88"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Information</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="112"/>
@@ -371,37 +376,37 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="50"/>
         <source>Constant Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitrate constant</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="51"/>
         <source>Constant Quantiser</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quantisation constante</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="52"/>
         <source>Same Quantiser as Input</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Même quantisation que la source</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="53"/>
         <source>Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rate Factor constant</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="54"/>
         <source>Two Pass - Video Size</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2 Passes- Taille de la vidéo</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="55"/>
         <source>Two Pass - Average Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">2 Passes - Bitrate moyen</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="57"/>
         <source>Encoding mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mode d&apos;encodage</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="62"/>
@@ -411,23 +416,23 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="148"/>
         <source>Target bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitrate cible (kb/s)</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="153"/>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="172"/>
         <source>Quantizer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quantisation</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="158"/>
         <source>Target video size (MB)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Taille cible de la vidéo (MB)</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="163"/>
         <source>Average bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitrate moyen (kb/s)</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
@@ -440,17 +445,17 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="45"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Désactivé</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="46"/>
         <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Détection auto</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="47"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Manuel</translation>
     </message>
 </context>
 <context>
@@ -764,7 +769,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="129"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Manuel</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="187"/>
@@ -1561,7 +1566,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="138"/>
         <source>_Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Force:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="143"/>
@@ -1589,7 +1594,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="177"/>
         <source>_Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Force:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="181"/>
@@ -1604,7 +1609,7 @@ Drop timing informations ?</source>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="393"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="657"/>
         <source>Malformed header</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">En tete malformé</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="90"/>
@@ -1820,7 +1825,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="16"/>
         <source>About Avidemux</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A propos d&apos;Avidemux</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="91"/>
@@ -1927,24 +1932,301 @@ Drop timing informations ?</source>
 <context>
     <name>adm</name>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="182"/>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished">Utiliser VDPAU pour décoder</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="183"/>
+        <source>Enable openGl support</source>
+        <translation type="unfinished">Activer OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="188"/>
+        <source>_Use systray while encoding</source>
+        <translation type="unfinished">Réduire dans la barre de taches</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="189"/>
+        <source>_Accept non-standard audio frequency for DVD</source>
+        <translation type="unfinished">Accepter les fréquences non standard pour les DVDs</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="190"/>
+        <source>Create _OpenDML files</source>
+        <translation type="unfinished">Créer des fichiers OpenDML</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="194"/>
+        <source>SIMD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="196"/>
+        <source>Enable all SIMD</source>
+        <translation type="unfinished">Activer toutes les optimisations SIMD</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="197"/>
+        <source>Enable MMX</source>
+        <translation type="unfinished">Activer le MMX</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="198"/>
+        <source>Enable MMXEXT</source>
+        <translation type="unfinished">Activer le MMXEXT</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="199"/>
+        <source>Enable 3DNOW</source>
+        <translation type="unfinished">Activer le 3DNOW</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="200"/>
+        <source>Enable 3DNOWEXT</source>
+        <translation type="unfinished">Activer le 3DNOWEXT</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="201"/>
+        <source>Enable SSE</source>
+        <translation type="unfinished">Activer le SSE</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="202"/>
+        <source>Enable SSE2</source>
+        <translation type="unfinished">Activer le SSE2</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="203"/>
+        <source>Enable SSE3</source>
+        <translation type="unfinished">Activer le SSE3</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="204"/>
+        <source>Enable SSSE3</source>
+        <translation type="unfinished">Activer le SSSE3</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="225"/>
+        <source>_lavc threads:</source>
+        <translation type="unfinished">Threads lavc:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="227"/>
+        <source>Multi-threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="231"/>
         <source>High</source>
-        <translation type="obsolete">Haute</translation>
+        <translation type="unfinished">Haute</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="232"/>
+        <source>Above normal</source>
+        <translation type="unfinished">Plus que normale</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="233"/>
         <source>Normal</source>
-        <translation type="obsolete">Normale</translation>
+        <translation type="unfinished">Normale</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="234"/>
+        <source>Below normal</source>
+        <translation type="unfinished">Sous normale</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="235"/>
         <source>Low</source>
-        <translation type="obsolete">BAsse</translation>
+        <translation type="unfinished">BAsse</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="237"/>
+        <source>_Encoding priority:</source>
+        <translation type="unfinished">Priorité de l&apos;encodage:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="238"/>
+        <source>_Indexing/unpacking priority:</source>
+        <translation type="unfinished">Priorité de l&apos;indexation:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="239"/>
+        <source>_Playback priority:</source>
+        <translation type="unfinished">Priorité de la lecture:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="241"/>
+        <source>Prioritisation</source>
+        <translation type="unfinished">Prioirités</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="246"/>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished">Créer un nouveau fichier MPEG tous les (MB):</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="248"/>
+        <source>_Use alternative tag for MP3 in .mp4</source>
+        <translation type="unfinished">Utiliser un tag alternatif pour les pistes mp3 (.mp4)</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="253"/>
+        <source>XVideo (best)</source>
+        <translation type="unfinished">Xvideo (rapide)</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="256"/>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished">VDPAU (très rapide)</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="259"/>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished">OpenGL (rapide)</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="264"/>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="265"/>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="267"/>
+        <source>SDL (good)</source>
+        <translation type="unfinished">SDL (moyen)</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="271"/>
+        <source>Video _display:</source>
+        <translation type="unfinished">Affichage vidéo</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="276"/>
+        <source>No alerts</source>
+        <translation type="unfinished">Pas d&apos;alertes</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="277"/>
+        <source>Display only error alerts</source>
+        <translation type="unfinished">N&apos;afficher que les erreurs</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="278"/>
+        <source>Display all alerts</source>
+        <translation type="unfinished">Afficher tout</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="280"/>
+        <source>_Message level:</source>
+        <translation type="unfinished">Afficher les messagees:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="285"/>
+        <source>PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="286"/>
+        <source>Master</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="287"/>
+        <source>_Volume control:</source>
+        <translation type="unfinished">Contrôle du volume:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="292"/>
+        <source>No downmixing</source>
+        <translation type="unfinished">Pas de downmixing</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="294"/>
+        <source>Pro Logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="295"/>
+        <source>Pro Logic II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="297"/>
+        <source>_Local playback downmixing:</source>
+        <translation type="unfinished">Downmixing pour la lecture:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="311"/>
+        <source>_AudioDevice</source>
+        <translation type="unfinished">Device audio</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="27"/>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">Force du filtre:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="28"/>
+        <source>_Swap U and V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="38"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="314"/>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Deblocking horizontal</translation>
+        <translation type="unfinished">Deblocking horizontal</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="39"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="315"/>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">Deblocking vertical</translation>
+        <translation type="unfinished">Deblocking vertical</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="40"/>
+        <source>_Deringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="316"/>
+        <source>De_ringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="317"/>
+        <source>_Strength:</source>
+        <translation type="unfinished">Force:</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="318"/>
+        <source>Default Postprocessing</source>
+        <translation type="unfinished">Postprocessing par défaut</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="328"/>
+        <source>User Interface</source>
+        <translation type="unfinished">Interface Utilisateur</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="335"/>
+        <source>Output</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="355"/>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="363"/>
+        <source>Threading</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="35"/>
@@ -2049,6 +2331,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Mettre le marqueur B</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="376"/>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="64"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
@@ -2097,7 +2380,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="91"/>
         <source>Open Application &amp;Log</source>
-        <translation type="unfinished">Ouvrir le fichier de log</translation>
+        <translation type="unfinished">Ouvrir le fichier de &amp;log</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="92"/>
@@ -2169,6 +2452,656 @@ Drop timing informations ?</source>
         <source>Go To Time</source>
         <translation type="unfinished">Aller au temps</translation>
     </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="33"/>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="33"/>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="37"/>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="62"/>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="38"/>
+        <source>Film to PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="39"/>
+        <source>PAL to Film</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="42"/>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="46"/>
+        <source>No change</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="47"/>
+        <source>Mono</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="48"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="293"/>
+        <source>Stereo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="49"/>
+        <source>Stereo+surround</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="50"/>
+        <source>Stereo+center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="51"/>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="52"/>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="53"/>
+        <source>5 channels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="54"/>
+        <source>5.1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="55"/>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="56"/>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="59"/>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="63"/>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="64"/>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="66"/>
+        <source>_Gain mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="68"/>
+        <source>G_ain value:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="72"/>
+        <source>_Mixer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="74"/>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="77"/>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="77"/>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="80"/>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Filtres</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="81"/>
+        <source>Fontconfig</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="82"/>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="83"/>
+        <source>Gettext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="84"/>
+        <source>SDL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="85"/>
+        <source>XVideo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="86"/>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="88"/>
+        <source>x86</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="89"/>
+        <source>x86-64</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="96"/>
+        <source>Libraries</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="97"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="359"/>
+        <source>CPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="101"/>
+        <source>Built-in Support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="8"/>
+        <source>_Job name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="9"/>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="9"/>
+        <source>Select Video To Write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="12"/>
+        <source>Save Job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="58"/>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="81"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="341"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="344"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="349"/>
+        <source>Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="87"/>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="111"/>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="116"/>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="140"/>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="145"/>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="167"/>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="174"/>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="196"/>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="203"/>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="225"/>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="233"/>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="255"/>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="260"/>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="48"/>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="48"/>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="64"/>
+        <location filename="../../common/gui_autodrive.cpp" line="78"/>
+        <location filename="../../common/gui_autodrive.cpp" line="109"/>
+        <location filename="../../common/gui_autodrive.cpp" line="115"/>
+        <location filename="../../common/gui_autodrive.cpp" line="130"/>
+        <location filename="../../common/gui_autodrive.cpp" line="157"/>
+        <location filename="../../common/gui_autodrive.cpp" line="192"/>
+        <source>Codec Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="64"/>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="78"/>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="110"/>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="116"/>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="130"/>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="157"/>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_autodrive.cpp" line="193"/>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="168"/>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="317"/>
+        <source>Not coded in this version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="328"/>
+        <location filename="../../common/gui_main.cpp" line="393"/>
+        <source>Select AVI File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="396"/>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="482"/>
+        <source>Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="567"/>
+        <source>Permission error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="567"/>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="570"/>
+        <source>File error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="570"/>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="607"/>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="608"/>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="610"/>
+        <source>Could not open the file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="646"/>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="646"/>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="736"/>
+        <source>Something failed when appending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="745"/>
+        <location filename="../../common/gui_main.cpp" line="939"/>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="883"/>
+        <source>Checking video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="899"/>
+        <source>No error found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="903"/>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="919"/>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="919"/>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="924"/>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="932"/>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Quelque chose d&apos;anormal c&apos;est produit</translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1020"/>
+        <source>_Track from video:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1023"/>
+        <source>Main Audio Track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1169"/>
+        <source>AvsProxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1169"/>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1174"/>
+        <source>avsproxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1208"/>
+        <source>Frame type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1209"/>
+        <source>Frame size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_main.cpp" line="1211"/>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_gototime.cpp" line="31"/>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_gototime.cpp" line="34"/>
+        <source>Go to Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="62"/>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="63"/>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="66"/>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="79"/>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="87"/>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="92"/>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="95"/>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="99"/>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="104"/>
+        <source>Select File to Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="164"/>
+        <source>Saving audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="310"/>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="310"/>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="341"/>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="347"/>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="347"/>
+        <source>Aborting.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="358"/>
+        <location filename="../../common/gui_save.cpp" line="396"/>
+        <source>Done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="358"/>
+        <source>Saved %d images.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="360"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="360"/>
+        <source>Could not save all images.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="382"/>
+        <source>BMP op failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="382"/>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="396"/>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="400"/>
+        <source>Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/gui_save.cpp" line="400"/>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="303"/>
+        <source>Recent Files</source>
+        <translation type="unfinished">Fichiers Récents</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="304"/>
+        <source>Recent Projects</source>
+        <translation type="unfinished">Projets Récents</translation>
+    </message>
 </context>
 <context>
     <name>avsfilter</name>
@@ -2180,7 +3113,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="552"/>
         <source>Select wine filename[wine/cedega/etc.]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Choisir le nom de l&apos;éxécutable wine (wine/cedega/...)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="554"/>
@@ -2200,7 +3133,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="558"/>
         <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Choisir le fichier avisynth (*.avs)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="559"/>
@@ -2210,7 +3143,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="563"/>
         <source>AvsFilter config</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Configuration AVSFilter</translation>
     </message>
 </context>
 <context>
@@ -2543,32 +3476,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="28"/>
         <source>Run all pending jobs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Executer tous les jobs en attente</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="31"/>
         <source>Run jobs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Executer</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="38"/>
         <source>Delete already executed jobs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Effacer les jobs déjà faits</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="41"/>
         <source>Cleanup</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nettoyer</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="48"/>
         <source>If you use VDPAU you cannot use CLI version</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Si vous utilisez VDAU, la version CLI ne marchera pas</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="51"/>
         <source>use QT4 version</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Utiliser la version Qt4</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="71"/>
@@ -2609,7 +3542,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Job Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nom du job</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
@@ -2619,48 +3552,48 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Start Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Date de départ</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>End Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Date de fin</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Sure!</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sur!</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <source>Delete job</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Détruire le job</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Etes vous sur de vouloir détruire %s job ?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Delete *all* job</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Detruire *tous* les jobs</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Etes vous sur de vouloir détruire TOUS les jobs ?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
         <source>Already done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Déjà fait</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
         <source>This script has already been successfully executed.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ce script a déjà été executé avec succés</translation>
     </message>
 </context>
 <context>
@@ -2759,42 +3692,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="189"/>
         <source>Linear blend</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mélange linéaire</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="190"/>
         <source>Linear interpolate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Interpolation linéaire</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="191"/>
         <source>Cubic interpolate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Interpolation Cubique</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="192"/>
         <source>Median interpolate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Interpolation Médiane</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="193"/>
         <source>FFmpeg deint</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">FFmpeg</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="197"/>
         <source>_Deinterlacing:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Dé-entrelacement</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="198"/>
         <source>_Autolevel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Niveau automatique de couleur</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="202"/>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">De-entralacement par Libavcodec</translation>
     </message>
 </context>
 <context>
@@ -3060,12 +3993,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="150"/>
         <source>Saving mp4</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde au format MP4</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="151"/>
         <source>Saving PSP</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde au format PSP</translation>
     </message>
 </context>
 <context>
@@ -3073,7 +4006,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="134"/>
         <source>Saving Mkv</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde au format MKV (ff)</translation>
     </message>
 </context>
 <context>
@@ -3081,7 +4014,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPS.cpp" line="140"/>
         <source>Saving mpeg PS (ff)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde au format PS (ff)</translation>
     </message>
 </context>
 <context>
@@ -3089,7 +4022,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Saving mpeg TS (ff)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarde au format TS (ff)</translation>
     </message>
 </context>
 <context>
@@ -3452,7 +4385,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="170"/>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">Sélectionner</translation>
+        <translation type="unfinished">Sélectionner sous titres</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="171"/>
@@ -3504,31 +4437,31 @@ p, li { white-space: pre-wrap; }
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="315"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="264"/>
         <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Garder le champs supérieur</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="316"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="265"/>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Garder le champs inférieur</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="317"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="266"/>
         <source>Double framerate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Doubler le nombre d&apos;image par seconde</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="321"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="270"/>
         <source>_Resize:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Redimensionner</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="322"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="271"/>
         <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mode de _deentrelacement:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="323"/>
@@ -3829,7 +4762,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="479"/>
         <source>Target Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitrate cible :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="480"/>
@@ -3840,17 +4773,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="484"/>
         <source>Quantiser:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quantisation:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="488"/>
         <source>Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Qualité:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="493"/>
         <source>Target Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Taille vidéo cible:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="494"/>
@@ -3860,21 +4793,25 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="498"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitrate moyen:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="561"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">L&apos; optimisation Macroblock-Tree  nécessite  Variance Adaptive Quantisation. Variance Adaptive Quantisation va être automatiquement activée.
+
+Voulez vous procéder ?</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
 
 Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">L&apos; optimisation Macroblock-Tree  nécessite  Variance Adaptive Quantisation. Variance Adaptive Quantisation va être automatiquement activée.
+
+Voulez vous procéder ?</translation>
     </message>
 </context>
 <context>

@@ -300,8 +300,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	buildCustomMenu();
 	addScriptReferencesToHelpMenu();
 
-    recentFiles=new QMenu("Recent Files", this);
-    recentProjects=new QMenu("Recent Projects", this);
+    QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Files"));
+    QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Projects"));
+    
+    recentFiles=new QMenu(rFiles, this);
+    recentProjects=new QMenu(rProjects, this);
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
     connect(this->recentFiles, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentFiles(QAction*)));

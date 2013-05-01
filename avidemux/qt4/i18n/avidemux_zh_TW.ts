@@ -6358,211 +6358,211 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">編碼時使用工作欄(_U)</translation>
+        <translation type="unfinished">編碼時使用工作欄(_U)</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">同意在 DVD 使用非標準的音訊頻率(_A)</translation>
+        <translation type="unfinished">同意在 DVD 使用非標準的音訊頻率(_A)</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">建立 _OpenDML 檔案</translation>
+        <translation type="unfinished">建立 _OpenDML 檔案</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
+        <translation type="unfinished">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">開啟所有 SIMD</translation>
+        <translation type="unfinished">開啟所有 SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">開啟 MMX</translation>
+        <translation type="unfinished">開啟 MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">開啟 MMXEXT</translation>
+        <translation type="unfinished">開啟 MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">開啟 3DNOW</translation>
+        <translation type="unfinished">開啟 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">開啟 3DNOWEXT</translation>
+        <translation type="unfinished">開啟 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">開啟 SSE</translation>
+        <translation type="unfinished">開啟 SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">開啟 SSE2</translation>
+        <translation type="unfinished">開啟 SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">開啟 SSE3</translation>
+        <translation type="unfinished">開啟 SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">開啟 SSSE3</translation>
+        <translation type="unfinished">開啟 SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">_lavc 訊息串:</translation>
+        <translation type="unfinished">_lavc 訊息串:</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">多執行緒</translation>
+        <translation type="unfinished">多執行緒</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">高</translation>
+        <translation type="unfinished">高</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">高於一般</translation>
+        <translation type="unfinished">高於一般</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">一般</translation>
+        <translation type="unfinished">一般</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">低於一般</translation>
+        <translation type="unfinished">低於一般</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">低</translation>
+        <translation type="unfinished">低</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">編碼優先次序(_E):</translation>
+        <translation type="unfinished">編碼優先次序(_E):</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">索引/拆開打包的優先次序(_I):</translation>
+        <translation type="unfinished">索引/拆開打包的優先次序(_I):</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">倒帶優先次序(_P):</translation>
+        <translation type="unfinished">倒帶優先次序(_P):</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">優化</translation>
+        <translation type="unfinished">優化</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">在 .mp4 對 MP3 使用選擇對象標籤(_U)</translation>
+        <translation type="unfinished">在 .mp4 對 MP3 使用選擇對象標籤(_U)</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (最好)</translation>
+        <translation type="unfinished">XVideo (最好)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (好)</translation>
+        <translation type="unfinished">SDL (好)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">視訊顯示(_D):</translation>
+        <translation type="unfinished">視訊顯示(_D):</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">不顯示任何警告</translation>
+        <translation type="unfinished">不顯示任何警告</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">只顯示錯誤警告</translation>
+        <translation type="unfinished">只顯示錯誤警告</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">顯示所有警告</translation>
+        <translation type="unfinished">顯示所有警告</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">訊息等級(_M):</translation>
+        <translation type="unfinished">訊息等級(_M):</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">主要</translation>
+        <translation type="unfinished">主要</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">音量控制(_V):</translation>
+        <translation type="unfinished">音量控制(_V):</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">沒有降混</translation>
+        <translation type="unfinished">沒有降混</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">立體聲</translation>
+        <translation type="unfinished">立體聲</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">定向邏輯</translation>
+        <translation type="unfinished">定向邏輯</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">第二代定向邏輯</translation>
+        <translation type="unfinished">第二代定向邏輯</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">局部倒帶降混(_L):</translation>
+        <translation type="unfinished">局部倒帶降混(_L):</translation>
     </message>
     <message>
         <source>_AudioDevice</source>
-        <translation type="obsolete">音訊裝置(_A)</translation>
+        <translation type="unfinished">音訊裝置(_A)</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">去除水平方向塊狀色斑(_H)</translation>
+        <translation type="unfinished">去除水平方向塊狀色斑(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">去除垂直方向塊狀色斑(_V)</translation>
+        <translation type="unfinished">去除垂直方向塊狀色斑(_V)</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">去除環狀色斑(_R)</translation>
+        <translation type="unfinished">去除環狀色斑(_R)</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">強度(_S):</translation>
+        <translation type="unfinished">強度(_S):</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">預設的後置處理</translation>
+        <translation type="unfinished">預設的後置處理</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">使用介面</translation>
+        <translation type="unfinished">使用介面</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">輸出</translation>
+        <translation type="unfinished">輸出</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">音訊</translation>
+        <translation type="unfinished">音訊</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">視訊</translation>
+        <translation type="unfinished">視訊</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">執行緒</translation>
+        <translation type="unfinished">執行緒</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -6738,6 +6738,545 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">重複取樣(_E) (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">重複取樣頻率 (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">Film 轉成 PAL</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">PAL 轉成 Film</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">畫格率改變(_F):</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">沒有改變</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">單音</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">立體+環繞</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">立體+中央</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">立體+中央+環繞</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">前段立體+後段立體</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 聲道</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">杜比定向邏輯</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">第二代杜比定向邏輯</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">自動 (最大值 -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">增益模式(_G):</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">增益值(_A):</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">混合器(_M):</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">音訊濾鏡</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Fontconfig</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished">Gettext</translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">函式庫</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">內建的支援</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">工作名稱(_J):</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished">輸出檔案(_F):</translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished">選擇影片來寫入</translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">儲存工作</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished">音訊外掛模組</translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished">視訊編碼器外掛模組</translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished">視訊編碼器</translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished">音訊裝置外掛模組</translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished">音訊裝置</translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished">音訊編碼器外掛模組</translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished">音訊編碼器</translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished">外掛模組資訊</translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">編解碼器錯誤</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">沒有編進這個版本</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">選擇 AVI 檔案...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">選擇 AVI 檔進行添加...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">確定嗎?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">權限許可錯誤</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">無法開啟 &quot;%s&quot;。</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">檔案錯誤</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">&quot;%s&quot; 不存在。</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">使用視訊載入器時無法開啟專案。</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">嘗試 &apos;檔案&apos; -&gt; &apos;載入/執行 專案...&apos;</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">無法開啟此檔案</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">多音軌</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">這檔案剛剛載入包含一些音訊軌道。
+前往 音訊-&gt;主要軌道 來選擇作用中的軌道。</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">當添加時某些事情失敗</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">不幸的事情發生 (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">正在檢查視訊</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">沒有找到錯誤</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">在 %u 畫格中發現錯誤</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">標記 A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">無法刪除此選取範圍。</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">你不能移除所有的畫格</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">影片中的軌道(_T):</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">主要音軌</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">無法連線到 avsproxy。
+要繼續執行嗎?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">avsproxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">畫格類型:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">畫格大小:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">畫格二位元轉出(_F)</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished">前往時間點</translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">濾鏡強度(_F):</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">置換 U 和 V(_S)</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">選擇工作台進行儲存</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">選擇檔案來儲存音訊</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">選擇 JPEG 順序進行儲存</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">選擇 BMP 進行儲存</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">選擇 JPG 進行儲存</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">選擇檔案進行儲存</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">正在儲存音訊</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">正在另存為整套 jpeg 檔</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">無法解碼畫格</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">正在中止。</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">完成</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">已儲存 %d 個圖像。</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">錯誤</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">無法儲存所有圖像。</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">BMP 運算失敗</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">另存 %s 為 BMP 檔失敗。</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">檔案 %s 已經成功地儲存。</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">已失敗</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">檔案 %s 儲存不正確。</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

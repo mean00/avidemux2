@@ -45,7 +45,7 @@ uint8_t A_autoDrive(Action action)
         //
         if(!currentaudiostream)
         {
-          GUI_Error_HIG(QT_TR_NOOP("No audio track"),QT_TR_NOOP( "An audio track is necessary to create such file"));
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","No audio track"),QT_TRANSLATE_NOOP("adm", "An audio track is necessary to create such file"));
                 return 0;
         }
 
@@ -61,7 +61,7 @@ uint8_t A_autoDrive(Action action)
 
 					if(!videoCodecSelectByName("XVID4")) 
 					{
-						GUI_Error_HIG(QT_TR_NOOP("Codec Error"),QT_TR_NOOP( "Cannot select the MPEG-4 SP codec."));
+						GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select the MPEG-4 SP codec."));
 						return 0;
 					}
                     GUI_Info_HIG(ADM_LOG_INFO,"CODE DISABLED","XVID4 PROFILE FOR IPOD");
@@ -75,7 +75,7 @@ uint8_t A_autoDrive(Action action)
 					{
 						if(audio_selectCodecByTag(WAV_AAC))
                         {
-                            GUI_Error_HIG(QT_TR_NOOP("Codec Error"),QT_TR_NOOP( "No AAC audio encoder plugin found."));
+                            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "No AAC audio encoder plugin found."));
                         }else
                         {
                             audioFilter_SetBitrate(128);
@@ -106,14 +106,14 @@ uint8_t A_autoDrive(Action action)
                                     audioFilter_SetBitrate(128);
                                     if(!audioSetOption("MP3DisableReservoir",1))
                                     {
-        					 GUI_Error_HIG(QT_TR_NOOP("Codec Error"),
-        					        QT_TR_NOOP( "The MP3 codec does not allow disabling reservoir.\nInstall lame plugin"));
+        					 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),
+        					        QT_TRANSLATE_NOOP("adm", "The MP3 codec does not allow disabling reservoir.\nInstall lame plugin"));
 
                                     }
         					}else
         					{
-        					 GUI_Error_HIG(QT_TR_NOOP("Codec Error"),
-        					        QT_TR_NOOP( "You don't have LAME!.\nIt is needed to create FLV  video."));
+        					 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),
+        					        QT_TRANSLATE_NOOP("adm", "You don't have LAME!.\nIt is needed to create FLV  video."));
                              }
         					 if(fq==44100 || fq==22050 || fq==11025)
         					         						{}
@@ -127,7 +127,7 @@ uint8_t A_autoDrive(Action action)
         			// Now video
         			 if(!videoCodecSelectByName("FLV1")) 
                     {
-                      GUI_Error_HIG(QT_TR_NOOP("Codec Error"),QT_TR_NOOP( "Cannot select FLV1  codec."));
+                      GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select FLV1  codec."));
                         return 0;
                     }
         			break;
@@ -154,7 +154,7 @@ uint8_t A_autoDrive(Action action)
                             if(!videoCodecSelectByName("FFMpeg4"))            
 #endif
                             {
-                              GUI_Error_HIG(QT_TR_NOOP("Codec Error"),QT_TR_NOOP( "Cannot select mpeg4 sp codec."));
+                              GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select mpeg4 sp codec."));
                                 return 0;
                             }
                             // Set mode & bitrate 
@@ -189,8 +189,8 @@ uint8_t A_autoDrive(Action action)
 
 
                           if(!audio_selectCodecByTag(WAV_AAC))
-                            GUI_Error_HIG(QT_TR_NOOP("Codec Error"),
-                                        QT_TR_NOOP( "You don't have FAAC!.\nIt is needed to create PSP compatible video."));
+                            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),
+                                        QT_TRANSLATE_NOOP("adm", "You don't have FAAC!.\nIt is needed to create PSP compatible video."));
                                     // ? Needed ?
                           if(currentaudiostream->getInfo()->frequency!=fq)
                           {

@@ -11883,203 +11883,203 @@ Má se znovu použít log soubor?</translation>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">_Pohltit do panelu při kódování</translation>
+        <translation type="unfinished">_Pohltit do panelu při kódování</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">P_ovolit nestandardní frekvenci zvuku pro DVD</translation>
+        <translation type="unfinished">P_ovolit nestandardní frekvenci zvuku pro DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">_Vytvářet OpenDML soubory</translation>
+        <translation type="unfinished">_Vytvářet OpenDML soubory</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
+        <translation type="unfinished">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">Aktivovat všechny SIMD</translation>
+        <translation type="unfinished">Aktivovat všechny SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">Aktivovat MMX</translation>
+        <translation type="unfinished">Aktivovat MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">Aktivovat MMXEXT</translation>
+        <translation type="unfinished">Aktivovat MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">Aktivovat 3DNOW</translation>
+        <translation type="unfinished">Aktivovat 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Aktivovat 3DNOWEXT</translation>
+        <translation type="unfinished">Aktivovat 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">Aktivovat SSE</translation>
+        <translation type="unfinished">Aktivovat SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">Aktivovat SSE2</translation>
+        <translation type="unfinished">Aktivovat SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">Aktivovat SSE3</translation>
+        <translation type="unfinished">Aktivovat SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">Aktivovat SSSE3</translation>
+        <translation type="unfinished">Aktivovat SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">Vlákna _libavcodecu:</translation>
+        <translation type="unfinished">Vlákna _libavcodecu:</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">Vícevláknové zpracování</translation>
+        <translation type="unfinished">Vícevláknové zpracování</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">Vyšší</translation>
+        <translation type="unfinished">Vyšší</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Normální</translation>
+        <translation type="unfinished">Normální</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">Nižší</translation>
+        <translation type="unfinished">Nižší</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">Priorita _kódování:</translation>
+        <translation type="unfinished">Priorita _kódování:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Priorita i_ndexace/rozbalování:</translation>
+        <translation type="unfinished">Priorita i_ndexace/rozbalování:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">Priorita př_ehrávání:</translation>
+        <translation type="unfinished">Priorita př_ehrávání:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">Priority</translation>
+        <translation type="unfinished">Priority</translation>
     </message>
     <message>
         <source>_Split MPEG files every (MB):</source>
-        <translation type="obsolete">_Rozdělovat MPEG soubory každých (MB):</translation>
+        <translation type="unfinished">_Rozdělovat MPEG soubory každých (MB):</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">_Používat alternativní značku pro MP3 v .mp4</translation>
+        <translation type="unfinished">_Používat alternativní značku pro MP3 v .mp4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (nejlepší)</translation>
+        <translation type="unfinished">XVideo (nejlepší)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (dobré)</translation>
+        <translation type="unfinished">SDL (dobré)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">_Video výstup:</translation>
+        <translation type="unfinished">_Video výstup:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Žádné</translation>
+        <translation type="unfinished">Žádné</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Pouze chybové hlášky</translation>
+        <translation type="unfinished">Pouze chybové hlášky</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Všechny</translation>
+        <translation type="unfinished">Všechny</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">Z_obrazovat zprávy:</translation>
+        <translation type="unfinished">Z_obrazovat zprávy:</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Master</translation>
+        <translation type="unfinished">Master</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">_Ovladač hlasitosti ovládá:</translation>
+        <translation type="unfinished">_Ovladač hlasitosti ovládá:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">Žádné smixování</translation>
+        <translation type="unfinished">Žádné smixování</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
+        <translation type="unfinished">Pro Logic</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
+        <translation type="unfinished">Pro Logic II</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">_Lokální smixování přehrávání:</translation>
+        <translation type="unfinished">_Lokální smixování přehrávání:</translation>
     </message>
     <message>
         <source>_AudioDevice</source>
-        <translation type="obsolete">Z_vukové zařízení</translation>
+        <translation type="unfinished">Z_vukové zařízení</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Horizontální deblocking</translation>
+        <translation type="unfinished">_Horizontální deblocking</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">V_ertikální deblocking</translation>
+        <translation type="unfinished">V_ertikální deblocking</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">De_ringing</translation>
+        <translation type="unfinished">De_ringing</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Síla:</translation>
+        <translation type="unfinished">_Síla:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Výchozí dodatečné zpracování</translation>
+        <translation type="unfinished">Výchozí dodatečné zpracování</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Uživatelské prostředí</translation>
+        <translation type="unfinished">Uživatelské prostředí</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Výstup</translation>
+        <translation type="unfinished">Výstup</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Audio</translation>
+        <translation type="unfinished">Audio</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Video</translation>
+        <translation type="unfinished">Video</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">Vlákna</translation>
+        <translation type="unfinished">Vlákna</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -12256,6 +12256,555 @@ Má se znovu použít log soubor?</translation>
     <message>
         <source>Go To Time</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">_Převzorkování (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">Frekvence převzorkování (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">Film -&gt; PAL</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">PAL -&gt; Film</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">Změna _snímkové frekvence:</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Beze změny</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Mono</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">Stereo+surround</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">Stereo+střed</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">Stereo+střed+surround</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">Stereo přední+stereo zadní</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 kanálů</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">Dolby Pro Logic</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">Dolby Pro Logic II</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">Automatické (max. -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">Z_výšení hlasitosti:</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">_Hodnota zvýšení:</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">_Mixér:</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Audio filtry</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Fontconfig</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished">FreeType 2</translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished">Gettext</translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">Knihovny</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">Vestavěná podpora</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">_Název úlohy:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished">_Výstupní soubor:</translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished">Zvolte video k uložení</translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Uložit úlohu</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished">Zvukové zásuvné moduly</translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished">Zásuvné moduly video kodérů</translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished">Video kodér</translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished">Zásuvné moduly zvukového zařízení</translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished">Zvukové zařízení</translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished">Zásuvné moduly audio kodérů</translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished">Audio kodéry</translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished">Informace o zásuvných modulech</translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished">Chybí zvuková stopa</translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished">Pro vytvoření takovéhoto souboru je zvuková stopa nutná.</translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Chyba kodeku</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished">Nelze vybrat MPEG-4 SP kodek.</translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished">Nemáte LAME!
+Je potřeba k vytvoření FLV videa.</translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished">Nelze vybrat FLV1 kodek.</translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished">Nelze vybrat MPEG-4 SP kodek.</translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished">Nemáte FAAC!
+To je potřeba k vytvoření PSP kompatibilního videa.</translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Nepodporováno v této verzi</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">Zvolte AVI soubor...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">Vyberte AVI soubor k připojení...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">Určitě?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">Chyba oprávnění</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Chyba souboru</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Otevřením videa nelze otevřít projekt.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Nelze otevřít soubor</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Více zvukových stop</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Načtený soubor obsahuje několik zvukových stop.
+V nabídce Audio-&gt;Hlavní stopa vyberte tu aktivní.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Při připojování něco selhalo</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">Přihodilo se něco zlého (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">Kontroluji video</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Nenalezena žádná chyba</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">Počet snímků s nalezenou chybou: %u</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">Značka A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Nelze smazat výběr.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Nemůžete odstranit všechny snímky</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Přihodilo se něco zlého</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">_Stopa z videa:</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">Hlavní audio stopa</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">Nelze se připojit k avsproxy.
+Je spuštěno?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">avsproxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Typ snímku:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">Velikost snímku:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">Hex výpis snímků</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished">Přejít na čas</translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">_Síla filtru:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">_Prohodit U a V</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished">_Deringing</translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">Zvolte projekt k uložení</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">Zvolte soubor k uložení zvuku</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">Vyberte sled JPEG souborů k uložení</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">Vyberte BMP soubor k uložení</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">Vyberte JPEG soubor k uložení</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">Zvolte soubor k uložení</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Ukládá se zvuk</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Ukládám jako sadu JPEG souborů</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Nelze dekódovat snímek</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">Ukončeno.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Hotovo</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">Počet uložených obrázků: %d.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Chyba</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Nelze uložit všechny obrázky.</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">BMP operace selhala</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">Uložení %s jako BMP souboru selhalo.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">Soubor %s byl úspěšně uložen.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Chyba</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">Soubor %s nebyl řádně uložen.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
+        <translation type="unfinished">Nedávné projekty</translation>
     </message>
 </context>
 <context>

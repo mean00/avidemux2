@@ -4373,224 +4373,224 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">エンコード中シストレーを使う(_U)</translation>
+        <translation type="unfinished">エンコード中シストレーを使う(_U)</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">DVDに標準でない音声周波数を受け付ける(_A)</translation>
+        <translation type="unfinished">DVDに標準でない音声周波数を受け付ける(_A)</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">OpenDMLファイルを作成する(_O)</translation>
+        <translation type="unfinished">OpenDMLファイルを作成する(_O)</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">高い</translation>
+        <translation type="unfinished">高い</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">普通以上</translation>
+        <translation type="unfinished">普通以上</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">普通</translation>
+        <translation type="unfinished">普通</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">普通以下</translation>
+        <translation type="unfinished">普通以下</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">低い</translation>
+        <translation type="unfinished">低い</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">エンコードの優先度(_E):</translation>
+        <translation type="unfinished">エンコードの優先度(_E):</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">インデックス付/アンパックの優先度(_I):</translation>
+        <translation type="unfinished">インデックス付/アンパックの優先度(_I):</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">再生の優先度(_P):</translation>
+        <translation type="unfinished">再生の優先度(_P):</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">.mp4にmp3の代替タグを使う(_U)</translation>
+        <translation type="unfinished">.mp4にmp3の代替タグを使う(_U)</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">映像表示(_D):</translation>
+        <translation type="unfinished">映像表示(_D):</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">警告しない</translation>
+        <translation type="unfinished">警告しない</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">エラーの警告のみ表示する</translation>
+        <translation type="unfinished">エラーの警告のみ表示する</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">すべての警告を表示する</translation>
+        <translation type="unfinished">すべての警告を表示する</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">メッセージレベル(_M):</translation>
+        <translation type="unfinished">メッセージレベル(_M):</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">音量制御(_V):</translation>
+        <translation type="unfinished">音量制御(_V):</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">ダウンミックスなし</translation>
+        <translation type="unfinished">ダウンミックスなし</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">ステレオ</translation>
+        <translation type="unfinished">ステレオ</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">ドルビープロロジック</translation>
+        <translation type="unfinished">ドルビープロロジック</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">ドルビープロロジックII</translation>
+        <translation type="unfinished">ドルビープロロジックII</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">ローカル再生ダウンミックス(_L):</translation>
+        <translation type="unfinished">ローカル再生ダウンミックス(_L):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">水平デブロック(_H)</translation>
+        <translation type="unfinished">水平デブロック(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">垂直デブロック(_V)</translation>
+        <translation type="unfinished">垂直デブロック(_V)</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">デリング(_R)</translation>
+        <translation type="unfinished">デリング(_R)</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">強さ(_S):</translation>
+        <translation type="unfinished">強さ(_S):</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">デフォルトの後処理</translation>
+        <translation type="unfinished">デフォルトの後処理</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">ユーザインタフェース</translation>
+        <translation type="unfinished">ユーザインタフェース</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">出力</translation>
+        <translation type="unfinished">出力</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">音声</translation>
+        <translation type="unfinished">音声</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">映像</translation>
+        <translation type="unfinished">映像</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -4767,6 +4767,549 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">リサンプル(_E) (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">変換周波数 (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">なし</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">FilmをPALへ</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">PALをFilmへ</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">フレームレート変換(_F):</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">変更なし</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">モノ</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">ステレオ+サラウンド</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">ステレオ+センター</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">ステレオ+センター+サラウンド</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">ステレオ フロント+ステレオ リア</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 チャンネル</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">ドルビープロロジック</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">ドルビープロロジックII</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">自動(最大 -3dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">利得モード(_G):</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">利得値(_A):</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">ミキサー(_M):</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">音声フィルタ</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Fontconfig</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">ライブラリ</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">内蔵サポート</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">ジョブ名(_J):</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">ジョブを保存</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">コーデックエラー</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">このバージョンではコード化されていません</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">AVIファイルの選択...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">追加するAVIファイルの選択...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">本当ですか ?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">パーミッション エラー</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">&quot;%s&quot; を開けません.</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">ファイルエラー</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">&quot;%s&quot; がありません.</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">映像ローダーを使っているプロジェクトを開けません.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">&apos;ファイル&apos; -&gt; &apos;プロジェクトを読込む/起動&apos;を試してみて下さい</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">ファイルを開けません</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">複数の音声トラック</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">読込んだファイルには複数の音声トラックが含まれています.
+音声-&gt;主トラック でアクティブにするものを選択して下さい.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">追加時に何かが失敗しました</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">何か悪いことが起きました (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">映像をチェック中</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">エラーは見付かりません</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">%u フレームにエラーが見付かりました</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">マーカー A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">選択を削除できません.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">全フレームを削除できません</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">何か悪いことが起きました</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">映像からのトラック(_T):</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">主音声トラック</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">AvsProxyへの接続に失敗.
+それは起動していますか ?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">フレームタイプ:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">フレームサイズ:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">フレーム16進ダンプ</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">フィルタの強さ(_F):</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">UとVを交換(_S)</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished">デリング(_D)</translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">保存するプロジェクトの選択</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">音声を保存するファイルの選択</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">保存するJPEG順序の選択</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">保存するBMPの選択</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">保存するJPEGの選択</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">保存するファイルの選択</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">音声保存中</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">JPEGの組を保存中</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">フレームをデコードできません</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">中止しています.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">完了</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">%d 画像を保存.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">全画像を保存できません</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">BMP op 失敗</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">%s をBMPファイルとしての保存は失敗しました.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">ファイル %s を無事に保存しました.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">失敗した</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">ファイル %s は正しく保存されなかった.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

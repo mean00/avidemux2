@@ -4513,183 +4513,183 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">Минимизировать в трей во время кодирования</translation>
+        <translation type="unfinished">Минимизировать в трей во время кодирования</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">Позволять нестрандартную частоту звука для DVD</translation>
+        <translation type="unfinished">Позволять нестрандартную частоту звука для DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">Создавать файлы _OpenDML</translation>
+        <translation type="unfinished">Создавать файлы _OpenDML</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">Включить все SIMD</translation>
+        <translation type="unfinished">Включить все SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">Включить MMX</translation>
+        <translation type="unfinished">Включить MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">Включить MMXEXT</translation>
+        <translation type="unfinished">Включить MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">Включить 3DNOW</translation>
+        <translation type="unfinished">Включить 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Включить 3DNOWEXT</translation>
+        <translation type="unfinished">Включить 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">Включить SSE</translation>
+        <translation type="unfinished">Включить SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">Включить SSE2</translation>
+        <translation type="unfinished">Включить SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">Включить SSE3</translation>
+        <translation type="unfinished">Включить SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">Включить SSSE3</translation>
+        <translation type="unfinished">Включить SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">_lavc</translation>
+        <translation type="unfinished">_lavc</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">Использовать многопоточность</translation>
+        <translation type="unfinished">Использовать многопоточность</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">Высокий</translation>
+        <translation type="unfinished">Высокий</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">Выше нормального</translation>
+        <translation type="unfinished">Выше нормального</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Нормальный</translation>
+        <translation type="unfinished">Нормальный</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">Ниже нормального</translation>
+        <translation type="unfinished">Ниже нормального</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">Низкий</translation>
+        <translation type="unfinished">Низкий</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">Кодирования:</translation>
+        <translation type="unfinished">Кодирования:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Индексации/распаковки:</translation>
+        <translation type="unfinished">Индексации/распаковки:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">Воспроизведения:</translation>
+        <translation type="unfinished">Воспроизведения:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">Приоритет</translation>
+        <translation type="unfinished">Приоритет</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">Использовать альтернативные тэги для MP3 в .MP4</translation>
+        <translation type="unfinished">Использовать альтернативные тэги для MP3 в .MP4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (лучше всего)</translation>
+        <translation type="unfinished">XVideo (лучше всего)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (хорошо)</translation>
+        <translation type="unfinished">SDL (хорошо)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">Метод вывода видео:</translation>
+        <translation type="unfinished">Метод вывода видео:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Без сообщений</translation>
+        <translation type="unfinished">Без сообщений</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Только сообщения об ошибках</translation>
+        <translation type="unfinished">Только сообщения об ошибках</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Все сообщения</translation>
+        <translation type="unfinished">Все сообщения</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">Уровень сообщений:</translation>
+        <translation type="unfinished">Уровень сообщений:</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Мастер</translation>
+        <translation type="unfinished">Мастер</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">Громкость звука управляется:</translation>
+        <translation type="unfinished">Громкость звука управляется:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">Оригинальный</translation>
+        <translation type="unfinished">Оригинальный</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">Стерео</translation>
+        <translation type="unfinished">Стерео</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">При проигрывании звук:</translation>
+        <translation type="unfinished">При проигрывании звук:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Горизонтальный деблокинг</translation>
+        <translation type="unfinished">Горизонтальный деблокинг</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">Вертикальный деблокинг</translation>
+        <translation type="unfinished">Вертикальный деблокинг</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">Уровень:</translation>
+        <translation type="unfinished">Уровень:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Постпроцессинг по-умолчанию</translation>
+        <translation type="unfinished">Постпроцессинг по-умолчанию</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Интерфейс</translation>
+        <translation type="unfinished">Интерфейс</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Вывод</translation>
+        <translation type="unfinished">Вывод</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Звук</translation>
+        <translation type="unfinished">Звук</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Видео</translation>
+        <translation type="unfinished">Видео</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">Многопоточность</translation>
+        <translation type="unfinished">Многопоточность</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -4865,6 +4865,574 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">Преобразование частоты (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">Новая частота (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Не нужно</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">Изменить частоту:</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Без изменений</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Моно</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 каналов  </translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">
+             {5.1?}</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">Авто (макс. -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">Режим:</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">Значение:</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">_Микшер</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Звуковые фильтры</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">Библиотеки</translation>
+    </message>
+    <message>
+        <source>CPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">Поддержка</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">_Имя задания:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished">Выбор видео для записи</translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Сохранение задания</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SIMD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PCM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro Logic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pro Logic II</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>De_ringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Ошибка аудиокодера</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Нет в этой версии</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">Выберите файл</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">Выберите файл для присоединения</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">Вы уверены?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">Ошибка прав доступа</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">Невозможно открыть &quot;%s&quot;.</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Файловая ошибка</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">&quot;%s&quot; не существует.</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Невозможно открыть проект, используя загрузчик видео.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">Попробуйте &quot;Файл-&gt;Загрузить/Запустить проект...&quot;</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Невозможно открыть файл</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Несколько звуковых дорожек</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Файл содержит несколько звуковых дорожек.
+Выберите главную через меню &quot;Аудио-&gt;Главная дорожка&quot;.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Ошибка при открытии файла для записи</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">Ошибка при обновлении видео</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">Проверка видео</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Ошибки не найдены</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">Найдены ошибки в %u кадрах</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">Метка A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Невозможно удалить выделенное.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Вы не можете удалить все кадры.</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Ошибка при открытии файла для записи</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">Дорожка:</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">Главная звуковая дорожка</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">Невозможно соединиться с AvsProxy.
+Он запущен?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Тип кадра:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">Размер кадра:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">Дамп кадра</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished">Переход</translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">Уровень фильтрации:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">Поменять U и V</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">Выберите файл для сохранения</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">Выберите файл для сохранения звука</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">Выберите файл для сохранения</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">Выберите файл для сохранения</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">Выберите файл для сохранения</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">Укажите файл для сохранения</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Сохранение аудио</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Сохранение как jpeg</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Невозможно декодировать кадр</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">Прервано.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Выполнено</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">Сохранено изображений: %d </translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Ошибка</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Невозможно сохранить все изображения.</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">Ошибка открытия BMP</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">Ошибка сохранения &quot;%s&quot; как BMP.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">Файл &quot;%s&quot; успешно сохранен.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Ошибка</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">Файл &quot;%s&quot; сохранен не корректно.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

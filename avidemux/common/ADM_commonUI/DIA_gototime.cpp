@@ -28,10 +28,10 @@ uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms)
 {
 uint32_t v=(*hh)*3600*1000+(*mm)*60*1000+(*ss)*1000+*ms;
 
-diaElemTimeStamp   eh(&v,QT_TR_NOOP("TimeStamp:"),0,24);
+diaElemTimeStamp   eh(&v,QT_TRANSLATE_NOOP("adm","TimeStamp:"),0,24);
 diaElem *allWidgets[]={&eh};
 
-  if(!diaFactoryRun(QT_TR_NOOP("Go to Time"),1,allWidgets)) return 0;
+  if(!diaFactoryRun(QT_TRANSLATE_NOOP("adm","Go to Time"),1,allWidgets)) return 0;
 
 //
 ms2time(v,hh,mm,ss,ms);

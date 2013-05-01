@@ -33,7 +33,7 @@ bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
 uint32_t ADM_ve6_getNbEncoders(void);
 uint32_t ADM_vd6_getNbEncoders(void);
 bool     ADM_vd6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
-#define QT_TR_NOOP(x) x
+//#define QT_TRANSLATE_NOOP("adm",x) x
 
 /* /Functions */
 /**
@@ -55,7 +55,7 @@ uint8_t DIA_pluginsInfo(void)
 
     printf("[Audio Plugins] Found %u plugins\n",aNbPlugin);
     diaElemReadOnlyText **aText=new diaElemReadOnlyText *[aNbPlugin];
-    diaElemFrame frameAudio(QT_TR_NOOP("Audio Plugins"));
+    diaElemFrame frameAudio(QT_TRANSLATE_NOOP("adm","Audio Plugins"));
         
        
     for(int i=0;i<aNbPlugin;i++)
@@ -78,13 +78,13 @@ uint8_t DIA_pluginsInfo(void)
             frameAudio.swallow(aText[i]);
     }
     diaElem *diaAudio[]={&frameAudio};
-    diaElemTabs tabAudio(QT_TR_NOOP("Audio"),1,diaAudio);
+    diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),1,diaAudio);
     // /Audio
 
     // Encoder
     printf("[VideoEncoder6 Plugins] Found %u plugins\n",ve6NbPlugin);
     diaElemReadOnlyText **veText=new diaElemReadOnlyText *[ve6NbPlugin];
-    diaElemFrame frameVE(QT_TR_NOOP("Video Encoder Plugins"));
+    diaElemFrame frameVE(QT_TRANSLATE_NOOP("adm","Video Encoder Plugins"));
         
        
     for(int i=0;i<ve6NbPlugin;i++)
@@ -108,12 +108,12 @@ uint8_t DIA_pluginsInfo(void)
     }
 
     diaElem *diaVE[]={&frameVE};
-    diaElemTabs tabVE(QT_TR_NOOP("Video Encoder"),1,diaVE);
+    diaElemTabs tabVE(QT_TRANSLATE_NOOP("adm","Video Encoder"),1,diaVE);
     // /Encoder
 // VideoDecoder
     printf("[VideoDecoder6 Plugins] Found %u plugins\n",vd6NbPlugin);
     diaElemReadOnlyText **vdText=new diaElemReadOnlyText *[vd6NbPlugin];
-    diaElemFrame frameVD(QT_TR_NOOP("Video Decoder Plugins"));
+    diaElemFrame frameVD(QT_TRANSLATE_NOOP("adm","Video Decoder Plugins"));
         
        
     for(int i=0;i<vd6NbPlugin;i++)
@@ -137,12 +137,12 @@ uint8_t DIA_pluginsInfo(void)
     }
 
     diaElem *diaVD[]={&frameVD};
-    diaElemTabs tabVD(QT_TR_NOOP("Video Decoder"),1,diaVD);
+    diaElemTabs tabVD(QT_TRANSLATE_NOOP("adm","Video Decoder"),1,diaVD);
     // /VideoDecoder
     // Audio Device
     printf("[AudioDevice Plugins] Found %u plugins\n",avNbPlugin);
     diaElemReadOnlyText **avText=new diaElemReadOnlyText *[avNbPlugin];
-    diaElemFrame frameAV(QT_TR_NOOP("Audio Device Plugins"));
+    diaElemFrame frameAV(QT_TRANSLATE_NOOP("adm","Audio Device Plugins"));
     
  for(int i=0;i<avNbPlugin;i++)
     {
@@ -164,14 +164,14 @@ uint8_t DIA_pluginsInfo(void)
             frameAV.swallow(avText[i]);
     }
     diaElem *diaAV[]={&frameAV};
-    diaElemTabs tabAV(QT_TR_NOOP("Audio Device"),1,diaAV);
+    diaElemTabs tabAV(QT_TRANSLATE_NOOP("adm","Audio Device"),1,diaAV);
 
     // /Encoder
 
   // Audio Encoder
     printf("[AudioEncoder Plugins] Found %u plugins\n",aeNbPlugin);
     diaElemReadOnlyText **aeText=new diaElemReadOnlyText*[aeNbPlugin];
-    diaElemFrame frameAE(QT_TR_NOOP("Audio Encoder Plugins"));
+    diaElemFrame frameAE(QT_TRANSLATE_NOOP("adm","Audio Encoder Plugins"));
     
  for(int i=0;i<aeNbPlugin;i++)
     {
@@ -193,14 +193,14 @@ uint8_t DIA_pluginsInfo(void)
             frameAE.swallow(aeText[i]);
     }
     diaElem *diaAE[]={&frameAE};
-    diaElemTabs tabAE(QT_TR_NOOP("Audio Encoders"),1,diaAE);
+    diaElemTabs tabAE(QT_TRANSLATE_NOOP("adm","Audio Encoders"),1,diaAE);
 
     // /Audio Encoder
 
  // Demuxer Encoder
     printf("[Demuxers Plugins] Found %u plugins\n",dmNbPlugin);
     diaElemReadOnlyText **dmText=new diaElemReadOnlyText*[dmNbPlugin];
-    diaElemFrame frameDM(QT_TR_NOOP("Demuxer Plugins"));
+    diaElemFrame frameDM(QT_TRANSLATE_NOOP("adm","Demuxer Plugins"));
     
  for(int i=0;i<dmNbPlugin;i++)
     {
@@ -222,7 +222,7 @@ uint8_t DIA_pluginsInfo(void)
             frameDM.swallow(dmText[i]);
     }
     diaElem *diaDM[]={&frameDM};
-    diaElemTabs tabDM(QT_TR_NOOP("Demuxers"),1,diaDM);
+    diaElemTabs tabDM(QT_TRANSLATE_NOOP("adm","Demuxers"),1,diaDM);
 
     // /Demuxer Encoder
 
@@ -230,7 +230,7 @@ uint8_t DIA_pluginsInfo(void)
  // muxer Encoder
     printf("[Muxers Plugins] Found %u plugins\n",mxNbPlugin);
     diaElemReadOnlyText **mxText=new diaElemReadOnlyText*[mxNbPlugin];
-    diaElemFrame frameMX(QT_TR_NOOP("Muxer Plugins"));
+    diaElemFrame frameMX(QT_TRANSLATE_NOOP("adm","Muxer Plugins"));
     
  for(int i=0;i<mxNbPlugin;i++)
     {
@@ -252,12 +252,12 @@ uint8_t DIA_pluginsInfo(void)
             frameMX.swallow(mxText[i]);
     }
     diaElem *diaMX[]={&frameMX};
-    diaElemTabs tabMX(QT_TR_NOOP("Muxers"),1,diaMX);
+    diaElemTabs tabMX(QT_TRANSLATE_NOOP("adm","Muxers"),1,diaMX);
 
     // /muxer Encoder
 
     diaElemTabs *tabs[]={&tabAudio,&tabVE,&tabVD,&tabAV,&tabAE,&tabDM,&tabMX};
-    diaFactoryRunTabs(QT_TR_NOOP("Plugins Info"),7,tabs);
+    diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Plugins Info"),7,tabs);
 
     for(int i=0;i<aNbPlugin;i++)
         delete aText[i];

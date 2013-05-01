@@ -7784,211 +7784,211 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">Rid_uci nell&apos;area di notifica durante la codifica</translation>
+        <translation type="unfinished">Rid_uci nell&apos;area di notifica durante la codifica</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">_Accetta frequenze audio non standard per DVD</translation>
+        <translation type="unfinished">_Accetta frequenze audio non standard per DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">_Crea file OpenDML</translation>
+        <translation type="unfinished">_Crea file OpenDML</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
+        <translation type="unfinished">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">Attiva tutti</translation>
+        <translation type="unfinished">Attiva tutti</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">Attiva MMX</translation>
+        <translation type="unfinished">Attiva MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">Attiva MMXEXT</translation>
+        <translation type="unfinished">Attiva MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">Attiva 3DNOW</translation>
+        <translation type="unfinished">Attiva 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Attiva 3DNOWEXT</translation>
+        <translation type="unfinished">Attiva 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">Attiva SSE</translation>
+        <translation type="unfinished">Attiva SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">Attiva SSE2</translation>
+        <translation type="unfinished">Attiva SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">Attiva SSE3</translation>
+        <translation type="unfinished">Attiva SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">Attiva SSSE3</translation>
+        <translation type="unfinished">Attiva SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">Thread _lavc:</translation>
+        <translation type="unfinished">Thread _lavc:</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">Multi-threading</translation>
+        <translation type="unfinished">Multi-threading</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">Alta</translation>
+        <translation type="unfinished">Alta</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">Al di sopra del normale</translation>
+        <translation type="unfinished">Al di sopra del normale</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Normale</translation>
+        <translation type="unfinished">Normale</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">Al di sotto del normale</translation>
+        <translation type="unfinished">Al di sotto del normale</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">Bassa</translation>
+        <translation type="unfinished">Bassa</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">Priorità di _codifica:</translation>
+        <translation type="unfinished">Priorità di _codifica:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Priorità di _indicizzazione/decompressione:</translation>
+        <translation type="unfinished">Priorità di _indicizzazione/decompressione:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">_Priorità riproduzione:</translation>
+        <translation type="unfinished">_Priorità riproduzione:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">Prioritizzazione</translation>
+        <translation type="unfinished">Prioritizzazione</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">_Usa etichette alternative per gli MP3 in file .mp4</translation>
+        <translation type="unfinished">_Usa etichette alternative per gli MP3 in file .mp4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (migliore)</translation>
+        <translation type="unfinished">XVideo (migliore)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (buono)</translation>
+        <translation type="unfinished">SDL (buono)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">_Visualizzazione video:</translation>
+        <translation type="unfinished">_Visualizzazione video:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Nessun avviso</translation>
+        <translation type="unfinished">Nessun avviso</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Visualizza solo gli avvisi di errore</translation>
+        <translation type="unfinished">Visualizza solo gli avvisi di errore</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Visualizza tutti gli avvisi</translation>
+        <translation type="unfinished">Visualizza tutti gli avvisi</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">Livello _messaggio:</translation>
+        <translation type="unfinished">Livello _messaggio:</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Master</translation>
+        <translation type="unfinished">Master</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">Controllo _volume:</translation>
+        <translation type="unfinished">Controllo _volume:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">Nessun downmixing</translation>
+        <translation type="unfinished">Nessun downmixing</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">Stereo</translation>
+        <translation type="unfinished">Stereo</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
+        <translation type="unfinished">Pro Logic</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
+        <translation type="unfinished">Pro Logic II</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">Downmixing riproduzione _locale:</translation>
+        <translation type="unfinished">Downmixing riproduzione _locale:</translation>
     </message>
     <message>
         <source>_AudioDevice</source>
-        <translation type="obsolete">Dispositivo _audio</translation>
+        <translation type="unfinished">Dispositivo _audio</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">Deblocking o_rizzontale</translation>
+        <translation type="unfinished">Deblocking o_rizzontale</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">Deblocking _verticale</translation>
+        <translation type="unfinished">Deblocking _verticale</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">_Deringing</translation>
+        <translation type="unfinished">_Deringing</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Intensità:</translation>
+        <translation type="unfinished">_Intensità:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Postprocessing predefinito</translation>
+        <translation type="unfinished">Postprocessing predefinito</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Interfaccia utente</translation>
+        <translation type="unfinished">Interfaccia utente</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Output</translation>
+        <translation type="unfinished">Output</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Audio</translation>
+        <translation type="unfinished">Audio</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Video</translation>
+        <translation type="unfinished">Video</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">CPU</translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">Threading</translation>
+        <translation type="unfinished">Threading</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -8165,6 +8165,545 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
     <message>
         <source>Go To Time</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">Ricampionam_ento (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">Frequenza di ricampionamento (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">Da film a PAL</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">Da PAL a film</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">Variazione _frame rate:</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Nessun cambiamento</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Mono</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">Stereo + surround</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">Stereo + centro</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">Stereo + centro + surround</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">Stereo frontale + stereo posteriore</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 canali</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">Dolby Pro Logic</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">Dolby Pro Logic II</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">Automatico (massimo -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">Modalità _guadagno:</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">V_alore guadagno:</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">_Mixer:</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Filtri audio</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Fontconfig</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished">Gettext</translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">Librerie</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">Supporto incorporato</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">Nome _attività:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished">_File in uscita:</translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished">Seleziona il video da scrivere</translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Salva attività</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished">Plugin audio</translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished">Plugin encoder video</translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished">Encoder video</translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished">Plugin dispositivo audio</translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished">Dispositivo audio</translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished">Plugin encoder audio</translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished">Encoder audio</translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished">Info plugin</translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Errore codec</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Non incluso in questa versione</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">Seleziona un file video...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">Seleziona il file video da aggiungere...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">Sei sicuro?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">Errore di permesso</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">Impossibile aprire &quot;%s&quot;.</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Errore file</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">&quot;%s&quot; non esiste.</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Impossibile aprire il progetto usando il caricatore video.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">Prova &apos;File&apos; -&gt; &apos;Carica/esegui progetto...&apos;</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Impossibile aprire il file</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Tracce audio multiple</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Il file appena caricato contiene diverse tracce audio.
+Vai a &apos;Audio&apos; -&gt; &apos;Traccia principale&apos; per selezionare la traccia attiva.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Errore durante l&apos;aggiunta</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">C&apos;è stato qualche errore (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">Verifica video in corso</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Nessun errore trovato</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">Errori trovati in %u fotogrammi</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">Segnalibro A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Impossibile eliminare la selezione.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Non puoi rimuovere tutti i fotogrammi</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">C&apos;è stato qualche errore</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">_Traccia dal video:</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">Traccia audio principale</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">Connessione a avsproxy fallita.
+È in esecuzione?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">avsproxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Tipo di fotogramma:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">Dimensione fotogramma:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">Hex Dump fotogramma</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished">Vai al tempo</translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">Intensità _filtro:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">_Inverti U e V</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished">_Deringing</translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">Seleziona il progetto da salvare</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">Seleziona il file audio da salvare</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">Seleziona la sequenza JPEG da salvare</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">Seleziona il file BMP da salvare</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">Seleziona il file JPEG da salvare</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">Seleziona il file da salvare</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Salvataggio audio in corso</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Salvataggio come gruppo di jpeg in corso</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Impossibile decodificare il fotogramma</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">Annullamento in corso.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Fatto</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">%d immagini salvate.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Errore</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Impossibile salvare tutte le immagini.</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">Op. BMP fallita</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">Salvataggio di %s come file BMP fallito.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">Il file %s è stato salvato con successo.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Fallito</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">Il file %s non è stato salvato correttamente.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
+        <translation type="unfinished">Progetti recenti</translation>
     </message>
 </context>
 <context>

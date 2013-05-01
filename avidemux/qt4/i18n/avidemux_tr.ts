@@ -4618,241 +4618,241 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Normal</translation>
+        <translation type="unfinished">Normal</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Uyarı yok</translation>
+        <translation type="unfinished">Uyarı yok</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Sadece hata uyarılarını göster</translation>
+        <translation type="unfinished">Sadece hata uyarılarını göster</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Tüm uyarıları göster</translation>
+        <translation type="unfinished">Tüm uyarıları göster</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Ana</translation>
+        <translation type="unfinished">Ana</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">Kanal azaltma yok (çok kanallı)</translation>
+        <translation type="unfinished">Kanal azaltma yok (çok kanallı)</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">İki kanal</translation>
+        <translation type="unfinished">İki kanal</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Yatay Blok Çözme</translation>
+        <translation type="unfinished">_Yatay Blok Çözme</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Dikey Blok Çözme</translation>
+        <translation type="unfinished">_Dikey Blok Çözme</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Güç:</translation>
+        <translation type="unfinished">_Güç:</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Varsayılan Son İşleme</translation>
+        <translation type="unfinished">Varsayılan Son İşleme</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Kullanıcı Arayüzü</translation>
+        <translation type="unfinished">Kullanıcı Arayüzü</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Çıktı</translation>
+        <translation type="unfinished">Çıktı</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Ses</translation>
+        <translation type="unfinished">Ses</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Video</translation>
+        <translation type="unfinished">Video</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">
+        <translation type="unfinished">
             </translation>
     </message>
     <message>
@@ -5030,6 +5030,590 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Hiçbiri</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Değiştirme</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Tek kanal</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 kanal</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">_Görev adı:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Görevi Kaydet</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Kodek Hatası</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Bu sürümde kodlanmamış</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">İzin hatası</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">&quot;%s&quot; açılamadı.</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Dosya hatası</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">&quot;%s&quot; yok.</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Video yükleyici kullanılarak proje açılamadı.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">&apos;Dosya&apos; -&gt; &apos;Projeyi Yükle/Çalıştır...&apos;ı deneyin</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Dosya açılamadı</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Birden fazla Ses İzi</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Yüklediğiniz dosya birden fazla ses izi barındırıyor.
+Aktif olanı seçmek için Ses-&gt;Ana İz&apos;e gidin.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Eklerken birşeyler başarısız oldu</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">Kötü birşeyler oldu (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Hata yok</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">%u karede hata bulundu</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">İşaretçi A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Seçili kısım silinemez.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Tüm kareleri silemezsiniz</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Kötü birşeyler oldu</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">_Süzgeç gücü:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished">_Halka Azaltma</translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Ses kaydediliyor</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Jpeg seti olarak kaydediliyor</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Kare kodu çözülemedi</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">İptâl ediliyor.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Tamamlandı</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">%d resim kaydedildi.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Hata</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Tüm resimler kaydedilemedi.</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">BMP işlemmi başarısız oldu</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">%s BMP kaydetme başarısız oldu.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">%s dosyası başarıyla kaydedildi.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Başarısız</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">%s dosyası sorunsuz biçimde KAYDEDİLEMEDİ.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

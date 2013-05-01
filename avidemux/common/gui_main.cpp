@@ -165,7 +165,7 @@ void HandleAction (Action action)
 				break;
 
 			case 2:
-				GUI_FileSelWrite(QT_TR_NOOP("Select script to save"), SaveScript);
+				GUI_FileSelWrite(QT_TRANSLATE_NOOP("adm","Select script to save"), SaveScript);
 				UI_refreshCustomMenu();
 				break;
 		}
@@ -314,7 +314,7 @@ void HandleAction (Action action)
   // restict disabled uncoded actions
   if ((int) action >= ACT_DUMMY)
     {
-      GUI_Error_HIG (QT_TR_NOOP("Not coded in this version"), NULL);
+      GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Not coded in this version"), NULL);
       return;
     }
   // allow only if avi loaded
@@ -325,7 +325,7 @@ void HandleAction (Action action)
           case ACT_JOG:
                 break;
           case ACT_OPEN_VIDEO:
-                GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."), (SELFILE_CB *)A_openAvi);
+                GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File..."), (SELFILE_CB *)A_openAvi);
                 break;
           default:
             break;
@@ -390,10 +390,10 @@ void HandleAction (Action action)
                 break;
 
     case ACT_OPEN_VIDEO:
-        GUI_FileSelRead (QT_TR_NOOP("Select AVI File..."),(SELFILE_CB *) A_openAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File..."),(SELFILE_CB *) A_openAvi);
         break;
     case ACT_APPEND_VIDEO:
-        GUI_FileSelRead (QT_TR_NOOP("Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
         break;
     case ACT_VIDEO_PROPERTIES:
         DIA_properties ();
@@ -479,7 +479,7 @@ void HandleAction (Action action)
 
     case ACT_ResetSegments:
        if(avifileinfo)
-         if(GUI_Question(QT_TR_NOOP("Are you sure?")))
+         if(GUI_Question(QT_TRANSLATE_NOOP("adm","Are you sure?")))
         {
             video_body->resetSeg();
             video_body->getVideoInfo (avifileinfo);
@@ -564,10 +564,10 @@ int A_openAvi (const char *name)
   fd = ADM_fopen (name, "rb");
   if (!fd){
     if( errno == EACCES ){
-      GUI_Error_HIG(QT_TR_NOOP("Permission error"), QT_TR_NOOP("Cannot open \"%s\"."), name);
+      GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Permission error"), QT_TRANSLATE_NOOP("adm","Cannot open \"%s\"."), name);
     }
     if( errno == ENOENT ){
-      GUI_Error_HIG(QT_TR_NOOP("File error"), QT_TR_NOOP("\"%s\" does not exist."), name);
+      GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","File error"), QT_TRANSLATE_NOOP("adm","\"%s\" does not exist."), name);
     }
     return 0;
   }
@@ -604,10 +604,10 @@ int A_openAvi (const char *name)
 	}
 
 	if( fourCC::check(id,(uint8_t *)"//AD") ){
-          GUI_Error_HIG(QT_TR_NOOP("Cannot open project using the video loader."),
-                        QT_TR_NOOP(  "Try 'File' -> 'Load/Run Project...'"));
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot open project using the video loader."),
+                        QT_TRANSLATE_NOOP("adm",  "Try 'File' -> 'Load/Run Project...'"));
 	}else{
-          GUI_Error_HIG (QT_TR_NOOP("Could not open the file"), NULL);
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Could not open the file"), NULL);
 	}
 	return 0;
     }
@@ -643,7 +643,7 @@ int A_openAvi (const char *name)
             {
                 if(nbAudio>1)
                 {   // Multiple track warn user
-                  GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Multiple Audio Tracks"),QT_TR_NOOP("The file you just loaded contains several audio tracks.\n"
+                  GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Multiple Audio Tracks"),QT_TRANSLATE_NOOP("adm","The file you just loaded contains several audio tracks.\n"
                       "Go to Audio->MainTrack to select the active one."));
                 }
             }
@@ -733,7 +733,7 @@ A_appendAvi (const char *name)
   if (!video_body->addFile (name))
     {
 //      DIA_StopBusy ();
-      GUI_Error_HIG (QT_TR_NOOP("Something failed when appending"), NULL);
+      GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
       return 0;
     }
 //  DIA_StopBusy ();
@@ -742,7 +742,7 @@ A_appendAvi (const char *name)
 //  video_body->dumpSeg ();
   if (!video_body->updateVideoInfo (avifileinfo))
     {
-      GUI_Error_HIG (QT_TR_NOOP("Something bad happened (II)"), NULL);
+      GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
       return 0;
     }
 
@@ -880,7 +880,7 @@ ADMImage *aImage;
 DIA_workingBase *work;
 
 	nb = avifileinfo->nb_frames;
-	work=createWorking(QT_TR_NOOP("Checking video"));
+	work=createWorking(QT_TRANSLATE_NOOP("adm","Checking video"));
 	aImage=new ADMImage(avifileinfo->width,avifileinfo->height);
   for(uint32_t i=0;i<nb;i++)
   {
@@ -896,11 +896,11 @@ DIA_workingBase *work;
   delete work;
   delete aImage;
   if(error==0)
-    GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TR_NOOP("No error found"), NULL);
+    GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TRANSLATE_NOOP("adm","No error found"), NULL);
 else
 	{
 		char str[400];
-                sprintf(str,QT_TR_NOOP("Errors found in %u frames"),error);
+                sprintf(str,QT_TRANSLATE_NOOP("adm","Errors found in %u frames"),error);
 		GUI_Info_HIG(ADM_LOG_IMPORTANT,str, NULL);
 
 	}
@@ -916,12 +916,12 @@ uint32_t count;
       count = end - start;
 
       if( end < start ){
-        GUI_Error_HIG(QT_TR_NOOP("Marker A > B"), QT_TR_NOOP("Cannot delete the selection."));
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Marker A > B"), QT_TRANSLATE_NOOP("adm","Cannot delete the selection."));
          return 0;
       }
       if (count >= info.nb_frames - 1)
 	{
-          GUI_Error_HIG (QT_TR_NOOP("You can't remove all frames"), NULL);
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","You can't remove all frames"), NULL);
 	  return 0;
 	}
 
@@ -929,14 +929,14 @@ uint32_t count;
 //      if (!video_body->removeFrames (start, end))
     if(0)
 	{
-          GUI_Error_HIG (QT_TR_NOOP("Something bad happened"), NULL);
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened"), NULL);
 	  return 0;
 	}
 //      video_body->dumpSeg ();
       //resync GUI and video
       if (!video_body->updateVideoInfo (avifileinfo))
 	{
-          GUI_Error_HIG (QT_TR_NOOP("Something bad happened (II)"), NULL);
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
 	}
 
 
@@ -1017,10 +1017,10 @@ void A_audioTrack( void )
         }
          if(infos) delete [] infos;
 
-         diaElemMenuDynamic   sourceFromVideo(&newTrack,QT_TR_NOOP("_Track from video:"),nbAudioTracks,sourceavitracks);
+         diaElemMenuDynamic   sourceFromVideo(&newTrack,QT_TRANSLATE_NOOP("adm","_Track from video:"),nbAudioTracks,sourceavitracks);
          diaElem *allWidgets[]={&sourceFromVideo};
 
-         if( diaFactoryRun(QT_TR_NOOP("Main Audio Track"),1,allWidgets))
+         if( diaFactoryRun(QT_TRANSLATE_NOOP("adm","Main Audio Track"),1,allWidgets))
          {
             if(newTrack!=currentAudioTrack)
             {
@@ -1166,12 +1166,12 @@ void GUI_avsProxy(void)
     {
         currentaudiostream = NULL;
         avifileinfo = NULL;
-        GUI_Error_HIG (QT_TR_NOOP("AvsProxy"), QT_TR_NOOP("Failed to connect to avsproxy.\nIs it running ?"));
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","AvsProxy"), QT_TRANSLATE_NOOP("adm","Failed to connect to avsproxy.\nIs it running ?"));
         return ;
     }
 
        updateLoaded ();
-       UI_setTitle(QT_TR_NOOP("avsproxy"));
+       UI_setTitle(QT_TRANSLATE_NOOP("adm","avsproxy"));
        return ;
 }
 /**
@@ -1205,10 +1205,10 @@ void GUI_showCurrentFrameHex(void)
     else sprintf(sType,"P");
  sprintf(sSize,"%d bytes",fullLen);
 
- diaElemReadOnlyText Type(sType,QT_TR_NOOP("Frame type:"));
- diaElemReadOnlyText Size(sSize,QT_TR_NOOP("Frame size:"));
+ diaElemReadOnlyText Type(sType,QT_TRANSLATE_NOOP("adm","Frame type:"));
+ diaElemReadOnlyText Size(sSize,QT_TRANSLATE_NOOP("adm","Frame size:"));
  diaElem *elems[]={&Type,&Size,&binhex   };
- if(diaFactoryRun(QT_TR_NOOP("Frame Hex Dump"),3,elems))
+ if(diaFactoryRun(QT_TRANSLATE_NOOP("adm","Frame Hex Dump"),3,elems))
 
  delete [] buffer;
 #endif

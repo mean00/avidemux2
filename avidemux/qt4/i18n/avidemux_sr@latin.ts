@@ -4269,207 +4269,207 @@ Da nastavim?</translation>
     <name>adm</name>
     <message>
         <source>_Use systray while encoding</source>
-        <translation type="obsolete">Smesti u o_baveštajnu zonu panela prilikom kodiranja</translation>
+        <translation type="unfinished">Smesti u o_baveštajnu zonu panela prilikom kodiranja</translation>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">_Dozvoli nestandardne učestanosti zvuka za DVD</translation>
+        <translation type="unfinished">_Dozvoli nestandardne učestanosti zvuka za DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
-        <translation type="obsolete">Napravi OpenDML _datoteke</translation>
+        <translation type="unfinished">Napravi OpenDML _datoteke</translation>
     </message>
     <message>
         <source>SIMD</source>
-        <translation type="obsolete">SIMD</translation>
+        <translation type="unfinished">SIMD</translation>
     </message>
     <message>
         <source>Enable all SIMD</source>
-        <translation type="obsolete">Omogući sve SIMD</translation>
+        <translation type="unfinished">Omogući sve SIMD</translation>
     </message>
     <message>
         <source>Enable MMX</source>
-        <translation type="obsolete">Omogući MMX</translation>
+        <translation type="unfinished">Omogući MMX</translation>
     </message>
     <message>
         <source>Enable MMXEXT</source>
-        <translation type="obsolete">Omogući MMXEXT</translation>
+        <translation type="unfinished">Omogući MMXEXT</translation>
     </message>
     <message>
         <source>Enable 3DNOW</source>
-        <translation type="obsolete">Omogući 3DNOW</translation>
+        <translation type="unfinished">Omogući 3DNOW</translation>
     </message>
     <message>
         <source>Enable 3DNOWEXT</source>
-        <translation type="obsolete">Omogući 3DNOWEXT</translation>
+        <translation type="unfinished">Omogući 3DNOWEXT</translation>
     </message>
     <message>
         <source>Enable SSE</source>
-        <translation type="obsolete">Omogući SSE</translation>
+        <translation type="unfinished">Omogući SSE</translation>
     </message>
     <message>
         <source>Enable SSE2</source>
-        <translation type="obsolete">Omogući SSE2</translation>
+        <translation type="unfinished">Omogući SSE2</translation>
     </message>
     <message>
         <source>Enable SSE3</source>
-        <translation type="obsolete">Omogući SSE3</translation>
+        <translation type="unfinished">Omogući SSE3</translation>
     </message>
     <message>
         <source>Enable SSSE3</source>
-        <translation type="obsolete">Omogući SSSE3</translation>
+        <translation type="unfinished">Omogući SSSE3</translation>
     </message>
     <message>
         <source>_lavc threads:</source>
-        <translation type="obsolete">lavc _niti:</translation>
+        <translation type="unfinished">lavc _niti:</translation>
     </message>
     <message>
         <source>Multi-threading</source>
-        <translation type="obsolete">Podrška za više niti</translation>
+        <translation type="unfinished">Podrška za više niti</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="obsolete">Visoko</translation>
+        <translation type="unfinished">Visoko</translation>
     </message>
     <message>
         <source>Above normal</source>
-        <translation type="obsolete">Iznad normalnog</translation>
+        <translation type="unfinished">Iznad normalnog</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Normano</translation>
+        <translation type="unfinished">Normano</translation>
     </message>
     <message>
         <source>Below normal</source>
-        <translation type="obsolete">Ispod normalnog</translation>
+        <translation type="unfinished">Ispod normalnog</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="obsolete">Nisko</translation>
+        <translation type="unfinished">Nisko</translation>
     </message>
     <message>
         <source>_Encoding priority:</source>
-        <translation type="obsolete">Prioritet _kodiranja:</translation>
+        <translation type="unfinished">Prioritet _kodiranja:</translation>
     </message>
     <message>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="obsolete">Prioritet _indeksiranja/raspakovanja:</translation>
+        <translation type="unfinished">Prioritet _indeksiranja/raspakovanja:</translation>
     </message>
     <message>
         <source>_Playback priority:</source>
-        <translation type="obsolete">Prioritet _reprodukcije:</translation>
+        <translation type="unfinished">Prioritet _reprodukcije:</translation>
     </message>
     <message>
         <source>Prioritisation</source>
-        <translation type="obsolete">Postavljanje prioriteta</translation>
+        <translation type="unfinished">Postavljanje prioriteta</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="obsolete">Koristi _alternativni tag za MP3 u .mp4</translation>
+        <translation type="unfinished">Koristi _alternativni tag za MP3 u .mp4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (najbolje)</translation>
+        <translation type="unfinished">XVideo (najbolje)</translation>
     </message>
     <message>
         <source>SDL (good)</source>
-        <translation type="obsolete">SDL (dobro)</translation>
+        <translation type="unfinished">SDL (dobro)</translation>
     </message>
     <message>
         <source>Video _display:</source>
-        <translation type="obsolete">Video _ekran:</translation>
+        <translation type="unfinished">Video _ekran:</translation>
     </message>
     <message>
         <source>No alerts</source>
-        <translation type="obsolete">Bez upozorenja</translation>
+        <translation type="unfinished">Bez upozorenja</translation>
     </message>
     <message>
         <source>Display only error alerts</source>
-        <translation type="obsolete">Prikaži samo upozorenja o greškama</translation>
+        <translation type="unfinished">Prikaži samo upozorenja o greškama</translation>
     </message>
     <message>
         <source>Display all alerts</source>
-        <translation type="obsolete">Prikaži sva upozorenja</translation>
+        <translation type="unfinished">Prikaži sva upozorenja</translation>
     </message>
     <message>
         <source>_Message level:</source>
-        <translation type="obsolete">Nivo _obaveštavanja:</translation>
+        <translation type="unfinished">Nivo _obaveštavanja:</translation>
     </message>
     <message>
         <source>PCM</source>
-        <translation type="obsolete">PCM</translation>
+        <translation type="unfinished">PCM</translation>
     </message>
     <message>
         <source>Master</source>
-        <translation type="obsolete">Glavni</translation>
+        <translation type="unfinished">Glavni</translation>
     </message>
     <message>
         <source>_Volume control:</source>
-        <translation type="obsolete">Kontrola _jačine zvuka:</translation>
+        <translation type="unfinished">Kontrola _jačine zvuka:</translation>
     </message>
     <message>
         <source>No downmixing</source>
-        <translation type="obsolete">Bez smanjenja avučnih kanala</translation>
+        <translation type="unfinished">Bez smanjenja avučnih kanala</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="obsolete">Stereo</translation>
+        <translation type="unfinished">Stereo</translation>
     </message>
     <message>
         <source>Pro Logic</source>
-        <translation type="obsolete">Pro Logic</translation>
+        <translation type="unfinished">Pro Logic</translation>
     </message>
     <message>
         <source>Pro Logic II</source>
-        <translation type="obsolete">Pro Logic II</translation>
+        <translation type="unfinished">Pro Logic II</translation>
     </message>
     <message>
         <source>_Local playback downmixing:</source>
-        <translation type="obsolete">_Smanjenje avučnih kanala pri reprodukciji:</translation>
+        <translation type="unfinished">_Smanjenje avučnih kanala pri reprodukciji:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="obsolete">_Horizontalno uklanjanje blokova</translation>
+        <translation type="unfinished">_Horizontalno uklanjanje blokova</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="obsolete">_Vertikalno uklanjanje blokova</translation>
+        <translation type="unfinished">_Vertikalno uklanjanje blokova</translation>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="obsolete">_Deringind</translation>
+        <translation type="unfinished">_Deringind</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="obsolete">_Jačina :</translation>
+        <translation type="unfinished">_Jačina :</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Podrazumevana naknadna obrada</translation>
+        <translation type="unfinished">Podrazumevana naknadna obrada</translation>
     </message>
     <message>
         <source>User Interface</source>
-        <translation type="obsolete">Korisničko okruženje</translation>
+        <translation type="unfinished">Korisničko okruženje</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Izlaz</translation>
+        <translation type="unfinished">Izlaz</translation>
     </message>
     <message>
         <source>Audio</source>
-        <translation type="obsolete">Zvuk</translation>
+        <translation type="unfinished">Zvuk</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Video</translation>
+        <translation type="unfinished">Video</translation>
     </message>
     <message>
         <source>CPU</source>
-        <translation type="obsolete">Procesori</translation>
+        <translation type="unfinished">Procesori</translation>
     </message>
     <message>
         <source>Threading</source>
-        <translation type="obsolete">Više niti</translation>
+        <translation type="unfinished">Više niti</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -4645,6 +4645,549 @@ Da nastavim?</translation>
     </message>
     <message>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>R_esampling (Hz):</source>
+        <translation type="unfinished">_Prevesti (Hz):</translation>
+    </message>
+    <message>
+        <source>Resampling frequency (Hz)</source>
+        <translation type="unfinished">Učestanost prevedenog (Hz)</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ništa</translation>
+    </message>
+    <message>
+        <source>Film to PAL</source>
+        <translation type="unfinished">Film u PAL</translation>
+    </message>
+    <message>
+        <source>PAL to Film</source>
+        <translation type="unfinished">PAL u Film</translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished">Promena _učestanosti kadrova:</translation>
+    </message>
+    <message>
+        <source>No change</source>
+        <translation type="unfinished">Bez izmena</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Mono</translation>
+    </message>
+    <message>
+        <source>Stereo+surround</source>
+        <translation type="unfinished">Stereo + saraund</translation>
+    </message>
+    <message>
+        <source>Stereo+center</source>
+        <translation type="unfinished">Stereo + centralni</translation>
+    </message>
+    <message>
+        <source>Stereo+center+surround</source>
+        <translation type="unfinished">Stereo + centar + saraund</translation>
+    </message>
+    <message>
+        <source>Stereo front+stereo rear</source>
+        <translation type="unfinished">Stereo napred + stereo pozadi</translation>
+    </message>
+    <message>
+        <source>5 channels</source>
+        <translation type="unfinished">5 kanala</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5+1 kanala</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic</source>
+        <translation type="unfinished">Dolby Pro Logic</translation>
+    </message>
+    <message>
+        <source>Dolby Pro Logic II</source>
+        <translation type="unfinished">Dolby Pro Logic II</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Automatic (max -3 dB)</source>
+        <translation type="unfinished">Automatski (najviše do -3 dB)</translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gain mode:</source>
+        <translation type="unfinished">_režim pojačavanja:</translation>
+    </message>
+    <message>
+        <source>G_ain value:</source>
+        <translation type="unfinished">_Nivo pojačanja:</translation>
+    </message>
+    <message>
+        <source>_Mixer:</source>
+        <translation type="unfinished">_Mikseta:</translation>
+    </message>
+    <message>
+        <source>Remix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift audio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shift Value (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Filters</source>
+        <translation type="unfinished">Zvučni filteri</translation>
+    </message>
+    <message>
+        <source>Fontconfig</source>
+        <translation type="unfinished">Fontconfig</translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gettext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SDL</source>
+        <translation type="unfinished">SDL</translation>
+    </message>
+    <message>
+        <source>XVideo</source>
+        <translation type="unfinished">XVideo</translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x86</source>
+        <translation type="unfinished">x86</translation>
+    </message>
+    <message>
+        <source>x86-64</source>
+        <translation type="unfinished">x86-64</translation>
+    </message>
+    <message>
+        <source>Libraries</source>
+        <translation type="unfinished">Biblioteke</translation>
+    </message>
+    <message>
+        <source>Built-in Support</source>
+        <translation type="unfinished">Podržani su</translation>
+    </message>
+    <message>
+        <source>_Job name:</source>
+        <translation type="unfinished">_Ime zadatka:</translation>
+    </message>
+    <message>
+        <source>Output _File:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Video To Write</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Job</source>
+        <translation type="unfinished">Sačuvaj zadatak</translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decode video using VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable openGl support</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Split MPEG files every (MB):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL (best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows DirectX (SDL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An audio track is necessary to create such file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Codec Error</source>
+        <translation type="unfinished">Greška u kodecima</translation>
+    </message>
+    <message>
+        <source>Cannot select the MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No AAC audio encoder plugin found.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The MP3 codec does not allow disabling reservoir.
+Install lame plugin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have LAME!.
+It is needed to create FLV  video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select FLV1  codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select mpeg4 sp codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You don&apos;t have FAAC!.
+It is needed to create PSP compatible video.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Not coded in this version</source>
+        <translation type="unfinished">Nije kodirano u ovoj verziji</translation>
+    </message>
+    <message>
+        <source>Select AVI File...</source>
+        <translation type="unfinished">Izaberi AVI datoteku...</translation>
+    </message>
+    <message>
+        <source>Select AVI File to Append...</source>
+        <translation type="unfinished">Izaberi datoteku da dodam...</translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished">Da li si siguran?</translation>
+    </message>
+    <message>
+        <source>Permission error</source>
+        <translation type="unfinished">Greška sa dozvolama</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">Ne mogu da otvorim „%s“</translation>
+    </message>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Greška sa datotekom</translation>
+    </message>
+    <message>
+        <source>&quot;%s&quot; does not exist.</source>
+        <translation type="unfinished">„%s“ ne postoji.</translation>
+    </message>
+    <message>
+        <source>Cannot open project using the video loader.</source>
+        <translation type="unfinished">Ne mogu da otvorim projekat koristeći video čitač.</translation>
+    </message>
+    <message>
+        <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
+        <translation type="unfinished">Probajte „Datoteka -&gt; Učitaj/Pokreni projekat...“</translation>
+    </message>
+    <message>
+        <source>Could not open the file</source>
+        <translation type="unfinished">Ne mogu da otvorim datoteku</translation>
+    </message>
+    <message>
+        <source>Multiple Audio Tracks</source>
+        <translation type="unfinished">Više zvučnih staza</translation>
+    </message>
+    <message>
+        <source>The file you just loaded contains several audio tracks.
+Go to Audio-&gt;MainTrack to select the active one.</source>
+        <translation type="unfinished">Datoteka koju ste upravo učitali sadrži nekoliko zvučnih staza.
+Idite u „Zvuk -&gt; Glavna staza“ i izaberite jednu aktivnu stazu.</translation>
+    </message>
+    <message>
+        <source>Something failed when appending</source>
+        <translation type="unfinished">Nešto nije uspelo prilikom dodavanja</translation>
+    </message>
+    <message>
+        <source>Something bad happened (II)</source>
+        <translation type="unfinished">Nešto loše se desilo (II)</translation>
+    </message>
+    <message>
+        <source>Checking video</source>
+        <translation type="unfinished">Proveravam video</translation>
+    </message>
+    <message>
+        <source>No error found</source>
+        <translation type="unfinished">Nisu nađene greške</translation>
+    </message>
+    <message>
+        <source>Errors found in %u frames</source>
+        <translation type="unfinished">Nađene greške u %u kadrovima</translation>
+    </message>
+    <message>
+        <source>Marker A &gt; B</source>
+        <translation type="unfinished">Graničnik A &gt; B</translation>
+    </message>
+    <message>
+        <source>Cannot delete the selection.</source>
+        <translation type="unfinished">Ne mogu da obrišem izabrano.</translation>
+    </message>
+    <message>
+        <source>You can&apos;t remove all frames</source>
+        <translation type="unfinished">Ne možete da uklonite sve kadrove</translation>
+    </message>
+    <message>
+        <source>Something bad happened</source>
+        <translation type="unfinished">Nešto loše se desilo</translation>
+    </message>
+    <message>
+        <source>_Track from video:</source>
+        <translation type="unfinished">_Uzmi zvuk iz video datoteke:</translation>
+    </message>
+    <message>
+        <source>Main Audio Track</source>
+        <translation type="unfinished">Glavna zvučna staza</translation>
+    </message>
+    <message>
+        <source>AvsProxy</source>
+        <translation type="unfinished">AvsProxy</translation>
+    </message>
+    <message>
+        <source>Failed to connect to avsproxy.
+Is it running ?</source>
+        <translation type="unfinished">Neuspelo povezivanje na avsproxy.
+Da li je on pokrenut ?</translation>
+    </message>
+    <message>
+        <source>avsproxy</source>
+        <translation type="unfinished">avsproxy</translation>
+    </message>
+    <message>
+        <source>Frame type:</source>
+        <translation type="unfinished">Tip kadra:</translation>
+    </message>
+    <message>
+        <source>Frame size:</source>
+        <translation type="unfinished">Veličina kadra:</translation>
+    </message>
+    <message>
+        <source>Frame Hex Dump</source>
+        <translation type="unfinished">Baci heksadekadni kadar</translation>
+    </message>
+    <message>
+        <source>TimeStamp:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filter strength:</source>
+        <translation type="unfinished">_Jačina filtera:</translation>
+    </message>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished">_Zameni U i V</translation>
+    </message>
+    <message>
+        <source>_Deringing</source>
+        <translation type="unfinished">_Deringing</translation>
+    </message>
+    <message>
+        <source>Output file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue job to jobList</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Workbench to Save</source>
+        <translation type="unfinished">Izaberi datoteku da sačuvam tezgu</translation>
+    </message>
+    <message>
+        <source>Select File to Save Audio</source>
+        <translation type="unfinished">Izaberi datoteku da sačuvam zvuk</translation>
+    </message>
+    <message>
+        <source>Select JPEG Sequence to Save</source>
+        <translation type="unfinished">Izaberi koju JPEG sekvencu da sačuvam</translation>
+    </message>
+    <message>
+        <source>Select BMP to Save</source>
+        <translation type="unfinished">Izaberi BMP za čuvanje</translation>
+    </message>
+    <message>
+        <source>Select JPEG to Save</source>
+        <translation type="unfinished">Izaberi BMP za čuvanje</translation>
+    </message>
+    <message>
+        <source>Select File to Save</source>
+        <translation type="unfinished">Izaberi datoteku za čuvanje</translation>
+    </message>
+    <message>
+        <source>Saving audio</source>
+        <translation type="unfinished">Snimam zvuk</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fail to save as jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving as set of jpegs</source>
+        <translation type="unfinished">Snimanje kao set JPEG slika neuspelo.</translation>
+    </message>
+    <message>
+        <source>Cannot decode frame</source>
+        <translation type="unfinished">Ne mogu da dekodiram kadar</translation>
+    </message>
+    <message>
+        <source>Aborting.</source>
+        <translation type="unfinished">Obustavljam.</translation>
+    </message>
+    <message>
+        <source>Done</source>
+        <translation type="unfinished">Završeno</translation>
+    </message>
+    <message>
+        <source>Saved %d images.</source>
+        <translation type="unfinished">Sačuvano %d slika.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Greška</translation>
+    </message>
+    <message>
+        <source>Could not save all images.</source>
+        <translation type="unfinished">Ne mogu da sačuvam sve slike</translation>
+    </message>
+    <message>
+        <source>BMP op failed</source>
+        <translation type="unfinished">Rad nad BMP neuspeo</translation>
+    </message>
+    <message>
+        <source>Saving %s as a BMP file failed.</source>
+        <translation type="unfinished">Snimanje %s u BMP datoteku neuspelo.</translation>
+    </message>
+    <message>
+        <source>File %s has been successfully saved.</source>
+        <translation type="unfinished">Datoteka %s je uspešno sačuvana.</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Neuspelo</translation>
+    </message>
+    <message>
+        <source>File %s was NOT saved correctly.</source>
+        <translation type="unfinished">Datoteka %s nije pravilno sačuvana.</translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

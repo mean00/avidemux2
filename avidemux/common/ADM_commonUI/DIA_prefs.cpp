@@ -179,29 +179,29 @@ uint32_t defaultPortAvisynth = 9999;
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
-        diaElemToggle useVdpau(&bvdpau,QT_TR_NOOP("Decode video using VDPAU"));
-        diaElemToggle useOpenGl(&hasOpenGl,QT_TR_NOOP("Enable openGl support"));
+        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU"));
+        diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
 #ifndef USE_OPENGL
         //useOpenGl.enable(0);
 #endif
         
-        diaElemToggle useSysTray(&useTray,QT_TR_NOOP("_Use systray while encoding"));
-        diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TR_NOOP("_Accept non-standard audio frequency for DVD"));
-        diaElemToggle openDml(&use_odml,QT_TR_NOOP("Create _OpenDML files"));
+        diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
+        diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
+        diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
 
         
 
-        diaElemFrame frameSimd(QT_TR_NOOP("SIMD"));
+        diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
 
-		diaElemToggle capsToggleAll(&capsAll,QT_TR_NOOP("Enable all SIMD"));
-        diaElemToggle capsToggleMMX(&capsMMX, QT_TR_NOOP("Enable MMX"));
-		diaElemToggle capsToggleMMXEXT(&capsMMXEXT, QT_TR_NOOP("Enable MMXEXT"));
-		diaElemToggle capsToggle3DNOW(&caps3DNOW, QT_TR_NOOP("Enable 3DNOW"));
-		diaElemToggle capsToggle3DNOWEXT(&caps3DNOWEXT, QT_TR_NOOP("Enable 3DNOWEXT"));
-		diaElemToggle capsToggleSSE(&capsSSE, QT_TR_NOOP("Enable SSE"));
-		diaElemToggle capsToggleSSE2(&capsSSE2, QT_TR_NOOP("Enable SSE2"));
-		diaElemToggle capsToggleSSE3(&capsSSE3, QT_TR_NOOP("Enable SSE3"));
-		diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TR_NOOP("Enable SSSE3"));
+		diaElemToggle capsToggleAll(&capsAll,QT_TRANSLATE_NOOP("adm","Enable all SIMD"));
+        diaElemToggle capsToggleMMX(&capsMMX, QT_TRANSLATE_NOOP("adm","Enable MMX"));
+		diaElemToggle capsToggleMMXEXT(&capsMMXEXT, QT_TRANSLATE_NOOP("adm","Enable MMXEXT"));
+		diaElemToggle capsToggle3DNOW(&caps3DNOW, QT_TRANSLATE_NOOP("adm","Enable 3DNOW"));
+		diaElemToggle capsToggle3DNOWEXT(&caps3DNOWEXT, QT_TRANSLATE_NOOP("adm","Enable 3DNOWEXT"));
+		diaElemToggle capsToggleSSE(&capsSSE, QT_TRANSLATE_NOOP("adm","Enable SSE"));
+		diaElemToggle capsToggleSSE2(&capsSSE2, QT_TRANSLATE_NOOP("adm","Enable SSE2"));
+		diaElemToggle capsToggleSSE3(&capsSSE3, QT_TRANSLATE_NOOP("adm","Enable SSE3"));
+		diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TRANSLATE_NOOP("adm","Enable SSSE3"));
 
 		capsToggleAll.link(0, &capsToggleMMX);
 		capsToggleAll.link(0, &capsToggleMMXEXT);
@@ -222,79 +222,79 @@ uint32_t defaultPortAvisynth = 9999;
 		frameSimd.swallow(&capsToggleSSE3);
 		frameSimd.swallow(&capsToggleSSSE3);
 
-		diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TR_NOOP("_lavc threads:"));
+		diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
 
-		diaElemFrame frameThread(QT_TR_NOOP("Multi-threading"));
+		diaElemFrame frameThread(QT_TRANSLATE_NOOP("adm","Multi-threading"));
 		frameThread.swallow(&lavcThreadCount);
 
 		diaMenuEntry priorityEntries[] = {
-                             {0,       QT_TR_NOOP("High"),NULL}
-                             ,{1,      QT_TR_NOOP("Above normal"),NULL}
-                             ,{2,      QT_TR_NOOP("Normal"),NULL}
-							 ,{3,      QT_TR_NOOP("Below normal"),NULL}
-							 ,{4,      QT_TR_NOOP("Low"),NULL}
+                             {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
+                             ,{1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL}
+                             ,{2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
+							 ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
+							 ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
         };
-		diaElemMenu menuEncodePriority(&encodePriority,QT_TR_NOOP("_Encoding priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
-		diaElemMenu menuIndexPriority(&indexPriority,QT_TR_NOOP("_Indexing/unpacking priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
-		diaElemMenu menuPlaybackPriority(&playbackPriority,QT_TR_NOOP("_Playback priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+		diaElemMenu menuEncodePriority(&encodePriority,QT_TRANSLATE_NOOP("adm","_Encoding priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+		diaElemMenu menuIndexPriority(&indexPriority,QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+		diaElemMenu menuPlaybackPriority(&playbackPriority,QT_TRANSLATE_NOOP("adm","_Playback priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
 
-		diaElemFrame framePriority(QT_TR_NOOP("Prioritisation"));
+		diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
 		framePriority.swallow(&menuEncodePriority);
 		framePriority.swallow(&menuIndexPriority);
 		framePriority.swallow(&menuPlaybackPriority);
 
-        diaElemUInteger autoSplit(&autosplit,QT_TR_NOOP("_Split MPEG files every (MB):"),10,4096);
+        diaElemUInteger autoSplit(&autosplit,QT_TRANSLATE_NOOP("adm","_Split MPEG files every (MB):"),10,4096);
         
-        diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TR_NOOP("_Use alternative tag for MP3 in .mp4"));
+        diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
         
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(), NULL}
 #ifdef USE_XV
-                             ,{RENDER_XV,   QT_TR_NOOP("XVideo (best)"),NULL}
+                             ,{RENDER_XV,   QT_TRANSLATE_NOOP("adm","XVideo (best)"),NULL}
 #endif
 #ifdef USE_VDPAU
-                             ,{RENDER_VDPAU,   QT_TR_NOOP("VDPAU (best)"),NULL}
+                             ,{RENDER_VDPAU,   QT_TRANSLATE_NOOP("adm","VDPAU (best)"),NULL}
 #endif
 #ifdef USE_OPENGL
-                             ,{RENDER_QTOPENGL,   QT_TR_NOOP("OpenGL (best)"),NULL}
+                             ,{RENDER_QTOPENGL,   QT_TRANSLATE_NOOP("adm","OpenGL (best)"),NULL}
 #endif
 
 #ifdef USE_SDL
 #ifdef _WIN32
-                             ,{RENDER_SDL,      QT_TR_NOOP("MS Windows GDI (SDL)"),NULL}
-							 ,{RENDER_DIRECTX,      QT_TR_NOOP("MS Windows DirectX (SDL)"),NULL}
+                             ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","MS Windows GDI (SDL)"),NULL}
+							 ,{RENDER_DIRECTX,      QT_TRANSLATE_NOOP("adm","MS Windows DirectX (SDL)"),NULL}
 #else
-							 ,{RENDER_SDL,      QT_TR_NOOP("SDL (good)"),NULL}
+							 ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","SDL (good)"),NULL}
 #endif
 #endif
         };        
-        diaElemMenu menuVideoMode(&render,QT_TR_NOOP("Video _display:"), sizeof(videoMode)/sizeof(diaMenuEntry),videoMode,"");
+        diaElemMenu menuVideoMode(&render,QT_TRANSLATE_NOOP("adm","Video _display:"), sizeof(videoMode)/sizeof(diaMenuEntry),videoMode,"");
         
         
         
         diaMenuEntry msgEntries[]={
-                             {0,       QT_TR_NOOP("No alerts"),NULL}
-                             ,{1,      QT_TR_NOOP("Display only error alerts"),NULL}
-                             ,{2,      QT_TR_NOOP("Display all alerts"),NULL}
+                             {0,       QT_TRANSLATE_NOOP("adm","No alerts"),NULL}
+                             ,{1,      QT_TRANSLATE_NOOP("adm","Display only error alerts"),NULL}
+                             ,{2,      QT_TRANSLATE_NOOP("adm","Display all alerts"),NULL}
         };
-        diaElemMenu menuMessage(&msglevel,QT_TR_NOOP("_Message level:"), sizeof(msgEntries)/sizeof(diaMenuEntry),msgEntries,"");
+        diaElemMenu menuMessage(&msglevel,QT_TRANSLATE_NOOP("adm","_Message level:"), sizeof(msgEntries)/sizeof(diaMenuEntry),msgEntries,"");
         
         
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
         diaMenuEntry volumeEntries[]={
-                             {0,       QT_TR_NOOP("PCM"),NULL}
-                             ,{1,      QT_TR_NOOP("Master"),NULL}};
-        diaElemMenu menuVolume(&useMaster,QT_TR_NOOP("_Volume control:"), sizeof(volumeEntries)/sizeof(diaMenuEntry),volumeEntries,"");
+                             {0,       QT_TRANSLATE_NOOP("adm","PCM"),NULL}
+                             ,{1,      QT_TRANSLATE_NOOP("adm","Master"),NULL}};
+        diaElemMenu menuVolume(&useMaster,QT_TRANSLATE_NOOP("adm","_Volume control:"), sizeof(volumeEntries)/sizeof(diaMenuEntry),volumeEntries,"");
 #endif
         
         
          diaMenuEntry mixerEntries[]={
-                             {0,       QT_TR_NOOP("No downmixing"),NULL}
-                             ,{1,       QT_TR_NOOP("Stereo"),NULL}
-                             ,{2,      QT_TR_NOOP("Pro Logic"),NULL}
-                              ,{3,      QT_TR_NOOP("Pro Logic II"),NULL}
+                             {0,       QT_TRANSLATE_NOOP("adm","No downmixing"),NULL}
+                             ,{1,       QT_TRANSLATE_NOOP("adm","Stereo"),NULL}
+                             ,{2,      QT_TRANSLATE_NOOP("adm","Pro Logic"),NULL}
+                              ,{3,      QT_TRANSLATE_NOOP("adm","Pro Logic II"),NULL}
          };
-        diaElemMenu menuMixer(&downmix,QT_TR_NOOP("_Local playback downmixing:"), sizeof(mixerEntries)/sizeof(diaMenuEntry),mixerEntries,"");
+        diaElemMenu menuMixer(&downmix,QT_TRANSLATE_NOOP("adm","_Local playback downmixing:"), sizeof(mixerEntries)/sizeof(diaMenuEntry),mixerEntries,"");
 //*********** AV_
 		
 //***AV
@@ -308,14 +308,14 @@ uint32_t defaultPortAvisynth = 9999;
             ADM_av_getDeviceInfo(i, &name, &major,&minor,&patch);
             audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name,name);
         }
-        diaElemMenuDynamic menuAudio(&newdevice,QT_TR_NOOP("_AudioDevice"), nbAudioDevice+1, 
+        diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1, 
                     audioDeviceItems,NULL);
         // default Post proc
-     diaElemToggle     fhzd(&hzd,QT_TR_NOOP("_Horizontal deblocking"));
-     diaElemToggle     fvzd(&vzd,QT_TR_NOOP("_Vertical deblocking"));
-     diaElemToggle     fdring(&dring,QT_TR_NOOP("De_ringing"));
-     diaElemUInteger   postProcStrength(&pp_value,QT_TR_NOOP("_Strength:"),0,5);
-     diaElemFrame      framePP(QT_TR_NOOP("Default Postprocessing"));
+     diaElemToggle     fhzd(&hzd,QT_TRANSLATE_NOOP("adm","_Horizontal deblocking"));
+     diaElemToggle     fvzd(&vzd,QT_TRANSLATE_NOOP("adm","_Vertical deblocking"));
+     diaElemToggle     fdring(&dring,QT_TRANSLATE_NOOP("adm","De_ringing"));
+     diaElemUInteger   postProcStrength(&pp_value,QT_TRANSLATE_NOOP("adm","_Strength:"),0,5);
+     diaElemFrame      framePP(QT_TRANSLATE_NOOP("adm","Default Postprocessing"));
      
      framePP.swallow(&fhzd);
      framePP.swallow(&fvzd);
@@ -325,42 +325,42 @@ uint32_t defaultPortAvisynth = 9999;
 
         /* User Interface */
         diaElem *diaUser[]={&useSysTray,&menuMessage};
-        diaElemTabs tabUser(QT_TR_NOOP("User Interface"),2,diaUser);
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),2,diaUser);
         
          /* Automation */
         
         
         /* Output */
         diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3};
-        diaElemTabs tabOutput(QT_TR_NOOP("Output"),4,(diaElem **)diaOutput);
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
         
         /* Audio */
 
 #if 0 //defined(ALSA_SUPPORT)
         diaElem *diaAudio[]={&menuMixer,&menuVolume,&menuAudio,&entryAlsaDevice};
-        diaElemTabs tabAudio(QT_TR_NOOP("Audio"),4,(diaElem **)diaAudio);
+        diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),4,(diaElem **)diaAudio);
 //#elif defined(OSS_SUPPORT)
         diaElem *diaAudio[]={&menuMixer,&menuVolume,&menuAudio};
-        diaElemTabs tabAudio(QT_TR_NOOP("Audio"),3,(diaElem **)diaAudio);
+        diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),3,(diaElem **)diaAudio);
 #endif
 
 #if 1
         diaElem *diaAudio[]={&menuMixer,&menuAudio};
-        diaElemTabs tabAudio(QT_TR_NOOP("Audio"),2,(diaElem **)diaAudio);
+        diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),2,(diaElem **)diaAudio);
 #endif
 
         
         /* Video */
         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useVdpau,&useOpenGl};
-        diaElemTabs tabVideo(QT_TR_NOOP("Video"),4,(diaElem **)diaVideo);
+        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Video"),4,(diaElem **)diaVideo);
         
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
-		diaElemTabs tabCpu(QT_TR_NOOP("CPU"),1,(diaElem **)diaCpu);
+		diaElemTabs tabCpu(QT_TRANSLATE_NOOP("adm","CPU"),1,(diaElem **)diaCpu);
 
         /* Threading tab */
 		diaElem *diaThreading[]={&frameThread, &framePriority};
-		diaElemTabs tabThreading(QT_TR_NOOP("Threading"),2,(diaElem **)diaThreading);
+		diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),2,(diaElem **)diaThreading);
 
 		/* Avisynth tab */
 		diaElemToggle togAskAvisynthPort(&askPortAvisynth,"_Always ask which port to use");
@@ -373,7 +373,7 @@ uint32_t defaultPortAvisynth = 9999;
                                     
 // SET
         diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading, &tabAvisynth};
-        if( diaFactoryRunTabs(QT_TR_NOOP("Preferences"),7,tabs))
+        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Preferences"),7,tabs))
 	{
         	//
 #ifdef USE_OPENGL

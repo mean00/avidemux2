@@ -59,11 +59,11 @@ void HandleAction_Save(Action action)
             {
                 char *oFile=NULL;
                 char *oText=NULL;
-                diaElemFile wFile(1,&oFile,QT_TR_NOOP("Output file"),"");
-                diaElemText wText(&oText,QT_TR_NOOP("Job name"));
+                diaElemFile wFile(1,&oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
+                diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                 diaElem *elems[2]={&wText,&wFile};
 
-                if(  diaFactoryRun(QT_TR_NOOP("Queue job to jobList"),2,elems))
+                if(  diaFactoryRun(QT_TRANSLATE_NOOP("adm","Queue job to jobList"),2,elems))
                 {
                     A_queueJob(oText,oFile);
                 }
@@ -76,7 +76,7 @@ void HandleAction_Save(Action action)
           if( pj.length() ){
              A_saveJsProject( pj.c_str() ); // will write "actual_workbench_file" itself
           }else{
-            GUI_FileSelWrite (QT_TR_NOOP("Select Workbench to Save"), A_saveJsProject);
+            GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select Workbench to Save"), A_saveJsProject);
             UI_refreshCustomMenu();
           }
         }
@@ -84,24 +84,24 @@ void HandleAction_Save(Action action)
 #endif
     case ACT_SAVE_AUDIO:
       	{
-          GUI_FileSelWrite (QT_TR_NOOP("Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
+          GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select File to Save Audio"),(SELFILE_CB *)A_audioSave);
         }
       break;
 
     case ACT_SAVE_BUNCH_OF_JPG:
-      GUI_FileSelWrite (QT_TR_NOOP("Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
+      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
     	break;
     case ACT_SAVE_BMP:
-      GUI_FileSelWrite (QT_TR_NOOP("Select BMP to Save"), (SELFILE_CB *)A_saveImg);
+      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select BMP to Save"), (SELFILE_CB *)A_saveImg);
       //GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       break;
     case ACT_SAVE_JPG :
-      GUI_FileSelWrite (QT_TR_NOOP("Select JPEG to Save"), (SELFILE_CB *)A_saveJpg);
+      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG to Save"), (SELFILE_CB *)A_saveJpg);
       	//GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
       	break;
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
-      GUI_FileSelWrite (QT_TR_NOOP("Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
+      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
       break;
 //---------------------------------------------------
 
@@ -161,7 +161,7 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
     return false;
   }
 
-  work=createWorking(QT_TR_NOOP("Saving audio"));
+  work=createWorking(QT_TRANSLATE_NOOP("adm","Saving audio"));
 
   uint64_t timeEnd,timeStart;
   uint32_t hold,len,sample;
@@ -307,7 +307,7 @@ int A_saveJpg (const char *name)
     }
     if(!image->saveAsJpg (name))
     {
-        GUI_Error_HIG(QT_TR_NOOP("Jpeg"),QT_TR_NOOP("Fail to save as jpeg"));
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Jpeg"),QT_TRANSLATE_NOOP("adm","Fail to save as jpeg"));
         return false;
     }
     return true ;
@@ -338,13 +338,13 @@ int A_saveBunchJpg(const char *name)
         src=new ADMImageDefault(avifileinfo->width,avifileinfo->height);
         ADM_assert(src);
 
-        working=createWorking(QT_TR_NOOP("Saving as set of jpegs"));
+        working=createWorking(QT_TRANSLATE_NOOP("adm","Saving as set of jpegs"));
         for(curImg=frameStart;curImg<=frameEnd;curImg++)
         {
                 working->update(curImg-frameStart,frameEnd-frameStart);
                 if (!GUI_getFrameContent (src,curImg ))
                 {
-                  GUI_Error_HIG(QT_TR_NOOP("Cannot decode frame"), QT_TR_NOOP("Aborting."));
+                  GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
                         goto _bunch_abort;
                 }
                 if(!working->isAlive()) goto _bunch_abort;
@@ -355,9 +355,9 @@ int A_saveBunchJpg(const char *name)
 
 _bunch_abort:
         if(success)
-            GUI_Info_HIG(ADM_LOG_INFO,QT_TR_NOOP("Done"),QT_TR_NOOP( "Saved %d images."), curImg-frameStart);
+            GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm", "Saved %d images."), curImg-frameStart);
         else
-            GUI_Error_HIG(QT_TR_NOOP("Error"),QT_TR_NOOP( "Could not save all images."));
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm", "Could not save all images."));
         delete working	;
         delete src;
         return success;
@@ -379,7 +379,7 @@ int A_saveImg (const char *name)
     }
     int r=image->saveAsBmp(name);
     if(!r)
-        GUI_Error_HIG (QT_TR_NOOP("BMP op failed"),QT_TR_NOOP( "Saving %s as a BMP file failed."), ADM_GetFileName(name));
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","BMP op failed"),QT_TRANSLATE_NOOP("adm", "Saving %s as a BMP file failed."), ADM_GetFileName(name));
     return r;
 
 }
@@ -393,11 +393,11 @@ int A_SaveWrapper(const char *name)
 
         if(A_Save(name))
         {
-          GUI_Info_HIG (ADM_LOG_INFO,QT_TR_NOOP("Done"),QT_TR_NOOP( "File %s has been successfully saved."),ADM_GetFileName(name));
+          GUI_Info_HIG (ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm", "File %s has been successfully saved."),ADM_GetFileName(name));
         }
         else
         {
-          GUI_Error_HIG (QT_TR_NOOP("Failed"), QT_TR_NOOP("File %s was NOT saved correctly."),ADM_GetFileName(name));
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Failed"), QT_TRANSLATE_NOOP("adm","File %s was NOT saved correctly."),ADM_GetFileName(name));
         }
         return 1;
 }
