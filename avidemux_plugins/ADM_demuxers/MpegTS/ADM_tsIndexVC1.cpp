@@ -33,6 +33,8 @@ TSVideo video;
 indexerData  data;    
 dmxPacketInfo info;
 
+    beginConsuming=0;
+    listOfUnits.clear();
 
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_VC1)
@@ -73,7 +75,7 @@ dmxPacketInfo info;
           switch(startCode)
                   {
                   case 0x0f: // sequence start
-                          
+                      
                           if(seq_found)
                           {
                               pkt->getInfo(&thisUnit.packetInfo);
