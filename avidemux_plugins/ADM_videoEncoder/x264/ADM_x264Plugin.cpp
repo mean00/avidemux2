@@ -24,7 +24,7 @@ extern "C"
 }
 extern bool         x264Configure(void);
 extern x264_encoder x264Settings;
-
+extern bool x264LoadProfile(const char *profile);
 void resetConfigurationData()
 {
 	x264_encoder defaultConf = X264_DEFAULT_CONF;
@@ -41,6 +41,6 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("x264",
                                 1,0,0,
                                 x264_encoder_param, // conf template
                                 &x264Settings, // conf var
-                               NULL, // setProfile
+                               x264LoadProfile, // setProfile
                                NULL  // getProfile
 );

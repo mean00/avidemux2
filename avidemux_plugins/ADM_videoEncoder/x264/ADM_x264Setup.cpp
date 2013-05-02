@@ -431,6 +431,34 @@ void dumpx264Setup(x264_param_t *param)
     RI(i_lookahead);
 
 }
+/**
+ * \fn x264LoadProfile
+ * @param profile
+ */
+extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
+extern bool  x264_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x264_encoder *key);
+extern "C" 
+{
+extern const ADM_paramList x264_encoder_param[];
+}
+
+bool x264LoadProfile(const char *profile)
+{
+    x264_encoder param=x264Settings;
+    std::string rootPath;
+    ADM_pluginGetPath("x264",1,rootPath);
+    std::string fullPath=rootPath+std::string("/")+profile+std::string(".json");
+    ADM_info("Trying to load %s\n",fullPath.c_str());
+    if(false==x264_encoder_jdeserialize(fullPath.c_str(),x264_encoder_param,&param))
+    {
+        ADM_warning("Failed\n");
+        return false;     
+    }
+    ADM_info("Profile loaded ok\n");
+    x264Settings=param;
+    return true;
+}
+
 // EOF
 
 
