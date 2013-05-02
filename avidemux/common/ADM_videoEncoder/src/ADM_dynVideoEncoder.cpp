@@ -34,6 +34,8 @@ ADM_videoEncoderDesc copyDesc={
         NULL, //ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head);
         NULL, //void         (*destroy)(ADM_coreVideoEncoder *codec);
         NULL, //bool         (*configure)(void);                                // Call UI to set it up
+        NULL, // setProfile
+        NULL, // getProfile
         NULL, //bool         (*getConfigurationData)(uint32_t *l, uint8_t **d); // Get the encoder private conf
         NULL, //bool         (*setConfigurationData)(uint32_t l, uint8_t *d);   // Set the encoder private conf
         NULL,
@@ -235,6 +237,18 @@ bool                  videoEncoder6_SetConfiguration(CONFcouple *c,bool full)
     ADM_assert(currentVideoCodec<ListOfEncoders.size());
     ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
     return e->desc->setConfigurationData(c,full);
+}
+/**
+    \fn videoEncoder6_SetProfile
+*/
+bool                  videoEncoder6_SetProfile(const char *profile)
+{
+    if(!profile) return true;
+    ADM_assert(currentVideoCodec<ListOfEncoders.size());
+    ADM_videoEncoder6 *e=ListOfEncoders[currentVideoCodec];
+    if(e->desc->setProfile)
+        return e->desc->setProfile(profile);
+    return true;
 }
 
 /**

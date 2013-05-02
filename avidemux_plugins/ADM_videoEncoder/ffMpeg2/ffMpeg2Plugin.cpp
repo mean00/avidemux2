@@ -38,5 +38,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMpeg2",
                                 ADM_UI_ALL,
                                 1,0,0,
                                 mpeg2_encoder_param, // conf template
-                                &Mp2Settings // conf var
+                                &Mp2Settings,NULL,NULL // conf var
 );

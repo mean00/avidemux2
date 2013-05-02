@@ -293,6 +293,7 @@ public:
         bool        setContainer(const char *cont, CONFcouple *c);
 		ADM_videoEncoder6* getCurrentVideoEncoder();
         int         setVideoCodec(const char *codec, CONFcouple *c);
+        int         setVideoCodecProfile(const char *codec, const char *profile);
         int         changeVideoParam(const char *codec, CONFcouple *c);
         int         addVideoFilter(const char *filter, CONFcouple *c);
         void        clearFilters();

@@ -38,5 +38,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("HUFFYUV",
                                 ADM_UI_ALL,
                                 1,0,0,
                                 huff_encoder_param, // conf template
-                                &huffType // conf var
+                                &huffType,NULL,NULL // conf var
 );

@@ -31,5 +31,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("null",
                                 ADM_UI_ALL,
                                 1,0,0,
                                 NULL, // conf template
-                                NULL // conf var
+                                NULL,NULL,NULL // conf var
 );

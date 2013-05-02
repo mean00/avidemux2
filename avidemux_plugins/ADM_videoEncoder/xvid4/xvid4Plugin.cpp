@@ -37,5 +37,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("xvid4",
                                 ADM_UI_ALL,
                                 1,0,0,
                                 xvid4_encoder_param, // conf template
-                                &xvid4Settings // conf var
+                                &xvid4Settings,NULL,NULL // conf var
 );

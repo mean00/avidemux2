@@ -31,5 +31,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffMsMp4",
                                 ADM_UI_ALL,
                                 1,0,0,
                                  FFcodecSettings_param, // conf template
-                                &MsMp4Settings // conf var
+                                &MsMp4Settings,NULL,NULL // conf var
 );

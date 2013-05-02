@@ -100,5 +100,6 @@ public:
     virtual void seekKeyFrame(int count) = 0;
     virtual void seekBlackFrame(int count) = 0;
     virtual uint32_t getFrameSize(int count) = 0;
+    virtual int setVideoCodecProfile(const char *codec, const char *profile)=0;
 };
 #endif

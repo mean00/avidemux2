@@ -201,6 +201,20 @@ static tp_obj zzpy_clearVideoFilters(TP)
   editor->clearFilters(); 
  return tp_None;
 }
+// videoCodecSetProfile -> int editor->setVideoCodecProfile (str  str ) 
+static tp_obj zzpy_videoCodecSetProfile(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  const char *p0 = pm.asString();
+  const char *p1 = pm.asString();
+  int r =   editor->setVideoCodecProfile(p0,p1); 
+  return tp_number(r);
+}
 // audioAddTrack -> int pyAddAudioTrack (IEditor int ) 
 static tp_obj zzpy_audioAddTrack(TP)
  {
@@ -592,6 +606,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_clearVideoFilters);
   }
+  if (!strcmp(key, "videoCodecSetProfile"))
+  {
+     return tp_method(vm, self, zzpy_videoCodecSetProfile);
+  }
   if (!strcmp(key, "audioAddTrack"))
   {
      return tp_method(vm, self, zzpy_audioAddTrack);
@@ -738,6 +756,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetShift(IEditor,int,int,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addSegment(int, double, double)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "clearVideoFilters(void)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodecSetProfile(str, str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioAddTrack(IEditor,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioFrequency(IEditor, int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getVideoCodec(void)\n");

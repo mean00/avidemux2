@@ -39,5 +39,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("ffFlv1",
                                 ADM_UI_ALL,
                                 1,0,0,
                                  FFcodecSettings_param, // conf template
-                                &Flv1Settings // conf var
+                                &Flv1Settings,NULL,NULL // conf var
 );

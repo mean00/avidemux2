@@ -95,6 +95,34 @@ int ADM_Composer::setVideoCodec(const char *codec, CONFcouple *c)
 	return true;
 }
 /**
+ * \fn setVideoCodecProfile
+ * \brief set a profile for the given video codec
+ * @param codec
+ * @param profile
+ * @return 
+ */
+int         ADM_Composer::setVideoCodecProfile(const char *codec, const char *profile)
+{
+        int idx = videoEncoder6_GetIndexFromName(codec);
+
+	if (idx == -1)
+	{
+		ADM_error("No such encoder :%s\n", codec);
+		return false;
+	}
+        // Select by index
+	videoEncoder6_SetCurrentEncoder(idx);
+	UI_setVideoCodec(idx);
+
+	if (profile)
+	{
+            ADM_info("Setting profile %s\n",profile);
+            return videoEncoder6_SetProfile(profile);
+	}
+
+	return true;
+}
+/**
  * \fn changeVideoParam
  * \brief same as above but you can only change one param
  * @param codec

@@ -34,7 +34,7 @@ const char            *videoEncoder6_GetCurrentEncoderName(void);
 
 bool                  videoEncoder6_SetConfiguration(CONFcouple *ci,bool full=true);
 bool                  videoEncoder6_GetConfiguration(CONFcouple **c);
-
+bool                  videoEncoder6_SetProfile(const char *profile);
 ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index,bool globalHeader);
 
 #endif

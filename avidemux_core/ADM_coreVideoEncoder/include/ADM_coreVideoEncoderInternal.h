@@ -15,7 +15,7 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 5
+#define ADM_VIDEO_ENCODER_API_VERSION 6
 
 #include "ADM_coreVideoEncoder6_export.h"
 #include "BVector.h"
@@ -41,9 +41,11 @@ typedef struct
     ADM_coreVideoEncoder *(*create)(ADM_coreVideoFilter *head,bool globalHeader);
     void         (*destroy)(ADM_coreVideoEncoder *codec);
     bool         (*configure)(void);                                // Call UI to set it up
+    bool         (*setProfile)(const char *profile);
+    const char   *(*getProfile)(void);
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
     bool         (*setConfigurationData)(CONFcouple *c,bool full);   // Set the encoder private conf
-	void         (*resetConfigurationData)();
+    void         (*resetConfigurationData)();
 
     ADM_UI_TYPE  UIType;                // Type of UI
     uint32_t     major,minor,patch;     // Version of the plugin
@@ -99,7 +101,7 @@ static void destroy (ADM_coreVideoEncoder * in) \
 }
 //******************************************************
 
-#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar) \
+#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile) \
 static ADM_videoEncoderDesc encoderDesc={\
     name,\
     menuName,\
@@ -108,6 +110,8 @@ static ADM_videoEncoderDesc encoderDesc={\
     &create,\
     &destroy,\
     configure,\
+    setProfile,\
+    getProfile, \
     getConfigurationData,\
     setConfigurationData,\
     resetConfigurationData,\

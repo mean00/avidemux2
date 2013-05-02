@@ -40,5 +40,7 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("x264",
                                 ADM_UI_TYPE_BUILD,
                                 1,0,0,
                                 x264_encoder_param, // conf template
-                                &x264Settings // conf var
+                                &x264Settings, // conf var
+                               NULL, // setProfile
+                               NULL  // getProfile
 );

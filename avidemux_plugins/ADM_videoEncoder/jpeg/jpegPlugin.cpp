@@ -39,5 +39,5 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("Mjpeg",
                                 ADM_UI_ALL,
                                 1,0,0,
                                 jpeg_encoder_param, // conf template
-                                &jpegConf // conf var
+                                &jpegConf,NULL,NULL // conf var
 );
