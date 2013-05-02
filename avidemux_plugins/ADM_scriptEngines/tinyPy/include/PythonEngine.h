@@ -31,6 +31,8 @@ private:
 	static tp_obj dumpBuiltin(tp_vm *tp);
 	static tp_obj getFileSize(tp_vm *tp);
 	static tp_obj getFolderContent(tp_vm *tp);
+        static tp_obj basename(tp_vm *tp);
+        static tp_obj dirname(tp_vm *tp);
 
 public:
 	~PythonEngine();

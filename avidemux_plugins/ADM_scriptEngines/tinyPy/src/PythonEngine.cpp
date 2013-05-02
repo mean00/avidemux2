@@ -12,7 +12,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <libgen.h>
 #include "ADM_assert.h"
 #include "ADM_pyAvidemux.h"
 #include "PythonEngine.h"
@@ -117,6 +117,8 @@ void PythonEngine::registerFunctions()
 	pyFunc addonFunctions[] = {{"help", PythonEngine::dumpBuiltin},
 		{"get_folder_content", PythonEngine::getFolderContent},
 		{"get_file_size", PythonEngine::getFileSize},
+		{"basename", PythonEngine::basename},
+                {"dirname", PythonEngine::dirname},
 		{NULL, NULL}};
 
 	this->registerFunction("addons", addonFunctions);
@@ -272,6 +274,45 @@ tp_obj PythonEngine::getFolderContent(tp_vm *tp)
 	clearDirectoryContent(nb, items);
 
 	return list;
+}
+/**
+    \fn basename
+    \brief similar to python os.basename()
+*/
+tp_obj PythonEngine::basename(tp_vm *tp)
+{
+	TinyParams pm(tp);
+        const char *path = pm.asString();
+	char *copy=strdup(path);
+        char *b=::basename(copy);
+        tp_obj r;
+        if(!b)
+        {
+            r=tp_None;
+        }else
+            r=tp_string_copy(tp,b,strlen(b));
+        free(copy);
+        return r;
+}
+/**
+    \fn basename
+    \brief similar to python os.basename()
+*/
+tp_obj PythonEngine::dirname(tp_vm *tp)
+{
+	TinyParams pm(tp);
+        const char *path = pm.asString();
+        char *copy=strdup(path);
+        
+        char *b=::dirname(copy);
+        tp_obj r;
+        if(!b)
+        {
+            r=tp_None;
+        }else
+            r=tp_string_copy(tp,b,strlen(b));
+        free(copy);
+        return r;
 }
 
 /**
