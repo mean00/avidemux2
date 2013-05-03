@@ -36,12 +36,21 @@
 #define ADM_PYID_DF_INTEGER  202
 #define ADM_PYID_DF_MENU     203
 
+extern void re_init(TP);
+/**
+ * \fn pyRaise
+ * @param vm
+ * @param exception
+ */
 void pyRaise(tp_vm *vm,const char *exception)
 {
         PythonEngine *engine = (PythonEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
         engine->raise(exception);
         
 }
+/**
+ * \fn pyPrintf
+ */
 void pyPrintf(tp_vm *vm, const char *fmt, ...)
 {
 	PythonEngine *engine = (PythonEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -120,7 +129,7 @@ void PythonEngine::registerFunctions()
 		{"basename", PythonEngine::basename},
                 {"dirname", PythonEngine::dirname},
 		{NULL, NULL}};
-
+        re_init(_vm);
 	this->registerFunction("addons", addonFunctions);
 	this->registerClass("Avidemux", initClasspyAdm, "avidemux class");
 	this->registerClass("Editor", initClasspyEditor, "add, remove videos");
