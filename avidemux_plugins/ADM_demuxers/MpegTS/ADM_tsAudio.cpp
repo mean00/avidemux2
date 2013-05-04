@@ -168,14 +168,28 @@ uint64_t p,d,start;
                     bool r=false;
                     int outsize=0;
                     *size=0;
-                    if(false==demuxer.getNextPES(packet)) return false;
-                    int avail=packet->payloadSize-packet->offset;
-                    if(avail>maxSize) ADM_assert(0);
-                    *size=avail;
-                    r=adts.convert(avail,packet->payload+packet->offset,&outsize,buffer);
-                    if(false==r) return false;
-                    *size=outsize;
-                    *dts=timeConvert(packet->pts);
+                    bool gotPacket=false;
+                    int insize=0;
+                    uint8_t *ptr=NULL;
+                    while(1)
+                    {
+                        // Manage several packet in packet
+                        if(ADM_adts2aac::ADTS_OK==adts.convert2(insize,ptr,&outsize,buffer))
+                        {
+                            *size=outsize;
+                            if(gotPacket)
+                                *dts=timeConvert(packet->pts);
+                            else
+                                *dts=ADM_NO_PTS;
+                            return true;
+                        }
+                        if(false==demuxer.getNextPES(packet)) return false;
+                        int avail=packet->payloadSize-packet->offset;
+                        if(avail>maxSize) ADM_assert(0);
+                        insize=avail;
+                        ptr=packet->payload+packet->offset;
+                        gotPacket=true;
+                    }
                     break;
             }
         case ADM_TS_MUX_NONE:
