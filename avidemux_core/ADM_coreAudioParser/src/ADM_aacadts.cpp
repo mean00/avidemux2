@@ -93,7 +93,7 @@ int ADM_adts2aac::getChannels(void)
     \brief strip adts header. Out can be null if you just want to get headers
 */
 
-bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *out)
+ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,uint8_t *inData,int *outLen,uint8_t *out)
 {
     bool r=false;
     // Step 1 : append to our buffer...
@@ -118,13 +118,13 @@ bool ADM_adts2aac::convert(int incomingLen,uint8_t *inData,int *outLen,uint8_t *
     memcpy(buffer.at(head),inData,incomingLen);
     head+=incomingLen;
     // ok , done
-    aprintf("********** LOOP *******\n");
+    aprintf("********** LOOP (incoming =%d)*******\n",incomingLen);
 again:
-    aprintf("*** head=%d tail=%d size=%d***\n",head,tail,head-tail);
+    aprintf("[ADTS] *** head=%d tail=%d size=%d***\n",head,tail,head-tail);
     if(tail+7>head) // we neeed at least 7 bytes...
     {
         aprintf("Adts: Not enough data \n");
-        return r;
+        return ADTS_MORE_DATA_NEEDED;
     }
     // now search for sync....
     bool found=false;
@@ -145,27 +145,27 @@ again:
                 crc=true;
             }
             if(nbFrames!=1) continue;
-            aprintf("Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
-            aprintf("Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
-            aprintf("Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
+            aprintf("[ADTS] Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
+            aprintf("[ADTS] Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
+            aprintf("[ADTS] Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
             if(match==tail && match+packetLen==head)
             {
-                aprintf("Perfect match\n");
+                aprintf("[ADTS] Perfect match\n");
                 found=true;
                 break;
             }
             if(match+packetLen+2>head && match+packetLen!=head)
             {
                 aprintf("[ADTS]** not enough data, r=%d **\n",(int)r);
-                return r;
+                return ADTS_MORE_DATA_NEEDED;
             }
             // do we have sync at the end ?
             if(p[packetLen]!=0xff)
             {
-                aprintf("no ff marker at the end\n");
+                aprintf("[ADTS] no ff marker at the end\n");
                 continue;
             }
-            aprintf("End marker found\n");
+            aprintf("[ADTS] End marker found\n");
             found=true;
             break;
         }
@@ -174,7 +174,7 @@ again:
     {
         aprintf("[ADTS]No sync\n");
         tail=head-1;
-        return r;
+        return ADTS_MORE_DATA_NEEDED;
     }
     if(!hasExtra)
     { // build codec specific info, thanks vlc  
@@ -184,6 +184,7 @@ again:
         extra[0] =   (i_profile + 1) << 3 | (i_sample_rate_idx >> 1);
         extra[1] =   ((i_sample_rate_idx & 0x01) << 7) | (pi_channels <<3);
         hasExtra=true;
+        aprintf("[ADTS] extradata %02x %02x\n",extra[0],extra[1]);
     }
     // size ?
     uint8_t *o;
@@ -205,21 +206,20 @@ again:
     if(!produced)
     {
         tail=match+1;
-        printf("No data produced\n");
+        aprintf("[ADTS] No data produced\n");
         goto again;
     }
-    aprintf("Found adts packet of size %d, extradataLen=%d\n",produced,2);
+    aprintf("[ADTS] Found adts packet of size %d, extradataLen=%d\n",produced,2);
     if(out)
     {
         memcpy(out,o,produced);
         out+=produced;
         *outLen+=produced;
     }
-    r=true; // we have found something
-    //printf("In : %d out %d\n",incomingLen,*outLen);
+    
     tail=match+packetLen; // ~ skip 
     ADM_assert(tail<=head);
-    goto again;
+    return ADTS_OK;
 }
 /**
     \fn ctor
