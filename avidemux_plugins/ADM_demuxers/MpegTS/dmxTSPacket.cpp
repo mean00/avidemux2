@@ -370,7 +370,11 @@ nextPack3:
     // Sync at source
     if(false==getNextPacket_NoHeader(pes->pid,&pkt,false)) return false;    
     // If it does not contain a payload start continue
-    if(!pkt.payloadStart)
+    bool mark=false;
+    uint32_t code=(pkt.payload[0]<<24)+(pkt.payload[1]<<16)+(pkt.payload[2]<<8)+pkt.payload[3];
+    if((code&0xffffffC0)==0x1C0) mark=true;
+    zprintf("Mark=%x\n",code);
+    if(!pkt.payloadStart && !mark)
     {
         printf("[Ts Demuxer] Pes for Pid =0x%d does not contain payload start\n",pes->pid);
         goto nextPack3;
@@ -380,7 +384,6 @@ nextPack3:
     // 1- Start Headers
     //____________________
     //____________________
-    uint32_t code=(pkt.payload[0]<<24)+(pkt.payload[1]<<16)+(pkt.payload[2]<<8)+pkt.payload[3];
     zprintf("[TS Demuxer] Code=0x%x pid=0x%x\n",code,pes->pid);
     if((code&0xffffff00)!=0x100)
     {
