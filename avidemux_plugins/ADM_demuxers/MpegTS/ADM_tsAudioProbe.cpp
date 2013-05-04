@@ -150,8 +150,11 @@ again:
                     ADM_adts2aac  adts;
                     trackInfo->mux=ADM_TS_MUX_ADTS;
                     int dummySize=0;
-                    if(false==adts.convert(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
+                    if(ADM_adts2aac::ADTS_OK!=adts.convert2(size,ptr,&dummySize,NULL)) // We dont need the output hence the null
+                    {
+                        ADM_info("ADTS no sync\n");
                         goto again;
+                    }
                     adts.getExtraData(&eLen,&eData);
                     if( eLen!=2) 
                     {
