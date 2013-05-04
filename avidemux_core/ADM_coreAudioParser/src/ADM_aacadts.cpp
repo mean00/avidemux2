@@ -156,7 +156,7 @@ again:
             }
             if(match+packetLen+2>head && match+packetLen!=head)
             {
-                aprintf("** not enough data **\n");
+                aprintf("[ADTS]** not enough data, r=%d **\n",(int)r);
                 return r;
             }
             // do we have sync at the end ?
@@ -172,7 +172,7 @@ again:
     }
     if(found==false)
     {
-        aprintf("No sync\n");
+        aprintf("[ADTS]No sync\n");
         tail=head-1;
         return r;
     }
@@ -181,9 +181,9 @@ again:
         int i_profile=p[2]>>6;
         int i_sample_rate_idx=(p[2]>>2)&0x0f;
         int pi_channels=((p[2]<<2)+((p[3]>>6)))&0x7;
-      extra[0] =   (i_profile + 1) << 3 | (i_sample_rate_idx >> 1);
-      extra[1] =   ((i_sample_rate_idx & 0x01) << 7) | (pi_channels <<3);
-      hasExtra=true;
+        extra[0] =   (i_profile + 1) << 3 | (i_sample_rate_idx >> 1);
+        extra[1] =   ((i_sample_rate_idx & 0x01) << 7) | (pi_channels <<3);
+        hasExtra=true;
     }
     // size ?
     uint8_t *o;
