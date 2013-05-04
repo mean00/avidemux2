@@ -39,7 +39,9 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 
    parser->seek(0);
    DIA_workingBase *work=createWorking("Matroska Images");
- 
+   
+   readBufferSize=200*1024;
+   readBuffer=new uint8_t[readBufferSize];
     //************
    work->update(0);
 #if 0
@@ -114,6 +116,8 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
   }
      printf("Found %"PRIu32" images in this cluster\n",(uint32_t)VIDEO.index.size());
      delete work;
+     delete [] readBuffer;
+     readBuffer=NULL;
      return 1;
 }
 /**
@@ -165,6 +169,15 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   ix.Dts=timecodeMS*_timeBase;
   ix.Pts=timecodeMS*_timeBase;
    uint32_t rpt=_tracks[0].headerRepeatSize;
+   
+   // expand buffer if needed
+   if(size>readBufferSize)
+   {
+       delete [] readBuffer;
+       readBufferSize=size*2;
+       readBuffer=new uint8_t[readBufferSize];
+   }
+   
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
   // Hackish, we already read the 3 bytes header
@@ -173,37 +186,34 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
-        uint8_t *buffer=(uint8_t *)malloc((rpt+size)*sizeof(uint8_t));
+        
             if(rpt)
-                memcpy(buffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(buffer+rpt,size-3);
+                memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+            parser->readBin(readBuffer+rpt,size-3);
             // Search the frame type...
 
              uint32_t nb,vopType,timeinc=16;
              ADM_vopS vops[10];
              vops[0].type=AVI_KEY_FRAME;
-             ADM_searchVop(buffer,buffer+rpt+size-3,&nb,vops, &timeinc);
+             ADM_searchVop(readBuffer,readBuffer+rpt+size-3,&nb,vops, &timeinc);
              ix.flags=vops[0].type;
-        free(buffer);
         
     }else
     if(isH264Compatible(_videostream.fccHandler))
     {
-                uint8_t *buffer=(uint8_t *)malloc(size+rpt);
+                
                 uint32_t flags=AVI_KEY_FRAME;
                 
                 if(rpt)
-                        memcpy(buffer,_tracks[0].headerRepeat,rpt);
-                parser->readBin(buffer+rpt,size-3);
-                extractH264FrameType(2,buffer,rpt+size-3,&flags); // Nal size is not used in that case
+                        memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+                parser->readBin(readBuffer+rpt,size-3);
+                extractH264FrameType(2,readBuffer,rpt+size-3,&flags); // Nal size is not used in that case
                 if(flags & AVI_KEY_FRAME)
                 {
                     printf("[MKV/H264] Frame %"PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
                 }
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
-                //printf("[] Flags=%x\n",flags);
-        	free(buffer);
 
     }
   }

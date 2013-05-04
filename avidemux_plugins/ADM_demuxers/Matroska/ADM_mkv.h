@@ -223,7 +223,9 @@ virtual     uint8_t                 getNbAudioStreams(void);
 virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
-
+        // Temporary buffer for indexing
+        uint8_t *readBuffer;
+        int     readBufferSize;
 };
 #endif
 

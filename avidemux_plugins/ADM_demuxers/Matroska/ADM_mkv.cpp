@@ -528,6 +528,8 @@ uint8_t mkvHeader::close(void)
   _currentAudioTrack=0;
   _access=NULL;
   _audioStreams=NULL;
+  
+  readBuffer=NULL;
 }
 /**
     \fn ~mkvHeader
