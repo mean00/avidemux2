@@ -52,7 +52,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
     _context->error_concealment=3; 
     // Hack
-    if(codecId==CODEC_ID_TSCC)
+    if(codecId==CODEC_ID_TSCC || codecId==CODEC_ID_CSCD)
     {
         ADM_warning("Forcing bit per coded sample to %d\n",bpp);
          _context->bits_per_coded_sample = bpp;
