@@ -135,7 +135,7 @@ again:
     int match;
     for( p=(buffer.at(tail));p<(buffer.at(head-2));p++)
     {
-        if(p[0]==0xff && p[1]&0xf0==0xf0)
+        if(p[0]==0xff && ((p[1]&0xf0)==0xf0))
         {
             match=p-buffer.at(0); // offset of syncword
             packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
