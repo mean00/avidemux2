@@ -140,7 +140,7 @@ again:
             match=p-buffer.at(0); // offset of syncword
             packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
             nbFrames=1+(p[6]&3);
-            if(!p[1]&1)
+            if(!(p[1]&1))
             {
                 crc=true;
             }
