@@ -1,7 +1,7 @@
 INCLUDE(vf_plugin)
 INCLUDE(FindTar)
 
-IF(NOT WIN32)
+IF(NOT WIN32 AND NOT APPLE)
 SET(ADM_vf_avsfilter_SRCS avsfilter.cpp avspipecomm.cpp cdebug.cpp strnew.cpp avsfilterparam_json.cpp)
 
 ADD_LIBRARY(ADM_vf_avsfilter SHARED ${ADM_vf_avsfilter_SRCS})
@@ -26,4 +26,4 @@ find_package(Tar)
 execute_process(COMMAND ${TAR_EXECUTABLE} xvf ${AVSFILTER_WINE_BINARY_ARCHIVE} -C ${tempAvsFilterUnpackDir})
 install(FILES ${tempAvsFilterUnpackDir}/avsload.exe ${tempAvsFilterUnpackDir}/pipe_source.dll DESTINATION ${addonesInstallDir}) 
 ENDIF(DO_SETTINGS) 
-ENDIF(NOT WIN32)
+ENDIF(NOT WIN32 AND NOT APPLE)
