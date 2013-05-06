@@ -267,8 +267,27 @@ bool x264Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x264_nal_t *nal,
                 return false;
         }
         out->len=size;
-        out->pts =  picout->i_pts+getEncoderDelay();
-        out->dts =  picout->i_dts+getEncoderDelay();
+        aprintf("--PostAmble--\n");
+        // Make sure PTS & DTS > 0
+        int64_t finalDts=picout->i_dts+(int64_t)getEncoderDelay();
+        if(finalDts<0)
+        {
+            out->dts=0; 
+            ADM_warning("Final DTS <0, fixing rounding error\n");        
+        }else
+        {
+                out->dts =  finalDts;
+        }
+         int64_t finalPts=picout->i_pts+(int64_t)getEncoderDelay();
+         if(finalPts<0)
+        {
+            out->pts=0; 
+            ADM_warning("Final PTS <0, fixing rounding error\n");
+        }else
+        {
+                out->pts =  finalPts;
+        }
+        //------
         aprintf("encoder delay=%d, pic out dts=%d picout pts=%d\n",getEncoderDelay(),picout->i_dts,picout->i_pts);
         aprintf("pts = %"PRIu64", dts=%"PRIu64", pts+delay=%"PRIu64" delta=%"PRIu64"\n",picout->i_pts,out->dts,out->pts,
                     out->pts-out->dts);
