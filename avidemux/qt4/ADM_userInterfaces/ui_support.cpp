@@ -73,7 +73,7 @@ void loadTranslator(void)
 	printf("\n[Locale] Locale: %s\n", QLocale::system().name().toUtf8().constData());
 
 #ifdef __APPLE__
-	QString appdir = QCoreApplication::applicationDirPath() + "../share/avidemux6/i18n/";
+	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/i18n/";
                 
 #elif defined(_WIN32)
 	QString appdir = QCoreApplication::applicationDirPath() + "/i18n/";
