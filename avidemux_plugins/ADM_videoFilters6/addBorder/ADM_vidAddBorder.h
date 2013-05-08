@@ -40,8 +40,8 @@ DECLARE_VIDEO_FILTER(   addBorders,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "addBorder",            // internal name (must be uniq!)
-                        "Add Borders",            // Display name
-                        "Add black boarders around the image." // Description
+                        QT_TRANSLATE_NOOP("addBorder","Add Borders"),            // Display name
+                        QT_TRANSLATE_NOOP("addBorder","Add black boarders around the image.") // Description
                     );
 
 

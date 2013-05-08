@@ -411,17 +411,17 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="73"/>
         <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Début (ms):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="74"/>
         <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fin(ms):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Fade to black</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fondu au noir</translation>
     </message>
 </context>
 <context>
@@ -601,17 +601,17 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="72"/>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Garder les images et le nombre d&apos;i/s</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="73"/>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Doubler les images et le nombre d&apos;i/s</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="74"/>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Doubler le nombre d&apos;images (ralenti)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="77"/>
@@ -626,7 +626,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="79"/>
         <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Seuil:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="80"/>
@@ -649,7 +649,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="159"/>
         <source>Shutting down</source>
-        <translation type="unfinished">Exctinction en cours</translation>
+        <translation type="unfinished">Extinction en cours</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="376"/>
@@ -679,32 +679,32 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="74"/>
         <source>Discard closer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eliminer le plus proche</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="75"/>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Remplacer (interpoler)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="76"/>
         <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eliminer la séquence répétée la plus longue (animés)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="77"/>
         <source>Pulldown dupe removal</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Elimination du pulldown</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="80"/>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rapide (luma partielle)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="82"/>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Moyen (toute la luma)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="87"/>
@@ -714,17 +714,17 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="88"/>
         <source>_Quality:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Qualité:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="89"/>
         <source>_Threshold 1:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Seuil 1:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="90"/>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">S_euil2:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="91"/>
@@ -734,7 +734,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="92"/>
         <source>Sho_w</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A_fficher</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="95"/>
@@ -1532,37 +1532,37 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="182"/>
         <source>_Left border:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bord gauche:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="183"/>
         <source>_Right border:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bord droit:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="184"/>
         <source>_Top border:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bord haut:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="185"/>
         <source>_Bottom border:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bord bas:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="188"/>
         <source>Add Borders</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ajout de bord</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192"/>
         <source>Incorrect parameters</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Paramètres incorrectes</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192"/>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tous les paramètres doivent être pairs et dans les bornes.</translation>
     </message>
 </context>
 <context>
@@ -3105,6 +3105,32 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>asharp</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="65"/>
+        <source>Asharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ass</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="60"/>
+        <source>SSA.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
+        <source>Hardcode ass/ssa subtitles using libass.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>avsfilter</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="551"/>
@@ -3250,8 +3276,26 @@ Is it running ?</source>
 <context>
     <name>chromashift</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="34"/>
+        <source>ChromaShift</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>coloryuv</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="62"/>
+        <source>Avisynth color filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="63"/>
+        <source>Color management filter.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3282,6 +3326,11 @@ Is it running ?</source>
         <source>Coef :</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
+        <source>Adjust contrast, brightness and colors.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>crash</name>
@@ -3300,6 +3349,45 @@ Is it running ?</source>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>crop</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="56"/>
+        <source>crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
+        <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>decimate</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="56"/>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="57"/>
+        <source>Donald Graft decimate. Remove duplicate after telecide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dgbob</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="56"/>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
+        <source>Donald Graft Bob.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3498,6 +3586,32 @@ p, li { white-space: pre-wrap; }
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="79"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="99"/>
         <source>Root privileges are required to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>eq2</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="59"/>
+        <source>MPlayer eq2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
+        <source>Adjust contrast, brightness, saturation and gamma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>fade</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="51"/>
+        <source>Fade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="52"/>
+        <source>Fade in/out.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4155,6 +4269,19 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="204"/>
         <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>gaussian</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="26"/>
+        <source>Gaussian convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="27"/>
+        <source>3x3 convolution filter :gaussian.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4866,6 +4993,35 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Go To Time</source>
         <translation type="obsolete">Aller au temps</translation>
+    </message>
+</context>
+<context>
+    <name>meadian</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="29"/>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mean</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="27"/>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="28"/>
+        <source>3x3 convolution filter :mean.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>median</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="28"/>
+        <source>Median convolution.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -53,8 +53,8 @@ DECLARE_VIDEO_FILTER(   DGbob,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "dgbob",            // internal name (must be uniq!)
-                        "dgbob",            // Display name
-                        QT_TR_NOOP("Donald Graft Bob.") // Description
+                        QT_TRANSLATE_NOOP("dgbob", "dgbob"),            // Display name
+                        QT_TRANSLATE_NOOP("dgbob","Donald Graft Bob.") // Description
                     );
 
 /**

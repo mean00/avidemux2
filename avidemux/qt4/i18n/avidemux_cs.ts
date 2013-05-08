@@ -13227,6 +13227,17 @@ Je spuštěno?</translation>
     </message>
 </context>
 <context>
+    <name>asharp</name>
+    <message>
+        <source>Asharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished">Adaptivní doostření, napsal MarcFD.</translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>ASharp</source>
@@ -13251,6 +13262,17 @@ Je spuštěno?</translation>
     <message>
         <source>High Quality Block Filtering</source>
         <translation type="obsolete">Vysoce kvalitní bloková filtrace</translation>
+    </message>
+</context>
+<context>
+    <name>ass</name>
+    <message>
+        <source>SSA.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hardcode ass/ssa subtitles using libass.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13403,6 +13425,10 @@ Je spuštěno?</translation>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
         <translation type="unfinished">Posun U/V chrominance pro opravu špatně synchronizované luminance/chrominance.</translation>
     </message>
+    <message>
+        <source>ChromaShift</source>
+        <translation type="unfinished">ChromaShift</translation>
+    </message>
 </context>
 <context>
     <name>chromashiftDialog</name>
@@ -13417,6 +13443,17 @@ Je spuštěno?</translation>
     <message>
         <source>U Shift</source>
         <translation type="obsolete">Posun U</translation>
+    </message>
+</context>
+<context>
+    <name>coloryuv</name>
+    <message>
+        <source>Avisynth color filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color management filter.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13440,6 +13477,10 @@ Je spuštěno?</translation>
     <message>
         <source>Coef :</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust contrast, brightness and colors.</source>
+        <translation type="unfinished">Úprava kontrastu, jasu a barev.</translation>
     </message>
 </context>
 <context>
@@ -13495,6 +13536,17 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>crop</name>
+    <message>
+        <source>crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
@@ -13523,6 +13575,28 @@ Do you want to load it  ?
     <message>
         <source>Auto Crop</source>
         <translation type="obsolete">Automatický ořez</translation>
+    </message>
+</context>
+<context>
+    <name>decimate</name>
+    <message>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft decimate. Remove duplicate after telecide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dgbob</name>
+    <message>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft Bob.</source>
+        <translation type="unfinished">Bob filtr Donalda Grafta.</translation>
     </message>
 </context>
 <context>
@@ -13768,6 +13842,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>eq2</name>
+    <message>
+        <source>MPlayer eq2</source>
+        <translation type="unfinished">MPlayer eq2</translation>
+    </message>
+    <message>
+        <source>Adjust contrast, brightness, saturation and gamma.</source>
+        <translation type="unfinished">Úprava kontrastu, jasu, sytosti a gama.</translation>
+    </message>
+</context>
+<context>
     <name>eq2Dialog</name>
     <message>
         <source>MPlayer eq2</source>
@@ -13820,6 +13905,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Initial</source>
         <translation type="obsolete">Výchozí</translation>
+    </message>
+</context>
+<context>
+    <name>fade</name>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished">Fade</translation>
+    </message>
+    <message>
+        <source>Fade in/out.</source>
+        <translation type="unfinished">Postupný náběh/do ztracena.</translation>
     </message>
 </context>
 <context>
@@ -14377,6 +14473,17 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>gaussian</name>
+    <message>
+        <source>Gaussian convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :gaussian.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -15027,6 +15134,31 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Next Black Frame</source>
         <translation type="obsolete">Následující černý snímek</translation>
+    </message>
+</context>
+<context>
+    <name>meadian</name>
+    <message>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mean</name>
+    <message>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :mean.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>median</name>
+    <message>
+        <source>Median convolution.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

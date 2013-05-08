@@ -57,8 +57,8 @@ DECLARE_VIDEO_FILTER(   subAss,   // Class
                         ADM_UI_ALL,         // UI
                         VF_SUBTITLE,            // Category
                         "ssa",            // internal name (must be uniq!)
-                        "SSA.",            // Display name
-                        "Hardcode ass/ssa subtitles using libass." // Description
+                        QT_TRANSLATE_NOOP("ass","SSA."),            // Display name
+                        QT_TRANSLATE_NOOP("ass","Hardcode ass/ssa subtitles using libass.") // Description
                     );
 
 

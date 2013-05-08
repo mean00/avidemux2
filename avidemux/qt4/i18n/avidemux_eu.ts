@@ -6306,6 +6306,19 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>asharp</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="65"/>
+        <source>Asharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>ASharp</source>
@@ -6326,6 +6339,19 @@ Is it running ?</source>
     <message>
         <source>High Quality Block Filtering</source>
         <translation type="obsolete">Ontasun Handiko Bloke Iragazpena</translation>
+    </message>
+</context>
+<context>
+    <name>ass</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="60"/>
+        <source>SSA.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
+        <source>Hardcode ass/ssa subtitles using libass.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6489,6 +6515,11 @@ Is it running ?</source>
 <context>
     <name>chromashift</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="34"/>
+        <source>ChromaShift</source>
+        <translation type="unfinished">Margotasuna Aldatu</translation>
+    </message>
+    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
         <translation type="unfinished"></translation>
@@ -6507,6 +6538,19 @@ Is it running ?</source>
     <message>
         <source>U Shift</source>
         <translation type="obsolete">U Aldatu</translation>
+    </message>
+</context>
+<context>
+    <name>coloryuv</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="62"/>
+        <source>Avisynth color filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="63"/>
+        <source>Color management filter.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6534,6 +6578,11 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="30"/>
         <source>Coef :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
+        <source>Adjust contrast, brightness and colors.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6589,6 +6638,19 @@ Do you want to load it  ?
     </message>
 </context>
 <context>
+    <name>crop</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="56"/>
+        <source>crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
+        <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
@@ -6617,6 +6679,32 @@ Do you want to load it  ?
     <message>
         <source>Auto Crop</source>
         <translation type="obsolete">Berez Moztu</translation>
+    </message>
+</context>
+<context>
+    <name>decimate</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="56"/>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="57"/>
+        <source>Donald Graft decimate. Remove duplicate after telecide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dgbob</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="56"/>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
+        <source>Donald Graft Bob.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6901,6 +6989,19 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>eq2</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="59"/>
+        <source>MPlayer eq2</source>
+        <translation type="unfinished">MPlayer eq2</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
+        <source>Adjust contrast, brightness, saturation and gamma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>eq2Dialog</name>
     <message>
         <source>MPlayer eq2</source>
@@ -6941,6 +7042,19 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Initial</source>
         <translation type="obsolete">Hasiera</translation>
+    </message>
+</context>
+<context>
+    <name>fade</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="51"/>
+        <source>Fade</source>
+        <translation type="unfinished">Baterapena</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="52"/>
+        <source>Fade in/out.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7629,6 +7743,19 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>gaussian</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="26"/>
+        <source>Gaussian convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="27"/>
+        <source>3x3 convolution filter :gaussian.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>h263Header</name>
     <message>
         <source>Size is not (s)QCIF</source>
@@ -8282,6 +8409,35 @@ p, li { white-space: pre-wrap; }
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="387"/>
         <source>&amp;Preview</source>
         <translation>&amp;Aurreikuspena</translation>
+    </message>
+</context>
+<context>
+    <name>meadian</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="29"/>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mean</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="27"/>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="28"/>
+        <source>3x3 convolution filter :mean.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>median</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="28"/>
+        <source>Median convolution.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

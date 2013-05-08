@@ -53,8 +53,8 @@ DECLARE_VIDEO_FILTER(   Decimate,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "decimate",            // internal name (must be uniq!)
-                        "Decomb decimate",            // Display name
-                        "Donald Graft decimate. Remove duplicate after telecide." // Description
+                        QT_TRANSLATE_NOOP("decimate","Decomb decimate"),            // Display name
+                        QT_TRANSLATE_NOOP("decimate","Donald Graft decimate. Remove duplicate after telecide.") // Description
                     );
 
 

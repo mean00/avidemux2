@@ -53,8 +53,8 @@ DECLARE_VIDEO_FILTER(   CropFilter,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "crop",            // internal name (must be uniq!)
-                        "crop",            // Display name
-                        "crop filter" // Description
+                        QT_TRANSLATE_NOOP("crop","crop"),            // Display name
+                        QT_TRANSLATE_NOOP("crop","crop filter") // Description
                     );
 
 

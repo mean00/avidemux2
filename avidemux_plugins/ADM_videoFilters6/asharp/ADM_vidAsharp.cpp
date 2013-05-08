@@ -62,8 +62,8 @@ DECLARE_VIDEO_FILTER(   ASharp,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
                         "asharp",            // internal name (must be uniq!)
-                        "Asharp",            // Display name
-                        QT_TR_NOOP("Adaptative sharpener by MarcFD.") // Description
+                        QT_TRANSLATE_NOOP("asharp","Asharp"),            // Display name
+                        QT_TRANSLATE_NOOP("asharp","Adaptative sharpener by MarcFD.") // Description
                     );
 
 void asharp_run_c(      uc* planeptr, int pitch,

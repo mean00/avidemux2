@@ -2332,6 +2332,28 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>asharp</name>
+    <message>
+        <source>Asharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ass</name>
+    <message>
+        <source>SSA.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hardcode ass/ssa subtitles using libass.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>avsfilter</name>
     <message>
         <source>_wine app file:</source>
@@ -2450,6 +2472,21 @@ Is it running ?</source>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>ChromaShift</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>coloryuv</name>
+    <message>
+        <source>Avisynth color filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color management filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>contrast</name>
@@ -2473,6 +2510,10 @@ Is it running ?</source>
         <source>Coef :</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Adjust contrast, brightness and colors.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>crash</name>
@@ -2488,6 +2529,39 @@ Is it running ?</source>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>crop</name>
+    <message>
+        <source>crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>decimate</name>
+    <message>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft decimate. Remove duplicate after telecide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dgbob</name>
+    <message>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft Bob.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2647,6 +2721,28 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Root privileges are required to perform this operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>eq2</name>
+    <message>
+        <source>MPlayer eq2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust contrast, brightness, saturation and gamma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>fade</name>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade in/out.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3174,6 +3270,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>gaussian</name>
+    <message>
+        <source>Gaussian convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :gaussian.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>histogram</name>
     <message>
         <source>No data</source>
@@ -3593,6 +3700,31 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>&amp;Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>meadian</name>
+    <message>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mean</name>
+    <message>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :mean.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>median</name>
+    <message>
+        <source>Median convolution.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

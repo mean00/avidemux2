@@ -40,8 +40,8 @@ DECLARE_VIDEO_FILTER(   blackenBorders,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "blackenBorder",            // internal name (must be uniq!)
-                        "Blacken Borders.",            // Display name
-                        "Remove noisy edge by turning them to black." // Description
+                        QT_TRANSLATE_NOOP("black","Blacken Borders."),            // Display name
+                        QT_TRANSLATE_NOOP("black","Remove noisy edge by turning them to black.") // Description
                     );
 
 

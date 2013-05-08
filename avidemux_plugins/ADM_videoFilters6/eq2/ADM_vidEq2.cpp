@@ -56,8 +56,8 @@ DECLARE_VIDEO_FILTER(   ADMVideoEq2,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_COLORS,            // Category
                         "eq2",            // internal name (must be uniq!)
-                        "MPlayer eq2",            // Display name
-                        QT_TR_NOOP("Adjust contrast, brightness, saturation and gamma.") // Description
+                        QT_TRANSLATE_NOOP("eq2","MPlayer eq2"),            // Display name
+                        QT_TRANSLATE_NOOP("eq2","Adjust contrast, brightness, saturation and gamma.") // Description
                     );
 /**
     \fn configure

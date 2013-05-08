@@ -48,8 +48,8 @@ DECLARE_VIDEO_FILTER(AVDM_Fade,
                      ADM_UI_ALL,         // UI
                      VF_TRANSFORM,            // Category
                      "fade",            // internal name (must be uniq!)
-                     "Fade",            // Display name
-                     "Fade in/out." // Description
+                     QT_TRANSLATE_NOOP("fade","Fade"),            // Display name
+                     QT_TRANSLATE_NOOP("fade","Fade in/out.") // Description
                  );   
 /**
  * \fn configure

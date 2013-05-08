@@ -59,8 +59,8 @@ DECLARE_VIDEO_FILTER(   vidColorYuv,   // Class
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category
                         "colorYuv",            // internal name (must be uniq!)
-                        "Avisynth color filter.",            // Display name
-                        "Color management filter." // Description
+                        QT_TRANSLATE_NOOP("coloryuv","Avisynth color filter."),            // Display name
+                        QT_TRANSLATE_NOOP("coloryuv","Color management filter.") // Description
                     );
 
 /**

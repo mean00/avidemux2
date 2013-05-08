@@ -40,7 +40,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 #define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d);ui.a->setText(text);}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e);ui.a->setText(text);}
 #define SET_YES(a,b) ui.a->setText(yesno[b])
-#define FILLQT_TRANSLATE_NOOP("qprops",q) ui.q->setText(text);
+#define FILLQT_TRANSLATE_NOOP(a,q) ui.q->setText(text);
         
     
         //------------------------------------

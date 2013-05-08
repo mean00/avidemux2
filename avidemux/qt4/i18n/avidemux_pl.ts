@@ -6993,10 +6993,32 @@ Czy jest on uruchomiony?</translation>
     </message>
 </context>
 <context>
+    <name>asharp</name>
+    <message>
+        <source>Asharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished">Inteligentne wyostrzanie od MarcFD.</translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>Threshold</source>
         <translation type="obsolete">Próg</translation>
+    </message>
+</context>
+<context>
+    <name>ass</name>
+    <message>
+        <source>SSA.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hardcode ass/ssa subtitles using libass.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7137,12 +7159,27 @@ Czy jest on uruchomiony?</translation>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
         <translation type="unfinished">Zamień chrominancję U/V aby naprawić źle zsynchronizowane luminancję/chrominancję.</translation>
     </message>
+    <message>
+        <source>ChromaShift</source>
+        <translation type="unfinished">Przesunięcie chrominancji</translation>
+    </message>
 </context>
 <context>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
         <translation type="obsolete">Przesunięcie chrominancji</translation>
+    </message>
+</context>
+<context>
+    <name>coloryuv</name>
+    <message>
+        <source>Avisynth color filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color management filter.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7166,6 +7203,10 @@ Czy jest on uruchomiony?</translation>
     <message>
         <source>Coef :</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust contrast, brightness and colors.</source>
+        <translation type="unfinished">Dostosuj kontrast, jasność i kolory.</translation>
     </message>
 </context>
 <context>
@@ -7203,6 +7244,17 @@ Czy chcesz go wczytać ?
     </message>
 </context>
 <context>
+    <name>crop</name>
+    <message>
+        <source>crop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
@@ -7211,6 +7263,28 @@ Czy chcesz go wczytać ?
     <message>
         <source>Auto Crop</source>
         <translation type="obsolete">Automatyczne kadrowanie</translation>
+    </message>
+</context>
+<context>
+    <name>decimate</name>
+    <message>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft decimate. Remove duplicate after telecide.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dgbob</name>
+    <message>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft Bob.</source>
+        <translation type="unfinished">Bob od Donalda Grafta</translation>
     </message>
 </context>
 <context>
@@ -7412,6 +7486,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>eq2</name>
+    <message>
+        <source>MPlayer eq2</source>
+        <translation type="unfinished">MPlayer eq2</translation>
+    </message>
+    <message>
+        <source>Adjust contrast, brightness, saturation and gamma.</source>
+        <translation type="unfinished">Dostosuj kontrast, jasność, nasycenie i gammę.</translation>
+    </message>
+</context>
+<context>
     <name>eq2Dialog</name>
     <message>
         <source>MPlayer eq2</source>
@@ -7428,6 +7513,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Brightness</source>
         <translation type="obsolete">Jasność</translation>
+    </message>
+</context>
+<context>
+    <name>fade</name>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished">Zanikanie</translation>
+    </message>
+    <message>
+        <source>Fade in/out.</source>
+        <translation type="unfinished">Zanikanie/wyłanianie</translation>
     </message>
 </context>
 <context>
@@ -7973,6 +8069,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>gaussian</name>
+    <message>
+        <source>Gaussian convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :gaussian.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
@@ -8503,6 +8610,31 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Filters</source>
         <translation type="obsolete">Filtry</translation>
+    </message>
+</context>
+<context>
+    <name>meadian</name>
+    <message>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mean</name>
+    <message>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :mean.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>median</name>
+    <message>
+        <source>Median convolution.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

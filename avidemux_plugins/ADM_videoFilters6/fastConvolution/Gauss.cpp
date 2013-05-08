@@ -23,8 +23,8 @@ DECLARE_VIDEO_FILTER(   AVDMFastVideoGauss,   // Class
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category
                         "Gaussian",            // internal name (must be uniq!)
-                        "Gaussian convolution.",            // Display name
-                        "3x3 convolution filter :gaussian." // Description
+                        QT_TRANSLATE_NOOP("gaussian","Gaussian convolution."),            // Display name
+                        QT_TRANSLATE_NOOP("gaussian","3x3 convolution filter :gaussian.") // Description
                     );
 
 /**

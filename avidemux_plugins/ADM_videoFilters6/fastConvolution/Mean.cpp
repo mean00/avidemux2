@@ -24,8 +24,8 @@ DECLARE_VIDEO_FILTER(   AVDMFastVideoMean,   // Class
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category
                         "Mean",            // internal name (must be uniq!)
-                        "Mean convolution.",            // Display name
-                        "3x3 convolution filter :mean." // Description
+                        QT_TRANSLATE_NOOP("mean","Mean convolution."),            // Display name
+                        QT_TRANSLATE_NOOP("mean","3x3 convolution filter :mean.") // Description
                     );
 
 /**
