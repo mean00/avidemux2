@@ -2821,15 +2821,15 @@ Enable it?</source>
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">時間臨界值(_T):</translation>
+        <translation type="obsolete">時間臨界值(_T):</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">空間臨界值(_S):</translation>
+        <translation type="obsolete">空間臨界值(_S):</translation>
     </message>
     <message>
         <source>FluxSmooth</source>
-        <translation type="unfinished">融熔平滑</translation>
+        <translation type="obsolete">融熔平滑</translation>
     </message>
 </context>
 <context>
@@ -4411,17 +4411,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>DIA_progressIndexing</name>
-    <message>
-        <source># Images :%0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Time Left :%02d:%02d:%02d</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>DVEncoder</name>
     <message>
         <source>Incompatible settings</source>
@@ -5866,23 +5855,23 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="unfinished">遮罩(_M)</translation>
+        <translation type="obsolete">遮罩(_M)</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="unfinished">高 Q(_H)</translation>
+        <translation type="obsolete">高 Q(_H)</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">強度(_S):</translation>
+        <translation type="obsolete">強度(_S):</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">MSharpen</translation>
+        <translation type="obsolete">MSharpen</translation>
     </message>
 </context>
 <context>
@@ -6255,27 +6244,27 @@ Drop timing informations ?</source>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">圖標(_L)(jpg 檔):</translation>
+        <translation type="obsolete">圖標(_L)(jpg 檔):</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">選擇 JPEG 檔案</translation>
+        <translation type="obsolete">選擇 JPEG 檔案</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">_X 位置:</translation>
+        <translation type="obsolete">_X 位置:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">_Y 位置:</translation>
+        <translation type="obsolete">_Y 位置:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alpha:</translation>
+        <translation type="obsolete">_Alpha:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">圖標</translation>
+        <translation type="obsolete">圖標</translation>
     </message>
 </context>
 <context>
@@ -7316,34 +7305,6 @@ Is it running ?</source>
         <translation type="obsolete">LAME 設定</translation>
     </message>
     <message>
-        <source>X11</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X Quartz 2D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X QuickDraw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows Direct3D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Default Raster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The filter is already partial</source>
         <translation type="unfinished">此濾鏡已經是區段性</translation>
     </message>
@@ -7601,6 +7562,17 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>aften</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">位元率(_B):</translation>
+    </message>
+    <message>
+        <source>Aften Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>ASharp</source>
@@ -7752,6 +7724,13 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>chromashift</name>
+    <message>
+        <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
+        <translation type="unfinished">改變色度 U/V 來修復糟糕的明度/色度同步。</translation>
+    </message>
+</context>
+<context>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
@@ -7810,6 +7789,25 @@ Is it running ?</source>
     <message>
         <source>Brightness</source>
         <translation type="obsolete">亮度</translation>
+    </message>
+</context>
+<context>
+    <name>crash</name>
+    <message>
+        <source>Load it</source>
+        <translation type="unfinished">載入它</translation>
+    </message>
+    <message>
+        <source>Crash file</source>
+        <translation type="unfinished">損壞檔</translation>
+    </message>
+    <message>
+        <source>I have detected a crash file. 
+Do you want to load it  ?
+(It will be deleted in all cases, you should save it if you want to keep it)</source>
+        <translation type="unfinished">偵測到一個損壞檔。
+是否要載入 ?
+(在所有的案例都會偵測，若要保存它你必須執行儲存)</translation>
     </message>
 </context>
 <context>
@@ -8573,6 +8571,25 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>flux</name>
+    <message>
+        <source>Spatio-temporal cleaner by Ross Thomas.</source>
+        <translation type="unfinished">空間-時間清理器，作者為 Ross Thomas。</translation>
+    </message>
+    <message>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished">時間臨界值(_T):</translation>
+    </message>
+    <message>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished">空間臨界值(_S):</translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished">融熔平滑</translation>
+    </message>
+</context>
+<context>
     <name>flv1</name>
     <message>
         <source>None</source>
@@ -8671,39 +8688,31 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">上下來回，時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">略過空間時間檢查</translation>
+        <translation type="obsolete">略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
+        <translation type="obsolete">上下來回，略過空間時間檢查</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">命令(_O):</translation>
+        <translation type="obsolete">命令(_O):</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 <context>
@@ -8711,6 +8720,41 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Size is not (s)QCIF</source>
         <translation type="obsolete">大小不是 (s)QCIF</translation>
+    </message>
+</context>
+<context>
+    <name>histogram</name>
+    <message>
+        <source>No data</source>
+        <translation type="unfinished">沒有資料</translation>
+    </message>
+    <message>
+        <source>Max. bitrate:</source>
+        <translation type="unfinished">最大位元率:</translation>
+    </message>
+    <message>
+        <source>Average bitrate:</source>
+        <translation type="unfinished">平均位元率:</translation>
+    </message>
+    <message>
+        <source>Number of I frames:</source>
+        <translation type="unfinished">I 畫格數目:</translation>
+    </message>
+    <message>
+        <source>Number of P frames:</source>
+        <translation type="unfinished">P 畫格數目:</translation>
+    </message>
+    <message>
+        <source>Number of B frames:</source>
+        <translation type="unfinished">B 畫格數目:</translation>
+    </message>
+    <message>
+        <source>Max. B frames:</source>
+        <translation type="unfinished">最大 B 畫格數:</translation>
+    </message>
+    <message>
+        <source>Bitrate Histogram</source>
+        <translation type="unfinished">位元率分佈圖</translation>
     </message>
 </context>
 <context>
@@ -8722,6 +8766,44 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Saturation</source>
         <translation type="obsolete">飽和度</translation>
+    </message>
+</context>
+<context>
+    <name>huff</name>
+    <message>
+        <source>HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FF HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HuffYUV Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>indexing</name>
+    <message>
+        <source>Continue indexing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort Requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to abort indexing ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Left :%02d:%02d:%02d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8757,6 +8839,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Quit</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oops</source>
+        <translation type="unfinished">Oops</translation>
+    </message>
+    <message>
+        <source>Something very wrong happened when building joblist.</source>
+        <translation type="unfinished">建立工作列表時發生某些重大錯誤。</translation>
+    </message>
+    <message>
+        <source>There are no jobs stored</source>
+        <translation type="unfinished">沒有儲存任何工作</translation>
     </message>
 </context>
 <context>
@@ -9031,6 +9125,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>logo</name>
+    <message>
+        <source>_Logo (jpg file):</source>
+        <translation type="unfinished">圖標(_L)(jpg 檔):</translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished">選擇 JPEG 檔案</translation>
+    </message>
+    <message>
+        <source>_X Position:</source>
+        <translation type="unfinished">_X 位置:</translation>
+    </message>
+    <message>
+        <source>_Y Position:</source>
+        <translation type="unfinished">_Y 位置:</translation>
+    </message>
+    <message>
+        <source>_Alpha:</source>
+        <translation type="unfinished">_Alpha:</translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished">圖標</translation>
+    </message>
+</context>
+<context>
     <name>mainFilterDialog</name>
     <message>
         <source>Video Filter Manager</source>
@@ -9201,6 +9322,40 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mkvmuxer</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>msharpen</name>
+    <message>
+        <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
+        <translation type="unfinished">沒有放大雜訊下銳利化邊緣。作者為 Donald Graft。</translation>
+    </message>
+    <message>
+        <source>_Mask</source>
+        <translation type="unfinished">遮罩(_M)</translation>
+    </message>
+    <message>
+        <source>_High Q</source>
+        <translation type="unfinished">高 Q(_H)</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">臨界值(_T):</translation>
+    </message>
+    <message>
+        <source>_Strength:</source>
+        <translation type="unfinished">強度(_S):</translation>
+    </message>
+    <message>
+        <source>MSharpen</source>
+        <translation type="unfinished">MSharpen</translation>
+    </message>
+</context>
+<context>
     <name>muxerMP4</name>
     <message>
         <source>Saving mp4</source>
@@ -9208,13 +9363,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving PSP</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>muxerMkv</name>
-    <message>
-        <source>Saving Mkv</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9292,11 +9440,11 @@ p, li { white-space: pre-wrap; }
     <name>propWindow</name>
     <message>
         <source>Mono</source>
-        <translation type="unfinished">單音</translation>
+        <translation type="obsolete">單音</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">立體聲</translation>
+        <translation type="obsolete">立體聲</translation>
     </message>
     <message>
         <source>No</source>
@@ -9305,22 +9453,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Yes</source>
         <translation type="obsolete">是</translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%2.3f fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%02d:%02d:%02d.%03d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%s (%u:%u)</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9416,6 +9548,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>OK</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qprops</name>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">否</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">是</translation>
+    </message>
+    <message>
+        <source>%2.3f fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%02d:%02d:%02d.%03d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%s (%u:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">單音</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">立體聲</translation>
     </message>
 </context>
 <context>
@@ -9690,17 +9853,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>vdpauVideoFilter</name>
+    <name>uisupport</name>
     <message>
-        <source>Width :</source>
+        <source>X11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Height :</source>
+        <source>MS Windows GDI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>vdpau</source>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9726,6 +9905,56 @@ p, li { white-space: pre-wrap; }
         <source>_Deint Mode:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter2</name>
     <message>
         <source>Width :</source>
         <translation type="unfinished"></translation>
@@ -10401,39 +10630,31 @@ Do you wish to continue?</source>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">上下來回，時間 &amp; 空間檢查</translation>
+        <translation type="obsolete">上下來回，時間 &amp; 空間檢查</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">略過空間時間檢查</translation>
+        <translation type="obsolete">略過空間時間檢查</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">上下來回，略過空間時間檢查</translation>
+        <translation type="obsolete">上下來回，略過空間時間檢查</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">命令(_O):</translation>
+        <translation type="obsolete">命令(_O):</translation>
     </message>
     <message>
         <source>yadif</source>
-        <translation type="unfinished">yadif</translation>
-    </message>
-    <message>
-        <source>Bottom field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Top field first</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">yadif</translation>
     </message>
 </context>
 </TS>

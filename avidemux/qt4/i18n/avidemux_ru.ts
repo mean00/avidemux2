@@ -1882,15 +1882,11 @@ Is it running ?</source>
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">Временной порог:</translation>
+        <translation type="obsolete">Временной порог:</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">Пространственный порог:</translation>
-    </message>
-    <message>
-        <source>FluxSmooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Пространственный порог:</translation>
     </message>
 </context>
 <context>
@@ -2975,17 +2971,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>DIA_progressIndexing</name>
-    <message>
-        <source># Images :%0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Time Left :%02d:%02d:%02d</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>DVEncoder</name>
     <message>
         <source>Incompatible settings</source>
@@ -4026,23 +4011,23 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="unfinished">Маска</translation>
+        <translation type="obsolete">Маска</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="unfinished">Высокое качество</translation>
+        <translation type="obsolete">Высокое качество</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">Порог:</translation>
+        <translation type="obsolete">Порог:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">Уровень:</translation>
+        <translation type="obsolete">Уровень:</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">Резкость</translation>
+        <translation type="obsolete">Резкость</translation>
     </message>
 </context>
 <context>
@@ -4355,27 +4340,23 @@ Drop timing informations ?</source>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">Лого (JPG-файл)</translation>
+        <translation type="obsolete">Лого (JPG-файл)</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">Выбор JPEG-файла</translation>
+        <translation type="obsolete">Выбор JPEG-файла</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">Позиция X:</translation>
+        <translation type="obsolete">Позиция X:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">Позиция Y:</translation>
+        <translation type="obsolete">Позиция Y:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">Прозрачность (alpha):</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Прозрачность (alpha):</translation>
     </message>
 </context>
 <context>
@@ -5373,34 +5354,6 @@ Is it running ?</source>
         <translation type="obsolete">Настройка LAME</translation>
     </message>
     <message>
-        <source>X11</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X Quartz 2D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X QuickDraw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows Direct3D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Default Raster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The filter is already partial</source>
         <translation type="unfinished">Фильтр уже частично применён</translation>
     </message>
@@ -5658,6 +5611,17 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>aften</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">Битрейт:</translation>
+    </message>
+    <message>
+        <source>Aften Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>Strength</source>
@@ -5805,6 +5769,13 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>chromashift</name>
+    <message>
+        <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
+        <translation type="unfinished">Смещение chroma U/V для исправления плохой синхронизации яркости/цвета (luma/chroma).</translation>
+    </message>
+</context>
+<context>
     <name>contrast</name>
     <message>
         <source>U :</source>
@@ -5840,6 +5811,25 @@ Is it running ?</source>
     <message>
         <source>Brightness</source>
         <translation type="obsolete">Яркость</translation>
+    </message>
+</context>
+<context>
+    <name>crash</name>
+    <message>
+        <source>Load it</source>
+        <translation type="unfinished">Загрузить</translation>
+    </message>
+    <message>
+        <source>Crash file</source>
+        <translation type="unfinished">Крэш-файл</translation>
+    </message>
+    <message>
+        <source>I have detected a crash file. 
+Do you want to load it  ?
+(It will be deleted in all cases, you should save it if you want to keep it)</source>
+        <translation type="unfinished">Обнаружен крэш-файл. 
+Хотите загрузить его?
+(Он будет удален в любом случае, поэтому Вам нужно сохранить его, если он потребуется Вам в дальнейшем)</translation>
     </message>
 </context>
 <context>
@@ -6505,6 +6495,25 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>flux</name>
+    <message>
+        <source>Spatio-temporal cleaner by Ross Thomas.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished">Временной порог:</translation>
+    </message>
+    <message>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished">Пространственный порог:</translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>flv1</name>
     <message>
         <source>None</source>
@@ -6603,39 +6612,54 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Нижнее поле первое</translation>
+        <translation type="obsolete">Нижнее поле первое</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Верхнее поле первое</translation>
+        <translation type="obsolete">Верхнее поле первое</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Режим:</translation>
+        <translation type="obsolete">_Режим:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">Порядок:</translation>
+        <translation type="obsolete">Порядок:</translation>
+    </message>
+</context>
+<context>
+    <name>histogram</name>
+    <message>
+        <source>No data</source>
+        <translation type="unfinished">Нет данных.</translation>
     </message>
     <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
+        <source>Max. bitrate:</source>
+        <translation type="unfinished">Максимальный битрейт:</translation>
     </message>
     <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
+        <source>Average bitrate:</source>
+        <translation type="unfinished">Средний битрейт:</translation>
     </message>
     <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
+        <source>Number of I frames:</source>
+        <translation type="unfinished">Число I-кадров</translation>
     </message>
     <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
+        <source>Number of P frames:</source>
+        <translation type="unfinished">Число P-кадров</translation>
     </message>
     <message>
-        <source>yadif</source>
-        <translation type="unfinished"></translation>
+        <source>Number of B frames:</source>
+        <translation type="unfinished">Число B-кадров</translation>
+    </message>
+    <message>
+        <source>Max. B frames:</source>
+        <translation type="unfinished">Максимальное количество B-кадров</translation>
+    </message>
+    <message>
+        <source>Bitrate Histogram</source>
+        <translation type="unfinished">Диаграмма битрейта</translation>
     </message>
 </context>
 <context>
@@ -6647,6 +6671,44 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Saturation</source>
         <translation type="obsolete">Насыщенность</translation>
+    </message>
+</context>
+<context>
+    <name>huff</name>
+    <message>
+        <source>HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FF HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HuffYUV Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>indexing</name>
+    <message>
+        <source>Continue indexing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort Requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to abort indexing ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Left :%02d:%02d:%02d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6682,6 +6744,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Quit</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oops</source>
+        <translation type="unfinished">Предупреждение</translation>
+    </message>
+    <message>
+        <source>Something very wrong happened when building joblist.</source>
+        <translation type="unfinished">Что-то очень необъяснимое случилось при построении списка заданий.</translation>
+    </message>
+    <message>
+        <source>There are no jobs stored</source>
+        <translation type="unfinished">Нет сохраненных заданий</translation>
     </message>
 </context>
 <context>
@@ -6952,6 +7026,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>logo</name>
+    <message>
+        <source>_Logo (jpg file):</source>
+        <translation type="unfinished">Лого (JPG-файл)</translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished">Выбор JPEG-файла</translation>
+    </message>
+    <message>
+        <source>_X Position:</source>
+        <translation type="unfinished">Позиция X:</translation>
+    </message>
+    <message>
+        <source>_Y Position:</source>
+        <translation type="unfinished">Позиция Y:</translation>
+    </message>
+    <message>
+        <source>_Alpha:</source>
+        <translation type="unfinished">Прозрачность (alpha):</translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>mainFilterDialog</name>
     <message>
         <source>Video Filter Manager</source>
@@ -7086,6 +7187,40 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mkvmuxer</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>msharpen</name>
+    <message>
+        <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mask</source>
+        <translation type="unfinished">Маска</translation>
+    </message>
+    <message>
+        <source>_High Q</source>
+        <translation type="unfinished">Высокое качество</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">Порог:</translation>
+    </message>
+    <message>
+        <source>_Strength:</source>
+        <translation type="unfinished">Уровень:</translation>
+    </message>
+    <message>
+        <source>MSharpen</source>
+        <translation type="unfinished">Резкость</translation>
+    </message>
+</context>
+<context>
     <name>muxerMP4</name>
     <message>
         <source>Saving mp4</source>
@@ -7093,13 +7228,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving PSP</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>muxerMkv</name>
-    <message>
-        <source>Saving Mkv</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7185,27 +7313,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Mono</source>
-        <translation type="unfinished">Моно</translation>
+        <translation type="obsolete">Моно</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">Стерео</translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%2.3f fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%02d:%02d:%02d.%03d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%s (%u:%u)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Стерео</translation>
     </message>
 </context>
 <context>
@@ -7297,6 +7409,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>OK</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qprops</name>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">Нет</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Да</translation>
+    </message>
+    <message>
+        <source>%2.3f fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%02d:%02d:%02d.%03d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%s (%u:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Моно</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">Стерео</translation>
     </message>
 </context>
 <context>
@@ -7511,17 +7654,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>vdpauVideoFilter</name>
+    <name>uisupport</name>
     <message>
-        <source>Width :</source>
+        <source>X11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Height :</source>
+        <source>MS Windows GDI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>vdpau</source>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7547,6 +7706,56 @@ p, li { white-space: pre-wrap; }
         <source>_Deint Mode:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter2</name>
     <message>
         <source>Width :</source>
         <translation type="unfinished"></translation>
@@ -8123,39 +8332,19 @@ Do you wish to continue?</source>
     <name>yadifFilter</name>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Нижнее поле первое</translation>
+        <translation type="obsolete">Нижнее поле первое</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Верхнее поле первое</translation>
+        <translation type="obsolete">Верхнее поле первое</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Режим:</translation>
+        <translation type="obsolete">_Режим:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">Порядок:</translation>
-    </message>
-    <message>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>yadif</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Порядок:</translation>
     </message>
 </context>
 </TS>

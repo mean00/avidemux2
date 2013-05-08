@@ -45,19 +45,12 @@
 <context>
     <name>ADMVideoFlux</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="88"/>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">Seuil temporel:</translation>
+        <translation type="obsolete">Seuil temporel:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="89"/>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">Seuil spacial:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="93"/>
-        <source>FluxSmooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Seuil spacial:</translation>
     </message>
 </context>
 <context>
@@ -677,14 +670,8 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>DIA_progressIndexing</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="140"/>
-        <source># Images :%0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="158"/>
         <source>Time Left :%02d:%02d:%02d</source>
-        <translation type="unfinished">Temps restant :%02d:%02d:%02d</translation>
+        <translation type="obsolete">Temps restant :%02d:%02d:%02d</translation>
     </message>
 </context>
 <context>
@@ -1286,29 +1273,8 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>Msharpen</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="133"/>
-        <source>_Mask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="134"/>
-        <source>_High Q</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="136"/>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="137"/>
         <source>_Strength:</source>
-        <translation type="unfinished">Force:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="142"/>
-        <source>MSharpen</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Force:</translation>
     </message>
 </context>
 <context>
@@ -1596,39 +1562,6 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192"/>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>addLogopFilter</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
-        <source>_Logo (jpg file):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
-        <source>Select JPEG file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="151"/>
-        <source>_X Position:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="152"/>
-        <source>_Y Position:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="153"/>
-        <source>_Alpha:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="157"/>
-        <source>Logo</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2372,12 +2305,12 @@ Ignorer les informations de timing ?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="58"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="57"/>
         <source>Audio Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="81"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="80"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="341"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="344"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="349"/>
@@ -2385,67 +2318,67 @@ Ignorer les informations de timing ?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="87"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="86"/>
         <source>Video Encoder Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="111"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="110"/>
         <source>Video Encoder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="116"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="115"/>
         <source>Video Decoder Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="140"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="139"/>
         <source>Video Decoder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="145"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="144"/>
         <source>Audio Device Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="167"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="166"/>
         <source>Audio Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="174"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="173"/>
         <source>Audio Encoder Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="196"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="195"/>
         <source>Audio Encoders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="203"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="202"/>
         <source>Demuxer Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="225"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="224"/>
         <source>Demuxers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="233"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="232"/>
         <source>Muxer Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="255"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="254"/>
         <source>Muxers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="260"/>
+        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="259"/>
         <source>Plugins Info</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3057,41 +2990,6 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="158"/>
-        <source>X11</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="160"/>
-        <source>MS Windows GDI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="162"/>
-        <source>Mac OS X Quartz 2D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="164"/>
-        <source>Mac OS X QuickDraw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="166"/>
-        <source>OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="169"/>
-        <source>MS Windows Direct3D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="172"/>
-        <source>Default Raster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="418"/>
         <source>The filter is already partial</source>
         <translation type="unfinished">The filtre est déjà partiel</translation>
@@ -3191,6 +3089,19 @@ Is it running ?</source>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
         <source>This script has already been successfully executed.</source>
         <translation type="unfinished">Ce script a déjà été executé avec succés</translation>
+    </message>
+</context>
+<context>
+    <name>aften</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="239"/>
+        <source>_Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="245"/>
+        <source>Aften Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3337,6 +3248,14 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>chromashift</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
+        <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>contrast</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="25"/>
@@ -3361,6 +3280,26 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="30"/>
         <source>Coef :</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>crash</name>
+    <message>
+        <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="85"/>
+        <source>Load it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="85"/>
+        <source>Crash file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="86"/>
+        <source>I have detected a crash file. 
+Do you want to load it  ?
+(It will be deleted in all cases, you should save it if you want to keep it)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4079,6 +4018,29 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>flux</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="38"/>
+        <source>Spatio-temporal cleaner by Ross Thomas.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="88"/>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished">Seuil temporel:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="89"/>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished">Seuil spacial:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="93"/>
+        <source>FluxSmooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>flv1</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="154"/>
@@ -4197,51 +4159,93 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>glYadif</name>
+    <name>histogram</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="261"/>
-        <source>Temporal &amp; spatial check</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="56"/>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="131"/>
+        <source>No data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="262"/>
-        <source>Bob, temporal &amp; spatial check</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="202"/>
+        <source>Max. bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="263"/>
-        <source>Skip spatial temporal check</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="203"/>
+        <source>Average bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="264"/>
-        <source>Bob, skip spatial temporal check</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="204"/>
+        <source>Number of I frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="267"/>
-        <source>Bottom field first</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="205"/>
+        <source>Number of P frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="268"/>
-        <source>Top field first</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="206"/>
+        <source>Number of B frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="271"/>
-        <source>_Mode:</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="207"/>
+        <source>Max. B frames:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="272"/>
-        <source>_Order:</source>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="220"/>
+        <source>Bitrate Histogram</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>huff</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="99"/>
+        <source>HUFFYUV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glYadif/glYadif.cpp" line="276"/>
-        <source>yadif</source>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="100"/>
+        <source>FF HUFFYUV</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="109"/>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="112"/>
+        <source>HuffYUV Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>indexing</name>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
+        <source>Continue indexing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
+        <source>Abort Requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
+        <source>Do you want to abort indexing ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="158"/>
+        <source>Time Left :%02d:%02d:%02d</source>
+        <translation type="unfinished">Temps restant :%02d:%02d:%02d</translation>
     </message>
 </context>
 <context>
@@ -4285,6 +4289,21 @@ p, li { white-space: pre-wrap; }
         <location filename="../ADM_jobs/src/uiJobs.ui" line="71"/>
         <source>Quit</source>
         <translation type="unfinished">Quitter</translation>
+    </message>
+    <message>
+        <location filename="../../common/GUI_jobs.cpp" line="37"/>
+        <source>Oops</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/GUI_jobs.cpp" line="37"/>
+        <source>Something very wrong happened when building joblist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/GUI_jobs.cpp" line="43"/>
+        <source>There are no jobs stored</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4452,37 +4471,37 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>lame</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="311"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="310"/>
         <source>CBR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="312"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="311"/>
         <source>ABR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="314"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="313"/>
         <source>Bit_rate mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="330"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="329"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="332"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="331"/>
         <source>_Quality:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="335"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="334"/>
         <source>_Disable reservoir:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="339"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="338"/>
         <source>LAME Configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4568,6 +4587,39 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/license.ui" line="62"/>
         <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>logo</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
+        <source>_Logo (jpg file):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
+        <source>Select JPEG file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="151"/>
+        <source>_X Position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="152"/>
+        <source>_Y Position:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="153"/>
+        <source>_Alpha:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="157"/>
+        <source>Logo</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4817,6 +4869,47 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mkvmuxer</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="134"/>
+        <source>Saving Mkv</source>
+        <translation type="unfinished">Sauvegarde au format MKV (ff)</translation>
+    </message>
+</context>
+<context>
+    <name>msharpen</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="78"/>
+        <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="133"/>
+        <source>_Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="134"/>
+        <source>_High Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="136"/>
+        <source>_Threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="137"/>
+        <source>_Strength:</source>
+        <translation type="unfinished">Force:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="142"/>
+        <source>MSharpen</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>muxerMP4</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="150"/>
@@ -4832,9 +4925,8 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>muxerMkv</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="134"/>
         <source>Saving Mkv</source>
-        <translation type="unfinished">Sauvegarde au format MKV (ff)</translation>
+        <translation type="obsolete">Sauvegarde au format MKV (ff)</translation>
     </message>
 </context>
 <context>
@@ -4868,42 +4960,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>glResize</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>propWindow</name>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="48"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="103"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="104"/>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="49"/>
-        <source>%2.3f fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="53"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="112"/>
-        <source>%02d:%02d:%02d.%03d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="59"/>
-        <source>%s (%u:%u)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="92"/>
-        <source>Mono</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="95"/>
-        <source>Stereo</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5002,6 +5058,45 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="268"/>
         <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qprops</name>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="23"/>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="23"/>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="49"/>
+        <source>%2.3f fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="53"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="112"/>
+        <source>%02d:%02d:%02d.%03d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="59"/>
+        <source>%s (%u:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="92"/>
+        <source>Mono</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="95"/>
+        <source>Stereo</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5272,7 +5367,146 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>uisupport</name>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="165"/>
+        <source>X11</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="167"/>
+        <source>MS Windows GDI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="169"/>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="171"/>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="173"/>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="176"/>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="179"/>
+        <source>Default Raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vdpauVideoFilter</name>
+    <message>
+        <source>Width :</source>
+        <translation type="obsolete">Largeur:</translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="obsolete">Hauteur:</translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="obsolete">vdpau</translation>
+    </message>
+</context>
+<context>
+    <name>vdpauVideoFilterDeint</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="315"/>
+        <source>Keep Top Field</source>
+        <translation type="unfinished">Garder le champs supérieur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="316"/>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished">Garder le champs inférieur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="317"/>
+        <source>Double framerate</source>
+        <translation type="unfinished">Doubler le nombre d&apos;image par seconde</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="321"/>
+        <source>_Resize:</source>
+        <translation type="unfinished">_Redimensionner</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="322"/>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished">Mode de _deentrelacement:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="323"/>
+        <source>Width :</source>
+        <translation type="unfinished">Largeur:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="324"/>
+        <source>Height :</source>
+        <translation type="unfinished">Hauteur:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="328"/>
+        <source>vdpau</source>
+        <translation type="unfinished">vdpau</translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="264"/>
+        <source>Keep Top Field</source>
+        <translation type="unfinished">Garder le champs supérieur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="265"/>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished">Garder le champs inférieur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="266"/>
+        <source>Double framerate</source>
+        <translation type="unfinished">Doubler le nombre d&apos;image par seconde</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="270"/>
+        <source>_Resize:</source>
+        <translation type="unfinished">_Redimensionner</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="271"/>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished">Mode de _deentrelacement:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="272"/>
+        <source>Width :</source>
+        <translation type="unfinished">Largeur:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="273"/>
+        <source>Height :</source>
+        <translation type="unfinished">Hauteur:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="277"/>
+        <source>vdpau</source>
+        <translation type="unfinished">vdpau</translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter2</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="198"/>
         <source>Width :</source>
@@ -5285,57 +5519,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
-        <source>vdpau</source>
-        <translation type="unfinished">vdpau</translation>
-    </message>
-</context>
-<context>
-    <name>vdpauVideoFilterDeint</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="315"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="264"/>
-        <source>Keep Top Field</source>
-        <translation type="unfinished">Garder le champs supérieur</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="316"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="265"/>
-        <source>Keep Bottom Field</source>
-        <translation type="unfinished">Garder le champs inférieur</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="317"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="266"/>
-        <source>Double framerate</source>
-        <translation type="unfinished">Doubler le nombre d&apos;image par seconde</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="321"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="270"/>
-        <source>_Resize:</source>
-        <translation type="unfinished">_Redimensionner</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="322"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="271"/>
-        <source>_Deint Mode:</source>
-        <translation type="unfinished">Mode de _deentrelacement:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="323"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="272"/>
-        <source>Width :</source>
-        <translation type="unfinished">Largeur:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="324"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="273"/>
-        <source>Height :</source>
-        <translation type="unfinished">Hauteur:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="328"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="277"/>
         <source>vdpau</source>
         <translation type="unfinished">vdpau</translation>
     </message>
@@ -5745,54 +5928,6 @@ Voulez vous procéder ?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="127"/>
         <source>Xvid4 MPEG-4 ASP configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>yadifFilter</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="131"/>
-        <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="132"/>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="133"/>
-        <source>Skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="134"/>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="137"/>
-        <source>Bottom field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="138"/>
-        <source>Top field first</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="141"/>
-        <source>_Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="142"/>
-        <source>_Order:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="146"/>
-        <source>yadif</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

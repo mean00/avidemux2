@@ -2177,15 +2177,15 @@ Do you want to load it  ?
     <name>ADMVideoFlux</name>
     <message>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">Κατώφλι χρώματος:</translation>
+        <translation type="obsolete">Κατώφλι χρώματος:</translation>
     </message>
     <message>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">Κατώφλι χρώματος:</translation>
+        <translation type="obsolete">Κατώφλι χρώματος:</translation>
     </message>
     <message>
         <source>FluxSmooth</source>
-        <translation type="unfinished">FluxSmooth</translation>
+        <translation type="obsolete">FluxSmooth</translation>
     </message>
 </context>
 <context>
@@ -3422,17 +3422,6 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>DIA_progressIndexing</name>
-    <message>
-        <source># Images :%0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Time Left :%02d:%02d:%02d</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4824,23 +4813,23 @@ Drop timing informations ?</source>
     <name>Msharpen</name>
     <message>
         <source>_Mask</source>
-        <translation type="unfinished">Mask</translation>
+        <translation type="obsolete">Mask</translation>
     </message>
     <message>
         <source>_High Q</source>
-        <translation type="unfinished">_Υψηλό Q</translation>
+        <translation type="obsolete">_Υψηλό Q</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Κατώφλι:</translation>
+        <translation type="obsolete">_Κατώφλι:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Ισχύς:</translation>
+        <translation type="obsolete">_Ισχύς:</translation>
     </message>
     <message>
         <source>MSharpen</source>
-        <translation type="unfinished">MSharpen (οξύτητα)</translation>
+        <translation type="obsolete">MSharpen (οξύτητα)</translation>
     </message>
 </context>
 <context>
@@ -5157,27 +5146,27 @@ Drop timing informations ?</source>
     <name>addLogopFilter</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">_Λογότυπο (αρχείο jpg):</translation>
+        <translation type="obsolete">_Λογότυπο (αρχείο jpg):</translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">Επιλογή Αρχείου JPEG</translation>
+        <translation type="obsolete">Επιλογή Αρχείου JPEG</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">Θέση _X:</translation>
+        <translation type="obsolete">Θέση _X:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">Θέση _Y:</translation>
+        <translation type="obsolete">Θέση _Y:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Άλφα:</translation>
+        <translation type="obsolete">_Άλφα:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">Λογότυπο</translation>
+        <translation type="obsolete">Λογότυπο</translation>
     </message>
 </context>
 <context>
@@ -6227,34 +6216,6 @@ Is it running ?</source>
         <translation type="obsolete">Ρύθμιση LAME</translation>
     </message>
     <message>
-        <source>X11</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows GDI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X Quartz 2D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mac OS X QuickDraw</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>OpenGL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MS Windows Direct3D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Default Raster</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The filter is already partial</source>
         <translation type="unfinished">Το φίλτρο είναι ήδη μερικό</translation>
     </message>
@@ -6512,6 +6473,17 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>aften</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Ρυθμός bit:</translation>
+    </message>
+    <message>
+        <source>Aften Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>asharpDialog</name>
     <message>
         <source>Strength</source>
@@ -6655,6 +6627,13 @@ Is it running ?</source>
     </message>
 </context>
 <context>
+    <name>chromashift</name>
+    <message>
+        <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
@@ -6705,6 +6684,25 @@ Is it running ?</source>
     <message>
         <source>Brightness</source>
         <translation type="obsolete">Φωτεινότητα</translation>
+    </message>
+</context>
+<context>
+    <name>crash</name>
+    <message>
+        <source>Load it</source>
+        <translation type="unfinished">Να γίνει φόρτωση</translation>
+    </message>
+    <message>
+        <source>Crash file</source>
+        <translation type="unfinished">Αρχείο κατάρευσης</translation>
+    </message>
+    <message>
+        <source>I have detected a crash file. 
+Do you want to load it  ?
+(It will be deleted in all cases, you should save it if you want to keep it)</source>
+        <translation type="unfinished">Έχω ανιχνεύσει ένα αρχείο κατάρρευσης. 
+Θέλεις να φορτωθεί ;
+(σε κάθε περίπτωση, θα διαγραφεί, θα πρέπει να το αποθηκεύσεις αν θες να το διατηρήσεις)</translation>
     </message>
 </context>
 <context>
@@ -7356,6 +7354,25 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>flux</name>
+    <message>
+        <source>Spatio-temporal cleaner by Ross Thomas.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Temporal threshold:</source>
+        <translation type="unfinished">Κατώφλι χρώματος:</translation>
+    </message>
+    <message>
+        <source>_Spatial threshold:</source>
+        <translation type="unfinished">Κατώφλι χρώματος:</translation>
+    </message>
+    <message>
+        <source>FluxSmooth</source>
+        <translation type="unfinished">FluxSmooth</translation>
+    </message>
+</context>
+<context>
     <name>flv1</name>
     <message>
         <source>None</source>
@@ -7454,39 +7471,27 @@ p, li { white-space: pre-wrap; }
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">Χρονικός και χωρικός έλεγχος</translation>
+        <translation type="obsolete">Χρονικός και χωρικός έλεγχος</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
+        <translation type="obsolete">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Πρώτα το κάτω πεδίο</translation>
+        <translation type="obsolete">Πρώτα το κάτω πεδίο</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Πρώτα το επάνω πεδίο</translation>
+        <translation type="obsolete">Πρώτα το επάνω πεδίο</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Λειτουργία: </translation>
+        <translation type="obsolete">_Λειτουργία: </translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">_Σειρά:</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>yadif</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Σειρά:</translation>
     </message>
 </context>
 <context>
@@ -7497,10 +7502,83 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>histogram</name>
+    <message>
+        <source>No data</source>
+        <translation type="unfinished">Δεν υπάρχουν δεδομένα</translation>
+    </message>
+    <message>
+        <source>Max. bitrate:</source>
+        <translation type="unfinished">Μέγιστος ρυθμός bit:</translation>
+    </message>
+    <message>
+        <source>Average bitrate:</source>
+        <translation type="unfinished">Μέσος όρος ρυθμού bit:</translation>
+    </message>
+    <message>
+        <source>Number of I frames:</source>
+        <translation type="unfinished">Αριθμός πλαισίων:</translation>
+    </message>
+    <message>
+        <source>Number of P frames:</source>
+        <translation type="unfinished">Αριθμός πλαισίων:</translation>
+    </message>
+    <message>
+        <source>Number of B frames:</source>
+        <translation type="unfinished">Αριθμός πλαισίων:</translation>
+    </message>
+    <message>
+        <source>Max. B frames:</source>
+        <translation type="unfinished">Μέγιστο βήμα QP μεταξύ καρέ</translation>
+    </message>
+    <message>
+        <source>Bitrate Histogram</source>
+        <translation type="unfinished">Ιστόγραμμα Ρυθμού Bit</translation>
+    </message>
+</context>
+<context>
     <name>hueDialog</name>
     <message>
         <source>Hue</source>
         <translation type="obsolete">Απόχρωση</translation>
+    </message>
+</context>
+<context>
+    <name>huff</name>
+    <message>
+        <source>HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FF HUFFYUV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HuffYUV Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>indexing</name>
+    <message>
+        <source>Continue indexing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort Requested</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you want to abort indexing ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Left :%02d:%02d:%02d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7536,6 +7614,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Quit</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oops</source>
+        <translation type="unfinished">Ουπς</translation>
+    </message>
+    <message>
+        <source>Something very wrong happened when building joblist.</source>
+        <translation type="unfinished">Κάτι πολύ λάθος συνέβει με τη λίστα διαδικασιών.</translation>
+    </message>
+    <message>
+        <source>There are no jobs stored</source>
+        <translation type="unfinished">Δεν υπάρχουν αποθηκευμένες διαδικασίες</translation>
     </message>
 </context>
 <context>
@@ -7774,6 +7864,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>logo</name>
+    <message>
+        <source>_Logo (jpg file):</source>
+        <translation type="unfinished">_Λογότυπο (αρχείο jpg):</translation>
+    </message>
+    <message>
+        <source>Select JPEG file</source>
+        <translation type="unfinished">Επιλογή Αρχείου JPEG</translation>
+    </message>
+    <message>
+        <source>_X Position:</source>
+        <translation type="unfinished">Θέση _X:</translation>
+    </message>
+    <message>
+        <source>_Y Position:</source>
+        <translation type="unfinished">Θέση _Y:</translation>
+    </message>
+    <message>
+        <source>_Alpha:</source>
+        <translation type="unfinished">_Άλφα:</translation>
+    </message>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished">Λογότυπο</translation>
+    </message>
+</context>
+<context>
     <name>mainFilterDialog</name>
     <message>
         <source>Video Filter Manager</source>
@@ -7900,6 +8017,40 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mkvmuxer</name>
+    <message>
+        <source>Saving Mkv</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>msharpen</name>
+    <message>
+        <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mask</source>
+        <translation type="unfinished">Mask</translation>
+    </message>
+    <message>
+        <source>_High Q</source>
+        <translation type="unfinished">_Υψηλό Q</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">_Κατώφλι:</translation>
+    </message>
+    <message>
+        <source>_Strength:</source>
+        <translation type="unfinished">_Ισχύς:</translation>
+    </message>
+    <message>
+        <source>MSharpen</source>
+        <translation type="unfinished">MSharpen (οξύτητα)</translation>
+    </message>
+</context>
+<context>
     <name>muxerMP4</name>
     <message>
         <source>Saving mp4</source>
@@ -7907,13 +8058,6 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Saving PSP</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>muxerMkv</name>
-    <message>
-        <source>Saving Mkv</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7999,27 +8143,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Mono</source>
-        <translation type="unfinished">Μονοφωνικό</translation>
+        <translation type="obsolete">Μονοφωνικό</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished">Στέρεο</translation>
-    </message>
-    <message>
-        <source>%</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%2.3f fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%02d:%02d:%02d.%03d</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>%s (%u:%u)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Στέρεο</translation>
     </message>
 </context>
 <context>
@@ -8107,6 +8235,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>OK</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qprops</name>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">Όχι</translation>
+    </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished">Ναι</translation>
+    </message>
+    <message>
+        <source>%2.3f fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%02d:%02d:%02d.%03d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%s (%u:%u)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Μονοφωνικό</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">Στέρεο</translation>
     </message>
 </context>
 <context>
@@ -8318,17 +8477,33 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>vdpauVideoFilter</name>
+    <name>uisupport</name>
     <message>
-        <source>Width :</source>
+        <source>X11</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Height :</source>
+        <source>MS Windows GDI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>vdpau</source>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8354,6 +8529,56 @@ p, li { white-space: pre-wrap; }
         <source>_Deint Mode:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vdpaufilter2</name>
     <message>
         <source>Width :</source>
         <translation type="unfinished"></translation>
@@ -8934,39 +9159,27 @@ Do you wish to continue?</source>
     <name>yadifFilter</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">Χρονικός και χωρικός έλεγχος</translation>
+        <translation type="obsolete">Χρονικός και χωρικός έλεγχος</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
+        <translation type="obsolete">Παράβλεψη χωρικού και χρονικού ελέγχου</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="unfinished">Πρώτα το κάτω πεδίο</translation>
+        <translation type="obsolete">Πρώτα το κάτω πεδίο</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="unfinished">Πρώτα το επάνω πεδίο</translation>
+        <translation type="obsolete">Πρώτα το επάνω πεδίο</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Λειτουργία: </translation>
+        <translation type="obsolete">_Λειτουργία: </translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="unfinished">_Σειρά:</translation>
-    </message>
-    <message>
-        <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>yadif</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Σειρά:</translation>
     </message>
 </context>
 </TS>
