@@ -31,7 +31,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoContrast,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_COLORS,            // Category
                         "contrast",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("contrast","Contrast",            // Display name
+                        QT_TRANSLATE_NOOP("contrast","Contrast"),            // Display name
                         QT_TRANSLATE_NOOP("contrast","Adjust contrast, brightness and colors.") // Description
                     );
 
