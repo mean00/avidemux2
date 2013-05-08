@@ -35,7 +35,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoFlux,   // Class
                         VF_NOISE,            // Category
                         "fluxsmooth",            // internal name (must be uniq!)
                         "FluxSmooth",            // Display name
-                        QT_TR_NOOP("Spatio-temporal cleaner by Ross Thomas.") // Description
+                        QT_TRANSLATE_NOOP("flux","Spatio-temporal cleaner by Ross Thomas.") // Description
                     );
 //********** /Register chunk ************
 
@@ -85,12 +85,12 @@ bool ADMVideoFlux::configure()
 uint8_t r;
 #define PX(X) &(_param.X##_threshold)
 
-    diaElemUInteger Gtemporal(PX(temporal),QT_TR_NOOP("_Temporal threshold:"),0,255);
-    diaElemUInteger Gspatial(PX(spatial),QT_TR_NOOP("_Spatial threshold:"),0,255);
+    diaElemUInteger Gtemporal(PX(temporal),QT_TRANSLATE_NOOP("flux","_Temporal threshold:"),0,255);
+    diaElemUInteger Gspatial(PX(spatial),QT_TRANSLATE_NOOP("flux","_Spatial threshold:"),0,255);
 	  
     diaElem *elems[2]={&Gtemporal,&Gspatial};
   
-    r=diaFactoryRun(QT_TR_NOOP("FluxSmooth"),2,elems);
+    r=diaFactoryRun(QT_TRANSLATE_NOOP("flux","FluxSmooth"),2,elems);
     return r;
     
 }

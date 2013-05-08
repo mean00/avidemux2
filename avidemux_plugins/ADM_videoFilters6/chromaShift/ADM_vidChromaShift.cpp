@@ -32,7 +32,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoChromaShift,   // Class
                         VF_COLORS,            // Category
                         "chromashift",            // internal name (must be uniq!)
                         "ChromaShift",            // Display name
-                        QT_TR_NOOP("Shift chroma U/V to fix badly synced luma/chroma.") // Description
+                        QT_TRANSLATE_NOOP("chromashift","Shift chroma U/V to fix badly synced luma/chroma.") // Description
                     );
 /**
     \fn

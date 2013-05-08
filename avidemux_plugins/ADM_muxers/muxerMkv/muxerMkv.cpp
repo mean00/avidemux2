@@ -131,7 +131,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 */
 bool muxerMkv::save(void) 
 {
-    const char *title=QT_TR_NOOP("Saving Mkv");
+    const char *title=QT_TRANSLATE_NOOP("mkvmuxer","Saving Mkv");
     return saveLoop(title);
 }
 

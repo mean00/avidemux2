@@ -147,14 +147,14 @@ const char *addLogopFilter::getConfiguration(void)
 bool addLogopFilter::configure( void)
 {
 #define PX(x) &(configuration.x)
-	   diaElemFile       file(0,(char **)PX(logo),QT_TR_NOOP("_Logo (jpg file):"), NULL, QT_TR_NOOP("Select JPEG file"));
-	   diaElemUInteger   positionX(PX(x),QT_TR_NOOP("_X Position:"),0,info.width);
-	   diaElemUInteger   positionY(PX(y),QT_TR_NOOP("_Y Position:"),0,info.height);
-	   diaElemUInteger   alpha(PX(alpha),QT_TR_NOOP("_Alpha:"),0,255);
+	   diaElemFile       file(0,(char **)PX(logo),QT_TRANSLATE_NOOP("logo","_Logo (jpg file):"), NULL, QT_TRANSLATE_NOOP("logo","Select JPEG file"));
+	   diaElemUInteger   positionX(PX(x),QT_TRANSLATE_NOOP("logo","_X Position:"),0,info.width);
+	   diaElemUInteger   positionY(PX(y),QT_TRANSLATE_NOOP("logo","_Y Position:"),0,info.height);
+	   diaElemUInteger   alpha(PX(alpha),QT_TRANSLATE_NOOP("logo","_Alpha:"),0,255);
 
 	   diaElem *elems[4]={&file,&positionX,&positionY,&alpha};
 
-	   if( diaFactoryRun(QT_TR_NOOP("Logo"),4,elems))
+	   if( diaFactoryRun(QT_TRANSLATE_NOOP("logo","Logo"),4,elems))
 	   {
 		   if(false==reloadImage())
             GUI_Error_HIG("Oops","Cannot load the logo");

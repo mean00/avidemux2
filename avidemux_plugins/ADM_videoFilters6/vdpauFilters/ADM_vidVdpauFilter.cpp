@@ -195,12 +195,12 @@ bool vdpauVideoFilter::configure( void)
 {
     
      
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TR_NOOP("Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TR_NOOP("Height :"),16,2048);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaufilter2","Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaufilter2","Height :"),16,2048);
      
      diaElem *elems[]={&tWidth,&tHeight};
      
-     if(diaFactoryRun(QT_TR_NOOP("vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpaufilter2","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 info.width=configuration.targetWidth;
                 info.height=configuration.targetHeight;

@@ -34,13 +34,13 @@ char *jobDir=ADM_getJobDir();
         if(!buildDirectoryContent(&nb,ADM_getJobDir(),jobName,MAX_JOBS,".py"))
         {
           delete [] jobDir;
-          GUI_Error_HIG(QT_TR_NOOP("Oops"),QT_TR_NOOP("Something very wrong happened when building joblist."));
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("jobs","Oops"),QT_TRANSLATE_NOOP("jobs","Something very wrong happened when building joblist."));
                 return 0;
         }
         delete [] jobDir;
         if(!nb)
         {
-          GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TR_NOOP("There are no jobs stored"), NULL);
+          GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TRANSLATE_NOOP("jobs","There are no jobs stored"), NULL);
                 return 1;
         }
         DIA_job(nb,jobName);

@@ -20,7 +20,7 @@
 #include "ADM_toolkitQt.h"
 #include "ADM_coreUtils.h"
 
-static const char *yesno[2]={QT_TR_NOOP("No"),QT_TR_NOOP("Yes")};
+static const char *yesno[2]={QT_TRANSLATE_NOOP("qprops","No"),QT_TRANSLATE_NOOP("qprops","Yes")};
 
 propWindow::propWindow(QWidget *parent) : QDialog(parent)
  {
@@ -40,23 +40,23 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 #define FILLTEXT4(a,b,c,d) {snprintf(text,79,b,c,d);ui.a->setText(text);}
 #define FILLTEXT5(a,b,c,d,e) {snprintf(text,79,b,c,d,e);ui.a->setText(text);}
 #define SET_YES(a,b) ui.a->setText(yesno[b])
-#define FILLQT_TR_NOOP(q) ui.q->setText(text);
+#define FILLQT_TRANSLATE_NOOP("qprops",q) ui.q->setText(text);
         
     
         //------------------------------------
     
-        FILLTEXT4(labeImageSize,QT_TR_NOOP("%"PRIu32" x %"PRIu32), avifileinfo->width,avifileinfo->height);
-        FILLTEXT(labelFrameRate, QT_TR_NOOP("%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
+        FILLTEXT4(labeImageSize,QT_TRANSLATE_NOOP("qprops","%"PRIu32" x %"PRIu32), avifileinfo->width,avifileinfo->height);
+        FILLTEXT(labelFrameRate, QT_TRANSLATE_NOOP("qprops","%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
         FILLTEXT(label4CC, "%s",      fourCC::tostring(avifileinfo->fcc));
         uint64_t duration=video_body->getVideoDuration();
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
-        snprintf(text,79, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
+        snprintf(text,79, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
         ui.labelVideoDuration->setText(text);
 
         war=video_body->getPARWidth();
         har=video_body->getPARHeight();
         getAspectRatioFromAR(war,har, &s);
-        FILLTEXT5(LabelAspectRatio,QT_TR_NOOP("%s (%u:%u)"), s,war,har);
+        FILLTEXT5(LabelAspectRatio,QT_TRANSLATE_NOOP("qprops","%s (%u:%u)"), s,war,har);
         
         uint32_t extraLen;
         uint8_t *extraData;
@@ -89,28 +89,28 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
               switch (wavinfo->channels)
                 {
                 case 1:
-                    sprintf(text,"%s", QT_TR_NOOP("Mono"));
+                    sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Mono"));
                     break;
                 case 2:
-                    sprintf(text,"%s", QT_TR_NOOP("Stereo"));
+                    sprintf(text,"%s", QT_TRANSLATE_NOOP("qprops","Stereo"));
                     break;
                 default:
                     sprintf(text, "%d",wavinfo->channels);
                     break;
                 }
 
-                FILLQT_TR_NOOP(labelChannels);
-                FILLTEXT(labelFrequency, QT_TR_NOOP("%"PRIu32" Hz"), wavinfo->frequency);
-                FILLTEXT4(labelBitrate, QT_TR_NOOP("%"PRIu32" Bps / %"PRIu32" kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
+                FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
+                FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%"PRIu32" Hz"), wavinfo->frequency);
+                FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%"PRIu32" Bps / %"PRIu32" kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
                 
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
-                FILLQT_TR_NOOP(labelACodec);
+                FILLQT_TRANSLATE_NOOP("qprops",labelACodec);
                 //
                 duration=st->getDurationInUs();
                 ms2time(duration/1000,&hh,&mm,&ss,&ms);
 
-                sprintf(text, QT_TR_NOOP("%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
-                FILLQT_TR_NOOP(labelAudioDuration);
+                sprintf(text, QT_TRANSLATE_NOOP("qprops","%02d:%02d:%02d.%03d"), hh, mm, ss, ms);
+                FILLQT_TRANSLATE_NOOP("qprops",labelAudioDuration);
 //                SET_YES(labelVBR,currentaudiostream->isVBR());
         } else
           {

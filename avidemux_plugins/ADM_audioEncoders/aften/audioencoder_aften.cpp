@@ -212,7 +212,7 @@ _again:
     \fn configure
 */
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("aften",#x)}
 
 bool configure (CONFcouple **setup)
 {
@@ -236,13 +236,13 @@ bool configure (CONFcouple **setup)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("aften","_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
 
     diaElem *elems[]={&bitrate};
 
-    if( diaFactoryRun(QT_TR_NOOP("Aften Configuration"),1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("aften","Aften Configuration"),1,elems))
     {
       if(*setup) delete *setup;
       *setup=NULL;

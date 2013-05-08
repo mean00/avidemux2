@@ -53,7 +53,7 @@ uint32_t maxBFrame=0;
 	max=0;
 	if((deltaTime<100000LL) || abs(start-end)<5)
 	{
-          GUI_Error_HIG(QT_TR_NOOP("No data"), NULL);
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("histogram","No data"), NULL);
 		return ;
 	}
     uint64_t increment=video_body->getFrameIncrement();
@@ -128,7 +128,7 @@ uint32_t maxBFrame=0;
 
 	if(!max)
 	{
-          GUI_Error_HIG(QT_TR_NOOP("No data"), NULL);
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("histogram","No data"), NULL);
 		return ;
 	}
 	nb_frame=end-start;
@@ -199,12 +199,12 @@ uint32_t maxBFrame=0;
         }
 #define DOME(a,b,c)       sprintf(bf,"%u",b); diaElemReadOnlyText a(bf,c);
         char bf[100];
-        DOME(mx,max,QT_TR_NOOP("Max. bitrate:"));
-        DOME(med,medium,QT_TR_NOOP("Average bitrate:"));
-        DOME(nI,nbIFrame,QT_TR_NOOP("Number of I frames:"));
-        DOME(nP,nbPFrame,QT_TR_NOOP("Number of P frames:"));
-        DOME(nB,nbBFrame,QT_TR_NOOP("Number of B frames:"));
-        DOME(nMB,maxBFrame,QT_TR_NOOP("Max. B frames:"));
+        DOME(mx,max,QT_TRANSLATE_NOOP("histogram","Max. bitrate:"));
+        DOME(med,medium,QT_TRANSLATE_NOOP("histogram","Average bitrate:"));
+        DOME(nI,nbIFrame,QT_TRANSLATE_NOOP("histogram","Number of I frames:"));
+        DOME(nP,nbPFrame,QT_TRANSLATE_NOOP("histogram","Number of P frames:"));
+        DOME(nB,nbBFrame,QT_TRANSLATE_NOOP("histogram","Number of B frames:"));
+        DOME(nMB,maxBFrame,QT_TRANSLATE_NOOP("histogram","Max. B frames:"));
         
         diaElemBar foo(0,"foo");
 #define P(X) bar[X] 
@@ -217,7 +217,7 @@ uint32_t maxBFrame=0;
             P(10),P(11),P(12),P(13),P(14),P(15),P(16),P(17),P(18),P(19)
           };
     
-        diaFactoryRun(QT_TR_NOOP("Bitrate Histogram"),20+6,elems);
+        diaFactoryRun(QT_TRANSLATE_NOOP("histogram","Bitrate Histogram"),20+6,elems);
         
         
         for(int i=0;i<20;i++)

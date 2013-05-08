@@ -82,8 +82,8 @@ void checkCrashFile(void)
 
 	  if (engine != NULL)
 	  {
-            if(GUI_Confirmation_HIG(QT_TR_NOOP("Load it"),QT_TR_NOOP("Crash file"),
-               QT_TR_NOOP("I have detected a crash file. \nDo you want to load it  ?\n(It will be deleted in all cases, you should save it if you want to keep it)")))
+            if(GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("crash","Load it"),QT_TRANSLATE_NOOP("crash","Crash file"),
+               QT_TRANSLATE_NOOP("crash","I have detected a crash file. \nDo you want to load it  ?\n(It will be deleted in all cases, you should save it if you want to keep it)")))
             {
                A_parseScript(engine,where);
             }

@@ -96,8 +96,8 @@ bool         ADM_huffEncoder::encode (ADMBitstream * out)
     
 static const diaMenuEntry colorMenus[2]=
     {
-	{ADM_HUFF_YUV,QT_TR_NOOP("HUFFYUV")},
-	{ADM_FF_HUFF_YUV,QT_TR_NOOP("FF HUFFYUV")},
+	{ADM_HUFF_YUV,QT_TRANSLATE_NOOP("huff","HUFFYUV")},
+	{ADM_FF_HUFF_YUV,QT_TRANSLATE_NOOP("huff","FF HUFFYUV")},
 };
 
 bool         huffConfigure(void)
@@ -106,10 +106,10 @@ uint32_t colorM;
     printf("[huff] Configure\n");
     colorM=(uint32_t)huffType.encoderType;
 
-    diaElemMenu      c(&colorM,QT_TR_NOOP("Type:"),2,colorMenus);
+    diaElemMenu      c(&colorM,QT_TRANSLATE_NOOP("huff","Type:"),2,colorMenus);
     diaElem *elems[1]={&c};
     
-      if( diaFactoryRun(QT_TR_NOOP("HuffYUV Configuration"),1 ,elems))
+      if( diaFactoryRun(QT_TRANSLATE_NOOP("huff","HuffYUV Configuration"),1 ,elems))
       {
         huffType.encoderType=colorM;
         return false;

@@ -75,7 +75,7 @@ DECLARE_VIDEO_FILTER(   Msharpen,   // Class
                         VF_SHARPNESS,            // Category
                         "msharpen",            // internal name (must be uniq!)
                         "Msharpen",            // Display name
-                        QT_TR_NOOP("Sharpen edges without amplifying noise. By Donald Graft.") // Description
+                        QT_TRANSLATE_NOOP("msharpen","Sharpen edges without amplifying noise. By Donald Graft.") // Description
                     );
 
 /**
@@ -130,16 +130,16 @@ uint8_t r=0;
 #define PX(x) &(_param.x)
   
         
-    diaElemToggle    mask(PX(mask),QT_TR_NOOP("_Mask"));
-    diaElemToggle    highq(PX(highq),QT_TR_NOOP("_High Q"));
+    diaElemToggle    mask(PX(mask),QT_TRANSLATE_NOOP("msharpen","_Mask"));
+    diaElemToggle    highq(PX(highq),QT_TRANSLATE_NOOP("msharpen","_High Q"));
     
-    diaElemUInteger   threshold(PX(threshold),QT_TR_NOOP("_Threshold:"),1,255);
-    diaElemUInteger   strength(PX(strength),QT_TR_NOOP("_Strength:"),1,255);
+    diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("msharpen","_Threshold:"),1,255);
+    diaElemUInteger   strength(PX(strength),QT_TRANSLATE_NOOP("msharpen","_Strength:"),1,255);
     
     
   diaElem *elems[4]={&mask,&highq,&threshold,&strength};
 
-  if(diaFactoryRun(QT_TR_NOOP("MSharpen"),4,elems))
+  if(diaFactoryRun(QT_TRANSLATE_NOOP("msharpen","MSharpen"),4,elems))
   {
          invstrength=255-_param.strength;
          return 1;

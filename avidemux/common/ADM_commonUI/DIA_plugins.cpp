@@ -33,7 +33,6 @@ bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
 uint32_t ADM_ve6_getNbEncoders(void);
 uint32_t ADM_vd6_getNbEncoders(void);
 bool     ADM_vd6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
-//#define QT_TRANSLATE_NOOP("adm",x) x
 
 /* /Functions */
 /**

@@ -162,21 +162,21 @@ const char* getNativeRendererDesc(void)
 	switch (paintEngineType)
 	{
 		case QPaintEngine::X11:
-			return QT_TR_NOOP("X11");
+			return QT_TRANSLATE_NOOP("uisupport","X11");
 		case QPaintEngine::Windows:
-			return QT_TR_NOOP("MS Windows GDI");
+			return QT_TRANSLATE_NOOP("uisupport","MS Windows GDI");
 		case QPaintEngine::CoreGraphics:
-			return QT_TR_NOOP("Mac OS X Quartz 2D");
+			return QT_TRANSLATE_NOOP("uisupport","Mac OS X Quartz 2D");
 		case QPaintEngine::QuickDraw:
-			return QT_TR_NOOP("Mac OS X QuickDraw");
+			return QT_TRANSLATE_NOOP("uisupport","Mac OS X QuickDraw");
 		case QPaintEngine::OpenGL:
-			return QT_TR_NOOP("OpenGL");
+			return QT_TRANSLATE_NOOP("uisupport","OpenGL");
 #if QT_VERSION >= 0x040400
 		case QPaintEngine::Direct3D:
-			return QT_TR_NOOP("MS Windows Direct3D");
+			return QT_TRANSLATE_NOOP("uisupport","MS Windows Direct3D");
 #endif
 		case QPaintEngine::Raster:
-			return QT_TR_NOOP("Default Raster");
+			return QT_TRANSLATE_NOOP("uisupport","Default Raster");
 	}
 
 	return "Qt";
