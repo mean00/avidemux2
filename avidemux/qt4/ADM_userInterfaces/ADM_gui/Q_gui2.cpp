@@ -704,7 +704,7 @@ static myQApplication *myApplication=NULL;
 */
 int UI_Init(int nargc, char **nargv)
 {
-    ADM_info("Starting QT4 GUI...\n");
+        ADM_info("Starting QT4 GUI...\n");
 	initTranslator();
 
 	global_argc=nargc;

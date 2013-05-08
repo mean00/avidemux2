@@ -123,7 +123,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 				// try to open it..
 				if(!fd)
 				{
-					GUI_Error_HIG(QT_TR_NOOP("File error"), QT_TR_NOOP("Cannot open \"%s\"."), name);
+					GUI_Error_HIG(QT_TRANSLATE_NOOP("filesel","File error"), QT_TRANSLATE_NOOP("filesel","Cannot open \"%s\"."), name);
 					return;
 				}
 			}
@@ -136,7 +136,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 
 					char msg[300];
 
-					snprintf(msg, 300, QT_TR_NOOP("%s already exists.\n\nDo you want to replace it?"), ADM_GetFileName(name));
+					snprintf(msg, 300, QT_TRANSLATE_NOOP("filesel","%s already exists.\n\nDo you want to replace it?"), ADM_GetFileName(name));
 
 					if(!GUI_Question(msg))
 						return;
@@ -163,7 +163,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 								char str[512];
 								snprintf(str,512,"File \"%s\" exists and is opened by Avidemux",name);
 								GUI_Error_HIG(str,
-									QT_TR_NOOP("It is possible that you are trying to overwrite an input file!"));
+									QT_TRANSLATE_NOOP("filesel","It is possible that you are trying to overwrite an input file!"));
 								return;
 							}
 						}
@@ -177,7 +177,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 							if( buf.st_ino == fdino ){
 								char str[512];
 								snprintf(str,512,"File \"%s\" exists and is the actual ECMAscript file",name);
-								GUI_Error_HIG(str,QT_TR_NOOP("It is possible that you are trying to overwrite an input file!"));
+								GUI_Error_HIG(str,QT_TRANSLATE_NOOP("filesel","It is possible that you are trying to overwrite an input file!"));
 								return;
 							}
 						}
@@ -188,7 +188,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 				fd=ADM_fopen(name,"wb");
 				if(!fd)
 				{
-					GUI_Error_HIG(QT_TR_NOOP("Cannot write the file"),QT_TR_NOOP( "No write access to \"%s\"."), name);
+					GUI_Error_HIG(QT_TRANSLATE_NOOP("filesel","Cannot write the file"),QT_TRANSLATE_NOOP("filesel", "No write access to \"%s\"."), name);
 					return;
 				}
 			}

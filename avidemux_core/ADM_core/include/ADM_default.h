@@ -36,8 +36,8 @@
 #include "ADM_cpuCap.h"
 #include "ADM_clock.h"
 #include "ADM_misc.h"
-
 #endif
+
 #ifdef __cplusplus
 extern "C" 
 {
@@ -49,6 +49,9 @@ ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
 #define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
 #define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
 #define ADM_error(a,...)    ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__)
+
+ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *stringToTranslate);
+
 #ifdef __cplusplus
 }
 #endif
@@ -58,12 +61,12 @@ ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
 #include "ADM_mangle.h"
 #include "ADM_files.h"
 
-#ifndef QT_TR_NOOP
-#define QT_TR_NOOP(x) x
-#endif
 
-#ifndef QT_TRANSLATE_NOOP
-#define QT_TRANSLATE_NOOP(a,x) x
-#endif
+//
+
+#undef QT_TR_NOOP
+#undef QT_TRANSLATE_NOOP
+#define QT_TR_NOOP(x) ADM_translate("adm",x)
+#define QT_TRANSLATE_NOOP(a,x) ADM_translate(a,x)
 
 #endif

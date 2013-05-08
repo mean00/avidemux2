@@ -15,6 +15,7 @@
 #include "ADM_inttype.h"
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
+#include "ADM_coreTranslator.h"
 extern QWidget *QuiMainWindows;
 
 #define MAX_UNLOADED_MSG_LENGTH 400
@@ -37,9 +38,7 @@ static int loadTranslation(QTranslator *qTranslator, QString translation)
     return 0;
 }
 
-void initTranslator(void) {}
-
-const char* translate(const char *__domainname, const char *__msgid)
+const char* qt4Translate(const char *__domainname, const char *__msgid)
 {
 	QString msgid = QString(__msgid);
 
@@ -64,6 +63,13 @@ const char* translate(const char *__domainname, const char *__msgid)
 	}
 
 	return map->value(msgid);
+}
+/**
+ * \fn initTranslator
+ */
+void initTranslator(void) 
+{
+    ADM_InitTranslator(qt4Translate);
 }
 
 #define HIDE_STRING_FROM_QT(domainname, msgid)  QApplication::translate(domainname, msgid) // to hide string from lupdate so a true test can be conducted
@@ -110,6 +116,7 @@ void loadTranslator(void)
 	}
 
 	ADM_info("[Locale] Test: &Edit -> %s\n\n", HIDE_STRING_FROM_QT("MainWindow", "&Edit").toUtf8().data());
+        
 }
 
 void destroyTranslator(void)
