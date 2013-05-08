@@ -233,7 +233,6 @@ cont:
       @return 1 on success, 0 on failure
 
 */
-#define QT_TR_NOOP(x) x
 
 bool configure (void)
 {

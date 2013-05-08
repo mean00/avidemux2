@@ -40,12 +40,12 @@ typedef struct
 
 const PredefinedFps_t predefinedFps[]=
 {
- {QT_TR_NOOP("Custom"),         10000,1000},
- {QT_TR_NOOP("25  (PAL)"),      25000,1000},
- {QT_TR_NOOP("23.976 (Film)"),  24000,1001},
- {QT_TR_NOOP("29.97 (NTSC)"),   30000,1001},
- {QT_TR_NOOP("50 (Pal)"),       50000,1000},
- {QT_TR_NOOP("59.93  (NTSC)"),  60000,1001}
+ {QT_TRANSLATE_NOOP("resampleFps","Custom"),         10000,1000},
+ {QT_TRANSLATE_NOOP("resampleFps","25  (PAL)"),      25000,1000},
+ {QT_TRANSLATE_NOOP("resampleFps","23.976 (Film)"),  24000,1001},
+ {QT_TRANSLATE_NOOP("resampleFps","29.97 (NTSC)"),   30000,1001},
+ {QT_TRANSLATE_NOOP("resampleFps","50 (Pal)"),       50000,1000},
+ {QT_TRANSLATE_NOOP("resampleFps","59.93  (NTSC)"),  60000,1001}
 };
 
 #define nbPredefined (sizeof(predefinedFps)/sizeof(PredefinedFps_t))
@@ -355,14 +355,14 @@ ADM_assert(nbPredefined == 6);
     uint32_t sel=configuration.mode;
     
 
-    diaElemMenu mFps(&(configuration.mode),   QT_TR_NOOP("_Mode:"), 6,tFps);
-    diaElemFloat fps(&f,QT_TR_NOOP("_New frame rate:"),1,200.);
+    diaElemMenu mFps(&(configuration.mode),   QT_TRANSLATE_NOOP("resampleFps","_Mode:"), 6,tFps);
+    diaElemFloat fps(&f,QT_TRANSLATE_NOOP("resampleFps","_New frame rate:"),1,200.);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
     diaElem *elems[2]={&mFps,&fps};
   
-    if( diaFactoryRun(QT_TR_NOOP("Resample fps"),2,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("resampleFps","Resample fps"),2,elems))
     {
       if(!configuration.mode) // Custom mode
       {

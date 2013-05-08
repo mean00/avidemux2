@@ -29,7 +29,6 @@
 #define aprintf(...) {}
 #define adm_printf(...) {}
 
-#define QT_TR_NOOP(x) x
 
 typedef struct ADMAtomDesc
 {

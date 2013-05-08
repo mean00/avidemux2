@@ -22,12 +22,12 @@
 
 uint8_t DIA_getContrast( ADM_coreVideoFilter *instream,contrast    *param )
 {
-    diaElemToggle  u(&(param->doChromaU),QT_TR_NOOP("U :"));
-    diaElemToggle  v(&(param->doChromaV),QT_TR_NOOP("V :"));
-    diaElemToggle  l(&(param->doLuma),QT_TR_NOOP("L :"));
+    diaElemToggle  u(&(param->doChromaU),QT_TRANSLATE_NOOP("contrast","U :"));
+    diaElemToggle  v(&(param->doChromaV),QT_TRANSLATE_NOOP("contrast","V :"));
+    diaElemToggle  l(&(param->doLuma),QT_TRANSLATE_NOOP("contrast","L :"));
 
-    diaElemInteger  o(&(param->offset),QT_TR_NOOP("Offset :"),-127,127);
-    diaElemFloat    c(&(param->coef),QT_TR_NOOP("Coef :"),-10,10);
+    diaElemInteger  o(&(param->offset),QT_TRANSLATE_NOOP("contrast","Offset :"),-127,127);
+    diaElemFloat    c(&(param->coef),QT_TRANSLATE_NOOP("contrast","Coef :"),-10,10);
     diaElem *elems[]={&c,&o,&l,&u,&v};
     return diaFactoryRun("Contrast",sizeof(elems)/sizeof(diaElem *),elems);
 }

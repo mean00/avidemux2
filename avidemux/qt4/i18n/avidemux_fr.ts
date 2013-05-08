@@ -15,47 +15,31 @@
 <context>
     <name>ADMVideoDenoise</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="382"/>
-        <source>_Luma lock:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="383"/>
-        <source>C_hroma lock:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="384"/>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">Seuil de Luma:</translation>
+        <translation type="obsolete">Seuil de Luma:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="385"/>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">Seuil de Chroma:</translation>
+        <translation type="obsolete">Seuil de Chroma:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="387"/>
         <source>_Scene change:</source>
-        <translation type="unfinished">Changement de scène:</translation>
+        <translation type="obsolete">Changement de scène:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Denoise/ADM_vidDenoise.cpp" line="393"/>
         <source>Denoise</source>
-        <translation type="unfinished">Débruitage</translation>
+        <translation type="obsolete">Débruitage</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/DropOut/ADM_vidDropOut.cpp" line="51"/>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">Seuil d&apos;élimination</translation>
+        <translation type="obsolete">Seuil d&apos;élimination</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/DropOut/ADM_vidDropOut.cpp" line="54"/>
         <source>Drop Out</source>
-        <translation type="unfinished">Elimination</translation>
+        <translation type="obsolete">Elimination</translation>
     </message>
 </context>
 <context>
@@ -79,34 +63,20 @@
 <context>
     <name>ADMVideoForcedPP</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="44"/>
         <source>_Filter strength:</source>
-        <translation type="unfinished">Force du filtre:</translation>
+        <translation type="obsolete">Force du filtre:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="45"/>
-        <source>_Quantizer:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="56"/>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">Deblocking horizontal</translation>
+        <translation type="obsolete">Deblocking horizontal</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="57"/>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">Deblocking vertical</translation>
+        <translation type="obsolete">Deblocking vertical</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="58"/>
-        <source>_Deringing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/ForcedPP/ADM_vidForcedPP.cpp" line="65"/>
         <source>Forced Postprocessing</source>
-        <translation type="unfinished">Postprocessing forcé</translation>
+        <translation type="obsolete">Postprocessing forcé</translation>
     </message>
 </context>
 <context>
@@ -159,149 +129,35 @@
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Soften/ADM_vidSoften.cpp" line="69"/>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">Seuil de _luma:</translation>
+        <translation type="obsolete">Seuil de _luma:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Soften/ADM_vidSoften.cpp" line="70"/>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">Seuil de c_hroma:</translation>
+        <translation type="obsolete">Seuil de c_hroma:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Soften/ADM_vidSoften.cpp" line="71"/>
         <source>_Radius:</source>
-        <translation type="unfinished">_Rayon:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Soften/ADM_vidSoften.cpp" line="75"/>
-        <source>Soften</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Rayon:</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Mosaic/ADM_vidMosaic.cpp" line="74"/>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">Empilement horitzontal:</translation>
+        <translation type="obsolete">Empilement horitzontal:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Mosaic/ADM_vidMosaic.cpp" line="75"/>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">Empilement vertical:</translation>
+        <translation type="obsolete">Empilement vertical:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Mosaic/ADM_vidMosaic.cpp" line="76"/>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">Miniaturisation:</translation>
+        <translation type="obsolete">Miniaturisation:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Mosaic/ADM_vidMosaic.cpp" line="77"/>
         <source>Show _frame</source>
-        <translation type="unfinished">Montrer les images</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Mosaic/ADM_vidMosaic.cpp" line="82"/>
-        <source>Mosaic</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoPalShift</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/PalShift/ADM_vidPalShift.cpp" line="67"/>
-        <source>_Try reverse</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/PalShift/ADM_vidPalShift.cpp" line="71"/>
-        <source>Pal Field Shift</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoStabilize</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Stabilize/ADM_vidStabilize.cpp" line="70"/>
-        <source>Stabilize Threshold</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Stabilize/ADM_vidStabilize.cpp" line="73"/>
-        <source>Stabilize</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoSubtitle</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Srt/ADM_vidSRT.cpp" line="191"/>
-        <source>Could not open subtitle file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Srt/ADM_vidSRT.cpp" line="211"/>
-        <source>Cannot identify subtitle format</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADMVideoTIsophote</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="60"/>
-        <source>Simple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="61"/>
-        <source>Medium</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="62"/>
-        <source>Slow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="66"/>
-        <source>_Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="67"/>
-        <source>_Iterations:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="67"/>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="68"/>
-        <source>_Chroma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="68"/>
-        <source>Process chroma.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="69"/>
-        <source>_Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="69"/>
-        <source>Step.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TIsophote/ADM_vidTisophote.cpp" line="73"/>
-        <source>KernelDeint</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Montrer les images</translation>
     </message>
 </context>
 <context>
@@ -459,50 +315,6 @@ Ignorer les informations de timing ?</translation>
     </message>
 </context>
 <context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/Editor.cpp" line="34"/>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/Editor.cpp" line="90"/>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/Editor.cpp" line="102"/>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/QtScriptObject.cpp" line="23"/>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/QtScriptObject.cpp" line="39"/>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/QtScriptObject.cpp" line="43"/>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/SegmentCollectionPrototype.cpp" line="26"/>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_qtray</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp" line="82"/>
@@ -536,58 +348,36 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>AVDMVideoMCDeint</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="90"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="120"/>
         <source>Fast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="91"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="121"/>
         <source>Medium</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="92"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="122"/>
         <source>Slow iterative motion search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="93"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="123"/>
         <source>Extra slow (same as 3+multiple reference frames)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="95"/>
-        <source>Top</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="96"/>
-        <source>Bottom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="99"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="126"/>
         <source>_Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="100"/>
-        <source>_Field dominance:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="101"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="128"/>
         <source>_Qp:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/McDeint/ADM_vidMcDeint.cpp" line="105"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>mcDeinterlace</source>
         <translation type="unfinished"></translation>
@@ -599,83 +389,30 @@ Ignorer les informations de timing ?</translation>
     </message>
 </context>
 <context>
-    <name>AVDMVideoVlad</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TemporalCleaner/ADM_vidVlad.cpp" line="91"/>
-        <source>_Luma temporal threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TemporalCleaner/ADM_vidVlad.cpp" line="92"/>
-        <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/TemporalCleaner/ADM_vidVlad.cpp" line="96"/>
-        <source>Temporal Cleaner</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>AVDM_Fade</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="51"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="51"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Fade out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="51"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>In</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="51"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Fade in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="57"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="72"/>
         <source>_Fade type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="58"/>
-        <source>_Start frame:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="59"/>
-        <source>_End frame:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="60"/>
-        <source>Fade to _black</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="64"/>
-        <source>Fade</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="69"/>
-        <source>Parameter Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/Fade/ADM_vidFade.cpp" line="69"/>
-        <source>Start must be before end, and both within video # of frames.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1185,13 +922,13 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>MP4Header</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="736"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="735"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp.orig" line="623"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Impossible de lire l&apos;entete SVQ3</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp" line="423"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp" line="422"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>No stts table</source>
         <translation type="unfinished">Pas d&apos;element STTS</translation>
@@ -1549,27 +1286,27 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>Msharpen</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="134"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="133"/>
         <source>_Mask</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="135"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="134"/>
         <source>_High Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="137"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="136"/>
         <source>_Threshold:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="138"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="137"/>
         <source>_Strength:</source>
         <translation type="unfinished">Force:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="143"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="142"/>
         <source>MSharpen</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1577,42 +1314,21 @@ Ignorer les informations de timing ?</translation>
 <context>
     <name>Msmooth</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="174"/>
-        <source>_High quality</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="175"/>
-        <source>Show _mask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="176"/>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="177"/>
         <source>_Strength:</source>
-        <translation type="unfinished">Force:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/MSmooth/ADM_vidMsmooth.cpp" line="181"/>
-        <source>MSmooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Force:</translation>
     </message>
 </context>
 <context>
     <name>OpenDMLHeader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="318"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="393"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="657"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="317"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="392"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="656"/>
         <source>Malformed header</source>
         <translation type="unfinished">En tete malformé</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="90"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
         <source>Unpacking bitstream</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1622,19 +1338,6 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="191"/>
         <source>Question</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QtScriptEngine</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/QtScriptEngine.cpp" line="171"/>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_scriptEngines/qtScript/src/QtScriptEngine.cpp" line="455"/>
-        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2018,6 +1721,7 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="231"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="47"/>
         <source>High</source>
         <translation type="unfinished">Haute</translation>
     </message>
@@ -2038,6 +1742,7 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="235"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="45"/>
         <source>Low</source>
         <translation type="unfinished">BAsse</translation>
     </message>
@@ -2465,6 +2170,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="37"/>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="62"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="43"/>
         <source>None</source>
         <translation type="unfinished">Aucun</translation>
     </message>
@@ -3084,6 +2790,7 @@ Is it running ?</source>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="400"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3101,6 +2808,389 @@ Is it running ?</source>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="304"/>
         <source>Recent Projects</source>
         <translation type="unfinished">Projets Récents</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="34"/>
+        <source>_Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="35"/>
+        <source>Ca_rtoon mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="36"/>
+        <source>_Greyscale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="37"/>
+        <source>Turbo mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="38"/>
+        <source>C_hroma optimizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="40"/>
+        <source>Main</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="44"/>
+        <source>Very Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="46"/>
+        <source>Medium</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="48"/>
+        <source>Very High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="49"/>
+        <source>Ultra High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="50"/>
+        <source>Motion Search Precision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="53"/>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="54"/>
+        <source>Mode Decision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="55"/>
+        <source>Limited Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="56"/>
+        <source>Medium Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="57"/>
+        <source>Wide Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="58"/>
+        <source>VHQ Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="62"/>
+        <source>Max B Frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="63"/>
+        <source>Quarter Pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="64"/>
+        <source>GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="65"/>
+        <source>BVHQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="74"/>
+        <source>4MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="75"/>
+        <source>Chroma ME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="76"/>
+        <source>HQ AC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="77"/>
+        <source>More Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="82"/>
+        <source>Min Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="83"/>
+        <source>Max Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="84"/>
+        <source>GOP Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="89"/>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="92"/>
+        <source>H263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="93"/>
+        <source>Mpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="94"/>
+        <source>Quantization Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="95"/>
+        <source>Trellis Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="103"/>
+        <source>Two Pass Tuning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="105"/>
+        <source>Key Frame Boost(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="107"/>
+        <source>I-frames closer than...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="108"/>
+        <source>.. are reduced by(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="109"/>
+        <source>Max Overflow Improvement(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="110"/>
+        <source>Max Overglow Degradation(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="114"/>
+        <source>Curve Compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="116"/>
+        <source>High Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="117"/>
+        <source>Low Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="118"/>
+        <source>Overflow Control Strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="121"/>
+        <source>Two Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="128"/>
+        <source>Xvid4 Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="obsolete">Manuel</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">Nouveau nombre d&apos;i/s:</translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="obsolete">Entrelacement</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="99"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="66"/>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="158"/>
+        <source>X11</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="160"/>
+        <source>MS Windows GDI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="162"/>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="164"/>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="166"/>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="169"/>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="172"/>
+        <source>Default Raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="418"/>
+        <source>The filter is already partial</source>
+        <translation type="unfinished">The filtre est déjà partiel</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="610"/>
+        <source>Partial Start Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="611"/>
+        <source>Partial End Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="612"/>
+        <source>Configure child</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="615"/>
+        <source>Partial Video Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
+        <source>Ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
+        <source>Succeeded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
+        <source>Deleted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
+        <source>Running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
+        <source>Job Name</source>
+        <translation type="unfinished">Nom du job</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
+        <source>Start Time</source>
+        <translation type="unfinished">Date de départ</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
+        <source>End Time</source>
+        <translation type="unfinished">Date de fin</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
+        <source>Sure!</source>
+        <translation type="unfinished">Sur!</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
+        <source>Delete job</source>
+        <translation type="unfinished">Détruire le job</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished">Etes vous sur de vouloir détruire %s job ?</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
+        <source>Delete *all* job</source>
+        <translation type="unfinished">Detruire *tous* les jobs</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished">Etes vous sur de vouloir détruire TOUS les jobs ?</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
+        <source>Already done</source>
+        <translation type="unfinished">Déjà fait</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished">Ce script a déjà été executé avec succés</translation>
     </message>
 </context>
 <context>
@@ -3187,6 +3277,36 @@ Is it running ?</source>
 <context>
     <name>changeFps</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="40"/>
+        <source>Custom</source>
+        <translation type="unfinished">Manuel</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="41"/>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="42"/>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="43"/>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="44"/>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="45"/>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="208"/>
         <source>Source Fps:</source>
         <translation type="unfinished"></translation>
@@ -3209,6 +3329,38 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="222"/>
         <source>Change fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">Nouveau nombre d&apos;i/s:</translation>
+    </message>
+</context>
+<context>
+    <name>contrast</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="25"/>
+        <source>U :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="26"/>
+        <source>V :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="27"/>
+        <source>L :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="29"/>
+        <source>Offset :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="30"/>
+        <source>Coef :</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -3411,11 +3563,637 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ffmpeg2</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="200"/>
+        <source>Normal (4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="201"/>
+        <source>Wide (16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="206"/>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="207"/>
+        <source>Tmpgenc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="208"/>
+        <source>Animes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="209"/>
+        <source>KVCD</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="213"/>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="214"/>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="215"/>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="218"/>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="219"/>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="220"/>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="221"/>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="225"/>
+        <source>Progressive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="226"/>
+        <source>Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="229"/>
+        <source>Top Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="230"/>
+        <source>Bottom Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="240"/>
+        <source>Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="241"/>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="242"/>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="243"/>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="244"/>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="245"/>
+        <source>Max bitrate (kb/s):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="247"/>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="249"/>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="253"/>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="254"/>
+        <source>Aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="255"/>
+        <source>Matrices:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="256"/>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="258"/>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="259"/>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="261"/>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="263"/>
+        <source>_Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="264"/>
+        <source>Field Order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="268"/>
+        <source>Basic Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="272"/>
+        <source>Adv. Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="276"/>
+        <source>Interlacing</source>
+        <translation type="unfinished">Entrelacement</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="281"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="286"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="289"/>
+        <source>libavcodec MPEG-2 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmpeg4</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="176"/>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="177"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="178"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="179"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="180"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="181"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="185"/>
+        <source>H.263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="186"/>
+        <source>MPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="190"/>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="191"/>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="192"/>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="195"/>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="196"/>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="197"/>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="198"/>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="208"/>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="209"/>
+        <source>Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="210"/>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="211"/>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="212"/>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="214"/>
+        <source>4_MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="215"/>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="217"/>
+        <source>_Quarter pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="218"/>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="221"/>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="222"/>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="224"/>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="226"/>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="228"/>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="229"/>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="231"/>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="234"/>
+        <source>User Interface</source>
+        <translation type="unfinished">Interface Utilisateur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="237"/>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="244"/>
+        <source>Motion Estimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="248"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="253"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="256"/>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmsmpeg4</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="214"/>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="215"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="216"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="217"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="218"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="219"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="223"/>
+        <source>H.263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="224"/>
+        <source>MPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="228"/>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="229"/>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="230"/>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="239"/>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="240"/>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="241"/>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="242"/>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="243"/>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="245"/>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="246"/>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="248"/>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="251"/>
+        <source>User Interface</source>
+        <translation type="unfinished">Interface Utilisateur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="256"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="261"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>filtermainWindow</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="418"/>
         <source>The filter is already partial</source>
-        <translation type="unfinished">The filtre est déjà partiel</translation>
+        <translation type="obsolete">The filtre est déjà partiel</translation>
+    </message>
+</context>
+<context>
+    <name>flv1</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="154"/>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="155"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="156"/>
+        <source>Log</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="157"/>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="158"/>
+        <source>EPZS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="159"/>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="163"/>
+        <source>H.263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="164"/>
+        <source>MPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="168"/>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="169"/>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="170"/>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="179"/>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="180"/>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="181"/>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="182"/>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="183"/>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="185"/>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="186"/>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="188"/>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="191"/>
+        <source>User Interface</source>
+        <translation type="unfinished">Interface Utilisateur</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="196"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="201"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="204"/>
+        <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3540,60 +4318,72 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>jobsWindow</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Job Name</source>
-        <translation type="unfinished">Nom du job</translation>
+        <translation type="obsolete">Nom du job</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
-        <source>Status</source>
+        <source>Start Time</source>
+        <translation type="obsolete">Date de départ</translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="obsolete">Date de fin</translation>
+    </message>
+    <message>
+        <source>Sure!</source>
+        <translation type="obsolete">Sur!</translation>
+    </message>
+    <message>
+        <source>Delete job</source>
+        <translation type="obsolete">Détruire le job</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="obsolete">Etes vous sur de vouloir détruire %s job ?</translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="obsolete">Detruire *tous* les jobs</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="obsolete">Etes vous sur de vouloir détruire TOUS les jobs ?</translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="obsolete">Déjà fait</translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="obsolete">Ce script a déjà été executé avec succés</translation>
+    </message>
+</context>
+<context>
+    <name>jpeg</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="76"/>
+        <source>YUV422</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
-        <source>Start Time</source>
-        <translation type="unfinished">Date de départ</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="77"/>
+        <source>YUV420</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
-        <source>End Time</source>
-        <translation type="unfinished">Date de fin</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="88"/>
+        <source>_Quantizer:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
-        <source>Sure!</source>
-        <translation type="unfinished">Sur!</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="89"/>
+        <source>_ColorSpace:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
-        <source>Delete job</source>
-        <translation type="unfinished">Détruire le job</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
-        <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished">Etes vous sur de vouloir détruire %s job ?</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
-        <source>Delete *all* job</source>
-        <translation type="unfinished">Detruire *tous* les jobs</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished">Etes vous sur de vouloir détruire TOUS les jobs ?</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
-        <source>Already done</source>
-        <translation type="unfinished">Déjà fait</translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
-        <source>This script has already been successfully executed.</source>
-        <translation type="unfinished">Ce script a déjà été executé avec succés</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="93"/>
+        <source>Mjpeg Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3656,6 +4446,44 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="78"/>
         <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lame</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="311"/>
+        <source>CBR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="312"/>
+        <source>ABR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="314"/>
+        <source>Bit_rate mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="330"/>
+        <source>_Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="332"/>
+        <source>_Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="335"/>
+        <source>_Disable reservoir:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="339"/>
+        <source>LAME Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4218,6 +5046,36 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>resampleFps</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="43"/>
+        <source>Custom</source>
+        <translation type="unfinished">Manuel</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="44"/>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="45"/>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="46"/>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="47"/>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="48"/>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="358"/>
         <source>_Mode:</source>
         <translation type="unfinished"></translation>
@@ -4483,54 +5341,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>vidBlendRemoval</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="68"/>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="69"/>
-        <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="71"/>
-        <source>_Noise:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="71"/>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="72"/>
-        <source>I_dentical:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="72"/>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="73"/>
-        <source>_Show metrics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="73"/>
-        <source>Show metric in image (debug)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidBlendRemoval.cpp" line="77"/>
-        <source>Blend Removal</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>vidColorYuv</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="75"/>
@@ -4644,64 +5454,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>vidHardPDRemoval</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="76"/>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="77"/>
-        <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="79"/>
-        <source>_Noise:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="79"/>
-        <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="80"/>
-        <source>_Identical:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="80"/>
-        <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="81"/>
-        <source>_Show metrics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="81"/>
-        <source>Show metric in image (debug)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/BlendRemover/ADM_vidHardIvtcRemoval.cpp" line="85"/>
-        <source>Hard IVTC Removal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/PulldownRemoval/ADM_vidFieldUnblend.cpp" line="73"/>
-        <source>Metrics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters/PulldownRemoval/ADM_vidFieldUnblend.cpp" line="73"/>
-        <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>vobSubDialog</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="13"/>
@@ -4726,6 +5478,39 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="74"/>
         <source>Idx File :</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vorbis</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="331"/>
+        <source>VBR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="332"/>
+        <source>Quality based</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="334"/>
+        <source>_Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="348"/>
+        <source>_Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="350"/>
+        <source>_Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="357"/>
+        <source>Vorbis Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4812,6 +5597,155 @@ Do you wish to continue?</source>
         <translation type="unfinished">L&apos; optimisation Macroblock-Tree  nécessite  Variance Adaptive Quantisation. Variance Adaptive Quantisation va être automatiquement activée.
 
 Voulez vous procéder ?</translation>
+    </message>
+</context>
+<context>
+    <name>xvid4</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="37"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="61"/>
+        <source>None</source>
+        <translation type="unfinished">Aucun</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="38"/>
+        <source>Low</source>
+        <translation type="unfinished">BAsse</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="39"/>
+        <source>Medium</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="40"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="44"/>
+        <source>H.263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="45"/>
+        <source>MPEG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="46"/>
+        <source>Custom</source>
+        <translation type="unfinished">Manuel</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="62"/>
+        <source>DCT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="63"/>
+        <source>Qpel16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="64"/>
+        <source>Qpel8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="65"/>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="69"/>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="70"/>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="71"/>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="72"/>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="79"/>
+        <source>MotionEstimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="81"/>
+        <source>Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="87"/>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="88"/>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="90"/>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="92"/>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="94"/>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="101"/>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="104"/>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="112"/>
+        <source>Motion Estimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="117"/>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="121"/>
+        <source>Threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="124"/>
+        <source>Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="127"/>
+        <source>Xvid4 MPEG-4 ASP configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -134,8 +134,5 @@ extern "C" ADM_videoEncoderDesc *getInfo (void) \
   return &encoderDesc; \
 }  \
 
-#ifndef QT_TR_NOOP
-#define QT_TR_NOOP(x) x
-#endif
 #endif
 //EOF

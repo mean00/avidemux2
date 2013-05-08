@@ -1699,38 +1699,34 @@ Do you want to load it  ?
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="unfinished">_Лума закључавање:</translation>
+        <translation type="obsolete">_Лума закључавање:</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="unfinished">_Хрома закључавање:</translation>
+        <translation type="obsolete">_Хрома закључавање:</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">Л_ума осетљивост:</translation>
+        <translation type="obsolete">Л_ума осетљивост:</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">Х_рома осетљивост:</translation>
+        <translation type="obsolete">Х_рома осетљивост:</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="unfinished">_Промена сцене:</translation>
+        <translation type="obsolete">_Промена сцене:</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">Умањење шума</translation>
+        <translation type="obsolete">Умањење шума</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">Одбачена осетљивост</translation>
-    </message>
-    <message>
-        <source>Drop Out</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Одбачена осетљивост</translation>
     </message>
 </context>
 <context>
@@ -1759,27 +1755,23 @@ Do you want to load it  ?
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="unfinished">_Јачина филтера:</translation>
+        <translation type="obsolete">_Јачина филтера:</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="unfinished">_Квантизер:</translation>
+        <translation type="obsolete">_Квантизер:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">_Хоризонтално уклањање блокова</translation>
+        <translation type="obsolete">_Хоризонтално уклањање блокова</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">_Вертикално уклањање блокова</translation>
+        <translation type="obsolete">_Вертикално уклањање блокова</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="unfinished">_Дерингинг</translation>
-    </message>
-    <message>
-        <source>Forced Postprocessing</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Дерингинг</translation>
     </message>
 </context>
 <context>
@@ -1929,53 +1921,41 @@ Do you want to load it  ?
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">_Лума осетљивост:</translation>
+        <translation type="obsolete">_Лума осетљивост:</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">_Хрома осетљивост:</translation>
+        <translation type="obsolete">_Хрома осетљивост:</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="unfinished">_Пречник:</translation>
-    </message>
-    <message>
-        <source>Soften</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Пречник:</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">Хоризонтални удео:</translation>
+        <translation type="obsolete">Хоризонтални удео:</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">Вертикални удео:</translation>
+        <translation type="obsolete">Вертикални удео:</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">Фактор _сужења:</translation>
+        <translation type="obsolete">Фактор _сужења:</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="unfinished">Прикажи _кадар</translation>
-    </message>
-    <message>
-        <source>Mosaic</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Прикажи _кадар</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="unfinished">Покушај _обрнуто</translation>
-    </message>
-    <message>
-        <source>Pal Field Shift</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Покушај _обрнуто</translation>
     </message>
 </context>
 <context>
@@ -2067,11 +2047,7 @@ Do you want to load it  ?
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="unfinished">Стабилизуј осетљивост</translation>
-    </message>
-    <message>
-        <source>Stabilize</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Стабилизуј осетљивост</translation>
     </message>
 </context>
 <context>
@@ -2101,11 +2077,11 @@ Do you want to load it  ?
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="unfinished">Не могу да отворима датотеку са титлом</translation>
+        <translation type="obsolete">Не могу да отворима датотеку са титлом</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="unfinished">Не могу да препознам датотеку са титлом</translation>
+        <translation type="obsolete">Не могу да препознам датотеку са титлом</translation>
     </message>
 </context>
 <context>
@@ -2228,47 +2204,15 @@ file image mult. by this when loaded):</source>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Средње</translation>
+        <translation type="obsolete">Средње</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">_Тип:</translation>
+        <translation type="obsolete">_Тип:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">Мања вредност више расплиће</translation>
-    </message>
-    <message>
-        <source>Simple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Iterations:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Chroma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chroma.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Step.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Мања вредност више расплиће</translation>
     </message>
 </context>
 <context>
@@ -2600,43 +2544,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
@@ -2689,11 +2596,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Изнад</translation>
+        <translation type="obsolete">Изнад</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Дно</translation>
+        <translation type="obsolete">Дно</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -2701,7 +2608,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="unfinished">_Доминација поља:</translation>
+        <translation type="obsolete">_Доминација поља:</translation>
     </message>
     <message>
         <source>_Qp:</source>
@@ -2720,15 +2627,11 @@ Drop timing informations ?</source>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="unfinished">_Лума темпорална осетљивост:</translation>
+        <translation type="obsolete">_Лума темпорална осетљивост:</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished">_Хрома темпорална осетљивост:</translation>
-    </message>
-    <message>
-        <source>Temporal Cleaner</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Хрома темпорална осетљивост:</translation>
     </message>
 </context>
 <context>
@@ -2755,27 +2658,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="unfinished">_Почетни кадар:</translation>
+        <translation type="obsolete">_Почетни кадар:</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="unfinished">_Крајњи кадар:</translation>
+        <translation type="obsolete">_Крајњи кадар:</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="unfinished">Избледи до црног</translation>
+        <translation type="obsolete">Избледи до црног</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="unfinished">Грешка у параметрима</translation>
+        <translation type="obsolete">Грешка у параметрима</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="unfinished">Почетак мора бити након краја о оба унутар видеа # од кадрова.</translation>
-    </message>
-    <message>
-        <source>Fade</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Почетак мора бити након краја о оба унутар видеа # од кадрова.</translation>
     </message>
     <message>
         <source>_Start time (ms):</source>
@@ -3929,23 +3828,11 @@ Drop timing informations ?</source>
     <name>Msmooth</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Осетљивост:</translation>
+        <translation type="obsolete">_Осетљивост:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Јачина :</translation>
-    </message>
-    <message>
-        <source>_High quality</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show _mask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MSmooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Јачина :</translation>
     </message>
 </context>
 <context>
@@ -3971,17 +3858,6 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Question</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QtScriptEngine</name>
-    <message>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open script file %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5190,6 +5066,394 @@ Is it running ?</source>
         <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Custom</source>
+        <translation type="obsolete">Произвољно</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">_Режим:</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">_Нова учестаност кадрова:</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="obsolete">Подразумевано</translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="obsolete">KVCD</translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="obsolete">Прогресивни</translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="obsolete">Преплитање</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="obsolete">Контрола протока</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="obsolete">Потпуно</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="obsolete">Дневник измена</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="obsolete">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="obsolete">EPZS</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="obsolete">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="obsolete">MPEG</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="obsolete">Процена покрета</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Средње</translation>
+    </message>
+    <message>
+        <source>VBR</source>
+        <translation type="obsolete">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="obsolete">Базирано на квалитету</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="obsolete">_Битски проток:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="obsolete">_Квалитет:</translation>
+    </message>
+    <message>
+        <source>_Quantizer:</source>
+        <translation type="obsolete">_Квантизер:</translation>
+    </message>
+    <message>
+        <source>CBR</source>
+        <translation type="obsolete">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="obsolete">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="obsolete">Бит_ски проток:</translation>
+    </message>
+    <message>
+        <source>X11</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The filter is already partial</source>
+        <translation type="unfinished">Филтер је већ половичан</translation>
+    </message>
+    <message>
+        <source>Partial Start Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partial End Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure child</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partial Video Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ca_rtoon mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Greyscale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turbo mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C_hroma optimizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Main</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Very Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Very High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ultra High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Search Precision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode Decision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limited Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wide Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VHQ Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max B Frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quarter Pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BVHQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma ME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HQ AC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantization Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trellis Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Pass Tuning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key Frame Boost(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frames closer than...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.. are reduced by(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Overflow Improvement(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Overglow Degradation(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>High Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overflow Control Strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Xvid4 Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation type="unfinished">Спремно</translation>
+    </message>
+    <message>
+        <source>Succeeded</source>
+        <translation type="unfinished">Успешно</translation>
+    </message>
+    <message>
+        <source>Deleted</source>
+        <translation type="unfinished">Уклоњено</translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation type="unfinished">У току</translation>
+    </message>
+    <message>
+        <source>Job Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sure!</source>
+        <translation type="unfinished">Sigurno!</translation>
+    </message>
+    <message>
+        <source>Delete job</source>
+        <translation type="unfinished">Уклони задатак</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>autoWizard</name>
@@ -5267,6 +5531,38 @@ Is it running ?</source>
 <context>
     <name>changeFps</name>
     <message>
+        <source>Custom</source>
+        <translation type="unfinished">Произвољно</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">_Режим:</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">_Нова учестаност кадрова:</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Source Fps:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5292,6 +5588,29 @@ Is it running ?</source>
     <message>
         <source>ChromaShift</source>
         <translation type="obsolete">Хрома померај</translation>
+    </message>
+</context>
+<context>
+    <name>contrast</name>
+    <message>
+        <source>U :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coef :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5526,10 +5845,419 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ffmpeg2</name>
+    <message>
+        <source>Normal (4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wide (16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished">Подразумевано</translation>
+    </message>
+    <message>
+        <source>Tmpgenc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="unfinished">KVCD</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="unfinished">Прогресивни</translation>
+    </message>
+    <message>
+        <source>Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Више нити</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max bitrate (kb/s):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adv. Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="unfinished">Преплитање</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Контрола протока</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-2 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ништа</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Потпуно</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Дневник измена</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Више нити</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4_MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quarter pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Корисничко окружење</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">Процена покрета</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Контрола протока</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmsmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ништа</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Потпуно</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Дневник измена</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Корисничко окружење</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Контрола протока</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>filtermainWindow</name>
     <message>
         <source>The filter is already partial</source>
-        <translation type="unfinished">Филтер је већ половичан</translation>
+        <translation type="obsolete">Филтер је већ половичан</translation>
     </message>
     <message>
         <source>Load set of filters</source>
@@ -5542,6 +6270,101 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Save set of filters</source>
         <translation type="obsolete">Сачувај сет филтера</translation>
+    </message>
+</context>
+<context>
+    <name>flv1</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ништа</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Потпуно</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Дневник измена</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Корисничко окружење</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Контрола протока</translation>
+    </message>
+    <message>
+        <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5679,46 +6502,33 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Sure!</source>
-        <translation type="unfinished">Sigurno!</translation>
+        <translation type="obsolete">Sigurno!</translation>
     </message>
     <message>
         <source>Delete job</source>
-        <translation type="unfinished">Уклони задатак</translation>
+        <translation type="obsolete">Уклони задатак</translation>
     </message>
+</context>
+<context>
+    <name>jpeg</name>
     <message>
-        <source>Job Name</source>
+        <source>YUV422</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Status</source>
+        <source>YUV420</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Start Time</source>
+        <source>_Quantizer:</source>
+        <translation type="unfinished">_Квантизер:</translation>
+    </message>
+    <message>
+        <source>_ColorSpace:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>End Time</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete *all* job</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Already done</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This script has already been successfully executed.</source>
+        <source>Mjpeg Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5770,6 +6580,37 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>KernelDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lame</name>
+    <message>
+        <source>CBR</source>
+        <translation type="unfinished">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="unfinished">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="unfinished">Бит_ски проток:</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Битски проток:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">_Квалитет:</translation>
+    </message>
+    <message>
+        <source>_Disable reservoir:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAME Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6207,6 +7048,30 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">_Нова учестаност кадрова:</translation>
     </message>
     <message>
+        <source>Custom</source>
+        <translation type="unfinished">Произвољно</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Resample fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6403,39 +7268,35 @@ p, li { white-space: pre-wrap; }
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Осетљивост:</translation>
+        <translation type="obsolete">_Осетљивост:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished">Уколико је вредност мања него осетљивост сматра се исправном. Мања вредност може да значи нетачан позитив.</translation>
+        <translation type="obsolete">Уколико је вредност мања него осетљивост сматра се исправном. Мања вредност може да значи нетачан позитив.</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">_Шум:</translation>
+        <translation type="obsolete">_Шум:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Уколико су пиксели слични шуму, они сматрају истимм</translation>
+        <translation type="obsolete">Уколико су пиксели слични шуму, они сматрају истимм</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="unfinished">_Идентично:</translation>
+        <translation type="obsolete">_Идентично:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Уколико су мере готово исте, слике се сматрају истим</translation>
+        <translation type="obsolete">Уколико су мере готово исте, слике се сматрају истим</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">Прикажи _мере</translation>
+        <translation type="obsolete">Прикажи _мере</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Прикажи мере у слици (налажење грешака)</translation>
-    </message>
-    <message>
-        <source>Blend Removal</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Прикажи мере у слици (налажење грешака)</translation>
     </message>
 </context>
 <context>
@@ -6533,47 +7394,43 @@ p, li { white-space: pre-wrap; }
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="unfinished">Мере</translation>
+        <translation type="obsolete">Мере</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished">Да ли желите да прикажете мере на екрану ?</translation>
+        <translation type="obsolete">Да ли желите да прикажете мере на екрану ?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Осетљивост:</translation>
+        <translation type="obsolete">_Осетљивост:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished">Уколико је вредност мања него осетљивост сматра се исправном. Мања вредност може да значи варљив позитив</translation>
+        <translation type="obsolete">Уколико је вредност мања него осетљивост сматра се исправном. Мања вредност може да значи варљив позитив</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">_Шум:</translation>
+        <translation type="obsolete">_Шум:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Уколико су пиксели слични шуму, они сматрају истимм</translation>
+        <translation type="obsolete">Уколико су пиксели слични шуму, они сматрају истимм</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="unfinished">_Идентично:</translation>
+        <translation type="obsolete">_Идентично:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Уколико су мере готово исте, слике се сматрају истим</translation>
+        <translation type="obsolete">Уколико су мере готово исте, слике се сматрају истим</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">Прикажи _мере</translation>
+        <translation type="obsolete">Прикажи _мере</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Прикажи мере у слици (налажење грешака)</translation>
-    </message>
-    <message>
-        <source>Hard IVTC Removal</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Прикажи мере у слици (налажење грешака)</translation>
     </message>
 </context>
 <context>
@@ -6600,6 +7457,33 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Idx File :</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vorbis</name>
+    <message>
+        <source>VBR</source>
+        <translation type="unfinished">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="unfinished">Базирано на квалитету</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Режим:</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Битски проток:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">_Квалитет:</translation>
+    </message>
+    <message>
+        <source>Vorbis Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6813,6 +7697,125 @@ Do you wish to continue?</source>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
 
 Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>xvid4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ништа</translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished">Ниско</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Средње</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Потпуно</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Произвољно</translation>
+    </message>
+    <message>
+        <source>DCT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MotionEstimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Више нити</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">Процена покрета</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Контрола протока</translation>
+    </message>
+    <message>
+        <source>Xvid4 MPEG-4 ASP configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

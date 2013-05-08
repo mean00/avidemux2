@@ -60,12 +60,6 @@ typedef FilterDescriptor *(VF_getDescriptor)(void);
                                                                 ADM_UI_TYPE_BUILD); \
     extern "C" {        FilterDescriptor *ADM_VF_getDescriptor(void) {return &descriptor_vf_id_##myClass ;}};                                                   
 #endif
-/* Hook, filters cannot include config.h as they are framework independant */
-#ifdef QT_TR_NOOP
-#undef QT_TR_NOOP
-#endif
-// FIXME TODO extern const char* translate(const char *__domainname, const char *__msgid);
-#define QT_TR_NOOP(String) String //translate ("avidemux", String)
 #define ADM_MINIMAL_UI_INTERFACE
 
 #define ADM_CONF_STRING_SIZE 256

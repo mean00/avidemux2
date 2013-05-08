@@ -2712,38 +2712,38 @@ Enable it?</source>
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="unfinished">明度鎖定(_L):</translation>
+        <translation type="obsolete">明度鎖定(_L):</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="unfinished">色度鎖定(_H):</translation>
+        <translation type="obsolete">色度鎖定(_H):</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">明度臨界值(_U):</translation>
+        <translation type="obsolete">明度臨界值(_U):</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">色度臨界值(_R):</translation>
+        <translation type="obsolete">色度臨界值(_R):</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="unfinished">場景變換(_S):</translation>
+        <translation type="obsolete">場景變換(_S):</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">減少雜訊</translation>
+        <translation type="obsolete">減少雜訊</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">脫離臨界值</translation>
+        <translation type="obsolete">脫離臨界值</translation>
     </message>
     <message>
         <source>Drop Out</source>
-        <translation type="unfinished">脫離</translation>
+        <translation type="obsolete">脫離</translation>
     </message>
 </context>
 <context>
@@ -2836,27 +2836,27 @@ Enable it?</source>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="unfinished">濾鏡強度(_F):</translation>
+        <translation type="obsolete">濾鏡強度(_F):</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="unfinished">量化值(_Q):</translation>
+        <translation type="obsolete">量化值(_Q):</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">去除水平方向塊狀色斑(_H)</translation>
+        <translation type="obsolete">去除水平方向塊狀色斑(_H)</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">去除垂直方向塊狀色斑(_V)</translation>
+        <translation type="obsolete">去除垂直方向塊狀色斑(_V)</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="unfinished">去除環狀色斑(_D)</translation>
+        <translation type="obsolete">去除環狀色斑(_D)</translation>
     </message>
     <message>
         <source>Forced Postprocessing</source>
-        <translation type="unfinished">強制性後置處理</translation>
+        <translation type="obsolete">強制性後置處理</translation>
     </message>
 </context>
 <context>
@@ -3045,53 +3045,53 @@ Enable it?</source>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">明度臨界值(_L):</translation>
+        <translation type="obsolete">明度臨界值(_L):</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">色度臨界值(_H):</translation>
+        <translation type="obsolete">色度臨界值(_H):</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="unfinished">半徑(_R):</translation>
+        <translation type="obsolete">半徑(_R):</translation>
     </message>
     <message>
         <source>Soften</source>
-        <translation type="unfinished">柔化</translation>
+        <translation type="obsolete">柔化</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">水平層疊(_H):</translation>
+        <translation type="obsolete">水平層疊(_H):</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">垂直層疊(_V):</translation>
+        <translation type="obsolete">垂直層疊(_V):</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">收縮係數(_S):</translation>
+        <translation type="obsolete">收縮係數(_S):</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="unfinished">顯示畫格(_F)</translation>
+        <translation type="obsolete">顯示畫格(_F)</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation type="unfinished">馬賽克</translation>
+        <translation type="obsolete">馬賽克</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="unfinished">嘗試反轉(_T)</translation>
+        <translation type="obsolete">嘗試反轉(_T)</translation>
     </message>
     <message>
         <source>Pal Field Shift</source>
-        <translation type="unfinished">Pal 場移動</translation>
+        <translation type="obsolete">Pal 場移動</translation>
     </message>
 </context>
 <context>
@@ -3215,11 +3215,11 @@ Enable it?</source>
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="unfinished">穩定臨界值</translation>
+        <translation type="obsolete">穩定臨界值</translation>
     </message>
     <message>
         <source>Stabilize</source>
-        <translation type="unfinished">穩定</translation>
+        <translation type="obsolete">穩定</translation>
     </message>
 </context>
 <context>
@@ -3257,11 +3257,11 @@ Enable it?</source>
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="unfinished">無法開啟字幕檔</translation>
+        <translation type="obsolete">無法開啟字幕檔</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="unfinished">無法識別字幕格式</translation>
+        <translation type="obsolete">無法識別字幕格式</translation>
     </message>
 </context>
 <context>
@@ -3411,47 +3411,19 @@ multiplied by this):</source>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
+        <translation type="obsolete">中</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">類型(_T):</translation>
+        <translation type="obsolete">類型(_T):</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">越小表示更多的去交錯</translation>
+        <translation type="obsolete">越小表示更多的去交錯</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
-    </message>
-    <message>
-        <source>Simple</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Slow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Iterations:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Chroma:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Process chroma.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_Step:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Step.</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
@@ -3872,43 +3844,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
@@ -3992,11 +3927,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -4004,7 +3939,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="unfinished">圖場控制(_F):</translation>
+        <translation type="obsolete">圖場控制(_F):</translation>
     </message>
     <message>
         <source>_Qp:</source>
@@ -4054,15 +3989,15 @@ Drop timing informations ?</source>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="unfinished">明度時間臨界值(_L):</translation>
+        <translation type="obsolete">明度時間臨界值(_L):</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished">色度時間臨界值(_R):</translation>
+        <translation type="obsolete">色度時間臨界值(_R):</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="unfinished">時間清理器</translation>
+        <translation type="obsolete">時間清理器</translation>
     </message>
 </context>
 <context>
@@ -4089,27 +4024,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="unfinished">起始畫格(_S):</translation>
+        <translation type="obsolete">起始畫格(_S):</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="unfinished">結束畫格(_E):</translation>
+        <translation type="obsolete">結束畫格(_E):</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="unfinished">逐漸消失成黑色(_B)</translation>
+        <translation type="obsolete">逐漸消失成黑色(_B)</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">淡化</translation>
+        <translation type="obsolete">淡化</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="unfinished">參數錯誤</translation>
+        <translation type="obsolete">參數錯誤</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="unfinished">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
+        <translation type="obsolete">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
     </message>
     <message>
         <source>_Start time (ms):</source>
@@ -5954,23 +5889,23 @@ Drop timing informations ?</source>
     <name>Msmooth</name>
     <message>
         <source>_High quality</source>
-        <translation type="unfinished">高品質(_H)</translation>
+        <translation type="obsolete">高品質(_H)</translation>
     </message>
     <message>
         <source>Show _mask</source>
-        <translation type="unfinished">顯示遮罩(_M)</translation>
+        <translation type="obsolete">顯示遮罩(_M)</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">強度(_S):</translation>
+        <translation type="obsolete">強度(_S):</translation>
     </message>
     <message>
         <source>MSmooth</source>
-        <translation type="unfinished">MSmooth</translation>
+        <translation type="obsolete">MSmooth</translation>
     </message>
 </context>
 <context>
@@ -6005,17 +5940,6 @@ Drop timing informations ?</source>
     <message>
         <source>Question</source>
         <translation type="unfinished">問題</translation>
-    </message>
-</context>
-<context>
-    <name>QtScriptEngine</name>
-    <message>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open script file %1</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7279,6 +7203,402 @@ Is it running ?</source>
         <source>Recent Projects</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Custom</source>
+        <translation type="obsolete">自訂</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">新畫格率(_N):</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="obsolete">重複取樣 fps</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="obsolete">預設</translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="obsolete">KVCD</translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="obsolete">漸進的</translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="obsolete">交錯</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="obsolete">比率控制</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="obsolete">全部</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="obsolete">Log</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="obsolete">EPZS</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="obsolete">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="obsolete">MPEG</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="obsolete">動作估測</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">中</translation>
+    </message>
+    <message>
+        <source>VBR</source>
+        <translation type="obsolete">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="obsolete">基本品質</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="obsolete">位元率(_B):</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="obsolete">品質(_Q):</translation>
+    </message>
+    <message>
+        <source>Vorbis Configuration</source>
+        <translation type="obsolete">Vorbis 設定</translation>
+    </message>
+    <message>
+        <source>_Quantizer:</source>
+        <translation type="obsolete">量化值(_Q):</translation>
+    </message>
+    <message>
+        <source>CBR</source>
+        <translation type="obsolete">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="obsolete">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="obsolete">位元率模式(_R):</translation>
+    </message>
+    <message>
+        <source>LAME Configuration</source>
+        <translation type="obsolete">LAME 設定</translation>
+    </message>
+    <message>
+        <source>X11</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows GDI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The filter is already partial</source>
+        <translation type="unfinished">此濾鏡已經是區段性</translation>
+    </message>
+    <message>
+        <source>Partial Start Frame:</source>
+        <translation type="unfinished">區段起始畫格:</translation>
+    </message>
+    <message>
+        <source>Partial End Frame:</source>
+        <translation type="unfinished">區段結束畫格:</translation>
+    </message>
+    <message>
+        <source>Configure child</source>
+        <translation type="unfinished">設定子項目</translation>
+    </message>
+    <message>
+        <source>Partial Video Filter</source>
+        <translation type="unfinished">區段性視訊濾鏡</translation>
+    </message>
+    <message>
+        <source>_Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ca_rtoon mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Greyscale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Turbo mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>C_hroma optimizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Main</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Very Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Very High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ultra High</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Search Precision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mode Decision</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limited Search</source>
+        <translation type="unfinished">限度搜尋</translation>
+    </message>
+    <message>
+        <source>Medium Search</source>
+        <translation type="unfinished">中等搜尋</translation>
+    </message>
+    <message>
+        <source>Wide Search</source>
+        <translation type="unfinished">廣泛搜尋</translation>
+    </message>
+    <message>
+        <source>VHQ Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max B Frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quarter Pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BVHQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma ME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HQ AC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished">動作</translation>
+    </message>
+    <message>
+        <source>H263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantization Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trellis Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Pass Tuning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Key Frame Boost(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frames closer than...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.. are reduced by(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Overflow Improvement(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Overglow Degradation(%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Curve Compression</source>
+        <translation type="unfinished">曲線壓縮</translation>
+    </message>
+    <message>
+        <source>High Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low Bitrate Scenes (%)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overflow Control Strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Pass</source>
+        <translation type="unfinished">二次運算</translation>
+    </message>
+    <message>
+        <source>Xvid4 Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation type="unfinished">準備</translation>
+    </message>
+    <message>
+        <source>Succeeded</source>
+        <translation type="unfinished">已成功</translation>
+    </message>
+    <message>
+        <source>Deleted</source>
+        <translation type="unfinished">已刪除</translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation type="unfinished">正在執行</translation>
+    </message>
+    <message>
+        <source>Job Name</source>
+        <translation type="unfinished">工作名稱</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished">狀態</translation>
+    </message>
+    <message>
+        <source>Start Time</source>
+        <translation type="unfinished">起始時間</translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="unfinished">終了時間</translation>
+    </message>
+    <message>
+        <source>Sure!</source>
+        <translation type="unfinished">確定!</translation>
+    </message>
+    <message>
+        <source>Delete job</source>
+        <translation type="unfinished">刪除工作</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished">確定要刪除 %s 工作?</translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="unfinished">刪除*所有*工作</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished">確定要刪除所有工作?</translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="unfinished">已經完成</translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished">這個腳本已經成功執行。</translation>
+    </message>
 </context>
 <context>
     <name>asharpDialog</name>
@@ -7375,6 +7695,42 @@ Is it running ?</source>
 <context>
     <name>changeFps</name>
     <message>
+        <source>Custom</source>
+        <translation type="unfinished">自訂</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">新畫格率(_N):</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="obsolete">重複取樣 fps</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Source Fps:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7408,6 +7764,29 @@ Is it running ?</source>
     <message>
         <source>U Shift</source>
         <translation type="obsolete">U 位移</translation>
+    </message>
+</context>
+<context>
+    <name>contrast</name>
+    <message>
+        <source>U :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coef :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7750,10 +8129,419 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ffmpeg2</name>
+    <message>
+        <source>Normal (4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wide (16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished">預設</translation>
+    </message>
+    <message>
+        <source>Tmpgenc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="unfinished">KVCD</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="unfinished">漸進的</translation>
+    </message>
+    <message>
+        <source>Interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">執行緒</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max bitrate (kb/s):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adv. Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="unfinished">交錯</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">比率控制</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-2 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">全部</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">執行緒</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4_MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quarter pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">使用介面</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">動作估測</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">比率控制</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ffmsmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">全部</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">使用介面</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">比率控制</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>filtermainWindow</name>
     <message>
         <source>The filter is already partial</source>
-        <translation type="unfinished">此濾鏡已經是區段性</translation>
+        <translation type="obsolete">此濾鏡已經是區段性</translation>
     </message>
     <message>
         <source>Load set of filters</source>
@@ -7782,6 +8570,101 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Partial Video Filter</source>
         <translation type="obsolete">區段性視訊濾鏡</translation>
+    </message>
+</context>
+<context>
+    <name>flv1</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">全部</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">使用介面</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">比率控制</translation>
+    </message>
+    <message>
+        <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7903,47 +8786,47 @@ p, li { white-space: pre-wrap; }
     <name>jobsWindow</name>
     <message>
         <source>Job Name</source>
-        <translation type="unfinished">工作名稱</translation>
+        <translation type="obsolete">工作名稱</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="unfinished">狀態</translation>
+        <translation type="obsolete">狀態</translation>
     </message>
     <message>
         <source>Start Time</source>
-        <translation type="unfinished">起始時間</translation>
+        <translation type="obsolete">起始時間</translation>
     </message>
     <message>
         <source>End Time</source>
-        <translation type="unfinished">終了時間</translation>
+        <translation type="obsolete">終了時間</translation>
     </message>
     <message>
         <source>Sure!</source>
-        <translation type="unfinished">確定!</translation>
+        <translation type="obsolete">確定!</translation>
     </message>
     <message>
         <source>Delete job</source>
-        <translation type="unfinished">刪除工作</translation>
+        <translation type="obsolete">刪除工作</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished">確定要刪除 %s 工作?</translation>
+        <translation type="obsolete">確定要刪除 %s 工作?</translation>
     </message>
     <message>
         <source>Delete *all* job</source>
-        <translation type="unfinished">刪除*所有*工作</translation>
+        <translation type="obsolete">刪除*所有*工作</translation>
     </message>
     <message>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished">確定要刪除所有工作?</translation>
+        <translation type="obsolete">確定要刪除所有工作?</translation>
     </message>
     <message>
         <source>Already done</source>
-        <translation type="unfinished">已經完成</translation>
+        <translation type="obsolete">已經完成</translation>
     </message>
     <message>
         <source>This script has already been successfully executed.</source>
-        <translation type="unfinished">這個腳本已經成功執行。</translation>
+        <translation type="obsolete">這個腳本已經成功執行。</translation>
     </message>
     <message>
         <source>Ready</source>
@@ -7964,6 +8847,29 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Running</source>
         <translation type="obsolete">正在執行</translation>
+    </message>
+</context>
+<context>
+    <name>jpeg</name>
+    <message>
+        <source>YUV422</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YUV420</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer:</source>
+        <translation type="unfinished">量化值(_Q):</translation>
+    </message>
+    <message>
+        <source>_ColorSpace:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mjpeg Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8015,6 +8921,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>_Field order:</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lame</name>
+    <message>
+        <source>CBR</source>
+        <translation type="unfinished">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="unfinished">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="unfinished">位元率模式(_R):</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">位元率(_B):</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">品質(_Q):</translation>
+    </message>
+    <message>
+        <source>_Disable reservoir:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAME Configuration</source>
+        <translation type="unfinished">LAME 設定</translation>
     </message>
 </context>
 <context>
@@ -8526,6 +9463,30 @@ p, li { white-space: pre-wrap; }
         <source>Resample fps</source>
         <translation type="unfinished">重複取樣 fps</translation>
     </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">自訂</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>resizeDialog</name>
@@ -8782,39 +9743,39 @@ p, li { white-space: pre-wrap; }
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判。</translation>
+        <translation type="obsolete">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判。</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">雜訊(_N):</translation>
+        <translation type="obsolete">雜訊(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">如果像素太接近雜訊，它們被視為一樣</translation>
+        <translation type="obsolete">如果像素太接近雜訊，它們被視為一樣</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="unfinished">相同(_D):</translation>
+        <translation type="obsolete">相同(_D):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">如果量度少於等同的，圖像被視為完全相同</translation>
+        <translation type="obsolete">如果量度少於等同的，圖像被視為完全相同</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">顯示量度(_S)</translation>
+        <translation type="obsolete">顯示量度(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">圖像顯示量度 (除錯)</translation>
+        <translation type="obsolete">圖像顯示量度 (除錯)</translation>
     </message>
     <message>
         <source>Blend Removal</source>
-        <translation type="unfinished">去除混合</translation>
+        <translation type="obsolete">去除混合</translation>
     </message>
 </context>
 <context>
@@ -8912,47 +9873,47 @@ p, li { white-space: pre-wrap; }
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="unfinished">量度</translation>
+        <translation type="obsolete">量度</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished">確定要將矩陣顯示在螢幕上?</translation>
+        <translation type="obsolete">確定要將矩陣顯示在螢幕上?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判</translation>
+        <translation type="obsolete">如果數值小於臨界值，它被視為有效的。較小的值可能意味著更多的誤判</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">雜訊(_N):</translation>
+        <translation type="obsolete">雜訊(_N):</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">如果像素太接近雜訊，它們被視為一樣</translation>
+        <translation type="obsolete">如果像素太接近雜訊，它們被視為一樣</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="unfinished">相同(_I):</translation>
+        <translation type="obsolete">相同(_I):</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">如果量度少於等同的，圖像被視為完全相同</translation>
+        <translation type="obsolete">如果量度少於等同的，圖像被視為完全相同</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">顯示量度(_S)</translation>
+        <translation type="obsolete">顯示量度(_S)</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">圖像顯示量度 (除錯)</translation>
+        <translation type="obsolete">圖像顯示量度 (除錯)</translation>
     </message>
     <message>
         <source>Hard IVTC Removal</source>
-        <translation type="unfinished">硬去除 IVTC</translation>
+        <translation type="obsolete">硬去除 IVTC</translation>
     </message>
 </context>
 <context>
@@ -8992,6 +9953,33 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Idx File :</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vorbis</name>
+    <message>
+        <source>VBR</source>
+        <translation type="unfinished">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="unfinished">基本品質</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">位元率(_B):</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">品質(_Q):</translation>
+    </message>
+    <message>
+        <source>Vorbis Configuration</source>
+        <translation type="unfinished">Vorbis 設定</translation>
     </message>
 </context>
 <context>
@@ -9288,6 +10276,125 @@ Do you wish to continue?</source>
     <message>
         <source>Mode</source>
         <translation type="obsolete">模式</translation>
+    </message>
+</context>
+<context>
+    <name>xvid4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished">低</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">中</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">全部</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">自訂</translation>
+    </message>
+    <message>
+        <source>DCT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MotionEstimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">執行緒</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">動作估測</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">比率控制</translation>
+    </message>
+    <message>
+        <source>Xvid4 MPEG-4 ASP configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

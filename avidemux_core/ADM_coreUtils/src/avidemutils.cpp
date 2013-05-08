@@ -29,7 +29,6 @@
 #include "ADM_bitmap.h"
 #include "ADM_coreUtils.h"
 
-#define QT_TR_NOOP(x) x
 
 uint8_t  mk_hex(uint8_t a, uint8_t b);
 void     memcpyswap(uint8_t *dest, uint8_t *src, uint32_t size);

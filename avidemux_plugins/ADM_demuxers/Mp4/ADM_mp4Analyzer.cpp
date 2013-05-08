@@ -33,7 +33,6 @@
 #define aprintf printf
 #endif
 
-#define QT_TR_NOOP(x) x
 #define TRACK_OTHER 0
 #define TRACK_AUDIO 1
 #define TRACK_VIDEO 2

@@ -328,10 +328,10 @@ bool configure(CONFcouple **setup)
     qqual=(ELEM_TYPE_FLOAT)config.quality;
 
     diaMenuEntry channelMode[]={
-                             {ADM_VORBIS_VBR,      QT_TR_NOOP("VBR"),NULL},
-                             {ADM_VORBIS_QUALITY,   QT_TR_NOOP("Quality based"),NULL}};
+                             {ADM_VORBIS_VBR,      QT_TRANSLATE_NOOP("vorbis","VBR"),NULL},
+                             {ADM_VORBIS_QUALITY,   QT_TRANSLATE_NOOP("vorbis","Quality based"),NULL}};
 
-    diaElemMenu menuMode(&mmode,   QT_TR_NOOP("_Mode:"), SZT(channelMode),channelMode);
+    diaElemMenu menuMode(&mmode,   QT_TRANSLATE_NOOP("vorbis","_Mode:"), SZT(channelMode),channelMode);
 
 
     diaMenuEntry bitrateM[]={
@@ -345,16 +345,16 @@ bool configure(CONFcouple **setup)
                               BITRATE(192),
                               BITRATE(224)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("vorbis","_Bitrate:"), SZT(bitrateM),bitrateM);
 
-    diaElemFloat quality(&qqual,QT_TR_NOOP("_Quality:"),-1.,10.);
+    diaElemFloat quality(&qqual,QT_TRANSLATE_NOOP("vorbis","_Quality:"),-1.,10.);
 
 
 
 
       diaElem *elems[]={&menuMode,&bitrate,&quality};
 
-  if( diaFactoryRun(QT_TR_NOOP("Vorbis Configuration"),3,elems))
+  if( diaFactoryRun(QT_TRANSLATE_NOOP("vorbis","Vorbis Configuration"),3,elems))
   {
     config.mode=(ADM_VORBIS_MODE)mmode;
     config.quality=(float)qqual;

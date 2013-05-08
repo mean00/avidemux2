@@ -289,7 +289,7 @@ cont:
       @return 1 on success, 0 on failure
 
 */
-#define QT_TR_NOOP(x) x
+//#define QT_TR_NOOP(x) x
 
 bool configure (CONFcouple **setup)
 {
@@ -308,12 +308,12 @@ bool configure (CONFcouple **setup)
   ppreset = config.preset;
 
   diaMenuEntry encodingMode[] = {
-    {ADM_LAME_PRESET_CBR, QT_TR_NOOP ("CBR"), NULL},
-    {ADM_LAME_PRESET_ABR, QT_TR_NOOP ("ABR"), NULL},
+    {ADM_LAME_PRESET_CBR, QT_TRANSLATE_NOOP("lame","CBR"), NULL},
+    {ADM_LAME_PRESET_ABR, QT_TRANSLATE_NOOP("lame","ABR"), NULL},
   };
-  diaElemMenu Mode (&ppreset, QT_TR_NOOP ("Bit_rate mode:"),   SZT (encodingMode), encodingMode);
+  diaElemMenu Mode (&ppreset, QT_TRANSLATE_NOOP("lame","Bit_rate mode:"),   SZT (encodingMode), encodingMode);
 
-#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lame",#x)}
   diaMenuEntry bitrateM[] = {
     BITRATE (56),
     BITRATE (64),
@@ -327,16 +327,16 @@ bool configure (CONFcouple **setup)
   };
 
 //***
-  diaElemMenu bitrate (&(config.bitrate), QT_TR_NOOP ("_Bitrate:"), SZT (bitrateM),
+  diaElemMenu bitrate (&(config.bitrate), QT_TRANSLATE_NOOP("lame","_Bitrate:"), SZT (bitrateM),
 		       bitrateM);
-  diaElemUInteger quality (PX (quality), QT_TR_NOOP ("_Quality:"), 0, 9);
+  diaElemUInteger quality (PX (quality), QT_TRANSLATE_NOOP("lame","_Quality:"), 0, 9);
   bool reservoir32=config.disableBitReservoir;
   diaElemToggle reservoir (&reservoir32,
-			   QT_TR_NOOP ("_Disable reservoir:"));
+			   QT_TRANSLATE_NOOP("lame","_Disable reservoir:"));
 
   diaElem *elems[] = { &Mode, &bitrate,&quality, &reservoir };
 
-  if (diaFactoryRun (QT_TR_NOOP ("LAME Configuration"), 4, elems))
+  if (diaFactoryRun (QT_TRANSLATE_NOOP("lame","LAME Configuration"), 4, elems))
     {
       config.preset=(ADM_LAME_PRESET)ppreset;
       config.disableBitReservoir=reservoir32;

@@ -38,7 +38,6 @@ It is an fopen/fwrite lookalike interface to chunks
 	//#define OPENDML_VERBOSE
 #endif
 #define DEPACK_VERBOSE
-#define QT_TR_NOOP(x) x
 
 #define MAX_VOP 10
 

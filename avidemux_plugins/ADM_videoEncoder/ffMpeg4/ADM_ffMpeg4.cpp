@@ -173,29 +173,29 @@ bool         ADM_ffMpeg4Encoder::isDualPass(void)
 bool         ffMpeg4Configure(void)
 {
 diaMenuEntry meE[]={
-  {1,QT_TR_NOOP("None")},
-  {2,QT_TR_NOOP("Full")},
-  {3,QT_TR_NOOP("Log")},
-  {4,QT_TR_NOOP("Phods")},
-  {5,QT_TR_NOOP("EPZS")},
-  {6,QT_TR_NOOP("X1")}
+  {1,QT_TRANSLATE_NOOP("ffmpeg4","None")},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Full")},
+  {3,QT_TRANSLATE_NOOP("ffmpeg4","Log")},
+  {4,QT_TRANSLATE_NOOP("ffmpeg4","Phods")},
+  {5,QT_TRANSLATE_NOOP("ffmpeg4","EPZS")},
+  {6,QT_TRANSLATE_NOOP("ffmpeg4","X1")}
 };
 
 diaMenuEntry qzE[]={
-  {0,QT_TR_NOOP("H.263")},
-  {1,QT_TR_NOOP("MPEG")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","H.263")},
+  {1,QT_TRANSLATE_NOOP("ffmpeg4","MPEG")}
 };
 
 diaMenuEntry rdE[]={
-  {0,QT_TR_NOOP("MB comparison")},
-  {1,QT_TR_NOOP("Fewest bits (vhq)")},
-  {2,QT_TR_NOOP("Rate distortion")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","MB comparison")},
+  {1,QT_TRANSLATE_NOOP("ffmpeg4","Fewest bits (vhq)")},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Rate distortion")}
 };
 diaMenuEntry threads[]={
-  {0,QT_TR_NOOP("One thread")},
-  {2,QT_TR_NOOP("Two threads)")},
-  {3,QT_TR_NOOP("Three threads")},
-  {99,QT_TR_NOOP("Auto (#cpu)")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg4","One thread")},
+  {2,QT_TRANSLATE_NOOP("ffmpeg4","Two threads)")},
+  {3,QT_TRANSLATE_NOOP("ffmpeg4","Three threads")},
+  {99,QT_TRANSLATE_NOOP("ffmpeg4","Auto (#cpu)")}
 };
 
 
@@ -205,55 +205,55 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 #define PX(x) &(conf->lavcSettings.x)
 
          diaElemBitrate   bitrate(&(Mp4Settings.params),NULL);
-         diaElemMenu      meM(&me,QT_TR_NOOP("Matrices"),4,meE);
-         diaElemMenu      threadM(PX(MultiThreaded),QT_TR_NOOP("Threading"),4,threads);
-         diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
-         diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
-         diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
+         diaElemMenu      meM(&me,QT_TRANSLATE_NOOP("ffmpeg4","Matrices"),4,meE);
+         diaElemMenu      threadM(PX(MultiThreaded),QT_TRANSLATE_NOOP("ffmpeg4","Threading"),4,threads);
+         diaElemUInteger  qminM(PX(qmin),QT_TRANSLATE_NOOP("ffmpeg4","Mi_n. quantizer:"),1,31);
+         diaElemUInteger  qmaxM(PX(qmax),QT_TRANSLATE_NOOP("ffmpeg4","Ma_x. quantizer:"),1,31);
+         diaElemUInteger  qdiffM(PX(max_qdiff),QT_TRANSLATE_NOOP("ffmpeg4","Max. quantizer _difference:"),1,31);
 
-         diaElemToggle    fourMv(PX(_4MV),QT_TR_NOOP("4_MV"));
-         diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
+         diaElemToggle    fourMv(PX(_4MV),QT_TRANSLATE_NOOP("ffmpeg4","4_MV"));
+         diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TRANSLATE_NOOP("ffmpeg4","_Trellis quantization"));
 
-         diaElemToggle    qpel(PX(_QPEL),QT_TR_NOOP("_Quarter pixel"));
-         diaElemToggle    gmc(PX(_GMC),QT_TR_NOOP("_GMC"));
+         diaElemToggle    qpel(PX(_QPEL),QT_TRANSLATE_NOOP("ffmpeg4","_Quarter pixel"));
+         diaElemToggle    gmc(PX(_GMC),QT_TRANSLATE_NOOP("ffmpeg4","_GMC"));
 
 
-         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
-         diaElemMenu     qzM(PX(mpeg_quant),QT_TR_NOOP("_Quantization type:"),2,qzE);
+         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TRANSLATE_NOOP("ffmpeg4","_Number of B frames:"),0,32);
+         diaElemMenu     qzM(PX(mpeg_quant),QT_TRANSLATE_NOOP("ffmpeg4","_Quantization type:"),2,qzE);
 
-         diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
+         diaElemMenu     rdM(PX(mb_eval),QT_TRANSLATE_NOOP("ffmpeg4","_Macroblock decision:"),3,rdE);
 
-         diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
+         diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("ffmpeg4","_Filesize tolerance (kb):"),0,100000);
 
-         diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TR_NOOP("Quantizer _blur:"),0,1);
+         diaElemFloat    qzComp(PX(qcompress),QT_TRANSLATE_NOOP("ffmpeg4","_Quantizer compression:"),0,1);
+         diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("ffmpeg4","Quantizer _blur:"),0,1);
 
-        diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,500);
+        diaElemUInteger GopSize(PX(gop_size),QT_TRANSLATE_NOOP("ffmpeg4","_Gop Size:"),1,500);
           /* First Tab : encoding mode */
         diaElem *diamode[]={&GopSize,&threadM,&bitrate};
-        diaElemTabs tabMode(QT_TR_NOOP("User Interface"),3,diamode);
+        diaElemTabs tabMode(QT_TRANSLATE_NOOP("ffmpeg4","User Interface"),3,diamode);
 
         /* 2nd Tab : ME */
-        diaElemFrame frameMe(QT_TR_NOOP("Advanced Simple Profile"));
+        diaElemFrame frameMe(QT_TRANSLATE_NOOP("ffmpeg4","Advanced Simple Profile"));
 
         frameMe.swallow(&max_b_frames);
         frameMe.swallow(&qpel);
         frameMe.swallow(&gmc);
 
         diaElem *diaME[]={&fourMv,&frameMe};
-        diaElemTabs tabME(QT_TR_NOOP("Motion Estimation"),2,diaME);
+        diaElemTabs tabME(QT_TRANSLATE_NOOP("ffmpeg4","Motion Estimation"),2,diaME);
         /* 3nd Tab : Qz */
 
          diaElem *diaQze[]={&qzM,&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
-        diaElemTabs tabQz(QT_TR_NOOP("Quantization"),6,diaQze);
+        diaElemTabs tabQz(QT_TRANSLATE_NOOP("ffmpeg4","Quantization"),6,diaQze);
 
         /* 4th Tab : RControl */
 
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
-        diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
+        diaElemTabs tabRC(QT_TRANSLATE_NOOP("ffmpeg4","Rate Control"),3,diaRC);
 
          diaElemTabs *tabs[]={&tabMode,&tabME,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-4 configuration"),4,tabs))
+        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg4","libavcodec MPEG-4 configuration"),4,tabs))
         {
           conf->lavcSettings.me_method=(Motion_Est_ID)me;
           return true;

@@ -37,12 +37,12 @@ typedef struct
 
 const PredefinedFps_t predefinedFps[]=
 {
- {QT_TR_NOOP("Custom"),         10000,1000},
- {QT_TR_NOOP("25  (PAL)"),      25000,1000},
- {QT_TR_NOOP("23.976 (Film)"),  24000,1001},
- {QT_TR_NOOP("29.97 (NTSC)"),   30000,1001},
- {QT_TR_NOOP("50 (Pal)"),       50000,1000},
- {QT_TR_NOOP("59.93  (NTSC)"),  60000,1001}
+ {QT_TRANSLATE_NOOP("changeFps","Custom"),         10000,1000},
+ {QT_TRANSLATE_NOOP("changeFps","25  (PAL)"),      25000,1000},
+ {QT_TRANSLATE_NOOP("changeFps","23.976 (Film)"),  24000,1001},
+ {QT_TRANSLATE_NOOP("changeFps","29.97 (NTSC)"),   30000,1001},
+ {QT_TRANSLATE_NOOP("changeFps","50 (Pal)"),       50000,1000},
+ {QT_TRANSLATE_NOOP("changeFps","59.93  (NTSC)"),  60000,1001}
 };
 
 #define nbPredefined (sizeof(predefinedFps)/sizeof(PredefinedFps_t))
@@ -205,13 +205,13 @@ ADM_assert(nbPredefined == 6);
     
     
 
-    diaElemMenu mFps(&(configuration.oldMode),   QT_TR_NOOP("Source Fps:"), 6,tFps);
-    diaElemFloat fps(&oldFrac,QT_TR_NOOP("Source frame rate:"),1,200.);
+    diaElemMenu mFps(&(configuration.oldMode),   QT_TRANSLATE_NOOP("changeFps","Source Fps:"), 6,tFps);
+    diaElemFloat fps(&oldFrac,QT_TRANSLATE_NOOP("changeFps","Source frame rate:"),1,200.);
 
     mFps.link(tFps+0,1,&fps); // only activate entry in custom mode
 
-    diaElemMenu targetmFps(&(configuration.newMode),   QT_TR_NOOP("Destination Fps:"), 6,tFps);
-    diaElemFloat targetfps(&newFrac,QT_TR_NOOP("Destination frame rate:"),1,200.);
+    diaElemMenu targetmFps(&(configuration.newMode),   QT_TRANSLATE_NOOP("changeFps","Destination Fps:"), 6,tFps);
+    diaElemFloat targetfps(&newFrac,QT_TRANSLATE_NOOP("changeFps","Destination frame rate:"),1,200.);
 
     targetmFps.link(tFps+0,1,&targetfps); // only activate entry in custom mode
 
@@ -219,7 +219,7 @@ ADM_assert(nbPredefined == 6);
 
     diaElem *elems[4]={&mFps,&fps,&targetmFps,&targetfps};
   
-    if( !diaFactoryRun(QT_TR_NOOP("Change fps"),4,elems))
+    if( !diaFactoryRun(QT_TRANSLATE_NOOP("changeFps","Change fps"),4,elems))
         return false;
     
     if(newFrac==0 || oldFrac==0)

@@ -35,7 +35,6 @@
 #define adm_printf(...) {}
 #define aprintf(...) {}
 
-#define QT_TR_NOOP(x) x
 
 
 

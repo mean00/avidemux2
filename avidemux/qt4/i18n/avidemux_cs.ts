@@ -6807,38 +6807,38 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoDenoise</name>
     <message>
         <source>_Luma lock:</source>
-        <translation type="unfinished">Z_amčení luminance:</translation>
+        <translation type="obsolete">Z_amčení luminance:</translation>
     </message>
     <message>
         <source>C_hroma lock:</source>
-        <translation type="unfinished">Za_mčení chrominance:</translation>
+        <translation type="obsolete">Za_mčení chrominance:</translation>
     </message>
     <message>
         <source>L_uma threshold:</source>
-        <translation type="unfinished">_Práh luminance:</translation>
+        <translation type="obsolete">_Práh luminance:</translation>
     </message>
     <message>
         <source>Ch_roma threshold:</source>
-        <translation type="unfinished">P_ráh chrominance:</translation>
+        <translation type="obsolete">P_ráh chrominance:</translation>
     </message>
     <message>
         <source>_Scene change:</source>
-        <translation type="unfinished">Změna _scény:</translation>
+        <translation type="obsolete">Změna _scény:</translation>
     </message>
     <message>
         <source>Denoise</source>
-        <translation type="unfinished">Denoise</translation>
+        <translation type="obsolete">Denoise</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoDropOut</name>
     <message>
         <source>DropOut Threshold</source>
-        <translation type="unfinished">Práh výpadků</translation>
+        <translation type="obsolete">Práh výpadků</translation>
     </message>
     <message>
         <source>Drop Out</source>
-        <translation type="unfinished">Drop Out</translation>
+        <translation type="obsolete">Drop Out</translation>
     </message>
 </context>
 <context>
@@ -6942,27 +6942,27 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoForcedPP</name>
     <message>
         <source>_Filter strength:</source>
-        <translation type="unfinished">_Síla filtru:</translation>
+        <translation type="obsolete">_Síla filtru:</translation>
     </message>
     <message>
         <source>_Quantizer:</source>
-        <translation type="unfinished">_Kvantizér:</translation>
+        <translation type="obsolete">_Kvantizér:</translation>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">_Horizontální deblocking</translation>
+        <translation type="obsolete">_Horizontální deblocking</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">V_ertikální deblocking</translation>
+        <translation type="obsolete">V_ertikální deblocking</translation>
     </message>
     <message>
         <source>_Deringing</source>
-        <translation type="unfinished">_Deringing</translation>
+        <translation type="obsolete">_Deringing</translation>
     </message>
     <message>
         <source>Forced Postprocessing</source>
-        <translation type="unfinished">Forced Postprocessing</translation>
+        <translation type="obsolete">Forced Postprocessing</translation>
     </message>
 </context>
 <context>
@@ -7155,53 +7155,53 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoMaskedSoften</name>
     <message>
         <source>_Luma threshold:</source>
-        <translation type="unfinished">_Práh luminance:</translation>
+        <translation type="obsolete">_Práh luminance:</translation>
     </message>
     <message>
         <source>C_hroma threshold:</source>
-        <translation type="unfinished">P_ráh chrominance:</translation>
+        <translation type="obsolete">P_ráh chrominance:</translation>
     </message>
     <message>
         <source>_Radius:</source>
-        <translation type="unfinished">P_oloměr:</translation>
+        <translation type="obsolete">P_oloměr:</translation>
     </message>
     <message>
         <source>Soften</source>
-        <translation type="unfinished">Soften</translation>
+        <translation type="obsolete">Soften</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMosaic</name>
     <message>
         <source>_Horizontal stacking:</source>
-        <translation type="unfinished">_Horizontální počet:</translation>
+        <translation type="obsolete">_Horizontální počet:</translation>
     </message>
     <message>
         <source>_Vertical stacking:</source>
-        <translation type="unfinished">_Vertikální počet:</translation>
+        <translation type="obsolete">_Vertikální počet:</translation>
     </message>
     <message>
         <source>_Shrink factor:</source>
-        <translation type="unfinished">_Faktor smrštění:</translation>
+        <translation type="obsolete">_Faktor smrštění:</translation>
     </message>
     <message>
         <source>Show _frame</source>
-        <translation type="unfinished">_Ukázat čísla snímků</translation>
+        <translation type="obsolete">_Ukázat čísla snímků</translation>
     </message>
     <message>
         <source>Mosaic</source>
-        <translation type="unfinished">Mosaic</translation>
+        <translation type="obsolete">Mosaic</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoPalShift</name>
     <message>
         <source>_Try reverse</source>
-        <translation type="unfinished">Zkusit _opačně</translation>
+        <translation type="obsolete">Zkusit _opačně</translation>
     </message>
     <message>
         <source>Pal Field Shift</source>
-        <translation type="unfinished">Pal Field Shift</translation>
+        <translation type="obsolete">Pal Field Shift</translation>
     </message>
 </context>
 <context>
@@ -7337,11 +7337,11 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoStabilize</name>
     <message>
         <source>Stabilize Threshold</source>
-        <translation type="unfinished">Práh stabilizace</translation>
+        <translation type="obsolete">Práh stabilizace</translation>
     </message>
     <message>
         <source>Stabilize</source>
-        <translation type="unfinished">Stabilize</translation>
+        <translation type="obsolete">Stabilize</translation>
     </message>
 </context>
 <context>
@@ -7379,11 +7379,11 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoSubtitle</name>
     <message>
         <source>Could not open subtitle file</source>
-        <translation type="unfinished">Nelze otevřít soubor s titulky</translation>
+        <translation type="obsolete">Nelze otevřít soubor s titulky</translation>
     </message>
     <message>
         <source>Cannot identify subtitle format</source>
-        <translation type="unfinished">Nemůžu identifikovat formát titulků</translation>
+        <translation type="obsolete">Nemůžu identifikovat formát titulků</translation>
     </message>
 </context>
 <context>
@@ -7405,47 +7405,47 @@ Chcete přesto pokračovat?</translation>
     <name>ADMVideoTIsophote</name>
     <message>
         <source>Simple</source>
-        <translation type="unfinished">Jednoduchý</translation>
+        <translation type="obsolete">Jednoduchý</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Střední</translation>
+        <translation type="obsolete">Střední</translation>
     </message>
     <message>
         <source>Slow</source>
-        <translation type="unfinished">Pomalý</translation>
+        <translation type="obsolete">Pomalý</translation>
     </message>
     <message>
         <source>_Type:</source>
-        <translation type="unfinished">_Typ:</translation>
+        <translation type="obsolete">_Typ:</translation>
     </message>
     <message>
         <source>_Iterations:</source>
-        <translation type="unfinished">_Iterace:</translation>
+        <translation type="obsolete">_Iterace:</translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">Menší číslo znamená větší míru odstranění prokladu</translation>
+        <translation type="obsolete">Menší číslo znamená větší míru odstranění prokladu</translation>
     </message>
     <message>
         <source>_Chroma:</source>
-        <translation type="unfinished">Ch_roma:</translation>
+        <translation type="obsolete">Ch_roma:</translation>
     </message>
     <message>
         <source>Process chroma.</source>
-        <translation type="unfinished">Zpracovat chrominanci.</translation>
+        <translation type="obsolete">Zpracovat chrominanci.</translation>
     </message>
     <message>
         <source>_Step:</source>
-        <translation type="unfinished">_Krok:</translation>
+        <translation type="obsolete">_Krok:</translation>
     </message>
     <message>
         <source>Step.</source>
-        <translation type="unfinished">Krok.</translation>
+        <translation type="obsolete">Krok.</translation>
     </message>
     <message>
         <source>KernelDeint</source>
-        <translation type="unfinished">KernelDeint</translation>
+        <translation type="obsolete">KernelDeint</translation>
     </message>
 </context>
 <context>
@@ -7962,43 +7962,6 @@ Má se znovu použít log soubor?</translation>
     </message>
 </context>
 <context>
-    <name>ADM_qtScript::Editor</name>
-    <message>
-        <source>Unable to append %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video must contain an audio track to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::QtScriptObject</name>
-    <message>
-        <source>Parameter %1 must be a number</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be greater than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Parameter %1 must be less than %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_qtScript::SegmentCollectionPrototype</name>
-    <message>
-        <source>A video must be open to perform this operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
@@ -8082,11 +8045,11 @@ Má se znovu použít log soubor?</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Vrchní</translation>
+        <translation type="obsolete">Vrchní</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Spodní</translation>
+        <translation type="obsolete">Spodní</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -8094,7 +8057,7 @@ Má se znovu použít log soubor?</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
-        <translation type="unfinished">Dominance půlsnímků:</translation>
+        <translation type="obsolete">Dominance půlsnímků:</translation>
     </message>
     <message>
         <source>_Qp:</source>
@@ -8151,15 +8114,15 @@ Má se znovu použít log soubor?</translation>
     <name>AVDMVideoVlad</name>
     <message>
         <source>_Luma temporal threshold:</source>
-        <translation type="unfinished">Č_asový práh luminance:</translation>
+        <translation type="obsolete">Č_asový práh luminance:</translation>
     </message>
     <message>
         <source>Ch_roma temporal threshold:</source>
-        <translation type="unfinished">Ča_sový práh chrominance:</translation>
+        <translation type="obsolete">Ča_sový práh chrominance:</translation>
     </message>
     <message>
         <source>Temporal Cleaner</source>
-        <translation type="unfinished">Temporal Cleaner</translation>
+        <translation type="obsolete">Temporal Cleaner</translation>
     </message>
 </context>
 <context>
@@ -8186,27 +8149,27 @@ Má se znovu použít log soubor?</translation>
     </message>
     <message>
         <source>_Start frame:</source>
-        <translation type="unfinished">_Počáteční snímek:</translation>
+        <translation type="obsolete">_Počáteční snímek:</translation>
     </message>
     <message>
         <source>_End frame:</source>
-        <translation type="unfinished">_Konečný snímek:</translation>
+        <translation type="obsolete">_Konečný snímek:</translation>
     </message>
     <message>
         <source>Fade to _black</source>
-        <translation type="unfinished">Ztmavit _do černa</translation>
+        <translation type="obsolete">Ztmavit _do černa</translation>
     </message>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">Fade</translation>
+        <translation type="obsolete">Fade</translation>
     </message>
     <message>
         <source>Parameter Error</source>
-        <translation type="unfinished">Chyba parametru</translation>
+        <translation type="obsolete">Chyba parametru</translation>
     </message>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
-        <translation type="unfinished">Začátek musí být před koncem a v rozmezí daném počtem snímků.</translation>
+        <translation type="obsolete">Začátek musí být před koncem a v rozmezí daném počtem snímků.</translation>
     </message>
     <message>
         <source>_Start time (ms):</source>
@@ -11044,23 +11007,23 @@ Má se znovu použít log soubor?</translation>
     <name>Msmooth</name>
     <message>
         <source>_High quality</source>
-        <translation type="unfinished">_Vysoká kvalita</translation>
+        <translation type="obsolete">_Vysoká kvalita</translation>
     </message>
     <message>
         <source>Show _mask</source>
-        <translation type="unfinished">Zobrazovat _masku</translation>
+        <translation type="obsolete">Zobrazovat _masku</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Práh:</translation>
+        <translation type="obsolete">_Práh:</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished">_Síla:</translation>
+        <translation type="obsolete">_Síla:</translation>
     </message>
     <message>
         <source>MSmooth</source>
-        <translation type="unfinished">MSmooth</translation>
+        <translation type="obsolete">MSmooth</translation>
     </message>
 </context>
 <context>
@@ -11099,17 +11062,6 @@ Má se znovu použít log soubor?</translation>
     <message>
         <source>Question?</source>
         <translation type="obsolete">Otázka</translation>
-    </message>
-</context>
-<context>
-    <name>QtScriptEngine</name>
-    <message>
-        <source>Avidemux Script Debugger</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Unable to open script file %1</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12806,6 +12758,490 @@ Je spuštěno?</translation>
         <source>Recent Projects</source>
         <translation type="unfinished">Nedávné projekty</translation>
     </message>
+    <message>
+        <source>Custom</source>
+        <translation type="obsolete">Vlastní</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">_Režim:</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">_Nová snímková frekvence:</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="obsolete">Resample fps</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="obsolete">Výchozí</translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="obsolete">KVCD</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="obsolete">Porovnání MB</translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="obsolete">Nejméně bitů (vhq)</translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="obsolete">Progresivní</translation>
+    </message>
+    <message>
+        <source>Interlaced</source>
+        <translation type="obsolete">Prokládaný</translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="obsolete">Nejdřív horní půlsnímek</translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="obsolete">Nejdřív spodní půlsnímek</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="obsolete">Mi_n. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="obsolete">Ma_x. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="obsolete">Max. r_ozdíl kvantizérů:</translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="obsolete">Velikost VBV bufferu:</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="obsolete">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="obsolete">_Počet B snímků:</translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="obsolete">_Rozhodování makrobloků:</translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="obsolete">_Tolerance velikosti souboru (kb):</translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="obsolete">_Komprese kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="obsolete">_Rozmazání kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="obsolete">Prokládání</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="obsolete">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-2 configuration</source>
+        <translation type="obsolete">Nastavení libavcodec MPEG-4 {2 ?}</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="obsolete">Plná</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="obsolete">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="obsolete">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="obsolete">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="obsolete">X1</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="obsolete">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="obsolete">MPEG</translation>
+    </message>
+    <message>
+        <source>Matrices</source>
+        <translation type="obsolete">Matice</translation>
+    </message>
+    <message>
+        <source>_Quarter pixel</source>
+        <translation type="obsolete">_Qpel</translation>
+    </message>
+    <message>
+        <source>_GMC</source>
+        <translation type="obsolete">_GMC</translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="obsolete">_Typ kvantizace:</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished">Advanced Simple Profile</translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="obsolete">Odhad pohybu</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="obsolete">Nastavení libavcodec MPEG-4</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Střední</translation>
+    </message>
+    <message>
+        <source>VBR</source>
+        <translation type="obsolete">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="obsolete">Režim kvality</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="obsolete">_Datový tok:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="obsolete">_Kvalita:</translation>
+    </message>
+    <message>
+        <source>_Quantizer:</source>
+        <translation type="obsolete">_Kvantizér:</translation>
+    </message>
+    <message>
+        <source>CBR</source>
+        <translation type="obsolete">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="obsolete">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="obsolete">_Typ datového toku:</translation>
+    </message>
+    <message>
+        <source>LAME Configuration</source>
+        <translation type="obsolete">Nastavení LAME</translation>
+    </message>
+    <message>
+        <source>X11</source>
+        <translation type="unfinished">X11</translation>
+    </message>
+    <message>
+        <source>MS Windows GDI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X Quartz 2D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mac OS X QuickDraw</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MS Windows Direct3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default Raster</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The filter is already partial</source>
+        <translation type="unfinished">Filtr již je částečný</translation>
+    </message>
+    <message>
+        <source>Partial Start Frame:</source>
+        <translation type="unfinished">Počáteční snímek:</translation>
+    </message>
+    <message>
+        <source>Partial End Frame:</source>
+        <translation type="unfinished">Konečný snímek:</translation>
+    </message>
+    <message>
+        <source>Configure child</source>
+        <translation type="unfinished">Nastavit filtr</translation>
+    </message>
+    <message>
+        <source>Partial Video Filter</source>
+        <translation type="unfinished">Částečný video filtr</translation>
+    </message>
+    <message>
+        <source>_Interlaced</source>
+        <translation type="unfinished">_Prokládaný</translation>
+    </message>
+    <message>
+        <source>Ca_rtoon mode</source>
+        <translation type="unfinished">_Režim kreslených seriálů</translation>
+    </message>
+    <message>
+        <source>_Greyscale</source>
+        <translation type="unfinished">_Odstíny šedi</translation>
+    </message>
+    <message>
+        <source>Turbo mode</source>
+        <translation type="unfinished">Turbo režim</translation>
+    </message>
+    <message>
+        <source>C_hroma optimizer</source>
+        <translation type="unfinished">Opti_malizace chrominance</translation>
+    </message>
+    <message>
+        <source>Main</source>
+        <translation type="unfinished">Hlavní</translation>
+    </message>
+    <message>
+        <source>Very Low</source>
+        <translation type="unfinished">Velmi nízká</translation>
+    </message>
+    <message>
+        <source>Very High</source>
+        <translation type="unfinished">Velmi vysoká</translation>
+    </message>
+    <message>
+        <source>Ultra High</source>
+        <translation type="unfinished">Ultra vysoká</translation>
+    </message>
+    <message>
+        <source>Motion Search Precision</source>
+        <translation type="unfinished">Přesnost vyhledávání pohybu</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished">Vypnuto</translation>
+    </message>
+    <message>
+        <source>Mode Decision</source>
+        <translation type="unfinished">Rozhodování režimu</translation>
+    </message>
+    <message>
+        <source>Limited Search</source>
+        <translation type="unfinished">Omezené vyhledávání</translation>
+    </message>
+    <message>
+        <source>Medium Search</source>
+        <translation type="unfinished">Střední vyhledávání</translation>
+    </message>
+    <message>
+        <source>Wide Search</source>
+        <translation type="unfinished">Široké vyhledávání</translation>
+    </message>
+    <message>
+        <source>VHQ Mode</source>
+        <translation type="unfinished">VHQ režim</translation>
+    </message>
+    <message>
+        <source>Max B Frames</source>
+        <translation type="unfinished">Max počet B snímků</translation>
+    </message>
+    <message>
+        <source>Quarter Pixel</source>
+        <translation type="unfinished">Qpel</translation>
+    </message>
+    <message>
+        <source>GMC</source>
+        <translation type="unfinished">GMC</translation>
+    </message>
+    <message>
+        <source>BVHQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma ME</source>
+        <translation type="unfinished">Chrominance pro odhad pohybu</translation>
+    </message>
+    <message>
+        <source>HQ AC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More Search</source>
+        <translation type="unfinished">Další možnosti</translation>
+    </message>
+    <message>
+        <source>Min Gop Size</source>
+        <translation type="unfinished">Min. velikost GOP</translation>
+    </message>
+    <message>
+        <source>Max Gop Size</source>
+        <translation type="unfinished">Max. velikost GOP</translation>
+    </message>
+    <message>
+        <source>GOP Size</source>
+        <translation type="unfinished">Velikost GOP</translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished">Pohyb</translation>
+    </message>
+    <message>
+        <source>H263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantization Matrix</source>
+        <translation type="unfinished">Kvantizační matice</translation>
+    </message>
+    <message>
+        <source>Trellis Quantization</source>
+        <translation type="unfinished">Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>Two Pass Tuning</source>
+        <translation type="unfinished">Vyladění druhého průchodu</translation>
+    </message>
+    <message>
+        <source>Key Frame Boost(%)</source>
+        <translation type="unfinished">Vylepšení klíčových snímků (%)</translation>
+    </message>
+    <message>
+        <source>I-frames closer than...</source>
+        <translation type="unfinished">I snímky bližší než...</translation>
+    </message>
+    <message>
+        <source>.. are reduced by(%)</source>
+        <translation type="unfinished">...jsou redukovány o (%)</translation>
+    </message>
+    <message>
+        <source>Max Overflow Improvement(%)</source>
+        <translation type="unfinished">Max. zlepšení přetečení (%)</translation>
+    </message>
+    <message>
+        <source>Max Overglow Degradation(%)</source>
+        <translation type="unfinished">Max. zhoršení přetečení (%)</translation>
+    </message>
+    <message>
+        <source>Curve Compression</source>
+        <translation type="unfinished">Komprese křivky</translation>
+    </message>
+    <message>
+        <source>High Bitrate Scenes (%)</source>
+        <translation type="unfinished">Scény s vysokým datovým tokem (%)</translation>
+    </message>
+    <message>
+        <source>Low Bitrate Scenes (%)</source>
+        <translation type="unfinished">Scény s nízkým datovým tokem (%)</translation>
+    </message>
+    <message>
+        <source>Overflow Control Strength</source>
+        <translation type="unfinished">Síla kontroly přetečení</translation>
+    </message>
+    <message>
+        <source>Two Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Xvid4 Configuration</source>
+        <translation type="unfinished">Nastavení Xvid4</translation>
+    </message>
+    <message>
+        <source>Ready</source>
+        <translation type="unfinished">Připraven</translation>
+    </message>
+    <message>
+        <source>Succeeded</source>
+        <translation type="unfinished">Dokončen</translation>
+    </message>
+    <message>
+        <source>Deleted</source>
+        <translation type="unfinished">Smazáno</translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation type="unfinished">Běží</translation>
+    </message>
+    <message>
+        <source>Job Name</source>
+        <translation type="unfinished">Název úlohy</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished">Stav</translation>
+    </message>
+    <message>
+        <source>Start Time</source>
+        <translation type="unfinished">Počáteční čas</translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="unfinished">Konečný čas</translation>
+    </message>
+    <message>
+        <source>Sure!</source>
+        <translation type="unfinished">Jistě!</translation>
+    </message>
+    <message>
+        <source>Delete job</source>
+        <translation type="unfinished">Smazat úlohu</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished">Opravdu chcete smazat úlohu %s?</translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="unfinished">Smazat všechny úlohy</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished">Opravdu chcete smazat všechny úlohy?</translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="unfinished">Už je to hotovo</translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished">Tento skript již byl úspěšně vykonán.</translation>
+    </message>
 </context>
 <context>
     <name>asharpDialog</name>
@@ -12922,6 +13358,42 @@ Je spuštěno?</translation>
 <context>
     <name>changeFps</name>
     <message>
+        <source>Custom</source>
+        <translation type="unfinished">Vlastní</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="obsolete">_Režim:</translation>
+    </message>
+    <message>
+        <source>_New frame rate:</source>
+        <translation type="obsolete">_Nová snímková frekvence:</translation>
+    </message>
+    <message>
+        <source>Resample fps</source>
+        <translation type="obsolete">Resample fps</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Source Fps:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12955,6 +13427,29 @@ Je spuštěno?</translation>
     <message>
         <source>U Shift</source>
         <translation type="obsolete">Posun U</translation>
+    </message>
+</context>
+<context>
+    <name>contrast</name>
+    <message>
+        <source>U :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>L :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Offset :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coef :</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13321,10 +13816,419 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>ffmpeg2</name>
+    <message>
+        <source>Normal (4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wide (16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished">Výchozí</translation>
+    </message>
+    <message>
+        <source>Tmpgenc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>KVCD</source>
+        <translation type="unfinished">KVCD</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished">Porovnání MB</translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished">Nejméně bitů (vhq)</translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="unfinished">Progresivní</translation>
+    </message>
+    <message>
+        <source>Interlaced</source>
+        <translation type="unfinished">Prokládaný</translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished">Nejdřív horní půlsnímek</translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished">Nejdřív spodní půlsnímek</translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Vlákna</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished">Mi_n. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished">Ma_x. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished">Max. r_ozdíl kvantizérů:</translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished">Velikost VBV bufferu:</translation>
+    </message>
+    <message>
+        <source>Max bitrate (kb/s):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished">_Počet B snímků:</translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished">_Rozhodování makrobloků:</translation>
+    </message>
+    <message>
+        <source>Aspect ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished">_Tolerance velikosti souboru (kb):</translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished">_Komprese kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished">_Rozmazání kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field Order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adv. Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlacing</source>
+        <translation type="unfinished">Prokládání</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-2 configuration</source>
+        <translation type="unfinished">Nastavení libavcodec MPEG-4 {2 ?}</translation>
+    </message>
+</context>
+<context>
+    <name>ffmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Plná</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished">X1</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished">Porovnání MB</translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished">Nejméně bitů (vhq)</translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices</source>
+        <translation type="unfinished">Matice</translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Vlákna</translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished">Mi_n. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished">Ma_x. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished">Max. r_ozdíl kvantizérů:</translation>
+    </message>
+    <message>
+        <source>4_MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Quarter pixel</source>
+        <translation type="unfinished">_Qpel</translation>
+    </message>
+    <message>
+        <source>_GMC</source>
+        <translation type="unfinished">_GMC</translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished">_Počet B snímků:</translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished">_Typ kvantizace:</translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished">_Rozhodování makrobloků:</translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished">_Tolerance velikosti souboru (kb):</translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished">_Komprese kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished">_Rozmazání kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Uživatelské prostředí</translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished">Advanced Simple Profile</translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">Odhad pohybu</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished">Nastavení libavcodec MPEG-4</translation>
+    </message>
+</context>
+<context>
+    <name>ffmsmpeg4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Plná</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished">X1</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished">Porovnání MB</translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished">Nejméně bitů (vhq)</translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished">Mi_n. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished">Ma_x. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished">Max. r_ozdíl kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished">_Tolerance velikosti souboru (kb):</translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished">_Komprese kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished">_Rozmazání kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Uživatelské prostředí</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished">Nastavení libavcodec MPEG-4</translation>
+    </message>
+</context>
+<context>
     <name>filtermainWindow</name>
     <message>
         <source>The filter is already partial</source>
-        <translation type="unfinished">Filtr již je částečný</translation>
+        <translation type="obsolete">Filtr již je částečný</translation>
     </message>
     <message>
         <source>Load set of filters</source>
@@ -13353,6 +14257,101 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Partial Video Filter</source>
         <translation type="obsolete">Částečný video filtr</translation>
+    </message>
+</context>
+<context>
+    <name>flv1</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Plná</translation>
+    </message>
+    <message>
+        <source>Log</source>
+        <translation type="unfinished">Log</translation>
+    </message>
+    <message>
+        <source>Phods</source>
+        <translation type="unfinished">Phods</translation>
+    </message>
+    <message>
+        <source>EPZS</source>
+        <translation type="unfinished">EPZS</translation>
+    </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished">X1</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>MB comparison</source>
+        <translation type="unfinished">Porovnání MB</translation>
+    </message>
+    <message>
+        <source>Fewest bits (vhq)</source>
+        <translation type="unfinished">Nejméně bitů (vhq)</translation>
+    </message>
+    <message>
+        <source>Rate distortion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi_n. quantizer:</source>
+        <translation type="unfinished">Mi_n. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Ma_x. quantizer:</source>
+        <translation type="unfinished">Ma_x. kvantizér:</translation>
+    </message>
+    <message>
+        <source>Max. quantizer _difference:</source>
+        <translation type="unfinished">Max. r_ozdíl kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Filesize tolerance (kb):</source>
+        <translation type="unfinished">_Tolerance velikosti souboru (kb):</translation>
+    </message>
+    <message>
+        <source>_Quantizer compression:</source>
+        <translation type="unfinished">_Komprese kvantizérů:</translation>
+    </message>
+    <message>
+        <source>Quantizer _blur:</source>
+        <translation type="unfinished">_Rozmazání kvantizérů:</translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>User Interface</source>
+        <translation type="unfinished">Uživatelské prostředí</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>libavcodec FLV1 configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13494,19 +14493,19 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Job Name</source>
-        <translation type="unfinished">Název úlohy</translation>
+        <translation type="obsolete">Název úlohy</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="unfinished">Stav</translation>
+        <translation type="obsolete">Stav</translation>
     </message>
     <message>
         <source>Start Time</source>
-        <translation type="unfinished">Počáteční čas</translation>
+        <translation type="obsolete">Počáteční čas</translation>
     </message>
     <message>
         <source>End Time</source>
-        <translation type="unfinished">Konečný čas</translation>
+        <translation type="obsolete">Konečný čas</translation>
     </message>
     <message>
         <source>%1:%2:%3</source>
@@ -13514,31 +14513,54 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Sure!</source>
-        <translation type="unfinished">Jistě!</translation>
+        <translation type="obsolete">Jistě!</translation>
     </message>
     <message>
         <source>Delete job</source>
-        <translation type="unfinished">Smazat úlohu</translation>
+        <translation type="obsolete">Smazat úlohu</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished">Opravdu chcete smazat úlohu %s?</translation>
+        <translation type="obsolete">Opravdu chcete smazat úlohu %s?</translation>
     </message>
     <message>
         <source>Delete *all* job</source>
-        <translation type="unfinished">Smazat všechny úlohy</translation>
+        <translation type="obsolete">Smazat všechny úlohy</translation>
     </message>
     <message>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished">Opravdu chcete smazat všechny úlohy?</translation>
+        <translation type="obsolete">Opravdu chcete smazat všechny úlohy?</translation>
     </message>
     <message>
         <source>Already done</source>
-        <translation type="unfinished">Už je to hotovo</translation>
+        <translation type="obsolete">Už je to hotovo</translation>
     </message>
     <message>
         <source>This script has already been successfully executed.</source>
-        <translation type="unfinished">Tento skript již byl úspěšně vykonán.</translation>
+        <translation type="obsolete">Tento skript již byl úspěšně vykonán.</translation>
+    </message>
+</context>
+<context>
+    <name>jpeg</name>
+    <message>
+        <source>YUV422</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YUV420</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quantizer:</source>
+        <translation type="unfinished">_Kvantizér:</translation>
+    </message>
+    <message>
+        <source>_ColorSpace:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mjpeg Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -13590,6 +14612,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>KernelDeint</source>
         <translation type="unfinished">KernelDeint</translation>
+    </message>
+</context>
+<context>
+    <name>lame</name>
+    <message>
+        <source>CBR</source>
+        <translation type="unfinished">CBR</translation>
+    </message>
+    <message>
+        <source>ABR</source>
+        <translation type="unfinished">ABR</translation>
+    </message>
+    <message>
+        <source>Bit_rate mode:</source>
+        <translation type="unfinished">_Typ datového toku:</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Datový tok:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">_Kvalita:</translation>
+    </message>
+    <message>
+        <source>_Disable reservoir:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LAME Configuration</source>
+        <translation type="unfinished">Nastavení LAME</translation>
     </message>
 </context>
 <context>
@@ -14191,6 +15244,30 @@ p, li { white-space: pre-wrap; }
         <source>Resample fps</source>
         <translation type="unfinished">Resample fps</translation>
     </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Vlastní</translation>
+    </message>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>resizeDialog</name>
@@ -14447,39 +15524,39 @@ p, li { white-space: pre-wrap; }
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Práh:</translation>
+        <translation type="obsolete">_Práh:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
-        <translation type="unfinished">Pokud je hodnota menší než práh, je to považováno za správné. Menší hodnota může znamenat více nesprávných detekcí.</translation>
+        <translation type="obsolete">Pokud je hodnota menší než práh, je to považováno za správné. Menší hodnota může znamenat více nesprávných detekcí.</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">Š_um:</translation>
+        <translation type="obsolete">Š_um:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Pokud jsou pixely blíž než práh šumu, jsou považovány za identické</translation>
+        <translation type="obsolete">Pokud jsou pixely blíž než práh šumu, jsou považovány za identické</translation>
     </message>
     <message>
         <source>I_dentical:</source>
-        <translation type="unfinished">_Identické:</translation>
+        <translation type="obsolete">_Identické:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Méně než tento práh znamená, že jsou obrázky považovány za identické</translation>
+        <translation type="obsolete">Méně než tento práh znamená, že jsou obrázky považovány za identické</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">Z_obrazovat údaje</translation>
+        <translation type="obsolete">Z_obrazovat údaje</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Zobrazovat měřící údaje v obrazu (pro testování)</translation>
+        <translation type="obsolete">Zobrazovat měřící údaje v obrazu (pro testování)</translation>
     </message>
     <message>
         <source>Blend Removal</source>
-        <translation type="unfinished">Blend Removal</translation>
+        <translation type="obsolete">Blend Removal</translation>
     </message>
 </context>
 <context>
@@ -14577,47 +15654,47 @@ p, li { white-space: pre-wrap; }
     <name>vidHardPDRemoval</name>
     <message>
         <source>Metrics</source>
-        <translation type="unfinished">Metrika</translation>
+        <translation type="obsolete">Metrika</translation>
     </message>
     <message>
         <source>Do you want to print metrics on screen ?</source>
-        <translation type="unfinished">Chcete zobrazit metriku?</translation>
+        <translation type="obsolete">Chcete zobrazit metriku?</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Práh:</translation>
+        <translation type="obsolete">_Práh:</translation>
     </message>
     <message>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
-        <translation type="unfinished">Pokud je hodnota menší než práh, je to považováno za správné. Menší hodnota může znamenat více nesprávných detekcí.</translation>
+        <translation type="obsolete">Pokud je hodnota menší než práh, je to považováno za správné. Menší hodnota může znamenat více nesprávných detekcí.</translation>
     </message>
     <message>
         <source>_Noise:</source>
-        <translation type="unfinished">Š_um:</translation>
+        <translation type="obsolete">Š_um:</translation>
     </message>
     <message>
         <source>If pixels are closer than noise, they are considered to be the same</source>
-        <translation type="unfinished">Pokud jsou pixely blíž než práh šumu, jsou považovány za identické</translation>
+        <translation type="obsolete">Pokud jsou pixely blíž než práh šumu, jsou považovány za identické</translation>
     </message>
     <message>
         <source>_Identical:</source>
-        <translation type="unfinished">_Identické:</translation>
+        <translation type="obsolete">_Identické:</translation>
     </message>
     <message>
         <source>If metric is less than identical, images are considered identical</source>
-        <translation type="unfinished">Méně než tento práh znamená, že jsou obrázky považovány za identické</translation>
+        <translation type="obsolete">Méně než tento práh znamená, že jsou obrázky považovány za identické</translation>
     </message>
     <message>
         <source>_Show metrics</source>
-        <translation type="unfinished">Z_obrazovat údaje</translation>
+        <translation type="obsolete">Z_obrazovat údaje</translation>
     </message>
     <message>
         <source>Show metric in image (debug)</source>
-        <translation type="unfinished">Zobrazovat měřící údaje v obrazu (pro testování)</translation>
+        <translation type="obsolete">Zobrazovat měřící údaje v obrazu (pro testování)</translation>
     </message>
     <message>
         <source>Hard IVTC Removal</source>
-        <translation type="unfinished">Hard IVTC Removal</translation>
+        <translation type="obsolete">Hard IVTC Removal</translation>
     </message>
 </context>
 <context>
@@ -14656,6 +15733,33 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Idx File :</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vorbis</name>
+    <message>
+        <source>VBR</source>
+        <translation type="unfinished">VBR</translation>
+    </message>
+    <message>
+        <source>Quality based</source>
+        <translation type="unfinished">Režim kvality</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Režim:</translation>
+    </message>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Datový tok:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">_Kvalita:</translation>
+    </message>
+    <message>
+        <source>Vorbis Configuration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -15641,6 +16745,125 @@ Chcete pokračovat?</translation>
     <message>
         <source>Value</source>
         <translation type="obsolete">Hodnota</translation>
+    </message>
+</context>
+<context>
+    <name>xvid4</name>
+    <message>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Low</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Střední</translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Plná</translation>
+    </message>
+    <message>
+        <source>H.263</source>
+        <translation type="unfinished">H.263</translation>
+    </message>
+    <message>
+        <source>MPEG</source>
+        <translation type="unfinished">MPEG</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Vlastní</translation>
+    </message>
+    <message>
+        <source>DCT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Square</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>One thread</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two threads)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Three threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MotionEstimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threading</source>
+        <translation type="unfinished">Vlákna</translation>
+    </message>
+    <message>
+        <source>_Trellis quantization</source>
+        <translation type="unfinished">_Síťová (trellis) kvantizace</translation>
+    </message>
+    <message>
+        <source>_Number of B frames:</source>
+        <translation type="unfinished">_Počet B snímků:</translation>
+    </message>
+    <message>
+        <source>_Quantization type:</source>
+        <translation type="unfinished">_Typ kvantizace:</translation>
+    </message>
+    <message>
+        <source>_Macroblock decision:</source>
+        <translation type="unfinished">_Rozhodování makrobloků:</translation>
+    </message>
+    <message>
+        <source>Profile:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Gop Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Simple Profile</source>
+        <translation type="unfinished">Advanced Simple Profile</translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">Odhad pohybu</translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished">Kvantizace</translation>
+    </message>
+    <message>
+        <source>Threads</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Řízení datového toku</translation>
+    </message>
+    <message>
+        <source>Xvid4 MPEG-4 ASP configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

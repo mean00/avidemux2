@@ -415,7 +415,7 @@ void filtermainWindow::partial( bool b)
         conf = videofilters[itag].conf;
         if (videofilters[itag].tag == VF_PARTIAL_FILTER)	// cannot recurse
         {
-            GUI_Error_HIG (QT_TR_NOOP("The filter is already partial"), NULL);
+            GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","The filter is already partial"), NULL);
             return;
         }
 
@@ -607,12 +607,12 @@ uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGen
          uint32_t fmax=previous->getInfo()->nb_frames;
          if(fmax) fmax--;
 
-         diaElemUInteger  start(PX(_start),QT_TR_NOOP("Partial Start Frame:"),0,fmax);
-         diaElemUInteger  end(PX(_end),QT_TR_NOOP("Partial End Frame:"),0,fmax);
-         diaElemButton    button(QT_TR_NOOP("Configure child"), partialCb,params);
+         diaElemUInteger  start(PX(_start),QT_TRANSLATE_NOOP("adm","Partial Start Frame:"),0,fmax);
+         diaElemUInteger  end(PX(_end),QT_TRANSLATE_NOOP("adm","Partial End Frame:"),0,fmax);
+         diaElemButton    button(QT_TRANSLATE_NOOP("adm","Configure child"), partialCb,params);
 
          diaElem *tabs[]={&start,&end,&button};
-        return diaFactoryRun(QT_TR_NOOP("Partial Video Filter"),3,tabs);
+        return diaFactoryRun(QT_TRANSLATE_NOOP("adm","Partial Video Filter"),3,tabs);
 
 
 }

@@ -31,7 +31,6 @@
 #endif
 
 
-#define QT_TR_NOOP(x) x
 #define MAX_CHUNK_SIZE (4*1024)
 uint32_t sample2byte(WAVHeader *hdr,uint32_t sample);
 /**

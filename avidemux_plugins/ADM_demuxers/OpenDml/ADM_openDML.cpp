@@ -30,7 +30,6 @@
 #else
     #define aprintf(...) {}
 #endif
-#define QT_TR_NOOP(x) x
 
 uint8_t OpenDMLHeader::setFlag(uint32_t frame,uint32_t flags)
 {

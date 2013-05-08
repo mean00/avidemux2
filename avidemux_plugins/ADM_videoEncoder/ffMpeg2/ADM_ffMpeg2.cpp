@@ -197,37 +197,37 @@ bool         ffMpeg2Configure(void)
 
 diaMenuEntry  arE[]=
 {
-    {0,QT_TR_NOOP("Normal (4:3)")},
-    {1,QT_TR_NOOP("Wide (16:9)")}
+    {0,QT_TRANSLATE_NOOP("ffmpeg2","Normal (4:3)")},
+    {1,QT_TRANSLATE_NOOP("ffmpeg2","Wide (16:9)")}
 };
       
 diaMenuEntry  matrixE[]=
 {
-    {MPEG2_MATRIX_DEFAULT,QT_TR_NOOP("Default")},
-    {MPEG2_MATRIX_TMPGENC,QT_TR_NOOP("Tmpgenc")},
-    {MPEG2_MATRIX_ANIME,QT_TR_NOOP("Animes")},
-    {MPEG2_MATRIX_KVCD,QT_TR_NOOP("KVCD")},
+    {MPEG2_MATRIX_DEFAULT,QT_TRANSLATE_NOOP("ffmpeg2","Default")},
+    {MPEG2_MATRIX_TMPGENC,QT_TRANSLATE_NOOP("ffmpeg2","Tmpgenc")},
+    {MPEG2_MATRIX_ANIME,QT_TRANSLATE_NOOP("ffmpeg2","Animes")},
+    {MPEG2_MATRIX_KVCD,QT_TRANSLATE_NOOP("ffmpeg2","KVCD")},
 };
       
 diaMenuEntry rdE[]={
-  {0,QT_TR_NOOP("MB comparison")},
-  {1,QT_TR_NOOP("Fewest bits (vhq)")},
-  {2,QT_TR_NOOP("Rate distortion")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","MB comparison")},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Fewest bits (vhq)")},
+  {2,QT_TRANSLATE_NOOP("ffmpeg2","Rate distortion")}
 };     
 diaMenuEntry threads[]={
-  {0,QT_TR_NOOP("One thread")},
-  {2,QT_TR_NOOP("Two threads)")},
-  {3,QT_TR_NOOP("Three threads")},
-  {99,QT_TR_NOOP("Auto (#cpu)")}
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","One thread")},
+  {2,QT_TRANSLATE_NOOP("ffmpeg2","Two threads)")},
+  {3,QT_TRANSLATE_NOOP("ffmpeg2","Three threads")},
+  {99,QT_TRANSLATE_NOOP("ffmpeg2","Auto (#cpu)")}
 };     
    
 diaMenuEntry interE[]={
-  {0,QT_TR_NOOP("Progressive")},
-  {1,QT_TR_NOOP("Interlaced")},
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","Progressive")},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Interlaced")},
 };     
 diaMenuEntry foE[]={
-  {0,QT_TR_NOOP("Top Field First")},
-  {1,QT_TR_NOOP("Bottom Field First")},
+  {0,QT_TRANSLATE_NOOP("ffmpeg2","Top Field First")},
+  {1,QT_TRANSLATE_NOOP("ffmpeg2","Bottom Field First")},
 };     
 
         mpeg2_encoder *conf=&Mp2Settings;
@@ -237,56 +237,56 @@ uint32_t me=(uint32_t)conf->lavcSettings.me_method;
 
          diaElemBitrate   bitrate(&(Mp2Settings.params),NULL);
 
-         diaElemMenu      threadM(PX(MultiThreaded),QT_TR_NOOP("Threading"),4,threads);
-         diaElemUInteger  qminM(PX(qmin),QT_TR_NOOP("Mi_n. quantizer:"),1,31);
-         diaElemUInteger  qmaxM(PX(qmax),QT_TR_NOOP("Ma_x. quantizer:"),1,31);
-         diaElemUInteger  qdiffM(PX(max_qdiff),QT_TR_NOOP("Max. quantizer _difference:"),1,31);
-         diaElemUInteger  bufferS(PX(bufferSize),QT_TR_NOOP("VBV Buffer Size:"),1,1024);
-         diaElemUInteger  maxBitrate(PX(maxBitrate),QT_TR_NOOP("Max bitrate (kb/s):"),1,50000);
+         diaElemMenu      threadM(PX(MultiThreaded),QT_TRANSLATE_NOOP("ffmpeg2","Threading"),4,threads);
+         diaElemUInteger  qminM(PX(qmin),QT_TRANSLATE_NOOP("ffmpeg2","Mi_n. quantizer:"),1,31);
+         diaElemUInteger  qmaxM(PX(qmax),QT_TRANSLATE_NOOP("ffmpeg2","Ma_x. quantizer:"),1,31);
+         diaElemUInteger  qdiffM(PX(max_qdiff),QT_TRANSLATE_NOOP("ffmpeg2","Max. quantizer _difference:"),1,31);
+         diaElemUInteger  bufferS(PX(bufferSize),QT_TRANSLATE_NOOP("ffmpeg2","VBV Buffer Size:"),1,1024);
+         diaElemUInteger  maxBitrate(PX(maxBitrate),QT_TRANSLATE_NOOP("ffmpeg2","Max bitrate (kb/s):"),1,50000);
          
-         diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TR_NOOP("_Trellis quantization"));
+         diaElemToggle    trellis(PX(_TRELLIS_QUANT),QT_TRANSLATE_NOOP("ffmpeg2","_Trellis quantization"));
          
-         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TR_NOOP("_Number of B frames:"),0,32);
+         diaElemUInteger  max_b_frames(PX(max_b_frames),QT_TRANSLATE_NOOP("ffmpeg2","_Number of B frames:"),0,32);
          uint32_t widescreen= conf->lavcSettings.widescreen;
          uint32_t iinterlaced= conf->lavcSettings.interlaced;
          uint32_t bff= conf->lavcSettings.bff;
-         diaElemMenu     rdM(PX(mb_eval),QT_TR_NOOP("_Macroblock decision:"),3,rdE);
-         diaElemMenu     arM(&(widescreen),QT_TR_NOOP("Aspect ratio:"),2,arE);
-         diaElemMenu     matrixM(&(Mp2Settings.matrix),QT_TR_NOOP("Matrices:"),MPEG2_MATRIX_LAST,matrixE);
-         diaElemUInteger filetol(PX(vratetol),QT_TR_NOOP("_Filesize tolerance (kb):"),0,100000);
+         diaElemMenu     rdM(PX(mb_eval),QT_TRANSLATE_NOOP("ffmpeg2","_Macroblock decision:"),3,rdE);
+         diaElemMenu     arM(&(widescreen),QT_TRANSLATE_NOOP("ffmpeg2","Aspect ratio:"),2,arE);
+         diaElemMenu     matrixM(&(Mp2Settings.matrix),QT_TRANSLATE_NOOP("ffmpeg2","Matrices:"),MPEG2_MATRIX_LAST,matrixE);
+         diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("ffmpeg2","_Filesize tolerance (kb):"),0,100000);
          
-         diaElemFloat    qzComp(PX(qcompress),QT_TR_NOOP("_Quantizer compression:"),0,1);
-         diaElemFloat    qzBlur(PX(qblur),QT_TR_NOOP("Quantizer _blur:"),0,1);
+         diaElemFloat    qzComp(PX(qcompress),QT_TRANSLATE_NOOP("ffmpeg2","_Quantizer compression:"),0,1);
+         diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("ffmpeg2","Quantizer _blur:"),0,1);
          
-        diaElemUInteger GopSize(PX(gop_size),QT_TR_NOOP("_Gop Size:"),1,30); 
+        diaElemUInteger GopSize(PX(gop_size),QT_TRANSLATE_NOOP("ffmpeg2","_Gop Size:"),1,30); 
 
-        diaElemMenu     interlaced(&(iinterlaced),QT_TR_NOOP("_Interlaced:"),2,interE);
-        diaElemMenu     fieldOrder(&(bff),QT_TR_NOOP("Field Order:"),2,foE);
+        diaElemMenu     interlaced(&(iinterlaced),QT_TRANSLATE_NOOP("ffmpeg2","_Interlaced:"),2,interE);
+        diaElemMenu     fieldOrder(&(bff),QT_TRANSLATE_NOOP("ffmpeg2","Field Order:"),2,foE);
 
           /* First Tab : encoding mode */
         diaElem *diamode[]={&arM,&threadM,&bitrate};
-        diaElemTabs tabMode(QT_TR_NOOP("Basic Settings"),3,diamode);
+        diaElemTabs tabMode(QT_TRANSLATE_NOOP("ffmpeg2","Basic Settings"),3,diamode);
         
         /* 2nd Tab : advanced*/
         diaElem *diaAdv[]={&bufferS,&matrixM,&max_b_frames,&GopSize,&maxBitrate};
-        diaElemTabs tabAdv(QT_TR_NOOP("Adv. Settings"),5,diaAdv);
+        diaElemTabs tabAdv(QT_TRANSLATE_NOOP("ffmpeg2","Adv. Settings"),5,diaAdv);
 
         /* 2ndb Tab : interlacing*/
         diaElem *diaInter[]={&interlaced,&fieldOrder};
-        diaElemTabs tabInter(QT_TR_NOOP("Interlacing"),2,diaInter);
+        diaElemTabs tabInter(QT_TRANSLATE_NOOP("ffmpeg2","Interlacing"),2,diaInter);
 
         /* 3nd Tab : Qz */
         
         diaElem *diaQze[]={&rdM,&qminM,&qmaxM,&qdiffM,&trellis};
-        diaElemTabs tabQz(QT_TR_NOOP("Quantization"),5,diaQze);
+        diaElemTabs tabQz(QT_TRANSLATE_NOOP("ffmpeg2","Quantization"),5,diaQze);
         
         /* 4th Tab : RControl */
         
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
-        diaElemTabs tabRC(QT_TR_NOOP("Rate Control"),3,diaRC);
+        diaElemTabs tabRC(QT_TRANSLATE_NOOP("ffmpeg2","Rate Control"),3,diaRC);
         
          diaElemTabs *tabs[]={&tabMode,&tabAdv,&tabInter,&tabQz,&tabRC};
-        if( diaFactoryRunTabs(QT_TR_NOOP("libavcodec MPEG-2 configuration"),5,tabs))
+        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("ffmpeg2","libavcodec MPEG-2 configuration"),5,tabs))
         {
           conf->lavcSettings.me_method=(Motion_Est_ID)me;
           conf->lavcSettings.widescreen= widescreen;
