@@ -55,8 +55,8 @@ DECLARE_VIDEO_FILTER(   MPDelogo,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
                         "mpdelogo",            // internal name (must be uniq!)
-                        "MPlayer delogo",            // Display name
-                        QT_TR_NOOP("Blend a logo by interpolating its surrounding box.") // Description
+                        QT_TRANSLATE_NOOP("delogo","MPlayer delogo"),            // Display name
+                        QT_TRANSLATE_NOOP("delogo","Blend a logo by interpolating its surrounding box.") // Description
                     );
 //******************************************
 /**

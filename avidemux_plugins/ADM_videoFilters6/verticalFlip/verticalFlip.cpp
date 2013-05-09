@@ -44,8 +44,8 @@ DECLARE_VIDEO_FILTER(   verticalFlipFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "vflip",            // internal name (must be uniq!)
-                        "Vertical Flip",            // Display name
-                        "Vertically flip the image." // Description
+                        QT_TRANSLATE_NOOP("vflip","Vertical Flip"),            // Display name
+                        QT_TRANSLATE_NOOP("vflip","Vertically flip the image.") // Description
                     );
 
 // Now implements the interesting parts

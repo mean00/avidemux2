@@ -38,8 +38,8 @@ DECLARE_VIDEO_FILTER(   swapUv,   // Class
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category
                         "swapUV",            // internal name (must be uniq!)
-                        "Swap UV",            // Display name
-                        "Swap the U and V planes." // Description
+                       QT_TRANSLATE_NOOP("swapuv", "Swap UV"),            // Display name
+                       QT_TRANSLATE_NOOP("swapuv", "Swap the U and V planes.") // Description
                     );
 
 /**

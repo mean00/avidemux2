@@ -48,8 +48,8 @@ DECLARE_VIDEO_FILTER(   addLogopFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "addLogo",            // internal name (must be uniq!)
-                        "Add logo.",            // Display name
-                        "Put a logo on top of video, with alpha blending." // Description
+                        QT_TRANSLATE_NOOP("logo","Add logo."),            // Display name
+                        QT_TRANSLATE_NOOP("logo","Put a logo on top of video, with alpha blending.") // Description
                     );
 
 // Now implements the interesting parts

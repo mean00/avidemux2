@@ -78,8 +78,8 @@ DECLARE_VIDEO_FILTER(   AVDMVideoMCDeint,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "mcdeinterlace",            // internal name (must be uniq!)
-                        "MCDeint",            // Display name
-                        "Motion compensation deinterlacer. Ported from MPlayer." // Description
+                       QT_TRANSLATE_NOOP("mcdeint", "MCDeint"),            // Display name
+                       QT_TRANSLATE_NOOP("mcdeint", "Motion compensation deinterlacer. Ported from MPlayer.") // Description
                     );
 
 //********** Register chunk ************
@@ -117,19 +117,19 @@ const char *AVDMVideoMCDeint::getConfiguration(void)
 bool AVDMVideoMCDeint::configure()
 {
   
-   diaMenuEntry menuMode[4]={{0,QT_TR_NOOP("Fast"),NULL},
-                             {1,QT_TR_NOOP("Medium"),NULL},
-                             {2,QT_TR_NOOP("Slow iterative motion search"),NULL},
-                             {3,QT_TR_NOOP("Extra slow (same as 3+multiple reference frames)"),NULL}
+   diaMenuEntry menuMode[4]={{0,QT_TRANSLATE_NOOP("mcdeint","Fast"),NULL},
+                             {1,QT_TRANSLATE_NOOP("mcdeint","Medium"),NULL},
+                             {2,QT_TRANSLATE_NOOP("mcdeint","Slow iterative motion search"),NULL},
+                             {3,QT_TRANSLATE_NOOP("mcdeint","Extra slow (same as 3+multiple reference frames)"),NULL}
                           };
   
-    diaElemMenu     menu1(&(_param.mode),QT_TR_NOOP("_Mode:"), 4,menuMode);
-    diaElemToggle     menu2(&(_param.initial_parity),QT_TR_NOOP("Bottom :"));
-    diaElemUInteger qp(&(_param.qp),QT_TR_NOOP("_Qp:"),1,60);
+    diaElemMenu     menu1(&(_param.mode),QT_TRANSLATE_NOOP("mcdeint","_Mode:"), 4,menuMode);
+    diaElemToggle     menu2(&(_param.initial_parity),QT_TRANSLATE_NOOP("mcdeint","Bottom :"));
+    diaElemUInteger qp(&(_param.qp),QT_TRANSLATE_NOOP("mcdeint","_Qp:"),1,60);
     
     diaElem *elems[3]={&menu1,&menu2,&qp};
   
-    return  diaFactoryRun(QT_TR_NOOP("mcDeinterlace"),3,elems);
+    return  diaFactoryRun(QT_TRANSLATE_NOOP("mcdeint","mcDeinterlace"),3,elems);
 
 }
 /**

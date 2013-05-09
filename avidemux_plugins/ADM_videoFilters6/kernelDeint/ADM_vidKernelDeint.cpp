@@ -47,8 +47,8 @@ DECLARE_VIDEO_FILTER(   kernelDeint,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "kerndelDeint",            // internal name (must be uniq!)
-                        "Kernel Deint.",            // Display name
-                        "Port of Donald Graft Kernel Deinterlacer." // Description
+                        QT_TRANSLATE_NOOP("kerneldeint","Kernel Deint."),            // Display name
+                        QT_TRANSLATE_NOOP("kerneldeint","Port of Donald Graft Kernel Deinterlacer.") // Description
                     );
 
 #define PROGRESSIVE  0x00000001
@@ -62,20 +62,20 @@ bool kernelDeint::configure( void)
 {
   #define PX(x) &(param.x)
 
-   diaMenuEntry menuField[2]={{1,QT_TR_NOOP("Top"),NULL},
-                             {0,QT_TR_NOOP("Bottom"),NULL}
+   diaMenuEntry menuField[2]={{1,QT_TRANSLATE_NOOP("kerneldeint","Top"),NULL},
+                             {0,QT_TRANSLATE_NOOP("kerneldeint","Bottom"),NULL}
                           };
   
     
-    diaElemMenu     menu1(PX(order),QT_TR_NOOP("_Field order:"), 2,menuField);
-    diaElemUInteger threshold(PX(threshold),QT_TR_NOOP("_Threshold:"),0,100,QT_TR_NOOP("Smaller means more deinterlacing"));
-    diaElemToggle   sharp(PX(sharp),QT_TR_NOOP("_Sharp"),QT_TR_NOOP("_Sharper engine:"));
-    diaElemToggle   twoway(PX(twoway),QT_TR_NOOP("T_woway"),QT_TR_NOOP("Extrapolate better (better not to use it)"));
-    diaElemToggle   map(PX(map),QT_TR_NOOP("_Map"),QT_TR_NOOP("Show interlaced areas (for test!)"));
+    diaElemMenu     menu1(PX(order),QT_TRANSLATE_NOOP("kerneldeint","_Field order:"), 2,menuField);
+    diaElemUInteger threshold(PX(threshold),QT_TRANSLATE_NOOP("kerneldeint","_Threshold:"),0,100,QT_TRANSLATE_NOOP("kerneldeint","Smaller means more deinterlacing"));
+    diaElemToggle   sharp(PX(sharp),QT_TRANSLATE_NOOP("kerneldeint","_Sharp"),QT_TRANSLATE_NOOP("kerneldeint","_Sharper engine:"));
+    diaElemToggle   twoway(PX(twoway),QT_TRANSLATE_NOOP("kerneldeint","T_woway"),QT_TRANSLATE_NOOP("kerneldeint","Extrapolate better (better not to use it)"));
+    diaElemToggle   map(PX(map),QT_TRANSLATE_NOOP("kerneldeint","_Map"),QT_TRANSLATE_NOOP("kerneldeint","Show interlaced areas (for test!)"));
     
     diaElem *elems[5]={&menu1,&threshold,&sharp,&twoway,&map};
   
-   return  diaFactoryRun(QT_TR_NOOP("KernelDeint"),5,elems);
+   return  diaFactoryRun(QT_TRANSLATE_NOOP("kerneldeint","KernelDeint"),5,elems);
 }
 /**
     \fn getCoupledConf

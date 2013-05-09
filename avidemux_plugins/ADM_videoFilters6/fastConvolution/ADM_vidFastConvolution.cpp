@@ -133,12 +133,12 @@ bool AVDMFastVideoConvolution::configure(void)
 {
   
   //return DIA_getLumaChroma(&(_param->luma),&(_param->chroma)) ; 
-  diaElemToggle luma(&(param.luma),QT_TR_NOOP("_Process luma"),QT_TR_NOOP("Process luma plane"));
-  diaElemToggle chroma(&(param.chroma),QT_TR_NOOP("P_rocess chroma"));
+  diaElemToggle luma(&(param.luma),QT_TRANSLATE_NOOP("convolution","_Process luma"),QT_TRANSLATE_NOOP("convolution","Process luma plane"));
+  diaElemToggle chroma(&(param.chroma),QT_TRANSLATE_NOOP("convolution","P_rocess chroma"));
   
   diaElem *elems[2]={&luma,&chroma};
   
-  return diaFactoryRun(QT_TR_NOOP("Fast Convolution"),2,elems);
+  return diaFactoryRun(QT_TRANSLATE_NOOP("convolution","Fast Convolution"),2,elems);
 }
 /**
     \fn getConfiguration

@@ -3160,11 +3160,11 @@ La voleu habilitar?</translation>
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Intensitat _luminància espacial:</translation>
+        <translation type="obsolete">Intensitat _luminància espacial:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Intensitat _crominància espacial:</translation>
+        <translation type="obsolete">Intensitat _crominància espacial:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
@@ -3176,30 +3176,26 @@ La voleu habilitar?</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
-    </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Intensitat _luminància espacial:</translation>
+        <translation type="obsolete">Intensitat _luminància espacial:</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Intensitat _crominància espacial:</translation>
+        <translation type="obsolete">Intensitat _crominància espacial:</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">Intensitat _temporal:</translation>
+        <translation type="obsolete">Intensitat _temporal:</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -4047,19 +4043,19 @@ Drop timing informations ?</source>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">Processament de la _luminància</translation>
+        <translation type="obsolete">Processament de la _luminància</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">Process luma plane</translation>
+        <translation type="obsolete">Process luma plane</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">Processament de la _luminància</translation>
+        <translation type="obsolete">Processament de la _luminància</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">Fast Convolution</translation>
+        <translation type="obsolete">Fast Convolution</translation>
     </message>
 </context>
 <context>
@@ -4104,19 +4100,19 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">Ràpid</translation>
+        <translation type="obsolete">Ràpid</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Mitjà</translation>
+        <translation type="obsolete">Mitjà</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="unfinished">Lent, estimació iterativa movim.</translation>
+        <translation type="obsolete">Lent, estimació iterativa movim.</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished">Extra lent (com [3] + fotogr. referèn. múltiple)</translation>
+        <translation type="obsolete">Extra lent (com [3] + fotogr. referèn. múltiple)</translation>
     </message>
     <message>
         <source>Top</source>
@@ -4128,7 +4124,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Mode:</translation>
+        <translation type="obsolete">_Mode:</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
@@ -4136,15 +4132,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="unfinished">_QP:</translation>
+        <translation type="obsolete">_QP:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeinterlace</translation>
-    </message>
-    <message>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">mcDeinterlace</translation>
     </message>
 </context>
 <context>
@@ -4197,23 +4189,23 @@ Drop timing informations ?</source>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="unfinished">En negre</translation>
+        <translation type="obsolete">En negre</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="unfinished">Fosa en negre</translation>
+        <translation type="obsolete">Fosa en negre</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">En blanc</translation>
+        <translation type="obsolete">En blanc</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="unfinished">Fosa en blanc</translation>
+        <translation type="obsolete">Fosa en blanc</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">_Tipus de fosa:</translation>
+        <translation type="obsolete">_Tipus de fosa:</translation>
     </message>
     <message>
         <source>_Start frame:</source>
@@ -4238,18 +4230,6 @@ Drop timing informations ?</source>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
         <translation type="obsolete">L&apos;inici ha d&apos;estar abans del final, i ambdós dins del # de fotogr. del vídeo.</translation>
-    </message>
-    <message>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4579,23 +4559,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Al damunt</translation>
+        <translation type="obsolete">Al damunt</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Baix</translation>
+        <translation type="obsolete">Baix</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">Manté # fotogr. i FPS</translation>
+        <translation type="obsolete">Manté # fotogr. i FPS</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">Dobla # fotog. i fps </translation>
+        <translation type="obsolete">Dobla # fotog. i fps </translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">Dobla # fotog. (ralentí)</translation>
+        <translation type="obsolete">Dobla # fotog. (ralentí)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -4603,27 +4583,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Mode:</translation>
+        <translation type="obsolete">_Mode:</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Llindar: </translation>
+        <translation type="obsolete">_Llindar: </translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="unfinished">_Extra</translation>
+        <translation type="obsolete">_Extra</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">Compr. extra (s&apos;ha d&apos;evitar el seu ús) </translation>
+        <translation type="obsolete">Compr. extra (s&apos;ha d&apos;evitar el seu ús) </translation>
     </message>
     <message>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
-    </message>
-    <message>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DGBob</translation>
     </message>
 </context>
 <context>
@@ -4671,23 +4647,23 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="unfinished">Descarta proper</translation>
+        <translation type="obsolete">Descarta proper</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished">Substitueix (interpola)</translation>
+        <translation type="obsolete">Substitueix (interpola)</translation>
     </message>
     <message>
         <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished">Descarta dupls. grans (animés)</translation>
+        <translation type="obsolete">Descarta dupls. grans (animés)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="unfinished">Elimina duplic. pulldown</translation>
+        <translation type="obsolete">Elimina duplic. pulldown</translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">Més ràpida (sense chroma, luma parcial)</translation>
+        <translation type="obsolete">Més ràpida (sense chroma, luma parcial)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -4695,7 +4671,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">Mitjana (luma complet, sense chroma)</translation>
+        <translation type="obsolete">Mitjana (luma complet, sense chroma)</translation>
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
@@ -4703,31 +4679,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Mode:</translation>
+        <translation type="obsolete">_Mode:</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="unfinished">_Qualitat: </translation>
+        <translation type="obsolete">_Qualitat: </translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="unfinished">Llindar _1: </translation>
+        <translation type="obsolete">Llindar _1: </translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished">Llindar _2: </translation>
+        <translation type="obsolete">Llindar _2: </translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="unfinished">C_icle:</translation>
+        <translation type="obsolete">C_icle:</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="unfinished">Decomb Decimate</translation>
-    </message>
-    <message>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Decomb Decimate</translation>
     </message>
 </context>
 <context>
@@ -8559,6 +8531,34 @@ Segur que està funcionant?</translation>
         <source>Hardcode ass/ssa subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>_Subtitle file (ASS/SSA):</source>
+        <translation type="unfinished">Fitxer de _subtítols (ASS/SSA):</translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished">Seleccioneu el fitxer de subtítols</translation>
+    </message>
+    <message>
+        <source>_Line spacing:</source>
+        <translation type="unfinished">_Espaiat línia:</translation>
+    </message>
+    <message>
+        <source>_Font scale:</source>
+        <translation type="unfinished">Mida _lletra: </translation>
+    </message>
+    <message>
+        <source>_Top margin:</source>
+        <translation type="unfinished">Marge _superior:</translation>
+    </message>
+    <message>
+        <source>Botto_m margin</source>
+        <translation type="unfinished">Marge _inferior:</translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished">ASS</translation>
+    </message>
 </context>
 <context>
     <name>autoWizard</name>
@@ -8615,7 +8615,7 @@ Segur que està funcionant?</translation>
     </message>
 </context>
 <context>
-    <name>blackenBorders</name>
+    <name>blacken</name>
     <message>
         <source>_Left border:</source>
         <translation type="unfinished">Vora _esquerra:</translation>
@@ -8643,6 +8643,37 @@ Segur que està funcionant?</translation>
     <message>
         <source>All parameters must be even and within range.</source>
         <translation type="unfinished">Tots els paràmetres han de ser parells i dins del rang.</translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="obsolete">Vora _esquerra:</translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="obsolete">Vora _dreta:</translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="obsolete">Vora _superior:</translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="obsolete">Vora _inferior:</translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="obsolete">Blacken Borders</translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="obsolete">Els paràmetres són incorrectes</translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="obsolete">Tots els paràmetres han de ser parells i dins del rang.</translation>
     </message>
 </context>
 <context>
@@ -8703,6 +8734,21 @@ Segur que està funcionant?</translation>
         <source>Change fps</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Invalid fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>changefps</name>
+    <message>
+        <source>Change FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chromashift</name>
@@ -8740,6 +8786,94 @@ Segur que està funcionant?</translation>
         <source>Color management filter.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Cap</translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>contrast</name>
@@ -8766,6 +8900,10 @@ Segur que està funcionant?</translation>
     <message>
         <source>Adjust contrast, brightness and colors.</source>
         <translation type="unfinished">Ajusta el contrast, la lluminositat i els colors.</translation>
+    </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished">Contrast</translation>
     </message>
 </context>
 <context>
@@ -8804,6 +8942,25 @@ Segur que està funcionant?</translation>
     </message>
 </context>
 <context>
+    <name>convolution</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished">Processament de la _luminància</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">Process luma plane</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished">Processament de la _luminància</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished">Fast Convolution</translation>
+    </message>
+</context>
+<context>
     <name>crash</name>
     <message>
         <source>Load it</source>
@@ -8830,6 +8987,16 @@ El voleu carregar?
     </message>
     <message>
         <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning Cropping too much width ! Width reseted !
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning Cropping too much height ! Height reseted !
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8874,6 +9041,69 @@ El voleu carregar?
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Discard closer</source>
+        <translation type="unfinished">Descarta proper</translation>
+    </message>
+    <message>
+        <source>Replace (interpolate)</source>
+        <translation type="unfinished">Substitueix (interpola)</translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished">Descarta dupls. grans (animés)</translation>
+    </message>
+    <message>
+        <source>Pulldown dupe removal</source>
+        <translation type="unfinished">Elimina duplic. pulldown</translation>
+    </message>
+    <message>
+        <source>Fastest (no chroma, partial luma)</source>
+        <translation type="unfinished">Més ràpida (sense chroma, luma parcial)</translation>
+    </message>
+    <message>
+        <source>Medium (full luma, no chroma)</source>
+        <translation type="unfinished">Mitjana (luma complet, sense chroma)</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Mode:</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Threshold 1:</source>
+        <translation type="unfinished">Llindar _1: </translation>
+    </message>
+    <message>
+        <source>T_hreshold 2:</source>
+        <translation type="unfinished">Llindar _2: </translation>
+    </message>
+    <message>
+        <source>C_ycle:</source>
+        <translation type="unfinished">C_icle:</translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Decimate</source>
+        <translation type="unfinished">Decomb Decimate</translation>
+    </message>
+</context>
+<context>
+    <name>delogo</name>
+    <message>
+        <source>MPlayer delogo</source>
+        <translation type="unfinished">MPlayer delogo</translation>
+    </message>
+    <message>
+        <source>Blend a logo by interpolating its surrounding box.</source>
+        <translation type="unfinished">Torna transparent un logo interpolant una caixa circumdant.</translation>
+    </message>
 </context>
 <context>
     <name>dgbob</name>
@@ -8884,6 +9114,50 @@ El voleu carregar?
     <message>
         <source>Donald Graft Bob.</source>
         <translation type="unfinished">Filtre Bob, de Donald Graft.</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished">Al damunt</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished">Baix</translation>
+    </message>
+    <message>
+        <source>Keep nb of frames and fps</source>
+        <translation type="unfinished">Manté # fotogr. i FPS</translation>
+    </message>
+    <message>
+        <source>Double nb of frames and fps</source>
+        <translation type="unfinished">Dobla # fotog. i fps </translation>
+    </message>
+    <message>
+        <source>Double nb of frames (slow motion)</source>
+        <translation type="unfinished">Dobla # fotog. (ralentí)</translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Mode:</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Extra</source>
+        <translation type="unfinished">_Extra</translation>
+    </message>
+    <message>
+        <source>Extra check, avoid using it</source>
+        <translation type="unfinished">Compr. extra (s&apos;ha d&apos;evitar el seu ús) </translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished">DGBob</translation>
     </message>
 </context>
 <context>
@@ -9203,6 +9477,38 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Fade in/out.</source>
         <translation type="unfinished">Fosa en blanc/en negre </translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation type="unfinished">En negre</translation>
+    </message>
+    <message>
+        <source>Fade out</source>
+        <translation type="unfinished">Fosa en negre</translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation type="unfinished">En blanc</translation>
+    </message>
+    <message>
+        <source>Fade in</source>
+        <translation type="unfinished">Fosa en blanc</translation>
+    </message>
+    <message>
+        <source>_Fade type:</source>
+        <translation type="unfinished">_Tipus de fosa:</translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9817,6 +10123,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>hflip</name>
+    <message>
+        <source>Horizontal Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontally flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>histogram</name>
     <message>
         <source>No data</source>
@@ -9849,6 +10166,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Bitrate Histogram</source>
         <translation type="unfinished">Histograma de la taxa de bits</translation>
+    </message>
+</context>
+<context>
+    <name>hue</name>
+    <message>
+        <source>Mplayer Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust hue and saturation.</source>
+        <translation type="unfinished">Ajusta el matís i la saturació.</translation>
     </message>
 </context>
 <context>
@@ -10068,6 +10396,61 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
+        <translation type="obsolete">Al damunt</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="obsolete">Baix</translation>
+    </message>
+    <message>
+        <source>_Field order:</source>
+        <translation type="obsolete">_Ordre dels camps:</translation>
+    </message>
+    <message>
+        <source>Smaller means more deinterlacing</source>
+        <translation type="obsolete">Més petit suposa més desentrellaçament</translation>
+    </message>
+    <message>
+        <source>_Sharp</source>
+        <translation type="obsolete">_Nitideja</translation>
+    </message>
+    <message>
+        <source>_Sharper engine:</source>
+        <translation type="obsolete">_Sharper engine:</translation>
+    </message>
+    <message>
+        <source>T_woway</source>
+        <translation type="obsolete">Dues _vies</translation>
+    </message>
+    <message>
+        <source>Extrapolate better (better not to use it)</source>
+        <translation type="obsolete">Extrapola millor (més val no fer-la servir)</translation>
+    </message>
+    <message>
+        <source>_Map</source>
+        <translation type="obsolete">_Mapeja</translation>
+    </message>
+    <message>
+        <source>Show interlaced areas (for test!)</source>
+        <translation type="obsolete">Mostra àrees entrellaçades (només prova!)</translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="obsolete">KernelDeint</translation>
+    </message>
+</context>
+<context>
+    <name>kerneldeint</name>
+    <message>
+        <source>Kernel Deint.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port of Donald Graft Kernel Deinterlacer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
         <translation type="unfinished">Al damunt</translation>
     </message>
     <message>
@@ -10077,6 +10460,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>_Field order:</source>
         <translation type="unfinished">_Ordre dels camps:</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Smaller means more deinterlacing</source>
@@ -10109,10 +10496,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>KernelDeint</source>
         <translation type="unfinished">KernelDeint</translation>
-    </message>
-    <message>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10150,6 +10533,33 @@ p, li { white-space: pre-wrap; }
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
+        <translation type="obsolete">Processament de la _luminància</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="obsolete">Process luma plane</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="obsolete">Processament de la _luminància</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="obsolete">Fast Convolution</translation>
+    </message>
+</context>
+<context>
+    <name>largemedian</name>
+    <message>
+        <source>Large Median (5x5).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Median filter on 5x5 matrix.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Process luma</source>
         <translation type="unfinished">Processament de la _luminància</translation>
     </message>
     <message>
@@ -10167,6 +10577,56 @@ p, li { white-space: pre-wrap; }
 </context>
 <context>
     <name>lavDeint</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">Cap</translation>
+    </message>
+    <message>
+        <source>Linear blend</source>
+        <translation type="obsolete">Fusió lineal </translation>
+    </message>
+    <message>
+        <source>Linear interpolate</source>
+        <translation type="obsolete">Interpolació lineal </translation>
+    </message>
+    <message>
+        <source>Cubic interpolate</source>
+        <translation type="obsolete">Interpolació cúbica </translation>
+    </message>
+    <message>
+        <source>Median interpolate</source>
+        <translation type="obsolete">Interpolac. mediana </translation>
+    </message>
+    <message>
+        <source>FFmpeg deint</source>
+        <translation type="obsolete">Desentrell. FFmpeg</translation>
+    </message>
+    <message>
+        <source>_Deinterlacing:</source>
+        <translation type="obsolete">_Desentrellaçat:</translation>
+    </message>
+    <message>
+        <source>_Autolevel</source>
+        <translation type="obsolete">Nivell _automàtic</translation>
+    </message>
+</context>
+<context>
+    <name>lavMuxer</name>
+    <message>
+        <source>Incompatible frame rate</source>
+        <translation type="obsolete">La velocitat d&apos;imatge és incompatible.</translation>
+    </message>
+</context>
+<context>
+    <name>lavdeint</name>
+    <message>
+        <source>Libavdec Deinterlacers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lavcodec deinterlacer family.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">Cap</translation>
@@ -10205,13 +10665,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">La velocitat d&apos;imatge és incompatible.</translation>
-    </message>
-</context>
-<context>
     <name>licenseDialog</name>
     <message>
         <source>License</source>
@@ -10247,6 +10700,25 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Logo</source>
         <translation type="unfinished">Logo</translation>
+    </message>
+    <message>
+        <source>Add logo.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Put a logo on top of video, with alpha blending.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lumaonly</name>
+    <message>
+        <source>GreyScale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove color, only key grey image.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10420,6 +10892,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mcdeint</name>
+    <message>
+        <source>MCDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
+        <translation type="unfinished">Desentrellaçador per motion compensation. Portat de l&apos;MPlayer.</translation>
+    </message>
+    <message>
+        <source>Fast</source>
+        <translation type="unfinished">Ràpid</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Mitjà</translation>
+    </message>
+    <message>
+        <source>Slow iterative motion search</source>
+        <translation type="unfinished">Lent, estimació iterativa movim.</translation>
+    </message>
+    <message>
+        <source>Extra slow (same as 3+multiple reference frames)</source>
+        <translation type="unfinished">Extra lent (com [3] + fotogr. referèn. múltiple)</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Mode:</translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Qp:</source>
+        <translation type="unfinished">_QP:</translation>
+    </message>
+    <message>
+        <source>mcDeinterlace</source>
+        <translation type="unfinished">mcDeinterlace</translation>
+    </message>
+</context>
+<context>
     <name>meadian</name>
     <message>
         <source>3x3 convolution filter :median.</source>
@@ -10452,6 +10967,60 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mp3d</name>
+    <message>
+        <source>Mplayer Denoise 3D HQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished">Intensitat _luminància espacial:</translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished">Intensitat _crominància espacial:</translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">MPlayer denoise3d</translation>
+    </message>
+</context>
+<context>
+    <name>mp3dlow</name>
+    <message>
+        <source>Mplayer Denoise 3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility.</source>
+        <translation type="unfinished">Redueix el soroll, suavitza la imatge, augmenta la compressibilitat.</translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished">Intensitat _luminància espacial:</translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished">Intensitat _crominància espacial:</translation>
+    </message>
+    <message>
+        <source>_Temporal strength:</source>
+        <translation type="unfinished">Intensitat _temporal:</translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">MPlayer denoise3d</translation>
+    </message>
+</context>
+<context>
     <name>msharpen</name>
     <message>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
@@ -10476,6 +11045,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>MSharpen</source>
         <translation type="unfinished">MSharpen</translation>
+    </message>
+    <message>
+        <source>Msharpen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10744,11 +11317,26 @@ p, li { white-space: pre-wrap; }
     <name>removePlaneFilter</name>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">Process luma plane</translation>
+        <translation type="obsolete">Process luma plane</translation>
+    </message>
+</context>
+<context>
+    <name>removeplane</name>
+    <message>
+        <source>Remove  Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Keep Y Plane</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">Process luma plane</translation>
     </message>
     <message>
         <source>Keep U Plane</source>
@@ -10807,6 +11395,25 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resample FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change and enforce FPS. Keep duration and sync.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>resize</name>
+    <message>
+        <source>swsResize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>swScale Resizer.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -10905,7 +11512,15 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
+    <name>rotate</name>
+    <message>
+        <source>Rotate</source>
+        <translation type="unfinished">Rotate</translation>
+    </message>
+    <message>
+        <source>Rotate the image by 90/180/270 degrees.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">Cap</translation>
@@ -10938,9 +11553,44 @@ p, li { white-space: pre-wrap; }
         <source>_Angle:</source>
         <translation type="unfinished">_Angle: </translation>
     </message>
+</context>
+<context>
+    <name>rotateFilter</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">Cap</translation>
+    </message>
+    <message>
+        <source>90 degrees</source>
+        <translation type="obsolete">90 graus</translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="obsolete">90°</translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="obsolete">180 graus</translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="obsolete">180°</translation>
+    </message>
+    <message>
+        <source>270 degrees</source>
+        <translation type="obsolete">270 graus</translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="obsolete">270°</translation>
+    </message>
+    <message>
+        <source>_Angle:</source>
+        <translation type="obsolete">_Angle: </translation>
+    </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">Rotate</translation>
+        <translation type="obsolete">Rotate</translation>
     </message>
 </context>
 <context>
@@ -10984,31 +11634,42 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">Fitxer de _subtítols (ASS/SSA):</translation>
+        <translation type="obsolete">Fitxer de _subtítols (ASS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">Seleccioneu el fitxer de subtítols</translation>
+        <translation type="obsolete">Seleccioneu el fitxer de subtítols</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">_Espaiat línia:</translation>
+        <translation type="obsolete">_Espaiat línia:</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">Mida _lletra: </translation>
+        <translation type="obsolete">Mida _lletra: </translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">Marge _superior:</translation>
+        <translation type="obsolete">Marge _superior:</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">Marge _inferior:</translation>
+        <translation type="obsolete">Marge _inferior:</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation type="obsolete">ASS</translation>
+    </message>
+</context>
+<context>
+    <name>swapuv</name>
+    <message>
+        <source>Swap UV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swap the U and V planes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -11128,6 +11789,28 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>vdpresize</name>
+    <message>
+        <source>vdpau: Resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau: Resize image using vdpau.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vflip</name>
+    <message>
+        <source>Vertical Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertically flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
@@ -11170,91 +11853,7 @@ p, li { white-space: pre-wrap; }
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">Cap</translation>
-    </message>
-    <message>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Cap</translation>
     </message>
 </context>
 <context>

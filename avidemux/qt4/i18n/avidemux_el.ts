@@ -2335,7 +2335,7 @@ Do you want to load it  ?
     <name>ADMVideoMPD3D</name>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">Αποθορυβοποιητής3d MPlayer </translation>
+        <translation type="obsolete">Αποθορυβοποιητής3d MPlayer </translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
@@ -2345,36 +2345,16 @@ Do you want to load it  ?
         <source>MPlayer hqdn3d</source>
         <translation type="obsolete">MPlayer hqdn3d</translation>
     </message>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">Σήμα:</translation>
+        <translation type="obsolete">Σήμα:</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">Αποθορυβοποιητής3d MPlayer </translation>
-    </message>
-    <message>
-        <source>_Spatial luma strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>S_patial chroma strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Αποθορυβοποιητής3d MPlayer </translation>
     </message>
 </context>
 <context>
@@ -2982,19 +2962,15 @@ Drop timing informations ?</source>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">Κατώφλι φωτεινότητας:</translation>
+        <translation type="obsolete">Κατώφλι φωτεινότητας:</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">Επεξεργασία chroma</translation>
+        <translation type="obsolete">Επεξεργασία chroma</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">&amp;Προσαρμοσμένη περιέλιξη...</translation>
-    </message>
-    <message>
-        <source>Process luma plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">&amp;Προσαρμοσμένη περιέλιξη...</translation>
     </message>
 </context>
 <context>
@@ -3039,15 +3015,15 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">Γρήγορο</translation>
+        <translation type="obsolete">Γρήγορο</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">Μεσαίο</translation>
+        <translation type="obsolete">Μεσαίο</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="unfinished">Αργή αναζήτηση επαναληπτικής κίνησης</translation>
+        <translation type="obsolete">Αργή αναζήτηση επαναληπτικής κίνησης</translation>
     </message>
     <message>
         <source>Top</source>
@@ -3059,7 +3035,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Λειτουργία: </translation>
+        <translation type="obsolete">_Λειτουργία: </translation>
     </message>
     <message>
         <source>_Field dominance:</source>
@@ -3067,19 +3043,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="unfinished">_Qp:</translation>
+        <translation type="obsolete">_Qp:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">Πεπλεγμένη</translation>
-    </message>
-    <message>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Πεπλεγμένη</translation>
     </message>
 </context>
 <context>
@@ -3132,23 +3100,23 @@ Drop timing informations ?</source>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="unfinished">Έξοδος</translation>
+        <translation type="obsolete">Έξοδος</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="unfinished">Φθίνουσα έξοδος</translation>
+        <translation type="obsolete">Φθίνουσα έξοδος</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">Είσοδος</translation>
+        <translation type="obsolete">Είσοδος</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="unfinished">Αύξουσα είσοδος</translation>
+        <translation type="obsolete">Αύξουσα είσοδος</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">_Τύπος μετάβασης:</translation>
+        <translation type="obsolete">_Τύπος μετάβασης:</translation>
     </message>
     <message>
         <source>_Start frame:</source>
@@ -3173,18 +3141,6 @@ Drop timing informations ?</source>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
         <translation type="obsolete">Η αρχή πρέπει να είναι πριν το τέλος, και τα δύο εντός του βίντεο # των καρέ.</translation>
-    </message>
-    <message>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3359,23 +3315,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">πάνω-κάτω</translation>
+        <translation type="obsolete">πάνω-κάτω</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Κάτω</translation>
+        <translation type="obsolete">Κάτω</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">Διατήρηση του αριθμού των καρέ και την ταχύτητά τους (fps)</translation>
+        <translation type="obsolete">Διατήρηση του αριθμού των καρέ και την ταχύτητά τους (fps)</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">Εικόνες σκότους</translation>
+        <translation type="obsolete">Εικόνες σκότους</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">Διπλός αριθμός καρέ (αργή κίνηση)</translation>
+        <translation type="obsolete">Διπλός αριθμός καρέ (αργή κίνηση)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -3383,27 +3339,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Λειτουργία: </translation>
+        <translation type="obsolete">_Λειτουργία: </translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Κατώφλι:</translation>
+        <translation type="obsolete">_Κατώφλι:</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="unfinished">_Επιπλέον</translation>
+        <translation type="obsolete">_Επιπλέον</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">Επιπλέον έλεγχος, απέφυγε τη χρήση του</translation>
+        <translation type="obsolete">Επιπλέον έλεγχος, απέφυγε τη χρήση του</translation>
     </message>
     <message>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
-    </message>
-    <message>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DGBob</translation>
     </message>
 </context>
 <context>
@@ -3436,55 +3388,31 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="unfinished">Απόρριψη κοντινότερου</translation>
+        <translation type="obsolete">Απόρριψη κοντινότερου</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished">Αντικατάσταση αλφαριθμητικού</translation>
+        <translation type="obsolete">Αντικατάσταση αλφαριθμητικού</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">_Λειτουργία: </translation>
+        <translation type="obsolete">_Λειτουργία: </translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="unfinished">_Ποιότητα:</translation>
+        <translation type="obsolete">_Ποιότητα:</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="unfinished">_Κατώφλι 1:</translation>
+        <translation type="obsolete">_Κατώφλι 1:</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished">Κα_τώφλι 2:</translation>
+        <translation type="obsolete">Κα_τώφλι 2:</translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="unfinished">_Τύπος:</translation>
-    </message>
-    <message>
-        <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pulldown dupe removal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Decomb Decimate</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">_Τύπος:</translation>
     </message>
 </context>
 <context>
@@ -6515,6 +6443,34 @@ Is it running ?</source>
         <source>Hardcode ass/ssa subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>_Subtitle file (ASS/SSA):</source>
+        <translation type="unfinished">Αρχείο _υποτίτλων (ASS/SSA):</translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Line spacing:</source>
+        <translation type="unfinished">Απόσταση μεταξύ γρα&amp;μμών:</translation>
+    </message>
+    <message>
+        <source>_Font scale:</source>
+        <translation type="unfinished">Μέγεθος _γραμματοσειράς:</translation>
+    </message>
+    <message>
+        <source>_Top margin:</source>
+        <translation type="unfinished">Άνω περιθώριο:</translation>
+    </message>
+    <message>
+        <source>Botto_m margin</source>
+        <translation type="unfinished">_Κάτω περιθώριο</translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished">ASS</translation>
+    </message>
 </context>
 <context>
     <name>autoWizard</name>
@@ -6559,7 +6515,7 @@ Is it running ?</source>
     </message>
 </context>
 <context>
-    <name>blackenBorders</name>
+    <name>blacken</name>
     <message>
         <source>_Left border:</source>
         <translation type="unfinished">_Αριστερό όριο:</translation>
@@ -6587,6 +6543,37 @@ Is it running ?</source>
     <message>
         <source>All parameters must be even and within range.</source>
         <translation type="unfinished">Όλες οι παράμετροι πρέπει να είναι ίσες και μέσα στα όρια.</translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="obsolete">_Αριστερό όριο:</translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="obsolete">_Δεξί όριο:</translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="obsolete">_Επάνω όριο:</translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="obsolete">_Κάτω όριο:</translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="obsolete">Μαύρισμα των Ορίων</translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="obsolete">Εσφαλμένες παράμετροι</translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="obsolete">Όλες οι παράμετροι πρέπει να είναι ίσες και μέσα στα όρια.</translation>
     </message>
 </context>
 <context>
@@ -6647,6 +6634,21 @@ Is it running ?</source>
         <source>Change fps</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Invalid fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>changefps</name>
+    <message>
+        <source>Change FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chromashift</name>
@@ -6676,6 +6678,94 @@ Is it running ?</source>
         <source>Color management filter.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Καμία</translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>contrast</name>
@@ -6703,6 +6793,10 @@ Is it running ?</source>
         <source>Adjust contrast, brightness and colors.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished">Αντίθεση</translation>
+    </message>
 </context>
 <context>
     <name>contrastDialog</name>
@@ -6725,6 +6819,25 @@ Is it running ?</source>
     <message>
         <source>Brightness</source>
         <translation type="obsolete">Φωτεινότητα</translation>
+    </message>
+</context>
+<context>
+    <name>convolution</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished">Κατώφλι φωτεινότητας:</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished">Επεξεργασία chroma</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished">&amp;Προσαρμοσμένη περιέλιξη...</translation>
     </message>
 </context>
 <context>
@@ -6756,6 +6869,16 @@ Do you want to load it  ?
         <source>crop filter</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Warning Cropping too much width ! Width reseted !
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning Cropping too much height ! Height reseted !
+</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>cropDialog</name>
@@ -6778,6 +6901,69 @@ Do you want to load it  ?
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Discard closer</source>
+        <translation type="unfinished">Απόρριψη κοντινότερου</translation>
+    </message>
+    <message>
+        <source>Replace (interpolate)</source>
+        <translation type="unfinished">Αντικατάσταση αλφαριθμητικού</translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pulldown dupe removal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fastest (no chroma, partial luma)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Medium (full luma, no chroma)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Λειτουργία: </translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">_Ποιότητα:</translation>
+    </message>
+    <message>
+        <source>_Threshold 1:</source>
+        <translation type="unfinished">_Κατώφλι 1:</translation>
+    </message>
+    <message>
+        <source>T_hreshold 2:</source>
+        <translation type="unfinished">Κα_τώφλι 2:</translation>
+    </message>
+    <message>
+        <source>C_ycle:</source>
+        <translation type="unfinished">_Τύπος:</translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>delogo</name>
+    <message>
+        <source>MPlayer delogo</source>
+        <translation type="unfinished">MPlayer αφαιρετής λογότυπου</translation>
+    </message>
+    <message>
+        <source>Blend a logo by interpolating its surrounding box.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dgbob</name>
@@ -6788,6 +6974,50 @@ Do you want to load it  ?
     <message>
         <source>Donald Graft Bob.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished">πάνω-κάτω</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished">Κάτω</translation>
+    </message>
+    <message>
+        <source>Keep nb of frames and fps</source>
+        <translation type="unfinished">Διατήρηση του αριθμού των καρέ και την ταχύτητά τους (fps)</translation>
+    </message>
+    <message>
+        <source>Double nb of frames and fps</source>
+        <translation type="unfinished">Εικόνες σκότους</translation>
+    </message>
+    <message>
+        <source>Double nb of frames (slow motion)</source>
+        <translation type="unfinished">Διπλός αριθμός καρέ (αργή κίνηση)</translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Λειτουργία: </translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">_Κατώφλι:</translation>
+    </message>
+    <message>
+        <source>_Extra</source>
+        <translation type="unfinished">_Επιπλέον</translation>
+    </message>
+    <message>
+        <source>Extra check, avoid using it</source>
+        <translation type="unfinished">Επιπλέον έλεγχος, απέφυγε τη χρήση του</translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished">DGBob</translation>
     </message>
 </context>
 <context>
@@ -7019,6 +7249,38 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Fade in/out.</source>
         <translation type="unfinished">Ομαλή είσοδος/έξοδος.</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation type="unfinished">Έξοδος</translation>
+    </message>
+    <message>
+        <source>Fade out</source>
+        <translation type="unfinished">Φθίνουσα έξοδος</translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation type="unfinished">Είσοδος</translation>
+    </message>
+    <message>
+        <source>Fade in</source>
+        <translation type="unfinished">Αύξουσα είσοδος</translation>
+    </message>
+    <message>
+        <source>_Fade type:</source>
+        <translation type="unfinished">_Τύπος μετάβασης:</translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7609,6 +7871,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>hflip</name>
+    <message>
+        <source>Horizontal Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontally flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>histogram</name>
     <message>
         <source>No data</source>
@@ -7641,6 +7914,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Bitrate Histogram</source>
         <translation type="unfinished">Ιστόγραμμα Ρυθμού Bit</translation>
+    </message>
+</context>
+<context>
+    <name>hue</name>
+    <message>
+        <source>Mplayer Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust hue and saturation.</source>
+        <translation type="unfinished">Ρύθμιση της απόχρωσης και του κορεσμού.</translation>
     </message>
 </context>
 <context>
@@ -7816,6 +8100,49 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
+        <translation type="obsolete">πάνω-κάτω</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="obsolete">Κάτω</translation>
+    </message>
+    <message>
+        <source>_Field order:</source>
+        <translation type="obsolete">&lt;b&gt;Σειρά Subpixel&lt;/b&gt;:</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="obsolete">_Κατώφλι:</translation>
+    </message>
+    <message>
+        <source>_Sharp</source>
+        <translation type="obsolete">_Οξύ</translation>
+    </message>
+    <message>
+        <source>_Sharper engine:</source>
+        <translation type="obsolete">_Μηχανή οξύτητας:</translation>
+    </message>
+    <message>
+        <source>T_woway</source>
+        <translation type="obsolete">_Διπλής Κατεύθυνσης</translation>
+    </message>
+    <message>
+        <source>_Map</source>
+        <translation type="obsolete">_Χαρτογράφηση</translation>
+    </message>
+</context>
+<context>
+    <name>kerneldeint</name>
+    <message>
+        <source>Kernel Deint.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port of Donald Graft Kernel Deinterlacer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
         <translation type="unfinished">πάνω-κάτω</translation>
     </message>
     <message>
@@ -7831,6 +8158,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">_Κατώφλι:</translation>
     </message>
     <message>
+        <source>Smaller means more deinterlacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>_Sharp</source>
         <translation type="unfinished">_Οξύ</translation>
     </message>
@@ -7843,16 +8174,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">_Διπλής Κατεύθυνσης</translation>
     </message>
     <message>
-        <source>_Map</source>
-        <translation type="unfinished">_Χαρτογράφηση</translation>
-    </message>
-    <message>
-        <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Extrapolate better (better not to use it)</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Map</source>
+        <translation type="unfinished">_Χαρτογράφηση</translation>
     </message>
     <message>
         <source>Show interlaced areas (for test!)</source>
@@ -7898,7 +8225,34 @@ p, li { white-space: pre-wrap; }
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
+        <translation type="obsolete">Κατώφλι φωτεινότητας:</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="obsolete">Επεξεργασία chroma</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="obsolete">&amp;Προσαρμοσμένη περιέλιξη...</translation>
+    </message>
+</context>
+<context>
+    <name>largemedian</name>
+    <message>
+        <source>Large Median (5x5).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Median filter on 5x5 matrix.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Process luma</source>
         <translation type="unfinished">Κατώφλι φωτεινότητας:</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
@@ -7908,13 +8262,63 @@ p, li { white-space: pre-wrap; }
         <source>Fast Convolution</source>
         <translation type="unfinished">&amp;Προσαρμοσμένη περιέλιξη...</translation>
     </message>
-    <message>
-        <source>Process luma plane</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>lavDeint</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">Καμία</translation>
+    </message>
+    <message>
+        <source>Linear blend</source>
+        <translation type="obsolete">Γραμμική ανάμειξη</translation>
+    </message>
+    <message>
+        <source>Linear interpolate</source>
+        <translation type="obsolete">Γραμμική ανάμειξη</translation>
+    </message>
+    <message>
+        <source>Cubic interpolate</source>
+        <translation type="obsolete">Κυβική Spline</translation>
+    </message>
+    <message>
+        <source>Median interpolate</source>
+        <translation type="obsolete">Απόπλεξη διαμέσου</translation>
+    </message>
+    <message>
+        <source>FFmpeg deint</source>
+        <translation type="obsolete">Απόπλεξη FFmpeg</translation>
+    </message>
+    <message>
+        <source>_Deinterlacing:</source>
+        <translation type="obsolete">_Απόπλεξη:</translation>
+    </message>
+    <message>
+        <source>_Autolevel</source>
+        <translation type="obsolete">_Συσκευή ήχου</translation>
+    </message>
+    <message>
+        <source>libavcodec deinterlacer</source>
+        <translation type="obsolete">Ρύθμιση Deinterlacer...</translation>
+    </message>
+</context>
+<context>
+    <name>lavMuxer</name>
+    <message>
+        <source>Incompatible frame rate</source>
+        <translation type="obsolete">Ασύμβατη ταχύτητα καρέ</translation>
+    </message>
+</context>
+<context>
+    <name>lavdeint</name>
+    <message>
+        <source>Libavdec Deinterlacers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lavcodec deinterlacer family.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">Καμία</translation>
@@ -7953,13 +8357,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">Ασύμβατη ταχύτητα καρέ</translation>
-    </message>
-</context>
-<context>
     <name>licenseDialog</name>
     <message>
         <source>License</source>
@@ -7995,6 +8392,25 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Logo</source>
         <translation type="unfinished">Λογότυπο</translation>
+    </message>
+    <message>
+        <source>Add logo.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Put a logo on top of video, with alpha blending.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lumaonly</name>
+    <message>
+        <source>GreyScale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove color, only key grey image.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8124,6 +8540,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mcdeint</name>
+    <message>
+        <source>MCDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
+        <translation type="unfinished">Αποπλεκτής αποζημίωσης κίνησης. Εισήχθηκε και Προσαρμόσθηκε από τον MPlayer.</translation>
+    </message>
+    <message>
+        <source>Fast</source>
+        <translation type="unfinished">Γρήγορο</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">Μεσαίο</translation>
+    </message>
+    <message>
+        <source>Slow iterative motion search</source>
+        <translation type="unfinished">Αργή αναζήτηση επαναληπτικής κίνησης</translation>
+    </message>
+    <message>
+        <source>Extra slow (same as 3+multiple reference frames)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Λειτουργία: </translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Qp:</source>
+        <translation type="unfinished">_Qp:</translation>
+    </message>
+    <message>
+        <source>mcDeinterlace</source>
+        <translation type="unfinished">Πεπλεγμένη</translation>
+    </message>
+</context>
+<context>
     <name>meadian</name>
     <message>
         <source>3x3 convolution filter :median.</source>
@@ -8156,6 +8615,60 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mp3d</name>
+    <message>
+        <source>Mplayer Denoise 3D HQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">Αποθορυβοποιητής3d MPlayer </translation>
+    </message>
+</context>
+<context>
+    <name>mp3dlow</name>
+    <message>
+        <source>Mplayer Denoise 3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Temporal strength:</source>
+        <translation type="unfinished">Σήμα:</translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">Αποθορυβοποιητής3d MPlayer </translation>
+    </message>
+</context>
+<context>
     <name>msharpen</name>
     <message>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
@@ -8180,6 +8693,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>MSharpen</source>
         <translation type="unfinished">MSharpen (οξύτητα)</translation>
+    </message>
+    <message>
+        <source>Msharpen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8401,7 +8918,15 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>removePlaneFilter</name>
+    <name>removeplane</name>
+    <message>
+        <source>Remove  Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Keep Y Plane</source>
         <translation type="unfinished"></translation>
@@ -8469,6 +8994,25 @@ p, li { white-space: pre-wrap; }
         <source>59.93  (NTSC)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Resample FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change and enforce FPS. Keep duration and sync.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>resize</name>
+    <message>
+        <source>swsResize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>swScale Resizer.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>resizeDialog</name>
@@ -8513,7 +9057,15 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
+    <name>rotate</name>
+    <message>
+        <source>Rotate</source>
+        <translation type="unfinished">Περιστροφή</translation>
+    </message>
+    <message>
+        <source>Rotate the image by 90/180/270 degrees.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">Καμία</translation>
@@ -8523,32 +9075,55 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">90 μοίρες</translation>
     </message>
     <message>
-        <source>180 degrees</source>
-        <translation type="unfinished">180 μοίρες</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="unfinished">270 μοίρες</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="unfinished">_Γωνία:</translation>
-    </message>
-    <message>
-        <source>Rotate</source>
-        <translation type="unfinished">Περιστροφή</translation>
-    </message>
-    <message>
         <source>90Â°</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="unfinished">180 μοίρες</translation>
     </message>
     <message>
         <source>180Â°</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>270 degrees</source>
+        <translation type="unfinished">270 μοίρες</translation>
+    </message>
+    <message>
         <source>270Â°</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Angle:</source>
+        <translation type="unfinished">_Γωνία:</translation>
+    </message>
+</context>
+<context>
+    <name>rotateFilter</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">Καμία</translation>
+    </message>
+    <message>
+        <source>90 degrees</source>
+        <translation type="obsolete">90 μοίρες</translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="obsolete">180 μοίρες</translation>
+    </message>
+    <message>
+        <source>270 degrees</source>
+        <translation type="obsolete">270 μοίρες</translation>
+    </message>
+    <message>
+        <source>_Angle:</source>
+        <translation type="obsolete">_Γωνία:</translation>
+    </message>
+    <message>
+        <source>Rotate</source>
+        <translation type="obsolete">Περιστροφή</translation>
     </message>
 </context>
 <context>
@@ -8581,30 +9156,37 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">Αρχείο _υποτίτλων (ASS/SSA):</translation>
+        <translation type="obsolete">Αρχείο _υποτίτλων (ASS/SSA):</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">Απόσταση μεταξύ γρα&amp;μμών:</translation>
+        <translation type="obsolete">Απόσταση μεταξύ γρα&amp;μμών:</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">Μέγεθος _γραμματοσειράς:</translation>
+        <translation type="obsolete">Μέγεθος _γραμματοσειράς:</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">Άνω περιθώριο:</translation>
+        <translation type="obsolete">Άνω περιθώριο:</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">_Κάτω περιθώριο</translation>
+        <translation type="obsolete">_Κάτω περιθώριο</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation type="obsolete">ASS</translation>
+    </message>
+</context>
+<context>
+    <name>swapuv</name>
+    <message>
+        <source>Swap UV</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Select Subtitle file</source>
+        <source>Swap the U and V planes.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -8725,6 +9307,28 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>vdpresize</name>
+    <message>
+        <source>vdpau: Resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau: Resize image using vdpau.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vflip</name>
+    <message>
+        <source>Vertical Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertically flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
@@ -8751,91 +9355,7 @@ p, li { white-space: pre-wrap; }
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">Καμία</translation>
-    </message>
-    <message>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Καμία</translation>
     </message>
 </context>
 <context>

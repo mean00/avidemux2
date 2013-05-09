@@ -41,8 +41,8 @@ DECLARE_VIDEO_FILTER(   lumaOnlyFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category
                         "lumaonly",            // internal name (must be uniq!)
-                        "GreyScale",            // Display name
-                        "Remove color, only key grey image." // Description
+                        QT_TRANSLATE_NOOP("lumaonly","GreyScale"),            // Display name
+                        QT_TRANSLATE_NOOP("lumaonly","Remove color, only key grey image.") // Description
                     );
 
 // Now implements the interesting parts

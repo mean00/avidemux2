@@ -80,8 +80,8 @@ DECLARE_VIDEO_FILTER(   resampleFps,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "resampleFps",            // internal name (must be uniq!)
-                        "Resample FPS",            // Display name
-                        "Change and enforce FPS. Keep duration and sync." // Description
+                        QT_TRANSLATE_NOOP("resampleFps","Resample FPS"),            // Display name
+                        QT_TRANSLATE_NOOP("resampleFps","Change and enforce FPS. Keep duration and sync.") // Description
                     );
 
 /**

@@ -73,8 +73,8 @@ DECLARE_VIDEO_FILTER(   changeFps,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "changeFps",            // internal name (must be uniq!)
-                        "Change FPS",            // Display name
-                        "Speed up/slow down the video as if altering fps. This filter changes duration." // Description
+                        QT_TRANSLATE_NOOP("changefps","Change FPS"),            // Display name
+                        QT_TRANSLATE_NOOP("changefps","Speed up/slow down the video as if altering fps. This filter changes duration.") // Description
                     );
 
 /**
@@ -224,7 +224,7 @@ ADM_assert(nbPredefined == 6);
     
     if(newFrac==0 || oldFrac==0)
     {
-        GUI_Error_HIG("Error","Invalid fps");
+        GUI_Error_HIG("Error",QT_TRANSLATE_NOOP("changeFps","Invalid fps"));
         goto again;
     }
       // 

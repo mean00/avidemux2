@@ -2999,11 +2999,11 @@ Enable it?</source>
     <name>ADMVideoMPD3D</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">空間的明度強度(_S):</translation>
+        <translation type="obsolete">空間的明度強度(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">空間的色度強度(_P):</translation>
+        <translation type="obsolete">空間的色度強度(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
@@ -3015,30 +3015,26 @@ Enable it?</source>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
-    </message>
-    <message>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">空間的明度強度(_S):</translation>
+        <translation type="obsolete">空間的明度強度(_S):</translation>
     </message>
     <message>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">空間的色度強度(_P):</translation>
+        <translation type="obsolete">空間的色度強度(_P):</translation>
     </message>
     <message>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">時間強度(_T):</translation>
+        <translation type="obsolete">時間強度(_T):</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -3854,19 +3850,19 @@ Drop timing informations ?</source>
     <name>AVDMFastVideoConvolution</name>
     <message>
         <source>_Process luma</source>
-        <translation type="unfinished">處理明度(_P)</translation>
+        <translation type="obsolete">處理明度(_P)</translation>
     </message>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
+        <translation type="obsolete">處理明度平面</translation>
     </message>
     <message>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">處理色度(_R)</translation>
+        <translation type="obsolete">處理色度(_R)</translation>
     </message>
     <message>
         <source>Fast Convolution</source>
-        <translation type="unfinished">快速卷積</translation>
+        <translation type="obsolete">快速卷積</translation>
     </message>
 </context>
 <context>
@@ -3911,19 +3907,19 @@ Drop timing informations ?</source>
     <name>AVDMVideoMCDeint</name>
     <message>
         <source>Fast</source>
-        <translation type="unfinished">快</translation>
+        <translation type="obsolete">快</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished">中</translation>
+        <translation type="obsolete">中</translation>
     </message>
     <message>
         <source>Slow iterative motion search</source>
-        <translation type="unfinished">緩慢反覆的動作搜尋</translation>
+        <translation type="obsolete">緩慢反覆的動作搜尋</translation>
     </message>
     <message>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished">特別慢 (同於3或3倍數以上的參考畫格數)</translation>
+        <translation type="obsolete">特別慢 (同於3或3倍數以上的參考畫格數)</translation>
     </message>
     <message>
         <source>Top</source>
@@ -3935,7 +3931,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Field dominance:</source>
@@ -3943,15 +3939,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Qp:</source>
-        <translation type="unfinished">_Qp:</translation>
+        <translation type="obsolete">_Qp:</translation>
     </message>
     <message>
         <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeinterlace</translation>
-    </message>
-    <message>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">mcDeinterlace</translation>
     </message>
 </context>
 <context>
@@ -4004,23 +3996,23 @@ Drop timing informations ?</source>
     <name>AVDM_Fade</name>
     <message>
         <source>Out</source>
-        <translation type="unfinished">出</translation>
+        <translation type="obsolete">出</translation>
     </message>
     <message>
         <source>Fade out</source>
-        <translation type="unfinished">淡出</translation>
+        <translation type="obsolete">淡出</translation>
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">入</translation>
+        <translation type="obsolete">入</translation>
     </message>
     <message>
         <source>Fade in</source>
-        <translation type="unfinished">淡入</translation>
+        <translation type="obsolete">淡入</translation>
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">淡化方式(_F):</translation>
+        <translation type="obsolete">淡化方式(_F):</translation>
     </message>
     <message>
         <source>_Start frame:</source>
@@ -4045,18 +4037,6 @@ Drop timing informations ?</source>
     <message>
         <source>Start must be before end, and both within video # of frames.</source>
         <translation type="obsolete">在結束前必須開始，並且兩者在畫格的視訊 # 之內。</translation>
-    </message>
-    <message>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4344,23 +4324,23 @@ Drop timing informations ?</source>
     <name>DGbob</name>
     <message>
         <source>Top</source>
-        <translation type="unfinished">頂部</translation>
+        <translation type="obsolete">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">底部</translation>
+        <translation type="obsolete">底部</translation>
     </message>
     <message>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">保持畫格和 fps 的數目</translation>
+        <translation type="obsolete">保持畫格和 fps 的數目</translation>
     </message>
     <message>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">兩倍畫格和 fps 的數目</translation>
+        <translation type="obsolete">兩倍畫格和 fps 的數目</translation>
     </message>
     <message>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">兩倍畫格的數量(慢動作)</translation>
+        <translation type="obsolete">兩倍畫格的數量(慢動作)</translation>
     </message>
     <message>
         <source>_Field order:</source>
@@ -4368,27 +4348,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Threshold:</source>
-        <translation type="unfinished">臨界值(_T):</translation>
+        <translation type="obsolete">臨界值(_T):</translation>
     </message>
     <message>
         <source>_Extra</source>
-        <translation type="unfinished">額外(_E)</translation>
+        <translation type="obsolete">額外(_E)</translation>
     </message>
     <message>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">額外檢查，避免正在使用它</translation>
+        <translation type="obsolete">額外檢查，避免正在使用它</translation>
     </message>
     <message>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
-    </message>
-    <message>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">DGBob</translation>
     </message>
 </context>
 <context>
@@ -4421,23 +4397,23 @@ Drop timing informations ?</source>
     <name>Decimate</name>
     <message>
         <source>Discard closer</source>
-        <translation type="unfinished">丟棄較靠近的</translation>
+        <translation type="obsolete">丟棄較靠近的</translation>
     </message>
     <message>
         <source>Replace (interpolate)</source>
-        <translation type="unfinished">取代 (插入)</translation>
+        <translation type="obsolete">取代 (插入)</translation>
     </message>
     <message>
         <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished">丟棄 longer dupe (animés)</translation>
+        <translation type="obsolete">丟棄 longer dupe (animés)</translation>
     </message>
     <message>
         <source>Pulldown dupe removal</source>
-        <translation type="unfinished">去除 Pulldown 偽裝</translation>
+        <translation type="obsolete">去除 Pulldown 偽裝</translation>
     </message>
     <message>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">最快 (沒有色度，部份的明度)</translation>
+        <translation type="obsolete">最快 (沒有色度，部份的明度)</translation>
     </message>
     <message>
         <source>Fast (partial luma and chroma)</source>
@@ -4445,7 +4421,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">中 (全部的明度，沒有色度)</translation>
+        <translation type="obsolete">中 (全部的明度，沒有色度)</translation>
     </message>
     <message>
         <source>Slow (full luma and chroma)</source>
@@ -4453,31 +4429,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="unfinished">模式(_M):</translation>
+        <translation type="obsolete">模式(_M):</translation>
     </message>
     <message>
         <source>_Quality:</source>
-        <translation type="unfinished">品質(_Q):</translation>
+        <translation type="obsolete">品質(_Q):</translation>
     </message>
     <message>
         <source>_Threshold 1:</source>
-        <translation type="unfinished">臨界值 1(_T):</translation>
+        <translation type="obsolete">臨界值 1(_T):</translation>
     </message>
     <message>
         <source>T_hreshold 2:</source>
-        <translation type="unfinished">臨界值 2(_H):</translation>
+        <translation type="obsolete">臨界值 2(_H):</translation>
     </message>
     <message>
         <source>C_ycle:</source>
-        <translation type="unfinished">循環(_Y):</translation>
+        <translation type="obsolete">循環(_Y):</translation>
     </message>
     <message>
         <source>Decomb Decimate</source>
-        <translation type="unfinished">去除梳形雜訊成批編碼器</translation>
-    </message>
-    <message>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">去除梳形雜訊成批編碼器</translation>
     </message>
 </context>
 <context>
@@ -7612,6 +7584,34 @@ Is it running ?</source>
         <source>Hardcode ass/ssa subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>_Subtitle file (ASS/SSA):</source>
+        <translation type="unfinished">字幕檔(A_SS/SSA):</translation>
+    </message>
+    <message>
+        <source>Select Subtitle file</source>
+        <translation type="unfinished">選擇字幕檔</translation>
+    </message>
+    <message>
+        <source>_Line spacing:</source>
+        <translation type="unfinished">行距(_L):</translation>
+    </message>
+    <message>
+        <source>_Font scale:</source>
+        <translation type="unfinished">字體縮放(_F):</translation>
+    </message>
+    <message>
+        <source>_Top margin:</source>
+        <translation type="unfinished">頂部邊界(_T):</translation>
+    </message>
+    <message>
+        <source>Botto_m margin</source>
+        <translation type="unfinished">底部邊界(_M)</translation>
+    </message>
+    <message>
+        <source>ASS</source>
+        <translation type="unfinished">ASS</translation>
+    </message>
 </context>
 <context>
     <name>autoWizard</name>
@@ -7656,7 +7656,7 @@ Is it running ?</source>
     </message>
 </context>
 <context>
-    <name>blackenBorders</name>
+    <name>blacken</name>
     <message>
         <source>_Left border:</source>
         <translation type="unfinished">左側邊界(_L):</translation>
@@ -7684,6 +7684,37 @@ Is it running ?</source>
     <message>
         <source>All parameters must be even and within range.</source>
         <translation type="unfinished">所有參數必須是偶數且在範圍內。</translation>
+    </message>
+</context>
+<context>
+    <name>blackenBorders</name>
+    <message>
+        <source>_Left border:</source>
+        <translation type="obsolete">左側邊界(_L):</translation>
+    </message>
+    <message>
+        <source>_Right border:</source>
+        <translation type="obsolete">右側邊界(_R):</translation>
+    </message>
+    <message>
+        <source>_Top border:</source>
+        <translation type="obsolete">頂部邊界(_T):</translation>
+    </message>
+    <message>
+        <source>_Bottom border:</source>
+        <translation type="obsolete">底部邊界(_B):</translation>
+    </message>
+    <message>
+        <source>Blacken Borders</source>
+        <translation type="obsolete">邊框填黑</translation>
+    </message>
+    <message>
+        <source>Incorrect parameters</source>
+        <translation type="obsolete">不正確的參數</translation>
+    </message>
+    <message>
+        <source>All parameters must be even and within range.</source>
+        <translation type="obsolete">所有參數必須是偶數且在範圍內。</translation>
     </message>
 </context>
 <context>
@@ -7744,6 +7775,21 @@ Is it running ?</source>
         <source>Change fps</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Invalid fps</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>changefps</name>
+    <message>
+        <source>Change FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>chromashift</name>
@@ -7781,6 +7827,94 @@ Is it running ?</source>
         <source>Color management filter.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>AutoWhite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AutoGain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">無</translation>
+    </message>
+    <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Levels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Gamma</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V gain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Brightness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V Contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>colorYuv</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>contrast</name>
@@ -7808,6 +7942,10 @@ Is it running ?</source>
         <source>Adjust contrast, brightness and colors.</source>
         <translation type="unfinished">調整對比、亮度和色彩。</translation>
     </message>
+    <message>
+        <source>Contrast</source>
+        <translation type="unfinished">對比</translation>
+    </message>
 </context>
 <context>
     <name>contrastDialog</name>
@@ -7830,6 +7968,25 @@ Is it running ?</source>
     <message>
         <source>Brightness</source>
         <translation type="obsolete">亮度</translation>
+    </message>
+</context>
+<context>
+    <name>convolution</name>
+    <message>
+        <source>_Process luma</source>
+        <translation type="unfinished">處理明度(_P)</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">處理明度平面</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="unfinished">處理色度(_R)</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="unfinished">快速卷積</translation>
     </message>
 </context>
 <context>
@@ -7859,6 +8016,16 @@ Do you want to load it  ?
     </message>
     <message>
         <source>crop filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning Cropping too much width ! Width reseted !
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning Cropping too much height ! Height reseted !
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7903,6 +8070,69 @@ Do you want to load it  ?
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Discard closer</source>
+        <translation type="unfinished">丟棄較靠近的</translation>
+    </message>
+    <message>
+        <source>Replace (interpolate)</source>
+        <translation type="unfinished">取代 (插入)</translation>
+    </message>
+    <message>
+        <source>Discard longer dupe (animÃ©s)</source>
+        <translation type="unfinished">丟棄 longer dupe (animés)</translation>
+    </message>
+    <message>
+        <source>Pulldown dupe removal</source>
+        <translation type="unfinished">去除 Pulldown 偽裝</translation>
+    </message>
+    <message>
+        <source>Fastest (no chroma, partial luma)</source>
+        <translation type="unfinished">最快 (沒有色度，部份的明度)</translation>
+    </message>
+    <message>
+        <source>Medium (full luma, no chroma)</source>
+        <translation type="unfinished">中 (全部的明度，沒有色度)</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_Quality:</source>
+        <translation type="unfinished">品質(_Q):</translation>
+    </message>
+    <message>
+        <source>_Threshold 1:</source>
+        <translation type="unfinished">臨界值 1(_T):</translation>
+    </message>
+    <message>
+        <source>T_hreshold 2:</source>
+        <translation type="unfinished">臨界值 2(_H):</translation>
+    </message>
+    <message>
+        <source>C_ycle:</source>
+        <translation type="unfinished">循環(_Y):</translation>
+    </message>
+    <message>
+        <source>Sho_w</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Decomb Decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>delogo</name>
+    <message>
+        <source>MPlayer delogo</source>
+        <translation type="unfinished">Mplayer 去圖標</translation>
+    </message>
+    <message>
+        <source>Blend a logo by interpolating its surrounding box.</source>
+        <translation type="unfinished">利用插值它的包圍框來混合一個圖標。</translation>
+    </message>
 </context>
 <context>
     <name>dgbob</name>
@@ -7913,6 +8143,50 @@ Do you want to load it  ?
     <message>
         <source>Donald Graft Bob.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished">頂部</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished">底部</translation>
+    </message>
+    <message>
+        <source>Keep nb of frames and fps</source>
+        <translation type="unfinished">保持畫格和 fps 的數目</translation>
+    </message>
+    <message>
+        <source>Double nb of frames and fps</source>
+        <translation type="unfinished">兩倍畫格和 fps 的數目</translation>
+    </message>
+    <message>
+        <source>Double nb of frames (slow motion)</source>
+        <translation type="unfinished">兩倍畫格的數量(慢動作)</translation>
+    </message>
+    <message>
+        <source>_Top Field First:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="unfinished">臨界值(_T):</translation>
+    </message>
+    <message>
+        <source>_Extra</source>
+        <translation type="unfinished">額外(_E)</translation>
+    </message>
+    <message>
+        <source>Extra check, avoid using it</source>
+        <translation type="unfinished">額外檢查，避免正在使用它</translation>
+    </message>
+    <message>
+        <source>DGBob</source>
+        <translation type="unfinished">DGBob</translation>
     </message>
 </context>
 <context>
@@ -8220,6 +8494,38 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Fade in/out.</source>
         <translation type="unfinished">淡入/出。</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation type="unfinished">出</translation>
+    </message>
+    <message>
+        <source>Fade out</source>
+        <translation type="unfinished">淡出</translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation type="unfinished">入</translation>
+    </message>
+    <message>
+        <source>Fade in</source>
+        <translation type="unfinished">淡入</translation>
+    </message>
+    <message>
+        <source>_Fade type:</source>
+        <translation type="unfinished">淡化方式(_F):</translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8830,6 +9136,17 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>hflip</name>
+    <message>
+        <source>Horizontal Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Horizontally flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>histogram</name>
     <message>
         <source>No data</source>
@@ -8862,6 +9179,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Bitrate Histogram</source>
         <translation type="unfinished">位元率分佈圖</translation>
+    </message>
+</context>
+<context>
+    <name>hue</name>
+    <message>
+        <source>Mplayer Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adjust hue and saturation.</source>
+        <translation type="unfinished">調整色相和飽和度。</translation>
     </message>
 </context>
 <context>
@@ -9077,11 +9405,70 @@ p, li { white-space: pre-wrap; }
     <name>kernelDeint</name>
     <message>
         <source>Top</source>
+        <translation type="obsolete">頂部</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="obsolete">底部</translation>
+    </message>
+    <message>
+        <source>_Threshold:</source>
+        <translation type="obsolete">臨界值(_T):</translation>
+    </message>
+    <message>
+        <source>Smaller means more deinterlacing</source>
+        <translation type="obsolete">越小表示更多的去交錯</translation>
+    </message>
+    <message>
+        <source>_Sharp</source>
+        <translation type="obsolete">銳利(_S)</translation>
+    </message>
+    <message>
+        <source>_Sharper engine:</source>
+        <translation type="obsolete">清晰化引擎(_S):</translation>
+    </message>
+    <message>
+        <source>T_woway</source>
+        <translation type="obsolete">雙向(_W)</translation>
+    </message>
+    <message>
+        <source>Extrapolate better (better not to use it)</source>
+        <translation type="obsolete">推算較好的 (最好不使用它)</translation>
+    </message>
+    <message>
+        <source>_Map</source>
+        <translation type="obsolete">對應(_M)</translation>
+    </message>
+    <message>
+        <source>Show interlaced areas (for test!)</source>
+        <translation type="obsolete">顯示交錯的範圍(測試用！)</translation>
+    </message>
+    <message>
+        <source>KernelDeint</source>
+        <translation type="obsolete">KernelDeint</translation>
+    </message>
+</context>
+<context>
+    <name>kerneldeint</name>
+    <message>
+        <source>Kernel Deint.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Port of Donald Graft Kernel Deinterlacer.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top</source>
         <translation type="unfinished">頂部</translation>
     </message>
     <message>
         <source>Bottom</source>
         <translation type="unfinished">底部</translation>
+    </message>
+    <message>
+        <source>_Field order:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>_Threshold:</source>
@@ -9119,10 +9506,6 @@ p, li { white-space: pre-wrap; }
         <source>KernelDeint</source>
         <translation type="unfinished">KernelDeint</translation>
     </message>
-    <message>
-        <source>_Field order:</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>lame</name>
@@ -9159,6 +9542,33 @@ p, li { white-space: pre-wrap; }
     <name>largeMedian</name>
     <message>
         <source>_Process luma</source>
+        <translation type="obsolete">處理明度(_P)</translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="obsolete">處理明度平面</translation>
+    </message>
+    <message>
+        <source>P_rocess chroma</source>
+        <translation type="obsolete">處理色度(_R)</translation>
+    </message>
+    <message>
+        <source>Fast Convolution</source>
+        <translation type="obsolete">快速卷積</translation>
+    </message>
+</context>
+<context>
+    <name>largemedian</name>
+    <message>
+        <source>Large Median (5x5).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Median filter on 5x5 matrix.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Process luma</source>
         <translation type="unfinished">處理明度(_P)</translation>
     </message>
     <message>
@@ -9176,6 +9586,60 @@ p, li { white-space: pre-wrap; }
 </context>
 <context>
     <name>lavDeint</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">無</translation>
+    </message>
+    <message>
+        <source>Linear blend</source>
+        <translation type="obsolete">線性混合</translation>
+    </message>
+    <message>
+        <source>Linear interpolate</source>
+        <translation type="obsolete">線性插值</translation>
+    </message>
+    <message>
+        <source>Cubic interpolate</source>
+        <translation type="obsolete">立方插值</translation>
+    </message>
+    <message>
+        <source>Median interpolate</source>
+        <translation type="obsolete">中位插值</translation>
+    </message>
+    <message>
+        <source>FFmpeg deint</source>
+        <translation type="obsolete">FFmpeg deint</translation>
+    </message>
+    <message>
+        <source>_Deinterlacing:</source>
+        <translation type="obsolete">去交錯(_D):</translation>
+    </message>
+    <message>
+        <source>_Autolevel</source>
+        <translation type="obsolete">自動色階(_A)</translation>
+    </message>
+    <message>
+        <source>libavcodec deinterlacer</source>
+        <translation type="obsolete">libavcodec 去交錯器</translation>
+    </message>
+</context>
+<context>
+    <name>lavMuxer</name>
+    <message>
+        <source>Incompatible frame rate</source>
+        <translation type="obsolete">不相容的畫格率</translation>
+    </message>
+</context>
+<context>
+    <name>lavdeint</name>
+    <message>
+        <source>Libavdec Deinterlacers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lavcodec deinterlacer family.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">無</translation>
@@ -9214,13 +9678,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>lavMuxer</name>
-    <message>
-        <source>Incompatible frame rate</source>
-        <translation type="obsolete">不相容的畫格率</translation>
-    </message>
-</context>
-<context>
     <name>licenseDialog</name>
     <message>
         <source>License</source>
@@ -9256,6 +9713,25 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Logo</source>
         <translation type="unfinished">圖標</translation>
+    </message>
+    <message>
+        <source>Add logo.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Put a logo on top of video, with alpha blending.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>lumaonly</name>
+    <message>
+        <source>GreyScale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove color, only key grey image.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9429,6 +9905,49 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mcdeint</name>
+    <message>
+        <source>MCDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
+        <translation type="unfinished">從 MPlayer 移植的動作補償去交錯器。</translation>
+    </message>
+    <message>
+        <source>Fast</source>
+        <translation type="unfinished">快</translation>
+    </message>
+    <message>
+        <source>Medium</source>
+        <translation type="unfinished">中</translation>
+    </message>
+    <message>
+        <source>Slow iterative motion search</source>
+        <translation type="unfinished">緩慢反覆的動作搜尋</translation>
+    </message>
+    <message>
+        <source>Extra slow (same as 3+multiple reference frames)</source>
+        <translation type="unfinished">特別慢 (同於3或3倍數以上的參考畫格數)</translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">模式(_M):</translation>
+    </message>
+    <message>
+        <source>Bottom :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Qp:</source>
+        <translation type="unfinished">_Qp:</translation>
+    </message>
+    <message>
+        <source>mcDeinterlace</source>
+        <translation type="unfinished">mcDeinterlace</translation>
+    </message>
+</context>
+<context>
     <name>meadian</name>
     <message>
         <source>3x3 convolution filter :median.</source>
@@ -9461,6 +9980,60 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>mp3d</name>
+    <message>
+        <source>Mplayer Denoise 3D HQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished">空間的明度強度(_S):</translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished">空間的色度強度(_P):</translation>
+    </message>
+    <message>
+        <source>Luma _Temporal strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">MPlayer denoise3d</translation>
+    </message>
+</context>
+<context>
+    <name>mp3dlow</name>
+    <message>
+        <source>Mplayer Denoise 3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce noise, smooth image, increase compressibility.</source>
+        <translation type="unfinished">減少雜訊、平滑圖像、增加壓縮率。</translation>
+    </message>
+    <message>
+        <source>_Spatial luma strength:</source>
+        <translation type="unfinished">空間的明度強度(_S):</translation>
+    </message>
+    <message>
+        <source>S_patial chroma strength:</source>
+        <translation type="unfinished">空間的色度強度(_P):</translation>
+    </message>
+    <message>
+        <source>_Temporal strength:</source>
+        <translation type="unfinished">時間強度(_T):</translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="unfinished">MPlayer denoise3d</translation>
+    </message>
+</context>
+<context>
     <name>msharpen</name>
     <message>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
@@ -9485,6 +10058,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>MSharpen</source>
         <translation type="unfinished">MSharpen</translation>
+    </message>
+    <message>
+        <source>Msharpen</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9717,11 +10294,26 @@ p, li { white-space: pre-wrap; }
     <name>removePlaneFilter</name>
     <message>
         <source>Process luma plane</source>
-        <translation type="unfinished">處理明度平面</translation>
+        <translation type="obsolete">處理明度平面</translation>
+    </message>
+</context>
+<context>
+    <name>removeplane</name>
+    <message>
+        <source>Remove  Plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Keep Y Plane</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process luma plane</source>
+        <translation type="unfinished">處理明度平面</translation>
     </message>
     <message>
         <source>Keep U Plane</source>
@@ -9780,6 +10372,25 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resample FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change and enforce FPS. Keep duration and sync.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>resize</name>
+    <message>
+        <source>swsResize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>swScale Resizer.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9878,7 +10489,15 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>rotateFilter</name>
+    <name>rotate</name>
+    <message>
+        <source>Rotate</source>
+        <translation type="unfinished">旋轉</translation>
+    </message>
+    <message>
+        <source>Rotate the image by 90/180/270 degrees.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>None</source>
         <translation type="unfinished">無</translation>
@@ -9911,9 +10530,44 @@ p, li { white-space: pre-wrap; }
         <source>_Angle:</source>
         <translation type="unfinished">角度(_A):</translation>
     </message>
+</context>
+<context>
+    <name>rotateFilter</name>
+    <message>
+        <source>None</source>
+        <translation type="obsolete">無</translation>
+    </message>
+    <message>
+        <source>90 degrees</source>
+        <translation type="obsolete">90 度</translation>
+    </message>
+    <message>
+        <source>90Â°</source>
+        <translation type="obsolete">90Â°</translation>
+    </message>
+    <message>
+        <source>180 degrees</source>
+        <translation type="obsolete">180 度</translation>
+    </message>
+    <message>
+        <source>180Â°</source>
+        <translation type="obsolete">180Â°</translation>
+    </message>
+    <message>
+        <source>270 degrees</source>
+        <translation type="obsolete">270 度</translation>
+    </message>
+    <message>
+        <source>270Â°</source>
+        <translation type="obsolete">270Â°</translation>
+    </message>
+    <message>
+        <source>_Angle:</source>
+        <translation type="obsolete">角度(_A):</translation>
+    </message>
     <message>
         <source>Rotate</source>
-        <translation type="unfinished">旋轉</translation>
+        <translation type="obsolete">旋轉</translation>
     </message>
 </context>
 <context>
@@ -9957,31 +10611,42 @@ p, li { white-space: pre-wrap; }
     <name>subAss</name>
     <message>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">字幕檔(A_SS/SSA):</translation>
+        <translation type="obsolete">字幕檔(A_SS/SSA):</translation>
     </message>
     <message>
         <source>Select Subtitle file</source>
-        <translation type="unfinished">選擇字幕檔</translation>
+        <translation type="obsolete">選擇字幕檔</translation>
     </message>
     <message>
         <source>_Line spacing:</source>
-        <translation type="unfinished">行距(_L):</translation>
+        <translation type="obsolete">行距(_L):</translation>
     </message>
     <message>
         <source>_Font scale:</source>
-        <translation type="unfinished">字體縮放(_F):</translation>
+        <translation type="obsolete">字體縮放(_F):</translation>
     </message>
     <message>
         <source>_Top margin:</source>
-        <translation type="unfinished">頂部邊界(_T):</translation>
+        <translation type="obsolete">頂部邊界(_T):</translation>
     </message>
     <message>
         <source>Botto_m margin</source>
-        <translation type="unfinished">底部邊界(_M)</translation>
+        <translation type="obsolete">底部邊界(_M)</translation>
     </message>
     <message>
         <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation type="obsolete">ASS</translation>
+    </message>
+</context>
+<context>
+    <name>swapuv</name>
+    <message>
+        <source>Swap UV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swap the U and V planes.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10101,6 +10766,28 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>vdpresize</name>
+    <message>
+        <source>vdpau: Resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau: Resize image using vdpau.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>vflip</name>
+    <message>
+        <source>Vertical Flip</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vertically flip the image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vidBlendRemoval</name>
     <message>
         <source>_Threshold:</source>
@@ -10143,91 +10830,7 @@ p, li { white-space: pre-wrap; }
     <name>vidColorYuv</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">無</translation>
-    </message>
-    <message>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">無</translation>
     </message>
 </context>
 <context>

@@ -41,8 +41,8 @@ DECLARE_VIDEO_FILTER(   horizontalFlipFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "hflip",            // internal name (must be uniq!)
-                        "Horizontal Flip",            // Display name
-                        "Horizontally flip the image." // Description
+                        QT_TRANSLATE_NOOP("hflip","Horizontal Flip"),            // Display name
+                        QT_TRANSLATE_NOOP("hflip","Horizontally flip the image.") // Description
                     );
 
 // Now implements the interesting parts

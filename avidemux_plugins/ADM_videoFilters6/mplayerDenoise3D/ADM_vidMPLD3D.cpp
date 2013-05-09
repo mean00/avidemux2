@@ -198,8 +198,8 @@ DECLARE_VIDEO_FILTER(   ADMVideoMPD3D,   // Class
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category
                         "MplayerDenoise3DHQ",            // internal name (must be uniq!)
-                        "Mplayer Denoise 3D HQ",            // Display name
-                        "Reduce noise, smooth image, increase compressibility. HQ Version." // Description
+                        QT_TRANSLATE_NOOP("mp3d","Mplayer Denoise 3D HQ"),            // Display name
+                        QT_TRANSLATE_NOOP("mp3d","Reduce noise, smooth image, increase compressibility. HQ Version.") // Description
                     );
 
 #define PARAM1_DEFAULT 4.0
@@ -232,14 +232,14 @@ bool ADMVideoMPD3D::configure(void)
         OOP(luma_temporal,LumaTemporal);
         OOP(chroma_temporal,ChromaTemporal);
         
-        diaElemFloat   luma(PX(fluma_spatial),QT_TR_NOOP("_Spatial luma strength:"),0.1,100.);
-        diaElemFloat   chroma(PX(fchroma_spatial),QT_TR_NOOP("S_patial chroma strength:"),0.,100.);
-        diaElemFloat   lumaTemporal(PX(fluma_temporal),QT_TR_NOOP("Luma _Temporal strength:"),0.,100.);
-        diaElemFloat   chromaTemporal(PX(fchroma_temporal),QT_TR_NOOP("Luma _Temporal strength:"),0.,100.);
+        diaElemFloat   luma(PX(fluma_spatial),QT_TRANSLATE_NOOP("mp3d","_Spatial luma strength:"),0.1,100.);
+        diaElemFloat   chroma(PX(fchroma_spatial),QT_TRANSLATE_NOOP("mp3d","S_patial chroma strength:"),0.,100.);
+        diaElemFloat   lumaTemporal(PX(fluma_temporal),QT_TRANSLATE_NOOP("mp3d","Luma _Temporal strength:"),0.,100.);
+        diaElemFloat   chromaTemporal(PX(fchroma_temporal),QT_TRANSLATE_NOOP("mp3d","Luma _Temporal strength:"),0.,100.);
     
         diaElem *elems[4]={&luma,&chroma,&lumaTemporal,&chromaTemporal};
   
-        if(  diaFactoryRun(QT_TR_NOOP("MPlayer denoise3d"),4,elems))
+        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3d","MPlayer denoise3d"),4,elems))
         {
 #undef OOP
 #define OOP(x,y) param.x=(float) f##x

@@ -167,15 +167,15 @@ bool subAss::configure(void)
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
 
-    diaElemFile       file(0,(char **)PX(subtitleFile),QT_TR_NOOP("_Subtitle file (ASS/SSA):"), NULL, QT_TR_NOOP("Select Subtitle file"));
-    diaElemFloat      dSpacing(&spacing,QT_TR_NOOP("_Line spacing:"),0.10,10.0);
-    diaElemFloat      dScale(&scale,QT_TR_NOOP("_Font scale:"),0.10,10.0);
-    diaElemUInteger   dTop(PX(topMargin),QT_TR_NOOP("_Top margin:"),0,200);
-    diaElemUInteger   dBottom(PX(bottomMargin),QT_TR_NOOP("Botto_m margin"),0,200);
+    diaElemFile       file(0,(char **)PX(subtitleFile),QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
+    diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
+    diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
+    diaElemUInteger   dBottom(PX(bottomMargin),QT_TRANSLATE_NOOP("ass","Botto_m margin"),0,200);
 
        diaElem *elems[5]={&file,&dSpacing,&dScale,&dTop,&dBottom};
 
-   if( diaFactoryRun(QT_TR_NOOP("ASS"),5,elems))
+   if( diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
    {
 #undef MKME
 #define MKME(x,y) param.y=(float)x

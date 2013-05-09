@@ -77,8 +77,8 @@ DECLARE_VIDEO_FILTER(   swScaleResizeFilter,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "swscale",            // internal name (must be uniq!)
-                        "swsResize",            // Display name
-                        "swScale Resizer." // Description
+                        QT_TRANSLATE_NOOP("resize","swsResize"),            // Display name
+                        QT_TRANSLATE_NOOP("resize","swScale Resizer.") // Description
                     );
 
 /**

@@ -34,7 +34,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoFlux,   // Class
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category
                         "fluxsmooth",            // internal name (must be uniq!)
-                        "FluxSmooth",            // Display name
+                        QT_TRANSLATE_NOOP("flux","FluxSmooth"),            // Display name
                         QT_TRANSLATE_NOOP("flux","Spatio-temporal cleaner by Ross Thomas.") // Description
                     );
 //********** /Register chunk ************

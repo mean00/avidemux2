@@ -42,8 +42,8 @@ DECLARE_VIDEO_FILTER(   removePlaneFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category
                         "rplane",            // internal name (must be uniq!)
-                        "Remove  Plane",            // Display name
-                        "Remove Y,U or V plane (used mainly to debug other filters)." // Description
+                        QT_TRANSLATE_NOOP("removeplane","Remove  Plane"),            // Display name
+                        QT_TRANSLATE_NOOP("removeplane","Remove Y,U or V plane (used mainly to debug other filters).") // Description
                     );
 
 // Now implements the interesting parts
@@ -148,14 +148,14 @@ const char *removePlaneFilter::getConfiguration(void)
 bool removePlaneFilter::configure(void)
 {
   
-  diaElemToggle planeY(&(config.keepY),QT_TR_NOOP("Keep Y Plane"),QT_TR_NOOP("Process luma plane"));
-  diaElemToggle planeU(&(config.keepU),QT_TR_NOOP("Keep U Plane"),QT_TR_NOOP("Process chromaU plane"));
-  diaElemToggle planeV(&(config.keepV),QT_TR_NOOP("Keep V Plane"),QT_TR_NOOP("Process chromaV plane"));
+  diaElemToggle planeY(&(config.keepY),QT_TRANSLATE_NOOP("removeplane","Keep Y Plane"),QT_TRANSLATE_NOOP("removeplane","Process luma plane"));
+  diaElemToggle planeU(&(config.keepU),QT_TRANSLATE_NOOP("removeplane","Keep U Plane"),QT_TRANSLATE_NOOP("removeplane","Process chromaU plane"));
+  diaElemToggle planeV(&(config.keepV),QT_TRANSLATE_NOOP("removeplane","Keep V Plane"),QT_TRANSLATE_NOOP("removeplane","Process chromaV plane"));
   
   
   diaElem *elems[3]={&planeY,&planeU,&planeV};
   
-  return diaFactoryRun(QT_TR_NOOP("Remove plane"),3,elems);
+  return diaFactoryRun(QT_TRANSLATE_NOOP("removeplane","Remove plane"),3,elems);
 }
 
 

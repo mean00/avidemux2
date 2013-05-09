@@ -66,8 +66,8 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilter,   // Class
                         ADM_UI_GTK+ADM_UI_QT4,     // We need a display for VDPAU; so no cli...
                         VF_TRANSFORM,            // Category
                         "vdpauResize",            // internal name (must be uniq!)
-                        "vdpau: Resize",            // Display name
-                        "vdpau: Resize image using vdpau." // Description
+                        QT_TRANSLATE_NOOP("vdpresize","vdpau: Resize"),            // Display name
+                        QT_TRANSLATE_NOOP("vdpresize","vdpau: Resize image using vdpau.") // Description
                     );
 
 /**

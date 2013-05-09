@@ -76,12 +76,12 @@ CropFilter::CropFilter(ADM_coreVideoFilter *in,CONFcouple *couples) :ADM_coreVid
         }
         if(  in->getInfo()->width<(configuration.right+configuration.left))
                 {
-                    ADM_warning("Warning Cropping too much width ! Width reseted !\n");
+                    ADM_warning(QT_TRANSLATE_NOOP("crop","Warning Cropping too much width ! Width reseted !\n"));
                         configuration.right=configuration.left=0;
                 }
         if(  in->getInfo()->height<(configuration.bottom+configuration.top))
                 {
-                    ADM_warning("Warning Cropping too much height ! Height reseted !\n");
+                    ADM_warning(QT_TRANSLATE_NOOP("crop","Warning Cropping too much height ! Height reseted !\n"));
                     configuration.bottom=configuration.top=0;
                 }
 

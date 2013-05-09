@@ -71,28 +71,28 @@ bool Decimate::configure(void)
     ELEM_TYPE_FLOAT t2=(ELEM_TYPE_FLOAT)_param->threshold2;
 
          diaMenuEntry tMode[]={
-                             {0, QT_TR_NOOP("Discard closer"),NULL},
-                             {1, QT_TR_NOOP("Replace (interpolate)"),NULL},
-                             {2, QT_TR_NOOP("Discard longer dupe (animés)"),NULL},
-                             {3, QT_TR_NOOP("Pulldown dupe removal"),NULL}
+                             {0, QT_TRANSLATE_NOOP("decimate","Discard closer"),NULL},
+                             {1, QT_TRANSLATE_NOOP("decimate","Replace (interpolate)"),NULL},
+                             {2, QT_TRANSLATE_NOOP("decimate","Discard longer dupe (animés)"),NULL},
+                             {3, QT_TRANSLATE_NOOP("decimate","Pulldown dupe removal"),NULL}
                           };
          diaMenuEntry tQuality[]={
-                             {0, QT_TR_NOOP("Fastest (no chroma, partial luma)"),NULL},
-//                             {1, QT_TR_NOOP("Fast (partial luma and chroma)"),NULL},
-                             {2, QT_TR_NOOP("Medium (full luma, no chroma)"),NULL},
-//                             {3, QT_TR_NOOP("Slow (full luma and chroma)"),NULL}
+                             {0, QT_TRANSLATE_NOOP("decimate","Fastest (no chroma, partial luma)"),NULL},
+//                             {1, QT_TRANSLATE_NOOP("decimate","Fast (partial luma and chroma)"),NULL},
+                             {2, QT_TRANSLATE_NOOP("decimate","Medium (full luma, no chroma)"),NULL},
+//                             {3, QT_TRANSLATE_NOOP("decimate","Slow (full luma and chroma)"),NULL}
                           };
   
     
-    diaElemMenu menuMode(PX(mode),QT_TR_NOOP("_Mode:"), 4,tMode);
-    diaElemMenu menuQuality(PX(quality),QT_TR_NOOP("_Quality:"), sizeof(tQuality)/sizeof(diaMenuEntry),tQuality);
-    diaElemFloat menuThresh1(&t1,QT_TR_NOOP("_Threshold 1:"),0,100.);
-    diaElemFloat menuThresh2(&t2,QT_TR_NOOP("T_hreshold 2:"),0,100.);
-    diaElemUInteger cycle(PX(cycle),QT_TR_NOOP("C_ycle:"),2,40);
-    diaElemToggle show(PX(show),QT_TR_NOOP("Sho_w"));
+    diaElemMenu menuMode(PX(mode),QT_TRANSLATE_NOOP("decimate","_Mode:"), 4,tMode);
+    diaElemMenu menuQuality(PX(quality),QT_TRANSLATE_NOOP("decimate","_Quality:"), sizeof(tQuality)/sizeof(diaMenuEntry),tQuality);
+    diaElemFloat menuThresh1(&t1,QT_TRANSLATE_NOOP("decimate","_Threshold 1:"),0,100.);
+    diaElemFloat menuThresh2(&t2,QT_TRANSLATE_NOOP("decimate","T_hreshold 2:"),0,100.);
+    diaElemUInteger cycle(PX(cycle),QT_TRANSLATE_NOOP("decimate","C_ycle:"),2,40);
+    diaElemToggle show(PX(show),QT_TRANSLATE_NOOP("decimate","Sho_w"));
     diaElem *elems[]={&cycle,&menuMode,&menuQuality,&menuThresh1,&menuThresh2,&show};
     
-  if(diaFactoryRun(QT_TR_NOOP("Decomb Decimate"),6,elems))
+  if(diaFactoryRun(QT_TRANSLATE_NOOP("decimate","Decomb Decimate"),6,elems))
   {
     _param->threshold=(double )t1;
     _param->threshold2=(double )t2;

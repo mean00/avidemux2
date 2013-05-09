@@ -156,17 +156,17 @@ bool blackenBorders::configure(void)
           width=previousFilter->getInfo()->width;
           height=previousFilter->getInfo()->height;
 
-          diaElemUInteger dleft(&left,QT_TR_NOOP("_Left border:"),       0,width/2);
-          diaElemUInteger dright(&right,QT_TR_NOOP("_Right border:"),    0,width/2);
-          diaElemUInteger dtop(&(top),QT_TR_NOOP("_Top border:"),          0,height/2);
-          diaElemUInteger dbottom(&(bottom),QT_TR_NOOP("_Bottom border:"), 0,height/2);
+          diaElemUInteger dleft(&left,QT_TRANSLATE_NOOP("blacken","_Left border:"),       0,width/2);
+          diaElemUInteger dright(&right,QT_TRANSLATE_NOOP("blacken","_Right border:"),    0,width/2);
+          diaElemUInteger dtop(&(top),QT_TRANSLATE_NOOP("blacken","_Top border:"),          0,height/2);
+          diaElemUInteger dbottom(&(bottom),QT_TRANSLATE_NOOP("blacken","_Bottom border:"), 0,height/2);
 
           diaElem *elems[4]={&dleft,&dright,&dtop,&dbottom};
-          if(diaFactoryRun(QT_TR_NOOP("Blacken Borders"),4,elems))
+          if(diaFactoryRun(QT_TRANSLATE_NOOP("blacken","Blacken Borders"),4,elems))
           {
             if((left&1) || (right&1)|| (top&1) || (bottom&1))
             {
-              GUI_Error_HIG(QT_TR_NOOP("Incorrect parameters"),QT_TR_NOOP("All parameters must be even and within range."));
+              GUI_Error_HIG(QT_TRANSLATE_NOOP("blacken","Incorrect parameters"),QT_TRANSLATE_NOOP("blacken","All parameters must be even and within range."));
               continue;
             }
             else

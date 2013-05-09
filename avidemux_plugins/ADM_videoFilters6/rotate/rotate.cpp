@@ -49,8 +49,8 @@ DECLARE_VIDEO_FILTER(   rotateFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "rotate",            // internal name (must be uniq!)
-                        "Rotate",            // Display name
-                        "Rotate the image by 90/180/270 degrees." // Description
+                        QT_TRANSLATE_NOOP("rotate","Rotate"),            // Display name
+                        QT_TRANSLATE_NOOP("rotate","Rotate the image by 90/180/270 degrees.") // Description
                     );
 
 /**
@@ -205,14 +205,14 @@ bool rotateFilter::configure( void)
   uint8_t r;
   
   diaMenuEntry rotateValues[]={
-      {0,QT_TR_NOOP("None"),QT_TR_NOOP("None")},
-      {90,QT_TR_NOOP("90 degrees"),QT_TR_NOOP("90°")},
-      {180,QT_TR_NOOP("180 degrees"),QT_TR_NOOP("180°")},
-      {270,QT_TR_NOOP("270 degrees"),QT_TR_NOOP("270°")}
+      {0,QT_TRANSLATE_NOOP("rotate","None"),QT_TRANSLATE_NOOP("rotate","None")},
+      {90,QT_TRANSLATE_NOOP("rotate","90 degrees"),QT_TRANSLATE_NOOP("rotate","90°")},
+      {180,QT_TRANSLATE_NOOP("rotate","180 degrees"),QT_TRANSLATE_NOOP("rotate","180°")},
+      {270,QT_TRANSLATE_NOOP("rotate","270 degrees"),QT_TRANSLATE_NOOP("rotate","270°")}
   };
-  diaElemMenu     rotate(&(param.angle),QT_TR_NOOP("_Angle:"),4,rotateValues,NULL);
+  diaElemMenu     rotate(&(param.angle),QT_TRANSLATE_NOOP("rotate","_Angle:"),4,rotateValues,NULL);
   diaElem *allWidgets[]={&rotate};
-  if( !diaFactoryRun(QT_TR_NOOP("Rotate"),1,allWidgets)) return false;
+  if( !diaFactoryRun(QT_TRANSLATE_NOOP("rotate","Rotate"),1,allWidgets)) return false;
   reset();
   return true;
 }

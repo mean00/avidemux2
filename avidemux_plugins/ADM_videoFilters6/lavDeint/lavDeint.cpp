@@ -68,8 +68,8 @@ DECLARE_VIDEO_FILTER(   lavDeint,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "lavdeint",            // internal name (must be uniq!)
-                        "Libavdec Deinterlacers",            // Display name
-                        "Lavcodec deinterlacer family." // Description
+                        QT_TRANSLATE_NOOP("lavdeint","Libavdec Deinterlacers"),            // Display name
+                        QT_TRANSLATE_NOOP("lavdeint","Lavcodec deinterlacer family.") // Description
                     );
 
 /**
@@ -185,21 +185,21 @@ bool lavDeint::configure( void)
 {
 
   #define PX(x) &(param.x)
-   diaMenuEntry menuField[6]={{PP_BM_NONE,        QT_TR_NOOP("None"),NULL},
-                             {PP_BM_LINEAR_BLEND, QT_TR_NOOP("Linear blend"),NULL},
-                             {PP_BM_LINEAR_INTER, QT_TR_NOOP("Linear interpolate"),NULL},
-                             {PP_BM_CUBIC_INTER,  QT_TR_NOOP("Cubic interpolate"),NULL},
-                             {PP_BM_MEDIAN_INTER, QT_TR_NOOP("Median interpolate"),NULL},
-                             {PP_BM_FFMPEG_DEINT, QT_TR_NOOP("FFmpeg deint"),NULL},
+   diaMenuEntry menuField[6]={{PP_BM_NONE,        QT_TRANSLATE_NOOP("lavdeint","None"),NULL},
+                             {PP_BM_LINEAR_BLEND, QT_TRANSLATE_NOOP("lavdeint","Linear blend"),NULL},
+                             {PP_BM_LINEAR_INTER, QT_TRANSLATE_NOOP("lavdeint","Linear interpolate"),NULL},
+                             {PP_BM_CUBIC_INTER,  QT_TRANSLATE_NOOP("lavdeint","Cubic interpolate"),NULL},
+                             {PP_BM_MEDIAN_INTER, QT_TRANSLATE_NOOP("lavdeint","Median interpolate"),NULL},
+                             {PP_BM_FFMPEG_DEINT, QT_TRANSLATE_NOOP("lavdeint","FFmpeg deint"),NULL},
                           };
   
     
-    diaElemMenu     menu1(PX(deintType),QT_TR_NOOP("_Deinterlacing:"), 6,menuField);
-    diaElemToggle   autolevel(PX(autoLevel),QT_TR_NOOP("_Autolevel"));
+    diaElemMenu     menu1(PX(deintType),QT_TRANSLATE_NOOP("lavdeint","_Deinterlacing:"), 6,menuField);
+    diaElemToggle   autolevel(PX(autoLevel),QT_TRANSLATE_NOOP("lavdeint","_Autolevel"));
     
     diaElem *elems[2]={&menu1,&autolevel};
   
-   if(diaFactoryRun(QT_TR_NOOP("libavcodec deinterlacer"),2,elems))
+   if(diaFactoryRun(QT_TRANSLATE_NOOP("lavdeint","libavcodec deinterlacer"),2,elems))
   {
     setup();
     return true; 

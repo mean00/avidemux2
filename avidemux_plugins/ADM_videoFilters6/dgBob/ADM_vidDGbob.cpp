@@ -65,22 +65,22 @@ bool DGbob::configure()
         
 #define PX(x) &(_param.x)
   
-     diaMenuEntry menuField[2]={{0,QT_TR_NOOP("Top"),NULL},
-                             {1,QT_TR_NOOP("Bottom"),NULL}
+     diaMenuEntry menuField[2]={{0,QT_TRANSLATE_NOOP("dgbob","Top"),NULL},
+                             {1,QT_TRANSLATE_NOOP("dgbob","Bottom"),NULL}
                           };
   
-     diaMenuEntry menuMode[3]={{0,QT_TR_NOOP("Keep nb of frames and fps"),NULL},
-                            {1,QT_TR_NOOP("Double nb of frames and fps"),NULL},
-                            {2,QT_TR_NOOP("Double nb of frames (slow motion)"),NULL}
+     diaMenuEntry menuMode[3]={{0,QT_TRANSLATE_NOOP("dgbob","Keep nb of frames and fps"),NULL},
+                            {1,QT_TRANSLATE_NOOP("dgbob","Double nb of frames and fps"),NULL},
+                            {2,QT_TRANSLATE_NOOP("dgbob","Double nb of frames (slow motion)"),NULL}
                           };
                           
-    diaElemToggle   menu1(PX(order),QT_TR_NOOP("_Top Field First:"));
-    diaElemMenu     menu2(PX(mode),QT_TR_NOOP("_Mode:"), 3,menuMode);
-    diaElemUInteger threshold(PX(thresh),QT_TR_NOOP("_Threshold:"),0,255);
-    diaElemToggle   extra(PX(ap),QT_TR_NOOP("_Extra"),QT_TR_NOOP("Extra check, avoid using it"));
+    diaElemToggle   menu1(PX(order),QT_TRANSLATE_NOOP("dgbob","_Top Field First:"));
+    diaElemMenu     menu2(PX(mode),QT_TRANSLATE_NOOP("dgbob","_Mode:"), 3,menuMode);
+    diaElemUInteger threshold(PX(thresh),QT_TRANSLATE_NOOP("dgbob","_Threshold:"),0,255);
+    diaElemToggle   extra(PX(ap),QT_TRANSLATE_NOOP("dgbob","_Extra"),QT_TRANSLATE_NOOP("dgbob","Extra check, avoid using it"));
     
     diaElem *elems[4]={&menu1,&menu2,&threshold ,&extra};
-    if(diaFactoryRun(QT_TR_NOOP("DGBob"),4,elems))
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("dgbob","DGBob"),4,elems))
     {
                 update();
                 return true;

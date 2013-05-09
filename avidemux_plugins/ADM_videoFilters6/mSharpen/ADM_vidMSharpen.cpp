@@ -74,7 +74,7 @@ DECLARE_VIDEO_FILTER(   Msharpen,   // Class
                         ADM_UI_ALL,         // UI
                         VF_SHARPNESS,            // Category
                         "msharpen",            // internal name (must be uniq!)
-                        "Msharpen",            // Display name
+                        QT_TRANSLATE_NOOP("msharpen","Msharpen"),            // Display name
                         QT_TRANSLATE_NOOP("msharpen","Sharpen edges without amplifying noise. By Donald Graft.") // Description
                     );
 

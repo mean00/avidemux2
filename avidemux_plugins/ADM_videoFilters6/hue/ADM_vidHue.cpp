@@ -53,8 +53,8 @@ DECLARE_VIDEO_FILTER(   ADMVideoHue,   // Class
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_COLORS,            // Category
                         "hue",            // internal name (must be uniq!)
-                        "Mplayer Hue",            // Display name
-                        ("Adjust hue and saturation.") // Description
+                        QT_TRANSLATE_NOOP("hue","Mplayer Hue"),            // Display name
+                        QT_TRANSLATE_NOOP("hue","Adjust hue and saturation.") // Description
                     );
 /**
     \fn HueProcess_C

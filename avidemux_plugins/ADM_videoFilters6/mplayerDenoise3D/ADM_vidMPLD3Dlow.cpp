@@ -33,8 +33,8 @@ DECLARE_VIDEO_FILTER(   ADMVideoMPD3Dlow,   // Class
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category
                         "MplayerDenoise3D",            // internal name (must be uniq!)
-                        "Mplayer Denoise 3D",            // Display name
-                        "Reduce noise, smooth image, increase compressibility." // Description
+                         QT_TRANSLATE_NOOP("mp3dlow","Mplayer Denoise 3D"),            // Display name
+                         QT_TRANSLATE_NOOP("mp3dlow","Reduce noise, smooth image, increase compressibility.") // Description
                     );
 
 #define PARAM1_DEFAULT 4.0
@@ -66,13 +66,13 @@ bool ADMVideoMPD3Dlow::configure(void)
         OOP(chroma,Chroma);
         OOP(temporal,Temporal);
         
-        diaElemFloat   luma(PX(fluma),QT_TR_NOOP("_Spatial luma strength:"),0.,100.);
-        diaElemFloat   chroma(PX(fchroma),QT_TR_NOOP("S_patial chroma strength:"),0.,100.);
-        diaElemFloat   temporal(PX(ftemporal),QT_TR_NOOP("_Temporal strength:"),0.,100.);
+        diaElemFloat   luma(PX(fluma),QT_TRANSLATE_NOOP("mp3dlow","_Spatial luma strength:"),0.,100.);
+        diaElemFloat   chroma(PX(fchroma),QT_TRANSLATE_NOOP("mp3dlow","S_patial chroma strength:"),0.,100.);
+        diaElemFloat   temporal(PX(ftemporal),QT_TRANSLATE_NOOP("mp3dlow","_Temporal strength:"),0.,100.);
     
         diaElem *elems[3]={&luma,&chroma,&temporal};
   
-        if(  diaFactoryRun(QT_TR_NOOP("MPlayer denoise3d"),3,elems))
+        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3dlow","MPlayer denoise3d"),3,elems))
         {
 #undef OOP
 #define OOP(x,y) param.x=(float) f##x
