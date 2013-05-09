@@ -16,7 +16,7 @@
 #include "ADM_default.h"
 #include "ADM_coreTranslator.h"
 
-static ADM_translator *myTranslator=NULL;
+static const ADM_translator *myTranslator=NULL;
 
 /**
  * \fn ADM_InitTranslator
