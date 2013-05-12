@@ -13,6 +13,7 @@ extern "C" int getMainNSWindow(void);
 #include "ADM_inttype.h"
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
+#include "ADM_default.h"
 
 extern GtkWidget *guiRootWindow;
 
