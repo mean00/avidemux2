@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="eu">
+<!DOCTYPE TS><TS version="1.1" language="eu">
 <context>
     <name>ADMImage</name>
     <message>
+        <location filename="" line="383"/>
         <source>Memory error</source>
         <translation type="obsolete">Oroimen akatsa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Error converting to BMP</source>
         <translation type="obsolete">Akatsa BMP-ra bihurtzean</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Something bad happened</source>
         <translation type="obsolete">Zerbait gaitza gertatu da</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>File error</source>
         <translation type="obsolete">Agiri akatsa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Cannot open &quot;%s&quot; for writing.</source>
         <translation type="obsolete">Ezinezkoa &quot;%s&quot; idazteko irekitzea.</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Cannot encode the frame</source>
         <translation type="obsolete">Ezinezkoa framea kodeatzea</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Cannot initialise JPEG encoder</source>
         <translation type="obsolete">Ezinezkoa JPEG kodeatzailea abiaraztea</translation>
     </message>
@@ -35,34 +41,42 @@
 <context>
     <name>ADMVideoAVSfilter</name>
     <message>
+        <location filename="" line="383"/>
         <source>_wine app file:</source>
         <translation type="obsolete">_wine gehigarri agiria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select wine filename[wine/cedega/etc.]</source>
         <translation type="obsolete">Hautatu wine agirizena[wine/cedega/etab.]</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_loader file:</source>
         <translation type="obsolete">_gertatzaile agiria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select loader filename[avsload.exe]</source>
         <translation type="obsolete">Hautatu gertatzaile agirizena[avxload.exe]</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_avs file:</source>
         <translation type="obsolete">_avs agiria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select avs filename[*.avs]</source>
         <translation type="obsolete">Hautatu avs agirizena[*.avs]</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_pipe timeout:</source>
         <translation type="obsolete">_hodi itxaronaldia:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>AvsFilter config</source>
         <translation type="obsolete">AvsIragazki itxurapena</translation>
     </message>
@@ -70,42 +84,52 @@
 <context>
     <name>ADMVideoComputeAverage</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Start Frame (first frame # to include in average):</source>
         <translation type="obsolete">_Hasiera Framea (lehen fraime zenb. bataz-bestekoan sartzeko):</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_End Frame (last frame # to include), -1 = last:</source>
         <translation type="obsolete">_Amaiera Framea (azken frame zenb.sartzeko), -1 = azkena:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Output File:</source>
         <translation type="obsolete">_Irteera Agiria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select output file</source>
         <translation type="obsolete">Hautatu irteera agiria</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Bias (only for display; use 0 for average, 128 for frame minus average):</source>
         <translation type="obsolete">_Bias (erakuspenerako bakarrik; erabili 0 bataz-besterako, 128 frame ken bataz-best.):</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Current frame minus average so far</source>
         <translation type="obsolete">Uneko frame ken bataz-bestekoa oraingoz</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Average so far</source>
         <translation type="obsolete">Bataz-bestekoa oraingoz</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Display nothing (fast for batch processing)</source>
         <translation type="obsolete">Erakuspenik ez (azkarra multzoak prozesatzeko)</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Display _Mode:</source>
         <translation type="obsolete">Erakus _Modua:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>ComputeAverage</source>
         <translation type="obsolete">Konputazio Bataz-bestekoa</translation>
     </message>
@@ -113,26 +137,32 @@
 <context>
     <name>ADMVideoDenoise</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Luma lock:</source>
         <translation type="obsolete">_Argitasun blokeoa:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>C_hroma lock:</source>
         <translation type="obsolete">_Margotasun blokeoa:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>L_uma threshold:</source>
         <translation type="obsolete">Ar_gitasun muga:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Ch_roma threshold:</source>
         <translation type="obsolete">Mar_gotasun muga:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Scene change:</source>
         <translation type="obsolete">_Agerraldi aldaketa:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Denoise</source>
         <translation type="obsolete">Zaratakentzea</translation>
     </message>
@@ -140,10 +170,12 @@
 <context>
     <name>ADMVideoDropOut</name>
     <message>
+        <location filename="" line="383"/>
         <source>DropOut Threshold</source>
         <translation type="obsolete">Erorketa Irteera Muga</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Drop Out</source>
         <translation type="obsolete">Erorketa Irteera</translation>
     </message>
@@ -151,70 +183,87 @@
 <context>
     <name>ADMVideoEraser</name>
     <message>
+        <location filename="" line="383"/>
         <source>Erase</source>
         <translation type="obsolete">Ezabatu</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Un-Erase</source>
         <translation type="obsolete">Ez-Ezabatu</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>1x1</source>
         <translation type="obsolete">1x1</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>3x3</source>
         <translation type="obsolete">3x3</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>5x5</source>
         <translation type="obsolete">5x5</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>7x7</source>
         <translation type="obsolete">7x7</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>9x9</source>
         <translation type="obsolete">9x9</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>11x11</source>
         <translation type="obsolete">11x11</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>15x15</source>
         <translation type="obsolete">15x15</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>21x21</source>
         <translation type="obsolete">21x21</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Brush _Mode:</source>
         <translation type="obsolete">Eskuila _Modua:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Brush _Size:</source>
         <translation type="obsolete">Eskuila _Neurria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Output &quot;_Color&quot; for all masked pixels:</source>
         <translation type="obsolete">Irteera &quot;_Margoa&quot; mozorrotutako pixel guztientzat:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Eraser _Data File:</source>
         <translation type="obsolete">Ezabatu _Datu Agiria:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select data file</source>
         <translation type="obsolete">Hautatu datu agiria</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Debugging settings (bits):</source>
         <translation type="obsolete">_Garbiketa ezarpenak (bit):</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Eraser Configuration</source>
         <translation type="obsolete">Ezabatzaile Itxurapena</translation>
     </message>
@@ -222,14 +271,17 @@
 <context>
     <name>ADMVideoFlux</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Temporal threshold:</source>
         <translation type="obsolete">_Denbora muga:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Spatial threshold:</source>
         <translation type="obsolete">_Espazio muga:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>FluxSmooth</source>
         <translation type="obsolete">Jario Lehuna</translation>
     </message>
@@ -237,26 +289,32 @@
 <context>
     <name>ADMVideoForcedPP</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Filter strength:</source>
         <translation type="obsolete">_Iragazki indarra:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Quantizer:</source>
         <translation type="obsolete">_Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Horizontal deblocking</source>
         <translation type="obsolete">_Desblokeaketa etzana</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Vertical deblocking</source>
         <translation type="obsolete">_Desblokeaketa zutia</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Deringing</source>
         <translation type="obsolete">_Dehosketa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Forced Postprocessing</source>
         <translation type="obsolete">Behertu prozesatze-ondorengoa</translation>
     </message>
@@ -264,50 +322,62 @@
 <context>
     <name>ADMVideoKernelDeint</name>
     <message>
+        <location filename="" line="383"/>
         <source>Top</source>
         <translation type="obsolete">Goren</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Bottom</source>
         <translation type="obsolete">Beheren</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Field order:</source>
         <translation type="obsolete">_Eremu ordena:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Threshold:</source>
         <translation type="obsolete">_Muga:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Smaller means more deinterlacing</source>
         <translation type="obsolete">Txikiagoak esanahi du ezelkarlotura gehiago</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Sharp</source>
         <translation type="obsolete">_Garbitasuna</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Sharper engine:</source>
         <translation type="obsolete">_Garbitasun gailua:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>T_woway</source>
         <translation type="obsolete">T_woway</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Extrapolate better (better not to use it)</source>
         <translation type="obsolete">Estrapolazio hobea (hobe ez erabiltzea)</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Map</source>
         <translation type="obsolete">_Mapa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Show interlaced areas (for test!)</source>
         <translation type="obsolete">Erakutsi elkarlotutako eremuak (azterketarako!)</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>KernelDeint</source>
         <translation type="obsolete">Kernel Deselkarl</translation>
     </message>
@@ -315,18 +385,22 @@
 <context>
     <name>ADMVideoLargeMedian</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Process luma</source>
         <translation type="obsolete">_Garapen argitasuna</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Process luma plane</source>
         <translation type="obsolete">Garapen argitasun planoa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>P_rocess chroma</source>
         <translation type="obsolete">Ga_rapen margotasuna</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Large Median 5x5</source>
         <translation type="obsolete">Handi Ertaina 5x5</translation>
     </message>
@@ -334,42 +408,52 @@
 <context>
     <name>ADMVideoLavPPDeint</name>
     <message>
+        <location filename="" line="383"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Linear blend</source>
         <translation type="obsolete">Nahasketa  linearra</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Linear interpolate</source>
         <translation type="obsolete">Interpolazio linearra</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Cubic interpolate</source>
         <translation type="obsolete">Interpolazio kubikoa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Median interpolate</source>
         <translation type="obsolete">Interpolazio ertaina</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>FFmpeg deint</source>
         <translation type="obsolete">FFmpeg deselkarl</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Lowpass5 deint</source>
         <translation type="obsolete">Lowpass5 deselkarl</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Deinterlacing:</source>
         <translation type="obsolete">_Deselkarlotura:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Autolevel</source>
         <translation type="obsolete">_Berezmailaketa</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>libavcodec deinterlacer</source>
         <translation type="obsolete">libavcodec deselkarlotura</translation>
     </message>
@@ -377,26 +461,32 @@
 <context>
     <name>ADMVideoLogo</name>
     <message>
+        <location filename="" line="383"/>
         <source>_Logo (jpg file):</source>
         <translation type="obsolete">_Logoa (jpg agiria):</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Select JPEG file</source>
         <translation type="obsolete">Hautatu JPEG agiria</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_X Position:</source>
         <translation type="obsolete">_X Kokapena:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Y Position:</source>
         <translation type="obsolete">_Y Kokapena:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>_Alpha:</source>
         <translation type="obsolete">_Alfa:</translation>
     </message>
     <message>
+        <location filename="" line="383"/>
         <source>Logo</source>
         <translation type="obsolete">Logoa</translation>
     </message>
@@ -404,22 +494,32 @@
 <context>
     <name>ADMVideoMPD3D</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="235"/>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Espazio argit indarra:</translation>
+        <translation>Argitasun _espazial indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="236"/>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Es_pazio margot indarra:</translation>
+        <translation>Margotasun es_pazial indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="238"/>
+        <source>Luma _Temporal strength:</source>
+        <translation>Margotasun _Tenporal indarra:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="242"/>
         <source>MPlayer denoise3d</source>
-        <translation type="obsolete">MPlayer zaratakentze 3d</translation>
+        <translation>MPlayer zaratakentze 3d</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="242"/>
         <source>_Temporal strength:</source>
         <translation type="obsolete">_Denbora indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="242"/>
         <source>MPlayer hqdn3d</source>
         <translation type="obsolete">MPlayer hqdn3d</translation>
     </message>
@@ -427,37 +527,45 @@
 <context>
     <name>ADMVideoMPD3Dlow</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="69"/>
         <source>_Spatial luma strength:</source>
-        <translation type="obsolete">_Espazio argit indarra:</translation>
+        <translation>Argitasun _espazial indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="70"/>
         <source>S_patial chroma strength:</source>
-        <translation type="obsolete">Es_pazio margot indarra:</translation>
+        <translation>Margotasun es_pazial indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="71"/>
         <source>_Temporal strength:</source>
-        <translation type="obsolete">_Denbora indarra:</translation>
+        <translation>_Tenporal indarra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>MPlayer denoise3d</source>
-        <translation type="obsolete">MPlayer zaratakentze 3d</translation>
+        <translation>MPlayer zaratakentze 3d</translation>
     </message>
 </context>
 <context>
     <name>ADMVideoMaskedSoften</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Luma threshold:</source>
         <translation type="obsolete">_Argitasun muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>C_hroma threshold:</source>
         <translation type="obsolete">Ma_rgotasun muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Radius:</source>
         <translation type="obsolete">_Radioa:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Soften</source>
         <translation type="obsolete">Lehunketa</translation>
     </message>
@@ -465,22 +573,27 @@
 <context>
     <name>ADMVideoMosaic</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Horizontal stacking:</source>
         <translation type="obsolete">_Pilaketa etzana:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Vertical stacking:</source>
         <translation type="obsolete">_Zutikako pilaketa:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Shrink factor:</source>
         <translation type="obsolete">_Murrizpen ezaugarria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Show _frame</source>
         <translation type="obsolete">Erakutsi _framea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Mosaic</source>
         <translation type="obsolete">Eradonkia</translation>
     </message>
@@ -488,10 +601,12 @@
 <context>
     <name>ADMVideoPalShift</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Try reverse</source>
         <translation type="obsolete">_Saiatu alderantzizkoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Pal Field Shift</source>
         <translation type="obsolete">Pal Eremu Aldaketa</translation>
     </message>
@@ -499,62 +614,77 @@
 <context>
     <name>ADMVideoParticle</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>New format, preferred, good for Tracker3D</source>
         <translation type="obsolete">Heuskarri berria, hobetsia, ona 3D Aztarnarirako</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>DG@UWA format (includes shape info &amp; bounding box)</source>
         <translation type="obsolete">DG@UWA heuakarria (forma argibideak &amp; muga kutxa barne)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>AB@ODU format (includes shape info)</source>
         <translation type="obsolete">AB@ODU heuskarria (forma argibideak barne)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Old format that Tracker3D can&apos;t read directly</source>
         <translation type="obsolete">Tracker3D-k zuzenean irakurri ezin duen heuskarri zaharra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Output _Format:</source>
         <translation type="obsolete">Irteera _Heuskarria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Mi_nimum area for a particle to be detected:</source>
         <translation type="obsolete">Gu_txineko eremua zatia atzemana izateko:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Ma_ximum area for a particle to be detected:</source>
         <translation type="obsolete">Ge_hienezko eremua zatia atzemana izateko:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Left side crop (ignore particles in):</source>
         <translation type="obsolete">_Ezker alde mozketa (ezikusi zatiak hemen):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Right side crop (ignore particles in):</source>
         <translation type="obsolete">Eskuin alde mozketa (ezikusi zataik hemen):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Top crop (ignore particles in):</source>
         <translation type="obsolete">_Goren mozketa (ezikusi zatiak hemen):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Bottom crop (ignore particles in):</source>
         <translation type="obsolete">_Beheren mozketa (ezikusi zatiak hemen):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Output File:</source>
         <translation type="obsolete">_Irteera Agiria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Select file</source>
         <translation type="obsolete">Hautatu agiria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Camera number:</source>
         <translation type="obsolete">_Kamera zenbakia:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Debugging settings (bits):</source>
         <translation type="obsolete">_Garbiketa ezarpenak (bit):</translation>
     </message>
@@ -562,14 +692,17 @@
 <context>
     <name>ADMVideoResampleFPS</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_New frame rate:</source>
         <translation type="obsolete">_Frame neurri berria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Blend</source>
         <translation type="obsolete">_Nahasketa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Resample fps</source>
         <translation type="obsolete">Birlaginketa fs-ko</translation>
     </message>
@@ -577,38 +710,47 @@
 <context>
     <name>ADMVideoRotate</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>90 degrees</source>
         <translation type="obsolete">90 gradu</translation>
     </message>
     <message>
-        <source>90°</source>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
+        <source>90&#xb0;</source>
         <translation type="obsolete">90°</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>180 degrees</source>
         <translation type="obsolete">180 gradu</translation>
     </message>
     <message>
-        <source>180°</source>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
+        <source>180&#xb0;</source>
         <translation type="obsolete">180°</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>270 degrees</source>
         <translation type="obsolete">270 gradu</translation>
     </message>
     <message>
-        <source>270°</source>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
+        <source>270&#xb0;</source>
         <translation type="obsolete">270°</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Angle:</source>
         <translation type="obsolete">_Angelua:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Rotate</source>
         <translation type="obsolete">Itzulikatu</translation>
     </message>
@@ -616,10 +758,12 @@
 <context>
     <name>ADMVideoStabilize</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Stabilize Threshold</source>
         <translation type="obsolete">Egonkortze Muga</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Stabilize</source>
         <translation type="obsolete">Egonkortu</translation>
     </message>
@@ -627,30 +771,37 @@
 <context>
     <name>ADMVideoSubASS</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Subtitle file (ASS/SSA):</source>
         <translation type="obsolete">_Azpidatzi agiria (ASS/SSA):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Select Subtitle file</source>
         <translation type="obsolete">Hautatu Azpidatzi agiria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Line spacing:</source>
         <translation type="obsolete">_Lerro tartea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Font scale:</source>
         <translation type="obsolete">_Hizki neurria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Top margin:</source>
         <translation type="obsolete">_Goiko bazterra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Botto_m margin</source>
         <translation type="obsolete">Behe_ko bazterra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>ASS</source>
         <translation type="obsolete">ASS</translation>
     </message>
@@ -658,10 +809,12 @@
 <context>
     <name>ADMVideoSubtitle</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Could not open subtitle file</source>
         <translation type="obsolete">Ezinezkoa azpidatzi agiria irekitzea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Cannot identify subtitle format</source>
         <translation type="obsolete">Ezinezkoa azpidatzi heuskarria ezagutzea</translation>
     </message>
@@ -669,142 +822,175 @@
 <context>
     <name>ADMVideoSwissArmyKnife</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = A</source>
         <translation type="obsolete">P&apos; = A</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = P</source>
         <translation type="obsolete">P&apos; = P</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = P - A</source>
         <translation type="obsolete">P&apos; = P - A</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = A - P</source>
         <translation type="obsolete">P&apos; = A - P</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = P + A</source>
         <translation type="obsolete">P&apos; = P + A</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = P * A</source>
         <translation type="obsolete">P&apos; = P * A</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = P / A</source>
         <translation type="obsolete">P&apos; = P / A</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = A / P</source>
         <translation type="obsolete">P&apos; = A / P</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = min (P, A)</source>
         <translation type="obsolete">P&apos; = gutx (P, A)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>P&apos; = max (P, A)</source>
         <translation type="obsolete">P&apos; = geh (P, A)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>A = convolve(P); Load convolution kernel from file</source>
         <translation type="obsolete">A = Bihurriketa(P); Gertatu kernel itzulingurua agiritik</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>A = pixel from image file as float; Load image from file</source>
         <translation type="obsolete">A = pixela irudi agiritik gain bezala; Gertatu irudia agiritik</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>A = pixel from image file as integer; Load image from file</source>
         <translation type="obsolete">A = pixela irudi agiritik oso bezala; Gertatu irudia agiritik</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>A = floating point constant value</source>
         <translation type="obsolete">A = gain puntua balio aldagaitzaz</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>A = rolling average of pixel: A = A*(1-alpha)+(P*alpha)</source>
         <translation type="obsolete">A = pixelaren bataz-besteko jarraipena: A = A*(1-alpha)+(P*alpha)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Select _Operation on each pixel P and input A:</source>
         <translation type="obsolete">Hautatu _Eragiketa P pixel bakoitzean eta sartu A:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Input _Type:</source>
         <translation type="obsolete">Sarrera _Mota:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Input _File (image or convolution kernel):</source>
         <translation type="obsolete">Sarrera _Agiria (irudia edo kernel itzulingurua):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Select file</source>
         <translation type="obsolete">Hautatu agiria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Load Bias (added to each pixel
 in file image when loaded):</source>
         <translation type="obsolete">_Gertatu Bias (gehituz pixel
 bakoitzari agiri irudian gertatzerakoan):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Load _Multiplier (each pixel in
 file image mult. by this when loaded):</source>
         <translation type="obsolete">Gertatu _Biderkatzailea (pixel bakoitza
 agiri irudian bider. gertatzerakoan):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Input _Constant:</source>
         <translation type="obsolete">Sarrera _Aldagaitza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Memory constant _alpha
 (where A = (1-alpha)*A + alpha*(curr_frame + lookahead)):</source>
         <translation type="obsolete">Oroimen aldagaitza _alpha
 (non A = (1-alpha)*A + alpha*(unek_frame + aurrerabegira)):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Look ahead _N frames:</source>
         <translation type="obsolete">Aurrera begira _N frameP:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Init _Start Frame (first frame # to use for head start):</source>
         <translation type="obsolete">Has _Hasiera Framea (lehen framea zenb. buru hasieran erabiltzeko):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Init _End Frame (last frame # to use for head start):</source>
         <translation type="obsolete">Has _Amai Framea (azken frame zenb. buru hasieran erabiltzeko):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Init By _Rolling (compute head start using a rolling average rather than a straight average)</source>
         <translation type="obsolete">Has _Jarripenaz (konputatu buru hasiera jarraipen bat.-best. erabiliz zuzeneko bat.-best. ordez)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Bias (will be added to result):</source>
         <translation type="obsolete">_Bias (emaitzara gehituko da):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Result Bias (added to each result pixel):</source>
         <translation type="obsolete">_Emaitz Bias (emaitz pixel bakoitzera gehituta):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Result _Multiplier (each result pixel
 multiplied by this):</source>
         <translation type="obsolete">Emaitza _Biderkatzailea (emaitz pixel
 bakoitza hone biderkatuta):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Histogram every N frames (0 to disable):</source>
         <translation type="obsolete">_Histograma N frame bakoitzeko (0 ezgaitzeko):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Debugging settings (bits):</source>
         <translation type="obsolete">_Garbiketa ezarpenak (bit):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Swiss Army Knife Configuration</source>
         <translation type="obsolete">Armada Suitzarreko Labana Itxurapena</translation>
     </message>
@@ -812,46 +998,57 @@ bakoitza hone biderkatuta):</translation>
 <context>
     <name>ADMVideoTIsophote</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Simple</source>
         <translation type="obsolete">Arrunta</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Medium</source>
         <translation type="obsolete">Ertaina</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Slow</source>
         <translation type="obsolete">Astiro</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Type:</source>
         <translation type="obsolete">_Mota:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Iterations:</source>
         <translation type="obsolete">_Berrizteak:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Smaller means more deinterlacing</source>
         <translation type="obsolete">Txikiagoak esanahi du ezelkarlotura gehigo</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Chroma:</source>
         <translation type="obsolete">_Mota:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Process chroma.</source>
         <translation type="obsolete">Garatu margotasuna.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Step:</source>
         <translation type="obsolete">_Urratsa:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Step.</source>
         <translation type="obsolete">Urratsa.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>KernelDeint</source>
         <translation type="obsolete">Kernel Deselkarl</translation>
     </message>
@@ -859,30 +1056,37 @@ bakoitza hone biderkatuta):</translation>
 <context>
     <name>ADMVideoThreshold</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Mi_nimum value to be in-range:</source>
         <translation type="obsolete">Gu_txieneko balioa sarrera-mailarako:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Ma_ximum value to be in-range:</source>
         <translation type="obsolete">Ge_hienezko balioa sarrera-mailarako:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>In-range values go white, out-of-range go black</source>
         <translation type="obsolete">Sar-maila balioak zuri doaz, irt-maila beltz doaz</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>In-range values go black, out-of-range go white</source>
         <translation type="obsolete">Sar-maila balioak beltz doaz, irt-maila zuri doaz</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Output values:</source>
         <translation type="obsolete">Irteera balioak:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Debugging settings (bits):</source>
         <translation type="obsolete">_Garbiketa ezarpenak (bit):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Threshold Configuration</source>
         <translation type="obsolete">Muga Itxurapena</translation>
     </message>
@@ -890,38 +1094,47 @@ bakoitza hone biderkatuta):</translation>
 <context>
     <name>ADMVideoYadif</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Temporal &amp; spatial check</source>
         <translation type="obsolete">Denbora &amp; espazio hautapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Bob, temporal &amp; spatial check</source>
         <translation type="obsolete">Bob, denbora &amp; espazio hautapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Skip spatial temporal check</source>
         <translation type="obsolete">Jauzi espazio denbora hautapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Bob, skip spatial temporal check</source>
         <translation type="obsolete">Bob, jauzi espazio denbora hautapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Bottom field first</source>
         <translation type="obsolete">Beheko eremua lehenik</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Top field first</source>
         <translation type="obsolete">Goiko eremua lehenik</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Mode:</source>
         <translation type="obsolete">_Modua:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>_Order:</source>
         <translation type="obsolete">_Ordena:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>yadif</source>
         <translation type="obsolete">yadif</translation>
     </message>
@@ -929,10 +1142,12 @@ bakoitza hone biderkatuta):</translation>
 <context>
     <name>ADM_AudiocodecWMA</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Internal error</source>
         <translation type="obsolete">Barneko akatsa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Cannot open WMA2 codec.</source>
         <translation type="obsolete">Ezinezkoa WMA2 kodeka irekitzea.</translation>
     </message>
@@ -940,49 +1155,59 @@ bakoitza hone biderkatuta):</translation>
 <context>
     <name>ADM_Composer</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>No video loaded</source>
         <translation type="obsolete">Ez dago bideorik gertatuta</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Not indexable</source>
         <translation type="obsolete">Aurkibidetu ezina</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>DivX 5 + packed?</source>
         <translation type="obsolete">DivX 5 + paketatua?</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Rebuilding Frames</source>
         <translation type="obsolete">Frameak Birreraikitzen</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Aborted</source>
         <translation type="obsolete">Utzita</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Unsupported</source>
         <translation type="obsolete">Ez-sostengatua</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>Old format project file</source>
         <translation type="obsolete">Heuskarri zaharreko egitasmo agiria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>No more supported.</source>
         <translation type="obsolete">Ez da gehiago sostengatua.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>File type identified but no loader support detected...</source>
         <translation type="obsolete">Agiri mota ezaguna baina ez da gertatzaile sostengurik atzeman...</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
         <source>May be related to an old index file.</source>
         <translation type="obsolete">Badaiteke aurkibide agiri zahar batekin elkartua izatea.</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="178"/>
         <source>Cannot find a demuxer for %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da desmultiplexatzailea aurkitu %s-rako</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="200"/>
@@ -994,13 +1219,17 @@ bakoitza hone biderkatuta):</translation>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatinate them together</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin dituzu bideo neurri ezberdinak nahastu. Gero bideo iragazki partziala erabiltzeak ez du arazo hau sahiesten. Konponbidea da:
+1) &quot;birneurritu&quot; / &quot;gehitu hertza&quot; / &quot;Moztu&quot; jario bakoitza bereizmen berera 
+2) Kateatu elkarrekin</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Video dimensions don&apos;t match.</source>
         <translation type="obsolete">Bideo neurriak ez datoz bat.</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later will not work around this problem. The workaround is:
 
 1) &quot;Resize&quot; / &quot;Add Border&quot; / &quot;Crop&quot; each stream to the same resolution
@@ -1010,65 +1239,80 @@ bakoitza hone biderkatuta):</translation>
 1) &quot;Birneurritu&quot; / &quot;Gehitu Hertza&quot; / &quot;Moztu&quot; bereizmen bereko jario bakoitza2) Kateatu elkarrekin</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Build Time Map</source>
         <translation type="obsolete">Eraiki Denbora Mapa</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Build VBR time map?</source>
         <translation type="obsolete">Eraiki VBR denbora mapa?</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Use safe mode</source>
         <translation type="obsolete">Erabili modu segurua</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>H.264 detected</source>
         <translation type="obsolete">H.264 atzemanda</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>If the file is using B-frames as reference it can lead to a crash or stuttering.
 Avidemux can use another mode which is safe but YOU WILL LOSE FRAME ACCURACY.
 Do you want to use that mode?</source>
         <translation type="obsolete">Agiriak B-frameak erabiltzen baditu xehetasun bezala matxura edo totelka eragin dezaketeAvidemuxek beste modu bat erabili dezake heusteko baina FRAME ZEHAZTASUNA GALDUKO DUZUModu hau erabiltzea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Packed Bitstream detected</source>
         <translation type="obsolete">Paketatutako Bitjarioa atzemada</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Do you want me to unpack it ?</source>
         <translation type="obsolete">Despaketatzea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Could not unpack the video</source>
         <translation type="obsolete">Ezin da bideoa despaketatu</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Using backup decoder - not frame accurate.</source>
         <translation type="obsolete">Babeskopia dekodeatzailea erabiliz - frame zehaztasunik ez.</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Weird</source>
         <translation type="obsolete">Arraroa</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>The unpacking succeedeed but the index is still not up to date.</source>
         <translation type="obsolete">Despaketatzea egin da baina aurkibidea eguneratu gabe dago.</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Index is not up to date</source>
         <translation type="obsolete">Aurkibidea eguneratu gabe</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>You should use Tool-&gt;Rebuild frame. Do it now ?</source>
         <translation type="obsolete">Erabili behar duzu Tresna-&gt;Berreraiki framea. Orain egin?</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>This looks like mpeg
  Do you want to index it?</source>
         <translation type="obsolete">Hau mpeg antzekoa daAurkibidetzea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="226"/>
         <source>Indexing failed</source>
         <translation type="obsolete">Aurkibidetze hutsegitea</translation>
     </message>
@@ -1081,7 +1325,13 @@ If you re encode video we should drop these informations,
 If you just copy the video without reencoding,
  you should keep them.
 Drop timing informations ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zenbait denborapen argibide okerrak dira.
+Hau zenbait harpen softwarerekin gertatzen da.
+Bideoa kodeatzen baduzu argibide hauek erori egin daitezke,
+ baita ere bideo frame erorketa eta keinuka ere eragiten du.
+Bideoa berkodeatu gabe kopiatzen baduzu,
+ heutsi ahalko diozu.
+Erori denborapen argibideak?</translation>
     </message>
 </context>
 <context>
@@ -1089,30 +1339,27 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="32"/>
         <source>Alert</source>
-        <translation type="unfinished">Alerta</translation>
+        <translation>Alerta</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="38"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="63"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="88"/>
         <source>Info</source>
-        <translation type="unfinished">Argibideak</translation>
+        <translation>Argibideak</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="112"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="142"/>
         <source>Confirmation</source>
-        <translation type="unfinished">Baieztapena</translation>
+        <translation>Baieztapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="161"/>
         <source>Question</source>
-        <translation type="unfinished">Galdera</translation>
+        <translation>Galdera</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="184"/>
         <source>Question?</source>
-        <translation type="unfinished">Galdera?</translation>
+        <translation>Galdera?</translation>
     </message>
 </context>
 <context>
@@ -1140,12 +1387,12 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="54"/>
         <source>Two Pass - Video Size</source>
-        <translation>Bi Urrats - Bideo Neurria</translation>
+        <translation>Bi Pasaldi - Bideo Neurria</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="55"/>
         <source>Two Pass - Average Bitrate</source>
-        <translation>Bi Urrats - Bataz-besteko Bitneurria</translation>
+        <translation>Bi Pasaldi - Bataz-besteko Bitneurria</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="57"/>
@@ -1163,12 +1410,12 @@ Drop timing informations ?</source>
         <translation>Xede bitneurria (kb/s)</translation>
     </message>
     <message>
-        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="153"/>
         <location filename="../ADM_UIs/src/T_bitrate.cpp" line="172"/>
         <source>Quantizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="172"/>
         <source>Quantiser</source>
         <translation type="obsolete">Kuantizatzailea</translation>
     </message>
@@ -1191,30 +1438,37 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_Qt4Factory::ADM_QconfigMenu</name>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Configuration:</source>
         <translation type="obsolete">Itxurapena:</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Save As</source>
         <translation type="obsolete">Gorde Honela</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Delete</source>
         <translation type="obsolete">Ezabatu</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>&lt;default&gt;</source>
         <translation type="obsolete">&lt;berezkoa&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>&lt;custom&gt;</source>
         <translation type="obsolete">&lt;norberea&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Are you sure you wish to delete the selected configuration?</source>
         <translation type="obsolete">Zihur zaude hautatutako itxurapena ezabatzea nahi duzula?</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Configuration File (*.xml)</source>
         <translation type="obsolete">Itxurapen Agiria (*.xml)</translation>
     </message>
@@ -1222,30 +1476,37 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_ogmWrite</name>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Copy</source>
         <translation type="obsolete">Kopiatu</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>File error</source>
         <translation type="obsolete">Agiri akatsa</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Cannot open &quot;%s&quot; for writing.</source>
         <translation type="obsolete">Ezinezkoa &quot;%s&quot; idazteko irekitzea.</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>OGM</source>
         <translation type="obsolete">OGM</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Could not initialize video</source>
         <translation type="obsolete">Ezin da bideoa abiarazi</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Could not initialize audio</source>
         <translation type="obsolete">Ezin da audioa abiarazi</translation>
     </message>
@@ -1253,10 +1514,12 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_ogmWriteCopy</name>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Copy</source>
         <translation type="obsolete">Kopiatu</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Saving...</source>
         <translation type="obsolete">Gordetzen...</translation>
     </message>
@@ -1264,22 +1527,27 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_ogmWriteProcess</name>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Reuse the existing log file?</source>
         <translation type="obsolete">Ukatu dagoen ohar agiria?</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Filter init failed</source>
         <translation type="obsolete">Iragazki abio hutsegitea</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Pass one</source>
         <translation type="obsolete">Bat urratsa</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Pass 2</source>
         <translation type="obsolete">2 Urratsa</translation>
     </message>
     <message>
+        <location filename="../ADM_UIs/src/T_bitrate.cpp" line="168"/>
         <source>Encoding</source>
         <translation type="obsolete">Kodeatzen</translation>
     </message>
@@ -1313,25 +1581,30 @@ Drop timing informations ?</source>
 <context>
     <name>AVDMFastVideoConvolution</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="136"/>
         <source>_Process luma</source>
-        <translation type="obsolete">_Garapen argit</translation>
+        <translation>_Prozesatu argitasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="136"/>
         <source>Process luma plane</source>
-        <translation type="obsolete">Garapen argit planoa</translation>
+        <translation>Garapen argit planoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="137"/>
         <source>P_rocess chroma</source>
-        <translation type="obsolete">Ga_rapen margotasuna</translation>
+        <translation>P_ozesatu margotasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>Fast Convolution</source>
-        <translation type="obsolete">Itzulinguru Azkarra</translation>
+        <translation>Konboluzio Azkarra</translation>
     </message>
 </context>
 <context>
     <name>AVDMGenericAudioStream</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>Building VBR map</source>
         <translation type="obsolete">BVR mapa eraikitzen</translation>
     </message>
@@ -1339,30 +1612,37 @@ Drop timing informations ?</source>
 <context>
     <name>AVDMVideoAddBorder</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>_Left border:</source>
         <translation type="obsolete">E_zker hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>_Right border:</source>
         <translation type="obsolete">E_skuin hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>_Top border:</source>
         <translation type="obsolete">_Goiko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>_Bottom border:</source>
         <translation type="obsolete">_Beheko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>Add Borders</source>
         <translation type="obsolete">Gehitu Hertzak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>Incorrect parameters</source>
         <translation type="obsolete">Neurri okerrak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
         <source>All parameters must be even and within range.</source>
         <translation type="obsolete">Parametro guztiak berdinak eta mailakoak izan behar dute.</translation>
     </message>
@@ -1370,73 +1650,95 @@ Drop timing informations ?</source>
 <context>
     <name>AVDMVideoMCDeint</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="120"/>
         <source>Fast</source>
-        <translation type="obsolete">Azkarra</translation>
+        <translation>Azkarra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="121"/>
         <source>Medium</source>
-        <translation type="obsolete">Ertaina</translation>
+        <translation>Ertaina</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="122"/>
         <source>Slow iterative motion search</source>
-        <translation type="obsolete">Mugimendu bilaketa berrizte motela</translation>
+        <translation>Mugimendu bilaketa berrizte motela</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="123"/>
         <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="obsolete">Oso motela (3+frame xehetasun anitz bezala)</translation>
+        <translation>Oso motela (3+frame xehetasun anitz bezala)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="127"/>
+        <source>Bottom :</source>
+        <translation>Beheren:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="127"/>
         <source>Top</source>
         <translation type="obsolete">Goren</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="127"/>
         <source>Bottom</source>
         <translation type="obsolete">Beheren</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="126"/>
         <source>_Mode:</source>
-        <translation type="obsolete">_Modua:</translation>
+        <translation>_Modua:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="126"/>
         <source>_Field dominance:</source>
         <translation type="obsolete">_Eremu nagusitasuna:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="128"/>
         <source>_Qp:</source>
-        <translation type="obsolete">_Qp:</translation>
+        <translation>_Qp:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>mcDeinterlace</source>
-        <translation type="obsolete">mcDeselkarlotura</translation>
+        <translation>mcDeselkarlotura</translation>
     </message>
 </context>
 <context>
     <name>AVDMVideoStreamBSMear</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>_Left border:</source>
         <translation type="obsolete">E_zker hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>_Right border:</source>
         <translation type="obsolete">E_skuin hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>_Top border:</source>
         <translation type="obsolete">_Goiko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>_Bottom border:</source>
         <translation type="obsolete">_Beheko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>Blacken Borders</source>
         <translation type="obsolete">Hertz Beltzenak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>Incorrect parameters</source>
         <translation type="obsolete">Neurri okerrak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>All parameters must be even and within range.</source>
         <translation type="obsolete">Parametro guztiak berdinak etamailakoak izan behar dute.</translation>
     </message>
@@ -1444,14 +1746,17 @@ Drop timing informations ?</source>
 <context>
     <name>AVDMVideoVlad</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>_Luma temporal threshold:</source>
         <translation type="obsolete">_Margotasun denbora muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>Ch_roma temporal threshold:</source>
         <translation type="obsolete">_Margotasun denbora muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
         <source>Temporal Cleaner</source>
         <translation type="obsolete">Aldibaterako Garbitzailea</translation>
     </message>
@@ -1459,46 +1764,72 @@ Drop timing informations ?</source>
 <context>
     <name>AVDM_Fade</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Out</source>
-        <translation type="obsolete">Irteera</translation>
+        <translation>Irteera</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Fade out</source>
-        <translation type="obsolete">Irteera baterapena</translation>
+        <translation>Irteera hutsaltasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>In</source>
-        <translation type="obsolete">Sarrera</translation>
+        <translation>Sarrera</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
         <source>Fade in</source>
-        <translation type="obsolete">Sarrera baterapena</translation>
+        <translation>Sarrera baterapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="72"/>
         <source>_Fade type:</source>
-        <translation type="obsolete">_Baterapen mota:</translation>
+        <translation>_Hutsaltasun mota:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="73"/>
+        <source>_Start time (ms):</source>
+        <translation>_Hasiera Denbora (sm):</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="74"/>
+        <source>_End time (ms):</source>
+        <translation>_Amaiera Denbora (sm):</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
+        <source>Fade to black</source>
+        <translation>Hutsaldu beltzera</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>_Start frame:</source>
         <translation type="obsolete">_Hasiera framea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>_End frame:</source>
         <translation type="obsolete">_Amaiera framea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Fade to _black</source>
         <translation type="obsolete">Bateratu _beltzera</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Fade</source>
         <translation type="obsolete">Baterapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Parameter Error</source>
         <translation type="obsolete">Neurri Akatsa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Start must be before end, and both within video # of frames.</source>
         <translation type="obsolete">Hasiera amaiera baino lehen eogn behar da, edo biak bideo frame zenb. berean.</translation>
     </message>
@@ -1506,10 +1837,12 @@ Drop timing informations ?</source>
 <context>
     <name>Apple iPod</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>A video file must be open to use this Auto Wizard.</source>
         <translation type="obsolete">Bideo agiria ireki behar da Berez Laguntzaile hau erabiltzeko.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
         <source>Apple iPod Auto Wizard</source>
         <translation type="obsolete">Apple iPod Berez Laguntzailea</translation>
     </message>
@@ -1597,9 +1930,6 @@ Drop timing informations ?</source>
         <translation>Egile Neurria:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="210"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="408"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="435"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="469"/>
         <source>MB</source>
         <translation>MB</translation>
@@ -1615,11 +1945,9 @@ Drop timing informations ?</source>
         <translation>1 Bidea:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="286"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="323"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="555"/>
         <source>kbps</source>
-        <translation>kbps</translation>
+        <translation>kbs-ko</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="309"/>
@@ -1642,10 +1970,6 @@ Drop timing informations ?</source>
         <translation>Bideo Neurria:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="398"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="425"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="459"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="527"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="545"/>
         <source>0</source>
         <translation>0</translation>
@@ -1658,7 +1982,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="564"/>
         <source>Bits Per Pixel:</source>
-        <translation>Bit Pixelko:</translation>
+        <translation>Bit Pixeleko:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="571"/>
@@ -1668,73 +1992,88 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="632"/>
         <source>OK</source>
-        <translation type="unfinished">Ongi</translation>
+        <translation>Ongi</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Cancel</source>
-        <translation type="unfinished">Ezeztatu</translation>
+        <translation>Ezeztatu</translation>
     </message>
 </context>
 <context>
     <name>Cnr2Dialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma Noise Reducer 2</source>
         <translation type="obsolete">Margotasun Zarata Murriztzailea 2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Scene Change</source>
         <translation type="obsolete">Agerraldi Aldaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>0%</source>
         <translation type="obsolete">0%</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Scene Change Threshold</source>
         <translation type="obsolete">Agerraldi Aldaketa Muga</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>100%</source>
         <translation type="obsolete">100%</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Use chroma to also detect scene change</source>
         <translation type="obsolete">Erabili margotasuna agerraldi aldaketa ere atzematen bada</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Wide</source>
         <translation type="obsolete">Zabalera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Narrow</source>
         <translation type="obsolete">Estua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Mode</source>
         <translation type="obsolete">Modua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Luma Y:</source>
         <translation type="obsolete">Y Argitasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma V:</source>
         <translation type="obsolete">V Margotasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Maximum</source>
         <translation type="obsolete">Gehienez</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma U:</source>
         <translation type="obsolete">U Margotasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Sensibility</source>
         <translation type="obsolete">Sentikortasuna</translation>
     </message>
@@ -1742,94 +2081,117 @@ Drop timing informations ?</source>
 <context>
     <name>ColorYuvDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Avisynth ColorYUV</source>
         <translation type="obsolete">Avisynth MargoaYUV</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Colour Correction Matrix</source>
         <translation type="obsolete">Margo Zuzenketa Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Contrast</source>
         <translation type="obsolete">Zuribeltztasuna</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma U:</source>
         <translation type="obsolete">U Margotasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma V:</source>
         <translation type="obsolete">V Margotasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Luma Y:</source>
         <translation type="obsolete">Y Argitasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Brightness</source>
         <translation type="obsolete">Dizdira</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Gain</source>
         <translation type="obsolete">Irabazia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Gamma</source>
         <translation type="obsolete">Gamma</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Note: all values are normalised to 256</source>
         <translation type="obsolete">Oharra: balio guztiak 256-ra normalduta daude</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Parameters</source>
         <translation type="obsolete">Parametroak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Matrix:</source>
         <translation type="obsolete">Matriza:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>TV -&gt; PC</source>
         <translation type="obsolete">TB -&gt; PC</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>PC -&gt; TV</source>
         <translation type="obsolete">PC -&gt; TB</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>PC -&gt; TV.Y</source>
         <translation type="obsolete">PC -&gt; TB.Y</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Level:</source>
         <translation type="obsolete">Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Rec.709</source>
         <translation type="obsolete">Rec.709</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Coring</source>
         <translation type="obsolete">Coring</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Opt:</source>
         <translation type="obsolete">Auk:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Auto Gain</source>
         <translation type="obsolete">Berez Irabazia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Display Colour Statistics</source>
         <translation type="obsolete">Erakutsi Margo Estatistikak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Centre Colour Offsets</source>
         <translation type="obsolete">Erdiratu Margo Orekak</translation>
     </message>
@@ -1837,34 +2199,42 @@ Drop timing informations ?</source>
 <context>
     <name>CurveDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Curve Editor</source>
         <translation type="obsolete">Bihurgune Editatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Choose channel for editing</source>
         <translation type="obsolete">Hautatu editatzeko bidea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Luma (Y)</source>
         <translation type="obsolete">Argitasuna (Y)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma (U)</source>
         <translation type="obsolete">Margotasuna (U)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Chroma (V)</source>
         <translation type="obsolete">Margotasuna (V)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Sets default curve</source>
         <translation type="obsolete">Berezko bihurgunea ezartzen du</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Refresh</source>
         <translation type="obsolete">Berritu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Help</source>
         <translation type="obsolete">Laguntza</translation>
     </message>
@@ -1872,6 +2242,7 @@ Drop timing informations ?</source>
 <context>
     <name>CurveEditor</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/calculator.ui" line="639"/>
         <source>Control points count: Y:%d, U:%d, V:%d</source>
         <translation type="obsolete">Aginte puntu zenbatekoa: Y:%d, U:%d, V:%d</translation>
     </message>
@@ -1879,48 +2250,64 @@ Drop timing informations ?</source>
 <context>
     <name>DGbob</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="68"/>
         <source>Top</source>
-        <translation type="obsolete">Goren</translation>
+        <translation>Goren</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="69"/>
         <source>Bottom</source>
-        <translation type="obsolete">Beheren</translation>
+        <translation>Beheren</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="72"/>
         <source>Keep nb of frames and fps</source>
-        <translation type="obsolete">Gorde frame eta fs-ko zenbatekoa</translation>
+        <translation>Gorde frame eta fs-ko zenbatekoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="73"/>
         <source>Double nb of frames and fps</source>
-        <translation type="obsolete">Frame eta fs-ko zenbateko bikoitza</translation>
+        <translation>Frame eta fs-ko zenbateko bikoitza</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="74"/>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="obsolete">Frame zenbateko bikoitza (mugimendu astiroa)</translation>
+        <translation>Frame zenbateko bikoitza (mugimendu astiroa)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="77"/>
+        <source>_Top Field First:</source>
+        <translation>_Goiko Eremua Lehenik:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="77"/>
         <source>_Field order:</source>
         <translation type="obsolete">_Eremu ordena:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="78"/>
         <source>_Mode:</source>
-        <translation type="obsolete">_Modua:</translation>
+        <translation>_Modua:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="79"/>
         <source>_Threshold:</source>
-        <translation type="obsolete">_Muga:</translation>
+        <translation>_Muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="80"/>
         <source>_Extra</source>
-        <translation type="obsolete">_Estra</translation>
+        <translation>_Estra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="80"/>
         <source>Extra check, avoid using it</source>
-        <translation type="obsolete">Gain egiaztapena, sahiestu erabiltzea</translation>
+        <translation>Gain egiaztapena, saihestu erabiltzea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="83"/>
         <source>DGBob</source>
-        <translation type="obsolete">DGBob</translation>
+        <translation>DGBob</translation>
     </message>
 </context>
 <context>
@@ -1928,31 +2315,33 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="159"/>
         <source>Shutting down</source>
-        <translation type="unfinished">Itzaltzen</translation>
+        <translation>Itzaltzen</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="376"/>
         <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="unfinished">Kodeaketa pausatuta dago. Berrekitea edo uztea nahi duzu?</translation>
+        <translation>Kodeaketa pausatuta dago. Berrekitea edo uztea nahi duzu?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>Resume</source>
-        <translation type="unfinished">Berrekin</translation>
+        <translation>Berrekin</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>Abort</source>
-        <translation type="unfinished">Utzi</translation>
+        <translation>Utzi</translation>
     </message>
 </context>
 <context>
     <name>DVD</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>A video file must be open to use this Auto Wizard.</source>
         <translation type="obsolete">Bideo agiria irekita egon behar da Berez Laguntzaile hau erabiltzeko.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>DVD Auto Wizard</source>
         <translation type="obsolete">DVD Berez Laguntzailea</translation>
     </message>
@@ -1960,10 +2349,12 @@ Drop timing informations ?</source>
 <context>
     <name>DVEncoder</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>The DV encoder only accepts the following profiles:</source>
         <translation type="obsolete">DV kodeatzaileak hurrengo profilak bakarrik onartzen ditu:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="377"/>
         <source>Incompatible settings</source>
         <translation type="obsolete">Ezarpen bateraezinak</translation>
     </message>
@@ -1971,60 +2362,84 @@ Drop timing informations ?</source>
 <context>
     <name>Decimate</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="74"/>
         <source>Discard closer</source>
-        <translation type="obsolete">Baztertu istzailea</translation>
+        <translation>Baztertu istzailea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="75"/>
         <source>Replace (interpolate)</source>
-        <translation type="obsolete">Ordeztu (interpolatu)</translation>
+        <translation>Ordeztu (interpolatu)</translation>
     </message>
     <message>
-        <source>Discard longer dupe (animés)</source>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="75"/>
+        <source>Discard longer dupe (anim&#xe9;s)</source>
         <translation type="obsolete">Baztertu bikoizketa luzea (animazioa)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="77"/>
         <source>Pulldown dupe removal</source>
-        <translation type="obsolete">Hedagarri bikoiztu kenketa</translation>
+        <translation>Hedagarri bikoiztu kenketa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="80"/>
         <source>Fastest (no chroma, partial luma)</source>
-        <translation type="obsolete">Azkarrena (margot. gabe, argit. partziala)</translation>
+        <translation>Azkarrena (margot. gabe, argit. partziala)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="80"/>
         <source>Fast (partial luma and chroma)</source>
         <translation type="obsolete">Azkar (argit. eta margot. partziala)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="82"/>
         <source>Medium (full luma, no chroma)</source>
-        <translation type="obsolete">Ertaina (argit. osoa, margot. gabe)</translation>
+        <translation>Ertaina (argit. osoa, margot. gabe)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="82"/>
         <source>Slow (full luma and chroma)</source>
         <translation type="obsolete">Motela (argit. eta margot. osoa)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="76"/>
+        <source>Discard longer dupe (anim&#xc3;&#xa9;s)</source>
+        <translation>Baztertu bikoizpen luzeak (animÃ©s)</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="87"/>
         <source>_Mode:</source>
-        <translation type="obsolete">M_odua:</translation>
+        <translation>M_odua:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="88"/>
         <source>_Quality:</source>
-        <translation type="obsolete">_Ontasun:</translation>
+        <translation>_Ontasun:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="89"/>
         <source>_Threshold 1:</source>
-        <translation type="obsolete">_Muga 1:</translation>
+        <translation>_Muga 1:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="90"/>
         <source>T_hreshold 2:</source>
-        <translation type="obsolete">M_uga 2:</translation>
+        <translation>M_uga 2:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="91"/>
         <source>C_ycle:</source>
-        <translation type="obsolete">Z_ikloa:</translation>
+        <translation>Z_ikloa:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="92"/>
+        <source>Sho_w</source>
+        <translation>E_rakutsi</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="95"/>
         <source>Decomb Decimate</source>
-        <translation type="obsolete">Ezorrazketa Hamarrendua</translation>
+        <translation>Ezorrazketa Hamarrendua</translation>
     </message>
 </context>
 <context>
@@ -2032,17 +2447,17 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="64"/>
         <source>Indexing</source>
-        <translation type="unfinished">Aurkibidetzen</translation>
+        <translation>Aurkibidetzen</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="65"/>
         <source>Time Left : Infinity</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelditzen den Denbora: Mugagabea</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="66"/>
         <source># Images :</source>
-        <translation type="unfinished"></translation>
+        <translation># Irudiak :</translation>
     </message>
 </context>
 <context>
@@ -2050,51 +2465,42 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="14"/>
         <source>Audio Tracks Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Bide Itxurapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="22"/>
         <source>Track 1</source>
-        <translation type="unfinished">2 Bidea: {1?}</translation>
+        <translation>1 Bidea</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="29"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="67"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="105"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="143"/>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaituta</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="42"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="80"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="118"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="156"/>
         <source>Configure</source>
-        <translation type="unfinished">Itxuratu</translation>
+        <translation>Itxuratu</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="49"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="87"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="125"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="163"/>
         <source>Audio Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Iragazkiak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="60"/>
         <source>Track 2</source>
-        <translation type="unfinished">2 Bidea: {2?}</translation>
+        <translation>2 Bidea</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="98"/>
         <source>Track 3</source>
-        <translation type="unfinished">2 Bidea: {3?}</translation>
+        <translation>3 Bidea</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/audioTracks.ui" line="136"/>
         <source>Track 4</source>
-        <translation type="unfinished">2 Bidea: {4?}</translation>
+        <translation>4 Bidea</translation>
     </message>
 </context>
 <context>
@@ -2160,32 +2566,33 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_jobs/src/uiProgress.ui" line="17"/>
         <source>Progress</source>
-        <translation type="unfinished"></translation>
+        <translation>Garapena</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiProgress.ui" line="30"/>
         <source>Current job</source>
-        <translation type="unfinished"></translation>
+        <translation>Oraingo lana</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiProgress.ui" line="37"/>
         <source>1/1</source>
-        <translation type="unfinished">1/1</translation>
+        <translation>1/1</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiProgress.ui" line="44"/>
         <source>File being written </source>
-        <translation type="unfinished"></translation>
+        <translation>Agiria idazten da </translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>...</translation>
     </message>
 </context>
 <context>
     <name>EncoderCopy</name>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Copy</source>
         <translation type="obsolete">Kopiatu</translation>
     </message>
@@ -2193,6 +2600,7 @@ Drop timing informations ?</source>
 <context>
     <name>EncoderRequant</name>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Requant</source>
         <translation type="obsolete">Berkuant</translation>
     </message>
@@ -2200,6 +2608,7 @@ Drop timing informations ?</source>
 <context>
     <name>EncoderYV12</name>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>YV12</source>
         <translation type="obsolete">YV12</translation>
     </message>
@@ -2207,14 +2616,17 @@ Drop timing informations ?</source>
 <context>
     <name>EqualiserDialog</name>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Equaliser</source>
         <translation type="obsolete">Ekualizagailua</translation>
     </message>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Histogram</source>
         <translation type="obsolete">Historiagrama</translation>
     </message>
@@ -2222,18 +2634,22 @@ Drop timing informations ?</source>
 <context>
     <name>FLV1Encoder</name>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>_Bitrate (kb/s):</source>
         <translation type="obsolete">_Bitneurria (kb/s):</translation>
     </message>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>_GOP size:</source>
         <translation type="obsolete">_GOP neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_jobs/src/uiProgress.ui" line="51"/>
         <source>avcodec Sorenson Spark Configuration</source>
         <translation type="obsolete">avcodec Sorenson Spark Itxurapena</translation>
     </message>
@@ -2243,32 +2659,38 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Trouble initializing audio device</source>
-        <translation type="unfinished"></translation>
+        <translation>Arazoak audio gailua abiarazterakoan</translation>
     </message>
 </context>
 <context>
     <name>GenericAviSave</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Error initalizing audio filters</source>
         <translation type="obsolete">Akatsa audio iragazkiak abiarazterakoan</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Error initalizing video filters</source>
         <translation type="obsolete">Akatsa bideo iragazkiak abiarazterakoan</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Copy</source>
         <translation type="obsolete">Kopiatu</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>AVI</source>
         <translation type="obsolete">AVI</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Cannot initiate save</source>
         <translation type="obsolete">Ezinezkoa gordetzea abiaraztea</translation>
     </message>
@@ -2276,10 +2698,12 @@ Drop timing informations ?</source>
 <context>
     <name>GenericAviSaveCopy</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Cannot initiate save</source>
         <translation type="obsolete">Ezinezkoa gordetzea abiaraztea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Saving</source>
         <translation type="obsolete">Gordetzen</translation>
     </message>
@@ -2287,10 +2711,12 @@ Drop timing informations ?</source>
 <context>
     <name>GenericAviSaveCopyPack</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Cannot initiate save</source>
         <translation type="obsolete">Ezinezkoa gordetzea abiaraztea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Saving</source>
         <translation type="obsolete">Gordetzen</translation>
     </message>
@@ -2298,10 +2724,12 @@ Drop timing informations ?</source>
 <context>
     <name>GenericAviSaveCopyUnpack</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Cannot initiate save</source>
         <translation type="obsolete">Ezinezkoa gordetzea abiaraztea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Saving</source>
         <translation type="obsolete">Gordetzen</translation>
     </message>
@@ -2309,32 +2737,39 @@ Drop timing informations ?</source>
 <context>
     <name>GenericAviSaveProcess</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Width is not a multiple of 8
  continue anyway ?</source>
         <translation type="obsolete">Zabalera ez da 8-ren biderkagarria
  jarrraitu horrela ere?</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Reuse the existing log file?</source>
         <translation type="obsolete">Ukatu dagoen ohar agiria?</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Filter init failed</source>
         <translation type="obsolete">Hasiera Iragazki hutsegitea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>1st Pass</source>
         <translation type="obsolete">1. Urratsa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Aborting</source>
         <translation type="obsolete">Uzten</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Encoding</source>
         <translation type="obsolete">Kodeatzen</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>2nd Pass</source>
         <translation type="obsolete">2. Urratsa</translation>
     </message>
@@ -2342,6 +2777,7 @@ Drop timing informations ?</source>
 <context>
     <name>GenericAviSaveSmart</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Smart Copy</source>
         <translation type="obsolete">Kopia Azkarra</translation>
     </message>
@@ -2349,34 +2785,42 @@ Drop timing informations ?</source>
 <context>
     <name>GlyphEditorDialog</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Glyph Editor</source>
         <translation type="obsolete">Glyph Editatzailea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Prev. Empty</source>
         <translation type="obsolete">Aurreikus. Hutsik</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Home</source>
         <translation type="obsolete">Etxea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Next</source>
         <translation type="obsolete">Hurrengoa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Find</source>
         <translation type="obsolete">Bilatu</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Previous</source>
         <translation type="obsolete">Aurrekoa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Next Empty</source>
         <translation type="obsolete">Hurrengo Hutsik</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Delete</source>
         <translation type="obsolete">Ezabatu</translation>
     </message>
@@ -2384,26 +2828,32 @@ Drop timing informations ?</source>
 <context>
     <name>GlyphEditorWindow</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Head reached</source>
         <translation type="obsolete">Burua bilatuta</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>No more glyphs</source>
         <translation type="obsolete">Ez glyphs gehiago</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>End reached</source>
         <translation type="obsolete">Amaiera bilatuta</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>String</source>
         <translation type="obsolete">Katea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Search string</source>
         <translation type="obsolete">Bilatu katea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Select GlyphFile to edit</source>
         <translation type="obsolete">Hautatu Glyph-Agiria editatzeko</translation>
     </message>
@@ -2411,118 +2861,147 @@ Drop timing informations ?</source>
 <context>
     <name>H263Encoder</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Full</source>
         <translation type="obsolete">Osoa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Log</source>
         <translation type="obsolete">Ohar</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Phods</source>
         <translation type="obsolete">Phodak</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>EPZS</source>
         <translation type="obsolete">EPZS</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>H.263</source>
         <translation type="obsolete">H.263</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>MPEG</source>
         <translation type="obsolete">MPEG</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Sum of Absolute Differences</source>
         <translation type="obsolete">Ezberdintasun Osoen Gehiketa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Fewest Bits</source>
         <translation type="obsolete">Gutxiengo Bit</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Rate Distortion</source>
         <translation type="obsolete">Neurri Bihurdura</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Encoding Mode</source>
         <translation type="obsolete">Kodeaketa Modua</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Motion Estimation Method:</source>
         <translation type="obsolete">Mugimendu Estimazio Metodoa:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Maximum Consecutive B-frames:</source>
         <translation type="obsolete">_Gehienezko B-frame Jarraian:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>4 _Motion Vector</source>
         <translation type="obsolete">4 _Mugimendu Bektorea</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Quarter Pixel</source>
         <translation type="obsolete">_Eremu Pixel</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Global Motion Compensation</source>
         <translation type="obsolete">_Mugimendu Orekapen Orokorra</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Motion Estimation</source>
         <translation type="obsolete">Mugimendi Estimazioa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Quantisation Type:</source>
         <translation type="obsolete">_Kuantizazioa Mota:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Macroblock Decision Mode:</source>
         <translation type="obsolete">_Makrobloke Erabaki Modua:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Mi_nimum Quantiser:</source>
         <translation type="obsolete">Gut_xienezko Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Ma_ximum Quantiser:</source>
         <translation type="obsolete">Gehi_enezko Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Maximum Quantiser _Difference:</source>
         <translation type="obsolete">Gehienezko Kuantizatzaile _Aldea:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Quantiser Compression:</source>
         <translation type="obsolete">_Kuantizatzaile Konpresioa:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Quantiser _Blur:</source>
         <translation type="obsolete">_Blur Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>_Trellis Quantisation</source>
         <translation type="obsolete">_Trellis Kuantizazioa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Quantisation</source>
         <translation type="obsolete">Kuantizazioa</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>avcodec H.263 Configuration</source>
         <translation type="obsolete">avkodek H.263 Itxurapena</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>The H.263 encoder only accepts the following resolutions:</source>
         <translation type="obsolete">H.263 kodeatzaileak hurrengo bereizmenak bakarrik onartzen ditu:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Incompatible settings</source>
         <translation type="obsolete">Ezarpen bateraezinak</translation>
     </message>
@@ -2530,22 +3009,27 @@ Drop timing informations ?</source>
 <context>
     <name>IndexDialog</name>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Indexing</source>
         <translation type="obsolete">Aurkibidetzen</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Time Left:</source>
         <translation type="obsolete">Gelditzen den Denbora:</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>%1:%2:%3</source>
         <translation type="obsolete">%1:%2:%3</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source># Images: %1</source>
         <translation type="obsolete">Irudi zenb.: %1</translation>
     </message>
     <message>
+        <location filename="../../common/gui_play.cpp" line="394"/>
         <source>Time Left: %1:%2:%3</source>
         <translation type="obsolete">Gelditzen den Denbora: %1:%2:%3</translation>
     </message>
@@ -2553,13 +3037,11 @@ Drop timing informations ?</source>
 <context>
     <name>MP4Header</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="735"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp.orig" line="623"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Arazoak SVQ3 idazburuak irakurtzean</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp" line="422"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>No stts table</source>
         <translation>Ez dago stts taularik</translation>
@@ -2568,26 +3050,32 @@ Drop timing informations ?</source>
 <context>
     <name>MPDelogoDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>MPlayer Delogo</source>
         <translation type="obsolete">MPlayer Delogoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>Band:</source>
         <translation type="obsolete">Banda:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>Height:</source>
         <translation type="obsolete">Garaiera:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>Width:</source>
         <translation type="obsolete">Zabalera:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>Y:</source>
         <translation type="obsolete">Y:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="343"/>
         <source>X:</source>
         <translation type="obsolete">X:</translation>
     </message>
@@ -2600,19 +3088,16 @@ Drop timing informations ?</source>
         <translation>Avidemux</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="15"/>
         <source>&lt;b&gt;Video&lt;/b&gt;</source>
         <translation type="obsolete">&lt;b&gt;Bideoa&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="439"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="590"/>
         <source>Copy</source>
         <translation>Kopiatu</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="332"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="456"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="607"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="779"/>
         <source>Configure</source>
         <translation>Itxuratu</translation>
@@ -2620,35 +3105,35 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="169"/>
         <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Az&amp;kenak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="228"/>
         <source>Codec Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodek Aukerak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="261"/>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Bideo Dekodeatzailea&lt;b&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="316"/>
         <source>XXXX</source>
-        <translation type="unfinished"></translation>
+        <translation>XXXX</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="371"/>
         <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Bideo Irteera&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="472"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="623"/>
         <source>Filters</source>
         <translation>Iragazkiak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="623"/>
         <source>&lt;b&gt;Audio&lt;/b&gt;</source>
         <translation type="obsolete">&lt;b&gt;Audioa&lt;/b&gt;</translation>
     </message>
@@ -2663,35 +3148,27 @@ Drop timing informations ?</source>
         <translation>sm</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="673"/>
         <source>&lt;b&gt;Format&lt;/b&gt;</source>
         <translation type="obsolete">&lt;b&gt;Heuskarria&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="904"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="924"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="944"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="964"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="984"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1004"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1024"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1044"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1064"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1084"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1104"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1124"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1464"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1464"/>
         <source>Frame:</source>
         <translation type="obsolete">Frame:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1464"/>
         <source>0</source>
         <translation type="obsolete">0</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1464"/>
         <source>/ 0</source>
         <translation type="obsolete">/ 0</translation>
     </message>
@@ -2711,6 +3188,7 @@ Drop timing informations ?</source>
         <translation>/ 00:00:00.000</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1208"/>
         <source>Frame Type:</source>
         <translation type="obsolete">Frame Mota:</translation>
     </message>
@@ -2730,7 +3208,6 @@ Drop timing informations ?</source>
         <translation>A:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1404"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1411"/>
         <source>000000</source>
         <translation>000000</translation>
@@ -2748,12 +3225,12 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="127"/>
         <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tresnabarrak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="139"/>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Berez</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="159"/>
@@ -2771,6 +3248,7 @@ Drop timing informations ?</source>
         <translation>&amp;Ikusi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="123"/>
         <source>&amp;Preview Mode</source>
         <translation type="obsolete">A&amp;urreikuspen Modua</translation>
     </message>
@@ -2790,14 +3268,17 @@ Drop timing informations ?</source>
         <translation>&amp;Agiria</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="164"/>
         <source>&amp;Recent Files</source>
         <translation type="obsolete">A&amp;zken Agiriak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="164"/>
         <source>&amp;Save</source>
         <translation type="obsolete">&amp;Gorde</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="164"/>
         <source>Recent Projects</source>
         <translation type="obsolete">Azken Egitasmoak</translation>
     </message>
@@ -2807,6 +3288,7 @@ Drop timing informations ?</source>
         <translation>&amp;Laguntza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="108"/>
         <source>A&amp;uto</source>
         <translation type="obsolete">Be&amp;rez</translation>
     </message>
@@ -2818,42 +3300,42 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="529"/>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Audio Irteera&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="539"/>
         <source>   (0 track(s))</source>
-        <translation type="unfinished"></translation>
+        <translation>   (0 bide)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="708"/>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Irteera Heuskarria&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="822"/>
         <source>Navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>Nabigazioa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1237"/>
         <source>Frame type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Frame mota:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1362"/>
         <source>&lt;b&gt;Selection&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Hautapena&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1436"/>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Bolumena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1536"/>
         <source>Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Neurgailua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
@@ -2861,66 +3343,82 @@ Drop timing informations ?</source>
         <translation>&amp;Ireki...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Ctrl+O</source>
         <translation type="obsolete">Ctrl+O</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>&amp;Append...</source>
         <translation type="obsolete">G&amp;ehitu...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Ctrl+Alt+A</source>
         <translation type="obsolete">Ctrl+Alt+A</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>E&amp;xit</source>
         <translation type="obsolete">I&amp;rten</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Cu&amp;t</source>
         <translation type="obsolete">&amp;Ebaki</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Ctrl+X</source>
         <translation type="obsolete">Ctrl+X</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>&amp;Copy</source>
         <translation type="obsolete">&amp;Kopiatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Ctrl+C</source>
         <translation type="obsolete">Ctrl+C</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>&amp;Paste</source>
         <translation type="obsolete">It&amp;satsi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Ctrl+V</source>
         <translation type="obsolete">Ctrl+V</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>&amp;Delete</source>
         <translation type="obsolete">E&amp;zabatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Del</source>
         <translation type="obsolete">Del</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Set Marker A</source>
         <translation type="obsolete">Ezarri A Markatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>[</source>
         <translation type="obsolete">[</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>Set Marker B</source>
         <translation type="obsolete">Ezarri B Markatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1577"/>
         <source>]</source>
         <translation type="obsolete">]</translation>
     </message>
@@ -2932,7 +3430,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1589"/>
         <source>Alt+Return</source>
-        <translation>Alt+Enter</translation>
+        <translation>Alt+Sartu</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1598"/>
@@ -2940,28 +3438,32 @@ Drop timing informations ?</source>
         <translation>Gorde &amp;Bideoa...</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1601"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Save Video</source>
         <translation>Gorde Bideoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Ctrl+S</source>
         <translation type="obsolete">Ctrl+S</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Save &amp;BMP Image...</source>
         <translation type="obsolete">Gorde B&amp;MP Irudia...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Save BMP Image</source>
         <translation type="obsolete">Gorde BMP Irudia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Save &amp;JPEG Image...</source>
         <translation type="obsolete">Gorde &amp;JPEG Irudia...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1604"/>
         <source>Save JPEG Image</source>
         <translation type="obsolete">Gorde JPEG Irudia</translation>
     </message>
@@ -2971,7 +3473,6 @@ Drop timing informations ?</source>
         <translation>Gertatu/Ekin Egitas&amp;moa...</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1616"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1619"/>
         <source>Load/Run Project</source>
         <translation>Gertatu/Ekin Egitasmoa</translation>
@@ -2982,100 +3483,122 @@ Drop timing informations ?</source>
         <translation>Gorde Egi&amp;tasmoa</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1631"/>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Save Project</source>
         <translation>Gorde Egitasmoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Save P&amp;roject As...</source>
         <translation type="obsolete">Gorde Egita&amp;smoa Honela...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Save Project As</source>
         <translation type="obsolete">Gorde Egitasmoa Honela</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Zoom 1:4</source>
         <translation type="obsolete">&amp;Zooma 1:4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Ctrl+Shift+4</source>
         <translation type="obsolete">Ctrl+Shift+4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Z&amp;oom 1:2</source>
         <translation type="obsolete">Z&amp;ooma 1:2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Ctrl+Shift+2</source>
         <translation type="obsolete">Ctrl+Shift+2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Zoom &amp;1:1</source>
         <translation type="obsolete">Zooma &amp;1:1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Ctrl+Alt+1</source>
         <translation type="obsolete">Ctrl+Alt+1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Zoom &amp;2:1</source>
         <translation type="obsolete">Zooma &amp;2:1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Ctrl+Alt+2</source>
         <translation type="obsolete">Ctrl+Alt+2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Decoder Options...</source>
         <translation type="obsolete">&amp;Dekodeaketa Aukerak...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Decoder Options</source>
         <translation type="obsolete">Dekodeaketa Aukerak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>F3</source>
         <translation type="obsolete">F3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Postprocessing...</source>
         <translation type="obsolete">&amp;Prozesatze-ondorengoan...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>F4</source>
         <translation type="obsolete">F4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Frame Rate...</source>
         <translation type="obsolete">&amp;Frame Neurria...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Frame Rate</source>
         <translation type="obsolete">Frame Neurria</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Fil&amp;ters...</source>
         <translation type="obsolete">&amp;Iragazkiak...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Ctrl+Alt+F</source>
         <translation type="obsolete">Ctrl+Alt+F</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Main Track...</source>
         <translation type="obsolete">&amp;Bide Nagusia...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>&amp;Secondary Track...</source>
         <translation type="obsolete">Biga&amp;rren Bidea...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>Build VBR Time Map</source>
         <translation type="obsolete">Eraiki VBR Denbora Mapa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1634"/>
         <source>S&amp;ave...</source>
         <translation type="obsolete">G&amp;orde...</translation>
     </message>
@@ -3085,6 +3608,7 @@ Drop timing informations ?</source>
         <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1715"/>
         <source>&amp;Filters</source>
         <translation type="obsolete">&amp;Iragazkiak</translation>
     </message>
@@ -3099,246 +3623,307 @@ Drop timing informations ?</source>
         <translation>F7</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Rebuild I &amp;&amp; B Frames</source>
         <translation type="obsolete">&amp;Birreraiki I &amp;&amp; B Frameak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Rebuild I &amp; B Frames</source>
         <translation type="obsolete">Birreraiki I &amp; B Frameak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Bitrate Histogram...</source>
         <translation type="obsolete">Bi&amp;tneurri Historiagrama...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Bitrate Histogram</source>
         <translation type="obsolete">Bitneurri Historiagrama</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Scan for Black Frames...</source>
         <translation type="obsolete">&amp;Mihatu Frame Beltzen bila...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Scan for Black Frames</source>
         <translation type="obsolete">Mihatu Frame Beltzen bila</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;VOB -&gt; VobSub...</source>
         <translation type="obsolete">&amp;VOB -&gt; VobSub...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>VOB -&gt; VobSub</source>
         <translation type="obsolete">VOB -&gt; VobSub</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;OCR (VobSub -&gt; srt)...</source>
         <translation type="obsolete">&amp;OCR (VobSub -&gt; srt)...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>OCR (VobSub -&gt; srt)</source>
         <translation type="obsolete">OCR (VobSub -&gt; srt)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>P&amp;revious Frame</source>
         <translation type="obsolete">A&amp;urreko Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Left</source>
         <translation type="obsolete">Ezker</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Next Frame</source>
         <translation type="obsolete">&amp;Hurrengo Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Right</source>
         <translation type="obsolete">Eskuin</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Pr&amp;evious Intra Frame</source>
         <translation type="obsolete">Au&amp;rreko Intra Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Previous Intra Frame</source>
         <translation type="obsolete">Aurreko Intra Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Down</source>
         <translation type="obsolete">Behera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Next &amp;Intra Frame</source>
         <translation type="obsolete">Hurrengo In&amp;tra Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Next Intra Frame</source>
         <translation type="obsolete">Hurrengo Intra Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Up</source>
         <translation type="obsolete">Gora</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Previou&amp;s Black Frame</source>
         <translation type="obsolete">Aurreko Frame Belt&amp;za</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Previous Black Frame</source>
         <translation type="obsolete">Aurreko Frame Beltza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ne&amp;xt Black Frame</source>
         <translation type="obsolete">Hurren&amp;go Frame Beltza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Next Black Frame</source>
         <translation type="obsolete">Hurrengo Frame Beltza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;First Frame</source>
         <translation type="obsolete">&amp;Lehen Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Home</source>
         <translation type="obsolete">Etxea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Last Frame</source>
         <translation type="obsolete">&amp;Azken Framea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>End</source>
         <translation type="obsolete">Amaiera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to Marker &amp;A</source>
         <translation type="obsolete">Jauzi &amp;A Markatzailera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to Marker A</source>
         <translation type="obsolete">Jauzi A Markatzailera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ctrl+[</source>
         <translation type="obsolete">Ctrl+[</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to Marker &amp;B</source>
         <translation type="obsolete">Jauzi &amp;B Markatzailera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to Marker B</source>
         <translation type="obsolete">Jauzi B Markatzailera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ctrl+]</source>
         <translation type="obsolete">Ctrl+]</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to Fra&amp;me...</source>
         <translation type="obsolete">Jauzi &amp;Framera...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ctrl+F</source>
         <translation type="obsolete">Ctrl+F</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Jump to &amp;Time...</source>
         <translation type="obsolete">Jauzi &amp;Denborara...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ctrl+T</source>
         <translation type="obsolete">Ctrl+T</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Built-in Support...</source>
         <translation type="obsolete">E&amp;raiketa Sostengatua...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Built-in Support</source>
         <translation type="obsolete">Eraiketa Sostengua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;About Avidemux...</source>
         <translation type="obsolete">&amp;Avidemuxi buruz...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>About Avidemux</source>
         <translation type="obsolete">Avidemuxi buruz</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Play/Stop</source>
         <translation type="obsolete">&amp;Irakurri/Gelditu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Play/Stop</source>
         <translation type="obsolete">Irakurri/Gelditu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>P</source>
         <translation type="obsolete">P</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Recent0</source>
         <translation type="obsolete">Berrikiko 0</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Recent1</source>
         <translation type="obsolete">Berrikiko 1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Recent2</source>
         <translation type="obsolete">Berrikiko 2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Recent3</source>
         <translation type="obsolete">Berrikiko 3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Add to &amp;Joblist...</source>
         <translation type="obsolete">Gehitu &amp;Lan-zerrendara...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Add to Joblist</source>
         <translation type="obsolete">Gehitu Lan-zerrendara</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>View &amp;Joblist...</source>
         <translation type="obsolete">I&amp;kusi Lan-zerrenda...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>View Joblist</source>
         <translation type="obsolete">Ikusi Lan-zerrenda</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Ctrl+J</source>
         <translation type="obsolete">Ctrl+J</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Co&amp;nnect to avsproxy</source>
         <translation type="obsolete">Elkarketatu avsprox&amp;yra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Connect to avsproxy</source>
         <translation type="obsolete">Elkarketatu avsproxyra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>&amp;Reset Edits</source>
         <translation type="obsolete">&amp;Berrezarri Editatuak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>OCR (&amp;TS -&gt; srt)...</source>
         <translation type="obsolete">O&amp;CR (TS -&gt; srt)...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>OCR (TS -&gt; srt)</source>
         <translation type="obsolete">OCR (TS -&gt; srt)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Edit &amp;Glyphs...</source>
         <translation type="obsolete">Editatu &amp;Glyphs...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1646"/>
         <source>Edit Glyphs</source>
         <translation type="obsolete">Editatu Glyphs</translation>
     </message>
@@ -3355,47 +3940,47 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1684"/>
         <source>&amp;Codec Options</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Kodek Aukerak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1687"/>
         <source>Ctrl+Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+C</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1698"/>
         <source>&amp;Navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nabigazioa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1701"/>
         <source>Ctrl+Alt+N</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+N</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1712"/>
         <source>&amp;Selection</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Hautapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1726"/>
         <source>&amp;Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bolumena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1729"/>
         <source>Ctrl+Alt+V</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+V</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1740"/>
         <source>&amp;Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation>A&amp;udio Neurgailua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1743"/>
         <source>Ctrl+Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+M</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1779"/>
@@ -3413,78 +3998,97 @@ Drop timing informations ?</source>
         <translation>&amp;Bananduta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>&amp;Close</source>
         <translation type="obsolete">It&amp;xi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Ctrl+W</source>
         <translation type="obsolete">Ctrl+W</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Save Selection as JPEG Images...</source>
         <translation type="obsolete">Gorde Hautapena JPEG irudiak bezala...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>&amp;Preferences...</source>
         <translation type="obsolete">&amp;Hobespenak...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>P&amp;lugins...</source>
         <translation type="obsolete">&amp;Pluginak...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Recent4</source>
         <translation type="obsolete">Berrikiko 4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Recent5</source>
         <translation type="obsolete">Berrikiko 5</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject0</source>
         <translation type="obsolete">Azken Egitasmoak 0</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject1</source>
         <translation type="obsolete">Azken Egitasmoak 1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject2</source>
         <translation type="obsolete">Azken Egitasmoak 2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject3</source>
         <translation type="obsolete">Azken Egitasmoak 3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject4</source>
         <translation type="obsolete">Azken Egitasmoak 4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>RecentProject5</source>
         <translation type="obsolete">Azken Egitasmoak 5</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>&amp;Plugin Manager...</source>
         <translation type="obsolete">Plugin &amp;Kudeatzailea...</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>%1 (%2)</source>
         <translation type="obsolete">%1 (%2)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Optical Disc</source>
         <translation type="obsolete">Diska Optikoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>DVD</source>
         <translation type="obsolete">DVD</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Super Video CD</source>
         <translation type="obsolete">Super Video CD-a</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Video CD</source>
         <translation type="obsolete">Bideo CD-a</translation>
     </message>
@@ -3492,14 +4096,17 @@ Drop timing informations ?</source>
 <context>
     <name>MjpegEncoder</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Quantiser:</source>
         <translation type="obsolete">_Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>avcodec M-JPEG Configuration</source>
         <translation type="obsolete">avkodek M-JPEG Itxurapena</translation>
     </message>
@@ -3507,86 +4114,107 @@ Drop timing informations ?</source>
 <context>
     <name>Mpeg1Encoder</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>4:3</source>
         <translation type="obsolete">4:3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>16:9</source>
         <translation type="obsolete">16:9</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Default</source>
         <translation type="obsolete">Berezkoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>TMPGEnc</source>
         <translation type="obsolete">TMPGEnc</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Anime</source>
         <translation type="obsolete">Animazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>KVCD</source>
         <translation type="obsolete">KVCD</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Progressive</source>
         <translation type="obsolete">Aurrerakoia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Interlaced BFF</source>
         <translation type="obsolete">BFF Elkarlotuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Interlaced TFF</source>
         <translation type="obsolete">TFF Elkarlotuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Ma_x. bitrate:</source>
         <translation type="obsolete">Ge_h. bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Mi_n. bitrate:</source>
         <translation type="obsolete">Gu_tx. bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Use Xvid rate control</source>
         <translation type="obsolete">_Erabili Xvid neurri agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Buffer size:</source>
         <translation type="obsolete">_Buffer neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Aspect _ratio:</source>
         <translation type="obsolete">Ikuspegi _maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Matrices:</source>
         <translation type="obsolete">_Matrizak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_GOP size:</source>
         <translation type="obsolete">_GOP neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Interlacing:</source>
         <translation type="obsolete">_Elkarlotura:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>avcodec MPEG-1 Configuration</source>
         <translation type="obsolete">avkodek MPEG-1 Itxurapena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>New sequence every (MB):</source>
         <translation type="obsolete">_Frame neurri berria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>mpeg2enc Configuration</source>
         <translation type="obsolete">mpeg2enc Itxurapena</translation>
     </message>
@@ -3594,98 +4222,122 @@ Drop timing informations ?</source>
 <context>
     <name>Mpeg2Encoder</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>4:3</source>
         <translation type="obsolete">4:3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>16:9</source>
         <translation type="obsolete">16:9</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Default</source>
         <translation type="obsolete">Berezkoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>TMPGEnc</source>
         <translation type="obsolete">TMPGEnc</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Anime</source>
         <translation type="obsolete">Animazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>KVCD</source>
         <translation type="obsolete">KVCD</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Progressive</source>
         <translation type="obsolete">Aurrerakoia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Interlaced BFF</source>
         <translation type="obsolete">BFF Elkarlotuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Interlaced TFF</source>
         <translation type="obsolete">TFF Elkarlotuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Ma_x. bitrate:</source>
         <translation type="obsolete">Ge_h. bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Mi_n. bitrate:</source>
         <translation type="obsolete">Gu_tx. bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Use Xvid rate control</source>
         <translation type="obsolete">_Erabili Xvid neurri agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Buffer size:</source>
         <translation type="obsolete">_Buffer neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Aspect _ratio:</source>
         <translation type="obsolete">Ikuspegi _maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Matrices:</source>
         <translation type="obsolete">_Matrizak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_GOP size:</source>
         <translation type="obsolete">_GOP neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Interlacing:</source>
         <translation type="obsolete">_Elkarlotuz:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Settings</source>
         <translation type="obsolete">Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>avcodec MPEG-2 Configuration</source>
         <translation type="obsolete">avkodek MPEG-2 Itxurapena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>DVD</source>
         <translation type="obsolete">DVD</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Super Video CD</source>
         <translation type="obsolete">Super Video CD-a</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>New sequence every (MB):</source>
         <translation type="obsolete">Sekuentzia berria (MB):</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Stream _type:</source>
         <translation type="obsolete">Jario _mota:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>mpeg2enc Configuration</source>
         <translation type="obsolete">mpeg2enc Itxurapena</translation>
     </message>
@@ -3693,110 +4345,137 @@ Drop timing informations ?</source>
 <context>
     <name>Mpeg4aspEncoder</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Full</source>
         <translation type="obsolete">Osoa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Log</source>
         <translation type="obsolete">Ohar</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Phods</source>
         <translation type="obsolete">Phodak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>EPZS</source>
         <translation type="obsolete">EPZS</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>H.263</source>
         <translation type="obsolete">H.263</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>MPEG</source>
         <translation type="obsolete">MPEG</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Sum of Absolute Differences</source>
         <translation type="obsolete">Ezberdintasun Osoen Gehiketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Fewest Bits</source>
         <translation type="obsolete">Gutxiengo Bit</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Rate Distortion</source>
         <translation type="obsolete">Neurri Bihurdura</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Encoding Mode</source>
         <translation type="obsolete">Kodeaketa modua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Motion Estimation Method:</source>
         <translation type="obsolete">Mugimendu Estimazio Metodoa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Maximum Consecutive B-frames:</source>
         <translation type="obsolete">Gehienezko B-frame Jarraian:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>4 _Motion Vector</source>
         <translation type="obsolete">4 _Mugimendu Bektorea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Quarter Pixel</source>
         <translation type="obsolete">_Eremu Pixel</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Global Motion Compensation</source>
         <translation type="obsolete">_Mugimendu Orekapen Orokorra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Motion Estimation</source>
         <translation type="obsolete">Mugimendi Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Quantisation Type:</source>
         <translation type="obsolete">_Kuantizazioa Mota:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Macroblock Decision Mode:</source>
         <translation type="obsolete">_Makrobloke Erabaki Modua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Mi_nimum Quantiser:</source>
         <translation type="obsolete">Gut_xieneko Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Ma_ximum Quantiser:</source>
         <translation type="obsolete">Gehi_enezko Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Maximum Quantiser _Difference:</source>
         <translation type="obsolete">Gehienezko Kuantizatzaile _Aldea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Quantiser Compression:</source>
         <translation type="obsolete">_Kuantizatzaile Konpresioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Quantiser _Blur:</source>
         <translation type="obsolete">_Blur Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Trellis Quantisation</source>
         <translation type="obsolete">_Trellis Kuantizazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Quantisation</source>
         <translation type="obsolete">Kuantizazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>avcodec H.263 Configuration</source>
         <translation type="obsolete">avkodek H.263 Itxurapena</translation>
     </message>
@@ -3804,14 +4483,17 @@ Drop timing informations ?</source>
 <context>
     <name>MpegMuxer</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Incompatible audio</source>
         <translation type="obsolete">Audio bateraezina</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>For DVD, audio must be MP2 or AC3.</source>
         <translation type="obsolete">DVD-rako, audioa MP2 edo AC3 izan behar da.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>lvemux init failed</source>
         <translation type="obsolete">|vemux has hutsegitea</translation>
     </message>
@@ -3819,22 +4501,27 @@ Drop timing informations ?</source>
 <context>
     <name>Msharpen</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Mask</source>
         <translation type="obsolete">_Mozorroa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_High Q</source>
         <translation type="obsolete">_Ontasun Handia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Threshold:</source>
         <translation type="obsolete">Muga:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Strength:</source>
         <translation type="obsolete">_Indartsua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>MSharpen</source>
         <translation type="obsolete">M Zorrotza</translation>
     </message>
@@ -3842,22 +4529,27 @@ Drop timing informations ?</source>
 <context>
     <name>Msmooth</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_High quality</source>
         <translation type="obsolete">_Ontasun handia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>Show _mask</source>
         <translation type="obsolete">Erakutsi _mozorroa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Threshold:</source>
         <translation type="obsolete">_Muga:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>_Strength:</source>
         <translation type="obsolete">_Indartsua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1755"/>
         <source>MSmooth</source>
         <translation type="obsolete">M Lehuna</translation>
     </message>
@@ -3865,11 +4557,9 @@ Drop timing informations ?</source>
 <context>
     <name>OpenDMLHeader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="317"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="392"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDML.cpp" line="656"/>
         <source>Malformed header</source>
-        <translation>Buru gaizkieratua</translation>
+        <translation>Idazburu gaizkieratua</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
@@ -3877,6 +4567,7 @@ Drop timing informations ?</source>
         <translation>Bitjarioa despaketatzen</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
         <source>Indexing</source>
         <translation type="obsolete">Aurkibidetzen</translation>
     </message>
@@ -3884,14 +4575,17 @@ Drop timing informations ?</source>
 <context>
     <name>QObject</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
         <source>Alert</source>
         <translation type="obsolete">Alerta</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
         <source>Info</source>
         <translation type="obsolete">Argibideak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/OpenDml/ADM_openDMLDepack.cpp" line="89"/>
         <source>Confirmation</source>
         <translation type="obsolete">Baieztapena</translation>
     </message>
@@ -3901,6 +4595,7 @@ Drop timing informations ?</source>
         <translation>Galdera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="191"/>
         <source>Question?</source>
         <translation type="obsolete">Galdera?</translation>
     </message>
@@ -3908,10 +4603,12 @@ Drop timing informations ?</source>
 <context>
     <name>Sony PlayStation Portable</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="191"/>
         <source>A video file must be open to use this Auto Wizard.</source>
         <translation type="obsolete">Bideo agiria ireki behar da Berez Laguntzaile hau erabiltzeko.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/alert_qt4.cpp" line="191"/>
         <source>Sony PSP Auto Wizard</source>
         <translation type="obsolete">Sony PSP Berez Laguntzailea</translation>
     </message>
@@ -3921,31 +4618,33 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="17"/>
         <source>Shell</source>
-        <translation type="unfinished"></translation>
+        <translation>Shell</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="49"/>
         <source>Clear</source>
-        <translation type="unfinished"></translation>
+        <translation>Garbitu</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="89"/>
         <source>Evaluate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aztertu</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="92"/>
         <source>Ctrl+Return</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Sartu</translation>
     </message>
 </context>
 <context>
     <name>Super Video CD</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="92"/>
         <source>A video file must be open to use this Auto Wizard.</source>
         <translation type="obsolete">Bideo agiria ireki behar da Berez Laguntzaile hau erabiltzeko.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_shell/shell.ui" line="92"/>
         <source>Super Video CD Auto Wizard</source>
         <translation type="obsolete">Super Video CD Berez Laguntzailea</translation>
     </message>
@@ -3975,12 +4674,12 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="193"/>
         <source>Top</source>
-        <translation>Goian</translation>
+        <translation>Goren</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="194"/>
         <source>Bottom</source>
-        <translation>Behean</translation>
+        <translation>Beheren</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="198"/>
@@ -4104,18 +4803,22 @@ Drop timing informations ?</source>
 <context>
     <name>Ui_pluginManagerWindow</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp" line="25"/>
         <source>Name</source>
         <translation type="obsolete">Izena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp" line="25"/>
         <source>Version</source>
         <translation type="obsolete">Bertsioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp" line="25"/>
         <source>Description</source>
         <translation type="obsolete">Azalpena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp" line="25"/>
         <source>Internal video encoder</source>
         <translation type="obsolete">Barneko bideo kodeatzailea</translation>
     </message>
@@ -4131,10 +4834,12 @@ Drop timing informations ?</source>
 <context>
     <name>Video CD</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>A video file must be open to use this Auto Wizard.</source>
         <translation type="obsolete">Bideo agiria ireki behar da Berez Laguntzaile hau erabiltzeko.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Video CD Auto Wizard</source>
         <translation type="obsolete">Bideo CD Berez Laguntzailea</translation>
     </message>
@@ -4142,430 +4847,537 @@ Drop timing informations ?</source>
 <context>
     <name>XvidConfigDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Xvid Configuraton</source>
         <translation type="obsolete">Xvid Itxurapena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Configuration:</source>
         <translation type="obsolete">Itxurapena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Save As</source>
         <translation type="obsolete">Gorde Honela</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Delete</source>
         <translation type="obsolete">Ezabatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>General</source>
         <translation type="obsolete">Orokorra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Rate Control</source>
         <translation type="obsolete">Neurri Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Target Video Size:</source>
         <translation type="obsolete">Xede Bideo Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Constant Bitrate (Single Pass)</source>
         <translation type="obsolete">Bitneurri Aldagaitza (Urrats Bakarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Constant Quantiser (Single Pass)</source>
         <translation type="obsolete">Kuantizatzaile Aldagaitza (Urrats Bakarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Video Size (Two Pass)</source>
         <translation type="obsolete">Bideo Neurria (Bi Urrats)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Average Bitrate (Two Pass)</source>
         <translation type="obsolete">Bataz-besteko Bitneurria (Bi Urrats)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Encoding Mode:</source>
         <translation type="obsolete">Kodeaketa Modua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>MB</source>
         <translation type="obsolete">MB</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>1 (High Quality)</source>
         <translation type="obsolete">1 (Ontasun Handia)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Quantiser</source>
         <translation type="obsolete">Kuantizatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>31 (Low Quality)</source>
         <translation type="obsolete">31 (Ontasun Apala)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Pixel Aspect Ratio</source>
         <translation type="obsolete">Pixel Ikuspegi Maila</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Custom:</source>
         <translation type="obsolete">Norbererara:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>As Input</source>
         <translation type="obsolete">Sarrera Bezala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>:</source>
         <translation type="obsolete">:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Predefined Aspect Ratio:</source>
         <translation type="obsolete">Aurrezehaztutako Ikuspegi Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>16:15 (PAL 4:3)</source>
         <translation type="obsolete">16:15 (PAL 4:3)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>64:45 (PAL 16:9)</source>
         <translation type="obsolete">64:45 (PAL 16:9)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>8:9 (NTSC 4:3)</source>
         <translation type="obsolete">8:9 (NTSC 4:3)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>32:27 (NTSC 16:9)</source>
         <translation type="obsolete">32:27 (NTSC 16:9)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Multithreading</source>
         <translation type="obsolete">Hari-anitz</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Disable</source>
         <translation type="obsolete">Ezgaitu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Auto-detect</source>
         <translation type="obsolete">Berez-atzeman</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Motion</source>
         <translation type="obsolete">Mugimendua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Motion Estimation</source>
         <translation type="obsolete">Mugimendu Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Motion Estimation:</source>
         <translation type="obsolete">Mugimendu Estimazioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Low</source>
         <translation type="obsolete">Apala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Medium</source>
         <translation type="obsolete">Ertaina</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>High</source>
         <translation type="obsolete">Handia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Rate Distortion Optimisation:</source>
         <translation type="obsolete">Neurri Bihurdura Hobekuntza:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>No Search (DCT only)</source>
         <translation type="obsolete">Bilaketarik Ez (DCT bakarrik)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Limited Search</source>
         <translation type="obsolete">Bilaketa Mugatua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Medium Search</source>
         <translation type="obsolete">Bilaketa Ertaina</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Wide Search</source>
         <translation type="obsolete">Bilaketa Zabala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Rate Distortion Optimisation for B-frames</source>
         <translation type="obsolete">Neurri Bihurdura Hobekuntza B-framentzat</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Chroma Motion Estimation</source>
         <translation type="obsolete">Margotasun Mugimendu Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Quarter Pixel Motion Estimation</source>
         <translation type="obsolete">Eremu Pixel Mugimendu Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Global Motion Compensation</source>
         <translation type="obsolete">Mugimendu Orekapen Orokorra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Turbo Mode</source>
         <translation type="obsolete">Turbo Modua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Frame</source>
         <translation type="obsolete">Frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Frame Encoding</source>
         <translation type="obsolete">Frame Kodeaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Chroma Optimiser</source>
         <translation type="obsolete">Margotasun Hobetzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Four Motion Vectors per Macroblock</source>
         <translation type="obsolete">Lau Mugimendu Bektore Makroblokeko</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Cartoon</source>
         <translation type="obsolete">Marrazki biziduna</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Greyscale</source>
         <translation type="obsolete">Griseskala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Interlaced:</source>
         <translation type="obsolete">Elkarlotuta:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Bottom Field First</source>
         <translation type="obsolete">Beheko Eremua Lehenik</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Top Field First</source>
         <translation type="obsolete">Goiko Eremua Lehenik</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum I-frame Interval:</source>
         <translation type="obsolete">Gehienezko I-frame Aldia:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Frame Drop Ratio:</source>
         <translation type="obsolete">Frame Erorketa Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>B-frames</source>
         <translation type="obsolete">B-frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>B-frame Sensitivity:</source>
         <translation type="obsolete">B-frame Sentikortasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum Consecutive B-frames:</source>
         <translation type="obsolete">Gehienezko B-frame Jarraian:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Closed GOP</source>
         <translation type="obsolete">GOP itxita</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Packed Bitstream</source>
         <translation type="obsolete">Paketatutako Bitjarioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Quantiser Control</source>
         <translation type="obsolete">Kuantizatzaile Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum B-frame Quantiser:</source>
         <translation type="obsolete">Gehienezko B-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>B-frame Quantiser Offset:</source>
         <translation type="obsolete">B-frame Kuantizatzaile Oreka:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Minimum P-frame Quantiser:</source>
         <translation type="obsolete">Gutxienezko P-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>B-frame Quantiser Ratio:</source>
         <translation type="obsolete">B-frame Kuantizatzaile Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Minimum I-frame Quantiser:</source>
         <translation type="obsolete">Gutxienezko I-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Minimum B-frame Quantiser:</source>
         <translation type="obsolete">Gutxienezko B-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum P-frame Quantiser:</source>
         <translation type="obsolete">Gehienezko P-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum I-frame Quantiser:</source>
         <translation type="obsolete">Gehienezko I-frame Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Trellis Quantisation</source>
         <translation type="obsolete">Trellis Kuantizazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Quantisation Matrix</source>
         <translation type="obsolete">Kuantizazioa Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>H.263 Matrix</source>
         <translation type="obsolete">H.263 Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>MPEG Matrix</source>
         <translation type="obsolete">MPEG Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Custom Matrix</source>
         <translation type="obsolete">Egile Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Edit</source>
         <translation type="obsolete">Editatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Single Pass</source>
         <translation type="obsolete">Urrats Bakarra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Smoother:</source>
         <translation type="obsolete">Lehuntzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Averaging Quantiser Period:</source>
         <translation type="obsolete">Bataz-besteko Kuantizatzaile Aldia:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Reaction Delay Factor:</source>
         <translation type="obsolete">Erreakzio Atzerapen Ezaugarria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Two Pass</source>
         <translation type="obsolete">Bi Urrats</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>I-frames</source>
         <translation type="obsolete">I-frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>I-frame Boost:</source>
         <translation type="obsolete">I-frame Kitzikapena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>%</source>
         <translation type="obsolete">%</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>I-frame Bitrate Reduction Threshold:</source>
         <translation type="obsolete">I-frame Bitneurri Murrizketa Muga:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum I-frame Bitrate Reduction:</source>
         <translation type="obsolete">Gehienezko I-frame Bitneurri Murrizpena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>frame(s)</source>
         <translation type="obsolete">frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Overflow Control</source>
         <translation type="obsolete">Gaineko Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum Overflow Degradation:</source>
         <translation type="obsolete">Gehienezko Gainezkapen Itsuspena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum Overflow Improvement:</source>
         <translation type="obsolete">Gehinezko Gainezkapen Hobetura:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Overflow Control Strength:</source>
         <translation type="obsolete">Gainezkatze Aginte Indarra:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Curve Compression</source>
         <translation type="obsolete">Bihurgune Konpresioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Above Average Curve Compression:</source>
         <translation type="obsolete">Gaineko Bataz-besteko Bihurgune Konpresioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Below Average Curve Compression:</source>
         <translation type="obsolete">Azpiko Bataz-besteko Bihurgune Konpresioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Video Buffer Verifier</source>
         <translation type="obsolete">Bideo Buffer Egiaztatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>bit/s</source>
         <translation type="obsolete">bit/s</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>bit(s)</source>
         <translation type="obsolete">bit</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>VBV Buffer Size:</source>
         <translation type="obsolete">VBV Buffer Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Maximum VBV Bitrate:</source>
         <translation type="obsolete">Gehienezko VBV Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Peak Bitrate Over 1 Second:</source>
         <translation type="obsolete">Bitneurri Gailurra 1 Segundu Gainean:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>&lt;default&gt;</source>
         <translation type="obsolete">&lt;berezkoa&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>&lt;custom&gt;</source>
         <translation type="obsolete">&lt;norberea&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Xvid Configuration File (*.xml)</source>
         <translation type="obsolete">Xvid Itxurapen Agiria (*.xml)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Are you sure you wish to delete the selected configuration?</source>
         <translation type="obsolete">Zihur zaude hautatutako itxurapena ezabatzea nahi duzula?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Target Bitrate:</source>
         <translation type="obsolete">Xede Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>kbit/s</source>
         <translation type="obsolete">kbit/s</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Quantiser:</source>
         <translation type="obsolete">Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Average Bitrate:</source>
         <translation type="obsolete">Bataz-besteko Bitneurria:</translation>
     </message>
@@ -4573,42 +5385,52 @@ Drop timing informations ?</source>
 <context>
     <name>XvidCustomMatrixDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Xvid Custom Matrix</source>
         <translation type="obsolete">Xvid Egile Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Intra 8x8</source>
         <translation type="obsolete">Intra 8x8</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Luma:</source>
         <translation type="obsolete">Argitasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Inter 8x8</source>
         <translation type="obsolete">Inter 8x8</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Load File</source>
         <translation type="obsolete">Gertatu Agiria</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>OK</source>
         <translation type="obsolete">Ongi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Cancel</source>
         <translation type="obsolete">Ezeztatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Select Matrix File</source>
         <translation type="obsolete">Hautatu Matrize Agira</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Read Error</source>
         <translation type="obsolete">Irakurri Akatsa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_vobsub.cpp" line="88"/>
         <source>Error reading custom matrix file.</source>
         <translation type="obsolete">Akatsa egile matrize agiria irakurtzerakoan.</translation>
     </message>
@@ -4618,7 +5440,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="16"/>
         <source>About Avidemux</source>
-        <translation>Avidemuxi buruz</translation>
+        <translation>Avidemux buruz</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="91"/>
@@ -4630,17 +5452,18 @@ Drop timing informations ?</source>
         <source>Multi-platform Video Editor</source>
         <translation>Plataforma-anitzeko Bideo Editatzailea</translation>
     </message>
-    <message utf8="true">
+    <message encoding="UTF-8">
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="120"/>
         <source>© 2001 - 2012  Mean</source>
-        <translation type="unfinished">© 2001 - 2010  Mean {2001 ?} {2012 ?}</translation>
+        <translation>© 2001 - 2012  Mean</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="195"/>
         <source>OK</source>
-        <translation type="unfinished">Ongi</translation>
+        <translation>Ongi</translation>
     </message>
-    <message utf8="true">
+    <message encoding="UTF-8">
+        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="195"/>
         <source>© 2001 - 2010  Mean</source>
         <translation type="obsolete">© 2001 - 2010  Mean</translation>
     </message>
@@ -4660,37 +5483,37 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="182"/>
         <source>_Left border:</source>
-        <translation type="unfinished">E_zker hertza:</translation>
+        <translation>E_zker hertza:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="183"/>
         <source>_Right border:</source>
-        <translation type="unfinished">E_skuin hertza:</translation>
+        <translation>E_skuin hertza:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="184"/>
         <source>_Top border:</source>
-        <translation type="unfinished">_Goiko hertza:</translation>
+        <translation>_Goiko hertza:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="185"/>
         <source>_Bottom border:</source>
-        <translation type="unfinished">_Beheko hertza:</translation>
+        <translation>_Beheko hertza:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="188"/>
         <source>Add Borders</source>
-        <translation type="unfinished">Gehitu Hertzak</translation>
+        <translation>Gehitu Hertzak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192"/>
         <source>Incorrect parameters</source>
-        <translation type="unfinished">Neurri okerrak</translation>
+        <translation>Parametro okerrak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192"/>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished"></translation>
+        <translation>Parametro guztiak berdinak eta mailakoak izan behar dute.</translation>
     </message>
 </context>
 <context>
@@ -4698,1513 +5521,1492 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="33"/>
         <source>R_esampling (Hz):</source>
-        <translation type="unfinished"></translation>
+        <translation>B_irlaginketa (Hz):</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="33"/>
         <source>Resampling frequency (Hz)</source>
-        <translation type="unfinished"></translation>
+        <translation>Birlaginketa maiztasuna (Hz)</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="37"/>
-        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="62"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="43"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="38"/>
         <source>Film to PAL</source>
-        <translation type="unfinished"></translation>
+        <translation>Filmatik PAL-ra</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="39"/>
         <source>PAL to Film</source>
-        <translation type="unfinished"></translation>
+        <translation>PAL-tik Filmara</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="42"/>
         <source>_Frame rate change:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Frame neurri aldaketa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="46"/>
         <source>No change</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez aldatu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="47"/>
         <source>Mono</source>
-        <translation type="unfinished">Monoa</translation>
+        <translation>Monoa</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="48"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="293"/>
         <source>Stereo</source>
-        <translation type="unfinished">Estereoa</translation>
+        <translation>Estereoa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="49"/>
         <source>Stereo+surround</source>
-        <translation type="unfinished"></translation>
+        <translation>Estereoa+ingurasoinua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="50"/>
         <source>Stereo+center</source>
-        <translation type="unfinished"></translation>
+        <translation>Estereoa+erdia</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="51"/>
         <source>Stereo+center+surround</source>
-        <translation type="unfinished"></translation>
+        <translation>Estereoa+erdia+ingurasoinua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="52"/>
         <source>Stereo front+stereo rear</source>
-        <translation type="unfinished"></translation>
+        <translation>Estereo aurrea+estereo atzea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="53"/>
         <source>5 channels</source>
-        <translation type="unfinished"></translation>
+        <translation>5 bide</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="54"/>
         <source>5.1</source>
-        <translation type="unfinished">5.1</translation>
+        <translation>5.1</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="55"/>
         <source>Dolby Pro Logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Dolby Pro Logic</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="56"/>
         <source>Dolby Pro Logic II</source>
-        <translation type="unfinished"></translation>
+        <translation>Dolby Pro Logic II</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="59"/>
         <source>DRC</source>
-        <translation type="unfinished"></translation>
+        <translation>DRC</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="63"/>
         <source>Automatic (max -3 dB)</source>
-        <translation type="unfinished"></translation>
+        <translation>Berezgaitasunezkoa (geh -3 dB)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="64"/>
         <source>Manual (dB)</source>
-        <translation type="unfinished"></translation>
+        <translation>Eskuzkoa (dB)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="66"/>
         <source>_Gain mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Irabazi Modua:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="68"/>
         <source>G_ain value:</source>
-        <translation type="unfinished"></translation>
+        <translation>I_rabazi Modua:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="72"/>
         <source>_Mixer:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Nahastzailea:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="74"/>
         <source>Remix:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bernahastu:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="77"/>
         <source>Shift audio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Aldatu audioa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="77"/>
         <source>Shift Value (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation>Aldatu Balioa (sm):</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="80"/>
         <source>Audio Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Iragazkiak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="81"/>
         <source>Fontconfig</source>
-        <translation type="unfinished"></translation>
+        <translation>Hizki-itxurapena</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="82"/>
         <source>FreeType 2</source>
-        <translation type="unfinished"></translation>
+        <translation>FreeType 2</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="83"/>
         <source>Gettext</source>
-        <translation type="unfinished"></translation>
+        <translation>Gettext</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="84"/>
         <source>SDL</source>
-        <translation type="unfinished"></translation>
+        <translation>SDL</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="85"/>
         <source>XVideo</source>
-        <translation type="unfinished"></translation>
+        <translation>XVideo</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="86"/>
         <source>VDPAU</source>
-        <translation type="unfinished"></translation>
+        <translation>VDPAU</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="88"/>
         <source>x86</source>
-        <translation type="unfinished"></translation>
+        <translation>x86</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="89"/>
         <source>x86-64</source>
-        <translation type="unfinished"></translation>
+        <translation>x86-64</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="96"/>
         <source>Libraries</source>
-        <translation type="unfinished"></translation>
+        <translation>Liburutegiak</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="97"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="359"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="101"/>
         <source>Built-in Support</source>
-        <translation type="unfinished">Eraiketa Sostengua</translation>
+        <translation>Eraiketa Sostengua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_gototime.cpp" line="31"/>
         <source>TimeStamp:</source>
-        <translation type="unfinished"></translation>
+        <translation>DenboraIrarketa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_gototime.cpp" line="34"/>
         <source>Go to Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Joan Denborara</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="8"/>
         <source>_Job name:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Lan izena:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="9"/>
         <source>Output _File:</source>
-        <translation type="unfinished"></translation>
+        <translation>Irteera _Agiria:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="9"/>
         <source>Select Video To Write</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Idazteko Bideoa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="12"/>
         <source>Save Job</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde Lana</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="57"/>
         <source>Audio Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Pluginak</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="80"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="341"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="344"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="349"/>
         <source>Audio</source>
-        <translation type="unfinished">Audioa</translation>
+        <translation>Audioa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="86"/>
         <source>Video Encoder Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideo Kodeatzaile Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="110"/>
         <source>Video Encoder</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideo Kodeatzailea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="115"/>
         <source>Video Decoder Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideo Dekodeatzaile Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="139"/>
         <source>Video Decoder</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideo Dekodeatzailea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="144"/>
         <source>Audio Device Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Gailu Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="166"/>
         <source>Audio Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Gailua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="173"/>
         <source>Audio Encoder Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Kodeatzaile Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="195"/>
         <source>Audio Encoders</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Kodeatzaileak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="202"/>
         <source>Demuxer Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Desmultiplexatzaile Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="224"/>
         <source>Demuxers</source>
-        <translation type="unfinished"></translation>
+        <translation>Desmultiplexatzaileak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="232"/>
         <source>Muxer Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Desmultiplexatzaile Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="254"/>
         <source>Muxers</source>
-        <translation type="unfinished"></translation>
+        <translation>Desmultiplexatzaileak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_plugins.cpp" line="259"/>
         <source>Plugins Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Plugin Argibideak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="27"/>
         <source>_Filter strength:</source>
-        <translation type="unfinished">_Iragazki indarra:</translation>
+        <translation>_Iragazki indarra:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="28"/>
         <source>_Swap U and V</source>
-        <translation type="unfinished"></translation>
+        <translation>_Aldatu U eta V</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="38"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="314"/>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">_Desblokeaketa etzana</translation>
+        <translation>_Desblokeaketa etzana</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="39"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="315"/>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">_Desblokeaketa zutia</translation>
+        <translation>_Desblokeaketa zutia</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="40"/>
         <source>_Deringing</source>
-        <translation type="unfinished">_Dehosketa</translation>
+        <translation>_Deshosketa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="182"/>
         <source>Decode video using VDPAU</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodeatu bideoa VDPAU erabiliz</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="183"/>
         <source>Enable openGl support</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu openGl sostengua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="188"/>
         <source>_Use systray while encoding</source>
-        <translation type="unfinished"></translation>
+        <translation>_Erabili sistema-erretilua kodeatzerakoan</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="189"/>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished"></translation>
+        <translation>_Onartu audio maiztasun ez-estandarra DVD-rako</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="190"/>
         <source>Create _OpenDML files</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortu _OpenDML agiriak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="194"/>
         <source>SIMD</source>
-        <translation type="unfinished"></translation>
+        <translation>SIMD</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="196"/>
         <source>Enable all SIMD</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu SIMD guztiak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="197"/>
         <source>Enable MMX</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu MMX</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="198"/>
         <source>Enable MMXEXT</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu MMXEXT</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="199"/>
         <source>Enable 3DNOW</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu 3DNOW</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="200"/>
         <source>Enable 3DNOWEXT</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu 3DNOWEXT</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="201"/>
         <source>Enable SSE</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu SSE</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="202"/>
         <source>Enable SSE2</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu SSE2</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="203"/>
         <source>Enable SSE3</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu SSE3</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="204"/>
         <source>Enable SSSE3</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaitu SSSE3</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="225"/>
         <source>_lavc threads:</source>
-        <translation type="unfinished"></translation>
+        <translation>_lavc hariak:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="227"/>
         <source>Multi-threading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hari-anitz</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="231"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="47"/>
         <source>High</source>
-        <translation type="unfinished">Handia</translation>
+        <translation>Handia</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="232"/>
         <source>Above normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Arruntaren gainetikoa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="233"/>
         <source>Normal</source>
-        <translation type="unfinished">Arrunta</translation>
+        <translation>Arrunta</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="234"/>
         <source>Below normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Arruntaren azpitikoa</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="235"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="45"/>
         <source>Low</source>
-        <translation type="unfinished">Apala</translation>
+        <translation>Apala</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="237"/>
         <source>_Encoding priority:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kodeaketa lehentasuna:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="238"/>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Aurkibidetze/despaketatze lehentasuna:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="239"/>
         <source>_Playback priority:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Irakurketa lehentasuna:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="241"/>
         <source>Prioritisation</source>
-        <translation type="unfinished"></translation>
+        <translation>Lehentasunpena</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="246"/>
         <source>_Split MPEG files every (MB):</source>
-        <translation type="unfinished"></translation>
+        <translation>_Banandu MPEG agiriak zatika (MB):</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="248"/>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="unfinished"></translation>
+        <translation>_Erabili aukerazko etiketak MP3-rako .mp4-an</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="253"/>
         <source>XVideo (best)</source>
-        <translation type="unfinished"></translation>
+        <translation>XVideo (hoberena)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="256"/>
         <source>VDPAU (best)</source>
-        <translation type="unfinished"></translation>
+        <translation>VDPAU (hoberena)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="259"/>
         <source>OpenGL (best)</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL (hoberena)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="264"/>
         <source>MS Windows GDI (SDL)</source>
-        <translation type="unfinished"></translation>
+        <translation>MS Windows GDI (SDL)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="265"/>
         <source>MS Windows DirectX (SDL)</source>
-        <translation type="unfinished"></translation>
+        <translation>MS Windows DirectX (SDL)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="267"/>
         <source>SDL (good)</source>
-        <translation type="unfinished"></translation>
+        <translation>SDL (ona)</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="271"/>
         <source>Video _display:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideo _erakuspena:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="276"/>
         <source>No alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alertarik ez</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="277"/>
         <source>Display only error alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Erakutsi akats alertak bakarrik</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="278"/>
         <source>Display all alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Erakutsi alerta guztiak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="280"/>
         <source>_Message level:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Mezu maila:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="285"/>
         <source>PCM</source>
-        <translation type="unfinished"></translation>
+        <translation>PCM</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="286"/>
         <source>Master</source>
-        <translation type="unfinished"></translation>
+        <translation>Masterra</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="287"/>
         <source>_Volume control:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Bolumen agintea:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="292"/>
         <source>No downmixing</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez behera-nahastu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="294"/>
         <source>Pro Logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Pro Logic</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="295"/>
         <source>Pro Logic II</source>
-        <translation type="unfinished"></translation>
+        <translation>Pro Logic II</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="297"/>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Tokiko irakurketa behera-nahasketa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="311"/>
         <source>_AudioDevice</source>
-        <translation type="unfinished"></translation>
+        <translation>_AudioGailua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="316"/>
         <source>De_ringing</source>
-        <translation type="unfinished"></translation>
+        <translation>_Deshosketa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="317"/>
         <source>_Strength:</source>
-        <translation type="unfinished">_Indartsua:</translation>
+        <translation>_Indartsua:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="318"/>
         <source>Default Postprocessing</source>
-        <translation type="unfinished"></translation>
+        <translation>Berezko prozesatze-ondorengoa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="328"/>
         <source>User Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Erabiltzaile Interfazea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="335"/>
         <source>Output</source>
-        <translation type="unfinished">Irteera</translation>
+        <translation>Irteera</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="355"/>
         <source>Video</source>
-        <translation type="unfinished">Bideoa</translation>
+        <translation>Bideoa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="363"/>
         <source>Threading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hariak</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="376"/>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="64"/>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Hobespenak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="35"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Ireki</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="36"/>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation>Erantsi</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="37"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="38"/>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Lerrokatu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="39"/>
         <source>Save as Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde Irudi bezala</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="40"/>
         <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde BMP bezala</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="41"/>
         <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde JPEG bezala</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="42"/>
         <source>Close</source>
-        <translation type="unfinished">Itxi</translation>
+        <translation>Itxi</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="43"/>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="45"/>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="47"/>
         <source>-</source>
-        <translation type="unfinished">-</translation>
+        <translation>-</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="44"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Argibideak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="46"/>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished">Elkarketatu avsproxyra</translation>
+        <translation>Elkarketatu avsproxyra</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="48"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Utzi</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="54"/>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>Desegin</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="55"/>
         <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Berrezarri Edizioa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="56"/>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Ebaki</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="57"/>
         <source>Copy</source>
-        <translation type="unfinished">Kopiatu</translation>
+        <translation>Kopiatu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="58"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>Itsatsi</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="59"/>
         <source>Delete</source>
-        <translation type="unfinished">Ezabatu</translation>
+        <translation>Ezabatu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="61"/>
         <source>Set Marker A</source>
-        <translation type="unfinished">Ezarri A Markatzailea</translation>
+        <translation>Ezarri A Markatzailea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="62"/>
         <source>Set Marker B</source>
-        <translation type="unfinished">Ezarri B Markatzailea</translation>
+        <translation>Ezarri B Markatzailea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="70"/>
         <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodeatzaile Aukera</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="71"/>
         <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozes.-ondorengoa</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="72"/>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="80"/>
         <source>Filters</source>
-        <translation type="unfinished">Iragazkiak</translation>
+        <translation>Iragazkiak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="78"/>
         <source>Select Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Bidea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="79"/>
         <source>Save audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Gorde audioa</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="86"/>
         <source>Build Option</source>
-        <translation type="unfinished"></translation>
+        <translation>Eraiketa Aukera</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="87"/>
         <source>Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>Pluginak</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="90"/>
         <source>&amp;Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation>A&amp;urreratua</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="91"/>
         <source>Open Application &amp;Log</source>
-        <translation type="unfinished"></translation>
+        <translation>Ireki Aplikazioaren &amp;Oharra</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="92"/>
         <source>Open Application Data &amp;Folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Ireki Aplikazioaren &amp;Datu Agiritegia</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="95"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Honi buruz</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="102"/>
         <source>Play/Stop</source>
-        <translation type="unfinished">Irakurri/Gelditu</translation>
+        <translation>Irakurri/Gelditu</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="103"/>
         <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Aurreko  Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="104"/>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Hurrengo Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="105"/>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">Aurreko Intra Framea</translation>
+        <translation>Aurreko Intra Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="106"/>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">Hurrengo Intra Framea</translation>
+        <translation>Hurrengo Intra Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="107"/>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">Aurreko Frame Beltza</translation>
+        <translation>Aurreko Frame Beltza</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="108"/>
         <source>Next Black Frame</source>
-        <translation type="unfinished">Hurrengo Frame Beltza</translation>
+        <translation>Hurrengo Frame Beltza</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="109"/>
         <source>First Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Lehen Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="110"/>
         <source>Last Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Azken Framea</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="112"/>
         <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Joan A Markatzailera</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="113"/>
         <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Joan B Markatzailera</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="115"/>
         <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Joan Denborara</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="48"/>
         <source>No audio track</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio biderik ez</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="48"/>
         <source>An audio track is necessary to create such file</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio bide bat behar da agiria sortzeko</translation>
     </message>
     <message>
-        <location filename="../../common/gui_autodrive.cpp" line="64"/>
-        <location filename="../../common/gui_autodrive.cpp" line="78"/>
-        <location filename="../../common/gui_autodrive.cpp" line="109"/>
-        <location filename="../../common/gui_autodrive.cpp" line="115"/>
-        <location filename="../../common/gui_autodrive.cpp" line="130"/>
-        <location filename="../../common/gui_autodrive.cpp" line="157"/>
         <location filename="../../common/gui_autodrive.cpp" line="192"/>
         <source>Codec Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodek Akatsa</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="64"/>
         <source>Cannot select the MPEG-4 SP codec.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezinezkoa MPEG-4SP kodeka hautatu.</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="78"/>
         <source>No AAC audio encoder plugin found.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez da AAC audio kodeatzaile pluginik aurkitu.</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="110"/>
         <source>The MP3 codec does not allow disabling reservoir.
 Install lame plugin</source>
-        <translation type="unfinished"></translation>
+        <translation>MP3 kodekak ez du biltegia ezgaitzea ahalbidetzen.
+Ezarril lame plugina</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="116"/>
         <source>You don&apos;t have LAME!.
 It is needed to create FLV  video.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez duzu LAME!.
+Hau beharrezkoa da FLV  bideoa sortzeko.</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="130"/>
         <source>Cannot select FLV1  codec.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da FLV1  kodeka hautatu.</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="157"/>
         <source>Cannot select mpeg4 sp codec.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da mpeg4 sp kodeka hautatu.</translation>
     </message>
     <message>
         <location filename="../../common/gui_autodrive.cpp" line="193"/>
         <source>You don&apos;t have FAAC!.
 It is needed to create PSP compatible video.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez duzu FAAC!.
+Hau beharrezkoa da PSP bateragarri bideoa sortzeko.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="168"/>
         <source>Select script to save</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu gordetzeko eskripta</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="317"/>
         <source>Not coded in this version</source>
-        <translation type="unfinished"></translation>
+        <translation>Kodeatu gabe bertsio honetan</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="328"/>
         <location filename="../../common/gui_main.cpp" line="393"/>
         <source>Select AVI File...</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu AVI Agiria...</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="396"/>
         <source>Select AVI File to Append...</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Eransteko AVI Agiria...</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="482"/>
         <source>Are you sure?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zihur zaude?</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="567"/>
         <source>Permission error</source>
-        <translation type="unfinished"></translation>
+        <translation>Baimen akatsa</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="567"/>
         <source>Cannot open &quot;%s&quot;.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da &quot;%s&quot; ireki.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="570"/>
         <source>File error</source>
-        <translation type="unfinished">Agiri akatsa</translation>
+        <translation>Agiri akatsa</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="570"/>
         <source>&quot;%s&quot; does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>&quot;%s&quot; ez dago.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="607"/>
         <source>Cannot open project using the video loader.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da egitasmoa ireki bideo gertatzailea erabiliz.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="608"/>
         <source>Try &apos;File&apos; -&gt; &apos;Load/Run Project...&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Saiatu &apos;Agiria&apos; -&gt; &apos;Gertatu/Ekin Egitasmoa...&apos;</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="610"/>
         <source>Could not open the file</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezinezkoa agiria irekitzea</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="646"/>
         <source>Multiple Audio Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Bide Anitz</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="646"/>
         <source>The file you just loaded contains several audio tracks.
 Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gertatu duzun agiriak audio bide ugari ditu.
+Joan Audio-&gt;Bide Nagusia gaituriko bat hautatzeko.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="736"/>
         <source>Something failed when appending</source>
-        <translation type="unfinished"></translation>
+        <translation>Zerbaitek huts egin du eransterakoan</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="745"/>
         <location filename="../../common/gui_main.cpp" line="939"/>
         <source>Something bad happened (II)</source>
-        <translation type="unfinished"></translation>
+        <translation>Zerbait gaitza gertatu da (II)</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="883"/>
         <source>Checking video</source>
-        <translation type="unfinished"></translation>
+        <translation>Bideoa aztertzen</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="899"/>
         <source>No error found</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez da akatsik aurkitu</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="903"/>
         <source>Errors found in %u frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Akatsak aurkitu dira %u frametan</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="919"/>
         <source>Marker A &gt; B</source>
-        <translation type="unfinished"></translation>
+        <translation>Markatzailea A &gt; B</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="919"/>
         <source>Cannot delete the selection.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin da hautapena ezabatu.</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="924"/>
         <source>You can&apos;t remove all frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezin dituzu frame guztiak kendu</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="932"/>
         <source>Something bad happened</source>
-        <translation type="unfinished">Zerbait gaitza gertatu da</translation>
+        <translation>Zerbait gaitza gertatu da</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1020"/>
         <source>_Track from video:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Bidea bideotik:</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1023"/>
         <source>Main Audio Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Audio Bide Nagusia</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1169"/>
         <source>AvsProxy</source>
-        <translation type="unfinished"></translation>
+        <translation>AvsProxy</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1169"/>
         <source>Failed to connect to avsproxy.
 Is it running ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Hutsegitea avsproxy-ra elkarketatzerakoan.
+Ekinean dago ?</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1174"/>
         <source>avsproxy</source>
-        <translation type="unfinished"></translation>
+        <translation>avsproxy</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1208"/>
         <source>Frame type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Frame mota:</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1209"/>
         <source>Frame size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Frame neurria:</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="1211"/>
         <source>Frame Hex Dump</source>
-        <translation type="unfinished"></translation>
+        <translation>Frame Hex Iraulketa</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="62"/>
         <source>Output file</source>
-        <translation type="unfinished"></translation>
+        <translation>Irteera agiria</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="63"/>
         <source>Job name</source>
-        <translation type="unfinished"></translation>
+        <translation>Lanaren izena</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="66"/>
         <source>Queue job to jobList</source>
-        <translation type="unfinished"></translation>
+        <translation>Lerrokatu lana lan-zerrendan</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="79"/>
         <source>Select Workbench to Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Gordtzeko Lanmahaia</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="87"/>
         <source>Select File to Save Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Audioa Gordetzeko Agiria</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="92"/>
         <source>Select JPEG Sequence to Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Autatu Gordetzeko JPEG Sekuentzia</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="95"/>
         <source>Select BMP to Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Gordetzeko BMP-a</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="99"/>
         <source>Select JPEG to Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Gordetzeko JPEG-a</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="104"/>
         <source>Select File to Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Gordetzeko Agiria</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="164"/>
         <source>Saving audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Audioa gordetzen</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="310"/>
         <source>Jpeg</source>
-        <translation type="unfinished"></translation>
+        <translation>Jpeg</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="310"/>
         <source>Fail to save as jpeg</source>
-        <translation type="unfinished"></translation>
+        <translation>Hutsegitea jpeg bezala gordetzerakoan</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="341"/>
         <source>Saving as set of jpegs</source>
-        <translation type="unfinished"></translation>
+        <translation>jpeg ezarpen bezala gordetzen</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="347"/>
         <source>Cannot decode frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezinezkoa framea dekodeatzea</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="347"/>
         <source>Aborting.</source>
-        <translation type="unfinished"></translation>
+        <translation>Uzten.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="358"/>
         <location filename="../../common/gui_save.cpp" line="396"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation>Eginda</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="358"/>
         <source>Saved %d images.</source>
-        <translation type="unfinished"></translation>
+        <translation>%d irudi gordeta.</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="360"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Akatsa</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="360"/>
         <source>Could not save all images.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezinezkoa agiri guztiak gordetzea.</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="382"/>
         <source>BMP op failed</source>
-        <translation type="unfinished"></translation>
+        <translation>BMP op hutsegitea</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="382"/>
         <source>Saving %s as a BMP file failed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Hutsegitea %s BMP agiri bat bezala gordetzerakoan.</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="396"/>
         <source>File %s has been successfully saved.</source>
-        <translation type="unfinished"></translation>
+        <translation>%s agiria ongi gorde da.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="400"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Failed</source>
-        <translation type="unfinished">Huts eginda</translation>
+        <translation>Hutsegitea</translation>
     </message>
     <message>
         <location filename="../../common/gui_save.cpp" line="400"/>
         <source>File %s was NOT saved correctly.</source>
-        <translation type="unfinished"></translation>
+        <translation>%s agiria EZ da zuzen gorde.</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="34"/>
         <source>_Interlaced</source>
-        <translation type="unfinished"></translation>
+        <translation>_Elkarlotuta</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="35"/>
         <source>Ca_rtoon mode</source>
-        <translation type="unfinished"></translation>
+        <translation>_Marrazki bizidun modua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="36"/>
         <source>_Greyscale</source>
-        <translation type="unfinished"></translation>
+        <translation>_Urdinabar</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="37"/>
         <source>Turbo mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Turbo modua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="38"/>
         <source>C_hroma optimizer</source>
-        <translation type="unfinished"></translation>
+        <translation>M_argotasun hobetzailea</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="40"/>
         <source>Main</source>
-        <translation type="unfinished"></translation>
+        <translation>Nagusia</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="44"/>
         <source>Very Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Oso Apala</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="46"/>
         <source>Medium</source>
-        <translation type="unfinished">Ertaina</translation>
+        <translation>Ertaina</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="48"/>
         <source>Very High</source>
-        <translation type="unfinished"></translation>
+        <translation>Oso Handia</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="49"/>
         <source>Ultra High</source>
-        <translation type="unfinished"></translation>
+        <translation>Ultra Handia</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="50"/>
         <source>Motion Search Precision</source>
-        <translation type="unfinished"></translation>
+        <translation>Mugimendu Bilaketa Zehaztasuna</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="53"/>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Etenda</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="54"/>
         <source>Mode Decision</source>
-        <translation type="unfinished"></translation>
+        <translation>Erabaki Modua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="55"/>
         <source>Limited Search</source>
-        <translation type="unfinished">Bilaketa Mugatua</translation>
+        <translation>Bilaketa Mugatua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="56"/>
         <source>Medium Search</source>
-        <translation type="unfinished">Bilaketa Ertaina</translation>
+        <translation>Bilaketa Ertaina</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="57"/>
         <source>Wide Search</source>
-        <translation type="unfinished">Bilaketa Zabala</translation>
+        <translation>Bilaketa Zabala</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="58"/>
         <source>VHQ Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>VHQ Modua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="62"/>
         <source>Max B Frames</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh B Frame</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="63"/>
         <source>Quarter Pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>_Eremu Pixel</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="64"/>
         <source>GMC</source>
-        <translation type="unfinished"></translation>
+        <translation>GMC</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="65"/>
         <source>BVHQ</source>
-        <translation type="unfinished"></translation>
+        <translation>BVHQ</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="66"/>
         <source>Advanced Simple Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil Aurreratu Arrunta</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="74"/>
         <source>4MV</source>
-        <translation type="unfinished"></translation>
+        <translation>4MV</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="75"/>
         <source>Chroma ME</source>
-        <translation type="unfinished"></translation>
+        <translation>Margo ME</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="76"/>
         <source>HQ AC</source>
-        <translation type="unfinished"></translation>
+        <translation>HQ AC</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="77"/>
         <source>More Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilaketa Gehiago</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="82"/>
         <source>Min Gop Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Gutx Gop Neurria</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="83"/>
         <source>Max Gop Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh Gop Neurria</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="84"/>
         <source>GOP Size</source>
-        <translation type="unfinished"></translation>
+        <translation>GOP Neurria</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="89"/>
         <source>Motion</source>
-        <translation type="unfinished">Mugimendua</translation>
+        <translation>Mugimendua</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="92"/>
         <source>H263</source>
-        <translation type="unfinished"></translation>
+        <translation>H263</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="93"/>
         <source>Mpeg</source>
-        <translation type="unfinished"></translation>
+        <translation>Mpeg</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="94"/>
         <source>Quantization Matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazio Matrixa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="95"/>
         <source>Trellis Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Trellis Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="99"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="103"/>
         <source>Two Pass Tuning</source>
-        <translation type="unfinished"></translation>
+        <translation>Bi Pasaldi</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="105"/>
         <source>Key Frame Boost(%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Giltza Frame Bultzada(%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="107"/>
         <source>I-frames closer than...</source>
-        <translation type="unfinished"></translation>
+        <translation>I-frameak hau baino hurbilago...</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="108"/>
         <source>.. are reduced by(%)</source>
-        <translation type="unfinished"></translation>
+        <translation>.. murrizten ditu(%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="109"/>
         <source>Max Overflow Improvement(%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh. Gainezkatze hobekuntza(%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="110"/>
         <source>Max Overglow Degradation(%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gehienezko Gainezkatze Itsuspena(%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="114"/>
         <source>Curve Compression</source>
-        <translation type="unfinished">Bihurgune Konpresioa</translation>
+        <translation>Bihurgune Konpresioa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="116"/>
         <source>High Bitrate Scenes (%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitneurri Handiko Agerraldiak (%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="117"/>
         <source>Low Bitrate Scenes (%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitneurri Apaleko Agerraldiak (%)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="118"/>
         <source>Overflow Control Strength</source>
-        <translation type="unfinished"></translation>
+        <translation>Gainezkatze Aginte Indarra</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="121"/>
         <source>Two Pass</source>
-        <translation type="unfinished">Bi Urrats</translation>
+        <translation>Bi Pasaldi</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="128"/>
         <source>Xvid4 Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Xvid4 Itxurapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Ready</source>
-        <translation type="unfinished">Gertu</translation>
+        <translation>Gertu</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Succeeded</source>
-        <translation type="unfinished">Gertatuta</translation>
+        <translation>Gertatuta</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Deleted</source>
-        <translation type="unfinished">Ezabatuta</translation>
+        <translation>Ezabatuta</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="13"/>
         <source>Running</source>
-        <translation type="unfinished">Ekiten</translation>
+        <translation>Ekiten</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Job Name</source>
-        <translation type="unfinished">Lan Izena</translation>
+        <translation>Lanaren Izena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Status</source>
-        <translation type="unfinished">Egoera</translation>
+        <translation>Egoera</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>Start Time</source>
-        <translation type="unfinished">Hasiera Denbora</translation>
+        <translation>Hasiera Denbora</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="37"/>
         <source>End Time</source>
-        <translation type="unfinished">Amaiera Denbora</translation>
+        <translation>Amaiera Denbora</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Sure!</source>
-        <translation type="unfinished">Zihur!</translation>
+        <translation>Zihur!</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <source>Delete job</source>
-        <translation type="unfinished">Ezabatu lana</translation>
+        <translation>Ezabatu lana</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="101"/>
         <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished">Zihur zaude %s lana ezabatzea nahi duzula?</translation>
+        <translation>Zihur zaude %s lana ezabatzea nahi duzula?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Delete *all* job</source>
-        <translation type="unfinished">Ezabatu lan *guzitiak*</translation>
+        <translation>Ezabatu lan *guzitiak*</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="115"/>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished">Zihur zaude lana GUZTIAK ezabatzea nahi dituzula?</translation>
+        <translation>Zihur zaude lana GUZTIAK ezabatzea nahi dituzula?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
         <source>Already done</source>
-        <translation type="unfinished">Jadanik eginda</translation>
+        <translation>Jadanik eginda</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_jobs.cpp" line="139"/>
         <source>This script has already been successfully executed.</source>
-        <translation type="unfinished">Eskript hau jadanik ongi exekutatuta dago.</translation>
+        <translation>Eskript hau jadanik ongi exekutaturik dago.</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="418"/>
         <source>The filter is already partial</source>
-        <translation type="unfinished">Iragazkia jadanik zatia da</translation>
+        <translation>Iragazkia jadanik zatia da</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="610"/>
         <source>Partial Start Frame:</source>
-        <translation type="unfinished">Zati Hasiera Framea:</translation>
+        <translation>Zati Hasiera Framea:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="611"/>
         <source>Partial End Frame:</source>
-        <translation type="unfinished">Zati Amaiera Framea:</translation>
+        <translation>Zati Amaiera Framea:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="612"/>
         <source>Configure child</source>
-        <translation type="unfinished">Child itxurapena</translation>
+        <translation>Child itxurapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="615"/>
         <source>Partial Video Filter</source>
-        <translation type="unfinished">Zati Bideo Iragazkia</translation>
+        <translation>Zati Bideo Iragazkia</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="303"/>
         <source>Recent Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Azken Agiriak</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="304"/>
         <source>Recent Projects</source>
-        <translation type="unfinished">Azken Egitasmoak</translation>
+        <translation>Azken Egitasmoak</translation>
     </message>
 </context>
 <context>
@@ -6212,12 +7014,12 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="239"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Bitneurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="245"/>
         <source>Aften Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Aften Itxurapena</translation>
     </message>
 </context>
 <context>
@@ -6225,33 +7027,38 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="65"/>
         <source>Asharp</source>
-        <translation type="unfinished"></translation>
+        <translation>Asharp</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zorroztzaile egokigarria MarcFD-ek egina.</translation>
     </message>
 </context>
 <context>
     <name>asharpDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>ASharp</source>
         <translation type="obsolete">A Zorrotza</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>Strength</source>
         <translation type="obsolete">Indartsua</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>Threshold</source>
         <translation type="obsolete">Muga</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>Block Adaptative</source>
         <translation type="obsolete">Bloke Egokigarria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="66"/>
         <source>High Quality Block Filtering</source>
         <translation type="obsolete">Ontasun Handiko Bloke Iragazpena</translation>
     </message>
@@ -6261,64 +7068,33 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="60"/>
         <source>SSA.</source>
-        <translation type="unfinished"></translation>
+        <translation>SSA.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
         <source>Hardcode ass/ssa subtitles using libass.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="170"/>
-        <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">_Azpidatzi agiria (ASS/SSA):</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="170"/>
-        <source>Select Subtitle file</source>
-        <translation type="unfinished">Hautatu Azpidatzi agiria</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="171"/>
-        <source>_Line spacing:</source>
-        <translation type="unfinished">_Lerro tartea:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="172"/>
-        <source>_Font scale:</source>
-        <translation type="unfinished">_Hizki neurria:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="173"/>
-        <source>_Top margin:</source>
-        <translation type="unfinished">_Goiko bazterra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="174"/>
-        <source>Botto_m margin</source>
-        <translation type="unfinished">Behe_ko bazterra</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="178"/>
-        <source>ASS</source>
-        <translation type="unfinished">ASS</translation>
+        <translation>Erre ass/ssa azpidatziak libass erabiliz.</translation>
     </message>
 </context>
 <context>
     <name>autoWizard</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
         <source>Resolution:</source>
         <translation type="obsolete">Bereizmena:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
         <source>Source Aspect Ratio:</source>
         <translation type="obsolete">Iturburu Ikuspegi Maila:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
         <source>Destination Aspect Ratio:</source>
         <translation type="obsolete">Helmuga Ikuspegi Maila:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="61"/>
         <source>Codec:</source>
         <translation type="obsolete">Kodeka:</translation>
     </message>
@@ -6328,107 +7104,80 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="551"/>
         <source>_wine app file:</source>
-        <translation type="unfinished">_wine gehigarri agiria:</translation>
+        <translation>_wine gehigarri agiria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="552"/>
         <source>Select wine filename[wine/cedega/etc.]</source>
-        <translation type="unfinished">Hautatu wine agirizena[wine/cedega/etab.]</translation>
+        <translation>Hautatu wine agirizena[wine/cedega/etab.]</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="554"/>
         <source>_loader file:</source>
-        <translation type="unfinished">_gertatzaile agiria:</translation>
+        <translation>_gertatzaile agiria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="555"/>
         <source>Select loader filename[avsload.exe]</source>
-        <translation type="unfinished">Hautatu gertatzaile agirizena[avxload.exe]</translation>
+        <translation>Hautatu gertatzaile agirizena[avxload.exe]</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="557"/>
         <source>_avs file:</source>
-        <translation type="unfinished">_avs agiria:</translation>
+        <translation>_avs agiria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="558"/>
         <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished">Hautatu avs agirizena[*.avs]</translation>
+        <translation>Hautatu avs agirizena[*.avs]</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="559"/>
         <source>_pipe timeout:</source>
-        <translation type="unfinished">_hodi itxaronaldia:</translation>
+        <translation>_hodi itxaronaldia:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/avsfilter/avsfilter.cpp" line="563"/>
         <source>AvsFilter config</source>
-        <translation type="unfinished">AvsIragazki itxurapena</translation>
-    </message>
-</context>
-<context>
-    <name>blacken</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="159"/>
-        <source>_Left border:</source>
-        <translation type="unfinished">E_zker hertza:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="160"/>
-        <source>_Right border:</source>
-        <translation type="unfinished">E_skuin hertza:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="161"/>
-        <source>_Top border:</source>
-        <translation type="unfinished">_Goiko hertza:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="162"/>
-        <source>_Bottom border:</source>
-        <translation type="unfinished">_Beheko hertza:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="165"/>
-        <source>Blacken Borders</source>
-        <translation type="unfinished">Hertz Beltzenak</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169"/>
-        <source>Incorrect parameters</source>
-        <translation type="unfinished">Neurri okerrak</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169"/>
-        <source>All parameters must be even and within range.</source>
-        <translation type="unfinished"></translation>
+        <translation>AvsIragazki itxurap</translation>
     </message>
 </context>
 <context>
     <name>blackenBorders</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="159"/>
         <source>_Left border:</source>
-        <translation type="obsolete">E_zker hertza:</translation>
+        <translation>E_zker hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="160"/>
         <source>_Right border:</source>
-        <translation type="obsolete">E_skuin hertza:</translation>
+        <translation>E_skuin hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="161"/>
         <source>_Top border:</source>
-        <translation type="obsolete">_Goiko hertza:</translation>
+        <translation>_Goiko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="162"/>
         <source>_Bottom border:</source>
-        <translation type="obsolete">_Beheko hertza:</translation>
+        <translation>_Beheko hertza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="165"/>
         <source>Blacken Borders</source>
-        <translation type="obsolete">Hertz Beltzenak</translation>
+        <translation>Hertz Beltzenak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169"/>
         <source>Incorrect parameters</source>
-        <translation type="obsolete">Neurri okerrak</translation>
+        <translation>Parametro okerrak</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169"/>
+        <source>All parameters must be even and within range.</source>
+        <translation>Parametro guztiak berdinak eta mailakoak izan behar dute.</translation>
     </message>
 </context>
 <context>
@@ -6436,75 +7185,57 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="40"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Egilea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="41"/>
         <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
+        <translation>25  (PAL)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="42"/>
         <source>23.976 (Film)</source>
-        <translation type="unfinished"></translation>
+        <translation>23.976 (Filma)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="43"/>
         <source>29.97 (NTSC)</source>
-        <translation type="unfinished"></translation>
+        <translation>29.97 (NTSC)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="44"/>
         <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
+        <translation>50 (Pal)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="45"/>
         <source>59.93  (NTSC)</source>
-        <translation type="unfinished"></translation>
+        <translation>59.93  (NTSC)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="208"/>
         <source>Source Fps:</source>
-        <translation type="unfinished"></translation>
+        <translation>Iturburu Fs-ko:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="209"/>
         <source>Source frame rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Iturburu frame neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="213"/>
         <source>Destination Fps:</source>
-        <translation type="unfinished"></translation>
+        <translation>Helmuga Fs-ko:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="214"/>
         <source>Destination frame rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Helmuga frame neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="222"/>
         <source>Change fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="227"/>
-        <source>Invalid fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>changefps</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="76"/>
-        <source>Change FPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="77"/>
-        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aldatu fs-ko</translation>
     </message>
 </context>
 <context>
@@ -6512,25 +7243,28 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="34"/>
         <source>ChromaShift</source>
-        <translation type="unfinished">Margotasuna Aldatu</translation>
+        <translation>Margotasuna Aldatu</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>Shift chroma U/V to fix badly synced luma/chroma.</source>
-        <translation type="unfinished"></translation>
+        <translation>Aldatu margo U/V gaizki aldibereturiko argit/margot. zuzentzeko.</translation>
     </message>
 </context>
 <context>
     <name>chromashiftDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>ChromaShift</source>
         <translation type="obsolete">Margotasuna Aldatu</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>V Shift</source>
         <translation type="obsolete">V Aldatu</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/chromaShift/ADM_vidChromaShift.cpp" line="35"/>
         <source>U Shift</source>
         <translation type="obsolete">U Aldatu</translation>
     </message>
@@ -6540,122 +7274,12 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="62"/>
         <source>Avisynth color filter.</source>
-        <translation type="unfinished"></translation>
+        <translation>Avisynth margo iragazkia.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="63"/>
         <source>Color management filter.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="75"/>
-        <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="76"/>
-        <source>AutoGain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="77"/>
-        <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="78"/>
-        <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="79"/>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="80"/>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="82"/>
-        <source>Levels:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="89"/>
-        <source>Y gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="90"/>
-        <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="91"/>
-        <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="92"/>
-        <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="97"/>
-        <source>U gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="98"/>
-        <source>U Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="100"/>
-        <source>U Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="106"/>
-        <source>V gain</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="107"/>
-        <source>V Brightness</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="109"/>
-        <source>V Contrast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="113"/>
-        <source>Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="114"/>
-        <source>Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="115"/>
-        <source>U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="116"/>
-        <source>V</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
-        <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation>Margo kudeaketa iragazkia.</translation>
     </message>
 </context>
 <context>
@@ -6663,91 +7287,70 @@ Is it running ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="25"/>
         <source>U :</source>
-        <translation type="unfinished"></translation>
+        <translation>U :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="26"/>
         <source>V :</source>
-        <translation type="unfinished"></translation>
+        <translation>V :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="27"/>
         <source>L :</source>
-        <translation type="unfinished"></translation>
+        <translation>L :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="29"/>
         <source>Offset :</source>
-        <translation type="unfinished"></translation>
+        <translation>Oreka :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/cli/DIA_contrast.cpp" line="30"/>
         <source>Coef :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="34"/>
-        <source>Contrast</source>
-        <translation type="unfinished">Zuribeltztasuna</translation>
+        <translation>Ezaug :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Adjust contrast, brightness and colors.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zehaztu zuribeltztasuna, dizdira eta margoak.</translation>
     </message>
 </context>
 <context>
     <name>contrastDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Contrast</source>
         <translation type="obsolete">Zuribeltztasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Contrast:</source>
         <translation type="obsolete">Zuribeltztasuna:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Brightness:</source>
         <translation type="obsolete">Dizdira:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Colour Space</source>
         <translation type="obsolete">Margo Eremua</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>Luma</source>
         <translation type="obsolete">Argitasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>ChromaU</source>
         <translation type="obsolete">U Margotasuna</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/ADM_vidContrast.cpp" line="35"/>
         <source>ChromaV</source>
         <translation type="obsolete">V Margotasuna</translation>
-    </message>
-</context>
-<context>
-    <name>convolution</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="136"/>
-        <source>_Process luma</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="136"/>
-        <source>Process luma plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="137"/>
-        <source>P_rocess chroma</source>
-        <translation type="unfinished">Ga_rapen margotasuna</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/ADM_vidFastConvolution.cpp" line="141"/>
-        <source>Fast Convolution</source>
-        <translation type="unfinished">Itzulinguru Azkarra</translation>
     </message>
 </context>
 <context>
@@ -6755,19 +7358,21 @@ Is it running ?</source>
     <message>
         <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="85"/>
         <source>Load it</source>
-        <translation type="unfinished"></translation>
+        <translation>Gertatu hura</translation>
     </message>
     <message>
         <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="85"/>
         <source>Crash file</source>
-        <translation type="unfinished"></translation>
+        <translation>Matxura agiria</translation>
     </message>
     <message>
         <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="86"/>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation type="unfinished"></translation>
+        <translation>Agiri matxura bat atzeman dut. 
+Hau gertatzea nahi duzu  ?
+(Edonola ezabatua izango da, gorde egin behar duzu heustea nahi badiozu)</translation>
     </message>
 </context>
 <context>
@@ -6775,53 +7380,48 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="56"/>
         <source>crop</source>
-        <translation type="unfinished"></translation>
+        <translation>moztu</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>crop filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="79"/>
-        <source>Warning Cropping too much width ! Width reseted !
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="84"/>
-        <source>Warning Cropping too much height ! Height reseted !
-</source>
-        <translation type="unfinished"></translation>
+        <translation>moztu iragazkia</translation>
     </message>
 </context>
 <context>
     <name>cropDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Crop</source>
         <translation type="obsolete">Moztu</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Right:</source>
         <translation type="obsolete">Eskuin:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Top:</source>
         <translation type="obsolete">Goi:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Reset</source>
         <translation type="obsolete">Birrezarri</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Bottom:</source>
         <translation type="obsolete">Behe:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Left:</source>
         <translation type="obsolete">Ezker:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="57"/>
         <source>Auto Crop</source>
         <translation type="obsolete">Berez Moztu</translation>
     </message>
@@ -6831,90 +7431,12 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="56"/>
         <source>Decomb decimate</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezorrazketa Hamarrendua</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="57"/>
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="74"/>
-        <source>Discard closer</source>
-        <translation type="unfinished">Baztertu istzailea</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="75"/>
-        <source>Replace (interpolate)</source>
-        <translation type="unfinished">Ordeztu (interpolatu)</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="76"/>
-        <source>Discard longer dupe (animÃ©s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="77"/>
-        <source>Pulldown dupe removal</source>
-        <translation type="unfinished">Hedagarri bikoiztu kenketa</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="80"/>
-        <source>Fastest (no chroma, partial luma)</source>
-        <translation type="unfinished">Azkarrena (margot. gabe, argit. partziala)</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="82"/>
-        <source>Medium (full luma, no chroma)</source>
-        <translation type="unfinished">Ertaina (argit. osoa, margot. gabe)</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="87"/>
-        <source>_Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="88"/>
-        <source>_Quality:</source>
-        <translation type="unfinished">_Ontasun:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="89"/>
-        <source>_Threshold 1:</source>
-        <translation type="unfinished">_Muga 1:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="90"/>
-        <source>T_hreshold 2:</source>
-        <translation type="unfinished">M_uga 2:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="91"/>
-        <source>C_ycle:</source>
-        <translation type="unfinished">Z_ikloa:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="92"/>
-        <source>Sho_w</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/decimate/decimate.cpp" line="95"/>
-        <source>Decomb Decimate</source>
-        <translation type="unfinished">Ezorrazketa Hamarrendua</translation>
-    </message>
-</context>
-<context>
-    <name>delogo</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/ADM_vidMPdelogo.cpp" line="58"/>
-        <source>MPlayer delogo</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/ADM_vidMPdelogo.cpp" line="59"/>
-        <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished"></translation>
+        <translation>Donald Graft hamarrendua. Kendu bikoiztuak telecide ondoren.</translation>
     </message>
 </context>
 <context>
@@ -6922,80 +7444,28 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="56"/>
         <source>dgbob</source>
-        <translation type="unfinished"></translation>
+        <translation>dgbob</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
         <source>Donald Graft Bob.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="68"/>
-        <source>Top</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="69"/>
-        <source>Bottom</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="72"/>
-        <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">Gorde frame eta fs-ko zenbatekoa</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="73"/>
-        <source>Double nb of frames and fps</source>
-        <translation type="unfinished">Frame eta fs-ko zenbateko bikoitza</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="74"/>
-        <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">Frame zenbateko bikoitza (mugimendu astiroa)</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="77"/>
-        <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="78"/>
-        <source>_Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="79"/>
-        <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="80"/>
-        <source>_Extra</source>
-        <translation type="unfinished">_Estra</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="80"/>
-        <source>Extra check, avoid using it</source>
-        <translation type="unfinished">Gain egiaztapena, sahiestu erabiltzea</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="83"/>
-        <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
+        <translation>Donald Graft Bob.</translation>
     </message>
 </context>
 <context>
     <name>dmxHeader</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
         <source>Out of memory</source>
         <translation type="obsolete">Oroimenetik kanpo</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
         <source>Opening MPEG</source>
         <translation type="obsolete">MPEG-a irekitzen</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="57"/>
         <source>MPEG renumbering error</source>
         <translation type="obsolete">MPEG birzenbakitze akatsa</translation>
     </message>
@@ -7010,7 +7480,7 @@ Do you want to load it  ?
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="72"/>
         <source>Phase:</source>
-        <translation>Urratsa:</translation>
+        <translation>Aldia:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="85"/>
@@ -7018,29 +7488,26 @@ Do you want to load it  ?
         <translation>Bideo Kodeka:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="92"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="99"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="123"/>
         <source>None</source>
         <translation>Ezer ez</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="106"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="174"/>
         <source>Unknown</source>
         <translation>Ezezaguna</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="174"/>
         <source>Container:</source>
         <translation type="obsolete">Edukiontzia:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="174"/>
         <source>Audio Codec:</source>
         <translation type="obsolete">Audio Kodeka:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="167"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="336"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="363"/>
         <source>0</source>
         <translation>0</translation>
@@ -7051,41 +7518,47 @@ Do you want to load it  ?
         <translation>00:00:00</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="181"/>
         <source>Elapsed:</source>
         <translation type="obsolete">Igarota:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="181"/>
         <source>Time Remaining:</source>
         <translation type="obsolete">Gelditzen dena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="181"/>
         <source>Frames/sec:</source>
         <translation type="obsolete">Frame/seg:</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="245"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="262"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>0 MB</source>
         <translation>0 MB</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>Total Size:</source>
         <translation type="obsolete">Neurria Guztira:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>Audio Size:</source>
         <translation type="obsolete">Audio Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>Video Size:</source>
         <translation type="obsolete">Bideo Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>Processed Frames:</source>
         <translation type="obsolete">Prozesatutako Frameak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="279"/>
         <source>Total Frames:</source>
         <translation type="obsolete">Frameak Guztira:</translation>
     </message>
@@ -7095,10 +7568,12 @@ Do you want to load it  ?
         <translation>0 kB/s</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="346"/>
         <source>Average Bitrate:</source>
         <translation type="obsolete">Bataz-besteko Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="346"/>
         <source>Quantiser:</source>
         <translation type="obsolete">Kuantizatzailea:</translation>
     </message>
@@ -7108,7 +7583,10 @@ Do you want to load it  ?
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Edukiontzia:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="130"/>
@@ -7116,7 +7594,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Codec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Kodeka:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="188"/>
@@ -7124,7 +7605,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Igarota:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="198"/>
@@ -7132,7 +7616,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Gelditzen Da:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="208"/>
@@ -7140,7 +7627,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frame/seg:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="252"/>
@@ -7148,7 +7638,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Neurria Guztira:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="269"/>
@@ -7156,7 +7649,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Neurria:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="289"/>
@@ -7164,7 +7660,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Bideo Neurria:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="326"/>
@@ -7172,7 +7671,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Prozesatutako Frameak:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="353"/>
@@ -7180,7 +7682,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Average Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Bataz-besteko Bitneurria:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="370"/>
@@ -7188,7 +7693,10 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Kuantizatzailea:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="429"/>
@@ -7228,40 +7736,43 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="554"/>
         <source>Pause / Abort</source>
-        <translation type="unfinished">Pausatu / Utzi</translation>
+        <translation>Pausatu / Utzi</translation>
     </message>
 </context>
 <context>
     <name>encodingWindow</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="554"/>
         <source>Pause / Abort</source>
         <translation type="obsolete">Pausatu / Utzi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="554"/>
         <source>The encoding is paused. Do you want to resume or abort?</source>
         <translation type="obsolete">Kodeaketa pausatuta dago. Berrekitea edo uztea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="554"/>
         <source>Resume</source>
         <translation type="obsolete">Berrekin</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/encoding.ui" line="554"/>
         <source>Abort</source>
         <translation type="obsolete">Utzi</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="79"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="99"/>
         <source>Privileges Required</source>
-        <translation>Beharrezkoa Eskubide Bereziak</translation>
+        <translation>Eskubide Bereziak behar dira</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="79"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="99"/>
         <source>Root privileges are required to perform this operation.</source>
         <translation>Erro eskubideak beharrezkoak dira eragiketa hau burutzeko.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_encoding.cpp" line="99"/>
         <source>Shutting down</source>
         <translation type="obsolete">Itzaltzen</translation>
     </message>
@@ -7271,53 +7782,63 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="59"/>
         <source>MPlayer eq2</source>
-        <translation type="unfinished">MPlayer eq2</translation>
+        <translation>MPlayer eq2</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Adjust contrast, brightness, saturation and gamma.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zehaztu zuribeltztasuna, dizdira, margoasetasuna eta gamma.</translation>
     </message>
 </context>
 <context>
     <name>eq2Dialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>MPlayer eq2</source>
         <translation type="obsolete">MPlayer eq2</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Contrast:</source>
         <translation type="obsolete">Zuribeltztasuna:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Brightness:</source>
         <translation type="obsolete">Dizdira:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Saturation:</source>
         <translation type="obsolete">Margoasetasuna:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Gamma</source>
         <translation type="obsolete">Gamma</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Green</source>
         <translation type="obsolete">Orlegia</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Red</source>
         <translation type="obsolete">Gorria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Blue</source>
         <translation type="obsolete">Urdina</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Weight</source>
         <translation type="obsolete">Pisua</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="60"/>
         <source>Initial</source>
         <translation type="obsolete">Hasiera</translation>
     </message>
@@ -7327,52 +7848,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="51"/>
         <source>Fade</source>
-        <translation type="unfinished">Baterapena</translation>
+        <translation>Hutsaltasuna</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="52"/>
         <source>Fade in/out.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
-        <source>Out</source>
-        <translation type="unfinished">Irteera</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
-        <source>Fade out</source>
-        <translation type="unfinished">Irteera baterapena</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
-        <source>In</source>
-        <translation type="unfinished">Sarrera</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="63"/>
-        <source>Fade in</source>
-        <translation type="unfinished">Sarrera baterapena</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="72"/>
-        <source>_Fade type:</source>
-        <translation type="unfinished">_Baterapen mota:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="73"/>
-        <source>_Start time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="74"/>
-        <source>_End time (ms):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="77"/>
-        <source>Fade to black</source>
-        <translation type="unfinished"></translation>
+        <translation>Hutsaltasuna sar/irt.</translation>
     </message>
 </context>
 <context>
@@ -7380,202 +7861,202 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="200"/>
         <source>Normal (4:3)</source>
-        <translation type="unfinished"></translation>
+        <translation>Arrunta (4:3)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="201"/>
         <source>Wide (16:9)</source>
-        <translation type="unfinished"></translation>
+        <translation>Zabala (16:9)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="206"/>
         <source>Default</source>
-        <translation type="unfinished">Berezkoa</translation>
+        <translation>Berezkoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="207"/>
         <source>Tmpgenc</source>
-        <translation type="unfinished"></translation>
+        <translation>Tmpgenc</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="208"/>
         <source>Animes</source>
-        <translation type="unfinished"></translation>
+        <translation>Animazioak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="209"/>
         <source>KVCD</source>
-        <translation type="unfinished">KVCD</translation>
+        <translation>KVCD</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="213"/>
         <source>MB comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>MB alderaketa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="214"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gutxiengo bit (vhq)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="215"/>
         <source>Rate distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Neurri bihurdura</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="218"/>
         <source>One thread</source>
-        <translation type="unfinished"></translation>
+        <translation>Bat hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="219"/>
         <source>Two threads)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bi hari)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="220"/>
         <source>Three threads</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiru hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="221"/>
         <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
+        <translation>Berez (#cpu)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="225"/>
         <source>Progressive</source>
-        <translation type="unfinished">Aurrerakoia</translation>
+        <translation>Aurrerakoia</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="226"/>
         <source>Interlaced</source>
-        <translation type="unfinished"></translation>
+        <translation>Elkarlotuta</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="229"/>
         <source>Top Field First</source>
-        <translation type="unfinished">Goiko Eremua Lehenik</translation>
+        <translation>Goren Eremua Lehenik</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="230"/>
         <source>Bottom Field First</source>
-        <translation type="unfinished">Beheko Eremua Lehenik</translation>
+        <translation>Beheren Eremua Lehenik</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="240"/>
         <source>Threading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hariak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="241"/>
         <source>Mi_n. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gut_x kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="242"/>
         <source>Ma_x. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ge_h kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="243"/>
         <source>Max. quantizer _difference:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh kuantizatzaile _aldea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="244"/>
         <source>VBV Buffer Size:</source>
-        <translation type="unfinished">VBV Buffer Neurria:</translation>
+        <translation>BNA Buffer Neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="245"/>
         <source>Max bitrate (kb/s):</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh bitneurria (kb/s):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="247"/>
         <source>_Trellis quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>_Trellis kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="249"/>
         <source>_Number of B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>_B frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="253"/>
         <source>_Macroblock decision:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Makrobloke erabakia:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="254"/>
         <source>Aspect ratio:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ikuspegi Maila:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="255"/>
         <source>Matrices:</source>
-        <translation type="unfinished"></translation>
+        <translation>Matrizeak:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="256"/>
         <source>_Filesize tolerance (kb):</source>
-        <translation type="unfinished"></translation>
+        <translation>_Agirineurri jasangarritasuna (kb):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="258"/>
         <source>_Quantizer compression:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizatzaile konpresioa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="259"/>
         <source>Quantizer _blur:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Blur Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="261"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Gop Neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="263"/>
         <source>_Interlaced:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Elkarlotuta:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="264"/>
         <source>Field Order:</source>
-        <translation type="unfinished"></translation>
+        <translation>Eremu Hurrenkera:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="268"/>
         <source>Basic Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ohinarrizko Ezarpenak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="272"/>
         <source>Adv. Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezarpen Aurreratuak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="276"/>
         <source>Interlacing</source>
-        <translation type="unfinished">Elkarlotzen</translation>
+        <translation>Elkarlotzen</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="281"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="286"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Neurri Agintea</translation>
+        <translation>Neurri Agintea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="289"/>
         <source>libavcodec MPEG-2 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>libavcodec MPEG-2 itxurapena</translation>
     </message>
 </context>
 <context>
@@ -7583,187 +8064,187 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="176"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="177"/>
         <source>Full</source>
-        <translation type="unfinished">Osoa</translation>
+        <translation>Osoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="178"/>
         <source>Log</source>
-        <translation type="unfinished">Ohar</translation>
+        <translation>Oharra</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="179"/>
         <source>Phods</source>
-        <translation type="unfinished">Phodak</translation>
+        <translation>Phodak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="180"/>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation>EPZS</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="181"/>
         <source>X1</source>
-        <translation type="unfinished"></translation>
+        <translation>X1</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="185"/>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation>H.263</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="186"/>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
+        <translation>MPEG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="190"/>
         <source>MB comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>MB alderaketa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="191"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gutxiengo bit (vhq)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="192"/>
         <source>Rate distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Neurri bihurdura</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="195"/>
         <source>One thread</source>
-        <translation type="unfinished"></translation>
+        <translation>Bat hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="196"/>
         <source>Two threads)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bi hari)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="197"/>
         <source>Three threads</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiru hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="198"/>
         <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
+        <translation>berez (#cpu)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="208"/>
         <source>Matrices</source>
-        <translation type="unfinished"></translation>
+        <translation>Matrizeak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="209"/>
         <source>Threading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hariak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="210"/>
         <source>Mi_n. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gut_x kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="211"/>
         <source>Ma_x. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ge_h kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="212"/>
         <source>Max. quantizer _difference:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh kuantizatzaile _aldea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="214"/>
         <source>4_MV</source>
-        <translation type="unfinished"></translation>
+        <translation>4_MV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="215"/>
         <source>_Trellis quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>_Trellis kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="217"/>
         <source>_Quarter pixel</source>
-        <translation type="unfinished"></translation>
+        <translation>_Eremu Pixel</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="218"/>
         <source>_GMC</source>
-        <translation type="unfinished"></translation>
+        <translation>_GMC</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="221"/>
         <source>_Number of B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>_B frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="222"/>
         <source>_Quantization type:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizazio mota:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="224"/>
         <source>_Macroblock decision:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Makrobloke erabakia:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="226"/>
         <source>_Filesize tolerance (kb):</source>
-        <translation type="unfinished"></translation>
+        <translation>_Agirineurri jasangarritasuna (kb):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="228"/>
         <source>_Quantizer compression:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizatzaile konpresioa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="229"/>
         <source>Quantizer _blur:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Blur Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="231"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_GOP Neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="234"/>
         <source>User Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Erabiltzaile Interfazea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="237"/>
         <source>Advanced Simple Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil Aurreratu Arrunta</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="244"/>
         <source>Motion Estimation</source>
-        <translation type="unfinished"></translation>
+        <translation>Mugimendi Estimazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="248"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="253"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Neurri Agintea</translation>
+        <translation>Neurri Agintea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="256"/>
         <source>libavcodec MPEG-4 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>libavcodec MPEG-4 itxurapena</translation>
     </message>
 </context>
 <context>
@@ -7771,150 +8252,158 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="214"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="215"/>
         <source>Full</source>
-        <translation type="unfinished">Osoa</translation>
+        <translation>Osoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="216"/>
         <source>Log</source>
-        <translation type="unfinished">Ohar</translation>
+        <translation>Oharra</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="217"/>
         <source>Phods</source>
-        <translation type="unfinished">Phodak</translation>
+        <translation>Phodak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="218"/>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation>EPZS</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="219"/>
         <source>X1</source>
-        <translation type="unfinished"></translation>
+        <translation>X1</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="223"/>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation>H.263</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="224"/>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
+        <translation>MPEG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="228"/>
         <source>MB comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>MB alderaketa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="229"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gutxiengo bit (vhq)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="230"/>
         <source>Rate distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Neurri bihurdura</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="239"/>
         <source>Mi_n. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gut_x kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="240"/>
         <source>Ma_x. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ge_h kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="241"/>
         <source>Max. quantizer _difference:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh kuantizatzaile _aldea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="242"/>
         <source>_Trellis quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>_Trellis kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="243"/>
         <source>_Filesize tolerance (kb):</source>
-        <translation type="unfinished"></translation>
+        <translation>_Agirineurri jasangarritasuna (kb):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="245"/>
         <source>_Quantizer compression:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizatzaile konpresioa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="246"/>
         <source>Quantizer _blur:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Blur Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="248"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_GOP neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="251"/>
         <source>User Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Erabiltzaile Interfazea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="256"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="261"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Neurri Agintea</translation>
+        <translation>Neurri Agintea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>libavcodec MPEG-4 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>libavcodec MPEG-4 itxurapena</translation>
     </message>
 </context>
 <context>
     <name>filtermainWindow</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>The filter is already partial</source>
         <translation type="obsolete">Iragazkia jadanik zatia da</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Load set of filters</source>
         <translation type="obsolete">Gertatu iragazkien ezapenak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Nothing to save</source>
         <translation type="obsolete">Ezer ez gordetzeko</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Save set of filters</source>
         <translation type="obsolete">Gorde iragazkien ezarpena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Partial Start Frame:</source>
         <translation type="obsolete">Zati Hasiera Framea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Partial End Frame:</source>
         <translation type="obsolete">Zati Amaiera Framea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Configure child</source>
         <translation type="obsolete">Child itxurapena</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="264"/>
         <source>Partial Video Filter</source>
         <translation type="obsolete">Zati Bideo Iragazkia</translation>
     </message>
@@ -7924,23 +8413,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="38"/>
         <source>Spatio-temporal cleaner by Ross Thomas.</source>
-        <translation type="unfinished"></translation>
+        <translation>Espazial-tenporal garbitzailea Ross Thomas-ek egina.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="88"/>
         <source>_Temporal threshold:</source>
-        <translation type="unfinished">_Denbora muga:</translation>
+        <translation>_Tenporal muga:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="89"/>
         <source>_Spatial threshold:</source>
-        <translation type="unfinished">_Espazio muga:</translation>
+        <translation>_Espazial muga:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="37"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="93"/>
         <source>FluxSmooth</source>
-        <translation type="unfinished">Jario Lehuna</translation>
+        <translation>Jario Lehuna</translation>
     </message>
 </context>
 <context>
@@ -7948,117 +8436,117 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="154"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="155"/>
         <source>Full</source>
-        <translation type="unfinished">Osoa</translation>
+        <translation>Osoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="156"/>
         <source>Log</source>
-        <translation type="unfinished">Ohar</translation>
+        <translation>Oharra</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="157"/>
         <source>Phods</source>
-        <translation type="unfinished">Phodak</translation>
+        <translation>Phodak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="158"/>
         <source>EPZS</source>
-        <translation type="unfinished">EPZS</translation>
+        <translation>EPZS</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="159"/>
         <source>X1</source>
-        <translation type="unfinished"></translation>
+        <translation>X1</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="163"/>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation>H.263</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="164"/>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
+        <translation>MPEG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="168"/>
         <source>MB comparison</source>
-        <translation type="unfinished"></translation>
+        <translation>MB alderaketa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="169"/>
         <source>Fewest bits (vhq)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gutxiengo bit (vhq)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="170"/>
         <source>Rate distortion</source>
-        <translation type="unfinished"></translation>
+        <translation>Neurri bihurdura</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="179"/>
         <source>Mi_n. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gut_x kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="180"/>
         <source>Ma_x. quantizer:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ge_h kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="181"/>
         <source>Max. quantizer _difference:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh kuantizatzaile _aldea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="182"/>
         <source>_Trellis quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>_Trellis kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="183"/>
         <source>_Filesize tolerance (kb):</source>
-        <translation type="unfinished"></translation>
+        <translation>_Agirineurri jasangarritasuna (kb):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="185"/>
         <source>_Quantizer compression:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizatzaile konpresioa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="186"/>
         <source>Quantizer _blur:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Blur Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="188"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_GOP neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="191"/>
         <source>User Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Erabiltzaile Interfazea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="196"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="201"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Neurri Agintea</translation>
+        <translation>Neurri Agintea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="204"/>
         <source>libavcodec FLV1 configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>libavcodec FLV1 itxurapena</translation>
     </message>
 </context>
 <context>
@@ -8066,98 +8554,74 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="26"/>
         <source>Gaussian convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation>Gaussiar konboluzioa.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="27"/>
         <source>3x3 convolution filter :gaussian.</source>
-        <translation type="unfinished"></translation>
+        <translation>3x3 konboluzioa iragazkiar :gaussiarra.</translation>
     </message>
 </context>
 <context>
     <name>h263Header</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="27"/>
         <source>Size is not (s)QCIF</source>
         <translation type="obsolete">Neurria ez da (s)QCIF</translation>
     </message>
 </context>
 <context>
-    <name>hflip</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="44"/>
-        <source>Horizontal Flip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="45"/>
-        <source>Horizontally flip the image.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>histogram</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="56"/>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="131"/>
         <source>No data</source>
-        <translation type="unfinished"></translation>
+        <translation>Daturik ez</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="202"/>
         <source>Max. bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh. bitneurria:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="203"/>
         <source>Average bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bataz-besteko bitneurria:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="204"/>
         <source>Number of I frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>_I frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="205"/>
         <source>Number of P frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>P frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="206"/>
         <source>Number of B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>B frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="207"/>
         <source>Max. B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>Geh. B frame:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="220"/>
         <source>Bitrate Histogram</source>
-        <translation type="unfinished">Bitneurri Historiagrama</translation>
-    </message>
-</context>
-<context>
-    <name>hue</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/ADM_vidHue.cpp" line="56"/>
-        <source>Mplayer Hue</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/ADM_vidHue.cpp" line="57"/>
-        <source>Adjust hue and saturation.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitneurri Historiograma</translation>
     </message>
 </context>
 <context>
     <name>hueDialog</name>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="220"/>
         <source>Hue</source>
         <translation type="obsolete">Nabardura</translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_bitrateHisto.cpp" line="220"/>
         <source>Saturation</source>
         <translation type="obsolete">Margoasetasuna</translation>
     </message>
@@ -8167,22 +8631,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="99"/>
         <source>HUFFYUV</source>
-        <translation type="unfinished"></translation>
+        <translation>HUFFYUV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="100"/>
         <source>FF HUFFYUV</source>
-        <translation type="unfinished"></translation>
+        <translation>FF HUFFYUV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="109"/>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mota:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/huff/ADM_huffEncoder.cpp" line="112"/>
         <source>HuffYUV Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>HuffYUV Itxurapena</translation>
     </message>
 </context>
 <context>
@@ -8190,22 +8654,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
         <source>Continue indexing</source>
-        <translation type="unfinished"></translation>
+        <translation>Jarraitu aurkibidetzen</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
         <source>Abort Requested</source>
-        <translation type="unfinished"></translation>
+        <translation>Utzi Eskabidea</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="82"/>
         <source>Do you want to abort indexing ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Aurkibidetzea uztea nahi duzu?</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/T_index_pg.cpp" line="158"/>
         <source>Time Left :%02d:%02d:%02d</source>
-        <translation type="unfinished"></translation>
+        <translation>Gelditzen den Denbora :%02d:%02d:%02d</translation>
     </message>
 </context>
 <context>
@@ -8213,57 +8677,57 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="17"/>
         <source>Avidemux Jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Avidemux Lanak</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="28"/>
         <source>Run all pending jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekin egiteke dauden lan denak</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="31"/>
         <source>Run jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Ekin lanei</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="38"/>
         <source>Delete already executed jobs</source>
-        <translation type="unfinished"></translation>
+        <translation>Ezabatu jadanik exekutaturiko lanak</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="41"/>
         <source>Cleanup</source>
-        <translation type="unfinished"></translation>
+        <translation>Garbitu</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="48"/>
         <source>If you use VDPAU you cannot use CLI version</source>
-        <translation type="unfinished"></translation>
+        <translation>VDPAU erabiltzen baduzu ezin duzu CLI bertsioa erabili</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="51"/>
         <source>use QT4 version</source>
-        <translation type="unfinished"></translation>
+        <translation>erabili QT4 bertsioa</translation>
     </message>
     <message>
         <location filename="../ADM_jobs/src/uiJobs.ui" line="71"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Utzi</translation>
     </message>
     <message>
         <location filename="../../common/GUI_jobs.cpp" line="37"/>
         <source>Oops</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustekabea</translation>
     </message>
     <message>
         <location filename="../../common/GUI_jobs.cpp" line="37"/>
         <source>Something very wrong happened when building joblist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zerbait oso okerra gertatu da lan-zerrenda eraikitzerakoan.</translation>
     </message>
     <message>
         <location filename="../../common/GUI_jobs.cpp" line="43"/>
         <source>There are no jobs stored</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez dago lanik biltegiratuta</translation>
     </message>
 </context>
 <context>
@@ -8297,70 +8761,87 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>jobsWindow</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Ready</source>
         <translation type="obsolete">Gertu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Succeeded</source>
         <translation type="obsolete">Gertatuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Failed</source>
         <translation type="obsolete">Huts eginda</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Deleted</source>
         <translation type="obsolete">Ezabatuta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Running</source>
         <translation type="obsolete">Ekiten</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Job Name</source>
         <translation type="obsolete">Lan Izena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Status</source>
         <translation type="obsolete">Egoera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Start Time</source>
         <translation type="obsolete">Hasiera Denbora</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>End Time</source>
         <translation type="obsolete">Amaiera Denbora</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>%1:%2:%3</source>
         <translation type="obsolete">%1:%2:%3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Sure!</source>
         <translation type="obsolete">Zihur!</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Delete job</source>
         <translation type="obsolete">Ezabatu lana</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Are you sure you want to delete %s job?</source>
         <translation type="obsolete">Zihur zaude %s lana ezabatzea nahi duzula?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Delete *all* job</source>
         <translation type="obsolete">Ezabatu lan *guzitiak*</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Are you sure you want to delete ALL jobs?</source>
         <translation type="obsolete">Zihur zaude lana GUZTIAK ezabatzea nahi dituzula?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>Already done</source>
         <translation type="obsolete">Jadanik eginda</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/jobs.ui" line="71"/>
         <source>This script has already been successfully executed.</source>
         <translation type="obsolete">Eskript hau jadanik ongi exekutatuta dago.</translation>
     </message>
@@ -8370,135 +8851,90 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="76"/>
         <source>YUV422</source>
-        <translation type="unfinished"></translation>
+        <translation>YUV422</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="77"/>
         <source>YUV420</source>
-        <translation type="unfinished"></translation>
+        <translation>YUV420</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="88"/>
         <source>_Quantizer:</source>
-        <translation type="unfinished">_Kuantizatzailea:</translation>
+        <translation>_Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="89"/>
         <source>_ColorSpace:</source>
-        <translation type="unfinished"></translation>
+        <translation>_MargoEremua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/jpeg/ADM_jpegEncoder.cpp" line="93"/>
         <source>Mjpeg Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Mjpeg Itxurapena</translation>
     </message>
 </context>
 <context>
     <name>kernelDeint</name>
     <message>
-        <source>_Field order:</source>
-        <translation type="obsolete">_Eremu ordena:</translation>
-    </message>
-    <message>
-        <source>_Sharp</source>
-        <translation type="obsolete">_Garbitasuna</translation>
-    </message>
-    <message>
-        <source>_Sharper engine:</source>
-        <translation type="obsolete">_Garbitasun gailua:</translation>
-    </message>
-    <message>
-        <source>T_woway</source>
-        <translation type="obsolete">T_woway</translation>
-    </message>
-    <message>
-        <source>Extrapolate better (better not to use it)</source>
-        <translation type="obsolete">Estrapolazio hobea (hobe ez erabiltzea)</translation>
-    </message>
-    <message>
-        <source>_Map</source>
-        <translation type="obsolete">_Mapa</translation>
-    </message>
-    <message>
-        <source>Show interlaced areas (for test!)</source>
-        <translation type="obsolete">Erakutsi elkarlotutako eremuak (azterketarako!)</translation>
-    </message>
-    <message>
-        <source>KernelDeint</source>
-        <translation type="obsolete">Kernel Deselkarl</translation>
-    </message>
-</context>
-<context>
-    <name>kerneldeint</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="50"/>
-        <source>Kernel Deint.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="51"/>
-        <source>Port of Donald Graft Kernel Deinterlacer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="65"/>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Goia</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="66"/>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Behea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="70"/>
         <source>_Field order:</source>
-        <translation type="unfinished">_Eremu ordena:</translation>
+        <translation>_Eremu hurrenkera:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="71"/>
         <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Muga:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="71"/>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Txikiagoak esanahi du ezelkarlotura gehiago</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="72"/>
         <source>_Sharp</source>
-        <translation type="unfinished">_Garbitasuna</translation>
+        <translation>_Garbitasuna</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="72"/>
         <source>_Sharper engine:</source>
-        <translation type="unfinished">_Garbitasun gailua:</translation>
+        <translation>_Garbitasun gailua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="73"/>
         <source>T_woway</source>
-        <translation type="unfinished">T_woway</translation>
+        <translation>T_woway</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="73"/>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="unfinished">Estrapolazio hobea (hobe ez erabiltzea)</translation>
+        <translation>Estrapolazio hobea (hobe ez erabiltzea)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="74"/>
         <source>_Map</source>
-        <translation type="unfinished">_Mapa</translation>
+        <translation>_Mapa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="74"/>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="unfinished">Erakutsi elkarlotutako eremuak (azterketarako!)</translation>
+        <translation>Erakutsi elkarlotutako eremuak (azterketarako!)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="78"/>
         <source>KernelDeint</source>
-        <translation type="unfinished">Kernel Deselkarl</translation>
+        <translation>Kernel Deselkarl</translation>
     </message>
 </context>
 <context>
@@ -8506,189 +8942,121 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="310"/>
         <source>CBR</source>
-        <translation type="unfinished">CBR</translation>
+        <translation>BNG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="311"/>
         <source>ABR</source>
-        <translation type="unfinished"></translation>
+        <translation>BNA</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="313"/>
         <source>Bit_rate mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bit_neurri modua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="329"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Bitneurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="331"/>
         <source>_Quality:</source>
-        <translation type="unfinished">_Ontasun:</translation>
+        <translation>_Ontasuna:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="334"/>
         <source>_Disable reservoir:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Ezgaitu biltegia:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/lame/audioencoder_lame.cpp" line="338"/>
         <source>LAME Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>LAME Itxurapena</translation>
     </message>
 </context>
 <context>
     <name>largeMedian</name>
     <message>
-        <source>P_rocess chroma</source>
-        <translation type="obsolete">Ga_rapen margotasuna</translation>
-    </message>
-    <message>
-        <source>Fast Convolution</source>
-        <translation type="obsolete">Itzulinguru Azkarra</translation>
-    </message>
-</context>
-<context>
-    <name>largemedian</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="36"/>
-        <source>Large Median (5x5).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="37"/>
-        <source>Median filter on 5x5 matrix.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="71"/>
         <source>_Process luma</source>
-        <translation type="unfinished"></translation>
+        <translation>_Prozesatu argitasuna</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="71"/>
         <source>Process luma plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozesatu argit. planoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="72"/>
         <source>P_rocess chroma</source>
-        <translation type="unfinished">Ga_rapen margotasuna</translation>
+        <translation>Prozesatu margoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/largeMedian/ADM_largeMedian.cpp" line="76"/>
         <source>Fast Convolution</source>
-        <translation type="unfinished">Itzulinguru Azkarra</translation>
+        <translation>Konboluzio Azkarra</translation>
     </message>
 </context>
 <context>
     <name>lavDeint</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="188"/>
         <source>None</source>
-        <translation type="obsolete">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="189"/>
         <source>Linear blend</source>
-        <translation type="obsolete">Nahasketa  linearra</translation>
+        <translation>Nahasketa  linearra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="190"/>
         <source>Linear interpolate</source>
-        <translation type="obsolete">Interpolazio linearra</translation>
+        <translation>Interpolazio linearra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="191"/>
         <source>Cubic interpolate</source>
-        <translation type="obsolete">Interpolazio kubikoa</translation>
+        <translation>Interpolazio kubikoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="192"/>
         <source>Median interpolate</source>
-        <translation type="obsolete">Interpolazio ertaina</translation>
+        <translation>Interpolazio ertaina</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="193"/>
         <source>FFmpeg deint</source>
-        <translation type="obsolete">FFmpeg deselkarl</translation>
+        <translation>FFmpeg deselkarl</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="197"/>
         <source>_Deinterlacing:</source>
-        <translation type="obsolete">_Deselkarlotura:</translation>
+        <translation>_Deselkarlotura:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="198"/>
         <source>_Autolevel</source>
-        <translation type="obsolete">_Berezmailaketa</translation>
+        <translation>_Berezmailaketa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="202"/>
         <source>libavcodec deinterlacer</source>
-        <translation type="obsolete">libavcodec deselkarlotura</translation>
+        <translation>libavcodec deselkarlotura</translation>
     </message>
 </context>
 <context>
     <name>lavMuxer</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="202"/>
         <source>Can&apos;t mux that video codec into MKV</source>
         <translation type="obsolete">Ezinezkoa bideo kodeka MKV-an multiplexatzea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="202"/>
         <source>Incompatible frame rate</source>
         <translation type="obsolete">Frame neurri bateraezina</translation>
-    </message>
-</context>
-<context>
-    <name>lavdeint</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="71"/>
-        <source>Libavdec Deinterlacers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="72"/>
-        <source>Lavcodec deinterlacer family.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="188"/>
-        <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="189"/>
-        <source>Linear blend</source>
-        <translation type="unfinished">Nahasketa  linearra</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="190"/>
-        <source>Linear interpolate</source>
-        <translation type="unfinished">Interpolazio linearra</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="191"/>
-        <source>Cubic interpolate</source>
-        <translation type="unfinished">Interpolazio kubikoa</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="192"/>
-        <source>Median interpolate</source>
-        <translation type="unfinished">Interpolazio ertaina</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="193"/>
-        <source>FFmpeg deint</source>
-        <translation type="unfinished">FFmpeg deselkarl</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="197"/>
-        <source>_Deinterlacing:</source>
-        <translation type="unfinished">_Deselkarlotura:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="198"/>
-        <source>_Autolevel</source>
-        <translation type="unfinished">_Berezmailaketa</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lavDeint/lavDeint.cpp" line="202"/>
-        <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">libavcodec deselkarlotura</translation>
     </message>
 </context>
 <context>
@@ -8701,63 +9069,40 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/license.ui" line="62"/>
         <source>OK</source>
-        <translation type="unfinished">Ongi</translation>
+        <translation>Ongi</translation>
     </message>
 </context>
 <context>
     <name>logo</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="51"/>
-        <source>Add logo.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="52"/>
-        <source>Put a logo on top of video, with alpha blending.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">_Logoa (jpg agiria):</translation>
+        <translation>_Logoa (jpg agiria):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="150"/>
         <source>Select JPEG file</source>
-        <translation type="unfinished">Hautatu JPEG agiria</translation>
+        <translation>Hautatu JPEG agiria</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="151"/>
         <source>_X Position:</source>
-        <translation type="unfinished">_X Kokapena:</translation>
+        <translation>_X Kokapena:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="152"/>
         <source>_Y Position:</source>
-        <translation type="unfinished">_Y Kokapena:</translation>
+        <translation>_Y Kokapena:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="153"/>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alfa:</translation>
+        <translation>_Alfa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="157"/>
         <source>Logo</source>
-        <translation type="unfinished">Logoa</translation>
-    </message>
-</context>
-<context>
-    <name>lumaonly</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lumaOnly/lumaOnly.cpp" line="44"/>
-        <source>GreyScale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/lumaOnly/lumaOnly.cpp" line="45"/>
-        <source>Remove color, only key grey image.</source>
-        <translation type="unfinished"></translation>
+        <translation>Logoa</translation>
     </message>
 </context>
 <context>
@@ -8783,22 +9128,27 @@ p, li { white-space: pre-wrap; }
         <translation>Za&amp;tia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="134"/>
         <source>Open Script</source>
         <translation type="obsolete">Ireki Eskripta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="134"/>
         <source>Load</source>
         <translation type="obsolete">Gertatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="134"/>
         <source>Save Script As</source>
         <translation type="obsolete">Gorde Eskripta Honela</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="134"/>
         <source>Save Script</source>
         <translation type="obsolete">Gorde Eskripta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="134"/>
         <source>Move Filter Down</source>
         <translation type="obsolete">Mugitu Iragazkia Behera</translation>
     </message>
@@ -8808,6 +9158,7 @@ p, li { white-space: pre-wrap; }
         <translation>Behera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="141"/>
         <source>Move Filter Up</source>
         <translation type="obsolete">Mugitu Iragazkia Gora</translation>
     </message>
@@ -8817,6 +9168,7 @@ p, li { white-space: pre-wrap; }
         <translation>Gora</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="152"/>
         <source>Remove Filter</source>
         <translation type="obsolete">Kendu Iragazkia</translation>
     </message>
@@ -8826,6 +9178,7 @@ p, li { white-space: pre-wrap; }
         <translation>Kendu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="176"/>
         <source>Add Filter</source>
         <translation type="obsolete">Gehitu Iragazkia</translation>
     </message>
@@ -8867,7 +9220,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="327"/>
         <source>OpenGl</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGl</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="336"/>
@@ -8877,9 +9230,10 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="398"/>
         <source>&amp;Close</source>
-        <translation type="unfinished">It&amp;xi</translation>
+        <translation>It&amp;xi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/mainfilter.ui" line="398"/>
         <source>External</source>
         <translation type="obsolete">Kanpokoa</translation>
     </message>
@@ -8895,64 +9249,11 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>mcdeint</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="81"/>
-        <source>MCDeint</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="82"/>
-        <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="120"/>
-        <source>Fast</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="121"/>
-        <source>Medium</source>
-        <translation type="unfinished">Ertaina</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="122"/>
-        <source>Slow iterative motion search</source>
-        <translation type="unfinished">Mugimendu bilaketa berrizte motela</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="123"/>
-        <source>Extra slow (same as 3+multiple reference frames)</source>
-        <translation type="unfinished">Oso motela (3+frame xehetasun anitz bezala)</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="126"/>
-        <source>_Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="127"/>
-        <source>Bottom :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="128"/>
-        <source>_Qp:</source>
-        <translation type="unfinished">_Qp:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mcDeint/ADM_vidMcDeint.cpp" line="132"/>
-        <source>mcDeinterlace</source>
-        <translation type="unfinished">mcDeselkarlotura</translation>
-    </message>
-</context>
-<context>
     <name>meadian</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="29"/>
         <source>3x3 convolution filter :median.</source>
-        <translation type="unfinished"></translation>
+        <translation>3x3 konboluzioa iragazkia :median.</translation>
     </message>
 </context>
 <context>
@@ -8960,12 +9261,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="27"/>
         <source>Mean convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mean konboluzioa.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="28"/>
         <source>3x3 convolution filter :mean.</source>
-        <translation type="unfinished"></translation>
+        <translation>3x3 konboluzioa iragazkia :mean.</translation>
     </message>
 </context>
 <context>
@@ -8973,7 +9274,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="28"/>
         <source>Median convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mean konboluzioa.</translation>
     </message>
 </context>
 <context>
@@ -8981,112 +9282,40 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="134"/>
         <source>Saving Mkv</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>mp3d</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="201"/>
-        <source>Mplayer Denoise 3D HQ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="202"/>
-        <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="235"/>
-        <source>_Spatial luma strength:</source>
-        <translation type="unfinished">_Espazio argit indarra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="236"/>
-        <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Es_pazio margot indarra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="237"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="238"/>
-        <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="242"/>
-        <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer zaratakentze 3d</translation>
-    </message>
-</context>
-<context>
-    <name>mp3dlow</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="36"/>
-        <source>Mplayer Denoise 3D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="37"/>
-        <source>Reduce noise, smooth image, increase compressibility.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="69"/>
-        <source>_Spatial luma strength:</source>
-        <translation type="unfinished">_Espazio argit indarra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="70"/>
-        <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Es_pazio margot indarra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="71"/>
-        <source>_Temporal strength:</source>
-        <translation type="unfinished">_Denbora indarra:</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="75"/>
-        <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer zaratakentze 3d</translation>
+        <translation>Mkv gordeketa</translation>
     </message>
 </context>
 <context>
     <name>msharpen</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="77"/>
-        <source>Msharpen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="78"/>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
-        <translation type="unfinished"></translation>
+        <translation>Zorroztu hertzak zarata handitu gabe. Donald Graft-ek egina.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="133"/>
         <source>_Mask</source>
-        <translation type="unfinished">_Mozorroa</translation>
+        <translation>_Mozorroa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="134"/>
         <source>_High Q</source>
-        <translation type="unfinished">_Ontasun Handia</translation>
+        <translation>_Ontasun Handia</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="136"/>
         <source>_Threshold:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Muga:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="137"/>
         <source>_Strength:</source>
-        <translation type="unfinished">_Indartsua:</translation>
+        <translation>_Indartsua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="142"/>
         <source>MSharpen</source>
-        <translation type="unfinished">M Zorrotza</translation>
+        <translation>MSharpen</translation>
     </message>
 </context>
 <context>
@@ -9094,12 +9323,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="150"/>
         <source>Saving mp4</source>
-        <translation type="unfinished"></translation>
+        <translation>mp4 gordetzea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="151"/>
         <source>Saving PSP</source>
-        <translation type="unfinished"></translation>
+        <translation>PSP gordetzea</translation>
     </message>
 </context>
 <context>
@@ -9107,7 +9336,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPS.cpp" line="140"/>
         <source>Saving mpeg PS (ff)</source>
-        <translation type="unfinished"></translation>
+        <translation>mpeg PS (ff) gordetzea</translation>
     </message>
 </context>
 <context>
@@ -9115,28 +9344,33 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Saving mpeg TS (ff)</source>
-        <translation type="unfinished"></translation>
+        <translation>mpeg TS (ff) gordetzea</translation>
     </message>
 </context>
 <context>
     <name>nuvHeader</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Opening Nuppel video</source>
         <translation type="obsolete">Nuppel bideoa irekitzen</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Sure you want to abort ?</source>
         <translation type="obsolete">Zihur zaude uztea nahi duzula ?</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Size mismatch</source>
         <translation type="obsolete">Neurri zehazgabezia</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Expect a crash.</source>
         <translation type="obsolete">Matxura itxaron.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Do you want to save an index ?</source>
         <translation type="obsolete">Aurkibide batean gordetzea nahi duzu ?</translation>
     </message>
@@ -9144,10 +9378,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>oggHeader</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Take second track ?</source>
         <translation type="obsolete">Biigarren bidea hartu ?</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="147"/>
         <source>Scanning OGM</source>
         <translation type="obsolete">OGM Mihatzen</translation>
     </message>
@@ -9157,46 +9393,53 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="218"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Zabalera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="219"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Garaiera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>glResize</source>
-        <translation type="unfinished"></translation>
+        <translation>gl-Birneurriratu</translation>
     </message>
 </context>
 <context>
     <name>pluginManagerDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Plugin Manager</source>
         <translation type="obsolete">Plugin Kudeatzailea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>&amp;Video Encoder</source>
         <translation type="obsolete">&amp;Bideo Kodeatzailea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>&amp;Set As Default</source>
         <translation type="obsolete">&amp;Ezarri Berezko Bezala</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>&amp;Enable All</source>
         <translation type="obsolete">&amp;Gaitu Denak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Disable &amp;All</source>
         <translation type="obsolete">E&amp;zgaitu Denak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Move &amp;Up</source>
         <translation type="obsolete">Mugitu G&amp;ora</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Move &amp;Down</source>
         <translation type="obsolete">Mugitu Be&amp;hera</translation>
     </message>
@@ -9204,6 +9447,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>previewDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Preview</source>
         <translation type="obsolete">Aurreikuspena</translation>
     </message>
@@ -9211,50 +9455,62 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>propWindow</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>No</source>
         <translation type="obsolete">Ez</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Yes</source>
         <translation type="obsolete">Bai</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 x %2</source>
         <translation type="obsolete">%1 x %2</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 fps</source>
         <translation type="obsolete">%1 fs-ko</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 frames</source>
         <translation type="obsolete">%1 frame</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1:%2:%3.%4</source>
         <translation type="obsolete">%1:%2:%3.%4</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 (%2:%3)</source>
         <translation type="obsolete">%1 (%2:%3)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Mono</source>
         <translation type="obsolete">Monoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>Stereo</source>
         <translation type="obsolete">Estereoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 Hz</source>
         <translation type="obsolete">%1 Hz</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 Bps / %2 kbps</source>
         <translation type="obsolete">%1 Bs-ko / %2 kbs-ko</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glResize/sampleGl.cpp" line="223"/>
         <source>%1 MB</source>
         <translation type="obsolete">%1 MB</translation>
     </message>
@@ -9272,10 +9528,6 @@ p, li { white-space: pre-wrap; }
         <translation>Bideoa</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="41"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="55"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="69"/>
-        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="83"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="97"/>
         <source>TextLabel</source>
         <translation>Idazki Etiketa</translation>
@@ -9286,11 +9538,11 @@ p, li { white-space: pre-wrap; }
         <translation>Frame Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="48"/>
         <source>Frame Count: </source>
         <translation type="obsolete">Frame Zenbat.: </translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="62"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="179"/>
         <source>Total Duration:</source>
         <translation>Iraupena Guztira:</translation>
@@ -9318,27 +9570,30 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="133"/>
         <source>ExtraDataSize:</source>
-        <translation type="unfinished"></translation>
+        <translation>GainDatuNeurria:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="147"/>
         <source>Extra data :</source>
-        <translation type="unfinished"></translation>
+        <translation>Gain datuak :</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="268"/>
         <source>OK</source>
-        <translation type="unfinished">Ongi</translation>
+        <translation>Ongi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="268"/>
         <source>Global Motion Compensation:</source>
         <translation type="obsolete">Mugimendu Orekapen Orokorra:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="268"/>
         <source>Packed Bitstream:</source>
         <translation type="obsolete">Paketatutako Bitjarioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="268"/>
         <source>Quarter Pixel:</source>
         <translation type="obsolete">Eremu Pixel:</translation>
     </message>
@@ -9348,6 +9603,7 @@ p, li { white-space: pre-wrap; }
         <translation>Audioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="157"/>
         <source>File Size:</source>
         <translation type="obsolete">Agiri Neurria:</translation>
     </message>
@@ -9382,86 +9638,75 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="23"/>
         <source>No</source>
-        <translation type="unfinished">Ez</translation>
+        <translation>Ez</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="23"/>
         <source>Yes</source>
-        <translation type="unfinished">Bai</translation>
+        <translation>Bai</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="49"/>
         <source>%2.3f fps</source>
-        <translation type="unfinished"></translation>
+        <translation>%2.3f fs-ko</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="53"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="112"/>
         <source>%02d:%02d:%02d.%03d</source>
-        <translation type="unfinished"></translation>
+        <translation>%02d:%02d:%02d.%03d</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="59"/>
         <source>%s (%u:%u)</source>
-        <translation type="unfinished"></translation>
+        <translation>%s (%u:%u)</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="92"/>
         <source>Mono</source>
-        <translation type="unfinished">Monoa</translation>
+        <translation>Monoa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="95"/>
         <source>Stereo</source>
-        <translation type="unfinished">Estereoa</translation>
+        <translation>Estereoa</translation>
     </message>
 </context>
 <context>
-    <name>removeplane</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="45"/>
-        <source>Remove  Plane</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="46"/>
-        <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
-        <translation type="unfinished"></translation>
-    </message>
+    <name>removePlaneFilter</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="151"/>
         <source>Keep Y Plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi Y Planoari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="151"/>
         <source>Process luma plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozesatu argit. planoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="152"/>
         <source>Keep U Plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi U Planoari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="152"/>
         <source>Process chromaU plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozesatu margoU Planoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="153"/>
         <source>Keep V Plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi V Planoari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="153"/>
         <source>Process chromaV plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozesatu margoV planoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/removePlane/removePlane.cpp" line="158"/>
         <source>Remove plane</source>
-        <translation type="unfinished"></translation>
+        <translation>Kendu planoa</translation>
     </message>
 </context>
 <context>
@@ -9469,155 +9714,153 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="43"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Egilea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="44"/>
         <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
+        <translation>25  (PAL)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="45"/>
         <source>23.976 (Film)</source>
-        <translation type="unfinished"></translation>
+        <translation>23.976 (Filma)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="46"/>
         <source>29.97 (NTSC)</source>
-        <translation type="unfinished"></translation>
+        <translation>29.97 (NTSC)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="47"/>
         <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
+        <translation>50 (Pal)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="48"/>
         <source>59.93  (NTSC)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="83"/>
-        <source>Resample FPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="84"/>
-        <source>Change and enforce FPS. Keep duration and sync.</source>
-        <translation type="unfinished"></translation>
+        <translation>59.93  (NTSC)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="358"/>
         <source>_Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Modua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="359"/>
         <source>_New frame rate:</source>
-        <translation type="unfinished">_Frame neurri berria:</translation>
+        <translation>_Frame neurri berria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Resample fps</source>
-        <translation type="unfinished">Birlaginketa fs-ko</translation>
-    </message>
-</context>
-<context>
-    <name>resize</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/swScaleResize.cpp" line="80"/>
-        <source>swsResize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/swScaleResize.cpp" line="81"/>
-        <source>swScale Resizer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Birlaginketa fs-ko</translation>
     </message>
 </context>
 <context>
     <name>resizeDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Resize</source>
         <translation type="obsolete">Birneurritu</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Aspect Ratio</source>
         <translation type="obsolete">Ikuspegi Maila</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Lock Aspect Ratio</source>
         <translation type="obsolete">Blokeatu Ikuspegi Maila</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Source:</source>
         <translation type="obsolete">Iturria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>1:1</source>
         <translation type="obsolete">1:1</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>4:3</source>
         <translation type="obsolete">4:3</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>16:9</source>
         <translation type="obsolete">16:9</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Destination:</source>
         <translation type="obsolete">Helmuga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Resize Dimensions</source>
         <translation type="obsolete">Birneurritu Neurriak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Width:</source>
         <translation type="obsolete">Zabalera:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Height:</source>
         <translation type="obsolete">Garaiera:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Round to the Nearest Multiple of 16</source>
         <translation type="obsolete">16-ren Hurbileneko Biderkagarri Inguruan</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>1%</source>
         <translation type="obsolete">1%</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Percent</source>
         <translation type="obsolete">Ehunekoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>200%</source>
         <translation type="obsolete">200%</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Error X / Y:</source>
         <translation type="obsolete">Akatsa X / Y:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>0.00 / 0.00</source>
         <translation type="obsolete">0.00 / 0.00</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Resize Method:</source>
         <translation type="obsolete">Birneurriratze Metodoa:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Bilinear</source>
         <translation type="obsolete">Bilinearra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Bicubic</source>
         <translation type="obsolete">Bikubikoa</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/resampleFps/ADM_vidResampleFPS.cpp" line="365"/>
         <source>Lanzcos3</source>
         <translation type="obsolete">Lanzcos3</translation>
     </message>
@@ -9631,97 +9874,64 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>rotate</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="52"/>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="215"/>
-        <source>Rotate</source>
-        <translation type="unfinished">Itzulikatu</translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="53"/>
-        <source>Rotate the image by 90/180/270 degrees.</source>
-        <translation type="unfinished"></translation>
-    </message>
+    <name>rotateFilter</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="208"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="209"/>
         <source>90 degrees</source>
-        <translation type="unfinished">90 gradu</translation>
+        <translation>90 gradu</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="209"/>
-        <source>90Â°</source>
-        <translation type="unfinished"></translation>
+        <source>90&#xc2;&#xb0;</source>
+        <translation>90Â°</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="210"/>
         <source>180 degrees</source>
-        <translation type="unfinished">180 gradu</translation>
+        <translation>180 gradu</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="210"/>
-        <source>180Â°</source>
-        <translation type="unfinished"></translation>
+        <source>180&#xc2;&#xb0;</source>
+        <translation>180Â°</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="211"/>
         <source>270 degrees</source>
-        <translation type="unfinished">270 gradu</translation>
+        <translation>270 gradu</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="211"/>
-        <source>270Â°</source>
-        <translation type="unfinished"></translation>
+        <source>270&#xc2;&#xb0;</source>
+        <translation>270Â°</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="213"/>
         <source>_Angle:</source>
-        <translation type="unfinished">_Angelua:</translation>
-    </message>
-</context>
-<context>
-    <name>rotateFilter</name>
-    <message>
-        <source>None</source>
-        <translation type="obsolete">Ezer ez</translation>
+        <translation>_Angelua:</translation>
     </message>
     <message>
-        <source>90 degrees</source>
-        <translation type="obsolete">90 gradu</translation>
-    </message>
-    <message>
-        <source>180 degrees</source>
-        <translation type="obsolete">180 gradu</translation>
-    </message>
-    <message>
-        <source>270 degrees</source>
-        <translation type="obsolete">270 gradu</translation>
-    </message>
-    <message>
-        <source>_Angle:</source>
-        <translation type="obsolete">_Angelua:</translation>
-    </message>
-    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="215"/>
         <source>Rotate</source>
-        <translation type="obsolete">Itzulikatu</translation>
+        <translation>Itzulikatu</translation>
     </message>
 </context>
 <context>
     <name>rotateGl</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glRotate/rotateGl.cpp" line="179"/>
-        <source>Angle (Â°):</source>
-        <translation type="unfinished"></translation>
+        <source>Angle (&#xc2;&#xb0;):</source>
+        <translation>Angelua (Â°):</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glRotate/rotateGl.cpp" line="184"/>
         <source>glRotate</source>
-        <translation type="unfinished"></translation>
+        <translation>gl-Itzulikapena</translation>
     </message>
 </context>
 <context>
@@ -9734,21 +9944,23 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="96"/>
         <source>next</source>
-        <translation type="unfinished"></translation>
+        <translation>hurrengoa</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="103"/>
         <source>00:00:00.000</source>
-        <translation type="unfinished">00:00:00.000</translation>
+        <translation>00:00:00.000</translation>
     </message>
 </context>
 <context>
     <name>srtDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="103"/>
         <source>Subtitle Font Size and Position</source>
         <translation type="obsolete">Azpidatzi Hizki Neurria eta Kokapena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="103"/>
         <source>Font Size :</source>
         <translation type="obsolete">Hizki Neurria:</translation>
     </message>
@@ -9756,45 +9968,39 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>subAss</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="170"/>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="obsolete">_Azpidatzi agiria (ASS/SSA):</translation>
+        <translation>_Azpidatzi agiria (ASS/SSA):</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="170"/>
         <source>Select Subtitle file</source>
-        <translation type="obsolete">Hautatu Azpidatzi agiria</translation>
+        <translation>Hautatu Azpidatzi agiria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="171"/>
         <source>_Line spacing:</source>
-        <translation type="obsolete">_Lerro tartea:</translation>
+        <translation>_Lerro tartea:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="172"/>
         <source>_Font scale:</source>
-        <translation type="obsolete">_Hizki neurria:</translation>
+        <translation>_Hizki neurria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="173"/>
         <source>_Top margin:</source>
-        <translation type="obsolete">_Goiko bazterra:</translation>
+        <translation>_Goiko bazterra:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="174"/>
         <source>Botto_m margin</source>
-        <translation type="obsolete">Behe_ko bazterra</translation>
+        <translation>Behe_ko bazterra</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="178"/>
         <source>ASS</source>
-        <translation type="obsolete">ASS</translation>
-    </message>
-</context>
-<context>
-    <name>swapuv</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/swapUV/swapUV.cpp" line="41"/>
-        <source>Swap UV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/swapUV/swapUV.cpp" line="42"/>
-        <source>Swap the U and V planes.</source>
-        <translation type="unfinished"></translation>
+        <translation>ASS</translation>
     </message>
 </context>
 <context>
@@ -9802,37 +10008,37 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="165"/>
         <source>X11</source>
-        <translation type="unfinished"></translation>
+        <translation>X11</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="167"/>
         <source>MS Windows GDI</source>
-        <translation type="unfinished"></translation>
+        <translation>MS Windows GDI</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="169"/>
         <source>Mac OS X Quartz 2D</source>
-        <translation type="unfinished"></translation>
+        <translation>Mac OS X Quartz 2D</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="171"/>
         <source>Mac OS X QuickDraw</source>
-        <translation type="unfinished"></translation>
+        <translation>Mac OS X QuickDraw</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="173"/>
         <source>OpenGL</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="176"/>
         <source>MS Windows Direct3D</source>
-        <translation type="unfinished"></translation>
+        <translation>MS Windows Direct3D</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ui_support.cpp" line="179"/>
         <source>Default Raster</source>
-        <translation type="unfinished"></translation>
+        <translation>Berezko Raster</translation>
     </message>
 </context>
 <context>
@@ -9840,42 +10046,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="315"/>
         <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi Goiko Eremuari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="316"/>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi Beheko Eremuari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="317"/>
         <source>Double framerate</source>
-        <translation type="unfinished"></translation>
+        <translation>Frameneurri bikoitza</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="321"/>
         <source>_Resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Birneurriratu:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="322"/>
         <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Deint Modua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="323"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Zabalera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="324"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Garaiera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="328"/>
         <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau</translation>
     </message>
 </context>
 <context>
@@ -9883,42 +10089,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="264"/>
         <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi Goiko Eremuari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="265"/>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Heutsi Beheko Eremuari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="266"/>
         <source>Double framerate</source>
-        <translation type="unfinished"></translation>
+        <translation>Frameneurri bikoitza</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="270"/>
         <source>_Resize:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Birneurriratu:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="271"/>
         <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Deint Modua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="272"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Zabalera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="273"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Garaiera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glVdpau/ADM_vidVdpauFilterDeint.cpp" line="277"/>
         <source>vdpau</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau</translation>
     </message>
 </context>
 <context>
@@ -9926,80 +10132,63 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="198"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>Zabaleera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="199"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>Garaiera :</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>vdpau</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>vdpresize</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="69"/>
-        <source>vdpau: Resize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="70"/>
-        <source>vdpau: Resize image using vdpau.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>vflip</name>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/verticalFlip/verticalFlip.cpp" line="47"/>
-        <source>Vertical Flip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/verticalFlip/verticalFlip.cpp" line="48"/>
-        <source>Vertically flip the image.</source>
-        <translation type="unfinished"></translation>
+        <translation>vdpau</translation>
     </message>
 </context>
 <context>
     <name>vidBlendRemoval</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>_Threshold:</source>
         <translation type="obsolete">_Muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>If value is smaller than threshold it is considered valid.Smaller value might mean more false positive.</source>
         <translation type="obsolete">Balio hau muga baino txikiagoa bada baliozkotzat hartzen da. Balio txikiagoak esanahi du faltsu positibo gehiago.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>_Noise:</source>
         <translation type="obsolete">_Zarata:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>If pixels are closer than noise, they are considered to be the same</source>
         <translation type="obsolete">Pixelak zarata baino hurbilago badaude, berdintzat hartzen dira</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>I_dentical:</source>
         <translation type="obsolete">Be_rdintasuna:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>If metric is less than identical, images are considered identical</source>
         <translation type="obsolete">Neurria berdintasuna baino txikiagoa bada, irudiak berdintzat hartzen dira</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>_Show metrics</source>
         <translation type="obsolete">_Erakutsi neurriak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>Show metric in image (debug)</source>
         <translation type="obsolete">Erakutsi neurriak irudian (garbiketa)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="203"/>
         <source>Blend Removal</source>
         <translation type="obsolete">Nahasketa Kentzea</translation>
     </message>
@@ -10007,53 +10196,170 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vidColorYuv</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="75"/>
+        <source>AutoWhite</source>
+        <translation>Berez-Zuria</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="76"/>
+        <source>AutoGain</source>
+        <translation>Berez-Irabazia</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="77"/>
+        <source>Clip to Tv Range (16-235)</source>
+        <translation>Klikatu Tb Mailara (16-235)</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="78"/>
         <source>None</source>
-        <translation type="obsolete">Ezer ez</translation>
+        <translation>Ezer ez</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="79"/>
+        <source>PC-&gt;TV</source>
+        <translation>PC-&gt;TB</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="80"/>
+        <source>TV-&gt;PC</source>
+        <translation>TB-&gt;PC</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="82"/>
+        <source>Levels:</source>
+        <translation>Mailak:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="89"/>
+        <source>Y gain</source>
+        <translation>Y irabazia</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="90"/>
+        <source>Y Brightness</source>
+        <translation>Y Dizdira</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="91"/>
+        <source>Y Gamma</source>
+        <translation>Y Gamma</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="92"/>
+        <source>Y Contrast</source>
+        <translation>Y Zuribeltztasuna</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="97"/>
+        <source>U gain</source>
+        <translation>U irabazia</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="98"/>
+        <source>U Brightness</source>
+        <translation>U Dizdira</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="100"/>
+        <source>U Contrast</source>
+        <translation>U Zuribeltztasuna</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="106"/>
+        <source>V gain</source>
+        <translation>V irabazia</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="107"/>
+        <source>V Brightness</source>
+        <translation>V Dizdira</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="109"/>
+        <source>V Contrast</source>
+        <translation>V Zuribeltztasuna</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="113"/>
+        <source>Flags</source>
+        <translation>Ikurrak</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="114"/>
+        <source>Y</source>
+        <translation>Y</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="115"/>
+        <source>U</source>
+        <translation>U</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="116"/>
+        <source>V</source>
+        <translation>V</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
+        <source>colorYuv</source>
+        <translation>margoa-Yuv</translation>
     </message>
 </context>
 <context>
     <name>vidHardPDRemoval</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>_Threshold:</source>
         <translation type="obsolete">_Muga:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>If value is smaller than threshold it is considered valid. Smaller value might mean more false positive</source>
         <translation type="obsolete">Balio hau muga baino txikiagoa bada baliozkotzat hartzen da. Balio txikiagoak esanahi du faltsu positibo gehiago</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>_Noise:</source>
         <translation type="obsolete">_Zarata:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>If pixels are closer than noise, they are considered to be the same</source>
         <translation type="obsolete">Pixelak zarata baino hurbilago badaude, berdintzat hartzen dira</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>_Identical:</source>
         <translation type="obsolete">_Berdinak:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>If metric is less than identical, images are considered identical</source>
         <translation type="obsolete">Neurria berdintasuna baino txikiagoa bada, irudiak berdintzat hartzen dira</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>_Show metrics</source>
         <translation type="obsolete">_Erakutsi neurriak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Show metric in image (debug)</source>
         <translation type="obsolete">Erakutsi neurriak irudian (garbiketa)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Hard IVTC Removal</source>
         <translation type="obsolete">IVTC Gogor Kentzea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Metrics</source>
         <translation type="obsolete">Metrikak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Do you want to print metrics on screen ?</source>
         <translation type="obsolete">Neurriak ikusleihoan irarkitzea nahi duzu ?</translation>
     </message>
@@ -10061,45 +10367,49 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vobSubDialog</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>VobSub Settings</source>
         <translation type="obsolete">VobSub Ezarpenak</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Language:</source>
         <translation type="obsolete">Hizkuntza:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Idx File:</source>
         <translation type="obsolete">Idx Agiria:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="119"/>
         <source>Delay:</source>
         <translation type="obsolete">Atzerapena:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="13"/>
         <source>Subtitle Font Size and Position</source>
-        <translation type="unfinished">Azpidatzi Hizki Neurria eta Kokapena</translation>
+        <translation>Azpidatzi Hizki Neurria eta Kokapena</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="50"/>
         <source>Delay :</source>
-        <translation type="unfinished"></translation>
+        <translation>Atzerapena :</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="60"/>
         <source>Select File</source>
-        <translation type="unfinished"></translation>
+        <translation>Hautatu Agiria</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="67"/>
         <source>Language :</source>
-        <translation type="unfinished"></translation>
+        <translation>Hizkuntza :</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/vobsub.ui" line="74"/>
         <source>Idx File :</source>
-        <translation type="unfinished"></translation>
+        <translation>Idx Agiria :</translation>
     </message>
 </context>
 <context>
@@ -10107,32 +10417,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="331"/>
         <source>VBR</source>
-        <translation type="unfinished">VBR</translation>
+        <translation>BNG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="332"/>
         <source>Quality based</source>
-        <translation type="unfinished"></translation>
+        <translation>Ontasunean ohinarrituta</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="334"/>
         <source>_Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Modua:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="348"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Bitneurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="350"/>
         <source>_Quality:</source>
-        <translation type="unfinished">_Ontasun:</translation>
+        <translation>_Ontasuna:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/vorbis/audioencoder_vorbis.cpp" line="357"/>
         <source>Vorbis Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorbis Itxurapena</translation>
     </message>
 </context>
 <context>
@@ -10150,7 +10460,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="99"/>
         <source>Time Remaining:</source>
-        <translation>Gelditzen dena:</translation>
+        <translation>Gelditzen da:</translation>
     </message>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="125"/>
@@ -10160,898 +10470,1120 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Cancel</source>
-        <translation type="unfinished">Ezeztatu</translation>
+        <translation>Ezeztatu</translation>
     </message>
 </context>
 <context>
     <name>x264ConfigDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>x264 Configuraton</source>
         <translation type="obsolete">x264 Itxurapena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Configuration:</source>
         <translation type="obsolete">Itxurapena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Save As</source>
         <translation type="obsolete">Gorde Honela</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Delete</source>
         <translation type="obsolete">Ezabatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>General</source>
         <translation type="obsolete">Orokorra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Rate Control</source>
         <translation type="obsolete">Neurri Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Target Video Size:</source>
         <translation type="obsolete">Xede Bideo Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Constant Bitrate (Single Pass)</source>
         <translation type="obsolete">Bitneurri Aldagaitza (Urrats Bakarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Constant Quantiser (Single Pass)</source>
         <translation type="obsolete">Kuantizatzaile Aldagaitza (Urrats Bakarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Constant Rate Factor (Single Pass)</source>
         <translation type="obsolete">Neurri Ezaugarri Aldagaitza (Urrats Bakarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Video Size (Two Pass)</source>
         <translation type="obsolete">Bideo Neurria (Bi Urrats)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Average Bitrate (Two Pass)</source>
         <translation type="obsolete">Bataz-besteko Bitneurria (Bi Urrats)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Encoding Mode:</source>
         <translation type="obsolete">Kodeaketa Modua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>MB</source>
         <translation type="obsolete">MB</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>0 (High Quality)</source>
         <translation type="obsolete">0 (Ontasun Handia)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantiser</source>
         <translation type="obsolete">Kuantizatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>51 (Low Quality)</source>
         <translation type="obsolete">51 (Ontasun Apala)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Constant Rate Factor</source>
         <translation type="obsolete">Gehienezko Neurri Ezaugarri Aldagaitza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Fast First Pass</source>
         <translation type="obsolete">Lehen Urrats Azkarra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Macroblock-tree Rate Control</source>
         <translation type="obsolete">Makrobloke-zuhaitz Neurri Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Frametype Lookahead:</source>
         <translation type="obsolete">Frame-mota Aurrerabegira:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>frames</source>
         <translation type="obsolete">frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Motion</source>
         <translation type="obsolete">Mugimendua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Motion Estimation</source>
         <translation type="obsolete">MMugimendu Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Motion Estimation Method:</source>
         <translation type="obsolete">Mugimendu Estimazio Metodoa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Diamond Search</source>
         <translation type="obsolete">Diamante Bilaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Hexagonal Search</source>
         <translation type="obsolete">Bilaketa Hexagonala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Uneven Multi-hexagonal Search</source>
         <translation type="obsolete">Multi-hexagonal Bilaketa Ezberdina</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Exhaustive Search</source>
         <translation type="obsolete">Bilaketa Bizia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Hadamard Exhaustive Search</source>
         <translation type="obsolete">Hadamard Bilaketa Bizia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>1 (Fast)</source>
         <translation type="obsolete">1 (Azkarra)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Subpixel Refinement</source>
         <translation type="obsolete">Azpipixela Irazketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>10 (Best)</source>
         <translation type="obsolete">10 (Hobea)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Motion Vector</source>
         <translation type="obsolete">Mugimendu Bektorea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Motion Vector Length:</source>
         <translation type="obsolete">Gehienezko Mugimendu Bektore Luzera:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Minimum Buffer Between Threads:</source>
         <translation type="obsolete">Gutxienezko Buffera Harien Artean:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Motion Vector Search Range:</source>
         <translation type="obsolete">Gehienezko Mugimendu Bektore Bilaketa Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Prediction</source>
         <translation type="obsolete">Iragarpena</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Disabled</source>
         <translation type="obsolete">Ezgaituta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Weighted References</source>
         <translation type="obsolete">Neurritasun Xehetasunak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Weighted References + Duplicates</source>
         <translation type="obsolete">Neurritasun Xehetasunak + Bikoizpenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Direct Prediction Mode:</source>
         <translation type="obsolete">Zuzeneko Iragarpen Modua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Weighted Prediction for P-frames:</source>
         <translation type="obsolete">Neurritasun Iragarpenak P-framentzat:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>None</source>
         <translation type="obsolete">Ezer ez</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Spatial</source>
         <translation type="obsolete">Espaziala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Temporal</source>
         <translation type="obsolete">Tenporala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Auto</source>
         <translation type="obsolete">Berez</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Weighted Prediction for B-frames</source>
         <translation type="obsolete">Neurritasun Iragarpenak B-framentzat</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Constrained Intra Prediction</source>
         <translation type="obsolete">Intra Iragarpen Hertsatua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Partition</source>
         <translation type="obsolete">Zatiketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Partition Search</source>
         <translation type="obsolete">Zatiketa Bilaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>8x8 DCT Spatial Transform</source>
         <translation type="obsolete">8x8 DCT Espazio Eraldaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>8x8, 8x16 and 16x8 P-frame Intra-predicted Blocks</source>
         <translation type="obsolete">8x8, 8x16 eta 16x8 P-frame Intra-iragarritako Blokeak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>8x8, 8x16 and 16x8 B-frame Intra-predicted Blocks</source>
         <translation type="obsolete">8x8, 8x16 eta 16x8 B-frame Intra-iragarritako Blokeak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>4x4, 4x8 and 8x4 P-frame Intra-predicted Blocks</source>
         <translation type="obsolete">4x4, 4x8 eta 8x4 P-frame Intra-iragarritako Blokeak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>8x8 Intra-predicted Blocks</source>
         <translation type="obsolete">8x8 Intra-iragarritako Blokeak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>4x4 Intra-predicted Blocks</source>
         <translation type="obsolete">4x4 Intra-iragarritako Blokeak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Frame</source>
         <translation type="obsolete">Frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Frame Encoding</source>
         <translation type="obsolete">Frame Kodeaketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>CABAC</source>
         <translation type="obsolete">CABAC</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Loop Filter:</source>
         <translation type="obsolete">Bigizta Iragazkia:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Strength:</source>
         <translation type="obsolete">Indartsua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Threshold:</source>
         <translation type="obsolete">Muga:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Open GOP:</source>
         <translation type="obsolete">Ireki GOP:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Normal Mode</source>
         <translation type="obsolete">Modu Arrunta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Blu-ray Mode</source>
         <translation type="obsolete">Blu-ray Modua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Interlaced:</source>
         <translation type="obsolete">Elkarlotuta:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Bottom Field First</source>
         <translation type="obsolete">Beheko Eremua Lehenik</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Top Field First</source>
         <translation type="obsolete">Goiko Eremua Lehenik</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Fake Interlaced</source>
         <translation type="obsolete">Elkarlotura Faltsua</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Reference Frames:</source>
         <translation type="obsolete">Gehienezko Xehetasun Frameak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>B-frames</source>
         <translation type="obsolete">B-frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>B-frames as References:</source>
         <translation type="obsolete">B-frameak Xehetasun bezala:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Strictly Hierarchical Pyramid</source>
         <translation type="obsolete">Piramide Hierarkiko Zorrotza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Non-strict (Not Blu-ray Compatible)</source>
         <translation type="obsolete">Ez-zorrotza (Bluray-arekin Bateraezina)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Fast</source>
         <translation type="obsolete">Azkar</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Optimal</source>
         <translation type="obsolete">Hoberen</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>B-frame Bias:</source>
         <translation type="obsolete">B-frame Bias:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Consecutive B-frames:</source>
         <translation type="obsolete">Gehienezko B-frame Jarraian:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Adaptive B-frame Decision:</source>
         <translation type="obsolete">B-frame Erabaki Egokigarria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>I-frames</source>
         <translation type="obsolete">I-frame</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>GOP Size:</source>
         <translation type="obsolete">GOP Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Minimum:</source>
         <translation type="obsolete">Gutxienez:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum:</source>
         <translation type="obsolete">Gehienez:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>I-frame Threshold:</source>
         <translation type="obsolete">I-frame Muga:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Periodic Intra Refresh</source>
         <translation type="obsolete">Aldikako Intra Berritzea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Analysis</source>
         <translation type="obsolete">Azterketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Mixed References</source>
         <translation type="obsolete">Nahasketa Hobespenak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Chroma Motion Estimation</source>
         <translation type="obsolete">Margotasun Mugimendu Estimazioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Trellis Quantization:</source>
         <translation type="obsolete">Trellis Kuantizazioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Final Macroblock Only</source>
         <translation type="obsolete">Amaiera Makroblokea Bakarrik</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Always On</source>
         <translation type="obsolete">Betik Eraginda</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Fast Skip Detection on P-frames</source>
         <translation type="obsolete">Atzemate Jauzi Azkarra P-frametan</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>DCT Decimation on P-frames</source>
         <translation type="obsolete">DCT Hamarrenjtzea P-frametan</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Psychovisual Rate Distortion Optimisation:</source>
         <translation type="obsolete">Psikoikuspen Neurri Bihurdura Hobekuntza:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Psychovisual Trellis:</source>
         <translation type="obsolete">Trellis Psikoikuspena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Noise Reduction:</source>
         <translation type="obsolete">Zarata Murrizpena:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Luma Quantisation Deadzone</source>
         <translation type="obsolete">Luma Kuantizazio Gunehila</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Intra Luma Quantisation Deadzone:</source>
         <translation type="obsolete">Intra Luma Kuantizazio Gunehila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Inter Luma Quantisation Deadzone:</source>
         <translation type="obsolete">Inter Luma Kuantizazio Gunehila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantisation Matrix</source>
         <translation type="obsolete">Kuantizazioa Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Flat Matrix</source>
         <translation type="obsolete">Flat Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>JVT Matrix</source>
         <translation type="obsolete">JVT Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Custom Matrix</source>
         <translation type="obsolete">Egile Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Edit</source>
         <translation type="obsolete">Editatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantiser Control</source>
         <translation type="obsolete">Kuantizatzaile Agintea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Quantiser:</source>
         <translation type="obsolete">Gehienezko Kuantizatzaile:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>I and P-frame Quantiser Ratio:</source>
         <translation type="obsolete">I eta P-frame Kuantzizatzaile Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>%</source>
         <translation type="obsolete">%</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Quantiser Step:</source>
         <translation type="obsolete">Gehienezko Kuantizatzaile Urrats:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>P and B-frame Quantiser Ratio:</source>
         <translation type="obsolete">P eta B-frame Kuantizatzaile Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Average Bitrate Tolerance:</source>
         <translation type="obsolete">Bataz-besteko Bitneurri Jasangarritasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Chroma to Luma Quantiser Offset:</source>
         <translation type="obsolete">Margotasuna Luma Kuantizatzaile Orekarako:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Minimum Quantiser:</source>
         <translation type="obsolete">Gutxineko Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantiser Curve Compression</source>
         <translation type="obsolete">Kuantizatzaile Bihurgune Konpresioa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantiser Curve Compression:</source>
         <translation type="obsolete">Kuantizatzaile Bihurgune Konpresioa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Reduce Fluctuation Before Curve Compression:</source>
         <translation type="obsolete">Murriztu Gorabehera Konpresio Bihurgunearen Aurretik:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Reduce Fluctuation After Curve Compression:</source>
         <translation type="obsolete">Murriztu Gorabehera Konpresio Bihurgunearen Ondoren:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Adaptive Quantisation</source>
         <translation type="obsolete">Kuantizazioa Egokigarria</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Variance AQ:</source>
         <translation type="obsolete">AQ Aldaera:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Normal</source>
         <translation type="obsolete">Arrunta</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Auto Variance AQ</source>
         <translation type="obsolete">AQ  Berez Aldaera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Advanced 1</source>
         <translation type="obsolete">Aurreratua 1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Video Buffer Verifier</source>
         <translation type="obsolete">Bideo Buffer Egiaztatzailea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum VBV Bitrate:</source>
         <translation type="obsolete">Gehienezko VBV Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Initial VBV Buffer Occupancy:</source>
         <translation type="obsolete">Hasierako VBV Buffer Tokia:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>kbit</source>
         <translation type="obsolete">kbit</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>kbit/s</source>
         <translation type="obsolete">kbit/s</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>VBV Buffer Size:</source>
         <translation type="obsolete">VBV Buffer Neurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Slicing</source>
         <translation type="obsolete">Ebakina</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Slices per Frame:</source>
         <translation type="obsolete">Ebakin Frameko:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Size per Slice:</source>
         <translation type="obsolete">Gehienezko Neurria Ebakineko:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>bytes</source>
         <translation type="obsolete">byte</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Maximum Macroblocks per Slice:</source>
         <translation type="obsolete">Gehienezko Makrobloke Ebakineko:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Zones</source>
         <translation type="obsolete">Gune</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Add</source>
         <translation type="obsolete">Gehitu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Advanced 2</source>
         <translation type="obsolete">Aurreratua 2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Multithreading</source>
         <translation type="obsolete">Eginkizun-anitz</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Disable</source>
         <translation type="obsolete">Ezgaitu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Auto-detect</source>
         <translation type="obsolete">Berez-atzeman</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Custom:</source>
         <comment>multithreading</comment>
         <translation type="obsolete">Egilea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Enforce Repeatability</source>
         <translation type="obsolete">Behartu Berregintasuna</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Slice-based Threading</source>
         <translation type="obsolete">Ebakin-ohinarriko Hariketa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Custom Threaded Lookahead Buffer:</source>
         <translation type="obsolete">Egileak Haritutako Aurrerabegira Bufferra:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Output 1</source>
         <translation type="obsolete">Irteera 1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Output</source>
         <translation type="obsolete">Irteera</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>1</source>
         <translation type="obsolete">1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>1.1</source>
         <translation type="obsolete">1.1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>1.2</source>
         <translation type="obsolete">1.2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>1.3</source>
         <translation type="obsolete">1.3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>2</source>
         <translation type="obsolete">2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>2.1</source>
         <translation type="obsolete">2.1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>2.2</source>
         <translation type="obsolete">2.2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>3</source>
         <translation type="obsolete">3</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>3.1</source>
         <translation type="obsolete">3.1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>3.2</source>
         <translation type="obsolete">3.2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>4</source>
         <translation type="obsolete">4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>4.1</source>
         <translation type="obsolete">4.1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>4.2</source>
         <translation type="obsolete">4.2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>5</source>
         <translation type="obsolete">5</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>5.1</source>
         <translation type="obsolete">5.1</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Sequence Parameter Set Identifer:</source>
         <translation type="obsolete">Sekuentzia Parametro Ezarpen Ezautzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>IDC Level:</source>
         <translation type="obsolete">IDC Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>0</source>
         <translation type="obsolete">0</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>7</source>
         <translation type="obsolete">7</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>15</source>
         <translation type="obsolete">15</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>31</source>
         <translation type="obsolete">31</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Generate Access Unit Delimiters</source>
         <translation type="obsolete">Sortu Sarbide Batasun Mugatzaileak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Pixel Aspect Ratio</source>
         <translation type="obsolete">Pixel Ikuspegi Maila</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Custom:</source>
         <comment>PAR</comment>
         <translation type="obsolete">Egilea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>As Input</source>
         <translation type="obsolete">Sarrera Bezala</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>:</source>
         <translation type="obsolete">:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Predefined Aspect Ratio:</source>
         <translation type="obsolete">Aurrezehatutako Ikuspegi Maila:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>16:15 (PAL 4:3)</source>
         <translation type="obsolete">16:15 (PAL 4:3)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>64:45 (PAL 16:9)</source>
         <translation type="obsolete">64:45 (PAL 16:9)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>8:9 (NTSC 4:3)</source>
         <translation type="obsolete">8:9 (NTSC 4:3)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>32:27 (NTSC 16:9)</source>
         <translation type="obsolete">32:27 (NTSC 16:9)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Output 2</source>
         <translation type="obsolete">Irteera 2</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Video Usability Information</source>
         <translation type="obsolete">Bideo Erabilgarritasun Argibideak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
         <translation type="obsolete">Ezarpen hauek irakurketa tresneriarentzako iradokizunak bakarrik dira.  Erabili zeure arriskupean.</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Overscan:</source>
         <translation type="obsolete">Gainmihaketa:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Undefined</source>
         <translation type="obsolete">Zehaztugabea</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Show</source>
         <translation type="obsolete">Erakutsi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Crop</source>
         <translation type="obsolete">Moztu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Video Format:</source>
         <translation type="obsolete">Bideo Heuskarria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Component</source>
         <translation type="obsolete">Osagaia</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>PAL</source>
         <translation type="obsolete">PAL</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>NTSC</source>
         <translation type="obsolete">NTSC</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>SECAM</source>
         <translation type="obsolete">SECAM</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>MAC</source>
         <translation type="obsolete">MAC</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Colour Primaries:</source>
         <translation type="obsolete">Lehen margoak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>BT709</source>
         <translation type="obsolete">BT709</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>BT470M</source>
         <translation type="obsolete">BT470M</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>BT470BG</source>
         <translation type="obsolete">BT470BG</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>SMPTE170M</source>
         <translation type="obsolete">SMPTE170M</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>SMPTE240M</source>
         <translation type="obsolete">SMPTE170M</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Film</source>
         <translation type="obsolete">Filma</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Transfer Characteristics:</source>
         <translation type="obsolete">Eskualdaketa Ezaugarriak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Linear</source>
         <translation type="obsolete">Linearra</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>LOG100</source>
         <translation type="obsolete">LOG100</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>LOG316</source>
         <translation type="obsolete">LOG316</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>SMPTEL170M</source>
         <translation type="obsolete">SMPTEL170M</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Colour Matrix:</source>
         <translation type="obsolete">Margo Matriza:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>FCC</source>
         <translation type="obsolete">FCC</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>GBR</source>
         <translation type="obsolete">GBR</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>YCgCo</source>
         <translation type="obsolete">YCgCo</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>HRD Parameters:</source>
         <translation type="obsolete">HRD Parametroak:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>VBR</source>
         <translation type="obsolete">VBR</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>CBR</source>
         <translation type="obsolete">CBR</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Chroma Sample Location:</source>
         <translation type="obsolete">Margotasun Lagun Kokalekua:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Full Range Samples</source>
         <translation type="obsolete">Maila Osoko Laginak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Blind Offset</source>
         <translation type="obsolete">Mozorro Oreka</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Smart Analysis</source>
         <translation type="obsolete">Azterketa Azkarrak</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>&lt;default&gt;</source>
         <translation type="obsolete">&lt;berezkoa&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>&lt;custom&gt;</source>
         <translation type="obsolete">&lt;egilea&gt;</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>x264 Configuration File (*.xml)</source>
         <translation type="obsolete">x264 Itxurapen Agiria (*.xml)</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Are you sure you wish to delete the selected configuration?</source>
         <translation type="obsolete">Zihur zaude hautatutako itxurapena ezabatzea nahi duzula?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Target Bitrate:</source>
         <translation type="obsolete">Xede Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quantiser:</source>
         <translation type="obsolete">Kuantizatzailea:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Quality:</source>
         <translation type="obsolete">Ontasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Average Bitrate:</source>
         <translation type="obsolete">Bataz-besteko Bitneurria:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
@@ -11060,6 +11592,7 @@ Do you wish to continue?</source>
 Jarraitzea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
 
 Do you wish to continue?</source>
@@ -11068,6 +11601,7 @@ Do you wish to continue?</source>
 Jarraitzea nahi duzu?</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Are you sure you wish to delete the selected zone?</source>
         <translation type="obsolete">Zihur zaude hautatutako gunea ezabatzea nahi duzula?</translation>
     </message>
@@ -11075,54 +11609,67 @@ Jarraitzea nahi duzu?</translation>
 <context>
     <name>x264CustomMatrixDialog</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>x264 Custom Matrix</source>
         <translation type="obsolete">x264 Egile Matriza</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Intra 4x4</source>
         <translation type="obsolete">Intra 4x4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Luma:</source>
         <translation type="obsolete">Argitasuna:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Chroma U/V:</source>
         <translation type="obsolete">Margotasuna U/V:</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Inter 4x4</source>
         <translation type="obsolete">Inter 4x4</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Intra 8x8</source>
         <translation type="obsolete">Intra 8x8</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Inter 8x8</source>
         <translation type="obsolete">Inter 8x8</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Load File</source>
         <translation type="obsolete">Gertatu Agiria</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>OK</source>
         <translation type="obsolete">Ongi</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Cancel</source>
         <translation type="obsolete">Ezeztatu</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Select Matrix File</source>
         <translation type="obsolete">Hautatu Matrize Agira</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Read Error</source>
         <translation type="obsolete">Irakurri Akatsa</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_dialog/working.ui" line="212"/>
         <source>Error reading custom matrix file.</source>
         <translation type="obsolete">Akatsa egile matrize agiria irakurtzerakoan.</translation>
     </message>
@@ -11132,45 +11679,44 @@ Jarraitzea nahi duzu?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="479"/>
         <source>Target Bitrate:</source>
-        <translation type="unfinished">Xede Bitneurria:</translation>
+        <translation>Xede Bitneurria:</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="480"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="499"/>
         <source>kbit/s</source>
-        <translation type="unfinished">kbit/s</translation>
+        <translation>kbit/s</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="484"/>
         <source>Quantiser:</source>
-        <translation type="unfinished">Kuantizatzailea:</translation>
+        <translation>Kuantizatzailea:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="488"/>
         <source>Quality:</source>
-        <translation type="unfinished">Ontasuna:</translation>
+        <translation>Ontasuna:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="493"/>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Xede Bideo Neurria:</translation>
+        <translation>Xede Bideo Neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="494"/>
         <source>MB</source>
-        <translation type="unfinished">MB</translation>
+        <translation>MB</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="498"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">Bataz-besteko Bitneurria:</translation>
+        <translation>Bataz-besteko Bitneurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="561"/>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
-        <translation type="unfinished">Makrobloke-Zuhaitz hobekuntzak Aldaera Egokigarriko Kuantizazioa gaituta egotea behar du.  Aldaera Egokigarriko Kuantizazioa berezgaitasunez gaituko da.
+        <translation>Makrobloke-Zuhaitz hobekuntzak Aldaera Egokigarriko Kuantizazioa gaituta egotea behar du.  Aldaera Egokigarriko Kuantizazioa berezgaitasunez gaituko da.
 
 Jarraitzea nahi duzu?</translation>
     </message>
@@ -11179,7 +11725,7 @@ Jarraitzea nahi duzu?</translation>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
 
 Do you wish to continue?</source>
-        <translation type="unfinished">Makrobloke-Zuhaitz hobekuntzak Aldaera Egokigarriko Kuantizazioa gaituta egotea behar du.  Makrobloke-Zuhaitz hobekuntza berezgaitasunez ezgaituko da.
+        <translation>Makrobloke-Zuhaitz hobekuntzak Aldaera Egokigarriko Kuantizazioa gaituta egotea behar du.  Makrobloke-Zuhaitz hobekuntza berezgaitasunez ezgaituko da.
 
 Jarraitzea nahi duzu?</translation>
     </message>
@@ -11187,10 +11733,12 @@ Jarraitzea nahi duzu?</translation>
 <context>
     <name>x264ZoneTableDelegate</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Quantiser</source>
         <translation type="obsolete">Kuantizatzailea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Bitrate Factor</source>
         <translation type="obsolete">Bitneurri Ezaugarria</translation>
     </message>
@@ -11198,26 +11746,32 @@ Jarraitzea nahi duzu?</translation>
 <context>
     <name>x264ZoneTableModel</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Quantiser</source>
         <translation type="obsolete">Kuantizatzailea</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Bitrate Factor</source>
         <translation type="obsolete">Bitneurri Ezaugarria</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Frame Start</source>
         <translation type="obsolete">Frame Hasiera</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Frame End</source>
         <translation type="obsolete">Frame Amaiera</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Mode</source>
         <translation type="obsolete">Modua</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="572"/>
         <source>Value</source>
         <translation type="obsolete">Balioa</translation>
     </message>
@@ -11225,150 +11779,149 @@ Jarraitzea nahi duzu?</translation>
 <context>
     <name>xvid4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="37"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="61"/>
         <source>None</source>
-        <translation type="unfinished">Ezer ez</translation>
+        <translation>Ezer ez</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="38"/>
         <source>Low</source>
-        <translation type="unfinished">Apala</translation>
+        <translation>Apala</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="39"/>
         <source>Medium</source>
-        <translation type="unfinished">Ertaina</translation>
+        <translation>Ertaina</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="40"/>
         <source>Full</source>
-        <translation type="unfinished">Osoa</translation>
+        <translation>Osoa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="44"/>
         <source>H.263</source>
-        <translation type="unfinished">H.263</translation>
+        <translation>H.263</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="45"/>
         <source>MPEG</source>
-        <translation type="unfinished">MPEG</translation>
+        <translation>MPEG</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="46"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Egilea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="62"/>
         <source>DCT</source>
-        <translation type="unfinished"></translation>
+        <translation>DCT</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="63"/>
         <source>Qpel16</source>
-        <translation type="unfinished"></translation>
+        <translation>Qpel16</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="64"/>
         <source>Qpel8</source>
-        <translation type="unfinished"></translation>
+        <translation>Qpel8</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="65"/>
         <source>Square</source>
-        <translation type="unfinished"></translation>
+        <translation>Eremua</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="69"/>
         <source>One thread</source>
-        <translation type="unfinished"></translation>
+        <translation>Bat hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="70"/>
         <source>Two threads)</source>
-        <translation type="unfinished"></translation>
+        <translation>Bi hari)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="71"/>
         <source>Three threads</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiru hari</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="72"/>
         <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
+        <translation>Berez (#cpu)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="79"/>
         <source>MotionEstimation</source>
-        <translation type="unfinished"></translation>
+        <translation>MugimenduEstimazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="81"/>
         <source>Threading</source>
-        <translation type="unfinished"></translation>
+        <translation>Hariak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="87"/>
         <source>_Trellis quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>_Trellis kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="88"/>
         <source>_Number of B frames:</source>
-        <translation type="unfinished"></translation>
+        <translation>_B frame zenbatekoa:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="90"/>
         <source>_Quantization type:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Kuantizazio mota:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="92"/>
         <source>_Macroblock decision:</source>
-        <translation type="unfinished"></translation>
+        <translation>_Makrobloke erabakia:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="94"/>
         <source>Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profila:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="101"/>
         <source>_Gop Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>_GOP Neurria:</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="104"/>
         <source>Advanced Simple Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil Aurreratu Arrunta</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="112"/>
         <source>Motion Estimation</source>
-        <translation type="unfinished"></translation>
+        <translation>Mugimendu Estimazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="117"/>
         <source>Quantization</source>
-        <translation type="unfinished"></translation>
+        <translation>Kuantizazioa</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="121"/>
         <source>Threads</source>
-        <translation type="unfinished"></translation>
+        <translation>Hariak</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="124"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Neurri Agintea</translation>
+        <translation>Neurri Agintea</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/xvid4/xvid4Dialog.cpp" line="127"/>
         <source>Xvid4 MPEG-4 ASP configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Xvid4 MPEG-4 ASP itxurapena</translation>
     </message>
 </context>
 </TS>
