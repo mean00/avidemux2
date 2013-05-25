@@ -1103,7 +1103,7 @@ nextAtom:
 
           _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
           // update fps
-          float f=_videostream.dwLength;
+          double f=_videostream.dwLength;
           if(_movieDuration) f=1000000.*f/_movieDuration;
               else  f=25000;
           _videostream.dwRate=(uint32_t)floor(f+0.49);
@@ -1259,7 +1259,7 @@ int tag,l;
 uint8_t MP4Header::updateCtts(MPsampleinfo *info )
 {
     uint32_t scope=info->nbCtts;
-    float f;
+    double f;
     if(scope>_videostream.dwLength) scope=_videostream.dwLength;
     ADM_info("[MP4]**************** Updating CTTS **********************\n");
     for(int i=0;i<scope;i++)

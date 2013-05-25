@@ -335,7 +335,7 @@ again:
         case StreamCopyIdle:
         {
             uint64_t targetTime=clock->getTimeUs();
-            int skew=(int) fabs((float)*dts-(float)targetTime);
+            int skew=(int) fabs((double)*dts-(double)targetTime);
             aprintf("Skew= %d\n",skew);
             if(skew>MIN_SKEW)
             {
@@ -371,7 +371,7 @@ again:
         {
             uint64_t currentClock=clock->getTimeUs();
             aprintf("Duping clockDts=%d, syncDts=%d\n",currentClock,nextDts);
-            if( fabs((float)nextDts-(float)currentClock<MAX_SKEW))
+            if( fabs((double)nextDts-(double)currentClock<MAX_SKEW))
             {
                 changeState(Flushing);
             }

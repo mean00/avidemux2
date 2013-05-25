@@ -399,7 +399,7 @@ uint32_t i,j,cur;
                      splitAudio(track,info, trackScale);
 		// now collapse
 		uint64_t total=0;
-		float    ftot;
+		double   ftot;
 		uint32_t thisone;
 		
 		for(uint32_t i=0;i<nbChunk;i++)
