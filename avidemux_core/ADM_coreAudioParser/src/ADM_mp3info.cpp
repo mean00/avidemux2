@@ -83,7 +83,7 @@ uint32_t nfq,fqindex,brindex,index;
 					brindex=(a[2]>>4);
 
 					// Remove impossible case
-					if(mpegInfo->layer==0) continue;
+					if(mpegInfo->layer==4) continue;
 					// Check fq
                                         if((a[1]>>4)&1)
                                         {
