@@ -341,7 +341,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       _context->debug &= ~(FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP);
     }
 
-
+  //printf("Frame size : %d\n",in->dataLength);
 
   if (in->dataLength == 0 && !_allowNull)	// Null frame, silently skipped
     {
@@ -397,13 +397,15 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // Some encoder code a vop header with the
       // vop flag set to 0
       // it is meant to mean frame skipped but very dubious
-      if (in->dataLength <= 8 && codecId == CODEC_ID_MPEG4)
+      if (in->dataLength <= 8)
+        if(codecId == CODEC_ID_MPEG4||codecId==CODEC_ID_FRAPS)
 	{
 	  printf ("[lavc] Probably pseudo black frame...\n");
 	  out->_Qp = 2;
 	  out->flags = 0;	// assume P ?
 
 	  clonePic (_context->coded_frame, out);
+          out->Pts=ADM_NO_PTS; // not sure
 	  return 1;
 	}
       // allow null means we allow null frame in and so potentially
