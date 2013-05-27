@@ -1104,8 +1104,15 @@ nextAtom:
           _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
           // update fps
           double f=_videostream.dwLength;
+          
+          ADM_info("Movie duration = %d\n",(int)_movieDuration);
+          ADM_info("# images = %d\n",(int)_mainaviheader.dwTotalFrames);
+          
           if(_movieDuration) f=1000000.*f/_movieDuration;
               else  f=25000;
+          
+          ADM_info("Avg fps %f\n",(float)f);
+          
           _videostream.dwRate=(uint32_t)floor(f+0.49);
            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
           // if we have a sync atom ???

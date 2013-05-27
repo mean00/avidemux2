@@ -125,8 +125,9 @@ protected:
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
+          bool                          refineFps(void);
           uint32_t                      _videoScale;
-          int64_t						_movieDuration; // in ms
+          int64_t			_movieDuration; // in ms
           uint32_t                      _videoFound;
           bool                          processAudio( MP4Track *track,  uint32_t trackScale,  
                                                             MPsampleinfo *info,uint32_t *outNbChunk);

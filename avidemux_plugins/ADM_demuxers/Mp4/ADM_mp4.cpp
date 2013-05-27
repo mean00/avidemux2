@@ -129,7 +129,40 @@ uint64_t                   MP4Header::getVideoDuration(void)
     return _movieDuration*1000LL; //VDEO.index[VDEO.nbIndex-1].time;
 
 }
-
+/**
+ * \fn compute the minimum us delta = maximum fps
+ * \brief average fps is not good enough, it might be too high
+ * @return 
+ */
+bool MP4Header::refineFps(void)
+{
+    int n=VDEO.nbIndex;
+    uint64_t minDelta=60*1000*1000;
+    for(int i=0;i<n-1;i++)
+    {
+        MP4Index *dex=&(_tracks[0].index[i]);
+        MP4Index *next=&(_tracks[0].index[i+1]);
+        if(dex->dts==ADM_NO_PTS) continue;
+        if(next->dts==ADM_NO_PTS) continue;
+        uint64_t delta=next->dts-dex->dts;
+        if(delta<minDelta) minDelta=delta;
+    }
+    if(minDelta>1000)
+    {
+        double f=1000000./(double)minDelta;
+        f*=1000.;
+        ADM_info("MinDelta=%d us\n",(int)minDelta);
+        ADM_info("Computed fps1000=%d\n",(int)f);
+        uint32_t fps1000=floor(f+0.49);
+        if(fps1000>  _videostream.dwRate)
+        {
+            ADM_info("Adjusting fps, the computed is higher than average, dropped frames ?\n");
+           _videostream.dwRate=fps1000;
+           _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
+        }
+    }
+    
+}
 uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
     if(framenum>=VDEO.nbIndex)
@@ -424,6 +457,7 @@ uint8_t    MP4Header::open(const char *name)
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);
         }
         fseeko(_fd,0,SEEK_SET);
+        refineFps();
         ADM_info("3gp/mov file successfully read..\n");
         
         ADM_info("Nb images      : %d\n",nb);
