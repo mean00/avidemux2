@@ -140,7 +140,9 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
 */
  ADM_aviAudioAccess::~ADM_aviAudioAccess()
 {
-    if(fd)fclose(fd);
+     ADM_info("Deleting audio track from avi\n");
+    if(fd)
+        fclose(fd);
     fd=NULL;
     if(extraData) delete[] extraData;
     extraData=NULL;

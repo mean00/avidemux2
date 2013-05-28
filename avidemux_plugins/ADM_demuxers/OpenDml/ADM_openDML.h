@@ -37,6 +37,7 @@ typedef struct odmlTrack
 /**
     \class odmlAudioTrack
 */
+class ADM_aviAudioAccess;
 class odmlAudioTrack
 {
 public:
@@ -65,6 +66,7 @@ protected:
 	  FILE 				*_fd;
 	  odmlIndex 		*_idx;
 	  odmlAudioTrack                *_audioTracks;
+          ADM_aviAudioAccess           **_audioAccess;
           ADM_audioStream              **_audioStreams;
           uint32_t                       _nbAudioTracks;
           uint32_t                       _currentAudioTrack;

@@ -134,11 +134,12 @@ OpenDMLHeader::~OpenDMLHeader()
 */
 uint8_t    OpenDMLHeader::close( void )
 {
+        ADM_info("[Avi] Closing...\n");
 	if(_fd)
  		{
                	fclose(_fd);
         }
-    _fd=NULL;
+        _fd=NULL;
 	if(_idx)
 	{
 		delete [] _idx;
@@ -165,9 +166,12 @@ uint8_t    OpenDMLHeader::close( void )
         for(int i=0;i<_nbAudioTracks;i++)
         {
             delete _audioStreams[i];
+            delete _audioAccess[i];
         }
         delete [] _audioStreams;
+        delete [] _audioAccess;
         _audioStreams=NULL;
+        _audioAccess=NULL;
     }
  	return 1;
 }
@@ -377,6 +381,7 @@ uint32_t rd;
 
                           _audioTracks=new odmlAudioTrack[_nbAudioTracks]; 
                           _audioStreams=new ADM_audioStream *[_nbAudioTracks]; 
+                          _audioAccess=new ADM_aviAudioAccess*[_nbAudioTracks];
                           while(audio<_nbAudioTracks)
                           {
                                         ADM_assert(run<_nbTrack);
@@ -508,11 +513,11 @@ uint32_t rd;
                         for(int i=0;i<_nbAudioTracks;i++)
                         {
                                 track=&(_audioTracks[i]);
-                                ADM_aviAudioAccess *access=new ADM_aviAudioAccess(track->index,track->wavHeader,
+                                _audioAccess[i]=new ADM_aviAudioAccess(track->index,track->wavHeader,
                                             track->nbChunks,
                                             myName,
                                             track->extraDataLen,track->extraData);
-                                _audioStreams[i]= ADM_audioCreateStream((track->wavHeader), access);
+                                _audioStreams[i]= ADM_audioCreateStream((track->wavHeader), _audioAccess[i]);
                         }
                 }
                 if(!_video_bih.biCompression && fourCC::check(_videostream.fccHandler,(uint8_t*)"DIB "))
