@@ -166,8 +166,8 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       if(info->SttsN[0]!=total)
       {
           ADM_warning("Not regular (Nb sequential samples (%d)!= total samples (%d))\n",info->SttsN[0],total);
-          free(samplePerChunk);
-          return 1;
+          //free(samplePerChunk);
+          //return 1;
       }
     
     track->index=new MP4Index[info->nbCo];
