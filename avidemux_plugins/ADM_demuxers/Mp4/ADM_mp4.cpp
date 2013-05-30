@@ -67,7 +67,7 @@ version 2 media descriptor :
 
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_codecType.h"
-
+#include "ADM_a52info.h"
 #define aprintf(...) {}
 
 //#define MP4_VERBOSE
@@ -441,17 +441,45 @@ uint8_t    MP4Header::open(const char *name)
         if(nbAudioTrack) _isaudiopresent=1; // Still needed ?
         for(int audio=0;audio<nbAudioTrack;audio++)
         {
-            // Lookup if AAC is lying about # of channels
-            if(_tracks[1+audio]._rdWav.encoding==WAV_AAC)
+            switch(_tracks[1+audio]._rdWav.encoding)
             {
-                if(_tracks[1+audio].extraDataSize==2)
+                
+            // Lookup if AAC is lying about # of channels
+            case WAV_AAC:
                 {
-                    // Channels
-                    uint32_t word=(_tracks[1+audio].extraData[0]<<8)+_tracks[1+audio].extraData[1];
-                    uint32_t chan=(word>>3)&0xf;
-                    uint32_t fqIndex=(word>>7)&0xf;
-                    printf("0x%x word, Channel : %d, fqIndex=%d\n",word,chan,fqIndex);
+                    if(_tracks[1+audio].extraDataSize==2)
+                    {
+                        // Channels
+                        uint32_t word=(_tracks[1+audio].extraData[0]<<8)+_tracks[1+audio].extraData[1];
+                        uint32_t chan=(word>>3)&0xf;
+                        uint32_t fqIndex=(word>>7)&0xf;
+                        printf("0x%x word, Channel : %d, fqIndex=%d\n",word,chan,fqIndex);
+                    }
                 }
+                break;
+            case WAV_AC3: // same for ac3
+            {
+                 // read First chunk
+                
+                MP4Index *dex=_tracks[1+audio].index;
+                int size=dex[0].size;
+                uint8_t *buffer=new uint8_t[size];
+                  fseeko(_fd,dex[0].offset,SEEK_SET);
+                  if(fread(buffer,1,size,_fd))
+                  {
+                      uint32_t fq,  br,  chan, syncoff;
+                      if(ADM_AC3GetInfo(buffer,size, &fq, &br, &chan,&syncoff))
+                      {
+                          ADM_info("Updating AC3 info : Fq=%d, br=%d, chan=%d\n",fq,br,chan);
+                          _tracks[1+audio]._rdWav.channels=chan;
+                          _tracks[1+audio]._rdWav.byterate=br;
+                      }
+                  }
+                  delete [] buffer;
+            }
+                break;
+            default:
+                break;
             }
             audioAccess[audio]=new ADM_mp4AudioAccess(name,&(_tracks[1+audio]));
             audioStream[audio]=ADM_audioCreateStream(&(_tracks[1+audio]._rdWav), audioAccess[audio]);

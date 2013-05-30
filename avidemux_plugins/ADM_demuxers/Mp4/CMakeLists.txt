@@ -10,6 +10,6 @@ ADM_mp4Plugin.cpp
 )
 	
 ADD_DEMUXER(ADM_dm_mp4 ${ADM_mp4_SRCS})
-
+TARGET_LINK_LIBRARIES(ADM_dm_mp4 ADM_audioParser6)
 INIT_DEMUXER(ADM_dm_mp4)
 INSTALL_DEMUXER(ADM_dm_mp4)
