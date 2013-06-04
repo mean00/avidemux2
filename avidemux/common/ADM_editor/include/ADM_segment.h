@@ -154,6 +154,7 @@ public:
             bool        resetSegment(void);
             bool        deleteSegments(void);
             bool        addSegment(_SEGMENT *seg);
+            bool        isEmpty(void);
 
             bool        removeEmptySegments(void);
 

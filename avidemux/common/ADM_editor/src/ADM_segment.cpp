@@ -25,7 +25,7 @@
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec/ADM_audiocodec.h"
 #include "ADM_codec.h"
-
+#include "DIA_coreToolkit.h"
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 }
@@ -540,8 +540,8 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
 
     ADM_info("Start, seg %"PRIu32" Offset :%"PRIu64" ms\n",startSeg,startOffset);
     ADM_info("End  , seg %"PRIu32" Offset :%"PRIu64" ms\n",endSeg,endOffset);
-
-    undoSegments.push_back(segments);
+    ListOfSegments tmp=segments;
+    
 
     if(startSeg==endSeg)
     {
@@ -567,6 +567,15 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     }
     updateStartTime();
     removeEmptySegments();
+    if(isEmpty())
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","You cannot remove *all* the video\n"));
+        segments=tmp;
+        updateStartTime();
+        return false;
+
+    }
+    undoSegments.push_back(tmp);
     dump();
     return true;
 }
@@ -692,6 +701,16 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
         segments.erase(segments.begin()+index);
     }
     return true;
+}
+/**
+ * \fn isEmpty
+ * @return 
+ */
+bool        ADM_EditorSegment::isEmpty(void)
+{
+    if(segments.size()==0) return true;
+    return false;
+            
 }
 /**
     \fn LinearToRefTime
