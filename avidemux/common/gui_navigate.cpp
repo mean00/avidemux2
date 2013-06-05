@@ -143,6 +143,7 @@ static int ignore_change=0;
             }
             admPreview::deferDisplay(0);
             admPreview::samePicture();
+            GUI_setCurrentFrameAndTime();
         }
             break;
       case ACT_Begin:
