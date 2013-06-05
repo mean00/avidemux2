@@ -136,7 +136,13 @@ static int ignore_change=0;
         {
             uint64_t pts=video_body->getLastKeyFramePts();
             if(pts==ADM_NO_PTS) break;            
-            GUI_GoToTime(pts);
+            admPreview::deferDisplay(1);
+            GUI_GoToTime(pts);            
+            while(admPreview::nextPicture())
+            {
+            }
+            admPreview::deferDisplay(0);
+            admPreview::samePicture();
         }
             break;
       case ACT_Begin:
