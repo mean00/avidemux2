@@ -284,4 +284,41 @@ uint32_t seg;
     *time=dts;
     return true;
 }
+/**
+ * \fn getLastKeyFramePts
+ * \brief returns the pts of the last accessible keyframe
+ * @return 
+ */
+uint64_t    ADM_Composer::getLastKeyFramePts(void)
+ {         
+    int lastSeg=_segments.getNbSegments();
+    int seg;
+    uint64_t pts,dts;
+    if(!lastSeg) return ADM_NO_PTS;
+    for(seg=lastSeg-1;seg>=0;seg--)
+    {
+          _SEGMENT *s=_segments.getSegment(seg);
+          _VIDEOS  *v=_segments.getRefVideo(s->_reference);
+          int nbFrame=v->_nb_video_frames;
+          if(!nbFrame) break;
+
+          for(int frame=nbFrame-1;frame>=0;frame--)
+          {
+              uint32_t flags;
+              pts=ADM_NO_PTS;    
+              v->_aviheader->getFlags(frame,&flags);
+              if(!(flags & AVI_KEY_FRAME)) continue;
+              v->_aviheader->getPtsDts(frame,&pts,&dts);
+              if(pts==ADM_NO_PTS) continue;          
+              ADM_info("found last keyframe at %d, time=%s\n",frame,ADM_us2plain(pts));
+              break;
+          }
+          if(pts!=ADM_NO_PTS)
+          {
+              return pts+s->_startTimeUs-s->_refStartTimeUs;
+          }
+     }
+    ADM_info("Cannot find lastKeyFrame with a valid PTS\n");
+    return ADM_NO_PTS;
+}
 //EOF

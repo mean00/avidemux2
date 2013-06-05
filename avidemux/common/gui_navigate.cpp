@@ -133,7 +133,11 @@ static int ignore_change=0;
         GUI_PrevBlackFrame();
 	  break;
       case ACT_End:
-            GUI_GoToTime(video_body->getVideoDuration()-1000000);
+        {
+            uint64_t pts=video_body->getLastKeyFramePts();
+            if(pts==ADM_NO_PTS) break;            
+            GUI_GoToTime(pts);
+        }
             break;
       case ACT_Begin:
             video_body->rewind();

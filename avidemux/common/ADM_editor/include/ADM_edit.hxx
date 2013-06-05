@@ -214,6 +214,7 @@ public:
 public:
 /************************************ Public API ***************************/
 public:
+                    uint64_t    getLastKeyFramePts(void);
                     uint64_t    getCurrentFramePts(void);
 					bool		setCurrentFramePts(uint64_t pts);
                     bool        goToTimeVideo(uint64_t time);
