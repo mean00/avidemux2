@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "1.1.2")
+set(FFMPEG_VERSION "1.2.1")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -53,6 +53,7 @@ if (FFMPEG_PERFORM_PATCH)
 	file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
 	foreach(patchFile ${patchFiles})
+                MESSAGE(STATUS "-- Applying patch <${patchFile}> --")
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
 

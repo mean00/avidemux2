@@ -1,15 +1,17 @@
---- libavcodec/avcodec.h.old	2012-10-08 09:31:19.589968418 +0200
-+++ libavcodec/avcodec.h	2012-10-08 09:32:22.581969243 +0200
-@@ -687,6 +687,8 @@
- #define CODEC_FLAG2_NO_OUTPUT     0x00000004 ///< Skip bitstream encoding.
+--- libavcodec/avcodec.h.org	2013-06-07 18:00:01.245361566 +0200
++++ libavcodec/avcodec.h	2013-06-07 18:00:49.133360281 +0200
+@@ -718,7 +718,9 @@
  #define CODEC_FLAG2_LOCAL_HEADER  0x00000008 ///< Place global headers at every keyframe instead of in extradata.
  #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format. DEPRECATED!!!!
+ #define CODEC_FLAG2_IGNORE_CROP   0x00010000 ///< Discard cropping information from SPS.
+-
 +//MEANX: NEVER EVER USE CLOSED GOP ?
 +#define CODEC_FLAG2_32_PULLDOWN   0x80000000
++// /MEANX
  #if FF_API_MPV_GLOBAL_OPTS
  #define CODEC_FLAG_CBP_RD         0x04000000 ///< Use rate distortion optimization for cbp.
  #define CODEC_FLAG_QP_RD          0x08000000 ///< Use rate distortion optimization for qp selectioon.
-@@ -2428,6 +2430,7 @@
+@@ -2543,6 +2545,7 @@
       * - decoding: unused
       */
      int rc_buffer_size;
@@ -17,7 +19,7 @@
  
      /**
       * ratecontrol override, see RcOverride
-@@ -2450,6 +2453,7 @@
+@@ -2565,6 +2568,7 @@
       * - decoding: unused
       */
      int rc_max_rate;
