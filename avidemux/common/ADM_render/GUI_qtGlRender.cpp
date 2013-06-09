@@ -35,32 +35,35 @@
 #include "GUI_qtGlRender.h"
 
 static const char *yuvToRgb =
-	"#extension GL_ARB_texture_rectangle: enable\n"
-	"uniform sampler2DRect texY, texU, texV;\n"
-	"uniform float height;\n"
-    "const mat4 mytrix=mat4( 1,   0,         1.5958,   0,"
-                            "1,  -0.39173,  -0.81290,  0,"
-                            "1,   2.017,      0,       0,"
+    "#extension GL_ARB_texture_rectangle: enable\n"
+
+    "uniform sampler2DRect texY, texU, texV;\n"
+
+    "uniform float height;\n"
+
+    "const mat4 mytrix=mat4( 1.1643,   0,         1.5958,   0,"
+                            "1.1643,  -0.39173,  -0.81290,  0,"
+                            "1.1643,   2.017,      0,       0,"
                             "0,        0,     0,       1);\n"
-                            
+    "const mat2 divby2=mat2( 0.5  ,0,"
+                            "0    ,0.5);\n"                            
     "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
-    "const vec4 factorx=vec4(1.1643,1,1,1);\n"
-    "const vec2 factorTex=vec2(0.5,0.5);"
+    
 
 	"void main(void) {\n"
 	"  float nx = gl_TexCoord[0].x;\n"
 	"  float ny = height - gl_TexCoord[0].y;\n"
-    "  vec2 coord=vec2(nx,ny);"
-    "  vec2 coord2=coord*factorTex;"
+        "\n"
+        "  vec2 coord=vec2(nx,ny);"
+        "  vec2 coord2=coord*divby2;"
 	"  float y = texture2DRect(texY, coord).r;\n"
 	"  float u = texture2DRect(texU, coord2).r;\n"
 	"  float v = texture2DRect(texV, coord2).r;\n"
 
-    "  vec4 inx=vec4(y,u,v,1.0);\n"
-    "  vec4 inx2=(factorx*inx)+offsetx;\n"
-    "  vec4 outx=inx2*mytrix;\n"
-	"  gl_FragColor = outx;\n"
-	"}\n";
+        "  vec4 inx=vec4(y,u,v,1.0);\n"
+        "  vec4 outx=(inx+offsetx)*mytrix;\n"
+        "  gl_FragColor = outx;\n"
+        "}\n";
 
 typedef void (*_glActiveTexture) (GLenum);
 static _glActiveTexture myGlActiveTexture=NULL;
@@ -112,9 +115,9 @@ static bool initOnce(QGLWidget *widget)
 
 QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(parent)
 {
-    ADM_info("\t Creating glWidget\n");
+    ADM_info("[QTGL]\t Creating glWidget\n");
 	memset(textureRealWidths, 0, sizeof(textureRealWidths));
-    memset(textureStrides, 0, sizeof(textureStrides));
+        memset(textureStrides, 0, sizeof(textureStrides));
 	memset(textureHeights, 0, sizeof(textureHeights));
 	memset(textureOffsets, 0, sizeof(textureOffsets));
 
@@ -122,8 +125,8 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(pare
 	imageHeight = h;
 	firstRun = true;
 	glProgram = NULL;
-    textureName[0]=textureName[1]=textureName[2]=0;
-    glGenTextures(3,textureName);
+        textureName[0]=textureName[1]=textureName[2]=0;
+        glGenTextures(3,textureName);
 }
 /**
     \fn setDisplaySize
@@ -141,7 +144,7 @@ bool QtGlAccelWidget::setDisplaySize(int width,int height)
 */
 QtGlAccelWidget::~QtGlAccelWidget()
 {
-    ADM_info("\t Deleting glWidget\n");
+    ADM_info("[QTGL]\t Deleting glWidget\n");
     if(glProgram) 
     {
         
@@ -246,6 +249,7 @@ void QtGlAccelWidget::updateTexture()
         
       // Activate texture unit "tex"
         for(int xplane=2;xplane>=0;xplane--)
+        //for(int xplane=0;xplane<3;xplane++)
         {
             myGlActiveTexture(GL_TEXTURE0+xplane);
             ADM_PLANE plane=(ADM_PLANE)xplane;

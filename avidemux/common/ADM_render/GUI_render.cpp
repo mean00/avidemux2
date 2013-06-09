@@ -26,7 +26,7 @@
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
 #include "GUI_nullRender.h"
-
+#include "prefs.h"
 #ifdef USE_XV
 #include "GUI_xvRender.h"
 #endif
@@ -275,18 +275,29 @@ bool spawnRenderer(void)
         {
 #if defined(USE_OPENGL)
        case RENDER_QTOPENGL:
-                renderer=RenderSpawnQtGl();
-                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                if(!r)
+       {
+                bool hasOpenGl=false;
+                prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
+                if(!hasOpenGl)
                 {
-                    delete renderer;
+                    ADM_warning("OpenGl is disabled \n");
                     renderer=NULL;
-                    ADM_warning("QtGl init failed\n");
-                }
-                else
+                }else
                 {
-                    ADM_info("QtGl init ok\n");
+                    renderer=RenderSpawnQtGl();
+                    r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                    if(!r)
+                    {
+                        delete renderer;
+                        renderer=NULL;
+                        ADM_warning("QtGl init failed\n");
+                    }
+                    else
+                    {
+                        ADM_info("QtGl init ok\n");
+                    }
                 }
+       }
                 break;
 #endif
 
