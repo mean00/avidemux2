@@ -111,6 +111,11 @@ if (USE_VDPAU)
 	SET(commonLibs1 ${commonLibs1} ADM_coreVDPAU6)
 	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 endif (USE_VDPAU)
+if (USE_XVBA)
+	SET(commonLibs1 ${commonLibs1} ADM_coreXvba6)
+	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
+endif (USE_XVBA)
+
 
 SET(commonLibs2
 ADM_coreJobs

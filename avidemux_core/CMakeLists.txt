@@ -103,6 +103,9 @@ add_subdirectory(ADM_coreScript)
 if (USE_VDPAU)
 	ADD_SUBDIRECTORY(ADM_coreVdpau)
 endif (USE_VDPAU)
+if (USE_XVBA)
+	ADD_SUBDIRECTORY(ADM_coreXvba)
+endif (USE_XVBA)
 
 ########################################
 # Config Summary

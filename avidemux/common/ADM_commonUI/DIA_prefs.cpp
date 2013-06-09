@@ -68,6 +68,7 @@ uint32_t pp_type=3;
 uint32_t pp_value=5;
 
 bool     bvdpau=false;
+bool     bxvba=false;
 bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
@@ -124,6 +125,8 @@ uint32_t defaultPortAvisynth = 9999;
 #endif
         // vdpau
         prefs->get(FEATURES_VDPAU,&bvdpau);
+        // xvba
+        prefs->get(FEATURES_XVBA,&bxvba);
         
         // Alternate mp3 tag (haali)
         prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
@@ -180,6 +183,7 @@ uint32_t defaultPortAvisynth = 9999;
         // Audio device
         /************************ Build diaelems ****************************************/
         diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU"));
+        diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
 #ifndef USE_OPENGL
         //useOpenGl.enable(0);
@@ -254,6 +258,9 @@ uint32_t defaultPortAvisynth = 9999;
 #endif
 #ifdef USE_VDPAU
                              ,{RENDER_VDPAU,   QT_TRANSLATE_NOOP("adm","VDPAU (best)"),NULL}
+#endif
+#ifdef USE_XVBA
+                             //,{RENDER_XVBA,   QT_TRANSLATE_NOOP("adm","XVBA (best)"),NULL}
 #endif
 #ifdef USE_OPENGL
                              ,{RENDER_QTOPENGL,   QT_TRANSLATE_NOOP("adm","OpenGL (best)"),NULL}
@@ -351,8 +358,8 @@ uint32_t defaultPortAvisynth = 9999;
 
         
         /* Video */
-        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useVdpau,&useOpenGl};
-        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Video"),4,(diaElem **)diaVideo);
+        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useVdpau,&useXvba,&useOpenGl};
+        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Video"),5,(diaElem **)diaVideo);
         
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
@@ -459,6 +466,8 @@ uint32_t defaultPortAvisynth = 9999;
 
                 // VDPAU
                 prefs->set(FEATURES_VDPAU,bvdpau);
+                // XVBA
+                prefs->set(FEATURES_XVBA,bxvba);
                 // Alternate mp3 tag (haali)
                 prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 

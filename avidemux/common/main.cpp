@@ -76,6 +76,9 @@ extern void ADM_ve6_cleanup(void);
 extern bool vdpauProbe(void);
 extern bool vdpauCleanup(void);
 
+extern bool xvbaProbe(void);
+extern bool xvbaCleanup(void);
+
 extern void loadPlugins(void);
 extern void InitFactory(void);
 extern void InitCoreToolkit(void);
@@ -309,6 +312,18 @@ int startAvidemux(int argc, char *argv[])
   #endif
 #endif
 
+#if defined( USE_XVBA)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("Probing for XVBA...\n");
+    if(xvbaProbe()==true) printf("XVBA available\n");
+        else printf("XVBA not available\n");
+  #else
+    printf("Cannot use XVBA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
+    
+    
+    
     // Init jobs
     ADM_jobInit();
 

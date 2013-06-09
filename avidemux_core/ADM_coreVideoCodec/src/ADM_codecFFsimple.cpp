@@ -93,6 +93,14 @@ bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat)
         return true;
     }
 #endif
+#ifdef USE_XVBA
+    if(feat==ADM_CORE_CODEC_FEATURE_XVBA)
+    {
+        return true;
+    }
+#endif
+    
+    
     return false;
 }
 // EOF
