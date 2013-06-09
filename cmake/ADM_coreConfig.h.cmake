@@ -18,6 +18,8 @@
 
 // use vdpau h264 hw decoding 
 #cmakedefine USE_VDPAU
+// use xvba h264 hw decoding 
+#cmakedefine USE_XVBA
 
 // 'gettimeofday' function is present
 #cmakedefine HAVE_GETTIMEOFDAY

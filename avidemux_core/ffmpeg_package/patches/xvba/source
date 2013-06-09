@@ -1,0 +1,10 @@
+Xvba support extracted from https://github.com/FernetMenta/xbmc.git
+Squashed the following patches :
+    [VC1] 0001-ffmpeg-xvba-fix-vc1-field-interlace.patch
+    [VC1] 0001-xvba-translate-picture_structure-to-a-value-xvba-und.patch
+    [VC1] 0001-XVBA-Only-set-second_field-when-we-are-interlaced-an.patch
+    [VC1] 0001-ffmpeg-XVBA-VC1-use-v-second_field-instead-of-s-firs.patch
+    [VC1] 0001-XVBA-revisit-draw-functions.patch
+    [] XVBA 0001-XVBA-revisit-draw-functions.patch
+    [xvba] Patch 0001-ffmpeg-add-xvba-hwaccel.patch
+

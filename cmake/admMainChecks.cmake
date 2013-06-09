@@ -129,7 +129,9 @@ IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
 INCLUDE(admCheckVDPAU)
+INCLUDE(admCheckXvba)
 checkVDPAU()
+checkXvba()
 ENDIF(NOT PLUGINS)
 
 ########################################

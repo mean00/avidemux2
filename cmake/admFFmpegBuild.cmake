@@ -50,14 +50,25 @@ message("")
 
 if (FFMPEG_PERFORM_PATCH)
 	find_package(Patch)
+
+        # my patches
 	file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
 	foreach(patchFile ${patchFiles})
                 get_filename_component(short ${patchFile}  NAME)
-                MESSAGE(STATUS "-- Applying patch <${short}> --")
+                MESSAGE(STATUS "-- Mine, Applying patch <${short}> --")
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
+        # XVBA patch from xbmc_dxva
+	file(GLOB patchFilesXvba "${FFMPEG_PATCH_DIR}/xvba/*.patch")
 
+	foreach(patchFileXvba ${patchFilesXvba})
+                get_filename_component(short ${patchFileXvba}  NAME)
+                MESSAGE(STATUS "-- DXVA, Applying patch <${short}> --")
+		patch_file_p1("${FFMPEG_SOURCE_DIR}" "${patchFileXvba}")
+	endforeach(patchFileXvba)
+        
+        #
 	if (UNIX )
 			MESSAGE(STATUS "Patching Linux common.mak")
 			patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/common.mak.diff") 
@@ -70,6 +81,12 @@ if (USE_VDPAU)
 	xadd(--enable-vdpau)
 	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
+
+if(USE_XVBA)
+else(USE_XVBA)
+	xadd(--disable-xvba)
+endif(USE_XVBA)
+
 
 xadd(--enable-bsf aac_adtstoasc)
 
