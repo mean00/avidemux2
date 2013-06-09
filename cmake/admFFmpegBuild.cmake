@@ -53,7 +53,8 @@ if (FFMPEG_PERFORM_PATCH)
 	file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
 	foreach(patchFile ${patchFiles})
-                MESSAGE(STATUS "-- Applying patch <${patchFile}> --")
+                get_filename_component(short ${patchFile}  NAME)
+                MESSAGE(STATUS "-- Applying patch <${short}> --")
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
 
