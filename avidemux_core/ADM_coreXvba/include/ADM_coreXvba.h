@@ -33,9 +33,6 @@ public:
     static bool         cleanup(void);
     /* Surface */
 #ifdef USE_XVBA
-static  bool        queryExtensionProc       (Display *dpy, int *vers);
-static  int         createContextProc        (void *input, void *output);
-static  int         destroyContextProc       (void *context);
 static  bool        getSessionInfoProc       (void *input, void *output);
 static  int         createSurfaceProc        (void *input, void *output);
 static  int         createGLSharedSurfaceProc(void *input, void *output);
