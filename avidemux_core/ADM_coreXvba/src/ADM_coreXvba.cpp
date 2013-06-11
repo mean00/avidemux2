@@ -20,6 +20,7 @@
 #ifdef USE_XVBA
 #include "../include/ADM_coreXvbaInternal.h"
 #include "ADM_dynamicLoading.h"
+#include "ADM_windowInfo.h"
 
 
 GUI_WindowInfo      admXvba::myWindowInfo;
@@ -27,6 +28,7 @@ GUI_WindowInfo      admXvba::myWindowInfo;
 namespace ADM_coreXvba
 {
  XvbaFunctions          funcs; 
+ void                   *context;
 }
 
 static ADM_LibWrapper        xvbaDynaLoader;
@@ -42,6 +44,7 @@ bool admXvba::init(GUI_WindowInfo *x)
 {
     ADM_info("Loading Xvba library ...\n");
     memset(&ADM_coreXvba::funcs,0,sizeof(ADM_coreXvba::funcs));
+    ADM_coreXvba::context=NULL;
     if(false==xvbaDynaLoader.loadLibrary("libXvBAW.so.1"))
     {
         ADM_info("Cannot load libxvba.so\n");
@@ -58,8 +61,8 @@ bool admXvba::init(GUI_WindowInfo *x)
   GetMe(             createSurface,            XVBACreateSurface)
   GetMe(             createGLSharedSurface,    XVBACreateGLSharedSurface)
   GetMe(             destroySurface,           XVBADestroySurface)
-  GetMe(             createDecodeBuffers,      XVBACreateDecodeBuffers)
-  GetMe(             destroyDecodeBuffers,     XVBADestroyDecodeBuffers)
+  GetMe(             createDecodeBuffer,      XVBACreateDecodeBuffers)
+  GetMe(             destroyDecodeBuffer,     XVBADestroyDecodeBuffers)
   GetMe(             getCapDecode,             XVBAGetCapDecode) 
   GetMe(             createDecode,             XVBACreateDecode)
   GetMe(             destroyDecode,            XVBADestroyDecode)
@@ -70,7 +73,33 @@ bool admXvba::init(GUI_WindowInfo *x)
   GetMe(             getSurface,               XVBAGetSurface)
   GetMe(             transferSurface,          XVBATransferSurface)
     
-   
+  // Time to query
+   int version=0;
+   if(!ADM_coreXvba::funcs.queryExtension((Display *)x->display,&version))
+   {
+       ADM_warning("Xvba Query extension failed\n");
+       return false;
+   }
+  ADM_info("Xvba version %d\n",version);
+  // Create global context
+#define CLEAR(x) memset(&x,0,sizeof(x))
+  XVBA_Create_Context_Input  contextInput;
+  XVBA_Create_Context_Output contextOutput;
+  CLEAR(contextInput);
+  CLEAR(contextOutput);
+  
+  contextInput.display=(Display *)x->display;
+  contextInput.draw=(Drawable )x->widget; // fixme
+  contextInput.size=sizeof(contextInput);
+  
+  contextOutput.size=sizeof(contextOutput);
+  
+  if(Success!=ADM_coreXvba::funcs.createContext(&contextInput,&contextOutput))
+  {
+      ADM_warning("Xvba context creation failed\n");
+      return false;
+  }
+    ADM_coreXvba::context=contextOutput.context;
     coreXvbaWorking=true;
     myWindowInfo=*x;
 
@@ -84,7 +113,11 @@ bool admXvba::cleanup(void)
 {
     if(true==coreXvbaWorking)
     {
-           
+           if(ADM_coreXvba::context)
+           {
+               ADM_coreXvba::funcs.destroyContext(ADM_coreXvba::context);
+               ADM_coreXvba::context=NULL;
+           }
     }
     coreXvbaWorking=false;
     return true;

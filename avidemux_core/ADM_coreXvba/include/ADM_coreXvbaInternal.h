@@ -15,24 +15,24 @@
 
 // From xbmc 
 
-typedef Bool        (*XVBAQueryExtensionProc)       (Display *dpy, int *vers);
-typedef Status      (*XVBACreateContextProc)        (void *input, void *output);
-typedef Status      (*XVBADestroyContextProc)       (void *context);
-typedef Bool        (*XVBAGetSessionInfoProc)       (void *input, void *output);
-typedef Status      (*XVBACreateSurfaceProc)        (void *input, void *output);
-typedef Status      (*XVBACreateGLSharedSurfaceProc)(void *input, void *output);
-typedef Status      (*XVBADestroySurfaceProc)       (void *surface);
-typedef Status      (*XVBACreateDecodeBuffersProc)  (void *input, void *output);
-typedef Status      (*XVBADestroyDecodeBuffersProc) (void *input);
-typedef Status      (*XVBAGetCapDecodeProc)         (void *input, void *output);
-typedef Status      (*XVBACreateDecodeProc)         (void *input, void *output);
-typedef Status      (*XVBADestroyDecodeProc)        (void *session);
-typedef Status      (*XVBAStartDecodePictureProc)   (void *input);
-typedef Status      (*XVBADecodePictureProc)        (void *input);
-typedef Status      (*XVBAEndDecodePictureProc)     (void *input);
-typedef Status      (*XVBASyncSurfaceProc)          (void *input, void *output);
-typedef Status      (*XVBAGetSurfaceProc)           (void *input);
-typedef Status      (*XVBATransferSurfaceProc)      (void *input);
+typedef Bool        (XVBAQueryExtensionProc)       (Display *dpy, int *vers);
+typedef Status      (XVBACreateContextProc)        (void *input, void *output);
+typedef Status      (XVBADestroyContextProc)       (void *context);
+typedef Bool        (XVBAGetSessionInfoProc)       (void *input, void *output);
+typedef Status      (XVBACreateSurfaceProc)        (void *input, void *output);
+typedef Status      (XVBACreateGLSharedSurfaceProc)(void *input, void *output);
+typedef Status      (XVBADestroySurfaceProc)       (void *surface);
+typedef Status      (XVBACreateDecodeBuffersProc)  (void *input);
+typedef Status      (XVBADestroyDecodeBuffersProc) (void *input, void *output);
+typedef Status      (XVBAGetCapDecodeProc)         (void *input, void *output);
+typedef Status      (XVBACreateDecodeProc)         (void *input, void *output);
+typedef Status      (XVBADestroyDecodeProc)        (void *session);
+typedef Status      (XVBAStartDecodePictureProc)   (void *input);
+typedef Status      (XVBADecodePictureProc)        (void *input);
+typedef Status      (XVBAEndDecodePictureProc)     (void *input);
+typedef Status      (XVBASyncSurfaceProc)          (void *input, void *output);
+typedef Status      (XVBAGetSurfaceProc)           (void *input);
+typedef Status      (XVBATransferSurfaceProc)      (void *input);
 
 
 /**
@@ -49,8 +49,8 @@ typedef struct
   XVBACreateSurfaceProc               *createSurface;
   XVBACreateGLSharedSurfaceProc       *createGLSharedSurface;
   XVBADestroySurfaceProc              *destroySurface;
-  XVBACreateDecodeBuffersProc         *createDecodeBuffers;
-  XVBADestroyDecodeBuffersProc        *destroyDecodeBuffers;
+  XVBACreateDecodeBuffersProc         *createDecodeBuffer;
+  XVBADestroyDecodeBuffersProc        *destroyDecodeBuffer;
   XVBAGetCapDecodeProc                *getCapDecode;
   XVBACreateDecodeProc                *createDecode;
   XVBADestroyDecodeProc               *destroyDecode;
