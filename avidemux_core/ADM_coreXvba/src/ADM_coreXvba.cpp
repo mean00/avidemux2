@@ -112,9 +112,9 @@ bool admXvba::init(GUI_WindowInfo *x)
   CLEAR(contextInput);
   PREPARE_OUT(contextOutput);
   
-  
+  contextInput.size=sizeof(contextInput);
   contextInput.display=dis;
-  contextInput.draw= DefaultRootWindow(dis); // fixme
+  contextInput.draw= x->window; // fixme
   
   CHECK_ERROR(ADM_coreXvba::funcs.createContext(&contextInput,&contextOutput))
   if(Success!=xError)
@@ -122,7 +122,7 @@ bool admXvba::init(GUI_WindowInfo *x)
       ADM_warning("Xvba context creation failed\n");
       return false;
   }
-
+    ADM_info("[XVBA] Context created ok\n");
     // Get decode cap
     XVBA_GetCapDecode_Input  capin;
     XVBA_GetCapDecode_Output capout;
