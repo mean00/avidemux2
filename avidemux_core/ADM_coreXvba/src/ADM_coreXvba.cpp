@@ -25,14 +25,22 @@
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
 
-
-
+/**
+ * 
+ */
+ 
 GUI_WindowInfo      admXvba::myWindowInfo;
 
 namespace ADM_coreXvba
 {
  XvbaFunctions          funcs; 
  void                   *context;
+ namespace decoders
+ {
+        bool    h264;
+        bool    vc1;
+ 
+ }
 }
 
 static ADM_LibWrapper        xvbaDynaLoader;
@@ -66,6 +74,10 @@ bool admXvba::init(GUI_WindowInfo *x)
     ADM_info("Loading Xvba library ...\n");
     memset(&ADM_coreXvba::funcs,0,sizeof(ADM_coreXvba::funcs));
     ADM_coreXvba::context=NULL;
+    ADM_coreXvba::decoders::h264=false;
+    ADM_coreXvba::decoders::vc1=false;
+            
+    myWindowInfo=*x;
     if(false==xvbaDynaLoader.loadLibrary("libXvBAW.so.1"))
     {
         ADM_info("Cannot load libxvba.so\n");
@@ -123,6 +135,7 @@ bool admXvba::init(GUI_WindowInfo *x)
       return false;
   }
     ADM_info("[XVBA] Context created ok\n");
+    ADM_coreXvba::context=contextOutput.context;
     // Get decode cap
     XVBA_GetCapDecode_Input  capin;
     XVBA_GetCapDecode_Output capout;
@@ -130,8 +143,7 @@ bool admXvba::init(GUI_WindowInfo *x)
     PREPARE_IN(capin);
     
     
-    xError=ADM_coreXvba::funcs.getCapDecode(&capin,&capout);
-    CHECK_ERROR(xError);
+    CHECK_ERROR(ADM_coreXvba::funcs.getCapDecode(&capin,&capout));
     if(Success!=xError)
     {
         ADM_warning("Can't get Xvba decode capabilities\n");
@@ -141,18 +153,18 @@ bool admXvba::init(GUI_WindowInfo *x)
     {
         switch(capout.decode_caps_list[c].capability_id)
         {
-            case  XVBA_H264:      ADM_info("H264");break;
-            case XVBA_VC1:        ADM_info("VC1");break;
+            case XVBA_H264:      ADM_info("H264");ADM_coreXvba::decoders::h264=true;break;
+            case XVBA_VC1:        ADM_info("VC1");ADM_coreXvba::decoders::vc1=true;break;
             case XVBA_MPEG2_IDCT: ADM_info("MPEG2 IDCT");break;
             case XVBA_MPEG2_VLD : ADM_info("MPEG2 VLD");break;
             default :             ADM_info("???\n");break;
         }
-        printf("\n");
+        printf(" decoder \n");
     }
     
-    ADM_coreXvba::context=contextOutput.context;
+    
     coreXvbaWorking=true;
-    myWindowInfo=*x;
+    
     
     ADM_info("Xvba  init ok.\n");
     return true;
