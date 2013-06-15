@@ -163,6 +163,7 @@ bool admXvba::init(GUI_WindowInfo *x)
     ADM_info("[XVBA] Context created ok\n");
     ADM_coreXvba::context=contextOutput.context;
     // -------------- Get decode cap---------------------
+#if 0    // crash ???    
     XVBA_GetCapDecode_Input  capin;
     XVBA_GetCapDecode_Output capout;
     PREPARE_IN(capin);
@@ -176,7 +177,7 @@ bool admXvba::init(GUI_WindowInfo *x)
         ADM_warning("Can't get Xvba decode capabilities\n");
         return false;
     }
-#if 0        
+     
     for(int c=0;c<capout.num_of_decodecaps;c++)
     {
         switch(capout.decode_caps_list[c].capability_id)
