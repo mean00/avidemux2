@@ -15,7 +15,7 @@
 
 #include "ADM_default.h"
 #include "../include/ADM_coreXvba.h"
-
+#include "fglrxinfo.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
@@ -71,6 +71,31 @@ static void displayXError(const char *func,Display *dis,int er)
 */
 bool admXvba::init(GUI_WindowInfo *x)
 {
+    Display *dis=(Display *)x->display;
+    int maj=0,min=0,patch=0;
+    ADM_info("Checking it is an ATI/AMD device..\n");
+    if(! fglrx_get_version(dis,DefaultScreen(dis),&maj,&min,&patch))
+    {
+        ADM_info("nope\n");
+        return false;
+    }
+    ADM_info("ATI version %d.%d.%d\n",maj,min,patch);
+
+    
+    unsigned int deviceId=0;
+    if(! fglrx_get_device_id(dis,DefaultScreen(dis),&deviceId))
+    {
+        ADM_info("cant get deviceId\n");
+        return false;
+    }
+     ADM_info("Device ID %u\n",deviceId);
+     if(fglrx_is_dri_capable(dis,DefaultScreen(dis)))
+     {
+         ADM_info("Device is DRI capable\n");
+     }else
+     {
+         ADM_info("Device is not DRI capable\n");
+     }
     ADM_info("Loading Xvba library ...\n");
     memset(&ADM_coreXvba::funcs,0,sizeof(ADM_coreXvba::funcs));
     ADM_coreXvba::context=NULL;
@@ -84,7 +109,7 @@ bool admXvba::init(GUI_WindowInfo *x)
         return false;
     }
     int xError;
-    Display *dis=(Display *)x->display;
+  
     
     
 #define GetMe(fun,id)         {ADM_coreXvba::funcs.fun= (typeof( ADM_coreXvba::funcs.fun))xvbaDynaLoader.getSymbol(#id);\
@@ -97,8 +122,8 @@ bool admXvba::init(GUI_WindowInfo *x)
   GetMe(             createSurface,            XVBACreateSurface)
   GetMe(             createGLSharedSurface,    XVBACreateGLSharedSurface)
   GetMe(             destroySurface,           XVBADestroySurface)
-  GetMe(             createDecodeBuffer,      XVBACreateDecodeBuffers)
-  GetMe(             destroyDecodeBuffer,     XVBADestroyDecodeBuffers)
+  GetMe(             createDecodeBuffer,       XVBACreateDecodeBuffers)
+  GetMe(             destroyDecodeBuffer,      XVBADestroyDecodeBuffers)
   GetMe(             getCapDecode,             XVBAGetCapDecode) 
   GetMe(             createDecode,             XVBACreateDecode)
   GetMe(             destroyDecode,            XVBADestroyDecode)
@@ -117,7 +142,7 @@ bool admXvba::init(GUI_WindowInfo *x)
        return false;
    }
   ADM_info("Xvba version %d\n",version);
-  // Create global context
+  // ----------Create global context------------------
   
   XVBA_Create_Context_Input  contextInput;
   XVBA_Create_Context_Output contextOutput;
@@ -134,21 +159,24 @@ bool admXvba::init(GUI_WindowInfo *x)
       ADM_warning("Xvba context creation failed\n");
       return false;
   }
+
     ADM_info("[XVBA] Context created ok\n");
     ADM_coreXvba::context=contextOutput.context;
-    // Get decode cap
+    // -------------- Get decode cap---------------------
     XVBA_GetCapDecode_Input  capin;
     XVBA_GetCapDecode_Output capout;
-    PREPARE_OUT(capout);
     PREPARE_IN(capin);
+    PREPARE_OUT(capout);
     
     
+// -
     CHECK_ERROR(ADM_coreXvba::funcs.getCapDecode(&capin,&capout));
     if(Success!=xError)
     {
         ADM_warning("Can't get Xvba decode capabilities\n");
         return false;
     }
+#if 0        
     for(int c=0;c<capout.num_of_decodecaps;c++)
     {
         switch(capout.decode_caps_list[c].capability_id)
@@ -164,7 +192,7 @@ bool admXvba::init(GUI_WindowInfo *x)
     
     
     coreXvbaWorking=true;
-    
+#endif    
     
     ADM_info("Xvba  init ok.\n");
     return true;

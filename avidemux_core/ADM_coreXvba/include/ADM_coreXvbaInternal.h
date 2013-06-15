@@ -24,7 +24,7 @@ typedef Status      (XVBACreateGLSharedSurfaceProc)(void *input, void *output);
 typedef Status      (XVBADestroySurfaceProc)       (void *surface);
 typedef Status      (XVBACreateDecodeBuffersProc)  (void *input);
 typedef Status      (XVBADestroyDecodeBuffersProc) (void *input, void *output);
-typedef Status      (XVBAGetCapDecodeProc)         (void *input, void *output);
+typedef Status      (XVBAGetCapDecodeProc)         ( XVBA_GetCapDecode_Input     *decodecap_list_input,   XVBA_GetCapDecode_Output    *decodecap_list_output);
 typedef Status      (XVBACreateDecodeProc)         (void *input, void *output);
 typedef Status      (XVBADestroyDecodeProc)        (void *session);
 typedef Status      (XVBAStartDecodePictureProc)   (void *input);
@@ -61,23 +61,5 @@ typedef struct
   XVBAGetSurfaceProc                  *getSurface;
   XVBATransferSurfaceProc             *transferSurface;
 }XvbaFunctions;
-
-namespace ADM_coreXvba
-{
- extern XvbaFunctions         funcs;
- extern void                  *xvbDevice;
-}
-
-#define CHECK(x) if(!isOperationnal()) {ADM_error("xvba is not operationnal\n");return VDP_STATUS_ERROR;}\
-                 VdpStatus r=x;\
-                 if(VDP_STATUS_OK!=r) {ADM_warning(#x" call failed with error=%s\n",getErrorString(r));}return r;
-
-#define CHECKBOOL(x) if(!isOperationnal())\
-                    {ADM_error("xvba is not operationnal\n");return false;}\
-                 VdpStatus r=x;\
-                 if(VDP_STATUS_OK!=r)  \
-                    {\
-                    ADM_warning(#x" call failed with error=%s\n",getErrorString(r));\
-                    return false;};
 
 #endif
