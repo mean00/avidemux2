@@ -4,24 +4,18 @@ Name    : Secret Rabit Code
 URL     : http://www.mega-nerd.com/SRC
 License : GPL 
 
-Name : Tinypy
-URL: http://www.tinypy.org
-License : MIT + PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2 
+Name   : BVecor
+URL    : http://berenger.eu/blog/
+License: LGPL
 
 Name    : ffmpeg
 URL     : http://www.ffmpeg.org
 License : GPL >=2
 
-Name   : SQLite3
-URL    : http://www.sqlite.org
-License: Public Domain
-
-Name   : Spidermonky
-URL    : https://developer.mozilla.org/en/SpiderMonkey
+Name   : fglrx_info
+URL    : Splitted-Desktop Systems
 License: GPLv2
 
-URL    : http://resare.com/libmp4v2
-License: LGPL
 Name   : liba52
 URL    : http://liba52.sf.net
 License: GPL
@@ -34,3 +28,22 @@ Name   :  TwoLame
 URL    :  http://twolame.sf.net
 License:  LGPL
 
+URL    : http://mp4v2.googlecode.com/svn
+License: LGPL
+Rev: 485
+Name   : Spidermonky
+URL    : https://developer.mozilla.org/en/SpiderMonkey
+License: GPLv2
+
+Name : Tinypy
+URL: http://www.tinypy.org
+License : MIT + PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2 
+
+Name    : libass
+URL     : https://code.google.com/p/libass/
+License : GPL >=2
+Version : 0.10.1
+
+URL    : https://github.com/saintdev/libmkv.git
+License:  GPL
+Rev: 0.6.5.1 / d2906c03cc8f91fca0074e02bb14504a0e85bce6
