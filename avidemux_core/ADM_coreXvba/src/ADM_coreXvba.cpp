@@ -38,8 +38,9 @@ namespace ADM_coreXvba
  Display                *display;
  namespace decoders
  {
-        bool    h264;
-        bool    vc1;
+        bool            h264;
+        XVBADecodeCap   h264_decode_cap;
+        bool            vc1;
  
  }
 }
@@ -183,6 +184,7 @@ bool admXvba::init(GUI_WindowInfo *x)
     PREPARE_IN(capin);
     PREPARE_OUT(capout);
     
+    uint8_t buffer[1024*1024]; // try to prevent xvba from trashing the stack
     
 // -
     CHECK_ERROR(ADM_coreXvba::funcs.getCapDecode(&capin,&capout));
@@ -196,7 +198,10 @@ bool admXvba::init(GUI_WindowInfo *x)
     {
         switch(capout.decode_caps_list[c].capability_id)
         {
-            case XVBA_H264:       ADM_info("\tH264");ADM_coreXvba::decoders::h264=true;break;
+            case XVBA_H264:       ADM_info("\tH264");
+                                  ADM_coreXvba::decoders::h264=true;
+                                  ADM_coreXvba::decoders::h264_decode_cap=capout.decode_caps_list[c];
+                                  break;
             case XVBA_VC1:        ADM_info("\tVC1");ADM_coreXvba::decoders::vc1=true;break;
             case XVBA_MPEG2_IDCT: ADM_info("\tMPEG2 IDCT");break;
             case XVBA_MPEG2_VLD : ADM_info("\tMPEG2 VLD");break;
@@ -253,23 +258,42 @@ void        *admXvba::createDecoder(int width, int height)
     XVBADecodeCap                     cap;
     XVBA_Create_Decode_Session_Input  sessionInput;
     XVBA_Create_Decode_Session_Output sessionOutput;
-    PREPARE_IN(sessionInput);
-    PREPARE_OUT(cap);
+    PREPARE_IN(sessionInput);    
     PREPARE_OUT(sessionOutput);
-    
-    cap.capability_id=XVBA_H264;
-    cap.flags=XVBA_H264_HIGH;
-    cap.surface_type=XVBA_YV12;
-    
+        
     sessionInput.width=(width+15) & ~15;
     sessionInput.height=(height+15) & ~15;
-    sessionInput.decode_cap=&cap;
+    sessionInput.decode_cap=&(ADM_coreXvba::decoders::h264_decode_cap);
+     if( XVBA_H264!=ADM_coreXvba::decoders::h264_decode_cap.capability_id)
+     {
+         ADM_warning("Cap is not H264\n");
+     }
+    printf("H264:");
     
-    ADM_info("Creating decoder, %d x %d \n",width,height);
+    switch(ADM_coreXvba::decoders::h264_decode_cap.flags)
+    {
+        case XVBA_H264_BASELINE: printf("Baseline\n");break;
+        case XVBA_H264_MAIN:printf("Main\n");break;
+        case XVBA_H264_HIGH:printf("High\n");break;
+        default:  printf("Profile:???\n");break;
+    }
+    switch(ADM_coreXvba::decoders::h264_decode_cap.surface_type)
+    {
+#define MKS(x) case x: printf("Format :"#x"\n");break;
+        MKS(  XVBA_NV12)
+        MKS(  XVBA_YUY2)
+        MKS(  XVBA_ARGB)
+        MKS(  XVBA_AYUV)
+        MKS(  XVBA_YV12)
+        default:  printf("surface format ???\n");
+    }
+    
+    
+    ADM_info("Creating decoder, %d x %d, %d x %d \n",width,height,sessionInput.width,sessionInput.height);
     CHECK_ERROR(ADM_coreXvba::funcs.createDecode(&sessionInput,&sessionOutput));
     if(Success==xError)
     {
-        ADM_info("Xvba session created\n");
+        ADM_info("Xvba session created successfully\n");
         return sessionOutput.session;
     }
      ADM_warning("Xvba session failed\n");
