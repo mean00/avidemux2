@@ -35,6 +35,7 @@ namespace ADM_coreXvba
 {
  XvbaFunctions          funcs; 
  void                   *context;
+ Display                *display;
  namespace decoders
  {
         bool    h264;
@@ -49,7 +50,7 @@ static bool                  coreXvbaWorking=false;
 #define CLEAR(x) memset(&x,0,sizeof(x))
 #define PREPARE_IN(z) {CLEAR(z);z.size=sizeof(z);z.context=ADM_coreXvba::context;}
 #define PREPARE_OUT(z) {CLEAR(z);z.size=sizeof(z);}
-#define CHECK_ERROR(x) {xError=x;displayXError(#x,dis,xError);}
+#define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreXvba::display,xError);}
 
 /**
  * \fn displayXError
@@ -71,10 +72,10 @@ static void displayXError(const char *func,Display *dis,int er)
 */
 bool admXvba::init(GUI_WindowInfo *x)
 {
-    Display *dis=(Display *)x->display;
+    ADM_coreXvba::display=(Display *)x->display;
     int maj=0,min=0,patch=0;
     ADM_info("Checking it is an ATI/AMD device..\n");
-    if(! fglrx_get_version(dis,DefaultScreen(dis),&maj,&min,&patch))
+    if(! fglrx_get_version(ADM_coreXvba::display,DefaultScreen(ADM_coreXvba::display),&maj,&min,&patch))
     {
         ADM_info("nope\n");
         return false;
@@ -83,13 +84,13 @@ bool admXvba::init(GUI_WindowInfo *x)
 
     
     unsigned int deviceId=0;
-    if(! fglrx_get_device_id(dis,DefaultScreen(dis),&deviceId))
+    if(! fglrx_get_device_id(ADM_coreXvba::display,DefaultScreen(ADM_coreXvba::display),&deviceId))
     {
         ADM_info("cant get deviceId\n");
         return false;
     }
      ADM_info("Device ID %u\n",deviceId);
-     if(fglrx_is_dri_capable(dis,DefaultScreen(dis)))
+     if(fglrx_is_dri_capable(ADM_coreXvba::display,DefaultScreen(ADM_coreXvba::display)))
      {
          ADM_info("Device is DRI capable\n");
      }else
@@ -150,7 +151,7 @@ bool admXvba::init(GUI_WindowInfo *x)
   PREPARE_OUT(contextOutput);
   
   contextInput.size=sizeof(contextInput);
-  contextInput.display=dis;
+  contextInput.display=ADM_coreXvba::display;
   contextInput.draw= x->window; // fixme
   
   CHECK_ERROR(ADM_coreXvba::funcs.createContext(&contextInput,&contextOutput))
@@ -162,8 +163,21 @@ bool admXvba::init(GUI_WindowInfo *x)
 
     ADM_info("[XVBA] Context created ok\n");
     ADM_coreXvba::context=contextOutput.context;
+    //--------------- Session info -------------------------
+     XVBA_GetSessionInfo_Input   infoInput;
+     XVBA_GetSessionInfo_Output  infoOutput;
+     PREPARE_IN(infoInput);
+     PREPARE_OUT(infoOutput);
+     
+     ADM_info("[XVBA] Getting session info...\n");
+    CHECK_ERROR(ADM_coreXvba::funcs.getSessionInfo(&infoInput,&infoOutput))
+    if(Success!=xError)
+    {
+        ADM_warning("Xvba getSessionInfo failed\n");
+        return false;
+    }
     // -------------- Get decode cap---------------------
-#if 0    // crash ???    
+#if 1    // crash ???    
     XVBA_GetCapDecode_Input  capin;
     XVBA_GetCapDecode_Output capout;
     PREPARE_IN(capin);
@@ -182,20 +196,20 @@ bool admXvba::init(GUI_WindowInfo *x)
     {
         switch(capout.decode_caps_list[c].capability_id)
         {
-            case XVBA_H264:      ADM_info("H264");ADM_coreXvba::decoders::h264=true;break;
-            case XVBA_VC1:        ADM_info("VC1");ADM_coreXvba::decoders::vc1=true;break;
-            case XVBA_MPEG2_IDCT: ADM_info("MPEG2 IDCT");break;
-            case XVBA_MPEG2_VLD : ADM_info("MPEG2 VLD");break;
-            default :             ADM_info("???\n");break;
+            case XVBA_H264:       ADM_info("\tH264");ADM_coreXvba::decoders::h264=true;break;
+            case XVBA_VC1:        ADM_info("\tVC1");ADM_coreXvba::decoders::vc1=true;break;
+            case XVBA_MPEG2_IDCT: ADM_info("\tMPEG2 IDCT");break;
+            case XVBA_MPEG2_VLD : ADM_info("\tMPEG2 VLD");break;
+            default :             ADM_info("\t???\n");break;
         }
-        printf(" decoder \n");
+        printf(" decoder supported\n");
     }
-    
+#endif        
     
     coreXvbaWorking=true;
-#endif    
+
     
-    ADM_info("Xvba  init ok.\n");
+    ADM_info("[XVBA] Xvba  init ok.\n");
     return true;
 }
 /**
@@ -220,6 +234,61 @@ bool admXvba::cleanup(void)
 bool admXvba::isOperationnal(void)
 {
     return coreXvbaWorking;
+}
+
+#define CHECK_WORKING(x)   if(!coreXvbaWorking) {ADM_warning("Xvba not operationnal\n");return x;}
+
+/**
+ * 
+ * @param width
+ * @param height
+ * @return 
+ */
+void        *admXvba::createDecoder(int width, int height)
+{
+    CHECK_WORKING(NULL);
+    
+    int xError;
+    
+    XVBADecodeCap                     cap;
+    XVBA_Create_Decode_Session_Input  sessionInput;
+    XVBA_Create_Decode_Session_Output sessionOutput;
+    PREPARE_IN(sessionInput);
+    PREPARE_OUT(cap);
+    PREPARE_OUT(sessionOutput);
+    
+    cap.capability_id=XVBA_H264;
+    cap.flags=XVBA_H264_HIGH;
+    cap.surface_type=XVBA_YV12;
+    
+    sessionInput.width=(width+15) & ~15;
+    sessionInput.height=(height+15) & ~15;
+    sessionInput.decode_cap=&cap;
+    
+    ADM_info("Creating decoder, %d x %d \n",width,height);
+    CHECK_ERROR(ADM_coreXvba::funcs.createDecode(&sessionInput,&sessionOutput));
+    if(Success==xError)
+    {
+        ADM_info("Xvba session created\n");
+        return sessionOutput.session;
+    }
+     ADM_warning("Xvba session failed\n");
+     return NULL;
+}
+
+/**
+ * \fn destroySession
+ */
+bool admXvba::destroyDecoder(void *session)
+{
+     CHECK_WORKING(false);
+     if(Success == ADM_coreXvba::funcs.destroyDecode(session))
+     {
+         ADM_info("Xvba decoder destroyed\n");
+         return true;
+     }
+     ADM_info("Error destroying Xvba decoder\n");
+     return false;
 }
 
 #else 

@@ -38,7 +38,7 @@ extern "C" {
 #include "ADM_threads.h"
 
 
-static bool         xvbaWorking=false;
+static bool         xvbaWorking=true;
 static admMutex     surfaceMutex;
 static bool         destroyingFlag=false;
 static BVector   <void *> destroyedList;
@@ -99,8 +99,8 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
     \brief Return true if  vdpau can be used...
 */
 bool xvbaUsable(void)
-{
-    bool v=false;
+{    
+    bool v=true;
     if(!xvbaWorking) return false;
     if(!prefs->get(FEATURES_XVBA,&v)) v=false;
     return v;
@@ -446,6 +446,8 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
     alive=false;
+    void *decoder=admXvba::createDecoder(w,h);
+    admXvba::destroyDecoder(decoder);
 }
 decoderFFXVBA::~decoderFFXVBA()
 {

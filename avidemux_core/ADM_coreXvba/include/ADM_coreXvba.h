@@ -31,8 +31,13 @@ public:
     static bool         init(GUI_WindowInfo *x);
     static bool         isOperationnal(void);
     static bool         cleanup(void);
-    /* Surface */
+    /* Surface */   
 #ifdef USE_XVBA
+    
+static  void        *createDecoder(int width, int height);
+static  bool        destroyDecoder(void *decoder);
+
+    
 static  bool        getSessionInfoProc       (void *input, void *output);
 static  int         createSurfaceProc        (void *input, void *output);
 static  int         createGLSharedSurfaceProc(void *input, void *output);
