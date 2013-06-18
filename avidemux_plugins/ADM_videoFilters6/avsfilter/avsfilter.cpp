@@ -878,15 +878,20 @@ bool send_bit_blt(int h,
 
 bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
 {
- uint32_t iframe = nextFrame++;
- uint32_t frame = iframe, tmpframe;
- *fn=nextFrame;
+ uint32_t iframe = nextFrame;
+ uint32_t frame, tmpframe;
+ frame = iframe;
 
- DEBUG_PRINTF("avsfilter : receive getFrameNumberNoAlloc %d, wine_loader %X\n",
-              frame, wine_loader);
+  DEBUG_PRINTF("avsfilter : receive getFrameNumberNoAlloc %d, wine_loader %X\n",
+               frame, wine_loader);
 
   // check framenumber
-  if(!wine_loader) return 0;
+  if (!wine_loader || ((iframe * wine_loader->output_info.frameIncrement) > wine_loader->output_info.totalDuration))
+  {
+   DEBUG_PRINTF("avsfilter : input framenumber (%d) is out of bounds [time %d > %d] \n", iframe,
+                iframe * wine_loader->output_info.frameIncrement, wine_loader->output_info.totalDuration);
+   return false;
+  }
 
   FRAME_DATA fd = {frame};
 
@@ -919,7 +924,11 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
         tmpframe = fd.frame;
         DEBUG_PRINTF("avsfilter : %d but really get %d\n", fd.frame, tmpframe);
         //src=vidCache->getImage(tmpframe);
-        if (!previousFilter->getNextFrame(&tmpframe, _uncompressed)) return false;
+        if (!previousFilter->getNextFrame(&tmpframe, _uncompressed))
+        {
+         DEBUG_PRINTF("avsfilter : !!!OOPS!!!\n");
+         return false;
+        }
         DEBUG_PRINTF("avsfilter : in frame size %lu pitchYUV %d %d %d, widthYUV %d %d %d, heightYUV %d %d %d\n",
                      in_frame_sz, _uncompressed->GetPitch(PLANAR_Y), _uncompressed->GetPitch(PLANAR_U), _uncompressed->GetPitch(PLANAR_V),
                      _uncompressed->GetWidth(PLANAR_Y), _uncompressed->GetWidth(PLANAR_U), _uncompressed->GetWidth(PLANAR_V),
@@ -1003,6 +1012,8 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
         data->copyInfo(_uncompressed);
         data->Pts = _uncompressed->Pts;
         //        vidCache->unlockAll();
+        *fn=nextFrame;
+        nextFrame++;
         return true;
         break;
     }
