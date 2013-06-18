@@ -289,7 +289,10 @@ ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
 
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
-
+IF(USE_XVBA)
+        install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 
+        install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 
+ENDIF(USE_XVBA)
 install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
 	"${FFMPEG_SOURCE_DIR}/libavcodec/version.h" 
 	"${FFMPEG_SOURCE_DIR}/libavcodec/old_codec_ids.h" 
