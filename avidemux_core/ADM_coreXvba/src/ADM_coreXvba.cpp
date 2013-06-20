@@ -287,7 +287,8 @@ void        *admXvba::createDecoder(int width, int height)
         MKS(  XVBA_YV12)
         default:  printf("surface format ???\n");
     }
-    
+    // NV12 & AYUV works
+    // ADM_coreXvba::decoders::h264_decode_cap.surface_type=XVBA_AYUV;
     
     ADM_info("Creating decoder, %d x %d, %d x %d \n",width,height,sessionInput.width,sessionInput.height);
     CHECK_ERROR(ADM_coreXvba::funcs.createDecode(&sessionInput,&sessionOutput));
@@ -305,14 +306,15 @@ void        *admXvba::createDecoder(int width, int height)
  */
 bool admXvba::destroyDecoder(void *session)
 {
+    bool r=false:
      CHECK_WORKING(false);
      if(Success == ADM_coreXvba::funcs.destroyDecode(session))
      {
          ADM_info("Xvba decoder destroyed\n");
-         return true;
-     }
-     ADM_info("Error destroying Xvba decoder\n");
-     return false;
+         r=true;
+     }else
+        ADM_info("Error destroying Xvba decoder\n");
+     return r;
 }
 
 #else 
