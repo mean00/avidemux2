@@ -16,11 +16,6 @@
 #ifndef ADM_ffmpeg_xvba_internal_H
 #define ADM_ffmpeg_xvba_internal_H
 #include <vector>
-extern "C" {
-static void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
-static int ADM_XVBAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
-static void ADM_XVBAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-}
 
 
 #define NB_SURFACE 25

@@ -51,6 +51,12 @@ typedef enum
     ADM_XVBA_MPEG2=2,
     ADM_XVBA_VC1=3
 }ADM_XVBA_TYPE;
+
+// Trampoline
+static void ADM_XVBADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
+static void ADM_XVBAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
+static int  ADM_XVBAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
+
 /**
     \fn hasBeenDestroyed
     \brief If the context has been destroyed, dont attempt to manipulate the buffers attached
@@ -121,10 +127,12 @@ bool xvbaProbe(void)
         GUI_Error_HIG("Error","Core has been compiled without xvba support, but the application has been compiled with it.\nInstallation mismatch");
         xvbaWorking=false;
     }
-#endif
+
     if(false==admXvba::init(&xinfo)) return false;
     xvbaWorking=true;
     return true;
+#endif
+    return false;
 }
 /**
     \fn vdpauCleanup
@@ -133,22 +141,114 @@ bool xvbaCleanup(void)
 {
    return admXvba::cleanup();
 }
-#if 0
+
+// dummy
+decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
+        uint8_t *extraData,uint32_t bpp)
+:decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
+{
+    alive=false;
+    xvba=admXvba::createDecoder(w,h);
+    if(!xvba) return;
+    _context->opaque          = this;
+    _context->thread_count    = 1;
+    _context->get_buffer      = ADM_XVBAgetBuffer;
+    _context->release_buffer  = ADM_XVBAreleaseBuffer ;
+    _context->draw_horiz_band = ADM_XVBADraw;
+    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
+    WRAP_Open(CODEC_ID_H264)
+
+}
+decoderFFXVBA::~decoderFFXVBA()
+{
+}
+/**
+ * \fn uncompress
+ * @param in
+ * @param out
+ * @return 
+ */
+bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
+{
+    // First let ffmpeg prepare datas...
+    xvba_copy=out;
+    decode_status=false;
+
+   
+    if(!decoderFF::uncompress (in, scratch))
+    {
+        aprintf("[XVBA] No data from libavcodec\n");
+        return 0;
+    }
+    if(decode_status!=true)
+    {
+        printf("[XVBA] error in renderDecode\n");
+        return false;
+    }
+    struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
+    
+   // TODO : Read rndr->out
+    
+    out->Pts=scratch->Pts;
+    out->flags=scratch->flags;
+    return (bool)decode_status;
+    return false;
+}
 /**
     \fn ADM_VDPAUgetBuffer
     \brief trampoline to get a VDPAU surface
 */
 int ADM_XVBAgetBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
+    decoderFFXVBA *dec=(decoderFFXVBA *)avctx->opaque;
     return dec->getBuffer(avctx,pic);
+}
+/**
+ * \fn ADM_XVBAreleaseBuffer
+ * @param avctx
+ * @param pic
+ */
+void ADM_XVBAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
+{
+   decoderFFXVBA *dec=(decoderFFXVBA *)avctx->opaque;
+   return dec->releaseBuffer(avctx,pic);
+}
+
+
+/**
+    \fn draw
+    \brief callback invoked by lavcodec when a pic is ready to be decoded
+*/
+void ADM_XVBADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
+{
+    decoderFFXVBA *dec=(decoderFFXVBA *)s->opaque;
+    dec->goOn(src,type);
+    return ;
+}
+
+
+/**
+    \fn releaseBuffer
+*/
+void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
+{
+  xvba_render_state * render;
+  int i;
+  
+  render=(xvba_render_state*)pic->data[0];
+  ADM_assert(render);
+  for(i=0; i<4; i++)
+  {
+    pic->data[i]= NULL;
+  }
 }
 /**
     \fn getBuffer
     \brief returns a VDPAU render masquerading as a AVFrame
 */
-int decoder::getBuffer(AVCodecContext *avctx, AVFrame *pic)
+int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
+#if 0
     vdpau_render_state * render;
     if(VDPAU->freeQueue.size()==0)
     {
@@ -186,227 +286,23 @@ int decoder::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     }
 
     return 0;
-}
-/**
-    \fn releaseBuffer
-*/
-void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
-{
-  vdpau_render_state * render;
-  int i;
-  if(destroying==true) return; // They are already freed...
-  render=(vdpau_render_state*)pic->data[0];
-  ADM_assert(render);
-  ADM_assert(render->refCount);
-  render->state &= ~FF_VDPAU_STATE_USED_FOR_REFERENCE;
-  for(i=0; i<4; i++){
-    pic->data[i]= NULL;
-  }
-  vdpauMarkSurfaceUnused(VDPAU,(void *)render);
-}
-/**
-    \fn ADM_VDPAUreleaseBuffer
-*/
- void ADM_VDPAUreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
-{
-    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
-    dec->releaseBuffer(avctx,pic);
-}
-/**
-    \fn vdpauGetFormat
-    \brief Borrowed from mplayer
-
-*/
-extern "C"
-{
-static enum PixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum PixelFormat *fmt)
-{
-    int i;
-
-    for(i=0;fmt[i]!=PIX_FMT_NONE;i++)
-    {
-        PixelFormat c=fmt[i];
-        switch(c)
-        {
-            case PIX_FMT_VDPAU_H264:
-            case PIX_FMT_VDPAU_MPEG1:
-            case PIX_FMT_VDPAU_MPEG2:
-            case PIX_FMT_VDPAU_WMV3:
-            case PIX_FMT_VDPAU_VC1:
-                        return c;
-            default:break;
-
-        }
-    }
-    return PIX_FMT_NONE;
-}
-}
-/**
-    \fn decoderFFVDPAU
-*/
-decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
-        uint8_t *extraData,uint32_t bpp)
-:decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
-{
-        destroying=false;
-        destroyingFlag=false; 
-        destroyedList.clear();
-        alive=true;
-        scratch=NULL;
-        uint8_t *extraCopy=NULL;
-        if(extraDataLen)
-        {
-                extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-                memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-                memcpy(extraCopy,extraData,extraDataLen);
-        }
-        _context->opaque          = this;
-        _context->get_buffer      = ADM_VDPAUgetBuffer;
-        _context->release_buffer  = ADM_VDPAUreleaseBuffer;
-        _context->draw_horiz_band = draw;
-        _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-        _context->extradata = (uint8_t *) extraCopy;
-        _context->extradata_size  = (int) extraDataLen;
-        _context->get_format      = vdpauGetFormat;
-        vdpau=(void *)new vdpauContext;
-        VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
-        ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
-        if(isH264Compatible(fcc))
-        {
-            vdpauType=ADM_VDPAU_H264;
-        }else if(isMpeg12Compatible(fcc))
-        {
-            vdpauType=ADM_VDPAU_MPEG2;
-        }else if(isVC1Compatible(fcc))
-        {
-            vdpauType=ADM_VDPAU_VC1;
-        }else ADM_assert(0);
-        int vdpDecoder;
-        switch(vdpauType)
-        {
-            case ADM_VDPAU_VC1  : vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
-                                  WRAP_OpenByName(vc1_vdpau,CODEC_ID_VC1);
-                                  break;
-
-            case ADM_VDPAU_H264 : vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
-                                  WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
-                                  break;
-            case ADM_VDPAU_MPEG2: 
-                                  vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
-                                  WRAP_OpenByName(mpegvideo_vdpau,CODEC_ID_MPEG2VIDEO);
-                                  break;
-            default: ADM_assert(0);break;
-        }
-        ADM_info("[VDPAU] Decoder created \n");
-        // Now instantiate our VDPAU surface & decoder
-        for(int i=0;i<NB_SURFACE;i++)
-            VDPAU->renders[i]=NULL;
-        
-        if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, w,h,15,&(VDPAU->vdpDecoder)))
-        {
-            ADM_error("Cannot create VDPAU decoder\n");
-            alive=false;
-            return;
-        }
-        // Create our surfaces...
-        for(int i=0;i<NB_SURFACE;i++)
-        {
-            VDPAU->renders[i]=new vdpau_render_state;
-            memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
-            if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&(VDPAU->renders[i]->surface)))
-            {
-                ADM_error("Cannot create surface %d/%d\n",i,NB_SURFACE);
-                alive=false;
-                return;
-            }
-            VDPAU->freeQueue.push_back(VDPAU->renders[i]);
-        }
-        scratch=new ADMImageRef(w,h);
-        b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
-
-}
-/**
-    \fn ~            void    goOn( const AVFrame *d);
-*/
-decoderFFVDPAU::~decoderFFVDPAU()
-{
-        ADM_info("[VDPAU] Cleaning up\n");
-        destroying=true;
-        destroyingFlag=true;
-        destroyedList.append(VDPAU);
-        if(scratch)
-            delete scratch;
-        scratch=NULL;
-        for(int i=0;i<NB_SURFACE;i++)
-        {
-            if(VDPAU->renders[i])
-            {
-                if(VDPAU->renders[i]->surface)
-                {
-                    if(VDPAU->renders[i]->surface)
-                        if(VDP_STATUS_OK!=admVdpau::surfaceDestroy((VDPAU->renders[i]->surface)))
-                                ADM_error("Error destroying surface %d\n",i);
-                }
-                delete VDPAU->renders[i];
-            }
-        }
-         ADM_info("[VDPAU] Destroying decoder\n");
-         if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))
-                ADM_error("Error destroying VDPAU decoder\n");
-         delete VDPAU;
-         vdpau=NULL;
-}
-/**
-    \fn uncompress
-*/
-bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
-{
-VdpStatus status;
-    
-    // First let ffmpeg prepare datas...
-    vdpau_copy=out;
-    decode_status=false;
-
-    if(out->refType==ADM_HW_VDPAU)
-    {
-            vdpauMarkSurfaceUnused(VDPAU,out->refDescriptor.refCookie);
-            out->refType=ADM_HW_NONE;
-    }
-
-    if(!decoderFF::uncompress (in, scratch))
-    {
-        aprintf("[VDPAU] No data from libavcodec\n");
-        return 0;
-    }
-    if(decode_status!=true)
-    {
-        printf("[VDPAU] error in renderDecode\n");
-        return false;
-    }
-    //ADM_info("Surface used %d\n",VDPAU->freeQueue.size());
-    if(decode_status)
-    {
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
-        out->refType=ADM_HW_VDPAU;
-        out->refDescriptor.refCookie=(void *)rndr;
-        out->refDescriptor.refInstance=VDPAU;
-        out->refDescriptor.refMarkUsed=vdpauMarkSurfaceUsed;
-        out->refDescriptor.refMarkUnused=vdpauMarkSurfaceUnused;
-        out->refDescriptor.refDownload=vdpauRefDownload;
-        vdpauMarkSurfaceUsed(VDPAU,(void *)rndr);
-    }
-    out->Pts=scratch->Pts;
-    out->flags=scratch->flags;
-    return (bool)decode_status;
+#endif
+    return -1;
 }
 /**
     \fn goOn
     \brief Callback from ffmpeg when a pic is ready to be decoded
 */
-void decoderFFVDPAU::goOn( const AVFrame *d,int type)
+void decoderFFXVBA::goOn( const AVFrame *d,int type)
 {
-   VdpStatus status;
-   struct vdpau_render_state *rndr = (struct vdpau_render_state *)d->data[0];
+   
+   struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0];
+   if(!rndr)
+   {
+       ADM_warning("Bad context\n");
+       return;
+   }
+#if 0
    VdpVideoSurface  surface;
 
     surface=rndr->surface;
@@ -423,39 +319,8 @@ void decoderFFVDPAU::goOn( const AVFrame *d,int type)
     }
     aprintf("[VDPAU] DecodeRender Ok***\n");
     decode_status=true;
+#endif    
     return;
 }
-
-
-/**
-    \fn draw
-    \brief callback invoked by lavcodec when a pic is ready to be decoded
-*/
-void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
-{
-    decoderFFVDPAU *dec=(decoderFFVDPAU *)s->opaque;
-    dec->goOn(src,type);
-}
-
 #endif
-#endif
-
-// dummy
-decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
-        uint8_t *extraData,uint32_t bpp)
-:decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
-{
-    alive=false;
-    void *decoder=admXvba::createDecoder(w,h);
-    admXvba::destroyDecoder(decoder);
-}
-decoderFFXVBA::~decoderFFXVBA()
-{
-}
-bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
-{
-    return false;
-}
-
-
 // EOF
