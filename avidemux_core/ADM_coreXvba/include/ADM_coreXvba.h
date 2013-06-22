@@ -45,6 +45,8 @@ static  void        destroySurface(void *session, void *surface);
 static  void        *createDecodeBuffer(void *session,int type);
 static  void        destroyDecodeBuffer(void *session,void *buffer);
 
+static bool        decodeStart(void *session, void *surface);
+
 //--
 #if 0
 static  bool        getSessionInfoProc       (void *input, void *output);

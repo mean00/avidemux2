@@ -412,7 +412,30 @@ void        admXvba::destroyDecodeBuffer(void *session,void *decodeBuffer)
         aprintf("Error destroying decode buffer\n");
         return;
 }
+/**
+ * 
+ * @param session
+ * @param surface
+ * @return 
+ */
+bool        admXvba::decodeStart(void *session, void *surface)
+{
+      int xError;
+      CHECK_WORKING(false);
+      XVBA_Decode_Picture_Start_Input in;
+      PREPARE_SESSION_IN(session,in);
+      XVBABufferDescriptor *list[2];
 
+      in.target_surface=surface;
+      
+       CHECK_ERROR(ADM_coreXvba::funcs.startDecodePicture(&in));
+      
+      if(xError!=Success)
+      {
+          ADM_info("decodeStart failed\n");
+          return false;
+      }
+}
 #else 
 //******************************************
 //******************************************

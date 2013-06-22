@@ -148,6 +148,9 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
     alive=false;
+    scratch=new ADMImageRef(w,h);
+    descrBuffer=dataBuffer=qmBuffer=ctrlBuffer[0]=NULL;
+    ctrlBufferCount=0;
     xvba=admXvba::createDecoder(w,h);
     if(!xvba) return;
     _context->opaque          = this;
@@ -173,7 +176,18 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
         freeQueue.push(render);
 
     }
-   // alive=true;
+    // Allocate buffers
+     descrBuffer=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
+     dataBuffer=admXvba::createDecodeBuffer(xvba,XVBA_DATA_BUFFER);
+     ctrlBuffer[0]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
+     ctrlBufferCount++;
+     qmBuffer=admXvba::createDecodeBuffer(xvba,XVBA_QM_BUFFER);
+#define CHECK_BUFFER(x)     if(!x) {ADM_warning("Failed to allocate "#x"\n");}
+     CHECK_BUFFER(descrBuffer)
+     CHECK_BUFFER(dataBuffer)
+     CHECK_BUFFER(ctrlBuffer[0])
+     CHECK_BUFFER(qmBuffer)
+     alive=true;
 
 }
 /**
@@ -189,10 +203,20 @@ decoderFFXVBA::~decoderFFXVBA()
             admXvba::destroySurface(xvba,r->surface);
             free(r);
         }
+        // destroy buffers
+        
+        #define DEL_BUFFER(x)     if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
+     DEL_BUFFER(descrBuffer)
+     DEL_BUFFER(dataBuffer)     
+     DEL_BUFFER(qmBuffer)
+     for(int i=0;i<ctrlBufferCount;i++)             
+         admXvba::destroyDecodeBuffer(xvba,ctrlBuffer[i]);
         // delete decoder
         admXvba::destroyDecoder(xvba);
         xvba=NULL;
     }
+    if(scratch) delete scratch;
+    scratch=NULL;            
 }
 /**
  * \fn uncompress
@@ -273,6 +297,9 @@ void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
   {
     pic->data[i]= NULL;
   }
+  render->state &=~ FF_XVBA_STATE_USED_FOR_REFERENCE;
+  decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
+  x->freeQueue.pushBack(render);
 }
 /**
     \fn getBuffer
@@ -280,21 +307,17 @@ void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 */
 int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-#if 0
-    vdpau_render_state * render;
-    if(VDPAU->freeQueue.size()==0)
+    
+    decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
+    xvba_render_state * render;
+    if(x->freeQueue.isEmpty())
     {
-        aprintf("[VDPAU] No more available surface\n");
+        aprintf("[XVBA] No more available surface\n");
         return -1;
     }
     // Get an image   
-    surfaceMutex.lock();
-    render=VDPAU->freeQueue.front();
-    render->refCount=0;
-    VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
-    surfaceMutex.unlock();
-    vdpauMarkSurfaceUsed(VDPAU,(void *)render);
-    render->state=0;
+    
+    render=x->freeQueue.pop();
     pic->data[0]=(uint8_t *)render;
     pic->data[1]=(uint8_t *)render;
     pic->data[2]=(uint8_t *)render;
@@ -302,24 +325,12 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->linesize[1]=0;
     pic->linesize[2]=0;
     pic->type=FF_BUFFER_TYPE_USER;
-    render->state |= FF_VDPAU_STATE_USED_FOR_REFERENCE;
+    render->state |= FF_XVBA_STATE_USED_FOR_REFERENCE;
+    render->state &= ~FF_XVBA_STATE_DECODED;
     pic->reordered_opaque= avctx->reordered_opaque;
-    // I dont really understand what it is used for ....
-    if(pic->reference)
-    {
-        ip_age[0]=ip_age[1]+1;
-        ip_age[1]=1;
-        b_age++;
-    }else
-    {
-        ip_age[0]++;
-        ip_age[1]++;
-        b_age=1;
-    }
+    // FIXME render->iq_matrix= ((XVBAQuantMatrixAvc *)x->qmBuffer)->bufferXVBA;
 
     return 0;
-#endif
-    return -1;
 }
 /**
     \fn goOn
@@ -334,24 +345,12 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("Bad context\n");
        return;
    }
-#if 0
-   VdpVideoSurface  surface;
-
-    surface=rndr->surface;
-    vdpau_pts=d->reordered_opaque; // Retrieve our PTS
-
-     aprintf("[VDPAU] Decoding Using surface %d\n", surface);
-    status=admVdpau::decoderRender(VDPAU->vdpDecoder, surface,
-                            &rndr->info, rndr->bitstream_buffers_used, rndr->bitstream_buffers);
-    if(VDP_STATUS_OK!=status)
-    {
-        printf("[VDPAU] No data after decoderRender <%s>\n",admVdpau::getErrorString(status));
-        decode_status=false;
-        return ;
-    }
-    aprintf("[VDPAU] DecodeRender Ok***\n");
-    decode_status=true;
-#endif    
+   if(!admXvba::decodeStart(xvba,rndr->surface))
+   {
+       ADM_warning("Decode start failed\n");
+   }
+   
+   //
     return;
 }
 #endif

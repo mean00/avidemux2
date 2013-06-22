@@ -5,8 +5,17 @@
 #ifdef USE_XVBA
 #include <ADM_ptrQueue.h>
 struct xvba_render_state;
+/**
+ * \class decoderFFXVBA
+ */
 class decoderFFXVBA:public decoderFF
 {
+protected:
+                    void  *descrBuffer;
+                    void  *dataBuffer;
+                    void  *qmBuffer;
+                    void  *ctrlBuffer[50];
+                    int   ctrlBufferCount;;
 protected:
                     bool alive;
                     int b_age;
