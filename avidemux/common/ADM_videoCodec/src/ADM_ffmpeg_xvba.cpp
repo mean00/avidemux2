@@ -157,10 +157,42 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     _context->draw_horiz_band = ADM_XVBADraw;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     WRAP_Open(CODEC_ID_H264)
+    // allocate a few render beforehand
+    for(int i=0;i<5;i++)
+    {
+        void *surface=admXvba::allocateSurface(xvba,w,h);
+        if(!surface)
+        {
+            ADM_warning("Cannot allocate surface\n");
+            return;
+        }
+        xvba_render_state *render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
+        render->surface=surface;
+        //picture_descriptor ??
+        //iq_matrix ??
+        freeQueue.push(render);
+
+    }
+   // alive=true;
 
 }
+/**
+ * \fn dtor
+ */
 decoderFFXVBA::~decoderFFXVBA()
 {
+    if(xvba)
+    {
+        while(!freeQueue.isEmpty())
+        {
+            xvba_render_state *r=freeQueue.pop();
+            admXvba::destroySurface(xvba,r->surface);
+            free(r);
+        }
+        // delete decoder
+        admXvba::destroyDecoder(xvba);
+        xvba=NULL;
+    }
 }
 /**
  * \fn uncompress

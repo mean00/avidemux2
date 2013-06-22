@@ -3,13 +3,16 @@
  *      \brief wrapper around ffmpeg wrapper around xvba
  */
 #ifdef USE_XVBA
+#include <ADM_ptrQueue.h>
+struct xvba_render_state;
 class decoderFFXVBA:public decoderFF
 {
 protected:
                     bool alive;
                     int b_age;
                     int ip_age[2];
-
+                    ADM_ptrQueue <xvba_render_state> freeQueue;
+                    ADM_ptrQueue <xvba_render_state> inUseQueue;
                     void     *xvba;
                     ADMImage *scratch;
                     ADMImage *xvba_copy;

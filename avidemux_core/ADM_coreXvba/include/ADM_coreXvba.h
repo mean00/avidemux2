@@ -37,7 +37,16 @@ public:
 static  void        *createDecoder(int width, int height);
 static  bool        destroyDecoder(void *decoder);
 
-    
+static  void        *allocateSurface(void *session, int w, int h);
+static  void        destroySurface(void *session, void *surface);
+
+//  type : XVBA_NONE = 0,    XVBA_PICTURE_DESCRIPTION_BUFFER,    XVBA_DATA_BUFFER,    
+//  XVBA_DATA_CTRL_BUFFER,    XVBA_QM_BUFFER
+static  void        *createDecodeBuffer(void *session,int type);
+static  void        destroyDecodeBuffer(void *session,void *buffer);
+
+//--
+#if 0
 static  bool        getSessionInfoProc       (void *input, void *output);
 static  int         createSurfaceProc        (void *input, void *output);
 static  int         createGLSharedSurfaceProc(void *input, void *output);
@@ -52,7 +61,7 @@ static  int         decodePictureProc        (void *input);
 static  int         syncSurfaceProc          (void *input, void *output);
 static  int         getSurfaceProc           (void *input);
 static  int         transferSurfaceProc      (void *input);
-
+#endif
 
 #endif
 };

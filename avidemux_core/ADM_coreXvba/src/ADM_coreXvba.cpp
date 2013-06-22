@@ -25,6 +25,8 @@
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
 
+#define aprintf printf
+
 /**
  * 
  */
@@ -50,6 +52,7 @@ static bool                  coreXvbaWorking=false;
 
 #define CLEAR(x) memset(&x,0,sizeof(x))
 #define PREPARE_IN(z) {CLEAR(z);z.size=sizeof(z);z.context=ADM_coreXvba::context;}
+#define PREPARE_SESSION_IN(session,z) {CLEAR(z);z.size=sizeof(z);z.session=session;}
 #define PREPARE_OUT(z) {CLEAR(z);z.size=sizeof(z);}
 #define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreXvba::display,xError);}
 
@@ -224,6 +227,7 @@ bool admXvba::cleanup(void)
 {
     if(true==coreXvbaWorking)
     {
+           
            if(ADM_coreXvba::context)
            {
                ADM_coreXvba::funcs.destroyContext(ADM_coreXvba::context);
@@ -288,9 +292,9 @@ void        *admXvba::createDecoder(int width, int height)
         default:  printf("surface format ???\n");
     }
     // NV12 & AYUV works
-    // ADM_coreXvba::decoders::h264_decode_cap.surface_type=XVBA_AYUV;
+    //ADM_coreXvba::decoders::h264_decode_cap.surface_type=XVBA_AYUV;
     
-    ADM_info("Creating decoder, %d x %d, %d x %d \n",width,height,sessionInput.width,sessionInput.height);
+    ADM_info("Creating xvba decoder, %d x %d, %d x %d \n",width,height,sessionInput.width,sessionInput.height);
     CHECK_ERROR(ADM_coreXvba::funcs.createDecode(&sessionInput,&sessionOutput));
     if(Success==xError)
     {
@@ -306,7 +310,7 @@ void        *admXvba::createDecoder(int width, int height)
  */
 bool admXvba::destroyDecoder(void *session)
 {
-    bool r=false:
+    bool r=false;
      CHECK_WORKING(false);
      if(Success == ADM_coreXvba::funcs.destroyDecode(session))
      {
@@ -315,6 +319,98 @@ bool admXvba::destroyDecoder(void *session)
      }else
         ADM_info("Error destroying Xvba decoder\n");
      return r;
+}
+/**
+ * \fn allocateSurface
+ * @param w
+ * @param h
+ * @return 
+ */
+void        *admXvba::allocateSurface(void *session,int w, int h)
+{
+       int xError;
+       CHECK_WORKING(NULL);
+       w=(w+15) & ~15; 
+       h=(h+15) & ~15; 
+       XVBA_Create_Surface_Input in;
+       XVBA_Create_Surface_Output out;
+       
+       PREPARE_SESSION_IN(session,in);
+       
+       
+       PREPARE_OUT(out);
+       in.width=w;
+       in.height=h;
+       in.surface_type=XVBA_NV12;
+       
+       aprintf("Creating surface %d x %d\n",w,h);
+        CHECK_ERROR(ADM_coreXvba::funcs.createSurface(&in,&out));
+        if(Success==xError)
+        {
+            return out.surface;
+        }
+        aprintf("Error creating surface\n");
+        return NULL;
+    
+}
+/**
+ * \fn destroySurface
+ * @param session
+ * @param surface
+ */
+void        admXvba::destroySurface(void *session, void *surface)
+{
+      int xError;
+      CHECK_WORKING();
+      CHECK_ERROR(ADM_coreXvba::funcs.destroySurface(surface));
+        if(Success==xError)
+        {
+            return;
+        }
+        aprintf("Error destroying surface\n");
+        return;
+}
+
+/**
+ * \fn destroySurface
+ * @param session
+ * @param surface
+ */
+void        *admXvba::createDecodeBuffer(void *session,int type)
+{
+      CHECK_WORKING(NULL);
+      int xError;
+      XVBA_Create_DecodeBuff_Input  in;
+      XVBA_Create_DecodeBuff_Output out;
+      PREPARE_SESSION_IN(session,in);
+      in.buffer_type=(XVBA_BUFFER)type;
+      in.num_of_buffers=1;
+      
+      CHECK_ERROR(ADM_coreXvba::funcs.createDecodeBuffer(&in,&out));
+        if(Success==xError && out.num_of_buffers_in_list==1)
+        {
+            return out.buffer_list;
+        }
+        aprintf("Error creating decode buffer of type %d\n",type);
+        return NULL;
+}
+
+/**
+ * \fn destroySurface
+ * @param session
+ * @param surface
+ */
+void        admXvba::destroyDecodeBuffer(void *session,void *decodeBuffer)
+{
+      int xError;
+      CHECK_WORKING();
+      CHECK_ERROR(ADM_coreXvba::funcs.destroyDecodeBuffer(decodeBuffer));
+        if(Success==xError)
+        {
+            return;
+        }
+        aprintf("Error destroying decode buffer\n");
+        return;
 }
 
 #else 
