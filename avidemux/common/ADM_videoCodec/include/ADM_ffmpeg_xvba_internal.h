@@ -33,7 +33,7 @@ typedef struct
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\
 AVCodec *codec=funcz(argz);\
-if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"display));ADM_assert(0);} \
+if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec :"display));ADM_assert(0);} \
   codecId=codecid; \
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
