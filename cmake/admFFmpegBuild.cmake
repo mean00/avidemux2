@@ -83,6 +83,7 @@ if (USE_VDPAU)
 endif (USE_VDPAU)
 
 if(USE_XVBA)
+	xadd(--enable-xvba)
 else(USE_XVBA)
 	xadd(--disable-xvba)
 endif(USE_XVBA)

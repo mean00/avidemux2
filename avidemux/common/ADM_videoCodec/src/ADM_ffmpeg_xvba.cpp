@@ -42,7 +42,12 @@ static bool         xvbaWorking=true;
 static admMutex     surfaceMutex;
 static bool         destroyingFlag=false;
 static BVector   <void *> destroyedList;
+
+#if 0
 #define aprintf(...) {}
+#else
+#define aprintf ADM_info
+#endif
 
 typedef enum 
 {
@@ -159,7 +164,18 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     _context->release_buffer  = ADM_XVBAreleaseBuffer ;
     _context->draw_horiz_band = ADM_XVBADraw;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    WRAP_Open(CODEC_ID_H264)
+    
+    uint8_t *extraCopy=NULL;
+    if(extraDataLen)
+    {
+            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
+            memcpy(extraCopy,extraData,extraDataLen);
+            _context->extradata = (uint8_t *) extraCopy;
+            _context->extradata_size  = (int) extraDataLen;
+    } 
+    
+     WRAP_OpenByName(h264_xvba,CODEC_ID_H264);
     // allocate a few render beforehand
     for(int i=0;i<5;i++)
     {
@@ -169,6 +185,7 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
             ADM_warning("Cannot allocate surface\n");
             return;
         }
+        ADM_info("Allocated surface %llx\n",surface);
         xvba_render_state *render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
         render->surface=surface;
         //picture_descriptor ??
@@ -292,6 +309,7 @@ void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
   int i;
   
   render=(xvba_render_state*)pic->data[0];
+  aprintf("Release Buffer : 0x%llx\n",render);
   ADM_assert(render);
   for(i=0; i<4; i++)
   {
@@ -318,6 +336,7 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     // Get an image   
     
     render=x->freeQueue.pop();
+    aprintf("Alloc Buffer : 0x%llx\n",render);
     pic->data[0]=(uint8_t *)render;
     pic->data[1]=(uint8_t *)render;
     pic->data[2]=(uint8_t *)render;
@@ -340,6 +359,8 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
 {
    
    struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0];
+   aprintf("Decode Buffer : 0x%llx\n",rndr);
+   aprintf("Surface  : 0x%llx\n",rndr->surface);
    if(!rndr)
    {
        ADM_warning("Bad context\n");
@@ -348,8 +369,13 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
    if(!admXvba::decodeStart(xvba,rndr->surface))
    {
        ADM_warning("Decode start failed\n");
+       return;
    }
-   
+   if(!admXvba::decode(xvba,descrBuffer,qmBuffer))
+   {
+       ADM_warning("Decode start failed\n");
+       return;
+   } 
    //
     return;
 }

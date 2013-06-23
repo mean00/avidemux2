@@ -46,6 +46,7 @@ static  void        *createDecodeBuffer(void *session,int type);
 static  void        destroyDecodeBuffer(void *session,void *buffer);
 
 static bool        decodeStart(void *session, void *surface);
+static bool        decode(void *session,void *picture_desc, void *matrix_desc);
 
 //--
 #if 0

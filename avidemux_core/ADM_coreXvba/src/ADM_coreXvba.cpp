@@ -436,6 +436,32 @@ bool        admXvba::decodeStart(void *session, void *surface)
           return false;
       }
 }
+/**
+ * \fn decode
+ * @param session
+ * @param x
+ * @return 
+ */
+bool        admXvba::decode(void *session,void *picture_desc,void *matrix_desc)
+{
+      int xError;
+      CHECK_WORKING(false);
+      XVBA_Decode_Picture_Input in;
+      PREPARE_SESSION_IN(session,in);
+      XVBABufferDescriptor *desc[3];
+      in.buffer_list=desc;
+      in.num_of_buffers_in_list=2;
+      desc[0]=(XVBABufferDescriptor *)picture_desc;
+      desc[1]=(XVBABufferDescriptor *)matrix_desc;
+      CHECK_ERROR(ADM_coreXvba::funcs.decodePicture(&in));
+      if(Success!=xError)
+      {
+          return false;
+      }
+      return true;
+      
+}
+
 #else 
 //******************************************
 //******************************************
