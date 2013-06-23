@@ -23,6 +23,7 @@
 #ifdef USE_XVBA
 extern "C" {
 #include "libavcodec/avcodec.h"
+#include "libavutil/pixfmt.h"
 #include "libavcodec/xvba.h"
 }
 
@@ -146,6 +147,32 @@ bool xvbaCleanup(void)
 {
    return admXvba::cleanup();
 }
+/**
+ * 
+ * @param w
+ * @param h
+ * @param fcc
+ * @param extraDataLen
+ * @param extraData
+ * @param bpp
+ */
+static enum AVPixelFormat ADM_XVBA_getFormat( struct AVCodecContext * avctx , const AVPixelFormat * fmt)
+{
+   const PixelFormat * cur = fmt;
+   while(*cur != AV_PIX_FMT_NONE)
+   {
+       if(*cur==AV_PIX_FMT_XVBA_VLD) 
+       {
+           ADM_info(">---------->Match\n");
+           return AV_PIX_FMT_XVBA_VLD;
+       }
+       cur++;
+   }
+   ADM_warning(">---------->No XVBA colorspace\n");
+   return AV_PIX_FMT_NONE;
+
+    
+}
 
 // dummy
 decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
@@ -163,7 +190,10 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     _context->get_buffer      = ADM_XVBAgetBuffer;
     _context->release_buffer  = ADM_XVBAreleaseBuffer ;
     _context->draw_horiz_band = ADM_XVBADraw;
+    _context->get_format      = ADM_XVBA_getFormat;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
+    _context->pix_fmt         = AV_PIX_FMT_XVBA_VLD;
+    
     
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
@@ -175,9 +205,9 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
             _context->extradata_size  = (int) extraDataLen;
     } 
     
-     WRAP_OpenByName(h264_xvba,CODEC_ID_H264);
+     WRAP_Open(CODEC_ID_H264);
     // allocate a few render beforehand
-    for(int i=0;i<5;i++)
+    for(int i=0;i<20;i++)
     {
         void *surface=admXvba::allocateSurface(xvba,w,h);
         if(!surface)
@@ -246,7 +276,7 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
     // First let ffmpeg prepare datas...
     xvba_copy=out;
     decode_status=false;
-
+    aprintf("[XVBA]>-------------uncompress>\n");
    
     if(!decoderFF::uncompress (in, scratch))
     {
@@ -346,8 +376,10 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->type=FF_BUFFER_TYPE_USER;
     render->state |= FF_XVBA_STATE_USED_FOR_REFERENCE;
     render->state &= ~FF_XVBA_STATE_DECODED;
+    render->iq_matrix=(XVBAQuantMatrixAvc *)x->qmBuffer;
+    render->picture_descriptor=(XVBAPictureDescriptor *)x->descrBuffer;
     pic->reordered_opaque= avctx->reordered_opaque;
-    // FIXME render->iq_matrix= ((XVBAQuantMatrixAvc *)x->qmBuffer)->bufferXVBA;
+    
 
     return 0;
 }
@@ -359,8 +391,8 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
 {
    
    struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0];
-   aprintf("Decode Buffer : 0x%llx\n",rndr);
-   aprintf("Surface  : 0x%llx\n",rndr->surface);
+   aprintf("[XVBA]Decode Buffer : 0x%llx\n",rndr);
+   aprintf("[XVBA]Surface  : 0x%llx\n",rndr->surface);
    if(!rndr)
    {
        ADM_warning("Bad context\n");
@@ -373,9 +405,10 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
    }
    if(!admXvba::decode(xvba,descrBuffer,qmBuffer))
    {
-       ADM_warning("Decode start failed\n");
+       ADM_warning("Decode failed\n");
        return;
    } 
+   aprintf("[XVBA] End goOn\n");
    //
     return;
 }
