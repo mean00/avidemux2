@@ -2,7 +2,7 @@
             \file              ADM_ffmpeg_xvba.cpp  
             \brief Decoder using half ffmpeg/half VDPAU
 
- Derived from xbmc_xvba
+ Strongly derived from xbmc_xvba
  Very similar to ffmpeg_vdpau
 
 
@@ -181,18 +181,18 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
 {
     alive=false;
     scratch=new ADMImageRef(w,h);
-    descrBuffer=dataBuffer=qmBuffer=ctrlBuffer[0]=NULL;
+    pictureDescriptor=dataBuffer=qmBuffer=ctrlBuffer[0]=NULL;
     ctrlBufferCount=0;
     xvba=admXvba::createDecoder(w,h);
     if(!xvba) return;
     
-     descrBuffer=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
+     pictureDescriptor=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
      dataBuffer=admXvba::createDecodeBuffer(xvba,XVBA_DATA_BUFFER);
      ctrlBuffer[0]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
      ctrlBufferCount++;
      qmBuffer=admXvba::createDecodeBuffer(xvba,XVBA_QM_BUFFER);
 #define CHECK_BUFFER(x)     if(!x) {ADM_warning("Failed to allocate "#x"\n");return;}
-     CHECK_BUFFER(descrBuffer)
+     CHECK_BUFFER(pictureDescriptor)
      CHECK_BUFFER(dataBuffer)
      CHECK_BUFFER(ctrlBuffer[0])
      CHECK_BUFFER(qmBuffer)
@@ -237,7 +237,7 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
         xvba_render_state *render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
         render->surface=surface;
         render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
-        render->picture_descriptor=(XVBAPictureDescriptor*)this->descrBuffer->bufferXVBA;
+        render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
         freeQueue.push(render);
 
     }
@@ -261,7 +261,7 @@ decoderFFXVBA::~decoderFFXVBA()
         // destroy buffers
         
         #define DEL_BUFFER(x)     if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
-         DEL_BUFFER(descrBuffer)
+         DEL_BUFFER(pictureDescriptor)
          DEL_BUFFER(dataBuffer)     
          DEL_BUFFER(qmBuffer)
          for(int i=0;i<ctrlBufferCount;i++)             
@@ -388,8 +388,8 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->type=FF_BUFFER_TYPE_USER;
     render->state |= FF_XVBA_STATE_USED_FOR_REFERENCE;
     render->state &= ~FF_XVBA_STATE_DECODED;
-    render->iq_matrix=(XVBAQuantMatrixAvc *)x->qmBuffer;
-    render->picture_descriptor=(XVBAPictureDescriptor *)x->descrBuffer;
+    render->iq_matrix=(XVBAQuantMatrixAvc *)x->qmBuffer->bufferXVBA;
+    render->picture_descriptor=(XVBAPictureDescriptor *)x->pictureDescriptor->bufferXVBA;
     pic->reordered_opaque= avctx->reordered_opaque;
     
 
@@ -416,7 +416,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("Decode start failed\n");
        return;
    }
-   if(!admXvba::decode(xvba,descrBuffer,qmBuffer,false,0,0))
+   if(!admXvba::decode(xvba,pictureDescriptor,qmBuffer,false,0,0))
     {
         ADM_warning("Decode failed\n");
         return;

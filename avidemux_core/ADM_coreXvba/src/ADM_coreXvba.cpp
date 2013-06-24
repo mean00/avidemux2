@@ -376,14 +376,14 @@ void        admXvba::destroySurface(void *session, void *surface)
  * @param session
  * @param surface
  */
-XVBABufferDescriptor        *admXvba::createDecodeBuffer(void *session,int type)
+XVBABufferDescriptor        *admXvba::createDecodeBuffer(void *session,XVBA_BUFFER type)
 {
       CHECK_WORKING(NULL);
       int xError;
       XVBA_Create_DecodeBuff_Input  in;
       XVBA_Create_DecodeBuff_Output out;
       PREPARE_SESSION_IN(session,in);
-      in.buffer_type=(XVBA_BUFFER)type;
+      in.buffer_type=type;
       in.num_of_buffers=1;
       
       CHECK_ERROR(ADM_coreXvba::funcs.createDecodeBuffer(&in,&out));

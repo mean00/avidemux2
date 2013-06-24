@@ -43,7 +43,7 @@ static  void        destroySurface(void *session, void *surface);
 
 //  type : XVBA_NONE = 0,    XVBA_PICTURE_DESCRIPTION_BUFFER,    XVBA_DATA_BUFFER,    
 //  XVBA_DATA_CTRL_BUFFER,    XVBA_QM_BUFFER
-static  XVBABufferDescriptor        *createDecodeBuffer(void *session,int type);
+static  XVBABufferDescriptor        *createDecodeBuffer(void *session,XVBA_BUFFER type);
 static  void        destroyDecodeBuffer(void *session,XVBABufferDescriptor *buffer);
 
 static bool        decodeStart(void *session, void *surface);

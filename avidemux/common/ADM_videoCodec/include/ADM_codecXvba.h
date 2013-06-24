@@ -14,7 +14,7 @@ struct xvba_render_state;
 class decoderFFXVBA:public decoderFF
 {
 protected:
-                    XVBABufferDescriptor  *descrBuffer;
+                    XVBABufferDescriptor  *pictureDescriptor;
                     XVBABufferDescriptor  *dataBuffer;
                     XVBABufferDescriptor  *qmBuffer;
                     XVBABufferDescriptor  *ctrlBuffer[50];
