@@ -19,6 +19,7 @@ protected:
                     XVBABufferDescriptor  *qmBuffer;
                     XVBABufferDescriptor  *ctrlBuffer[50];
                     int   ctrlBufferCount;;
+                    uint8_t *tmpYV12Buffer;
 protected:
                     bool alive;
                     int b_age;

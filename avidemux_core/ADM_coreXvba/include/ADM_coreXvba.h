@@ -50,9 +50,9 @@ static bool        decodeStart(void *session, void *surface);
 static bool        decode(void *session,void *picture_desc, void *matrix_desc,bool set,int off0,int size1);
 static bool        decodeEnd(void *session);
 
-static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img);
+static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);
  
-
+static bool        syncSurface(void *session, void *surface, bool *ready);
 
 //--
 #if 0

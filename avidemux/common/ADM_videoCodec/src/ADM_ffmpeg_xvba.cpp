@@ -183,6 +183,7 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     scratch=new ADMImageRef(w,h);
     pictureDescriptor=dataBuffer=qmBuffer=ctrlBuffer[0]=NULL;
     ctrlBufferCount=0;
+    tmpYV12Buffer=new uint8_t[w*h*2];
     xvba=admXvba::createDecoder(w,h);
     if(!xvba) return;
     
@@ -298,7 +299,22 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     struct xvba_render_state *rndr = (struct xvba_render_state *)scratch->GetReadPtr(PLANAR_Y);
     
-    if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out))
+    int count=1000;
+    bool ready;
+    while(count--)
+    {
+        if(!admXvba::syncSurface(xvba,rndr->surface,&ready))
+        {
+            ADM_warning("Sync surface failed\n");
+            return false;
+        }
+        if(ready) break;
+        aprintf("Surface not ready, waiting...\n");
+        ADM_usleep(1000);
+    }
+    aprintf("[XVBA] Surface ready...\n");
+    
+    if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out,tmpYV12Buffer))
     {
         ADM_warning("Cannot transfer\n");
         return false;
