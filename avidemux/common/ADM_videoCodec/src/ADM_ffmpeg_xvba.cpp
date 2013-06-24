@@ -471,7 +471,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
   for (unsigned int i = 0; i < rndr->num_slices; ++i)
   {    
     aprintf("-- decode 2 --\n");
-    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(ctrlBuffer[0])))
+    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(*dataControl)))
     {
         ADM_warning("Decode failed\n");
         return;
