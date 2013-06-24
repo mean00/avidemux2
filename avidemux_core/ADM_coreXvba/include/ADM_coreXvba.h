@@ -20,6 +20,7 @@
 #include "ADM_windowInfo.h"
 #include "X11/Xlib.h"
 #include "amd/amdxvba.h"
+#include "ADM_image.h"
 /**
     \class admXvba
 */
@@ -47,6 +48,11 @@ static  void        destroyDecodeBuffer(void *session,void *buffer);
 
 static bool        decodeStart(void *session, void *surface);
 static bool        decode(void *session,void *picture_desc, void *matrix_desc);
+static bool        decodeEnd(void *session);
+
+static bool        transfer(void *session, void *surface, ADMImage *img);
+ 
+
 
 //--
 #if 0

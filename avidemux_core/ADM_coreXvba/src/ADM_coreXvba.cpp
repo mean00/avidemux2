@@ -424,7 +424,6 @@ bool        admXvba::decodeStart(void *session, void *surface)
       CHECK_WORKING(false);
       XVBA_Decode_Picture_Start_Input in;
       PREPARE_SESSION_IN(session,in);
-      XVBABufferDescriptor *list[2];
 
       in.target_surface=surface;
       
@@ -435,6 +434,7 @@ bool        admXvba::decodeStart(void *session, void *surface)
           ADM_info("decodeStart failed\n");
           return false;
       }
+      return true;
 }
 /**
  * \fn decode
@@ -461,6 +461,55 @@ bool        admXvba::decode(void *session,void *picture_desc,void *matrix_desc)
       return true;
       
 }
+/**
+ *      \fn decodeEnd
+ */
+bool admXvba::decodeEnd(void *session)
+{
+    int xError;
+      CHECK_WORKING(false);
+      XVBA_Decode_Picture_End_Input in;
+      PREPARE_SESSION_IN(session,in);
+      
+       CHECK_ERROR(ADM_coreXvba::funcs.endDecodePicture(&in));
+      
+      if(xError!=Success)
+      {
+          ADM_info("decodeEnd failed\n");
+          return false;
+      }
+       return true;
+}
+/**
+ * \fn transfer
+ * \brief fetch back a decoded image
+ * @param session
+ * @param surface
+ * @param img
+ * @return 
+ */
+bool        admXvba::transfer(void *session, void *surface, ADMImage *img)
+{
+    return false;
+    /*
+     int xError;
+      CHECK_WORKING(false);
+      XVBA_Transfer_Surface_Input in;
+      PREPARE_SESSION_IN(session,in);
+      XVBABufferDescriptor *list[2];
+
+      in.target_surface=surface;
+      
+       CHECK_ERROR(ADM_coreXvba::funcs.transferSurface(&in));
+      
+      if(xError!=Success)
+      {
+          ADM_info("decodeStart failed\n");
+          return false;
+      }
+     * */
+      return true;
+ }
 
 #else 
 //******************************************

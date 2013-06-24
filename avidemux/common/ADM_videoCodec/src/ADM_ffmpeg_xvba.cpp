@@ -163,7 +163,7 @@ static enum AVPixelFormat ADM_XVBA_getFormat( struct AVCodecContext * avctx , co
    {
        if(*cur==AV_PIX_FMT_XVBA_VLD) 
        {
-           ADM_info(">---------->Match\n");
+           aprintf(">---------->Match\n");
            return AV_PIX_FMT_XVBA_VLD;
        }
        cur++;
@@ -288,14 +288,18 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
         printf("[XVBA] error in renderDecode\n");
         return false;
     }
-    struct vdpau_render_state *rndr = (struct vdpau_render_state *)scratch->GetReadPtr(PLANAR_Y);
+    struct xvba_render_state *rndr = (struct xvba_render_state *)scratch->GetReadPtr(PLANAR_Y);
     
-   // TODO : Read rndr->out
+    if(!admXvba::transfer(xvba,rndr->surface,out))
+    {
+        ADM_warning("Cannot transfer\n");
+        return false;
+    }
     
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
-    return (bool)decode_status;
-    return false;
+    return true;
+    
 }
 /**
     \fn ADM_VDPAUgetBuffer
@@ -406,6 +410,11 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
    if(!admXvba::decode(xvba,descrBuffer,qmBuffer))
    {
        ADM_warning("Decode failed\n");
+       return;
+   } 
+   if(!admXvba::decodeEnd(xvba))
+   {
+       ADM_warning("DecodeEnd failed\n");
        return;
    } 
    aprintf("[XVBA] End goOn\n");
