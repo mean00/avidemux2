@@ -497,27 +497,40 @@ bool admXvba::decodeEnd(void *session)
  * @param img
  * @return 
  */
-bool        admXvba::transfer(void *session, void *surface, ADMImage *img)
+bool        admXvba::transfer(void *session, int w, int h,void *surface, ADMImage *img)
 {
-    return false;
-    /*
-     int xError;
-      CHECK_WORKING(false);
-      XVBA_Transfer_Surface_Input in;
-      PREPARE_SESSION_IN(session,in);
-      XVBABufferDescriptor *list[2];
+    int xError;
+    CHECK_WORKING(false);
 
-      in.target_surface=surface;
-      
-       CHECK_ERROR(ADM_coreXvba::funcs.transferSurface(&in));
-      
-      if(xError!=Success)
-      {
-          ADM_info("decodeStart failed\n");
-          return false;
-      }
-     * */
-      return true;
+    
+    XVBA_GetSurface_Target target;
+    XVBA_Get_Surface_Input input;
+    PREPARE_SESSION_IN(session,input);
+    
+    int pw= (w+15) & ~15; 
+    int ph= (h+15) & ~15; 
+    
+    target.size = sizeof(target);
+    target.surfaceType = XVBA_YV12;
+    target.flag = XVBA_FRAME;
+
+    input.src_surface=surface;
+  
+    input.target_buffer         = img->GetWritePtr(PLANAR_Y);
+    input.target_pitch          = pw;
+    input.target_width          = w;
+    input.target_height         = h;
+    input.target_parameter      = target;
+
+        
+    CHECK_ERROR(ADM_coreXvba::funcs.getSurface(&input));
+
+    if(xError!=Success)
+    {
+        ADM_info("transfer failed\n");
+        return false;
+    }
+    return true;
  }
 
 #else 

@@ -293,12 +293,12 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     if(decode_status!=true)
     {
-        printf("[XVBA] error in renderDecode\n");
+        printf("[XVBA] error in renderDecode (bad decode status)\n");
         return false;
     }
     struct xvba_render_state *rndr = (struct xvba_render_state *)scratch->GetReadPtr(PLANAR_Y);
     
-    if(!admXvba::transfer(xvba,rndr->surface,out))
+    if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out))
     {
         ADM_warning("Cannot transfer\n");
         return false;
@@ -487,6 +487,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        return;
    } 
    aprintf("-- transfer --\n");
+   decode_status=true;
    aprintf("[XVBA] End goOn\n");
    //
     return;
