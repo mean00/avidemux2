@@ -185,6 +185,20 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     ctrlBufferCount=0;
     xvba=admXvba::createDecoder(w,h);
     if(!xvba) return;
+    
+     descrBuffer=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
+     dataBuffer=admXvba::createDecodeBuffer(xvba,XVBA_DATA_BUFFER);
+     ctrlBuffer[0]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
+     ctrlBufferCount++;
+     qmBuffer=admXvba::createDecodeBuffer(xvba,XVBA_QM_BUFFER);
+#define CHECK_BUFFER(x)     if(!x) {ADM_warning("Failed to allocate "#x"\n");return;}
+     CHECK_BUFFER(descrBuffer)
+     CHECK_BUFFER(dataBuffer)
+     CHECK_BUFFER(ctrlBuffer[0])
+     CHECK_BUFFER(qmBuffer)
+
+    
+    
     _context->opaque          = this;
     _context->thread_count    = 1;
     _context->get_buffer      = ADM_XVBAgetBuffer;
@@ -206,6 +220,10 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     } 
     
      WRAP_Open(CODEC_ID_H264);
+    //
+
+     
+     
     // allocate a few render beforehand
     for(int i=0;i<20;i++)
     {
@@ -218,22 +236,12 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
         ADM_info("Allocated surface %llx\n",surface);
         xvba_render_state *render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
         render->surface=surface;
-        //picture_descriptor ??
-        //iq_matrix ??
+        render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
+        render->picture_descriptor=(XVBAPictureDescriptor*)this->descrBuffer->bufferXVBA;
         freeQueue.push(render);
 
     }
     // Allocate buffers
-     descrBuffer=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
-     dataBuffer=admXvba::createDecodeBuffer(xvba,XVBA_DATA_BUFFER);
-     ctrlBuffer[0]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
-     ctrlBufferCount++;
-     qmBuffer=admXvba::createDecodeBuffer(xvba,XVBA_QM_BUFFER);
-#define CHECK_BUFFER(x)     if(!x) {ADM_warning("Failed to allocate "#x"\n");}
-     CHECK_BUFFER(descrBuffer)
-     CHECK_BUFFER(dataBuffer)
-     CHECK_BUFFER(ctrlBuffer[0])
-     CHECK_BUFFER(qmBuffer)
      alive=true;
 
 }
@@ -253,11 +261,11 @@ decoderFFXVBA::~decoderFFXVBA()
         // destroy buffers
         
         #define DEL_BUFFER(x)     if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
-     DEL_BUFFER(descrBuffer)
-     DEL_BUFFER(dataBuffer)     
-     DEL_BUFFER(qmBuffer)
-     for(int i=0;i<ctrlBufferCount;i++)             
-         admXvba::destroyDecodeBuffer(xvba,ctrlBuffer[i]);
+         DEL_BUFFER(descrBuffer)
+         DEL_BUFFER(dataBuffer)     
+         DEL_BUFFER(qmBuffer)
+         for(int i=0;i<ctrlBufferCount;i++)             
+             admXvba::destroyDecodeBuffer(xvba,ctrlBuffer[i]);
         // delete decoder
         admXvba::destroyDecoder(xvba);
         xvba=NULL;
@@ -402,21 +410,83 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("Bad context\n");
        return;
    }
+   aprintf("-- decode start --\n");
    if(!admXvba::decodeStart(xvba,rndr->surface))
    {
        ADM_warning("Decode start failed\n");
        return;
    }
-   if(!admXvba::decode(xvba,descrBuffer,qmBuffer))
+   if(!admXvba::decode(xvba,descrBuffer,qmBuffer,false,0,0))
+    {
+        ADM_warning("Decode failed\n");
+        return;
+    } 
+   // Make sure we have enough slice
+   if(rndr->num_slices!=1)
    {
-       ADM_warning("Decode failed\n");
-       return;
-   } 
+       ADM_error("Not enough slices\n");
+       exit(-1);
+   }
+ //-----------
+  XVBADataCtrl *dataControl;
+  int location = 0;
+  const    uint8_t startCode[] = {0x00,0x00,0x01};
+  dataBuffer->data_size_in_buffer = 0;
+  for (unsigned int j = 0; j < rndr->num_slices; ++j)
+  {
+    int startCodeSize = 0;
+
+   
+    startCodeSize = 3;
+    memcpy((uint8_t *)dataBuffer->bufferXVBA+location,  startCode, 3);
+    // check for potential buffer overwrite
+    unsigned int bytesToCopy = rndr->buffers[j].size;
+    unsigned int freeBufferSize = dataBuffer->buffer_size - dataBuffer->data_size_in_buffer;
+    if (bytesToCopy >= freeBufferSize)
+    {
+       ADM_warning("Too much data to copy, not enough space in buffer\n");
+      return;
+    }
+    memcpy((uint8_t *)dataBuffer->bufferXVBA+location+startCodeSize, rndr->buffers[j].buffer,  rndr->buffers[j].size);
+    dataControl = (XVBADataCtrl *)ctrlBuffer[j]->bufferXVBA;
+    dataControl->SliceDataLocation = location;
+    dataControl->SliceBytesInBuffer = rndr->buffers[j].size+startCodeSize;
+    dataControl->SliceBitsInBuffer = dataControl->SliceBytesInBuffer * 8;
+    dataBuffer->data_size_in_buffer += dataControl->SliceBytesInBuffer;
+    location += dataControl->SliceBytesInBuffer;
+  }
+
+  int bufSize = dataBuffer->data_size_in_buffer;
+  int padding = bufSize % 128;
+  if (padding)
+  {
+    padding = 128 - padding;
+    dataBuffer->data_size_in_buffer += padding;
+    memset((uint8_t *)dataBuffer->bufferXVBA+bufSize,0,padding);
+  }
+
+  
+  
+
+  for (unsigned int i = 0; i < rndr->num_slices; ++i)
+  {    
+    aprintf("-- decode 2 --\n");
+    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(ctrlBuffer[0])))
+    {
+        ADM_warning("Decode failed\n");
+        return;
+    } 
+  }
+  
+  //-------------- 
+   aprintf("-- decode end --\n");
+
    if(!admXvba::decodeEnd(xvba))
    {
        ADM_warning("DecodeEnd failed\n");
        return;
    } 
+   aprintf("-- transfer --\n");
    aprintf("[XVBA] End goOn\n");
    //
     return;

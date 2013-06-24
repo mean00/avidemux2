@@ -43,11 +43,11 @@ static  void        destroySurface(void *session, void *surface);
 
 //  type : XVBA_NONE = 0,    XVBA_PICTURE_DESCRIPTION_BUFFER,    XVBA_DATA_BUFFER,    
 //  XVBA_DATA_CTRL_BUFFER,    XVBA_QM_BUFFER
-static  void        *createDecodeBuffer(void *session,int type);
-static  void        destroyDecodeBuffer(void *session,void *buffer);
+static  XVBABufferDescriptor        *createDecodeBuffer(void *session,int type);
+static  void        destroyDecodeBuffer(void *session,XVBABufferDescriptor *buffer);
 
 static bool        decodeStart(void *session, void *surface);
-static bool        decode(void *session,void *picture_desc, void *matrix_desc);
+static bool        decode(void *session,void *picture_desc, void *matrix_desc,bool set,int off0,int size1);
 static bool        decodeEnd(void *session);
 
 static bool        transfer(void *session, void *surface, ADMImage *img);

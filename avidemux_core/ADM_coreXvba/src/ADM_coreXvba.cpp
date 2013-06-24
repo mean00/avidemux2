@@ -376,7 +376,7 @@ void        admXvba::destroySurface(void *session, void *surface)
  * @param session
  * @param surface
  */
-void        *admXvba::createDecodeBuffer(void *session,int type)
+XVBABufferDescriptor        *admXvba::createDecodeBuffer(void *session,int type)
 {
       CHECK_WORKING(NULL);
       int xError;
@@ -389,7 +389,7 @@ void        *admXvba::createDecodeBuffer(void *session,int type)
       CHECK_ERROR(ADM_coreXvba::funcs.createDecodeBuffer(&in,&out));
         if(Success==xError && out.num_of_buffers_in_list==1)
         {
-            return out.buffer_list;
+            return (XVBABufferDescriptor *)out.buffer_list;
         }
         aprintf("Error creating decode buffer of type %d\n",type);
         return NULL;
@@ -400,7 +400,7 @@ void        *admXvba::createDecodeBuffer(void *session,int type)
  * @param session
  * @param surface
  */
-void        admXvba::destroyDecodeBuffer(void *session,void *decodeBuffer)
+void        admXvba::destroyDecodeBuffer(void *session,XVBABufferDescriptor *decodeBuffer)
 {
       int xError;
       CHECK_WORKING();
@@ -442,7 +442,7 @@ bool        admXvba::decodeStart(void *session, void *surface)
  * @param x
  * @return 
  */
-bool        admXvba::decode(void *session,void *picture_desc,void *matrix_desc)
+bool        admXvba::decode(void *session,void *picture_desc,void *matrix_desc,bool set,int off0,int size1)
 {
       int xError;
       CHECK_WORKING(false);
@@ -451,8 +451,17 @@ bool        admXvba::decode(void *session,void *picture_desc,void *matrix_desc)
       XVBABufferDescriptor *desc[3];
       in.buffer_list=desc;
       in.num_of_buffers_in_list=2;
+      
+      
       desc[0]=(XVBABufferDescriptor *)picture_desc;
       desc[1]=(XVBABufferDescriptor *)matrix_desc;
+      
+      if(set)
+      {
+          desc[0]->data_offset=off0;
+          desc[1]->data_size_in_buffer=size1;
+      }
+      
       CHECK_ERROR(ADM_coreXvba::funcs.decodePicture(&in));
       if(Success!=xError)
       {

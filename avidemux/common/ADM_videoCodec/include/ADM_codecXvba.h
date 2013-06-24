@@ -3,6 +3,9 @@
  *      \brief wrapper around ffmpeg wrapper around xvba
  */
 #ifdef USE_XVBA
+#include "X11/Xlib.h"
+#include "amd/amdxvba.h"
+
 #include <ADM_ptrQueue.h>
 struct xvba_render_state;
 /**
@@ -11,10 +14,10 @@ struct xvba_render_state;
 class decoderFFXVBA:public decoderFF
 {
 protected:
-                    void  *descrBuffer;
-                    void  *dataBuffer;
-                    void  *qmBuffer;
-                    void  *ctrlBuffer[50];
+                    XVBABufferDescriptor  *descrBuffer;
+                    XVBABufferDescriptor  *dataBuffer;
+                    XVBABufferDescriptor  *qmBuffer;
+                    XVBABufferDescriptor  *ctrlBuffer[50];
                     int   ctrlBufferCount;;
 protected:
                     bool alive;
