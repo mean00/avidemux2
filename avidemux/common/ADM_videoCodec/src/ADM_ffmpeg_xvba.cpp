@@ -37,6 +37,7 @@ extern "C" {
 #include "ADM_coreXvba/include/ADM_coreXvba.h"
 #include "ADM_codecXvba.h"
 #include "ADM_threads.h"
+#include "ADM_vidMisc.h"
 
 
 static bool         xvbaWorking=true;
@@ -225,23 +226,7 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
 
      
      
-    // allocate a few render beforehand
-    for(int i=0;i<20;i++)
-    {
-        void *surface=admXvba::allocateSurface(xvba,w,h);
-        if(!surface)
-        {
-            ADM_warning("Cannot allocate surface\n");
-            return;
-        }
-        ADM_info("Allocated surface %llx\n",surface);
-        xvba_render_state *render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
-        render->surface=surface;
-        render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
-        render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
-        freeQueue.push(render);
-
-    }
+   
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
 
@@ -322,6 +307,7 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
     
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
+    aprintf("PTs = %s\n",ADM_us2plain(out->Pts));
     return true;
     
 }
@@ -388,12 +374,25 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     xvba_render_state * render;
     if(x->freeQueue.isEmpty())
     {
-        aprintf("[XVBA] No more available surface\n");
-        return -1;
+        aprintf("[XVBA] Allocating NEW surface\n");
+        void *surface=admXvba::allocateSurface(x->xvba,x->_w,x->_h);
+        if(!surface)
+        {
+            ADM_warning("[XVBA]Cannot allocate surface\n");
+            return -1;
+        }
+        ADM_info("Allocated surface %llx\n",surface);
+        render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
+        render->surface=surface;
+        render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
+        render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
+       
+
+    }else
+    {
+        // Get an image       
+        render=x->freeQueue.pop();
     }
-    // Get an image   
-    
-    render=x->freeQueue.pop();
     aprintf("Alloc Buffer : 0x%llx\n",render);
     pic->data[0]=(uint8_t *)render;
     pic->data[1]=(uint8_t *)render;
@@ -447,11 +446,15 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
         ADM_warning("Decode failed\n");
         return;
     } 
-   // Make sure we have enough slice
-   if(rndr->num_slices!=1)
+   // Make sure we have enough slices
+   if(rndr->num_slices>this->ctrlBufferCount)
    {
-       ADM_error("Not enough slices\n");
-       exit(-1);
+       aprintf("Increasing ctrl buffer from %d to %d\n",ctrlBufferCount,rndr->num_slices);
+       for(int j=ctrlBufferCount;j<rndr->num_slices;j++)
+       {
+           ctrlBuffer[j]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
+       }
+       ctrlBufferCount=rndr->num_slices;
    }
  //-----------
   XVBADataCtrl *dataControl;
@@ -512,7 +515,6 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("DecodeEnd failed\n");
        return;
    } 
-   aprintf("-- transfer --\n");
    decode_status=true;
    aprintf("[XVBA] End goOn\n");
    //
