@@ -242,7 +242,7 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
         freeQueue.push(render);
 
     }
-    // Allocate buffers
+      b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
 
 }
@@ -407,7 +407,17 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     render->iq_matrix=(XVBAQuantMatrixAvc *)x->qmBuffer->bufferXVBA;
     render->picture_descriptor=(XVBAPictureDescriptor *)x->pictureDescriptor->bufferXVBA;
     pic->reordered_opaque= avctx->reordered_opaque;
-    
+    if(pic->reference)
+    {
+        ip_age[0]=ip_age[1]+1;
+        ip_age[1]=1;
+        b_age++;
+    }else
+    {
+        ip_age[0]++;
+        ip_age[1]++;
+        b_age=1;
+    }
 
     return 0;
 }
