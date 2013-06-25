@@ -457,32 +457,34 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ctrlBufferCount=rndr->num_slices;
    }
  //-----------
-  XVBADataCtrl *dataControl;
-  int location = 0;
   const    uint8_t startCode[] = {0x00,0x00,0x01};
+  
+  int offset = 0;  
   dataBuffer->data_size_in_buffer = 0;
+  uint8_t *dest=(uint8_t *)dataBuffer->bufferXVBA;
+  
   for (unsigned int j = 0; j < rndr->num_slices; ++j)
   {
-    int startCodeSize = 0;
-
-   
-    startCodeSize = 3;
-    memcpy((uint8_t *)dataBuffer->bufferXVBA+location,  startCode, 3);
+    
     // check for potential buffer overwrite
-    unsigned int bytesToCopy = rndr->buffers[j].size;
+    
+    unsigned int bytesToCopy = rndr->buffers[j].size+3;
     unsigned int freeBufferSize = dataBuffer->buffer_size - dataBuffer->data_size_in_buffer;
     if (bytesToCopy >= freeBufferSize)
     {
        ADM_warning("Too much data to copy, not enough space in buffer\n");
       return;
     }
-    memcpy((uint8_t *)dataBuffer->bufferXVBA+location+startCodeSize, rndr->buffers[j].buffer,  rndr->buffers[j].size);
+    memcpy(dest+offset,  startCode, 3);
+    memcpy(dest+offset+3, rndr->buffers[j].buffer,  bytesToCopy);
+    
+    XVBADataCtrl *dataControl;
     dataControl = (XVBADataCtrl *)ctrlBuffer[j]->bufferXVBA;
-    dataControl->SliceDataLocation = location;
-    dataControl->SliceBytesInBuffer = rndr->buffers[j].size+startCodeSize;
+    dataControl->SliceDataLocation = offset;
+    dataControl->SliceBytesInBuffer = bytesToCopy+3;
     dataControl->SliceBitsInBuffer = dataControl->SliceBytesInBuffer * 8;
     dataBuffer->data_size_in_buffer += dataControl->SliceBytesInBuffer;
-    location += dataControl->SliceBytesInBuffer;
+    offset += dataControl->SliceBytesInBuffer;
   }
 
   int bufSize = dataBuffer->data_size_in_buffer;
@@ -491,16 +493,13 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
   {
     padding = 128 - padding;
     dataBuffer->data_size_in_buffer += padding;
-    memset((uint8_t *)dataBuffer->bufferXVBA+bufSize,0,padding);
+    memset((uint8_t *)dest+bufSize,0,padding);
   }
-
-  
-  
 
   for (unsigned int i = 0; i < rndr->num_slices; ++i)
   {    
     aprintf("-- decode 2 --\n");
-    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(*dataControl)))
+    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(XVBADataCtrl)))
     {
         ADM_warning("Decode failed\n");
         return;
