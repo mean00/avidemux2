@@ -229,8 +229,32 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
    
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
-
 }
+/**
+ * \fn waitForSync
+ * @param surface
+ * @return 
+ */
+bool decoderFFXVBA::waitForSync(void *surface)
+{
+    int count=1000;
+    bool ready;
+    while(--count)
+    {
+        if(!admXvba::syncSurface(xvba,surface,&ready))
+        {
+            ADM_warning("Sync surface failed\n");
+            return false;
+        }
+        if(ready) break;
+        aprintf("Surface not ready, waiting...\n");
+        ADM_usleep(1000);
+    }
+    if(count)
+        return true;
+    return false;
+}
+
 /**
  * \fn dtor
  */
@@ -238,21 +262,25 @@ decoderFFXVBA::~decoderFFXVBA()
 {
     if(xvba)
     {
-        while(!freeQueue.isEmpty())
+        aprintf("Deleting surfaces \n");
+        while(allQueue.size())
         {
-            xvba_render_state *r=freeQueue.pop();
+            xvba_render_state *r=allQueue[0];
+            allQueue.popFront();
+            waitForSync(r->surface);
             admXvba::destroySurface(xvba,r->surface);
             free(r);
         }
         // destroy buffers
         
-        #define DEL_BUFFER(x)     if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
+        #define DEL_BUFFER(x)     aprintf("Deleting "#x"\n");if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
          DEL_BUFFER(pictureDescriptor)
          DEL_BUFFER(dataBuffer)     
          DEL_BUFFER(qmBuffer)
          for(int i=0;i<ctrlBufferCount;i++)             
              admXvba::destroyDecodeBuffer(xvba,ctrlBuffer[i]);
         // delete decoder
+        aprintf("Destroying session\n");
         admXvba::destroyDecoder(xvba);
         xvba=NULL;
     }
@@ -261,6 +289,7 @@ decoderFFXVBA::~decoderFFXVBA()
 }
 /**
  * \fn uncompress
+ * \brief First call ffmpeg, the 2nd part of the decoding will happen in ::goOn
  * @param in
  * @param out
  * @return 
@@ -284,21 +313,14 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     struct xvba_render_state *rndr = (struct xvba_render_state *)scratch->GetReadPtr(PLANAR_Y);
     
-    int count=1000;
-    bool ready;
-    while(count--)
+    if(!waitForSync(rndr->surface))
     {
-        if(!admXvba::syncSurface(xvba,rndr->surface,&ready))
-        {
             ADM_warning("Sync surface failed\n");
             return false;
-        }
-        if(ready) break;
-        aprintf("Surface not ready, waiting...\n");
-        ADM_usleep(1000);
     }
     aprintf("[XVBA] Surface ready...\n");
     
+    rndr->state |= FF_XVBA_STATE_DECODED;        
     if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out,tmpYV12Buffer))
     {
         ADM_warning("Cannot transfer\n");
@@ -372,7 +394,7 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     
     decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
     xvba_render_state * render;
-    if(x->freeQueue.isEmpty())
+    if(!x->freeQueue.size())
     {
         aprintf("[XVBA] Allocating NEW surface\n");
         void *surface=admXvba::allocateSurface(x->xvba,x->_w,x->_h);
@@ -386,12 +408,13 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         render->surface=surface;
         render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
         render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
-       
+        x->allQueue.append(render);
 
     }else
     {
         // Get an image       
-        render=x->freeQueue.pop();
+        render=x->freeQueue[0];
+        x->freeQueue.popFront();
     }
     aprintf("Alloc Buffer : 0x%llx\n",render);
     pic->data[0]=(uint8_t *)render;

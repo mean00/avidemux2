@@ -403,9 +403,13 @@ XVBABufferDescriptor        *admXvba::createDecodeBuffer(void *session,XVBA_BUFF
  */
 void        admXvba::destroyDecodeBuffer(void *session,XVBABufferDescriptor *decodeBuffer)
 {
-      int xError;
-      CHECK_WORKING();
-      CHECK_ERROR(ADM_coreXvba::funcs.destroyDecodeBuffer(decodeBuffer));
+        int xError;
+        XVBA_Destroy_Decode_Buffers_Input in;
+        CHECK_WORKING();
+        PREPARE_SESSION_IN(session,in);
+        in.num_of_buffers_in_list=1;
+        in.buffer_list=decodeBuffer;
+        CHECK_ERROR(ADM_coreXvba::funcs.destroyDecodeBuffer(&in));
         if(Success==xError)
         {
             return;
@@ -513,7 +517,8 @@ bool admXvba::syncSurface(void *session, void *surface, bool *ready)
         ADM_info("syncSurface failed\n");
         return false;
     }
-    if(out.status_flags & XVBA_STILL_PENDING)
+    
+    if(!(out.status_flags & XVBA_COMPLETED))
     {
          *ready=false;
     }

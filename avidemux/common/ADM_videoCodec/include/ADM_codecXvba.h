@@ -6,7 +6,7 @@
 #include "X11/Xlib.h"
 #include "amd/amdxvba.h"
 
-#include <ADM_ptrQueue.h>
+#include <BVector.h>
 struct xvba_render_state;
 /**
  * \class decoderFFXVBA
@@ -24,8 +24,8 @@ protected:
                     bool alive;
                     int b_age;
                     int ip_age[2];
-                    ADM_ptrQueue <xvba_render_state> freeQueue;
-                    ADM_ptrQueue <xvba_render_state> inUseQueue;
+                    BVector <xvba_render_state *> freeQueue;
+                    BVector <xvba_render_state *> allQueue;
                     void     *xvba;
                     ADMImage *scratch;
                     ADMImage *xvba_copy;
@@ -35,7 +35,8 @@ protected:
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-                    void    goOn( const AVFrame *d,int type);            
+                    void    goOn( const AVFrame *d,int type);   
+                    bool    waitForSync(void *surface);
 public:
             // public API
                     decoderFFXVBA (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
