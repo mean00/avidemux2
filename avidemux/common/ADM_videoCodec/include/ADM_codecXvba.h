@@ -32,6 +32,7 @@ protected:
                     uint64_t xvba_pts;
                     bool     decode_status;
                     bool     destroying;
+                    int      decodedCount;
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);

@@ -225,15 +225,17 @@ decoderFF::~decoderFF ()
       printf ("[lavc] Killing decoding threads\n");
       _usingMT = 0;
     }
-
-  avcodec_close (_context);
-#if LIBAVCODEC_BUILD >= 4624
-	av_free(_context);
-#else
-  delete _context;
-#endif
- _context=NULL;
-  printf ("[lavc] Destroyed\n");
+  if(_context)
+  {
+        avcodec_close (_context);
+        #if LIBAVCODEC_BUILD >= 4624
+                av_free(_context);
+        #else
+                delete _context;
+        #endif
+        _context=NULL;
+        printf ("[lavc] Destroyed\n");
+    }
 }
 
 /**

@@ -260,9 +260,20 @@ bool decoderFFXVBA::waitForSync(void *surface)
  */
 decoderFFXVBA::~decoderFFXVBA()
 {
+    if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
+                 // released
+    {
+        avcodec_close (_context);
+        av_free(_context);
+        _context=NULL;
+    }
     if(xvba)
     {
         aprintf("Deleting surfaces \n");
+        if(allQueue.size()!=this->freeQueue.size())
+        {
+            ADM_warning("Some surface are unaccounted for (%d / %d)\n",allQueue.size(),freeQueue.size());
+        }
         while(allQueue.size())
         {
             xvba_render_state *r=allQueue[0];
@@ -298,6 +309,7 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     // First let ffmpeg prepare datas...
     xvba_copy=out;
+    decodedCount=0;
     decode_status=false;
     aprintf("[XVBA]>-------------uncompress>\n");
    
@@ -373,8 +385,27 @@ void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
   xvba_render_state * render;
   int i;
-  
+  decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
   render=(xvba_render_state*)pic->data[0];
+  
+#if 0
+  int n=x->allQueue.size();
+  bool found=false;
+  for(int i=0;i<n;i++)
+  {
+      if(render==x->allQueue[i])
+      {
+          found=true;
+          break;
+      }
+  }    
+  if(false==found)
+  {
+      ADM_warning("***** Freeing invalid buffer *******\n");
+      exit(-1);
+  }
+#endif
+  
   aprintf("Release Buffer : 0x%llx\n",render);
   ADM_assert(render);
   for(i=0; i<4; i++)
@@ -382,7 +413,7 @@ void decoderFFXVBA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->data[i]= NULL;
   }
   render->state &=~ FF_XVBA_STATE_USED_FOR_REFERENCE;
-  decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
+
   x->freeQueue.pushBack(render);
 }
 /**
@@ -458,6 +489,12 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("Bad context\n");
        return;
    }
+   if(decodedCount)
+   {
+       ADM_warning("Multilple call to goOn\n");
+       exit(-1);
+   }
+   decodedCount++;
    aprintf("-- decode start --\n");
    if(!admXvba::decodeStart(xvba,rndr->surface))
    {
