@@ -518,30 +518,36 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
    }
  //-----------
   const    uint8_t startCode[] = {0x00,0x00,0x01};
-  
+  const int header=3;
   int offset = 0;  
+  
   dataBuffer->data_size_in_buffer = 0;
   uint8_t *dest=(uint8_t *)dataBuffer->bufferXVBA;
   
+   // check for potential buffer overwrite
+  int available= dataBuffer->buffer_size;
+  int toCopy=0;   
+  for(int i=0;i< rndr->num_slices; i++)
+  {
+      toCopy+=rndr->buffers[i].size+header;
+  }
+  if(toCopy>available)
+  {
+      ADM_warning("[XVBA] Too much data to copy, not enough space in buffer\n");
+      return;
+  }
+  
   for (unsigned int j = 0; j < rndr->num_slices; ++j)
   {
-    
-    // check for potential buffer overwrite
-    
-    unsigned int bytesToCopy = rndr->buffers[j].size+3;
-    unsigned int freeBufferSize = dataBuffer->buffer_size - dataBuffer->data_size_in_buffer;
-    if (bytesToCopy >= freeBufferSize)
-    {
-       ADM_warning("Too much data to copy, not enough space in buffer\n");
-      return;
-    }
-    memcpy(dest+offset,  startCode, 3);
-    memcpy(dest+offset+3, rndr->buffers[j].buffer,  bytesToCopy);
+    unsigned int bytesToCopy = rndr->buffers[j].size;
+    uint8_t      *data=(uint8_t *)rndr->buffers[j].buffer;
+    memcpy(dest+offset,  startCode, header);
+    memcpy(dest+offset+header, data,  bytesToCopy);
     
     XVBADataCtrl *dataControl;
     dataControl = (XVBADataCtrl *)ctrlBuffer[j]->bufferXVBA;
     dataControl->SliceDataLocation = offset;
-    dataControl->SliceBytesInBuffer = bytesToCopy+3;
+    dataControl->SliceBytesInBuffer = bytesToCopy+header;
     dataControl->SliceBitsInBuffer = dataControl->SliceBytesInBuffer * 8;
     dataBuffer->data_size_in_buffer += dataControl->SliceBytesInBuffer;
     offset += dataControl->SliceBytesInBuffer;
