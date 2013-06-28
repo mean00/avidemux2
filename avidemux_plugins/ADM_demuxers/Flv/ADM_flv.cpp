@@ -142,6 +142,14 @@ void flvHeader::setProperties(const char *name,float value)
     {
         metaHeight=(uint32_t)value;
     }
+    if(!strcmp(name,"frameWidth"))
+    {
+        metaFrameWidth=(uint32_t)value;
+    }
+    if(!strcmp(name,"frameHeight"))
+    {
+        metaFrameHeight=(uint32_t)value;
+    }
 
 }
 #define Nest() {for(int xxx=0;xxx<nesting;xxx++) printf("\t");}
@@ -578,6 +586,8 @@ bool flvHeader::updateDimensionWithMeta(uint32_t codec)
 {
     if(codec==0xFFFF) return false;
     ADM_info("We got metadata : %d x %d\n",(int)metaWidth,(int)metaHeight,(int)codec);
+    if(metaFrameWidth)  metaWidth=metaFrameWidth;
+    if(metaFrameHeight) metaHeight=metaFrameHeight;
     if( metaWidth && metaHeight )
     {
         switch(codec)
@@ -817,6 +827,8 @@ uint8_t flvHeader::close(void)
     metaWidth=0;
     metaHeight=0;
     metaFps1000=0;
+    metaFrameWidth=0;
+    metaFrameHeight=0;
 
 }
 /**

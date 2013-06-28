@@ -103,6 +103,7 @@ class flvHeader         :public vidHeader
     ADM_flvAccess           *access;
     /* */
     uint32_t            metaWidth,metaHeight,metaFps1000,videoCodec;
+    uint32_t            metaFrameWidth,metaFrameHeight;
 
     uint8_t     read(uint32_t len, uint8_t *where);
     uint8_t     read8(void);
