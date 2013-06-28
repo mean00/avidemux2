@@ -25,7 +25,11 @@
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
 
+#if 0
 #define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 /**
  * 

@@ -45,7 +45,7 @@ static admMutex     surfaceMutex;
 static bool         destroyingFlag=false;
 static BVector   <void *> destroyedList;
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf ADM_info
@@ -455,23 +455,11 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->linesize[1]=0;
     pic->linesize[2]=0;
     pic->type=FF_BUFFER_TYPE_USER;
+    render->state  =0;
     render->state |= FF_XVBA_STATE_USED_FOR_REFERENCE;
     render->state &= ~FF_XVBA_STATE_DECODED;
-    render->iq_matrix=(XVBAQuantMatrixAvc *)x->qmBuffer->bufferXVBA;
-    render->picture_descriptor=(XVBAPictureDescriptor *)x->pictureDescriptor->bufferXVBA;
+    render->psf=0;
     pic->reordered_opaque= avctx->reordered_opaque;
-    if(pic->reference)
-    {
-        ip_age[0]=ip_age[1]+1;
-        ip_age[1]=1;
-        b_age++;
-    }else
-    {
-        ip_age[0]++;
-        ip_age[1]++;
-        b_age=1;
-    }
-
     return 0;
 }
 /**
