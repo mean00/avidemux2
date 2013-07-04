@@ -16,6 +16,7 @@ struct  {
 	bool alternate_mp3_tag;
 	bool vdpau;
 	bool xvba;
+	bool libva;
 	bool enable_opengl;
 }features;
 struct  {

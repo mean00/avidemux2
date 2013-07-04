@@ -262,11 +262,11 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     // First let ffmpeg prepare datas...
 
-    aprintf("[XVBA]>-------------uncompress>\n");
+    aprintf("[LIBVA]>-------------uncompress>\n");
    
     if(!decoderFF::uncompress (in, scratch))
     {
-        aprintf("[XVBA] No data from libavcodec\n");
+        aprintf("[LIBVA] No data from libavcodec\n");
         return 0;
     }
     
@@ -283,7 +283,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
             ADM_warning("Sync surface failed\n");
             return false;
     }
-    aprintf("[XVBA] Surface ready :%x ...\n",rndr->surface);
+    aprintf("[LIBVA] Surface ready :%x ...\n",rndr->surface);
     
     rndr->state |= FF_XVBA_STATE_DECODED;        
     if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out,tmpYV12Buffer))
@@ -314,7 +314,7 @@ int ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic)
  * @param avctx
  * @param pic
  */
-void ADM_LIBAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
+void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
 {
    decoderFFLIBVA *dec=(decoderFFLIBVA *)avctx->opaque;
    return dec->releaseBuffer(avctx,pic);
@@ -385,11 +385,11 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     xvba_render_state * render;
     if(!x->freeQueue.size())
     {
-        aprintf("[XVBA] Allocating NEW surface\n");
+        aprintf("[LIBVA] Allocating NEW surface\n");
         void *surface=admXvba::allocateSurface(x->xvba,x->_w,x->_h);
         if(!surface)
         {
-            ADM_warning("[XVBA]Cannot allocate surface\n");
+            ADM_warning("[LIBVA]Cannot allocate surface\n");
             return -1;
         }
         ADM_info("Allocated surface %llx\n",surface);
@@ -432,8 +432,8 @@ void decoderFFLIBVA::goOn( const AVFrame *d,int type)
 {
 #if 0   
    struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0]; 
-   aprintf("[XVBA]Decode Buffer : 0x%llx\n",rndr);
-   aprintf("[XVBA]Surface  : 0x%llx\n",rndr->surface);
+   aprintf("[LIBVA]Decode Buffer : 0x%llx\n",rndr);
+   aprintf("[LIBVA]Surface  : 0x%llx\n",rndr->surface);
    if(!rndr)
    {
        ADM_warning("Bad context\n");
@@ -483,7 +483,7 @@ void decoderFFLIBVA::goOn( const AVFrame *d,int type)
   }
   if(toCopy>available)
   {
-      ADM_warning("[XVBA] Too much data to copy, not enough space in buffer\n");
+      ADM_warning("[LIBVA] Too much data to copy, not enough space in buffer\n");
       return;
   }
   
@@ -531,7 +531,7 @@ void decoderFFLIBVA::goOn( const AVFrame *d,int type)
        return;
    } 
    decode_status=true;
-   aprintf("[XVBA] End goOn\n");
+   aprintf("[LIBVA] End goOn\n");
    //
     return;
 #endif

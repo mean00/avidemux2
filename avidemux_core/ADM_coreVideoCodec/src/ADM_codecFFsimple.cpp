@@ -99,8 +99,12 @@ bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat)
         return true;
     }
 #endif
-    
-    
+#ifdef USE_LIBVA
+    if(feat==ADM_CORE_CODEC_FEATURE_LIBVA)
+    {
+        return true;
+    }
+#endif
     return false;
 }
 // EOF

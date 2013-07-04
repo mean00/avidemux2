@@ -19,6 +19,7 @@ json.addBool("mpeg_no_limit",key->features.mpeg_no_limit);
 json.addBool("alternate_mp3_tag",key->features.alternate_mp3_tag);
 json.addBool("vdpau",key->features.vdpau);
 json.addBool("xvba",key->features.xvba);
+json.addBool("libva",key->features.libva);
 json.addBool("enable_opengl",key->features.enable_opengl);
 json.endNode();
 json.addNode("lastfiles");
