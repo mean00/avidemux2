@@ -82,6 +82,12 @@ if (USE_VDPAU)
 	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
 endif (USE_VDPAU)
 
+if (USE_LIBVA)
+	xadd(--enable-vaapi)
+	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vaapi)
+endif (USE_LIBVA)
+
+
 if(USE_XVBA)
 	xadd(--enable-xvba)
 else(USE_XVBA)
@@ -290,6 +296,10 @@ ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
 
 install(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil") 
+IF(USE_LIBVA)
+        install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 
+        install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 
+ENDIF(USE_LIBVA)
 IF(USE_XVBA)
         install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 
         install(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec") 

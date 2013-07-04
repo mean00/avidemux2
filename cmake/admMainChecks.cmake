@@ -130,8 +130,10 @@ INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
 INCLUDE(admCheckVDPAU)
 INCLUDE(admCheckXvba)
+INCLUDE(admCheckLibVA)
 checkVDPAU()
 checkXvba()
+checkLibVA()
 ENDIF(NOT PLUGINS)
 
 ########################################
