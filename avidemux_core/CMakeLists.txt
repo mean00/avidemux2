@@ -106,6 +106,9 @@ endif (USE_VDPAU)
 if (USE_XVBA)
 	ADD_SUBDIRECTORY(ADM_coreXvba)
 endif (USE_XVBA)
+if (USE_LIBVA)
+	ADD_SUBDIRECTORY(ADM_coreLibVA)
+endif (USE_LIBVA)
 
 ########################################
 # Config Summary

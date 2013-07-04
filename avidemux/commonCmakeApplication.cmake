@@ -115,6 +115,11 @@ if (USE_XVBA)
 	SET(commonLibs1 ${commonLibs1} ADM_coreXvba6)
 	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 endif (USE_XVBA)
+if (USE_LIBVA)
+	SET(commonLibs1 ${commonLibs1} ADM_coreLibVA6)
+	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
+endif (USE_LIBVA)
+
 
 
 SET(commonLibs2
