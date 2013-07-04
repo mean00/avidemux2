@@ -45,7 +45,7 @@ static admMutex     surfaceMutex;
 static bool         destroyingFlag=false;
 static BVector   <void *> destroyedList;
 
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf ADM_info
@@ -330,7 +330,7 @@ bool decoderFFXVBA::uncompress (ADMCompressedImage * in, ADMImage * out)
             ADM_warning("Sync surface failed\n");
             return false;
     }
-    aprintf("[XVBA] Surface ready...\n");
+    aprintf("[XVBA] Surface ready :%x ...\n",rndr->surface);
     
     rndr->state |= FF_XVBA_STATE_DECODED;        
     if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out,tmpYV12Buffer))
@@ -437,6 +437,7 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         ADM_info("Allocated surface %llx\n",surface);
         render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
         render->surface=surface;
+        render->buffers_alllocated=0;
         render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
         render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
         x->allQueue.append(render);
@@ -460,6 +461,7 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     render->state &= ~FF_XVBA_STATE_DECODED;
     render->psf=0;
     pic->reordered_opaque= avctx->reordered_opaque;
+    pic->opaque= avctx->opaque;
     return 0;
 }
 /**
@@ -469,7 +471,7 @@ int decoderFFXVBA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 void decoderFFXVBA::goOn( const AVFrame *d,int type)
 {
    
-   struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0];
+   struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0]; 
    aprintf("[XVBA]Decode Buffer : 0x%llx\n",rndr);
    aprintf("[XVBA]Surface  : 0x%llx\n",rndr->surface);
    if(!rndr)
@@ -489,7 +491,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
        ADM_warning("Decode start failed\n");
        return;
    }
-   if(!admXvba::decode(xvba,pictureDescriptor,qmBuffer,false,0,0))
+   if(!admXvba::decode1(xvba,pictureDescriptor,qmBuffer))
     {
         ADM_warning("Decode failed\n");
         return;
@@ -512,7 +514,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
   dataBuffer->data_size_in_buffer = 0;
   uint8_t *dest=(uint8_t *)dataBuffer->bufferXVBA;
   
-   // check for potential buffer overwrite
+   // check for potential buffer overflow
   int available= dataBuffer->buffer_size;
   int toCopy=0;   
   for(int i=0;i< rndr->num_slices; i++)
@@ -553,7 +555,7 @@ void decoderFFXVBA::goOn( const AVFrame *d,int type)
   for (unsigned int i = 0; i < rndr->num_slices; ++i)
   {    
     aprintf("-- decode 2 --\n");
-    if(!admXvba::decode(xvba,dataBuffer,ctrlBuffer[i],true,0, sizeof(XVBADataCtrl)))
+    if(!admXvba::decode2(xvba,dataBuffer,ctrlBuffer[i]))
     {
         ADM_warning("Decode failed\n");
         return;
