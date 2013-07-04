@@ -47,7 +47,8 @@ static  XVBABufferDescriptor        *createDecodeBuffer(void *session,XVBA_BUFFE
 static  void        destroyDecodeBuffer(void *session,XVBABufferDescriptor *buffer);
 
 static bool        decodeStart(void *session, void *surface);
-static bool        decode(void *session,void *picture_desc, void *matrix_desc,bool set,int off0,int size1);
+static bool        decode1(void *session,void *picture_desc, void *matrix_desc);
+static bool        decode2(void *session,void *data, void *ctrl);
 static bool        decodeEnd(void *session);
 
 static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);
