@@ -570,7 +570,7 @@ bool        admXvba::transfer(void *session, int w, int h,void *surface, ADMImag
     int xError;
     CHECK_WORKING(false);
 
-    
+    ADM_assert(img->isRef()); // Incoming should be a reference image i.e. just pointers
     XVBA_GetSurface_Target target;
     XVBA_Get_Surface_Input input;
     PREPARE_SESSION_IN(session,input);
@@ -603,31 +603,24 @@ bool        admXvba::transfer(void *session, int w, int h,void *surface, ADMImag
     if(xError!=Success)
     {
         ADM_info("transfer failed\n");
-        free(tmpBuffer);
         return false;
     }
-    int spitch;
-    for(int i=0;i<3;i++)
-    {
-        ADM_PLANE plane=(ADM_PLANE)i;
-        int pitch=img->GetPitch(plane);
-        int height=img->GetHeight(plane);
-        int width=img->GetWidth(plane);
-        uint8_t *dst=img->GetWritePtr(plane);
-        uint8_t *src;
-        switch(i)
-        {
-        case 0: src=tmpBuffer;spitch=pw;break;
-        case 1: src=tmpBuffer+pw*ph;spitch=pw/2;break;
-        case 2: src=tmpBuffer+(pw*ph*5)/4;spitch=pw/2;break;
-        }
-        for(int y=0;y<height;y++)
-        {
-            memcpy(dst,src,width);
-            src+=spitch;
-            dst+=pitch;
-        }
-    }
+    
+    // update the ref images
+    uint8_t *planes[3];
+    uint32_t pitches[3];
+    img->GetReadPlanes(planes);
+    img->GetPitches(pitches);
+    pitches[0]=pw;
+    pitches[1]=pw/2;
+    pitches[2]=pw/2;
+    
+    uint32_t p=(pw*ph);
+    
+    planes[0]=tmpBuffer;
+    planes[1]=tmpBuffer+p;
+    planes[2]=tmpBuffer+((p*5)/4);
+    
     
     return true;
  }
