@@ -37,7 +37,7 @@ extern "C" {
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_vdpau_internal.h"
 #include "prefs.h"
-#include "ADM_coreVdpau/include/ADM_coreVdpau.h"
+#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
 #include "ADM_codecVdpau.h"
 #include "ADM_threads.h"
 

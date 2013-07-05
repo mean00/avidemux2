@@ -15,7 +15,7 @@
 
 #include "ADM_default.h"
 #include "../include/ADM_coreXvba.h"
-#include "fglrxinfo.h"
+#include "../include/fglrxinfo.h"
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 

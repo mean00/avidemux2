@@ -27,7 +27,7 @@ extern "C"
 #include <X11/extensions/Xext.h>
 #include <X11/extensions/extutil.h>
 }
-#include "fglrxinfo.h"
+#include "../include/fglrxinfo.h"
 
 #define ATIFGL_EXTENSION_NAME "ATIFGLEXTENSION"
 #define ATIFGL_EXTENSION_EVENTS 0

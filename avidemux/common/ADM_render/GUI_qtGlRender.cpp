@@ -192,6 +192,7 @@ void QtGlAccelWidget::initializeGL()
     {
         ADM_warning("No QtGl support\n");
         success=false;
+        return;
         
     }
 	glProgram = new QGLShaderProgram(this);

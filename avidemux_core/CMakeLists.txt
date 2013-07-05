@@ -100,16 +100,6 @@ ADD_SUBDIRECTORY(ADM_coreSocket)
 add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
 
-if (USE_VDPAU)
-	ADD_SUBDIRECTORY(ADM_coreVdpau)
-endif (USE_VDPAU)
-if (USE_XVBA)
-	ADD_SUBDIRECTORY(ADM_coreXvba)
-endif (USE_XVBA)
-if (USE_LIBVA)
-	ADD_SUBDIRECTORY(ADM_coreLibVA)
-endif (USE_LIBVA)
-
 ########################################
 # Config Summary
 ########################################
@@ -117,16 +107,6 @@ DISPLAY_SUMMARY_LIST()
 
 include(admPackager)
 admPackager(corePackage)
-FILE(WRITE  ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake "")
-IF(USE_VDPAU)
-        FILE(APPEND  ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake "SET(USE_VDPAU 1)\n")
-ENDIF(USE_VDPAU)
-IF(USE_XVBA)
-        FILE(APPEND  ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake "SET(USE_XVBA 1)\n")
-ENDIF(USE_XVBA)
-IF(USE_LIBVA)
-        FILE(APPEND  ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake "SET(USE_LIBVA 1)\n")
-ENDIF(USE_LIBVA)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6")
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6")
 MESSAGE("")

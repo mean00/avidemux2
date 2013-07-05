@@ -34,7 +34,7 @@ extern "C" {
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_xvba_internal.h"
 #include "prefs.h"
-#include "ADM_coreXvba/include/ADM_coreXvba.h"
+#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreXvba/include/ADM_coreXvba.h"
 #include "ADM_codecXvba.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"
