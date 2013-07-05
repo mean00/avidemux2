@@ -83,11 +83,10 @@ bool libvaProbe(void)
         GUI_Error_HIG("Error","Core has been compiled without libva support, but the application has been compiled with it.\nInstallation mismatch");
         libvaWorking=false;
     }
-#if 0
-    if(false==admXvba::init(&xinfo)) return false;
+
+    if(false==admLibVA::init(&xinfo)) return false;
     libvaWorking=true;
     return true;
-#endif
 #endif
     return false;
 }

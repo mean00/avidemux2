@@ -24,6 +24,7 @@
 /**
     \class admXvba
 */
+#define VA_INVALID -1
 class admLibVA
 {
 protected:
@@ -34,11 +35,11 @@ public:
     static bool         cleanup(void);
     /* Surface */   
     
-static  void        *createDecoder(int width, int height);
-static  bool        destroyDecoder(void *decoder);
+static  VAContextID createDecoder(int width, int height);
+static  bool        destroyDecoder(VAContextID decoder);
 
-static  void        *allocateSurface(void *session, int w, int h);
-static  void        destroySurface(void *session, void *surface);
+static  VASurfaceID allocateSurface(void *session, int w, int h);
+static  void        destroySurface(void *session, VASurfaceID surface);
 
 
 static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);

@@ -52,6 +52,7 @@ extern "C" {
 
 static bool setPrefsDefault(void);
 extern bool  vdpauProbe(void);
+extern bool  libvaProbe(void);
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
@@ -321,7 +322,16 @@ int startAvidemux(int argc, char *argv[])
     printf("Cannot use XVBA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
   #endif
 #endif
-    
+
+#if defined( USE_LIBVA)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("Probing for LIBVA...\n");
+    if(libvaProbe()==true) printf("LIBVA available\n");
+        else printf("LIBVA not available\n");
+  #else
+    printf("Cannot use LIBVA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif    
     
     
     // Init jobs

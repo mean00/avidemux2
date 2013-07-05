@@ -15,7 +15,7 @@
 
 #include "ADM_default.h"
 #include "../include/ADM_coreLibVA.h"
-
+#include "va/va_x11.h"
 
 #ifdef USE_XVBA
 #include "../include/ADM_coreLibVA_internal.h"
@@ -37,7 +37,7 @@ GUI_WindowInfo      admLibVA::myWindowInfo;
 namespace ADM_coreLibVA
 {
  void                   *context;
- Display                *display;
+ VADisplay              display;
  namespace decoders
  {
         bool            h264; 
@@ -54,7 +54,7 @@ static bool                  coreLibVAWorking=false;
  * @param dis
  * @param er
  */
-static void displayXError(const char *func,Display *dis,const VAStatus er)
+static void displayXError(const char *func,const VADisplay dis,const VAStatus er)
 {
     if(!er) return;    
     ADM_warning("LibVA Error : <%s:%s>\n",func,vaErrorStr((er)));
@@ -67,7 +67,8 @@ static void displayXError(const char *func,Display *dis,const VAStatus er)
 */
 bool admLibVA::init(GUI_WindowInfo *x)
 {
-    ADM_coreLibVA::display=(Display *)x->display;
+    Display *dis=(Display *)x->display;
+    ADM_coreLibVA::display=vaGetDisplay(dis);
     int maj=0,min=0,patch=0;
     ADM_info("[LIBVA] Initializing LibVA library ...\n");
 
@@ -115,113 +116,75 @@ bool admLibVA::isOperationnal(void)
     return coreLibVAWorking;
 }
 
-#define CHECK_WORKING(x)   if(!coreXvbaWorking) {ADM_warning("Xvba not operationnal\n");return x;}
+#define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
 
 /**
- * 
+ * \fn createDecoder
  * @param width
  * @param height
  * @return 
  */
-#if 0
-void        *admLibVA::createDecoder(int width, int height)
+
+VAContextID        admLibVA::createDecoder(int width, int height)
 {
-    CHECK_WORKING(NULL);
-    
+    CHECK_WORKING(VA_INVALID);
+#if 0
     int xError;
-    
-    XVBADecodeCap                     cap;
-    XVBA_Create_Decode_Session_Input  sessionInput;
-    XVBA_Create_Decode_Session_Output sessionOutput;
-    PREPARE_IN(sessionInput);    
-    PREPARE_OUT(sessionOutput);
-        
-    sessionInput.width=(width+15) & ~15;
-    sessionInput.height=(height+15) & ~15;
-    sessionInput.decode_cap=&(ADM_coreLibVA::decoders::h264_decode_cap);
-     if( XVBA_H264!=ADM_coreLibVA::decoders::h264_decode_cap.capability_id)
-     {
-         ADM_warning("Cap is not H264\n");
-     }
-    printf("H264:");
-    
-    switch(ADM_coreLibVA::decoders::h264_decode_cap.flags)
-    {
-        case XVBA_H264_BASELINE: printf("Baseline\n");break;
-        case XVBA_H264_MAIN:printf("Main\n");break;
-        case XVBA_H264_HIGH:printf("High\n");break;
-        default:  printf("Profile:???\n");break;
-    }
-    switch(ADM_coreLibVA::decoders::h264_decode_cap.surface_type)
-    {
-#define MKS(x) case x: printf("Format :"#x"\n");break;
-        MKS(  XVBA_NV12)
-        MKS(  XVBA_YUY2)
-        MKS(  XVBA_ARGB)
-        MKS(  XVBA_AYUV)
-        MKS(  XVBA_YV12)
-        default:  printf("surface format ???\n");
-    }
-    // NV12 & AYUV works
-    //ADM_coreLibVA::decoders::h264_decode_cap.surface_type=XVBA_AYUV;
-    
-    ADM_info("Creating xvba decoder, %d x %d, %d x %d \n",width,height,sessionInput.width,sessionInput.height);
-    CHECK_ERROR(ADM_coreLibVA::funcs.createDecode(&sessionInput,&sessionOutput));
-    if(Success==xError)
-    {
-        ADM_info("Xvba session created successfully\n");
-        return sessionOutput.session;
-    }
-     ADM_warning("Xvba session failed\n");
-     return NULL;
+     CHECK_ERROR(vaCreateContext (  ADM_coreLibVA::display,
+    VAConfigID config_id,
+    w,
+    H,
+    int flag,
+    VASurfaceID *render_targets,
+    int num_render_targets,
+    VAContextID *context		/* out */
+    );
+#endif
+
+
+    return 0;
 }
 
 /**
  * \fn destroySession
  */
-bool admLibVA::destroyDecoder(void *session)
+bool admLibVA::destroyDecoder(VAContextID session)
 {
-    bool r=false;
-     CHECK_WORKING(false);
-     if(Success == ADM_coreLibVA::funcs.destroyDecode(session))
-     {
-         ADM_info("Xvba decoder destroyed\n");
-         r=true;
-     }else
-        ADM_info("Error destroying Xvba decoder\n");
-     return r;
+       
+       int xError;
+       CHECK_WORKING(false);
+       
+       aprintf("Destroying decoder %x\n",session);
+        CHECK_ERROR(vaDestroyContext(ADM_coreLibVA::display,session));
+        if(!xError)
+        {
+            aprintf("Decoder destroyed\n");
+            return true;
+        }
+        aprintf("Error creating surface\n");
+        return false;
 }
+
 /**
  * \fn allocateSurface
  * @param w
  * @param h
  * @return 
  */
-void        *admLibVA::allocateSurface(void *session,int w, int h)
+VASurfaceID        admLibVA::allocateSurface(void *session,int w, int h)
 {
        int xError;
-       CHECK_WORKING(NULL);
-       w=(w+15) & ~15; 
-       h=(h+15) & ~15; 
-       XVBA_Create_Surface_Input in;
-       XVBA_Create_Surface_Output out;
-       
-       PREPARE_SESSION_IN(session,in);
-       
-       
-       PREPARE_OUT(out);
-       in.width=w;
-       in.height=h;
-       in.surface_type=XVBA_NV12;
+       CHECK_WORKING(VA_INVALID);
        
        aprintf("Creating surface %d x %d\n",w,h);
-        CHECK_ERROR(ADM_coreLibVA::funcs.createSurface(&in,&out));
-        if(Success==xError)
+       VASurfaceID s;
+        CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,w,h,VA_RT_FORMAT_YUV420,1,&s));
+        if(!xError)
         {
-            return out.surface;
+            return s;
         }
         aprintf("Error creating surface\n");
-        return NULL;
+        return VA_INVALID;
     
 }
 /**
@@ -229,19 +192,19 @@ void        *admLibVA::allocateSurface(void *session,int w, int h)
  * @param session
  * @param surface
  */
-void        admLibVA::destroySurface(void *session, void *surface)
+void        admLibVA::destroySurface(void *session, VASurfaceID surface)
 {
       int xError;
       CHECK_WORKING();
-      CHECK_ERROR(ADM_coreLibVA::funcs.destroySurface(surface));
-        if(Success==xError)
+      CHECK_ERROR(vaDestroySurfaces(ADM_coreLibVA::display,&surface,1));
+        if(!xError)
         {
             return;
         }
         aprintf("Error destroying surface\n");
         return;
 }
-
+#if 0
 /**
  * \fn destroySurface
  * @param session
