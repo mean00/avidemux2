@@ -22,7 +22,7 @@ extern "C" {
 
 
 
-#include "ADM_coreVdpau/include/ADM_coreVdpau.h"
+#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
 //
 #define ADM_INVALID_FRAME_NUM 0x80000000
 #define ADM_NB_SURFACES 3
