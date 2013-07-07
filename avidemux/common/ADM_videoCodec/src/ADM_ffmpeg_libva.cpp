@@ -20,7 +20,7 @@
 #include "BVector.h"
 #include "ADM_default.h"
 
-#ifdef USE_XVBA
+#ifdef USE_LIBVA
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"

@@ -2,7 +2,7 @@
         \file FFLIBVA
  *      \brief wrapper around ffmpeg wrapper around libva
  */
-#ifdef USE_XVBA
+#ifdef USE_LIBVA
 #include "X11/Xlib.h"
 #include "va/va.h"
 

@@ -13,8 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_ffmpeg_xvba_internal_H
-#define ADM_ffmpeg_xvba_internal_H
+#ifndef ADM_ffmpeg_libva_internal_H
+#define ADM_ffmpeg_libva_internal_H
 #include <vector>
 
 
