@@ -131,22 +131,8 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 {
     alive=false;
     scratch=new ADMImageRef(w,h);
-#if 0
-    xvba=admXvba::createDecoder(w,h);
-    if(!xvba) return;
-    
-     pictureDescriptor=admXvba::createDecodeBuffer(xvba,XVBA_PICTURE_DESCRIPTION_BUFFER);
-     dataBuffer=admXvba::createDecodeBuffer(xvba,XVBA_DATA_BUFFER);
-     ctrlBuffer[0]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
-     ctrlBufferCount++;
-     qmBuffer=admXvba::createDecodeBuffer(xvba,XVBA_QM_BUFFER);
-#define CHECK_BUFFER(x)     if(!x) {ADM_warning("Failed to allocate "#x"\n");return;}
-     CHECK_BUFFER(pictureDescriptor)
-     CHECK_BUFFER(dataBuffer)
-     CHECK_BUFFER(ctrlBuffer[0])
-     CHECK_BUFFER(qmBuffer)
-
-#endif    
+    libva=admLibVA::createDecoder(w,h,0,NULL);
+    if(VA_INVALID==libva) return;
     
     _context->opaque          = this;
     _context->thread_count    = 1;
@@ -429,6 +415,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 */
 void decoderFFLIBVA::goOn( const AVFrame *d,int type)
 {
+    aprintf("[LIBVA] Go on\n");
 #if 0   
    struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0]; 
    aprintf("[LIBVA]Decode Buffer : 0x%llx\n",rndr);

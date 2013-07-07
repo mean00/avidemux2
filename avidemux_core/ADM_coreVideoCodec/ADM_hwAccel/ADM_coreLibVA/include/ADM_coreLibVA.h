@@ -33,9 +33,12 @@ public:
     static bool         init(GUI_WindowInfo *x);
     static bool         isOperationnal(void);
     static bool         cleanup(void);
+    
+    /* Setup   */
+    static bool         setupConfig(void);
     /* Surface */   
     
-static  VAContextID createDecoder(int width, int height);
+static  VAContextID createDecoder(int width, int height, int nbSurface, VASurfaceID *surfaces);
 static  bool        destroyDecoder(VAContextID decoder);
 
 static  VASurfaceID allocateSurface(void *session, int w, int h);

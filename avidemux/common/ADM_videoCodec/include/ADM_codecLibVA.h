@@ -19,6 +19,7 @@ protected:
                     int ip_age[2];
                     ADMImage *scratch;
                     bool     decode_status;
+                    VAContextID libva;
 #if 0
                     BVector <xvba_render_state *> freeQueue;
                     BVector <xvba_render_state *> allQueue;

@@ -38,6 +38,7 @@ namespace ADM_coreLibVA
 {
  void                   *context;
  VADisplay              display;
+ VAConfigID             config;
  namespace decoders
  {
         bool            h264; 
@@ -60,7 +61,70 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
     ADM_warning("LibVA Error : <%s:%s>\n",func,vaErrorStr((er)));
 
 }
+/**
+ *      \fn setupConfig
+ *      \brief verify that h264 main profile is supported
+ */
+bool admLibVA::setupConfig(void)
+{
+    VAStatus xError;
+    bool r=false;
+    int nb=vaMaxNumProfiles(ADM_coreLibVA::display);
+    ADM_info("Max config =  %d \n",nb);
+    VAProfile *prof=new VAProfile[nb];
+    int nbProfiles;
+    CHECK_ERROR(vaQueryConfigProfiles (ADM_coreLibVA::display, prof,&nbProfiles));
 
+    // Check supported profiles
+    if(!xError)
+    {
+        ADM_info("Found %d config \n",nbProfiles);
+        for(int i=0;i<nbProfiles;i++)
+        {
+            if(prof[i]==VAProfileH264High)
+            {
+                r=true;
+                ADM_info("H264 high profile found\n");
+            }
+        }
+    }
+    // supported ?
+    if(r)
+    {
+        VAConfigAttrib attrib;
+                attrib.type = VAConfigAttribRTFormat;
+                CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, VAProfileH264High, VAEntrypointVLD, &attrib, 1))
+
+                if (!(attrib.value & VA_RT_FORMAT_YUV420) )
+                {
+                    ADM_warning("YUV420 not supported\n");
+                    r=false;
+                }else
+                {
+                    ADM_info("YUV420 supported\n");
+                    
+                    VAConfigID id;
+                    CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, VAProfileH264High, VAEntrypointVLD,&attrib, 1,&id));
+                    if(xError)
+                    {
+                        ADM_warning("Cannot create config\n");
+                     }
+                    else
+                    {
+                        ADM_info("Config created\n");
+                        ADM_coreLibVA::config=id;
+                        r=true;
+                    }
+                    
+                }
+
+ 
+    }
+    delete [] prof;
+    return r;
+    
+    
+}
 /**
     \fn     init
     \brief
@@ -87,7 +151,10 @@ bool admLibVA::init(GUI_WindowInfo *x)
     }
     ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vaQueryVendorString(ADM_coreLibVA::display));
     
-    coreLibVAWorking=true;
+    if(setupConfig())
+    {
+        coreLibVAWorking=true;
+    }
 
     
     ADM_info("[LIBVA] VA  init ok.\n");
@@ -125,24 +192,24 @@ bool admLibVA::isOperationnal(void)
  * @return 
  */
 
-VAContextID        admLibVA::createDecoder(int width, int height)
+VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, VASurfaceID *surfaces)
 {
+    int xError=1;
     CHECK_WORKING(VA_INVALID);
-#if 0
-    int xError;
-     CHECK_ERROR(vaCreateContext (  ADM_coreLibVA::display,
-    VAConfigID config_id,
-    w,
-    H,
-    int flag,
-    VASurfaceID *render_targets,
-    int num_render_targets,
-    VAContextID *context		/* out */
-    );
-#endif
-
-
-    return 0;
+    VAContextID id;
+    CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, ADM_coreLibVA::config,
+                width,    height,    
+                VA_PROGRESSIVE, // ?? NOT SURE ??
+                surfaces,
+                nbSurface,
+                &id));
+    if(xError)
+    {
+        ADM_warning("Cannot create decoder\n");
+        return VA_INVALID;
+    }
+    ADM_info("Decoder created");
+    return id;
 }
 
 /**
@@ -161,7 +228,7 @@ bool admLibVA::destroyDecoder(VAContextID session)
             aprintf("Decoder destroyed\n");
             return true;
         }
-        aprintf("Error creating surface\n");
+        aprintf("Error destroying decoder\n");
         return false;
 }
 
