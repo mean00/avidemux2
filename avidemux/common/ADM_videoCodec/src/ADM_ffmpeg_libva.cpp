@@ -2,7 +2,7 @@
             \file              ADM_ffmpeg_libvap.cpp  
             \brief Decoder using half ffmpeg/half vaapi
 
- Strongly derived from xbmc_xvba
+ 
  Very similar to ffmpeg_vdpau
 
 
@@ -118,7 +118,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat( struct AVCodecContext * avctx , c
        }
        cur++;
    }
-   ADM_warning(">---------->No XVBA colorspace\n");
+   ADM_warning(">---------->No LIBVA colorspace\n");
    return AV_PIX_FMT_NONE;
 
     

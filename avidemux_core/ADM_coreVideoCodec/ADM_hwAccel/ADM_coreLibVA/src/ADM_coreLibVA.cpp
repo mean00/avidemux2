@@ -17,7 +17,7 @@
 #include "../include/ADM_coreLibVA.h"
 #include "va/va_x11.h"
 
-#ifdef USE_XVBA
+#ifdef USE_LIBVA
 #include "../include/ADM_coreLibVA_internal.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
