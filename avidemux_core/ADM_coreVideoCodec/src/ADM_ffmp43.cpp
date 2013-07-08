@@ -486,6 +486,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case PIX_FMT_VDPAU_H264:
         out->_colorspace=ADM_COLOR_VDPAU;
         break;
+    case PIX_FMT_VAAPI_VLD:
+        out->_colorspace=ADM_COLOR_LIBVA;
+        break;
+        
 #ifdef USE_XVBA        
     case AV_PIX_FMT_XVBA_VLD:
         out->_colorspace=ADM_COLOR_XVBA;

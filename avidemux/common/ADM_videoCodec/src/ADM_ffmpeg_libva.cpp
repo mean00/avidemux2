@@ -138,14 +138,14 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     nbSurface=17;
     for(int i=0;i<nbSurface;i++)
     {
-        surfaces[i]=new ADM_surface(w,h);
-        if(!surfaces[i]->isValid())
+        surfaces[i]=admLibVA::allocateSurface(w,h);
+        if(!surfaces[i]==VA_INVALID)
         {
             nbSurface=i;
             return;
         }
         freeQueue.pushFront(surfaces[i]);
-        sid[i]=surfaces[i]->surface;
+        sid[i]=surfaces[i];
     }
     ADM_info("Preallocated %d surfaces\n",nbSurface);
     // Linearize surface
@@ -239,8 +239,8 @@ decoderFFLIBVA::~decoderFFLIBVA()
     }
     for(int i=0;i<nbSurface;i++)
     {
-        delete surfaces[i];
-        surfaces[i]=NULL;
+                admLibVA::destroySurface(surfaces[i]);        
+                surfaces[i]=VA_INVALID;
     }
         
     nbSurface=0;
@@ -344,7 +344,8 @@ void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4
 */
 void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-  ADM_surface *s=(ADM_surface *)pic->data[0];
+  uint64_t p=(uint64_t )pic->data[0];
+  VASurfaceID s=(VASurfaceID)p;
   decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
     
   
@@ -372,22 +373,25 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         return -1;
         
     }
-    ADM_surface *s= x->freeQueue[0];
+    VASurfaceID s= x->freeQueue[0];
     x->freeQueue.popFront();
     aprintf("Alloc Buffer : 0x%llx\n",s);
-    pic->data[0]=(uint8_t *)s;
-    pic->data[1]=(uint8_t *)s;
-    pic->data[2]=(uint8_t *)s;
+    uint8_t *p=(uint8_t *)s;
+    pic->data[0]=p;
+    pic->data[1]=p;
+    pic->data[2]=p;
+    pic->data[3]=p;
     pic->linesize[0]=0;
     pic->linesize[1]=0;
     pic->linesize[2]=0;
+    pic->linesize[3]=0;
     pic->type=FF_BUFFER_TYPE_USER;
 //    render->state  =0;
 //    render->state |= FF_LIBVA_STATE_USED_FOR_REFERENCE;
 //    render->state &= ~FF_LIBVA_STATE_DECODED;
 //    render->psf=0;
     pic->reordered_opaque= avctx->reordered_opaque;
-    pic->opaque= avctx->opaque;
+   // pic->opaque= avctx->opaque;
     return 0;
 }
 /**

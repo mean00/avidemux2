@@ -55,9 +55,9 @@ protected:
                     VAContextID   libva;
                     int           nbSurface;
                     vaapi_context *va_context;
-                    ADM_surface   *surfaces[ADM_MAX_SURFACE];
+                    VASurfaceID   surfaces[ADM_MAX_SURFACE];
 
-                    BVector <ADM_surface * > freeQueue;
+                    BVector <VASurfaceID  > freeQueue;
      
 #if 0
                     ADMImage *xvba_copy;
