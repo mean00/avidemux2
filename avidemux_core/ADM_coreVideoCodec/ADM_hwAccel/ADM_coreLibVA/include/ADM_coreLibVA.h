@@ -45,6 +45,7 @@ public:
     
     /* Setup   */
     static bool         setupConfig(void);
+    static bool         setupImageFormat(void);
     /* Surface */   
     
 static  VAContextID createDecoder(int width, int height, int nbSurface, VASurfaceID *surfaces);
@@ -52,6 +53,9 @@ static  bool        destroyDecoder(VAContextID decoder);
 
 static  VASurfaceID allocateSurface( int w, int h);
 static  void        destroySurface(  VASurfaceID surface);
+
+static  VAImage    *allocateYV12Image( int w, int h);
+static  void       destroyImage(  VAImage *image);
 
 
 static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);

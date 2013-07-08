@@ -56,7 +56,7 @@ protected:
                     int           nbSurface;
                     vaapi_context *va_context;
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
-
+                    VAImageID     image;
                     BVector <VASurfaceID  > freeQueue;
      
 #if 0
@@ -79,7 +79,7 @@ public:
 
     virtual bool dontcopy (void)
                       {
-                        return 0; // We cannot use ffmpeg internal buffer, they dont exist!
+                        return 1; // For now, we give a reference to the fully decoded image
                       }
 
     virtual bool bFramePossible (void)

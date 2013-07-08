@@ -23,6 +23,8 @@
 #include "ADM_windowInfo.h"
 #include "libavcodec/vaapi.h"
 
+#include "fourcc.h"
+
 #define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
 
 #if 1
@@ -42,6 +44,7 @@ namespace ADM_coreLibVA
  void                   *context;
  VADisplay              display;
  VAConfigID             config;
+ VAImageFormat          imageFormat;
  namespace decoders
  {
         bool            h264; 
@@ -123,12 +126,67 @@ bool admLibVA::setupConfig(void)
 
  
     }
+   
     delete [] prof;
     return r;
     
     
 }
+/**
+ * \fn fourCC_tostring
+ * @param fourcc
+ * @return 
+ */
+static char *fourCC_tostring(uint32_t fourcc)
+{
+    static char s[5];
+    s[4] = 0;
 
+	s[3]=((fourcc & 0xff000000)>>24)&0xff;
+	s[2]=((fourcc & 0xff0000)>>16)&0xff;
+	s[1]=((fourcc & 0xff00)>>8)&0xff;
+	s[0]=((fourcc & 0xff)>>0)&0xff;
+
+    return s;
+}
+/**
+ * \fn setupImageFormat
+ */
+bool admLibVA::setupImageFormat()
+{
+    int xError;
+    bool r=false;
+        int nbImage=vaMaxNumImageFormats(ADM_coreLibVA::display);
+        VAImageFormat *list=new VAImageFormat[nbImage];
+        int nb;
+        CHECK_ERROR(vaQueryImageFormats( ADM_coreLibVA::display,list,&nb));
+        if(xError)
+        {
+            r=false;
+        }else
+        {
+            r=false;
+            for(int i=0;i<nb;i++)
+            {
+                aprintf("----------");
+                aprintf("bpp : %d\n",list[i].bits_per_pixel);
+                uint32_t fcc=list[i].fourcc;
+                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));                
+                if( 0x32315659==fcc)
+                {
+                    ADM_coreLibVA::imageFormat=list[i];
+                    r=true;
+                }
+            }
+            
+        }
+        if(r==false)
+        {
+            ADM_warning("Cannot find supported image format : YV12\n");
+        }
+        delete [] list;
+        return r;
+}
 /**
  * \fn fillContext
  * @param c
@@ -170,7 +228,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     }
     ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vaQueryVendorString(ADM_coreLibVA::display));
     
-    if(setupConfig())
+    if(setupConfig() && setupImageFormat())
     {
         coreLibVAWorking=true;
     }
@@ -229,6 +287,46 @@ VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, 
     }
     aprintf("Decoder created : %llx\n",(uint64_t)id);
     return id;
+}
+/**
+ * 
+ * @param w
+ * @param h
+ * @return 
+ */
+VAImage   *admLibVA::allocateYV12Image( int w, int h)
+{
+    int xError=1;
+    CHECK_WORKING(NULL);
+    VAImage *image=new VAImage;
+    memset(image,0,sizeof(image));
+    CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormat,
+                w,    h,    
+                image));
+    if(xError)
+    {
+        ADM_warning("Cannot allocate yv12 image\n");
+        delete image;
+        return NULL;
+    }
+    return image;
+}
+/**
+ * 
+ * @param surface
+ */
+void        admLibVA::destroyImage(  VAImage *image)
+{
+    int xError=1;
+    CHECK_WORKING();
+    CHECK_ERROR(vaDestroyImage(ADM_coreLibVA::display, image->image_id));
+    delete image;
+    if(xError)
+    {
+        ADM_warning("Cannot destroy image\n");
+        return ;
+    }
+    return ;
 }
 
 /**
