@@ -21,8 +21,11 @@
 #include "../include/ADM_coreLibVA_internal.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
+#include "libavcodec/vaapi.h"
 
-#if 0
+#define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
+
+#if 1
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -125,6 +128,22 @@ bool admLibVA::setupConfig(void)
     
     
 }
+
+/**
+ * \fn fillContext
+ * @param c
+ * @return 
+ */    
+bool admLibVA::fillContext(vaapi_context *c)
+{
+    CHECK_WORKING(false);
+    c->config_id=ADM_coreLibVA::config;
+    c->display=ADM_coreLibVA::display;
+    return true;
+}
+    
+    
+
 /**
     \fn     init
     \brief
@@ -183,7 +202,7 @@ bool admLibVA::isOperationnal(void)
     return coreLibVAWorking;
 }
 
-#define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
+
 
 /**
  * \fn createDecoder
@@ -208,7 +227,7 @@ VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, 
         ADM_warning("Cannot create decoder\n");
         return VA_INVALID;
     }
-    ADM_info("Decoder created");
+    aprintf("Decoder created : %llx\n",(uint64_t)id);
     return id;
 }
 
@@ -238,7 +257,7 @@ bool admLibVA::destroyDecoder(VAContextID session)
  * @param h
  * @return 
  */
-VASurfaceID        admLibVA::allocateSurface(void *session,int w, int h)
+VASurfaceID        admLibVA::allocateSurface(int w, int h)
 {
        int xError;
        CHECK_WORKING(VA_INVALID);
@@ -259,7 +278,7 @@ VASurfaceID        admLibVA::allocateSurface(void *session,int w, int h)
  * @param session
  * @param surface
  */
-void        admLibVA::destroySurface(void *session, VASurfaceID surface)
+void        admLibVA::destroySurface( VASurfaceID surface)
 {
       int xError;
       CHECK_WORKING();

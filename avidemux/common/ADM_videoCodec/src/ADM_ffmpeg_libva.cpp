@@ -56,6 +56,7 @@ static void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int o
 
 
 
+
 /**
     \fn vdpauUsable
     \brief Return true if  vdpau can be used...
@@ -129,20 +130,53 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         uint8_t *extraData,uint32_t bpp)
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
+    VASurfaceID sid[ADM_MAX_SURFACE];
     alive=false;
+    va_context=NULL;
     scratch=new ADMImageRef(w,h);
-    libva=admLibVA::createDecoder(w,h,0,NULL);
-    if(VA_INVALID==libva) return;
+    // Allocate 17 surfaces, enough for the moment
+    nbSurface=17;
+    for(int i=0;i<nbSurface;i++)
+    {
+        surfaces[i]=new ADM_surface(w,h);
+        if(!surfaces[i]->isValid())
+        {
+            nbSurface=i;
+            return;
+        }
+        freeQueue.pushFront(surfaces[i]);
+        sid[i]=surfaces[i]->surface;
+    }
+    ADM_info("Preallocated %d surfaces\n",nbSurface);
+    // Linearize surface
+    
+    libva=admLibVA::createDecoder(w,h,nbSurface,sid);
+    if(VA_INVALID==libva)
+    {
+        ADM_warning("Cannot create libva decoder\n");
+        return;
+    }
+    
+    va_context=new vaapi_context;
+    memset(va_context,0,sizeof(*va_context)); // dangerous...
+    
+    if(!admLibVA::fillContext(va_context))
+    {
+        ADM_warning("Cannot get va context initialized for libavcodec\n");
+        return ;
+    }
+    va_context->context_id=libva;
     
     _context->opaque          = this;
     _context->thread_count    = 1;
     _context->get_buffer      = ADM_LIBVAgetBuffer;
     _context->release_buffer  = ADM_LIBVAreleaseBuffer ;
-    _context->draw_horiz_band = ADM_LIBVADraw;
+    _context->draw_horiz_band = NULL;
     _context->get_format      = ADM_LIBVA_getFormat;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD;
-    
+    _context->hwaccel_context = va_context;
+    nbSurface=0;
     
     uint8_t *extraCopy=NULL;
     if(extraDataLen)
@@ -203,38 +237,25 @@ decoderFFLIBVA::~decoderFFLIBVA()
         av_free(_context);
         _context=NULL;
     }
-#if 0
-    if(xvba)
+    for(int i=0;i<nbSurface;i++)
     {
-        aprintf("Deleting surfaces \n");
-        if(allQueue.size()!=this->freeQueue.size())
-        {
-            ADM_warning("Some surface are unaccounted for (%d / %d)\n",allQueue.size(),freeQueue.size());
-        }
-        while(allQueue.size())
-        {
-            xvba_render_state *r=allQueue[0];
-            allQueue.popFront();
-            waitForSync(r->surface);
-            admXvba::destroySurface(xvba,r->surface);
-            free(r);
-        }
-        // destroy buffers
-        
-        #define DEL_BUFFER(x)     aprintf("Deleting "#x"\n");if(x) {admXvba::destroyDecodeBuffer(xvba,x);}
-         DEL_BUFFER(pictureDescriptor)
-         DEL_BUFFER(dataBuffer)     
-         DEL_BUFFER(qmBuffer)
-         for(int i=0;i<ctrlBufferCount;i++)             
-             admXvba::destroyDecodeBuffer(xvba,ctrlBuffer[i]);
-        // delete decoder
-        aprintf("Destroying session\n");
-        admXvba::destroyDecoder(xvba);
-        xvba=NULL;
+        delete surfaces[i];
+        surfaces[i]=NULL;
     }
-#endif    
+        
+    nbSurface=0;
+    if(libva!=VA_INVALID)
+        admLibVA::destroyDecoder(libva);
+    libva=VA_INVALID;
+
     if(scratch) delete scratch;
-    scratch=NULL;            
+    scratch=NULL;    
+    
+    if(va_context)
+    {
+        delete va_context;
+        va_context=NULL;
+    }
 }
 /**
  * \fn uncompress
@@ -323,40 +344,18 @@ void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4
 */
 void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-#if 0
-  xvba_render_state * render;
-  int i;
-  decoderFFXVBA *x=(decoderFFXVBA *)avctx->opaque;
-  render=(xvba_render_state*)pic->data[0];
+  ADM_surface *s=(ADM_surface *)pic->data[0];
+  decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
+    
   
-
-  int n=x->allQueue.size();
-  bool found=false;
-  for(int i=0;i<n;i++)
-  {
-      if(render==x->allQueue[i])
-      {
-          found=true;
-          break;
-      }
-  }    
-  if(false==found)
-  {
-      ADM_warning("***** Freeing invalid buffer *******\n");
-      exit(-1);
-  }
-
+  aprintf("Release Buffer : 0x%llx\n",s);
   
-  aprintf("Release Buffer : 0x%llx\n",render);
-  ADM_assert(render);
-  for(i=0; i<4; i++)
+  for(int i=0; i<4; i++)
   {
     pic->data[i]= NULL;
   }
-  render->state &=~ FF_XVBA_STATE_USED_FOR_REFERENCE;
-
-  x->freeQueue.pushBack(render);
-  #endif
+  
+  x->freeQueue.pushBack(s);
 }
 /**
     \fn getBuffer
@@ -366,48 +365,30 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
     
     decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
-#if 0
-    xvba_render_state * render;
-    if(!x->freeQueue.size())
+    if(x->freeQueue.empty())
     {
-        aprintf("[LIBVA] Allocating NEW surface\n");
-        void *surface=admXvba::allocateSurface(x->xvba,x->_w,x->_h);
-        if(!surface)
-        {
-            ADM_warning("[LIBVA]Cannot allocate surface\n");
-            return -1;
-        }
-        ADM_info("Allocated surface %llx\n",surface);
-        render = (xvba_render_state*)calloc(sizeof(xvba_render_state), 1);
-        render->surface=surface;
-        render->buffers_alllocated=0;
-        render->iq_matrix=(XVBAQuantMatrixAvc*)this->qmBuffer->bufferXVBA;
-        render->picture_descriptor=(XVBAPictureDescriptor*)this->pictureDescriptor->bufferXVBA;
-        x->allQueue.append(render);
-
-    }else
-    {
-        // Get an image       
-        render=x->freeQueue[0];
-        x->freeQueue.popFront();
+        ADM_warning("Surface Queue is empty !\n");
+        ADM_warning("Surface Queue is empty !\n");
+        return -1;
+        
     }
-    aprintf("Alloc Buffer : 0x%llx\n",render);
-    pic->data[0]=(uint8_t *)render;
-    pic->data[1]=(uint8_t *)render;
-    pic->data[2]=(uint8_t *)render;
+    ADM_surface *s= x->freeQueue[0];
+    x->freeQueue.popFront();
+    aprintf("Alloc Buffer : 0x%llx\n",s);
+    pic->data[0]=(uint8_t *)s;
+    pic->data[1]=(uint8_t *)s;
+    pic->data[2]=(uint8_t *)s;
     pic->linesize[0]=0;
     pic->linesize[1]=0;
     pic->linesize[2]=0;
     pic->type=FF_BUFFER_TYPE_USER;
-    render->state  =0;
-    render->state |= FF_XVBA_STATE_USED_FOR_REFERENCE;
-    render->state &= ~FF_XVBA_STATE_DECODED;
-    render->psf=0;
+//    render->state  =0;
+//    render->state |= FF_LIBVA_STATE_USED_FOR_REFERENCE;
+//    render->state &= ~FF_LIBVA_STATE_DECODED;
+//    render->psf=0;
     pic->reordered_opaque= avctx->reordered_opaque;
     pic->opaque= avctx->opaque;
     return 0;
-#endif
-    return -1;
 }
 /**
     \fn goOn

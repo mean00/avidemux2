@@ -17,14 +17,23 @@
 #define ADM_CORE_LIBVA_H
 
 #ifdef USE_LIBVA
+extern "C" {
+#include "libavcodec/avcodec.h"
+#include "libavutil/pixfmt.h"
+#include "libavcodec/vaapi.h"
+}
+
 #include "ADM_windowInfo.h"
 #include "X11/Xlib.h"
 #include "va/va.h"
 #include "ADM_image.h"
-/**
-    \class admXvba
-*/
+
 #define VA_INVALID -1
+
+/**
+    \class admLibVA
+*/
+
 class admLibVA
 {
 protected:
@@ -41,12 +50,12 @@ public:
 static  VAContextID createDecoder(int width, int height, int nbSurface, VASurfaceID *surfaces);
 static  bool        destroyDecoder(VAContextID decoder);
 
-static  VASurfaceID allocateSurface(void *session, int w, int h);
-static  void        destroySurface(void *session, VASurfaceID surface);
+static  VASurfaceID allocateSurface( int w, int h);
+static  void        destroySurface(  VASurfaceID surface);
 
 
 static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);
- 
+static bool        fillContext(vaapi_context *c);
 
 };
 #endif
