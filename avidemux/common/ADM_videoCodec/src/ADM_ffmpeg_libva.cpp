@@ -171,7 +171,8 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     _context->thread_count    = 1;
     _context->get_buffer      = ADM_LIBVAgetBuffer;
     _context->release_buffer  = ADM_LIBVAreleaseBuffer ;
-    _context->draw_horiz_band = NULL;
+   // _context->draw_horiz_band = ADM_LIBVADraw;
+     _context->draw_horiz_band = NULL;
     _context->get_format      = ADM_LIBVA_getFormat;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD;
@@ -275,35 +276,10 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
         aprintf("[LIBVA] No data from libavcodec\n");
         return 0;
     }
-    
-    if(decode_status!=true)
-    {
-        printf("[LIBVA] error in renderDecode (bad decode status)\n");
-        return false;
-    }
-#if 0
-    struct xvba_render_state *rndr = (struct xvba_render_state *)scratch->GetReadPtr(PLANAR_Y);
-    
-    if(!waitForSync(rndr->surface))
-    {
-            ADM_warning("Sync surface failed\n");
-            return false;
-    }
-    aprintf("[LIBVA] Surface ready :%x ...\n",rndr->surface);
-    
-    rndr->state |= FF_XVBA_STATE_DECODED;        
-    if(!admXvba::transfer(xvba,_w,_h,rndr->surface,out,tmpYV12Buffer))
-    {
-        ADM_warning("Cannot transfer\n");
-        return false;
-    }
-    
-    out->Pts=scratch->Pts;
-    out->flags=scratch->flags;
-    aprintf("PTs = %s\n",ADM_us2plain(out->Pts));
-    return true;
-#endif
-    return false;
+    uint64_t p=(uint64_t )scratch->GetReadPtr(PLANAR_Y);
+    VASurfaceID id=(VASurfaceID)p;
+    aprintf("uncompress : Got surface =0x%x\n",id);
+    return admLibVA::transfer(libva,_w,_h,id,out,NULL);    
     
 }
 /**
@@ -334,7 +310,7 @@ void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
 void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
 {
     decoderFFLIBVA *dec=(decoderFFLIBVA *)s->opaque;
-    dec->goOn(src,type);
+    dec->goOn((AVFrame *)src,type);
     return ;
 }
 
@@ -398,114 +374,17 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     \fn goOn
     \brief Callback from ffmpeg when a pic is ready to be decoded
 */
-void decoderFFLIBVA::goOn( const AVFrame *d,int type)
+void decoderFFLIBVA::goOn(  AVFrame *d,int type)
 {
     aprintf("[LIBVA] Go on\n");
-#if 0   
-   struct xvba_render_state *rndr = (struct xvba_render_state *)d->data[0]; 
-   aprintf("[LIBVA]Decode Buffer : 0x%llx\n",rndr);
-   aprintf("[LIBVA]Surface  : 0x%llx\n",rndr->surface);
-   if(!rndr)
-   {
-       ADM_warning("Bad context\n");
-       return;
-   }
-   if(decodedCount)
-   {
-       ADM_warning("Multilple call to goOn\n");
-       exit(-1);
-   }
-   decodedCount++;
-   aprintf("-- decode start --\n");
-   if(!admXvba::decodeStart(xvba,rndr->surface))
-   {
-       ADM_warning("Decode start failed\n");
-       return;
-   }
-   if(!admXvba::decode1(xvba,pictureDescriptor,qmBuffer))
-    {
-        ADM_warning("Decode failed\n");
-        return;
-    } 
-   // Make sure we have enough slices
-   if(rndr->num_slices>this->ctrlBufferCount)
-   {
-       aprintf("Increasing ctrl buffer from %d to %d\n",ctrlBufferCount,rndr->num_slices);
-       for(int j=ctrlBufferCount;j<rndr->num_slices;j++)
-       {
-           ctrlBuffer[j]=admXvba::createDecodeBuffer(xvba,XVBA_DATA_CTRL_BUFFER);
-       }
-       ctrlBufferCount=rndr->num_slices;
-   }
- //-----------
-  const    uint8_t startCode[] = {0x00,0x00,0x01};
-  const int header=3;
-  int offset = 0;  
-  
-  dataBuffer->data_size_in_buffer = 0;
-  uint8_t *dest=(uint8_t *)dataBuffer->bufferXVBA;
-  
-   // check for potential buffer overflow
-  int available= dataBuffer->buffer_size;
-  int toCopy=0;   
-  for(int i=0;i< rndr->num_slices; i++)
-  {
-      toCopy+=rndr->buffers[i].size+header;
-  }
-  if(toCopy>available)
-  {
-      ADM_warning("[LIBVA] Too much data to copy, not enough space in buffer\n");
-      return;
-  }
-  
-  for (unsigned int j = 0; j < rndr->num_slices; ++j)
-  {
-    unsigned int bytesToCopy = rndr->buffers[j].size;
-    uint8_t      *data=(uint8_t *)rndr->buffers[j].buffer;
-    memcpy(dest+offset,  startCode, header);
-    memcpy(dest+offset+header, data,  bytesToCopy);
-    
-    XVBADataCtrl *dataControl;
-    dataControl = (XVBADataCtrl *)ctrlBuffer[j]->bufferXVBA;
-    dataControl->SliceDataLocation = offset;
-    dataControl->SliceBytesInBuffer = bytesToCopy+header;
-    dataControl->SliceBitsInBuffer = dataControl->SliceBytesInBuffer * 8;
-    dataBuffer->data_size_in_buffer += dataControl->SliceBytesInBuffer;
-    offset += dataControl->SliceBytesInBuffer;
-  }
+    uint64_t p=(uint64_t )d->data[3];
+    d->data[0]=d->data[3];
+    VASurfaceID s=(VASurfaceID)p;
+    aprintf("[LIBVA] Surface ID=0x%x\n",(int)s);
+    decode_status=true;
 
-  int bufSize = dataBuffer->data_size_in_buffer;
-  int padding = bufSize % 128;
-  if (padding)
-  {
-    padding = 128 - padding;
-    dataBuffer->data_size_in_buffer += padding;
-    memset((uint8_t *)dest+bufSize,0,padding);
-  }
-
-  for (unsigned int i = 0; i < rndr->num_slices; ++i)
-  {    
-    aprintf("-- decode 2 --\n");
-    if(!admXvba::decode2(xvba,dataBuffer,ctrlBuffer[i]))
-    {
-        ADM_warning("Decode failed\n");
-        return;
-    } 
-  }
-  
-  //-------------- 
-   aprintf("-- decode end --\n");
-
-   if(!admXvba::decodeEnd(xvba))
-   {
-       ADM_warning("DecodeEnd failed\n");
-       return;
-   } 
-   decode_status=true;
-   aprintf("[LIBVA] End goOn\n");
-   //
     return;
-#endif
+
 }
 
 

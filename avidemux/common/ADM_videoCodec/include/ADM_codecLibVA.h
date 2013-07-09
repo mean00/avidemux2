@@ -69,7 +69,7 @@ protected:
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-                    void    goOn( const AVFrame *d,int type);   
+                    void    goOn(  AVFrame *d,int type);   
                     
 public:
             // public API

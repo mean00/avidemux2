@@ -571,6 +571,7 @@ bool admLibVA::syncSurface(void *session, void *surface, bool *ready)
     return true;
     
 }
+#endif
 /**
  * \fn transfer
  * \brief fetch back a decoded image
@@ -579,72 +580,12 @@ bool admLibVA::syncSurface(void *session, void *surface, bool *ready)
  * @param img
  * @return 
  */
-bool        admLibVA::transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmpBuffer)
+bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,uint8_t *tmp)
 {
     int xError;
     CHECK_WORKING(false);
 
-    
-    XVBA_GetSurface_Target target;
-    XVBA_Get_Surface_Input input;
-    PREPARE_SESSION_IN(session,input);
-    
-    int pw= (w+15) & ~15; 
-    int ph= (h+15) & ~15; 
-    
-    
-    target.size = sizeof(target);
-    target.surfaceType = XVBA_YV12;
-    target.flag = XVBA_FRAME;
-
-    input.src_surface=surface;
-
-    aprintf("Getting surface %d x %d, pitch = %d\n",w,h,pw);
-    
-    
-    
-    input.target_buffer         = tmpBuffer;
-    input.target_pitch          = pw;
-    input.target_width          = pw;
-    input.target_height         = ph;
-    input.target_parameter      = target;
-
-  
-    
-        
-    CHECK_ERROR(ADM_coreLibVA::funcs.getSurface(&input));
-
-    if(xError!=Success)
-    {
-        ADM_info("transfer failed\n");
-        free(tmpBuffer);
-        return false;
-    }
-    int spitch;
-    for(int i=0;i<3;i++)
-    {
-        ADM_PLANE plane=(ADM_PLANE)i;
-        int pitch=img->GetPitch(plane);
-        int height=img->GetHeight(plane);
-        int width=img->GetWidth(plane);
-        uint8_t *dst=img->GetWritePtr(plane);
-        uint8_t *src;
-        switch(i)
-        {
-        case 0: src=tmpBuffer;spitch=pw;break;
-        case 1: src=tmpBuffer+pw*ph;spitch=pw/2;break;
-        case 2: src=tmpBuffer+(pw*ph*5)/4;spitch=pw/2;break;
-        }
-        for(int y=0;y<height;y++)
-        {
-            memcpy(dst,src,width);
-            src+=spitch;
-            dst+=pitch;
-        }
-    }
-    
-    return true;
+    return false;
  }
 
-#endif //#if 0
 #endif // ifdef LIBVA

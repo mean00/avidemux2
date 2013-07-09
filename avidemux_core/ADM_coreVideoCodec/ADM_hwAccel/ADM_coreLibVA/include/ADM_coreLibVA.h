@@ -58,7 +58,7 @@ static  VAImage    *allocateYV12Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
 
 
-static bool        transfer(void *session, int w, int h,void *surface, ADMImage *img,uint8_t *tmp);
+static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,uint8_t *tmp);
 static bool        fillContext(vaapi_context *c);
 
 };
