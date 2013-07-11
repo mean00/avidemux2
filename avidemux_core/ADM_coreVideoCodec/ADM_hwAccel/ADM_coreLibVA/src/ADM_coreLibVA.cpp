@@ -68,6 +68,52 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
 
 }
 /**
+ * \fn copyNV12Image
+ * \brief copy NV12 to YV12
+ * @param yv12
+ * @param myImage
+ * @param w
+ * @param h
+ * @param ptr
+ */
+static void copyNV12Image(uint8_t *yv12,VAImage *tmp,int w,int h,uint8_t *ptr)
+{
+        // Y
+        int dstride=w;
+        int sstride=tmp->pitches[0];
+        uint8_t *dst=yv12;
+        uint8_t *src=ptr+tmp->offsets[0];
+        for(int y=0;y<w;y++)
+        {
+            memcpy(dst,src,w);
+            src+=sstride;
+            dst+=dstride;
+        }
+        // U  & V
+        src=ptr+tmp->offsets[1]; // NV12
+        uint8_t *dstu=yv12+(w*h);
+        uint8_t *dstv=yv12+(5*w*h)/4;
+        uint8_t *u,*v,*s;
+        
+        int half=w/2;
+        
+        for(int y=0;y<half;y++)
+        {
+            u=dstu;
+            v=dstv;
+            s=src;
+            dstu+=half;
+            dstv+=half;
+            src+=tmp->pitches[1];
+            for(int x=0;x<half;x++)
+            {
+                *u++=*s++;
+                *v++=*s++;
+            }
+        }
+}
+
+/**
  *      \fn setupConfig
  *      \brief verify that h264 main profile is supported
  */
@@ -403,6 +449,31 @@ bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID su
     CHECK_WORKING(false);
     bool r=false;
     VAImage myImage;
+#if 0    
+    VASurfaceStatus status;
+    int count=100;
+    while(1)
+    {
+        CHECK_ERROR(vaQuerySurfaceStatus (ADM_coreLibVA::display,surface,&status));
+        if(xError)
+        {
+            ADM_warning("Questy surface status failed\n");
+            break;
+        }
+        if(status==VASurfaceReady)
+            break;
+        count--;
+        if(!count)
+        {
+            ADM_warning("Timeout getting surface\n");
+            return false;
+        }
+        ADM_usleep(1000);
+        
+    }
+#endif
+    
+    
     aprintf("Transfer--->0x%x to 0x%x\n",(int)surface,(int)tmp->image_id);
     CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display,surface,&myImage));
     if(xError)
@@ -417,43 +488,8 @@ bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID su
           ADM_warning("Cannot map image\n");
           goto endIt;         
      }
-     
-     // Copy Image
-     {
-        int dstride=w;
-        int sstride=tmp->pitches[0];
-        uint8_t *dst=yv12;
-        uint8_t *src=ptr+tmp->offsets[0];
-        for(int y=0;y<w;y++)
-        {
-            memcpy(dst,src,w);
-            src+=sstride;
-            dst+=dstride;
-        }
-        // U  & V
-        src=ptr+tmp->offsets[1]; // NV12
-        uint8_t *dstu=yv12+(w*h);
-        uint8_t *dstv=yv12+(5*w*h)/4;
-        uint8_t *u,*v,*s;
-        
-        int half=w/2;
-        
-        for(int y=0;y<half;y++)
-        {
-            u=dstu;
-            v=dstv;
-            s=src;
-            dstu+=half;
-            dstv+=half;
-            src+=tmp->pitches[1];
-            for(int x=0;x<half;x++)
-            {
-                *u++=*s++;
-                *v++=*s++;
-            }
-        }
+     copyNV12Image(yv12,&myImage,w,h,ptr);
 
-     }
     CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, myImage.buf))
      if(xError)
      { 
