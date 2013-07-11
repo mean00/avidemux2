@@ -388,190 +388,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
         aprintf("Error destroying surface\n");
         return;
 }
-#if 0
-/**
- * \fn destroySurface
- * @param session
- * @param surface
- */
-XVBABufferDescriptor        *admLibVA::createDecodeBuffer(void *session,XVBA_BUFFER type)
-{
-      CHECK_WORKING(NULL);
-      int xError;
-      XVBA_Create_DecodeBuff_Input  in;
-      XVBA_Create_DecodeBuff_Output out;
-      PREPARE_SESSION_IN(session,in);
-      PREPARE_OUT(out);
-      in.buffer_type=type;
-      in.num_of_buffers=1;
-      
-      CHECK_ERROR(ADM_coreLibVA::funcs.createDecodeBuffer(&in,&out));
-        if(Success==xError && out.num_of_buffers_in_list==1)
-        {
-            return (XVBABufferDescriptor *)out.buffer_list;
-        }
-        aprintf("Error creating decode buffer of type %d\n",type);
-        return NULL;
-}
 
-/**
- * \fn destroySurface
- * @param session
- * @param surface
- */
-void        admLibVA::destroyDecodeBuffer(void *session,XVBABufferDescriptor *decodeBuffer)
-{
-        int xError;
-        XVBA_Destroy_Decode_Buffers_Input in;
-        CHECK_WORKING();
-        PREPARE_SESSION_IN(session,in);
-        in.num_of_buffers_in_list=1;
-        in.buffer_list=decodeBuffer;
-        CHECK_ERROR(ADM_coreLibVA::funcs.destroyDecodeBuffer(&in));
-        if(Success==xError)
-        {
-            return;
-        }
-        aprintf("Error destroying decode buffer\n");
-        return;
-}
-/**
- * 
- * @param session
- * @param surface
- * @return 
- */
-bool        admLibVA::decodeStart(void *session, void *surface)
-{
-      int xError;
-      CHECK_WORKING(false);
-      XVBA_Decode_Picture_Start_Input in;
-      PREPARE_SESSION_IN(session,in);
-
-      in.target_surface=surface;
-      
-       CHECK_ERROR(ADM_coreLibVA::funcs.startDecodePicture(&in));
-      
-      if(xError!=Success)
-      {
-          ADM_info("decodeStart failed\n");
-          return false;
-      }
-      return true;
-}
-/**
- * \fn decode
- * @param session
- * @param x
- * @return 
- */
-bool        admLibVA::decode1(void *session,void *picture_desc,void *matrix_desc)
-{
-      int xError;
-      CHECK_WORKING(false);
-      XVBA_Decode_Picture_Input in;
-      PREPARE_SESSION_IN(session,in);
-      XVBABufferDescriptor *desc[3];
-      in.buffer_list=desc;
-      in.num_of_buffers_in_list=2;
-      
-      
-      desc[0]=(XVBABufferDescriptor *)picture_desc;
-      desc[1]=(XVBABufferDescriptor *)matrix_desc;
-      
-      
-      CHECK_ERROR(ADM_coreLibVA::funcs.decodePicture(&in));
-      if(Success!=xError)
-      {
-          return false;
-      }
-      return true;
-      
-}
-
-/**
- * \fn decode
- * @param session
- * @param x
- * @return 
- */
-bool        admLibVA::decode2(void *session,void *data,void *ctrl)
-{
-      int xError;
-      CHECK_WORKING(false);
-      XVBA_Decode_Picture_Input in;
-      PREPARE_SESSION_IN(session,in);
-      XVBABufferDescriptor *desc[3];
-      in.buffer_list=desc;
-      in.num_of_buffers_in_list=2;
-      
-      
-      desc[0]=(XVBABufferDescriptor *)data;
-      desc[1]=(XVBABufferDescriptor *)ctrl;
-      
-      desc[0]->data_offset=0;
-      desc[1]->data_size_in_buffer=sizeof(XVBADataCtrl);
-      
-      CHECK_ERROR(ADM_coreLibVA::funcs.decodePicture(&in));
-      if(Success!=xError)
-      {
-          return false;
-      }
-      return true;
-      
-}
-/**
- *      \fn decodeEnd
- */
-bool admLibVA::decodeEnd(void *session)
-{
-    int xError;
-      CHECK_WORKING(false);
-      XVBA_Decode_Picture_End_Input in;
-      PREPARE_SESSION_IN(session,in);
-      
-       CHECK_ERROR(ADM_coreLibVA::funcs.endDecodePicture(&in));
-      
-      if(xError!=Success)
-      {
-          ADM_info("decodeEnd failed\n");
-          return false;
-      }
-       return true;
-}
-/**
- * \fn syncSurface
- */
-bool admLibVA::syncSurface(void *session, void *surface, bool *ready)
-{
-    int xError;
-    CHECK_WORKING(false);
-
-    XVBA_Surface_Sync_Input  in;
-    XVBA_Surface_Sync_Output out;
-    PREPARE_SESSION_IN(session,in);
-    PREPARE_OUT(out);
-    
-    in.surface=surface;
-    in.query_status=XVBA_GET_SURFACE_STATUS;
-    
-    CHECK_ERROR(ADM_coreLibVA::funcs.syncSurface(&in,&out));
-
-    if(xError!=Success)
-    {
-        ADM_info("syncSurface failed\n");
-        return false;
-    }
-    
-    if(!(out.status_flags & XVBA_COMPLETED))
-    {
-         *ready=false;
-    }
-    *ready=true;
-    return true;
-    
-}
-#endif
 /**
  * \fn transfer
  * \brief fetch back a decoded image
@@ -580,12 +397,57 @@ bool admLibVA::syncSurface(void *session, void *surface, bool *ready)
  * @param img
  * @return 
  */
-bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,uint8_t *tmp)
+bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *outImage,uint8_t *tmp)
 {
     int xError;
     CHECK_WORKING(false);
-
-    return false;
+    bool r=false;
+    aprintf("Transfer--->\n");
+    VAImage image;
+    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display,  surface,&image))
+    if(xError)
+    {
+        ADM_warning("Cannot derive image\n");
+        return false;
+    }
+    // Map image
+     uint8_t  *ptr = NULL;
+     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, image.buf, (void**)&ptr))
+     if(xError)
+     { 
+          ADM_warning("Cannot map image\n");
+          goto stopIt;
+         
+     }
+    aprintf("Mapping ok\n");
+    // Copy Image
+    {
+        int dstride=outImage->GetPitch(PLANAR_Y);
+        int sstride=image.pitches[0];
+        uint8_t *dst=outImage->GetWritePtr(PLANAR_Y);
+        uint8_t *src=ptr+image.offsets[0];
+        for(int y=0;y<w;y++)
+        {
+            memcpy(dst,src,w);
+            src+=sstride;
+            dst+=dstride;
+        }
+    }
+    r=true;
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, image.buf))
+    if(xError)
+    { 
+          ADM_warning("Cannot unmap image\n");
+          goto stopIt;
+    }
+     
+stopIt:     
+     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,  image.image_id))
+    if(xError)
+    {
+        ADM_warning("Cannot destroy image\n");
+    }
+    return r;
  }
 
 #endif // ifdef LIBVA

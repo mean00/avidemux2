@@ -56,37 +56,29 @@ protected:
                     int           nbSurface;
                     vaapi_context *va_context;
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
-                    VAImageID     image;
+                    VAImageID     intermediateImage;
                     BVector <VASurfaceID  > freeQueue;
-     
-#if 0
-                    ADMImage *xvba_copy;
-                    uint64_t xvba_pts;
-
-                    bool     destroying;
-                    int      decodedCount;
-#endif
 public:     // Callbacks
-                    int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
-                    void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-                    void    goOn(  AVFrame *d,int type);   
+                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
+                    void        releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
+                    void        goOn(  AVFrame *d,int type);   
                     
 public:
             // public API
-                    decoderFFLIBVA (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-                    ~decoderFFLIBVA();
-    virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+                                decoderFFLIBVA (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+                                ~decoderFFLIBVA();
+    virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
 
-    virtual bool dontcopy (void)
+    virtual         bool        dontcopy (void)
                       {
                         return 1; // For now, we give a reference to the fully decoded image
                       }
 
-    virtual bool bFramePossible (void)
+    virtual         bool        bFramePossible (void)
       {
         return 1;
       }
-    virtual const char *getDecoderName(void) {return "LIBVA";}
-    virtual bool  initializedOk(void)  {return alive;};
+    virtual const   char        *getDecoderName(void) {return "LIBVA";}
+    virtual         bool        initializedOk(void)  {return alive;};
 };
 #endif
