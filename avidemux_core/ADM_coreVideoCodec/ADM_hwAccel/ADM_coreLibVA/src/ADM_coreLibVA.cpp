@@ -172,7 +172,7 @@ bool admLibVA::setupImageFormat()
                 aprintf("bpp : %d\n",list[i].bits_per_pixel);
                 uint32_t fcc=list[i].fourcc;
                 aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));                
-                if( 0x32315659==fcc)
+                if( 0x3231564e==fcc) //NV12 0x3231564e, YV12 0x32315659
                 {
                     ADM_coreLibVA::imageFormat=list[i];
                     r=true;
@@ -397,22 +397,104 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * @param img
  * @return 
  */
-bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *outImage,uint8_t *tmp)
+bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *outImage,VAImage *tmp,uint8_t *yv12)
 {
     int xError;
     CHECK_WORKING(false);
     bool r=false;
-    aprintf("Transfer--->\n");
-    VAImage image;
-    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display,  surface,&image))
+    VAImage myImage;
+    aprintf("Transfer--->0x%x to 0x%x\n",(int)surface,(int)tmp->image_id);
+    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display,surface,&myImage));
     if(xError)
     {
-        ADM_warning("Cannot derive image\n");
+        ADM_warning("VaDeriveImage failed\n");
         return false;
     }
+     uint8_t *ptr=NULL;
+     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, myImage.buf, (void**)&ptr))
+     if(xError)
+     { 
+          ADM_warning("Cannot map image\n");
+          goto endIt;         
+     }
+     
+     // Copy Image
+     {
+        int dstride=w;
+        int sstride=tmp->pitches[0];
+        uint8_t *dst=yv12;
+        uint8_t *src=ptr+tmp->offsets[0];
+        for(int y=0;y<w;y++)
+        {
+            memcpy(dst,src,w);
+            src+=sstride;
+            dst+=dstride;
+        }
+        // U  & V
+        src=ptr+tmp->offsets[1]; // NV12
+        uint8_t *dstu=yv12+(w*h);
+        uint8_t *dstv=yv12+(5*w*h)/4;
+        uint8_t *u,*v,*s;
+        
+        int half=w/2;
+        
+        for(int y=0;y<half;y++)
+        {
+            u=dstu;
+            v=dstv;
+            s=src;
+            dstu+=half;
+            dstv+=half;
+            src+=tmp->pitches[1];
+            for(int x=0;x<half;x++)
+            {
+                *u++=*s++;
+                *v++=*s++;
+            }
+        }
+
+     }
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, myImage.buf))
+     if(xError)
+     { 
+          ADM_warning("Cannot unmap image\n");
+     }
+    {
+        ADMImageRef *ref=outImage->castToRef();
+        ref->_planes[0] = yv12;
+        ref->_planes[1] = yv12+(w*h);
+        ref->_planes[2] = yv12+(5*w*h)/4;
+        ref->_planeStride[0] = w;
+        ref->_planeStride[1] = w/2;
+        ref->_planeStride[2] = w/2;
+        r=true;
+    }
+     
+endIt:
+    CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,myImage.image_id));
+    if(xError)
+    {
+        ADM_warning("DestroyImage failed\n");
+    }
+    return r;
+}
+#endif // ifdef LIBVA
+    
+#if 0
+    #if 0    
+    CHECK_ERROR(vaGetImage (ADM_coreLibVA::display,surface,
+                                        0,0,
+                                        w,h,
+                                        tmp->image_id));
+    if(xError)
+    {
+        ADM_warning("Cannot getImage image\n");
+        return false;
+    }
+    aprintf("Get image ok\n");
     // Map image
      uint8_t  *ptr = NULL;
-     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, image.buf, (void**)&ptr))
+     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, tmp->buf, (void**)&ptr))
      if(xError)
      { 
           ADM_warning("Cannot map image\n");
@@ -423,9 +505,9 @@ bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID su
     // Copy Image
     {
         int dstride=outImage->GetPitch(PLANAR_Y);
-        int sstride=image.pitches[0];
+        int sstride=tmp->pitches[0];
         uint8_t *dst=outImage->GetWritePtr(PLANAR_Y);
-        uint8_t *src=ptr+image.offsets[0];
+        uint8_t *src=ptr+tmp->offsets[0];
         for(int y=0;y<w;y++)
         {
             memcpy(dst,src,w);
@@ -434,7 +516,7 @@ bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID su
         }
     }
     r=true;
-    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, image.buf))
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, tmp->buf))
     if(xError)
     { 
           ADM_warning("Cannot unmap image\n");
@@ -442,12 +524,10 @@ bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID su
     }
      
 stopIt:     
-     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,  image.image_id))
-    if(xError)
-    {
-        ADM_warning("Cannot destroy image\n");
-    }
+     
     return r;
  }
-
-#endif // ifdef LIBVA
+#endif
+ 
+ 
+#endif

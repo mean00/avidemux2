@@ -131,9 +131,18 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
     VASurfaceID sid[ADM_MAX_SURFACE];
+    intermediateImage=NULL;
     alive=false;
     va_context=NULL;
     scratch=new ADMImageRef(w,h);
+    intermediateImage=admLibVA::allocateYV12Image(w,h);
+    yv12Buffer=new uint8_t[(w+15)*(h+15)*3];
+    if(!intermediateImage)
+    {
+        ADM_warning("Cannot allocate image\n");
+        return;
+    }
+    
     // Allocate 17 surfaces, enough for the moment
     nbSurface=17;
     for(int i=0;i<nbSurface;i++)
@@ -231,6 +240,16 @@ bool decoderFFLIBVA::waitForSync(void *surface)
  */
 decoderFFLIBVA::~decoderFFLIBVA()
 {
+    if(yv12Buffer)
+    {
+        delete [] yv12Buffer;
+        yv12Buffer=NULL;
+    }
+    if(intermediateImage)
+    {
+        admLibVA::destroyImage(intermediateImage);
+        intermediateImage=NULL;
+    }
     if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
                  // released
     {
@@ -278,8 +297,10 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     uint64_t p=(uint64_t )scratch->GetReadPtr(PLANAR_Y);
     VASurfaceID id=(VASurfaceID)p;
+    out->Pts=scratch->Pts;
+    out->flags=scratch->flags;
     aprintf("uncompress : Got surface =0x%x\n",id);
-    return admLibVA::transfer(libva,_w,_h,id,out,NULL);    
+    return admLibVA::transfer(libva,_w,_h,id,out,intermediateImage,yv12Buffer);    
     
 }
 /**

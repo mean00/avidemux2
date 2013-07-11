@@ -14,34 +14,6 @@
  */
 #define ADM_MAX_SURFACE 17
 
-/**
- *      \class ADM_surface
- */
-class ADM_surface
-{
-public:
-        VASurfaceID    surface;
-        ADM_surface(int w,int h)
-        {
-            surface=VA_INVALID;
-            surface=admLibVA::allocateSurface(w,h);
-        }
-        virtual ~ADM_surface()
-        {
-            if(surface!=VA_INVALID)
-            {
-                if(surface!=VA_INVALID)
-                        admLibVA::destroySurface(surface);
-                surface=VA_INVALID;
-            }
-        }
-        bool isValid()
-        {
-            if(surface!=VA_INVALID) return true;
-            return false;
-        }
-    
-};
 
 class decoderFFLIBVA:public decoderFF
 {
@@ -51,12 +23,13 @@ protected:
                     int           b_age;
                     int           ip_age[2];
                     ADMImage      *scratch;
+                    uint8_t       *yv12Buffer;
                     bool          decode_status;
                     VAContextID   libva;
                     int           nbSurface;
                     vaapi_context *va_context;
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
-                    VAImageID     intermediateImage;
+                    VAImage       *intermediateImage;
                     BVector <VASurfaceID  > freeQueue;
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
