@@ -74,43 +74,53 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
  * @param myImage
  * @param w
  * @param h
- * @param ptr
+ * @param ptr  bool   
  */
-static void copyNV12Image(uint8_t *yv12,VAImage *tmp,int w,int h,uint8_t *ptr)
+static void copyNV12Image(ADMImage *dstImage,ADM_vaImage *tmp,uint8_t *ptr)
 {
+    int w=dstImage->_width;
+    int h=dstImage->_height;
         // Y
         int dstride=w;
-        int sstride=tmp->pitches[0];
-        uint8_t *dst=yv12;
-        uint8_t *src=ptr+tmp->offsets[0];
+        int sstride=tmp->image->pitches[0];
+        uint8_t *dst=dstImage->GetWritePtr(PLANAR_Y);
+        uint8_t *src=ptr+tmp->image->offsets[0];
         for(int y=0;y<w;y++)
         {
             memcpy(dst,src,w);
             src+=sstride;
             dst+=dstride;
         }
-        // U  & V
-        src=ptr+tmp->offsets[1]; // NV12
-        uint8_t *dstu=yv12+(w*h);
-        uint8_t *dstv=yv12+(5*w*h)/4;
-        uint8_t *u,*v,*s;
         
-        int half=w/2;
+        //U & V
+        sstride=tmp->image->pitches[1];
+        src=ptr+tmp->image->offsets[1];
+        h/=2;
+        w/=2;
         
-        for(int y=0;y<half;y++)
+        int upitch=dstImage->GetPitch(PLANAR_U);
+        int vpitch=dstImage->GetPitch(PLANAR_V);
+        uint8_t *dstu=dstImage->GetWritePtr(PLANAR_U);
+        uint8_t *dstv=dstImage->GetWritePtr(PLANAR_V);
+        
+        for(int y=0;y<h;y++)
         {
-            u=dstu;
-            v=dstv;
-            s=src;
-            dstu+=half;
-            dstv+=half;
-            src+=tmp->pitches[1];
-            for(int x=0;x<half;x++)
-            {
-                *u++=*s++;
-                *v++=*s++;
-            }
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=sstride;
+                dstu+=upitch;
+                dstv+=vpitch;
+
+                for(int x=0;x<w;x++)
+                {
+                    *u++=ssrc[1];
+                    *v++=ssrc[0];
+                    ssrc+=2;
+                }
         }
+        
+        return ;
 }
 
 /**
@@ -442,9 +452,25 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  */
 bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
 {
-    ADM_warning("imageToAdmImage ...\n");
-    return true;
-    
+    bool r=false;
+    aprintf("imageToAdmImage ...0x%x \n",(int)src->image->image_id);
+    int xError;
+    uint8_t *ptr=NULL;
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, src->image->buf, (void**)&ptr))
+    if(xError)
+     { 
+          ADM_warning("Cannot map image\n");
+          return false;
+     }
+     copyNV12Image(dest,src,ptr);
+
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, src->image->buf))
+     if(xError)
+     { 
+          ADM_warning("Cannot unmap image\n");
+     }       
+    r=true;
+    return r;
 }
 
 /**
@@ -465,135 +491,5 @@ bool        admLibVA::surfaceToImage(VASurfaceID id,ADM_vaImage *img)
     }
     return true;
 }
-/**
- * \fn transfer
- * \brief fetch back a decoded image
- * @param session
- * @param surface
- * @param img
- * @return 
- */
-bool        admLibVA:: transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *outImage,VAImage *tmp,uint8_t *yv12)
-{
-    int xError;
-    CHECK_WORKING(false);
-    bool r=false;
-    VAImage myImage;
-#if 0    
-    VASurfaceStatus status;
-    int count=100;
-    while(1)
-    {
-        CHECK_ERROR(vaQuerySurfaceStatus (ADM_coreLibVA::display,surface,&status));
-        if(xError)
-        {
-            ADM_warning("Questy surface status failed\n");
-            break;
-        }
-        if(status==VASurfaceReady)
-            break;
-        count--;
-        if(!count)
-        {
-            ADM_warning("Timeout getting surface\n");
-            return false;
-        }
-        ADM_usleep(1000);
-        
-    }
-#endif
-    
-    
-    aprintf("Transfer--->0x%x to 0x%x\n",(int)surface,(int)tmp->image_id);
-    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display,surface,&myImage));
-    if(xError)
-    {
-        ADM_warning("VaDeriveImage failed\n");
-        return false;
-    }
-     uint8_t *ptr=NULL;
-     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, myImage.buf, (void**)&ptr))
-     if(xError)
-     { 
-          ADM_warning("Cannot map image\n");
-          goto endIt;         
-     }
-     copyNV12Image(yv12,&myImage,w,h,ptr);
-
-    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, myImage.buf))
-     if(xError)
-     { 
-          ADM_warning("Cannot unmap image\n");
-     }
-    {
-        ADMImageRef *ref=outImage->castToRef();
-        ref->_planes[0] = yv12;
-        ref->_planes[1] = yv12+(w*h);
-        ref->_planes[2] = yv12+(5*w*h)/4;
-        ref->_planeStride[0] = w;
-        ref->_planeStride[1] = w/2;
-        ref->_planeStride[2] = w/2;
-        r=true;
-    }
-     
-endIt:
-    CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,myImage.image_id));
-    if(xError)
-    {
-        ADM_warning("DestroyImage failed\n");
-    }
-    return r;
-}
-#endif // ifdef LIBVA
-    
-#if 0
-    #if 0    
-    CHECK_ERROR(vaGetImage (ADM_coreLibVA::display,surface,
-                                        0,0,
-                                        w,h,
-                                        tmp->image_id));
-    if(xError)
-    {
-        ADM_warning("Cannot getImage image\n");
-        return false;
-    }
-    aprintf("Get image ok\n");
-    // Map image
-     uint8_t  *ptr = NULL;
-     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, tmp->buf, (void**)&ptr))
-     if(xError)
-     { 
-          ADM_warning("Cannot map image\n");
-          goto stopIt;
-         
-     }
-    aprintf("Mapping ok\n");
-    // Copy Image
-    {
-        int dstride=outImage->GetPitch(PLANAR_Y);
-        int sstride=tmp->pitches[0];
-        uint8_t *dst=outImage->GetWritePtr(PLANAR_Y);
-        uint8_t *src=ptr+tmp->offsets[0];
-        for(int y=0;y<w;y++)
-        {
-            memcpy(dst,src,w);
-            src+=sstride;
-            dst+=dstride;
-        }
-    }
-    r=true;
-    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, tmp->buf))
-    if(xError)
-    { 
-          ADM_warning("Cannot unmap image\n");
-          goto stopIt;
-    }
-     
-stopIt:     
-     
-    return r;
- }
-#endif
- 
  
 #endif

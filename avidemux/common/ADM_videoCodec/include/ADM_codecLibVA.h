@@ -22,13 +22,13 @@ protected:
                     int           b_age;
                     int           ip_age[2];
                     ADMImage      *scratch;
-                    uint8_t       *yv12Buffer;
                     bool          decode_status;
                     VAContextID   libva;
                     int           nbSurface;
                     vaapi_context *va_context;
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
-                    VAImage       *intermediateImage;
+
+                    //
                     BVector <VASurfaceID  > freeQueue;
                     //
                     

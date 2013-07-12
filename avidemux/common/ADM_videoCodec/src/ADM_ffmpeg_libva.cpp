@@ -57,8 +57,8 @@ static void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int o
 
 
 /**
-    \fn vdpauUsable
-    \brief Return true if  vdpau can be used...
+    \fn libvaUsable
+    \brief Return true if  libva can be used...
 */
 bool libvaUsable(void)
 {    
@@ -189,17 +189,10 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
     VASurfaceID sid[ADM_MAX_SURFACE];
-    intermediateImage=NULL;
+    
     alive=false;
     va_context=NULL;
     scratch=new ADMImageRef(w,h);
-    intermediateImage=admLibVA::allocateYV12Image(w,h);
-    yv12Buffer=new uint8_t[(w+15)*(h+15)*3];
-    if(!intermediateImage)
-    {
-        ADM_warning("Cannot allocate image\n");
-        return;
-    }
     
     // Allocate 17 surfaces, enough for the moment
     nbSurface=17;
@@ -298,16 +291,6 @@ bool decoderFFLIBVA::waitForSync(void *surface)
  */
 decoderFFLIBVA::~decoderFFLIBVA()
 {
-    if(yv12Buffer)
-    {
-        delete [] yv12Buffer;
-        yv12Buffer=NULL;
-    }
-    if(intermediateImage)
-    {
-        admLibVA::destroyImage(intermediateImage);
-        intermediateImage=NULL;
-    }
     if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
                  // released
     {
@@ -362,6 +345,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     ADM_vaImage *img;
     if(  freeImageQueue.empty())
     {
+        aprintf("Allocating new image\n");
         img=new ADM_vaImage(this,_w,_h);
         img->image=admLibVA::allocateYV12Image(_w,_h);
         if(!img->image)
@@ -374,12 +358,19 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
         allImageQueue.append(img);
     }else
     {
+        aprintf("Taking image from queue\n");
         img=freeImageQueue[0];
         freeImageQueue.popFront();
     }        
     imageMutex.unlock();
-        
-       
+    if(!admLibVA::surfaceToImage(id,img))    
+    {
+        imageMutex.lock();
+        freeImageQueue.append(img);
+        imageMutex.unlock();
+        ADM_warning("[LIBVA] Surface to image failed\n");
+        return false;
+    }
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCookie=this;
     out->refDescriptor.refInstance=img;
