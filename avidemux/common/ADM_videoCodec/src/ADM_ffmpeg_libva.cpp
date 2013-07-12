@@ -91,6 +91,36 @@ bool libvaProbe(void)
 #endif
     return false;
 }
+
+
+/**
+    \fn markSurfaceUsed
+    \brief mark the surfave as used. Can be called multiple time.
+*/
+static bool libvaMarkSurfaceUsed(void *v, void * cookie)
+{
+
+    return true;
+}
+/**
+    \fn markSurfaceUnused
+    \brief mark the surfave as unused by the caller. Can be called multiple time.
+*/
+static bool libvaMarkSurfaceUnused(void *v, void * cookie)
+{
+   return true;
+}
+/**
+    \fn vdpauRefDownload
+    \brief Convert a VDPAU image to a regular image
+*/
+
+static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
+{
+    
+    return true;
+}
+
 /**
     \fn vdpauCleanup
 */
@@ -299,8 +329,48 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     VASurfaceID id=(VASurfaceID)p;
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
+    
+    imageMutex.lock();
+    ADM_vaImage *img;
+    if(  freeImageQueue.empty())
+    {
+        img=new ADM_vaImage(this,_w,_h);
+        img->image=admLibVA::allocateYV12Image(_w,_h);
+        if(img->image)
+        {
+            delete img;
+            ADM_warning("Cannot allocate image (libVA)\n");
+            imageMutex.unlock();
+            return false;
+        }
+        allImageQueue.append(img);
+    }else
+    {
+        img=freeImageQueue[0];
+        freeImageQueue.popFront();
+    }        
+    imageMutex.unlock();
+        
+       
+    out->refType=ADM_HW_LIBVA;
+    out->refDescriptor.refCookie=this;
+    out->refDescriptor.refInstance=img;
+    out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
+    out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
+    out->refDescriptor.refDownload=libvaRefDownload;
+    libvaMarkSurfaceUsed(NULL,NULL);
+    
+    if(!admLibVA::surfaceToImage(id,img))
+    {
+         imageMutex.lock();
+         freeImageQueue.append(img);
+         imageMutex.unlock();
+         ADM_warning("Cannot convert surface to image\n");
+         return false;
+    }
+    
     aprintf("uncompress : Got surface =0x%x\n",id);
-    return admLibVA::transfer(libva,_w,_h,id,out,intermediateImage,yv12Buffer);    
+    return true;
     
 }
 /**

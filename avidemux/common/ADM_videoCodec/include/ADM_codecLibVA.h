@@ -8,15 +8,14 @@
 
 #include <BVector.h>
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
-
+#include "ADM_threads.h"
 /**
  * \class decoderFFLIBVA
  */
 #define ADM_MAX_SURFACE 17
-
-
 class decoderFFLIBVA:public decoderFF
 {
+friend class ADM_vaImage;
 protected:
 protected:
                     bool          alive;
@@ -31,6 +30,11 @@ protected:
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
                     VAImage       *intermediateImage;
                     BVector <VASurfaceID  > freeQueue;
+                    //
+                    admMutex                imageMutex;
+                    BVector <ADM_vaImage *> freeImageQueue;
+                    BVector <ADM_vaImage *> allImageQueue;
+                    
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);

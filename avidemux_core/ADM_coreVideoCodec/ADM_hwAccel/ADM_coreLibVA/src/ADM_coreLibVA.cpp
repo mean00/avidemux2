@@ -434,7 +434,24 @@ void        admLibVA::destroySurface( VASurfaceID surface)
         aprintf("Error destroying surface\n");
         return;
 }
-
+/**
+ * \fn surfaceToImage
+ * @param id
+ * @param img
+ * @return 
+ */
+bool        admLibVA::surfaceToImage(VASurfaceID id,ADM_vaImage *img)
+{
+    int xError;
+    CHECK_WORKING(false);
+    CHECK_ERROR(vaGetImage (ADM_coreLibVA::display, id,0,0,img->w,img->h,img->image->image_id));
+    if(xError)
+    {
+        ADM_warning("Va GetImage failed\n");
+        return false;
+    }
+    return true;
+}
 /**
  * \fn transfer
  * \brief fetch back a decoded image
