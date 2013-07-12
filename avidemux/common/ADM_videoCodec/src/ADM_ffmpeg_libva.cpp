@@ -116,6 +116,7 @@ static bool libvaMarkSurfaceUnused(void *v, void * cookie)
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     imageMutex.lock();
     img->refCount--;
+    aprintf("Ref count is now %d\n",img->refCount);
     if(!img->refCount)
     {
         decoder->reclaimImage(img);
@@ -377,7 +378,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
-    libvaMarkSurfaceUsed(img,this);
+    //libvaMarkSurfaceUsed(img,this);
     
   
     
