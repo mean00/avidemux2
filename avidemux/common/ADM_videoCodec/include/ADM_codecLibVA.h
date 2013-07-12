@@ -31,7 +31,7 @@ protected:
                     VAImage       *intermediateImage;
                     BVector <VASurfaceID  > freeQueue;
                     //
-                    admMutex                imageMutex;
+                    
                     BVector <ADM_vaImage *> freeImageQueue;
                     BVector <ADM_vaImage *> allImageQueue;
                     
@@ -39,6 +39,8 @@ public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
                     void        goOn(  AVFrame *d,int type);   
+                    
+                    bool        reclaimImage(ADM_vaImage *img);
                     
 public:
             // public API

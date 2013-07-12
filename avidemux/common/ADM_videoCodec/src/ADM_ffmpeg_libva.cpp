@@ -41,8 +41,7 @@ extern "C" {
 
 
 static bool         libvaWorking=true;
-static admMutex     surfaceMutex;
-
+static admMutex     imageMutex;
 static int  ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
@@ -92,15 +91,20 @@ bool libvaProbe(void)
     return false;
 }
 
-
+//    out->refDescriptor.refCookie=FFLIBVADecode;
+//    out->refDescriptor.refInstance=ADM_vaIMage;
 /**
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
 */
 static bool libvaMarkSurfaceUsed(void *v, void * cookie)
 {
-
-    return true;
+    ADM_vaImage    *img=(ADM_vaImage *)v;
+    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
+    imageMutex.lock();
+    img->refCount++;
+    imageMutex.unlock();
+    
 }
 /**
     \fn markSurfaceUnused
@@ -108,7 +112,30 @@ static bool libvaMarkSurfaceUsed(void *v, void * cookie)
 */
 static bool libvaMarkSurfaceUnused(void *v, void * cookie)
 {
+    ADM_vaImage    *img=(ADM_vaImage *)v;
+    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
+    imageMutex.lock();
+    img->refCount--;
+    if(!img->refCount)
+    {
+        decoder->reclaimImage(img);
+    }
+    imageMutex.unlock();
+    
    return true;
+}
+/**
+ * \fn reclaimImage
+ * \brief must be called with mutex held
+ * @param image
+ * @param instance
+ * @param cookie
+ * @return 
+ */
+bool    decoderFFLIBVA::reclaimImage(ADM_vaImage *img)
+{
+        freeImageQueue.append(img);
+        return true;
 }
 /**
     \fn vdpauRefDownload
@@ -117,7 +144,7 @@ static bool libvaMarkSurfaceUnused(void *v, void * cookie)
 
 static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
-    
+    ADM_warning("Tansferring VAImage to YV12 ADMImage\n");
     return true;
 }
 
@@ -336,7 +363,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         img=new ADM_vaImage(this,_w,_h);
         img->image=admLibVA::allocateYV12Image(_w,_h);
-        if(img->image)
+        if(!img->image)
         {
             delete img;
             ADM_warning("Cannot allocate image (libVA)\n");
@@ -358,16 +385,9 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
-    libvaMarkSurfaceUsed(NULL,NULL);
+    libvaMarkSurfaceUsed(img,this);
     
-    if(!admLibVA::surfaceToImage(id,img))
-    {
-         imageMutex.lock();
-         freeImageQueue.append(img);
-         imageMutex.unlock();
-         ADM_warning("Cannot convert surface to image\n");
-         return false;
-    }
+  
     
     aprintf("uncompress : Got surface =0x%x\n",id);
     return true;
