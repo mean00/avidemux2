@@ -63,7 +63,7 @@ static  void       destroyImage(  VAImage *image);
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 static bool        fillContext(vaapi_context *c);
 static bool        surfaceToImage(VASurfaceID id,ADM_vaImage *img);
-
+static bool        imageToAdmImage(ADM_vaImage *src,ADMImage *dest);
 };
 
 /**

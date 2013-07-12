@@ -144,8 +144,9 @@ bool    decoderFFLIBVA::reclaimImage(ADM_vaImage *img)
 
 static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
-    ADM_warning("Tansferring VAImage to YV12 ADMImage\n");
-    return true;
+    ADM_vaImage    *img=(ADM_vaImage *)instance;
+    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
+    return        admLibVA::imageToAdmImage(img,image);   
 }
 
 /**

@@ -435,6 +435,19 @@ void        admLibVA::destroySurface( VASurfaceID surface)
         return;
 }
 /**
+ * \fn imageToAdmImage
+ * @param src
+ * @param dest
+ * @return 
+ */
+bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
+{
+    ADM_warning("imageToAdmImage ...\n");
+    return true;
+    
+}
+
+/**
  * \fn surfaceToImage
  * @param id
  * @param img
