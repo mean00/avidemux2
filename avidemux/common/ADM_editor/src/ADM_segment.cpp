@@ -191,6 +191,9 @@ bool ADM_EditorSegment::deleteAll (void)
   for (uint32_t vid = 0; vid < n; vid++)
     {
         _VIDEOS *v=&(videos[vid]);
+        // Delete cache 1st, might contain refs to decoder etc..
+      if(v->_videoCache)
+      	delete  v->_videoCache;
       // if there is a video decoder...
       if (v->decoder)
             delete v->decoder;
@@ -201,8 +204,7 @@ bool ADM_EditorSegment::deleteAll (void)
           v->_aviheader->close ();
           delete v->_aviheader;
       }
-      if(v->_videoCache)
-      	delete  v->_videoCache;
+    
       v->_videoCache=NULL;
       v->color=NULL;
       v->decoder=NULL;
