@@ -434,11 +434,11 @@ bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
     // Map image...
      uint8_t *ptr=NULL;
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
-            
-    dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
-    
-    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
-    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))            
+    if(!xError)        
+    {
+        dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);    
+        CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
+    }
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
     
     
