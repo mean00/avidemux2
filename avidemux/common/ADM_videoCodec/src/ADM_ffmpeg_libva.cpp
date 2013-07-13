@@ -47,7 +47,7 @@ static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
 
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf ADM_info

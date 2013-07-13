@@ -27,7 +27,7 @@
 
 #define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
