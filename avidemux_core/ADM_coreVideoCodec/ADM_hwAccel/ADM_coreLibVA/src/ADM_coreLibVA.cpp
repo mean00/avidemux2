@@ -85,7 +85,7 @@ static void copyNV12Image(ADMImage *dstImage,ADM_vaImage *tmp,uint8_t *ptr)
         int sstride=tmp->image->pitches[0];
         uint8_t *dst=dstImage->GetWritePtr(PLANAR_Y);
         uint8_t *src=ptr+tmp->image->offsets[0];
-        for(int y=0;y<w;y++)
+        for(int y=0;y<h;y++)
         {
             memcpy(dst,src,w);
             src+=sstride;
@@ -482,13 +482,37 @@ bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
 bool        admLibVA::surfaceToImage(VASurfaceID id,ADM_vaImage *img)
 {
     int xError;
+    VASurfaceStatus status;
     CHECK_WORKING(false);
+    
+    // Wait for surface to be ready...
+    int countDown=20;
+    while(1)
+    {
+     CHECK_ERROR(vaQuerySurfaceStatus ( ADM_coreLibVA::display, id,&status));
+     if(xError)
+     {
+         ADM_warning("QuerySurfacStatus failed\n");
+         return false;
+     }
+     if(status==VASurfaceReady) break;
+     countDown--;
+     if(!countDown) 
+     {
+         ADM_warning("Timeout waiting for surface\n");
+         return false;
+     }
+     ADM_usleep(1000);
+    }
+    
+    
     CHECK_ERROR(vaGetImage (ADM_coreLibVA::display, id,0,0,img->w,img->h,img->image->image_id));
     if(xError)
     {
         ADM_warning("Va GetImage failed\n");
         return false;
     }
+    
     return true;
 }
  
