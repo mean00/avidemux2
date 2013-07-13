@@ -304,7 +304,20 @@ decoderFFLIBVA::~decoderFFLIBVA()
                 admLibVA::destroySurface(surfaces[i]);        
                 surfaces[i]=VA_INVALID;
     }
-        
+    imageMutex.lock();
+    if(freeImageQueue.size()!=allImageQueue.size())
+    {
+        ADM_warning("Some vaImage are still used!\n");
+    }
+    
+    int n=freeImageQueue.size();
+    for(int i=0;i<n;i++)
+    {
+        delete freeImageQueue[i];
+    }
+    freeImageQueue.clear();
+    allImageQueue.clear();
+    imageMutex.unlock();
     nbSurface=0;
     if(libva!=VA_INVALID)
         admLibVA::destroyDecoder(libva);
