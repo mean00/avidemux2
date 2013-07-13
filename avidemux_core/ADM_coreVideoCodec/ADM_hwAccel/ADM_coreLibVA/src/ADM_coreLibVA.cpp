@@ -78,6 +78,7 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
  */
 static void copyNV12Image(ADMImage *dstImage,ADM_vaImage *tmp,uint8_t *ptr)
 {
+    
     int w=dstImage->_width;
     int h=dstImage->_height;
         // Y
@@ -462,8 +463,9 @@ bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
           ADM_warning("Cannot map image\n");
           return false;
      }
-     copyNV12Image(dest,src,ptr);
-
+    
+    dest->convertFromNV12(ptr+src->image->offsets[0],ptr+src->image->offsets[1], src->image->pitches[0], src->image->pitches[1]);
+    
     CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, src->image->buf))
      if(xError)
      { 

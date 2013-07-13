@@ -719,8 +719,65 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
         src+=4*w*2*2;
     }
 }
+/**
+ * \fn convertFromNV12
+ * @param yData
+ * @param uvData
+ * @param strideY
+ * @param strideUV
+ * @return 
+ */
+bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV)
+{
+        // Y
+    int w=_width;
+    int h=_height;
+        int dstride=GetPitch(PLANAR_Y);
+        int sstride=strideY;
+        uint8_t *dst=GetWritePtr(PLANAR_Y);
+        uint8_t *src=yData;
+        for(int y=0;y<_height;y++)
+        {
+            memcpy(dst,src,w);
+            src+=sstride;
+            dst+=dstride;
+        }
+        
+        //U & V
+        sstride=strideUV;
+        src=uvData;
+        h/=2;
+        w/=2;
+        
+        int upitch=GetPitch(PLANAR_U);
+        int vpitch=GetPitch(PLANAR_V);
+        uint8_t *dstu=GetWritePtr(PLANAR_U);
+        uint8_t *dstv=GetWritePtr(PLANAR_V);
+        
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=sstride;
+                dstu+=upitch;
+                dstv+=vpitch;
 
-
+                for(int x=0;x<w;x++)
+                {
+                    *u++=ssrc[1];
+                    *v++=ssrc[0];
+                    ssrc+=2;
+                }
+        }
+        
+        return true;
+}
+/**
+ * \fn convertFromYUV444
+ * @param from
+ * @return 
+ */
 bool ADMImage::convertFromYUV444(uint8_t *from)
 {
     int stride=this->GetPitch(PLANAR_Y);
