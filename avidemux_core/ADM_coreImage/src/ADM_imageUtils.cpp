@@ -719,6 +719,26 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
         src+=4*w*2*2;
     }
 }
+static void nv12_to_uv_c(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
+{
+        
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=srcPitch;
+                dstu+=upitch;
+                dstv+=vpitch;
+
+                for(int x=0;x<w;x++)
+                {
+                    *u++=ssrc[1];
+                    *v++=ssrc[0];
+                    ssrc+=2;
+                }
+        }
+}
 /**
  * \fn convertFromNV12
  * @param yData
@@ -749,27 +769,14 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
         h/=2;
         w/=2;
         
-        int upitch=GetPitch(PLANAR_U);
-        int vpitch=GetPitch(PLANAR_V);
-        uint8_t *dstu=GetWritePtr(PLANAR_U);
-        uint8_t *dstv=GetWritePtr(PLANAR_V);
-        
-        for(int y=0;y<h;y++)
-        {
-                uint8_t *ssrc=src;                
-                uint8_t *u=dstu;
-                uint8_t *v=dstv;
-                src+=sstride;
-                dstu+=upitch;
-                dstv+=vpitch;
+        #ifdef ADM_CPU_X86
+                if(CpuCaps::hasMMX())
+                    nv12_to_uv_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+                else
+        #endif   
+                    nv12_to_uv_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
 
-                for(int x=0;x<w;x++)
-                {
-                    *u++=ssrc[1];
-                    *v++=ssrc[0];
-                    ssrc+=2;
-                }
-        }
+       
         
         return true;
 }
