@@ -89,7 +89,7 @@ public:
     {
         if(image)
         {
-           admLibVA::destroyImage(NULL);
+           admLibVA::destroyImage(image);
            image=NULL;
         }
     }
