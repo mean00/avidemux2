@@ -739,6 +739,84 @@ static void nv12_to_uv_c(int w, int h,int upitch, int vpitch, uint8_t *dstu, uin
                 }
         }
 }
+#ifdef ADM_CPU_X86
+/**
+ * \fn nv12_to_uv_mmx
+ * \brief unpack nv12 interleaved uv into planar uv
+ * @param w
+ * @param h
+ * @param upitch
+ * @param vpitch
+ * @param dstu
+ * @param dstv
+ * @param srcPitch
+ * @param src
+ */
+static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
+{
+        int mod16=w>>3;
+        int leftOver=w&7;
+        int x;
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=srcPitch;
+                dstu+=upitch;
+                dstv+=vpitch;                        
+
+                        x=mod16;
+                      __asm__(
+                        "1:"
+                        "movq           (%0),%%mm0   \n"
+                        "movq           8(%0),%%mm1  \n"                              
+                        "movq           %%mm0,%%mm2  \n"                       
+                        "movq           %%mm1,%%mm3  \n"   
+
+                        "psllw          $8,%%mm0    \n"                              
+                        "psrlw          $8,%%mm0    \n"    
+
+                        "psllw          $8,%%mm1    \n"                              
+                        "psrlw          $8,%%mm1    \n"    
+
+                              
+                        "packuswb       %%mm1,%%mm0 \n"
+                        
+                        "psrlw          $8,%%mm2    \n"                              
+                        "psrlw          $8,%%mm3    \n"    
+                              
+                        "packuswb       %%mm3,%%mm2 \n"
+                        
+                        "movq           %%mm0,(%2)  \n"                       
+                        "movq           %%mm2,(%1)  \n"     
+                        
+                        "add            $16,%0\n"
+                        "add            $8,%1\n"
+                        "add            $8,%2\n"
+                        "sub            $1,%3\n"
+                        "jnz            1b\n"
+                        :: "r"(ssrc),"r"(u),"r"(v),"r"(x)
+                        );
+                if(leftOver)
+                {
+                    x=mod16*8;
+                    for(;x<w;x++)
+                    {
+                        *u++=ssrc[1];
+                        *v++=ssrc[0];
+                        ssrc+=2;
+                    }
+                }
+        }
+        __asm__(
+                "emms\n"
+                ::
+            );
+
+}
+
+#endif
 /**
  * \fn convertFromNV12
  * @param yData
@@ -771,7 +849,7 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
         
         #ifdef ADM_CPU_X86
                 if(CpuCaps::hasMMX())
-                    nv12_to_uv_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+                    nv12_to_uv_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
                 else
         #endif   
                     nv12_to_uv_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
