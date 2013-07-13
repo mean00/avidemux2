@@ -184,10 +184,22 @@ uint32_t defaultPortAvisynth = 9999;
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
-        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU"));
+        diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
         diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
+
+#ifndef USE_VDPAU
+        useVdpau.enable(0);
+#endif
+#ifndef USE_LIBVA
+        useLibVA.enable(0);
+#endif
+#ifndef USE_XVBA
+        useXvba.enable(0);
+#endif
+
+        
 #ifndef USE_OPENGL
         //useOpenGl.enable(0);
 #endif
@@ -361,9 +373,12 @@ uint32_t defaultPortAvisynth = 9999;
 #endif
 
         
-        /* Video */
-        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useVdpau,&useXvba,&useLibVA,&useOpenGl};
-        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Video"),6,(diaElem **)diaVideo);
+        /* Display */
+        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl};
+        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),3,(diaElem **)diaVideo);
+        /* HW */
+          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA};
+          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),3,(diaElem **)diaHwDecoding);
         
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
@@ -383,8 +398,16 @@ uint32_t defaultPortAvisynth = 9999;
 
                                     
 // SET
-        diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,&tabCpu,&tabThreading, &tabAvisynth};
-        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Preferences"),7,tabs))
+                int extra=0;
+#ifdef __linux__
+              extra++;  
+#endif
+                diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,
+#ifdef __linux__                
+                                &tabHwDecoding,
+#endif
+                                &tabCpu,&tabThreading, &tabAvisynth};
+        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs))
 	{
         	//
 #ifdef USE_OPENGL
