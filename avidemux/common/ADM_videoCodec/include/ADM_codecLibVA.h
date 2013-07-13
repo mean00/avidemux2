@@ -12,7 +12,7 @@
 /**
  * \class decoderFFLIBVA
  */
-#define ADM_MAX_SURFACE 17
+#define ADM_MAX_SURFACE 16+6+1
 class decoderFFLIBVA:public decoderFF
 {
 friend class ADM_vaImage;
@@ -29,11 +29,10 @@ protected:
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
 
                     //
-                    BVector <VASurfaceID  > freeQueue;
+                    BVector <ADM_vaImage  *> freeSurfaceQueue;
+                    BVector <ADM_vaImage  *> allSurfaceQueue;
                     //
                     
-                    BVector <ADM_vaImage *> freeImageQueue;
-                    BVector <ADM_vaImage *> allImageQueue;
                     
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
@@ -41,6 +40,7 @@ public:     // Callbacks
                     void        goOn(  AVFrame *d,int type);   
                     
                     bool        reclaimImage(ADM_vaImage *img);
+                    ADM_vaImage *lookupBySurfaceId(VASurfaceID id);
                     
 public:
             // public API

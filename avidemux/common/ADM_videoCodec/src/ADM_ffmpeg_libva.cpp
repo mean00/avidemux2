@@ -135,7 +135,7 @@ static bool libvaMarkSurfaceUnused(void *v, void * cookie)
  */
 bool    decoderFFLIBVA::reclaimImage(ADM_vaImage *img)
 {
-        freeImageQueue.append(img);
+        freeSurfaceQueue.append(img);
         return true;
 }
 /**
@@ -147,7 +147,7 @@ static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     ADM_vaImage    *img=(ADM_vaImage *)instance;
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
-    return        admLibVA::imageToAdmImage(img,image);   
+    return        admLibVA::surfaceToImage(image,img);
 }
 
 /**
@@ -189,14 +189,14 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         uint8_t *extraData,uint32_t bpp)
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
-    VASurfaceID sid[ADM_MAX_SURFACE];
+    VASurfaceID sid[ADM_MAX_SURFACE+1];
     
     alive=false;
     va_context=NULL;
     scratch=new ADMImageRef(w,h);
     
     // Allocate 17 surfaces, enough for the moment
-    nbSurface=17;
+    nbSurface=ADM_MAX_SURFACE;
     for(int i=0;i<nbSurface;i++)
     {
         surfaces[i]=admLibVA::allocateSurface(w,h);
@@ -205,7 +205,10 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             nbSurface=i;
             return;
         }
-        freeQueue.pushFront(surfaces[i]);
+        ADM_vaImage *img=new ADM_vaImage(this,w,h);
+        img->surface=surfaces[i];
+        freeSurfaceQueue.append(img);
+        allSurfaceQueue.append(img);
         sid[i]=surfaces[i];
     }
     ADM_info("Preallocated %d surfaces\n",nbSurface);
@@ -259,34 +262,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
 }
-#if 0
-/**
- * \fn waitForSync
- * @param surface
- * @return 
- */
-bool decoderFFLIBVA::waitForSync(void *surface)
-{
 
-    int count=1000;
-    bool ready;
-    while(--count)
-    {
-        if(!admXvba::syncSurface(xvba,surface,&ready))
-        {
-            ADM_warning("Sync surface failed\n");
-            return false;
-        }
-        if(ready) break;
-        aprintf("Surface not ready, waiting...\n");
-        ADM_usleep(1000);
-    }
-    if(count)
-        return true;
-
-    return false;
-}
-#endif
 /**
  * \fn dtor
  */
@@ -299,25 +275,15 @@ decoderFFLIBVA::~decoderFFLIBVA()
         av_free(_context);
         _context=NULL;
     }
-    for(int i=0;i<nbSurface;i++)
-    {
-                admLibVA::destroySurface(surfaces[i]);        
-                surfaces[i]=VA_INVALID;
-    }
     imageMutex.lock();
-    if(freeImageQueue.size()!=allImageQueue.size())
-    {
-        ADM_warning("Some vaImage are still used!\n");
-    }
-    
-    int n=freeImageQueue.size();
+    int n=freeSurfaceQueue.size();
     for(int i=0;i<n;i++)
     {
-        delete freeImageQueue[i];
+        delete freeSurfaceQueue[i];
     }
-    freeImageQueue.clear();
-    allImageQueue.clear();
+    freeSurfaceQueue.clear();
     imageMutex.unlock();
+    
     nbSurface=0;
     if(libva!=VA_INVALID)
         admLibVA::destroyDecoder(libva);
@@ -355,50 +321,42 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
     
-    imageMutex.lock();
-    ADM_vaImage *img;
-    if(  freeImageQueue.empty())
-    {
-        aprintf("Allocating new image\n");
-        img=new ADM_vaImage(this,_w,_h);
-        img->image=admLibVA::allocateYV12Image(_w,_h);
-        if(!img->image)
-        {
-            delete img;
-            ADM_warning("Cannot allocate image (libVA)\n");
-            imageMutex.unlock();
-            return false;
-        }
-        allImageQueue.append(img);
-    }else
-    {
-        aprintf("Taking image from queue\n");
-        img=freeImageQueue[0];
-        freeImageQueue.popFront();
-    }        
-    imageMutex.unlock();
-    if(!admLibVA::surfaceToImage(id,img))    
-    {
-        imageMutex.lock();
-        freeImageQueue.append(img);
-        imageMutex.unlock();
-        ADM_warning("[LIBVA] Surface to image failed\n");
-        return false;
-    }
+    ADM_vaImage *img=lookupBySurfaceId(id);
+    
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCookie=this;
     out->refDescriptor.refInstance=img;
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
-    //libvaMarkSurfaceUsed(img,this);
-    
-  
-    
     aprintf("uncompress : Got surface =0x%x\n",id);
     return true;
     
 }
+/**
+ * \fn lookupBySurfaceId
+ * @param 
+ * @return 
+ */
+ADM_vaImage *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
+{
+    imageMutex.lock();
+    int n=allSurfaceQueue.size();
+    for(int i=0;i<n;i++)
+        if(allSurfaceQueue[i]->surface==id)
+        {
+            imageMutex.unlock();
+            return allSurfaceQueue[i];
+        }
+    imageMutex.unlock();
+    ADM_warning("Lookup a non existing surface\n");
+    ADM_assert(0);
+    return NULL;
+    
+}
+    
+    
+    
 /**
     \fn ADM_VDPAUgetBuffer
     \brief trampoline to get a VDPAU surface
@@ -441,6 +399,7 @@ void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
   VASurfaceID s=(VASurfaceID)p;
   decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
     
+  ADM_vaImage *i=lookupBySurfaceId(s);
   
   aprintf("Release Buffer : 0x%llx\n",s);
   
@@ -449,7 +408,8 @@ void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->data[i]= NULL;
   }
   
-  x->freeQueue.pushBack(s);
+  libvaMarkSurfaceUnused(i,this);
+  
 }
 /**
     \fn getBuffer
@@ -459,17 +419,16 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
     
     decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
-    if(x->freeQueue.empty())
-    {
-        ADM_warning("Surface Queue is empty !\n");
-        ADM_warning("Surface Queue is empty !\n");
-        return -1;
-        
-    }
-    VASurfaceID s= x->freeQueue[0];
-    x->freeQueue.popFront();
+    
+    imageMutex.lock();
+    ADM_assert(!freeSurfaceQueue.empty());
+    ADM_vaImage *s= x->freeSurfaceQueue[0];
+    x->freeSurfaceQueue.popFront();
+    imageMutex.unlock();
+    libvaMarkSurfaceUsed(s,this);
+    
     aprintf("Alloc Buffer : 0x%llx\n",s);
-    uint8_t *p=(uint8_t *)s;
+    uint8_t *p=(uint8_t *)s->surface;
     pic->data[0]=p;
     pic->data[1]=p;
     pic->data[2]=p;

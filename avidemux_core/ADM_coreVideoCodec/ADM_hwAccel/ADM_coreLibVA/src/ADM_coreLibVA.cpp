@@ -68,63 +68,6 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
 
 }
 /**
- * \fn copyNV12Image
- * \brief copy NV12 to YV12
- * @param yv12
- * @param myImage
- * @param w
- * @param h
- * @param ptr  bool   
- */
-static void copyNV12Image(ADMImage *dstImage,ADM_vaImage *tmp,uint8_t *ptr)
-{
-    
-    int w=dstImage->_width;
-    int h=dstImage->_height;
-        // Y
-        int dstride=w;
-        int sstride=tmp->image->pitches[0];
-        uint8_t *dst=dstImage->GetWritePtr(PLANAR_Y);
-        uint8_t *src=ptr+tmp->image->offsets[0];
-        for(int y=0;y<h;y++)
-        {
-            memcpy(dst,src,w);
-            src+=sstride;
-            dst+=dstride;
-        }
-        
-        //U & V
-        sstride=tmp->image->pitches[1];
-        src=ptr+tmp->image->offsets[1];
-        h/=2;
-        w/=2;
-        
-        int upitch=dstImage->GetPitch(PLANAR_U);
-        int vpitch=dstImage->GetPitch(PLANAR_V);
-        uint8_t *dstu=dstImage->GetWritePtr(PLANAR_U);
-        uint8_t *dstv=dstImage->GetWritePtr(PLANAR_V);
-        
-        for(int y=0;y<h;y++)
-        {
-                uint8_t *ssrc=src;                
-                uint8_t *u=dstu;
-                uint8_t *v=dstv;
-                src+=sstride;
-                dstu+=upitch;
-                dstv+=vpitch;
-
-                for(int x=0;x<w;x++)
-                {
-                    *u++=ssrc[1];
-                    *v++=ssrc[0];
-                    ssrc+=2;
-                }
-        }
-        
-        return ;
-}
-
-/**
  *      \fn setupConfig
  *      \brief verify that h264 main profile is supported
  */
@@ -445,35 +388,6 @@ void        admLibVA::destroySurface( VASurfaceID surface)
         aprintf("Error destroying surface\n");
         return;
 }
-/**
- * \fn imageToAdmImage
- * @param src
- * @param dest
- * @return 
- */
-bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
-{
-    bool r=false;
-    aprintf("imageToAdmImage ...0x%x \n",(int)src->image->image_id);
-    int xError;
-    uint8_t *ptr=NULL;
-    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, src->image->buf, (void**)&ptr))
-    if(xError)
-     { 
-          ADM_warning("Cannot map image\n");
-          return false;
-     }
-    
-    dest->convertFromNV12(ptr+src->image->offsets[0],ptr+src->image->offsets[1], src->image->pitches[0], src->image->pitches[1]);
-    
-    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, src->image->buf))
-     if(xError)
-     { 
-          ADM_warning("Cannot unmap image\n");
-     }       
-    r=true;
-    return r;
-}
 
 /**
  * \fn surfaceToImage
@@ -481,17 +395,18 @@ bool    admLibVA::imageToAdmImage(ADM_vaImage *src,ADMImage *dest)
  * @param img
  * @return 
  */
-bool        admLibVA::surfaceToImage(VASurfaceID id,ADM_vaImage *img)
+bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
 {
     int xError;
     VASurfaceStatus status;
     CHECK_WORKING(false);
-    
+    //--------------------------
     // Wait for surface to be ready...
+    //--------------------------
     int countDown=20;
     while(1)
     {
-     CHECK_ERROR(vaQuerySurfaceStatus ( ADM_coreLibVA::display, id,&status));
+     CHECK_ERROR(vaQuerySurfaceStatus ( ADM_coreLibVA::display, src->surface,&status));
      if(xError)
      {
          ADM_warning("QuerySurfacStatus failed\n");
@@ -506,14 +421,26 @@ bool        admLibVA::surfaceToImage(VASurfaceID id,ADM_vaImage *img)
      }
      ADM_usleep(1000);
     }
-    
-    
-    CHECK_ERROR(vaGetImage (ADM_coreLibVA::display, id,0,0,img->w,img->h,img->image->image_id));
+    //--------------------------
+    // Derive Image
+    //--------------------------
+    VAImage vaImage;
+    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display, src->surface,&vaImage));
     if(xError)
     {
         ADM_warning("Va GetImage failed\n");
         return false;
     }
+    // Map image...
+     uint8_t *ptr=NULL;
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
+            
+    dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
+    
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))            
+    CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
+    
     
     return true;
 }

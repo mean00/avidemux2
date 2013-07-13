@@ -62,8 +62,8 @@ static  void       destroyImage(  VAImage *image);
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 static bool        fillContext(vaapi_context *c);
-static bool        surfaceToImage(VASurfaceID id,ADM_vaImage *img);
-static bool        imageToAdmImage(ADM_vaImage *src,ADMImage *dest);
+static bool        surfaceToImage(ADMImage *dest,ADM_vaImage *src);
+
 };
 
 /**
@@ -73,24 +73,24 @@ class decoderFFLIBVA;
 class ADM_vaImage
 {
 public:
-    VAImage             *image;
+    VASurfaceID         surface;
     int                 refCount;
     decoderFFLIBVA      *parent;
     int                 w,h;
     ADM_vaImage(decoderFFLIBVA *parent,int w, int h)
     {
         this->parent=parent;
-        image=NULL;
+        surface=VA_INVALID;
         refCount=0;
         this->w=w;
         this->h=h;
     }
     ~ADM_vaImage()
     {
-        if(image)
+        if(surface!=VA_INVALID)
         {
-           admLibVA::destroyImage(image);
-           image=NULL;
+           admLibVA::destroySurface(surface);
+           surface=VA_INVALID;
         }
     }
     
