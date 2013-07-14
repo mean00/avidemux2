@@ -64,6 +64,8 @@ static bool        transfer(VAContextID session, int w, int h,VASurfaceID surfac
 static bool        fillContext(vaapi_context *c);
 static bool        surfaceToImage(ADMImage *dest,ADM_vaImage *src);
 
+static bool        putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight);
+
 };
 
 /**

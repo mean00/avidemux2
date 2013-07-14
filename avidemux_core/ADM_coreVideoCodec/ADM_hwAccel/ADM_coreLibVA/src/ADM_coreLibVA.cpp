@@ -444,5 +444,27 @@ bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
     
     return true;
 }
- 
+/**
+ * \fn putX11Surface
+ * @param img
+ * @param widget
+ * @param displayWidth
+ * @param displayHeight
+ * @return 
+ */
+bool        admLibVA::putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight)
+{
+    int xError;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    CHECK_ERROR(vaPutSurface ( ADM_coreLibVA::display, img->surface,(Drawable)widget,0,0,img->w, img->h,0,0,displayWidth,displayHeight,
+                              NULL,0 // clip & and num clip
+                              ,0));  // flags
+    if(xError)
+    {
+        ADM_warning("putX11Surface failed\n");
+        return false;
+    }
+    return true;
+}
 #endif
