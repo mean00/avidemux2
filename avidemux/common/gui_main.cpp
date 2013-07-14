@@ -788,6 +788,7 @@ void cleanUp (void)
 		delete avifileinfo;
 		avifileinfo=NULL;
 	}
+        admPreview::cleanUp();
 	if (video_body)
 	{
 		delete video_body;
@@ -796,7 +797,7 @@ void cleanUp (void)
 
 	currentaudiostream=NULL;
 //	filterCleanUp();
-	admPreview::cleanUp();
+
 }
 
 //#warning fixme

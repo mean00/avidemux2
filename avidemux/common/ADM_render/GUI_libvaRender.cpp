@@ -123,6 +123,11 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("[VARender] No surface\n");
             return false;
         }
+        if(!myImage)
+        {
+            ADM_warning("[VARender] No image\n");
+            return false;
+        }
         // ADMImage to VAImage
         if(false==admLibVA::uploadToImage(pic,myImage))
         {
@@ -135,6 +140,7 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("[VARender] uploading to surface failed\n");
             return false;
         }
+        printf("Display non native VA image\n");
         // and display VASurface1
         admLibVA::putX11Surface(mySurface,info.window,displayWidth,displayHeight);
     }

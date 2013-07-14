@@ -104,10 +104,6 @@ bool ADM_Composer::getExtraHeaderData (uint32_t * len, uint8_t ** data)
 */
 ADM_Composer::~ADM_Composer ()
 {
-	cleanup();
-
-    if(_pp) delete _pp;
-    _pp=NULL;
     if(_imageBuffer)
     {
         if(_imageBuffer->quant)
@@ -119,6 +115,12 @@ ADM_Composer::~ADM_Composer ()
     if(_scratch)
         delete  _scratch;
     _scratch=NULL;
+
+    cleanup();
+
+    if(_pp) delete _pp;
+    _pp=NULL;
+   
 
 }
 /**
