@@ -230,7 +230,6 @@ bool ADM_Composer::addFile (const char *name)
          return false;
       }
    }
-
   // else update info
   video._aviheader->getVideoInfo (&info);
   video._aviheader->setMyName (name);
@@ -473,6 +472,9 @@ uint32_t ref;
 */
 uint8_t ADM_Composer::cleanup (void)
 {
+  if(_scratch)
+        delete  _scratch;
+   _scratch=NULL;
   _segments.deleteAll();
   _currentPts = 0;
   markerAPts = 0;
