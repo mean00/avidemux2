@@ -275,7 +275,12 @@ decoderFFLIBVA::~decoderFFLIBVA()
         _context=NULL;
     }
     imageMutex.lock();
+    int m=this->allSurfaceQueue.size();
     int n=freeSurfaceQueue.size();
+    if(n!=m)
+    {
+        ADM_warning("Some surfaces are not reclaimed! (%d/%d)\n",n,m);
+    }
     for(int i=0;i<n;i++)
     {
         delete freeSurfaceQueue[i];
