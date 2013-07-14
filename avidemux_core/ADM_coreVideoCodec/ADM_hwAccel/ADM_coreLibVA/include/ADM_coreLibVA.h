@@ -56,7 +56,7 @@ static  bool        destroyDecoder(VAContextID decoder);
 static  VASurfaceID allocateSurface( int w, int h);
 static  void        destroySurface(  VASurfaceID surface);
 
-static  VAImage    *allocateYV12Image( int w, int h);
+static  VAImage    *allocateNV12Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
 
 
@@ -65,7 +65,8 @@ static bool        fillContext(vaapi_context *c);
 static bool        surfaceToImage(ADMImage *dest,ADM_vaImage *src);
 
 static bool        putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight);
-
+static bool        uploadToImage(ADMImage *src,VAImage *dest );
+static bool        imageToSurface(VAImage *src,ADM_vaImage *dest);
 };
 
 /**

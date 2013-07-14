@@ -294,7 +294,7 @@ VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, 
  * @param h
  * @return 
  */
-VAImage   *admLibVA::allocateYV12Image( int w, int h)
+VAImage   *admLibVA::allocateNV12Image( int w, int h)
 {
     int xError=1;
     CHECK_WORKING(NULL);
@@ -467,4 +467,78 @@ bool        admLibVA::putX11Surface(ADM_vaImage *img,int widget,int displayWidth
     }
     return true;
 }
+
+/***
+ *      \fn imageToSurface
+ */
+bool   admLibVA::imageToSurface(VAImage *src, ADM_vaImage *dst)
+{
+    /*
+   VAStatus vaPutImage (
+    VADisplay dpy,
+    VASurfaceID surface,
+    VAImageID image,
+    int src_x,
+    int src_y,
+    unsigned int src_width,
+    unsigned int src_height,
+    int dest_x,
+    int dest_y,
+    unsigned int dest_width,
+    unsigned int dest_height
+);*/
+    
+    int xError;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    CHECK_ERROR(vaPutImage(ADM_coreLibVA::display,
+                           dst->surface,
+                           src->image_id,
+                           0,0,
+                           dst->w,dst->h,
+                           0,0,
+                           dst->w,dst->h));
+    if(xError)
+    {
+        ADM_warning("[libVa] ImageToSurface failed\n");
+        return false;
+    }
+    return true;
+}
+
+/**
+ * \fn uploadToImage
+ * @param dest
+ * @param src
+ * @return 
+ */
+bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
+{
+    int xError;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    uint8_t *ptr=NULL;
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
+    if(xError)        
+    {
+        ADM_warning("Cannot map image\n");
+        return false;
+    }
+    int w=src->_width;
+    int h=src->_height;
+    int dstStride= dest->pitches[0];
+    int srcStride= src->GetPitch(PLANAR_Y);
+    uint8_t *s=    src->GetReadPtr(PLANAR_Y);
+    uint8_t *d=    ptr+dest->offsets[0];
+    for(int y=0;y<h;y++)
+    {
+        memcpy(d,s,w);
+        s+=srcStride;
+        d+=dstStride;
+    }
+    
+    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
+    return true;
+}
+
 #endif
