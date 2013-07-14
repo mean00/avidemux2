@@ -552,126 +552,136 @@ void HandleAction (Action action)
 */
 int A_openAvi (const char *name)
 {
-  uint8_t res;
-  char *longname;
-  uint32_t magic[4];
-  uint32_t id = 0;
+    uint8_t res;
+    char *longname;
+    uint32_t magic[4];
+    uint32_t id = 0;
 
-  if (playing)
-    return 0;
-  /// check if name exists
-  FILE *fd;
-  fd = ADM_fopen (name, "rb");
-  if (!fd){
-    if( errno == EACCES ){
-      GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Permission error"), QT_TRANSLATE_NOOP("adm","Cannot open \"%s\"."), name);
+    if (playing)
+        return 0;
+    /// check if name exists
+    FILE *fd;
+    fd = ADM_fopen(name, "rb");
+    if (!fd)
+    {
+        if (errno == EACCES)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Permission error"), QT_TRANSLATE_NOOP("adm", "Cannot open \"%s\"."), name);
+        }
+        if (errno == ENOENT)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "File error"), QT_TRANSLATE_NOOP("adm", "\"%s\" does not exist."), name);
+        }
+        return 0;
     }
-    if( errno == ENOENT ){
-      GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","File error"), QT_TRANSLATE_NOOP("adm","\"%s\" does not exist."), name);
-    }
-    return 0;
-  }
-  if( 4 == fread(magic,4,4,fd) )
-     id=R32(magic[0]);
-  fclose (fd);
+    if (4 == fread(magic, 4, 4, fd))
+        id = R32(magic[0]);
+    fclose(fd);
 
 
-  GUI_close(); // Cleanup
+    GUI_close(); // Cleanup
 
-//  DIA_StartBusy ();
-  /*
-  ** we may get a relative path by cmdline
-  */
-  longname = ADM_PathCanonize(name);
-  
-  // check if avisynth input is given
-  if(fourCC::check (id, (uint8_t *) "ADAP"))
-    res = video_body->addFile(AVS_PROXY_DUMMY_FILE);
-  else
-    res = video_body->addFile (longname);
+    //  DIA_StartBusy ();
+    /*
+     ** we may get a relative path by cmdline
+     */
+    longname = ADM_PathCanonize(name);
 
-//  DIA_StopBusy ();
+    // check if avisynth input is given
+    if (fourCC::check(id, (uint8_t *) "ADAP"))
+        res = video_body->addFile(AVS_PROXY_DUMMY_FILE);
+    else
+        res = video_body->addFile(longname);
 
-  // forget last project file
+    //  DIA_StopBusy ();
+
+    // forget last project file
     video_body->setProjectName("");
 
-  if (res!=ADM_OK)			// an error occured
+    if (res != ADM_OK) // an error occured
     {
-		delete[] longname;
-    	if(ADM_IGN==res)
-	{
-		return 0;
-	}
+        delete[] longname;
+        if (ADM_IGN == res)
+        {
+            return 0;
+        }
 
-	if( fourCC::check(id,(uint8_t *)"//AD") ){
-          GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot open project using the video loader."),
-                        QT_TRANSLATE_NOOP("adm",  "Try 'File' -> 'Load/Run Project...'"));
-	}else{
-          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Could not open the file"), NULL);
-	}
-	return 0;
+        if (fourCC::check(id, (uint8_t *) "//AD"))
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Cannot open project using the video loader."),
+                          QT_TRANSLATE_NOOP("adm", "Try 'File' -> 'Load/Run Project...'"));
+        }
+        else
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Could not open the file"), NULL);
+        }
+        return 0;
     }
 
-    { int i;
-      FILE *fd=NULL;
-      char magic[4];
+    {
+        int i;
+        FILE *fd = NULL;
+        char magic[4];
 
-	/* check myself it is a project file (transparent detected and read
-        ** by video_body->addFile (name);
-	*/
-//#warning FIXME
+        /* check myself it is a project file (transparent detected and read
+         ** by video_body->addFile (name);
+         */
+        //#warning FIXME
 #if 0
-	if( (fd = ADM_fopen(longname,"rb"))  ){
-		if( fread(magic,4,1,fd) == 4 ){
-			/* remember a workbench file */
-			if( !strncmp(magic,"ADMW",4) ){
-				actual_workbench_file = ADM_strdup(longname);
-			}
-		}
-		fclose(fd);
-	}
-#endif
-	/* remember any video or workbench file to "recent" */
-        prefs->set_lastfile(longname);
-        UI_updateRecentMenu();
-        updateLoaded ();
-        if(currentaudiostream)
+        if ((fd = ADM_fopen(longname, "rb")))
         {
-            uint32_t nbAudio;
-            audioInfo *infos=NULL;
-            if(video_body->getAudioStreamsInfo(admPreview::getCurrentPts()+1,&nbAudio,&infos))
+            if (fread(magic, 4, 1, fd) == 4)
             {
-                if(nbAudio>1)
-                {   // Multiple track warn user
-                  GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Multiple Audio Tracks"),QT_TRANSLATE_NOOP("adm","The file you just loaded contains several audio tracks.\n"
-                      "Go to Audio->MainTrack to select the active one."));
+                /* remember a workbench file */
+                if (!strncmp(magic, "ADMW", 4))
+                {
+                    actual_workbench_file = ADM_strdup(longname);
                 }
             }
-            if(infos) delete [] infos;
+            fclose(fd);
+        }
+#endif
+        /* remember any video or workbench file to "recent" */
+        prefs->set_lastfile(longname);
+        UI_updateRecentMenu();
+        updateLoaded();
+        if (currentaudiostream)
+        {
+            uint32_t nbAudio;
+            audioInfo *infos = NULL;
+            if (video_body->getAudioStreamsInfo(admPreview::getCurrentPts() + 1, &nbAudio, &infos))
+            {
+                if (nbAudio > 1)
+                { // Multiple track warn user
+                    GUI_Info_HIG(ADM_LOG_INFO, QT_TRANSLATE_NOOP("adm", "Multiple Audio Tracks"), QT_TRANSLATE_NOOP("adm", "The file you just loaded contains several audio tracks.\n"
+                                                                                                                    "Go to Audio->MainTrack to select the active one."));
+                }
+            }
+            if (infos) delete [] infos;
             // Revert mixer to copy
             //setCurrentMixerFromString("NONE");
-            EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
-            if(ed) ed->audioEncodingConfig.audioFilterSetMixer(CHANNEL_INVALID);
+            EditableAudioTrack *ed = video_body->getDefaultEditableAudioTrack();
+            if (ed) ed->audioEncodingConfig.audioFilterSetMixer(CHANNEL_INVALID);
 
         }
-	for(i=strlen(longname);i>=0;i--)
-    {
-#ifdef _WIN32
-		if( longname[i] == '\\' || longname[i] == '/' )
-#else
-		if( longname[i] == '/' )
-#endif
+        for (i = strlen(longname); i >= 0; i--)
         {
+#ifdef _WIN32
+            if (longname[i] == '\\' || longname[i] == '/')
+#else
+            if (longname[i] == '/')
+#endif
+            {
 
-			i++;
-			break;
-		}
-    }
-	UI_setTitle(longname+i);
+                i++;
+                break;
+            }
+        }
+        UI_setTitle(longname + i);
     }
 
-	delete[] longname;
-	return 1;
+    delete[] longname;
+    return 1;
 }
 /**
     \fn updateLoaded
@@ -1135,7 +1145,7 @@ uint8_t GUI_close(void)
       }
       delete avifileinfo;
       //delete wavinfo;
-
+      admPreview::destroy();
       avifileinfo = NULL;
       video_body->cleanup ();
 
