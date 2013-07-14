@@ -79,6 +79,9 @@ typedef enum
 #ifdef USE_OPENGL
         RENDER_QTOPENGL=5,
 #endif
+#ifdef USE_LIBVA
+        RENDER_LIBVA=6,
+#endif
 
         RENDER_LAST       
 

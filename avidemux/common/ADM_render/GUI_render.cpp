@@ -38,6 +38,9 @@
 #ifdef USE_VDPAU
 #include "GUI_vdpauRender.h"
 #endif
+#ifdef USE_LIBVA
+#include "GUI_libvaRender.h"
+#endif
 
 #if defined (USE_OPENGL)
 extern VideoRenderBase *RenderSpawnQtGl(void);
@@ -314,6 +317,22 @@ bool spawnRenderer(void)
                 else
                 {
                     ADM_info("vdpau init ok\n");
+                }
+                break;
+#endif
+#if defined(USE_LIBVA)
+       case RENDER_LIBVA:
+                renderer=new libvaRender();
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
+                if(!r)
+                {
+                    delete renderer;
+                    renderer=NULL;
+                    ADM_warning("libva init failed\n");
+                }
+                else
+                {
+                    ADM_info("libva init ok\n");
                 }
                 break;
 #endif

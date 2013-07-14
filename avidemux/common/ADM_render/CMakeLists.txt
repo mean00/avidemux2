@@ -6,6 +6,7 @@ GUI_simpleRender.cpp
 GUI_sdlRender.cpp
 GUI_xvRender.cpp
 GUI_vdpauRender.cpp
+GUI_libvaRender.cpp
 )
 
 IF (USE_OPENGL)

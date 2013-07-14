@@ -188,6 +188,10 @@ uint32_t defaultPortAvisynth = 9999;
         diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
+        
+        bool foo=0;
+        diaElemToggle hwAccelText(&foo,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"));
+        
 
 #ifndef USE_VDPAU
         useVdpau.enable(0);
@@ -281,7 +285,11 @@ uint32_t defaultPortAvisynth = 9999;
 #ifdef USE_OPENGL
                              ,{RENDER_QTOPENGL,   QT_TRANSLATE_NOOP("adm","OpenGL (best)"),NULL}
 #endif
+#ifdef USE_LIBVA
+                             ,{RENDER_LIBVA,   QT_TRANSLATE_NOOP("adm","LIBVA (best)"),NULL}
+#endif
 
+                             
 #ifdef USE_SDL
 #ifdef _WIN32
                              ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","MS Windows GDI (SDL)"),NULL}
@@ -376,9 +384,9 @@ uint32_t defaultPortAvisynth = 9999;
         /* Display */
         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl};
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),3,(diaElem **)diaVideo);
-        /* HW */
-          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA};
-          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),3,(diaElem **)diaHwDecoding);
+        /* HW accel */
+          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&hwAccelText};
+          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
         
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
