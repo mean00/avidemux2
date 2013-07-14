@@ -44,7 +44,7 @@ static bool         libvaWorking=true;
 static admMutex     imageMutex;
 static int  ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic);
 static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-static void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
+
 
 
 #if 1
@@ -234,9 +234,8 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     _context->opaque          = this;
     _context->thread_count    = 1;
     _context->get_buffer      = ADM_LIBVAgetBuffer;
-    _context->release_buffer  = ADM_LIBVAreleaseBuffer ;
-   // _context->draw_horiz_band = ADM_LIBVADraw;
-     _context->draw_horiz_band = NULL;
+    _context->release_buffer  = ADM_LIBVAreleaseBuffer ;   
+    _context->draw_horiz_band = NULL;
     _context->get_format      = ADM_LIBVA_getFormat;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD;
@@ -300,7 +299,7 @@ decoderFFLIBVA::~decoderFFLIBVA()
 }
 /**
  * \fn uncompress
- * \brief First call ffmpeg, the 2nd part of the decoding will happen in ::goOn
+ * \brief 
  * @param in
  * @param out
  * @return 
@@ -378,17 +377,6 @@ void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
 }
 
 
-/**
-    \fn draw
-    \brief callback invoked by lavcodec when a pic is ready to be decoded
-*/
-void ADM_LIBVADraw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height)
-{
-    decoderFFLIBVA *dec=(decoderFFLIBVA *)s->opaque;
-    dec->goOn((AVFrame *)src,type);
-    return ;
-}
-
 
 /**
     \fn releaseBuffer
@@ -446,22 +434,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
    // pic->opaque= avctx->opaque;
     return 0;
 }
-/**
-    \fn goOn
-    \brief Callback from ffmpeg when a pic is ready to be decoded
-*/
-void decoderFFLIBVA::goOn(  AVFrame *d,int type)
-{
-    aprintf("[LIBVA] Go on\n");
-    uint64_t p=(uint64_t )d->data[3];
-    d->data[0]=d->data[3];
-    VASurfaceID s=(VASurfaceID)p;
-    aprintf("[LIBVA] Surface ID=0x%x\n",(int)s);
-    decode_status=true;
 
-    return;
-
-}
 
 
 #endif
