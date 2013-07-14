@@ -194,18 +194,18 @@ uint32_t defaultPortAvisynth = 9999;
         
 
 #ifndef USE_VDPAU
-        useVdpau.enable(0);
+        // Crash useVdpau.enable(0);
 #endif
 #ifndef USE_LIBVA
-        useLibVA.enable(0);
+        // Crash useLibVA.enable(0);
 #endif
 #ifndef USE_XVBA
-        useXvba.enable(0);
+        // Crash useXvba.enable(0);
 #endif
 
         
 #ifndef USE_OPENGL
-        //useOpenGl.enable(0);
+        // Crash         //useOpenGl.enable(0);
 #endif
         
         diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
