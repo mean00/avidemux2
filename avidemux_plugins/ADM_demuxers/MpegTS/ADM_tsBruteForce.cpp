@@ -195,19 +195,19 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
             continue;
         }
     }
-    if(nbSuccessH264>threshold)
+    if(nbSuccessH264>=threshold)
     {
         trackType=ADM_TS_H264;
         ADM_warning("Probably H264\n");
         return true;
     }
-    if(nbSuccessMpeg2>threshold)
+    if(nbSuccessMpeg2>=threshold)
     {
         trackType=ADM_TS_MPEG2;
         ADM_warning("Probably Mpeg2\n");
         return true;
     }
-    ADM_warning("dont know what it is...\n");
+    ADM_warning("dont know what it is... (mpeg2 score=%d, h264 score=%d, threshold=%d)\n",nbSuccessMpeg2,nbSuccessH264,threshold);
     return false;
 }
 
