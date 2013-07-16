@@ -66,6 +66,7 @@ static bool        surfaceToImage(ADMImage *dest,ADM_vaImage *src);
 
 static bool        putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight);
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
+static bool        uploadToSurface( ADMImage *src,ADM_vaImage *dest);
 static bool        imageToSurface(VAImage *src,ADM_vaImage *dest);
 };
 

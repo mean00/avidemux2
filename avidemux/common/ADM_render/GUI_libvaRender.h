@@ -25,9 +25,10 @@ class libvaRender: public VideoRenderBase
 {
       protected:
                             GUI_WindowInfo info;
-                            ADM_vaImage    *mySurface;
+                            ADM_vaImage    *mySurface[2];
                             VAImage        *myImage;
                         bool cleanup(void);
+                        int  toggle;
                         
       public:
                              libvaRender( void ) ;

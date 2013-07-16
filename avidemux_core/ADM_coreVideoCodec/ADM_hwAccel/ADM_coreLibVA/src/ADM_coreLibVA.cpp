@@ -540,5 +540,129 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
     CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
     return true;
 }
+/**
+ * \fn copyNV12
+ * @param ptr
+ * @param dest
+ * @param src
+ */
+static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src) 
+{
+          int w=src->_width;
 
+         int h=src->_height;
+         int dstStride= dest->pitches[0];
+         int srcStride= src->GetPitch(PLANAR_Y);
+         uint8_t *s=    src->GetReadPtr(PLANAR_Y);
+         uint8_t *d=    ptr+dest->offsets[0];
+         for(int y=0;y<h;y++)
+         {
+                memcpy(d,s,w);
+                s+=srcStride;
+                d+=dstStride;
+         }
+         
+        w=w/2;
+        h=h/2;
+        uint8_t *srcu=src->GetReadPtr(PLANAR_U);
+        uint8_t *srcv=src->GetReadPtr(PLANAR_V);
+        int     uStride=src->GetPitch(PLANAR_U);
+        int     vStride=src->GetPitch(PLANAR_V);
+                dstStride=dest->pitches[1];
+        uint8_t *dstPtr= ptr+dest->offsets[1];
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrcu=srcu;
+                uint8_t *ssrcv=srcv;
+                uint8_t *d=dstPtr;
+                
+                srcu+=uStride;
+                srcv+=vStride;
+                dstPtr+=dstStride;
+
+                for(int x=0;x<w;x++)
+                {
+                    d[0]=*ssrcu++;
+                    d[1]=*ssrcv++;
+                    d+=2;
+                }
+        }
+}/**
+ * \fn copyNV12
+ * @param ptr
+ * @param dest
+ * @param src
+ */
+static void  copyYV12(uint8_t *ptr, VAImage *dest, ADMImage *src) 
+{
+    for(int plane=0;plane<3;plane++)
+    {
+         ADM_PLANE p=(ADM_PLANE)plane;
+         int w=src->GetWidth(p);
+         int h=src->GetHeight(p);
+         int dstStride= dest->pitches[plane];
+         int srcStride= src->GetPitch(p);
+         uint8_t *s=    src->GetReadPtr(p);
+         uint8_t *d=    ptr+dest->offsets[plane];
+         for(int y=0;y<h;y++)
+         {
+                memcpy(d,s,w);
+                s+=srcStride;
+                d+=dstStride;
+         }
+         
+    }   
+}
+/**
+ * \fn uploadToSurface
+ * @param src
+ * @param dest
+ * @return 
+ */
+bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaImage *dest)
+{
+    int xError;
+    bool r=false;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    uint8_t *ptr=NULL;
+    
+    VAImage vaImage;
+    CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display, dest->surface,&vaImage));
+    if(xError)
+    {
+        ADM_warning("Va Derive failed\n");
+        return false;
+    }
+    // NV12 or YV12
+    switch(vaImage.format.fourcc)
+    {
+        case VA_FOURCC_YV12:break;
+        case VA_FOURCC_NV12:break;
+        default:  
+            ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+    }
+
+    // Map image...
+
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
+    if(!xError)        
+    {
+         r=true;
+         // NV12 or YV12
+        switch(vaImage.format.fourcc)
+        {
+            case VA_FOURCC_YV12: copyYV12(ptr,&vaImage,src);break;
+            case VA_FOURCC_NV12: copyNV12(ptr,&vaImage,src);break;
+            default:  
+                ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+        }
+    
+         
+        CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
+    }
+    CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
+    
+    return r;
+}
 #endif
