@@ -652,13 +652,20 @@ bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaImage *dest)
          // NV12 or YV12
         switch(vaImage.format.fourcc)
         {
-            case VA_FOURCC_YV12: copyYV12(ptr,&vaImage,src);break;
+            case VA_FOURCC_YV12: 
+            {
+                ADMImageRefWrittable ref(src->_width,src->_height);
+                for(int i=0;i<3;i++)
+                {
+                        ref._planes[i]= ptr+vaImage.offsets[i];
+                        ref._planeStride[i]=vaImage.pitches[i];
+                }
+                ref.duplicate(src);
+            }break;
             case VA_FOURCC_NV12: copyNV12(ptr,&vaImage,src);break;
             default:  
                 ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
         }
-    
-         
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
