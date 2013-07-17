@@ -395,9 +395,10 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * @param img
  * @return 
  */
-bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
+bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaImage *src)
 {
     int xError;
+    bool r=false;
     VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
@@ -458,18 +459,22 @@ bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
                     dest->duplicate(&ref);
                     break;
                 }
-                case VA_FOURCC_NV12:break; dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);break;
+                case VA_FOURCC_NV12:
+                {
+                    dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
+                    break;
+                }
                 default:  
                         goto dropIt;
     }
-        
+         r=true;
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
 dropIt:    
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
     
     
-    return true;
+    return r;
 }
 /**
  * \fn putX11Surface
