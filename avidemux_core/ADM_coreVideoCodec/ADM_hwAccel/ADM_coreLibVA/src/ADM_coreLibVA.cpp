@@ -400,6 +400,7 @@ bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
     int xError;
     VASurfaceStatus status;
     CHECK_WORKING(false);
+    uint8_t *ptr=NULL;
     //--------------------------
     // Wait for surface to be ready...
     //--------------------------
@@ -431,14 +432,40 @@ bool        admLibVA::surfaceToImage(ADMImage *dest,ADM_vaImage *src)
         ADM_warning("Va GetImage failed\n");
         return false;
     }
+    switch(vaImage.format.fourcc)
+    {
+        case VA_FOURCC_YV12:break;
+        case VA_FOURCC_NV12:break;
+        default:  
+            ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+            goto dropIt;
+    }
     // Map image...
-     uint8_t *ptr=NULL;
+     
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
     if(!xError)        
     {
-        dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);    
+         switch(vaImage.format.fourcc)
+        {
+                case VA_FOURCC_YV12:
+                {
+                    ADMImageRefWrittable ref(dest->_width,dest->_height);
+                    for(int i=0;i<3;i++)
+                    {
+                            ref._planes[i]= ptr+vaImage.offsets[i];
+                            ref._planeStride[i]=vaImage.pitches[i];
+                    }
+                    dest->duplicate(&ref);
+                    break;
+                }
+                case VA_FOURCC_NV12:break; dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);break;
+                default:  
+                        goto dropIt;
+    }
+        
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
+dropIt:    
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
     
     
@@ -587,31 +614,6 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
                     d+=2;
                 }
         }
-}/**
- * \fn copyNV12
- * @param ptr
- * @param dest
- * @param src
- */
-static void  copyYV12(uint8_t *ptr, VAImage *dest, ADMImage *src) 
-{
-    for(int plane=0;plane<3;plane++)
-    {
-         ADM_PLANE p=(ADM_PLANE)plane;
-         int w=src->GetWidth(p);
-         int h=src->GetHeight(p);
-         int dstStride= dest->pitches[plane];
-         int srcStride= src->GetPitch(p);
-         uint8_t *s=    src->GetReadPtr(p);
-         uint8_t *d=    ptr+dest->offsets[plane];
-         for(int y=0;y<h;y++)
-         {
-                memcpy(d,s,w);
-                s+=srcStride;
-                d+=dstStride;
-         }
-         
-    }   
 }
 /**
  * \fn uploadToSurface
