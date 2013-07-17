@@ -29,6 +29,7 @@ class libvaRender: public VideoRenderBase
                             VAImage        *myImage;
                         bool cleanup(void);
                         int  toggle;
+                        bool directUploadSupported;
                         
       public:
                              libvaRender( void ) ;

@@ -59,6 +59,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
         ADM_warning("[libva] Not operationnal\n");
         return false;
     }
+    directUploadSupported=true;
     for(int i=0;i<2;i++)
     {
         VASurfaceID surface=admLibVA::allocateSurface(w,h);
@@ -136,30 +137,30 @@ bool libvaRender::displayImage(ADMImage *pic)
         }
         ADM_vaImage *dest=mySurface[toggle];
         toggle^=1;
-        if(false==admLibVA::uploadToSurface(pic,dest))
+again:
+        if(directUploadSupported)
         {
-            ADM_warning("VaRender] Failed to upload pic\n");
+            if(false==admLibVA::uploadToSurface(pic,dest))
+            {
+                ADM_warning("VaRender] Failed to upload pic directly\n");
+                directUploadSupported=false;
+                goto again;
+            }
+        }else
+        {
+             if(false==admLibVA::uploadToImage(pic,myImage))
+             {
+                ADM_warning("[VARender] uploading to image failed\n");
+                return false;
+             }
+            // then VAImage to VASurface
+            if(false==admLibVA::imageToSurface(myImage,dest))
+            {
+                ADM_warning("[VARender] uploading to surface failed\n");
+                return false;
+            }
         }
         admLibVA::putX11Surface(dest,info.window,displayWidth,displayHeight);
-#if 0        
-        // ADMImage to VAImage
-        if(false==admLibVA::uploadToImage(pic,myImage))
-        {
-            ADM_warning("[VARender] uploading to image failed\n");
-            return false;
-        }
-        // then VAImage to VASurface
-        if(false==admLibVA::imageToSurface(myImage,mySurface[0]))
-        {
-            ADM_warning("[VARender] uploading to surface failed\n");
-            return false;
-        }
-        printf("Display non native VA image\n");
-        // and display VASurface1
-        admLibVA::putX11Surface(mySurface[0],info.window,displayWidth,displayHeight);
-#else
-         // upload directly to surface through vaDeriveImage
-#endif        
     }
     return true;
 }
