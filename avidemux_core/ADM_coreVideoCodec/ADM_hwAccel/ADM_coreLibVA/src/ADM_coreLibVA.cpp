@@ -505,20 +505,6 @@ bool        admLibVA::putX11Surface(ADM_vaImage *img,int widget,int displayWidth
  */
 bool   admLibVA::imageToSurface(VAImage *src, ADM_vaImage *dst)
 {
-    /*
-   VAStatus vaPutImage (
-    VADisplay dpy,
-    VASurfaceID surface,
-    VAImageID image,
-    int src_x,
-    int src_y,
-    unsigned int src_width,
-    unsigned int src_height,
-    int dest_x,
-    int dest_y,
-    unsigned int dest_width,
-    unsigned int dest_height
-);*/
     
     int xError;
     VASurfaceStatus status;
@@ -648,6 +634,7 @@ bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaImage *dest)
         case VA_FOURCC_NV12:break;
         default:  
             ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+            goto dontTry;
     }
 
     // Map image...
@@ -675,6 +662,7 @@ bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaImage *dest)
         }
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
+dontTry:    
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
     
     return r;
