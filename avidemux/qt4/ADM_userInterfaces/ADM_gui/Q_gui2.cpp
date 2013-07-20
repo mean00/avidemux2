@@ -42,6 +42,7 @@ using namespace std;
 extern bool ADM_glHasActiveTexture(void);
 void UI_Qt4InitGl(void);
 void UI_Qt4CleanGl(void);
+bool  openGLStarted=false;
 #endif
 
 extern int global_argc;
@@ -749,6 +750,26 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     VuMeter=mw->ui.frameVU;
     UI_InitVUMeter(mw->ui.frameVU);
 
+#ifdef USE_OPENGL
+    ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
+    bool enabled;
+    prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
+
+    if(enabled)
+    {
+        ADM_info("OpenGL activated, initializing... \n");
+        openGLStarted=true;
+        UI_Qt4InitGl();
+    }else
+    {
+        ADM_info("OpenGL not activated, not initialized\n");
+    }
+#else
+        ADM_info("OpenGL: Not enabled at built time.\n");
+#endif
+    
+    
+    
 	return 1;
 }
 /**
@@ -858,28 +879,12 @@ int UI_RunApp(void)
     setupMenus();
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	
-    // Create an openGL context
-#ifdef USE_OPENGL
-    ADM_info("OpenGL enabled at built time, checking if we should run it..\n");
-    bool enabled;
-    prefs->get(FEATURES_ENABLE_OPENGL,&enabled);
-
-    if(enabled)
-    {
-        ADM_info("OpenGL activated, initializing... \n");
-        UI_Qt4InitGl();
-    }else
-    {
-        ADM_info("OpenGL not activated, not initialized\n");
-    }
-#else
-        ADM_info("OpenGL: Not enabled at built time.\n");
-#endif
-        ADM_info("Checking for crash... \n");
+          
+    ADM_info("Checking for crash... \n");
     
     myApplication->exec();
 #ifdef USE_OPENGL
-    if(enabled)
+    if(openGLStarted)
     {
         ADM_info("OpenGL: Cleaning up\n");
         UI_Qt4CleanGl();

@@ -14,7 +14,7 @@
 
 class ADM_coreVideoFilter;
 
-#define VF_API_VERSION 4
+#define VF_API_VERSION 5
 
 /**
     \struct admVideoFilterInfo
@@ -31,6 +31,7 @@ typedef struct
 typedef ADM_coreVideoFilter  *(ADM_vf_CreateFunction)(ADM_coreVideoFilter *previous,CONFcouple *conf);
 typedef void              (ADM_vf_DeleteFunction)(ADM_coreVideoFilter *codec);
 typedef int               (ADM_vf_SupportedUI)(void); //  QT4/GTK / ALL
+typedef int               (ADM_vf_NeededFeatures)(void); // VDPAU, OPenGL,...
 typedef uint32_t          (ADM_vf_GetApiVersion)(void);
 typedef bool              (ADM_vf_GetPluginVersion)(uint32_t *major, uint32_t *minor, uint32_t *patch);
 typedef const char       *(ADM_vf_GetString)(void);
@@ -46,18 +47,18 @@ class ADM_vf_plugin : public ADM_LibWrapper
 	public:
 		ADM_vf_CreateFunction		*create;
 		ADM_vf_DeleteFunction		*destroy;
-		ADM_vf_SupportedUI		    *supportedUI;
-
-		ADM_vf_GetApiVersion		*getApiVersion;
+		ADM_vf_SupportedUI              *supportedUI;
+                ADM_vf_NeededFeatures           *neededFeatures;
+		ADM_vf_GetApiVersion	    *getApiVersion;
 		ADM_vf_GetPluginVersion	    *getFilterVersion;
 		ADM_vf_GetString    	    *getDesc;
-        ADM_vf_GetString    	    *getInternalName;
-        ADM_vf_GetString    	    *getDisplayName;
-        ADM_vf_getCategory          *getCategory;
+                ADM_vf_GetString    	    *getInternalName;
+                ADM_vf_GetString    	    *getDisplayName;
+                ADM_vf_getCategory          *getCategory;
 
-        const char 					*nameOfLibrary;
-	    VF_FILTERS                  tag;
-        admVideoFilterInfo          info;
+                const char                  *nameOfLibrary;
+                VF_FILTERS                  tag;
+                admVideoFilterInfo          info;
 
 		ADM_vf_plugin(const char *file);
 };
@@ -76,7 +77,11 @@ class ADM_vf_plugin : public ADM_LibWrapper
 	}\
 	int supportedUI(void) \
 	{ \
-		return UI; \
+		return UI & ADM_UI_MASK; \
+	} \
+        int neededFeatures(void) \
+	{ \
+		return UI & ADM_FEATURE_MASK; \
 	} \
 	uint32_t getApiVersion(void)\
 	{\

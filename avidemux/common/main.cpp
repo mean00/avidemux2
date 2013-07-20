@@ -252,13 +252,55 @@ int startAvidemux(int argc, char *argv[])
     char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");
     char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");
     char *vfPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoFilters");
-	char *sePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "scriptEngines");
+    char *sePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "scriptEngines");
 
+    //***************Plugins *********************
+
+	if(!initGUI(initialiseScriptEngines(sePlugins, video_body)))
+	{
+		printf("\n Fatal : could not init GUI\n");
+		exit(-1);
+	}
+
+    delete [] sePlugins;
+
+#if defined( USE_VDPAU)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("Probing for VDPAU...\n");
+    if(vdpauProbe()==true) printf("VDPAU available\n");
+        else printf("VDPAU not available\n");
+  #else
+    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
+
+#if defined( USE_XVBA)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("Probing for XVBA...\n");
+    if(xvbaProbe()==true) printf("XVBA available\n");
+        else printf("XVBA not available\n");
+  #else
+    printf("Cannot use XVBA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
+
+#if defined( USE_LIBVA)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    printf("Probing for LIBVA...\n");
+    if(libvaProbe()==true) printf("LIBVA available\n");
+        else printf("LIBVA not available\n");
+  #else
+    printf("Cannot use LIBVA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif    
+        
+    //
+    
     ADM_mx_loadPlugins(mxPlugins);
     delete [] mxPlugins;
 
-	ADM_ad_loadPlugins(adPlugins);
-	delete [] adPlugins;
+    ADM_ad_loadPlugins(adPlugins);
+    delete [] adPlugins;
 
     ADM_av_loadPlugins(avPlugins);
     delete [] avPlugins;
@@ -290,49 +332,11 @@ int startAvidemux(int argc, char *argv[])
 	delete [] vfPlugins;
 
 
-	//***************Plugins *********************
-
-	if(!initGUI(initialiseScriptEngines(sePlugins, video_body)))
-	{
-		printf("\n Fatal : could not init GUI\n");
-		exit(-1);
-	}
-
-    delete [] sePlugins;
+	
 
     ADM_lavInit();
     AVDM_audioInit();
 
-#if defined( USE_VDPAU)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for VDPAU...\n");
-    if(vdpauProbe()==true) printf("VDPAU available\n");
-        else printf("VDPAU not available\n");
-  #else
-    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
-
-#if defined( USE_XVBA)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for XVBA...\n");
-    if(xvbaProbe()==true) printf("XVBA available\n");
-        else printf("XVBA not available\n");
-  #else
-    printf("Cannot use XVBA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
-
-#if defined( USE_LIBVA)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for LIBVA...\n");
-    if(libvaProbe()==true) printf("LIBVA available\n");
-        else printf("LIBVA not available\n");
-  #else
-    printf("Cannot use LIBVA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif    
-    
     
     // Init jobs
     ADM_jobInit();

@@ -19,6 +19,8 @@
 #include "ADM_dynamicLoading.h"
 #include "ADM_videoFilterApi.h"
 #include "BVector.h"
+#include "config.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf printf
@@ -28,13 +30,23 @@
 static uint32_t lastTag=100;
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
+
+#ifdef USE_LIBVA               
+#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#endif        
+#ifdef USE_VDPAU               
+#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
+#endif        
+
+
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-	initialised = (loadLibrary(file) && getSymbols(9,
+	initialised = (loadLibrary(file) && getSymbols(10,
 		&create, "create",
 		&destroy, "destroy",
 		&getApiVersion, "getApiVersion",
 		&supportedUI, "supportedUI",
+                &neededFeatures,"neededFeatures",
 		&getFilterVersion, "getFilterVersion",
 		&getDesc, "getDesc",
 		&getInternalName, "getInternalName",
@@ -89,10 +101,11 @@ static bool sortVideoFiltersByName(void)
  * 	\fn tryLoadingVideoFilterPlugin
  *  \brief try to load the plugin given as argument..
  */
-static uint8_t tryLoadingVideoFilterPlugin(const char *file)
+static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask)
 {
-	ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
-    admVideoFilterInfo          *info=NULL;
+        ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
+        admVideoFilterInfo          *info=NULL;
+     
 
 	if (!plugin->isAvailable())
 	{
@@ -107,12 +120,23 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file)
 			ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
 		goto Err_ad;
 	}
-    if(!(plugin->supportedUI() & UI_GetCurrentUI()))
-    {  // FIXME
-        ADM_info("==> wrong UI\n");
-        goto Err_ad;
+        if(!(plugin->supportedUI() & UI_GetCurrentUI()))
+        {  // FIXME
+            ADM_info("==> wrong UI\n");
+            goto Err_ad;
 
-    }
+        }
+        {
+            int needed=plugin->neededFeatures();
+            if(needed)
+            {
+                if(  ((needed & featureMask)!=needed))
+                {
+                    ADM_info("[ADM_vf_plugin] %s needs features that are not active\n",plugin->getDisplayName());
+                    goto Err_ad;
+                }
+            }
+        }
 	// Get infos
 	uint32_t major, minor, patch;
 
@@ -200,7 +224,23 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 
 	char *files[MAX_EXTERNAL_FILTER];
 	uint32_t nbFile;
+        uint32_t featureMask=0;
 
+#ifdef USE_LIBVA               
+        if(admLibVA::isOperationnal()) featureMask|=ADM_FEATURE_LIBVA;
+#endif        
+#ifdef USE_VDPAU               
+        if(admVdpau::isOperationnal()) featureMask|=ADM_FEATURE_VDPAU;
+#endif        
+#if defined(USE_OPENGL)
+        bool hasOpenGl=false;
+        prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
+        if(hasOpenGl)
+            featureMask|=ADM_FEATURE_OPENGL;
+#endif
+
+        
+        
 	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
 	printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
@@ -210,12 +250,14 @@ uint8_t ADM_vf_loadPlugins(const char *path)
 		return 0;
 	}
 
+
+        ADM_info("Feature Mask = 0x%x\n",featureMask);
 	for(int i=0;i<nbFile;i++)
-		tryLoadingVideoFilterPlugin(files[i]);
+		tryLoadingVideoFilterPlugin(files[i],featureMask);
 
 	printf("[ADM_vf_plugin] Scanning done, found %d video filer(s)\n", (int)ADM_vf_getNbFilters());
-    clearDirectoryContent(nbFile,files);
-    sortVideoFiltersByName();
+        clearDirectoryContent(nbFile,files);
+        sortVideoFiltersByName();
 	return 1;
 }
 /**

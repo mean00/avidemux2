@@ -54,7 +54,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   openGlDistort,   // Class
                         1,0,0,              // Version
-                        ADM_UI_QT4+ADM_UI_GL,         // UI
+                        ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glSampleDistort",            // internal name (must be uniq!)
                         "OpenGl wave ",            // Display name
