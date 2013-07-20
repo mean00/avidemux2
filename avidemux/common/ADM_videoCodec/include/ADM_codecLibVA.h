@@ -22,7 +22,6 @@ protected:
                     int           b_age;
                     int           ip_age[2];
                     ADMImage      *scratch;
-                    bool          decode_status;
                     VAContextID   libva;
                     int           nbSurface;
                     vaapi_context *va_context;

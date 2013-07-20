@@ -104,6 +104,7 @@ static bool libvaMarkSurfaceUsed(void *v, void * cookie)
     imageMutex.lock();
     img->refCount++;
     imageMutex.unlock();
+    return true;
     
 }
 /**
