@@ -59,6 +59,79 @@ static bool                  coreLibVAWorking=false;
 #define CLEAR(x) memset(&x,0,sizeof(x))
 #define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);}
 
+static bool checkMarkers(uint8_t *mark)
+{
+    if(mark[0]==0x11 &&    mark[800]==0x22 &&    mark[1600]==0x33) return true;
+    ADM_info("Marker do not check\n");
+    return false;
+}
+static bool setMarkers(uint8_t *mark)
+{
+    mark[0]=0x11;
+    mark[800]=0x22;
+    mark[1600]=0x33;
+    return true;
+}
+static bool resetMarkers(uint8_t *mark)
+{
+    mark[0]=0x4;
+    mark[800]=0x5;
+    mark[1600]=0x6;
+    return true;
+}
+
+/**
+ * \fn tryIndirectUpload
+ * @param title
+ * @param image
+ * @param image1
+ * @param image2
+ * @return 
+ */
+static bool tryIndirectUpload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image1)
+{
+    bool work=false;
+            ADM_info("%s indirect upload... \n",title);
+            if(!admLibVA::uploadToImage(&image1,image))
+            {
+                ADM_info("Upload to yv12 image failed \n");
+                return false;
+            }
+            if(!admLibVA::imageToSurface(image,&admSurface))
+            {                    
+                ADM_info("image to surface failed\n");
+                return false;
+            }
+            return true;
+}
+/**
+ * \fn tryIndirectDownload
+ * @param title
+ * @param admSurface
+ * @param image
+ * @param image1
+ * @param image2
+ * @return 
+ */
+static bool tryIndirectDownload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image2)
+{
+    bool work=false;
+            ADM_info("%s indirect upload... \n",title);
+            if(!admLibVA::surfaceToImage(&admSurface,image))
+            {
+                ADM_info("Surface to image failed\n");
+                return false;
+            }
+            if(!admLibVA::downloadFromImage(&image2,image))            
+            {
+                   ADM_info("download from image failed\n");
+                   return false;
+            }
+            uint8_t *ptr=image2.GetReadPtr(PLANAR_Y);
+            return checkMarkers(ptr);
+}
+
+
 /**
  * \fn checkSupportedFunctionsAndImageFormat
  * \brief check if operation through vaDeriveImage is supported and if 
@@ -70,9 +143,10 @@ static bool                  coreLibVAWorking=false;
 static bool checkSupportedFunctionsAndImageFormat(void)
 {
     bool r=false;
-    ADMImageDefault image1(640,400),image2(640,400);
-    VASurfaceID     surface=admLibVA::allocateSurface(640,400);
-    ADM_vaSurface     admSurface(NULL,640,400);        
+    ADMImageDefault  image1(640,400),image2(640,400);
+    VASurfaceID      surface=admLibVA::allocateSurface(640,400); // freed with admSurface
+    ADM_vaSurface    admSurface(NULL,640,400);        
+    VAImage          *image=NULL;
     admSurface.surface=VA_INVALID;
     
     if(surface==VA_INVALID)
@@ -88,7 +162,7 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     if(surface==VA_INVALID) goto done; // does not work..
     admSurface.surface=surface;
     ADM_info("Direct upload...\n");
-    if(true==admLibVA::uploadToSurface(&image1,&admSurface))
+    if(true==admLibVA::admImageToSurface(&image1,&admSurface))
     {
         ADM_info("\tworks\n");
         
@@ -100,19 +174,60 @@ static bool checkSupportedFunctionsAndImageFormat(void)
         {
             ADM_info("\tCall ok, checking value\n");
             mark=image2.GetWritePtr(PLANAR_Y);
-            if(mark[0]==0x11 && mark[800]==0x22 && mark[1600]==0x33)
+            
+            if(checkMarkers(mark))
             {
-                ADM_info("\tWorks\n");
                 ADM_coreLibVA::directDownload=true;
             }else
             {
                 ADM_info("Value incorrect\n");
             }
         }
+        r=true;
     
-    }else
+    }//else
     {
-        ADM_info("\tdoes not work\n");
+        //--------------- YV12 -------------
+        ADM_info("Trying indirect transfer...\n");
+        image=admLibVA::allocateYV12Image(640,400);
+        if(!image)
+        {
+            ADM_info("Cannot allocate YV12 image\n");
+        }else
+        {
+           setMarkers(image1.GetReadPtr(PLANAR_Y));
+           resetMarkers(image2.GetReadPtr(PLANAR_Y));
+           if(true==tryIndirectUpload("YV12",admSurface,image, image1))
+           {
+               ADM_info("YV12 upload works\n");
+           }
+            if(true==tryIndirectDownload("YV12",admSurface,image,image2))   
+           {
+               ADM_info("YV12 download  works\n");
+           }
+            admLibVA::destroyImage(image);
+            image=NULL;
+        }
+        //--------------- NV12 -------------
+        image=admLibVA::allocateNV12Image(640,400);
+        if(!image)
+        {
+            ADM_info("Cannot allocate NV12 image\n");
+        }else
+        {
+           setMarkers(image1.GetReadPtr(PLANAR_Y));
+           resetMarkers(image2.GetReadPtr(PLANAR_Y));
+           if(true==tryIndirectUpload("NV12",admSurface,image, image1))
+           {
+               ADM_info("NV12 upload works\n");
+           }
+           if(true==tryIndirectDownload("NV12",admSurface,image,image2))
+           {
+               ADM_info("NV12 download works\n");
+           }
+            admLibVA::destroyImage(image);
+            image=NULL;
+        }
         
     }
     
@@ -623,6 +738,29 @@ bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
     return true;
 }
 
+/***
+ *      \fn imageToSurface
+ */
+bool   admLibVA::surfaceToImage(ADM_vaSurface *dst,VAImage *src )
+{
+    
+    int xError;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    CHECK_ERROR(vaGetImage(ADM_coreLibVA::display,
+                           dst->surface,                           
+                           0,0,
+                           dst->w,dst->h,
+                           src->image_id
+                          ));
+    if(xError)
+    {
+        ADM_warning("[libVa] surfaceToImage failed\n");
+        return false;
+    }
+    return true;
+}
+
 /**
  * \fn uploadToImage
  * @param dest
@@ -650,6 +788,41 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
     for(int y=0;y<h;y++)
     {
         memcpy(d,s,w);
+        s+=srcStride;
+        d+=dstStride;
+    }
+    
+    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
+    return true;
+}
+
+/**
+ * \fn uploadToImage
+ * @param dest
+ * @param src
+ * @return 
+ */
+bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
+{
+    int xError;
+    VASurfaceStatus status;
+    CHECK_WORKING(false);
+    uint8_t *ptr=NULL;
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
+    if(xError)        
+    {
+        ADM_warning("Cannot map image\n");
+        return false;
+    }
+    int w=src->_width;
+    int h=src->_height;
+    int dstStride= dest->pitches[0];
+    int srcStride= src->GetPitch(PLANAR_Y);
+    uint8_t *s=    src->GetReadPtr(PLANAR_Y);
+    uint8_t *d=    ptr+dest->offsets[0];
+    for(int y=0;y<h;y++)
+    {
+        memcpy(s,d,w);
         s+=srcStride;
         d+=dstStride;
     }
@@ -711,7 +884,7 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
  * @param dest
  * @return 
  */
-bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaSurface *dest)
+bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
 {
     int xError;
     bool r=false;

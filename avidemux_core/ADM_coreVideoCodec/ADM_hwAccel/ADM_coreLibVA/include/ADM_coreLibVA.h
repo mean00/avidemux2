@@ -63,12 +63,22 @@ static  void       destroyImage(  VAImage *image);
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 static bool        fillContext(vaapi_context *c);
-static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
+
+// Indirect access through image
+static bool        uploadToImage(ADMImage *src,VAImage *dest );
+static bool        downloadFromImage(ADMImage *src,VAImage *dest );
+static bool        imageToSurface(VAImage *src,ADM_vaSurface *dest);
+static bool        surfaceToImage(ADM_vaSurface *dst,VAImage *src );
+
+// Display
 
 static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight);
-static bool        uploadToImage(ADMImage *src,VAImage *dest );
-static bool        uploadToSurface( ADMImage *src,ADM_vaSurface *dest);
-static bool        imageToSurface(VAImage *src,ADM_vaSurface *dest);
+
+// Direct access
+
+static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
+static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
+
 };
 
 /**

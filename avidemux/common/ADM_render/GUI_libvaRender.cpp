@@ -140,7 +140,7 @@ bool libvaRender::displayImage(ADMImage *pic)
 again:
         if(directUploadSupported)
         {
-            if(false==admLibVA::uploadToSurface(pic,dest))
+            if(false==admLibVA::admImageToSurface(pic,dest))
             {
                 ADM_warning("VaRender] Failed to upload pic directly\n");
                 directUploadSupported=false;
