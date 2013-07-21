@@ -46,8 +46,11 @@ namespace ADM_coreLibVA
  VAConfigID             config;
  VAImageFormat          imageFormatNV12;
  VAImageFormat          imageFormatYV12;
- bool                   directUpload;
- bool                   directDownload;
+ bool                   directOperation;
+ bool                   indirectOperationYV12;
+ bool                   indirectOperationNV12;
+admLibVA::LIBVA_TRANSFER_MODE    transferMode;
+ 
  namespace decoders
  {
         bool            h264; 
@@ -59,77 +62,7 @@ static bool                  coreLibVAWorking=false;
 #define CLEAR(x) memset(&x,0,sizeof(x))
 #define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);}
 
-static bool checkMarkers(uint8_t *mark)
-{
-    if(mark[0]==0x11 &&    mark[800]==0x22 &&    mark[1600]==0x33) return true;
-    ADM_info("Marker do not check\n");
-    return false;
-}
-static bool setMarkers(uint8_t *mark)
-{
-    mark[0]=0x11;
-    mark[800]=0x22;
-    mark[1600]=0x33;
-    return true;
-}
-static bool resetMarkers(uint8_t *mark)
-{
-    mark[0]=0x4;
-    mark[800]=0x5;
-    mark[1600]=0x6;
-    return true;
-}
-
-/**
- * \fn tryIndirectUpload
- * @param title
- * @param image
- * @param image1
- * @param image2
- * @return 
- */
-static bool tryIndirectUpload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image1)
-{
-    bool work=false;
-            ADM_info("%s indirect upload... \n",title);
-            if(!admLibVA::uploadToImage(&image1,image))
-            {
-                ADM_info("Upload to yv12 image failed \n");
-                return false;
-            }
-            if(!admLibVA::imageToSurface(image,&admSurface))
-            {                    
-                ADM_info("image to surface failed\n");
-                return false;
-            }
-            return true;
-}
-/**
- * \fn tryIndirectDownload
- * @param title
- * @param admSurface
- * @param image
- * @param image1
- * @param image2
- * @return 
- */
-static bool tryIndirectDownload(const char *title, ADM_vaSurface &admSurface,VAImage *image, ADMImage &image2)
-{
-    bool work=false;
-            ADM_info("%s indirect upload... \n",title);
-            if(!admLibVA::surfaceToImage(&admSurface,image))
-            {
-                ADM_info("Surface to image failed\n");
-                return false;
-            }
-            if(!admLibVA::downloadFromImage(&image2,image))            
-            {
-                   ADM_info("download from image failed\n");
-                   return false;
-            }
-            uint8_t *ptr=image2.GetReadPtr(PLANAR_Y);
-            return checkMarkers(ptr);
-}
+#include "ADM_coreLibVA_test.cpp"
 
 
 /**
@@ -145,96 +78,41 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     bool r=false;
     ADMImageDefault  image1(640,400),image2(640,400);
     VASurfaceID      surface=admLibVA::allocateSurface(640,400); // freed with admSurface
-    ADM_vaSurface    admSurface(NULL,640,400);        
-    VAImage          *image=NULL;
+    ADM_vaSurface    admSurface(NULL,640,400);            
     admSurface.surface=VA_INVALID;
     
     if(surface==VA_INVALID)
     {
         ADM_info("Cannot allocate a surface => not working\n");
         return false;
-    }
-    
-    uint8_t *mark=image1.GetWritePtr(PLANAR_Y);
-    mark[0]=0x11;
-    mark[800]=0x22;
-    mark[1600]=0x33;
-    if(surface==VA_INVALID) goto done; // does not work..
+    }    
     admSurface.surface=surface;
-    ADM_info("Direct upload...\n");
-    if(true==admLibVA::admImageToSurface(&image1,&admSurface))
-    {
-        ADM_info("\tworks\n");
-        
-        // Surface to image now
-        ADM_coreLibVA::directUpload=true;
-        // read it back
-        ADM_info("Direct download ...\n");
-        if(true==admLibVA::surfaceToAdmImage(&image2,&admSurface))
-        {
-            ADM_info("\tCall ok, checking value\n");
-            mark=image2.GetWritePtr(PLANAR_Y);
-            
-            if(checkMarkers(mark))
-            {
-                ADM_coreLibVA::directDownload=true;
-            }else
-            {
-                ADM_info("Value incorrect\n");
-            }
-        }
-        r=true;
     
-    }//else
+    // Check direct upload/Download works    
+    ADM_info("--Trying direct operations --\n");
+    ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
+    ADM_info("-- Trying indirect (YV12) --\n");
+    ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
+    ADM_info("-- Trying indirect (NV12) --\n");
+    ADM_coreLibVA::indirectOperationNV12=tryIndirect(1,admSurface, image1, image2 );
+    
+    ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
+    ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
+    ADM_info("Indirect YV12    : %d\n",ADM_coreLibVA::indirectOperationYV12);
+    if(ADM_coreLibVA::directOperation)
+        ADM_coreLibVA::transferMode=admLibVA::ADM_LIBVA_DIRECT;
+    else if(ADM_coreLibVA::indirectOperationYV12)
+        ADM_coreLibVA::transferMode=admLibVA::ADM_LIBVA_INDIRECT_YV12;
+    else if(ADM_coreLibVA::indirectOperationNV12)
+        ADM_coreLibVA::transferMode=admLibVA::ADM_LIBVA_INDIRECT_NV12;
+    else
     {
-        //--------------- YV12 -------------
-        ADM_info("Trying indirect transfer...\n");
-        image=admLibVA::allocateYV12Image(640,400);
-        if(!image)
-        {
-            ADM_info("Cannot allocate YV12 image\n");
-        }else
-        {
-           setMarkers(image1.GetReadPtr(PLANAR_Y));
-           resetMarkers(image2.GetReadPtr(PLANAR_Y));
-           if(true==tryIndirectUpload("YV12",admSurface,image, image1))
-           {
-               ADM_info("YV12 upload works\n");
-           }
-            if(true==tryIndirectDownload("YV12",admSurface,image,image2))   
-           {
-               ADM_info("YV12 download  works\n");
-           }
-            admLibVA::destroyImage(image);
-            image=NULL;
-        }
-        //--------------- NV12 -------------
-        image=admLibVA::allocateNV12Image(640,400);
-        if(!image)
-        {
-            ADM_info("Cannot allocate NV12 image\n");
-        }else
-        {
-           setMarkers(image1.GetReadPtr(PLANAR_Y));
-           resetMarkers(image2.GetReadPtr(PLANAR_Y));
-           if(true==tryIndirectUpload("NV12",admSurface,image, image1))
-           {
-               ADM_info("NV12 upload works\n");
-           }
-           if(true==tryIndirectDownload("NV12",admSurface,image,image2))
-           {
-               ADM_info("NV12 download works\n");
-           }
-            admLibVA::destroyImage(image);
-            image=NULL;
-        }
-        
+         ADM_warning("Did not find a usable way to transfer images to/from LibVA\n");
+         ADM_coreLibVA::transferMode=admLibVA::ADM_LIBVA_NONE;
+         return false;
     }
-    
-done:    
-        ADM_info("Direct upload    : %d\n",ADM_coreLibVA::directUpload);
-        ADM_info("Direct download  : %d\n",ADM_coreLibVA::directDownload);
-    return r;
+    ADM_info("LibVA: All ok\n");
+    return true;
 }
 
 /**
@@ -405,8 +283,8 @@ bool admLibVA::init(GUI_WindowInfo *x)
     ADM_coreLibVA::decoders::h264=false;
 //    ADM_coreLibVA::imageFormatNV12=VA_INVALID;
 //    ADM_coreLibVA::imageFormatYV12=VA_INVALID;
-    ADM_coreLibVA::directUpload=false;
-    ADM_coreLibVA::directDownload=false;
+    ADM_coreLibVA::directOperation=true;
+    ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
             
     myWindowInfo=*x;
     VAStatus xError;
@@ -423,10 +301,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     {
         coreLibVAWorking=true;
     }
-    checkSupportedFunctionsAndImageFormat();
-    
-    ADM_info("[LIBVA] VA  init ok.\n");
-    return true;
+    return checkSupportedFunctionsAndImageFormat();
 }
 /**
     \fn cleanup

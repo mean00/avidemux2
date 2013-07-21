@@ -41,6 +41,14 @@ class admLibVA
 protected:
     static GUI_WindowInfo      myWindowInfo;
 public:
+    
+    typedef enum LIBVA_TRANSFER_MODE
+    {
+        ADM_LIBVA_NONE,
+        ADM_LIBVA_DIRECT, ADM_LIBVA_INDIRECT_NV12, ADM_LIBVA_INDIRECT_YV12
+    };
+
+    
     static bool         init(GUI_WindowInfo *x);
     static bool         isOperationnal(void);
     static bool         cleanup(void);
