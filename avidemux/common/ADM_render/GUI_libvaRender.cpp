@@ -69,7 +69,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
             return false;
         }
 
-        mySurface[i]=new ADM_vaImage(NULL,w,h);
+        mySurface[i]=new ADM_vaSurface(NULL,w,h);
         mySurface[i]->surface=surface;
     }    
     myImage=admLibVA::allocateNV12Image(w,h);
@@ -121,7 +121,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     // if input is already a VA surface, no need to reupload it...
     if(pic->refType==ADM_HW_LIBVA)
     {
-        ADM_vaImage *img=(ADM_vaImage *)pic->refDescriptor.refInstance;
+        ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refInstance;
         admLibVA::putX11Surface(img,info.window,displayWidth,displayHeight);
     }else
     {
@@ -135,7 +135,7 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("[VARender] No image\n");
             return false;
         }
-        ADM_vaImage *dest=mySurface[toggle];
+        ADM_vaSurface *dest=mySurface[toggle];
         toggle^=1;
 again:
         if(directUploadSupported)

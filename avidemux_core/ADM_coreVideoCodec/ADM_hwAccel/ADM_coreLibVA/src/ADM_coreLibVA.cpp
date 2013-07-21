@@ -44,7 +44,10 @@ namespace ADM_coreLibVA
  void                   *context;
  VADisplay              display;
  VAConfigID             config;
- VAImageFormat          imageFormat;
+ VAImageFormat          imageFormatNV12;
+ VAImageFormat          imageFormatYV12;
+ bool                   directUpload;
+ bool                   directDownload;
  namespace decoders
  {
         bool            h264; 
@@ -57,6 +60,69 @@ static bool                  coreLibVAWorking=false;
 #define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);}
 
 /**
+ * \fn checkSupportedFunctionsAndImageFormat
+ * \brief check if operation through vaDeriveImage is supported and if 
+ *           YV12 or NV12 is supported
+ * @param func
+ * @param dis
+ * @param er
+ */
+static bool checkSupportedFunctionsAndImageFormat(void)
+{
+    bool r=false;
+    ADMImageDefault image1(640,400),image2(640,400);
+    VASurfaceID     surface=admLibVA::allocateSurface(640,400);
+    ADM_vaSurface     admSurface(NULL,640,400);        
+    admSurface.surface=VA_INVALID;
+    
+    if(surface==VA_INVALID)
+    {
+        ADM_info("Cannot allocate a surface => not working\n");
+        return false;
+    }
+    
+    uint8_t *mark=image1.GetWritePtr(PLANAR_Y);
+    mark[0]=0x11;
+    mark[800]=0x22;
+    mark[1600]=0x33;
+    if(surface==VA_INVALID) goto done; // does not work..
+    admSurface.surface=surface;
+    ADM_info("Direct upload...\n");
+    if(true==admLibVA::uploadToSurface(&image1,&admSurface))
+    {
+        ADM_info("\tworks\n");
+        
+        // Surface to image now
+        ADM_coreLibVA::directUpload=true;
+        // read it back
+        ADM_info("Direct download ...\n");
+        if(true==admLibVA::surfaceToAdmImage(&image2,&admSurface))
+        {
+            ADM_info("\tCall ok, checking value\n");
+            mark=image2.GetWritePtr(PLANAR_Y);
+            if(mark[0]==0x11 && mark[800]==0x22 && mark[1600]==0x33)
+            {
+                ADM_info("\tWorks\n");
+                ADM_coreLibVA::directDownload=true;
+            }else
+            {
+                ADM_info("Value incorrect\n");
+            }
+        }
+    
+    }else
+    {
+        ADM_info("\tdoes not work\n");
+        
+    }
+    
+done:    
+        ADM_info("Direct upload    : %d\n",ADM_coreLibVA::directUpload);
+        ADM_info("Direct download  : %d\n",ADM_coreLibVA::directDownload);
+    return r;
+}
+
+/**
  * \fn displayXError
  * @param dis
  * @param er
@@ -65,6 +131,7 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
 {
     if(!er) return;    
     ADM_warning("LibVA Error : <%s:%s>\n",func,vaErrorStr((er)));
+    
 
 }
 /**
@@ -171,11 +238,17 @@ bool admLibVA::setupImageFormat()
                 aprintf("----------");
                 aprintf("bpp : %d\n",list[i].bits_per_pixel);
                 uint32_t fcc=list[i].fourcc;
-                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));                
-                if( 0x3231564e==fcc) //NV12 0x3231564e, YV12 0x32315659
+                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));  
+                switch(fcc)
                 {
-                    ADM_coreLibVA::imageFormat=list[i];
+                case VA_FOURCC_NV12:
+                    ADM_coreLibVA::imageFormatNV12=list[i];
                     r=true;
+                    break;
+                case VA_FOURCC_YV12:
+                     ADM_coreLibVA::imageFormatYV12=list[i];
+                     r=true;
+                     break;
                 }
             }
             
@@ -215,7 +288,10 @@ bool admLibVA::init(GUI_WindowInfo *x)
 
     ADM_coreLibVA::context=NULL;
     ADM_coreLibVA::decoders::h264=false;
-    
+//    ADM_coreLibVA::imageFormatNV12=VA_INVALID;
+//    ADM_coreLibVA::imageFormatYV12=VA_INVALID;
+    ADM_coreLibVA::directUpload=false;
+    ADM_coreLibVA::directDownload=false;
             
     myWindowInfo=*x;
     VAStatus xError;
@@ -232,7 +308,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     {
         coreLibVAWorking=true;
     }
-
+    checkSupportedFunctionsAndImageFormat();
     
     ADM_info("[LIBVA] VA  init ok.\n");
     return true;
@@ -300,7 +376,30 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
     CHECK_WORKING(NULL);
     VAImage *image=new VAImage;
     memset(image,0,sizeof(image));
-    CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormat,
+    CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatNV12,
+                w,    h,    
+                image));
+    if(xError)
+    {
+        ADM_warning("Cannot allocate nv12 image\n");
+        delete image;
+        return NULL;
+    }
+    return image;
+}
+/**
+ * 
+ * @param w
+ * @param h
+ * @return 
+ */
+VAImage   *admLibVA::allocateYV12Image( int w, int h)
+{
+    int xError=1;
+    CHECK_WORKING(NULL);
+    VAImage *image=new VAImage;
+    memset(image,0,sizeof(image));
+    CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatYV12,
                 w,    h,    
                 image));
     if(xError)
@@ -395,7 +494,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * @param img
  * @return 
  */
-bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaImage *src)
+bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
 {
     int xError;
     bool r=false;
@@ -484,7 +583,7 @@ dropIt:
  * @param displayHeight
  * @return 
  */
-bool        admLibVA::putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight)
+bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight)
 {
     int xError;
     VASurfaceStatus status;
@@ -503,7 +602,7 @@ bool        admLibVA::putX11Surface(ADM_vaImage *img,int widget,int displayWidth
 /***
  *      \fn imageToSurface
  */
-bool   admLibVA::imageToSurface(VAImage *src, ADM_vaImage *dst)
+bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
 {
     
     int xError;
@@ -612,7 +711,7 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
  * @param dest
  * @return 
  */
-bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaImage *dest)
+bool   admLibVA::uploadToSurface( ADMImage *src,ADM_vaSurface *dest)
 {
     int xError;
     bool r=false;

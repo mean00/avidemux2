@@ -29,7 +29,7 @@ extern "C" {
 #include "ADM_image.h"
 
 #define VA_INVALID -1
-class ADM_vaImage;
+class ADM_vaSurface;
 
 
 /**
@@ -57,31 +57,32 @@ static  VASurfaceID allocateSurface( int w, int h);
 static  void        destroySurface(  VASurfaceID surface);
 
 static  VAImage    *allocateNV12Image( int w, int h);
+static  VAImage    *allocateYV12Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
 
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 static bool        fillContext(vaapi_context *c);
-static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaImage *src);
+static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
-static bool        putX11Surface(ADM_vaImage *img,int widget,int displayWidth,int displayHeight);
+static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight);
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
-static bool        uploadToSurface( ADMImage *src,ADM_vaImage *dest);
-static bool        imageToSurface(VAImage *src,ADM_vaImage *dest);
+static bool        uploadToSurface( ADMImage *src,ADM_vaSurface *dest);
+static bool        imageToSurface(VAImage *src,ADM_vaSurface *dest);
 };
 
 /**
- * \class ADM_vaImage
+ * \class ADM_vaSurface
  */
 class decoderFFLIBVA;
-class ADM_vaImage
+class ADM_vaSurface
 {
 public:
     VASurfaceID         surface;
     int                 refCount;
     decoderFFLIBVA      *parent;
     int                 w,h;
-    ADM_vaImage(decoderFFLIBVA *parent,int w, int h)
+    ADM_vaSurface(decoderFFLIBVA *parent,int w, int h)
     {
         this->parent=parent;
         surface=VA_INVALID;
@@ -89,7 +90,7 @@ public:
         this->w=w;
         this->h=h;
     }
-    ~ADM_vaImage()
+    ~ADM_vaSurface()
     {
         if(surface!=VA_INVALID)
         {

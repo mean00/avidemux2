@@ -99,7 +99,7 @@ bool libvaProbe(void)
 */
 static bool libvaMarkSurfaceUsed(void *v, void * cookie)
 {
-    ADM_vaImage    *img=(ADM_vaImage *)v;
+    ADM_vaSurface    *img=(ADM_vaSurface *)v;
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     imageMutex.lock();
     img->refCount++;
@@ -113,7 +113,7 @@ static bool libvaMarkSurfaceUsed(void *v, void * cookie)
 */
 static bool libvaMarkSurfaceUnused(void *v, void * cookie)
 {
-    ADM_vaImage    *img=(ADM_vaImage *)v;
+    ADM_vaSurface    *img=(ADM_vaSurface *)v;
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     imageMutex.lock();
     img->refCount--;
@@ -134,7 +134,7 @@ static bool libvaMarkSurfaceUnused(void *v, void * cookie)
  * @param cookie
  * @return 
  */
-bool    decoderFFLIBVA::reclaimImage(ADM_vaImage *img)
+bool    decoderFFLIBVA::reclaimImage(ADM_vaSurface *img)
 {
         freeSurfaceQueue.append(img);
         return true;
@@ -146,7 +146,7 @@ bool    decoderFFLIBVA::reclaimImage(ADM_vaImage *img)
 
 static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
-    ADM_vaImage    *img=(ADM_vaImage *)instance;
+    ADM_vaSurface    *img=(ADM_vaSurface *)instance;
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     return        admLibVA::surfaceToAdmImage(image,img);
 }
@@ -206,7 +206,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             nbSurface=i;
             return;
         }
-        ADM_vaImage *img=new ADM_vaImage(this,w,h);
+        ADM_vaSurface *img=new ADM_vaSurface(this,w,h);
         img->surface=surfaces[i];
         freeSurfaceQueue.append(img);
         allSurfaceQueue.append(img);
@@ -326,7 +326,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts=scratch->Pts;
     out->flags=scratch->flags;
     
-    ADM_vaImage *img=lookupBySurfaceId(id);
+    ADM_vaSurface *img=lookupBySurfaceId(id);
     
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCookie=this;
@@ -343,7 +343,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
  * @param 
  * @return 
  */
-ADM_vaImage *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
+ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
 {
     imageMutex.lock();
     int n=allSurfaceQueue.size();
@@ -393,7 +393,7 @@ void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
   VASurfaceID s=(VASurfaceID)p;
   decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
     
-  ADM_vaImage *i=lookupBySurfaceId(s);
+  ADM_vaSurface *i=lookupBySurfaceId(s);
   
   aprintf("Release Buffer : 0x%llx\n",s);
   
@@ -416,7 +416,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     
     imageMutex.lock();
     ADM_assert(!freeSurfaceQueue.empty());
-    ADM_vaImage *s= x->freeSurfaceQueue[0];
+    ADM_vaSurface *s= x->freeSurfaceQueue[0];
     x->freeSurfaceQueue.popFront();
     imageMutex.unlock();
     libvaMarkSurfaceUsed(s,this);
