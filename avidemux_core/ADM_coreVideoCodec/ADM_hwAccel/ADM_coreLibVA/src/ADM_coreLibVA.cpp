@@ -355,6 +355,29 @@ VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, 
     return id;
 }
 /**
+ * \fn allocateImage
+ * \brief allocate the correct image type for transfer : None, YV12 or NV12
+ * @param w
+ * @param h
+ * @return 
+ */
+ VAImage    *admLibVA::allocateImage( int w, int h)
+ {
+    switch(ADM_coreLibVA::transferMode)
+    {
+    case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");
+    case   admLibVA::ADM_LIBVA_DIRECT:        
+                return NULL;break;
+    case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
+                return admLibVA::allocateNV12Image(w,h);break;
+    case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
+                return admLibVA::allocateYV12Image(w,h);break;
+    default:ADM_assert(0);
+    }
+    return NULL;
+ }
+
+/**
  * 
  * @param w
  * @param h
@@ -814,4 +837,56 @@ dontTry:
     
     return r;
 }
+/**
+ * 
+ * @param image
+ * @return 
+ */
+bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
+{
+    switch(ADM_coreLibVA::transferMode)
+    {
+    case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
+    case   admLibVA::ADM_LIBVA_DIRECT:   
+                //printf("Direct\n");
+                return admLibVA::admImageToSurface (dest,this);
+    case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
+    case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
+                ADM_assert(this->image);
+                //printf("InDirect\n");
+                if(  admLibVA::uploadToImage(dest,this->image))
+                    return  admLibVA::imageToSurface(this->image,this);
+                return false;
+                break;
+    default:ADM_assert(0);
+    }
+    return false;
+}
+/**
+ * 
+ * @param image
+ * @return 
+ */
+bool ADM_vaSurface::toAdmImage(ADMImage *dest)
+{
+    switch(ADM_coreLibVA::transferMode)
+    {
+    case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
+    case   admLibVA::ADM_LIBVA_DIRECT:   
+                //printf("Direct\n");
+                return admLibVA::surfaceToAdmImage(dest,this);
+    case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
+    case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
+                //printf("InDirect\n");
+                ADM_assert(this->image);
+                if(admLibVA::surfaceToImage(this,this->image))
+                        return  admLibVA::downloadFromImage(dest,this->image);
+                return false;
+                break;
+    default:ADM_assert(0);
+    }
+    return false;
+}
+    
+    
 #endif

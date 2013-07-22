@@ -33,7 +33,6 @@ extern "C" {
 libvaRender::libvaRender( void )
 {
     mySurface[0]=mySurface[1]=NULL;;
-    myImage=NULL;
     toggle=0;
     
     
@@ -59,7 +58,6 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
         ADM_warning("[libva] Not operationnal\n");
         return false;
     }
-    directUploadSupported=true;
     for(int i=0;i<2;i++)
     {
         VASurfaceID surface=admLibVA::allocateSurface(w,h);
@@ -72,13 +70,6 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
         mySurface[i]=new ADM_vaSurface(NULL,w,h);
         mySurface[i]->surface=surface;
     }    
-    myImage=admLibVA::allocateNV12Image(w,h);
-    if(!myImage)
-    {
-         ADM_warning("[libva] cannot allocate image\n");
-        return false;
-    }
-
     
     baseInit(w,h,zoom);
     return true;
@@ -95,11 +86,6 @@ bool libvaRender::cleanup(void)
             delete mySurface[i];
             mySurface[i]=NULL;
         }
-    }
-    if(myImage)
-    {
-        admLibVA::destroyImage(myImage);
-        myImage=NULL;
     }
     return true;
 }
@@ -130,35 +116,12 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("[VARender] No surface\n");
             return false;
         }
-        if(!myImage)
-        {
-            ADM_warning("[VARender] No image\n");
-            return false;
-        }
         ADM_vaSurface *dest=mySurface[toggle];
         toggle^=1;
-again:
-        if(directUploadSupported)
+        if(false==dest->fromAdmImage(pic))
         {
-            if(false==admLibVA::admImageToSurface(pic,dest))
-            {
-                ADM_warning("VaRender] Failed to upload pic directly\n");
-                directUploadSupported=false;
-                goto again;
-            }
-        }else
-        {
-             if(false==admLibVA::uploadToImage(pic,myImage))
-             {
-                ADM_warning("[VARender] uploading to image failed\n");
-                return false;
-             }
-            // then VAImage to VASurface
-            if(false==admLibVA::imageToSurface(myImage,dest))
-            {
-                ADM_warning("[VARender] uploading to surface failed\n");
-                return false;
-            }
+            ADM_warning("VaRender] Failed to upload pic \n");
+            return false;
         }
         admLibVA::putX11Surface(dest,info.window,displayWidth,displayHeight);
     }

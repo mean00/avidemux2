@@ -148,7 +148,7 @@ static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     ADM_vaSurface    *img=(ADM_vaSurface *)instance;
     decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
-    return        admLibVA::surfaceToAdmImage(image,img);
+    return        img->toAdmImage(image);
 }
 
 /**

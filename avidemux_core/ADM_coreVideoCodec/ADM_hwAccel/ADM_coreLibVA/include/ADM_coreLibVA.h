@@ -124,7 +124,8 @@ public:
             image=NULL;
         }
     }
-    
+    bool toAdmImage(ADMImage *image);
+    bool fromAdmImage(ADMImage *image);
     
 };
 
