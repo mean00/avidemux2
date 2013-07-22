@@ -677,19 +677,22 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
         ADM_warning("Cannot map image\n");
         return false;
     }
-    int w=src->_width;
-    int h=src->_height;
-    int dstStride= dest->pitches[0];
-    int srcStride= src->GetPitch(PLANAR_Y);
-    uint8_t *s=    src->GetReadPtr(PLANAR_Y);
-    uint8_t *d=    ptr+dest->offsets[0];
-    for(int y=0;y<h;y++)
+    switch(dest->format.fourcc)
     {
-        memcpy(d,s,w);
-        s+=srcStride;
-        d+=dstStride;
+        case VA_FOURCC_YV12:
+                {
+                        ADMImageRefWrittable ref(src->_width,src->_height);
+                        for(int i=0;i<3;i++)
+                        {
+                                ref._planes[i]= ptr+dest->offsets[i];
+                                ref._planeStride[i]=dest->pitches[i];
+                        }
+                        ref.duplicate(src);
+                }
+                break;
+        case VA_FOURCC_NV12:src->convertToNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);break;
+        default: ADM_assert(0);
     }
-    
     CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
     return true;
 }
@@ -712,7 +715,23 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
         ADM_warning("Cannot map image\n");
         return false;
     }
-    int w=src->_width;
+     switch(dest->format.fourcc)
+    {
+        case VA_FOURCC_YV12:
+                {
+                        ADMImageRef ref(src->_width,src->_height);
+                        for(int i=0;i<3;i++)
+                        {
+                                ref._planes[i]= ptr+dest->offsets[i];
+                                ref._planeStride[i]=dest->pitches[i];
+                        }
+                        src->duplicate(&ref);
+                }
+                break;
+        case VA_FOURCC_NV12:src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);break;
+        default: ADM_assert(0);
+    }
+int w=src->_width;
     int h=src->_height;
     int dstStride= dest->pitches[0];
     int srcStride= src->GetPitch(PLANAR_Y);

@@ -719,6 +719,83 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
         src+=4*w*2*2;
     }
 }
+/**
+        \fn nv12_to_uv_c
+*/
+static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int strideUV, uint8_t *dst)
+{ 
+        int dstride=strideUV;
+               
+        for(int y=0;y<h;y++)
+        {                
+                uint8_t *u=srcu;
+                uint8_t *v=srcv;
+                uint8_t *d=dst;
+                srcu+=upitch;
+                srcv+=vpitch;
+                dst+=dstride;
+
+                for(int x=0;x<w;x++)
+                {
+                    d[0]=*u++;
+                    d[1]=*v++;
+                    d+=2;
+                }
+        }
+ } 
+ #ifdef ADM_CPU_X86
+static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int strideUV, uint8_t *dst)
+{
+        int mod16=w>>3;
+        int leftOver=w&7;
+        int x;
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ddst=dst;                
+                uint8_t *u=srcu;
+                uint8_t *v=srcv;
+                dst+=strideUV;
+                srcu+=upitch;
+                srcv+=vpitch;                        
+
+                        x=mod16;
+                      __asm__(
+                        "1:"
+                        "movq           (%1),%%mm0   \n" // U
+                        "movq           (%2),%%mm1   \n" // V
+                        "movq           %%mm0,%%mm2  \n"                       
+                        "movq           %%mm1,%%mm3  \n"   
+
+                        "punpcklbw      %%mm1,%%mm0 \n"
+                        "punpcklbw      %%mm3,%%mm2 \n"
+                        "movq           %%mm0,(%0)  \n"                       
+                        "movq           %%mm2,8(%0)  \n"     
+                        
+                        "add            $16,%0\n"
+                        "add            $8,%1\n"
+                        "add            $8,%2\n"
+                        "sub            $1,%3\n"
+                        "jnz            1b\n"
+                        :: "r"(ddst),"r"(u),"r"(v),"r"(x)
+                        );
+                if(leftOver)
+                {
+                    x=mod16*8;
+                    for(;x<w;x++)
+                    {
+                        ddst[1]=*u++;
+                        ddst[0]=*v++;
+                        ddst+=2;
+                    }
+                }
+        }
+        __asm__(
+                "emms\n"
+                ::
+            );
+        return ;
+}
+#endif
 static void nv12_to_uv_c(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
 {
         
@@ -881,34 +958,12 @@ bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, in
             src+=sstride;
             dst+=dstride;
         }
-        
-        //U & V
-        dstride=strideUV;
-        dst=uvData;
-        h/=2;
-        w/=2;
-               
-        uint8_t *srcu=GetReadPtr(PLANAR_U);
-        uint8_t *srcv=GetReadPtr(PLANAR_V);
-        int upitch=GetPitch(PLANAR_U);
-        int vpitch=GetPitch(PLANAR_V);
-        for(int y=0;y<h;y++)
-        {                
-                uint8_t *u=srcu;
-                uint8_t *v=srcv;
-                uint8_t *d=dst;
-                srcu+=upitch;
-                srcv+=vpitch;
-                dst+=dstride;
-
-                for(int x=0;x<w;x++)
-                {
-                    d[0]=*u++;
-                    d[1]=*v++;
-                    d+=2;
-                }
-        }
-        
+        #ifdef ADM_CPU_X86
+                if(CpuCaps::hasMMX())
+                    uv_to_nv12_mmx(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+                else
+        #endif   
+                    uv_to_nv12_c(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
         return true;
 }
 /**
