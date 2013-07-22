@@ -67,6 +67,7 @@ static  void        destroySurface(  VASurfaceID surface);
 static  VAImage    *allocateNV12Image( int w, int h);
 static  VAImage    *allocateYV12Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
+static  VAImage    *allocateImage( int w, int h);
 
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
@@ -99,6 +100,7 @@ public:
     VASurfaceID         surface;
     int                 refCount;
     decoderFFLIBVA      *parent;
+    VAImage             *image;
     int                 w,h;
     ADM_vaSurface(decoderFFLIBVA *parent,int w, int h)
     {
@@ -107,6 +109,7 @@ public:
         refCount=0;
         this->w=w;
         this->h=h;
+        image=admLibVA::allocateImage(w,h);
     }
     ~ADM_vaSurface()
     {
@@ -114,6 +117,11 @@ public:
         {
            admLibVA::destroySurface(surface);
            surface=VA_INVALID;
+        }
+        if(image)
+        {
+            admLibVA::destroyImage(image);
+            image=NULL;
         }
     }
     
