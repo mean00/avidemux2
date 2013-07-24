@@ -54,6 +54,32 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
     return 1;
 
 }
+
+static void doLineYOnly(int w,uint8_t *src, uint8_t *y, uint8_t *u, uint8_t *v)
+{
+     for (int x = 0; x < w/2; x++)
+      {
+	    y[0] = src[0];
+            y[1] = src[2];
+            y+=2;
+            src+=4;
+        }    
+}
+static void doLineYUV(int w,uint8_t *src, uint8_t *y, uint8_t *u, uint8_t *v,int stride)
+{
+     for (int x = 0; x < w/2; x++)
+      {
+	    y[0] = src[0];
+            y[1] = src[2];
+            v[0] = (src[1]+src[1+stride])>>1;
+            u[0] = (src[3]+src[1+stride])>>1;
+            y+=2;
+            u++;
+            v++;
+            src+=4;
+        }    
+}
+
 /**
     \fn uncompress
 */
@@ -71,29 +97,18 @@ bool   decoderYUY2::uncompress  (ADMCompressedImage * in, ADMImage * out)
   ptrY = YPLANE(out);
   ptrV = VPLANE(out);
   ptrU = UPLANE(out);
-  ADM_assert(_w==out->GetPitch(PLANAR_Y));
-  ADM_assert(_w/2==out->GetPitch(PLANAR_U));
-  for (uint32_t y = 0; y < _h; y++)
-    for (uint32_t x = 0; x < (_w >> 1); x++)
-      {
-	if (!(y & 1))
-	  {
-	    *ptrY++ = *ptr++;
-	    *ptrV++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
-	    ptr++;
-	    *ptrY++ = *ptr++;
-	    *ptrU++ = (*(ptr) + *(ptr + _w * 2)) >> 1;
-	    ptr++;
-
-	  }
-	else
-	  {
-	    *ptrY++ = *(ptr);
-	    *ptrY++ = *(ptr + 2);
-	    ptr += 4;
-	  }
-      }
-
+  int sy=out->GetPitch(PLANAR_Y);
+  int su=out->GetPitch(PLANAR_U);
+  int sv=out->GetPitch(PLANAR_V);
+  for (uint32_t y = 0; y < _h/2; y++)
+  {
+    doLineYUV(_w,ptr,ptrY,ptrU,ptrV,_w*2)  ;
+    doLineYOnly(_w,ptr+_w*2,ptrY+sy,NULL,NULL)  ;
+    ptr+=4*_w;
+    ptrY+=2*sy;
+    ptrU+=su;
+    ptrV+=sv;
+  }
   out->Pts=in->demuxerPts;
   out->flags = AVI_KEY_FRAME;
   return 1;
