@@ -12,9 +12,30 @@
 #ifndef AUDM_DOLBY_H
 #define AUDM_DOLBY_H
 
-extern void DolbyInit();
-extern void DolbySkip(bool on);
-extern float DolbyShiftLeft(float isamp);
-extern float DolbyShiftRight(float isamp);
+
+#define NZEROS 500
+#define GAIN 1.571116176e+00
+
+/**
+ * \class  ADMDolbyContext
+ */
+class ADMDolbyContext
+{
+public:    
+        ADMDolbyContext()
+        {
+            for(int i=0;i<=NZEROS;i++)
+            {
+                xv_left[i]=xv_right[i]=0;
+            }
+        }
+        float xv_left[NZEROS+1];
+        float xv_right[NZEROS+1];
+        static bool  skip;
+        float DolbyShiftLeft(float isamp);
+        float DolbyShiftRight(float isamp);
+        void  DolbyInit();
+        static void  DolbySkip(bool on);
+};
 
 #endif

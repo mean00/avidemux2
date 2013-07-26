@@ -20,12 +20,8 @@
  ***************************************************************************/
 
 #include <string.h>
+#include "audiofilter_dolby.h"
 
-#define NZEROS 500
-#define GAIN 1.571116176e+00
-
-static float xv_left[NZEROS+1];
-static float xv_right[NZEROS+1];
 
 static float xcoeffs[] =
 { +0.0000000000, +0.0003214310, +0.0000000000, +0.0003252099,
@@ -156,20 +152,14 @@ static float xcoeffs[] =
 -0.0000000000,
 };
 
-static bool skip;
+bool ADMDolbyContext::skip=false;
 
-void DolbySkip(bool on)
+void ADMDolbyContext::DolbySkip(bool on)
 {
 	skip = on;
 }
 
-void DolbyInit()
-{
-	memset(xv_left, 0, sizeof(float) * NZEROS);
-	memset(xv_right, 0, sizeof(float) * NZEROS);
-}
-
-float DolbyShiftLeft(float isamp)
+float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
 if(!skip) {
 	float *p_xcoeffs = xcoeffs;
@@ -197,7 +187,7 @@ if(!skip) {
 }
 }
 
-float DolbyShiftRight(float isamp)
+float ADMDolbyContext::DolbyShiftRight(float isamp)
 {
 if(!skip) {
 	float *p_xcoeffs = xcoeffs;

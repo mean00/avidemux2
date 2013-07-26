@@ -15,14 +15,17 @@
 
 #ifndef AUDM_AUDIO_MIXER_H
 #define AUDM_AUDIO_MIXER_H
+#include "audiofilter_dolby.h"
 class AUDMAudioFilterMixer : public AUDMAudioFilter
 {
     protected:
         CHANNEL_CONF    _output;
         CHANNEL_CONF    _input;
         // output channel mapping
-        CHANNEL_TYPE outputChannelMapping[MAX_CHANNELS];
+        CHANNEL_TYPE    outputChannelMapping[MAX_CHANNELS];
+        // Dolby specific info
     public:
+       ADMDolbyContext dolby;
 
       ~AUDMAudioFilterMixer();
       AUDMAudioFilterMixer(AUDMAudioFilter *instream,CHANNEL_CONF out);

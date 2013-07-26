@@ -124,7 +124,7 @@ static int MCOPY(float *in,float *out,uint32_t nbSample,uint32_t chan)
     
 }
 
-static int MNto1(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int MNto1(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 float sum;
 int den=(chan+1)&0xfe;
@@ -141,7 +141,7 @@ int den=(chan+1)&0xfe;
     
 }
 
-static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
 
@@ -176,7 +176,7 @@ static int MStereo(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_
 	return nbSample*2;
 }
 
-static int M2F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M2F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 3);
 
@@ -223,7 +223,7 @@ static int M2F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 	return nbSample * 3;
 }
 
-static int M3F(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M3F(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 3);
 
@@ -261,7 +261,7 @@ static int M3F(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE
 	return nbSample * 3;
 }
 
-static int M3F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M3F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 4);
 
@@ -308,7 +308,7 @@ static int M3F1R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 	return nbSample * 4;
 }
 
-static int M2F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M2F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 4);
 
@@ -361,7 +361,7 @@ static int M2F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 	return nbSample * 4;
 }
 
-static int M3F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M3F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 5);
 
@@ -414,7 +414,7 @@ static int M3F2R(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TY
 	return nbSample * 5;
 }
 
-static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 6);
 
@@ -463,7 +463,7 @@ static int M3F2RLFE(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL
 	return nbSample * 6;
 }
 
-static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
 
@@ -485,18 +485,18 @@ static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,C
 				case ADM_CH_REAR_CENTER:
 				case ADM_CH_REAR_LEFT:
 				case ADM_CH_REAR_RIGHT:
-					out[0]  += DolbyShiftLeft(*in) * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707;
 				break;
 				case ADM_CH_SIDE_LEFT:
 					out[0]  += *in * 0.707;
-					out[0]  += DolbyShiftLeft(*in) * 0.707 * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.707 * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707 * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707 * 0.707;
 				break;
 				case ADM_CH_SIDE_RIGHT:
 					out[1]  += *in * 0.5;
-					out[0]  += DolbyShiftLeft(*in) * 0.707 * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.707 * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707 * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707 * 0.707;
 				break;
                 default:
                     break;
@@ -509,7 +509,7 @@ static int MDolbyProLogic(float *in,float *out,uint32_t nbSample,uint32_t chan,C
 	return nbSample*2;
 }
 
-static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)
+static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)
 {
 	memset(out, 0, sizeof(float) * nbSample * 2);
 
@@ -529,26 +529,26 @@ static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,
 					out[1]  += *in;
 				break;
 				case ADM_CH_REAR_CENTER:
-					out[0]  += DolbyShiftLeft(*in) * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.707;
 				break;
 				case ADM_CH_REAR_LEFT:
-					out[0]  += DolbyShiftLeft(*in) * 0.8165;
-					out[1]  += DolbyShiftRight(*in) * 0.5774;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.8165;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.5774;
 				break;
 				case ADM_CH_REAR_RIGHT:
-					out[0]  += DolbyShiftLeft(*in) * 0.5774;
-					out[1]  += DolbyShiftRight(*in) * 0.8165;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.5774;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.8165;
 				break;
 				case ADM_CH_SIDE_LEFT:
 					out[0]  += *in * 0.707;
-					out[0]  += DolbyShiftLeft(*in) * 0.8165 * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.5774 * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.8165 * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.5774 * 0.707;
 				break;
 				case ADM_CH_SIDE_RIGHT:
 					out[1]  += *in * 0.707;
-					out[0]  += DolbyShiftLeft(*in) * 0.5774 * 0.707;
-					out[1]  += DolbyShiftRight(*in) * 0.8165 * 0.707;
+					out[0]  += me->dolby.DolbyShiftLeft(*in) * 0.5774 * 0.707;
+					out[1]  += me->dolby.DolbyShiftRight(*in) * 0.8165 * 0.707;
 				break;
                 default:
                     break;
@@ -562,7 +562,7 @@ static int MDolbyProLogic2(float *in,float *out,uint32_t nbSample,uint32_t chan,
 }
 
 
-typedef int MIXER(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap)  ;
+typedef int MIXER(float *in,float *out,uint32_t nbSample,uint32_t chan,CHANNEL_TYPE *chanMap,AUDMAudioFilterMixer *me)  ;
 
 static MIXER *matrixCall[CHANNEL_LAST] = {
 NULL, MNto1, MStereo, M2F1R, M3F, M3F1R, M2F2R, M3F2R, M3F2RLFE, MDolbyProLogic, MDolbyProLogic2
@@ -616,7 +616,7 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
 	} else 
 	{
 		MIXER *call=matrixCall[_output];
-		rd= (uint32_t)call(_incomingBuffer.at(_head),output,available,input_channels,_previous->getChannelMapping());
+		rd= (uint32_t)call(_incomingBuffer.at(_head),output,available,input_channels,_previous->getChannelMapping(),this);
 	}
 
     _head+=available*input_channels;
