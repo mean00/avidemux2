@@ -161,14 +161,15 @@ void ADMDolbyContext::DolbySkip(bool on)
 
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
-if(!skip) {
+if(skip) return isamp;
+
 	float *p_xcoeffs = xcoeffs;
 	static int pos = 0;
 
-	if ((pos - 1) < 0)
+	if ((posLeft - 1) < 0)
 		xv_left[NZEROS] = isamp / GAIN;
 	else
-		xv_left[pos - 1] = isamp / GAIN;
+		xv_left[posLeft - 1] = isamp / GAIN;
 
 	float sum = 0;
 	for (int i = pos; i <= NZEROS; i++)
@@ -177,40 +178,38 @@ if(!skip) {
 	for (int i = 0; i < pos; i++)
 		sum += (*(p_xcoeffs++) * xv_left[i]);
 
-	pos++;
-	if (pos > NZEROS)
-		pos = 0;
+	posLeft++;
+	if (posLeft > NZEROS)
+		posLeft = 0;
 
 	return sum;
-}else{
-	return isamp;
 }
-}
-
+/**
+ * \fn DolbyShiftRight
+ * @param isamp
+ * @return 
+ */
 float ADMDolbyContext::DolbyShiftRight(float isamp)
 {
-if(!skip) {
+if(skip) return isamp;
 	float *p_xcoeffs = xcoeffs;
-	static int pos = 0;
+	
 
-	if ((pos - 1) < 0)
+	if ((posRight - 1) < 0)
 		xv_right[NZEROS] = isamp / GAIN;
 	else
-		xv_right[pos - 1] = isamp / GAIN;
+		xv_right[posRight - 1] = isamp / GAIN;
 
 	float sum = 0;
-	for (int i = pos; i <= NZEROS; i++)
+	for (int i = posRight; i <= NZEROS; i++)
 		sum += (*(p_xcoeffs++) * xv_right[i]);
 
-	for (int i = 0; i < pos; i++)
+	for (int i = 0; i < posRight; i++)
 		sum += (*(p_xcoeffs++) * xv_right[i]);
 
-	pos++;
-	if (pos > NZEROS)
-		pos = 0;
+	posRight++;
+	if (posRight > NZEROS)
+		posRight = 0;
 
 	return -sum;
-}else{
-	return isamp;
-}
 }
