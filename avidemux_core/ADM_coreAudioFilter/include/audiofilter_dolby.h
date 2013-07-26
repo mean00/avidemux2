@@ -22,14 +22,8 @@
 class ADMDolbyContext
 {
 public:    
-        ADMDolbyContext()
-        {
-            for(int i=0;i<=NZEROS;i++)
-            {
-                xv_left[i]=xv_right[i]=0;
-            }
-            posLeft=posRight=0;
-        }
+        ADMDolbyContext();
+       
         float xv_left[NZEROS+1];
         float xv_right[NZEROS+1];
         static bool  skip;

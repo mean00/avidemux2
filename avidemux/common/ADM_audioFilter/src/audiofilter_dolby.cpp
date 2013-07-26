@@ -18,12 +18,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <stdio.h>
 #include <string.h>
 #include "audiofilter_dolby.h"
 
 
-static float xcoeffs[] =
+static float xcoeffs[] = // 501 samples
 { +0.0000000000, +0.0003214310, +0.0000000000, +0.0003252099,
 +0.0000000000, +0.0003302355, +0.0000000000, +0.0003365372,
 +0.0000000000, +0.0003441444, +0.0000000000, +0.0003530868,
@@ -157,8 +157,25 @@ bool ADMDolbyContext::skip=false;
 void ADMDolbyContext::DolbySkip(bool on)
 {
 	skip = on;
+        
 }
-
+/**
+ * 
+ */
+ ADMDolbyContext::ADMDolbyContext()
+        {
+            for(int i=0;i<=NZEROS;i++)
+            {
+                xv_left[i]=xv_right[i]=0;
+            }
+            posLeft=posRight=0;
+            //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
+        }
+ /**
+  * 
+  * @param isamp
+  * @return 
+  */
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
 if(skip) return isamp;
