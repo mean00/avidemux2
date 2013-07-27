@@ -74,7 +74,7 @@ float ADMDolbyContext::DolbyShiftLeft_convolution(int pos, float *oldie, float *
  /**
   * 
   * @param isamp
-  * @return 
+  * @return  
   */
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
