@@ -107,13 +107,42 @@ float ADMDolbyContext::DolbyShift_convolutionAlign1(int pos, float *oldie, float
   * @param isamp
   * @return 
   */
+
 float ADMDolbyContext::DolbyShift_convolutionAlign2(float *oldie, float *coef)
 {
-    const float *src1=oldie;         // Aligned also
-    const float *src2=coef;          // that one is always aligned to a 16 bytes boundary
+   float *src1=oldie;         // Aligned also
+   float *src2=coef;          // that one is always aligned to a 16 bytes boundary
     float sum = 0;
-	for (int i = 0; i < 1+NZEROS; i++)
+    for(int i=0;i<NZEROS+1;i++)
+    {        
+            sum+=src1[i]*src2[i];
+    }
+    return sum;
+}
+
+
+float ADMDolbyContext::DolbyShift_convolutionAlign3(float *oldie, float *coef)
+{
+   float *src1=oldie;         // Aligned also
+   float *src2=coef;          // that one is always aligned to a 16 bytes boundary
+    int mod16=(1+NZEROS)>>2;
+    int left=(1+NZEROS)&3;
+    static float __attribute__ ((__aligned__ (16))) sum16[4]={0,0,0,0};
+    float sum = 0;
+    for(int i=0;i<mod16;i++)
+    {
+        for(int x=0;x<4;x++)
+            sum16[x]+=src1[x]*src2[x];
+    
+        src1+=4;
+        src2+=4;
+    }
+   
+    
+	for (int i = 0; i <left; i++)
 		sum += (*src1++)*(*src2++);
+        for(int i=0;i<4;i++)
+            sum+=sum16[i];
 	return sum;
 }
 /**
@@ -125,8 +154,8 @@ float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
 {
      float *src1=oldie;         // Aligned also
      float *src2=coef;          // that one is always aligned to a 16 bytes boundary
-    int mod16=(1+NZEROS)>>4;
-    int left=(1+NZEROS)&15;
+    int mod16=(1+NZEROS)>>2;
+    int left=(1+NZEROS)&3;
     static float __attribute__ ((__aligned__ (16))) sum16[4];
     
     float sum = 0;
@@ -198,8 +227,10 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         
         int mod=posLeft&3;
         int of2=posLeft-mod;
- //       float sum3= DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
+        //float sum3 = DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
+        //float sum5 = DolbyShift_convolutionAlign3(xv_left[mod]+of2,xcoeffs);
         float sum4 = DolbyShift_convolutionAlignSSE(xv_left[mod]+of2,xcoeffs);
+        
 //--
 	posLeft++;
 	if (posLeft > NZEROS)
@@ -215,16 +246,18 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
             ADM_warning("Aligned 1 Mismatch!\n");
             exit(-1);
         }
+      
+        printf("Ref: %f align2: %f align3 : %f SSE:%f\n",sum1,sum3,sum5,sum4);
          if(sum1!=sum3)
         {
-            ADM_warning("Aligned 2 Mismatch!\n");
-            exit(-1);
+          //  ADM_warning("Aligned 2 Mismatch!\n");
+            //exit(-1);
         }
-#endif
+#endif  
          if(sum1!=sum4)
         {
-            ADM_warning("Aligned SSE Mismatch!\n");
-         //   exit(-1);
+         //   ADM_warning("Aligned SSE Mismatch %f : %f!\n",sum1,sum4);
+         ////   exit(-1);
         }
 	
 	return sum1;

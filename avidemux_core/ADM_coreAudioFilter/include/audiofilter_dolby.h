@@ -43,6 +43,7 @@ static  float DolbyShift_simple(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolution(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolutionAlign1(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolutionAlign2(float *oldie, float *coef);
+static  float DolbyShift_convolutionAlign3(float *oldie, float *coef);
 static  float DolbyShift_convolutionAlignSSE(float *oldie, float *coef);
 };
 
