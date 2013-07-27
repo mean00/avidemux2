@@ -958,11 +958,13 @@ bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, in
             src+=sstride;
             dst+=dstride;
         }
+#if 0        
         #ifdef ADM_CPU_X86
                 if(CpuCaps::hasMMX())
                     uv_to_nv12_mmx(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
                 else
         #endif   
+#endif
                     uv_to_nv12_c(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
         return true;
 }
