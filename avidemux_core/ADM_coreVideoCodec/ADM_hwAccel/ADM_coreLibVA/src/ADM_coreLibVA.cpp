@@ -93,8 +93,8 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
     ADM_info("-- Trying indirect (YV12) --\n");
     ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
-    ADM_info("-- Trying indirect (NV12) --\n");
-    ADM_coreLibVA::indirectOperationNV12=tryIndirect(1,admSurface, image1, image2 );
+    ADM_info("-- Trying indirect (NV12) --\nSKIPPED\n");
+    ADM_coreLibVA::indirectOperationNV12=false; //tryIndirect(1,admSurface, image1, image2 );
     
     ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
     ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
