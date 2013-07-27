@@ -20,7 +20,7 @@
  ***************************************************************************/
 # pragma once
 
-static float xcoeffs[] = // 501 samples
+static float __attribute__ ((__aligned__ (16))) xcoeffs[] = // 501 samples
 { 
 //    
 +0.0000000000, +0.0003214310, +0.0000000000, +0.0003252099,
@@ -279,3 +279,4 @@ static float xcoeffs[] = // 501 samples
 -0.0000000000,
 
 };
+

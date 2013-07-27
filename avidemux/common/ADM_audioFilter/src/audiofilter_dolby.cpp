@@ -34,10 +34,13 @@ void ADMDolbyContext::DolbySkip(bool on)
  */
  ADMDolbyContext::ADMDolbyContext()
         {
-            for(int i=0;i<2*(NZEROS+1);i++)
-            {
-                xv_left[i]=xv_right[i]=0;
-            }
+        for(int j=0;j<4;j++)
+        {
+               for(int i=0;i<2*(NZEROS+1);i++)
+               {
+                   xv_left[j][i]=xv_right[j][i]=0;
+               }
+        }
             posLeft=posRight=0;
             //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
         }
@@ -46,7 +49,7 @@ void ADMDolbyContext::DolbySkip(bool on)
   * @param isamp
   * @return 
   */
-float ADMDolbyContext::DolbyShiftLeft_simple(int pos, float *oldie, float *coef)
+float ADMDolbyContext::DolbyShift_simple(int pos, float *oldie, float *coef)
 {
 
 	float sum = 0;
@@ -62,7 +65,7 @@ float ADMDolbyContext::DolbyShiftLeft_simple(int pos, float *oldie, float *coef)
   * @param isamp
   * @return 
   */
-float ADMDolbyContext::DolbyShiftLeft_convolution(int pos, float *oldie, float *coef)
+float ADMDolbyContext::DolbyShift_convolution(int pos, float *oldie, float *coef)
 {
 
 	float sum = 0;
@@ -70,7 +73,55 @@ float ADMDolbyContext::DolbyShiftLeft_convolution(int pos, float *oldie, float *
 		sum += (*(coef++) * oldie[i]);
 	return sum;
 }
-  
+/**
+  * 
+  * @param isamp
+  * @return 
+  */
+float ADMDolbyContext::DolbyShift_convolutionAlign1(int pos, float *oldie, float *coef)
+{
+    const float *src1=oldie+pos;
+    const float *src2=coef;          // that one is always aligned to a 16 bytes boundary
+    float sum = 0;
+	for (int i = 0; i < 1+NZEROS; i++)
+		sum += (*src1++)*(*src2++);
+	return sum;
+}
+/**
+  * 
+  * @param isamp
+  * @return 
+  */
+float ADMDolbyContext::DolbyShift_convolutionAlign2(float *oldie, float *coef)
+{
+    const float *src1=oldie;         // Aligned also
+    const float *src2=coef;          // that one is always aligned to a 16 bytes boundary
+    float sum = 0;
+	for (int i = 0; i < 1+NZEROS; i++)
+		sum += (*src1++)*(*src2++);
+	return sum;
+}
+  /**
+   * 
+   * @param target
+   * @param offset
+   * @param value
+   * @return 
+   */
+bool ADMDolbyContext::set(float **target,int offset, float *value)
+{
+        if (!posLeft )
+        {
+            	xv_left[0][NZEROS+NZEROS+1] = value;
+                xv_left[0][NZEROS] = value;
+            
+        }
+	else
+        {
+		xv_left[0][posLeft + NZEROS] = isamp / GAIN;
+                xv_left[0][posLeft -1] = isamp / GAIN;
+        }    
+}
  /**
   * 
   * @param isamp
@@ -78,24 +129,12 @@ float ADMDolbyContext::DolbyShiftLeft_convolution(int pos, float *oldie, float *
   */
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
-if(skip) return isamp;
-
-	float *p_xcoeffs = xcoeffs;
-
-
-	if (!posLeft )
-        {
-		xv_left[NZEROS+NZEROS+1] = isamp / GAIN;
-                xv_left[NZEROS] = isamp / GAIN;
-        }
-	else
-        {
-		xv_left[posLeft + NZEROS] = isamp / GAIN;
-                xv_left[posLeft -1] = isamp / GAIN;
-        }
+        if(skip) return isamp;
+        set(xv_left,posLeft,isamp / GAIN);
 //--
-        float sum1= DolbyShiftLeft_simple(posLeft,xv_left,xcoeffs);
-	float sum = DolbyShiftLeft_convolution(posLeft,xv_left,xcoeffs);
+        float sum1= DolbyShift_simple(posLeft,xv_left[0],xcoeffs);
+	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
+        float sum2= DolbyShift_convolutionAlign1(posLeft,xv_left[0],xcoeffs);
 //--
 	posLeft++;
 	if (posLeft > NZEROS)
@@ -106,6 +145,12 @@ if(skip) return isamp;
             ADM_warning("Mismatch!\n");
             exit(-1);
         }
+        if(sum1!=sum2)
+        {
+            ADM_warning("Aligned 1 Mismatch!\n");
+            exit(-1);
+        }
+	
 	return sum;
 }
 /**
@@ -120,16 +165,16 @@ if(skip) return isamp;
 	
 
 	if ((posRight - 1) < 0)
-		xv_right[NZEROS] = isamp / GAIN;
+		xv_right[0][NZEROS] = isamp / GAIN;
 	else
-		xv_right[posRight - 1] = isamp / GAIN;
+		xv_right[0][posRight - 1] = isamp / GAIN;
 
 	float sum = 0;
 	for (int i = posRight; i <= NZEROS; i++)
-		sum += (*(p_xcoeffs++) * xv_right[i]);
+		sum += (*(p_xcoeffs++) * xv_right[0][i]);
 
 	for (int i = 0; i < posRight; i++)
-		sum += (*(p_xcoeffs++) * xv_right[i]);
+		sum += (*(p_xcoeffs++) * xv_right[0][i]);
 
 	posRight++;
 	if (posRight > NZEROS)
