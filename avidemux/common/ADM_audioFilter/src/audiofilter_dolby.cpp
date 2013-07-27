@@ -150,6 +150,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlign3(float *oldie, float *coef)
   * @param isamp
   * @return 
   */
+#ifdef ADM_CPU_X86
 float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
 {
      float *src1=oldie;         // Aligned also
@@ -182,6 +183,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
             sum+=sum16[i];
 	return sum;
 }
+#endif ADM_CPU_X86
   /**
    * 
    * @param target
@@ -217,50 +219,26 @@ bool ADMDolbyContext::setValue(float **target,int offset, float value)
   */
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
+        float sum;
         if(skip) return isamp;
         setValue(xv_left,posLeft,isamp / GAIN);
-//--
-        float sum1= DolbyShift_simple(posLeft,xv_left[0],xcoeffs);
-//	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
-//        float sum2= DolbyShift_convolutionAlign1(posLeft,xv_left[0],xcoeffs);
-        
-        
-        int mod=posLeft&3;
-        int of2=posLeft-mod;
-        //float sum3 = DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
-        //float sum5 = DolbyShift_convolutionAlign3(xv_left[mod]+of2,xcoeffs);
-        float sum4 = DolbyShift_convolutionAlignSSE(xv_left[mod]+of2,xcoeffs);
-        
+#ifdef ADM_CPU_X86
+        if(CpuCaps::hasSSE())
+        {
+            int mod=posLeft&3;
+            int of2=posLeft-mod;
+            sum = DolbyShift_convolutionAlignSSE(xv_left[mod]+of2,xcoeffs);
+        }else
+#endif            
+        {
+            sum= DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
+        }
 //--
 	posLeft++;
 	if (posLeft > NZEROS)
 		posLeft = 0;
-#if 0
-        if(sum1!=sum)
-        {
-            ADM_warning("Mismatch!\n");
-            exit(-1);
-        }
-        if(sum1!=sum2)
-        {
-            ADM_warning("Aligned 1 Mismatch!\n");
-            exit(-1);
-        }
-      
-        printf("Ref: %f align2: %f align3 : %f SSE:%f\n",sum1,sum3,sum5,sum4);
-         if(sum1!=sum3)
-        {
-          //  ADM_warning("Aligned 2 Mismatch!\n");
-            //exit(-1);
-        }
-#endif  
-         if(sum1!=sum4)
-        {
-         //   ADM_warning("Aligned SSE Mismatch %f : %f!\n",sum1,sum4);
-         ////   exit(-1);
-        }
-	
-	return sum1;
+
+	return sum;
 }
 /**
  * \fn DolbyShiftRight
@@ -269,25 +247,23 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
  */
 float ADMDolbyContext::DolbyShiftRight(float isamp)
 {
-if(skip) return isamp;
-	float *p_xcoeffs = xcoeffs;
-	
-
-	if ((posRight - 1) < 0)
-		xv_right[0][NZEROS] = isamp / GAIN;
-	else
-		xv_right[0][posRight - 1] = isamp / GAIN;
-
-	float sum = 0;
-	for (int i = posRight; i <= NZEROS; i++)
-		sum += (*(p_xcoeffs++) * xv_right[0][i]);
-
-	for (int i = 0; i < posRight; i++)
-		sum += (*(p_xcoeffs++) * xv_right[0][i]);
-
+        float sum;
+        if(skip) return isamp;
+        setValue(xv_right,posRight,isamp / GAIN);
+#ifdef ADM_CPU_X86
+        if(CpuCaps::hasSSE())
+        {
+            int mod=posRight&3;
+            int of2=posRight-mod;
+            sum = DolbyShift_convolutionAlignSSE(xv_right[mod]+of2,xcoeffs);
+        }else
+#endif            
+        {
+            sum= DolbyShift_convolution(posRight,xv_right[0],xcoeffs);
+        }
+//--
 	posRight++;
 	if (posRight > NZEROS)
 		posRight = 0;
-
 	return -sum;
 }
