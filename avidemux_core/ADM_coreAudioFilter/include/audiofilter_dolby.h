@@ -24,8 +24,10 @@ class ADMDolbyContext
 public:    
         ADMDolbyContext();
        
-        float xv_left[4][NZEROS*2+2];
-        float xv_right[4][NZEROS*2+2];
+        float *xv_left[4];
+        float *xv_right[4];
+        float lefty[4][NZEROS*2+2];
+        float righty[4][NZEROS*2+2];
         static bool  skip;
         int    posLeft;
         int    posRight;
@@ -34,7 +36,7 @@ public:
         float DolbyShiftRight(float isamp);
         void  DolbyInit();
         
-        bool set(float **target,int offset, float *value);
+        bool setValue(float **target,int offset, float value);
         
         static void  DolbySkip(bool on);
         

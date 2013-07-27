@@ -33,17 +33,20 @@ void ADMDolbyContext::DolbySkip(bool on)
  * 
  */
  ADMDolbyContext::ADMDolbyContext()
-        {
-        for(int j=0;j<4;j++)
-        {
-               for(int i=0;i<2*(NZEROS+1);i++)
-               {
-                   xv_left[j][i]=xv_right[j][i]=0;
-               }
-        }
-            posLeft=posRight=0;
-            //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
-        }
+{
+    for(int j=0;j<4;j++)
+    {
+           for(int i=0;i<2*(NZEROS+1);i++)
+           {
+               lefty[j][i]=righty[j][i]=0;
+           }
+           xv_left[j]=lefty[j];
+           xv_right[j]=righty[j];
+    }
+    
+    posLeft=posRight=0;
+    //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
+}
  /**
   * 
   * @param isamp
@@ -108,18 +111,18 @@ float ADMDolbyContext::DolbyShift_convolutionAlign2(float *oldie, float *coef)
    * @param value
    * @return 
    */
-bool ADMDolbyContext::set(float **target,int offset, float *value)
+bool ADMDolbyContext::setValue(float **target,int offset, float value)
 {
-        if (!posLeft )
+        if (!offset )
         {
-            	xv_left[0][NZEROS+NZEROS+1] = value;
-                xv_left[0][NZEROS] = value;
+            	target[0][NZEROS+NZEROS+1] = value;
+                target[0][NZEROS] = value;
             
         }
 	else
         {
-		xv_left[0][posLeft + NZEROS] = isamp / GAIN;
-                xv_left[0][posLeft -1] = isamp / GAIN;
+		target[0][offset + NZEROS] = value;
+                target[0][offset -1] = value;
         }    
 }
  /**
@@ -130,7 +133,7 @@ bool ADMDolbyContext::set(float **target,int offset, float *value)
 float ADMDolbyContext::DolbyShiftLeft(float isamp)
 {
         if(skip) return isamp;
-        set(xv_left,posLeft,isamp / GAIN);
+        setValue(xv_left,posLeft,isamp / GAIN);
 //--
         float sum1= DolbyShift_simple(posLeft,xv_left[0],xcoeffs);
 	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
