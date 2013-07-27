@@ -19,6 +19,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
+
 #include "audiofilter_dolby.h"
 #include "audiofilter_dolby_table.h"
 
@@ -34,18 +35,29 @@ void ADMDolbyContext::DolbySkip(bool on)
  */
  ADMDolbyContext::ADMDolbyContext()
 {
-    for(int j=0;j<4;j++)
-    {
-           for(int i=0;i<2*(NZEROS+1);i++)
-           {
-               lefty[j][i]=righty[j][i]=0;
-           }
-           xv_left[j]=lefty[j];
-           xv_right[j]=righty[j];
-    }
-    
+     for(int j=0;j<4;j++)
+     {
+         float *l=xv_left[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+         float *r=xv_right[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+         for(int i=0;i<2*(NZEROS+1);i++)
+         {
+             l[i]=r[i]=0;
+         }
+
+     }    
     posLeft=posRight=0;
     //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
+}
+ADMDolbyContext::~ADMDolbyContext()
+{
+     for(int j=0;j<4;j++)
+     {
+         float *l=xv_left[j];
+         float *r=xv_right[j];
+         ADM_dezalloc(l);
+         ADM_dezalloc(r);
+     }
+    
 }
  /**
   * 
@@ -104,6 +116,43 @@ float ADMDolbyContext::DolbyShift_convolutionAlign2(float *oldie, float *coef)
 		sum += (*src1++)*(*src2++);
 	return sum;
 }
+/**
+  * 
+  * @param isamp
+  * @return 
+  */
+float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
+{
+     float *src1=oldie;         // Aligned also
+     float *src2=coef;          // that one is always aligned to a 16 bytes boundary
+    int mod16=(1+NZEROS)>>4;
+    int left=(1+NZEROS)&15;
+    static float __attribute__ ((__aligned__ (16))) sum16[4];
+    
+    float sum = 0;
+     __asm__(
+                        "xorps          %%xmm2,%%xmm2     \n" // carry
+                        "1: \n"
+                        "movaps         (%0),%%xmm0  \n" // src1
+                        "movaps         (%1),%%xmm1  \n" // src2
+                        "mulps          %%xmm1,%%xmm0 \n" // src1*src2
+                        "addps          %%xmm0,%%xmm2 \n" // sum+=src1*src2
+                        "add           $16,%0      \n"
+                        "add           $16,%1      \n"
+                        "sub           $1,%3      \n"
+                        "jnz             1b        \n"
+                        "movaps        %%xmm2,(%2)        \n"
+
+                : : "r" (src1),"r" (src2),"r"(sum16),"r"(mod16)
+                );
+   
+    
+	for (int i = 0; i <left; i++)
+		sum += (*src1++)*(*src2++);
+        for(int i=0;i<4;i++)
+            sum+=sum16[i];
+	return sum;
+}
   /**
    * 
    * @param target
@@ -143,17 +192,19 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         setValue(xv_left,posLeft,isamp / GAIN);
 //--
         float sum1= DolbyShift_simple(posLeft,xv_left[0],xcoeffs);
-	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
-        float sum2= DolbyShift_convolutionAlign1(posLeft,xv_left[0],xcoeffs);
+//	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
+//        float sum2= DolbyShift_convolutionAlign1(posLeft,xv_left[0],xcoeffs);
+        
         
         int mod=posLeft&3;
         int of2=posLeft-mod;
-        float sum3= DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
+ //       float sum3= DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
+        float sum4 = DolbyShift_convolutionAlignSSE(xv_left[mod]+of2,xcoeffs);
 //--
 	posLeft++;
 	if (posLeft > NZEROS)
 		posLeft = 0;
-
+#if 0
         if(sum1!=sum)
         {
             ADM_warning("Mismatch!\n");
@@ -169,8 +220,14 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
             ADM_warning("Aligned 2 Mismatch!\n");
             exit(-1);
         }
+#endif
+         if(sum1!=sum4)
+        {
+            ADM_warning("Aligned SSE Mismatch!\n");
+         //   exit(-1);
+        }
 	
-	return sum;
+	return sum1;
 }
 /**
  * \fn DolbyShiftRight

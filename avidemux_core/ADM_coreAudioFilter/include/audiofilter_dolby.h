@@ -23,11 +23,9 @@ class ADMDolbyContext
 {
 public:    
         ADMDolbyContext();
-       
+        ~ADMDolbyContext();
         float *xv_left[4];
         float *xv_right[4];
-        float lefty[4][NZEROS*2+2];
-        float righty[4][NZEROS*2+2];
         static bool  skip;
         int    posLeft;
         int    posRight;
@@ -45,6 +43,7 @@ static  float DolbyShift_simple(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolution(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolutionAlign1(int pos, float *oldie, float *coef);
 static  float DolbyShift_convolutionAlign2(float *oldie, float *coef);
+static  float DolbyShift_convolutionAlignSSE(float *oldie, float *coef);
 };
 
 #endif
