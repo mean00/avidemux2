@@ -36,14 +36,15 @@ public:
         float DolbyShiftRight(float isamp);
         void  DolbyInit();
         
-        bool setValue(float **target,int offset, float value);
+static   bool setValue(  float **target,int offset, float value);
+static   bool setOneValue(float *target,int offset, float value);
         
-        static void  DolbySkip(bool on);
+static   void  DolbySkip(bool on);
         
-        float DolbyShift_simple(int pos, float *oldie, float *coef);        
-        float DolbyShift_convolution(int pos, float *oldie, float *coef);
-        float DolbyShift_convolutionAlign1(int pos, float *oldie, float *coef);
-        float DolbyShift_convolutionAlign2(float *oldie, float *coef);
+static  float DolbyShift_simple(int pos, float *oldie, float *coef);        
+static  float DolbyShift_convolution(int pos, float *oldie, float *coef);
+static  float DolbyShift_convolutionAlign1(int pos, float *oldie, float *coef);
+static  float DolbyShift_convolutionAlign2(float *oldie, float *coef);
 };
 
 #endif

@@ -111,19 +111,26 @@ float ADMDolbyContext::DolbyShift_convolutionAlign2(float *oldie, float *coef)
    * @param value
    * @return 
    */
+bool ADMDolbyContext::setOneValue(float *target,int offset, float value)
+{
+    if(offset<=0)
+        offset+=NZEROS+1;
+    target[offset + NZEROS] = value;
+    target[offset -1] = value;
+}
+  /**
+   * 
+   * @param target
+   * @param offset
+   * @param value
+   * @return 
+   */
 bool ADMDolbyContext::setValue(float **target,int offset, float value)
 {
-        if (!offset )
-        {
-            	target[0][NZEROS+NZEROS+1] = value;
-                target[0][NZEROS] = value;
-            
-        }
-	else
-        {
-		target[0][offset + NZEROS] = value;
-                target[0][offset -1] = value;
-        }    
+    for(int i=0;i<4;i++)
+    {
+        setOneValue(target[i],offset-i,value);
+    }
 }
  /**
   * 
@@ -138,6 +145,10 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         float sum1= DolbyShift_simple(posLeft,xv_left[0],xcoeffs);
 	float sum = DolbyShift_convolution(posLeft,xv_left[0],xcoeffs);
         float sum2= DolbyShift_convolutionAlign1(posLeft,xv_left[0],xcoeffs);
+        
+        int mod=posLeft&3;
+        int of2=posLeft-mod;
+        float sum3= DolbyShift_convolutionAlign2(xv_left[mod]+of2,xcoeffs);
 //--
 	posLeft++;
 	if (posLeft > NZEROS)
@@ -151,6 +162,11 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         if(sum1!=sum2)
         {
             ADM_warning("Aligned 1 Mismatch!\n");
+            exit(-1);
+        }
+         if(sum1!=sum3)
+        {
+            ADM_warning("Aligned 2 Mismatch!\n");
             exit(-1);
         }
 	
