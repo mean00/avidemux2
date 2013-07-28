@@ -33,6 +33,7 @@ public:
         float DolbyShiftLeft(float isamp);
         float DolbyShiftRight(float isamp);
         void  DolbyInit();
+        void  reset();
         
 static   bool setValue(  float **target,int offset, float value);
 static   bool setOneValue(float *target,int offset, float value);

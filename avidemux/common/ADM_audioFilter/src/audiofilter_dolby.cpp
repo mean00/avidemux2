@@ -33,12 +33,12 @@ void ADMDolbyContext::DolbySkip(bool on)
 /**
  * 
  */
- ADMDolbyContext::ADMDolbyContext()
+void  ADMDolbyContext::reset()
 {
      for(int j=0;j<4;j++)
      {
-         float *l=xv_left[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
-         float *r=xv_right[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+         float *l=xv_left[j];
+         float *r=xv_right[j];
          for(int i=0;i<2*(NZEROS+1);i++)
          {
              l[i]=r[i]=0;
@@ -46,7 +46,18 @@ void ADMDolbyContext::DolbySkip(bool on)
 
      }    
     posLeft=posRight=0;
-    //printf("Dolby kernel size=%d\n",sizeof(xcoeffs)/sizeof(float));
+}
+/**
+ * 
+ */
+ ADMDolbyContext::ADMDolbyContext()
+{
+     for(int j=0;j<4;j++)
+     {
+         xv_left[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+         xv_right[j]=(float *)ADM_alloc( sizeof(float)*(NZEROS*2+2));
+     }    
+     reset();
 }
 ADMDolbyContext::~ADMDolbyContext()
 {

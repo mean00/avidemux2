@@ -32,5 +32,10 @@ class AUDMAudioFilterMixer : public AUDMAudioFilter
       uint32_t   fill(uint32_t max,float *output,AUD_Status *status);
       // That filter changes its output channel mapping...
       virtual   CHANNEL_TYPE    *getChannelMapping(void );
+      uint8_t  rewind(void)
+                {
+                        dolby.reset();
+                        return AUDMAudioFilter::rewind();
+                }
 };
 #endif
