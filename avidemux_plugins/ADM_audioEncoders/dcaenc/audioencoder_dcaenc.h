@@ -30,7 +30,7 @@ class AUDMEncoder_DcaEnc : public ADM_AudioEncoder
                       int send(uint32_t nbSample, uint8_t *dest);
   public:
     virtual             ~AUDMEncoder_DcaEnc();
-                        AUDMEncoder_DcaEnc(AUDMAudioFilter *instream,bool globalHeader);
+                        AUDMEncoder_DcaEnc(AUDMAudioFilter *instream,bool globalHeader,CONFcouple *setup);
             bool	    isVBR(void );
 
    virtual bool         encode(uint8_t *dest, uint32_t *len, uint32_t *samples);

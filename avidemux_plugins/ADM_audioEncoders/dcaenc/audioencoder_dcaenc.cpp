@@ -19,6 +19,7 @@
 #include "DIA_coreToolkit.h"
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
+#include "dcaencoder.h"
 
 extern "C"
 {
@@ -33,35 +34,34 @@ static uint32_t dcaencBitrate=300;
 
 extern "C"
 {
-static bool configure (void);
+static bool configure (CONFcouple **setup);
 static bool setOption(const char *paramName, uint32_t value);
 };
+#include "dcaencoder_desc.cpp"
+static void getDefaultConfiguration(CONFcouple **c);
+#define DCAENC_DEFAULT_CONF {300}
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_DcaEnc);
 
 static ADM_audioEncoder encoderDesc = {
+    //--
   ADM_AUDIO_ENCODER_API_VERSION,
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
   configure,		//** put your own function here**
   "DcaEnc",
-  "DTS (dcaenc)",
-  "DCA encoder plugin Mean 2009",
+  "DTS (DcaEnc)",
+  "DCAEnc Dts encoder plugin Mean/Gruntster 2008/2013",
   6,                    // Max channels
   1,0,0,                // Version
-  WAV_DTS,              // WavTag
+  WAV_DTS,
   200,                  // Priority
-  getConfigurationData,  // Defined by macro automatically
-  setConfigurationData,  // Defined by macro automatically
 
-  getBitrate,           // Defined by macro automatically
-  setBitrate,            // Defined by macro automatically
-
-  setOption,         //** put your own function here**
-
-  NULL
+  NULL,                                 // set option
+  getDefaultConfiguration,              // default conf
+  NULL                                  // opaque
 };
-ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,dcaencBitrate);
+ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
 #define MYFLAGS (lame_global_flags *)lameFlags
@@ -69,7 +69,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG(NULL,NULL,dcaencBitrate);
     \fn AUDMEncoder_DcaEnc Constructor
     \brief
 */
-AUDMEncoder_DcaEnc::AUDMEncoder_DcaEnc (AUDMAudioFilter * instream,bool globalHeader):ADM_AudioEncoder  (instream)
+AUDMEncoder_DcaEnc::AUDMEncoder_DcaEnc (AUDMAudioFilter * instream,bool globalHeader,CONFcouple *setup):ADM_AudioEncoder  (instream,setup)
 {
   ADM_info ("[dcaenc] Creating lame\n");
   context = NULL;
@@ -234,9 +234,49 @@ cont:
 
 */
 
-bool configure (void)
+/**
+    \fn configure
+*/
+#define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("aften",#x)}
+
+bool configure (CONFcouple **setup)
 {
-  return true;
+ int ret=0;
+    dcaencoder config=DCAENC_DEFAULT_CONF;
+    if(*setup)
+    {
+        ADM_paramLoad(*setup,dcaencoder_param,&config);
+    }
+
+
+    diaMenuEntry bitrateM[]={
+                              BITRATE(56),
+                              BITRATE(64),
+                              BITRATE(80),
+                              BITRATE(96),
+                              BITRATE(112),
+                              BITRATE(128),
+                              BITRATE(160),
+                              BITRATE(192),
+                              BITRATE(224),
+                              BITRATE(384)
+                          };
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("dcaenc","_Bitrate:"), SZT(bitrateM),bitrateM);
+
+
+
+    diaElem *elems[]={&bitrate};
+
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("DcaEnc","DcaEnc Configuration"),1,elems))
+    {
+      if(*setup) delete *setup;
+      *setup=NULL;
+      ADM_paramSave(setup,dcaencoder_param,&config);
+//      defaultConfig=config;
+      return true;
+    }
+    return false;
 }
 /**
      \fn setOption
@@ -246,4 +286,13 @@ bool setOption(const char *paramName, uint32_t value)
 {
     return true;
 }
+
+
+void getDefaultConfiguration(CONFcouple **c)
+{
+	dcaencoder config = DCAENC_DEFAULT_CONF;
+
+	ADM_paramSave(c, dcaencoder_param, &config);
+}
+
 // EOF
