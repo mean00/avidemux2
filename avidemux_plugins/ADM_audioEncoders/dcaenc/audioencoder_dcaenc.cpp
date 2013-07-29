@@ -27,8 +27,9 @@ extern "C"
 }
 #include "audioencoder_dcaenc.h"
 #include "dcaencoder.h"
-static dcaencoder config={300};
-static uint32_t dcaencBitrate=300;
+static dcaencoder config={320};
+static dcaencoder defaultConfig={320};
+static uint32_t dcaencBitrate=320;
 
 #define BLOCK_SIZE 1024
 
@@ -74,6 +75,10 @@ AUDMEncoder_DcaEnc::AUDMEncoder_DcaEnc (AUDMAudioFilter * instream,bool globalHe
   ADM_info ("[dcaenc] Creating lame\n");
   context = NULL;
   wavheader.encoding = WAV_DTS;
+  if(setup) // load config if possible
+    ADM_paramLoad(setup,dcaencoder_param,&config);
+
+  
 };
 
 /**
@@ -105,13 +110,16 @@ bool AUDMEncoder_DcaEnc::initialize (void)
   {
     case 1: chan_config=DCAENC_CHANNELS_MONO;break;
     case 2: chan_config=DCAENC_CHANNELS_STEREO;break;
+    case 6: chan_config=DCAENC_CHANNELS_3FRONT_2REAR_1OV;break;
+    case 5: chan_config=DCAENC_CHANNELS_3FRONT_2REAR;break;
     default:
          ADM_warning("Unsupported channel configuration \n");
          break;
   }
-  context=dcaenc_create(wavheader.frequency,chan_config,config.bitrate*1000,DCAENC_FLAG_BIGENDIAN
-                            );
-
+  wavheader.byterate=(config.bitrate*1000)>>3;
+  ADM_info("Starting dcaenc with channels=%d, bitrate=%d\n",wavheader.channels,config.bitrate);
+  context=dcaenc_create(wavheader.frequency,chan_config,config.bitrate*1000,DCAENC_FLAG_BIGENDIAN   );
+  
   if(!context)
   {
       ADM_warning("Cannot create dcaenc context   \n");
@@ -138,12 +146,13 @@ bool AUDMEncoder_DcaEnc::isVBR (void)
 */
 static void dither32(float *s,int nb,int channels)
 {
+    int32_t *o=(int32_t *)s;
     float shift=(1LL<<32)-1;
     for(int i=0;i<nb;i++)
     {
         float f=s[i];
         f*=shift;
-        s[i]=(int32_t )f;
+        o[i]=(int32_t )f;
     }
 }
 /**
@@ -238,7 +247,7 @@ cont:
     \fn configure
 */
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("aften",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("dcaenc",#x)}
 
 bool configure (CONFcouple **setup)
 {
@@ -247,20 +256,18 @@ bool configure (CONFcouple **setup)
     if(*setup)
     {
         ADM_paramLoad(*setup,dcaencoder_param,&config);
+    }else
+    {
+        config=defaultConfig;
     }
 
 
     diaMenuEntry bitrateM[]={
-                              BITRATE(56),
-                              BITRATE(64),
-                              BITRATE(80),
-                              BITRATE(96),
-                              BITRATE(112),
-                              BITRATE(128),
-                              BITRATE(160),
-                              BITRATE(192),
-                              BITRATE(224),
-                              BITRATE(384)
+                              BITRATE(320),
+                              BITRATE(384),
+                              BITRATE(448),
+                              BITRATE(512),
+                              BITRATE(640)
                           };
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("dcaenc","_Bitrate:"), SZT(bitrateM),bitrateM);
 
@@ -273,7 +280,7 @@ bool configure (CONFcouple **setup)
       if(*setup) delete *setup;
       *setup=NULL;
       ADM_paramSave(setup,dcaencoder_param,&config);
-//      defaultConfig=config;
+      defaultConfig=config;
       return true;
     }
     return false;
@@ -292,7 +299,7 @@ void getDefaultConfiguration(CONFcouple **c)
 {
 	dcaencoder config = DCAENC_DEFAULT_CONF;
 
-	ADM_paramSave(c, dcaencoder_param, &config);
+	ADM_paramSave(c, dcaencoder_param, &defaultConfig);
 }
 
 // EOF
