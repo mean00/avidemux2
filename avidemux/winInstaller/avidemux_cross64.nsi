@@ -274,7 +274,7 @@ Section "Avidemux Core" SecCore
     ${File} "./Change Log.html"
     #${File} ${ADM_SYSDIR}/libexpat-1.dll
     #${File} ${ADM_SYSDIR}/mgwz.dll
-    ${File} ${ADM_DIR}/libfreetype-6.dll
+    ${File} ${ADM_SYSDIR}/libfreetype-6.dll
     ${File} ${ADM_SYSDIR}/libsqlite3-0.dll
     ${File} ${ADM_SYSDIR}/libstdc++-6.dll
     ${File} ${ADM_SYSDIR}/libgcc_s_seh-1.dll
@@ -399,7 +399,7 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
 		SetOutPath $INSTDIR
-		${File} ${ADM_DIR}/libopencore-amrwb-*.dll
+		${File} ${ADM_SYSDIR}/libopencore-amrwb-*.dll
 	${MementoSectionEnd}
 	${MementoSection} "MP2, MP3 (MAD)" SecAudDecMad
 		SectionIn 1 2
