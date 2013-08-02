@@ -275,10 +275,14 @@ Section "Avidemux Core" SecCore
     #${File} ${ADM_SYSDIR}/libexpat-1.dll
     #${File} ${ADM_SYSDIR}/mgwz.dll
     ${File} ${ADM_DIR}/libfreetype-6.dll
-    ${File} ${ADM_SYSDIR}/../lib/sqlite3.dll
-    ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libstdc++-6.dll
-    ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libgcc_s_sjlj-1.dll
-    ${File} ${TOOLCHAIN_DIR}/x86_64-w64-mingw32/lib/libwinpthread-1.dll
+    ${File} ${ADM_SYSDIR}/libsqlite3-0.dll
+    ${File} ${ADM_SYSDIR}/libstdc++-6.dll
+    ${File} ${ADM_SYSDIR}/libgcc_s_seh-1.dll
+    ${File} ${ADM_SYSDIR}/libwinpthread-1.dll
+    ${File} ${ADM_SYSDIR}/libpng16-16.dll
+    ${File} ${ADM_SYSDIR}/SDL.dll
+    ${File} ${ADM_SYSDIR}/libz.dll
+    ${File} ${ADM_SYSDIR}/libz.dll.1.2.8
     ${File} ${ADM_DIR}/libADM_audioParser6.dll
     ${File} ${ADM_DIR}/libADM_core6.dll
     ${File} ${ADM_DIR}/libADM_coreAudio6.dll
@@ -387,7 +391,7 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
 		SetOutPath $INSTDIR
-		#${File} ${ADM_DIR}/libopencore-amrnb-*.dll
+		${File} ${ADM_DIR}/libopencore-amrnb-*.dll
 	${MementoSectionEnd}
 	${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
 		SectionIn 1 2
@@ -395,7 +399,7 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
 		SetOutPath $INSTDIR
-		#${File} ${ADM_DIR}/libopencore-amrwb-*.dll
+		${File} ${ADM_DIR}/libopencore-amrwb-*.dll
 	${MementoSectionEnd}
 	${MementoSection} "MP2, MP3 (MAD)" SecAudDecMad
 		SectionIn 1 2
@@ -466,12 +470,12 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		SetOutPath $INSTDIR
 		#${File} ${ADM_SYSDIR}/libtwolame-*.dll
 	${MementoSectionEnd}
-	${MementoSection} "MP2 (TwoLAME)" SecAudEncTwoLame
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\audioEncoders
-		${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_twolame.dll
-	${MementoSectionEnd}
+	#${MementoSection} "MP2 (TwoLAME)" SecAudEncTwoLame
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\audioEncoders
+		#${File} ${ADM_DIR}/plugins/audioEncoders/libADM_ae_twolame.dll
+	#${MementoSectionEnd}
 	${MementoSection} "MP3" SecAudEncLame
 		SectionIn 1 2
 		SetOverwrite on
@@ -685,14 +689,14 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		SetOutPath $INSTDIR\plugins\videoEncoders
 		${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_ffMpeg4.dll
 	${MementoSectionEnd}
-	#${MementoSection} "MPEG-4 ASP (Xvid)" SecVidEncXvid
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\videoEncoders
-		#${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_xvid4.dll
-		#SetOutPath $INSTDIR
-		#${File} ${ADM_SYSDIR}/xvidcore.dll
-	#${MementoSectionEnd}
+	${MementoSection} "MPEG-4 ASP (Xvid)" SecVidEncXvid
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\videoEncoders
+		${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_xvid4.dll
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/xvidcore.dll
+	${MementoSectionEnd}
 	${MementoSection} "MPEG-4 AVC" SecVidEncX264
 		SectionIn 1 2
 		SetOverwrite on
@@ -705,7 +709,7 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${Folder} ${ADM_DIR}/plugins/pluginSettings/x264
 		SetOutPath $INSTDIR
 		${File} ${ADM_SYSDIR}/libx264-*.dll
-		${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
+		#${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
 	${MementoSectionEnd}
 	${MementoSection} "PNG" SecVidEncLavPng
 		SectionIn 1 2
@@ -999,7 +1003,7 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			${File} ${ADM_SYSDIR}/libfribidi-0.dll
 			${File} ${ADM_SYSDIR}/libiconv-2.dll
 			${File} ${ADM_SYSDIR}/libfontconfig-1.dll
-			${File} ${ADM_SYSDIR}/libexpat-1.dll
+			#${File} ${ADM_SYSDIR}/libexpat-1.dll
 			SetOutPath $INSTDIR\etc\fonts
 			${Folder} ${ADM_DIR}/etc/fonts
 		${MementoSectionEnd}
