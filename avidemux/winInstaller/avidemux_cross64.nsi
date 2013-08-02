@@ -391,7 +391,7 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
 		SetOutPath $INSTDIR
-		${File} ${ADM_DIR}/libopencore-amrnb-*.dll
+		${File} ${ADM_SYSDIR}/libopencore-amrnb-*.dll
 	${MementoSectionEnd}
 	${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
 		SectionIn 1 2
