@@ -503,19 +503,19 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Avisynth" SecGrpAvisynth
-	#${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
-		#SectionIn 2
-		#SetOutPath $INSTDIR
-		#SetOverwrite on
-		#${File} ${ADM_SYSDIR}/avsproxy.exe
-		#${File} ${ADM_SYSDIR}/avsproxy_gui.exe
-	#${MementoSectionEnd}
-	#${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
-		#SectionIn 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\demuxers
-		#${File} ${ADM_DIR}/plugins/demuxers/libADM_dm_avsproxy.dll
-	#${MementoSectionEnd}
+	${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
+		SectionIn 2
+		SetOutPath $INSTDIR
+		SetOverwrite on
+		${File} ${ADM_SYSDIR}/avsproxy.exe
+		${File} ${ADM_SYSDIR}/avsproxy_gui.exe
+	${MementoSectionEnd}
+	${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
+		SectionIn 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\demuxers
+		${File} ${ADM_DIR}/plugins/demuxers/libADM_dm_avsproxy.dll
+	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Demuxers" SecGrpDemuxers
 	${MementoSection} "ASF" SecDemuxAsf
