@@ -16,15 +16,15 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_yv12Encoder.h"
+#include "ADM_libvaEncoder.h"
 #include "ADM_coreVideoEncoderInternal.h"
 
 void resetConfigurationData() {}
 
-ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_yv12Encoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN("YV12Encoder",
-                               "YV12 Encoder",
-                               "Simple YV12 Encoder (c) 2009 Mean",
+ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_libvaEncoder);
+ADM_DECLARE_VIDEO_ENCODER_MAIN("LibVaEncoder (HW)",
+                               "Mpeg4 AVC (VA/HW)",
+                               "Simple Libva Encoder (c) 2013 Mean",
                                 NULL, // No configuration
                                 ADM_UI_ALL,
                                 1,0,0,

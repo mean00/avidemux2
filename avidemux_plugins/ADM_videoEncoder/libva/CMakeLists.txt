@@ -1,7 +1,7 @@
 INCLUDE(ve_plugin)
 
 SET(LIBVA_SRCS 
-        libvaPlugin.cpp
+        libvaencPlugin.cpp
         ADM_libvaEncoder.cpp
 )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})

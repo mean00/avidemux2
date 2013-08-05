@@ -16,12 +16,12 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_yv12Encoder.h"
+#include "ADM_libvaEncoder.h"
 
 /**
-        \fn ADM_yv12Encoder
+        \fn ADM_libvaEncoder
 */
-ADM_yv12Encoder::ADM_yv12Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
+ADM_libvaEncoder::ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
 {
     printf("[YV12Encoder] Creating.\n");
     int w,h;
@@ -32,9 +32,9 @@ ADM_yv12Encoder::ADM_yv12Encoder(ADM_coreVideoFilter *src,bool globalHeader) : A
     plane=(w*h*3)/2;
 }
 /** 
-    \fn ~ADM_yv12Encoder
+    \fn ~ADM_libvaEncoder
 */
-ADM_yv12Encoder::~ADM_yv12Encoder()
+ADM_libvaEncoder::~ADM_libvaEncoder()
 {
     printf("[YV12Encoder] Destroying.\n");
 }
@@ -43,7 +43,7 @@ ADM_yv12Encoder::~ADM_yv12Encoder()
 /**
     \fn encode
 */
-bool         ADM_yv12Encoder::encode (ADMBitstream * out)
+bool         ADM_libvaEncoder::encode (ADMBitstream * out)
 {
     uint32_t fn;
     if(source->getNextFrame(&fn,image)==false)

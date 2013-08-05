@@ -21,18 +21,18 @@
 
 
 /**
-        \class ADM_yv12Encoder
+        \class ADM_libvaEncoder
         \brief Dummy encoder that does nothing
 
 */
-class ADM_yv12Encoder : public ADM_coreVideoEncoder
+class ADM_libvaEncoder : public ADM_coreVideoEncoder
 {
 protected:
                int plane;
 public:
 
-                            ADM_yv12Encoder(ADM_coreVideoFilter *src,bool globalHeader);
-                            ~ADM_yv12Encoder();
+                            ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader);
+                            ~ADM_libvaEncoder();
 virtual        bool         encode (ADMBitstream * out);
 virtual const  char         *getFourcc(void) {return "YV12";}
 };
