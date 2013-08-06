@@ -56,6 +56,8 @@ public:
     /* Setup   */
     static bool         setupConfig(void);
     static bool         setupImageFormat(void);
+    /* Encoding - setup */
+    static bool         setupEncodingConfig(void);
     /* Surface */   
     
 static  VAContextID createDecoder(int width, int height, int nbSurface, VASurfaceID *surfaces);

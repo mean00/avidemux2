@@ -23,20 +23,26 @@
 */
 ADM_libvaEncoder::ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoder(src)
 {
-    printf("[YV12Encoder] Creating.\n");
+    printf("[LibVAEncoder] Creating.\n");
     int w,h;
     FilterInfo *info=src->getInfo();
     w=info->width;
     h=info->height;
     image=new ADMImageDefault(w,h);
     plane=(w*h*3)/2;
+    vaSurface=new ADM_vaSurface(NULL,w,h);
 }
 /** 
     \fn ~ADM_libvaEncoder
 */
 ADM_libvaEncoder::~ADM_libvaEncoder()
 {
-    printf("[YV12Encoder] Destroying.\n");
+    printf("[LibVAEncoder] Destroying.\n");
+    if(vaSurface)
+    {
+        delete vaSurface;
+        vaSurface=NULL;
+    }
 }
 
 
@@ -48,7 +54,12 @@ bool         ADM_libvaEncoder::encode (ADMBitstream * out)
     uint32_t fn;
     if(source->getNextFrame(&fn,image)==false)
     {
-        printf("[YV12] Cannot get next image\n");
+        ADM_warning("[LIBVA] Cannot get next image\n");
+        return false;
+    }
+    if(!vaSurface.fromAdmImage(image))
+    {
+        ADM_warning("Cannot upload image to surface\n");
         return false;
     }
     ADM_assert(out->bufferSize>plane);

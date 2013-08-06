@@ -55,6 +55,11 @@ admLibVA::LIBVA_TRANSFER_MODE    transferMode;
  {
         bool            h264; 
  }
+ namespace encoders
+ {
+        bool            h264;
+        VAConfigID      h264ConfigID;
+ }
 }
 
 static bool                  coreLibVAWorking=false;
@@ -127,6 +132,59 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
     
 
 }
+/**
+ * \fn setupEncodingConfig
+ * @return 
+ */
+bool admLibVA::setupEncodingConfig(void)
+{
+    VAStatus xError;
+    VAEntrypoint entrypoints[5];
+    int num_entrypoints;
+    VAConfigAttrib attrib[2];
+    
+ 
+    CHECK_ERROR(vaQueryConfigEntrypoints(ADM_coreLibVA::display, VAProfileH264Baseline, entrypoints,        &num_entrypoints));
+    
+    int found=-1;
+    for	(int slice_entrypoint = 0; slice_entrypoint < num_entrypoints; slice_entrypoint++) 
+    {
+        if (entrypoints[slice_entrypoint] == VAEntrypointEncSlice)
+        {
+            found=slice_entrypoint;
+            break;
+        }
+            
+    }
+    if(-1 == found)
+    {
+        ADM_warning("Cannot find encoder entry point\n");
+        return false;
+    }
+     /* find out the format for the render target, and rate control mode */
+    attrib[0].type = VAConfigAttribRTFormat;
+    attrib[1].type = VAConfigAttribRateControl;
+    CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, VAProfileH264Baseline, VAEntrypointEncSlice,    &attrib[0], 2));
+    if (!(attrib[0].value & VA_RT_FORMAT_YUV420))
+    {
+        ADM_warning("Encoder does not support YV12\n");
+        return false;
+    }
+    ADM_info("YV12 supported..\n");
+    if (!(attrib[1].value & VA_RC_VBR))
+    {
+        ADM_warning("Encoder does not support VBR\n");
+        return false;
+    }
+    ADM_info("VBR supported..\n");
+    CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileH264Baseline, VAEntrypointEncSlice,
+                              &attrib[0], 2,&(ADM_coreLibVA::encoders::h264ConfigID)));
+
+    
+    ADM_info("H264 Encoding config created\n");
+    return true;
+}
+
 /**
  *      \fn setupConfig
  *      \brief verify that h264 main profile is supported
@@ -281,6 +339,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
 
     ADM_coreLibVA::context=NULL;
     ADM_coreLibVA::decoders::h264=false;
+    ADM_coreLibVA::encoders::h264=false;
 //    ADM_coreLibVA::imageFormatNV12=VA_INVALID;
 //    ADM_coreLibVA::imageFormatYV12=VA_INVALID;
     ADM_coreLibVA::directOperation=true;
@@ -300,6 +359,14 @@ bool admLibVA::init(GUI_WindowInfo *x)
     if(setupConfig() && setupImageFormat())
     {
         coreLibVAWorking=true;
+    }
+    ADM_coreLibVA::encoders::h264=setupEncodingConfig();
+    if(ADM_coreLibVA::encoders::h264)
+    {
+        ADM_info("VA: Encoding supported\n");
+    }else
+    {
+        ADM_warning("VA: Encoding not supported\n");
     }
     return checkSupportedFunctionsAndImageFormat();
 }
