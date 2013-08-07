@@ -35,9 +35,9 @@
 #include "ADM_default.h"
 
 #ifdef _WIN32
-static const char *SEPARATOR="\\";
+const char *ADM_SEPARATOR="\\";
 #else
-static const char *SEPARATOR="/";
+const char *ADM_SEPARATOR="/";
 #endif
 
 static char ADM_basedir[1024] = {0};
@@ -294,8 +294,8 @@ char *ADM_getJobDir(void)
 
 static void AddSeparator(char *path)
 {
-	if (path && (strlen(path) < strlen(SEPARATOR) || strncmp(path + strlen(path) - strlen(SEPARATOR), SEPARATOR, strlen(SEPARATOR)) != 0))
-		strcat(path, SEPARATOR);
+	if (path && (strlen(path) < strlen(ADM_SEPARATOR) || strncmp(path + strlen(path) - strlen(ADM_SEPARATOR), ADM_SEPARATOR, strlen(ADM_SEPARATOR)) != 0))
+		strcat(path, ADM_SEPARATOR);
 }
 
 /**
@@ -324,7 +324,7 @@ static char *ADM_getRelativePath(const char *base0, const char *base1, const cha
 		if (strlen(base1))
 		{
 			strcat(result, base1);
-			strcat(result, SEPARATOR);
+			strcat(result, ADM_SEPARATOR);
 		}
 
 		if (base2)
@@ -332,13 +332,13 @@ static char *ADM_getRelativePath(const char *base0, const char *base1, const cha
 			if (strlen(base2))
 			{
 				strcat(result, base2);
-				strcat(result, SEPARATOR);
+				strcat(result, ADM_SEPARATOR);
 			}
 
 			if (base3 && strlen(base3))
 			{
 				strcat(result, base3);				
-				strcat(result, SEPARATOR);
+				strcat(result, ADM_SEPARATOR);
 			}
 		}
 	}
@@ -475,7 +475,7 @@ void ADM_initBaseDir(bool portableMode)
 #endif
 
 		strcat(ADM_basedir, ADM_DIR_NAME);
-		strcat(ADM_basedir, SEPARATOR);
+		strcat(ADM_basedir, ADM_SEPARATOR);
 
 		delete [] home;
 

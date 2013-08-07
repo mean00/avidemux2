@@ -83,7 +83,7 @@ return json.dumpToFile(file);
 bool  x264_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x264_encoder *key){
 admJsonToCouple json;
 CONFcouple *c=json.readFromFile(file);
-if(!c) {ADM_error("Cannot read json file");return false;}
+if(!c) {ADM_error("Cannot read json file (%s)\n",file);return false;}
 bool r= ADM_paramLoadPartial(c,tmpl,key);
 delete c;
 return r;

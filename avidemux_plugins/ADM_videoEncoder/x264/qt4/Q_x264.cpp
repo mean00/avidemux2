@@ -590,7 +590,7 @@ void x264Dialog::maxCrfSpinBox_valueChanged(int value)
 /**
     \fn configurationComboBox_currentIndexChanged
 */
-
+extern char *ADM_SEPARATOR;
 void x264Dialog::configurationComboBox_currentIndexChanged(int index)
 {
     int n=ui.configurationComboBox->currentIndex();
@@ -604,7 +604,7 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     // get text
     std::string rootPath;
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
-    QString text=QString("/")+ui.configurationComboBox->itemText(n);
+    QString text=QString(ADM_SEPARATOR)+ui.configurationComboBox->itemText(n);
     text=QString(rootPath.c_str())+text+QString(".json");
     const char *t=text.toUtf8().constData();
     ADM_info("Loading preset %s\n",t);
@@ -665,7 +665,7 @@ void x264Dialog::saveAsButton_pressed(void)
   download();
   std::string rootPath;
   ADM_pluginGetPath("x264",pluginVersion,rootPath);
-  std::string fullpath=rootPath+std::string("/")+out+std::string(".json");
+  std::string fullpath=rootPath+std::string(ADM_SEPARATOR)+out+std::string(".json");
 
   if(ADM_fileExist(fullpath.c_str()))
   {
