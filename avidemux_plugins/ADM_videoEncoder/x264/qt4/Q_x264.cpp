@@ -605,7 +605,7 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     ADM_pluginGetPath("x264",pluginVersion,rootPath);
     QString text=QString(ADM_SEPARATOR)+ui.configurationComboBox->itemText(n);
     text=QString(rootPath.c_str())+text+QString(".json");
-    const char *t=text.toUtf8().constData();
+    const char *t=ADM_strdup(text.toUtf8().constData());
     ADM_info("Loading preset %s\n",t);
     if(false==x264_encoder_jdeserialize(t,x264_encoder_param,&myCopy))
     {
@@ -615,6 +615,7 @@ void x264Dialog::configurationComboBox_currentIndexChanged(int index)
     {
         upload();
     }
+    ADM_dezalloc(t);
 }
 /**
     \fn getProfileName  
