@@ -57,7 +57,7 @@ bool         ADM_libvaEncoder::encode (ADMBitstream * out)
         ADM_warning("[LIBVA] Cannot get next image\n");
         return false;
     }
-    if(!vaSurface.fromAdmImage(image))
+    if(!vaSurface->fromAdmImage(image))
     {
         ADM_warning("Cannot upload image to surface\n");
         return false;
