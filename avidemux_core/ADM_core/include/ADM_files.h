@@ -47,9 +47,9 @@ ADM_CORE6_EXPORT uint8_t clearDirectoryContent(const uint32_t nb, char *jobName[
 
 
 #ifdef _WIN32
-static const char *ADM_SEPARATOR="\\";
+#define ADM_SEPARATOR "\\"
 #else
-static const char *ADM_SEPARATOR="/";
+#define ADM_SEPARATOR "/"
 #endif
 
 
