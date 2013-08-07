@@ -590,7 +590,6 @@ void x264Dialog::maxCrfSpinBox_valueChanged(int value)
 /**
     \fn configurationComboBox_currentIndexChanged
 */
-extern const char *ADM_SEPARATOR;
 void x264Dialog::configurationComboBox_currentIndexChanged(int index)
 {
     int n=ui.configurationComboBox->currentIndex();

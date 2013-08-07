@@ -44,4 +44,13 @@ ADM_CORE6_EXPORT char *ADM_getHomeRelativePath(const char *base1, const char *ba
 #endif
 ADM_CORE6_EXPORT uint8_t buildDirectoryContent(uint32_t *outnb,const char *base, char *jobName[],int maxElems,const char *ext);
 ADM_CORE6_EXPORT uint8_t clearDirectoryContent(const uint32_t nb, char *jobName[]);
+
+
+#ifdef _WIN32
+static const char *ADM_SEPARATOR="\\";
+#else
+static const char *ADM_SEPARATOR="/";
+#endif
+
+
 #endif

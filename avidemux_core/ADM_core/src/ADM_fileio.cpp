@@ -34,12 +34,6 @@
 
 #include "ADM_default.h"
 
-#ifdef _WIN32
-const char *ADM_SEPARATOR="\\";
-#else
-const char *ADM_SEPARATOR="/";
-#endif
-
 static char ADM_basedir[1024] = {0};
 static char *ADM_jobdir = NULL;
 static char *ADM_customdir = NULL;
