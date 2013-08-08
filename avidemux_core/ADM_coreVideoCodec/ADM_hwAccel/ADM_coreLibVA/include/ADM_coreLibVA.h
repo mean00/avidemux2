@@ -90,8 +90,20 @@ static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,
 static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
 static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
-};
 
+};
+/**
+ * \class admLibVAEnc
+ */
+class ADM_vaEncodingContext
+{
+protected:   
+        VAContextID contextId;
+public:
+                    ADM_vaEncodingContext();
+        bool        init(int width, int height); // Surface..
+                    ~ADM_vaEncodingContext();
+};
 /**
  * \class ADM_vaSurface
  */
@@ -130,6 +142,17 @@ public:
     bool fromAdmImage(ADMImage *image);
     
 };
+/**
+ * \class ADM_vaEncodingBuffer
+ */
 
+class ADM_vaEncodingBuffer
+{
+public:
+    VABufferID          bufferId;
+    ADM_vaEncodingBuffer(VAContextID context,int bufferSize);
+    ~ADM_vaEncodingBuffer();
+    bool   readBuffers(int maxSize, uint8_t *to, int *sizeOut);
+};
 #endif
 #endif

@@ -55,13 +55,15 @@ admLibVA::LIBVA_TRANSFER_MODE    transferMode;
  {
         bool            h264; 
  }
+}
+namespace ADM_coreLibVAEnc
+{
  namespace encoders
  {
         bool            h264;
         VAConfigID      h264ConfigID;
  }
 }
-
 static bool                  coreLibVAWorking=false;
 
 #define CLEAR(x) memset(&x,0,sizeof(x))
@@ -178,7 +180,7 @@ bool admLibVA::setupEncodingConfig(void)
     }
     ADM_info("VBR supported..\n");
     CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileH264Baseline, VAEntrypointEncSlice,
-                              &attrib[0], 2,&(ADM_coreLibVA::encoders::h264ConfigID)));
+                              &attrib[0], 2,&(ADM_coreLibVAEnc::encoders::h264ConfigID)));
 
     
     ADM_info("H264 Encoding config created\n");
@@ -337,11 +339,10 @@ bool admLibVA::init(GUI_WindowInfo *x)
     int maj=0,min=0,patch=0;
     ADM_info("[LIBVA] Initializing LibVA library ...\n");
 
+    ADM_coreLibVAEnc::encoders::h264=false;
+    
     ADM_coreLibVA::context=NULL;
     ADM_coreLibVA::decoders::h264=false;
-    ADM_coreLibVA::encoders::h264=false;
-//    ADM_coreLibVA::imageFormatNV12=VA_INVALID;
-//    ADM_coreLibVA::imageFormatYV12=VA_INVALID;
     ADM_coreLibVA::directOperation=true;
     ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
             
@@ -360,8 +361,9 @@ bool admLibVA::init(GUI_WindowInfo *x)
     {
         coreLibVAWorking=true;
     }
-    ADM_coreLibVA::encoders::h264=setupEncodingConfig();
-    if(ADM_coreLibVA::encoders::h264)
+    
+    ADM_coreLibVAEnc::encoders::h264=setupEncodingConfig();
+    if(ADM_coreLibVAEnc::encoders::h264)
     {
         ADM_info("VA: Encoding supported\n");
     }else
@@ -973,6 +975,101 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     }
     return false;
 }
+//------------------------------------
+/**
+ * \fn ctor
+ * @param context
+ * @param bufferSize
+ */
+ADM_vaEncodingBuffer::ADM_vaEncodingBuffer(VAContextID context,int bufferSize)
+{
+        int xError;
+        CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display,context,VAEncCodedBufferType,
+                                   bufferSize, 1, NULL, &bufferId));
+        if(xError)
+        {
+            ADM_warning("Cannot create encoding buffer\n");
+            bufferId=VA_INVALID;
+        }
+
+        
+}
+/**
+ * \fn dtor
+ */
+ADM_vaEncodingBuffer::~ADM_vaEncodingBuffer()
+{
+        if(bufferId!=VA_INVALID)
+        {
+              vaDestroyBuffer(ADM_coreLibVA::display,bufferId);
+              bufferId=VA_INVALID;
+        }
+        
+}
+
+/**
+ * \fn readBuffers
+ * @param bufferId
+ * @param maxSize
+ * @param to
+ * @param sizeOut
+ * @return 
+ */
+bool   ADM_vaEncodingBuffer::readBuffers(int maxSize, uint8_t *to, int *sizeOut)
+{
+    int xError;
+    CHECK_WORKING(false);
+    VACodedBufferSegment *buf_list = NULL;    
     
-    
+    *sizeOut=0;
+    if(bufferId==VA_INVALID)
+    {
+        ADM_warning("Using invalid encoding buffer\n");
+        return false;
+    }
+    CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display,bufferId,(void **)(&buf_list)));
+    if(xError)
+    {
+        ADM_warning("Cannot read buffer\n");
+        return false;
+    }
+    while (buf_list) 
+    {
+        if(*sizeOut+buf_list->size>maxSize)
+        {
+            ADM_warning("Overflow\n");
+            ADM_assert(0);
+        }
+        int round=buf_list->size;
+        memcpy(to, buf_list->buf, round);
+        to+=round;
+        *sizeOut+=round;
+        buf_list = (VACodedBufferSegment *)buf_list->next;
+    }
+    CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display,bufferId));
+    return true;
+}
+/**
+ * \fn ctor
+ */
+ADM_vaEncodingContext::ADM_vaEncodingContext()
+{
+    contextId=VA_INVALID;
+}
+/**
+ * \fn dtor
+ */
+
+ADM_vaEncodingContext::~ADM_vaEncodingContext()
+{
+    int xError;
+    CHECK_WORKING();
+    if(contextId!=VA_INVALID)
+    {
+        CHECK_ERROR(vaDestroyContext(ADM_coreLibVA::display,contextId));
+        contextId=VA_INVALID;
+    }
+            
+}
+
 #endif
