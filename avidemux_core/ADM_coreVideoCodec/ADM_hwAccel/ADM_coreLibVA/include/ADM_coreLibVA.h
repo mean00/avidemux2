@@ -98,10 +98,13 @@ static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 class ADM_vaEncodingContext
 {
 protected:   
-        VAContextID contextId;
+        int             width16;
+        int             height16;
+        VAContextID     contextId;
+        ADM_vaSurface   *internalSurface[2];
 public:
                     ADM_vaEncodingContext();
-        bool        init(int width, int height); // Surface..
+        bool        init(int width, int height, int surfaceCount, ADM_vaSurface **surfaces); 
                     ~ADM_vaEncodingContext();
 };
 /**

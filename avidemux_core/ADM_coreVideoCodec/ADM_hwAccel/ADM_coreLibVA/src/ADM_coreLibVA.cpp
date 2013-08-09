@@ -1055,6 +1055,8 @@ bool   ADM_vaEncodingBuffer::readBuffers(int maxSize, uint8_t *to, int *sizeOut)
 ADM_vaEncodingContext::ADM_vaEncodingContext()
 {
     contextId=VA_INVALID;
+    internalSurface[0]=NULL;
+    internalSurface[1]=NULL;
 }
 /**
  * \fn dtor
@@ -1069,7 +1071,61 @@ ADM_vaEncodingContext::~ADM_vaEncodingContext()
         CHECK_ERROR(vaDestroyContext(ADM_coreLibVA::display,contextId));
         contextId=VA_INVALID;
     }
+    for(int i=0;i<2;i++)
+        if(internalSurface[i])
+        {
+            delete internalSurface[i];
+            internalSurface[i]=NULL;
+        }
             
 }
+/**
+ * \fn init
+ * @param width
+ * @param height
+ * @param surfaceCount
+ * @param surfaces
+ * @return 
+ */
+ bool        ADM_vaEncodingContext::init(int width, int height, int surfaceCount, ADM_vaSurface **surfaces)
+ {
+    int xError;
+    CHECK_WORKING(false);
+    if(false==ADM_coreLibVAEnc::encoders::h264)
+    {
+        ADM_warning("H264 encoding not supported\n");
+        return false;
+    }
+     width16=(width+15)&~15;
+     height16=(height+15)&~15;
+     
+     internalSurface[0]=new ADM_vaSurface(NULL,width16,height16);
+     internalSurface[1]=new ADM_vaSurface(NULL,width16,height16);
+     if(!internalSurface[0] || !internalSurface[1])
+     {
+         ADM_warning("Cannot allocate internal surface\n");
+         return false;
+     }
+     
+     VASurfaceID *s=new VASurfaceID[surfaceCount+2];
+     for(int i=0;i<surfaceCount;i++)
+         s[i]=surfaces[i]->surface;
+     s[surfaceCount]=internalSurface[0]->surface;
+     s[surfaceCount+1]=internalSurface[1]->surface;
+     CHECK_ERROR(vaCreateContext(ADM_coreLibVA::display,  ADM_coreLibVAEnc::encoders::h264ConfigID,
+                                width16, height16,
+                                VA_PROGRESSIVE,
+                                 s,surfaceCount+2,&contextId));
+     delete [] s;
+     if(xError)
+     {
+         ADM_warning("Cannot create encoding context\n");
+         return false;
+     }
+     aprintf("Context created ok\n");
+     return true;
+ }
 
 #endif
+
+
