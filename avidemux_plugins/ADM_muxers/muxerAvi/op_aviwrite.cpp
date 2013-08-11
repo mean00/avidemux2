@@ -106,9 +106,9 @@ static 	uint32_t aacBitrate[16]=
 */
 aviWrite::aviWrite( void )
 {
-	_out=NULL;
+    _out=NULL;
     _file=NULL;
-
+    indexMaker=NULL;
     memset(&(audioTracks),0,sizeof(audioTracks));
     memset(openDmlHeaderPosition,0,sizeof(openDmlHeaderPosition));
     
