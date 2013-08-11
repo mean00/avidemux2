@@ -22,6 +22,7 @@
 #include "ADM_dynamicLoading.h"
 #include "ADM_windowInfo.h"
 #include "libavcodec/vaapi.h"
+#include "ADM_imageFlags.h"
 
 #include "fourcc.h"
 
@@ -70,6 +71,7 @@ static bool                  coreLibVAWorking=false;
 #define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);}
 
 #include "ADM_coreLibVA_test.cpp"
+#include "ADM_bitstream.h"
 
 
 /**
@@ -1015,7 +1017,7 @@ ADM_vaEncodingBuffer::~ADM_vaEncodingBuffer()
  * @param sizeOut
  * @return 
  */
-bool   ADM_vaEncodingBuffer::readBuffers(int maxSize, uint8_t *to, int *sizeOut)
+bool   ADM_vaEncodingBuffer::readBuffers(int maxSize, uint8_t *to, uint32_t *sizeOut)
 {
     int xError;
     CHECK_WORKING(false);
@@ -1057,6 +1059,8 @@ ADM_vaEncodingContext::ADM_vaEncodingContext()
     contextId=VA_INVALID;
     internalSurface[0]=NULL;
     internalSurface[1]=NULL;
+    extraData=NULL;
+    firstPic=false;
 }
 /**
  * \fn dtor
@@ -1077,8 +1081,125 @@ ADM_vaEncodingContext::~ADM_vaEncodingContext()
             delete internalSurface[i];
             internalSurface[i]=NULL;
         }
-            
+    if(extraData)            
+    {
+        delete [] extraData;
+        extraData=NULL;
+    }
 }
+/**
+ * \fn createExtraData
+ * @return 
+ */
+bool        ADM_vaEncodingContext::createExtraData()
+{
+        int xError;
+        CHECK_WORKING(false);
+
+        
+        VAEncSequenceParameterBufferH264 seq_h264 = {0};
+        VABufferID seq_param_buf;
+            
+            seq_h264.level_idc = 30;
+            seq_h264.picture_width_in_mbs = width16;
+            seq_h264.picture_height_in_mbs = width16;
+            seq_h264.bits_per_second = 8000000; // bps
+            seq_h264.frame_rate = 30; // fps
+            seq_h264.initial_qp = 20;
+            seq_h264.min_qp = 1;
+            seq_h264.basic_unit_size = 0;
+            seq_h264.intra_period = 50;
+            
+            CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,
+                                       VAEncSequenceParameterBufferType,
+                                       sizeof(seq_h264),1,&seq_h264,&seq_param_buf));
+            if(xError) return false;
+            CHECK_ERROR (vaRenderPicture(ADM_coreLibVA::display, contextId, &seq_param_buf, 1));
+            if(xError) return false;
+            return true;
+
+
+}
+/**
+ * \fn encode
+ * @param src
+ * @param out
+ * @param encodingBuffer
+ * @return 
+ */
+bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer)
+{
+        int xError;
+        CHECK_WORKING(false);
+
+        CHECK_ERROR(vaBeginPicture(ADM_coreLibVA::display, contextId, src->surface));
+        if(xError) return false;
+
+        if(firstPic)
+        {
+            firstPic=false;
+            if(!createExtraData())
+            {
+                ADM_warning("Cannot create SPS\n");
+                return false;
+            }
+        }
+        VAEncPictureParameterBufferH264 pic_h264;
+        VABufferID                      pic_param_buf;
+        VAEncSliceParameterBuffer       slice_h264;
+        VABufferID                      slice_param_buf;
+
+        pic_h264.reference_picture = internalSurface[toggle]->surface;
+        pic_h264.reconstructed_picture= internalSurface[1^toggle]->surface;
+        pic_h264.coded_buf = encodingBuffer->bufferId;
+        pic_h264.picture_width = width16;
+        pic_h264.picture_height = height16;
+        pic_h264.last_picture = 0; // FIXME
+        
+        CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,VAEncPictureParameterBufferType,
+                                   sizeof(pic_h264),1,&pic_h264,&pic_param_buf));
+        if(xError) return false;
+ 
+
+        CHECK_ERROR(vaRenderPicture(ADM_coreLibVA::display, contextId, &pic_param_buf, 1));
+        if(xError) return false;
+        
+        slice_h264.start_row_number = 0;
+        slice_h264.slice_height = height16/16; /* Measured by MB */
+        slice_h264.slice_flags.bits.is_intra = 1;
+        slice_h264.slice_flags.bits.disable_deblocking_filter_idc = 0;
+        CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,VAEncSliceParameterBufferType,
+                                   sizeof(slice_h264),1,&slice_h264,&slice_param_buf));
+        if(xError) return false;
+        
+        CHECK_ERROR(vaRenderPicture(ADM_coreLibVA::display, contextId, &slice_param_buf, 1));
+        if(xError) return false;
+        
+        CHECK_ERROR(vaEndPicture(ADM_coreLibVA::display, contextId));
+        if(xError) return false;
+
+        CHECK_ERROR(vaSyncSurface(ADM_coreLibVA::display, src->surface));
+        if(xError) return false;
+        VASurfaceStatus surface_status ;
+        CHECK_ERROR(vaQuerySurfaceStatus(ADM_coreLibVA::display, src->surface,&surface_status));
+        if(xError) return false;
+        
+        //frame_skipped = (surface_status & VASurfaceSkipped);
+
+        //save_coded_buf(coded_buf[codedbuf_idx], i, frame_skipped);
+        bool r=encodingBuffer->readBuffers(out->bufferSize,out->data,&(out->len));
+        if(!r)
+        {
+            ADM_warning("Cannot read buffer\n");
+            return false;
+        }
+        out->dts=ADM_NO_PTS;
+        out->pts=ADM_NO_PTS;
+        out->flags=AVI_KEY_FRAME;
+        return true;   
+}
+
+
 /**
  * \fn init
  * @param width

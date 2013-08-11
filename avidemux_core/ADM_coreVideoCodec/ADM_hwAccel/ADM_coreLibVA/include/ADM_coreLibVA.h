@@ -95,6 +95,8 @@ static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 /**
  * \class admLibVAEnc
  */
+class ADMBitstream;
+class ADM_vaEncodingBuffer;
 class ADM_vaEncodingContext
 {
 protected:   
@@ -102,10 +104,16 @@ protected:
         int             height16;
         VAContextID     contextId;
         ADM_vaSurface   *internalSurface[2];
+        uint8_t         *extraData;
+        int              extraDataSize;
+        bool             firstPic;
+        int              toggle;
 public:
                     ADM_vaEncodingContext();
         bool        init(int width, int height, int surfaceCount, ADM_vaSurface **surfaces); 
+        bool        createExtraData();
                     ~ADM_vaEncodingContext();
+        bool        encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer);
 };
 /**
  * \class ADM_vaSurface
@@ -155,7 +163,7 @@ public:
     VABufferID          bufferId;
     ADM_vaEncodingBuffer(VAContextID context,int bufferSize);
     ~ADM_vaEncodingBuffer();
-    bool   readBuffers(int maxSize, uint8_t *to, int *sizeOut);
+    bool   readBuffers(int maxSize, uint8_t *to, uint32_t *sizeOut);
 };
 #endif
 #endif
