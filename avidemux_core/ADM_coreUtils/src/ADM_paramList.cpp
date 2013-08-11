@@ -363,6 +363,11 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
 */
 bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 {
+    if(!couples && !params)
+    {
+          ADM_warning("Empty parameter list\n");
+          return true;
+    }
     if(false==ADM_paramValidate(couples,params)) return false;
     return ADM_paramLoadInternal(false,couples,params,s);
 
