@@ -99,6 +99,7 @@ class ADMBitstream;
 class ADM_vaEncodingBuffer;
 class ADM_vaEncodingContext
 {
+friend ADM_vaEncodingBuffer;
 protected:   
         int             width16;
         int             height16;
@@ -161,7 +162,7 @@ class ADM_vaEncodingBuffer
 {
 public:
     VABufferID          bufferId;
-    ADM_vaEncodingBuffer(VAContextID context,int bufferSize);
+    ADM_vaEncodingBuffer(ADM_vaEncodingContext *context,int bufferSize);
     ~ADM_vaEncodingBuffer();
     bool   readBuffers(int maxSize, uint8_t *to, uint32_t *sizeOut);
 };

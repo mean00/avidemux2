@@ -30,18 +30,61 @@ ADM_libvaEncoder::ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader) :
     h=info->height;
     image=new ADMImageDefault(w,h);
     plane=(w*h*3)/2;
-    vaSurface=new ADM_vaSurface(NULL,w,h);
+    for(int i=0;i<VA_ENC_NB_SURFACE;i++)    
+        vaSurface[i]=NULL;
+    context=NULL;
+    encodingBuffer=NULL;
+       
+
+}
+bool         ADM_libvaEncoder::setup(void)
+{
+    int width=getWidth();
+    int height=getHeight();
+    
+    // Allocate VAImage
+
+    for(int i=0;i<VA_ENC_NB_SURFACE;i++)
+    {
+        vaSurface[i]=new ADM_vaSurface(NULL,width,height);
+        if(vaSurface[i]->image) 
+        {
+            ADM_warning("Cannot allocate surface\n");
+            return false;
+        }
+    }
+    context=new ADM_vaEncodingContext();
+    if(!context->init(width,height,VA_ENC_NB_SURFACE,vaSurface))
+    {
+        ADM_warning("Cannot initialize vaEncoder context\n");
+        return false;
+    }
+    encodingBuffer=new ADM_vaEncodingBuffer(context,(width*height*400)/256);
+    return true;
 }
 /** 
     \fn ~ADM_libvaEncoder
 */
 ADM_libvaEncoder::~ADM_libvaEncoder()
 {
-    printf("[LibVAEncoder] Destroying.\n");
-    if(vaSurface)
+    ADM_info("[LibVAEncoder] Destroying.\n");
+    for(int i=0;i<VA_ENC_NB_SURFACE;i++)
     {
-        delete vaSurface;
-        vaSurface=NULL;
+        if(vaSurface[i])
+        {
+            delete vaSurface[i];
+            vaSurface[i]=NULL;
+        }
+    }
+    if(context)
+    {
+        delete context;
+        context=NULL;
+    }
+    if(encodingBuffer)
+    {
+        delete encodingBuffer;
+        encodingBuffer=NULL;
     }
 }
 
@@ -57,13 +100,18 @@ bool         ADM_libvaEncoder::encode (ADMBitstream * out)
         ADM_warning("[LIBVA] Cannot get next image\n");
         return false;
     }
-    if(!vaSurface->fromAdmImage(image))
+    if(!vaSurface[0]->fromAdmImage(image))
     {
         ADM_warning("Cannot upload image to surface\n");
         return false;
     }
-    ADM_assert(out->bufferSize>plane);
-    memcpy(out->data,image->GetReadPtr(PLANAR_Y),plane); // We KNOW the y,u,v planes are contiguous and width=stride!
+    //
+    if(!context->encode(vaSurface[0],out,encodingBuffer))
+    {
+        ADM_warning("Error encoding picture\n");
+        return false;
+    }
+    
     out->len=plane;
     out->pts=out->dts=image->Pts;
     out->flags=AVI_KEY_FRAME;
