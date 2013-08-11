@@ -20,20 +20,72 @@
 #include "ADM_ffDv.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-
+#include "DIA_coreToolkit.h"
 #if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
 #endif
 
+typedef enum
+{
+    dvColor420=0,
+    dvColor422=1,
+    dvColorUnsupported=0xff
+}dvColorFormat;
+typedef struct
+{
+    const int width;
+    const int height;
+    const int fps;
+    const dvColorFormat color;
+    
+} dvProfileClass;
+
+static const dvProfileClass supportedProfiles[]=
+{
+    {720,480,29.97,dvColor422},
+    {720,576,25,dvColor420},
+};
+
+static const dvProfileClass  *findProfile(int width, int height,int fps)
+{
+    int n=sizeof(supportedProfiles)/sizeof(dvProfileClass);
+    for(int i=0;i<n;i++)
+    {
+        const dvProfileClass *p=supportedProfiles+i;
+        if((p->width==width) && (p->height==height))
+        {
+            double f=(fps-p->fps);
+            f/=fps;
+            f*=100;
+            if(f<5.)
+                return p;
+        }
+    }
+    return NULL;
+}
 
 /**
     \fn setup
 */
 bool ADM_ffDvEncoder::setup(void)
 {
-    
+   double frameIn=this->getFrameIncrement();
+   frameIn=1/frameIn;
+   frameIn*=1000000.;
+   int fps=floor(frameIn+0.49);
+   ADM_info("Looking for dv profile : %d x %d, fps=%d\n",this->getWidth(),this->getHeight(),fps);
+   const dvProfileClass *p=findProfile(this->getWidth(),this->getHeight(),fps);
+   if(!p)
+   {
+       GUI_Error_HIG("DV",QT_TR_NOOP("DV only supports 720*576*25fps and 720*480*29.97fps"));
+       return false;
+   }
+   if(p->color==dvColor422)
+   {
+       targetColorSpace=ADM_COLOR_YUV422P;
+   }
    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_DVVIDEO))
         return false;
    return true;
