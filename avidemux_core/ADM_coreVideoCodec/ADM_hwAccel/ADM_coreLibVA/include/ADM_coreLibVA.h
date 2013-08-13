@@ -99,7 +99,7 @@ class ADMBitstream;
 class ADM_vaEncodingBuffer;
 class ADM_vaEncodingContext
 {
-friend ADM_vaEncodingBuffer;
+friend class ADM_vaEncodingBuffer;
 protected:   
         int             width16;
         int             height16;
