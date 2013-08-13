@@ -16,12 +16,12 @@ ADM_ScriptGenerator::ADM_ScriptGenerator(IEditor *editor, IScriptWriter* scriptW
 
 void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 {
-    if (!this->_editor->getNbSegment())
+        if (!this->_editor->getNbSegment())
 	{
         return;
 	}
-
-	this->_scriptWriter->connectStream(stream);
+        init(stream);
+	
 	this->_scriptWriter->closeVideo();
 
 	printf("Scripting video streams\n");
@@ -77,14 +77,8 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 
 	// Video filters....
 	printf("Scripting video filters\n");
-
-    int nbFilter = ADM_vf_getSize();
-
-    for (int i = 0; i < nbFilter; i++)
-    {
-		ADM_VideoFilterElement *element = &ADM_VideoFilters[i];
-		this->_scriptWriter->addVideoFilter(ADM_vf_getPluginFromTag(element->tag), element);
-    }
+        saveVideoFilters();
+  
 
 	printf("Scripting audio tracks\n");
 
@@ -143,5 +137,38 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 
 	this->_scriptWriter->setMuxer(this->_editor->getCurrentMuxer());
 
-	this->_scriptWriter->disconnectStream();
+	end();
+}
+/**
+ * \fn saveVideoFilters
+ * @param stream
+ */
+bool ADM_ScriptGenerator::saveVideoFilters()
+{
+    int nbFilter = ADM_vf_getSize();
+
+    for (int i = 0; i < nbFilter; i++)
+    {
+		ADM_VideoFilterElement *element = &ADM_VideoFilters[i];
+		this->_scriptWriter->addVideoFilter(ADM_vf_getPluginFromTag(element->tag), element);
+    }
+    return true;
+}
+/**
+ * \fn init
+ * @param stream
+ */
+bool ADM_ScriptGenerator::init(std::iostream& stream)
+{
+  this->_scriptWriter->connectStream(stream);
+  return true;
+}
+/**
+ * \fn end
+ * @return 
+ */
+bool ADM_ScriptGenerator::end()
+{
+        this->_scriptWriter->disconnectStream();
+        return true;
 }

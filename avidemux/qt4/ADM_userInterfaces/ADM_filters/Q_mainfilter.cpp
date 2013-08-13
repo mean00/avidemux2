@@ -26,6 +26,7 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include <vector>
+#include <sstream>
 using std::string;
 #include "Q_mainfilter.h"
 #include "ADM_default.h"
@@ -43,8 +44,9 @@ using std::string;
 #include "ADM_toolkitQt.h"
 
 #include "prefs.h"
-
-
+#include "ADM_edScriptGenerator.h"
+#include "DIA_fileSel.h"
+#include "ADM_script2/include/ADM_script.h"
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -511,6 +513,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect((ui.toolButtonDown),SIGNAL(clicked(bool)),this,SLOT(down(bool)));
     connect((ui.toolButtonPartial),SIGNAL(clicked(bool)),this,SLOT(partial(bool)));
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
+    connect(ui.pushLoad, SIGNAL(clicked(bool)), this, SLOT(loadFilters(bool)));
+    connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
 #if 0
     connect(ui.pushButtonDVD, SIGNAL(clicked(bool)), this, SLOT(DVD(bool)));
     connect(ui.pushButtonVCD, SIGNAL(clicked(bool)), this, SLOT(VCD(bool)));
@@ -641,6 +645,59 @@ void filtermainWindow::remove(void)
 void filtermainWindow::configure(void)
 {
     configure(true);
+}
+/**
+ * \fn loadFilters
+ * \brief load a filter from .py
+ * @param b
+ */
+extern void call_scriptEngine(const char *scriptFile);
+void filtermainWindow::loadFilters( bool b)
+{
+    printf("Load filters\n");
+
+    char name[1024];
+    
+    if(!FileSel_SelectRead(QT_TR_NOOP("Load video filters.."),name,1023,NULL))
+        return;
+    call_scriptEngine(name);
+    buildActiveFilterList();
+}
+/**
+ * \fn saveFilters
+ * \brief save a filter from .py
+ * @param b
+ */
+void filtermainWindow::saveFilters( bool b)
+{
+    printf("save filters\n");
+    char name[1024];
+    
+    if(!FileSel_SelectWrite(QT_TR_NOOP("Save video filters.."),name,1023,NULL))
+        return;
+    printf("save filters, part 2\n");
+    IScriptEngine *engine=getPythonScriptEngine();
+    IScriptWriter *writer = engine->createScriptWriter();
+    
+    ADM_ScriptGenerator generator(video_body, writer);
+    std::stringstream stream(std::stringstream::in | std::stringstream::out);
+    std::string fileName = std::string(name);
+
+    generator.init(stream);
+    generator.saveVideoFilters();
+    generator.end();
+    delete writer;
+
+    if (fileName.rfind(".") == std::string::npos)
+    {
+            fileName += "." + engine->defaultFileExtension();
+    }
+
+    FILE *file = ADM_fopen(fileName.c_str(), "wt");
+    string script = stream.str();
+
+    ADM_fwrite(script.c_str(), script.length(), 1, file);
+    ADM_fclose(file);
 }
 
 //EOF

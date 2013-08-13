@@ -54,17 +54,19 @@ public slots:
 	void down(bool b);
 	void remove(bool b);
 	void configure(bool b);
+        void saveFilters(bool b);
+        void loadFilters(bool b);
 	void partial(bool b);
 	void activeDoubleClick( QListWidgetItem  *item);
 	void allDoubleClick( QListWidgetItem  *item);
 	void filterFamilyClick(QListWidgetItem *item);
 	void filterFamilyClick(int  item);
 	void preview(bool b);
-    void closePreview(void);
-    // context menu
-    void add(void);
-    void remove(void);
-    void configure(void);
+        void closePreview(void);
+        // context menu
+        void add(void);
+        void remove(void);
+        void configure(void);
 
 private:
 	void setSelected(int sel);
