@@ -12,8 +12,11 @@ private:
 	IScriptWriter* _scriptWriter;
 
 public:
-	ADM_ScriptGenerator(IEditor *editor, IScriptWriter* scriptWriter);
+             ADM_ScriptGenerator(IEditor *editor, IScriptWriter* scriptWriter);
 	void generateScript(std::iostream& stream);
+        bool init(std::iostream& stream);
+        bool end();
+        bool saveVideoFilters();
 };
 
 #endif
