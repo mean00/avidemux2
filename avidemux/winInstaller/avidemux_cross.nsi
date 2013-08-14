@@ -109,8 +109,8 @@ Page custom InstallOptionsPage
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME} now"
 !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR/Change Log.html"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "View Change Log now"
-!define MUI_FINISHPAGE_LINK "Visit the Avidemux Builds for Windows website"
-!define MUI_FINISHPAGE_LINK_LOCATION "http://avidemux.razorbyte.com.au/"
+!define MUI_FINISHPAGE_LINK "Visit the Avidemux website"
+!define MUI_FINISHPAGE_LINK_LOCATION "http://avidemux.org/"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE ConfigureFinishPage
 !insertmacro MUI_PAGE_FINISH
 
