@@ -25,7 +25,6 @@ RequestExecutionLevel user
 !define QT_DIR /mingw/Qt/current/bin/
 !define ADM_SYSDIR /mingw/bin
 !define ADM_DIR /mingw/Release
-!define TOOLCHAIN_DIR /home/fx/rub/mingw64/
 #!define NSIDIR "/home/fx/hudson/workspace/mingw_2.6.2_nsis/avidemux/winInstaller"
 #!define SVN_VERSION 6
 !define REVISION ${SVN_VERSION}
@@ -34,7 +33,7 @@ RequestExecutionLevel user
 !define CORE_VERSION "2.6"
 !define POINT_RELEASE "4"
 !define PRODUCT_VERSION "${CORE_VERSION}.${POINT_RELEASE}.${SVN_VERSION}"
-!define PRODUCT_NAME "Avidemux ${CORE_VERSION}"
+!define PRODUCT_NAME "Avidemux ${CORE_VERSION} - 64bits"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
 
 !if ${BUILD_BITS} == 64
@@ -69,7 +68,7 @@ Name "${PRODUCT_FULLNAME}"
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "${REGKEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER Avidemux
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Avidemux (64bits)"
 !define MUI_STARTMENUPAGE_NODISABLE
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
@@ -108,8 +107,8 @@ Page custom InstallOptionsPage
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME} now"
 !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR/Change Log.html"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "View Change Log now"
-!define MUI_FINISHPAGE_LINK "Visit the Avidemux Builds for Windows website"
-!define MUI_FINISHPAGE_LINK_LOCATION "http://avidemux.razorbyte.com.au/"
+!define MUI_FINISHPAGE_LINK "Visit the Avidemux website"
+!define MUI_FINISHPAGE_LINK_LOCATION "http://www.avidemux.org"
 !define MUI_PAGE_CUSTOMFUNCTION_PRE ConfigureFinishPage
 !insertmacro MUI_PAGE_FINISH
 
