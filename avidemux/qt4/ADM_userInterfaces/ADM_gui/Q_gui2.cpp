@@ -743,6 +743,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 	printf("The screen seems to be %u x %u px\n",w,h);
 
 	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
+        mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
 	UI_updateRecentMenu();
 	UI_updateRecentProjectMenu();
 
