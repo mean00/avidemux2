@@ -68,7 +68,12 @@ version 2 media descriptor :
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_codecType.h"
 #include "ADM_a52info.h"
+
+#if 1
 #define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
 
 //#define MP4_VERBOSE
 #define MAX_CHUNK_SIZE (3*1024)
@@ -165,6 +170,7 @@ bool MP4Header::refineFps(void)
 }
 uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
+    aprintf("[MP4] frame %d requested (nbFrame=%d)\n",framenum,VDEO.nbIndex);
     if(framenum>=VDEO.nbIndex)
     {
       return 0;
@@ -182,6 +188,7 @@ MP4Index *idx=&(VDEO.index[framenum]);
 
     img->demuxerDts=idx->dts;
     img->demuxerPts=idx->pts;
+    aprintf("[MP4] Pts=%s\n",ADM_us2plain(idx->pts));
     /*
     if(img->demuxerPts==ADM_COMPRESSED_NO_PTS)
         img->demuxerPts=img->demuxerDts;
@@ -434,6 +441,7 @@ uint8_t    MP4Header::open(const char *name)
         if(maxDelta)
         {
             shiftTimeBy(maxDelta);
+             _movieDuration+=(maxDelta+999)/1000;
         }
         /*
                 Now build audio tracks
@@ -486,8 +494,15 @@ uint8_t    MP4Header::open(const char *name)
         }
         fseeko(_fd,0,SEEK_SET);
         refineFps();
-        ADM_info("3gp/mov file successfully read..\n");
+        uint64_t duration1=_movieDuration*1000LL;
+        uint64_t duration2=_tracks[0].index[nb-1].pts;
         
+        ADM_info("3gp/mov file successfully read..\n");
+        if(duration2!=ADM_NO_PTS && duration2>duration1)
+        {
+            ADM_warning("Last PTS is after movie duration, increasing movie duration\n");
+            _movieDuration=(_tracks[0].index[nb-1].pts/1000)+1;
+        }
         ADM_info("Nb images      : %d\n",nb);
         ADM_info("Movie duration : %s\n",ADM_us2plain(_movieDuration*1000LL));
         ADM_info("Last video PTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].pts));
