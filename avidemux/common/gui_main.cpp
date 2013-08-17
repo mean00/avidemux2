@@ -292,6 +292,7 @@ void HandleAction (Action action)
           }
           ADM_info("Closing ui\n");
 	  UI_closeGui();
+          
           return;
       break;
     default:

@@ -104,17 +104,6 @@ bool ADM_Composer::getExtraHeaderData (uint32_t * len, uint8_t ** data)
 */
 ADM_Composer::~ADM_Composer ()
 {
-    if(_imageBuffer)
-    {
-        if(_imageBuffer->quant)
-            delete [] _imageBuffer->quant;
-        _imageBuffer->quant=NULL;
-        delete  _imageBuffer;
-        _imageBuffer=NULL;
-    }
-    if(_scratch)
-        delete  _scratch;
-    _scratch=NULL;
 
     cleanup();
 
@@ -472,9 +461,18 @@ uint32_t ref;
 */
 uint8_t ADM_Composer::cleanup (void)
 {
-  if(_scratch)
+    if(_scratch)
         delete  _scratch;
-   _scratch=NULL;
+    _scratch=NULL;
+    if(_imageBuffer)
+     {
+         if(_imageBuffer->quant)
+             delete [] _imageBuffer->quant;
+         _imageBuffer->quant=NULL;
+         delete  _imageBuffer;
+         _imageBuffer=NULL;
+     }  
+  
   _segments.deleteAll();
   _currentPts = 0;
   markerAPts = 0;

@@ -44,8 +44,6 @@ extern "C" {
 
 static bool         vdpauWorking=false;
 static admMutex     surfaceMutex;
-static bool         destroyingFlag=false;
-static BVector   <void *> destroyedList;
 #define aprintf(...) {}
 
 typedef enum 
@@ -55,20 +53,6 @@ typedef enum
     ADM_VDPAU_MPEG2=2,
     ADM_VDPAU_VC1=3
 }ADM_VDPAU_TYPE;
-/**
-    \fn hasBeenDestroyed
-    \brief If the context has been destroyed, dont attempt to manipulate the buffers attached
-*/
-static bool hasBeenDestroyed(void *ptr)
-{
-    int nb=destroyedList.size();
-    for(int i=0;i<nb;i++)
-    {
-        if(destroyedList[i]==ptr)
-            return true;
-    }
-    return false;
-}
 
 /**
     \fn markSurfaceUsed
@@ -78,8 +62,6 @@ static bool vdpauMarkSurfaceUsed(void *v, void * cookie)
 {
     vdpauContext *vd=(vdpauContext*)v;
     vdpau_render_state *render=(vdpau_render_state *)cookie;
-    if(destroyingFlag) // check that the surface has not been destroyed already...
-         if(hasBeenDestroyed(vd)) return true;
     render->refCount++;
     return true;
 }
@@ -91,8 +73,6 @@ static bool vdpauMarkSurfaceUnused(void *v, void * cookie)
 {
     vdpauContext *vd=(vdpauContext*)v;
     vdpau_render_state *render=(vdpau_render_state *)cookie;
-    if(destroyingFlag) // check that the surface has not been destroyed already...
-         if(hasBeenDestroyed(vd)) return true;
     render->refCount--;
     if(!render->refCount)
     {
@@ -296,9 +276,6 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         uint8_t *extraData,uint32_t bpp)
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
-        destroying=false;
-        destroyingFlag=false; 
-        destroyedList.clear();
         alive=true;
         scratch=NULL;
         uint8_t *extraCopy=NULL;
@@ -379,9 +356,13 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 decoderFFVDPAU::~decoderFFVDPAU()
 {
         ADM_info("[VDPAU] Cleaning up\n");
-        destroying=true;
-        destroyingFlag=true;
-        destroyedList.append(VDPAU);
+        if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
+        // released
+        {
+                avcodec_close (_context);
+                av_free(_context);
+                _context=NULL;
+        }
         if(scratch)
             delete scratch;
         scratch=NULL;

@@ -780,6 +780,7 @@ void UI_closeGui(void)
 {
         if(!uiRunning) return;
         uiRunning=false;
+        
 	QuiMainWindows->close();
 	qtUnregisterDialog(QuiMainWindows);
         
@@ -791,15 +792,7 @@ void destroyGUI(void)
 }
 void callBackQtWindowDestroyed()
 {
-	renderDestroy();
-#if defined( USE_VDPAU)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    ADM_info("cleaning VDPAU...\n");
-    vdpauCleanup();
-  #else
-    ADM_info("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
+	
 
 }
 /**
@@ -1324,6 +1317,26 @@ void UI_setAudioTrackCount( int nb )
      WIDGET(TrackCountLabel)->setText(QString(txt));
 
 }
+/**
+ * \fn dtor
+ */
+myQApplication::~myQApplication()
+{
+    ADM_warning("Cleaning video body...\n");
+    if(video_body) video_body->cleanup (); // Delete decoder related to X11 context before purging X11 context
+    ADM_warning("Cleaning render...\n");
+    renderDestroy();
+#if defined( USE_VDPAU)
+  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    ADM_warning("cleaning VDPAU...\n");
+    vdpauCleanup();
+  #else
+    ADM_info("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
+  #endif
+#endif
 
+    ADM_warning("Exiting app\n");
+}
+                
 //********************************************
 //EOF

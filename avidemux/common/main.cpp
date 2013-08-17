@@ -381,6 +381,7 @@ void onexit( void )
     ADM_ve6_cleanup();
 
     ADM_jobShutDown();
+    
     printf("--End of cleanup--\n");
     ADMImage_stat();
 

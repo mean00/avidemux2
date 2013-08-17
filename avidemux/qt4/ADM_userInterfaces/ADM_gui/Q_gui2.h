@@ -40,11 +40,8 @@ class myQApplication : public QApplication
                     return QApplication::exec();
 
                 }
-
-                virtual ~myQApplication()
-                {
-                    ADM_warning("Exiting app\n");
-                }
+                
+                virtual ~myQApplication();
                 myQApplication(int &argc, char **argv) : QApplication(argc,argv)
                 {
                      
