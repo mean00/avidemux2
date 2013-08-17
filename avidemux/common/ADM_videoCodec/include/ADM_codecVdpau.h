@@ -10,8 +10,7 @@ protected:
                     ADMImage *scratch;
                     ADMImage *vdpau_copy;
                     uint64_t vdpau_pts;
-                    bool     decode_status;
-                    bool     destroying;
+                    bool     decode_status;                    
 public:     // Callbacks
                     int     getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void    releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);

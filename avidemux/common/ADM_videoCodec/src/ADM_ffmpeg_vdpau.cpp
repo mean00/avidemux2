@@ -222,7 +222,7 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
   vdpau_render_state * render;
   int i;
-  if(destroying==true) return; // They are already freed...
+  
   render=(vdpau_render_state*)pic->data[0];
   ADM_assert(render);
   ADM_assert(render->refCount);
