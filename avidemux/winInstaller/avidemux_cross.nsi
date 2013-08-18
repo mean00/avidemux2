@@ -1055,6 +1055,7 @@ ${MementoSection} "-Start menu Change Log" SecStartMenuChangeLog
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk" "$INSTDIR\Change Log.html"
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Avidemux job control.lnk" $INSTDIR\avidemux_jobs.exe
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
@@ -1115,8 +1116,8 @@ Section Uninstall
     Delete /REBOOTOK "$QUICKLAUNCH\${SHORTCUT_NAME}.lnk"
     Delete /REBOOTOK "$DESKTOP\${SHORTCUT_NAME}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk"
-
-	Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Avidemux job control.lnk"
+    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
     DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
