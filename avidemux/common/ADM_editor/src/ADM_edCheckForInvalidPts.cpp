@@ -107,4 +107,36 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     goToTimeVideo(seg->_startTimeUs);
     return true;
 }
+/**
+    \fn ADM_Composer
+
+*/
+bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
+{       
+    int totalFrames=hdr->getVideoStreamHeader()->dwLength;
+    int good=0,bad=0,skipped=0;
+    uint64_t dtsCeil= (timeIncrementUs*18)/10;
+    ADM_info("Checking for doubled FPS..\n");
+    for(int i=0;i<totalFrames-1;i++)
+    {
+          uint64_t pts,dts;
+          uint64_t dts2;
+          hdr->getPtsDts(i,&pts,&dts);
+          hdr->getPtsDts(i+1,&pts,&dts2);
+          if(dts==ADM_NO_PTS || dts2==ADM_NO_PTS)
+          {
+              skipped++;
+              continue;
+          }
+          if((dts2-dts)< dtsCeil)
+              bad++;
+          else
+              good++;
+    }
+    ADM_info("Out of %d frames, we have :\n",totalFrames);
+    ADM_info("Bad : %d\n",bad);
+    ADM_info("Good : %d\n",good);
+    ADM_info("Skipped : %d\n",skipped);
+    return true;
+}
 // EOF

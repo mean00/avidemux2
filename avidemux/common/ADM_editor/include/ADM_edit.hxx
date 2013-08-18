@@ -133,6 +133,7 @@ protected:
                     bool        searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime);
                     ADM_decodeStats stats;
                     bool        checkForValidPts (_SEGMENT *vid);
+                    bool        checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs);
 
 
 //******************************************************************************************
