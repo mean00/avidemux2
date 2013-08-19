@@ -218,7 +218,7 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
         shift=0;
   }
   else
-  {
+  { // shift <0
       int64_t comp=-shift;
       if(comp<startTime)
       {
@@ -226,7 +226,7 @@ ADM_audioStream *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audi
           shift=0;
       }else
       {
-          shift-=startTime;
+          shift=comp-startTime;
           startTime=0;
       }
   }
