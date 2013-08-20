@@ -371,8 +371,9 @@ again:
         {
             uint64_t currentClock=clock->getTimeUs();
             aprintf("Duping clockDts=%d, syncDts=%d\n",currentClock,nextDts);
-            if( fabs((double)nextDts-(double)currentClock<MAX_SKEW))
+            if( fabs((double)nextDts-(double)currentClock<MIN_SKEW) || (currentClock>nextDts) )
             {
+                aprintf("Close enough..\n");
                 changeState(Flushing);
             }
             dupePacket(buffer,*size,*nbSample,*dts);
@@ -389,6 +390,7 @@ again:
                 goto again;
              }
              bool r=popBackPacket(buffer,  size,  nbSample, dts);
+              *dts=clock->getTimeUs();
              clock->advanceBySample(*nbSample);
              return r;
         }
