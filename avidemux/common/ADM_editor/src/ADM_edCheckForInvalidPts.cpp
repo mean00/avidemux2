@@ -108,7 +108,8 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     return true;
 }
 /**
-    \fn ADM_Composer
+    \fn checkForDoubledFps
+    \brief Checks if the DTS increases by half the fps
 
 */
 bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
@@ -134,9 +135,17 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
               good++;
     }
     ADM_info("Out of %d frames, we have :\n",totalFrames);
-    ADM_info("Bad : %d\n",bad);
-    ADM_info("Good : %d\n",good);
+    ADM_info("Bad     : %d\n",bad);
+    ADM_info("Good    : %d\n",good);
     ADM_info("Skipped : %d\n",skipped);
-    return true;
+    int total=good+bad+skipped;
+    if(!total) return false;
+    if(bad==0 && good*100>40*total)
+    {
+        ADM_info("  Looks like doubled fps\n");
+        return true;
+              
+    }
+    return false;
 }
 // EOF

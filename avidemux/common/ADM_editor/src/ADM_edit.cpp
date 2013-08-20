@@ -376,7 +376,10 @@ bool ADM_Composer::addFile (const char *name)
         ADM_info("H264 in mp4 sometimes has invalid timestamps which confuse avidemux, checking\n");
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
     }
-    checkForDoubledFps( video._aviheader,video.timeIncrementInUs);
+    if(true==checkForDoubledFps( video._aviheader,video.timeIncrementInUs))
+    {
+        // 
+    }
   return 1;
 }
 #if 0
