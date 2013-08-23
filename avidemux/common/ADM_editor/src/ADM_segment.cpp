@@ -130,8 +130,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   ADM_info("[Editor] min increment %s\n",ADM_us2plain(minDelta));
   ADM_info("[Editor] max increment %s\n",ADM_us2plain(maxDelta));
   
-  if (minDelta==ref->timeIncrementInUs*2)
-              ref->timeIncrementInUs=minDelta;
+  //if (minDelta==ref->timeIncrementInUs*2)
+              //ref->timeIncrementInUs=minDelta;
 
   
   ADM_info("[Editor] About %"PRIu64" microseconds per frame\n",ref->timeIncrementInUs);

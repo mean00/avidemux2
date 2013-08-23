@@ -117,7 +117,7 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     int totalFrames=hdr->getVideoStreamHeader()->dwLength;
     int good=0,bad=0,skipped=0;
     uint64_t dtsCeil= (timeIncrementUs*18)/10;
-    ADM_info("Checking for doubled FPS..\n");
+    ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
     for(int i=0;i<totalFrames-1;i++)
     {
           uint64_t pts,dts;
