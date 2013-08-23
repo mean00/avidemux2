@@ -378,7 +378,8 @@ bool ADM_Composer::addFile (const char *name)
     }
     if(true==checkForDoubledFps( video._aviheader,video.timeIncrementInUs))
     {
-        // 
+        ADM_info("Halving Fps...\n");
+        _segments.halfFps();
     }
   return 1;
 }

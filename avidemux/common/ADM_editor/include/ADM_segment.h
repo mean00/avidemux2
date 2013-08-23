@@ -147,6 +147,7 @@ public:
                         ~ADM_EditorSegment();
 
             bool        addReferenceVideo(_VIDEOS *ref);
+            bool        halfFps(void);
             bool        updateRefVideo(void);
             bool        deleteAll(void);
 

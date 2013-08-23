@@ -37,6 +37,19 @@ ADM_EditorSegment::~ADM_EditorSegment()
     \fn updateRefVideo
     \brief Update start time
 */
+bool        ADM_EditorSegment::halfFps(void)
+{
+    int n=videos.size();
+    ADM_assert(n);
+    _VIDEOS *ref=getRefVideo(n-1);
+    ref->timeIncrementInUs*=2;
+    ref->_aviheader->getVideoStreamHeader()->dwRate/=2;
+    return true;
+}
+/**
+    \fn updateRefVideo
+    \brief Update start time
+*/
 bool        ADM_EditorSegment::updateRefVideo(void)
 {
     int n=videos.size();
