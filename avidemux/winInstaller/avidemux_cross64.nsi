@@ -271,7 +271,7 @@ Section "Avidemux Core" SecCore
     SetOverwrite on
     ${File} "./Build Info.txt"
     ${File} "./Change Log.html"
-    #${File} ${ADM_SYSDIR}/libexpat-1.dll
+    ${File} ${ADM_SYSDIR}/libexpat-1.dll
     #${File} ${ADM_SYSDIR}/mgwz.dll
     ${File} ${ADM_SYSDIR}/libfreetype-6.dll
     ${File} ${ADM_SYSDIR}/libsqlite3-0.dll
