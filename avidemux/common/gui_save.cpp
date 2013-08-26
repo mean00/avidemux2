@@ -57,6 +57,10 @@ void HandleAction_Save(Action action)
     {
     case ACT_SAVE_QUEUE:
             {
+                if(false==ADMJob::jobInit())
+                {
+                    GUI_Error_HIG("Job",QT_TR_NOOP("Cannot reach database. Do you have Job control running ?"));
+                }
                 char *oFile=NULL;
                 char *oText=NULL;
                 diaElemFile wFile(1,&oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
@@ -67,6 +71,7 @@ void HandleAction_Save(Action action)
                 {
                     A_queueJob(oText,oFile);
                 }
+                ADMJob::jobShutDown();
             }
             break;
 #if 0
@@ -419,7 +424,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
             job.jobName=string(jobName);
 //#warning make sure it is unique
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
-            if(false==ADM_jobAdd(job))
+            if(false==ADMJob::jobAdd(job))
             {
                 GUI_Error_HIG("Queue","Cannot add job %s",jobName);
                 return;

@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     ADM_initBaseDir(portableMode);
     // Init jobs
-    ADM_jobInit();
+    ADMJob::jobInit();
     jobRun(argc,argv);
 
 	uninstallSigHandler();
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 void onexit( void )
 {
     printf("Cleaning up\n");
-    ADM_jobShutDown();   
+    ADMJob::jobShutDown();   
     ADM_info("\nGoodbye...\n\n");
 }
 

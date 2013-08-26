@@ -64,7 +64,7 @@ void jobWindow::refreshList(void)
      ui.tableWidget->setHorizontalHeaderItem(0,status);
 
 
-      if(false==ADM_jobGet(listOfJob)) return ;
+      if(false==ADMJob::jobGet(listOfJob)) return ;
 
       int n=listOfJob.size();
       ADM_info("Found %d jobs\n",(int)n);
@@ -231,17 +231,17 @@ void jobWindow::runAction(JobAction action)
         switch(action)
         {
             case   JobAction_delete:
-                        ADM_jobDelete(*j);
+                        ADMJob::jobDelete(*j);
                         refreshList();
                     break;
             case   JobAction_setReady:          
                         j->status=ADM_JOB_IDLE;
-                        ADM_jobUpdate(*j);
+                        ADMJob::jobUpdate(*j);
                         refreshList();
                         break;
             case   JobAction_setOk:
                         j->status=ADM_JOB_OK;
-                        ADM_jobUpdate(*j);
+                        ADMJob::jobUpdate(*j);
                         refreshList();
                         break;
             case   JobAction_runNow:
@@ -317,7 +317,7 @@ void jobWindow::cleanup(void)
         int dex=toDel[i];
         ADM_info("Deleting job %d\n",dex);
         ADMJob *j=&(listOfJob[dex]);
-        ADM_jobDelete(*j);
+        ADMJob::jobDelete(*j);
     }
     toDel.clear();
     ADM_info("%d jobs to delete\n");

@@ -151,7 +151,7 @@ bool jobWindow::runOneJob( ADMJob &job)
     job.startTime=ADM_getSecondsSinceEpoch();
     job.status=ADM_JOB_RUNNING;
     ADM_commandSocket *runSocket=NULL;
-    ADM_jobUpdate(job);
+    ADMJob::jobUpdate(job);
     refreshList();
     ADM_socketMessage msg;
     uint32_t v;
@@ -249,7 +249,7 @@ done:
     if(r) job.status=ADM_JOB_OK;
         else job.status=ADM_JOB_KO;
     job.endTime=ADM_getSecondsSinceEpoch();
-    ADM_jobUpdate(job);
+    ADMJob::jobUpdate(job);
     if(runSocket) delete runSocket;
     refreshList();
     ADM_info("Running job id = %d\n",job.id);

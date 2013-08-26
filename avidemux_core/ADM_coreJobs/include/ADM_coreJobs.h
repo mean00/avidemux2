@@ -35,7 +35,7 @@ typedef enum
 /**
     \class ADMJob
 */
-class ADMJob
+class ADM_COREJOBS_EXPORT ADMJob
 {
 public:
     uint32_t            id;

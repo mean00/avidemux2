@@ -88,8 +88,6 @@ extern uint8_t  quotaInit(void);
 extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
-extern bool ADM_jobInit(void);
-extern bool ADM_jobShutDown(void);
 extern void cleanUp (void);
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
@@ -338,8 +336,6 @@ int startAvidemux(int argc, char *argv[])
     AVDM_audioInit();
 
     
-    // Init jobs
-    ADM_jobInit();
 
     UI_RunApp();
     cleanUp();
@@ -380,8 +376,6 @@ void onexit( void )
     ADM_dm_cleanup();
     ADM_ve6_cleanup();
 
-    ADM_jobShutDown();
-    
     printf("--End of cleanup--\n");
     ADMImage_stat();
 
