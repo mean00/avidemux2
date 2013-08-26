@@ -115,6 +115,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
             if(!parseTrack(&son))
             {
                 printf("Parse Track failed\n");
+                return false;
             } ;
             break;
         default :
@@ -220,7 +221,8 @@ uint8_t MP4Header::parseTrack(void *ztom)
               }
         case ADM_MP4_MDIA:
         {
-            parseMdia(&son,&trackType,w,h);
+            if(!parseMdia(&son,&trackType,w,h))
+                return false;
             break;
         }
         case ADM_MP4_EDTS:
@@ -1104,7 +1106,7 @@ nextAtom:
           _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
           // update fps
           double f=_videostream.dwLength;
-          
+          if(!r) return false;
           ADM_info("Movie duration = %d\n",(int)_movieDuration);
           ADM_info("# images = %d\n",(int)_mainaviheader.dwTotalFrames);
           

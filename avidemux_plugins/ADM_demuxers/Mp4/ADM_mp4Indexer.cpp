@@ -307,12 +307,14 @@ uint32_t i,j,cur;
         uint32_t totalchunk=0;
 
         // Search the maximum
-        for(i=0;i<info->nbSc-1;i++)
+        if(info->nbSc)
         {
+            for(i=0;i<info->nbSc-1;i++)
+            {
                 totalchunk+=(info->Sc[i+1]-info->Sc[i])*info->Sn[i];
+            }
+            totalchunk+=(info->nbCo-info->Sc[info->nbSc-1]+1)*info->Sn[info->nbSc-1];
         }
-        totalchunk+=(info->nbCo-info->Sc[info->nbSc-1]+1)*info->Sn[info->nbSc-1];
-
         aprintf("# of chunks %d, max # of samples %d\n",info->nbCo, totalchunk);
 
         uint32_t *chunkCount = new uint32_t[totalchunk+1];
@@ -420,7 +422,7 @@ uint32_t i,j,cur;
 	else // there is not ssts
 	{
           GUI_Error_HIG(QT_TR_NOOP("No stts table"), NULL);
-		ADM_assert(0);	
+          return 0;
 	}
         printf("Index done\n");
 	return 1;
