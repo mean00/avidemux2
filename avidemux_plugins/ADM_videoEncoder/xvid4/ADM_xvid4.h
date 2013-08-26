@@ -40,6 +40,8 @@
     2, /* MaxBframe */ \
     200, /* MaxKeyInterval */ \
     99, /* nbThreads */ \
+    2, /* Qmin */\
+    25, /* Qmax */\
     true, /* rdOnBframe */ \
     true, /*bool:hqAcPred */ \
     true, /*bool:optimizeChrome */ \

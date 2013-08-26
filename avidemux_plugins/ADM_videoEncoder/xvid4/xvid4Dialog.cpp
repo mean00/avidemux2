@@ -79,9 +79,10 @@ diaMenuEntry threads[]={
          diaElemMenu      meM(PX(motionEstimation),QT_TRANSLATE_NOOP("xvid4","MotionEstimation"),4,meE);
 
          diaElemMenu      threadM(PX(nbThreads),QT_TRANSLATE_NOOP("xvid4","Threading"),4,threads);
+
+         diaElemUInteger  qminM(PX(qMin),QT_TRANSLATE_NOOP("xvid4","Mi_n. quantizer:"),1,31);
+         diaElemUInteger  qmaxM(PX(qMax),QT_TRANSLATE_NOOP("xvid4","Ma_x. quantizer:"),1,31);
 /*
-         diaElemUInteger  qminM(PX(qmin),QT_TRANSLATE_NOOP("xvid4","Mi_n. quantizer:"),1,31);
-         diaElemUInteger  qmaxM(PX(qmax),QT_TRANSLATE_NOOP("xvid4","Ma_x. quantizer:"),1,31);
          diaElemUInteger  qdiffM(PX(max_qdiff),QT_TRANSLATE_NOOP("xvid4","Max. quantizer _difference:"),1,31);
 */
          diaElemToggle    trellis(PX(trellis),QT_TRANSLATE_NOOP("xvid4","_Trellis quantization"));         
@@ -113,8 +114,8 @@ diaMenuEntry threads[]={
 
         /* 2nd Tab : Qz */
        
-         diaElem *diaQze[]={&qzM,&rdM,&meM,&trellis};
-        diaElemTabs tabQz(QT_TRANSLATE_NOOP("xvid4","Quantization"),4,diaQze);
+         diaElem *diaQze[]={&qzM,&qminM,&qmaxM,&rdM,&meM,&trellis};
+        diaElemTabs tabQz(QT_TRANSLATE_NOOP("xvid4","Quantization"),6,diaQze);
         
         /* 3th Tab : thread */
          diaElem *diaThread[]={&threadM};

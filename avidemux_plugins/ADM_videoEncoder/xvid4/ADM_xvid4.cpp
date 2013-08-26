@@ -260,8 +260,8 @@ bool xvid4Encoder::setup(void)
     // dummy
     for(int i=0;i<3;i++)
     {
-        xvid_enc_create.min_quant[i]=2;
-        xvid_enc_create.max_quant[i]=31;
+        xvid_enc_create.min_quant[i]=xvid4Settings.qMin;
+        xvid_enc_create.max_quant[i]=xvid4Settings.qMax;
     }
     
     //Framerate
