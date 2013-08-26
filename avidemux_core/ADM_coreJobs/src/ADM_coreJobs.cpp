@@ -121,7 +121,7 @@ static bool ADM_jobCheckVersion(void)
     \fn ADM_jobInit
     \brief init sql and friends
 */
-bool    ADM_jobInit(void)
+bool    ADMJob::jobInit(void)
 {
     dbFile=new char[1024];
     strcpy(dbFile,ADM_getBaseDir());
@@ -132,7 +132,10 @@ bool    ADM_jobInit(void)
     {
         ADM_warning("[Jobs] jobs.sql does not exist, creating from default...\n");
         if(!ADM_jobInitializeDb())
+        {
+            ADM_warning("[Jobs] Db Init failed\n");
             return false;
+        }
         ADM_info("Database created\n");
     }
     if(false==dbInit())
@@ -164,7 +167,7 @@ bool    ADM_jobInit(void)
 /**
         \fn ADM_jobShutDown
 */
-bool    ADM_jobShutDown(void)
+bool    ADMJob::jobShutDown(void)
 {
 	if (dbFile)
 	{
@@ -178,7 +181,7 @@ bool    ADM_jobShutDown(void)
 /**
     \fn ADM_dumpJobs
 */
-bool ADM_jobDump(const ADMJob &job)
+bool ADMJob::jobDump(const ADMJob &job)
 {
 
     printf("Id       :%d\n",job.id);
@@ -195,7 +198,7 @@ bool ADM_jobDump(const ADMJob &job)
     \fn ADM_jobAdd
     \brief add a job
 */
-bool    ADM_jobAdd(const ADMJob& job)
+bool    ADMJob::jobAdd(const ADMJob& job)
 {
         if(!mydb)
         {   
@@ -221,7 +224,7 @@ bool    ADM_jobAdd(const ADMJob& job)
     \fn ADM_jobGet
     \brief Get all jobs as a vector
 */
-bool    ADM_jobGet(vector <ADMJob> &jobs)
+bool    ADMJob::jobGet(vector <ADMJob> &jobs)
 {
     jobs.clear();
     if(!mydb) return false;
@@ -249,7 +252,7 @@ bool    ADM_jobGet(vector <ADMJob> &jobs)
     \fn ADM_jobUpdate
     \brief update an existing job, only date & status are updated
 */
-bool    ADM_jobUpdate(const ADMJob & job)
+bool    ADMJob::jobUpdate(const ADMJob & job)
 {
     if(!mydb) return false;
     int id=job.id;
@@ -265,7 +268,7 @@ bool    ADM_jobUpdate(const ADMJob & job)
     \fn ADM_jobDropAllJobs
     \brief Empty the database
 */
-bool    ADM_jobDropAllJobs(void)
+bool    ADMJob::jobDropAllJobs(void)
 {
     if(!mydb) return false;
     Query q(*mydb);
@@ -277,7 +280,7 @@ bool    ADM_jobDropAllJobs(void)
     \fn     ADM_jobDelete
     \brief  Delete the job given as arg
 */
-bool    ADM_jobDelete(const ADMJob& job)
+bool    ADMJob::jobDelete(const ADMJob& job)
 {
     if(!mydb) return false;
     Query q(*mydb);

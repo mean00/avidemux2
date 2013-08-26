@@ -48,20 +48,16 @@ public:
                         ADMJob(void) {id=0;jobName=string("");scriptName=string("");outputFileName=string("");
                                             status=ADM_JOB_UNKNOWN;startTime=endTime=0;}
 
+
+    static bool    jobInit(void);
+    static bool    jobShutDown(void);
+    static bool    jobAdd(const ADMJob& job);
+    static bool    jobDelete(const ADMJob& job);
+    static bool    jobGet(vector <ADMJob> &jobs);
+    static bool    jobUpdate(const ADMJob & job);
+
+    static bool    jobDump(const ADMJob &job);
+    static bool    jobDropAllJobs(void);
 };
-/*
-    Our tiny tiny interface
-*/
-ADM_COREJOBS_EXPORT bool    ADM_jobInit(void);
-ADM_COREJOBS_EXPORT bool    ADM_jobShutDown(void);
-
-ADM_COREJOBS_EXPORT bool    ADM_jobAdd(const ADMJob& job);
-ADM_COREJOBS_EXPORT bool    ADM_jobDelete(const ADMJob& job);
-ADM_COREJOBS_EXPORT bool    ADM_jobGet(vector <ADMJob> &jobs);
-ADM_COREJOBS_EXPORT bool    ADM_jobUpdate(const ADMJob & job);
-
-bool    ADM_jobDump(const ADMJob &job);
-bool    ADM_jobDropAllJobs(void);
-
 #endif
 // EOF
