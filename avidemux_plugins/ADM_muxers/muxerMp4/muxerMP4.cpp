@@ -122,7 +122,8 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         snprintf(buf, sizeof(buf), "%d", AV_TIME_BASE / 10);
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
-		av_dict_set(&dict, "muxrate", "10080000", 0);
+        av_dict_set(&dict, "muxrate", "10080000", 0);
+        av_dict_set(&dict, "movflags","faststart",0);
 
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
 
@@ -134,7 +135,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             ADM_warning("Timebase roundup = %d\n",roundup);
 
         }
-        
+        av_dict_free(&dict);
         vStream=s;
         aStreams=a;
         nbAStreams=nbAudioTrack;
