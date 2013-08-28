@@ -366,18 +366,21 @@ decoderFFVDPAU::~decoderFFVDPAU()
         if(scratch)
             delete scratch;
         scratch=NULL;
-        for(int i=0;i<NB_SURFACE;i++)
+        // Delete free only, the ones still used will be deleted later
+        int n=VDPAU->freeQueue.size();        
+        for(int i=0;i<n;i++)
         {
-            if(VDPAU->renders[i])
+            vdpau_render_state *r=VDPAU->freeQueue[i];
+            if(r)
             {
-                if(VDPAU->renders[i]->surface)
+                if(r->surface)
                 {
-                    if(VDPAU->renders[i]->surface)
-                        if(VDP_STATUS_OK!=admVdpau::surfaceDestroy((VDPAU->renders[i]->surface)))
+                        if(VDP_STATUS_OK!=admVdpau::surfaceDestroy((r->surface)))
                                 ADM_error("Error destroying surface %d\n",i);
                 }
-                delete VDPAU->renders[i];
+                delete r;
             }
+            VDPAU->freeQueue.clear();
         }
          ADM_info("[VDPAU] Destroying decoder\n");
          if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))

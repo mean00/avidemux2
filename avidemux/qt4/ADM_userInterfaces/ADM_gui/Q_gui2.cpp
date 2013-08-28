@@ -36,6 +36,7 @@
 #include "DIA_coreToolkit.h"
 #include "GUI_ui.h"
 #include "config.h"
+#include "ADM_preview.h"
 using namespace std;
 
 #ifdef USE_OPENGL
@@ -1322,10 +1323,14 @@ void UI_setAudioTrackCount( int nb )
  */
 myQApplication::~myQApplication()
 {
-    ADM_warning("Cleaning video body...\n");
-    if(video_body) video_body->cleanup (); // Delete decoder related to X11 context before purging X11 context
+    
     ADM_warning("Cleaning render...\n");
     renderDestroy();
+    ADM_warning("Cleaning preview...\n");
+    admPreview::cleanUp();
+    ADM_warning("Cleaning video body...\n");
+    if(video_body) video_body->cleanup (); // Delete decoder related to X11 context before purging X11 context
+    
 #if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
     ADM_warning("cleaning VDPAU...\n");
