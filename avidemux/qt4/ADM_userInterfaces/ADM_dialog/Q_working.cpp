@@ -103,7 +103,18 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
 		sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
 
         workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
-//        wind->ui.labelTimeLeft->setText(ms2timedisplay((uint32_t) floor(((elapsed * 100.) / percent) - elapsed)));
+        
+        if(percent>=1)
+        {
+            double totalTime=(100*elapsed)/percent;
+            double remaining=totalTime-elapsed;
+            if(remaining<0)
+                remaining=0;
+            uint32_t remainingMs=(uint32_t)remaining;
+            wind->ui->labelTimeLeft->setText(ms2timedisplay(remainingMs));
+        }
+        
+        
         wind->ui->labelElapsed->setText(string);
         wind->ui->progressBar->setValue(percent);
        
