@@ -398,6 +398,7 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
   xvid_enc_frame.motion = motionMode[xvid4Settings.motionEstimation];
   xvid_enc_frame.vop_flags|=XVID_VOP_INTER4V;
   xvid_enc_frame.vop_flags |= XVID_VOP_HALFPEL;
+  xvid_enc_frame.par=xvid4Settings.arMode;
   
   SVOP (trellis, TRELLISQUANT);
   SVOP (hqAcPred, HQACPRED);

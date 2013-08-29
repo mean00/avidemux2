@@ -70,7 +70,15 @@ diaMenuEntry threads[]={
   {2,QT_TRANSLATE_NOOP("xvid4","Two threads)")},
   {3,QT_TRANSLATE_NOOP("xvid4","Three threads")},
   {99,QT_TRANSLATE_NOOP("xvid4","Auto (#cpu)")}
-};     
+};  
+
+diaMenuEntry arModeE[]={
+  {XVID_PAR_11_VGA,QT_TRANSLATE_NOOP("xvid4","1:1 (PC)")},
+  {XVID_PAR_43_PAL,QT_TRANSLATE_NOOP("xvid4","4:3 (PAL))")},
+  {XVID_PAR_43_NTSC,QT_TRANSLATE_NOOP("xvid4","4:3 (NTSC))")},
+  {XVID_PAR_169_PAL,QT_TRANSLATE_NOOP("xvid4","16:9 (PAL))")},
+  {XVID_PAR_169_NTSC,QT_TRANSLATE_NOOP("xvid4","16:9 (NTSC))")},
+};  
 
 
 #define PX(x) &(xvid4Settings.x)
@@ -93,6 +101,9 @@ diaMenuEntry threads[]={
          diaElemMenu     rdM(PX(rdMode),QT_TRANSLATE_NOOP("xvid4","_Macroblock decision:"),5,rdE);
 
          diaElemMenu     profileM(PX(profile),QT_TRANSLATE_NOOP("xvid4","Profile:"),9,profileE);
+         
+         diaElemMenu    par(PX(arMode),QT_TRANSLATE_NOOP("xvid4","Aspect Ratio:"),sizeof(arModeE)/sizeof(diaMenuEntry),arModeE);
+         
          /*
          diaElemUInteger filetol(PX(vratetol),QT_TRANSLATE_NOOP("xvid4","_Filesize tolerance (kb):"),0,100000);
          
@@ -120,12 +131,21 @@ diaMenuEntry threads[]={
         /* 3th Tab : thread */
          diaElem *diaThread[]={&threadM};
          diaElemTabs tabThread(QT_TRANSLATE_NOOP("xvid4","Threads"),1,diaThread);
+         
+         /**
+          * 4th tab : aspect ratio
+          * @return 
+          */
+         diaElem *diaAR[]={&par};
+         diaElemTabs tabAR(QT_TRANSLATE_NOOP("xvid4","Aspect Ratio"),1,diaAR);
+
+         
         #if 0
          diaElem *diaRC[]={&filetol,&qzComp,&qzBlur};
         diaElemTabs tabRC(QT_TRANSLATE_NOOP("xvid4","Rate Control"),3,diaRC);
         #endif
-         diaElemTabs *tabs[]={&tabME,&tabQz,&tabThread};
-        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("xvid4","Xvid4 MPEG-4 ASP configuration"),3,tabs))
+         diaElemTabs *tabs[]={&tabME,&tabQz,&tabThread,&tabAR};
+        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("xvid4","Xvid4 MPEG-4 ASP configuration"),4,tabs))
         {
             return true;
         }

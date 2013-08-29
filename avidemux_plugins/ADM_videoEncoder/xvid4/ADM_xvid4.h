@@ -36,7 +36,7 @@
     3, /* rdMode */ \
     3, /* MotionEstimation */ \
     0, /* cqmMode */ \
-    0, /* arMode */ \
+    1, /* arMode */ \
     2, /* MaxBframe */ \
     200, /* MaxKeyInterval */ \
     99, /* nbThreads */ \
