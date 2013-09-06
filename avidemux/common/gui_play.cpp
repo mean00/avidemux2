@@ -219,7 +219,15 @@ bool GUIPlayback::initialize(void)
     int nb=videoChain->size();
     videoFilter=(*videoChain)[nb-1];
     FilterInfo *info=videoFilter->getInfo();
-    admPreview::setMainDimension(info->width,info->height,ZOOM_AUTO);
+    renderZoom zoom=ZOOM_AUTO;
+    // if the video output has same width/height as input, we keep the same zoom
+    aviInfo originalVideo;
+    video_body->getVideoInfo(&originalVideo);
+    renderZoom currentZoom=admPreview::getCurrentZoom();
+    if(info->width==originalVideo.width && info->height==originalVideo.height)
+        zoom=currentZoom;
+    //
+    admPreview::setMainDimension(info->width,info->height,zoom);
 
     initializeAudio();
     return true;
