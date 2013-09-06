@@ -123,8 +123,9 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         av_dict_set(&dict, "preload", buf, 0);
         av_dict_set(&dict, "max_delay", "200000", 0);
         av_dict_set(&dict, "muxrate", "10080000", 0);
+#ifndef _WIN32 // does not work on windows as the file must be opened twice at the same time        
         av_dict_set(&dict, "movflags","faststart",0);
-
+#endif
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
