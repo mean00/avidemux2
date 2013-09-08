@@ -200,7 +200,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
     }
     free(samplePerChunk);
     if(info->nbCo)
-        track->index[0].dts=track->index[0].pts=0;
+        track->index[0].pts=0;
     printf("Found %u bytes, spread over %d blocks\n",totalBytes,info->nbCo);
     //
     // split large chunk into smaller ones if needed
