@@ -466,19 +466,25 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
   uint8_t stream;
 
   uint32_t val, hnt;
-
-  while (head + 4 < tail)
+  nalSize=4;
+// Check for short nalSize, i.e. size coded on 3 bytes
+  {
+      uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
+      if(length>len) nalSize=3;      
+  }
+  while (head + nalSize < tail)
     {
 
-      uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-      
+      uint32_t length =(head[0] << 16) + (head[1] << 8) + (head[2] << 0) ;
+      if(nalSize==4)
+          length=(length<<8)+head[3];
       if (length > len)// || length < 2)
       {
           ADM_warning ("Warning , incomplete nal (%u/%u),(%0x/%0x)\n", length, len, length, len);
           *flags = 0;
           return 0;
         }
-      head += 4;		// Skip nal lenth
+      head += nalSize;		// Skip nal lenth
       stream = *(head) & 0x1F;
       uint32_t recovery;
 
