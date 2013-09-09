@@ -174,7 +174,7 @@ entryDesc entry;
       {
          uint32_t  streamIndex;
          mkvTrak *t=&(_tracks[1+_nbAudioTrack]);
-
+        ADM_info("This track has %d bytes of  extradata\n",t->extraDataLen);
         // MS/ACM : ACMX
         if(0x100001==entry.fcc)
         {
@@ -190,6 +190,7 @@ entryDesc entry;
                 
                 if(x>0) // If we have more than a wavheader, it is extradata
                 {
+                    ADM_info("Found %d bytes of extradata\n",x);
                     t->extraData=new uint8_t[x];
                     t->extraDataLen=x;
                     memcpy(t->extraData,entry.extraData+wavSize,x);
@@ -213,6 +214,7 @@ entryDesc entry;
          t->wavHeader.byterate=(128000)>>3; //FIXME
          t->streamIndex=entry.trackNo;
          t->extraData=entry.extraData;
+         
          t->extraDataLen=entry.extraDataLen;
          if(entry.defaultDuration)
           t->_defaultFrameDuration=entry.defaultDuration;
@@ -229,7 +231,12 @@ entryDesc entry;
         return 1;
       }
       // Other tracks, ignored...
-      if(entry.extraData) delete [] entry.extraData;
+      
+      if(entry.extraData)
+      {
+          ADM_info("Ignoring extradata\n");
+          delete [] entry.extraData;
+      }
       return 1;
 
 }
