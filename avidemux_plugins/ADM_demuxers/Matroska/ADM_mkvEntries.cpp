@@ -1,6 +1,8 @@
 /***************************************************************************
     copyright            : (C) 2006 by mean
     email                : fixounet@free.fr
+ * 
+ * Some AAC extradata code borrowed from mplayer
  ***************************************************************************/
 
 /***************************************************************************
@@ -36,15 +38,87 @@ class entryDesc
           uint32_t defaultDuration;
           float    trackScale;
           uint8_t *extraData;
+          std::string codecId;
         
           void dump(void);
           uint32_t   headerRepeatSize;
           uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
+          entryDesc()
+          {
+              codecId=std::string("");
+              trackNo=0;
+              trackType=0;
+              extraDataLen=0;
+              fcc=w=h=fps=fq=chan=bpp=defaultDuration=0;
+              trackScale=0;
+              extraData=NULL;
+              headerRepeatSize=0;
+          }
 
 };
 /* Prototypes */
 static uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry);
 uint32_t ADM_mkvCodecToFourcc(const char *codec);
+
+
+
+#define AAC_SYNC_EXTENSION_TYPE 0x02b7
+static int aac_get_sample_rate_index(uint32_t sample_rate)
+{
+    static const int srates[] = {
+        92017, 75132, 55426, 46009, 37566, 27713,
+        23004, 18783, 13856, 11502, 9391, 0
+    };
+    int i = 0;
+    while (sample_rate < srates[i])
+        i++;
+    ADM_info("Found index of %d for aac fq of %d\n",i,sample_rate);
+    return i;
+}
+
+
+/**
+ * 
+ * @param haystack
+ * @param needle
+ * @return 
+ */
+static bool hasNeedle(const char *haystack, char *needle)
+{
+    if(NULL!=strstr( (char *)(haystack+12),needle)) return true;
+    return false;
+}
+/**
+ * \brief recreate codec extra data as soon as possible to detect / deal with sbr
+ * strongly derived from mplayer code
+ * @param codec
+ * @param entry
+ */
+static void createAACExtraData(const char *codec,entryDesc *entry)
+{
+    int profile=3;
+    int sampleRateIndex=aac_get_sample_rate_index(entry->fq);
+    if(hasNeedle(codec,"MAIN")) profile=0;
+    else if(hasNeedle(codec,"LC")) profile=1;
+    else if(hasNeedle(codec,"SSR")) profile=2;
+    uint8_t *e=entry->extraData;
+    e[0]=((profile + 1) << 3) | ((sampleRateIndex & 0xE) >> 1);
+    e[1]= ((sampleRateIndex & 0x1) << 7) | (entry->chan << 3);
+    entry->extraDataLen=2;
+    if(hasNeedle(codec,"SBR"))
+    {
+        entry->extraDataLen=5;    
+        sampleRateIndex=aac_get_sample_rate_index(entry->fq*2);
+        e[2] = AAC_SYNC_EXTENSION_TYPE >> 3;
+        e[3] = ((AAC_SYNC_EXTENSION_TYPE & 0x07) << 5) | 5;
+        e[4] = (1 << 7) | (sampleRateIndex << 3);
+    }
+    ADM_info("Created %d bytes ",entry->extraDataLen);
+    for(int i=0;i<entry->extraDataLen;i++)
+        ADM_info(" %02x",entry->extraData[i]);
+    ADM_info("\n");
+}
+
 /**
     \fn entryDesc::dump
     \brief Dump the track entry
@@ -87,8 +161,8 @@ void entryDesc::dump(void)
 uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
 {
 
-entryDesc entry;
-      memset(&entry,0,sizeof(entry));
+      entryDesc entry;
+      
       /* Set some defaults value */
 
       entry.chan=1;
@@ -206,7 +280,15 @@ entryDesc entry;
                 return 1;
             }
         }
-
+        //**
+                  if(entry.fcc==WAV_AAC && !entry.extraDataLen)
+                  {
+                      ADM_info("Recreating aac extradata..\n");
+                      entry.extraData = new uint8_t[5];
+                      createAACExtraData(entry.codecId.c_str(),&entry);
+                  }
+        
+        //**
          t->wavHeader.encoding=entry.fcc;
          t->wavHeader.channels=entry.chan;
          t->wavHeader.frequency=entry.fq;
@@ -240,6 +322,7 @@ entryDesc entry;
       return 1;
 
 }
+
 
 /**
     \fn entryWalk
@@ -310,7 +393,10 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
             uint8_t *codec=new uint8_t[len+1];
                   father.readBin(codec,len);
                   codec[len]=0;
+                  std::string codecAsString=std::string((char *)codec);
+                  entry->codecId=codecAsString;
                   entry->fcc=ADM_mkvCodecToFourcc((char *)codec);
+                  
                   delete [] codec;
 
             }
