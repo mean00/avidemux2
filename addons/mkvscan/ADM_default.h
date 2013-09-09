@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #define ADM_assert(x) if(!(x)){printf("OOPs");}
 #define LU "lu"
 #define LLU "llu"
