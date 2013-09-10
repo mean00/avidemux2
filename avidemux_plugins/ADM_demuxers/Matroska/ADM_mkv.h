@@ -61,6 +61,7 @@ public:
         headerRepeatSize=0;
         _sizeInBytes=0;
         _defaultFrameDuration=0;
+        language=std::string("unknown");
   }
   /* Index in mkv */
   uint32_t  streamIndex;
@@ -81,6 +82,7 @@ public:
 
   uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
+  std::string language;
 };
 
 #define MKV_MAX_LACES 31 // ?

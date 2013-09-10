@@ -182,6 +182,7 @@ uint8_t mkvHeader::open(const char *name)
     {
         _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
+        _audioStreams[i]->setLanguage(_tracks[1+i].language);
     }
   
   printf("[MKV]Matroska successfully read\n");

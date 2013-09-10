@@ -39,13 +39,14 @@ class entryDesc
           float    trackScale;
           uint8_t *extraData;
           std::string codecId;
+          std::string language;
         
           void dump(void);
           uint32_t   headerRepeatSize;
           uint8_t    headerRepeat[MKV_MAX_REPEAT_HEADER_SIZE];
           entryDesc()
           {
-              codecId=std::string("");
+              codecId=language=std::string("");
               trackNo=0;
               trackType=0;
               extraDataLen=0;
@@ -289,6 +290,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                   }
         
         //**
+         t->language=entry.language;
          t->wavHeader.encoding=entry.fcc;
          t->wavHeader.channels=entry.chan;
          t->wavHeader.frequency=entry.fq;
@@ -388,6 +390,17 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_CONTENT_COMPRESSION:
                   entryWalk(&father,len,entry);
                   break;
+        case MKV_LANGUAGE:
+                {
+                 char s[100];
+                 s[99]=0;
+                 father.readString(s,len);
+                 if(!strlen(s))
+                     strcpy(s,"eng"); // english is default
+                 ADM_info("Found language  = %s\n",s);
+                 entry->language=std::string(s);
+                }
+            break;
         case MKV_CODEC_ID:
             {
             uint8_t *codec=new uint8_t[len+1];
