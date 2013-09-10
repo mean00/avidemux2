@@ -36,6 +36,7 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
     ADM_assert(track);
     wavHeader=track->wavheader;
     durationInUs = track->stream->getDurationInUs();    
+    setLanguage(track->stream->getLanguage());
 }
 /**
     \fn isCBR

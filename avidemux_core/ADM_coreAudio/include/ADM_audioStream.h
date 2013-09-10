@@ -19,6 +19,7 @@
 #include "ADM_coreAudio6_export.h"
 #include "ADM_assert.h"
 #include "ADM_baseAudioStream.h"
+#include "string"
 
 /**
         \fn      ADM_audioAccess
@@ -83,6 +84,8 @@ class ADM_COREAUDIO6_EXPORT ADM_audioStream
                        uint64_t                 durationInUs;
                        uint64_t                 lastDtsBase;
                        uint64_t                 sampleElapsed;
+                       std::string              language;
+                       
     ///
                         void                    setDts(uint64_t newDts);
     /// increment DTS by samples
@@ -110,6 +113,8 @@ virtual bool            isCBR()
                                 if(!access) return false;
                                 return access->isCBR();
                             }
+        const std::string &getLanguage() {return language;}
+        void              setLanguage(const std::string &lan) {language=lan;}
 };
 /**
    \fn ADM_audioCreateStream

@@ -31,6 +31,7 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
                 durationInUs=access->getDurationInUs();
         else    
                 durationInUs=0;
+    language=std::string("unknown");
 }
 /**
     \fn goToTime
