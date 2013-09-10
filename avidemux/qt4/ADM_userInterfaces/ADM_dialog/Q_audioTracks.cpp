@@ -371,6 +371,9 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
             str+=QString(" (")+QString(getStrFromAudioCodec(hdr->encoding))+QString(",");
             str+=sChan+QString(",");
             str+=sBitrate+QString("kbps)");
+            
+            std::string language=_pool->at(i)->getLanguage();
+            str+=QString(" - ")+QString(language.c_str());
         }
         window->inputs[dex]->addItem(str); 
     }
