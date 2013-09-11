@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
 #include "ADM_default.h"
 #include "ADM_ts.h"
 #include "ADM_demuxerInternal.h"
@@ -26,7 +27,7 @@ typedef vector <ADM_TS_TRACK> listOfTsTracks;
     \fn scanPmt
 */
 static bool  TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list);
-static bool  decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen);
+static bool  decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen,std::string &language);
 static bool  decodeRegistration(int size,uint8_t *data);
 static ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str);
 /**
@@ -188,6 +189,7 @@ _failTs:
 bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
 {
     ADM_TS_TRACK trk;
+    trk.language=std::string("unknown");
     uint32_t len;
     TS_PSIpacketInfo psi;
     uint8_t *r=psi.payload;
@@ -209,7 +211,7 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
         printf("[PMT]--Decoding Program info--\n");
         if(programInfoLength && programInfoLength<=packLen)
         {
-            decodeProgrameDescriptor(r, programInfoLength);
+            decodeProgrameDescriptor(r, programInfoLength,trk.language);
             packLen-=programInfoLength;
             r+=programInfoLength;
         }
@@ -247,6 +249,30 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                     if(tag==0x6A) type=0x81;
                 }
 
+            }else
+            {
+                 uint8_t *head=base;
+                 uint8_t *tail=r;
+                 while(head<tail)
+                 {
+                    uint8_t tag=head[0];
+                    uint8_t tag_len=head[1];
+                    printf("[PMT]     Tag 0x%x , len %d, ",tag,tag_len);
+                    for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
+                    printf("\n");
+                    
+                    if(tag==0xa) 
+                    {
+                        char lan[16];
+                        for(int i=0;i<tag_len;i++)
+                        {
+                            lan[i]=head[2+i];
+                        }
+                        lan[tag_len]=0;
+                        trk.language=std::string(lan);
+                    }
+                    head+=2+tag_len;
+                 }
             }
             if(type==0xea)
             {
@@ -259,7 +285,8 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                     ADM_TS_TRACK trk2;
                     trk2.trackPid=pid;
                     trk2.trackType=trackType;
-                    printf("[PMT]  Adding pid 0x%x (%d) , type %s\n",pid,pid,str);
+                    trk2.language=trk.language;
+                    printf("[PMT]  Adding pid 0x%x (%d) , type %s, language=%s\n",pid,pid,str,trk2.language.c_str());
                     list->push_back(trk2);
             }else
                 printf("[PMT]              -> %s\n",str);
@@ -307,7 +334,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
     http://www.coolstf.com/tsreader/descriptors.html
 
 */
-bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
+bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen,std::string &language)
 {
         printf("[PMT] Program Info Len: %d\n",maxlen); 
         int packLen=maxlen;
@@ -361,7 +388,13 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen)
                     {
                         
                         case 0x05: printf("Registration Descriptor :%c%c%c%c",p[2],p[3],p[4],p[5]);break;
-                        case 0x0a: printf("Language descriptor :%c%c%c",p[2],p[3],p[4]);break;
+                        case 0x0a: 
+                        {
+                            printf("Language descriptor :%c%c%c",p[2],p[3],p[4]);
+                            char lang[4]={p[2],p[3],p[4],0};
+                            language=std::string(lang);
+                            break;
+                        }
                         case 0x11: printf("STD\n");break;
                         case 0x1e: printf("SL descriptor (H264 AAC ?)");break;
                         case 0x45: printf("VBI data\n");break;

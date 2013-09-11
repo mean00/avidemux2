@@ -18,6 +18,7 @@
 #ifndef ADM_TS_PAT_PMT_H
 #define ADM_TS_PAT_PMT_H
 #include "ADM_audiodef.h"
+#include <string>
 #define ADM_TS_MAX_EXTRADATA 256
 /**
     \typedef ADM_TS_VIDEO_TYPE
@@ -52,6 +53,7 @@ typedef struct
     ADM_TS_TRACK_TYPE trackType;
     uint32_t          extraDataLen;
     uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
+    std::string       language;
 }ADM_TS_TRACK;
 
 /**
@@ -65,6 +67,7 @@ typedef struct
     ADM_TS_MUX_TYPE   mux;
     uint32_t          extraDataLen;
     uint8_t           extraData[ADM_TS_MAX_EXTRADATA];
+    std::string       language;
 }tsAudioTrackInfo;
 
 typedef vector <tsAudioTrackInfo > listOfTsAudioTracks;
