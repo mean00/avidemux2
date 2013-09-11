@@ -232,48 +232,39 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
             printf("[PMT]          Type=0x%x pid=%x size=%d\n",type,pid,size);
             const char *str;
             
-            if(type==6) // Private data
+            //
+            // extract tags to get additional infos/properties
+            //
+            uint8_t *head=base;
+            uint8_t *tail=r;
+            while(head<tail)
             {
-                
-                uint8_t *head=base;
-                uint8_t *tail=r;
-                while(head<tail)
-                {
-                    uint8_t tag=head[0];
-                    uint8_t tag_len=head[1];
-                    printf("[PMT]  Tag 0x%x , len %d, ",tag,tag_len);
-                    for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
-                    printf("\n");
-                    head+=2+tag_len;
-                    if(tag==0x7A) type=0x84;
-                    if(tag==0x6A) type=0x81;
-                }
-
-            }else
-            {
-                 uint8_t *head=base;
-                 uint8_t *tail=r;
-                 while(head<tail)
-                 {
-                    uint8_t tag=head[0];
-                    uint8_t tag_len=head[1];
-                    printf("[PMT]     Tag 0x%x , len %d, ",tag,tag_len);
-                    for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
-                    printf("\n");
-                    
-                    if(tag==0xa) 
-                    {
-                        char lan[16];
-                        for(int i=0;i<tag_len;i++)
-                        {
-                            lan[i]=head[2+i];
-                        }
-                        lan[tag_len]=0;
-                        trk.language=std::string(lan);
-                    }
-                    head+=2+tag_len;
-                 }
+               uint8_t tag=head[0];
+               uint8_t tag_len=head[1];
+               printf("[PMT]     Tag 0x%x , len %d, ",tag,tag_len);
+               for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
+               printf("\n");
+               switch(tag)
+               {
+               case 0xa:  // dvb language
+               {
+                   if(tag_len<2) break; // too short
+                   char lan[16];
+                   for(int i=0;i<tag_len;i++)
+                   {
+                       lan[i]=head[2+i];
+                   }
+                   lan[tag_len]=0;
+                   trk.language=std::string(lan);
+                   break;                        
+               }
+               case 0x7A: if(type==6) type=0x84;break; 
+               case 0x6A: if(type==6) type=0x81;break; // AC3
+                   default:break;
+               }
+               head+=2+tag_len;
             }
+            
             if(type==0xea)
             {
 
