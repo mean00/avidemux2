@@ -61,7 +61,7 @@ public:
         headerRepeatSize=0;
         _sizeInBytes=0;
         _defaultFrameDuration=0;
-        language=std::string("unknown");
+        language=ADM_UNKNOWN_LANGUAGE;
   }
   /* Index in mkv */
   uint32_t  streamIndex;

@@ -21,6 +21,9 @@
 #include "ADM_baseAudioStream.h"
 #include "string"
 
+
+#define ADM_UNKNOWN_LANGUAGE std::string("unknown")
+
 /**
         \fn      ADM_audioAccess
         \brief   Access layer to the file. That one is re-instancied by each demuxer.
