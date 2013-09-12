@@ -189,7 +189,7 @@ _failTs:
 bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
 {
     ADM_TS_TRACK trk;
-    trk.language=std::string("unknown");
+    trk.language=ADM_UNKNOWN_LANGUAGE;
     uint32_t len;
     TS_PSIpacketInfo psi;
     uint8_t *r=psi.payload;

@@ -83,10 +83,12 @@ public:
         ADM_audioStream *stream;
         ADM_tsAccess    *access;
         WAVHeader       header;
+        std::string     language;
         ADM_tsTrackDescriptor()
             {
                 stream=NULL;
                 access=NULL;
+                language=ADM_UNKNOWN_LANGUAGE;
             }
         ~ADM_tsTrackDescriptor()
             {

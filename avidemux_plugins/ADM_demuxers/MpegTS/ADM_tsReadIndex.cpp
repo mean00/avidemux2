@@ -290,16 +290,27 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
     {
         char header[40];
         char body[40];
+        std::string language=ADM_UNKNOWN_LANGUAGE;
         uint32_t fq,chan,br,codec,pid,muxing=0;
         sprintf(header,"Track%d.",i);
 #define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%"PRIu32"\n",i,x);}
 #define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%"PRIu32"\n",i,x);}
+
         readInt(fq,fq);
         readInt(br,br);
         readInt(chan,chan);
         readInt(codec,codec);
         readHex(pid,pid);
         readInt(muxing,muxing);
+        
+        sprintf(body,"%s""language",header);
+        char *s=index->getAsString(body);
+        if(s)
+        {
+            language=std::string(s);
+            printf("Language=%s\n",s);
+        }
+        
         WAVHeader hdr;
             hdr.frequency=fq;
             hdr.byterate=br;
@@ -341,6 +352,7 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
         desc->stream=NULL;
         desc->access=access;
+        desc->language=language;
         memcpy(&(desc->header),&hdr,sizeof(hdr));
         listOfAudioTracks.push_back(desc);
     }

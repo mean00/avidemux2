@@ -118,6 +118,7 @@ uint8_t tsHeader::open(const char *name)
         }else       
         {
                 desc->stream=audioStream;
+                audioStream->setLanguage(desc->language);
         }
     }
 abt:
