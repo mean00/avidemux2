@@ -5,5 +5,6 @@
  
  */
 #pragma once
+#include "ADM_coreUtils6_export.h"
 
-const char *ADM_iso639b_toPlaintext(const char *iso);
+ADM_COREUTILS6_EXPORT const char *ADM_iso639b_toPlaintext(const char *iso);

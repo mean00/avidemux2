@@ -222,6 +222,6 @@ const char *ADM_iso639b_toPlaintext(const char *iso)
       {
           if(!strcmp(lang->iso639_2,iso)) return lang->eng_name;
       }
-      return languages[0].eng_name;
+      return iso;
 }
 
