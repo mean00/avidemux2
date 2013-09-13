@@ -14,6 +14,7 @@
 #include "Q_audioTrackClass.h"
 #include "ADM_audioFilterInterface.h"
 #include "DIA_fileSel.h"
+#include "ADM_iso639.h"
 
 /**
     \fn audioTrackQt4
@@ -373,7 +374,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
             str+=sBitrate+QString("kbps)");
             
             std::string language=_pool->at(i)->getLanguage();
-            str+=QString(" - ")+QString(language.c_str());
+            str+=QString(" - ")+QString(ADM_iso639b_toPlaintext(language.c_str()));
         }
         window->inputs[dex]->addItem(str); 
     }
