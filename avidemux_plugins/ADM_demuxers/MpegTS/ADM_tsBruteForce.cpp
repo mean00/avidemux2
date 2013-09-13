@@ -79,7 +79,7 @@ bool TS_guessContent(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outTrac
     if(listOfPid.size())
     {
         tracks=new ADM_TS_TRACK[listOfPid.size()];
-        memset(tracks,0,sizeof(ADM_TS_TRACK)*listOfPid.size());
+        //memset(tracks,0,sizeof(ADM_TS_TRACK)*listOfPid.size());
         int validTracks=0;
         ADM_TS_TRACK_TYPE trackType;
         printf("List of found PID:\n");
