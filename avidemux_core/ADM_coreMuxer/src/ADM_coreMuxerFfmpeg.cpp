@@ -361,6 +361,16 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                 ADM_warning("Audio has no extradata but muxer requires globalHeader.\n");
             }
           }
+        
+            //set language
+            const std::string lang=audio[i]->getLanguage();
+            if(lang.size())
+            {
+                  AVDictionary *dict = NULL;
+                  av_dict_set(&dict, "language", lang.c_str(), 0);
+                  audio_st[i]->metadata=dict;     
+                  ADM_info("Language for track %d is %s\n",i,lang.c_str());
+            }
         }
         printf("[FF] Audio initialized\n");
         return true;

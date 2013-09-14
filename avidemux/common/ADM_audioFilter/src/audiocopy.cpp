@@ -51,8 +51,8 @@ virtual                 ~ADM_audioStreamCopy();
 virtual WAVHeader      *getInfo(void) {return in->getInfo();};
 virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeMax,uint32_t *nbSample,uint64_t *dts);
 virtual bool            getExtraData(uint32_t *l, uint8_t **d);
-         uint64_t       getDurationInUs(void);
-         bool           isCBR();
+        uint64_t        getDurationInUs(void);
+        bool            isCBR();        
 };
 /**
         \class ADM_audioStreamCopyPerfect
@@ -149,6 +149,7 @@ ADM_audioStreamCopy::ADM_audioStreamCopy(ADM_audioStream *input,uint64_t startTi
     this->startTime=startTime;
     in->goToTime(startTime);
     this->shift=shift;
+    setLanguage(input->getLanguage());
     
 }
 /**
