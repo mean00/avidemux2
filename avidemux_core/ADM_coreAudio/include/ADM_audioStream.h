@@ -116,8 +116,8 @@ virtual bool            isCBR()
                                 if(!access) return false;
                                 return access->isCBR();
                             }
-        const std::string &getLanguage() {return language;}
-        void              setLanguage(const std::string &lan) {language=lan;}
+virtual        const std::string &getLanguage() {return language;}
+virtual        void              setLanguage(const std::string &lan) {language=lan;}
 };
 /**
    \fn ADM_audioCreateStream

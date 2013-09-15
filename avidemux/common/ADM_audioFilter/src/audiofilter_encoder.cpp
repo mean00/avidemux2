@@ -62,6 +62,8 @@ virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeM
 virtual bool            goToTime(uint64_t nbUs) {return son->goToTime(nbUs);};
 virtual bool            getExtraData(uint32_t *l, uint8_t **d) {return son->getExtraData(l,d);};
         uint64_t        getDurationInUs(void) {return son->getDurationInUs();}
+        const std::string &getLanguage() {return son->getLanguage();}
+        void              setLanguage(const std::string &lan) {son->setLanguage(lan);}
 };
 //************************************************
 extern ADM_audioAccess *ADM_threadifyAudioAccess(ADM_audioAccess *son);
@@ -148,7 +150,11 @@ ADM_audioStream *audioCreateEncodingStream(EditableAudioTrack *ed, bool globalHe
         delete threaded; // Access will destroy filter & encoder
         return NULL;
     }
+    const std::string lang=encoder->getLanguage();
+    stream->setLanguage(lang);
+    
     ADM_audioStream_autoDelete *autoDelete=new ADM_audioStream_autoDelete(stream, threaded);
+    
     return autoDelete;
 }
 // EOF

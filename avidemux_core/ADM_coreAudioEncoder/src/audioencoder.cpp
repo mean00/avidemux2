@@ -201,5 +201,12 @@ bool ADM_AudioEncoder::reorder(float *sample_in,float *sample_out,int samplePerC
     }
     return true;
 }
-
+/**
+ * \fn getLanguage
+ * @return 
+ */
+const std::string &ADM_AudioEncoder::getLanguage(void)
+  {
+      return _incoming->getLanguage();
+  }
 //EOF

@@ -193,4 +193,12 @@ CHANNEL_TYPE *AUDMAudioFilter_Bridge::getChannelMapping(void)
 	ADM_assert(_incoming);
 	return _incoming->getChannelMapping();
 }
+/**
+ * \fn getLanguage
+ * @return 
+ */
+ const std::string &AUDMAudioFilter_Bridge::getLanguage(void)
+{
+    return _incoming->getLanguage();
+}
 //EOF

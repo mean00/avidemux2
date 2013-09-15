@@ -19,7 +19,7 @@
 #define __Audio_ENG_Process__
 
 #include "ADM_coreAudioFilterAPI6_export.h"
-
+#include <string>
 #define AUD_PROCESS_BUFFER_SIZE 48000*4*4 // should be enougth 4 seconds of stereo
 #include "ADM_coreAudio.h"
 /**
@@ -92,5 +92,9 @@ class ADM_COREAUDIOFILTERAPI6_EXPORT AUDMAudioFilter
 // Returns the channel mapping, by default it is the on from the previous
 // The value returned is an array up to MAX_CHANNELS                  
         virtual   CHANNEL_TYPE    *getChannelMapping(void ) {return _previous->getChannelMapping();}
+        virtual const std::string &getLanguage(void)
+        {
+            return _previous->getLanguage();
+        }
 };
 #endif
