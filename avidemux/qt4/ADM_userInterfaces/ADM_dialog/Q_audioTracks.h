@@ -17,6 +17,7 @@ public:
             QComboBox        *inputs[NB_MENU];
             QPushButton      *codecConf[NB_MENU];
             QPushButton      *filters[NB_MENU];
+            QPushButton      *languages[NB_MENU];
 
 public:
 	audioTrackWindow()
@@ -27,6 +28,7 @@ public:
         ROLL(codecConf,pushButtonCodecConf);
         ROLL(filters,pushButtonFilter);
         ROLL(inputs,comboBoxInput);
+        ROLL(languages,pushButtonLanguage);
     }
 	~audioTrackWindow()
     {

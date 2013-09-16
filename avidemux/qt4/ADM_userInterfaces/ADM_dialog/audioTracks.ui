@@ -6,14 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>187</height>
+    <width>620</width>
+    <height>237</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Audio Tracks Configuration</string>
   </property>
   <layout class="QFormLayout" name="formLayout">
+   <property name="fieldGrowthPolicy">
+    <enum>QFormLayout::ExpandingFieldsGrow</enum>
+   </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -34,6 +37,19 @@
       <widget class="QComboBox" name="comboBoxInput1"/>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonLanguage1">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxCodec1"/>
      </item>
      <item>
@@ -46,7 +62,7 @@
      <item>
       <widget class="QPushButton" name="pushButtonFilter1">
        <property name="text">
-        <string>Audio Filters</string>
+        <string>Filters</string>
        </property>
       </widget>
      </item>
@@ -72,6 +88,19 @@
       <widget class="QComboBox" name="comboBoxInput2"/>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonLanguage2">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxCodec2"/>
      </item>
      <item>
@@ -84,7 +113,7 @@
      <item>
       <widget class="QPushButton" name="pushButtonFilter2">
        <property name="text">
-        <string>Audio Filters</string>
+        <string>Filters</string>
        </property>
       </widget>
      </item>
@@ -110,6 +139,19 @@
       <widget class="QComboBox" name="comboBoxInput3"/>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonLanguage3">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxCodec3"/>
      </item>
      <item>
@@ -122,7 +164,7 @@
      <item>
       <widget class="QPushButton" name="pushButtonFilter3">
        <property name="text">
-        <string>Audio Filters</string>
+        <string>Filters</string>
        </property>
       </widget>
      </item>
@@ -148,6 +190,19 @@
       <widget class="QComboBox" name="comboBoxInput4"/>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonLanguage4">
+       <property name="minimumSize">
+        <size>
+         <width>90</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="comboBoxCodec4"/>
      </item>
      <item>
@@ -160,7 +215,7 @@
      <item>
       <widget class="QPushButton" name="pushButtonFilter4">
        <property name="text">
-        <string>Audio Filters</string>
+        <string>Filters</string>
        </property>
       </widget>
      </item>

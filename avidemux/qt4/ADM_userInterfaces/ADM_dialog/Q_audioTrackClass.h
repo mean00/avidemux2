@@ -37,4 +37,5 @@ public slots:
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
                        void  inputChanged(int signal);
+                       bool  languagesClicked(bool a);
 };

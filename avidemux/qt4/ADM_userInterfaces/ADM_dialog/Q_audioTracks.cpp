@@ -48,6 +48,8 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
         {
             QObject::connect( window->filters[i],SIGNAL(clicked(bool)),
                             this,SLOT(filtersClicked(bool)));
+            QObject::connect( window->languages[i],SIGNAL(clicked(bool)),
+                            this,SLOT(languagesClicked(bool)));            
             QObject::connect( window->codecConf[i],SIGNAL(clicked(bool)),
                             this,SLOT(codecConfClicked(bool)));
             QObject::connect( window->enabled[i],SIGNAL(stateChanged(int)),
@@ -196,6 +198,22 @@ bool       audioTrackQt4::filtersClicked(bool a)
         return true;
 }
 /**
+    \fn filtersClicked
+*/
+bool       audioTrackQt4::languagesClicked(bool a)
+{
+        QObject *ptr=sender();
+        int dex=-1;
+        for(int i=0;i<NB_MENU;i++) if(ptr==window->languages[i]) dex=i;
+        if(dex==-1)
+        {
+            ADM_warning("No track found matching that language\n");
+            return true;
+        }
+        ADM_info("Language change for track %d\n",dex);
+        return true;
+}
+/**
     \fn audioTrackQt4
     \brief dtor
 */
@@ -297,6 +315,7 @@ void audioTrackQt4::enable(int i)
     ONOFF(codec);
     ONOFF(codecConf);
     ONOFF(filters);
+    ONOFF(languages);
 }
 /**
     \fn disable
@@ -311,6 +330,7 @@ void audioTrackQt4::disable(int i)
     ONOFF(codec);
     ONOFF(codecConf);
     ONOFF(filters);
+    ONOFF(languages);
 
 }
 
@@ -373,8 +393,12 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
             str+=sChan+QString(",");
             str+=sBitrate+QString("kbps)");
             
-            std::string language=_pool->at(i)->getLanguage();
-            str+=QString(" - ")+QString(ADM_iso639b_toPlaintext(language.c_str()));
+            std::string lang=_pool->at(i)->getLanguage();
+            if(!lang.compare(ADM_UNKNOWN_LANGUAGE))
+            {
+                lang=std::string("set Lang.");
+            }
+            window->languages[i]->setText(ADM_iso639b_toPlaintext(lang.c_str()));
         }
         window->inputs[dex]->addItem(str); 
     }
