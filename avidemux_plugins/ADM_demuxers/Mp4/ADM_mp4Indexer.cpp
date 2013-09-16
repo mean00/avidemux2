@@ -45,14 +45,16 @@ bool MP4Header::splitAudio(MP4Track *track,MPsampleinfo *info, uint32_t trackSca
         uint32_t maxChunkSize=(MAX_CHUNK_SIZE>>5)<<5;
         // Probe if it is needed
         int extra=0;
+        int sizeOfAudio=0;
         for(int i=0;i<track->nbIndex;i++)
         {
             int x=track->index[i].size/(maxChunkSize+1);
             extra+=x;
+            sizeOfAudio+=track->index[i].size;
         }
         if(!extra)
         {
-            ADM_info("No very large blocks found\n");
+            ADM_info("No very large blocks found, %d bytes present over %d blocks\n",sizeOfAudio,track->nbIndex);
             return true;
         }   
         ADM_info("%d large blocks found, splitting into %d bytes block\n",extra,maxChunkSize);
