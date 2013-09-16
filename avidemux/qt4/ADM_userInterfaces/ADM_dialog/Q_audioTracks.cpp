@@ -198,6 +198,17 @@ bool       audioTrackQt4::filtersClicked(bool a)
         return true;
 }
 /**
+ * \fn selectLanguage
+ * @param lang
+ * @return 
+ */
+bool selectLanguage(std::string &lang)
+{
+    
+    return false;
+}
+
+/**
     \fn filtersClicked
 */
 bool       audioTrackQt4::languagesClicked(bool a)
@@ -211,6 +222,14 @@ bool       audioTrackQt4::languagesClicked(bool a)
             return true;
         }
         ADM_info("Language change for track %d\n",dex);
+        EditableAudioTrack *ed=active.atEditable(dex);
+        std::string language=ed->edTrack->getLanguage();
+        
+        if(selectLanguage(language))
+        {
+                ed->edTrack->setLanguage(language);        
+                window->languages[dex]->setText(ADM_iso639b_toPlaintext(language.c_str()));
+        }
         return true;
 }
 /**
