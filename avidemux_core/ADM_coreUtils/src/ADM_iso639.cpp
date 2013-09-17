@@ -5,21 +5,13 @@
  
  */
 
-
+#include "ADM_default.h"
 #include "ADM_iso639.h"
 #include <string.h>
 #include <ctype.h>
 
+static int languageCount=0;
 
-typedef struct ADM_iso639_t
-{
-    const char * eng_name;        /* Description in English */
-    const char * native_name;     /* Description in native language */
-    const char * iso639_1;       /* ISO-639-1 (2 characters) code */
-    const char * iso639_2;        /* ISO-639-2/t (3 character) code */
-    const char * iso639_2b;       /* ISO-639-2/b code (if different from above) */
-
-} iso639_lang_t;
 
 static const iso639_lang_t languages[] =
 { { "Unknown", "", "", "und" },
@@ -209,7 +201,33 @@ static const iso639_lang_t languages[] =
   { "Zhuang", "", "za", "zha" },
   { "Zulu", "", "zu", "zul" },
   { NULL, NULL, NULL } };
-
+/**
+ * \fn ADM_getLanguageList
+ * @return 
+ */
+const ADM_iso639_t *ADM_getLanguageList()
+{
+    return languages;
+}
+/**
+ * \fn ADM_getLanguageListSize
+ * @return 
+ */
+int                 ADM_getLanguageListSize()
+{
+    if(!languageCount)
+    {
+        const ADM_iso639_t *t=languages;
+        int n=0;
+        while(t->eng_name)
+        {
+            t++;
+            n++;
+        };
+        languageCount=n;
+    }
+    return languageCount;
+}
 /**
  * \fn ADM_iso639b_toPlaintext
  * @param iso
@@ -224,4 +242,19 @@ const char *ADM_iso639b_toPlaintext(const char *iso)
       }
       return iso;
 }
-
+/**
+ * \fn ADM_getIndexForIso639
+ * @param iso
+ * @return 
+ */
+int                 ADM_getIndexForIso639(const char *iso)
+{
+    int n=ADM_getLanguageListSize();
+    for(int i=0;i<n;i++)
+    {
+        if(!strcmp(languages[i].iso639_2,iso)) return i;
+    }
+    ADM_error("Language %s not found in list\n",iso);
+    return -1;
+    
+}
