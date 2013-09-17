@@ -9,6 +9,7 @@
 #include "DIA_audioTracks.h"
 #include "ADM_edAudioTrackFromVideo.h"
 #include "ADM_edAudioTrackExternal.h"
+#include "ADM_iso639.h"
 
 
 uint32_t audioEncoderGetNumberOfEncoders(void);
@@ -22,6 +23,8 @@ class audioTrackQt4: public QObject,public DIA_audioTrackBase
 protected:
             audioTrackWindow *window;
             ActiveAudioTracks active;
+            int                nbLanguage;
+            const ADM_iso639_t *languages;
             void            setupMenu(int dex,int forcedIndex=-1);
             void            enable(int i);
             void            disable(int i);
@@ -37,5 +40,5 @@ public slots:
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
                        void  inputChanged(int signal);
-                       bool  languagesClicked(bool a);
+                       void  languageChanged(int  a);
 };

@@ -37,17 +37,7 @@
       <widget class="QComboBox" name="comboBoxInput1"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonLanguage1">
-       <property name="minimumSize">
-        <size>
-         <width>90</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="comboBoxLanguage1"/>
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxCodec1"/>
@@ -88,17 +78,7 @@
       <widget class="QComboBox" name="comboBoxInput2"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonLanguage2">
-       <property name="minimumSize">
-        <size>
-         <width>90</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="comboBoxLanguage2"/>
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxCodec2"/>
@@ -139,17 +119,7 @@
       <widget class="QComboBox" name="comboBoxInput3"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonLanguage3">
-       <property name="minimumSize">
-        <size>
-         <width>90</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="comboBoxLanguage3"/>
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxCodec3"/>
@@ -190,17 +160,7 @@
       <widget class="QComboBox" name="comboBoxInput4"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButtonLanguage4">
-       <property name="minimumSize">
-        <size>
-         <width>90</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="comboBoxLanguage4"/>
      </item>
      <item>
       <widget class="QComboBox" name="comboBoxCodec4"/>
