@@ -28,6 +28,7 @@ protected:
             void            setupMenu(int dex,int forcedIndex=-1);
             void            enable(int i);
             void            disable(int i);
+            void            setLanguageFromPool(int menuIndex, int poolIndex);
             
 public:
        
@@ -41,5 +42,4 @@ public slots:
                        bool  codecConfClicked(bool a);
                        bool  enabledStateChanged(int state);
                        void  inputChanged(int signal);
-                       void  languageChanged(int  a);
 };
