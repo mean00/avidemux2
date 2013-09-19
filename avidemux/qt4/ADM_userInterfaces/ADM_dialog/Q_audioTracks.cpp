@@ -46,6 +46,7 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
          // Set language list
         for(int i=0;i<NB_MENU;i++)
         {                  
+
             for(int j=0;j<nbLanguage;j++)
             {
                 window->languages[i]->addItem(languages[j].eng_name);
@@ -54,7 +55,9 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
         
         
         for(int i=0;i<NB_MENU;i++)
+        {
             setupMenu(i);
+        }
 
         // bind it
         for(int i=0;i<NB_MENU;i++)
@@ -264,7 +267,20 @@ bool      audioTrackQt4::run(void)
         {
             goto again;
         }
-        
+        // set language from UI
+        for(int i=0;i<NB_MENU;i++)
+        {
+              EditableAudioTrack *src=active.atEditable(i);
+              int dex=window->languages[i]->currentIndex();
+              if(src)
+              {
+                  if(src->edTrack)
+                  {
+                        std::string lang=languages[dex].iso639_2;
+                        src->edTrack->setLanguage(lang);
+                  }
+              }
+        }
     }
     qtUnregisterDialog(window);
     ADM_info("/Running QT4 audioTrack GUI\n");
@@ -421,32 +437,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
         }
         window->inputs[dex]->addItem(str); 
     }
-    //-- set current language --
-    if(_srcActive->size()>dex)
-    {
-        std::string lang=_srcActive->atEditable(dex)->edTrack->getLanguage();
-        ADM_info("Track %d, language %s\n",dex,lang.c_str());
-        int langIndex=0;
-        if(lang.compare(ADM_UNKNOWN_LANGUAGE))
-        {
-                //window->languages[i]->setText(ADM_iso639b_toPlaintext(lang.c_str()));
-                langIndex=ADM_getIndexForIso639(lang.c_str());
-                ADM_info("index is %d\n",langIndex);
-                if(langIndex<0) langIndex=0; //  0 is unknown
-        }
-        if(langIndex>=0)
-        {
-            
-            QComboBox *q=window->languages[dex];
-            int oldIndex=q->currentIndex();
-            ADM_info("Setting language index form %d to %d\n",oldIndex,langIndex);
-            //q->blockSignals(true);
-            q->setCurrentIndex(langIndex);
-            //q->blockSignals(false);
-            oldIndex=q->currentIndex();
-            ADM_info("Index is now %d\n",oldIndex);
-        }
-    }
+   
     //--
     // add the "add audio track" item
     window->inputs[dex]->addItem(QString(".... Add audio track"));
@@ -467,7 +458,41 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
          }
         if(!_pool->size())   window->inputs[dex]->setCurrentIndex(-1);          
     }else
-                window->inputs[dex]->setCurrentIndex(forcedIndex);             
+    {
+                window->inputs[dex]->setCurrentIndex(forcedIndex);  
+    }
+     //-- set current language --
+    int currentIndex=window->inputs[dex]->currentIndex();
+    if(currentIndex!=-1)
+    {
+        EditableAudioTrack *ed;
+        ed=active.atEditable(currentIndex);
+        if(ed)
+        {            
+            std::string lang=ed->edTrack->getLanguage();
+            int langIndex=0;
+            if(lang.compare(ADM_UNKNOWN_LANGUAGE))
+            {
+                    //window->languages[i]->setText(ADM_iso639b_toPlaintext(lang.c_str()));
+                    langIndex=ADM_getIndexForIso639(lang.c_str());
+                    ADM_info("index is %d\n",langIndex);
+                    if(langIndex<0) langIndex=0; //  0 is unknown
+            }
+            if(langIndex>=0)
+            {
+
+                QComboBox *q=window->languages[dex];
+                int oldIndex=q->currentIndex();
+                ADM_info("Setting language index form %d to %d\n",oldIndex,langIndex);
+                //q->blockSignals(true);
+                q->setCurrentIndex(langIndex);
+                //q->blockSignals(false);
+                oldIndex=q->currentIndex();
+                ADM_info("Index is now %d\n",oldIndex);
+            }
+        }
+    }
+    // -- language --
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
     window->codec[dex]->addItem(QString("copy"));

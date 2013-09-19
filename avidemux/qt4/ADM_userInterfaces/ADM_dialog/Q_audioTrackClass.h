@@ -28,6 +28,7 @@ protected:
             void            setupMenu(int dex,int forcedIndex=-1);
             void            enable(int i);
             void            disable(int i);
+            
 public:
        
                             audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactive );
