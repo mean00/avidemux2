@@ -23,6 +23,22 @@
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
 /**
+ * \fn audioSetAudioPoolLanguage
+ * @param poolIndex
+ * @param language
+ */
+bool ADM_Composer::audioSetAudioPoolLanguage(int poolIndex, const char *language)
+{
+    if(poolIndex>=audioTrackPool.size())
+    {
+        ADM_warning("Pool index is out of bound (%d/%d)\n",poolIndex,(int)audioTrackPool.size());
+        return false;
+    }
+    audioTrackPool.at(poolIndex)->setLanguage(language);
+    return true;
+}
+
+/**
     \fn getDefaultAudioTrack
     \brief return the main audio track
 */

@@ -165,6 +165,8 @@ protected:
                     bool        rederiveFrameType(vidHeader *demuxer);
 
   public:
+                    bool                audioSetAudioPoolLanguage(int poolIndex, const char *language);
+                    
                     ActiveAudioTracks   *getPoolOfActiveAudioTrack(void)
                                         {
                                             return &activeAudioTracks;

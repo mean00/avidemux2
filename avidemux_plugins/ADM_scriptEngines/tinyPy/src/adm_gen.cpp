@@ -302,6 +302,20 @@ static tp_obj zzpy_addVideoFilter(TP)
   int r =   editor->addVideoFilter(p0,p1); 
   return tp_number(r);
 }
+// setSourceTrackLanguage -> int editor->audioSetAudioPoolLanguage (int str ) 
+static tp_obj zzpy_setSourceTrackLanguage(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int p0 = pm.asInt();
+  const char *p1 = pm.asString();
+  int r =   editor->audioSetAudioPoolLanguage(p0,p1); 
+  return tp_number(r);
+}
 // audioSetFilm2Pal -> int pySetFilm2Pal (IEditor int int ) 
 static tp_obj zzpy_audioSetFilm2Pal(TP)
  {
@@ -634,6 +648,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_addVideoFilter);
   }
+  if (!strcmp(key, "setSourceTrackLanguage"))
+  {
+     return tp_method(vm, self, zzpy_setSourceTrackLanguage);
+  }
   if (!strcmp(key, "audioSetFilm2Pal"))
   {
      return tp_method(vm, self, zzpy_audioSetFilm2Pal);
@@ -763,6 +781,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getPARHeight(void)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioCodec(int,str,  couples)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addVideoFilter(str, couples)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setSourceTrackLanguage(int,str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioSetFilm2Pal(IEditor,int,int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "setPostProc(int, int, int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getHeight(IEditor)\n");
