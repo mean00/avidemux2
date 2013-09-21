@@ -12,6 +12,19 @@ namespace ADM_qtScript
 		this->_stream = NULL;
 	}
 
+   void QtScriptWriter::setAudioPoolLanguage(int trackIndex, const char *lang)
+   {
+                
+		
+                // not supported...
+		
+
+   }
+   void QtScriptWriter::addExternalAudioTrack(int trackIndex,const char *file)
+   {
+       
+   }
+        
     void QtScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
     {
         *(this->_stream) << std::endl << "audioOutput = new " << _mapper.getAudioEncoderClassName(encoder->codecName).toUtf8().constData()
@@ -28,16 +41,8 @@ namespace ADM_qtScript
 		delete defaultConfiguration;
 
 		*(this->_stream) << "Editor.audioOutputs.add(";
-
-		if (track->edTrack->getTrackType() == ADM_EDAUDIO_EXTERNAL)
-		{
-			*(this->_stream) << "\"" << track->edTrack->castToExternal()->getMyName() << "\"";
-		}
-		else
-		{
-			*(this->_stream) << track->poolIndex;
-		}
-
+                *(this->_stream) << track->poolIndex;
+		
 		*(this->_stream) << ", audioOutput);" << std::endl;
     }
 

@@ -9,6 +9,16 @@ SpiderMonkeyScriptWriter::SpiderMonkeyScriptWriter()
 	this->_stream = NULL;
 }
 
+
+void SpiderMonkeyScriptWriter::setAudioPoolLanguage(int trackIndex, const char *lang) // ! from pool, not activeAudioTrack
+{
+    
+}
+void SpiderMonkeyScriptWriter::addExternalAudioTrack(int trackIndex,const char *file)
+{
+    
+}
+
 void SpiderMonkeyScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
 {
     *(this->_stream) << "adm.audioCodec(" << trackIndex << ", \"" << encoder->codecName << "\"";

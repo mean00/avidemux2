@@ -84,53 +84,65 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
 
 	this->_scriptWriter->clearAudioTracks();
 	ActiveAudioTracks* activeAudioTracks = this->_editor->getPoolOfActiveAudioTrack();
-
-	// Audio
-    for (int i = 0; i < activeAudioTracks->size(); i++)
-    {
-		EditableAudioTrack* track = this->_editor->getEditableAudioTrackAt(i);
-
-		this->_scriptWriter->addAudioOutput(i, ListOfAudioEncoder[track->encoderIndex], track);
-
-		// Mixer
-		CHANNEL_CONF channel = track->audioEncodingConfig.audioFilterGetMixer();
-
-		if (channel != CHANNEL_INVALID)
-		{
-			this->_scriptWriter->setAudioMixer(i, channel);
-		}
-
-		// Resample
-        uint32_t x = track->audioEncodingConfig.audioFilterGetResample();
-
-        if (x)
-		{
-			this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
-		}
-        this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
-        bool shiftEnabled=false;
-	int32_t shiftValue=0;
-        track->audioEncodingConfig.audioFilterGetShift(&shiftEnabled,&shiftValue);
-        this->_scriptWriter->setAudioShift(i,shiftEnabled,shiftValue);
-		// Change fps?
-		FILMCONV fps = track->audioEncodingConfig.audioFilterGetFrameRate();
-
-		if (fps == FILMCONV_PAL2FILM || fps == FILMCONV_FILM2PAL)
-		{
-			this->_scriptWriter->stretchAudio(i, fps);
-		}
-
-		// --------- Normalize ----------------
-        ADM_GAINMode mode;
-        uint32_t gain;
-
-        track->audioEncodingConfig.audioFilterGetNormalize(&mode, &gain);
-
-        if (mode != ADM_NO_GAIN)
+        // Add external audio tracks to pool if needed
+        // and set language 
+        PoolOfAudioTracks *pool= this->_editor->getPoolOfAudioTrack();
+        for (int i = 0; i < pool->size(); i++)
         {
-			this->_scriptWriter->setAudioGain(i, mode, gain);
+            
+            if(pool->at(i)->getTrackType()==ADM_EDAUDIO_EXTERNAL)
+            {
+                 std::string name=pool->at(i)->castToExternal()->getMyName();
+                 this->_scriptWriter->addExternalAudioTrack(i,name.c_str());
+            }
+            const std::string lang=pool->at(i)->getLanguage();            
+            this->_scriptWriter->setAudioPoolLanguage(i, lang.c_str());
         }
-    }
+
+        // Active Audio now
+        for (int i = 0; i < activeAudioTracks->size(); i++)
+        {
+            EditableAudioTrack* track = this->_editor->getEditableAudioTrackAt(i);
+            this->_scriptWriter->addAudioOutput(i,ListOfAudioEncoder[track->encoderIndex],track);
+            // Mixer
+            CHANNEL_CONF channel = track->audioEncodingConfig.audioFilterGetMixer();
+
+            if (channel != CHANNEL_INVALID)
+            {
+                    this->_scriptWriter->setAudioMixer(i, channel);
+            }
+
+            // Resample
+            uint32_t x = track->audioEncodingConfig.audioFilterGetResample();
+
+            if (x)
+            {
+                    this->_scriptWriter->setAudioResample(i, track->audioEncodingConfig.audioFilterGetResample());
+            }
+            this->_scriptWriter->setAudioDrc(i,track->audioEncodingConfig.audioFilterGetDrcMode());
+            bool shiftEnabled=false;
+            int32_t shiftValue=0;
+            track->audioEncodingConfig.audioFilterGetShift(&shiftEnabled,&shiftValue);
+            this->_scriptWriter->setAudioShift(i,shiftEnabled,shiftValue);
+                    // Change fps?
+                    FILMCONV fps = track->audioEncodingConfig.audioFilterGetFrameRate();
+
+                    if (fps == FILMCONV_PAL2FILM || fps == FILMCONV_FILM2PAL)
+                    {
+                            this->_scriptWriter->stretchAudio(i, fps);
+                    }
+
+                    // --------- Normalize ----------------
+            ADM_GAINMode mode;
+            uint32_t gain;
+
+            track->audioEncodingConfig.audioFilterGetNormalize(&mode, &gain);
+
+            if (mode != ADM_NO_GAIN)
+            {
+                            this->_scriptWriter->setAudioGain(i, mode, gain);
+            }
+        }
 
 	// -------- Muxer -----------------------
 	printf("Scripting muxer\n");

@@ -10,13 +10,17 @@ PythonScriptWriter::PythonScriptWriter()
 	this->_stream = NULL;
 }
 
-void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
+void PythonScriptWriter::setAudioPoolLanguage(int trackIndex, const char *lang) // ! from pool, not activeAudioTrack
 {
-	if (track->edTrack->getTrackType() == ADM_EDAUDIO_EXTERNAL)
-	{
-		*(this->_stream) << "adm.audioAddExternal(\"" << track->edTrack->castToExternal()->getMyName() << "\")" << std::endl;
-	}
-
+     *(this->_stream) << "adm.setSourceTrackLanguage("<<trackIndex<<",\""  << lang << "\")" << std::endl;
+}
+void PythonScriptWriter::addExternalAudioTrack(int trackIndex,const char *file)
+{
+    
+    *(this->_stream) << "adm.audioAddExternal(\"" << file << "\")" << std::endl;
+}
+void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
+{	
     *(this->_stream) << "adm.audioAddTrack(" << track->poolIndex << ")" << std::endl;
     *(this->_stream) << "adm.audioCodec(" << trackIndex << ", \"" << encoder->codecName << "\"";
     this->dumpConfCouple(track->encoderConf);

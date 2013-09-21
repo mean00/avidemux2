@@ -33,6 +33,8 @@ public:
     void stretchAudio(int trackIndex, FILMCONV fps);
     void setAudioDrc(int trackIndex, bool active);
     void setAudioShift(int trackIndex, bool active,int32_t shiftMs);
+    void setAudioPoolLanguage(int trackIndex, const char *lang); // ! from pool, not activeAudioTrack
+    void addExternalAudioTrack(int trackIndex,const char *file);
 };
 
 #endif
