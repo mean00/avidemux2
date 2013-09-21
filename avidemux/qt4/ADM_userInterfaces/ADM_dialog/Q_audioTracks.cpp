@@ -295,6 +295,23 @@ bool  audioTrackQt4::updateActive(void)
     int done=0;
     for(int i=0;i<NB_MENU;i++)
     {
+            ADM_info("Processing input %d for track %d\n",i,done);
+            int trackIndex=window->inputs[i]->currentIndex();
+            if(trackIndex>=_pool->size()) 
+            {
+                ADM_warning("Referencing a non existing track in pool (%d/%d)\n",trackIndex,_pool->size());
+                continue;
+            }
+            int dex=window->languages[i]->currentIndex();
+            ADM_edAudioTrack *trk=_pool->at(trackIndex);
+            if(trk)
+            {
+                      std::string lang=languages[dex].iso639_2;
+                      trk->setLanguage(lang);   
+            }
+    }
+    for(int i=0;i<NB_MENU;i++)
+    {
         if(window->enabled[i]->checkState()==Qt::Checked)
         {
             ADM_info("Processing input %d for track %d\n",i,done);
@@ -318,13 +335,7 @@ bool  audioTrackQt4::updateActive(void)
                 dest->audioEncodingConfig=src->audioEncodingConfig;
             }
              // set language from UI                
-                int dex=window->languages[i]->currentIndex();
-                ADM_edAudioTrack *trk=_pool->at(trackIndex);
-                if(trk)
-                {
-                          std::string lang=languages[dex].iso639_2;
-                          trk->setLanguage(lang);   
-                }
+             
             // next
             done++;
         }
