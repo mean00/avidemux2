@@ -175,6 +175,13 @@ bool muxerMp4v2::initAudio(void)
                     ADM_error("Cannot create audio track of type 0x%x\n",header->encoding);
                     return false;
         }
+        if(aStreams[i]->isLanguageSet())
+        {
+                MP4SetTrackLanguage(handle,audioTrackIds[i],aStreams[i]->getLanguage().c_str());
+                ADM_info("[MP4v2] Setting language to %s \n",aStreams[i]->getLanguage().c_str());
+        }else
+            ADM_warning("[MP4v2] Language is undefined\n");
+
          MP4SetTrackBytesProperty(handle,audioTrackIds[i],"udta.name.value",
                     (const uint8_t*)"Stereo", strlen("Stereo"));
 
