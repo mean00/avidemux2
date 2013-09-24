@@ -131,6 +131,21 @@ bool    ADM_audioStream::advanceDtsBySample(uint32_t samples)
         return true;
 }
 /**
+ *      \fn isLanguageSet
+ * */
+bool              ADM_audioStream::isLanguageSet(void)
+{
+    const std::string lang=getLanguage();
+    if(lang.size()!=3) 
+        return false; // hackish...
+    return true;
+}
+/**
+ * @param samples
+ * @param fq
+ * @return 
+ */
+/**
         \fn advanceDtsByCustomSample
 */
 bool    ADM_audioStream::advanceDtsByCustomSample(uint32_t samples,uint32_t fq)

@@ -118,6 +118,7 @@ virtual bool            isCBR()
                             }
 virtual        const std::string &getLanguage() {return language;}
 virtual        void              setLanguage(const std::string &lan) {language=lan;}
+virtual        bool              isLanguageSet(void);
 };
 /**
    \fn ADM_audioCreateStream
