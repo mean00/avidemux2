@@ -290,26 +290,34 @@ bool  audioTrackQt4::updateActive(void)
         }
     }
 
-    // 2 - recreate audio tracks from menu
+    // 2 - recreate audio tracks from menu, set language
+    
     _srcActive->clear();
-    int done=0;
+    
     for(int i=0;i<NB_MENU;i++)
     {
-            ADM_info("Processing input %d for track %d\n",i,done);
+        if(window->enabled[i]->checkState()!=Qt::Checked) continue;
+            ADM_info("Checking input %d for track %d\n",i);
             int trackIndex=window->inputs[i]->currentIndex();
             if(trackIndex>=_pool->size()) 
             {
                 ADM_warning("Referencing a non existing track in pool (%d/%d)\n",trackIndex,_pool->size());
                 continue;
             }
+            
             int dex=window->languages[i]->currentIndex();
             ADM_edAudioTrack *trk=_pool->at(trackIndex);
-            if(trk)
+            if(trk && dex!=-1)
             {
                       std::string lang=languages[dex].iso639_2;
                       trk->setLanguage(lang);   
-            }
+                      ADM_info("\tSetting language %s to pool %d\n",lang.c_str(),trackIndex);
+                      //ADM_info("\tPool language is now %s\n",_pool->at(trackIndex)->getLanguage().c_str());
+                      
+            }else
+                ADM_warning("Cannot set language for track %d\n",i);
     }
+    int done=0;
     for(int i=0;i<NB_MENU;i++)
     {
         if(window->enabled[i]->checkState()==Qt::Checked)
@@ -334,8 +342,10 @@ bool  audioTrackQt4::updateActive(void)
                 // filters
                 dest->audioEncodingConfig=src->audioEncodingConfig;
             }
-             // set language from UI                
-             
+#if 0
+            ADM_info("Language for pool %d is %s\n",trackIndex,_pool->at(trackIndex)->getLanguage().c_str());
+            ADM_info("Language for track is %s\n",dest->edTrack->getLanguage().c_str());
+#endif        
             // next
             done++;
         }
@@ -467,6 +477,9 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
     if(currentIndex!=-1)
     {
         setLanguageFromPool(dex,currentIndex);        
+    }else
+    {
+        ADM_warning("Cannot setup language for track %d\n",dex);
     }
     // -- language --
     // now add codecs
