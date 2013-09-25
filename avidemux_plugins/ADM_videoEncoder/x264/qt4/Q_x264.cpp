@@ -21,7 +21,7 @@ using std::vector;
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 
-static int pluginVersion=1;
+static int pluginVersion=2;
 
 static x264_encoder myCopy; // ugly...
 extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
