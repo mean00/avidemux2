@@ -402,6 +402,7 @@ uint8_t       MP4Header::parseEdts(void *ztom)
                     uint32_t mediaTime=son.read32();
                     uint32_t playbackSpeed=son.read32();
                     ADM_info("Duration : %"PRIu32", mediaTime:%"PRIu32" speed=%"PRIu32"\n",editDuration,mediaTime,playbackSpeed);
+                    ADM_info("Mediatime in sms = %d\n",(1000*mediaTime)/trackScale);
                 }
               son.skipAtom();
               break;
