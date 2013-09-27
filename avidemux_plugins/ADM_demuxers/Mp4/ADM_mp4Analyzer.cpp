@@ -402,7 +402,6 @@ uint8_t       MP4Header::parseEdts(void *ztom)
                     uint32_t mediaTime=son.read32();
                     uint32_t playbackSpeed=son.read32();
                     ADM_info("Duration : %"PRIu32", mediaTime:%"PRIu32" speed=%"PRIu32"\n",editDuration,mediaTime,playbackSpeed);
-                    ADM_info("Mediatime in sms = %d\n",(1000*mediaTime)/trackScale);
                 }
               son.skipAtom();
               break;
@@ -421,7 +420,6 @@ uint8_t       MP4Header::parseEdts(void *ztom)
         \fn parseStbl
         \brief parse sample table. this is the most important function.
 */
-uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
