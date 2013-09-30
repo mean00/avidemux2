@@ -1,0 +1,267 @@
+diff --git a/common/common.c b/common/common.c
+index d03201d..7701100 100644
+--- a/common/common.c
++++ b/common/common.c
+@@ -1217,7 +1217,7 @@ char *x264_slurp_file( const char *filename )
+     int b_error = 0;
+     size_t i_size;
+     char *buf;
+-    FILE *fh = fopen( filename, "rb" );
++    FILE *fh = openf( filename, "rb" );
+     if( !fh )
+         return NULL;
+     b_error |= fseek( fh, 0, SEEK_END ) < 0;
+@@ -1368,4 +1368,96 @@ char *x264_param2string( x264_param_t *p, int b_res )
+ 
+     return buf;
+ }
++//
++// Convert UTF-8 string to wide char
++int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString)
++{
++	int wideCharStringLength = MultiByteToWideChar(CP_UTF8, 0, utf8String, utf8StringLength, NULL, 0);
++
++	if (wideCharString)
++		MultiByteToWideChar(CP_UTF8, 0, utf8String, utf8StringLength, wideCharString, wideCharStringLength);
++
++	return wideCharStringLength;
++}
++
++/**
++    \fn ADM_fopen
++    \brief utf8 aware fopen, so that we can use utf8 string even on win32
++*/
++FILE *openf(const char *file, const char *mode)
++{
++	// Override fopen to handle Unicode filenames and to ensure exclusive access when initially writing to a file.
++	int fileNameLength = utf8StringToWideChar(file, -1, NULL);
++	wchar_t *wcFile = (wchar_t *)malloc(fileNameLength*sizeof(wchar_t));
++	int creation = 0, access = 0;
++	HANDLE hFile;
++
++	utf8StringToWideChar(file, -1, wcFile);
++
++	while (1)
++	{
++		if (strchr(mode, 'w'))
++		{
++			creation = CREATE_ALWAYS;
++			access = GENERIC_WRITE;
++
++			if (strchr(mode, '+'))
++				access |= GENERIC_READ;
++		}
++		else if (strchr(mode, 'r'))
++		{
++			creation = OPEN_EXISTING;
++			access = GENERIC_READ;
++
++			if (strchr(mode, '+'))
++				access = GENERIC_WRITE;
++		}
++		else if (strchr(mode, 'a'))
++		{
++			creation = OPEN_ALWAYS;
++			access = GENERIC_WRITE;
++
++			if (strchr(mode, '+'))
++				access |= GENERIC_READ;
++		}
++
++		if (creation & GENERIC_WRITE)
++		{
++			hFile = CreateFileW(wcFile, access, 0, NULL, creation, 0, NULL);
++
++			if (hFile == INVALID_HANDLE_VALUE)
++				break;
++			else
++				CloseHandle(hFile);
++		}
++
++		hFile = CreateFileW(wcFile, access, FILE_SHARE_READ, NULL, creation, 0, NULL);
++		break;
++	}
++
++	free( wcFile);
++
++	if (hFile == INVALID_HANDLE_VALUE)
++		return NULL;
++	else
++		return _fdopen(_open_osfhandle((intptr_t)hFile, 0), mode);
++ }
++
++BOOL ADM_rename(const char *src, const char *dst)
++{
++	int fileNameLength;
++	BOOL r;
++	fileNameLength = utf8StringToWideChar(src, -1, NULL);
++	wchar_t *wcFileSrc = (wchar_t *)malloc(fileNameLength*sizeof(wchar_t));
++	utf8StringToWideChar(src, -1, wcFileSrc);
++
++	fileNameLength = utf8StringToWideChar(dst, -1, NULL);
++	wchar_t *wcFileDst = (wchar_t *)malloc(fileNameLength*sizeof(wchar_t));
++	utf8StringToWideChar(dst, -1, wcFileDst);
+ 
++	r= MoveFileW(wcFileSrc,wcFileDst);
++        free(wcFileSrc);
++	free(wcFileDst);
++	return r;
++
++}
+diff --git a/common/osdep.h b/common/osdep.h
+index f7cad57..5b4c439 100644
+--- a/common/osdep.h
++++ b/common/osdep.h
+@@ -43,6 +43,10 @@
+ #ifdef _WIN32
+ #include <io.h>    // _setmode()
+ #include <fcntl.h> // _O_BINARY
++#include <stdarg.h>
++#include <wchar.h>
++#include <windef.h> // MoveFileW
++#include <winbase.h> // MoveFileW
+ #endif
+ 
+ #ifdef __ICL
+@@ -68,7 +72,8 @@
+ #define isfinite finite
+ #endif
+ #ifdef _WIN32
+-#define rename(src,dst) (unlink(dst), rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
++extern BOOL ADM_rename(const char *src, const char *dst);
++#define rename(src,dst) (unlink(dst), ADM_rename(src,dst)) // POSIX says that rename() removes the destination, but win32 doesn't.
+ #ifndef strtok_r
+ #define strtok_r(str,delim,save) strtok(str,delim)
+ #endif
+diff --git a/configure b/configure
+index d527e8f..007d5a6 100755
+--- a/configure
++++ b/configure
+@@ -273,7 +273,7 @@ bit_depth="8"
+ chroma_format="all"
+ compiler="GNU"
+ 
+-CFLAGS="$CFLAGS -Wall -I. -I\$(SRCPATH)"
++CFLAGS="$CFLAGS -Wall -I. -I\$(SRCPATH) -include openf.h"
+ LDFLAGS="$LDFLAGS"
+ LDFLAGSCLI="$LDFLAGSCLI"
+ ASFLAGS="$ASFLAGS"
+diff --git a/encoder/encoder.c b/encoder/encoder.c
+index e9ea971..f618b73 100644
+--- a/encoder/encoder.c
++++ b/encoder/encoder.c
+@@ -82,7 +82,7 @@ static int x264_threadpool_wait_all( x264_t *h )
+ 
+ static void x264_frame_dump( x264_t *h )
+ {
+-    FILE *f = fopen( h->param.psz_dump_yuv, "r+b" );
++    FILE *f = openf( h->param.psz_dump_yuv, "r+b" );
+     if( !f )
+         return;
+ 
+@@ -1323,7 +1323,7 @@ x264_t *x264_encoder_open( x264_param_t *param )
+     if( h->param.psz_dump_yuv )
+     {
+         /* create or truncate the reconstructed video file */
+-        FILE *f = fopen( h->param.psz_dump_yuv, "w" );
++        FILE *f = openf( h->param.psz_dump_yuv, "w" );
+         if( !f )
+         {
+             x264_log( h, X264_LOG_ERROR, "dump_yuv: can't write to %s\n", h->param.psz_dump_yuv );
+diff --git a/encoder/ratecontrol.c b/encoder/ratecontrol.c
+index 0437fbd..b7098b2 100644
+--- a/encoder/ratecontrol.c
++++ b/encoder/ratecontrol.c
+@@ -728,7 +728,7 @@ int x264_ratecontrol_new( x264_t *h )
+             char *mbtree_stats_in = x264_strcat_filename( h->param.rc.psz_stat_in, ".mbtree" );
+             if( !mbtree_stats_in )
+                 return -1;
+-            rc->p_mbtree_stat_file_in = fopen( mbtree_stats_in, "rb" );
++            rc->p_mbtree_stat_file_in = openf( mbtree_stats_in, "rb" );
+             x264_free( mbtree_stats_in );
+             if( !rc->p_mbtree_stat_file_in )
+             {
+@@ -993,7 +993,7 @@ parse_error:
+         if( !rc->psz_stat_file_tmpname )
+             return -1;
+ 
+-        rc->p_stat_file_out = fopen( rc->psz_stat_file_tmpname, "wb" );
++        rc->p_stat_file_out = openf( rc->psz_stat_file_tmpname, "wb" );
+         if( rc->p_stat_file_out == NULL )
+         {
+             x264_log( h, X264_LOG_ERROR, "ratecontrol_init: can't open stats file\n" );
+@@ -1011,7 +1011,7 @@ parse_error:
+             if( !rc->psz_mbtree_stat_file_tmpname || !rc->psz_mbtree_stat_file_name )
+                 return -1;
+ 
+-            rc->p_mbtree_stat_file_out = fopen( rc->psz_mbtree_stat_file_tmpname, "wb" );
++            rc->p_mbtree_stat_file_out = openf( rc->psz_mbtree_stat_file_tmpname, "wb" );
+             if( rc->p_mbtree_stat_file_out == NULL )
+             {
+                 x264_log( h, X264_LOG_ERROR, "ratecontrol_init: can't open mbtree stats file\n" );
+diff --git a/openf.h b/openf.h
+new file mode 100644
+index 0000000..d01a5ab
+--- /dev/null
++++ b/openf.h
+@@ -0,0 +1,3 @@
++#include <stdio.h>
++extern FILE *openf (__const char *__restrict __filename,
++                    __const char *__restrict __modes);
+diff --git a/output/raw.c b/output/raw.c
+index ed3174c..cede924 100644
+--- a/output/raw.c
++++ b/output/raw.c
+@@ -30,7 +30,7 @@ static int open_file( char *psz_filename, hnd_t *p_handle, cli_output_opt_t *opt
+ {
+     if( !strcmp( psz_filename, "-" ) )
+         *p_handle = stdout;
+-    else if( !(*p_handle = fopen( psz_filename, "w+b" )) )
++    else if( !(*p_handle = openf( psz_filename, "w+b" )) )
+         return -1;
+ 
+     return 0;
+diff --git a/x264.c b/x264.c
+index 94c31fc..887a3ca 100644
+--- a/x264.c
++++ b/x264.c
+@@ -1076,7 +1076,7 @@ static int select_input( const char *demuxer, char *used_demuxer, char *filename
+     b_regular = b_regular && x264_is_regular_file_path( filename );
+     if( b_regular )
+     {
+-        FILE *f = fopen( filename, "r" );
++        FILE *f = openf( filename, "r" );
+         if( f )
+         {
+             b_regular = x264_is_regular_file( f );
+@@ -1320,7 +1320,7 @@ static int parse( int argc, char **argv, x264_param_t *param, cli_opt_t *opt )
+                 input_opt.index_file = optarg;
+                 break;
+             case OPT_QPFILE:
+-                opt->qpfile = fopen( optarg, "rb" );
++                opt->qpfile = openf( optarg, "rb" );
+                 FAIL_IF_ERROR( !opt->qpfile, "can't open qpfile `%s'\n", optarg )
+                 if( !x264_is_regular_file( opt->qpfile ) )
+                 {
+@@ -1379,7 +1379,7 @@ static int parse( int argc, char **argv, x264_param_t *param, cli_opt_t *opt )
+                 tcfile_name = optarg;
+                 break;
+             case OPT_TCFILE_OUT:
+-                opt->tcfile_out = fopen( optarg, "wb" );
++                opt->tcfile_out = openf( optarg, "wb" );
+                 FAIL_IF_ERROR( !opt->tcfile_out, "can't open `%s'\n", optarg )
+                 break;
+             case OPT_TIMEBASE:
+diff --git a/x264.h b/x264.h
+index 9219114..5b829e6 100644
+--- a/x264.h
++++ b/x264.h
+@@ -42,7 +42,7 @@
+ #include "x264_config.h"
+ 
+ #define X264_BUILD 123
+-
++#define X264_USE_UTF8
+ /* Application developers planning to link against a shared library version of
+  * libx264 from a Microsoft Visual Studio or similar development environment
+  * will need to define X264_API_IMPORTS before including this header.
