@@ -116,16 +116,19 @@ class MP4Header         :public vidHeader
 {
 protected:
           /*****************************/
+          uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
           void                          parseMvhd(void *tom);
           uint8_t                       parseTrack(void *ztom);
+          uint8_t                       parseElst(void *tom,uint32_t trackType);
           uint8_t                       decodeVideoAtom(void *ztom);
           uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
-          uint8_t                       parseEdts(void *ztom);
+          uint8_t                       parseEdts(void *ztom,uint32_t trackType);
           uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint32_t h,uint32_t trackScale);
           uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
           bool                          refineFps(void);
+          bool                          adjustElstDelay(void);
           uint32_t                      _videoScale;
           int64_t			_movieDuration; // in ms
           uint32_t                      _videoFound;
@@ -151,6 +154,7 @@ protected:
         uint32_t                      nbAudioTrack;
         bool                          refineAudio(WAVHeader *head,uint32_t extraLen, uint8_t *extra);
         bool                          shiftTimeBy(uint64_t shift);
+        bool                          shiftAudioTimeBy(uint64_t shift);
          /*********************************/
 	uint32_t                         readPackedLen(adm_atom *tom );
 	

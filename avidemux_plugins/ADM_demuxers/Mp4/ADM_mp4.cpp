@@ -226,6 +226,7 @@ MP4Header::MP4Header(void)
         _reordered=0;
         _videoScale=1;
         _videoFound=0;
+        delayRelativeToVideo=0;
 }
 /**
     \fn getAudioInfo
@@ -447,6 +448,10 @@ uint8_t    MP4Header::open(const char *name)
                 Now build audio tracks
         */
         if(nbAudioTrack) _isaudiopresent=1; // Still needed ?
+        
+        adjustElstDelay();
+        
+        //
         for(int audio=0;audio<nbAudioTrack;audio++)
         {
             switch(_tracks[1+audio]._rdWav.encoding)
@@ -511,6 +516,23 @@ uint8_t    MP4Header::open(const char *name)
         return 1;
 }
 /**
+ * \fn adjustElstDelay
+ * @return 
+ */
+bool MP4Header::adjustElstDelay()
+{
+    if(this->delayRelativeToVideo)
+    {
+        ADM_info("Compensating for a/v delay\n");
+        shiftAudioTimeBy(this->delayRelativeToVideo);
+    }
+    return true;
+
+}
+        
+    
+
+/**
  * \fn shiftTimeBy
  * \brief increase pts by shift, fix some mp4 where dts is too low
  * @param shift
@@ -530,7 +552,13 @@ bool MP4Header::shiftTimeBy(uint64_t shift)
             VDEO.index[i].pts=pts;
         }
 
-        for(int audioTrack=0;audioTrack<nbAudioTrack;audioTrack++)
+       shiftAudioTimeBy(shift);
+        return true;        
+}
+bool MP4Header::shiftAudioTimeBy(uint64_t shift)
+{
+    int nb;
+      for(int audioTrack=0;audioTrack<nbAudioTrack;audioTrack++)
         {
             nb=(int)_tracks[1+audioTrack].nbIndex;
             for(int i=0;i<nb;i++)
@@ -542,9 +570,8 @@ bool MP4Header::shiftTimeBy(uint64_t shift)
                         _tracks[audioTrack+1].index[i].dts=dts;
              }
         }
-        return true;
-        
 }
+
 //
 //	That tag are coded like this
 //	Each 8 bits is in fact a 7 Bits part while b7=1

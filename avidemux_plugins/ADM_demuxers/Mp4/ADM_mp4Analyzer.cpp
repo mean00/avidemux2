@@ -228,7 +228,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
         case ADM_MP4_EDTS:
         {
             ADM_info("EDTS atom found\n");
-            parseEdts(&son);
+            parseEdts(&son,trackType);
             break;
         }
        default:
@@ -367,12 +367,47 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
   }
   return r;
 }
-
+/**
+ * \fn parseElst
+ * \brief Parse edit list atom. We manage only one case : when video does not start at 
+ *              0, we delay all others tracks by the amount indicated
+ * @param tom
+ * @return 
+ */
+uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType)
+{
+    uint32_t editDuration;
+    uint32_t mediaTime;
+    uint32_t playbackSpeed;
+    adm_atom *tom=(adm_atom *)ztom;
+    tom->skipBytes(4);
+    uint32_t nb=tom->read32();
+    ADM_info("Found %"PRIu32" entries in list:\n",nb);
+    for(int i=0;i<nb;i++)
+      {
+          editDuration=tom->read32();
+          mediaTime=tom->read32();
+          playbackSpeed=tom->read32();
+          ADM_info("Duration : %"PRIu32", mediaTime:%"PRIu32" speed=%"PRIu32"\n",editDuration,mediaTime,playbackSpeed);
+      } 
+     if(trackType==TRACK_VIDEO && nb==1 && mediaTime>0 && _videoScale )
+     {
+         ADM_info("** Audio Tracks need to be delayed , %d vs trackscale %d \n",(int)mediaTime,(int)_videoScale);
+         double d=mediaTime;
+         d/=_videoScale;
+         d*=1000000.;
+         delayRelativeToVideo=(uint64_t)d;
+         ADM_info("** Computed delay =%s \n",ADM_us2plain(delayRelativeToVideo));
+         
+         
+     }
+    return 1;
+}
 /**
         \fn parseEdts
         \brief parse sample table. this is the most important function.
 */
-uint8_t       MP4Header::parseEdts(void *ztom)
+uint8_t       MP4Header::parseEdts(void *ztom,uint32_t trackType)
 {
   adm_atom *tom=(adm_atom *)ztom;
   ADMAtoms id;
@@ -393,16 +428,7 @@ uint8_t       MP4Header::parseEdts(void *ztom)
        case ADM_MP4_ELST:
        {
               ADM_info("ELST atom found\n");
-              son.skipBytes(4);
-              uint32_t nb=son.read32();
-              ADM_info("Found %"PRIu32" entries in list:\n",nb);
-              for(int i=0;i<nb;i++)
-                {
-                    uint32_t editDuration=son.read32();
-                    uint32_t mediaTime=son.read32();
-                    uint32_t playbackSpeed=son.read32();
-                    ADM_info("Duration : %"PRIu32", mediaTime:%"PRIu32" speed=%"PRIu32"\n",editDuration,mediaTime,playbackSpeed);
-                }
+              parseElst(&son,trackType);
               son.skipAtom();
               break;
         
