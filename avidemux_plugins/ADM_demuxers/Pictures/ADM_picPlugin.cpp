@@ -38,6 +38,12 @@ uint32_t result=0;
       printf (" \n PNG file detected...\n");
       return 100;
     }
+    if(magic==0xe0ffd8ff) 
+    {
+
+      printf (" \n JPG file detected...\n");
+      return 100;
+    }
     
     printf (" [picHeader] Cannot open that\n");
     return 0;
