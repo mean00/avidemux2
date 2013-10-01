@@ -44,6 +44,12 @@ uint32_t result=0;
       printf (" \n JPG file detected...\n");
       return 100;
     }
+    if((magic & 0xffff)==0x4d42) 
+    {
+
+      printf (" \n BMP file detected...\n");
+      return 100;
+    }
     
     printf (" [picHeader] Cannot open that\n");
     return 0;
