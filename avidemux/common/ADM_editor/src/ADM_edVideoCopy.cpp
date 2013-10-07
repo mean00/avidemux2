@@ -160,14 +160,26 @@ againGet:
     // after a segment switch, we may have some frames from "the past"
     // if the cut point is not a keyframe, drop them
 #if 1
-    if(_currentSegment && img->demuxerDts!=ADM_NO_PTS)
+    if( img->demuxerDts!=ADM_NO_PTS)
     {
-        if(img->demuxerDts<seg->_refStartDts)
+        bool drop=false;
+        if(_currentSegment  && img->demuxerDts<seg->_refStartDts)
         {
             ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
             ADM_info("vs %s\n",ADM_us2plain(seg->_refStartDts));
-            goto againGet;
+            drop=true;
         }
+        // Seeking is not accurate when cutting on non intra
+        // we might have some frames that are clearly too early , even in seg0
+        if(img->demuxerDts+seg->_startTimeUs<seg->_refStartTimeUs)
+        {
+            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+            ADM_info("vs %s\n",ADM_us2plain(seg->_refStartDts));
+            drop=true;
+        }
+        if(drop)
+            goto againGet;
+        
     }
 #endif
     // Need to switch seg ?
