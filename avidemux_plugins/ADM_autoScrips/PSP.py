@@ -6,7 +6,7 @@
 import ADM_imageInfo
 import ADM_image
 finalSizeWidth=480               # Start with DVD target, we'll adjust later
-finalSizeHeight=[272]
+finalSizeHeight=[272,272,272]
 #
 #
 adm=Avidemux()
