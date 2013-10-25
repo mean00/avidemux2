@@ -9,7 +9,7 @@ import ADM_image
 adm=Avidemux()
 gui=Gui()
 finalSizeWidth=352
-finalSizeHeight=[ 240,288]
+finalSizeHeight=[ 240,288,240]
 #
 MP2=80
 supported=[MP2]
