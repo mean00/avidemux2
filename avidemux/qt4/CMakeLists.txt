@@ -191,6 +191,8 @@ if(CROSS)
         TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
         TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
 endif(CROSS)
+
+target_link_libraries(avidemux3_qt4 "-lm -lstdc++")
 #
 # i18n
 #

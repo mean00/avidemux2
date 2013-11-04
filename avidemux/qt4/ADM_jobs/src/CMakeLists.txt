@@ -91,6 +91,8 @@ TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreJobs)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreUtils6)
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_core6)
 #
+target_link_libraries(avidemux3_jobs "-lm -lstdc++")
+#
 #
 
 
