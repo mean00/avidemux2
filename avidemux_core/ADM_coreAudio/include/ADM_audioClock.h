@@ -7,9 +7,9 @@
 #ifndef ADM_audioClock_H
 #define ADM_audioClock_H
 
-#include "ADM_coreMuxer6_export.h"
+#include "ADM_coreAudio6_export.h"
 
-class ADM_COREMUXER6_EXPORT audioClock
+class ADM_COREAUDIO6_EXPORT audioClock
 {
         protected:
                 uint32_t        _frequency;
