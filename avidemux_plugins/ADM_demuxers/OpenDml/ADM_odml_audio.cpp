@@ -30,8 +30,8 @@ It is an fopen/fwrite lookalike interface to chunks
 #include "ADM_openDML.h"
 
 #include "ADM_odml_audio.h"
-//#include "ADM_audiocodec/ADM_audiocodec.h"
 #include "ADM_audioStream.h"
+#include "ADM_audioClock.h"
 
 /**
     \fn ADM_aviAudioAccess
@@ -54,31 +54,54 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
         length+=idx[i].size;    
         if(idx[i].size>mx) mx=idx[i].size;
     }
-    if((hdr->encoding==WAV_PCM || hdr->encoding==WAV_LPCM)&& mx>ODML_MAX_AUDIO_CHUNK)
+    
+    
+    if((hdr->encoding==WAV_PCM || hdr->encoding==WAV_LPCM))
     {
-        // Split the huge chunk into smaller ones
-        for(int i=0;i<nbChunk;i++)
+        // Number of samples in one chunk
+        int maxAllowed=ODML_MAX_AUDIO_CHUNK; 
+        int bytePerSample=2;
+        if(hdr->bitspersample==8) bytePerSample=1;
+        int thirtyMs=(bytePerSample*hdr->channels*hdr->frequency)/40; // ~ 25 ms
+        if(thirtyMs<maxAllowed) maxAllowed=thirtyMs;
+        
+        maxAllowed/=(bytePerSample*hdr->channels);
+        maxAllowed*=(bytePerSample*hdr->channels);
+        
+        ADM_info("Checking that we dont have block larger than %d bytes, we have %d so far\n",maxAllowed,(int)mx);
+        if( mx>maxAllowed)
         {
-            uint64_t start=idx[i].offset;
-            uint32_t size=idx[i].size;      
-            uint32_t ONE_CHUNK=(ODML_MAX_AUDIO_CHUNK)/(2*hdr->channels);
-            ONE_CHUNK*=2*hdr->channels;
-            while(size>ONE_CHUNK)
+            ADM_info("Splitting it...\n");
+            // Split the huge chunk into smaller ones
+            audioClock clock(hdr->frequency);
+            uint64_t startAt=idx[0].dts;
+            if(startAt==ADM_NO_PTS) startAt=0;
+            
+            clock.setTimeUs(startAt);
+            for(int i=0;i<nbChunk;i++)
             {
-                odmlIndex current;
-                current.offset=start;
-                current.size=ONE_CHUNK;
-                current.dts=ADM_NO_PTS;
-                myIndex.append(current);
-                start+=ONE_CHUNK;
-                size-=ONE_CHUNK;
+                uint64_t start=idx[i].offset;
+                uint32_t size=idx[i].size;      
+                uint32_t ONE_CHUNK=(maxAllowed); // already a multiple of 2*chan
+                while(size>ONE_CHUNK)
+                {
+                    odmlIndex current;
+                    current.offset=start;
+                    current.size=ONE_CHUNK;
+                    current.dts=clock.getTimeUs();
+                    myIndex.append(current);
+                    start+=ONE_CHUNK;
+                    size-=ONE_CHUNK;
+                    clock.advanceBySample(ONE_CHUNK/(bytePerSample*hdr->channels));
+                }
+                    odmlIndex current;
+                    current.offset=start;
+                    current.size=size;
+                    current.dts=clock.getTimeUs();;
+                    myIndex.append(current);
+                    clock.advanceBySample(size/(bytePerSample*hdr->channels));
             }
-                odmlIndex current;
-                current.offset=start;
-                current.size=size;
-                current.dts=ADM_NO_PTS;
-                myIndex.append(current);
-        }
+       }
 
     }else
     {       // Duplicate index as is
