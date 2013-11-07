@@ -5,7 +5,7 @@
 */
 #include "ADM_default.h"
 #include "ADM_audioStreamPCM.h"
-
+#include "ADM_vidMisc.h"
 /**
     \fn ADM_audioStreamAC3
     \brief constructor
@@ -58,12 +58,16 @@ uint8_t ADM_audioStreamPCM::getPacket(uint8_t *obuffer,uint32_t *osize,
 {
 uint64_t thisDts=0;
     if(!access->getPacket(obuffer,osize,sizeMax,&thisDts)) return 0;
-    uint32_t bytesPerSample=wavHeader.channels*2; 
+
+    int  sampleSize=2;
+    if(wavHeader.bitspersample==8) sampleSize=1;
+    uint32_t bytesPerSample=wavHeader.channels*sampleSize; 
 //#warning fixme handle mono
     *nbSample=(uint32_t)(*osize/bytesPerSample);
     if(thisDts!=ADM_NO_PTS) 
             setDts(thisDts);
     *dts=lastDts;
+//    printf(">>audioCore : PCM packet : %s\n",ADM_us2plain(*dts));
     advanceDtsBySample(*nbSample);
     return 1;
 }
