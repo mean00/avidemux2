@@ -39,7 +39,7 @@ It is an fopen/fwrite lookalike interface to chunks
 #endif
 #define DEPACK_VERBOSE
 
-#define MAX_VOP 20
+#define MAX_VOP 200
 
 /* Static ones */
 
