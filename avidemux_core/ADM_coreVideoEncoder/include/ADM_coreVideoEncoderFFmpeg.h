@@ -45,7 +45,7 @@ protected:
                int              pass;   // Pass number = 1 or 2, valid only if we use 2 pass mode
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
-               float            timeScaler;
+               double           timeScaler;
               
 protected:
 

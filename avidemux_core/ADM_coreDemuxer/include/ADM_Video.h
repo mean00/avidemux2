@@ -81,7 +81,7 @@ virtual 	uint8_t		open(const char *name)=0;
 virtual 	uint8_t		close(void)=0;
 virtual         uint64_t        frameToUs(uint32_t frame)
                                 {
-                                    float f=frame;
+                                    double f=frame;
                                     f*=_videostream.dwScale;
                                     f/=_videostream.dwRate;
                                     f*=1000000.;

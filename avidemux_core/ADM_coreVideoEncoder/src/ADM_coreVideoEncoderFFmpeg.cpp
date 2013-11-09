@@ -166,7 +166,15 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 */
 int64_t          ADM_coreVideoEncoderFFmpeg::timingToLav(uint64_t val)
 {
-  int64_t v= floor( ((float)val+timeScaler/2.) /timeScaler);
+    double q=(double)val;
+    q+=timeScaler/(double)2.;
+    q/=timeScaler;
+    
+    int64_t v=floor(q);
+#if 0      
+  printf("Lav in=%d, scale=%lf,",(int)val,timeScaler);
+  printf(" q=%lf,out PTS=%lld\n",q,v);
+#endif
   return v;
 }
 /**
