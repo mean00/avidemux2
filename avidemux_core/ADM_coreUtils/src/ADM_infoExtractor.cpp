@@ -360,16 +360,15 @@ ADM_searchVop (uint8_t * begin, uint8_t * end, uint32_t * nb, ADM_vopS * vop,
 		case 0:
 		  voptype = AVI_KEY_FRAME;
 		  break;
-		case 1:
+		case 1: // P
+		case 3: // S
 		  voptype = 0;
 		  break;
 		case 2:
 		  voptype = AVI_B_FRAME;
 		  break;
-		case 3:
-		  printf ("[Avi] Glouglou\n");
-		  voptype = 0;
-		  break;
+                default:
+                  ADM_warning("Unknown vop type\n");
 
 		}
 	      vop[*nb].offset = globalOff + off - 4;
