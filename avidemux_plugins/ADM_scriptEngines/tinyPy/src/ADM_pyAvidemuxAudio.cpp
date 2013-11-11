@@ -51,6 +51,14 @@ int pyChangeAudioStream(IEditor *editor, int track)
     return 0;
 }
 
+int pyGetAudioBitrate(IEditor *editor,int dex)
+{
+    WAVHeader h;
+    if(!audioProlog(editor,dex,h)) return 0;
+	return ((h.byterate)*8)/1000;
+}
+
+
 /**
     \fn pyGetAudioChannels
     \brief

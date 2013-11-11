@@ -103,6 +103,20 @@ static tp_obj zzpy_videoCodecChangeParam(TP)
   int r =   editor->changeVideoParam(p0,p1); 
   return tp_number(r);
 }
+// audioBitrate -> int pyGetAudioBitrate (IEditor  int ) 
+static tp_obj zzpy_audioBitrate(TP)
+ {
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int p1 = pm.asInt();
+  int r =   pyGetAudioBitrate(p0,p1); 
+  return tp_number(r);
+}
 // audioClearTracks -> int pyClearAudioTracks (IEditor ) 
 static tp_obj zzpy_audioClearTracks(TP)
  {
@@ -592,6 +606,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
      return tp_method(vm, self, zzpy_videoCodecChangeParam);
   }
+  if (!strcmp(key, "audioBitrate"))
+  {
+     return tp_method(vm, self, zzpy_audioBitrate);
+  }
   if (!strcmp(key, "audioClearTracks"))
   {
      return tp_method(vm, self, zzpy_audioClearTracks);
@@ -767,6 +785,7 @@ static tp_obj zzpy__pyAdm_help(TP)
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioResetFilter(int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "save(str)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "videoCodecChangeParam(str, couples)\n");
+	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioBitrate(IEditor, int)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "audioClearTracks(IEditor)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "getFps1000(IEditor)\n");
 	engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "saveAudio(int,str)\n");

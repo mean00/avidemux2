@@ -19,6 +19,7 @@
 #include "IEditor.h"
 
 /* Audio */
+int pyGetAudioBitrate(IEditor *editor,int dex);
 int pyGetAudioChannels(IEditor *editor,int dex);
 int pyGetAudioFrequency(IEditor *editor,int dex);
 int pyGetAudioEncoding(IEditor *editor,int dex);

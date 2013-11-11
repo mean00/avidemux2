@@ -37,11 +37,13 @@
 /* METHOD */ int pyGetAudioFrequency:audioFrequency( int) 
 /* METHOD */ int pyGetAudioChannels:audioChannels( int) 
 /* METHOD */ int pyGetAudioEncoding:audioEncoding( int) 
+/* METHOD */ int pyGetAudioBitrate:audioBitrate( int) 
 #
 #
 #              cname:pyname
 #  Codec, container
 /* METHOD */ int editor->setVideoCodec:videoCodec(str, couples) 
+#/* METHOD */ int editor->videoCodecGui:videoCodecGui(str,couples)  # couples is OUT !
 /* METHOD */ int editor->changeVideoParam:videoCodecChangeParam(str, couples) 
 /* METHOD */ int editor->setVideoCodecProfile:videoCodecSetProfile(str, str) 
 /* METHOD */ int editor->setAudioCodec:audioCodec(int,str,  couples) 
