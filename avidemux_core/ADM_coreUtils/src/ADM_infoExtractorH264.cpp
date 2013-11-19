@@ -472,6 +472,8 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
       uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
       if(length>len) nalSize=3;      
   }
+  uint32_t recovery=0xff;
+  *flags=0;
   while (head + nalSize < tail)
     {
 
@@ -486,7 +488,7 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
         }
       head += nalSize;		// Skip nal lenth
       stream = *(head) & 0x1F;
-      uint32_t recovery;
+      
 
       switch (stream)
         {
