@@ -48,7 +48,7 @@ FP_TYPE fp=FP_DONT_APPEND;
         ADM_info("Creating audio track, pid=%x, muxing =%d\n",pid,muxing);
         if(myLen && myExtra)
         {   
-            extraData=new uint8_t [myLen];
+            extraData=new uint8_t [myLen+16]; // guards again lavcodec overread
             extraDataLen=myLen;
             memcpy(extraData,myExtra,extraDataLen);
             ADM_info("Creating ts audio access with %d bytes of extradata.",myLen);
