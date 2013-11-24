@@ -25,7 +25,7 @@ extern "C" {
 #define COOKIE   ((AVBitStreamFilterContext *)cookie)
 #define CONTEXT  ((AVCodecContext *)codec)
 
-#if 1
+#if 0
 #define xdebug ADM_info
 #else
 #define xdebug(...) {}
@@ -123,41 +123,38 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     xdebug("Fq=%d, channel=%d\n",fq,channelConfiguration);
     xdebug("ObjectType=%d\n",audioObjectType);
     
-    
-    switch(audioObjectType)
+    if(audioObjectType==5) // SBR
     {
-        case 5: // SBR
-        {            
-               
                int extendedSamplingFrequencyIndex=bits.get(4);
                xdebug("SBR audio freq=%d\n",aacSampleRate[extendedSamplingFrequencyIndex]);
                
-               audioObjectType=bits.get(5);
-               xdebug("New object type=%d\n",audioObjectType);
-               // No break here, not a mistake
-               break;
-        }      
+               audioObjectType=read31plus(bits); // 5 bits
+               xdebug("New object type=%d\n",audioObjectType);        
+    }
+    //17
+    switch(audioObjectType)
+    {
         case 2: // GASpecificConfig
                 {
-                bits.get(1);	// frameLength
-                bool dependsOnCoreCoder=bits.get(1);
-                if(dependsOnCoreCoder) bits.skip(14);
-                bool extensionFlag=bits.get(1);
-                if(!channelConfiguration)
-                {
-                    ADM_error("No channel configuraiton\n");
-                    return false;
-                }
-                if(extensionFlag)
-                {
-                    ADM_warning("Extension flag\n");
-                    //bits.get(1);	// extensionFlag3
-                    return false;
-                }
+                    int frameLengthFlags=bits.get(1);	// frameLength
+                    bool dependsOnCoreCoder=bits.get(1);
+                    xdebug("FrameLengthFlags=%d\n",frameLengthFlags);
+                    xdebug("dependsOnCoreCoder=%d\n",dependsOnCoreCoder);
+                    if(dependsOnCoreCoder) bits.skip(14); // coreCoderDelay
+                    bool extensionFlag=bits.get(1); //23
+                    if(!channelConfiguration)
+                    {
+                        ADM_error("No channel configuraiton\n");
+                        return false;
+                    }
+                    if(extensionFlag)
+                    {
+                        ADM_warning("Extension flag\n");
+                        //bits.get(1);	// extensionFlag3
+                        return false;
+                    }
                 }
                 break;
-        
-                
         default:
                 ADM_error("AudioObjecttype =%d not handled\n",audioObjectType);
                 return false;
@@ -432,7 +429,7 @@ bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t dts)
     while(start<end)
     {
         int key=(start[0]<<8)+start[1];
-        if((key & 0xffe0)!=0x56e0)
+        if((key & 0xffe0)!=0x56e0)  // 0x2b7 shifted by one bit
         {
             ADM_warning("Sync lost\n");
             return true;
@@ -450,7 +447,7 @@ bool ADM_latm2aac::pushData(int incomingLen,uint8_t *inData,uint64_t dts)
         // LATM demux
         start+=len;
     }
-    xdebug("-- end of this LOAS frame --\n");
+    xdebug("-- end of this LATM frame --\n");
     return true;
 }
 /**
@@ -485,21 +482,14 @@ bool ADM_latm2aac::empty()
     return false;
 }
 
-static void clearQueue(  ADM_ptrQueue <latmBuffer >  q)
-{
-    while(!q.isEmpty())
-    {
-        q.pop();
-    }
-}
 /**
     \fn flush
     \brief flush packet queue. Must be called when seeking
 */
 bool ADM_latm2aac::flush()
 {
-   clearQueue(listOfFreeBuffers);
-   clearQueue(listOfUsedBuffers);
+   listOfFreeBuffers.clear();
+   listOfUsedBuffers.clear();
    for(int i=0;i<LATM_NB_BUFFERS;i++)
                     listOfFreeBuffers.pushBack(&(buffers[i]));
    return true;
