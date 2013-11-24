@@ -47,6 +47,18 @@ typedef struct queueElem
           ADM_assert(!tail);
           return 1; 
     }
+    bool clear()
+    {
+        queueElem *elem=head;
+        while(elem)
+        {
+            queueElem *c=elem;
+            elem=elem->next;
+            delete c;
+        }
+        head=tail=NULL;
+        return true;
+    }
     bool push(T *data)
     {
         queueElem *elem=new queueElem;
@@ -95,11 +107,11 @@ typedef struct queueElem
          ADM_assert(head);         
          ADM_assert(tail);  
          
-         r=(T *)tail->data;
-         delete tail;
+         r=(T *)tail->data;         
          
          if(head==tail) // only one element..
          {
+             delete tail;
              head=tail=NULL;
              return r;
          }
@@ -112,6 +124,7 @@ typedef struct queueElem
          }
          // h is now the one before the last
          h->next=NULL;
+         delete tail;
          tail=h;
          return r;
     }
