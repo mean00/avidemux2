@@ -126,10 +126,10 @@ again:
                             trackInfo->wav.channels=latm.getChannels();
                             trackInfo->wav.byterate=128000>>3;
                             trackInfo->extraDataLen=eLen;
-                            trackInfo->extraData[0]=eData[0];
-                            trackInfo->extraData[1]=eData[1];
+                            for(int i=0;i<eLen;i++)
+                                trackInfo->extraData[i]=eData[i];
                             trackInfo->mux=ADM_TS_MUX_LATM;
-                            ADM_info("AAC extra data : %02x %02x\n",eData[0],eData[1]);
+                            ADM_info("AAC extra data (%d): %02x %02x\n",eLen,eData[0],eData[1]);
                             return true;
                         }
                         // next packet
@@ -162,9 +162,9 @@ again:
                         return false;
                     }
                     trackInfo->extraDataLen=eLen;
-                    trackInfo->extraData[0]=eData[0];
-                    trackInfo->extraData[1]=eData[1];
-                    ADM_info("AAC extra data : %02x %02x\n",eData[0],eData[1]);
+                    for(int i=0;i<eLen;i++)
+                        trackInfo->extraData[i]=eData[i];
+                    ADM_info("AAC extra data %d: %02x %02x\n",eLen,eData[0],eData[1]);
                     trackInfo->wav.frequency=adts.getFrequency();
                     trackInfo->wav.channels=adts.getChannels();
                     trackInfo->wav.byterate=128000>>3;
