@@ -26,6 +26,7 @@
 #include "ADM_getbits.h"
 #include "ADM_byteBuffer.h"
 #include <list>
+#include "ADM_ptrQueue.h"
 /**
     \class ADM_latm2aac
 */
@@ -64,8 +65,8 @@ class ADM_AUDIOPARSER6_EXPORT ADM_latm2aac
 {
 private:
                 latmBuffer buffers[LATM_NB_BUFFERS];
-                std::list <latmBuffer *> listOfFreeBuffers;
-                std::list <latmBuffer *> listOfUsedBuffers;
+                ADM_ptrQueue <latmBuffer > listOfFreeBuffers;
+                ADM_ptrQueue <latmBuffer > listOfUsedBuffers;
                 uint32_t extraLen;
                 uint8_t  extraData[AAC_LATM_MAX_EXTRA];
                 uint32_t fq,channels;

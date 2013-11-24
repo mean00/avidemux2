@@ -2,6 +2,8 @@
   \file ADM_aacLatm.cpp
   \brief  Extract aac packet from LOAS/LATM stream
      Derived from vlc code, seel ADM_aacLatm.h for vlc (c)
+ * 
+ * http://www.nhzjj.com/asp/admin/editor/newsfile/2010318163752818.pdf
  ***************************************************************************/
 
 /***************************************************************************
@@ -23,7 +25,7 @@ extern "C" {
 #define COOKIE   ((AVBitStreamFilterContext *)cookie)
 #define CONTEXT  ((AVCodecContext *)codec)
 
-#if 0
+#if 1
 #define xdebug ADM_info
 #else
 #define xdebug(...) {}
@@ -81,7 +83,7 @@ int ADM_latm2aac::getChannels(void)
 /**
 
 */
-static int  LatmGetValue( getBits bits )
+static int  LatmGetValue( getBits &bits )
 {
     int i_bytes = bits.get( 2 );
     int v = 0;
@@ -118,12 +120,23 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     }
     int channelConfiguration=bits.get(4);
     channels=aacChannels[channelConfiguration];
-
+    xdebug("Fq=%d, channel=%d\n",fq,channelConfiguration);
     xdebug("ObjectType=%d\n",audioObjectType);
     
     
     switch(audioObjectType)
     {
+        case 5: // SBR
+        {            
+               
+               int extendedSamplingFrequencyIndex=bits.get(4);
+               xdebug("SBR audio freq=%d\n",aacSampleRate[extendedSamplingFrequencyIndex]);
+               
+               audioObjectType=bits.get(5);
+               xdebug("New object type=%d\n",audioObjectType);
+               // No break here, not a mistake
+               break;
+        }      
         case 2: // GASpecificConfig
                 {
                 bits.get(1);	// frameLength
@@ -137,13 +150,16 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
                 }
                 if(extensionFlag)
                 {
-                    ADM_error("Extension flag\n");
+                    ADM_warning("Extension flag\n");
+                    //bits.get(1);	// extensionFlag3
                     return false;
                 }
                 }
                 break;
+        
+                
         default:
-                ADM_error("AudoObjecttype =%d not handled\n",audioObjectType);
+                ADM_error("AudioObjecttype =%d not handled\n",audioObjectType);
                 return false;
     }
     consumed=bits.getConsumedBits()-consumed;
@@ -169,8 +185,11 @@ bool ADM_latm2aac::AudioSpecificConfig(getBits &bits,int &bitsConsumed)
     }
 
 #endif
-    xdebug("Got %d extraData %x %x\n",extraLen,extraData[0],extraData[1]);
-    xdebug("Frequency %d, channels %d\n",fq,channels);
+    
+    xdebug("Got %d extraData \n",extraLen);
+    for(int i=0;i<extraLen;i++)
+        xdebug(" %02x",extraData[i]);
+    xdebug(" \nFrequency %d, channels %d\n",fq,channels);
     conf.gotConfig=true;
     return true;
 
@@ -217,13 +236,12 @@ bool ADM_latm2aac::readPayload(getBits &bits, uint64_t dts,int size)
             }
         
             // try to get a buffer...
-            if(!listOfFreeBuffers.size())
+            if(listOfFreeBuffers.isEmpty())
             {
                     ADM_error("No free buffer!\n");
                     return false;
             }
-            latmBuffer *b=listOfFreeBuffers.back();
-            listOfFreeBuffers.pop_back();
+            latmBuffer *b=listOfFreeBuffers.popBack();
             b->dts=dts;
             for(int i=0;i<size;i++)
             {                
@@ -231,9 +249,9 @@ bool ADM_latm2aac::readPayload(getBits &bits, uint64_t dts,int size)
             }
             b->bufferLen=size;
             if(!conf.gotConfig)
-                listOfFreeBuffers.push_back(b);
+                listOfFreeBuffers.pushBack(b);
             else
-                listOfUsedBuffers.push_back(b);
+                listOfUsedBuffers.pushBack(b);
             return true;
     }else
     {
@@ -367,7 +385,10 @@ bool  ADM_latm2aac::readAudioMux( uint64_t dts,getBits &bits )
 
     if( !bits.get(1) ) // use SameStreamMux
     {
-       if(false==readStreamMuxConfig(bits)) return false;
+       if(false==readStreamMuxConfig(bits)) 
+       {
+           return false;
+       }
     } // streamMuxConfig
 //    if(!numSubFrames) return false;
     if(conf.audioMuxVersionA==0)
@@ -444,7 +465,7 @@ ADM_latm2aac::ADM_latm2aac(void)
                 memset(&conf,0,sizeof(conf));
                 conf.gotConfig=false;
                 for(int i=0;i<LATM_NB_BUFFERS;i++)
-                    listOfFreeBuffers.push_back(&(buffers[i]));
+                    listOfFreeBuffers.pushBack(&(buffers[i]));
 }
 /**
     \fn dtor
@@ -460,8 +481,16 @@ ADM_latm2aac::~ADM_latm2aac()
 */
 bool ADM_latm2aac::empty()
 {
-    if(listOfUsedBuffers.size()==0) return true;
+    if(listOfUsedBuffers.isEmpty()) return true;
     return false;
+}
+
+static void clearQueue(  ADM_ptrQueue <latmBuffer >  q)
+{
+    while(!q.isEmpty())
+    {
+        q.pop();
+    }
 }
 /**
     \fn flush
@@ -469,10 +498,10 @@ bool ADM_latm2aac::empty()
 */
 bool ADM_latm2aac::flush()
 {
-   listOfFreeBuffers.clear();
-   listOfUsedBuffers.clear();
+   clearQueue(listOfFreeBuffers);
+   clearQueue(listOfUsedBuffers);
    for(int i=0;i<LATM_NB_BUFFERS;i++)
-                    listOfFreeBuffers.push_back(&(buffers[i]));
+                    listOfFreeBuffers.pushBack(&(buffers[i]));
    return true;
 }
 /**
@@ -482,10 +511,9 @@ bool ADM_latm2aac::flush()
 bool ADM_latm2aac::getData(uint64_t *time,uint32_t *len, uint8_t *data, uint32_t maxSize)
 {
     if(empty()) return false;
-    xdebug("%d slogs in latm buffers\n",listOfUsedBuffers.size());
-    latmBuffer *b=listOfUsedBuffers.front();
-    listOfUsedBuffers.pop_front();
-    listOfFreeBuffers.push_back(b);
+//    xdebug("%d slogs in latm buffers\n",listOfUsedBuffers.size());
+    latmBuffer *b=listOfUsedBuffers.pop();
+    listOfFreeBuffers.pushBack(b);
     if(b->bufferLen>maxSize)
     {
         ADM_warning("Buffer too small\n");
