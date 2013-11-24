@@ -393,7 +393,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
   uint8_t ret = 0;
   EditorCache   *cache;
   ADMImage	*result;
-  uint32_t  flags;
+  uint32_t  flags,flagsNext=0;
   ADMCompressedImage img;
 
     // PlaceHolder...
@@ -405,9 +405,14 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     vidHeader *demuxer=vid->_aviheader;
 	cache=vid->_videoCache;
 	ADM_assert(cache);
-    // Make sure frame is an intra
+    // Make sure frame is an intra, or the next field is intra
     demuxer->getFlags(frame,&flags);
-    ADM_assert(flags&AVI_KEY_FRAME);
+    demuxer->getFlags(frame+1,&flagsNext);
+    
+    // in case of field encoding, only the 2nd field might be
+    // flagged as intra
+    uint32_t twoFlags=flags | flagsNext;
+    ADM_assert(twoFlags&AVI_KEY_FRAME);
 
     bool found=false;
     vid->lastSentFrame=frame;

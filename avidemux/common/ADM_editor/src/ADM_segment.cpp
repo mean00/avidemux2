@@ -514,9 +514,11 @@ uint32_t    ADM_EditorSegment::intraTimeToFrame(uint32_t refVideo,uint64_t seekT
             ADM_error("Cannot find frame with time %"PRIu64"ms\n",seekTime/1000);
             ADM_assert(0);
         }
-        if(!(flags & AVI_KEY_FRAME))
+        uint32_t next;
+        v->_aviheader->getFlags(frame+1,&next);
+        if(!((next | flags) & AVI_KEY_FRAME)) // The 2nd field might be keyframe
         {
-                ADM_warning("Seeking to a non keyframe (time=%s)\n",ADM_us2plain(seekTime));
+                ADM_warning("Seeking to a non keyframe (time=%s), flags=%x, flagsNext=%x\n",ADM_us2plain(seekTime),flags,next);
                 ADM_warning("This is not normal unless you start frame is not a keyframe\n");
         }
         return frame;
