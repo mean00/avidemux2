@@ -87,6 +87,34 @@ typedef struct queueElem
          delete tmp;
          return r;
     }
+     T *popBack()
+    {
+         queueElem *h;
+         T *r;
+         if(isEmpty()) return NULL;
+         ADM_assert(head);         
+         ADM_assert(tail);  
+         
+         r=(T *)tail->data;
+         delete tail;
+         
+         if(head==tail) // only one element..
+         {
+             head=tail=NULL;
+             return r;
+         }
+         
+         h=head;
+         while(h->next!=tail)
+         {
+             h=h->next;
+             ADM_assert(h);
+         }
+         // h is now the one before the last
+         h->next=NULL;
+         tail=h;
+         return r;
+    }
   
 };
 
