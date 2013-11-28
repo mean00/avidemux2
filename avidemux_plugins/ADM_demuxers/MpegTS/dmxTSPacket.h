@@ -251,5 +251,6 @@ public:
         bool    getStats(uint32_t *nb,packetTSStats **stats);
 virtual bool    updateStats(uint8_t *data);
         int     findStartCode(void);
+        int     findStartCode2(bool &fourBytes);
 };
 #endif

@@ -881,6 +881,49 @@ int tsPacketLinearTracker::findStartCode(void)
         return startCode;
 }
 /**
+ * \fn fourByteStartCode
+ * @param four
+ * @return 
+ */
+int tsPacketLinearTracker::findStartCode2(bool &fourByteStartCode)
+{
+#define likely(x) x
+#define unlikely(x) x
+        unsigned int prev=0xfffff;
+        unsigned int last=0xfffff;
+        unsigned int cur=0xffff;
+        int startCode=0;
+        fourByteStartCode=false;
+        while(this->stillOk())
+        {
+            prev=last;
+            last=cur;
+            cur=this->readi16();
+            if(likely(last&0xff)) continue;
+            if(unlikely(!last)) // 00 00 , need 01 xx
+            {
+                if((cur>>8)==1) 
+                {
+                        startCode=cur&0xff;
+                        if(!(prev&0xff))
+                            fourByteStartCode=true;
+                        break;
+                }
+            }
+            if(unlikely(!(last&0xff))) // xx 00 need 00 01
+            {
+                if(cur==1)
+                {
+                        startCode=this->readi8();
+                        if(!(last>>8))
+                            fourByteStartCode=true;
+                        break;
+                }
+            }
+        }
+        return startCode;
+}
+/**
     \fn ~tsPacketLinearTracker
 */
 tsPacketLinearTracker::~tsPacketLinearTracker()

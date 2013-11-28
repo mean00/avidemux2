@@ -200,11 +200,16 @@ bool bAppend=false;
     //******************
     // 2 Index
     //******************
+        bool fourBytes;
       while(1)
       {
-        int startCode=pkt->findStartCode();
+          fourBytes=false;
+        int startCode=pkt->findStartCode2(fourBytes);
 resume:
         if(!pkt->stillOk()) break;
+
+        int startCodeLength=4;
+        if(fourBytes==true) startCodeLength++;
 
 //  1:0 2:Nal ref idc 5:Nal Type
         if(startCode&0x80) 
@@ -253,10 +258,12 @@ resume:
                             else 
                                     printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                             startCode=pkt->readi8();
+                            
                             decodingImage=false;
                             pkt->getInfo(&thisUnit.packetInfo);
                             thisUnit.consumedSoFar=pkt->getConsumed();
-                            addUnit(data,unitTypeSei,thisUnit,5+SEI_nal.payloadSize+1);                            
+                            addUnit(data,unitTypeSei,thisUnit,startCodeLength+SEI_nal.payloadSize+1);                            
+                            fourBytes=true;
                             goto resume;
                             }
                             break;
@@ -266,11 +273,11 @@ resume:
                                 pkt->getInfo(&thisUnit.packetInfo);
                                 if(firstSps)
                                 {
-                                    pkt->setConsumed(5); // reset consume counter
+                                    pkt->setConsumed(startCodeLength); // reset consume counter
                                     firstSps=false;
                                 }
                                 thisUnit.consumedSoFar=pkt->getConsumed();
-                                addUnit(data,unitTypeSps,thisUnit,5);
+                                addUnit(data,unitTypeSps,thisUnit,startCodeLength);
                           break;
 
                   case NAL_IDR:
@@ -319,7 +326,7 @@ resume:
                       pkt->getInfo(&thisUnit.packetInfo);
                       thisUnit.consumedSoFar=pkt->getConsumed();
 
-                      addUnit(data,unitTypePic,thisUnit,5+NON_IDR_PRE_READ);
+                      addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ);
                         // reset to default
                       thisUnit.imageStructure=pictureFrame;
                       thisUnit.recoveryCount=0xff;
