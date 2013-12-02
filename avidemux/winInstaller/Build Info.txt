@@ -1,4 +1,4 @@
-Avidemux 2.6.4 
+Avidemux 2.6.7 
 -----------------------
 Built using GCC 4.8.1 
 Packaged with NSIS 2.46.
