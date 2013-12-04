@@ -157,6 +157,7 @@ againGet:
             }
         }
     }
+    aprintf("Bframe droppable=%d, lastSentFrame=%d\n",seg->_dropBframes,vid->lastSentFrame);
     // after a segment switch, we may have some frames from "the past"
     // if the cut point is not a keyframe, drop them
 #if 1
@@ -165,17 +166,22 @@ againGet:
         bool drop=false;
         if(_currentSegment  && img->demuxerDts<seg->_refStartDts)
         {
-            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
-            ADM_info("vs %s\n",ADM_us2plain(seg->_refStartDts));
+            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerDts));
+            ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartDts));
+            ADM_info(" dts=%llu, ref=%llu\n",img->demuxerDts,seg->_refStartDts);
             drop=true;
         }
         // Seeking is not accurate when cutting on non intra
         // we might have some frames that are clearly too early , even in seg0
-        if(img->demuxerDts+seg->_startTimeUs<seg->_refStartTimeUs)
+        if(img->demuxerPts!=ADM_NO_PTS)
         {
-            ADM_info("Frame %d is in the past for this segment (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
-            ADM_info("vs %s\n",ADM_us2plain(seg->_refStartDts));
-            drop=true;
+            if(img->demuxerPts+seg->_startTimeUs<seg->_refStartTimeUs)
+            {
+                ADM_info("Frame %d is in the past for this segment -bis (%s)",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+                ADM_info("vs refstartdts %s\n",ADM_us2plain(seg->_refStartTimeUs));
+                ADM_info(" pts=%llu, startTime=%llu, _refStartTimeUs=%llu\n",img->demuxerPts,seg->_startTimeUs,seg->_refStartTimeUs);
+                drop=true;
+            }
         }
         if(drop)
             goto againGet;
@@ -188,8 +194,16 @@ againGet:
     //
 //**
    // ADM_info("Frame : Flags :%X, DTS:%"PRId64" PTS=%"PRId64" nextDts=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,_nextFrameDts,tail);
-    if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) goto nextSeg;
-    if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) goto nextSeg;
+    if(img->demuxerDts!= ADM_NO_PTS && img->demuxerDts>=tail) 
+    {
+        aprintf("DTS is too late, switching (%s)\n",ADM_us2plain(img->demuxerDts));
+        goto nextSeg;
+    }
+    if(img->demuxerPts!= ADM_NO_PTS && img->demuxerPts>=tail) 
+    {
+        aprintf("PTS is too late, switching (%s)\n",ADM_us2plain(img->demuxerDts));
+        goto nextSeg;
+    }
     
     // Since we rely on PTS for seeking, frame 0 might be at PTS 0, in that case the matching dts would be <0
     // so the caller can delay everything but recalibrate will clamp the value
