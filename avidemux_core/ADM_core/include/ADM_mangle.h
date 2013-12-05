@@ -75,7 +75,10 @@
 #define REG_d  "edx" 
 #define REG_S  "esi" 
 #define REG_D  "edi" 
-#define REG_SP "esp" 
+#if defined(__sun__) && defined(REG_SP)
+#undef REG_SP
+#endif /* : defined(__sun__) */
+#define REG_SP "esp"
 #define REGSP   esp  
 #define REG_BP "ebp" 
 #endif
