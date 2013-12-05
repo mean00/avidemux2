@@ -21,7 +21,18 @@
 #include <unistd.h>
 #include <cxxabi.h>
 #include <signal.h>
+#if defined(__sun__)
+#include <dlfcn.h>
+#include <strings.h>
+#include <ucontext.h>
+#include <sys/stack.h>
+#ifdef _LP64
+#define	_ELF64
+#endif
+#include <sys/machelf.h>
+#else
 #include <execinfo.h>
+#endif
 
 #include "ADM_default.h"
 
@@ -54,14 +65,101 @@ void installSigHandler()
 void sig_segfault_handler(int signo)
 {
      static int running=0;
-      if(running) 
+      if(running)
       {
         signo=0;
         exit(1);
       }
-      running=0; 
+      running=0;
       ADM_backTrack("Segfault",0,"??");
 }
+
+#if defined(__sun__)
+static const int maxSize = 2048;
+
+static void addr2sym(void* pc, char* buffer, int size)
+{
+	Dl_info info;
+	Sym* sym = (Sym*)0;
+	static size_t dsize = maxSize - 1;
+	static char demangled[maxSize];
+	int dstatus = 0;
+
+	if (dladdr1(pc, &info, (void**)&sym, RTLD_DL_SYMENT) == 0)
+	{
+		snprintf(buffer, size, "[0x%p]", pc);
+	}
+
+	if ((info.dli_fname != NULL && info.dli_sname != NULL) &&
+	    (((uintptr_t)pc - (uintptr_t)info.dli_saddr) < sym->st_size))
+	{
+		__cxxabiv1::__cxa_demangle(info.dli_sname,demangled,&dsize,&dstatus);
+		snprintf(buffer, size, "%s'%s+0x%x [0x%p]",
+				 info.dli_fname,
+				 demangled,
+				 (unsigned long)pc - (unsigned long)info.dli_saddr,
+				 pc);
+	}
+	else
+	{
+		snprintf(buffer, size, "%s'0x%p [0x%p]",
+				 info.dli_fname,
+				 (unsigned long)pc - (unsigned long)info.dli_fbase,
+				 pc);
+	}
+
+	return;
+}
+
+static void printFrame(int fd, const char* format, ...)
+{
+	va_list ap;
+	static char buffer[maxSize];
+
+	va_start(ap, format);
+	(void)vsnprintf(buffer, sizeof (buffer), format, ap);
+	va_end(ap);
+
+	(void)write(fd, buffer, strlen(buffer));
+}
+
+static int printStack(uintptr_t pc, int signo, void *arg)
+{
+
+	static char buffer[maxSize];
+	char sigbuf[SIG2STR_MAX];
+
+
+	int filenum = (intptr_t)arg;
+
+	addr2sym((void *)pc, buffer, sizeof (buffer));
+
+	if (signo) {
+		sigbuf[0] = '?';
+		sigbuf[1] = 0;
+
+		(void) sig2str(signo, sigbuf);
+
+		printFrame(filenum, "%s [Signal %d (%s)]\n",
+		    buffer, (ulong_t)signo, sigbuf);
+	} else
+		printFrame(filenum, "%s\n", buffer);
+
+	return (0);
+}
+
+static int backtrace(int fd)
+{
+	int rc = -1;
+	ucontext_t u;
+
+	if (getcontext(&u) >= 0)
+	{
+		rc = walkcontext(&u, printStack, (void*)(intptr_t)fd);
+	}
+	return(rc);
+}
+#endif /* : defined(__sun__) */
 
 void ADM_backTrack(const char *info,int lineno,const char *file)
 {
@@ -70,23 +168,27 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 
 #if !defined(__HAIKU__)
 	char wholeStuff[2048];
+#if !defined(__sun__)
     char buffer[4096];
     char in[2048];
 	void *stack[20];
 	char **functions;
 	int count, i;
-
+#endif
 	wholeStuff[0]=0;
 
 	printf("\n*********** BACKTRACK **************\n");
 
+#if !defined(__sun__)
 	count = backtrace(stack, 20);
 	functions = backtrace_symbols(stack, count);
+#endif
 	sprintf(wholeStuff,"%s\n at line %d, file %s",info,lineno,file);
+#if !defined(__sun__)
     int status;
     size_t size=2047;
     // it looks like that xxxx (functionName+0x***) XXXX
-	for (i=0; i < count; i++) 
+	for (i=0; i < count; i++)
 	{
         char *s=strstr(functions[i],"(");
         buffer[0]=0;
@@ -94,16 +196,18 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
         {
             strcpy(in,s+1);
             char *e=strstr(in,"+");
-            *e=0;                
+            *e=0;
             __cxxabiv1::__cxa_demangle(in,buffer,&size,&status);
             if(status) strcpy(buffer,in);
-        }else       
+        }else
             strcpy(buffer,functions[i]);
         printf("%s:%d:<%s>:%d\n",functions[i],i,buffer,status);
 		strcat(wholeStuff,buffer);
 		strcat(wholeStuff,"\n");
 	}
-
+#else
+	backtrace(fileno(stdout));
+#endif
 	printf("*********** BACKTRACK **************\n");
 
 	if(myFatalFunction)
