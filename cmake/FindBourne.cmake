@@ -3,7 +3,7 @@ if (NOT BASH_EXECUTABLE)
 	message(STATUS "*************************")
 
 	find_program(BASH_EXECUTABLE
-		sh
+		bash
 		${BASH_DIR}
 		/bin
 		/usr/bin 
