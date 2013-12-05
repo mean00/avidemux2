@@ -41,6 +41,9 @@ extern "C" {
 #include "ADM_codecVdpau.h"
 #include "ADM_threads.h"
 
+#if defined(__sun__)
+#include <alloca.h>
+#endif /* : defined(__sun__) */
 
 static bool         vdpauWorking=false;
 static admMutex     surfaceMutex;
