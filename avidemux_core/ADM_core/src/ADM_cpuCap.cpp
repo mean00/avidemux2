@@ -161,6 +161,8 @@ int ADM_cpu_num_processors(void)
         np = 1;
 
     return np;
+#elif defined(__sun__)
+	return sysconf( _SC_NPROCESSORS_ONLN );
 #elif defined(__unix__) && !defined(__CYGWIN__)
     unsigned int bit;
     int np;
