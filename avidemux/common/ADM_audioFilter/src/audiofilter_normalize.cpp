@@ -32,7 +32,7 @@
 
 #if defined (_WIN32) || defined (__HAIKU__)
 #define POW10(x)   pow(10,x)
-#elif defined(ADM_BSD_FAMILY)
+#elif defined(ADM_BSD_FAMILY) || defined(__sun__)
 #define POW10(x) powf(10.0,x)
 #else
 #define POW10(x)  pow10f(x)

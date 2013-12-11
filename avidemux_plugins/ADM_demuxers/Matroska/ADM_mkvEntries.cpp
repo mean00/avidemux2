@@ -194,7 +194,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
 
         }
 
-        _mainaviheader.dwMicroSecPerFrame=(uint32_t)floor(50);;
+        _mainaviheader.dwMicroSecPerFrame=(uint32_t)floor(50.0F);;
         _videostream.fccType=fourCC::get((uint8_t *)"vids");
         _video_bih.biBitCount=24;
         _videostream.dwInitialFrames= 0;

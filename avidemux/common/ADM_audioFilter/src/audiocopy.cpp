@@ -372,7 +372,7 @@ again:
         {
             uint64_t currentClock=clock->getTimeUs();
             aprintf("Duping clockDts=%d, syncDts=%d\n",currentClock,nextDts);
-            if( fabs((double)nextDts-(double)currentClock<MIN_SKEW) || (currentClock>nextDts) )
+            if( (fabs((double)nextDts-(double)currentClock)<MIN_SKEW) || (currentClock>nextDts) )
             {
                 aprintf("Close enough..\n");
                 changeState(Flushing);
