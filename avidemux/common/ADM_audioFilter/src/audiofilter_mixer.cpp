@@ -573,6 +573,7 @@ uint32_t AUDMAudioFilterMixer::fill(uint32_t max,float *output,AUD_Status *statu
 
     uint32_t rd = 0;
     int nbSampleMax=max/_wavHeader.channels;
+    if(!nbSampleMax) nbSampleMax=1;
     uint8_t input_channels = _previous->getInfo()->channels;
 
 // Fill incoming buffer
