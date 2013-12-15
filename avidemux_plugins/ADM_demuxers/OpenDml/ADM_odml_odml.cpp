@@ -254,7 +254,7 @@ _cntue:
 			}
 			else
 			{
-
+                                (*index)[count].dts=0;
 				(*index)[count].offset=read32();
 				(*index)[count].offset+=second.base;
 				sizeflag=read32();

@@ -183,6 +183,7 @@ _again:
                         track[Achunk].offset+=startOfData;
                         track[Achunk].size=len;
                         track[Achunk].intra=flags;
+                        track[Achunk].dts=0;
                         _audioTracks[nb].totalLen+=len;
 
                         audioSize+=len;
