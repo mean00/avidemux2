@@ -110,6 +110,7 @@ TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
+    beginConsuming=0;
     ui=createWorking ("Indexing");
     audioTracks=trk;
     ticktock.reset();
@@ -285,7 +286,8 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
 
 
         qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
-        qfprintf(index,":%06"PRIx32,nextConsumed-beginConsuming);
+        int32_t delta=(int32_t)(nextConsumed-beginConsuming);
+        qfprintf(index,":%06"PRIx32,delta);
         qfprintf(index,":%"PRId64":%"PRId64,deltaPts,deltaDts);
     
         beginConsuming=nextConsumed;
