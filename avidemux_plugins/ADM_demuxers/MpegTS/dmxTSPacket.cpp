@@ -590,6 +590,7 @@ tsPacketLinear::tsPacketLinear(uint32_t pid) : tsPacket()
     oldStartAt=0xfffffff;
     oldBufferLen=0;
     pesPacket=new TS_PESpacket(pid);
+    consumed=0;
     eof=false;
 }
 /**
