@@ -385,11 +385,13 @@ decoderFFVDPAU::~decoderFFVDPAU()
             }
             VDPAU->freeQueue.clear();
         }
-         ADM_info("[VDPAU] Destroying decoder\n");
-         if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))
+        if (VDPAU->vdpDecoder) {
+            ADM_info("[VDPAU] Destroying decoder\n");
+            if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))
                 ADM_error("Error destroying VDPAU decoder\n");
-         delete VDPAU;
-         vdpau=NULL;
+        }
+        delete VDPAU;
+        vdpau=NULL;
 }
 /**
     \fn uncompress
