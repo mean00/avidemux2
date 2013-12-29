@@ -21,6 +21,7 @@
 #include "ADM_tsPatPmt.h"
 
 #include "ADM_a52info.h"
+#include "ADM_eac3info.h"
 #include "ADM_mp3info.h"
 
 #include "ADM_coreUtils.h"
@@ -258,7 +259,23 @@ TS_PESpacket pes2(pid);
         uint32_t fq,br,chan,syncoff;
         uint32_t fq2,br2,chan2,syncoff2;
 
-        // Is it AC3 ?? No false positive with A52/AC3..
+        // Is it EAC3 ?? 
+        ADM_EAC3_INFO eac3,eac32;
+        if(ADM_EAC3GetInfo(ptr,  len, &syncoff,&eac3))
+        {
+                ADM_info("Maybe EAC3... \n");
+                // Try on 2nd packet...
+                if(ADM_EAC3GetInfo(ptr2,  len2, &syncoff,&eac32))
+                {
+                    if((eac3.frequency==eac32.frequency) && (eac3.byterate==eac32.byterate) && (eac3.channels==eac32.channels))
+                    {
+                        ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d\n",(int)eac3.frequency,(int)eac3.byterate,(int)eac3.channels);
+                        trackType=ADM_TS_EAC3;
+                        return true;
+                    }
+                }
+        }
+        // AC3 maybe ?
         if( ADM_AC3GetInfo(ptr,len, &fq, &br, &chan,&syncoff))
         {
                 ADM_info("Maybe AC3... \n");
