@@ -724,7 +724,9 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
         for(int i=0;i<n;i++)
         {
                 _SEGMENT *seg=getSegment(i);
+                _VIDEOS  *vid=this->getRefVideo(seg->_reference);
                 if(seg->_durationUs==0) index=i;
+                if(seg->_refStartTimeUs==0 && seg->_durationUs==vid->firstFramePts) index=i; 
         }
         if(index==-1) break;
         segments.erase(segments.begin()+index);
