@@ -73,6 +73,18 @@ uint32_t type,value;
 
 */
 #define YOURAUDIO(x) _videos[x].audioTracks[_videos[x].currentAudioStream]
+
+bool        ADM_Composer::copyToClipBoard(uint64_t startTime, uint64_t endTime)
+{
+    return _segments.copyToClipBoard(startTime,endTime);
+    
+}
+bool        ADM_Composer::pasteFromClipBoard(uint64_t currentTime)
+{
+    return _segments.pasteFromClipBoard(currentTime);
+    
+}
+
 /**
     \fn resetSeg
     \brief Redo a 1:1 mapping between ref video and segment

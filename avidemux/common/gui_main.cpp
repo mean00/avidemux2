@@ -453,11 +453,24 @@ void HandleAction (Action action)
       break;
     }
     case ACT_Copy:
-            brokenAct();
-//    		   video_body->copyToClipBoard (frameStart,frameEnd);
+    {
+                uint64_t markA,markB;
+                markA=video_body->getMarkerAPts();                
+                markB=video_body->getMarkerBPts();
+                if(markA>markB)
+                {
+                    uint64_t p=markA;
+                    markA=markB;
+                    markB=p;
+                }
+  		video_body->copyToClipBoard (markA,markB);
 		break;
+    }
     case ACT_Paste:
-            brokenAct();
+            {
+              uint64_t currentPts=video_body->getCurrentFramePts();
+              video_body->pasteFromClipBoard(currentPts);
+            }
             break;
       break;
 

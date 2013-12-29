@@ -133,6 +133,7 @@ class ADM_EditorSegment
 {
 protected:
         ListOfSegments segments;
+        ListOfSegments clipboard;
         std::list <ListOfSegments> undoSegments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
@@ -181,6 +182,9 @@ public:
             bool        dtsFromPts(uint32_t refVideo,uint64_t pts,uint64_t *dts);
 
             bool        LinearToRefTime(int segNo,uint64_t linear,uint64_t *refTime);
+            
+            bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
+            bool        pasteFromClipBoard(uint64_t currentTime);
 };
 
 #endif

@@ -26,6 +26,7 @@
 #include "ADM_audiocodec/ADM_audiocodec.h"
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_vidMisc.h"
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 }
@@ -256,7 +257,7 @@ bool ADM_EditorSegment::deleteAll (void)
 bool        ADM_EditorSegment::undo(void)
 {
     if(undoSegments.empty()) return false;
-
+    clipboard.clear();
     segments=undoSegments.back(); 
     undoSegments.pop_back();
     updateStartTime();
@@ -759,4 +760,29 @@ bool        ADM_EditorSegment::LinearToRefTime(int segNo,uint64_t linear,uint64_
     *refTime=(uint64_t )time;
     return true;
 }
+/**
+ * \fn copyToClipBoard
+ * \Brief copy the section between startTime and endTime to clipboard
+ * @param startTime
+ * @param endTime
+ * @return 
+ */
+bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endTime)
+{
+    ADM_info("Copy to clipboard from %s",ADM_us2plain(startTime));
+    ADM_info("to %s\n",ADM_us2plain(endTime));
+    return false;
+}
+/**
+ * \fn pasteFromClipBoard
+ * \brief instert clipboard at currentTime position
+ * @param currentTime
+ * @return 
+ */
+bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
+{
+    ADM_info("Pasting from clipboard to %s\n",ADM_us2plain(currentTime));
+    return false;
+}
+
 //EOF
