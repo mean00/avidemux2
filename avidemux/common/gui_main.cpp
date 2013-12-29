@@ -470,6 +470,9 @@ void HandleAction (Action action)
             {
               uint64_t currentPts=video_body->getCurrentFramePts();
               video_body->pasteFromClipBoard(currentPts);
+              video_body->getVideoInfo (avifileinfo);
+              A_ResetMarkers();
+      	      ReSync ();
             }
             break;
       break;

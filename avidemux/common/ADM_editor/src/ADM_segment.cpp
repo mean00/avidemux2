@@ -27,6 +27,13 @@
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
+
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
+
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 }
@@ -771,6 +778,33 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
 {
     ADM_info("Copy to clipboard from %s",ADM_us2plain(startTime));
     ADM_info("to %s\n",ADM_us2plain(endTime));
+    uint32_t startSeg,endSeg;
+    uint64_t startSegTime,endSegTime;
+    convertLinearTimeToSeg(  startTime, &startSeg,&startSegTime);
+    convertLinearTimeToSeg(  endTime, &endSeg,&endSegTime);
+    clipboard.clear();
+    for(int seg=startSeg;seg<=endSeg;seg++)
+    {
+        _SEGMENT s=segments[seg];
+        aprintf("Adding segment %d to clipboard\n",seg);
+        if(s._startTimeUs<=startTime && (s._startTimeUs+s._durationUs)>startTime)
+        {
+            // need to refine 1st seg
+            aprintf("Marker A is here\n");
+            uint64_t offset=startTime-s._startTimeUs;
+            s._refStartTimeUs+=offset;
+            s._durationUs-=offset;         // take into account the part we chopped
+        }
+        if(s._startTimeUs<=endTime && (s._startTimeUs+s._durationUs)>endTime)
+        {
+            aprintf("Marker B is here\n");
+            // need to refine last seg            
+            uint64_t offset=endTime-s._startTimeUs;
+            s._durationUs=offset;
+        }
+        // TODO refine timing for 1st/last/duration/...
+        clipboard.push_back(s);        
+    }
     return false;
 }
 /**
@@ -782,7 +816,41 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
 bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
 {
     ADM_info("Pasting from clipboard to %s\n",ADM_us2plain(currentTime));
-    return false;
+    uint32_t startSeg;
+    uint64_t startSegTime;
+    convertLinearTimeToSeg(  currentTime, &startSeg,&startSegTime);    
+    ListOfSegments newSegs;
+    int n=segments.size();
+    for(int i=0;i<n;i++)
+    {
+        _SEGMENT s=segments[i];
+        if(i==startSeg)
+        {
+            // insert clipboard
+            // Do we need to split it ?
+            if(currentTime==s._startTimeUs)
+            {
+                // nope
+                for(int j=0;j<clipboard.size();j++) newSegs.push_back(clipboard[j]);
+            }else
+            {
+                 _SEGMENT pre=s,post=s;
+                 uint64_t offset=currentTime-s._startTimeUs;
+                 pre._durationUs=offset;
+                 post._refStartTimeUs+=offset;
+                 post._durationUs-=offset;
+                 newSegs.push_back(pre);
+                 for(int j=0;j<clipboard.size();j++) newSegs.push_back(clipboard[j]);
+                 newSegs.push_back(post);
+                 continue;
+            }
+                    
+        }
+        newSegs.push_back(s);
+    }
+    segments=newSegs;
+    updateStartTime();
+    return true;
 }
 
 //EOF
