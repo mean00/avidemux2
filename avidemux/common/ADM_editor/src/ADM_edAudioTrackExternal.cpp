@@ -137,6 +137,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     {
         case WAV_PCM:
         case WAV_AC3:
+        case WAV_MP2:
         case WAV_MP3:
                 break;
         default:

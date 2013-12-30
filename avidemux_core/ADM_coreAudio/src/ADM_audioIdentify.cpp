@@ -72,8 +72,8 @@ static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
                             // fill in info
                             info.frequency=mp2info.samplerate;
                             info.byterate=(mp2info.bitrate>>3)*1000;
-                            if(mp2info.layer==1) info.encoding=WAV_MP2;
-                                else             info.encoding=WAV_MP3;
+                            if(mp2info.layer==3) info.encoding=WAV_MP3;
+                                else             info.encoding=WAV_MP2;
                             switch(mp2info.mode)
                             {
                                  case 1: // Joint stereo
