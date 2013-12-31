@@ -444,6 +444,13 @@ bool        ADM_EditorSegment::getRefFromTime(uint64_t xtime,uint32_t *refVideo)
 */
 bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime)
 {
+    if(!frameTime && segments.size()) // pick the first one
+    {
+        ADM_info("Frame time=0, taking first segment \n");
+        *seg=0;
+        *segTime=0; // ??
+        return true;
+    }
     for(int i=0;i<segments.size();i++)
     {
         if(segments[i]._startTimeUs<=frameTime && segments[i]._startTimeUs+segments[i]._durationUs>frameTime)
