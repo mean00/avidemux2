@@ -387,22 +387,22 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		SetOutPath $INSTDIR\plugins\audioDecoder
 		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_ms_adpcm.dll
 	${MementoSectionEnd}
-	#${MementoSection} "AMR-NB" SecAudDecOpencoreAmrNb
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\audioDecoder
-		#${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
-		#SetOutPath $INSTDIR
-		#${File} ${ADM_DIR}/libopencore-amrnb-*.dll
-	#${MementoSectionEnd}
-	#${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\audioDecoder
-		#${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
-		#SetOutPath $INSTDIR
-		#${File} ${ADM_DIR}/libopencore-amrwb-*.dll
-	#${MementoSectionEnd}
+	${MementoSection} "AMR-NB" SecAudDecOpencoreAmrNb
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\audioDecoder
+		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrnb.dll
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/libopencore-amrnb-*.dll
+	${MementoSectionEnd}
+	${MementoSection} "AMR-WB" SecAudDecOpencoreAmrWb
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\audioDecoder
+		${File} ${ADM_DIR}/plugins/audioDecoder/libADM_ad_opencore_amrwb.dll
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/libopencore-amrwb-*.dll
+	${MementoSectionEnd}
 	${MementoSection} "MP2, MP3 (MAD)" SecAudDecMad
 		SectionIn 1 2
 		SetOverwrite on
