@@ -153,7 +153,7 @@ again:
     if(!trk->codec->run(packetBuffer, packetBufferSize, dest, &nbOut))
     {
             packetBufferSize=0; // consume
-            ADM_warning(ADM_PRINT_ERROR,"[Composer::getPCMPacket] Track %d:%x : codec failed failed\n",
+            ADM_warning("[Composer::getPCMPacket] Track %d:%x : codec failed failed\n",
                             myTrackNumber,trk);
             return false;
     }
