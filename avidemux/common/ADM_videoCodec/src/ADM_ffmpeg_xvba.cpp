@@ -211,13 +211,10 @@ decoderFFXVBA::decoderFFXVBA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extra
     _context->pix_fmt         = AV_PIX_FMT_XVBA_VLD;
     
     
-    uint8_t *extraCopy=NULL;
+    
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-            memcpy(extraCopy,extraData,extraDataLen);
-            _context->extradata = (uint8_t *) extraCopy;
+            _context->extradata = (uint8_t *) _extraDataCopy;
             _context->extradata_size  = (int) extraDataLen;
     } 
     

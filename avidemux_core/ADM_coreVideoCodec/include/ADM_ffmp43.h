@@ -40,6 +40,7 @@ protected:
   int codecId;
   uint8_t _refCopy;
   AVCodecContext *_context;
+  uint8_t  *_extraDataCopy;
   AVFrame _frame;
   uint8_t _allowNull;
   uint32_t frameType (void);

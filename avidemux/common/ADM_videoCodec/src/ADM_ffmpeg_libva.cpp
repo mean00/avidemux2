@@ -243,13 +243,10 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     _context->hwaccel_context = va_context;
     nbSurface=0;
     
-    uint8_t *extraCopy=NULL;
+    
     if(extraDataLen)
     {
-            extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-            memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-            memcpy(extraCopy,extraData,extraDataLen);
-            _context->extradata = (uint8_t *) extraCopy;
+            _context->extradata = (uint8_t *) _extraDataCopy;
             _context->extradata_size  = (int) extraDataLen;
     } 
     

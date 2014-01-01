@@ -281,19 +281,13 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 {
         alive=true;
         scratch=NULL;
-        uint8_t *extraCopy=NULL;
-        if(extraDataLen)
-        {
-                extraCopy=(uint8_t *)alloca(extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-                memset(extraCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
-                memcpy(extraCopy,extraData,extraDataLen);
-        }
+     
         _context->opaque          = this;
         _context->get_buffer      = ADM_VDPAUgetBuffer;
         _context->release_buffer  = ADM_VDPAUreleaseBuffer;
         _context->draw_horiz_band = draw;
         _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-        _context->extradata = (uint8_t *) extraCopy;
+        _context->extradata = (uint8_t *) _extraDataCopy;
         _context->extradata_size  = (int) extraDataLen;
         _context->get_format      = vdpauGetFormat;
         vdpau=(void *)new vdpauContext;
