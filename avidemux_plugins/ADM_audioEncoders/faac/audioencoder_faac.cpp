@@ -68,7 +68,9 @@ AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader,
   _globalHeader=globalHeader;
   switch(channels)
   {
-    case 1:outputChannelMapping[1] = ADM_CH_FRONT_LEFT;break;
+    case 1:
+        outputChannelMapping[0] = ADM_CH_MONO;
+        break;
     case 2:
     	outputChannelMapping[0] = ADM_CH_FRONT_LEFT;
     	outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
