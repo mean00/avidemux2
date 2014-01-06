@@ -49,18 +49,20 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
     this->extraDataLen=extraLen;
     length=0;
     uint32_t mx=0;
+    bool doSplit=false;
     for(int i=0;i<nbChunk;i++) 
     {
         length+=idx[i].size;    
         if(idx[i].size>mx) mx=idx[i].size;
     }
     
-    
+    int bytePerSample=2;
+    int maxAllowed=ODML_MAX_AUDIO_CHUNK; 
     if((hdr->encoding==WAV_PCM || hdr->encoding==WAV_LPCM))
     {
         // Number of samples in one chunk
-        int maxAllowed=ODML_MAX_AUDIO_CHUNK; 
-        int bytePerSample=2;
+        
+        
         if(hdr->bitspersample==8) bytePerSample=1;
         int thirtyMs=(bytePerSample*hdr->channels*hdr->frequency)/40; // ~ 25 ms
         if(thirtyMs<maxAllowed) maxAllowed=thirtyMs;
@@ -71,6 +73,11 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
         ADM_info("Checking that we dont have block larger than %d bytes, we have %d so far\n",maxAllowed,(int)mx);
         if( mx>maxAllowed)
         {
+            doSplit=true;
+        }
+    }
+    if(doSplit)
+    {
             ADM_info("Splitting it...\n");
             // Split the huge chunk into smaller ones
             audioClock clock(hdr->frequency);
@@ -101,12 +108,11 @@ ADM_aviAudioAccess::ADM_aviAudioAccess(odmlIndex *idx,WAVHeader *hdr,
                     myIndex.append(current);
                     clock.advanceBySample(size/(bytePerSample*hdr->channels));
             }
-       }
-
     }else
     {       // Duplicate index as is
         for(int i=0;i<nbChunk;i++)
           myIndex.append(idx[i]);
+        ADM_info("Kept all of them as is (%d)\n",nbChunk);
     }
     fd=ADM_fopen(name,"r");
     ADM_assert(fd);
