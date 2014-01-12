@@ -30,6 +30,7 @@ public:
 public slots:
 
 private slots:
+        void useAdvancedConfigurationCheckBox_toggled(bool checked);
         void meSpinBox_valueChanged(int value);
         void meSlider_valueChanged(int value);
         void encodingModeComboBox_currentIndexChanged(int index);
@@ -46,7 +47,8 @@ private slots:
 
         bool updatePresetList(void);
 
-
+        bool toogleAdvancedConfiguration(bool advancedEnabled);
+        
 #if 0
         void maxCrfSlider_valueChanged(int value);
         void maxCrfSpinBox_valueChanged(int value);

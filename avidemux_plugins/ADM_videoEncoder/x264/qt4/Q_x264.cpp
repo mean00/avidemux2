@@ -21,7 +21,7 @@ using std::vector;
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 
-static int pluginVersion=2;
+static int pluginVersion=3;
 
 static x264_encoder myCopy; // ugly...
 extern bool  x264_encoder_jserialize(const char *file, const x264_encoder *key);
@@ -73,6 +73,16 @@ static const aspectRatio predefinedARs[]={
 };
 
 #define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
+
+static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
+#define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
+
+static const char* listOfTunings[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim" };
+#define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
+
+static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "high422", "high444" };
+#define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
+
 /**
     \fn x264_ui
     \brief hook to enter UI specific dialog
@@ -87,7 +97,16 @@ bool x264_ui(x264_encoder *settings)
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
+            if(settings->general.preset) ADM_dealloc(settings->general.preset);
+            settings->general.preset = NULL;
+            if(settings->general.tuning) ADM_dealloc(settings->general.tuning);
+            settings->general.tuning = NULL;
+            if(settings->general.profile) ADM_dealloc(settings->general.profile);
+            settings->general.profile = NULL;
             memcpy(settings,&myCopy,sizeof(myCopy));
+            if(myCopy.general.preset) settings->general.preset = ADM_strdup(myCopy.general.preset);
+            if(myCopy.general.tuning) settings->general.tuning = ADM_strdup(myCopy.general.tuning);
+            if(myCopy.general.profile) settings->general.profile = ADM_strdup(myCopy.general.profile);
             success = true;
     }
 
@@ -101,6 +120,7 @@ bool x264_ui(x264_encoder *settings)
 x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
 {
        ui.setupUi(this);
+        connect(ui.useAdvancedConfigurationCheckBox, SIGNAL(toggled(bool)), this, SLOT(useAdvancedConfigurationCheckBox_toggled(bool)));
         connect(ui.encodingModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(encodingModeComboBox_currentIndexChanged(int)));
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
         connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
@@ -114,7 +134,18 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
-       memcpy(&myCopy,param,sizeof(myCopy));
+       x264_encoder* settings = (x264_encoder*)param;
+       if(myCopy.general.preset) ADM_dealloc(myCopy.general.preset);
+       myCopy.general.preset = NULL;
+       if(myCopy.general.tuning) ADM_dealloc(myCopy.general.tuning);
+       myCopy.general.tuning = NULL;
+       if(myCopy.general.profile) ADM_dealloc(myCopy.general.profile);
+       myCopy.general.profile = NULL;
+       memcpy(&myCopy,settings,sizeof(myCopy));
+       if(settings->general.preset) myCopy.general.preset = ADM_strdup(settings->general.preset);
+       if(settings->general.tuning) myCopy.general.tuning = ADM_strdup(settings->general.tuning);
+       if(settings->general.profile) myCopy.general.profile = ADM_strdup(settings->general.profile);
+
 #define ENCODING(x)  myCopy.general.params.x       
         lastBitrate =   ENCODING(bitrate);
         lastVideoSize = ENCODING(finalsize);
@@ -131,6 +162,27 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         {
             const idcToken *t=listOfIdc+i;
             idc->addItem(QString(t->idcString));
+        }
+
+        QComboBox* presets=ui.presetComboBox;
+        presets->clear();
+        for(int i=0;i<NB_PRESET;i++)
+        {
+            presets->addItem(QString(listOfPresets[i]));
+        }
+
+        QComboBox* tunings=ui.tuningComboBox;
+        tunings->clear();
+        for(int i=0;i<NB_TUNE;i++)
+        {
+            tunings->addItem(QString(listOfTunings[i]));
+        }
+
+        QComboBox* profiles=ui.profileComboBox;
+        profiles->clear();
+        for(int i=0;i<NB_PROFILE;i++)
+        {
+            profiles->addItem(QString(listOfProfiles[i]));
         }
 
         upload();
@@ -159,6 +211,22 @@ bool x264Dialog::updatePresetList(void)
     return true;
 }
 
+bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
+{
+  ui.useAdvancedConfigurationCheckBox->setChecked(advancedEnabled);
+  ui.presetComboBox->setEnabled(!advancedEnabled);
+  ui.tuningComboBox->setEnabled(!advancedEnabled);
+  ui.profileComboBox->setEnabled(!advancedEnabled);
+  ui.fastDecodeCheckBox->setEnabled(!advancedEnabled);
+  ui.zeroLatencyCheckBox->setEnabled(!advancedEnabled);
+  ui.tabAdvancedRC->setEnabled(advancedEnabled);
+  ui.tabMotion->setEnabled(advancedEnabled);
+  ui.tabPartition->setEnabled(advancedEnabled);
+  ui.tabFrame->setEnabled(advancedEnabled);
+  ui.tabAnalysis->setEnabled(advancedEnabled);
+  ui.tabQuantiser->setEnabled(advancedEnabled);
+}
+
 /**
 
 */
@@ -167,9 +235,23 @@ bool x264Dialog::updatePresetList(void)
 #define DISABLE(x) ui.x->setEnabled(false);
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
 #define MK_RADIOBUTTON(x) ui.x->setChecked(true);
+#define MK_COMBOBOX_STR(x,y,list,count) \
+  { \
+    QComboBox *combobox=ui.x; \
+    for(int i=0;i<count;i++) \
+    { \
+      const char *p=list[i]; \
+      if(myCopy.y && !strcmp(myCopy.y, p)) \
+      { \
+        combobox->setCurrentIndex(i); \
+      } \
+    } \
+  }
 bool x264Dialog::upload(void)
 {
-          
+          toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
+          MK_CHECKBOX(fastDecodeCheckBox,general.fast_decode);
+          MK_CHECKBOX(zeroLatencyCheckBox,general.zero_latency);
           MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
           MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
@@ -264,6 +346,11 @@ bool x264Dialog::upload(void)
               MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
           }
 
+          // preset
+          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
+          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
           for(int i=0;i<NB_IDC;i++)
@@ -330,9 +417,9 @@ bool x264Dialog::upload(void)
 	      DISABLE(spsiComboBox);
 	      DISABLE(openGopCheckBox);
           DISABLE(groupBox_14); // quant matrix
-          DISABLE(tab_7);
-          DISABLE(tab_9);
-          DISABLE(tab);
+          DISABLE(tabAdvanced1);
+          DISABLE(tabAdvanced2);
+          DISABLE(tabOutput2);
           DISABLE(maxCrfCheckBox);
           DISABLE(sarAsInputRadioButton);
           DISABLE(groupBox_3);
@@ -343,12 +430,25 @@ bool x264Dialog::upload(void)
 #undef MK_UINT
 #undef MK_MENU
 #undef MK_RADIOBUTTON
+#undef MK_COMBOBOX_STR
 #define MK_CHECKBOX(x,y)    myCopy.y=ui.x->isChecked()
 #define MK_UINT(x,y)        myCopy.y=ui.x->value()
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 #define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
+#define MK_COMBOBOX_STR(x,y,list,count) \
+  { \
+    QComboBox* combo=ui.x; \
+    int idx=combo->currentIndex(); \
+    ADM_assert(idx<count); \
+    if(myCopy.y) ADM_dealloc(myCopy.y); \
+    myCopy.y = ADM_strdup(list[idx]); \
+  }
+
 bool x264Dialog::download(void)
 {
+          MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration);
+          MK_CHECKBOX(fastDecodeCheckBox,general.fast_decode);
+          MK_CHECKBOX(zeroLatencyCheckBox,general.zero_latency);
           MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
           MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
           MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
@@ -433,6 +533,10 @@ bool x264Dialog::download(void)
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
           
+          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
+          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+
           QComboBox *idc=ui.idcLevelComboBox;
           int dex=idc->currentIndex();
           ADM_assert(dex<NB_IDC);
@@ -517,6 +621,11 @@ void x264Dialog::encodingModeComboBox_currentIndexChanged(int index)
 
 	ui.maxCrfCheckBox->setEnabled(enableMaxCrf);
 #endif
+}
+
+void x264Dialog::useAdvancedConfigurationCheckBox_toggled(bool checked)
+{
+  toogleAdvancedConfiguration(checked);
 }
 
 void x264Dialog::quantiserSlider_valueChanged(int value)

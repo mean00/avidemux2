@@ -1,4 +1,5 @@
 {
+	"useAdvancedConfiguration" : true,
 	"general" : {
 		"params" : "AQ=14",
 		"threads" : 99,

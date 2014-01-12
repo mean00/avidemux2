@@ -2,12 +2,18 @@
 #ifndef ADM_x264_encoder_CONF_H
 #define ADM_x264_encoder_CONF_H
 typedef struct {
+bool useAdvancedConfiguration;
 struct  {
 	COMPRES_PARAMS params;
 	uint32_t threads;
+	char * preset;
+	char * tuning;
+	char * profile;
+	bool fast_decode;
+	bool zero_latency;
 	bool fast_first_pass;
 }general;
-uint32_t level;
+int32_t level;
 struct  {
 	uint32_t sar_height;
 	uint32_t sar_width;

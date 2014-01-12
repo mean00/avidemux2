@@ -27,6 +27,7 @@ extern "C"
 
 #define X264_DEFAULT_CONF \
 { \
+   true, /* bool UseAdvancedConfiguration */ \
    { /* General */ \
     { \
     COMPRESS_AQ, /* COMPRESSION_MODE  mode */ \
@@ -43,6 +44,11 @@ extern "C"
         0*ADM_ENC_CAP_SAME \
     }, \
     99, /* Threads : auto */ \
+    NULL, /* Preset */ \
+    NULL, /* Tuning */ \
+    NULL, /* Profile */ \
+    false, /* Fast decode */ \
+    false, /* Zero latency */ \
     true /* Fast first pass */ \
     }, \
     -1, /* Level */ \

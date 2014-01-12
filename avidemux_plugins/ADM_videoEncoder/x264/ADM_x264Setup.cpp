@@ -52,11 +52,30 @@ bool x264Encoder::setup(void)
 {
   ADM_info("=============x264, setting up==============\n");
   MMSET(param);
+
   x264_param_default( &param);
   param.pf_log=logger;
   firstIdr=true;
   image=new ADMImageDefault(getWidth(),getHeight());
 
+  // -------------- preset, tune, idc ------------
+  if(!x264Settings.useAdvancedConfiguration)
+  {
+    char tune[200] = {0};
+    strcat(tune, x264Settings.general.tuning);
+    if(x264Settings.general.fast_decode) 
+    {
+      strcat(tune, ",");
+      strcat(tune, "fastdecode");
+    }
+    if(x264Settings.general.zero_latency)
+    {
+      strcat(tune, ",");
+      strcat(tune, "zero_latency");
+    }
+    x264_param_default_preset(&param, x264Settings.general.preset, tune);
+  }
+  param.i_level_idc=x264Settings.level; 
 
   // Threads..
   switch(x264Settings.general.threads)
@@ -69,118 +88,25 @@ bool x264Encoder::setup(void)
   param.i_height = getHeight();
   param.i_csp = X264_CSP_I420;
   param.i_log_level=X264_LOG_INFO; //DEBUG; //INFO;
-  param.i_level_idc=x264Settings.level; 
-    //Framerate
-    int n,d;    
-    uint64_t f=source->getInfo()->frameIncrement;
-    usSecondsToFrac(f,&n,&d);
-    param.i_fps_num = d;
-    param.i_fps_den = n;
-    if(!x264Settings.MaxBFrame)  encoderDelay=0;
-    else    
-    {
-        if(2>=x264Settings.MaxRefFrames) 
-        {
-            encoderDelay=f*2*2;
-        }
-        else
-        {
-                encoderDelay=2*f*(x264Settings.MaxRefFrames-1);
-        }
-    }
-#define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
-#define MKPARAMF(x,y) {param.x = (float)x264Settings.y; aprintf("[x264] "#x" = %.2f\n",param.x);}
-#define MKPARAMB(x,y) {param.x = x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
-  MKPARAM(i_frame_reference,MaxRefFrames);
-  MKPARAM(i_keyint_min,MinIdr);
-  MKPARAM(i_keyint_max,MaxIdr);
-  MKPARAM(i_scenecut_threshold,i_scenecut_threshold);
-  MKPARAMB(b_intra_refresh,intra_refresh);
-  MKPARAM(i_bframe,MaxBFrame);
 
-  MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
-  MKPARAM(i_bframe_bias,i_bframe_bias);
-  MKPARAM(i_bframe_pyramid,i_bframe_pyramid);
-  MKPARAMB(b_deblocking_filter,b_deblocking_filter);
-  if(param.b_deblocking_filter)
-  {
-    MKPARAM(i_deblocking_filter_alphac0,i_deblocking_filter_alphac0);
-    MKPARAM(i_deblocking_filter_beta,i_deblocking_filter_beta);
-  }
-  MKPARAMB(b_cabac,cabac);
-  MKPARAMB(b_interlaced,interlaced);
-  MKPARAMB(b_constrained_intra,constrained_intra);
-  MKPARAMB(b_tff,tff);
-  MKPARAMB(b_fake_interlaced,fake_interlaced);
+  //Framerate
+  int n,d;    
+  uint64_t f=source->getInfo()->frameIncrement;
+  usSecondsToFrac(f,&n,&d);
+  param.i_fps_num = d;
+  param.i_fps_den = n;
 
   // -------------- vui------------
-#undef MKPARAM
-#undef MKPARAMF
-#undef MKPARAMB
-#define MKPARAM(x,y) {param.vui.x = x264Settings.vui.y;aprintf("[x264] vui."#x" = %d\n",param.vui.x);}
-#define MKPARAMF(x,y) {param.vui.x = (float)x264Settings.vui.y; aprintf("[x264] vui."#x" = %.2f\n",param.vui.x);}
-#define MKPARAMB(x,y) {param.vui.x = x264Settings.vui.y ;aprintf("[x264] vui."#x" = %s\n",TrueFalse[param.vui.x&1]);}
-   MKPARAM (i_sar_width,sar_width) 
-   MKPARAM (i_sar_height,sar_height) 
+  #undef MKPARAM
+  #undef MKPARAMF
+  #undef MKPARAMB
+  #define MKPARAM(x,y) {param.vui.x = x264Settings.vui.y;aprintf("[x264] vui."#x" = %d\n",param.vui.x);}
+  #define MKPARAMF(x,y) {param.vui.x = (float)x264Settings.vui.y; aprintf("[x264] vui."#x" = %.2f\n",param.vui.x);}
+  #define MKPARAMB(x,y) {param.vui.x = x264Settings.vui.y ;aprintf("[x264] vui."#x" = %s\n",TrueFalse[param.vui.x&1]);}
+  MKPARAM (i_sar_width,sar_width) 
+  MKPARAM (i_sar_height,sar_height) 
 
-  // -------------- analyze------------
-#undef MKPARAM
-#undef MKPARAMF
-#undef MKPARAMB
-#define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyse.x);}
-#define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
-#define MKPARAMB(x,y) {param.analyse.x = x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
-#define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
-   MKPARAMB(b_transform_8x8,b_8x8)
-   MKPARAMB(b_weighted_bipred,weighted_bipred) 
-   MKPARAM (i_weighted_pred,weighted_pred) 
-   MKPARAM (i_direct_mv_pred,direct_mv_pred)
-   MKPARAM (i_chroma_qp_offset,chroma_offset)
-
-   MKPARAM (i_me_method,me_method) 
-   MKPARAM (i_me_range,me_range)
-   MKPARAM (i_mv_range,mv_range) 
-   MKPARAM (i_mv_range_thread,mv_range_thread)
-   MKPARAM (i_subpel_refine,subpel_refine) 
-   MKPARAMB(b_chroma_me,chroma_me) 
-   MKPARAMB(b_mixed_references,mixed_references) 
-   MKPARAM (i_trellis,trellis) 
-   MKPARAMB(b_fast_pskip,fast_pskip) 
-   MKPARAMB(b_dct_decimate,dct_decimate) 
-   MKPARAMB(b_psy,psy) 
-   MKPARAMF(f_psy_rd,psy_rd) 
-   MKPARAMF(f_psy_trellis,psy_trellis)
-   MKPARAM (i_noise_reduction,noise_reduction)
-   MKPARAM (i_luma_deadzone[0],inter_luma) 
-   MKPARAM (i_luma_deadzone[1],intra_luma) 
-
-   MKFLAGS(inter,b_i4x4,X264_ANALYSE_I4x4)
-   MKFLAGS(inter,b_i8x8,X264_ANALYSE_I8x8)
-   MKFLAGS(inter,b_p16x16,X264_ANALYSE_PSUB16x16)
-   MKFLAGS(inter,b_p8x8,X264_ANALYSE_PSUB8x8)
-   MKFLAGS(inter,b_b16x16,X264_ANALYSE_BSUB16x16)
-
-   //---------------- ratecontrol -------------------
-#undef MKPARAM
-#undef MKPARAMF
-#undef MKPARAMB
-#define MKPARAM(x,y)  {param.rc.x = x264Settings.ratecontrol.y;aprintf("[x264] rc."#x" = %d\n",param.rc.x);}
-#define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
-#define MKPARAMB(x,y) {param.rc.x = x264Settings.ratecontrol.y ;aprintf("[x264] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
-
-    MKPARAM(i_qp_min,qp_min);
-    MKPARAM(i_qp_max,qp_max);
-    MKPARAM(i_qp_step,qp_step);
-    MKPARAM(f_rate_tolerance,rate_tolerance);
-    MKPARAM(f_ip_factor,ip_factor);
-    MKPARAM(f_pb_factor,pb_factor);
-    MKPARAMB(b_mb_tree,mb_tree);
-    MKPARAM(i_lookahead,lookahead);
-    MKPARAM(i_aq_mode,aq_mode);
-    MKPARAMF(f_aq_strength,aq_strength);
-  // -------------------------
-  
-
+  // -------------- rate control------------
   switch(x264Settings.general.params.mode)
   {
       case COMPRESS_2PASS:
@@ -220,7 +146,7 @@ bool x264Encoder::setup(void)
 #warning FIXME
 #if 0
                              if(x264Settings.)
-                                   	x264_param_apply_fastfirstpass(&_param);
+                                    x264_param_apply_fastfirstpass(&_param);
 #endif
  
                         }else
@@ -262,6 +188,108 @@ bool x264Encoder::setup(void)
 
   // We do pseudo cfr ...
   param.b_vfr_input=0;
+
+  if(x264Settings.useAdvancedConfiguration)
+  {  
+
+  #undef MKPARAM
+  #undef MKPARAMF
+  #undef MKPARAMB
+  #define MKPARAM(x,y) {param.x = x264Settings.y;aprintf("[x264] "#x" = %d\n",param.x);}
+  #define MKPARAMF(x,y) {param.x = (float)x264Settings.y; aprintf("[x264] "#x" = %.2f\n",param.x);}
+  #define MKPARAMB(x,y) {param.x = x264Settings.y ;aprintf("[x264] "#x" = %s\n",TrueFalse[param.x&1]);}
+    MKPARAM(i_frame_reference,MaxRefFrames);
+    MKPARAM(i_keyint_min,MinIdr);
+    MKPARAM(i_keyint_max,MaxIdr);
+    MKPARAM(i_scenecut_threshold,i_scenecut_threshold);
+    MKPARAMB(b_intra_refresh,intra_refresh);
+    MKPARAM(i_bframe,MaxBFrame);
+
+    MKPARAM(i_bframe_adaptive,i_bframe_adaptive);
+    MKPARAM(i_bframe_bias,i_bframe_bias);
+    MKPARAM(i_bframe_pyramid,i_bframe_pyramid);
+    MKPARAMB(b_deblocking_filter,b_deblocking_filter);
+    if(param.b_deblocking_filter)
+    {
+      MKPARAM(i_deblocking_filter_alphac0,i_deblocking_filter_alphac0);
+      MKPARAM(i_deblocking_filter_beta,i_deblocking_filter_beta);
+    }
+    MKPARAMB(b_cabac,cabac);
+    MKPARAMB(b_interlaced,interlaced);
+    MKPARAMB(b_constrained_intra,constrained_intra);
+    MKPARAMB(b_tff,tff);
+    MKPARAMB(b_fake_interlaced,fake_interlaced);
+
+    // -------------- analyze------------
+  #undef MKPARAM
+  #undef MKPARAMF
+  #undef MKPARAMB
+  #define MKPARAM(x,y) {param.analyse.x = x264Settings.analyze.y;aprintf("[x264] analyse."#x" = %d\n",param.analyse.x);}
+  #define MKPARAMF(x,y) {param.analyse.x = (float)x264Settings.analyze.y; aprintf("[x264] analyse."#x" = %.2f\n",param.analyse.x);}
+  #define MKPARAMB(x,y) {param.analyse.x = x264Settings.analyze.y ;aprintf("[x264] analyse."#x" = %s\n",TrueFalse[param.analyse.x&1]);}
+  #define MKFLAGS(fieldout,fieldin,mask) {if(x264Settings.analyze.fieldin) param.analyse.fieldout|=mask;}
+     MKPARAMB(b_transform_8x8,b_8x8)
+     MKPARAMB(b_weighted_bipred,weighted_bipred) 
+     MKPARAM (i_weighted_pred,weighted_pred) 
+     MKPARAM (i_direct_mv_pred,direct_mv_pred)
+     MKPARAM (i_chroma_qp_offset,chroma_offset)
+
+     MKPARAM (i_me_method,me_method) 
+     MKPARAM (i_me_range,me_range)
+     MKPARAM (i_mv_range,mv_range) 
+     MKPARAM (i_mv_range_thread,mv_range_thread)
+     MKPARAM (i_subpel_refine,subpel_refine) 
+     MKPARAMB(b_chroma_me,chroma_me) 
+     MKPARAMB(b_mixed_references,mixed_references) 
+     MKPARAM (i_trellis,trellis) 
+     MKPARAMB(b_fast_pskip,fast_pskip) 
+     MKPARAMB(b_dct_decimate,dct_decimate) 
+     MKPARAMB(b_psy,psy) 
+     MKPARAMF(f_psy_rd,psy_rd) 
+     MKPARAMF(f_psy_trellis,psy_trellis)
+     MKPARAM (i_noise_reduction,noise_reduction)
+     MKPARAM (i_luma_deadzone[0],inter_luma) 
+     MKPARAM (i_luma_deadzone[1],intra_luma) 
+
+     MKFLAGS(inter,b_i4x4,X264_ANALYSE_I4x4)
+     MKFLAGS(inter,b_i8x8,X264_ANALYSE_I8x8)
+     MKFLAGS(inter,b_p16x16,X264_ANALYSE_PSUB16x16)
+     MKFLAGS(inter,b_p8x8,X264_ANALYSE_PSUB8x8)
+     MKFLAGS(inter,b_b16x16,X264_ANALYSE_BSUB16x16)
+
+     //---------------- ratecontrol -------------------
+  #undef MKPARAM
+  #undef MKPARAMF
+  #undef MKPARAMB
+  #define MKPARAM(x,y)  {param.rc.x = x264Settings.ratecontrol.y;aprintf("[x264] rc."#x" = %d\n",param.rc.x);}
+  #define MKPARAMF(x,y) {param.rc.x = (float)x264Settings.ratecontrol.y; aprintf("[x264] rc."#x" = %.2f\n",param.rc.x);}
+  #define MKPARAMB(x,y) {param.rc.x = x264Settings.ratecontrol.y ;aprintf("[x264] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
+
+      MKPARAM(i_qp_min,qp_min);
+      MKPARAM(i_qp_max,qp_max);
+      MKPARAM(i_qp_step,qp_step);
+      MKPARAM(f_rate_tolerance,rate_tolerance);
+      MKPARAM(f_ip_factor,ip_factor);
+      MKPARAM(f_pb_factor,pb_factor);
+      MKPARAMB(b_mb_tree,mb_tree);
+      MKPARAM(i_lookahead,lookahead);
+      MKPARAM(i_aq_mode,aq_mode);
+      MKPARAMF(f_aq_strength,aq_strength);
+  }
+  
+  if(!param.i_bframe)  encoderDelay=0;
+  else    
+  {
+      if(2>=param.i_frame_reference) 
+      {
+          encoderDelay=f*2*2;
+      }
+      else
+      {
+              encoderDelay=2*f*(x264Settings.MaxRefFrames-1);
+      }
+  }
+
  //
   if(true==x264Settings.general.fast_first_pass)
   {
@@ -279,6 +307,12 @@ bool x264Encoder::setup(void)
         }
     }
   }
+
+  if(!x264Settings.useAdvancedConfiguration)
+  {
+    x264_param_apply_profile(&param, x264Settings.general.profile);
+  }
+
   dumpx264Setup(&param);
   ADM_info("Creating x264 encoder\n");
   handle = x264_encoder_open (&param);

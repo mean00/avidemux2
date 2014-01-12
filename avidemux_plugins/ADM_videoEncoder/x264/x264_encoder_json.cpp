@@ -5,12 +5,18 @@
 #include "x264_encoder.h"
 bool  x264_encoder_jserialize(const char *file, const x264_encoder *key){
 admJson json;
+json.addBool("useAdvancedConfiguration",key->useAdvancedConfiguration);
 json.addNode("general");
 json.addCompressParam("params",key->general.params);
 json.addUint32("threads",key->general.threads);
+json.addString("preset",key->general.preset);
+json.addString("tuning",key->general.tuning);
+json.addString("profile",key->general.profile);
+json.addBool("fast_decode",key->general.fast_decode);
+json.addBool("zero_latency",key->general.zero_latency);
 json.addBool("fast_first_pass",key->general.fast_first_pass);
 json.endNode();
-json.addUint32("level",key->level);
+json.addInt32("level",key->level);
 json.addNode("vui");
 json.addUint32("sar_height",key->vui.sar_height);
 json.addUint32("sar_width",key->vui.sar_width);
@@ -83,7 +89,7 @@ return json.dumpToFile(file);
 bool  x264_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x264_encoder *key){
 admJsonToCouple json;
 CONFcouple *c=json.readFromFile(file);
-if(!c) {ADM_error("Cannot read json file (%s)\n",file);return false;}
+if(!c) {ADM_error("Cannot read json file");return false;}
 bool r= ADM_paramLoadPartial(c,tmpl,key);
 delete c;
 return r;

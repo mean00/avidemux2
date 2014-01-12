@@ -1,10 +1,11 @@
 {
+	"useAdvancedConfiguration" : true,
 	"general" : {
 		"params" : "AQ=12",
 		"threads" : 99,
 		"fast_first_pass" : true
 	},
-	"level" : 4294967295,
+	"level" : -1,
 	"vui" : {
 		"sar_height" : 1,
 		"sar_width" : 1
