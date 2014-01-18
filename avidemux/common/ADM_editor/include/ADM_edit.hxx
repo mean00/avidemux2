@@ -324,11 +324,16 @@ public:
         bool        clearAudioTracks(void); /// remove all audio tracks
         bool        addAudioTrack(int poolIndex); /// Add an audio track in the active tracks
         bool        addExternalAudioTrack(const char *fileName); /// Add audio track from a file
-		void		updateDefaultAudioTrack(void);
+        void        updateDefaultAudioTrack(void);
 
-		void seekFrame(int count);
-		void seekKeyFrame(int count);
-		void seekBlackFrame(int count);
+        void        seekFrame(int count);
+        void        seekKeyFrame(int count);
+        void        seekBlackFrame(int count);
+public:
+        bool            setVar(const char *key, const char *value);
+        const char      *getVar(const char *key);
+        bool            printEnv(void);
+
 /********************************* /IEditor **********************************/
 };
 #endif

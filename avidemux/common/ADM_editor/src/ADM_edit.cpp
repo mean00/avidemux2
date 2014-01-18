@@ -25,6 +25,7 @@
 
 #include <fcntl.h>
 #include <errno.h>
+#include <map>
 
 #include "fourcc.h"
 #include "ADM_edit.hxx"
@@ -761,4 +762,54 @@ uint32_t           ADM_Composer::getFrameSize(int frame)
     v->_aviheader->getFrameSize(frame,&sz);
     return sz;
 }
+
+static  std::map<std::string, std::string> scriptEnv;
+
+/**
+ * \fn setVar
+ * @param key
+ * @param value
+ * @return 
+ */
+bool            ADM_Composer::setVar(const char *key, const char *value)
+{
+    std::map<std::string,std::string>::iterator it;
+    it=scriptEnv.find(std::string(key));
+    if(scriptEnv.end() !=it)
+    {
+        scriptEnv.erase(it);
+    }
+    scriptEnv.insert(std::pair<std::string, std::string>(key,value));
+    return true;
+}
+/**
+ * \fn getVar
+ * @param key
+ * @return 
+ */
+const char      *ADM_Composer::getVar(const char *key)
+{
+    std::map<std::string,std::string>::iterator it;
+    it=scriptEnv.find(std::string(key));
+    if(scriptEnv.end() !=it)
+    {
+        return scriptEnv[key].c_str(); // ??
+    }
+    return NULL;
+}
+/**
+ * \fn printEnv
+ * @param 
+ * @return 
+ */
+bool       ADM_Composer::printEnv(void)
+{
+    std::map<std::string,std::string>::iterator it;
+    for(it=scriptEnv.begin();it!=scriptEnv.end();it++)
+    {
+        printf("%s => %s\n",it->first.c_str(),it->second.c_str());
+    }
+    return true;
+}
+
 // EOF

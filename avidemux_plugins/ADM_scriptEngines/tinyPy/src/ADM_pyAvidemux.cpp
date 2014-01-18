@@ -214,4 +214,24 @@ int pyTestAssert(void)
 	ADM_assert(0);
 	return true;
 }
+/**
+ * \fn pyGetEnv
+ * @param editor
+ * @param 
+ * @return 
+ */
+char *pyGetEnv(IEditor *editor,const char *key)
+{
+    const char *src="";
+    if(editor)
+    {
+        if(key)
+        {
+            src=editor->getVar(key);
+            if(!src) src="";
+        }
+    }
+    return strdup(src);
+}
+
 // EOF

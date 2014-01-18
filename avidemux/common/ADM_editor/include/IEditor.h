@@ -102,5 +102,9 @@ public:
     virtual uint32_t getFrameSize(int count) = 0;
     virtual int  setVideoCodecProfile(const char *codec, const char *profile)=0;
     virtual bool audioSetAudioPoolLanguage(int poolIndex, const char *language)=0;
+    // var
+    virtual bool setVar(const char *key, const char *value)=0;
+    virtual const char *getVar(const char *key)=0;
+    virtual bool  printEnv(void)=0;
 };
 #endif

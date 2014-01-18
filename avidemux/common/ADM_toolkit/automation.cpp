@@ -561,30 +561,7 @@ uint32_t nbVar=0;
 */
 uint8_t scriptAddVar(char *var,char *value)
 {
-        if(!var || !(*var))
-        {
-                printf("Script : Var name invalid\n");
-                return 0;
-        }
-        if(!value || !(*value))
-        {
-                printf("Script : value invalid\n");
-                return 0;
-        }
-        myVars[nbVar].name=ADM_strdup(var);
-        myVars[nbVar].string=ADM_strdup(value);
-        // check it is a number
-        uint8_t digit=1;
-        for(int i=0;i<strlen(value);i++)
-        {
-                 if(!isdigit(value[i]))
-                        {digit=0;break;}
-        }
-        if(digit)
-             myVars[nbVar].isString=0;
-        else
-             myVars[nbVar].isString=1;
-        nbVar++;
+        video_body->setVar(var,value);
         return 1;
 
 }
@@ -594,26 +571,6 @@ uint8_t scriptAddVar(char *var,char *value)
 */
 
 
-char *script_getVar(char *in, int *r)
-{
-
-        printf("Get var called with in=[%s]\n",in);
-        for(uint32_t i=0;i<nbVar;i++)
-        {
-                if(myVars[i].name)
-                {
-                        if(!strcmp(myVars[i].name,in)) // skip the  $
-                        {
-                                *r=myVars[i].isString;
-                                return ADM_strdup(myVars[i].string);
-                        }
-
-                }
-        }
-        printf("Warning: var [%s] is unknown !\n",in);
-        return NULL;
-
-}
 
 void set_reuse_2pass_log(char *p){
    prefs->set(FEATURES_REUSE_2PASS_LOG,true);

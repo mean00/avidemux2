@@ -31,6 +31,7 @@
 #define ADM_PYID_AVIDEMUX 100
 #define ADM_PYID_EDITOR   101
 #define ADM_PYID_GUI      102
+#define ADM_PYID_OS       103
 #define ADM_PYID_DIALOGF     200
 #define ADM_PYID_DF_TOGGLE   201
 #define ADM_PYID_DF_INTEGER  202
@@ -74,6 +75,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "pyDFTimeStamp_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 #include "pyHelpers_gen.cpp"
+#include "os_gen.cpp"
 #include "tinypy/init_math.cpp"
 
 extern void tp_hook_set_syslib(const char *sysLib);
@@ -131,7 +133,9 @@ void PythonEngine::registerFunctions()
 		{NULL, NULL}};
         re_init(_vm);
 	this->registerFunction("addons", addonFunctions);
+        
 	this->registerClass("Avidemux", initClasspyAdm, "avidemux class");
+        this->registerClass("os", initClasspyOS, "os class");
 	this->registerClass("Editor", initClasspyEditor, "add, remove videos");
 	this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
 	this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
