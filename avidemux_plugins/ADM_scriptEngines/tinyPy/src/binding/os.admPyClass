@@ -1,0 +1,6 @@
+#           name    cookie id
+/* CLASS */ pyOS : void : ADM_PYID_OS
+#              cname:pyname
+/* CTOR */   (str) 
+#
+/* METHOD */ str pyGetEnv:environ          (str) 
