@@ -75,7 +75,6 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "pyDFTimeStamp_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 #include "pyHelpers_gen.cpp"
-#include "os_gen.cpp"
 #include "tinypy/init_math.cpp"
 
 extern void tp_hook_set_syslib(const char *sysLib);
@@ -131,11 +130,15 @@ void PythonEngine::registerFunctions()
 		{"basename", PythonEngine::basename},
                 {"dirname", PythonEngine::dirname},
 		{NULL, NULL}};
+        
+        pyFunc osStaticClassFunctions[] = {{"environ", PythonEngine::environ},
+		{NULL, NULL}};
+        
+        
         re_init(_vm);
 	this->registerFunction("addons", addonFunctions);
         
 	this->registerClass("Avidemux", initClasspyAdm, "avidemux class");
-        this->registerClass("os", initClasspyOS, "os class");
 	this->registerClass("Editor", initClasspyEditor, "add, remove videos");
 	this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
 	this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
@@ -144,6 +147,7 @@ void PythonEngine::registerFunctions()
 	this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
 	this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
 	this->registerFunction("test", pyHelpers_functions);
+        this->registerStaticClass("os",osStaticClassFunctions,"Access to operating system");
 }
 
 void PythonEngine::registerClass(const char *className, pyRegisterClass classPy, const char *desc)
@@ -158,7 +162,42 @@ void PythonEngine::registerClass(const char *className, pyRegisterClass classPy,
 
 	tp_set(_vm, _vm->builtins, tp_string(className), classPy(_vm));
 }
+/**
+ * 
+ * @param vm
+ * @return 
+ */
+static tp_obj myCtorpyStatic(tp_vm *vm)
+{
+  return tp_None;
+}
+/**
+ * \fn registerStaticClass
+ */
+void PythonEngine::registerStaticClass(const char *thisClass,pyFunc *funcs,const char *desc)
+{
+	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
+		(string("Registering static class ") + string(thisClass)).c_str());
 
+        tp_obj classObj =  tp_dict(_vm);
+        
+        pyClassDescriptor classDesc;
+	classDesc.className = string(thisClass);
+	classDesc.desc = string(desc);
+	_pyClasses.push_back(classDesc);
+        
+	while (funcs->funcName)
+	{
+		this->callEventHandlers(IScriptEngine::Information, NULL, -1,
+			(string("\tRegistering: ") + string(funcs->funcName)).c_str());
+
+		tp_set(_vm, classObj, tp_string(funcs->funcName), tp_fnc(_vm, funcs->funcCall));
+
+		funcs++;
+	}
+	tp_set(_vm, _vm->modules, tp_string(thisClass), classObj);
+
+}
 void PythonEngine::registerFunction(const char *group, pyFunc *funcs)
 {
 	this->callEventHandlers(IScriptEngine::Information, NULL, -1,
@@ -167,7 +206,7 @@ void PythonEngine::registerFunction(const char *group, pyFunc *funcs)
 	while (funcs->funcName)
 	{
 		this->callEventHandlers(IScriptEngine::Information, NULL, -1,
-			(string("Registering: ") + string(funcs->funcName)).c_str());
+			(string("\tRegistering: ") + string(funcs->funcName)).c_str());
 
 		tp_set(_vm, _vm->builtins, tp_string(funcs->funcName), tp_fnc(_vm, funcs->funcCall));
 
@@ -371,4 +410,24 @@ int PythonEngine::maturityRanking()
 string PythonEngine::referenceUrl()
 {
     return "";
+}
+/**
+ * \fn environ
+ * \brief os.environ
+ * @param tp
+ * @return 
+ */
+tp_obj PythonEngine::environ(tp_vm *tp)
+{
+	TinyParams pm(tp);
+	const char *file = pm.asString();
+        const char *defaultRet="";
+        char       *output=NULL;        
+        PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+        
+        
+        output=pyGetEnv(engine->editor(),file);
+        if(output) defaultRet=output;
+	tp_obj v =  tp_string_copy(tp,defaultRet,strlen(defaultRet));
+	return v;
 }

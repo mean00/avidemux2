@@ -27,12 +27,14 @@ private:
 	void registerFunction(const char *group, pyFunc *funcs);
 	void registerFunctions();
 	void registerClass(const char *className, pyRegisterClass classPy, const char *desc);
-
+        void registerStaticClass(const char *thisClass,pyFunc *funcs,const char *desc);
+        
 	static tp_obj dumpBuiltin(tp_vm *tp);
 	static tp_obj getFileSize(tp_vm *tp);
 	static tp_obj getFolderContent(tp_vm *tp);
         static tp_obj basename(tp_vm *tp);
         static tp_obj dirname(tp_vm *tp);
+        static tp_obj environ(tp_vm *tp);
 
 public:
 	~PythonEngine();
