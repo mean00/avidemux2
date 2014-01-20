@@ -6,8 +6,8 @@
 # /work/samples/avi/bar.avi
 # ...
 #
-o=os()
+import os
 print("environ ")
-val=o.environ("foo")
+val=os.environ("foo")
 print("val:"+str(val))
 print("Done")
