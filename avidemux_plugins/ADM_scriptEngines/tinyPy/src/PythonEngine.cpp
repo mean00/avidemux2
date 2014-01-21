@@ -131,7 +131,7 @@ void PythonEngine::registerFunctions()
                 {"dirname", PythonEngine::dirname},
 		{NULL, NULL}};
         
-        pyFunc osStaticClassFunctions[] = {{"environ", PythonEngine::environ},
+        pyFunc osStaticClassFunctions[] = {{"environ", PythonEngine::pyenviron},
 		{NULL, NULL}};
         
         
@@ -417,7 +417,7 @@ string PythonEngine::referenceUrl()
  * @param tp
  * @return 
  */
-tp_obj PythonEngine::environ(tp_vm *tp)
+tp_obj PythonEngine::pyenviron(tp_vm *tp)
 {
 	TinyParams pm(tp);
 	const char *file = pm.asString();
