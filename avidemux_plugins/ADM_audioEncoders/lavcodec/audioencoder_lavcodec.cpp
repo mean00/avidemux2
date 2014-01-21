@@ -186,9 +186,14 @@ bool AUDMEncoder_Lavcodec::initialize(void)
     CONTEXT->sample_fmt   =  AV_SAMPLE_FMT_FLTP;
     ret = avcodec_open2(CONTEXT, codec,NULL);
     if (ret<0)
-    {         
-                printError("Init failed",ret);
-                return 0;
+    {            
+                CONTEXT->sample_fmt=AV_SAMPLE_FMT_S16;
+                ret = avcodec_open2(CONTEXT, codec,NULL);
+                if (ret<0)
+                {
+                        printError("Init failed",ret);
+                        return 0;
+                }
      
    }
     //ADM_info("Frame size : %d, %d\n",CONTEXT->frame_size,_chunk/wavheader.channels);
@@ -265,13 +270,23 @@ bool	AUDMEncoder_Lavcodec::encodeBlockMultiChannels(int count, uint8_t *dest,int
         CHANNEL_TYPE *f=_incoming->getChannelMapping();
         CHANNEL_TYPE *o=channelMapping;
      
-        // reorder and de-interleave
-        reorderToPlanar(&(tmpbuffer[tmphead]),planarBuffer,nbBlocks,f,o);
       
-    
-        int er=avcodec_fill_audio_frame(_frame, channel,
+        
+        int er;
+        if( CONTEXT->sample_fmt   ==  AV_SAMPLE_FMT_FLTP)
+        {
+                    // reorder and de-interleave
+                reorderToPlanar(&(tmpbuffer[tmphead]),planarBuffer,nbBlocks,f,o);
+                er=avcodec_fill_audio_frame(_frame, channel,
                               AV_SAMPLE_FMT_FLTP, (uint8_t *)planarBuffer,
                                count*sizeof(float), 0);
+        }else
+        {
+              dither16(&(tmpbuffer[tmphead]),count,channel);
+              er=avcodec_fill_audio_frame(_frame, channel,
+                              AV_SAMPLE_FMT_S16, (uint8_t *)&(tmpbuffer[tmphead]),
+                               count*sizeof(uint16_t), 0);
+        }
         if(er<0)
         {
             printError("Fill audio",er);
@@ -345,10 +360,23 @@ bool	AUDMEncoder_Lavcodec::encodeBlockSimple(int count, uint8_t *dest,int &encod
 
      int nbBlocks=count/channel;
       _frame->nb_samples=nbBlocks;
-      float *in=i2p(count);
-      int er=avcodec_fill_audio_frame(_frame, channel,
+      
+      
+      int er;
+      if( CONTEXT->sample_fmt   ==  AV_SAMPLE_FMT_FLTP)
+        {
+                float *in=i2p(count);
+                // reorder and de-interleave
+                er=avcodec_fill_audio_frame(_frame, channel,
                               AV_SAMPLE_FMT_FLTP, (uint8_t *)in,
                                count*sizeof(float), 0);
+        }else
+        { // s16
+              dither16(&(tmpbuffer[tmphead]),count,channel);
+              er=avcodec_fill_audio_frame(_frame, channel,
+                              AV_SAMPLE_FMT_S16, (uint8_t *)&(tmpbuffer[tmphead]),
+                               count*sizeof(uint16_t), 0);
+        }
      if(er<0)
      {
         printError("Fill audio",er);
