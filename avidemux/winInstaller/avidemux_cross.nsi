@@ -597,12 +597,12 @@ SectionGroup "Muxers" SecGrpMuxers
 		SetOutPath $INSTDIR\plugins\muxers
 		${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4.dll
 	${MementoSectionEnd}
-	#${MementoSection} "MP4 (MP4v2)" SecMuxMp4v2
-		#SectionIn 1 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\muxers
-		#${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4v2.dll
-	#${MementoSectionEnd}
+	${MementoSection} "MP4 (MP4v2)" SecMuxMp4v2
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\muxers
+		${File} ${ADM_DIR}/plugins/muxers/libADM_mx_mp4v2.dll
+	${MementoSectionEnd}
 	${MementoSection} "MPEG-PS" SecMuxLavMpegPs
 		SectionIn 1 2
 		SetOverwrite on
