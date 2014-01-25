@@ -352,11 +352,44 @@ uint32_t defaultPortAvisynth = 9999;
      framePP.swallow(&fvzd);
      framePP.swallow(&fdring);
      framePP.swallow(&postProcStrength);
-     
+
+
+//  -- select language
+     typedef struct  { const char *lang;const char *desc;}languageDescriptor;
+     uint32_t languageIndex=0;
+     languageDescriptor myLanguages[]={
+                {"auto","System language"},
+                {"en","English"},
+                {"fr","Français"},
+                {"de","German"},
+                {"es","Spanish"},
+                {"it","Italian"},
+                {"ru","Pyckuu"},
+                {"pl","Polish"},
+        };
+        uint32_t nbLanguages=sizeof(myLanguages)/sizeof(languageDescriptor);
+        char *currentLanguage;
+        int currentIndex=0;
+        if(!prefs->get(DEFAULT_LANGUAGE,&currentLanguage)) currentLanguage="auto";
+  
+        diaMenuEntryDynamic **languagesMenuItems=new diaMenuEntryDynamic *[nbLanguages+1];
+        for(int i=0;i<nbLanguages;i++)
+        {           
+            languageDescriptor *lg=myLanguages+i;
+            if(!strcmp(lg->lang,currentLanguage))
+                currentIndex=i;
+            languagesMenuItems[i]=new diaMenuEntryDynamic(i,lg->desc,lg->lang);
+        }
+        languageIndex=currentIndex;
+        diaElemMenuDynamic menuLanguage(&languageIndex,QT_TRANSLATE_NOOP("adm","_Language"), nbLanguages, 
+                    languagesMenuItems,NULL);
+//--        
+        
+        
 
         /* User Interface */
-        diaElem *diaUser[]={&useSysTray,&menuMessage};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),2,diaUser);
+        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),3,diaUser);
         
          /* Automation */
         
@@ -508,6 +541,7 @@ uint32_t defaultPortAvisynth = 9999;
                 // Alternate mp3 tag (haali)
                 prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
+                prefs->set(DEFAULT_LANGUAGE,myLanguages[languageIndex].lang);
 			
                 // Avisynth
                 prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
