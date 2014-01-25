@@ -16,6 +16,7 @@
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
 #include "ADM_coreTranslator.h"
+#include "prefs.h"
 extern QWidget *QuiMainWindows;
 
 #define MAX_UNLOADED_MSG_LENGTH 400
@@ -76,8 +77,23 @@ void initTranslator(void)
 
 void loadTranslator(void)
 {
-	printf("\n[Locale] Locale: %s\n", QLocale::system().name().toUtf8().constData());
-
+	
+        char *lang=NULL;
+        bool autoSelect=true;
+        if(prefs->get(DEFAULT_LANGUAGE,&lang))
+        {
+            if(lang && strlen(lang)>0 && strcmp(lang,"auto"))
+                autoSelect=false;
+        }
+        if(autoSelect)
+        {
+            ADM_info("Using system language\n");
+            lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
+        }else
+        {
+            ADM_info("Language forced \n");
+        }
+        ADM_info("Initializing language %s\n",lang);
 #ifdef __APPLE__
 	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/i18n/";
                 
@@ -86,9 +102,10 @@ void loadTranslator(void)
 #else
 	QString appdir = ADM_getInstallRelativePath("share","avidemux6","i18n");
 #endif
+        QString languageFile=QString(lang);
     int nbLoaded=0;
-	nbLoaded+=loadTranslation(&qtTranslator, appdir + "qt_" + QLocale::system().name());
-	nbLoaded+=loadTranslation(&avidemuxTranslator, appdir + "avidemux_" + QLocale::system().name());
+	nbLoaded+=loadTranslation(&qtTranslator, appdir + "qt_" + languageFile);
+	nbLoaded+=loadTranslation(&avidemuxTranslator, appdir + "avidemux_" + languageFile);
 	translatorLoaded = true;
     if(!nbLoaded) // Nothing to translate..
         return;

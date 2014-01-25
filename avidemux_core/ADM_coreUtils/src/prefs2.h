@@ -50,6 +50,7 @@ struct  {
 	uint32_t postproc_type;
 	uint32_t postproc_value;
 	uint32_t downmixing;
+	char * language;
 }Default;
 uint32_t mpegsplit_autosplit;
 struct  {
