@@ -173,6 +173,7 @@ ADM_byteBuffer   byteBuffer;
     context->time_base.num=1;
     context->width=_width;
     context->height=_height;
+    context->flags |= CODEC_FLAG_QSCALE;
     r=avcodec_open(context, codec); 
     if(r<0)
     {
@@ -193,7 +194,7 @@ ADM_byteBuffer   byteBuffer;
     // Grab a temp buffer
     
     // Encode!
-      context->flags |= CODEC_FLAG_QSCALE;
+     
       frame.quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
 
       byteBuffer.setSize(_width*_height*4);
