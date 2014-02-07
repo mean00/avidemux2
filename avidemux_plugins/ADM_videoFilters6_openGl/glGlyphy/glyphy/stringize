@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if test "$#" = 0; then
+	echo "Usage: $0 DECL-SPEC FILE..."
+	exit 1
+fi
+decl="$1"
+shift
+
+echo "$decl ="
+sed '
+s/\\/\\\\/g;
+s/"/\\"/g;
+s/^/"/;
+s/$/\\n"/;
+' "$@"
+echo ";"
