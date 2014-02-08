@@ -151,7 +151,26 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
       parser->seek(tail);
       return 1;
 }
-
+/**
+ * 
+ * @return 
+ */
+static int mkvFindStartCode(uint8_t *& start, uint8_t *end)
+{
+        uint32_t last=0xffffffff;
+        while(start<end)
+        {
+            last=(last<<8)+*start;
+            if((last & 0xFFFFFF00)==0x100)
+            {
+                int r=start[0];
+                start++;
+                return r;
+            }
+            start++;
+        }
+        return -1;
+}
 /**
     \fn addVideoEntry
     \brief add an entry to the video index
@@ -215,6 +234,42 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
 
+    }else if(isMpeg12Compatible(_videostream.fccHandler))
+    {
+
+                if(rpt)
+                        memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+                parser->readBin(readBuffer+rpt,size-3);
+                uint8_t *begin=readBuffer;
+                uint8_t *end=readBuffer+size-3+rpt;
+                uint32_t flags=0;
+                while(begin<end)
+                {
+                    int code=mkvFindStartCode(begin,end);
+                    if(code==-1) 
+                    {
+                        ADM_warning("[Mpg2InMkv]No startcode found\n");
+                        break;
+                    }
+                    //printf("Startcode found = 0x%x\n",code);
+                    if(!code) // picture
+                    {
+                        int picType=begin[1]>>3;
+                        begin+=4;
+                        picType&=7;
+                        switch(picType)
+                        {
+                            case 1: ix.flags=AVI_KEY_FRAME;break;
+                            case 2: ix.flags=AVI_P_FRAME;break;
+                            case 4: ix.flags=AVI_P_FRAME;break;
+                            case 3: ix.flags=AVI_B_FRAME;break;
+                            default: ADM_warning("[Mpeg2inMkv]Bad pictype : %d\n",picType);
+                        }
+                        break;
+                    }
+                    
+                }             
+                
     }
   }
   Track->index.append(ix);
