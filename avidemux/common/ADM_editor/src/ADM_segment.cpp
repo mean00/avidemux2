@@ -345,7 +345,10 @@ int         ADM_EditorSegment::getNbSegments(void)
 bool         ADM_EditorSegment::updateStartTime(void)
 {
     int n=segments.size();
+    if(!n) return true;
+    
     uint64_t t=0;
+    t=segments[0]._startTimeUs;
     for(int i=0;i<n;i++)
     {
         segments[i]._startTimeUs=t;
