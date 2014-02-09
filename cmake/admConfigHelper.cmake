@@ -47,10 +47,10 @@ MACRO(FIND_HEADER_AND_LIB prefix headerFile)
 		ENDIF (NOT ${headerFile} STREQUAL "")
 
 		IF (_proceed AND NOT ${ARGV2} STREQUAL "")
-+                       # On Mac, search firts in port libs, else we might use an older lib coming from the system (e.g. iconv)
-+                       IF(APPLE)
-+                               FIND_LIBRARY(${prefix}_LIBRARY_DIR ${ARGV2} PATHS /opt/local/lib NO_DEFAULT_PATH) # needed for port stuff 
-+                       ENDIF(APPLE)
+                        # On Mac, search firts in port libs, else we might use an older lib coming from the system (e.g. iconv)
+                        IF(APPLE)
+                                FIND_LIBRARY(${prefix}_LIBRARY_DIR ${ARGV2} PATHS /opt/local/lib NO_DEFAULT_PATH) # needed for port stuff 
+                        ENDIF(APPLE)
 			FIND_LIBRARY(${prefix}_LIBRARY_DIR ${ARGV2})
 			MARK_AS_ADVANCED(${prefix}_LIBRARY_DIR)
 
