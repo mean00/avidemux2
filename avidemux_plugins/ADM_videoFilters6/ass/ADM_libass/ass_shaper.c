@@ -18,8 +18,6 @@
 
 #include "config.h"
 
-#include <fribidi/fribidi.h>
-
 #include "ass_shaper.h"
 #include "ass_render.h"
 #include "ass_font.h"
@@ -203,6 +201,12 @@ get_cached_metrics(struct ass_shaper_metrics_data *metrics, FT_Face face,
             return NULL;
 
         memcpy(&new_val.metrics, &face->glyph->metrics, sizeof(FT_Glyph_Metrics));
+
+        // if @font rendering is enabled and the glyph should be rotated,
+        // make cached_h_advance pick up the right advance later
+        if (metrics->vertical && glyph >= VERTICAL_LOWER_BOUND)
+            new_val.metrics.horiAdvance = new_val.metrics.vertAdvance;
+
         val = ass_cache_put(metrics->metrics_cache, &metrics->hash_key, &new_val);
     }
 
@@ -233,9 +237,6 @@ cached_h_advance(hb_font_t *font, void *font_data, hb_codepoint_t glyph,
 
     if (!metrics)
         return 0;
-
-    if (metrics_priv->vertical && glyph > VERTICAL_LOWER_BOUND)
-        return metrics->metrics.vertAdvance;
 
     return metrics->metrics.horiAdvance;
 }
@@ -391,9 +392,7 @@ static hb_font_t *get_hb_font(ASS_Shaper *shaper, GlyphInfo *info)
                 font->faces[info->face_index], NULL);
     }
 
-    // XXX: this is a rather crude hack
-    const double ft_size = 256.0;
-    ass_face_set_size(font->faces[info->face_index], ft_size);
+    ass_face_set_size(font->faces[info->face_index], info->font_size);
     update_hb_size(hb_fonts[info->face_index], font->faces[info->face_index]);
 
     // update hash key for cached metrics
@@ -406,6 +405,107 @@ static hb_font_t *get_hb_font(ASS_Shaper *shaper, GlyphInfo *info)
     metrics->hash_key.scale_y = double_to_d6(info->scale_y);
 
     return hb_fonts[info->face_index];
+}
+
+/**
+ * \brief Map script to default language.
+ *
+ * This maps a script to a language, if a script has a representative
+ * language it is typically used with. Otherwise, the invalid language
+ * is returned.
+ *
+ * The mapping is similar to Pango's pango-language.c.
+ *
+ * \param script script tag
+ * \return language tag
+ */
+static hb_language_t script_to_language(hb_script_t script)
+{
+    switch (script) {
+        // Unicode 1.1
+        case HB_SCRIPT_ARABIC: return hb_language_from_string("ar", -1); break;
+        case HB_SCRIPT_ARMENIAN: return hb_language_from_string("hy", -1); break;
+        case HB_SCRIPT_BENGALI: return hb_language_from_string("bn", -1); break;
+        case HB_SCRIPT_CANADIAN_ABORIGINAL: return hb_language_from_string("iu", -1); break;
+        case HB_SCRIPT_CHEROKEE: return hb_language_from_string("chr", -1); break;
+        case HB_SCRIPT_COPTIC: return hb_language_from_string("cop", -1); break;
+        case HB_SCRIPT_CYRILLIC: return hb_language_from_string("ru", -1); break;
+        case HB_SCRIPT_DEVANAGARI: return hb_language_from_string("hi", -1); break;
+        case HB_SCRIPT_GEORGIAN: return hb_language_from_string("ka", -1); break;
+        case HB_SCRIPT_GREEK: return hb_language_from_string("el", -1); break;
+        case HB_SCRIPT_GUJARATI: return hb_language_from_string("gu", -1); break;
+        case HB_SCRIPT_GURMUKHI: return hb_language_from_string("pa", -1); break;
+        case HB_SCRIPT_HANGUL: return hb_language_from_string("ko", -1); break;
+        case HB_SCRIPT_HEBREW: return hb_language_from_string("he", -1); break;
+        case HB_SCRIPT_HIRAGANA: return hb_language_from_string("ja", -1); break;
+        case HB_SCRIPT_KANNADA: return hb_language_from_string("kn", -1); break;
+        case HB_SCRIPT_KATAKANA: return hb_language_from_string("ja", -1); break;
+        case HB_SCRIPT_LAO: return hb_language_from_string("lo", -1); break;
+        case HB_SCRIPT_LATIN: return hb_language_from_string("en", -1); break;
+        case HB_SCRIPT_MALAYALAM: return hb_language_from_string("ml", -1); break;
+        case HB_SCRIPT_MONGOLIAN: return hb_language_from_string("mn", -1); break;
+        case HB_SCRIPT_ORIYA: return hb_language_from_string("or", -1); break;
+        case HB_SCRIPT_SYRIAC: return hb_language_from_string("syr", -1); break;
+        case HB_SCRIPT_TAMIL: return hb_language_from_string("ta", -1); break;
+        case HB_SCRIPT_TELUGU: return hb_language_from_string("te", -1); break;
+        case HB_SCRIPT_THAI: return hb_language_from_string("th", -1); break;
+
+        // Unicode 2.0
+        case HB_SCRIPT_TIBETAN: return hb_language_from_string("bo", -1); break;
+
+        // Unicode 3.0
+        case HB_SCRIPT_ETHIOPIC: return hb_language_from_string("am", -1); break;
+        case HB_SCRIPT_KHMER: return hb_language_from_string("km", -1); break;
+        case HB_SCRIPT_MYANMAR: return hb_language_from_string("my", -1); break;
+        case HB_SCRIPT_SINHALA: return hb_language_from_string("si", -1); break;
+        case HB_SCRIPT_THAANA: return hb_language_from_string("dv", -1); break;
+
+        // Unicode 3.2
+        case HB_SCRIPT_BUHID: return hb_language_from_string("bku", -1); break;
+        case HB_SCRIPT_HANUNOO: return hb_language_from_string("hnn", -1); break;
+        case HB_SCRIPT_TAGALOG: return hb_language_from_string("tl", -1); break;
+        case HB_SCRIPT_TAGBANWA: return hb_language_from_string("tbw", -1); break;
+
+        // Unicode 4.0
+        case HB_SCRIPT_UGARITIC: return hb_language_from_string("uga", -1); break;
+
+        // Unicode 4.1
+        case HB_SCRIPT_BUGINESE: return hb_language_from_string("bug", -1); break;
+        case HB_SCRIPT_OLD_PERSIAN: return hb_language_from_string("peo", -1); break;
+        case HB_SCRIPT_SYLOTI_NAGRI: return hb_language_from_string("syl", -1); break;
+
+        // Unicode 5.0
+        case HB_SCRIPT_NKO: return hb_language_from_string("nko", -1); break;
+
+        // no representative language exists
+        default: return HB_LANGUAGE_INVALID; break;
+    }
+}
+
+/**
+ * \brief Determine language to be used for shaping a run.
+ *
+ * \param shaper shaper instance
+ * \param script script tag associated with run
+ * \return language tag
+ */
+static hb_language_t
+hb_shaper_get_run_language(ASS_Shaper *shaper, hb_script_t script)
+{
+    hb_language_t lang;
+
+    // override set, use it
+    if (shaper->language != HB_LANGUAGE_INVALID)
+        return shaper->language;
+
+    // get default language for given script
+    lang = script_to_language(script);
+
+    // no dice, use system default
+    if (lang == HB_LANGUAGE_INVALID)
+        lang = hb_language_get_default();
+
+    return lang;
 }
 
 /**
@@ -423,13 +523,13 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
         hb_buffer_t *buf;
         hb_font_t *font;
     } runs[MAX_RUNS];
-    const double ft_size = 256.0;
 
     for (i = 0; i < len && run < MAX_RUNS; i++, run++) {
         // get length and level of the current run
         int k = i;
         int level = glyphs[i].shape_run_id;
         int direction = shaper->emblevels[k] % 2;
+        hb_script_t script = glyphs[i].script;
         while (i < (len - 1) && level == glyphs[i+1].shape_run_id)
             i++;
         runs[run].offset = k;
@@ -440,7 +540,9 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
         hb_buffer_pre_allocate(runs[run].buf, i - k + 1);
         hb_buffer_set_direction(runs[run].buf, direction ? HB_DIRECTION_RTL :
                 HB_DIRECTION_LTR);
-        hb_buffer_set_language(runs[run].buf, shaper->language);
+        hb_buffer_set_language(runs[run].buf,
+                hb_shaper_get_run_language(shaper, script));
+        hb_buffer_set_script(runs[run].buf, script);
         hb_buffer_add_utf32(runs[run].buf, shaper->event_text + k, i - k + 1,
                 0, i - k + 1);
         hb_shape(runs[run].font, runs[run].buf, shaper->features,
@@ -476,10 +578,10 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
             // set position and advance
             info->skip = 0;
             info->glyph_index = glyph_info[j].codepoint;
-            info->offset.x    = pos[j].x_offset * info->scale_x * (info->font_size / ft_size);
-            info->offset.y    = -pos[j].y_offset * info->scale_y * (info->font_size / ft_size);
-            info->advance.x   = pos[j].x_advance * info->scale_x * (info->font_size / ft_size);
-            info->advance.y   = -pos[j].y_advance * info->scale_y * (info->font_size / ft_size);
+            info->offset.x    = pos[j].x_offset * info->scale_x;
+            info->offset.y    = -pos[j].y_offset * info->scale_y;
+            info->advance.x   = pos[j].x_advance * info->scale_x;
+            info->advance.y   = -pos[j].y_advance * info->scale_y;
 
             // accumulate advance in the root glyph
             root->cluster_advance.x += info->advance.x;
@@ -492,6 +594,56 @@ static void shape_harfbuzz(ASS_Shaper *shaper, GlyphInfo *glyphs, size_t len)
         hb_buffer_destroy(runs[i].buf);
     }
 
+}
+
+/**
+ * \brief Determine script property of all characters. Characters of script
+ * common and inherited get their script from their context.
+ *
+ */
+void ass_shaper_determine_script(ASS_Shaper *shaper, GlyphInfo *glyphs,
+                                  size_t len)
+{
+    int i;
+    int backwards_scan = 0;
+    hb_unicode_funcs_t *ufuncs = hb_unicode_funcs_get_default();
+    hb_script_t last_script = HB_SCRIPT_UNKNOWN;
+
+    // determine script (forward scan)
+    for (i = 0; i < len; i++) {
+        GlyphInfo *info = glyphs + i;
+        info->script = hb_unicode_script(ufuncs, info->symbol);
+
+        // common/inherit codepoints inherit script from context
+        if (info->script == HB_SCRIPT_COMMON ||
+                info->script == HB_SCRIPT_INHERITED) {
+            // unknown is not a valid context
+            if (last_script != HB_SCRIPT_UNKNOWN)
+                info->script = last_script;
+            else
+                // do a backwards scan to check if next codepoint
+                // contains a valid script for context
+                backwards_scan = 1;
+        } else {
+            last_script = info->script;
+        }
+    }
+
+    // determine script (backwards scan, if needed)
+    last_script = HB_SCRIPT_UNKNOWN;
+    for (i = len - 1; i >= 0 && backwards_scan; i--) {
+        GlyphInfo *info = glyphs + i;
+
+        // common/inherit codepoints inherit script from context
+        if (info->script == HB_SCRIPT_COMMON ||
+                info->script == HB_SCRIPT_INHERITED) {
+            // unknown script is not a valid context
+            if (last_script != HB_SCRIPT_UNKNOWN)
+                info->script = last_script;
+        } else {
+            last_script = info->script;
+        }
+    }
 }
 #endif
 
@@ -543,6 +695,11 @@ void ass_shaper_find_runs(ASS_Shaper *shaper, ASS_Renderer *render_priv,
     int i;
     int shape_run = 0;
 
+#ifdef CONFIG_HARFBUZZ
+    ass_shaper_determine_script(shaper, glyphs, len);
+#endif
+
+    // find appropriate fonts for the shape runs
     for (i = 0; i < len; i++) {
         GlyphInfo *last = glyphs + i - 1;
         GlyphInfo *info = glyphs + i;
@@ -555,11 +712,13 @@ void ass_shaper_find_runs(ASS_Shaper *shaper, ASS_Renderer *render_priv,
         // shape runs share the same font face and size
         if (i > 0 && (last->font != info->font ||
                     last->font_size != info->font_size ||
-                    last->face_index != info->face_index))
+                    last->scale_x != info->scale_x ||
+                    last->scale_y != info->scale_y ||
+                    last->face_index != info->face_index ||
+                    last->script != info->script))
             shape_run++;
         info->shape_run_id = shape_run;
     }
-
 }
 
 /**
@@ -579,7 +738,14 @@ void ass_shaper_set_base_direction(ASS_Shaper *shaper, FriBidiParType dir)
 void ass_shaper_set_language(ASS_Shaper *shaper, const char *code)
 {
 #ifdef CONFIG_HARFBUZZ
-    shaper->language = hb_language_from_string(code, -1);
+    hb_language_t lang;
+
+    if (code)
+        lang = hb_language_from_string(code, -1);
+    else
+        lang = HB_LANGUAGE_INVALID;
+
+    shaper->language = lang;
 #endif
 }
 
@@ -715,10 +881,9 @@ FriBidiStrIndex *ass_shaper_reorder(ASS_Shaper *shaper, TextInfo *text_info)
     // Create reorder map line-by-line
     for (i = 0; i < text_info->n_lines; i++) {
         LineInfo *line = text_info->lines + i;
-        int level;
         FriBidiParType dir = FRIBIDI_PAR_ON;
 
-        level = fribidi_reorder_line(0,
+        fribidi_reorder_line(0,
                 shaper->ctypes + line->offset, line->len, 0, dir,
                 shaper->emblevels + line->offset, NULL,
                 shaper->cmap + line->offset);

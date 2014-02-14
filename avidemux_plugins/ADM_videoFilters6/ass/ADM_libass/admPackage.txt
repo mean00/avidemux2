@@ -1,5 +1,5 @@
 Name    : libass
 URL     : https://code.google.com/p/libass/
 License : GPL >=2
-Version : 0.10.1
+Version : 0.10.2
 

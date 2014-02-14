@@ -240,6 +240,13 @@ static int numpad2align(int val)
 		target->name = strdup(token); \
 		ass_msg(track->library, MSGL_DBG2, "%s = %s", #name, token);
 
+#define STARREDSTRVAL(name) \
+    } else if (strcasecmp(tname, #name) == 0) { \
+        if (target->name != NULL) free(target->name); \
+        while (*token == '*') ++token; \
+        target->name = strdup(token); \
+        ass_msg(track->library, MSGL_DBG2, "%s = %s", #name, token);
+
 #define COLORVAL(name) \
 	} else if (strcasecmp(tname, #name) == 0) { \
 		target->name = string2color(track->library, token); \
@@ -387,6 +394,8 @@ void ass_process_force_style(ASS_Track *track)
             track->ScaledBorderAndShadow = parse_bool(token);
         else if (!strcasecmp(*fs, "Kerning"))
             track->Kerning = parse_bool(token);
+        else if (!strcasecmp(*fs, "YCbCr Matrix"))
+            track->YCbCrMatrix = parse_ycbcr_matrix(token);
 
         dt = strrchr(*fs, '.');
         if (dt) {
@@ -424,6 +433,7 @@ void ass_process_force_style(ASS_Track *track)
                     FPVAL(ScaleY)
                     FPVAL(Outline)
                     FPVAL(Shadow)
+                    FPVAL(Blur)
                 }
             }
         }
@@ -495,10 +505,9 @@ static int process_style(ASS_Track *track, char *str)
         NEXT(p, token);
 
         if (0) {                // cool ;)
-            STRVAL(Name)
-            if ((strcmp(target->Name, "Default") == 0)
-                || (strcmp(target->Name, "*Default") == 0))
-            track->default_style = sid;
+            STARREDSTRVAL(Name)
+            if (strcmp(target->Name, "Default") == 0)
+                track->default_style = sid;
             STRVAL(FontName)
             COLORVAL(PrimaryColour)
             COLORVAL(SecondaryColour)
@@ -514,7 +523,7 @@ static int process_style(ASS_Track *track, char *str)
             INTVAL(Underline)
             INTVAL(StrikeOut)
             FPVAL(Spacing)
-            INTVAL(Angle)
+            FPVAL(Angle)
             INTVAL(BorderStyle)
             INTVAL(Alignment)
             if (track->track_type == TRACK_TYPE_ASS)
@@ -573,6 +582,8 @@ static int process_info_line(ASS_Track *track, char *str)
         track->ScaledBorderAndShadow = parse_bool(str + 22);
     } else if (!strncmp(str, "Kerning:", 8)) {
         track->Kerning = parse_bool(str + 8);
+    } else if (!strncmp(str, "YCbCr Matrix:", 13)) {
+        track->YCbCrMatrix = parse_ycbcr_matrix(str + 13);
     } else if (!strncmp(str, "Language:", 9)) {
         char *p = str + 9;
         while (*p && isspace(*p)) p++;
@@ -587,10 +598,10 @@ static void event_format_fallback(ASS_Track *track)
 {
     track->parser_priv->state = PST_EVENTS;
     if (track->track_type == TRACK_TYPE_SSA)
-        track->event_format = strdup("Format: Marked, Start, End, Style, "
+        track->event_format = strdup("Marked, Start, End, Style, "
             "Name, MarginL, MarginR, MarginV, Effect, Text");
     else
-        track->event_format = strdup("Format: Layer, Start, End, Style, "
+        track->event_format = strdup("Layer, Start, End, Style, "
             "Actor, MarginL, MarginR, MarginV, Effect, Text");
     ass_msg(track->library, MSGL_V,
             "No event format found, using fallback");
@@ -957,6 +968,11 @@ static char *sub_recode(ASS_Library *library, char *data, size_t size,
             ass_msg(library, MSGL_V, "Opened iconv descriptor");
         } else
             ass_msg(library, MSGL_ERR, "Error opening iconv descriptor");
+#ifdef CONFIG_ENCA
+        if (cp_tmp != codepage) {
+            free((void*)cp_tmp);
+        }
+#endif
     }
 
     {
@@ -988,7 +1004,9 @@ static char *sub_recode(ASS_Library *library, char *data, size_t size,
                     oleft += size;
                 } else {
                     ass_msg(library, MSGL_WARN, "Error recoding file");
-                    return NULL;
+                    free(outbuf);
+                    outbuf = NULL;
+                    goto out;
                 }
             } else if (clear)
                 break;
@@ -996,6 +1014,7 @@ static char *sub_recode(ASS_Library *library, char *data, size_t size,
         outbuf[osize - oleft - 1] = 0;
     }
 
+out:
     if (icdsc != (iconv_t) (-1)) {
         (void) iconv_close(icdsc);
         icdsc = (iconv_t) (-1);
@@ -1103,7 +1122,7 @@ ASS_Track *ass_read_memory(ASS_Library *library, char *buf,
                            size_t bufsize, char *codepage)
 {
     ASS_Track *track;
-    int need_free = 0;
+    int copied = 0;
 
     if (!buf)
         return 0;
@@ -1114,12 +1133,19 @@ ASS_Track *ass_read_memory(ASS_Library *library, char *buf,
         if (!buf)
             return 0;
         else
-            need_free = 1;
+            copied = 1;
     }
 #endif
+    if (!copied) {
+        char *newbuf = malloc(bufsize + 1);
+        if (!newbuf)
+            return 0;
+        memcpy(newbuf, buf, bufsize);
+        newbuf[bufsize] = '\0';
+        buf = newbuf;
+    }
     track = parse_memory(library, buf);
-    if (need_free)
-        free(buf);
+    free(buf);
     if (!track)
         return 0;
 
@@ -1216,33 +1242,45 @@ int ass_read_styles(ASS_Track *track, char *fname, char *codepage)
 long long ass_step_sub(ASS_Track *track, long long now, int movement)
 {
     int i;
+    ASS_Event *best = NULL;
+    long long target = now;
+    int direction = movement > 0 ? 1 : -1;
 
     if (movement == 0)
         return 0;
     if (track->n_events == 0)
         return 0;
 
-    if (movement < 0)
-        for (i = 0;
-             (i < track->n_events)
-             &&
-             ((long long) (track->events[i].Start +
-                           track->events[i].Duration) <= now); ++i) {
-    } else
-        for (i = track->n_events - 1;
-             (i >= 0) && ((long long) (track->events[i].Start) > now);
-             --i) {
+    while (movement) {
+        ASS_Event *closest = NULL;
+        long long closest_time = now;
+        for (i = 0; i < track->n_events; i++) {
+            if (direction < 0) {
+                long long end =
+                    track->events[i].Start + track->events[i].Duration;
+                if (end < target) {
+                    if (!closest || end > closest_time) {
+                        closest = &track->events[i];
+                        closest_time = end;
+                    }
+                }
+            } else {
+                long long start = track->events[i].Start;
+                if (start > target) {
+                    if (!closest || start < closest_time) {
+                        closest = &track->events[i];
+                        closest_time = start;
+                    }
+                }
+            }
         }
+        target = closest_time + direction;
+        movement -= direction;
+        if (closest)
+            best = closest;
+    }
 
-    // -1 and n_events are ok
-    assert(i >= -1);
-    assert(i <= track->n_events);
-    i += movement;
-    if (i < 0)
-        i = 0;
-    if (i >= track->n_events)
-        i = track->n_events - 1;
-    return ((long long) track->events[i].Start) - now;
+    return best ? best->Start - now : 0;
 }
 
 ASS_Track *ass_new_track(ASS_Library *library)

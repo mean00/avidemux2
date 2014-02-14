@@ -241,7 +241,7 @@ static char *parse_vector_clip(ASS_Renderer *render_priv, char *p)
     drawing->scale = scale;
     drawing->scale_x = render_priv->font_scale_x * render_priv->font_scale;
     drawing->scale_y = render_priv->font_scale;
-    while (*p != ')' && *p != '}' && p != 0)
+    while (*p != ')' && *p != '}' && *p != 0)
         ass_drawing_add_char(drawing, *p++);
     skipopt(')');
 
@@ -311,7 +311,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
         int x0, y0, x1, y1;
         int res = 1;
         char *start = p;
-        skipopt('(');
+        skip('(');
         res &= mystrtoi(&p, &x0);
         skipopt(',');
         res &= mystrtoi(&p, &y0);
@@ -418,6 +418,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
         mystrtod(&p, &x2);
         skip(',');
         mystrtod(&p, &y2);
+        t1 = t2 = 0;
         if (*p == ',') {
             skip(',');
             mystrtoll(&p, &t1);
@@ -427,13 +428,20 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
                    "movement6: (%f, %f) -> (%f, %f), (%" PRId64 " .. %"
                    PRId64 ")\n", x1, y1, x2, y2, (int64_t) t1,
                    (int64_t) t2);
-        } else {
+            // VSFilter
+            if (t1 > t2) {
+                double tmp = t2;
+                t2 = t1;
+                t1 = tmp;
+            }
+        }
+        if (t1 <= 0 && t2 <= 0) {
             t1 = 0;
             t2 = render_priv->state.event->Duration;
             ass_msg(render_priv->library, MSGL_DBG2,
                    "movement: (%f, %f) -> (%f, %f)", x1, y1, x2, y2);
         }
-        skip(')');
+        skipopt(')');
         delta_t = t2 - t1;
         t = render_priv->time - render_priv->state.event->Start;
         if (t < t1)
@@ -542,7 +550,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
         mystrtod(&p, &v1);
         skip(',');
         mystrtod(&p, &v2);
-        skip(')');
+        skipopt(')');
         ass_msg(render_priv->library, MSGL_DBG2, "pos(%f, %f)", v1, v2);
         if (render_priv->state.evt_type == EVENT_POSITIONED) {
             ass_msg(render_priv->library, MSGL_V, "Subtitle has a new \\pos "
@@ -586,7 +594,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
             skip(',');
             mystrtoll(&p, &t4);
         }
-        skip(')');
+        skipopt(')');
         if ((render_priv->state.parsed_tags & PARSED_FADE) == 0) {
             render_priv->state.fade =
                 interpolate_alpha(render_priv->time -
@@ -600,7 +608,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
         mystrtoi(&p, &v1);
         skip(',');
         mystrtoi(&p, &v2);
-        skip(')');
+        skipopt(')');
         ass_msg(render_priv->library, MSGL_DBG2, "org(%d, %d)", v1, v2);
         if (!render_priv->state.have_origin) {
             render_priv->state.org_x = v1;
@@ -617,9 +625,8 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
         double k;
         skip('(');
         for (cnt = 0; cnt < 3; ++cnt) {
-            if (*p == '\\')
+            if (!mystrtod(&p, &v[cnt]))
                 break;
-            mystrtod(&p, &v[cnt]);
             skip(',');
         }
         if (cnt == 3) {
@@ -654,15 +661,15 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
             assert(delta_t != 0.);
             k = pow(((double) (t - t1)) / delta_t, v3);
         }
-        while (*p == '\\')
+        while (*p != ')' && *p != '}' && *p != '\0')
             p = parse_tag(render_priv, p, k);   // maybe k*pwr ? no, specs forbid nested \t's
         skip_to(')');           // in case there is some unknown tag or a comment
-        skip(')');
+        skipopt(')');
     } else if (mystrcmp(&p, "clip")) {
         char *start = p;
         int x0, y0, x1, y1;
         int res = 1;
-        skipopt('(');
+        skip('(');
         res &= mystrtoi(&p, &x0);
         skipopt(',');
         res &= mystrtoi(&p, &y0);
@@ -749,7 +756,7 @@ char *parse_tag(ASS_Renderer *render_priv, char *p, double pwr)
             strncpy(style, start, p - start);
             style[p - start] = '\0';
             reset_render_context(render_priv,
-                    render_priv->track->styles + lookup_style(render_priv->track, style));
+                    lookup_style_strict(render_priv->track, style));
             free(style);
         } else
             reset_render_context(render_priv, NULL);

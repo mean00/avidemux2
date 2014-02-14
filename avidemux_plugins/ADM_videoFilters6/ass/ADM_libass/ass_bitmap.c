@@ -456,7 +456,7 @@ int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
                        FT_Library ftlib, FT_Outline *outline, FT_Outline *border,
                        Bitmap **bm_g, Bitmap **bm_o, Bitmap **bm_s,
                        int be, double blur_radius, FT_Vector shadow_offset,
-                       int border_style)
+                       int border_style, int border_visible)
 {
     blur_radius *= 2;
     int bbord = be > 0 ? sqrt(2 * be) : 0;
@@ -485,7 +485,7 @@ int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
     while (be--) {
         if (*bm_o)
             be_blur(*bm_o);
-        else
+        if (!*bm_o || border_style == 3)
             be_blur(*bm_g);
     }
 
@@ -493,7 +493,7 @@ int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
     if (blur_radius > 0.0) {
         if (*bm_o)
             resize_tmp(priv_blur, (*bm_o)->w, (*bm_o)->h);
-        else
+        if (!*bm_o || border_style == 3)
             resize_tmp(priv_blur, (*bm_g)->w, (*bm_g)->h);
         generate_tables(priv_blur, blur_radius);
         if (*bm_o)
@@ -501,7 +501,7 @@ int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
                            (*bm_o)->w, (*bm_o)->h, (*bm_o)->stride,
                            (int *) priv_blur->gt2, priv_blur->g_r,
                            priv_blur->g_w);
-        else
+        if (!*bm_o || border_style == 3)
             ass_gauss_blur((*bm_g)->buffer, priv_blur->tmp,
                            (*bm_g)->w, (*bm_g)->h, (*bm_g)->stride,
                            (int *) priv_blur->gt2, priv_blur->g_r,
@@ -512,8 +512,11 @@ int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
     if (*bm_o && border_style != 3) {
         *bm_s = copy_bitmap(*bm_o);
         fix_outline(*bm_g, *bm_o);
-    } else if (*bm_o) {
+    } else if (*bm_o && border_visible) {
         *bm_s = copy_bitmap(*bm_o);
+    } else if (*bm_o) {
+        *bm_s = *bm_o;
+        *bm_o = 0;
     } else
         *bm_s = copy_bitmap(*bm_g);
 

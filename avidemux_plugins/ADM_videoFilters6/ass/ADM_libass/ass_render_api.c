@@ -43,6 +43,13 @@ static void ass_reconfigure(ASS_Renderer *priv)
     priv->orig_height_nocrop =
         settings->frame_height - FFMAX(settings->top_margin, 0) -
         FFMAX(settings->bottom_margin, 0);
+    if (settings->storage_height) {
+        priv->storage_width = settings->storage_width;
+        priv->storage_height = settings->storage_height;
+    } else {
+        priv->storage_width = priv->orig_width;
+        priv->storage_height = priv->orig_height;
+    }
 }
 
 void ass_set_frame_size(ASS_Renderer *priv, int w, int h)
@@ -50,10 +57,16 @@ void ass_set_frame_size(ASS_Renderer *priv, int w, int h)
     if (priv->settings.frame_width != w || priv->settings.frame_height != h) {
         priv->settings.frame_width = w;
         priv->settings.frame_height = h;
-        if (priv->settings.aspect == 0.) {
-            priv->settings.aspect = ((double) w) / h;
-            priv->settings.storage_aspect = ((double) w) / h;
-        }
+        ass_reconfigure(priv);
+    }
+}
+
+void ass_set_storage_size(ASS_Renderer *priv, int w, int h)
+{
+    if (priv->settings.storage_width != w ||
+        priv->settings.storage_height != h) {
+        priv->settings.storage_width = w;
+        priv->settings.storage_height = h;
         ass_reconfigure(priv);
     }
 }
@@ -88,9 +101,13 @@ void ass_set_use_margins(ASS_Renderer *priv, int use)
 
 void ass_set_aspect_ratio(ASS_Renderer *priv, double dar, double sar)
 {
-    if (priv->settings.aspect != dar || priv->settings.storage_aspect != sar) {
-        priv->settings.aspect = dar;
-        priv->settings.storage_aspect = sar;
+    ass_set_pixel_aspect(priv, dar / sar);
+}
+
+void ass_set_pixel_aspect(ASS_Renderer *priv, double par)
+{
+    if (priv->settings.par != par) {
+        priv->settings.par = par;
         ass_reconfigure(priv);
     }
 }
