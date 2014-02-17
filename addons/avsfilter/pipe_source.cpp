@@ -27,8 +27,11 @@
 #include "cdebug.h"
 
 bool pipe_test(int hr, int hw);
+//bool use_adv_protocol = false;
+static int refCounter = 0;
+
 int h_read = -1, h_write = -1;
-uint32_t frame_sz = 0;
+uint32_t frame_sz = 0, frame_sz_pitch = 0;
 unsigned char *frame_data = NULL;
 
 #define WAIT_BEFORE_TRY 500
@@ -65,11 +68,12 @@ extern "C" __declspec(dllexport) bool __stdcall SetPipeName(const char *piper,
     }
     if (sz1 != sizeof(uint32_t))
     {
-      DEBUG_PRINTF("pipe_source : cannot read test data - read %d\n", sz1);
+      DEBUG_PRINTF_RED("pipe_source : cannot read test data - read %d\n", sz1);
       fflush(stdout);
       close (h_read);
       return false;
     }
+
     if (cb_send_data(hw, (unsigned char*)&test_r1, sz1))
     {
       h_write = hw;
@@ -78,7 +82,7 @@ extern "C" __declspec(dllexport) bool __stdcall SetPipeName(const char *piper,
     }
     else
     {
-      DEBUG_PRINTF("pipe_source : cannot write test data\n");
+      DEBUG_PRINTF_RED("pipe_source : cannot write test data\n");
       close (h_read);
     }
   }
@@ -104,6 +108,8 @@ PipeSource::PipeSource (IScriptEnvironment* env) {
 
   PIPE_MSG_HEADER msg;
   ADV_Info ai;
+
+  refCounter++;
 
   vi.width = 720;
   vi.height = 576;
@@ -134,68 +140,128 @@ PipeSource::PipeSource (IScriptEnvironment* env) {
         vi.num_frames = ai.nb_frames + ai.orgFrame;
         vi.fps_numerator = ai.fps1000;
         vi.fps_denominator = 1000;
+        if (ai.encoding == MAGIC_ADV_PROTOCOL_VAL)
+        {
+         PVideoFrame dst;
+         PIPE_MSG_HEADER msg = {SEND_PITCH_DATA_PIPE_SOURCE, sizeof(PITCH_DATA)};
+         dst = env->NewVideoFrame(vi);
+
+         PITCH_DATA pd = {dst->GetPitch(PLANAR_Y), dst->GetPitch(PLANAR_U), dst->GetPitch(PLANAR_V)};
+         // send SEND_PITCH_DATA to avidemux2/avsfilter
+         if (!pcb_send_data(h_write, (unsigned char*)&msg, sizeof(msg)) ||
+             !pcb_send_data(h_write, (unsigned char*)&pd, sizeof(pd)))
+          DEBUG_PRINTF_RED("pipe_source : error send SEND_PITCH_DATA_PIPE_SOURCE to avsfilter\n");
+         else
+          DEBUG_PRINTF("pipe_source : send SEND_PITCH_DATA_PIPE_SOURCE ok\n");
+
+         fflush(stdout);
+
+         //use_adv_protocol = true;
+         frame_sz_pitch = dst->GetPitch(PLANAR_Y) * dst->GetHeight(PLANAR_Y) + dst->GetPitch(PLANAR_U) * dst->GetHeight(PLANAR_U) + dst->GetPitch(PLANAR_V) * dst->GetHeight(PLANAR_V);
+         DEBUG_PRINTF("pipe_source : use advanced protocol (%d)\n", frame_sz_pitch);
+         delete dst;
+        }
         frame_sz = (vi.width * vi.height * 3) >> 1;
-        frame_data = (unsigned char*)malloc(frame_sz);
+        frame_data = (unsigned char*)malloc(frame_sz_pitch > frame_sz ? frame_sz_pitch : frame_sz);
       }
       else
-        DEBUG_PRINTF("pipe_source : error receive_data with info\n");
+        DEBUG_PRINTF_RED("pipe_source : error receive_data with info\n");
     else
-      DEBUG_PRINTF("pipe_source : receive_data return wrong header\n");
+      DEBUG_PRINTF_RED("pipe_source : receive_data return wrong header\n");
   else
-    DEBUG_PRINTF("pipe_source : error receive_data with header\n");
+    DEBUG_PRINTF_RED("pipe_source : error receive_data with header\n");
 }
 
 
 PipeSource::~PipeSource() {
   DEBUG_PRINTF("Delete PipeSource\n");
   fflush(stdout);
+  refCounter--;
+  if (!refCounter && frame_data) free(frame_data);
 }
 
 PVideoFrame __stdcall PipeSource::GetFrame(int n, IScriptEnvironment* env) {
 
-  PVideoFrame dst;
-  dst = env->NewVideoFrame(vi);
+ PVideoFrame dst;
+ dst = env->NewVideoFrame(vi);
 
   PIPE_MSG_HEADER msg = {GET_FRAME, sizeof(FRAME_DATA)};
   FRAME_DATA fd = {n};
 
   DEBUG_PRINTF("pipe_source : invoke GetFrame %d [num_frames %d]\n", n, vi.num_frames);
-  DEBUG_PRINTF("pipe_source : frame pitch %d\n", dst->GetPitch());
+  DEBUG_PRINTF("pipe_source : frame pitch YUV %d %d %d\n", dst->GetPitch(PLANAR_Y), dst->GetPitch(PLANAR_U), dst->GetPitch(PLANAR_V));
   fflush(stdout);
 
   // send GET_FRAME to avidemux2/avsfilter
   if (!pcb_send_data(h_write, (unsigned char*)&msg, sizeof(msg)) ||
       !pcb_send_data(h_write, (unsigned char*)&fd, sizeof(fd)))
   {
-    DEBUG_PRINTF("pipe_source : error send GET_FRAME to avsfilter\n", n);
+    DEBUG_PRINTF_RED("pipe_source : error send GET_FRAME to avsfilter\n", n);
     fflush(stdout);
     return dst;
   }
 
   DEBUG_PRINTF("pipe_source : send GET_FRAME ok\n");
   fflush(stdout);
-  
+
+#define CUR_FRAME_SIZE (msg.avs_cmd == PUT_FRAME ? frame_sz : frame_sz_pitch)
+
   int test_sz = 0;
   // receive frame from avsfilter
   if (!receive_cmd(h_read, &msg) ||
-      msg.avs_cmd != PUT_FRAME ||
+      (msg.avs_cmd != PUT_FRAME && msg.avs_cmd != PUT_FRAME_WITH_PITCH) ||
       ppread(h_read, &fd, sizeof(fd)) != sizeof(fd) ||
-      fd.frame != n || (frame_sz + sizeof(fd)) != msg.sz ||
-      (test_sz = ppread(h_read, frame_data, frame_sz)) != frame_sz)
+      fd.frame != n || (CUR_FRAME_SIZE + sizeof(fd)) != msg.sz)
   {
-    DEBUG_PRINTF("pipe_source : error get frame, par [code %d sz %d frame %d] chk par [frame_sz %d read_sz %d]\n",
-           msg.avs_cmd, msg.sz, fd.frame, frame_sz, test_sz);
+    DEBUG_PRINTF_RED("pipe_source : error get frame, par [code %d sz %d frame %d] chk par [frame_sz %d read_sz %d]\n",
+                     msg.avs_cmd, msg.sz, fd.frame, frame_sz, test_sz);
     fflush(stdout);
     return dst;
   }
 
-  // copy Y, U and V with pitch
-  env->BitBlt(dst->GetWritePtr(), dst->GetPitch(), frame_data, vi.width, vi.width, vi.height);
-  env->BitBlt(dst->GetWritePtr(PLANAR_V), dst->GetPitch(PLANAR_V),
-              frame_data + (vi.width * vi.height), vi.width / 2, vi.width / 2, vi.height / 2);
-  env->BitBlt(dst->GetWritePtr(PLANAR_U), dst->GetPitch(PLANAR_U),
-              frame_data + (vi.width * vi.height) + ((vi.width * vi.height) >> 2),
-              vi.width / 2, vi.width / 2, vi.height / 2);
+  if (msg.avs_cmd == PUT_FRAME)
+  {
+   if ((test_sz = ppread(h_read, frame_data, CUR_FRAME_SIZE)) != CUR_FRAME_SIZE)
+   {
+    DEBUG_PRINTF_RED("pipe_source : error get frame data, par [frame %d] chk par [frame_sz %d read_sz %d]\n",
+                 fd.frame, frame_sz, test_sz);
+    fflush(stdout);
+    return dst;
+   }
+
+   // copy Y, U and V with pitch
+   env->BitBlt(dst->GetWritePtr(), dst->GetPitch(), frame_data, vi.width, vi.width, vi.height);
+   env->BitBlt(dst->GetWritePtr(PLANAR_V), dst->GetPitch(PLANAR_V),
+               frame_data + (vi.width * vi.height), vi.width / 2, vi.width / 2, vi.height / 2);
+   env->BitBlt(dst->GetWritePtr(PLANAR_U), dst->GetPitch(PLANAR_U),
+               frame_data + (vi.width * vi.height) + ((vi.width * vi.height) >> 2),
+               vi.width / 2, vi.width / 2, vi.height / 2);
+  }
+  else
+  {
+   uint32_t pitch_data_sizeY = dst->GetPitch(PLANAR_Y) * dst->GetHeight(PLANAR_Y);
+   uint32_t pitch_data_sizeU = dst->GetPitch(PLANAR_U) * dst->GetHeight(PLANAR_U);
+   uint32_t pitch_data_sizeV = dst->GetPitch(PLANAR_V) * dst->GetHeight(PLANAR_V);
+   uint32_t pitch_data_size = pitch_data_sizeY + pitch_data_sizeU + pitch_data_sizeV;
+
+/*   DEBUG_PRINTF("pipe_source : PUT_FRAME_WITH_PITCH (%d) Pitch:Height %d:%d\n", CUR_FRAME_SIZE, dst->GetPitch(PLANAR_Y), dst->GetHeight(PLANAR_Y));*/
+   if (msg.sz != (pitch_data_size + sizeof(FRAME_DATA)))
+   {
+    DEBUG_PRINTF_RED("pipe_source : error size of PITCH frame data %d != %d + %d [msg.sz != (pitch_data_size + sizeof(FRAME_DATA))] \n",
+                     msg.sz, pitch_data_size, sizeof(FRAME_DATA));
+    fflush(stdout);
+    return dst;
+   }
+
+   if (ppread(h_read, dst->GetWritePtr(PLANAR_Y), pitch_data_sizeY) != pitch_data_sizeY ||
+       ppread(h_read, dst->GetWritePtr(PLANAR_U), pitch_data_sizeU) != pitch_data_sizeU ||
+       ppread(h_read, dst->GetWritePtr(PLANAR_V), pitch_data_sizeV) != pitch_data_sizeV)
+   {
+    DEBUG_PRINTF_RED("pipe_source : error get PITCH frame data %d %d %d\n", pitch_data_sizeY, pitch_data_sizeU, pitch_data_sizeV);
+    fflush(stdout);
+    return dst;
+   }
+  }
 
   DEBUG_PRINTF("pipe_source : return frame %d data ok\n", fd.frame);
   fflush(stdout);

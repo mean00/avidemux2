@@ -19,9 +19,12 @@
 #define __CDEBUG__
 #ifdef DEBUGMSG
 extern "C" void dbgprintf (const char *format, ...);
+extern "C" void dbgprintf_RED (const char *format, ...);
 extern "C" void setdbglog (const char *fname);
 #define DEBUG_PRINTF dbgprintf
+#define DEBUG_PRINTF_RED dbgprintf_RED
 #else
+#define DEBUG_PRINTF_RED
 #define DEBUG_PRINTF
 #endif
 

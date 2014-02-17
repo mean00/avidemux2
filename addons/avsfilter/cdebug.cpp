@@ -21,6 +21,10 @@
 #include <stdarg.h>
 #include <time.h>
 FILE *dbglog = stdout;
+
+#define RED_TEXT "\033[31m"
+#define END_TEXT "\033[0m"
+
 extern "C" void setdbglog (const char *fname)
 {
   FILE *out;
@@ -28,16 +32,32 @@ extern "C" void setdbglog (const char *fname)
     dbglog = out;
 }
 
-extern "C" void dbgprintf (const char *format, ...)
+extern "C" void dbgprintf_p (const char *format, va_list args)
 {
   time_t t = time(NULL);
   struct tm *tmp = localtime(&t);
+  if (strcmp(format,"\n"))
+   fprintf (dbglog,"%02d:%02d:%02d ", tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
+  if (dbglog == stdout) vprintf (format, args);
+  else vfprintf (dbglog, format, args);
+  fflush(dbglog);
+}
+
+extern "C" void dbgprintf (const char *format, ...)
+{
   va_list args;
   va_start (args, format);
-  if (strcmp(format,"\n"))
-    fprintf (dbglog,"%02d:%02d:%02d ", tmp->tm_hour, tmp->tm_min, tmp->tm_sec);
-  vfprintf (dbglog, format, args);
-  fflush(dbglog);
+  dbgprintf_p (format, args);
+  va_end (args);
+}
+
+extern "C" void dbgprintf_RED (const char *format, ...)
+{
+  va_list args;
+  va_start (args, format);
+  if (dbglog == stdout) {printf(RED_TEXT); fflush(dbglog);}
+  dbgprintf_p (format, args);
+  if (dbglog == stdout) { printf(END_TEXT); fflush(dbglog);}
   va_end (args);
 }
 #endif

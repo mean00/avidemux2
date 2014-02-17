@@ -61,6 +61,8 @@ bool pipe_test(int hr, int hw);
 #define BUF_SIZE (1920L * 1080L * 3L >> 1L)
 //#define BUF_SIZE 65536
 
+bool fget_pitch_data = false;
+
 void test_pipe_speed(int h_read, int h_write,
                      char *copy_buf, int buf_sz, int time_sec)
 {
@@ -140,7 +142,7 @@ bool load_avisynth(IScriptEnvironment **env, HMODULE *avsdll)
     *avsdll = LoadLibrary("avisynth.dll");
     if(!*avsdll)
     {
-      DEBUG_PRINTF("avsloader : failed to load avisynth.dll\n");
+      DEBUG_PRINTF_RED("avsloader : failed to load avisynth.dll\n");
       fflush(stdout);
       return false;
     }
@@ -149,7 +151,7 @@ bool load_avisynth(IScriptEnvironment **env, HMODULE *avsdll)
         = (IScriptEnvironment*(*)(int)) GetProcAddress(*avsdll, "CreateScriptEnvironment");
     if(!CreateScriptEnvironment)
     {
-      DEBUG_PRINTF("avsloader : failed to load CreateScriptEnvironment()\n");
+      DEBUG_PRINTF_RED("avsloader : failed to load CreateScriptEnvironment()\n");
       fflush(stdout);
 
       free_lib:
@@ -161,7 +163,7 @@ bool load_avisynth(IScriptEnvironment **env, HMODULE *avsdll)
   }
   catch(AvisynthError err)
   {
-    DEBUG_PRINTF("avsloader : avisynth error %s\n", err.msg);
+    DEBUG_PRINTF_RED("avsloader : avisynth error %s\n", err.msg);
     return false;
   }
   return true;
@@ -176,7 +178,7 @@ bool load_avs(char *infile, PClip &clip,
 
     if(!res.IsClip())
     {
-      DEBUG_PRINTF("avsloader : '%s' didn't return a video clip.\n", infile);
+      DEBUG_PRINTF_RED("avsloader : '%s' didn't return a video clip.\n", infile);
       fflush(stdout);
       return false;
     }
@@ -185,7 +187,7 @@ bool load_avs(char *infile, PClip &clip,
   }
   catch(AvisynthError err)
   {
-    DEBUG_PRINTF("avsloader : avisynth error %s\n", err.msg);
+    DEBUG_PRINTF_RED("avsloader : avisynth error %s\n", err.msg);
     return false;
   }
   return true;
@@ -202,7 +204,7 @@ bool load_pipe_dll(const char *dllname,
 
   if(!pipe_dll)
   {
-    DEBUG_PRINTF("failed to load %s\n", dllname);
+    DEBUG_PRINTF_RED("failed to load %s\n", dllname);
     fflush(stdout);
     return false;
   }
@@ -211,7 +213,7 @@ bool load_pipe_dll(const char *dllname,
                                                              "SetPipeName");
   if(!set_pipe_name)
   {
-    DEBUG_PRINTF("failed to get SetPipeName\n");
+    DEBUG_PRINTF_RED("failed to get SetPipeName\n");
     fflush(stdout);
 
     free_lib:
@@ -229,29 +231,6 @@ bool load_pipe_dll(const char *dllname,
 #define PIPE_LOADER_READ 1
 #define PIPE_LOADER_WRITE 0
 #define PIPE_FILTER_READ 2
-
-/*
-           void BitBlt(BYTE* dstp, int dst_pitch, const BYTE* srcp, int src_pitch, int row_size, int height) {
-           if ( (!height)|| (!row_size)) return;
-           if (GetCPUFlags() & CPUF_INTEGER_SSE) {
-           if (height == 1 || (src_pitch == dst_pitch && dst_pitch == row_size)) {
-           memcpy_amd(dstp, srcp, row_size*height);
-           } else {
-           asm_BitBlt_ISSE(dstp,dst_pitch,srcp,src_pitch,row_size,height);
-           }
-           return;
-           }
-           if (height == 1 || (dst_pitch == src_pitch && src_pitch == row_size)) {
-           memcpy(dstp, srcp, row_size*height);
-           } else {
-           for (int y=height; y>0; --y) {
-           memcpy(dstp, srcp, row_size);
-           dstp += dst_pitch;
-           srcp += src_pitch;
-           }
-           }
-
-           */
 
 bool send_bit_blt(int h,
                   const BYTE* srcp, int src_pitch,
@@ -286,7 +265,7 @@ void processing_frames(AVS_PIPES *avs_pipes)
 
   if (!load_avisynth(&env, &avsdll))
   {
-    DEBUG_PRINTF("avsloader : cannot load avisynth dll\n");
+    DEBUG_PRINTF_RED("avsloader : cannot load avisynth dll\n");
     fflush(stdout);
     return;
   }
@@ -320,7 +299,11 @@ void processing_frames(AVS_PIPES *avs_pipes)
 
       switch(msg.avs_cmd)
       {
-        case LOAD_AVS_SCRIPT:
+      case GET_PITCH_DATA:
+          fget_pitch_data = true;
+          break;
+
+      case LOAD_AVS_SCRIPT:
 
           DEBUG_PRINTF("avsloader : try load avisynth.dll and script %s\n",
                  data);
@@ -345,12 +328,13 @@ void processing_frames(AVS_PIPES *avs_pipes)
           info.nb_frames = inf.num_frames;
           info.fps1000 = inf.fps_numerator * 1000 / inf.fps_denominator;
           info.orgFrame = 0;
+          info.encoding = MAGIC_ADV_PROTOCOL_VAL; // set advanced protocol from avsfilter to avsloader
 
           if (!send_cmd(avs_pipes[PIPE_LOADER_WRITE].hpipe,
                         SET_CLIP_PARAMETER,
                         (void*)&info, sizeof(ADV_Info)))
           {
-            DEBUG_PRINTF("avsloader : cannot send avisynth clip param to avsfilter\n");
+            DEBUG_PRINTF_RED("avsloader : cannot send avisynth clip param to avsfilter\n");
             fflush(stdout);
             return;
           }
@@ -366,7 +350,7 @@ void processing_frames(AVS_PIPES *avs_pipes)
           DEBUG_PRINTF("avsloader : UNLOAD_AVS_LOADER ok\n");
           terminate = true;
           break;
-
+        case GET_FRAME_WITH_PITCH:
         case GET_FRAME:
           // avidemux2 avsfilter tell : get frame
           fd = (FRAME_DATA *)data;
@@ -386,37 +370,39 @@ void processing_frames(AVS_PIPES *avs_pipes)
           fflush(stdout);
 
           fd_copy = *fd;
-          /*
-           void BitBlt(BYTE* dstp, int dst_pitch, const BYTE* srcp, int src_pitch, int row_size, int height) {
-           if ( (!height)|| (!row_size)) return;
-           if (GetCPUFlags() & CPUF_INTEGER_SSE) {
-           if (height == 1 || (src_pitch == dst_pitch && dst_pitch == row_size)) {
-           memcpy_amd(dstp, srcp, row_size*height);
-           } else {
-           asm_BitBlt_ISSE(dstp,dst_pitch,srcp,src_pitch,row_size,height);
-           }
-           return;
-           }
-           if (height == 1 || (dst_pitch == src_pitch && src_pitch == row_size)) {
-           memcpy(dstp, srcp, row_size*height);
-           } else {
-           for (int y=height; y>0; --y) {
-           memcpy(dstp, srcp, row_size);
-           dstp += dst_pitch;
-           srcp += src_pitch;
-           }
-           }
-           */
-#ifdef PREVENT_INTERMEDIATE_BUFFERS
-          if (!send_cmd_with_specified_size(avs_pipes[PIPE_LOADER_WRITE].hpipe,
-                                            PUT_FRAME,
-                                            (void*)&fd_copy, sizeof(FRAME_DATA),
-                                            frame_sz))
+
+          if (msg.avs_cmd == GET_FRAME_WITH_PITCH)
           {
-            DEBUG_PRINTF("avsloader : error send frame header to avsfilter\n");
+           uint32_t pitch_data_sizeY = f->GetPitch(PLANAR_Y) * f->GetHeight(PLANAR_Y);
+           uint32_t pitch_data_sizeU = f->GetPitch(PLANAR_U) * f->GetHeight(PLANAR_U);
+           uint32_t pitch_data_sizeV = f->GetPitch(PLANAR_V) * f->GetHeight(PLANAR_V);
+           uint32_t pitch_data_size = pitch_data_sizeY + pitch_data_sizeU + pitch_data_sizeV;
+           DEBUG_PRINTF("avsloader : pitch frame size %lu\n", pitch_data_size);
+
+           if (!send_cmd_with_specified_size(avs_pipes[PIPE_LOADER_WRITE].hpipe,
+                                             PUT_FRAME_WITH_PITCH,
+                                             (void*)&fd_copy, sizeof(FRAME_DATA), pitch_data_size) ||
+               ppwrite(avs_pipes[PIPE_LOADER_WRITE].hpipe, (void*)f->GetReadPtr(PLANAR_Y), pitch_data_sizeY) != pitch_data_sizeY ||
+               ppwrite(avs_pipes[PIPE_LOADER_WRITE].hpipe, (void*)f->GetReadPtr(PLANAR_U), pitch_data_sizeU) != pitch_data_sizeU ||
+               ppwrite(avs_pipes[PIPE_LOADER_WRITE].hpipe, (void*)f->GetReadPtr(PLANAR_V), pitch_data_sizeV) != pitch_data_sizeV)
+           {
+            DEBUG_PRINTF_RED("avsloader : error send uncompressed PITCH frame to avsfilter\n");
             fflush(stdout);
+            return;
+           }
           }
           else
+          {
+#ifdef PREVENT_INTERMEDIATE_BUFFERS
+           if (!send_cmd_with_specified_size(avs_pipes[PIPE_LOADER_WRITE].hpipe,
+                                             PUT_FRAME,
+                                             (void*)&fd_copy, sizeof(FRAME_DATA),
+                                             frame_sz))
+           {
+            DEBUG_PRINTF_RED("avsloader : error send frame header to avsfilter\n");
+            fflush(stdout);
+           }
+           else
             if (!send_bit_blt(avs_pipes[PIPE_LOADER_WRITE].hpipe,
                               f->GetReadPtr(), f->GetPitch(),
                               inf.width, inf.height, data) ||
@@ -427,31 +413,46 @@ void processing_frames(AVS_PIPES *avs_pipes)
                               f->GetReadPtr(PLANAR_U), f->GetPitch(PLANAR_U),
                               inf.width / 2, inf.height / 2, data))
             {
-              DEBUG_PRINTF("avsloader : error send frame data to avsfilter\n");
-              fflush(stdout);
+             DEBUG_PRINTF_RED("avsloader : error send frame data to avsfilter\n");
+             fflush(stdout);
             }
 #else
 
-          // copy Y, U and V with pitch
-          env->BitBlt(data, inf.width, f->GetReadPtr(), f->GetPitch(), inf.width, inf.height);
-          env->BitBlt(data + (inf.width * inf.height), inf.width / 2,
-                      f->GetReadPtr(PLANAR_V), f->GetPitch(PLANAR_V),
-                      inf.width / 2, inf.height / 2);
-          env->BitBlt(data + (inf.width * inf.height) + ((inf.width * inf.height) >> 2),
-                      inf.width / 2, f->GetReadPtr(PLANAR_U), f->GetPitch(PLANAR_U),
-                      inf.width / 2, inf.height / 2);
+           // copy Y, U and V with pitch
+           env->BitBlt(data, inf.width, f->GetReadPtr(), f->GetPitch(), inf.width, inf.height);
+           env->BitBlt(data + (inf.width * inf.height), inf.width / 2,
+                       f->GetReadPtr(PLANAR_V), f->GetPitch(PLANAR_V),
+                       inf.width / 2, inf.height / 2);
+           env->BitBlt(data + (inf.width * inf.height) + ((inf.width * inf.height) >> 2),
+                       inf.width / 2, f->GetReadPtr(PLANAR_U), f->GetPitch(PLANAR_U),
+                       inf.width / 2, inf.height / 2);
 
-          // return filtered data
-          if (!send_cmd_by_two_part(avs_pipes[PIPE_LOADER_WRITE].hpipe,
-                                    PUT_FRAME,
-                                    (void*)&fd_copy, sizeof(FRAME_DATA),
-                                    (void*)data, frame_sz))
-          {
-            DEBUG_PRINTF("avsloader : error send frame to avsfilter\n");
+           // return filtered data
+           if (!send_cmd_by_two_part(avs_pipes[PIPE_LOADER_WRITE].hpipe,
+                                     PUT_FRAME,
+                                     (void*)&fd_copy, sizeof(FRAME_DATA),
+                                     (void*)data, frame_sz))
+           {
+            DEBUG_PRINTF_RED("avsloader : error send frame to avsfilter\n");
             fflush(stdout);
             return;
-          }
+           }
+
+           if (fget_pitch_data)
+           {
+            PITCH_DATA pd = {f->GetPitch(PLANAR_Y), f->GetPitch(PLANAR_U), f->GetPitch(PLANAR_V)};
+            // send SEND_PITCH_DATA_AVSLOADER to avidemux2/avsfilter
+            if (!send_cmd(avs_pipes[PIPE_LOADER_WRITE].hpipe,
+                          SEND_PITCH_DATA_AVSLOADER,
+                          (void*)&pd, sizeof(pd)))
+             DEBUG_PRINTF_RED("avsloader : error send SEND_PITCH_DATA_AVSLOADER to avsfilter\n");
+            else
+             DEBUG_PRINTF("avsloader : send SEND_PITCH_DATA_AVSLOADER ok\n");
+            fflush(stdout);
+            fget_pitch_data = false;
+           }
 #endif
+          }
           break;
       }
 
@@ -503,7 +504,7 @@ int __cdecl main(int argc, const char* argv[])
               open(avs_pipes[i].pipename, avs_pipes[i].flags)) == -1
              && j--)
       {
-        DEBUG_PRINTF("error open %s, try %d, errno %d\n",
+        DEBUG_PRINTF_RED("error open %s, try %d, errno %d\n",
                avs_pipes[i].pipename, j_old - j, errno);
         Sleep(WAIT_BEFORE_TRY);
       }
@@ -521,7 +522,7 @@ int __cdecl main(int argc, const char* argv[])
                        avs_pipes[PIPE_LOADER_WRITE].hpipe,
                        &cb_send_data, pipe_timeout))
     {
-      DEBUG_PRINTF("avsload : cannot call SetPipeHandle\n");
+      DEBUG_PRINTF_RED("avsload : cannot call SetPipeHandle\n");
       goto cleanup_close_pipes;
     }
 
@@ -529,10 +530,10 @@ int __cdecl main(int argc, const char* argv[])
     if (!pipe_test (avs_pipes[PIPE_LOADER_READ].hpipe,
                     avs_pipes[PIPE_LOADER_WRITE].hpipe))
     {
-      DEBUG_PRINTF("avsload : cannot test pipe from loader to avsfilter\n");
+      DEBUG_PRINTF_RED("avsload : cannot test pipe from loader to avsfilter\n");
       goto cleanup_close_pipes;
-
     }
+
     DEBUG_PRINTF("avsload : test pipe from loader to avsfilter ok\n");
     fflush(stdout);
 
