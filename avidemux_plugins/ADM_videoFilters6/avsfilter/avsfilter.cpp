@@ -43,8 +43,11 @@
 #include "avsfilter.h"
 #include "cdebug.h"
 
-#define AVSFILTER_VERSION_INFO "AvsFilter, ver 0.10"
+#define AVSFILTER_VERSION_INFO "AvsFilter, ver 0.12"
 #define NOCOMPILE26
+
+bool use_adv_protocol_avsfilter_to_pipesource = false;
+bool use_adv_protocol_avsloader_to_avsfilter = false;
 
 static WINE_LOADER *first_loader = NULL;
 static AVSTerminate term;
@@ -256,8 +259,7 @@ bool pipe_test_filter(int hr, int hw)
 
   sz1 = read(hr, &test_r1, sizeof(uint32_t));
 
-  if (sz1 != sizeof(uint32_t) ||
-      test_r1 != test_send) return false;
+  if (sz1 != sizeof(uint32_t) || (test_r1 != test_send)) return false;
 
   return true;
 }
@@ -417,7 +419,7 @@ bool wine_start(char *wine_app, char *avsloader, AVS_PIPES *avs_pipes, int pipe_
       DEBUG_PRINTF("avsfilter : test pipe to loader ok\n");
     }
     else
-      goto error_pipe_test;
+     goto error_pipe_test;
   }
   else
   {
@@ -432,7 +434,7 @@ bool wine_start(char *wine_app, char *avsloader, AVS_PIPES *avs_pipes, int pipe_
 }
 
 bool avs_start(FilterInfo *info, FilterInfo *avisynth_info,
-               char *fname, AVS_PIPES *avs_pipes)
+               char *fname, AVS_PIPES *avs_pipes, PITCH_DATA *pd_pipe_source, PITCH_DATA *pd_avsloader)
 {
  DEBUG_PRINTF("avsfilter : avs_start()\n");
  DEBUG_PRINTF("avsfilter : %X %X %s %X\n",
@@ -446,7 +448,7 @@ bool avs_start(FilterInfo *info, FilterInfo *avisynth_info,
  aii.width = info->width;
  aii.height = info->height;
  aii.nb_frames = info->totalDuration / info->frameIncrement;
- aii.encoding = 1;
+ aii.encoding = MAGIC_ADV_PROTOCOL_VAL;
  aii.codec = 0;
  aii.fps1000 = ADM_Fps1000FromUs(info->frameIncrement);
  aii.orgFrame = 0;
@@ -464,23 +466,62 @@ bool avs_start(FilterInfo *info, FilterInfo *avisynth_info,
   }
 
   // get avisynth frame info
-  PIPE_MSG_HEADER msg;
-  if (!receive_cmd(avs_pipes[PIPE_LOADER_READ].hpipe,
-                   &msg) ||
-      msg.avs_cmd != SET_CLIP_PARAMETER ||
-      !receive_data(avs_pipes[PIPE_LOADER_READ].hpipe,
-                    &msg, &aio))
-  {
-    DEBUG_PRINTF_RED("avsfilter : cannot receive avisynth clip parameters\n");
-    deinit_pipes(avs_pipes, CMD_PIPE_NUM);
-    return false;
-  }
+ PIPE_MSG_HEADER msg;
+ if (!receive_cmd(avs_pipes[PIPE_LOADER_READ].hpipe, &msg))
+ {
+  DEBUG_PRINTF_RED("avsfilter : cannot receive command (SEND_PITCH_DATA_PIPE_SOURCE, OR SET_CLIP_PARAMETER)\n");
+  deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+  return false;
+ }
+
+ switch (msg.avs_cmd)
+ {
+ case SEND_PITCH_DATA_PIPE_SOURCE:
+     if (!receive_data(avs_pipes[PIPE_LOADER_READ].hpipe, &msg, pd_pipe_source))
+     {
+      DEBUG_PRINTF_RED("avsfilter : cannot receive SEND_PITCH_DATA_PIPE_SOURCE\n");
+      deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+      return false;
+     }
+     DEBUG_PRINTF("avsfilter : receive SEND_PITCH_DATA_PIPE_SOURCE YUV = %d %d %d\n", pd_pipe_source->pitchY, pd_pipe_source->pitchU, pd_pipe_source->pitchV);
+     if (!receive_cmd(avs_pipes[PIPE_LOADER_READ].hpipe, &msg) ||
+         msg.avs_cmd != SET_CLIP_PARAMETER)
+     {
+      DEBUG_PRINTF_RED("avsfilter : cannot receive SET_CLIP_PARAMETER header message\n");
+      deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+      return false;
+     }
+ case SET_CLIP_PARAMETER:
+     if (!receive_data(avs_pipes[PIPE_LOADER_READ].hpipe, &msg, &aio))
+     {
+      DEBUG_PRINTF_RED("avsfilter : cannot receive avisynth clip parameters\n");
+      deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+      return false;
+     }
+     break;
+ default :
+     DEBUG_PRINTF_RED("avsfilter : receive unknown command %d\n", msg.avs_cmd);
+     deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+     return false;
+     break;
+ }
 
   DEBUG_PRINTF("avsfilter : receive ADV_Info from avsloader [fps1000 = %d, nb_frames = %d]\n", aio.fps1000, aio.nb_frames);
   avisynth_info->width = aio.width;
   avisynth_info->height = aio.height;
   avisynth_info->frameIncrement = ADM_UsecFromFps1000(aio.fps1000);
   avisynth_info->totalDuration = aio.nb_frames * avisynth_info->frameIncrement;
+  if (aio.encoding == MAGIC_ADV_PROTOCOL_VAL)
+  {
+   DEBUG_PRINTF("avsfilter : send GET_PITCH_DATA to avsloader\n");
+   if (!send_cmd(avs_pipes[PIPE_LOADER_WRITE].hpipe,
+                 GET_PITCH_DATA, NULL, 0))
+   {
+    DEBUG_PRINTF_RED("avsfilter : cannot send GET_PITCH_DATA\n");
+    deinit_pipes(avs_pipes, CMD_PIPE_NUM);
+    return false;
+   }
+  }
 
   // correct avisynth_info for span of frames, calculate fps change metrics
 /*  float k_fps;
@@ -495,7 +536,7 @@ bool avs_start(FilterInfo *info, FilterInfo *avisynth_info,
 #ifdef VERSION_2_5
 
 DECLARE_VIDEO_FILTER(avsfilter,
-                     0,0,10,
+                     0,0,12,
                      ADM_UI_ALL,
                      VF_MISC,
                      "avsfilter",
@@ -650,7 +691,7 @@ bool avsfilter::SetParameters(avsfilter_config *newparam)
     DEBUG_PRINTF("avsfilter : SetParameters !full_exact\n");
 
     // matched only order (need reload with new script/geometry/etc)
-    if (!avs_start(&info, &loader->output_info, (char*)newparam->avs_script, loader->avs_pipes))
+    if (!avs_start(&info, &loader->output_info, (char*)newparam->avs_script, loader->avs_pipes, &pd_pipe_source, &pd_avsloader))
     {
       DEBUG_PRINTF_RED("avsfilter : SetParameters fail avs_start\n");
       delete_object(loader);
@@ -792,6 +833,14 @@ avsfilter::avsfilter(ADM_coreVideoFilter *in,
   DEBUG_PRINTF("avsfilter : after constructor info : frameIncrement %lu totalDuration %llu\n",
                info.frameIncrement, info.totalDuration);
 
+  if (_uncompressed->GetPitch(PLANAR_Y) == pd_pipe_source.pitchY &&
+      _uncompressed->GetPitch(PLANAR_U) == pd_pipe_source.pitchU &&
+      _uncompressed->GetPitch(PLANAR_V) == pd_pipe_source.pitchV)
+  {
+   use_adv_protocol_avsfilter_to_pipesource = true;
+   DEBUG_PRINTF("avsfilter : use_adv_protocol_avsfilter_to_pipesource = true\n");
+  }
+
 //  vidCache=new VideoCache(16,in);
 }
 
@@ -830,7 +879,7 @@ bool avsfilter::getCoupledConf( CONFcouple **couples)
  DEBUG_PRINTF("avsfilter : getCoupledConf info #2: frameIncrement %lu totalDuration %llu\n",
               info.frameIncrement, info.totalDuration);
  return t;
- 
+
 /*  CSET(wine_app);
   CSET(avs_script);
   CSET(avs_loader);
@@ -897,7 +946,7 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
 
   // send command to get filtered data
   if (!send_cmd(wine_loader->avs_pipes[PIPE_LOADER_WRITE].hpipe,
-                GET_FRAME, (void*)&fd,
+                use_adv_protocol_avsloader_to_avsfilter ? GET_FRAME_WITH_PITCH : GET_FRAME, (void*)&fd,
                 sizeof(FRAME_DATA)))
   {
     DEBUG_PRINTF_RED("avsfilter : error send GET_FRAME to avsloader\n");
@@ -906,11 +955,27 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
 
   // read all data from avsloader and pipe dll
   PIPE_MSG_HEADER msg;
-  while (receive_cmd(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
-                     &msg))
+  while (receive_cmd(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, &msg))
   {
     switch(msg.avs_cmd)
     {
+    case SEND_PITCH_DATA_AVSLOADER:
+        DEBUG_PRINTF("avsfilter : receive SEND_PITCH_DATA_AVSLOADER\n");
+        if (!receive_data(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, &msg, &pd_avsloader))
+        {
+         DEBUG_PRINTF_RED("avsfilter : cannot get SEND_PITCH_DATA_AVSLOADER\n");
+         return 0;
+        }
+        DEBUG_PRINTF("avsfilter : receive SEND_PITCH_DATA_AVSLOADER YUV = %d %d %d\n", pd_avsloader.pitchY, pd_avsloader.pitchU, pd_avsloader.pitchV);
+        if (data->GetPitch(PLANAR_Y) == pd_avsloader.pitchY &&
+            data->GetPitch(PLANAR_U) == pd_avsloader.pitchU &&
+            data->GetPitch(PLANAR_V) == pd_avsloader.pitchV)
+        {
+         use_adv_protocol_avsloader_to_avsfilter = true;
+         DEBUG_PRINTF("avsfilter : use_adv_protocol_avsloader_to_avsfilter = true\n");
+        }
+        break;
+
       case GET_FRAME: // this request from pipe_source for input frame(s) to avisynth core
         DEBUG_PRINTF("avsfilter : receive GET_FRAME\n");
         if (!receive_data(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
@@ -929,41 +994,64 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
          DEBUG_PRINTF("avsfilter : !!!OOPS!!!\n");
          return false;
         }
-        DEBUG_PRINTF("avsfilter : in frame size %lu pitchYUV %d %d %d, widthYUV %d %d %d, heightYUV %d %d %d\n",
+
+/*        DEBUG_PRINTF("avsfilter : in frame size %lu pitchYUV %d %d %d, widthYUV %d %d %d, heightYUV %d %d %d\n",
                      in_frame_sz, _uncompressed->GetPitch(PLANAR_Y), _uncompressed->GetPitch(PLANAR_U), _uncompressed->GetPitch(PLANAR_V),
                      _uncompressed->GetWidth(PLANAR_Y), _uncompressed->GetWidth(PLANAR_U), _uncompressed->GetWidth(PLANAR_V),
-                     _uncompressed->GetHeight(PLANAR_Y), _uncompressed->GetHeight(PLANAR_U), _uncompressed->GetHeight(PLANAR_V));
-        // send frame to pipe_source
-        if (!send_cmd_with_specified_size(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
-                                          PUT_FRAME, (void*)&fd, sizeof(FRAME_DATA), in_frame_sz) ||
-            !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
-                          _uncompressed->GetReadPtr(PLANAR_Y), _uncompressed->GetPitch(PLANAR_Y),
-                          _uncompressed->GetWidth(PLANAR_Y), _uncompressed->GetHeight(PLANAR_Y), tmp_buf) ||
-            !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
-                          _uncompressed->GetReadPtr(PLANAR_U), _uncompressed->GetPitch(PLANAR_U),
-                          _uncompressed->GetWidth(PLANAR_U), _uncompressed->GetHeight(PLANAR_U), tmp_buf) ||
-            !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
-                          _uncompressed->GetReadPtr(PLANAR_V), _uncompressed->GetPitch(PLANAR_V),
-                          _uncompressed->GetWidth(PLANAR_V), _uncompressed->GetHeight(PLANAR_V), tmp_buf))
+                     _uncompressed->GetHeight(PLANAR_Y), _uncompressed->GetHeight(PLANAR_U), _uncompressed->GetHeight(PLANAR_V));*/
+
+        if (use_adv_protocol_avsfilter_to_pipesource)
         {
+         uint32_t pitch_data_sizeY = _uncompressed->GetPitch(PLANAR_Y) * _uncompressed->GetHeight(PLANAR_Y);
+         uint32_t pitch_data_sizeU = _uncompressed->GetPitch(PLANAR_U) * _uncompressed->GetHeight(PLANAR_U);
+         uint32_t pitch_data_sizeV = _uncompressed->GetPitch(PLANAR_V) * _uncompressed->GetHeight(PLANAR_V);
+         uint32_t pitch_data_size = pitch_data_sizeY + pitch_data_sizeU + pitch_data_sizeV;
+         DEBUG_PRINTF("avsfilter : pitch frame size %lu\n", pitch_data_size);
+
+         if (!send_cmd_with_specified_size(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
+                                           PUT_FRAME_WITH_PITCH,
+                                           (void*)&fd, sizeof(FRAME_DATA), pitch_data_size) ||
+             ppwrite(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe, _uncompressed->GetReadPtr(PLANAR_Y), pitch_data_sizeY) != pitch_data_sizeY ||
+             ppwrite(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe, _uncompressed->GetReadPtr(PLANAR_U), pitch_data_sizeU) != pitch_data_sizeU ||
+             ppwrite(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe, _uncompressed->GetReadPtr(PLANAR_V), pitch_data_sizeV) != pitch_data_sizeV)
+         {
+          DEBUG_PRINTF_RED("avsfilter : error send uncompressed PITCH frame to dll\n");
+          return 0;
+         }
+        }
+        else
+         // send frame to pipe_source
+         if (!send_cmd_with_specified_size(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
+                                           PUT_FRAME, (void*)&fd, sizeof(FRAME_DATA), in_frame_sz) ||
+             !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
+                           _uncompressed->GetReadPtr(PLANAR_Y), _uncompressed->GetPitch(PLANAR_Y),
+                           _uncompressed->GetWidth(PLANAR_Y), _uncompressed->GetHeight(PLANAR_Y), tmp_buf) ||
+             !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
+                           _uncompressed->GetReadPtr(PLANAR_U), _uncompressed->GetPitch(PLANAR_U),
+                           _uncompressed->GetWidth(PLANAR_U), _uncompressed->GetHeight(PLANAR_U), tmp_buf) ||
+             !send_bit_blt(wine_loader->avs_pipes[PIPE_FILTER_WRITE].hpipe,
+                           _uncompressed->GetReadPtr(PLANAR_V), _uncompressed->GetPitch(PLANAR_V),
+                           _uncompressed->GetWidth(PLANAR_V), _uncompressed->GetHeight(PLANAR_V), tmp_buf))
+         {
           DEBUG_PRINTF_RED("avsfilter : error send uncompressed frame to dll\n");
           return 0;
-        }
+         }
 
         //YPLANE(_uncompressed),
         DEBUG_PRINTF("avsfilter : send data ok for frame %d\n", fd.frame);
         break;
 
+      case PUT_FRAME_WITH_PITCH:
       case PUT_FRAME: // this request from avsload.exe with filtering data after avisynth
-        DEBUG_PRINTF("avsfilter : receive PUT_FRAME, msg.sz %d\n", msg.sz);
-        if (msg.sz != out_frame_sz + sizeof(FRAME_DATA))
+        DEBUG_PRINTF("avsfilter : receive %s, msg.sz %d\n", msg.avs_cmd == PUT_FRAME_WITH_PITCH ? "PUT_FRAME_WITH_PITCH" : "PUT_FRAME", msg.sz);
+        if (msg.avs_cmd == PUT_FRAME && msg.sz != out_frame_sz + sizeof(FRAME_DATA))
         {
-          DEBUG_PRINTF_RED("avsfilter : PUT_FRAME msg.sz [%lu] != out_frame_sz+sizeof(FRAME_DATA) [%lu,%d]\n",
-                 msg.sz, out_frame_sz, sizeof(FRAME_DATA));
+         DEBUG_PRINTF_RED("avsfilter : PUT_FRAME error : msg.sz [%d] != out_frame_sz+sizeof(FRAME_DATA) [%d,%d]\n",
+                           msg.sz, out_frame_sz, sizeof(FRAME_DATA));
           return 0;
         }
 
-        DEBUG_PRINTF("avsfilter : read 1\n");
+//        DEBUG_PRINTF("avsfilter : read 1\n");
         if (!receive_data_by_size(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
                                   &fd, sizeof(FRAME_DATA)))
         {
@@ -973,42 +1061,67 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
 
 //        ADM_assert(fd.frame == (iframe + info.orgFrame));
 
-        DEBUG_PRINTF("avsfilter : data->GetWidth(PLANAR_Y) %d data->GetHeight(PLANAR_Y) %d\n",
+/*        DEBUG_PRINTF("avsfilter : data->GetWidth(PLANAR_Y) %d data->GetHeight(PLANAR_Y) %d\n",
                      data->GetWidth(PLANAR_Y), data->GetHeight(PLANAR_Y));
         DEBUG_PRINTF("avsfilter : data->GetWidth(PLANAR_U) %d data->GetHeight(PLANAR_U) %d\n",
                      data->GetWidth(PLANAR_U), data->GetHeight(PLANAR_U));
         DEBUG_PRINTF("avsfilter : data->GetWidth(PLANAR_V) %d data->GetHeight(PLANAR_V) %d\n",
-                     data->GetWidth(PLANAR_V), data->GetHeight(PLANAR_V));
+                     data->GetWidth(PLANAR_V), data->GetHeight(PLANAR_V));*/
 
-        DEBUG_PRINTF("avsfilter : read %d frame number Y plane\n", fd.frame);
-        if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
-                             data->GetWritePtr(PLANAR_Y), data->GetPitch(PLANAR_Y),
-                             data->GetWidth(PLANAR_Y), data->GetHeight(PLANAR_Y)))
+        if (msg.avs_cmd == PUT_FRAME_WITH_PITCH)
         {
+         uint32_t pitch_data_sizeY = data->GetPitch(PLANAR_Y) * data->GetHeight(PLANAR_Y);
+         uint32_t pitch_data_sizeU = data->GetPitch(PLANAR_U) * data->GetHeight(PLANAR_U);
+         uint32_t pitch_data_sizeV = data->GetPitch(PLANAR_V) * data->GetHeight(PLANAR_V);
+         uint32_t pitch_data_size = pitch_data_sizeY + pitch_data_sizeU + pitch_data_sizeV;
+
+         if (msg.sz != (pitch_data_size + sizeof(FRAME_DATA)))
+         {
+          DEBUG_PRINTF_RED("avsfilter : PUT_FRAME_WITH_PITCH error : msg.sz [%d] != pitch_data_size + sizeof(FRAME_DATA) [%d,%d]\n",
+                           msg.sz, pitch_data_size, sizeof(FRAME_DATA));
+          return 0;
+        }
+
+         if (ppread(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, (void*)data->GetReadPtr(PLANAR_Y), pitch_data_sizeY) != pitch_data_sizeY ||
+             ppread(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, (void*)data->GetReadPtr(PLANAR_U), pitch_data_sizeU) != pitch_data_sizeU ||
+             ppread(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, (void*)data->GetReadPtr(PLANAR_V), pitch_data_sizeV) != pitch_data_sizeV)
+         {
+          DEBUG_PRINTF_RED("avsfilter : receive data error for PUT_FRAME_WITH_PITCH\n");
+          return 0;
+         }
+        }
+        else
+        {
+  //       DEBUG_PRINTF("avsfilter : read %d frame number Y plane\n", fd.frame);
+         if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
+                              data->GetWritePtr(PLANAR_Y), data->GetPitch(PLANAR_Y),
+                              data->GetWidth(PLANAR_Y), data->GetHeight(PLANAR_Y)))
+         {
           DEBUG_PRINTF_RED("avsfilter : receive data error#2\n");
           return 0;
-        }
+         }
 
-        DEBUG_PRINTF("avsfilter : read %d frame number U plane\n", fd.frame);
-        if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
-                             data->GetWritePtr(PLANAR_U), data->GetPitch(PLANAR_U),
-                             data->GetWidth(PLANAR_U), data->GetHeight(PLANAR_U)))
-        {
+//         DEBUG_PRINTF("avsfilter : read %d frame number U plane\n", fd.frame);
+         if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
+                              data->GetWritePtr(PLANAR_U), data->GetPitch(PLANAR_U),
+                              data->GetWidth(PLANAR_U), data->GetHeight(PLANAR_U)))
+         {
           DEBUG_PRINTF_RED("avsfilter : receive data error#3\n");
           return 0;
-        }
-        DEBUG_PRINTF("avsfilter : read %d frame number V plane\n", fd.frame);
-        if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
-                             data->GetWritePtr(PLANAR_V), data->GetPitch(PLANAR_V),
-                             data->GetWidth(PLANAR_V), data->GetHeight(PLANAR_V)))
-        {
+         }
+//         DEBUG_PRINTF("avsfilter : read %d frame number V plane\n", fd.frame);
+         if (!receive_bit_blt(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe,
+                              data->GetWritePtr(PLANAR_V), data->GetPitch(PLANAR_V),
+                              data->GetWidth(PLANAR_V), data->GetHeight(PLANAR_V)))
+         {
           DEBUG_PRINTF_RED("avsfilter : receive data error#4\n");
           return 0;
+         }
         }
 //        *len = out_frame_sz;
         DEBUG_PRINTF("avsfilter : copy data\n");
         DEBUG_PRINTF("avsfilter : data parameters %d:%d\n",
-               data->_width, data->_height);
+                     data->_width, data->_height);
         data->copyInfo(_uncompressed);
         data->Pts = _uncompressed->Pts;
         //        vidCache->unlockAll();

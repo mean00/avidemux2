@@ -60,6 +60,7 @@ class avsfilter:public ADM_coreVideoFilter
 protected:
     ADM_coreVideoFilter *in;
     ADMImage *_uncompressed;
+    PITCH_DATA pd_pipe_source, pd_avsloader;
     unsigned char *tmp_buf;
     char *prefs_name; // pointer to filename with preferences
     //  VideoCache *vidCache;

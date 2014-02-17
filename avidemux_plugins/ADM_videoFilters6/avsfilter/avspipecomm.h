@@ -26,7 +26,12 @@ typedef enum
   GET_FRAME,
   PUT_FRAME, //4
   UNLOAD_AVS_SCRIPT,
-  UNLOAD_AVS_LOADER
+  UNLOAD_AVS_LOADER,
+  SEND_PITCH_DATA_PIPE_SOURCE,
+  SEND_PITCH_DATA_AVSLOADER,
+  GET_PITCH_DATA,
+  GET_FRAME_WITH_PITCH,
+  PUT_FRAME_WITH_PITCH
 } AVS_CMD;
 
 typedef struct
@@ -58,6 +63,13 @@ typedef struct
   unsigned char frame_data[0];
 } FRAME_DATA;
 
+typedef struct
+{
+   uint32_t pitchY;
+   uint32_t pitchU;
+   uint32_t pitchV;
+}PITCH_DATA;
+
 bool send_cmd(int hw, AVS_CMD cmd,
               void *data, int sz);
 
@@ -79,3 +91,4 @@ int ppread(int h, void *data, int sz);
 int ppwrite(int h, void *data, int sz);
 
 #define PIPE_MAX_TRANSFER_SZ 65536/2
+#define MAGIC_ADV_PROTOCOL_VAL 0xADBACEED
