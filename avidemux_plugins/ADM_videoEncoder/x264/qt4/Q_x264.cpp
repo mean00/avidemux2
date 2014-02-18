@@ -57,6 +57,14 @@ static const idcToken listOfIdc[]={
 
 };
 #define NB_IDC sizeof(listOfIdc)/sizeof(idcToken)
+static const idcToken listOfThreads[]={
+        {0,"Auto"},
+        {1,"1"},      
+        {2,"2"},      
+        {4,"4"},      
+};
+
+#define NB_THREADS sizeof(listOfThreads)/sizeof(idcToken)
 
 typedef struct
 {
@@ -164,6 +172,13 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
             idc->addItem(QString(t->idcString));
         }
 
+        QComboBox *threads=ui.comboBoxThreads;
+        threads->clear();
+        for(int i=0;i<NB_THREADS;i++)
+        {
+            const idcToken *t=listOfThreads+i;
+            threads->addItem(QString(t->idcString));
+        }
         QComboBox* presets=ui.presetComboBox;
         presets->clear();
         for(int i=0;i<NB_PRESET;i++)
@@ -362,7 +377,17 @@ bool x264Dialog::upload(void)
                         break;
                 }
           }
-
+        // update threads
+          QComboBox *threads=ui.comboBoxThreads;
+          for(int i=0;i<NB_THREADS;i++)
+          {
+                const idcToken *t=listOfThreads+i;
+                if(myCopy.general.threads==t->idcValue)
+                {
+                        threads->setCurrentIndex(i);
+                        break;
+                }
+          }
         switch(ENCODING(mode))
         {
             case COMPRESS_AQ: // CRF
@@ -550,7 +575,12 @@ bool x264Dialog::download(void)
             case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
             case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
           }
+          // update thread count
+          QComboBox *threads=ui.comboBoxThreads;
+          int threadIndex=threads->currentIndex();
+          myCopy.general.threads=listOfThreads[threadIndex].idcValue;
 
+          
           int t=ui.trellisComboBox->currentIndex();
           if(!ui.trellisCheckBox->isChecked())
           {
