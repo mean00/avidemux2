@@ -7,8 +7,11 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-
-class subtitleEntry
+#include <string>
+/**
+ * \class subtitleTextEntry
+ */
+class subtitleTextEntry
 {
     uint64_t    start;
     uint64_t    stop;
@@ -20,10 +23,18 @@ class subtitleEntry
  */
 class ADM_subtitle
 {
+    typedef enum
+    {
+        SUB_TYPE_NONE,
+        SUB_TYPE_SRT,
+        SUB_TYPE_SSA
+    }ADM_SUBTITLE_TYPE;
+protected:
+    ADM_SUBTITLE_TYPE    _type;
 public:    
                 ADM_subtitle();
      virtual   ~ADM_subtitle();
-    
+     bool      load(const char *subtitleFile);
 private:    
     bool       srt2ssa(const char *inputFile, const char *outputFile);
 };

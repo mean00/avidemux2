@@ -99,6 +99,7 @@ ADD_SUBDIRECTORY(ADM_coreJobs)
 ADD_SUBDIRECTORY(ADM_coreSocket)
 add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
+add_subdirectory(ADM_coreSubtitles)
 
 ########################################
 # Config Summary
