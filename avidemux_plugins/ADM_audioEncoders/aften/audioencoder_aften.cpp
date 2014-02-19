@@ -234,7 +234,8 @@ bool configure (CONFcouple **setup)
                               BITRATE(160),
                               BITRATE(192),
                               BITRATE(224),
-                              BITRATE(384)
+                              BITRATE(384),
+                              BITRATE(448)
                           };
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("aften","_Bitrate:"), SZT(bitrateM),bitrateM);
 
