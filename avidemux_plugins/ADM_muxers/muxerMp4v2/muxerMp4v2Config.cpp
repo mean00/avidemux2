@@ -28,12 +28,12 @@ bool mp4v2Configure(void)
         bool optimize=muxerConfig.optimize;
         bool addItuneMetaData=muxerConfig.add_itunes_metadata;
         
-        diaElemToggle   wOptimize(&optimize,"Optimize for streaming");
+        diaElemToggle   wOptimize(&optimize,"Optimize for streaming (SLOW)");
         diaElemToggle   wItunes(&addItuneMetaData,"Add ipod metadata");
 
         //diaElem *tabs[]={&wOptimize,&wItunes};
-        diaElem *tabs[]={&wItunes};
-        if( diaFactoryRun(("MP4V2 Settings"),1,tabs))
+        diaElem *tabs[]={&wItunes,&wOptimize};
+        if( diaFactoryRun(("MP4V2 Settings"),2,tabs))
         {
             muxerConfig.optimize=optimize;
             //muxerConfig.optimize=false;
