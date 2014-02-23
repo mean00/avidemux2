@@ -53,7 +53,12 @@ sub genParam
 {
         my $num=shift;
         my $type=shift;
-        print OUTPUT "$type p".$num."=";
+        my $extra="";
+        if($type=~m/^char/)
+        {
+                $extra="*";
+        }
+        print OUTPUT "$type $extra p".$num."=";
         print OUTPUT castFrom($type);
         print OUTPUT ";\n"; 
 }
