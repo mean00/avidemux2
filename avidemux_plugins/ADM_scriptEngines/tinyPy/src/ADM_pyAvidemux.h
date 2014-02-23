@@ -68,6 +68,7 @@ void pyDisplayInfo(IEditor *editor, const char *one, const char *two);
 /* Misc */
 int pyTestCrash(void);
 int pyTestAssert(void);
+int pyTestSub( char *subName);
 /* OS */
 char *pyGetEnv(IEditor *editor,const char *);
 #endif

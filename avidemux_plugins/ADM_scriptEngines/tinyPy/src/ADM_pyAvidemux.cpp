@@ -195,25 +195,7 @@ void pyDisplayInfo(IEditor *editor, const char *one, const char *two)
 {
 	GUI_Info_HIG(ADM_LOG_INFO, one, two);
 }
-/**
-    \fn pyTestCrash
-*/
 
-int pyTestCrash(void)
-{
-	int *foobar = NULL;
-	*foobar = 0; // CRASH!
-	return true;
-}
-/**
-    \fn pyTestAssert
-*/
-
-int pyTestAssert(void)
-{
-	ADM_assert(0);
-	return true;
-}
 /**
  * \fn pyGetEnv
  * @param editor

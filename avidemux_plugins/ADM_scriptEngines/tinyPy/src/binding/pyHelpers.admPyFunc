@@ -1,4 +1,4 @@
 # Basic action load, handle seg, getInfo
-/* FUNC */ int pyTestAssert:testAssert          (void ) 
+/* FUNC */ int pyTestAssert:testAssert         (void ) 
 /* FUNC */ int pyTestCrash:testCrash           (void ) 
-
+/* FUNC */ int pyTestSub:testSub               (char) 
