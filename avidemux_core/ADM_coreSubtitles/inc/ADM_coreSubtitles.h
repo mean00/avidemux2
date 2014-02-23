@@ -8,16 +8,18 @@
  ***************************************************************************/
 #pragma once
 #include <string>
+#include <vector>
 /**
  * \class subtitleTextEntry
  */
 class subtitleTextEntry
 {
+public:    
     uint64_t    start;
     uint64_t    stop;
     std::string text;
 };
-
+typedef std::vector<subtitleTextEntry> ListOfSubtitleLines;
 /**
  *      \class ADM_subtitle
  */
@@ -31,6 +33,7 @@ class ADM_subtitle
     }ADM_SUBTITLE_TYPE;
 protected:
     ADM_SUBTITLE_TYPE    _type;
+    ListOfSubtitleLines  _list;
 public:    
                 ADM_subtitle();
      virtual   ~ADM_subtitle();
