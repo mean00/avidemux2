@@ -9,6 +9,7 @@
 #pragma once
 #include <string>
 #include <vector>
+typedef std::vector<std::string> ListOfText;
 /**
  * \class subtitleTextEntry
  */
@@ -17,7 +18,7 @@ class subtitleTextEntry
 public:    
     uint64_t    start;
     uint64_t    stop;
-    std::string text;
+    ListOfText  texts;
 };
 typedef std::vector<subtitleTextEntry> ListOfSubtitleLines;
 /**

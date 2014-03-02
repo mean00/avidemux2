@@ -61,13 +61,26 @@ uint32_t ms=(uint32_t)(ams/1000);
 bool srt2ssa(subtitleTextEntry &in,subtitleTextEntry &out)
 {
     char buffer[1024];
+    char buffer2[1024];
     std::string startTime=std::string(ADMus2Time(in.start));
     std::string endTime=std::string(ADMus2Time(in.stop));
     std::string result;
     
     sprintf(buffer,"Dialogue: 0,%s,%s,Default,,0000,0000,0000,,",startTime.c_str(),endTime.c_str());
-    out.text=std::string(buffer);
-    out.text+=in.text;
+    int m=in.texts.size();
+    if(m)
+    {
+        strcpy(buffer2,in.texts[0].c_str());
+        for(int i=1;i<m;i++)
+        {
+               strcat(buffer2,"\\n") ;
+               strcat(buffer2,in.texts[i].c_str());
+        }
+    
+    out.texts.clear();
+    strcat(buffer,buffer2);
+    out.texts.push_back(std::string(buffer));
+    }
     out.start=in.start;
     out.stop=in.stop;
     return true;

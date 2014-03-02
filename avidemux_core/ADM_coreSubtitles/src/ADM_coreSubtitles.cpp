@@ -73,7 +73,9 @@ bool      ADM_subtitle::dump(void)
         subtitleTextEntry &e=_list[i];
         printf(" %s ->",ADM_us2plain(e.start));
         printf(" %s :",ADM_us2plain(e.stop));
-        printf(" <%s> \n",e.text.c_str());
+        int m=e.texts.size();
+        for(int j=0;j<m;j++)
+                printf(" --><%s> \n",e.texts[j].c_str());
     }
     return true;
 }
@@ -152,7 +154,14 @@ bool       ADM_subtitle::saveAsSSA(const char *out)
     for(int i=0;i<n;i++)
     {
         subtitleTextEntry &in=_list[i];
-        fprintf(file,"%s\n",in.text.c_str());
+        int m=in.texts.size();
+        if(!m) continue;
+        fprintf(file,"%s",in.texts[0].c_str());
+        for(int j=1;j<m;j++)
+        {
+                fprintf(file,"\\n%s",in.texts[j].c_str());
+        }
+        fprintf(file,"\n");
     }
     ADM_info("%s written\n",out);
     fclose(file);

@@ -151,18 +151,18 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
                         }
                         entry.start=start;
                         entry.stop=end;
-                        entry.text=std::string("");
+                        entry.texts.clear();
                         state=STATE_DATA;
                         break;
             case STATE_DATA:
                         if(length<2)
                         {
                             lines.push_back(entry);
-                            entry.text="";
+                            entry.texts.clear();
                             state=STATE_LINENO;
                         }
-                        if(entry.text.length()>1) entry.text+=std::string("\n");
-                        entry.text+=std::string(buffer);
+                        
+                        entry.texts.push_back(std::string(buffer));
                         break;
         }
     }
