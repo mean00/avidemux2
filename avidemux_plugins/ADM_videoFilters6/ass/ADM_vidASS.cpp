@@ -20,6 +20,7 @@
 
 #include "ass_ssa.h"
 #include "ass_ssa_desc.cpp"
+#include "ADM_coreSubtitles/inc/ADM_coreSubtitles.h"
 
 extern "C"
 {
@@ -53,12 +54,12 @@ public:
 
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   subAss,   // Class
-                        1,0,0,              // Version
+                        1,0,1,              // Version
                         ADM_UI_ALL,         // UI
                         VF_SUBTITLE,            // Category
                         "ssa",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("ass","SSA."),            // Display name
-                        QT_TRANSLATE_NOOP("ass","Hardcode ass/ssa subtitles using libass.") // Description
+                        QT_TRANSLATE_NOOP("ass","SSA/ASS/SRT"),            // Display name
+                        QT_TRANSLATE_NOOP("ass","Hardcode ass/ssa/srt subtitles using libass.") // Description
                     );
 
 
@@ -101,30 +102,26 @@ const char *subAss::getConfiguration(void)
 /**
     \fn ctor
 */
-subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
-{
-	 if(!setup || !ADM_paramLoad(setup,ass_ssa_param,&param))
-    {
-            param.font_scale = 1.;
-            param.line_spacing = param.topMargin = param.bottomMargin = 0;
-            param.subtitleFile = NULL;
-            param.fontDirectory = ADM_strdup(DEFAULT_FONT_DIR);
-            param.extractEmbeddedFonts = 1;
+subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup) {
+    if (!setup || !ADM_paramLoad(setup, ass_ssa_param, &param)) {
+        param.font_scale = 1.;
+        param.line_spacing = param.topMargin = param.bottomMargin = 0;
+        param.subtitleFile = NULL;
+        param.fontDirectory = ADM_strdup(DEFAULT_FONT_DIR);
+        param.extractEmbeddedFonts = 1;
     }
-        src=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
+    src = new ADMImageDefault(in->getInfo()->width, in->getInfo()->height);
 
-        /* ASS initialization */
-        _ass_lib = NULL;
-        _ass_track = NULL;
-        _ass_rend = NULL;
+    /* ASS initialization */
+    _ass_lib = NULL;
+    _ass_track = NULL;
+    _ass_rend = NULL;
 
-        if(param.subtitleFile)
-        {
-              if(!this->setup())
-              {
-                GUI_Error_HIG("Format ?","Are you sure this is an ass file ?");
-              }
+    if (param.subtitleFile) {
+        if (!this->setup()) {
+            GUI_Error_HIG("Format ?", "Are you sure this is an ass file ?");
         }
+    }
 }
 /**
     \fn dtor
@@ -174,9 +171,41 @@ bool subAss::configure(void)
     diaElemUInteger   dBottom(PX(bottomMargin),QT_TRANSLATE_NOOP("ass","Botto_m margin"),0,200);
 
        diaElem *elems[5]={&file,&dSpacing,&dScale,&dTop,&dBottom};
-
+again:
    if( diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
    {
+       char *p=param.subtitleFile;
+       int l=strlen(p);
+       if(l>3 && !strcasecmp(p+l-4,".srt"))
+       {
+           if(!GUI_Question("This is a srt file. Convert to SSA ?"))
+           {
+               goto again;
+           }
+           ADM_subtitle sub;
+           if(!sub.load(p))
+           {
+               GUI_Error_HIG("Error","Cannot load this srt file.");
+               goto again;
+           }
+           if(false==sub.srt2ssa())
+           {
+               GUI_Error_HIG("Error","Cannot convert to ssa.");
+               goto again;               
+           }
+           char *newName=(char *)alloca(l)+5;
+           strcpy(newName,p);
+           strcpy(newName+l-4,".ssa");
+           if(false==sub.saveAsSSA(newName))
+           {
+               GUI_Error_HIG("Error","Cannot save converted file.");
+               goto again;                              
+           }
+           // all ok, we can now use the ssa file
+           strcpy(p,newName);
+       }
+       
+       
 #undef MKME
 #define MKME(x,y) param.y=(float)x
     MKME(scale,font_scale);
