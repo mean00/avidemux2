@@ -163,6 +163,7 @@ bool subAss::configure(void)
 
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
+    char newName[2*1024]; // should be a dynamic size..
 
     diaElemFile       file(0,(char **)PX(subtitleFile),QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
@@ -193,7 +194,7 @@ again:
                GUI_Error_HIG("Error","Cannot convert to ssa.");
                goto again;               
            }
-           char *newName=(char *)alloca(l)+5;
+           
            strcpy(newName,p);
            strcpy(newName+l-4,".ssa");
            if(false==sub.saveAsSSA(newName))
