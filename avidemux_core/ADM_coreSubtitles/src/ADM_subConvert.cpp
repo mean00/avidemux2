@@ -20,6 +20,21 @@ namespace ADM_sub
 {
 
 
+static const char *ADMus2Time(uint64_t ams)
+{
+static char buffer[256];
+uint32_t ms=(uint32_t)(ams/1000);
+    uint32_t hh,mm,ss,mms;
+    if(ams==ADM_NO_PTS)
+        sprintf(buffer,"xx:xx:xx.xxx");
+    else    
+    {
+        ms2time(ms,&hh,&mm,&ss,&mms);
+        sprintf(buffer,"%01"PRIu32":%02"PRIu32":%02"PRIu32".%03"PRIu32,hh,mm,ss,mms);
+    }
+    return buffer;
+
+}
 
 #ifndef DIR_SEP
 # ifdef WIN32
@@ -46,11 +61,11 @@ namespace ADM_sub
 bool srt2ssa(subtitleTextEntry &in,subtitleTextEntry &out)
 {
     char buffer[1024];
-    std::string startTime=std::string(ADM_us2plain(in.start));
-    std::string endTime=std::string(ADM_us2plain(in.start));
+    std::string startTime=std::string(ADMus2Time(in.start));
+    std::string endTime=std::string(ADMus2Time(in.stop));
     std::string result;
     
-    sprintf(buffer,"Dialogue: 0,%s:%s,Default,,0000,0000,0000,,",startTime.c_str(),endTime.c_str());
+    sprintf(buffer,"Dialogue: 0,%s,%s,Default,,0000,0000,0000,,",startTime.c_str(),endTime.c_str());
     out.text=std::string(buffer);
     out.text+=in.text;
     out.start=in.start;

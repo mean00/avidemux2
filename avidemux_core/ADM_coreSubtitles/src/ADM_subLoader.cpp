@@ -21,6 +21,8 @@
 #include "ADM_default.h"
 #include "ADM_coreSubtitles.h"
 
+#define HOLD_ON_TIMER (3*1000*1000LL)
+
 namespace ADM_sub
 {
 
@@ -51,7 +53,14 @@ static uint64_t split2us(const int h2,const int m2,const int s2,const int ms2)
     r=r*1000;
     return r;
 }
-bool splitSrtTiming(const char *str,uint64_t &start,uint64_t &end )
+/**
+ * \fn splitSrtTiming
+ * @param str
+ * @param start
+ * @param end
+ * @return 
+ */
+static bool splitSrtTiming(const char *str,uint64_t &start,uint64_t &end )
 {
     int h1,h2,m1,m2,s1,s2,ms1,ms2;
     int n=sscanf(str,"%d:%d:%d,%d --> %d:%d:%d,%d",&h1,&m1,&s1,&ms1,&h2,&m2,&s2,&ms2);
@@ -64,6 +73,28 @@ bool splitSrtTiming(const char *str,uint64_t &start,uint64_t &end )
     return true;
 }
 
+
+/**
+ *      \fn updateTiming
+ *      \brief srt does not provide 'end display' timeing information, make a guess
+ */
+static bool updateSrtTiming(ListOfSubtitleLines &lines)
+{
+    int n=lines.size();
+    for(int i=0;i<n-1;i++)
+    {
+        subtitleTextEntry &current=lines.at(i);
+        subtitleTextEntry &next=lines.at(i+1);
+        uint64_t limit=current.stop;        
+        if(limit+10000>=next.start) limit=next.start-10000;
+        lines.at(i).stop=limit;
+    }
+    if(n)
+        lines[n-1].stop=lines[n-1].start+HOLD_ON_TIMER;
+    return true;
+    
+    
+}
 /**
  * \fn loadSrt
  * @param file
@@ -137,6 +168,7 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
     }
     fclose(fd);
     ADM_info("%d entries loaded\n",lines.size());
+    //updateSrtTiming(lines);
     return true;
 }
 }
