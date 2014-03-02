@@ -57,7 +57,11 @@ int pyTestSub( char *subName)
 
     ADM_info("Dumping : %s\n",subName);
     sub.dump();
+    
+    ADM_info("Saving : %s\n",subName);
+    sub.saveAsSSA("/tmp/foo.ass");
 
+    
     ADM_info("Done : %s\n",subName);
     return 1;
 }

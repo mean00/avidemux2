@@ -39,6 +39,7 @@ public:
      virtual   ~ADM_subtitle();
      bool      load(const char *subtitleFile);
      bool      dump(void);
+     bool      saveAsSSA(const char *out);
 public:    
     bool       srt2ssa();
 };

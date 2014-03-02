@@ -102,3 +102,59 @@ bool       ADM_subtitle::srt2ssa()
     ADM_info("Converted %d entries\n",_list.size());
     return true;
 }
+static void writeSSAHeader(FILE *f)
+{
+#define W(x) fprintf(f,x"\n");
+W("[Script Info]");
+W("Title:");
+W("Original Script:");
+W("Original Translation:");
+W("Original Editing:");
+W("Original Timing:");
+W("Synch Point:");
+W("Script Updated By:");
+W("Update Details:");
+W("ScriptType: v4.00+");
+W("Collisions: Normal");
+W("PlayResY:");
+W("PlayResX:");
+W("PlayDepth:");
+W("Timer: 100.0000");
+W("WrapStyle:");
+W("");
+W("[V4+ Styles]");
+W("Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding");
+W("Style: Default,Arial,18,&H00ffffff,&H0000ffff,&H00000000,&H00000000,0,0,0,0,100,100,0,0.00,1,2,2,2,30,30,10,0");
+W("");
+W("[Events]");
+W("Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text")
+ 
+}
+/**
+ *      \fn saveAsSSA
+ */
+bool       ADM_subtitle::saveAsSSA(const char *out)
+{
+    ListOfSubtitleLines converted;
+    if(_type!=SUB_TYPE_SSA)
+    {
+        ADM_warning("saveAsSSA: Input file is not SSA\n");
+        return false;        
+    }
+    int n=_list.size();
+    FILE *file=ADM_fopen(out,"wt");
+    if(!file)
+    {
+        ADM_warning("Cannot create <%s>\n",out);
+        return false;
+    }
+    writeSSAHeader(file);
+    for(int i=0;i<n;i++)
+    {
+        subtitleTextEntry &in=_list[i];
+        fprintf(file,"%s\n",in.text.c_str());
+    }
+    ADM_info("%s written\n",out);
+    fclose(file);
+    return true;
+}
