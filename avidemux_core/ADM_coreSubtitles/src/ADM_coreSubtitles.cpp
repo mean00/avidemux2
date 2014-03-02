@@ -13,6 +13,7 @@
 namespace ADM_sub
 {
 extern bool loadSrt(const char *file,ListOfSubtitleLines &lines);
+extern bool srt2ssa(subtitleTextEntry &in,subtitleTextEntry &out);
 };
 
 /**
@@ -49,7 +50,13 @@ bool      ADM_subtitle::load(const char *subtitleFile)
     const char *ext=subtitleFile+l-3;
     if(!strcasecmp(ext,"srt"))
     {
-        return  ADM_sub::loadSrt(subtitleFile,_list);
+        bool r=ADM_sub::loadSrt(subtitleFile,_list);
+        if(!r)
+        {
+            return false;
+        }
+        _type=SUB_TYPE_SRT;
+        return true;
     }
     ADM_warning("Unknown extension <%s>, or not supported\n",ext);
     return false;
@@ -68,5 +75,30 @@ bool      ADM_subtitle::dump(void)
         printf(" %s :",ADM_us2plain(e.stop));
         printf(" <%s> \n",e.text.c_str());
     }
+    return true;
+}
+
+/**
+ */
+bool       ADM_subtitle::srt2ssa()
+{
+    ListOfSubtitleLines converted;
+    if(_type!=SUB_TYPE_SRT)
+    {
+        ADM_warning("srt2ssa: Input file is not SRT\n");
+        return false;        
+    }
+    int n=_list.size();
+    for(int i=0;i<n;i++)
+    {
+        subtitleTextEntry in,out;
+        in=_list[i];
+        ADM_sub::srt2ssa(in,out);
+        converted.push_back(out);        
+    }
+    _list.clear();
+    _list=converted;
+    _type=SUB_TYPE_SSA;
+    ADM_info("Converted %d entries\n",_list.size());
     return true;
 }

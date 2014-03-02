@@ -51,6 +51,13 @@ int pyTestSub( char *subName)
     }
     ADM_info("Dumping : %s\n",subName);
     sub.dump();
+    
+    ADM_info("Converting to  ssa: %s\n",subName);
+    sub.srt2ssa();
+
+    ADM_info("Dumping : %s\n",subName);
+    sub.dump();
+
     ADM_info("Done : %s\n",subName);
     return 1;
 }
