@@ -14,6 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <algorithm> 
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "A_functions.h"
@@ -108,6 +109,26 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     return true;
 }
 /**
+ * \fn checkTiming
+ * @param list
+ * @param limit
+ * @return 
+ */
+static bool checkTiming(std::vector<uint64_t> &list, uint64_t limit)
+{
+    int n=list.size();
+    int good=0,bad=0;
+    for(int i=0;i<n-1;i++)
+    {
+        if((list[i+1]-list[i])<limit) bad++;
+        else good ++;
+    }
+    printf("Good : %d\n",good);
+    printf("Bad  : %d\n",bad);
+    return false;
+}
+
+/**
     \fn checkForDoubledFps
     \brief Checks if the DTS increases by half the fps
 
@@ -117,35 +138,25 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     int totalFrames=hdr->getVideoStreamHeader()->dwLength;
     int good=0,bad=0,skipped=0;
     uint64_t dtsCeil= (timeIncrementUs*18)/10;
+    std::vector<uint64_t> dtsList,ptsList;
     ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
-    for(int i=0;i<totalFrames-1;i++)
+    for(int i=0;i<totalFrames;i++)
     {
-          uint64_t pts,dts;
-          uint64_t dts2;
+          uint64_t pts,dts;          
           hdr->getPtsDts(i,&pts,&dts);
-          hdr->getPtsDts(i+1,&pts,&dts2);
-          if(dts==ADM_NO_PTS || dts2==ADM_NO_PTS)
-          {
-              skipped++;
-              continue;
-          }
-          if((dts2-dts)< dtsCeil)
-              bad++;
-          else
-              good++;
+          
+          if(dts!=ADM_NO_PTS)
+                dtsList.push_back(dts);
+          if(pts!=ADM_NO_PTS)
+                ptsList.push_back(pts);          
     }
-    ADM_info("Out of %d frames, we have :\n",totalFrames);
-    ADM_info("Bad     : %d\n",bad);
-    ADM_info("Good    : %d\n",good);
-    ADM_info("Skipped : %d\n",skipped);
-    int total=good+bad+skipped;
-    if(!total) return false;
-    if(bad==0 && good*100>40*total)
-    {
-        ADM_info("  Looks like doubled fps\n");
-        return true;
-              
-    }
-    return false;
+    std::sort (dtsList.begin(), dtsList.end());   
+    std::sort (ptsList.begin(), ptsList.end());  
+    ADM_info("Checking DTS...\n");
+    bool okDts=checkTiming(dtsList,dtsCeil);
+    ADM_info("Checking PTS...\n");
+    bool okPts=checkTiming(ptsList,dtsCeil);
+    
+    return okDts && okPts;
 }
 // EOF
