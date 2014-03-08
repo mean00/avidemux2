@@ -274,8 +274,10 @@ bool      audioTrackQt4::run(void)
 bool  audioTrackQt4::updateActive(void)
 {
     // 1 - check for duplicates 
-    int map[NB_MENU];
-    memset(map,0,sizeof(map));
+    int map[32]; // The size is related to the INPUT number of tracks, not output thx Rickard
+    for(int i=0;i<32;i++)
+        map[i]=0;
+    
     for(int i=0;i<NB_MENU;i++)
     {
         if(window->enabled[i]->checkState()==Qt::Checked)
