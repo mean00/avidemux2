@@ -123,8 +123,9 @@ static bool checkTiming(std::vector<uint64_t> &list, uint64_t limit)
         if((list[i+1]-list[i])<limit) bad++;
         else good ++;
     }
-    printf("Good : %d\n",good);
-    printf("Bad  : %d\n",bad);
+    ADM_info("\tGood : %d\n",good);
+    ADM_info("\tBad  : %d\n",bad);
+    if(!bad) return true;
     return false;
 }
 
@@ -157,6 +158,13 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     ADM_info("Checking PTS...\n");
     bool okPts=checkTiming(ptsList,dtsCeil);
     
+    if(okDts && okPts)
+    {
+        ADM_info("We can safely halve fps\n");
+    }else
+    {
+        ADM_info("Cannot halve fps\n");
+    }
     return okDts && okPts;
 }
 // EOF
