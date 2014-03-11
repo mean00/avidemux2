@@ -52,15 +52,29 @@
     <div id="inner">
         <h1>What's New in Avidemux</h1>
         <ul>
-                <li>Windows : Better management of non ascii filename with x264</li>
-                <li>Images  : Better support for bmp and jpeg</li>
-                <li>Auto    : Fixed PSP auto script (LJ)</li>
-                <li>Packages: Better RPM generation (mit)</li>
-                <li>Audio   : Correct handling of 8Bits PCM in mp4/mov</li>
-                <li>Build   : Support for cmake 2.8.12 (2.8.13) (ajschult)</li>
-                <li>mkv     : Fixed seeking in mkv/h264</li>
-                <li>TS/Audio: Extend support for SBR in AAC/LATM</li>
-                <li>TS/H264 : Split at NALU boundaries, sometimes it was off by one byte</li>
+                <li>Image/export: Proper initialization of Qz for jpeg export</li>
+                <li>UI          : Add an override menu to force language</li>
+                <li>tinypy      : Add support for os.environ</li>
+                <li>x264        : Improved settings (tobias)</li>
+                <li>Win32       : Fix crash when having an audio problem</li>
+                <li>Win32       : Re-add mp4v2 to installer files</li>
+                <li>Audio/FAAC  : Fix channel mapping when source is mono</li>
+                <li>Audio/AMR   : Re-enabled AMR</li>
+                <li>Audio/lavc  : Fixed encoding for codec not supporting planar (MP2)</li>
+                <li>Audio       : Fixed importing MP2 audio detected as MP3</li>
+                <li>Editor      : Fix deleting chunks of the video leading to seek errors</li>
+                <li>Editor      : Initial copy/paste support</li>
+                <li>Editor/audio: Fix issue when source has more than 4 tracks</li>
+                <li>Editor      : Better detection of double fps input files</li>
+                <li>TS/Demux    : Brute force eac3 probe</li>
+                <li>TS/Demux    : Better initialization, avoid dropping audio</li>
+                <li>MP4/Demux   : Fix management of PCM audio</li>
+                <li>Mkv/Demux   : Proper re-indexing for mpeg2 in mkv</li>
+                <li>Mp4v2/Mux   : Add fast start mode back</li>
+                <li>OpenSolaris : Some fixes by pfelecan</li>
+                <li>Subtitles   : Update libass + very simple srt2ssa converter</li>
+                <li>OsX         : Enables more optional codecs...</li>
+                <li>avsfilte    : Performance Improvements (fahr)</li>
        </ul>
          <br />
     </div>
