@@ -306,6 +306,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ADM_DIR}/libADM_coreVideoCodec6.dll
     ${File} ${ADM_DIR}/libADM_coreVideoEncoder6.dll
     ${File} ${ADM_DIR}/libADM_coreVideoFilter6.dll
+    ${File} ${ADM_DIR}/libADM_coreSubtitle.dll
     ${File} ${QT_DIR}/QtCore4.dll
     ${File} ${QT_DIR}/QtGui4.dll
     ${File} ${NSIDIR}/../../AUTHORS.
