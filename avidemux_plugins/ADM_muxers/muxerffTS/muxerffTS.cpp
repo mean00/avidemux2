@@ -70,12 +70,6 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
             return false;
      }
    
-    if(!nbAudioTrack) 
-        {
-            printf("[ffTS] One audio track needed\n");
-            return false;
-        }
-   
     /* All seems fine, open stuff */
     const char *fmt="mpegts";
     

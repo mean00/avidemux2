@@ -211,11 +211,6 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
                     ADM_assert(0);
         }
     }
-    if(!nbAudioTrack) 
-        {
-            FAIL(" One audio track needed\n");
-            
-        }
     for(int i=0;i<nbAudioTrack;i++)
     {
         WAVHeader *head=a[i]->getInfo();
