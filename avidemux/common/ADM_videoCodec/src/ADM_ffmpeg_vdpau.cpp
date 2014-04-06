@@ -323,8 +323,11 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         // Now instantiate our VDPAU surface & decoder
         for(int i=0;i<NB_SURFACE;i++)
             VDPAU->renders[i]=NULL;
-        
-        if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, w,h,15,&(VDPAU->vdpDecoder)))
+       
+        int widthToUse=(w+15)&~15;
+        int heightToUse=(h+15)&~15;
+ 
+        if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, widthToUse,heightToUse,15,&(VDPAU->vdpDecoder)))
         {
             ADM_error("Cannot create VDPAU decoder\n");
             alive=false;
@@ -335,7 +338,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         {
             VDPAU->renders[i]=new vdpau_render_state;
             memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
-            if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&(VDPAU->renders[i]->surface)))
+            if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(VDPAU->renders[i]->surface)))
             {
                 ADM_error("Cannot create surface %d/%d\n",i,NB_SURFACE);
                 alive=false;
