@@ -380,17 +380,46 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
 {
     
     uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
+    int     originalNalSize=nalSize+16;
     uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
+    if(nalSize>originalNalSize)
+    {
+        ADM_warning("NAL is way too big : %d, while we expected %d at most\n",nalSize,originalNalSize);
+        free(payloadBuffer);
+        return false;
+    }        
+    
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
     {
                 uint32_t sei_type=0,sei_size=0;
-                while(payload[0]==0xff) {sei_type+=0xff;payload++;};
+                while(payload[0]==0xff) 
+                {
+                        sei_type+=0xff;payload++;
+                        if(payload+2>=tail) 
+                        {
+                            ADM_warning("Cannot decode SEI\n");
+                            goto abtSei;
+                        }
+                };
                 sei_type+=payload[0];payload++;
-                while(payload[0]==0xff) {sei_size+=0xff;payload++;};
+                if(payload>=tail)
+                {
+                            ADM_warning("Cannot decode SEI\n");
+                            goto abtSei;                    
+                }
+                while(payload[0]==0xff) 
+                {
+                    sei_size+=0xff;payload++;
+                    if(payload+1>=tail) 
+                        {
+                            ADM_warning("Cannot decode SEI (2)\n");
+                            goto abtSei;
+                        }                    
+                };
                 sei_size+=payload[0];payload++;
                 aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
                 if(payload+sei_size>tail) break;
@@ -409,6 +438,7 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                             break;
                 }
     }
+abtSei:
     free(payloadBuffer);
     return r;
 }
