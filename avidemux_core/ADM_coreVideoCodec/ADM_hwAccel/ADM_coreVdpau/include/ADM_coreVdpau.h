@@ -98,7 +98,10 @@ public:
                                 uint32_t attrCount,
                                 const  VdpVideoMixerAttribute *xkeys,
                                 void * const* values);
-
+    static int dimensionRoundUp(int x)
+    {
+                return (x+15) & ~15;
+    }
 
 #endif
 };

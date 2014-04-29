@@ -65,11 +65,16 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
     // Create couple of outputSurface
     surface[0]=surface[1]=VDP_INVALID_HANDLE;
     currentSurface=0;
+    
+    //
+    int widthToUse=admVdpau::dimensionRoundUp(w);
+    int heightToUse=admVdpau::dimensionRoundUp(h);
+    
     if(!reallocOutputSurface(displayWidth,displayHeight))
     {
         goto badInit;
     }
-    if(VDP_STATUS_OK!=admVdpau::surfaceCreate(w,h,&input)) 
+    if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&input)) 
     {
         ADM_error("Cannot create input Surface\n");
         goto badInit;
@@ -79,7 +84,7 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
         ADM_error("Cannot create queue\n");
         goto badInit;
     } 
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(w,h,&mixer)) 
+    if(VDP_STATUS_OK!=admVdpau::mixerCreate(widthToUse,heightToUse,&mixer)) 
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;

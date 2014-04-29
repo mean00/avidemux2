@@ -57,6 +57,7 @@ typedef enum
     ADM_VDPAU_VC1=3
 }ADM_VDPAU_TYPE;
 
+
 /**
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
@@ -324,8 +325,8 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         for(int i=0;i<NB_SURFACE;i++)
             VDPAU->renders[i]=NULL;
        
-        int widthToUse=(w+15)&~15;
-        int heightToUse=(h+15)&~15;
+        int widthToUse=admVdpau::dimensionRoundUp(w);
+        int heightToUse=admVdpau::dimensionRoundUp(h);
  
         if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, widthToUse,heightToUse,15,&(VDPAU->vdpDecoder)))
         {
