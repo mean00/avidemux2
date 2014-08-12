@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "1.2.1")
+set(FFMPEG_VERSION "1.2.7")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -60,6 +60,7 @@ if (FFMPEG_PERFORM_PATCH)
 		patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 	endforeach(patchFile)
         # XVBA patch from xbmc_dxva
+        IF(XVBA_NOT_ENABLED_FOR_NOW) #<-------------------
 	file(GLOB patchFilesXvba "${FFMPEG_PATCH_DIR}/xvba/*.patch")
 
 	foreach(patchFileXvba ${patchFilesXvba})
@@ -67,6 +68,7 @@ if (FFMPEG_PERFORM_PATCH)
                 MESSAGE(STATUS "-- DXVA, Applying patch <${short}> --")
 		patch_file_p1("${FFMPEG_SOURCE_DIR}" "${patchFileXvba}")
 	endforeach(patchFileXvba)
+        ENDIF(XVBA_NOT_ENABLED_FOR_NOW) #<-------------------
         
         #
 	if (UNIX )
@@ -88,11 +90,11 @@ if (USE_LIBVA)
 endif (USE_LIBVA)
 
 
-if(USE_XVBA)
-	xadd(--enable-xvba)
-else(USE_XVBA)
-	xadd(--disable-xvba)
-endif(USE_XVBA)
+#if(USE_XVBA)
+	#xadd(--enable-xvba)
+#else(USE_XVBA)
+	#xadd(--disable-xvba)
+#endif(USE_XVBA)
 
 
 xadd(--enable-bsf aac_adtstoasc)
