@@ -22,6 +22,7 @@ typedef void SELFILE_CB(const char *);
 
 // Associated functions type
 typedef void    DIA_FILE_SEL_CB(const char *label,SELFILE_CB *cb);
+typedef void    DIA_FILE_SEL_CB_EXTENSION(const char *label,const char *extension,SELFILE_CB *cb);
 typedef void    DIA_FILE_SEL_NAME(const char *label, char * * name);
 typedef uint8_t DIA_FILE_SELECT(const char *title,char *target,uint32_t max, const char *source);
 typedef void	DIA_FILE_INIT(void);
@@ -29,8 +30,10 @@ typedef void	DIA_FILE_INIT(void);
 // Old FileSel interface
 ADM_COREUI6_EXPORT void GUI_FileSelRead(const char *label,SELFILE_CB *cb) ;
 ADM_COREUI6_EXPORT void GUI_FileSelWrite(const char *label,SELFILE_CB *cb) ;
+ADM_COREUI6_EXPORT void GUI_FileSelWriteExtension(const char *label,const char *extension,SELFILE_CB *cb) ;
 ADM_COREUI6_EXPORT void GUI_FileSelRead(const char *label, char * * name);
 ADM_COREUI6_EXPORT void GUI_FileSelWrite(const char *label, char * * name);
+
 
 // New FileSel interface, the receiving buffer is allocated by the caller
 ADM_COREUI6_EXPORT uint8_t FileSel_SelectWrite(const char *title,char *target,uint32_t max, const char *source);

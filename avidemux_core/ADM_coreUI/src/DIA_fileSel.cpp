@@ -70,6 +70,18 @@ void GUI_FileSelWrite(const char *label,char * * name)
 	ADM_assert(fileSelDescriptor);
 	return fileSelDescriptor->fileWriteName(label,name);	
 }
+
+/**
+ * \fn GUI_FileSelWrite
+ * \brief Select a file for Writing, name is allocated with a copy of the name, null if fail.
+ */	
+
+void GUI_FileSelWriteExtension(const char *label,const char *extension,SELFILE_CB *cb) 
+{
+	ADM_assert(fileSelDescriptor);
+        if(!fileSelDescriptor->fileSelWriteWithExtension) return;
+	return fileSelDescriptor->fileSelWriteWithExtension(label,extension,cb);	
+}
 /**
  * \fn FileSel_SelectWrite
  * \brief Select a file for Writing, name is allocated with a copy of the name, null if fail.

@@ -67,14 +67,80 @@ namespace ADM_QT4_fileSel
 
 	}
 
-	void GUI_FileSelRead(const char *label, char **name)
+	
+/**
+	  \fn GUI_FileSelWrite (const char *label, char **name, uint32_t access) 
+	  \brief Ask for a file for reading (access=0) or writing (access=1)
+	*/
+	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, char **name)
+	{
+		char *tmpname = NULL;
+                *name = NULL;		
+                QString str ;
+                QString fileName,dot=QString(".");
+                QString filterFile=QString("*");
+                bool doFilter = !!(ext && strlen(ext));
+                QFileDialog::Options opts;
+                
+                //printf("Do filer=%d\n",(int)doFilter);
+                if (prefs->get(LASTFILES_LASTDIR_WRITE,&tmpname))
+		{
+                        
+                        str = QFileInfo(QString::fromUtf8(tmpname)).path();
+                	/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
+			if (!QDir(str).exists())
+                                str.clear();
+		}
+		
+                if(doFilter)
+                {
+                    std::string f=std::string("*.")+std::string(ext);
+                    filterFile=QString(f.c_str());
+                    //printf("Filter = %s\n",f.c_str());
+                }
+                fileName = QFileDialog::getSaveFileName(NULL, 
+                                        label,  // caption
+                                        str,    // folder
+                                        NULL,   // filter
+                                        NULL,   // selected filter
+                                        opts);
+                
+		if (fileName.isNull() ) return;
+                prefs->set(LASTFILES_LASTDIR_WRITE, fileName.toUtf8().constData());
+                *name = ADM_strdup(fileName.toUtf8().constData());
+                
+                // Check if we need to add an extension....
+                if(doFilter)
+                {                     
+                        if(!strstr(*name,"."))
+                        {
+                            char *newName=(char *)ADM_alloc(strlen(*name)+4+strlen(ext));
+                            strcpy(newName,*name);
+                            strcat(newName,".");
+                            strcat(newName,ext);
+                            ADM_dezalloc(*name);
+                            *name=newName;
+                            //printf("New name =<%s>\n",*name);
+                            QString newFileName=fileName+QString(".")+QString(ext);
+                            //printf("New filename =<%s>\n",newFileName.toUtf8().constData());
+                            QFile newFile(newFileName);
+                            if(newFile.exists())
+                            {
+                                std::string q=std::string("Overwrite file ")+std::string(newFile.name());
+                                if(!GUI_Question(q.c_str()))
+                                    return;
+                            }
+                        }
+                }
+	}
+        void GUI_FileSelRead(const char *label, char **name)
 	{
 		GUI_FileSelSelect(label, name, 0);
 	}
 
 	void GUI_FileSelWrite(const char *label, char **name)
 	{
-		GUI_FileSelSelect(label, name, 1);
+		GUI_FileSelSelectWriteInternal(label,"",name);
 	}
 
 	void GUI_FileSelRead(const char *label, SELFILE_CB cb)
@@ -88,8 +154,12 @@ namespace ADM_QT4_fileSel
 			cb(name); 
 			ADM_dealloc(name);
 		}
-	}
-
+	}        
+        /**
+         * \fn GUI_FileSelWrite
+         * @param label
+         * @param cb
+         */
 	void GUI_FileSelWrite(const char *label, SELFILE_CB cb)
 	{
 		char *name;
@@ -186,7 +256,14 @@ namespace ADM_QT4_fileSel
 
 		return 0;
 	}
-
+        void GUI_FileSelWriteExtension(const char *label, const char *extension,SELFILE_CB cb)
+	{
+            char *name;
+            printf("Extension is : %s\n",extension);
+            GUI_FileSelSelectWriteInternal(label, extension, &name);
+            if(name)
+                cb(name);
+        }
 	/**
 		 * 
 	*/
@@ -205,7 +282,8 @@ static DIA_FILESEL_DESC_T Qt4FileSelDesc =
 	ADM_QT4_fileSel::GUI_FileSelWrite,
 	ADM_QT4_fileSel::FileSel_SelectRead,
 	ADM_QT4_fileSel::FileSel_SelectWrite,
-	ADM_QT4_fileSel::FileSel_SelectDir
+	ADM_QT4_fileSel::FileSel_SelectDir,
+        ADM_QT4_fileSel::GUI_FileSelWriteExtension
 };
 
 // Hook our functions

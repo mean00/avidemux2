@@ -38,6 +38,7 @@
 // Local prototypes
 #include "A_functions.h"
 #include "ADM_script2/include/ADM_script.h"
+#include "ADM_muxerProto.h"
 
 int      A_Save(const char *name);
 extern   ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
@@ -108,7 +109,11 @@ void HandleAction_Save(Action action)
       	break;
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
-      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select File to Save"),(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
+    {
+      int  muxerIndex=UI_GetCurrentFormat();
+      const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
+      GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select File to Save"),defaultExtension,(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
+    }
       break;
 //---------------------------------------------------
 
