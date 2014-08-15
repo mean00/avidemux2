@@ -78,10 +78,15 @@ namespace ADM_QT4_fileSel
                 *name = NULL;		
                 QString str ;
                 QString fileName,dot=QString(".");
-                QString filterFile=QString("*");
+                QString filterFile=QString("(*.*)");
                 bool doFilter = !!(ext && strlen(ext));
                 QFileDialog::Options opts;
+                int extSize=1;
                 
+                if(doFilter)
+                {
+                    extSize+=strlen(ext);
+                }
                 //printf("Do filer=%d\n",(int)doFilter);
                 if (prefs->get(LASTFILES_LASTDIR_WRITE,&tmpname))
 		{
@@ -94,7 +99,7 @@ namespace ADM_QT4_fileSel
 		
                 if(doFilter)
                 {
-                    std::string f=std::string("*.")+std::string(ext);
+                    std::string f=std::string("(*.")+std::string(ext)+std::string(")");
                     filterFile=QString(f.c_str());
                     //printf("Filter = %s\n",f.c_str());
                 }
@@ -102,36 +107,37 @@ namespace ADM_QT4_fileSel
                                         label,  // caption
                                         str,    // folder
                                         NULL,   // filter
-                                        NULL,   // selected filter
+                                        &filterFile,   // selected filter
                                         opts);
                 
 		if (fileName.isNull() ) return;
-                prefs->set(LASTFILES_LASTDIR_WRITE, fileName.toUtf8().constData());
-                *name = ADM_strdup(fileName.toUtf8().constData());
+                
+                *name=(char *)ADM_alloc(  strlen(fileName.toUtf8().constData())+extSize);
+                strcpy(*name,fileName.toUtf8().constData());
                 
                 // Check if we need to add an extension....
                 if(doFilter)
                 {                     
                         if(!strstr(*name,"."))
                         {
-                            char *newName=(char *)ADM_alloc(strlen(*name)+4+strlen(ext));
-                            strcpy(newName,*name);
-                            strcat(newName,".");
-                            strcat(newName,ext);
-                            ADM_dezalloc(*name);
-                            *name=newName;
-                            //printf("New name =<%s>\n",*name);
-                            QString newFileName=fileName+QString(".")+QString(ext);
-                            //printf("New filename =<%s>\n",newFileName.toUtf8().constData());
-                            QFile newFile(newFileName);
+                            strcat(*name,"."); strcat(*name,ext);
+
+                            fileName=fileName+QString(".")+QString(ext);
+                            QFile newFile(fileName);
                             if(newFile.exists())
                             {
-                                std::string q=std::string("Overwrite file ")+std::string(newFile.name());
-                                if(!GUI_Question(q.c_str()))
+                                QFileInfo fileInfo(newFile);
+                                QString q=QString("Overwrite file ")+fileInfo.fileName()+QString("?");
+                                if(!GUI_Question(q.toUtf8().constData()))
+                                {
+                                    ADM_dezalloc(*name);
+                                    *name=NULL;
                                     return;
+                                }
                             }
                         }
                 }
+                prefs->set(LASTFILES_LASTDIR_WRITE, fileName.toUtf8().constData());
 	}
         void GUI_FileSelRead(const char *label, char **name)
 	{
