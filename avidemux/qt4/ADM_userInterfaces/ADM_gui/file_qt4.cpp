@@ -78,7 +78,7 @@ namespace ADM_QT4_fileSel
                 *name = NULL;		
                 QString str ;
                 QString fileName,dot=QString(".");
-                QString filterFile=QString("(*.*)");
+                QString filterFile=QString("All files (*.*)");
                 bool doFilter = !!(ext && strlen(ext));
                 QFileDialog::Options opts;
                 int extSize=1;
@@ -99,15 +99,13 @@ namespace ADM_QT4_fileSel
 		
                 if(doFilter)
                 {
-                    std::string f=std::string("(*.")+std::string(ext)+std::string(")");
-                    filterFile=QString(f.c_str());
-                    //printf("Filter = %s\n",f.c_str());
+                    filterFile=QString(ext)+QString(" files (*.")+QString(ext)+QString(")");
                 }
                 fileName = QFileDialog::getSaveFileName(NULL, 
                                         label,  // caption
                                         str,    // folder
-                                        NULL,   // filter
-                                        &filterFile,   // selected filter
+                                        filterFile,   // filter
+                                        NULL,   // selected filter
                                         opts);
                 
 		if (fileName.isNull() ) return;
