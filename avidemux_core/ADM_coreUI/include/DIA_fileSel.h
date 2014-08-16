@@ -31,6 +31,7 @@ typedef void	DIA_FILE_INIT(void);
 ADM_COREUI6_EXPORT void GUI_FileSelRead(const char *label,SELFILE_CB *cb) ;
 ADM_COREUI6_EXPORT void GUI_FileSelWrite(const char *label,SELFILE_CB *cb) ;
 ADM_COREUI6_EXPORT void GUI_FileSelWriteExtension(const char *label,const char *extension,SELFILE_CB *cb) ;
+ADM_COREUI6_EXPORT void GUI_FileSelReadExtension(const char *label,const char *extension,SELFILE_CB *cb) ;
 ADM_COREUI6_EXPORT void GUI_FileSelRead(const char *label, char * * name);
 ADM_COREUI6_EXPORT void GUI_FileSelWrite(const char *label, char * * name);
 

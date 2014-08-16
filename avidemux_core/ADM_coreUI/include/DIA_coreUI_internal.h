@@ -38,6 +38,7 @@ typedef struct
 	DIA_FILE_SELECT   *fileSelectWrite;
 	DIA_FILE_SELECT   *fileSelectDirectory;
         DIA_FILE_SEL_CB_EXTENSION *fileSelWriteWithExtension;
+        DIA_FILE_SEL_CB_EXTENSION *fileSelReadWithExtension;
 }DIA_FILESEL_DESC_T;
 
 // Call this to hook your fileSelector functions
