@@ -326,7 +326,7 @@ void HandleAction (Action action)
           case ACT_JOG:
                 break;
           case ACT_OPEN_VIDEO:
-                GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File..."), (SELFILE_CB *)A_openAvi);
+                GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."), (SELFILE_CB *)A_openAvi);
                 break;
           default:
             break;
@@ -391,10 +391,10 @@ void HandleAction (Action action)
                 break;
 
     case ACT_OPEN_VIDEO:
-        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File..."),(SELFILE_CB *) A_openAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."),(SELFILE_CB *) A_openAvi);
         break;
     case ACT_APPEND_VIDEO:
-        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select AVI File to Append..."),(SELFILE_CB *) A_appendAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File to Append..."),(SELFILE_CB *) A_appendAvi);
         break;
     case ACT_VIDEO_PROPERTIES:
         DIA_properties ();
