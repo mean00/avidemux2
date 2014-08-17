@@ -26,20 +26,18 @@
 class DIA_processingBase
 {
     protected :
-            uint32_t 	lastper;
-            Clock	    _clock;
+            Clock	_clock;
             uint32_t	_nextUpdate;
-            uint32_t 	elapsed;
-            
+            uint32_t    _currentFrames;
+            uint32_t    _lastFrames;
+            uint32_t    _fps1000;
+            uint64_t    _duration;
     public:
             void 		*_priv;
-                        DIA_processingBase( const char *title=NULL ) {};
+                                DIA_processingBase( const char *title,uint32_t fps1000, uint64_t duration ) {};
             virtual		~DIA_processingBase(){};
-            // If returns 1 -> Means aborted
-            virtual uint8_t  	update(uint32_t percent) {ADM_assert(0);return 1;}
-            virtual uint8_t 	update(uint32_t current,uint32_t total){ADM_assert(0);return 1;};
-            virtual uint8_t  	isAlive (void ){ADM_assert(0);return 1;};
+            virtual bool  	update(uint32_t frame) {return false;} // Return true = abort
             
 };
-ADM_COREUI6_EXPORT DIA_processingBase *createProcessing(const char *title);
+ADM_COREUI6_EXPORT DIA_processingBase *createProcessing(const char *title,uint32_t fps1000,uint64_t duration);
 

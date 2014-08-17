@@ -118,14 +118,14 @@ void GUI_NextBlackFrame(void)
     const int darkness=40;
     admPreview::deferDisplay(true);
     ADMImage *rdr;
-    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."));
+    
+#warning set real fps
+    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."),25000,video_body->getVideoDuration());
 
     uint64_t startTime=admPreview::getCurrentPts();
     uint64_t totalTime=video_body->getVideoDuration()-startTime;
     
-    double percent;
-    Clock refresh;
-
+    uint32_t count=0;
     while(1)
     {
         UI_purge();
@@ -146,28 +146,8 @@ void GUI_NextBlackFrame(void)
         {
                 break;
         }
-        // not black..
-        // Only refresh every 3 sec
-        if(refresh.getElapsedMS()>3000) 
-        {
-            if(totalTime>1)
-            {
-                    uint64_t curTime=admPreview::getCurrentPts();
-                    percent=(curTime-startTime)/(double)totalTime;
-                    percent*=1000;
-                    if(work->update((int)percent,1000))         
-                          break;
-                    if(!work->isAlive())
-                          break;
-            }
-            else
-            {
-                    percent=500;
-            }
-            
-            GUI_setCurrentFrameAndTime();
-            refresh.reset();
-        }
+        if(work->update(1))         
+              break;
     }
     delete work;
     admPreview::deferDisplay(false);
