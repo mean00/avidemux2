@@ -246,6 +246,16 @@ DIA_workingBase *createWorking(const char *title)
     if(Toolkit->createWorking) return Toolkit->createWorking(title);
     return NULL;
 }
+
+/**
+    \fn createWorking
+    \brief
+*/
+DIA_processingBase *createProcessing(const char *title)
+{
+    if(Toolkit->createProcessing) return Toolkit->createProcessing(title);
+    return NULL;
+}
 /**
     \fn createWorking
     \brief

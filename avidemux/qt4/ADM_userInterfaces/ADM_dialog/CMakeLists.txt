@@ -8,13 +8,14 @@ SET(
         license.ui
         jobs.ui
         props.ui  vobsub.ui  audioTracks.ui
+        processing.ui
         working.ui)
 
 SET(headers
 	Q_about.h  Q_calculator.h
         Q_encoding.h
         Q_audioTracks.h Q_audioTrackClass.h
-	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  T_index_pg.h)
+	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  Q_processing.h T_index_pg.h)
 
 QT4_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
 QT4_WRAP_CPP(${ADM_LIB}_source ${headers})
@@ -26,6 +27,7 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
         Q_license.cpp
         Q_jobs.cpp  Q_props.cpp
         Q_working.cpp
+        Q_processing.cpp
         T_index_pg.cpp
         alert_qt4.cpp
         DIA_busy.cpp

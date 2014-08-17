@@ -21,6 +21,7 @@
 #include "DIA_fileSel.h"
 #include "DIA_factory.h"
 #include "DIA_working.h"
+#include "DIA_processing.h"
 #include "DIA_encoding.h"
 #include "DIA_audioTracks.h"
 
@@ -136,28 +137,30 @@ typedef int             CREATE_GUI_QUESTION(const char *alertstring);
 typedef int             CREATE_GUI_ALTERNATE(const char *title,const char *choice1,const char *choice2);
 typedef void            CREATE_GUI_VERBOSE(void);
 typedef void            CREATE_GUI_QUIET(void);
-typedef uint8_t			CREATE_GUI_IS_GUIET(void);
+typedef uint8_t		CREATE_GUI_IS_GUIET(void);
 typedef DIA_workingBase    *CREATE_GUI_WORKING(const char *title);
+typedef DIA_processingBase *CREATE_GUI_PROCESSING(const char *title);
 typedef DIA_encodingBase   *CREATE_GUI_ENCODING(uint64_t duration,bool useTray);
 typedef DIA_audioTrackBase *CREATE_GUI_AUDIOTRACKBASE(PoolOfAudioTracks * pool,ActiveAudioTracks *active);
 typedef void             UI_PURGE(void);
 
 typedef struct
 {
-    GET_CORE_TOOLKIT_VERSION    *getVersion;
-	CREATE_GUI_INFO_HIG 		*infoHig;
-	CREATE_GUI_ERROR_HIG		*errorHig;
+    GET_CORE_TOOLKIT_VERSION        *getVersion;
+	CREATE_GUI_INFO_HIG         *infoHig;
+	CREATE_GUI_ERROR_HIG        *errorHig;
 	CREATE_GUI_CONFIRMATION_HIG *confirmationHig;
-	CREATE_GUI_YESNO 			*yesno;
-	CREATE_GUI_QUESTION 		*question;
+	CREATE_GUI_YESNO            *yesno;
+	CREATE_GUI_QUESTION         *question;
 	CREATE_GUI_ALTERNATE        *alternate;
-	CREATE_GUI_VERBOSE 			*verbose;
-	CREATE_GUI_QUIET 			*quiet;
-	CREATE_GUI_IS_GUIET 		*isQuiet;
-    CREATE_GUI_WORKING          *createWorking;
-    CREATE_GUI_ENCODING         *createEncoding;
-    CREATE_GUI_AUDIOTRACKBASE   *createAudioTrack;
-    UI_PURGE                    *uiPurge;
+	CREATE_GUI_VERBOSE          *verbose;
+	CREATE_GUI_QUIET            *quiet;
+	CREATE_GUI_IS_GUIET         *isQuiet;
+        CREATE_GUI_WORKING          *createWorking;
+        CREATE_GUI_ENCODING         *createEncoding;
+        CREATE_GUI_AUDIOTRACKBASE   *createAudioTrack;
+        UI_PURGE                    *uiPurge;
+        CREATE_GUI_PROCESSING       *createProcessing;
     
 }CoreToolkitDescriptor;
 //

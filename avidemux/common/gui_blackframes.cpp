@@ -33,6 +33,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_render/GUI_render.h"
 #include "DIA_working.h"
+#include "DIA_processing.h"
 #include "ADM_commonUI/DIA_busy.h"
 #include "ADM_commonUI/GUI_ui.h"
 
@@ -117,14 +118,18 @@ void GUI_NextBlackFrame(void)
     const int darkness=40;
     admPreview::deferDisplay(true);
     ADMImage *rdr;
-    DIA_workingBase *work=createWorking(QT_TR_NOOP("Seeking"));
+    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."));
+
+    uint64_t startTime=admPreview::getCurrentPts();
+    uint64_t totalTime=video_body->getVideoDuration()-startTime;
+    
+    double percent;
+    Clock refresh;
+
     while(1)
     {
         UI_purge();
-        if(work->update(0,1))         
-                break;
-        if(!work->isAlive())
-                break;
+
         if(false==admPreview::nextPicture())
                 break;
         rdr=admPreview::getBuffer();
@@ -138,13 +143,36 @@ void GUI_NextBlackFrame(void)
 
         }
         if(!fastIsNotBlack(darkness,rdr))
+        {
                 break;
+        }
         // not black..
-        GUI_setCurrentFrameAndTime();
+        // Only refresh every 3 sec
+        if(refresh.getElapsedMS()>3000) 
+        {
+            if(totalTime>1)
+            {
+                    uint64_t curTime=admPreview::getCurrentPts();
+                    percent=(curTime-startTime)/(double)totalTime;
+                    percent*=1000;
+                    if(work->update((int)percent,1000))         
+                          break;
+                    if(!work->isAlive())
+                          break;
+            }
+            else
+            {
+                    percent=500;
+            }
+            
+            GUI_setCurrentFrameAndTime();
+            refresh.reset();
+        }
     }
     delete work;
     admPreview::deferDisplay(false);
     admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
     return;
 
 }
