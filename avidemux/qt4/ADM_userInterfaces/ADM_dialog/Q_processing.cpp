@@ -32,6 +32,9 @@ DIA_processingQt4::DIA_processingQt4(const char *title,uint32_t fps1000,uint64_t
 {
         _fps1000=fps1000;
         _duration=duration;
+        ui=new Ui_DialogProcessing();
+        ui->setupUi(this);
+	qtRegisterDialog(this);
 
         setWindowTitle(title);
         postCtor(); 
@@ -50,9 +53,6 @@ void DIA_processingQt4 :: postCtor( void )
         _currentFrames=0;      
       
         setWindowModality(Qt::ApplicationModal);        
-        ui=new Ui_DialogProcessing();
-        ui->setupUi(this);
-	qtRegisterDialog(this);
         
         connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
         show();
