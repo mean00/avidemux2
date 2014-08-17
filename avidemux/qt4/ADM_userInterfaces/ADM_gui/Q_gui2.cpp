@@ -200,7 +200,7 @@ void MainWindow::audioToggled(bool checked)
 		AVDM_setVolume(0);
 }
 
-void MainWindow::previewModeChanged(QAction *action)
+void MainWindow::previewModeChanged(int  flop)
 {
 	HandleAction(ACT_PreviewChanged);
 }
@@ -238,12 +238,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.actionQuit->setMenuRole(QAction::NoRole);
 #endif
 
-	// Preview modes
-	QActionGroup *groupPreviewModes = new QActionGroup(this);
-
-	groupPreviewModes->addAction(ui.actionPreviewInput);
-	groupPreviewModes->addAction(ui.actionPreviewOutput);
-	connect(groupPreviewModes, SIGNAL(triggered(QAction*)), this, SLOT(previewModeChanged(QAction*)));
+        connect( ui.checkDisplayOut,SIGNAL(stateChanged(int)),this,SLOT(previewModeChanged(int)));
 
 	/*
 	Connect our button to buttonPressed
@@ -320,11 +315,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	this->setFocus(Qt::OtherFocusReason);
 
 	setAcceptDrops(true);
-    setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
+        setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
 
     // Hook also the toolbar
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
-    connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
+    //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
 	QWidget* dummy0 = new QWidget();
 	QWidget* dummy1 = new QWidget();
@@ -815,20 +810,13 @@ void UI_refreshCustomMenu(void)
 */
 int UI_getCurrentPreview(void)
 {
-	int index;
-
-	if (WIDGET(actionPreviewOutput)->isChecked())
-		index = 1;
-	else if (WIDGET(actionPreviewSide)->isChecked())
-		index = 2;
-	else if (WIDGET(actionPreviewTop)->isChecked())
-		index = 3;
-	else if (WIDGET(actionPreviewSeparate)->isChecked())
-		index = 4;
-	else
-		index = 0;
-
-	return index;
+    if(WIDGET(checkDisplayOut)->isChecked()) 
+    {
+        printf("Output is ON\n");
+        return 1;
+    }
+    printf("Output is Off\n");
+    return 0;
 }
 
 /**
@@ -837,24 +825,7 @@ int UI_getCurrentPreview(void)
 */
 void UI_setCurrentPreview(int ne)
 {
-	switch (ne)
-	{
-		case 1:
-			WIDGET(actionPreviewOutput)->setChecked(true);
-			break;
-		case 2:
-			WIDGET(actionPreviewSide)->setChecked(true);
-			break;
-		case 3:
-			WIDGET(actionPreviewTop)->setChecked(true);
-			break;
-		case 4:
-			WIDGET(actionPreviewSeparate)->setChecked(true);
-			break;
-		default:
-			WIDGET(actionPreviewInput)->setChecked(true);
-			break;
-	}
+        WIDGET(checkDisplayOut)->setChecked(true);
 }
 /**
         \fn FatalFunctionQt

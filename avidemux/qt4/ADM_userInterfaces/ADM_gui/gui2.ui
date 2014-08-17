@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>671</width>
-    <height>679</height>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -195,24 +195,6 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave_video"/>
    <addaction name="actionProperties"/>
-   <addaction name="separator"/>
-   <addaction name="actionLoad_run_project"/>
-   <addaction name="actionSave_project"/>
-   <addaction name="separator"/>
-   <addaction name="actionCalculator"/>
-  </widget>
-  <widget class="QToolBar" name="toolBar_2">
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionPreviewInput"/>
-   <addaction name="actionPreviewOutput"/>
   </widget>
   <widget class="QDockWidget" name="codecWidget">
    <property name="styleSheet">
@@ -867,22 +849,6 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>6</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
         <number>12</number>
@@ -1283,7 +1249,7 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>132</width>
+     <width>192</width>
      <height>143</height>
     </size>
    </property>
@@ -1336,33 +1302,10 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>6</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <layout class="QVBoxLayout" name="verticalLayout_6">
        <property name="spacing">
         <number>9</number>
        </property>
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>&lt;b&gt;Selection&lt;/b&gt;</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <layout class="QGridLayout" name="gridLayout">
          <property name="verticalSpacing">
@@ -1409,6 +1352,23 @@
           <widget class="QPushButton" name="pushButtonJumpToMarkerB">
            <property name="text">
             <string>000000</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QCheckBox" name="checkDisplayOut">
+           <property name="toolTip">
+            <string>Display processed video on playback</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Play filtered</string>
            </property>
           </widget>
          </item>
@@ -1575,6 +1535,9 @@
    </property>
    <property name="text">
     <string>&amp;Open...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Video</string>
    </property>
   </action>
   <action name="actionProperties">

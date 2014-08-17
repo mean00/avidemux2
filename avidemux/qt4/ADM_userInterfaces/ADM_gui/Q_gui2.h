@@ -99,7 +99,7 @@ public slots:
 	void sliderReleased(void);
 	void volumeChange( int u );
 	void audioToggled(bool checked);
-	void previewModeChanged(QAction *action);
+	void previewModeChanged(int status);
 	void previousIntraFrame(void);
 	void nextIntraFrame(void);
 	void timeChangeFinished(void);
