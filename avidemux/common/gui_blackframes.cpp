@@ -120,11 +120,12 @@ void GUI_NextBlackFrame(void)
     ADMImage *rdr;
     
 #warning set real fps
-    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."),25000,video_body->getVideoDuration());
-
-    uint64_t startTime=admPreview::getCurrentPts();
-    uint64_t totalTime=video_body->getVideoDuration()-startTime;
     
+    // guess ~ number of frames
+    uint64_t duration=video_body->getVideoDuration();    
+    uint64_t startTime=admPreview::getCurrentPts();
+    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."),duration-startTime);
+
     uint32_t count=0;
     while(1)
     {
@@ -146,7 +147,7 @@ void GUI_NextBlackFrame(void)
         {
                 break;
         }
-        if(work->update(1))         
+        if(work->update(1,admPreview::getCurrentPts()-startTime))
               break;
     }
     delete work;

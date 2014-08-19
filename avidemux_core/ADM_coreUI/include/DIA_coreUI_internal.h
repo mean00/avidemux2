@@ -26,7 +26,7 @@
 #include "DIA_audioTracks.h"
 
 #define ADM_CORE_TOOLKIT_MAJOR 1
-#define ADM_CORE_TOOLKIT_MINOR 3
+#define ADM_CORE_TOOLKIT_MINOR 4
 // Dia enter
 typedef struct
 {
@@ -139,7 +139,7 @@ typedef void            CREATE_GUI_VERBOSE(void);
 typedef void            CREATE_GUI_QUIET(void);
 typedef uint8_t		CREATE_GUI_IS_GUIET(void);
 typedef DIA_workingBase    *CREATE_GUI_WORKING(const char *title);
-typedef DIA_processingBase *CREATE_GUI_PROCESSING(const char *title,uint32_t fps1000,uint64_t duration);
+typedef DIA_processingBase *CREATE_GUI_PROCESSING(const char *title,uint64_t totalToProcess);
 typedef DIA_encodingBase   *CREATE_GUI_ENCODING(uint64_t duration,bool useTray);
 typedef DIA_audioTrackBase *CREATE_GUI_AUDIOTRACKBASE(PoolOfAudioTracks * pool,ActiveAudioTracks *active);
 typedef void             UI_PURGE(void);

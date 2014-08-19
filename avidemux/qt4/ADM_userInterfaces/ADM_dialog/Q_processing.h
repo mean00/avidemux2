@@ -16,12 +16,13 @@ class DIA_processingQt4 : public QDialog, public DIA_processingBase
 protected:
         virtual void            postCtor( void ) ;
         Ui_DialogProcessing     *ui;        
-        bool                    _stopRequest;        
+        bool                    _stopRequest;      
+        Clock                   _totalTime;
 public:
-                                DIA_processingQt4( const char *title,uint32_t fps100, uint64_t duration );
+                                DIA_processingQt4( const char *title, uint64_t totalToProcess );
         virtual		        ~DIA_processingQt4();
             
-        virtual bool            update(uint32_t frames);
+        virtual bool            update(uint32_t frames,uint64_t processed);
 
 public slots:
         void                    stop(bool a);

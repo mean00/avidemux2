@@ -30,14 +30,15 @@ class DIA_processingBase
             uint32_t	_nextUpdate;
             uint32_t    _currentFrames;
             uint32_t    _lastFrames;
-            uint32_t    _fps1000;
-            uint64_t    _duration;
+            uint32_t    _totalFrame;
+            uint64_t    _totalToProcess;
+            
     public:
             void 		*_priv;
-                                DIA_processingBase( const char *title,uint32_t fps1000, uint64_t duration ) {};
+                                DIA_processingBase( const char *title, uint64_t _totalToProcess ) {};
             virtual		~DIA_processingBase(){};
-            virtual bool  	update(uint32_t frame) {return false;} // Return true = abort
+            virtual bool  	update(uint32_t frame,uint64_t processed) {return false;} // Return true = abort
             
 };
-ADM_COREUI6_EXPORT DIA_processingBase *createProcessing(const char *title,uint32_t fps1000,uint64_t duration);
+ADM_COREUI6_EXPORT DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess);
 

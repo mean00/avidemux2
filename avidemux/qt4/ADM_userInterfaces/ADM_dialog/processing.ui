@@ -17,12 +17,12 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>CurrentTime</string>
+      <string>TimeLeft</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="labelTime">
+    <widget class="QLabel" name="labelTimeLeft">
      <property name="text">
       <string>00:00:00</string>
      </property>

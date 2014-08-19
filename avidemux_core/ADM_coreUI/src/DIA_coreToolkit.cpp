@@ -251,9 +251,9 @@ DIA_workingBase *createWorking(const char *title)
     \fn createWorking
     \brief
 */
-DIA_processingBase *createProcessing(const char *title,uint32_t fps1000,uint64_t duration)
+DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
 {
-    if(Toolkit->createProcessing) return Toolkit->createProcessing(title,fps1000,duration);
+    if(Toolkit->createProcessing) return Toolkit->createProcessing(title,totalToProcess);
     return NULL;
 }
 /**

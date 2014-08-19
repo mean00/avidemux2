@@ -20,6 +20,11 @@
 #include "ADM_toolkitQt.h"
 #include "DIA_coreToolkit.h"
 
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 namespace ADM_Qt4CoreUIToolkit
 {
 /**
@@ -28,10 +33,11 @@ namespace ADM_Qt4CoreUIToolkit
  * @param fps1000
  * @param duration
  */
-DIA_processingQt4::DIA_processingQt4(const char *title,uint32_t fps1000,uint64_t duration) : DIA_processingBase(title,fps1000,duration)
+DIA_processingQt4::DIA_processingQt4(const char *title,uint64_t totalToProcess) : DIA_processingBase(title,totalToProcess)
 {
-        _fps1000=fps1000;
-        _duration=duration;
+        _totalToProcess=totalToProcess;
+
+        if(!_totalToProcess) _totalToProcess=1000000;
         ui=new Ui_DialogProcessing();
         ui->setupUi(this);
 	qtRegisterDialog(this);
@@ -55,6 +61,8 @@ void DIA_processingQt4 :: postCtor( void )
         setWindowModality(Qt::ApplicationModal);        
         
         connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
+        ui->labelTimeLeft->setText(QString("00:00:00"));
+        ui->progressBar->setValue((int)0);        
         show();
 }
 
@@ -63,7 +71,7 @@ void DIA_processingQt4 :: postCtor( void )
  * @param percent
  * @return 
  */
-bool DIA_processingQt4::update(uint32_t frame)
+bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
 {
         UI_purge();
 
@@ -76,29 +84,45 @@ bool DIA_processingQt4::update(uint32_t frame)
         {
           return false;
         }
-        uint32_t delta;
-        delta=elapsed-_nextUpdate;
-        if(delta>REFRESH_RATE_IN_MS) _nextUpdate=0;
-        else _nextUpdate=REFRESH_RATE_IN_MS-delta;
+        _clock.reset();
+        _nextUpdate=REFRESH_RATE_IN_MS;
 
+        // compute time left
+        double percent=(double)(currentProcess)/(double)_totalToProcess;
+        
+        
+        double dElapsed=_totalTime.getElapsedMS(); // in dElapsed time, we have made percent percent
+        
+        double totalTimeNeeded=dElapsed/percent;
+        double remaining=totalTimeNeeded-dElapsed;
+        if(remaining<0) remaining=1;
+        
         uint32_t hh,mm,ss,mms;
         char string[25];
 
-        ms2time(elapsed,&hh,&mm,&ss,&mms);
+        ms2time((uint32_t)remaining,&hh,&mm,&ss,&mms);
         sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
 
-        
+        percent=100.*percent;
+        aprintf("Percent=%d,cur=%d,tot=%d\n",(int)percent,_lastFrames,_totalFrame);
+        aprintf("time %llx/ total time %llx\n",currentProcess,_totalToProcess);
+        if(percent>100.) percent=99.9;
+        if(percent<0.1) percent=0.1;
         _lastFrames+=_currentFrames;
         _currentFrames=0;
         if(ui)
         {
-            ui->labelImages->setText( QString::number(_lastFrames));
-            ui->labelTime->setText(QString(string));
+                        ui->labelImages->setText( QString::number(_lastFrames));
+                        ui->labelTimeLeft->setText(QString(string));
+                        ui->progressBar->setValue((int)percent);
+            
         }
         return false;
 }
 
-
+/**
+ * \fn dtor
+ */
 DIA_processingQt4::~DIA_processingQt4()
 {
      qtUnregisterDialog(this);
@@ -108,9 +132,9 @@ DIA_processingQt4::~DIA_processingQt4()
 /**
     \fn createWorking
 */
-DIA_processingBase *createProcessing(const char *title,uint32_t fps1000,uint64_t duration)
+DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
 {
-    return new DIA_processingQt4(title,fps1000,duration);
+    return new DIA_processingQt4(title,totalToProcess);
 }   
 /**
  * \fn stop
