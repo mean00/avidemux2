@@ -133,7 +133,7 @@ bool bAppend=false;
 
     
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-
+    
     FP_TYPE append=FP_DONT_APPEND;
     if(true==ADM_probeSequencedFile(file))
     {
@@ -146,6 +146,7 @@ bool bAppend=false;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
+    gui=createProcessing("Indexing",pkt->getSize());
     int lastRefIdc=0;
     //******************
     // 1 search SPS

@@ -7,6 +7,7 @@
 #include "DIA_processing.h"
 namespace ADM_Qt4CoreUIToolkit
 {
+#define PROC_NB_SLOTS 10
 /**
  *      \class DIA_processingQt4 QObject,public DIA_audioTrackBase
  */    
@@ -18,6 +19,10 @@ protected:
         Ui_DialogProcessing     *ui;        
         bool                    _stopRequest;      
         Clock                   _totalTime;
+        int                     _slots[PROC_NB_SLOTS];
+        int                     _slotIndex;
+        bool                    _first;
+        
 public:
                                 DIA_processingQt4( const char *title, uint64_t totalToProcess );
         virtual		        ~DIA_processingQt4();

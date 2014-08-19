@@ -26,7 +26,7 @@ using std::string;
 #include "dmxTSPacket.h"
 #include "ADM_quota.h"
 #include "ADM_tsAudioProbe.h"
-#include "DIA_working.h"
+#include "DIA_processing.h"
 #include "ADM_tsPatPmt.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
@@ -129,11 +129,12 @@ protected:
         vector <H264Unit> listOfUnits;
         H264Unit        thisUnit;
         bool            decodingImage;
+        int             processedThisRound;
 protected:
         FILE                    *index;
         tsPacketLinearTracker   *pkt;
         listOfTsAudioTracks     *audioTracks;
-        DIA_workingBase         *ui;
+        DIA_processingBase      *gui;
         ADM_SPSInfo             spsInfo;
         void                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);

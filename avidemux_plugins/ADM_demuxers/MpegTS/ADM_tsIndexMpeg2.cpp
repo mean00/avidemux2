@@ -75,6 +75,7 @@ bool bAppend=false;
     }
     
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
+    
     FP_TYPE append=FP_DONT_APPEND;
     if(true==ADM_probeSequencedFile(file))
     {
@@ -85,6 +86,7 @@ bool bAppend=false;
         append=FP_APPEND;
     writeSystem(file,bAppend);
     pkt->open(file,append);
+    gui= createProcessing("Indexing",pkt->getSize());
     data.pkt=pkt;
     fullSize=pkt->getSize();
     int startCode;

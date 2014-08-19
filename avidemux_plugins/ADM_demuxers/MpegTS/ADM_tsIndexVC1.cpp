@@ -58,11 +58,12 @@ dmxPacketInfo info;
     }
     writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-
+    
     FP_TYPE append=FP_APPEND;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
+    gui= createProcessing("Indexing",pkt->getSize());
     int startCode;
     decodingImage=false;
 #define likely(x) x

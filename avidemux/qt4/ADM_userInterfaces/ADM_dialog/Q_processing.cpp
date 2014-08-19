@@ -20,7 +20,7 @@
 #include "ADM_toolkitQt.h"
 #include "DIA_coreToolkit.h"
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -57,7 +57,8 @@ void DIA_processingQt4 :: postCtor( void )
         _nextUpdate=_clock.getElapsedMS()+REFRESH_RATE_IN_MS; // every one sec
         _lastFrames=0;
         _currentFrames=0;      
-      
+        _first=true;
+        _slotIndex=0;
         setWindowModality(Qt::ApplicationModal);        
         
         connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
@@ -86,7 +87,15 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         }
         _clock.reset();
         _nextUpdate=REFRESH_RATE_IN_MS;
-
+        if(_first)
+        {
+            _first=false;
+            for(int i=0;i<PROC_NB_SLOTS;i++)
+                _slots[i]=_currentFrames;
+        }
+        _slots[_slotIndex]=_currentFrames;
+        _slotIndex%=PROC_NB_SLOTS;
+        
         // compute time left
         double percent=(double)(currentProcess)/(double)_totalToProcess;
         
@@ -97,12 +106,9 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         double remaining=totalTimeNeeded-dElapsed;
         if(remaining<0) remaining=1;
         
-        uint32_t hh,mm,ss,mms;
-        char string[25];
-
-        ms2time((uint32_t)remaining,&hh,&mm,&ss,&mms);
-        sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
-
+        
+        QString qRemaining=QString(ADM_us2plain(remaining));
+        
         percent=100.*percent;
         aprintf("Percent=%d,cur=%d,tot=%d\n",(int)percent,_lastFrames,_totalFrame);
         aprintf("time %llx/ total time %llx\n",currentProcess,_totalToProcess);
@@ -110,12 +116,18 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         if(percent<0.1) percent=0.1;
         _lastFrames+=_currentFrames;
         _currentFrames=0;
+        
+        int avg=0;
+        for(int i=0;i<PROC_NB_SLOTS;i++)
+            avg+=_slots[i];
+        avg/=PROC_NB_SLOTS;
+        
         if(ui)
         {
                         ui->labelImages->setText( QString::number(_lastFrames));
-                        ui->labelTimeLeft->setText(QString(string));
+                        ui->labelTimeLeft->setText(qRemaining);
                         ui->progressBar->setValue((int)percent);
-            
+                        ui->labelSpeed->setText(QString::number(avg)+QString(" fps"));
         }
         return false;
 }

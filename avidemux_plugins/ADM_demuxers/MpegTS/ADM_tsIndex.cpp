@@ -111,9 +111,10 @@ TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
     pkt=NULL;
     audioTracks=NULL;
     beginConsuming=0;
-    ui=createWorking ("Indexing");
+    gui=NULL;
     audioTracks=trk;
     ticktock.reset();
+    processedThisRound=0;
 }
 
 /**
@@ -123,22 +124,20 @@ TsIndexer::~TsIndexer()
 {
     if(index) qfclose(index);
     if(pkt) delete pkt;
-    if(ui) delete ui;
-    ui=NULL;
+    if(gui) delete gui;
+    gui=NULL;
 }
 /**
     \fn updateUI
 */
 void TsIndexer::updateUI(void)
 {
-        if(ticktock.getElapsedMS()<1000) return;
+        processedThisRound++;
+        if(ticktock.getElapsedMS()<1000) 
+                return;
         ticktock.reset();
-        uint64_t p;
-        p=pkt->getPos();
-        float pos=p;
-        pos=pos/(float)fullSize;
-        pos*=100;
-        ui->update( (uint32_t)pos);
+        gui->update(processedThisRound, pkt->getPos());
+        processedThisRound=0;
 }
 /**
     \fn writeVideo
