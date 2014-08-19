@@ -97,7 +97,7 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         _slotIndex%=PROC_NB_SLOTS;
         
         // compute time left
-        double percent=(double)(currentProcess)/(double)_totalToProcess;
+        double percent=((double)(currentProcess))/((double)_totalToProcess);
         
         
         double dElapsed=_totalTime.getElapsedMS(); // in dElapsed time, we have made percent percent
@@ -107,7 +107,7 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         if(remaining<0) remaining=1;
         
         
-        QString qRemaining=QString(ADM_us2plain(remaining));
+        QString qRemaining=QString(ADM_us2plain(remaining*1000));
         
         percent=100.*percent;
         aprintf("Percent=%d,cur=%d,tot=%d\n",(int)percent,_lastFrames,_totalFrame);
