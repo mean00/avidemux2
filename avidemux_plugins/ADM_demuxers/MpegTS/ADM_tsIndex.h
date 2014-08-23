@@ -124,7 +124,6 @@ class TsIndexer
 protected:
         uint32_t        beginConsuming;
         uint64_t        fullSize;
-        Clock           ticktock;
         VC1Context      vc1Context;
         vector <H264Unit> listOfUnits;
         H264Unit        thisUnit;
@@ -136,7 +135,7 @@ protected:
         listOfTsAudioTracks     *audioTracks;
         DIA_processingBase      *gui;
         ADM_SPSInfo             spsInfo;
-        void                    updateUI(void);
+        bool                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);

@@ -113,7 +113,6 @@ TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
     beginConsuming=0;
     gui=NULL;
     audioTracks=trk;
-    ticktock.reset();
     processedThisRound=0;
 }
 
@@ -129,15 +128,14 @@ TsIndexer::~TsIndexer()
 }
 /**
     \fn updateUI
+ *  \brief return false if abort is needed
 */
-void TsIndexer::updateUI(void)
+bool  TsIndexer::updateUI(void)
 {
-        processedThisRound++;
-        if(ticktock.getElapsedMS()<1000) 
-                return;
-        ticktock.reset();
-        gui->update(processedThisRound, pkt->getPos());
+    int p=++processedThisRound;
         processedThisRound=0;
+        return !gui->update(p, pkt->getPos());
+    
 }
 /**
     \fn writeVideo
@@ -312,7 +310,11 @@ bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uin
             if(listOfUnits[n-1].unitType==unitTypePic)
             {
                 dumpUnits(data,myUnit.consumedSoFar-overRead,&(unit.packetInfo));
-                updateUI();
+                if(!updateUI())
+                {
+                    ADM_info("Indexer : cancelling\n");
+                    return false;
+                }
             }
         listOfUnits.push_back(myUnit);
         return true;

@@ -91,10 +91,10 @@ bool bAppend=false;
     fullSize=pkt->getSize();
     int startCode;
     decodingImage=false;
-    
+    bool keepRunning=true;
 #define likely(x) x
 #define unlikely(x) x
-      while(1)
+      while(keepRunning)
       {
         startCode=pkt->findStartCode();
         if(!pkt->stillOk()) break;
@@ -108,7 +108,8 @@ bool bAppend=false;
                                 decodingImage=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
                                 thisUnit.consumedSoFar=pkt->getConsumed();
-                                addUnit(data,unitTypeSps,thisUnit,4);
+                                if(!addUnit(data,unitTypeSps,thisUnit,4))
+                                    keepRunning=false;
                                 pkt->forward(8);  // Ignore
                                 continue;
                           }
@@ -131,7 +132,8 @@ bool bAppend=false;
                           decodingImage=false;
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
-                          addUnit(data,unitTypeSps,thisUnit,4+4+4);
+                          if(!addUnit(data,unitTypeSps,thisUnit,4+4+4))
+                              keepRunning=false;
                           continue;
                           break;
 #warning FIXME, update pic field info.... It triggers a end-of-pic message as it is
@@ -170,7 +172,8 @@ bool bAppend=false;
 
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
-                          addUnit(data,unitTypeSps,thisUnit,4);
+                          if(!addUnit(data,unitTypeSps,thisUnit,4))
+                              keepRunning=false;
                           break;
                   case 0x00 : // picture
                         {
@@ -195,7 +198,8 @@ bool bAppend=false;
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
                           thisUnit.imageType=type;
-                          addUnit(data,unitTypePic,thisUnit,4+2);
+                          if(!addUnit(data,unitTypePic,thisUnit,4+2))
+                              keepRunning=false;
                           pkt->invalidatePtsDts();
                           data.nbPics++;
                         }

@@ -148,10 +148,11 @@ bool bAppend=false;
     fullSize=pkt->getSize();
     gui=createProcessing("Indexing",pkt->getSize());
     int lastRefIdc=0;
+    bool keepRunning=true;
     //******************
     // 1 search SPS
     //******************
-      while(1)
+      while(keepRunning)
       {
         int startCode=pkt->findStartCode();
 
@@ -263,7 +264,8 @@ resume:
                             decodingImage=false;
                             pkt->getInfo(&thisUnit.packetInfo);
                             thisUnit.consumedSoFar=pkt->getConsumed();
-                            addUnit(data,unitTypeSei,thisUnit,startCodeLength+SEI_nal.payloadSize+1);                            
+                            if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength+SEI_nal.payloadSize+1))
+                                keepRunning=false;
                             fourBytes=true;
                             goto resume;
                             }
@@ -278,7 +280,8 @@ resume:
                                     firstSps=false;
                                 }
                                 thisUnit.consumedSoFar=pkt->getConsumed();
-                                addUnit(data,unitTypeSps,thisUnit,startCodeLength);
+                                if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
+                                    keepRunning=false;
                           break;
 
                   case NAL_IDR:
@@ -327,7 +330,8 @@ resume:
                       pkt->getInfo(&thisUnit.packetInfo);
                       thisUnit.consumedSoFar=pkt->getConsumed();
 
-                      addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ);
+                      if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
+                          keepRunning=false;
                         // reset to default
                       thisUnit.imageStructure=pictureFrame;
                       thisUnit.recoveryCount=0xff;

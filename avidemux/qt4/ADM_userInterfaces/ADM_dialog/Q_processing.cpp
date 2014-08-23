@@ -153,10 +153,17 @@ DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
  * @param a
  */
 void            DIA_processingQt4::stop(bool a)
+{
+    ADM_info("Stop Request\n");
+     if (GUI_Confirmation_HIG(QT_TR_NOOP("_Resume"), 
+                                 QT_TR_NOOP("The processing is paused."), 
+                                 QT_TR_NOOP("Cancel it ?")))
         {
-            ADM_info("Stop Request\n");
-            _stopRequest=true;
+                _stopRequest=true;
         }
+
 }
+
+}// Namespace
 //********************************************
 //EOF
