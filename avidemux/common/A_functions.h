@@ -8,7 +8,7 @@
 #include "IScriptEngine.h"
 
 int     A_delete(uint32_t start, uint32_t end);
-void    A_externalAudioTrack( void );
+void    A_externalAudioTrack(const char *trackIndex, const char *filename );
 uint8_t A_rebuildKeyFrame (void);
 void    A_openBrokenAvi (const char *name);
 int     A_openAvi2 (const char *name, uint8_t mode);

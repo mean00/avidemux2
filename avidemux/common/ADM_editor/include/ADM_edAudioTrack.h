@@ -24,6 +24,7 @@
 
 #define ADM_EDITOR_PACKET_BUFFER_SIZE (20*1024)
 #define ADM_ALLOWED_DRIFT_US 40000 // Allow 4b0 ms jitter on audio
+#define ADM_MAXIMUM_AMOUT_AUDIO_STREAMS 4 // Allow up to 4 audio streams
 typedef enum
 {
     ADM_EDAUDIO_FROM_VIDEO,

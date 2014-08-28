@@ -45,6 +45,8 @@
 #include "ADM_script2/include/ADM_script.h"
 #include "ADM_edScriptGenerator.h"
 
+#include "ADM_edAudioTrackExternal.h"
+
 renderZoom currentZoom=ZOOM_1_1;
 #include "DIA_audioTracks.h"
 //***********************************
@@ -1067,9 +1069,70 @@ roger_and_out:
 /**
         \fn A_externalAudioTrack
         \brief Select external audio track (for 2nd track)
+		@param trackIdx The track index to use
+		@param filename
 */
-void A_externalAudioTrack( void )
+void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 {
+	static const int MAX_TRACK_IDX_LENGTH = 4+1; // Max length expected = 0xFF. Test 1 char more than assumed to take the \0 into account
+	size_t trackTxtLen = strnlen(trackIdxTxt, MAX_TRACK_IDX_LENGTH);
+	if (trackTxtLen == MAX_TRACK_IDX_LENGTH) {
+		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
+		return;
+	}
+	char *endptr;
+	int trackIdx = static_cast<int>(strtol(trackIdxTxt, &endptr, 0));
+	
+	if (trackIdx < 1 || trackIdx > ADM_MAXIMUM_AMOUT_AUDIO_STREAMS || endptr != trackIdxTxt + trackTxtLen) {
+		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
+		return;
+	}
+	printf("\texternal audio index = %d\n", trackIdx);
+	printf("\tgiven '%s'\n", filename);
+	trackIdx--;
+
+	ADM_edAudioTrackExternal *ext=create_edAudioExternal(filename);
+	if (!ext) {
+		GUI_Error_HIG("Error","Cannot use that file as audio track");
+		return;
+	}
+	// add to the list of the known input files
+	ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
+	PoolOfAudioTracks *pool = video_body->getPoolOfAudioTrack();
+	int assumedIdx = pool->size();
+	pool->addInternalTrack( ext);
+	pool->dump();
+	// the shortcut insert which should work the most time
+	if (pool->size() > assumedIdx && pool->at(assumedIdx) == ext) {
+		if (trackIdx < tracks->size())
+			tracks->insertTrack(trackIdx, assumedIdx, ext);
+		else
+			tracks->insertTrack(tracks->size(), assumedIdx, ext);
+		if(tracks->size() > trackIdx+1)
+			tracks->removeTrack(trackIdx+1);
+	} else {
+		assumedIdx = -1;
+		for(int i=0; i<pool->size(); i++){
+			if(pool->at(i) == ext) {
+				assumedIdx = i;
+				break;
+			}
+		}
+		if (assumedIdx == -1) {
+			// This should never happen, but who knows?
+			GUI_Error_HIG("Error","Audio file not found in list, even than it should be there. Create a bug report!");
+			return;
+		}
+		printf("assumed Idx = %d\n", assumedIdx);
+		if(trackIdx >= tracks->size()) {
+			tracks->addTrack(assumedIdx, ext);
+		} else {
+			tracks->removeTrack(trackIdx);
+			tracks->insertTrack(trackIdx, assumedIdx, ext);
+		}
+	}
+	tracks->dump();
+	printf("external file appended");
 }
 /**
     \fn A_Resync
