@@ -1066,30 +1066,35 @@ roger_and_out:
 
 }
 #endif
-/**
-        \fn A_externalAudioTrack
-        \brief Select external audio track (for 2nd track)
-		@param trackIdx The track index to use
-		@param filename
-*/
-void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
-{
+
+static inline int extractTrackIndex(const char *trackIdxTxt){
 	static const int MAX_TRACK_IDX_LENGTH = 4+1; // Max length expected = 0xFF. Test 1 char more than assumed to take the \0 into account
 	size_t trackTxtLen = strnlen(trackIdxTxt, MAX_TRACK_IDX_LENGTH);
 	if (trackTxtLen == MAX_TRACK_IDX_LENGTH) {
 		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
-		return;
+		return -1;
 	}
 	char *endptr;
 	int trackIdx = static_cast<int>(strtol(trackIdxTxt, &endptr, 0));
 	
 	if (trackIdx < 1 || trackIdx > ADM_MAXIMUM_AMOUT_AUDIO_STREAMS || endptr != trackIdxTxt + trackTxtLen) {
 		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
-		return;
+		return -1;
 	}
+	return trackIdx-1;
+}
+/**
+        \fn A_externalAudioTrack
+        \brief Select external audio track (for 2nd track)
+		@param trackIdx The track index to use, according to the active track list
+		@param filename
+*/
+void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
+{
+	int trackIdx = extractTrackIndex(trackIdxTxt);
+	if(trackIdx == -1) return;
 	printf("\texternal audio index = %d\n", trackIdx);
 	printf("\tgiven '%s'\n", filename);
-	trackIdx--;
 
 	ADM_edAudioTrackExternal *ext=create_edAudioExternal(filename);
 	if (!ext) {
@@ -1134,6 +1139,32 @@ void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 	tracks->dump();
 	printf("external file appended");
 }
+
+/**
+    \fn A_setAudioLang
+    \brief Setting the language name for the given track index
+	@param trackIndex The track index to modify, according to the active track list
+*/
+void    A_setAudioLang(const char *trackIdxTxt, const char *langueName)
+{
+	if (!video_body->isFileOpen()) {
+		GUI_Error_HIG("Error","Unable to set the audio language: No video loaded yet!");
+		return;
+	}
+	int trackIdx = extractTrackIndex(trackIdxTxt);
+	if(trackIdx == -1) return;
+	ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
+	if (tracks->size() == 0 ) {
+		GUI_Error_HIG("Error","Setting the language for the given track index is not possible: Video has no audio file!");
+		return;
+	} else if (tracks->size() <= trackIdx) {
+		GUI_Error_HIG("Error","Setting the language for the given track index is not possible: Invalid track index!");
+		return;
+	}
+	tracks->atEdAudio(trackIdx)->setLanguage(langueName);
+
+}
+
 /**
     \fn A_Resync
     \brief

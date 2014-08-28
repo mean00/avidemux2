@@ -18,6 +18,7 @@ void	A_setPostproc( void );
 void    A_Resync(void);
 void    A_addJob(void);
 void    A_audioTrack(void);
+void    A_setAudioLang(const char *trackIndex, const char *langueName);
 
 bool A_parseScript(IScriptEngine *engine, const char *name);
 void A_saveScript(IScriptEngine* engine, const char* name);

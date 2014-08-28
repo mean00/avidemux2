@@ -30,6 +30,7 @@
 #include "ADM_videoEncoderApi.h"
 #include "DIA_factory.h"
 #include "ADM_slave.h"
+#include "ADM_iso639.h"
 
 extern void UI_setVideoCodec( int i);
 extern void UI_setAudioCodec( int i);
@@ -58,6 +59,7 @@ static void call_setPP(char *v,char *s);
 static void call_slave(char *p);
 //static void call_v2v(char *a,char *b,char *c);
 static void call_probePat(char *p);
+static void list_audio_languages(char *p);
 static void save(char*name);
 
 //extern uint8_t A_setContainer(const char *cont);
@@ -100,47 +102,49 @@ typedef struct
 #define avs_port_change "avisynth-port"
 AUTOMATON reaction_table[]=
 {
-        //{"js",                     0, "Dump the javascript functions",                                             {.one_arg = (one_arg_type)ADM_dumpJSHooks}},
-        {"nogui",                  0, "Run in silent mode",                                                        {.one_arg = (one_arg_type)GUI_Quiet}},
-        {"slave",                  1, "run as slave, master is on port arg",                                       {.one_arg = (one_arg_type)call_slave}},
-        {"run",                    1, "load and run a script",                                                     {.one_arg = (one_arg_type)call_scriptEngine}},
+	//{"js",                     0, "Dump the javascript functions",                                             {.one_arg = (one_arg_type)ADM_dumpJSHooks}},
+	{"nogui",                  0, "Run in silent mode",                                                        {.one_arg = (one_arg_type)GUI_Quiet}},
+	{"slave",                  1, "run as slave, master is on port arg",                                       {.one_arg = (one_arg_type)call_slave}},
+	{"run",                    1, "load and run a script",                                                     {.one_arg = (one_arg_type)call_scriptEngine}},
 
-        {"save-jpg",               1, "save a jpeg",                                                               {.one_arg = (one_arg_type)A_saveJpg}},
-        {"begin",                  1, "set start frame",                                                           {.one_arg = (one_arg_type)setBegin}},
+	{"save-jpg",               1, "save a jpeg",                                                               {.one_arg = (one_arg_type)A_saveJpg}},
+	{"begin",                  1, "set start frame",                                                           {.one_arg = (one_arg_type)setBegin}},
 
-        {"end",                    1, "set end frame",                                                             {.one_arg = (one_arg_type)setEnd}},
-        {"save-raw-audio",         1, "save audio as-is ",                                                         {.one_arg = (one_arg_type)A_saveAudioCopy}},
-        {"save-uncompressed-audio",1, "save uncompressed audio",                                                   {.one_arg = (one_arg_type)A_saveAudioProcessed}},
-        {"load",                   1, "load video or workbench",                                                   {.one_arg = (one_arg_type)A_openAvi}},
+	{"end",                    1, "set end frame",                                                             {.one_arg = (one_arg_type)setEnd}},
+	{"save-raw-audio",         1, "save audio as-is ",                                                         {.one_arg = (one_arg_type)A_saveAudioCopy}},
+	{"save-uncompressed-audio",1, "save uncompressed audio",                                                   {.one_arg = (one_arg_type)A_saveAudioProcessed}},
+	{"load",                   1, "load video or workbench",                                                   {.one_arg = (one_arg_type)A_openAvi}},
 
-        {"load-workbench",         1, "load workbench file",                                                       {.one_arg = (one_arg_type)A_openAvi}},
-        {"append",                 1, "append video",                                                              {.one_arg = (one_arg_type)A_appendAvi}},
-        {"save",                   1, "save avi",                                                                  {.one_arg = (one_arg_type)save}},
+	{"load-workbench",         1, "load workbench file",                                                       {.one_arg = (one_arg_type)A_openAvi}},
+	{"append",                 1, "append video",                                                              {.one_arg = (one_arg_type)A_appendAvi}},
+	{"save",                   1, "save avi",                                                                  {.one_arg = (one_arg_type)save}},
 
-        {"force-b-frame",          0, "Force detection of bframe in next loaded file",                             {.one_arg = (one_arg_type)call_bframe}},
-        {"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 {.one_arg = (one_arg_type)call_x264}},
+	{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             {.one_arg = (one_arg_type)call_bframe}},
+	{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 {.one_arg = (one_arg_type)call_x264}},
 
-        {"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     {.two_arg = (two_arg_type)A_externalAudioTrack}},
+	{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     {.two_arg = (two_arg_type)A_externalAudioTrack}},
+	{"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", {.two_arg = (two_arg_type)A_setAudioLang}},
 
-        {"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       {.one_arg = (one_arg_type)call_setAudio}},
-        {"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 {.one_arg = (one_arg_type)call_audiocodec}},
-        {"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          {.one_arg = (one_arg_type)call_videocodec}},
+	{"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       {.one_arg = (one_arg_type)call_setAudio}},
+	{"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 {.one_arg = (one_arg_type)call_audiocodec}},
+	{"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          {.one_arg = (one_arg_type)call_videocodec}},
 
-        {"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", {.one_arg = (one_arg_type)call_videoconf}},
-        {"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          {.one_arg = (one_arg_type)set_reuse_2pass_log}},
-        {"autosplit",              1, "split every N MBytes",                                                      {.one_arg = (one_arg_type)call_autosplit}},
-        {"info",                   0, "show information about loaded video and audio streams",                     {.one_arg = (one_arg_type)show_info}},
+	{"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", {.one_arg = (one_arg_type)call_videoconf}},
+	{"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          {.one_arg = (one_arg_type)set_reuse_2pass_log}},
+	{"autosplit",              1, "split every N MBytes",                                                      {.one_arg = (one_arg_type)call_autosplit}},
+	{"info",                   0, "show information about loaded video and audio streams",                     {.one_arg = (one_arg_type)show_info}},
 
 
-        {"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    {.one_arg = (one_arg_type)set_output_format}},
-        {"rebuild-index",          0, "rebuild index with correct frame type",                                     {.one_arg = (one_arg_type)A_rebuildKeyFrame}},
-        {"var",                    1, "set var (--var myvar=3)",                                                   {.one_arg = (one_arg_type)setVar}},
-        {"help",                   0, "print this",                                                                {.one_arg = (one_arg_type)call_help}},
-        {"quit",                   0, "exit avidemux",                                                             {.one_arg = (one_arg_type)call_quit}},
-        {"probePat",               1, "Probe for PAT//PMT..",                                                      {.one_arg = (one_arg_type)call_probePat}},
-        {avs_port_change,          1, "set avsproxy port accordingly",                                             {.one_arg = (one_arg_type)A_set_avisynth_port}}
+	{"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    {.one_arg = (one_arg_type)set_output_format}},
+	{"rebuild-index",          0, "rebuild index with correct frame type",                                     {.one_arg = (one_arg_type)A_rebuildKeyFrame}},
+	{"var",                    1, "set var (--var myvar=3)",                                                   {.one_arg = (one_arg_type)setVar}},
+	{"help",                   0, "print this",                                                                {.one_arg = (one_arg_type)call_help}},
+	{"quit",                   0, "exit avidemux",                                                             {.one_arg = (one_arg_type)call_quit}},
+	{"probePat",               1, "Probe for PAT//PMT..",                                                      {.one_arg = (one_arg_type)call_probePat}},
+	{"list-audio-languages",   0, "list all available audio langues",                                          {.one_arg = (one_arg_type)list_audio_languages}},
+	{avs_port_change,          1, "set avsproxy port accordingly",                                             {.one_arg = (one_arg_type)A_set_avisynth_port}}
 
-}  ;
+};
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
 //_________________________________________________________________________
 
@@ -418,6 +422,21 @@ void call_help(char *p)
     printf("\n");
 
                     call_quit(NULL);
+}
+
+void list_audio_languages(char *p){
+	UNUSED_ARG(p);
+	printf("\n Available audio languages:\nShort  |  LanguageName\n----------------------");
+	const ADM_iso639_t *languages = ADM_getLanguageList();
+	for(size_t i=0; i<ADM_getLanguageListSize(); i++){
+		int skipAfter = 5-strlen(languages[i].iso639_2);
+		printf("\n\t%s",languages[i].iso639_2);
+		while(skipAfter-- >0)
+			printf(" ");
+		printf("\t-\t%s",languages[i].eng_name);
+	}
+	printf("\n\n");
+	call_quit(NULL);
 }
 
 void save(char*name)

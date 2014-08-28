@@ -15,7 +15,7 @@ static int languageCount=0;
 
 static const iso639_lang_t languages[] =
 { { "Unknown", "", "", "und" },
-  { "Afar", "", "aa", "﻿aar" },
+  { "Afar", "", "aa", "aar" },
   { "Abkhazian", "", "ab", "abk" },
   { "Afrikaans", "", "af", "afr" },
   { "Akan", "", "ak", "aka" },
