@@ -132,7 +132,7 @@ INCLUDE(admCheckVDPAU)
 #INCLUDE(admCheckXvba)
 INCLUDE(admCheckLibVA)
 checkVDPAU()
-checkXvba()
+#checkXvba()
 checkLibVA()
 ENDIF(NOT PLUGINS)
 
