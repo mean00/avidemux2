@@ -49,10 +49,10 @@ int main(int argc, char *argv[])
     bool portableMode=isPortableMode(argc,argv);
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
-  	if(ADM_SUBVERSION)
-	{
-		printf(" (r%04u)", ADM_SUBVERSION);
-	}
+#if defined(ADM_SUBVERSION)
+#define MKSTRING(x) x
+     printf(" (%s)", MKSTRING(ADM_SUBVERSION));
+#endif
     printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
     printf(" Code      : Mean, JSC, Gruntster \n");

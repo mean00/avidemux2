@@ -63,7 +63,7 @@ endif (WIN32)
 include(admCoreIncludes)
 include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_EXECUTABLE(avidemux3_jobs ${ADM_JOB_SRCS})
-ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
+ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
 
 ###########################################
 TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreSocket6)

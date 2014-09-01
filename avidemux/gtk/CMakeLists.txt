@@ -33,7 +33,7 @@ ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsGtk)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesGtk)
 
 SDLify(../common/main.cpp)
-ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=${ADM_SUBVERSION}")
+ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
 
 ###########################################
 # Version Info
