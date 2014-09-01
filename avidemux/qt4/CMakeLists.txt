@@ -63,6 +63,7 @@ ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQT4)
 
 SDLify(../common/main.cpp)
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
+ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION='\"${AVIDEMUX_VERSION}\"'")
 
 ###########################################
 # Version Info

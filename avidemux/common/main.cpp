@@ -137,11 +137,11 @@ int main(int _argc, char *_argv[])
 int startAvidemux(int argc, char *argv[])
 {
     printf("*************************\n");
-    printf("  Avidemux v" VERSION);
+    printf("  Avidemux v"ADM_VERSION);
 
 #if defined( ADM_SUBVERSION )
 #define MKSTRING(x) x
-         printf(" %s .", MKSTRING(ADM_SUBVERSION)); 
+         printf(" (%s) .", MKSTRING(ADM_SUBVERSION)); 
 #endif
 
     printf("\n*************************\n");
