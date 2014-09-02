@@ -19,6 +19,7 @@
 
 #include "ADM_toolkitQt.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_prettyPrint.h"
 
 #if 0
 #define aprintf printf
@@ -62,7 +63,7 @@ void DIA_processingQt4 :: postCtor( void )
         setWindowModality(Qt::ApplicationModal);        
         
         connect( ui->cancelButton,SIGNAL(clicked(bool)),this,SLOT(stop(bool)));
-        ui->labelTimeLeft->setText(QString("00:00:00"));
+        ui->labelTimeLeft->setText(QString("Unknown"));
         ui->progressBar->setValue((int)0);        
         show();
 }
@@ -70,7 +71,7 @@ void DIA_processingQt4 :: postCtor( void )
 /**
  * \fn update
  * @param percent
- * @return 
+ * @return true if processing should be stopped
  */
 bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
 {
@@ -106,8 +107,9 @@ bool DIA_processingQt4::update(uint32_t frame,uint64_t currentProcess)
         double remaining=totalTimeNeeded-dElapsed;
         if(remaining<0) remaining=1;
         
-        
-        QString qRemaining=QString(ADM_us2plain(remaining*1000));
+        std::string r;
+        ADM_durationToString(remaining, r);
+        QString qRemaining=QString(r.c_str());
         
         percent=100.*percent;
         aprintf("Percent=%d,cur=%d,tot=%d\n",(int)percent,_lastFrames,_totalFrame);

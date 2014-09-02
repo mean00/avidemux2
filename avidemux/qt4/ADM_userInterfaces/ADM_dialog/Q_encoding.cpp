@@ -23,6 +23,7 @@
 #include "ADM_toolkitQt.h"
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
+#include "ADM_prettyPrint.h"
 
 static int stopReq=0;
 extern bool ADM_slaveReportProgress(uint32_t percent);
@@ -355,13 +356,12 @@ void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
     \fn setRemainingTimeMS
     \brief display remaining time (ETA)
 */
-void DIA_encodingQt4::setRemainingTimeMS(uint32_t nb)
+void DIA_encodingQt4::setRemainingTimeMS(uint32_t milliseconds)
 {
           ADM_assert(window);
-          uint64_t mb=nb;
-          mb*=1000;
-          strcpy(stringMe,ADM_us2plain(mb));
-          WRITE(labelETA);
+          std::string s;
+          ADM_durationToString(milliseconds,s);
+          window->ui->labelETA->setText(QString(s.c_str()));
 }
 
 /**
