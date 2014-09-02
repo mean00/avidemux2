@@ -38,7 +38,7 @@ bool ADM_durationToString(uint32_t durationInMs, std::string &outputString)
 {
     uint32_t hh,mm,ss,mms;
     
-   // ms2time(durationInUs/1000,&hh,&mm,&ss,&mms);
+    ms2time(durationInMs,&hh,&mm,&ss,&mms);
     
     if(!hh)
     {

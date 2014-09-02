@@ -15,4 +15,6 @@
  ***************************************************************************/
 #pragma once
 #include <string>
+
+/// Convert a duration in ms into a human friendly string
 bool ADM_durationToString(uint32_t durationInMs, std::string &outputString);
