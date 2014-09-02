@@ -16,5 +16,6 @@
 #pragma once
 #include <string>
 
+#include "ADM_core6_export.h"
 /// Convert a duration in ms into a human friendly string
-bool ADM_durationToString(uint32_t durationInMs, std::string &outputString);
+ADM_CORE6_EXPORT bool ADM_durationToString(uint32_t durationInMs, std::string &outputString);
