@@ -85,64 +85,59 @@ typedef	void (*two_arg_type)(char *arg,char *otherarg);
 typedef	void (*three_arg_type)(char *arg,char *otherarg,char *yetother);
 //_________________________________________________________________________
 
-typedef union {
-one_arg_type one_arg;
-two_arg_type two_arg;
-three_arg_type three_arg;
-} callback_t;
 typedef struct
 {
           const char    *string;
           uint8_t       have_arg;
           const char    *help_string;
-          callback_t    callback;
+          one_arg_type   callback;
 }AUTOMATON;
 //_________________________________________________________________________
 
 #define avs_port_change "avisynth-port"
 AUTOMATON reaction_table[]=
 {
-	//{"js",                     0, "Dump the javascript functions",                                             {.one_arg = (one_arg_type)ADM_dumpJSHooks}},
-	{"nogui",                  0, "Run in silent mode",                                                        {.one_arg = (one_arg_type)GUI_Quiet}},
-	{"slave",                  1, "run as slave, master is on port arg",                                       {.one_arg = (one_arg_type)call_slave}},
-	{"run",                    1, "load and run a script",                                                     {.one_arg = (one_arg_type)call_scriptEngine}},
+	
+	{"nogui",                  0, "Run in silent mode",                                                        (one_arg_type)GUI_Quiet},
+	{"slave",                  1, "run as slave, master is on port arg",                                       (one_arg_type)call_slave},
+	{"run",                    1, "load and run a script",                                                     (one_arg_type)call_scriptEngine},
 
-	{"save-jpg",               1, "save a jpeg",                                                               {.one_arg = (one_arg_type)A_saveJpg}},
-	{"begin",                  1, "set start frame",                                                           {.one_arg = (one_arg_type)setBegin}},
+	{"save-jpg",               1, "save a jpeg",                                                               (one_arg_type)A_saveJpg},
+	{"begin",                  1, "set start frame",                                                           (one_arg_type)setBegin},
 
-	{"end",                    1, "set end frame",                                                             {.one_arg = (one_arg_type)setEnd}},
-	{"save-raw-audio",         1, "save audio as-is ",                                                         {.one_arg = (one_arg_type)A_saveAudioCopy}},
-	{"save-uncompressed-audio",1, "save uncompressed audio",                                                   {.one_arg = (one_arg_type)A_saveAudioProcessed}},
-	{"load",                   1, "load video or workbench",                                                   {.one_arg = (one_arg_type)A_openAvi}},
+	{"end",                    1, "set end frame",                                                             (one_arg_type)setEnd},
+	{"save-raw-audio",         1, "save audio as-is ",                                                         (one_arg_type)A_saveAudioCopy},
+	{"save-uncompressed-audio",1, "save uncompressed audio",                                                   (one_arg_type)A_saveAudioProcessed},
+	{"load",                   1, "load video or workbench",                                                   (one_arg_type)A_openAvi},
 
-	{"load-workbench",         1, "load workbench file",                                                       {.one_arg = (one_arg_type)A_openAvi}},
-	{"append",                 1, "append video",                                                              {.one_arg = (one_arg_type)A_appendAvi}},
-	{"save",                   1, "save avi",                                                                  {.one_arg = (one_arg_type)save}},
+	{"load-workbench",         1, "load workbench file",                                                       (one_arg_type)A_openAvi},
+	{"append",                 1, "append video",                                                              (one_arg_type)A_appendAvi},
+	{"save",                   1, "save avi",                                                                  (one_arg_type)save},
 
-	{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             {.one_arg = (one_arg_type)call_bframe}},
-	{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 {.one_arg = (one_arg_type)call_x264}},
+	{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             (one_arg_type)call_bframe},
+	{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 (one_arg_type)call_x264},
 
-	{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     {.two_arg = (two_arg_type)A_externalAudioTrack}},
-	{"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", {.two_arg = (two_arg_type)A_setAudioLang}},
+	{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     (one_arg_type)A_externalAudioTrack},
+	{"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", (one_arg_type)A_setAudioLang},
 
-	{"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       {.one_arg = (one_arg_type)call_setAudio}},
-	{"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 {.one_arg = (one_arg_type)call_audiocodec}},
-	{"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          {.one_arg = (one_arg_type)call_videocodec}},
+	{"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       (one_arg_type)call_setAudio},
+	{"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 (one_arg_type)call_audiocodec},
+	{"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          (one_arg_type)call_videocodec},
 
-	{"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", {.one_arg = (one_arg_type)call_videoconf}},
-	{"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          {.one_arg = (one_arg_type)set_reuse_2pass_log}},
-	{"autosplit",              1, "split every N MBytes",                                                      {.one_arg = (one_arg_type)call_autosplit}},
-	{"info",                   0, "show information about loaded video and audio streams",                     {.one_arg = (one_arg_type)show_info}},
+	{"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", (one_arg_type)call_videoconf},
+	{"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          (one_arg_type)set_reuse_2pass_log},
+	{"autosplit",              1, "split every N MBytes",                                                      (one_arg_type)call_autosplit},
+	{"info",                   0, "show information about loaded video and audio streams",                     (one_arg_type)show_info},
 
 
-	{"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    {.one_arg = (one_arg_type)set_output_format}},
-	{"rebuild-index",          0, "rebuild index with correct frame type",                                     {.one_arg = (one_arg_type)A_rebuildKeyFrame}},
-	{"var",                    1, "set var (--var myvar=3)",                                                   {.one_arg = (one_arg_type)setVar}},
-	{"help",                   0, "print this",                                                                {.one_arg = (one_arg_type)call_help}},
-	{"quit",                   0, "exit avidemux",                                                             {.one_arg = (one_arg_type)call_quit}},
-	{"probePat",               1, "Probe for PAT//PMT..",                                                      {.one_arg = (one_arg_type)call_probePat}},
-	{"list-audio-languages",   0, "list all available audio langues",                                          {.one_arg = (one_arg_type)list_audio_languages}},
-	{avs_port_change,          1, "set avsproxy port accordingly",                                             {.one_arg = (one_arg_type)A_set_avisynth_port}}
+	{"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    (one_arg_type)set_output_format},
+	{"rebuild-index",          0, "rebuild index with correct frame type",                                     (one_arg_type)A_rebuildKeyFrame},
+	{"var",                    1, "set var (--var myvar=3)",                                                   (one_arg_type)setVar},
+	{"help",                   0, "print this",                                                                (one_arg_type)call_help},
+	{"quit",                   0, "exit avidemux",                                                             (one_arg_type)call_quit},
+	{"probePat",               1, "Probe for PAT//PMT..",                                                      (one_arg_type)call_probePat},
+	{"list-audio-languages",   0, "list all available audio langues",                                          (one_arg_type)list_audio_languages},
+	{avs_port_change,          1, "set avsproxy port accordingly",                                             (one_arg_type)A_set_avisynth_port}
 
 };
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
@@ -164,7 +159,10 @@ static int argc;
 static int cur;
 static int myargc;
 static int index;
-    argc=global_argc;
+static three_arg_type three;
+static two_arg_type two;
+
+        argc=global_argc;
 	argv = global_argv;
 
           //the port change has to be done before the video load
@@ -216,20 +214,22 @@ static int index;
                       else
                       {
                           printf("%s-->%d\n", reaction_table[index].string,reaction_table[index].have_arg);
+                          one_arg_type call=reaction_table[index].callback;
                           switch(  reaction_table[index].have_arg)
                           {
                               case 3:
-                                        reaction_table[index].callback.three_arg( argv[cur+1],argv[cur+2],argv[cur+3]);
-                                        printf("\n arg: %d index %d\n",myargc,index);
+                                        three=(three_arg_type)call;
+                                        three( argv[cur+1],argv[cur+2],argv[cur+3]);
                                         break;
                               case 2:
-                                        reaction_table[index].callback.two_arg( argv[cur+1],argv[cur+2]);
+                                        two=(two_arg_type)call;
+                                        two( argv[cur+1],argv[cur+2]);
                                         break;
                               case 1:
-                                        reaction_table[index].callback.one_arg(argv[cur+1]);
+                                        call(argv[cur+1]);
                                         break;
                               case 0:
-                                        reaction_table[index].callback.one_arg(NULL);
+                                        call(NULL);
                                         break;
                               default:
                                         ADM_assert(0);
