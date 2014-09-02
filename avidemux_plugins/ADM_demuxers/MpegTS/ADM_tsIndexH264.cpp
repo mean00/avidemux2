@@ -203,7 +203,7 @@ bool bAppend=false;
     // 2 Index
     //******************
         bool fourBytes;
-      while(1)
+      while(keepRunning)
       {
           fourBytes=false;
         int startCode=pkt->findStartCode2(fourBytes);
