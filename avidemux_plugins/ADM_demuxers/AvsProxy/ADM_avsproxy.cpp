@@ -231,7 +231,7 @@ uint8_t  avsHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
     if(frame>=_mainaviheader.dwTotalFrames)
     {
         ADM_warning("Avisynth proxy out of bound %u / %u\n",frame,_mainaviheader.dwTotalFrames);
-        return 0;
+        return ADM_NO_PTS;
     }
     return frameToTime(frame);
 }

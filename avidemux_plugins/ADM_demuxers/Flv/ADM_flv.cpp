@@ -880,7 +880,7 @@ uint32_t flvHeader::getFlags(uint32_t frame,uint32_t *flags)
 */
 uint64_t flvHeader::getTime(uint32_t frame)
 {
-     if(frame>=videoTrack->_nbIndex) return 0;
+     if(frame>=videoTrack->_nbIndex) return ADM_NO_PTS;
      flvIndex *idx=&(videoTrack->_index[frame]);
      return idx->ptsUs;
 }

@@ -220,7 +220,7 @@ uint8_t     asfHeader::getFrameSize(uint32_t frame,uint32_t *size)
 */
 uint64_t                   asfHeader::getTime(uint32_t frameNum)
 {
-     if(frameNum>=nbImage) return 0;
+     if(frameNum>=nbImage) return ADM_NO_PTS;
      return _index[frameNum].pts; // ??PTS??
 }
 /**
