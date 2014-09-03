@@ -3,7 +3,7 @@
         ELSE(CROSS)
                 SET(WINDRES windres.exe)
         ENDIF(CROSS)
-
+include(admTimeStamp)
 #
 MACRO(WINDRESIFY src)
         # add icon and version info
@@ -11,8 +11,9 @@ MACRO(WINDRESIFY src)
         SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
         STRING(REPLACE "." "," FILEVERSION ${FILEVERSION_STRING})
         STRING(REPLACE "." "," PRODUCTVERSION ${PRODUCTVERSION_STRING})
-        SET(PRODUCTVERSION "${PRODUCTVERSION},0")
-        SET(FILEVERSION "${FILEVERSION},0")
+        ADM_TIMESTAMP(date)
+        SET(PRODUCTVERSION "${PRODUCTVERSION},${date}")
+        SET(FILEVERSION "${FILEVERSION},${date}")
 
         IF (ADM_CPU_X86_64)
 	        SET(WIN_RES_TARGET "pe-x86-64")

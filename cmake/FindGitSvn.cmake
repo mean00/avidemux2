@@ -1,4 +1,5 @@
 # - Extract information from a subversion working copy
+include(admTimeStamp)
 ###################################################################
 #
 # Look for git-svn-id in the logs to detect if it is git-svn
@@ -44,7 +45,7 @@ MACRO(admGetGitRevision _dir _rev)
                         RESULT_VARIABLE result 
                         OUTPUT_VARIABLE output
                         )
-                STRING(TIMESTAMP  date "%d_%m_%y")
+                ADM_TIMESTAMP(date)
                 STRING(STRIP "${output}" output)
                 SET( ${_rev} "${date}_${output}")
                 MESSAGE(STATUS "<${output}><${date}>==> ${${_rev}}")
