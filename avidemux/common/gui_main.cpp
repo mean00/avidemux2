@@ -1066,11 +1066,19 @@ roger_and_out:
 
 }
 #endif
-
-static inline int extractTrackIndex(const char *trackIdxTxt){
+/**
+ * \fn extractTrackIndex
+ * @param trackIdxTxt
+ * @return 
+ */
+static inline int extractTrackIndex(const char *trackIdxTxt)
+{
 	static const int MAX_TRACK_IDX_LENGTH = 4+1; // Max length expected = 0xFF. Test 1 char more than assumed to take the \0 into account
-	size_t trackTxtLen = strnlen(trackIdxTxt, MAX_TRACK_IDX_LENGTH);
-	if (trackTxtLen == MAX_TRACK_IDX_LENGTH) {
+	size_t trackTxtLen = strlen(trackIdxTxt);
+        if(trackTxtLen>= MAX_TRACK_IDX_LENGTH)
+            trackTxtLen=MAX_TRACK_IDX_LENGTH;
+	if ( MAX_TRACK_IDX_LENGTH == trackTxtLen) 
+        {
 		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
 		return -1;
 	}
