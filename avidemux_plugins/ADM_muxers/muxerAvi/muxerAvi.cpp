@@ -222,6 +222,7 @@ bool muxerAvi::save(void)
     printf("[AviMuxer] Saving\n");
     uint32_t bufSize=vStream->getWidth()*vStream->getHeight()*3;
     bool result=true;
+    bool keepGoing=true;
    
     uint64_t rawDts;
     uint64_t lastVideoDts=0;
@@ -241,8 +242,9 @@ bool muxerAvi::save(void)
 
     initUI("Saving Avi");
     encoding->setContainer("AVI/OpenDML");
+    
     if(false==prefill(&in)) goto abt;
-    while(1)
+    while(keepGoing)
     {
             aprintf("Current clock=%s\n",ADM_us2plain(aviTime));
             aprintf("Video in dts=%s\n",ADM_us2plain(in.dts));
@@ -275,7 +277,7 @@ bool muxerAvi::save(void)
             if(updateUI()==false)
             {  
                 result=false;
-                goto abt;
+                keepGoing=false;
             }
            
             written++;

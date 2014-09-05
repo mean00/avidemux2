@@ -223,6 +223,7 @@ bool muxerMp4v2::save(void)
    
 
     initUI("Saving MP4V2");
+    encoding->setPhasis(QT_TRANSLATE_NOOP("adm","Saving"));
     encoding->setContainer("MP4 (libmp4v2)");
     uint64_t lastSentDts=0;
     

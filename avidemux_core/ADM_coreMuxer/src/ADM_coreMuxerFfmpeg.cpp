@@ -416,7 +416,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     ADM_info("avg fps=%u\n",vStream->getAvgFps1000());
     uint64_t videoDuration=vStream->getVideoDuration();
 
-    initUI("Saving");
+    initUI(QT_TRANSLATE_NOOP("adm","Saving"));
     encoding->setContainer(getContainerName());
     MuxAudioPacket *audioPackets=new MuxAudioPacket[nbAStreams];
     ADMBitstream out(bufSize);

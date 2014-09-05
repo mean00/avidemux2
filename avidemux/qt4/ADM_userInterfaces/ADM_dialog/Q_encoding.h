@@ -23,33 +23,13 @@
 #include "ADM_inttype.h"
 #include "DIA_encoding.h"
 #include "ADM_tray.h"
-/**
-    \class encodingWindow
-*/
-class encodingWindow : public QDialog
+
+/**     
+ * \class DIA_encodingQt4
+ */
+class DIA_encodingQt4 : public QDialog,public DIA_encodingBase
 {
-     Q_OBJECT
-
- public:
-     encodingWindow(QWidget *parent);
-     virtual ~encodingWindow()
-     {
-         delete ui;
-         ui=NULL;
-     }
-     Ui_encodingDialog *ui;
-
- public slots:
-	void buttonPressed(void);
-	void priorityChanged(int priorityLevel);
-	void shutdownChanged(int state);
-};
-/**
-    \class DIA_encodingQt4
-*/
-
-class DIA_encodingQt4 : public DIA_encodingBase
-{
+    Q_OBJECT
 public:
     DIA_encodingQt4( uint64_t duration,bool useTray);
     ~DIA_encodingQt4( );
@@ -66,8 +46,10 @@ protected:
     void setAverageQz(uint32_t nb);
     void setAverageBitrateKbits(uint32_t kb);
 
-    ADM_tray *tray;
-
+    
+    bool                stopRequest;
+    Ui_encodingDialog   *ui;    
+    ADM_tray            *tray;
 public:    
     void *WINDOW;
     
@@ -79,5 +61,11 @@ public:
     void setQuantIn(int size);
     bool isAlive( void );
     
+ public slots:
+    void buttonPressed(void);
+    void priorityChanged(int priorityLevel);
+    void shutdownChanged(int state);    
+    void closeEvent(QCloseEvent *event) ;
+
 };
 #endif	// Q_encoding_h

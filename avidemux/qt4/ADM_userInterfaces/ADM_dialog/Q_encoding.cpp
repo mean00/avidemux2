@@ -13,7 +13,10 @@
  ***************************************************************************/
 #include <math.h>
 #include "ADM_inttype.h"
+#include <QtCore/QEvent>
+#include <QtGui/QCloseEvent>
 #include "Q_encoding.h"
+
 
 #include "prefs.h"
 #include "DIA_working.h"
@@ -25,11 +28,62 @@
 #include "ADM_coreUtils.h"
 #include "ADM_prettyPrint.h"
 
-static int stopReq=0;
+//*******************************************
+#define WIDGET(x) (ui->x)
+#define WRITEM(x,y) ui->x->setText(y)
+#define WRITE(x) WRITEM(x,stringMe)
+/*************************************/
+
 extern bool ADM_slaveReportProgress(uint32_t percent);
 
-encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowMinimizeButtonHint)
- {
+
+
+void DIA_encodingQt4::buttonPressed(void)
+{
+	ADM_info("StopReq\n");
+	stopRequest=true;
+}
+
+void DIA_encodingQt4::priorityChanged(int priorityLevel)
+{
+#ifndef _WIN32
+	if (getuid() != 0)
+	{
+		ui->comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
+		ui->comboBoxPriority->setCurrentIndex(2);
+		connect(ui->checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
+
+		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
+
+		return;
+	}
+#endif
+
+	#ifndef __HAIKU__
+	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
+	#endif
+}
+
+void DIA_encodingQt4::shutdownChanged(int state)
+{
+#ifndef _WIN32
+	if (getuid() != 0)
+	{
+		ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
+		ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
+		connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
+
+		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
+	}
+#endif
+}
+
+static char stringMe[80];
+
+DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encodingBase(duration,systray)
+{
+        stopRequest=false;
+        
         ui=new Ui_encodingDialog;
 	ui->setupUi(this);
 
@@ -60,69 +114,17 @@ encodingWindow::encodingWindow(QWidget *parent) : QDialog(parent, Qt::WindowTitl
 #else
 	ui->comboBoxPriority->setCurrentIndex(priority);
 #endif
- }
-
-void encodingWindow::buttonPressed(void)
-{
-	printf("StopReq\n");
-	stopReq=1;
-}
-
-void encodingWindow::priorityChanged(int priorityLevel)
-{
-#ifndef _WIN32
-	if (getuid() != 0)
-	{
-		ui->comboBoxPriority->disconnect(SIGNAL(currentIndexChanged(int)));
-		ui->comboBoxPriority->setCurrentIndex(2);
-		connect(ui->checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
-
-		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
-
-		return;
-	}
-#endif
-
-	#ifndef __HAIKU__
-	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
-	#endif
-}
-
-void encodingWindow::shutdownChanged(int state)
-{
-#ifndef _WIN32
-	if (getuid() != 0)
-	{
-		ui->checkBoxShutdown->disconnect(SIGNAL(stateChanged(int)));
-		ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
-		connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-
-		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
-	}
-#endif
-}
-
-//*******************************************
-#define WIDGET(x) (window->ui->x)
-#define WRITEM(x,y) window->ui->x->setText(y)
-#define WRITE(x) WRITEM(x,stringMe)
-/*************************************/
-static char stringMe[80];
-#define window ((encodingWindow *)WINDOW)
-DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encodingBase(duration,systray)
-{
-        WINDOW=NULL;
-        stopReq=0;
-        WINDOW=(void *)new encodingWindow(qtLastRegisteredDialog());
-		qtRegisterDialog(window);
-        window->setModal(TRUE);
-        window->show();
+        
+        
+        qtRegisterDialog(this);
+        setModal(TRUE);
+        show();
         tray=NULL;
         if(_useSystray)
         {
-            window->hide();
+            hide();
             UI_iconify();
-            tray=DIA_createTray(WINDOW);
+            tray=DIA_createTray(this);
         }
 
 }
@@ -143,45 +145,21 @@ void DIA_encodingQt4::setFps(uint32_t fps)
 DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
-	bool shutdownRequired = (window->ui->checkBoxShutdown->checkState() == Qt::Checked);
+    bool shutdownRequired = (ui->checkBoxShutdown->checkState() == Qt::Checked);
     if(tray)
     {
         UI_deiconify();
         delete tray;
         tray=NULL;
     }
-    encodingWindow *w=window;
-	qtUnregisterDialog(w);
-	if(w) delete w;
-	WINDOW=NULL;
-#if 0
-	if (shutdownRequired && !stopReq)
-	{
-		DIA_working *work=new DIA_working(QT_TR_NOOP("Shutting down"));
-		bool performShutdown=true;
-
-		for(int i = 0; i <= 30; i++)
-		{
-			if (work->isAlive())
-			{
-				GUI_Sleep(1000);
-				work->update(i, 30);
-			}
-			else
-			{
-				performShutdown=false;
-				break;
-			}
-		}
-
-		if (performShutdown && shutdown())
-		{
-			GUI_Sleep(5000);
-		}
-
-		delete work;
-	}
-#endif
+        
+	
+	if(ui) 
+        {
+            qtUnregisterDialog(this);
+            delete ui;
+            ui=NULL;
+        }
 }
 /**
     \fn setPhasis(const char *n)
@@ -190,7 +168,7 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 
 void DIA_encodingQt4::setPhasis(const char *n)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           WRITEM(labelPhasis,n);
 
 }
@@ -201,7 +179,7 @@ void DIA_encodingQt4::setPhasis(const char *n)
 
 void DIA_encodingQt4::setFrameCount(uint32_t nb)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           snprintf(stringMe,79,"%"PRIu32,nb);
           WRITE(labelFrame);
 
@@ -213,7 +191,7 @@ void DIA_encodingQt4::setFrameCount(uint32_t nb)
 
 void DIA_encodingQt4::setPercent(uint32_t p)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           printf("Percent:%u\n",p);
           WIDGET(progressBar)->setValue(p);
           ADM_slaveReportProgress(p);
@@ -228,7 +206,7 @@ void DIA_encodingQt4::setPercent(uint32_t p)
 
 void DIA_encodingQt4::setAudioCodec(const char *n)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           WRITEM(labelAudCodec,n);
 }
 /**
@@ -238,7 +216,7 @@ void DIA_encodingQt4::setAudioCodec(const char *n)
 
 void DIA_encodingQt4::setVideoCodec(const char *n)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           WRITEM(labelVidCodec,n);
 }
 /**
@@ -248,7 +226,7 @@ void DIA_encodingQt4::setVideoCodec(const char *n)
 
 void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           snprintf(stringMe,79,"%"PRIu32" kB/s",br);
           WRITE(labelVidBitrate);
 
@@ -260,7 +238,7 @@ void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 
 void DIA_encodingQt4::setContainer(const char *container)
 {
-        ADM_assert(window);
+        ADM_assert(ui);
         WRITEM(labelContainer,container);
 }
 
@@ -271,7 +249,7 @@ void DIA_encodingQt4::setContainer(const char *container)
 
 void DIA_encodingQt4::setQuantIn(int size)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           sprintf(stringMe,"%"PRIu32,size);
           WRITE(labelQz);
 
@@ -283,7 +261,7 @@ void DIA_encodingQt4::setQuantIn(int size)
 
 void DIA_encodingQt4::setTotalSize(uint64_t size)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           uint64_t mb=size>>20;
           sprintf(stringMe,"%"PRIu32" MB",(int)mb);
           WRITE(labelTotalSize);
@@ -297,7 +275,7 @@ void DIA_encodingQt4::setTotalSize(uint64_t size)
 
 void DIA_encodingQt4::setVideoSize(uint64_t size)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           uint64_t mb=size>>20;
           sprintf(stringMe,"%"PRIu32" MB",(int)mb);
           WRITE(labelVideoSize);
@@ -310,7 +288,7 @@ void DIA_encodingQt4::setVideoSize(uint64_t size)
 
 void DIA_encodingQt4::setAudioSize(uint64_t size)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           uint64_t mb=size>>20;
           sprintf(stringMe,"%"PRIu32" MB",(int)mb);
           WRITE(labelAudioSize);
@@ -323,7 +301,7 @@ void DIA_encodingQt4::setAudioSize(uint64_t size)
 */
 void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           uint64_t mb=nb;
           mb*=1000;
           strcpy(stringMe,ADM_us2plain(mb));
@@ -336,7 +314,7 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
 
 void DIA_encodingQt4::setAverageQz(uint32_t nb)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           snprintf(stringMe,79,"%"PRIu32,nb);
           WRITE(labelQz);
 }
@@ -347,7 +325,7 @@ void DIA_encodingQt4::setAverageQz(uint32_t nb)
 
 void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           snprintf(stringMe,79,"%"PRIu32" kbits/s",kb);
           WRITE(labelVidBitrate);
 }
@@ -358,10 +336,10 @@ void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
 */
 void DIA_encodingQt4::setRemainingTimeMS(uint32_t milliseconds)
 {
-          ADM_assert(window);
+          ADM_assert(ui);
           std::string s;
           ADM_durationToString(milliseconds,s);
-          window->ui->labelETA->setText(QString(s.c_str()));
+          ui->labelETA->setText(QString(s.c_str()));
 }
 
 /**
@@ -371,19 +349,28 @@ void DIA_encodingQt4::setRemainingTimeMS(uint32_t milliseconds)
 bool DIA_encodingQt4::isAlive( void )
 {
 
-        if(stopReq)
+        if(stopRequest)
         {
-          if(GUI_Alternate((char*)QT_TR_NOOP("The encoding is paused. Do you want to resume or abort?"),
+                if(GUI_Alternate((char*)QT_TR_NOOP("The encoding is paused. Do you want to resume or abort?"),
                               (char*)QT_TR_NOOP("Resume"),(char*)QT_TR_NOOP("Abort")))
                  {
-                         stopReq=0;
+                         stopRequest=false;
                  }
         }
 
-        if(!stopReq) return true;		
+        if(!stopRequest) return true;		
 
         return false;
 }
+/**
+ * \fn closeEvent
+ * @param event
+ */
+ void DIA_encodingQt4::closeEvent(QCloseEvent *event) 
+    {
+        stopRequest=true;
+        event->ignore(); // keep window
+    }
 /**
         \fn createEncoding
 */

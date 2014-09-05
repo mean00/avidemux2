@@ -85,7 +85,9 @@ bool     ADM_muxer::initUI(const char *title)
         ADM_info("Muxer, creating UI, video duration is %s\n",ADM_us2plain(videoDuration));
         encoding=createEncoding(videoDuration,useTray);
         // Set video stream etc...
+        encoding->setPhasis(title);
         encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));
+        
         if(!nbAStreams) encoding->setAudioCodec("None");
                 else    encoding->setAudioCodec(getStrFromAudioCodec(aStreams[0]->getInfo()->encoding));
         return true;
@@ -102,6 +104,7 @@ bool     ADM_muxer::updateUI(void)
             encoding->refresh();
             if(!encoding->isAlive()) 
             {
+                ADM_info("[coreMuxer]Stop request\n");
                 return false;
             }
             return true;
