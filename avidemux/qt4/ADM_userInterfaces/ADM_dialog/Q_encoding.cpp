@@ -93,7 +93,11 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encoding
 	{
 		// set priority to normal, regardless of preferences
 		ui->comboBoxPriority->setCurrentIndex(2);
-	}
+                
+	}else
+        {
+            ui->comboBoxPriority->setEnabled(false);
+        }
 #endif
 
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
