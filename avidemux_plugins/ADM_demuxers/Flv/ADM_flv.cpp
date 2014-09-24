@@ -20,6 +20,7 @@ Not sure if the timestamp is PTS or DTS (...)
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_videoInfoExtractor.h"
 
 #include "ADM_flv.h"
 
@@ -517,6 +518,40 @@ uint8_t flvHeader::open(const char *name)
 
   // Udpate frame count etc..
   ADM_info("\n[FLV] Found %u frames\n",videoTrack->_nbIndex);
+  
+  if(!metaWidth && !metaHeight &&  videoCodec==FLV_CODECID_H264)
+  {
+      ADM_info("No width / height, trying to get them..\n");
+      
+      uint32_t spsLen,ppsLen;
+      uint8_t *spsData,*ppsData;
+      if( ADM_getH264SpsPpsFromExtraData(videoTrack->extraDataLen,videoTrack->extraData,
+                                    &spsLen,&spsData,
+                                    &ppsLen,&ppsData))
+      {
+               ADM_SPSInfo spsinfo;
+                if(extractSPSInfo (spsData,spsLen,&spsinfo))
+                {
+                        ADM_info("W %d\n",spsinfo.width);
+                        ADM_info("H %d\n",spsinfo.height);
+                        if(spsinfo.width && spsinfo.height)
+                        {
+                            metaWidth=spsinfo.width;
+                            metaHeight=spsinfo.height;
+                            updateDimensionWithMeta(FLV_CODECID_H264);
+                        }
+                        
+                }else
+                {
+                    ADM_warning("Cannot decode SPS\n");
+                }
+      }else
+      {
+          ADM_warning("Cannot extract pps and sps\n");
+      }
+          
+  }
+  
    _videostream.dwLength= _mainaviheader.dwTotalFrames=videoTrack->_nbIndex;
    // Compute average fps
     float f=_videostream.dwLength;
