@@ -703,14 +703,21 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 #if 1        
         
         bool l=extractSPSInfo_lavcodec(data,len,spsinfo);
-        DPY(width);
-        DPY(height);
-        DPY(fps1000);
-        DPY(hasStructInfo);
-        DPY(CpbDpbToSkip);
-        DPY(darNum);
-        DPY(darDen);
+        if(l)
+        {
+            DPY(width);
+            DPY(height);
+            DPY(fps1000);
+            DPY(hasStructInfo);
+            DPY(CpbDpbToSkip);
+            DPY(darNum);
+            DPY(darDen);
+        }else
+        {
+            ADM_info("Failed\n.");
+        }
         return l;
+        
 #else           
         bool i=extractSPSInfo_internal(data,len,spsinfo);
         DPY(width);
