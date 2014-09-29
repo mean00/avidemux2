@@ -652,7 +652,13 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
          uint8_t *outptr=NULL;
          int outsize=0;
 
-         av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
+         int used=av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
+         printf("Used bytes %d/%d (+5)\n",used,len);
+         if(!used)
+         {
+             ADM_warning("Failed to extract SPS info\n");
+             goto theEnd;
+         }
     }
     ADM_info("Width  : %d\n",ctx->width);
     ADM_info("Height : %d\n",ctx->height);
