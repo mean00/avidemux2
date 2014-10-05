@@ -1,6 +1,6 @@
 MACRO(ADM_TIMESTAMP src)
  if (${CMAKE_VERSION} VERSION_GREATER 2.8.11)
-        STRING(TIMESTAMP  ${src} "%d%m%y")
+        STRING(TIMESTAMP  ${src} "%y%m%d")
  else (${CMAKE_VERSION} VERSION_GREATER 2.8.11)
         SET( ${src} "0")
  endif (${CMAKE_VERSION} VERSION_GREATER 2.8.11)
