@@ -226,24 +226,54 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
 */
 bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime)
 {
-    // Search from the end till we get a keyframe
-    _VIDEOS *v=_segments.getRefVideo(ref);
-    uint32_t nbFrame=v->_nb_video_frames;
-    uint64_t pts,dts;
-    for(int i=nbFrame-1;i>=0;i--)
-    {
+    // Search for the current frame with quick search
+    _VIDEOS *v = _segments.getRefVideo(ref);
+    uint32_t nbFrame = v->_nb_video_frames;
+    uint64_t pts, dts;
+	uint32_t curFrame=nbFrame >> 1;
+	uint32_t splitMoval = curFrame >> 1;
+	do {
+		// seems like the pts determination, not always works -> retry if necessary
+		bool worked;
+		do {
+			worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
+			if (!worked || pts == ADM_NO_PTS) {
+				curFrame++;
+				if (curFrame == nbFrame) {
+					ADM_warning("The whole segment is corrupted. Abort the search");
+					return false;
+				}
+			} else
+				break;
+		} while(true);
+
+		if (splitMoval != 0) {
+			if (pts >= refTime)
+				curFrame -= splitMoval;
+			else
+				curFrame += splitMoval;
+			splitMoval >>= 1;
+		} else
+			break;
+	} while(refTime != pts);
+
+	if (pts > refTime)
+		curFrame--;
+	for (int i=curFrame; i>=0; i--) 
+        {
         uint64_t p;
         uint32_t flags;
-        v->_aviheader->getFlags(i,&flags);
-        if(!(flags & AVI_KEY_FRAME)) continue;
-        v->_aviheader->getPtsDts(i,&pts,&dts);
-        if(pts==ADM_NO_PTS) continue;
-        if(pts<refTime)
-        {
-            *nkTime=pts;
-            return true;
-        }
-    }
+                v->_aviheader->getFlags(i,&flags);
+                if(!(flags & AVI_KEY_FRAME)) continue;
+		if(!v->_aviheader->getPtsDts(i,&pts,&dts) || pts == ADM_NO_PTS)
+                {
+			ADM_warning("The keyframe with PTS less than %"PRIu32"ms is corrupted\n",refTime/1000);
+                        continue;
+                }
+                if(pts>=refTime) continue;
+		*nkTime = pts;
+		return true;
+	}
     ADM_warning("Cannot find keyframe with PTS less than %"PRIu32"ms\n",refTime/1000);
     return false;
 }
