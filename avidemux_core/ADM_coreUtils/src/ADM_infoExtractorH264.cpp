@@ -637,7 +637,7 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
         \fn extractSPSInfo_mp4Header
         \brief Only works for mp4 style headers i.e. begine by 0x01
 */
-uint8_t extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
         
