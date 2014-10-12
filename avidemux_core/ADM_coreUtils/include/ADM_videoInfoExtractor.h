@@ -37,6 +37,8 @@ typedef struct
 }ADM_SPSInfo;
 
 ADM_COREUTILS6_EXPORT uint8_t extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+ADM_COREUTILS6_EXPORT bool extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
@@ -78,5 +80,6 @@ typedef struct
 
 ADM_COREUTILS6_EXPORT uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, ADM_vopS *vop,uint32_t *timeincbits);
 ADM_COREUTILS6_EXPORT uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
+ADM_COREUTILS6_EXPORT uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
 #endif
 //EOF

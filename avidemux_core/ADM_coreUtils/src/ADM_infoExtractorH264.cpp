@@ -52,6 +52,39 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
 /**
+    \fn ADM_escapeH264
+    \brief Add escape stuff
+
+*/
+uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
+{
+  uint32_t outlen = 0;
+  uint8_t *tail = in + len;
+  if (len < 2)
+    return 0;
+  while (in < tail-1 )
+    {
+      if (!in[0] && !in[1])
+	{
+	  out[0] = 0;
+	  out[1] = 0;
+          out[2] = 3;
+	  out += 3;
+	  outlen += 3;
+	  in += 2;
+          continue;
+	}
+      *out++ = *in++;
+      outlen++;
+    }
+  // copy last bytes
+  uint32_t left = tail - in;
+  memcpy (out, in, left);
+  outlen += left;
+  return outlen;
+
+}
+/**
     \fn unescapeH264
     \brief Remove escape stuff
 
@@ -71,6 +104,7 @@ uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 	  out += 2;
 	  outlen += 2;
 	  in += 3;
+          continue;
 	}
       *out++ = *in++;
       outlen++;
@@ -597,6 +631,101 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
   printf ("No stream\n");
   return 0;
 }
+
+
+/**
+        \fn extractSPSInfo_mp4Header
+        \brief Only works for mp4 style headers i.e. begine by 0x01
+*/
+uint8_t extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+{
+    bool r=false;
+        
+    // duplicate
+    int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    uint8_t *myData=new uint8_t[myLen];
+    memset(myData,0x2,myLen);
+    memcpy(myData,data,len);
+    
+    // 1-Create parser
+    AVCodecParserContext *parser=av_parser_init(CODEC_ID_H264);
+    AVCodecContext *ctx=NULL; 
+    AVCodec *codec=NULL;
+    uint8_t *d=NULL;
+  
+    if(!parser)
+    {
+        ADM_error("cannot create h264 parser\n");
+        goto theEnd;
+    }
+    ADM_info("Parser created\n");
+    codec=avcodec_find_decoder(CODEC_ID_H264);
+    if(!codec)
+    {
+        ADM_error("cannot create h264 codec\n");
+        goto theEnd;
+    }
+    ADM_info("Codec created\n");
+    ctx=avcodec_alloc_context();
+   if (avcodec_open(ctx, codec) < 0)  
+   {
+        ADM_error("cannot create h264 context\n");
+        goto theEnd;
+    }
+    ADM_info("Context created\n");
+    //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
+    ctx->extradata=myData;
+    ctx->extradata_size=len;
+     {
+         uint8_t *outptr=NULL;
+         int outsize=0;
+
+         int used=av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
+         printf("Used bytes %d/%d (+5)\n",used,len);
+         if(!used)
+         {
+             ADM_warning("Failed to extract SPS info\n");
+           //  goto theEnd;
+         }
+    }
+    ADM_info("Width  : %d\n",ctx->width);
+    ADM_info("Height : %d\n",ctx->height);
+    {
+        ffSpsInfo nfo;
+        if(!ff_h264_info(parser,&nfo))
+        {
+            ADM_error("Cannot get sps info from lavcodec\n");
+            r=false;
+            goto theEnd;
+        }
+        ADM_info("Width2 : %d\n",nfo.width);
+        ADM_info("Height2: %d\n",nfo.height);
+        #define CPY(x) spsinfo->x=nfo.x
+        CPY(width);
+        CPY(height);
+        CPY(fps1000);
+        CPY(hasStructInfo);
+        CPY(CpbDpbToSkip);
+        CPY(darNum);
+        CPY(darDen);
+        r=true;
+     }
+    // cleanup
+theEnd:
+    if(ctx)
+    {
+        avcodec_close(ctx);
+        av_free(ctx);
+    }
+    if(parser)
+        av_parser_close(parser);
+
+	delete [] myData;
+
+    return r;
+}
+
+
 /**
         \fn extractSPSInfo2
         \brief Same as extractSPSInfo, but using libavcodec
