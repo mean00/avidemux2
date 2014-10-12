@@ -657,7 +657,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
          if(!used)
          {
              ADM_warning("Failed to extract SPS info\n");
-             goto theEnd;
+           //  goto theEnd;
          }
     }
     ADM_info("Width  : %d\n",ctx->width);
