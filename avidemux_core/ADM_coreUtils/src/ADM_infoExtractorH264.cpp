@@ -608,7 +608,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     uint8_t *myData = new uint8_t[myLen];
     bool r=false;
 
-    memset(myData,myLen,1);
+    memset(myData,1,myLen);
     mixDump(data,len);
     // put dummy SPS tag + dummy filler at the end
     // so that lavcodec can split it
