@@ -179,7 +179,8 @@ bool bAppend=false;
             pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
             if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
             {
-              printf("[TsIndexer] Found video %"PRIu32"x%"PRIu32", fps=%"PRIu32"\n",video.w,video.h,video.fps);
+              ADM_info("[TsIndexer] Found video %"PRIu32"x%"PRIu32", fps=%"PRIu32"\n",video.w,video.h,video.fps);
+              ADM_info("[TsIndexer] SPS says %"PRIu32"x%"PRIu32"\n",spsInfo.width,spsInfo.height);
               seq_found=1;
               video.w=spsInfo.width;
               video.h=spsInfo.height;

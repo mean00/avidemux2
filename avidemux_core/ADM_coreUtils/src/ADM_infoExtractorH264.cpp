@@ -49,6 +49,40 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 
 #define MAX_NALU_PER_CHUNK 20
 
+
+/**
+    \fn ADM_getH264SpsPpsFromExtraData
+    \brief Returns a copy of PPS/SPS extracted from extrdata
+*/
+static bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
+                                    uint32_t *outLen, uint8_t *outData)
+{
+    if(dataLen>200)
+    {
+        ADM_warning("SPS TOO LONG\n");
+        return false;
+    }
+    // 01
+    // 4d 40 1f ff 
+    // e1 00 1b 67 
+    // 4d 40 1f f6 
+    // 02 80 2d
+
+    outData[0]=1;
+    outData[1]=0x4d;
+    outData[2]=0x40;
+    outData[3]=0x1f;
+    outData[4]=0xff;
+    outData[5]=0xe1; // 1 stream
+    outData[6]=0; // Len MSB
+    outData[7]=0; // Len LSB, should fit in 1 byte...
+    outData[8]=0x67; // Len LSB, should fit in 1 byte...
+    int p=ADM_unescapeH264(dataLen,incoming,outData+9) ;
+    outData[7]=p; // Len LSB, should fit in 1 byte...
+    *outLen= p+9;
+    return true;
+}
+
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
 			    uint8_t * outstartcode, uint32_t * offset);
 /**
@@ -732,98 +766,24 @@ theEnd:
 */
 uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
-    static const uint8_t sig[5]={0,0,0,1,0};
-    uint32_t myLen=len+5+5+FF_INPUT_BUFFER_PADDING_SIZE;
-    uint8_t *myData = new uint8_t[myLen];
-    bool r=false;
-
-    memset(myData,1,myLen);
+    if(data[0]==1) return extractSPSInfo_mp4Header(data,len,spsinfo);
+    
+    ADM_info("Incoming SPS info\n");
     mixDump(data,len);
-    // put dummy SPS tag + dummy filler at the end
-    // so that lavcodec can split it
-    memcpy(myData,sig,5);
-    memcpy(myData+5,data,len);
-    memcpy(myData+5+len,sig,5);
-    myData[4]=NAL_SPS;
-    myData[5+len+4]=NAL_FILLER;
     
+    ADM_info("\nconverted SPS info\n");
     
-    // 1-Create parser
-    AVCodecParserContext *parser=av_parser_init(CODEC_ID_H264);
-    AVCodecContext *ctx=NULL; 
-    AVCodec *codec=NULL;
-    uint8_t *d=NULL;
-  
-    if(!parser)
+    uint32_t converted;
+    uint8_t buffer[256];
+    if(! ADM_SPSannexBToMP4(len,data,&converted,buffer))
     {
-        ADM_error("cannot create h264 parser\n");
-        goto theEnd;
+        ADM_warning("Cannot convert SPS\n");
+        return false;
     }
-    ADM_info("Parser created\n");
-    codec=avcodec_find_decoder(CODEC_ID_H264);
-    if(!codec)
-    {
-        ADM_error("cannot create h264 codec\n");
-        goto theEnd;
-    }
-    ADM_info("Codec created\n");
-    ctx=avcodec_alloc_context();
-   if (avcodec_open(ctx, codec) < 0)  
-   {
-        ADM_error("cannot create h264 context\n");
-        goto theEnd;
-    }
-    ADM_info("Context created\n");
-    //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
-    ctx->extradata=myData;
-    ctx->extradata_size=myLen;
-     {
-         uint8_t *outptr=NULL;
-         int outsize=0;
-
-         int used=av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
-         printf("Used bytes %d/%d (+5)\n",used,len);
-         if(!used)
-         {
-             ADM_warning("Failed to extract SPS info\n");
-           //  goto theEnd;
-         }
-    }
-    ADM_info("Width  : %d\n",ctx->width);
-    ADM_info("Height : %d\n",ctx->height);
-    {
-        ffSpsInfo nfo;
-        if(!ff_h264_info(parser,&nfo))
-        {
-            ADM_error("Cannot get sps info from lavcodec\n");
-            r=false;
-            goto theEnd;
-        }
-        ADM_info("Width2 : %d\n",nfo.width);
-        ADM_info("Height2: %d\n",nfo.height);
-        #define CPY(x) spsinfo->x=nfo.x
-        CPY(width);
-        CPY(height);
-        CPY(fps1000);
-        CPY(hasStructInfo);
-        CPY(CpbDpbToSkip);
-        CPY(darNum);
-        CPY(darDen);
-        r=true;
-     }
-    // cleanup
-theEnd:
-    if(ctx)
-    {
-        avcodec_close(ctx);
-        av_free(ctx);
-    }
-    if(parser)
-        av_parser_close(parser);
-
-	delete [] myData;
-
-    return r;
+    mixDump(buffer,converted);
+    ADM_info("\n");
+    return    extractSPSInfo_mp4Header(buffer,converted,spsinfo) ;
+    
 }
 
 uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
