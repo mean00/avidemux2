@@ -77,7 +77,12 @@ static bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
     outData[6]=0; // Len MSB
     outData[7]=0; // Len LSB, should fit in 1 byte...
     outData[8]=0x67; // Len LSB, should fit in 1 byte...
+#if 1
+    memcpy(outData+9,incoming,dataLen);
+    int p=dataLen+9;
+#else
     int p=ADM_unescapeH264(dataLen,incoming,outData+9) ;
+#endif
     outData[7]=p; // Len LSB, should fit in 1 byte...
     *outLen= p+9;
     return true;
