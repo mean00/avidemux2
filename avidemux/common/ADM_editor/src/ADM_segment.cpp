@@ -626,13 +626,25 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
 */
 void ADM_EditorSegment::dump(void)
 {
-    int n=segments.size();
-    printf("We have %d segments\n",n);
+    dumpSegmentsInternal(segments);
+}
+
+void ADM_EditorSegment::dumpSegmentsInternal(ListOfSegments &l)
+{
+    int n=l.size();
     for(int i=0;i<n;i++)
     {
-      dumpSegment(i);
+        _SEGMENT s=l.at(i);
+
+        printf("Segment :%d/%d\n",i,n);
+        printf("\tReference    :%"PRIu32"    %s\n",s._reference,ADM_us2plain(s._reference));
+        printf("\tstartLinear  :%08"PRIu64" %s\n",s._startTimeUs,ADM_us2plain(s._startTimeUs));
+        printf("\tduration     :%08"PRIu64" %s\n",s._durationUs,ADM_us2plain(s._durationUs));
+        printf("\trefStartPts  :%08"PRIu64" %s\n",s._refStartTimeUs,ADM_us2plain(s._refStartTimeUs));
+        printf("\trefStartDts  :%08"PRIu64" %s\n",s._refStartDts,ADM_us2plain(s._refStartDts));
     }
 }
+
 void       ADM_EditorSegment::dumpSegment(int i)
 {
     int n=segments.size();
@@ -794,6 +806,7 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
     uint64_t startSegTime,endSegTime;
     convertLinearTimeToSeg(  startTime, &startSeg,&startSegTime);
     convertLinearTimeToSeg(  endTime, &endSeg,&endSegTime);
+    dump();
     clipboard.clear();
     for(int seg=startSeg;seg<=endSeg;seg++)
     {
@@ -802,23 +815,35 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
         if(s._startTimeUs<=startTime && (s._startTimeUs+s._durationUs)>startTime)
         {
             // need to refine 1st seg
-            aprintf("Marker A is here\n");
+
             uint64_t offset=startTime-s._startTimeUs;
             s._refStartTimeUs+=offset;
             s._durationUs-=offset;         // take into account the part we chopped
+            aprintf("Marker A is here offset=%d\n",(int)offset);
         }
         if(s._startTimeUs<=endTime && (s._startTimeUs+s._durationUs)>endTime)
         {
-            aprintf("Marker B is here\n");
+            
             // need to refine last seg            
             uint64_t offset=endTime-s._startTimeUs;
             s._durationUs=offset;
+            aprintf("Marker B is here offset=%d\n",(int)offset);
         }
         // TODO refine timing for 1st/last/duration/...
         clipboard.push_back(s);        
     }
+    dumpClipBoard();
     return false;
 }
+/**
+ * \fn dumpClipBoard
+ * @return 
+ */
+bool        ADM_EditorSegment::dumpClipBoard()
+{
+    dumpSegmentsInternal(clipboard);
+}
+
 /**
  * \fn pasteFromClipBoard
  * \brief instert clipboard at currentTime position
