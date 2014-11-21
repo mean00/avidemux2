@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "1.2.7")
+set(FFMPEG_VERSION "2.2.10")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -29,7 +29,7 @@ set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
 xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
-xadd("--enable-swscale --disable-swresample")
+xadd("--enable-swscale --disable-swresample --enable-libx265")
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
@@ -290,6 +290,7 @@ add_custom_command(OUTPUT
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 include_directories("${FFMPEG_SOURCE_DIR}")
+include_directories("${FFMPEG_BINARY_DIR}")
 
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")

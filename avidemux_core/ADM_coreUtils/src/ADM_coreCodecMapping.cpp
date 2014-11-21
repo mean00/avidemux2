@@ -85,7 +85,7 @@ const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc)
     \fn ADM_codecIdFindByFourcc
     \brief get lav codec if from fourcc (used by muxer)
 */
-CodecID ADM_codecIdFindByFourcc(const char *fcc)
+AVCodecID ADM_codecIdFindByFourcc(const char *fcc)
 {
     uint32_t fid=fourCC::get((uint8_t *)fcc);
     // Special cases
