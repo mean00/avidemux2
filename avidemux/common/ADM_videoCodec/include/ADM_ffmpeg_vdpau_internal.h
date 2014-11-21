@@ -47,7 +47,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
   codecId=codecid; \
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
-  if (avcodec_open(_context, codec) < 0)  \
+  if (avcodec_open2(_context, codec, NULL) < 0)  \
                       { \
                                         printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
                                         GUI_Error_HIG("Codec","Internal error opening "display); \
