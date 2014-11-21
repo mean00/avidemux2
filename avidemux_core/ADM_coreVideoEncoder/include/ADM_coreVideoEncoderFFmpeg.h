@@ -51,7 +51,7 @@ protected:
 
     virtual               bool             prolog(ADMImage *img); 
     virtual               bool             preEncode(void); 
-    virtual               bool             setup(CodecID codecId);
+    virtual               bool             setup(AVCodecID codecId);
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
                           bool             presetContext(FFcodecSettings *set);
                           bool             postEncode(ADMBitstream *out, uint32_t size);

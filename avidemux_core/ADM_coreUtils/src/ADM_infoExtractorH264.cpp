@@ -705,8 +705,8 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
     ADM_info("Codec created\n");
-    ctx=avcodec_alloc_context();
-   if (avcodec_open(ctx, codec) < 0)  
+    ctx=avcodec_alloc_context3(codec);
+   if (avcodec_open2(ctx, codec, NULL) < 0)  
    {
         ADM_error("cannot create h264 context\n");
         goto theEnd;

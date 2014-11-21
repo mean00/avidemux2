@@ -258,7 +258,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                             {
                                                 uint32_t id=stream->getFCC();
 
-                                                CodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
+                                                AVCodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
                                                 if(cid==CODEC_ID_NONE)
                                                 {
                                                     printf("[FF] Unknown video codec\n");

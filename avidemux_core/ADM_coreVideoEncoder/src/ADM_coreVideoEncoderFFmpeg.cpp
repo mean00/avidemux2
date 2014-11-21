@@ -51,7 +51,7 @@ uint32_t w,h;
     h=getHeight();
 
     image=new ADMImageDefault(w,h);
-    _context = avcodec_alloc_context2 (AVMEDIA_TYPE_VIDEO);
+    _context = avcodec_alloc_context3 (NULL);
     ADM_assert (_context);
     memset (&_frame, 0, sizeof (_frame));
     _frame.pts = AV_NOPTS_VALUE;
@@ -257,7 +257,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     \fn setup
     \brief put flags before calling setup!
 */
-bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
+bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
 {
     int res;
     AVCodec *codec=avcodec_find_encoder(codecId);
@@ -272,7 +272,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
     {
         encoderMT();
     }
-   res=avcodec_open(_context, codec);
+   res=avcodec_open2(_context, codec, NULL);
    if(res<0)
     {   printf("[ff] Cannot open codec\n");
         return false;
@@ -406,8 +406,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 	  //_context->gop_size = 250;
 
 #define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
-#define SETX_COND(x) if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);} else\
-		{ printf(#x" is not activated\n");}
+
       SETX (me_method);
       SETX (qmin);
       SETX (qmax);
@@ -415,11 +414,8 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
       SETX (mpeg_quant);
       SETX (max_qdiff);
       SETX (gop_size);
-      SETX_COND (luma_elim_threshold);
-      SETX_COND (chroma_elim_threshold);
 
 #undef SETX
-#undef SETX_COND
 
 #define SETX(x)  _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);
 #define SETX_COND(x)  if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);} else  \

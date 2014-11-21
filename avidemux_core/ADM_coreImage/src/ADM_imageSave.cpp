@@ -154,19 +154,20 @@ bool             result=false;
 AVCodec          *codec=NULL;
 int              sz=0,r=0;
 ADM_byteBuffer   byteBuffer;
-
-    context=avcodec_alloc_context();
-    if(!context) 
-    {
-        printf("[saveAsJpg] Cannot allocate context\n");
-        return false;
-    }
     codec=avcodec_find_encoder(CODEC_ID_MJPEG);
     if(!codec)
     {
         printf("[saveAsJpg] Cannot allocate codec\n");
         goto jpgCleanup;
     }
+
+    context=avcodec_alloc_context3(codec);
+    if(!context) 
+    {
+        printf("[saveAsJpg] Cannot allocate context\n");
+        return false;
+    }
+
     context->pix_fmt =PIX_FMT_YUV420P;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
@@ -174,7 +175,7 @@ ADM_byteBuffer   byteBuffer;
     context->width=_width;
     context->height=_height;
     context->flags |= CODEC_FLAG_QSCALE;
-    r=avcodec_open(context, codec); 
+    r=avcodec_open2(context, codec, NULL); 
     if(r<0)
     {
         printf("[saveAsJpg] Cannot mix codec and context\n");
