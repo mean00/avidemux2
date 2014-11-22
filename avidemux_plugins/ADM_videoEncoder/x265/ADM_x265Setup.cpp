@@ -67,6 +67,7 @@ bool x265Encoder::setup(void)
   param.sourceWidth = getWidth();
   param.sourceHeight = getHeight();
   param.internalCsp = X265_CSP_I420;
+  param.internalBitDepth = 8;
   param.logLevel=X265_LOG_INFO; //DEBUG; //INFO;
 
   //Framerate

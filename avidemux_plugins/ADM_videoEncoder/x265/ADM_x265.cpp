@@ -250,6 +250,7 @@ bool  x265Encoder::preAmble (ADMImage * in)
       pic.stride[2] = in->GetPitch(PLANAR_V);
       pic.sliceType = X265_TYPE_AUTO;
       pic.pts = in->Pts;
+      pic.bitDepth = 8;
   return true;
 }
 /**
