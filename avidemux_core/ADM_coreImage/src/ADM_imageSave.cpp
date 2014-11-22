@@ -158,14 +158,14 @@ ADM_byteBuffer   byteBuffer;
     if(!codec)
     {
         printf("[saveAsJpg] Cannot allocate codec\n");
-        goto jpgCleanup;
+        return false;
     }
 
     context=avcodec_alloc_context3(codec);
     if(!context) 
     {
         printf("[saveAsJpg] Cannot allocate context\n");
-        return false;
+        goto jpgCleanup;
     }
 
     context->pix_fmt =PIX_FMT_YUV420P;
