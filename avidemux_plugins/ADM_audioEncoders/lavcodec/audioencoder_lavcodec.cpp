@@ -146,7 +146,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
     return 0;
   }
   AVCodec *codec;
-  CodecID codecID;
+  AVCodecID codecID;
   codecID=makeName(CODEC_ID);
   codec = avcodec_find_encoder(codecID);
   ADM_assert(codec);

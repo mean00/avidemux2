@@ -102,7 +102,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
     channels=info->channels;
-    _contextVoid=(void *)avcodec_alloc_context();
+    _contextVoid=(void *)avcodec_alloc_context3(NULL);
     ADM_assert(_contextVoid);
     // Fills in some values...
     _context->codec_type=AVMEDIA_TYPE_AUDIO;
@@ -179,11 +179,11 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
    if(!codec) {ADM_assert(0);}
 
     _context->sample_fmt=AV_SAMPLE_FMT_FLT;
-    if (avcodec_open(_context, codec) < 0)
+    if (avcodec_open2(_context, codec, NULL) < 0)
     {
          ADM_warning("[audioCodec] Cannot use float, retrying with int16 \n");
          _context->sample_fmt=AV_SAMPLE_FMT_S16;
-         if (avcodec_open(_context, codec) < 0)
+         if (avcodec_open2(_context, codec, NULL) < 0)
           {
               ADM_warning("[audioCodec] int16 failed also. Crashing.. \n");
               ADM_assert(0);
