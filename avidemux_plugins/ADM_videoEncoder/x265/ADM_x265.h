@@ -123,7 +123,7 @@ public:
 virtual                    ~x265Encoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "H265";}
+virtual const  char        *getFourcc(void) {return "HEVC";}
 virtual        bool         getExtraData(uint32_t *l,uint8_t **d) {*l=extraDataLen;*d=extraData;return true;}
 virtual        bool         isDualPass(void) ;
 
