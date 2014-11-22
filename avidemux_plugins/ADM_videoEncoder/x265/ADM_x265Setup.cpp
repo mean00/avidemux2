@@ -44,7 +44,7 @@ static void        logger( void *cooki, int i_level, const char *psz, va_list li
 }
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
-extern x265_encoder x265Settings;
+extern x265_configuration x265Settings;
 /**
     \fn setup
 */
@@ -469,21 +469,21 @@ void dumpx265Setup(x265_param *param)
  * \fn x265LoadProfile
  * @param profile
  */
-extern bool  x265_encoder_jserialize(const char *file, const x265_encoder *key);
-extern bool  x265_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_encoder *key);
+extern bool  x265_configuration_jserialize(const char *file, const x265_configuration *key);
+extern bool  x265_configuration_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_configuration *key);
 extern "C" 
 {
-extern const ADM_paramList x265_encoder_param[];
+extern const ADM_paramList x265_configuration_param[];
 }
 
 bool x265LoadProfile(const char *profile)
 {
-    x265_encoder param=x265Settings;
+    x265_configuration param=x265Settings;
     std::string rootPath;
     ADM_pluginGetPath("x265",1,rootPath);
     std::string fullPath=rootPath+std::string("/")+profile+std::string(".json");
     ADM_info("Trying to load %s\n",fullPath.c_str());
-    if(false==x265_encoder_jdeserialize(fullPath.c_str(),x265_encoder_param,&param))
+    if(false==x265_configuration_jdeserialize(fullPath.c_str(),x265_configuration_param,&param))
     {
         ADM_warning("Failed\n");
         return false;     

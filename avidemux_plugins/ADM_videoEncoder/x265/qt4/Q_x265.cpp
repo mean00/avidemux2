@@ -15,7 +15,7 @@ using std::vector;
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
-#include "../x265_encoder.h"
+#include "../x265_configuration.h"
 #include "Q_x265.h"
 #include "ADM_paramList.h"
 #include "DIA_coreToolkit.h"
@@ -23,12 +23,12 @@ using std::vector;
 
 static int pluginVersion=3;
 
-static x265_encoder myCopy; // ugly...
-extern bool  x265_encoder_jserialize(const char *file, const x265_encoder *key);
-extern bool  x265_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_encoder *key);
+static x265_configuration myCopy; // ugly...
+extern bool  x265_configuration_jserialize(const char *file, const x265_configuration *key);
+extern bool  x265_configuration_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_configuration *key);
 extern "C" 
 {
-extern const ADM_paramList x265_encoder_param[];
+extern const ADM_paramList x265_configuration_param[];
 }
 
 typedef struct
@@ -95,7 +95,7 @@ static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "h
     \fn x265_ui
     \brief hook to enter UI specific dialog
 */
-bool x265_ui(x265_encoder *settings)
+bool x265_ui(x265_configuration *settings)
 {
 	bool success = false;
     x265Dialog dialog(qtLastRegisteredDialog(), settings);
@@ -142,7 +142,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
-       x265_encoder* settings = (x265_encoder*)param;
+       x265_configuration* settings = (x265_configuration*)param;
        if(myCopy.general.preset) ADM_dealloc(myCopy.general.preset);
        myCopy.general.preset = NULL;
        if(myCopy.general.tuning) ADM_dealloc(myCopy.general.tuning);
@@ -746,7 +746,7 @@ void x265Dialog::configurationComboBox_currentIndexChanged(int index)
     text=QString(rootPath.c_str())+text+QString(".json");
     char *t=ADM_strdup(text.toUtf8().constData());
     ADM_info("Loading preset %s\n",t);
-    if(false==x265_encoder_jdeserialize(t,x265_encoder_param,&myCopy))
+    if(false==x265_configuration_jdeserialize(t,x265_configuration_param,&myCopy))
     {
         GUI_Error_HIG("Error","Cannot load preset");
         ADM_error("Cannot read from %s\n",t);
@@ -815,7 +815,7 @@ void x265Dialog::saveAsButton_pressed(void)
         }
   }
   ADM_dealloc(out);
-  if(false==x265_encoder_jserialize(fullpath.c_str(),&myCopy))
+  if(false==x265_configuration_jserialize(fullpath.c_str(),&myCopy))
   {
         GUI_Error_HIG("Error","Cannot save preset");
         ADM_error("Cannot write to %s\n",out);

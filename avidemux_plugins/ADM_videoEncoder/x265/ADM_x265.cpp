@@ -31,9 +31,9 @@
 
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
-bool  x265_encoder_jserialize(const char *file, const x265_encoder *key);
+bool  x265_configuration_jserialize(const char *file, const x265_configuration *key);
 
-x265_encoder x265Settings = X265_DEFAULT_CONF;
+x265_configuration x265Settings = X265_DEFAULT_CONF;
 
 /**
         \fn x265Encoder
@@ -346,7 +346,7 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
         return true;
 }
 
-extern bool x265_ui(x265_encoder *settings);
+extern bool x265_ui(x265_configuration *settings);
 bool         x265Configure(void)
 {
 bool r;

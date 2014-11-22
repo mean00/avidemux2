@@ -6,7 +6,7 @@ SET(x265_SRCS
         ADM_x265.cpp
         ADM_x265Plugin.cpp
         ADM_x265Setup.cpp
-        x265_encoder_json.cpp
+        x265_configuration_json.cpp
 )
 include(admCheckX265)
 checkX265()

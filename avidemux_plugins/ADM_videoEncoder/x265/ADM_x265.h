@@ -19,7 +19,7 @@
 #define ADM_x265_H
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
-#include "x265_encoder.h"
+#include "x265_configuration.h"
 extern "C"
 {
 #include "x265.h"
