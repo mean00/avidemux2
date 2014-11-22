@@ -70,16 +70,16 @@ int x265Encoder::encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount
 
     for (i = 0; i < nalCount; i++)
         {
-        if (skipSei && nals[i].i_type == NAL_SEI)
+        if (skipSei && (nals[i].type == NAL_UNIT_PREFIX_SEI || nals[i].type == NAL_UNIT_SUFFIX_SEI))
                 {
-            seiUserDataLen = nals[i].i_payload;
+            seiUserDataLen = nals[i].sizeBytes;
             seiUserData = new uint8_t[seiUserDataLen];
-            memcpy(seiUserData, nals[i].p_payload, nals[i].i_payload);
+            memcpy(seiUserData, nals[i].payload, nals[i].sizeBytes);
             continue;
         }
 
-        memcpy(p, nals[i].p_payload, nals[i].i_payload);
-        p += nals[i].i_payload;
+        memcpy(p, nals[i].payload, nals[i].sizeBytes);
+        p += nals[i].sizeBytes;
     }
 
     return p - buf;
@@ -98,7 +98,7 @@ bool x265Encoder::createHeader (void)
 {
 
   x265_nal *nal;
-  int        nalCount;
+  uint32_t nalCount;
 
     extraDataLen = x265_encoder_headers(handle, &nal, &nalCount);
     extraData = new uint8_t[extraDataLen];
@@ -183,7 +183,7 @@ again:
     }
     //
       x265_nal          *nal;
-      int               nbNal = 0;
+      uint32_t          nbNal = 0;
       x265_picture      pic_out;
 
       out->flags = 0;
@@ -241,16 +241,15 @@ bool         x265Encoder::isDualPass(void)
 bool  x265Encoder::preAmble (ADMImage * in)
 {
     MMSET(pic);
-      pic.img.i_csp = X265_CSP_I420;
-      pic.img.i_plane = 3;
-      pic.img.plane[0] = YPLANE(in);
-      pic.img.plane[2] = UPLANE(in);
-      pic.img.plane[1] = VPLANE(in);
-      pic.img.i_stride[0] = in->GetPitch(PLANAR_Y);
-      pic.img.i_stride[1] = in->GetPitch(PLANAR_U);
-      pic.img.i_stride[2] = in->GetPitch(PLANAR_V);
-      pic.i_type = X265_TYPE_AUTO;
-      pic.i_pts = in->Pts;
+      pic.colorSpace = X265_CSP_I420;
+      pic.planes[0] = YPLANE(in);
+      pic.planes[2] = UPLANE(in);
+      pic.planes[1] = VPLANE(in);
+      pic.stride[0] = in->GetPitch(PLANAR_Y);
+      pic.stride[1] = in->GetPitch(PLANAR_U);
+      pic.stride[2] = in->GetPitch(PLANAR_V);
+      pic.sliceType = X265_TYPE_AUTO;
+      pic.pts = in->Pts;
   return true;
 }
 /**
@@ -269,7 +268,7 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
         out->len=size;
         aprintf("--PostAmble--\n");
         // Make sure PTS & DTS > 0
-        int64_t finalDts=picout->i_dts+(int64_t)getEncoderDelay();
+        int64_t finalDts=picout->dts+(int64_t)getEncoderDelay();
         if(finalDts<0)
         {
             out->dts=0; 
@@ -278,7 +277,7 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
         {
                 out->dts =  finalDts;
         }
-         int64_t finalPts=picout->i_pts+(int64_t)getEncoderDelay();
+         int64_t finalPts=picout->pts+(int64_t)getEncoderDelay();
          if(finalPts<0)
         {
             out->pts=0; 
@@ -295,19 +294,19 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
         {
             ADM_warning("DTS > PTS, that can happen when there are holes in the source (%"PRIu64"/%"PRIu64")\n",
                         out->dts,out->pts);
-            if(picout->i_type!=X265_TYPE_B && picout->i_type!=X265_TYPE_BREF)
+            if(picout->sliceType!=X265_TYPE_B && picout->sliceType!=X265_TYPE_BREF)
             {
                 ADM_warning("It is not a bframe, expect problems\n");
                 ADM_warning("It is not a bframe, expect problems\n");
             }
             out->dts=out->pts;
         }
-        switch (picout->i_type)
+        switch (picout->sliceType)
         {
         case X265_TYPE_IDR:
           out->flags = AVI_KEY_FRAME;
           /* First Idr ?*/
-          if(!param.b_repeat_headers && seiUserData && firstIdr==true)
+          if(!param.bRepeatHeaders && seiUserData && firstIdr==true)
           {
               // Put our SEI front...
               // first a temp location...
@@ -338,11 +337,11 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
           out->flags = AVI_B_FRAME;
           break;
         default:
-          ADM_error ("[x265] Unknown image type: %d\n", picout->i_type);
+          ADM_error ("[x265] Unknown image type: %d\n", picout->sliceType);
           //ADM_assert(0);
         }
         //printf("[OOOO] x265 Outgoing : %"PRIu64"us \n",out->dts);    
-        out->out_quantizer = picout->i_qpplus1;
+        out->out_quantizer = picout->forceqp;
         return true;
 }
 
