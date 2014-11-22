@@ -20,16 +20,16 @@
 #include "ADM_coreVideoEncoderInternal.h"
 extern "C"
 {
-#include "x265_configuration_desc.cpp"
+#include "x265_settings_desc.cpp"
 }
 extern bool         x265Configure(void);
-extern x265_configuration x265Settings;
+extern x265_settings x265Settings;
 extern bool x265LoadProfile(const char *profile);
 void resetConfigurationData()
 {
-	x265_configuration defaultConf = X265_DEFAULT_CONF;
+	x265_settings defaultConf = X265_DEFAULT_CONF;
 
-	memcpy(&x265Settings, &defaultConf, sizeof(x265_configuration));
+	memcpy(&x265Settings, &defaultConf, sizeof(x265_settings));
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x265Encoder);
@@ -39,7 +39,7 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN("x265",
                                 x265Configure, // No configuration
                                 ADM_UI_TYPE_BUILD,
                                 1,0,0,
-                                x265_configuration_param, // conf template
+                                x265_settings_param, // conf template
                                 &x265Settings, // conf var
                                x265LoadProfile, // setProfile
                                NULL  // getProfile

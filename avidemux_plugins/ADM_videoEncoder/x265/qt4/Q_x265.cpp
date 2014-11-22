@@ -15,7 +15,7 @@ using std::vector;
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_encoderConf.h"
-#include "../x265_configuration.h"
+#include "../x265_settings.h"
 #include "Q_x265.h"
 #include "ADM_paramList.h"
 #include "DIA_coreToolkit.h"
@@ -23,12 +23,12 @@ using std::vector;
 
 static int pluginVersion=3;
 
-static x265_configuration myCopy; // ugly...
-extern bool  x265_configuration_jserialize(const char *file, const x265_configuration *key);
-extern bool  x265_configuration_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_configuration *key);
+static x265_settings myCopy; // ugly...
+extern bool  x265_settings_jserialize(const char *file, const x265_settings *key);
+extern bool  x265_settings_jdeserialize(const char *file, const ADM_paramList *tmpl,x265_settings *key);
 extern "C" 
 {
-extern const ADM_paramList x265_configuration_param[];
+extern const ADM_paramList x265_settings_param[];
 }
 
 typedef struct
@@ -40,28 +40,27 @@ typedef struct
 static const idcToken listOfIdc[]={
         {-1,"Auto"},
         {10,"1"},
-        {11,"1.1"},
-        {12,"1.2"},
-        {13,"1.3"},
         {20,"2"},
         {21,"2.1"},
-        {22,"2.2"},
         {30,"3"},
         {31,"3.1"},
-        {32,"3.2"},
         {40,"4"},
         {41,"4.1"},
-        {42,"4.2"},
         {50,"5"},
         {51,"5.1"},
-
+        {52,"5.2"},
+        {60,"6"},
+        {61,"6.1"},
+        {62,"6.2"},
 };
 #define NB_IDC sizeof(listOfIdc)/sizeof(idcToken)
 static const idcToken listOfThreads[]={
         {0,"Auto"},
         {1,"1"},      
         {2,"2"},      
-        {4,"4"},      
+        {4,"4"},
+        {4,"8"},
+        {4,"16"},
 };
 
 #define NB_THREADS sizeof(listOfThreads)/sizeof(idcToken)
@@ -85,17 +84,17 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim" };
+static const char* listOfTunings[] = { "psnr", "ssim", "zerolatency", "fastdecode" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
-static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "high422", "high444" };
+static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
 #define NB_PROFILE sizeof(listOfProfiles)/sizeof(char*)
 
 /**
     \fn x265_ui
     \brief hook to enter UI specific dialog
 */
-bool x265_ui(x265_configuration *settings)
+bool x265_ui(x265_settings *settings)
 {
 	bool success = false;
     x265Dialog dialog(qtLastRegisteredDialog(), settings);
@@ -135,14 +134,13 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
-        connect(ui.loopFilterCheckBox, SIGNAL(toggled(bool)), this, SLOT(loopFilterCheckBox_toggled(bool)));
-        connect(ui.mbTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(mbTreeCheckBox_toggled(bool)));
+        connect(ui.cuTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(cuTreeCheckBox_toggled(bool)));
         connect(ui.aqVarianceCheckBox, SIGNAL(toggled(bool)), this, SLOT(aqVarianceCheckBox_toggled(bool)));
 #if 0
         connect(ui.maxCrfSlider, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSlider_valueChanged(int)));
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
-       x265_configuration* settings = (x265_configuration*)param;
+       x265_settings* settings = (x265_settings*)param;
        if(myCopy.general.preset) ADM_dealloc(myCopy.general.preset);
        myCopy.general.preset = NULL;
        if(myCopy.general.tuning) ADM_dealloc(myCopy.general.tuning);
@@ -232,11 +230,8 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
   ui.presetComboBox->setEnabled(!advancedEnabled);
   ui.tuningComboBox->setEnabled(!advancedEnabled);
   ui.profileComboBox->setEnabled(!advancedEnabled);
-  ui.fastDecodeCheckBox->setEnabled(!advancedEnabled);
-  ui.zeroLatencyCheckBox->setEnabled(!advancedEnabled);
   ui.tabAdvancedRC->setEnabled(advancedEnabled);
   ui.tabMotion->setEnabled(advancedEnabled);
-  ui.tabPartition->setEnabled(advancedEnabled);
   ui.tabFrame->setEnabled(advancedEnabled);
   ui.tabAnalysis->setEnabled(advancedEnabled);
   ui.tabQuantiser->setEnabled(advancedEnabled);
@@ -265,63 +260,38 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 bool x265Dialog::upload(void)
 {
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
-          MK_CHECKBOX(fastDecodeCheckBox,general.fast_decode);
-          MK_CHECKBOX(zeroLatencyCheckBox,general.zero_latency);
-          MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
-          MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
-          MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
-          MK_CHECKBOX(dct8x8CheckBox,analyze.b_8x8);
-          MK_CHECKBOX(i4x4CheckBox,analyze.b_i4x4);
-          MK_CHECKBOX(i8x8CheckBox,analyze.b_i8x8);
-          MK_CHECKBOX(p4x4CheckBox,analyze.b_p8x8);
-          MK_CHECKBOX(p8x8CheckBox,analyze.b_p16x16);
-          MK_CHECKBOX(b8x8CheckBox,analyze.b_b16x16);
-          MK_CHECKBOX(trellisCheckBox,analyze.trellis);
-          MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
-          MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
-          MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
-          MK_UINT(intraLumaSpinBox,analyze.intra_luma);
-          MK_UINT(interLumaSpinBox,analyze.inter_luma);
-          if(myCopy.analyze.trellis)
+          MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
+          MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
+          MK_CHECKBOX(trellisCheckBox,trellis);
+          MK_UINT(psychoRdoSpinBox,psy_rd);
+          MK_UINT(noiseReductionSpinBox,noise_reduction);
+          if(myCopy.trellis)
           {
-                ui.trellisComboBox->setCurrentIndex(myCopy.analyze.trellis-1);
+                ui.trellisComboBox->setCurrentIndex(myCopy.trellis-1);
           }
 
-          MK_CHECKBOX(cabacCheckBox,cabac);
-          if (myCopy.interlaced || myCopy.fake_interlaced) {
+          if (myCopy.interlaced_mode > 0) {
         	  ui.interlacedCheckBox->setChecked(true);
+                  ui.interlacedComboBox->setCurrentIndex(myCopy.interlaced_mode - 1);
           } else {
         	  ui.interlacedCheckBox->setChecked(false);
           }
-          if (myCopy.fake_interlaced) {
-        	  ui.interlacedComboBox->setCurrentIndex(2);
-          } else {
-        	  if (myCopy.tff) {
-        		  ui.interlacedComboBox->setCurrentIndex(1);
-        	  } else {
-        		  ui.interlacedComboBox->setCurrentIndex(0);
-        	  }
-          }
     
-          MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
-          MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
-          MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
+          MK_CHECKBOX(dctDecimateCheckBox,dct_decimate);
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
           MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
-          MK_CHECKBOX(intraRefreshCheckBox,intra_refresh);
-          MK_UINT(meSpinBox,analyze.subpel_refine);
+          MK_UINT(meSpinBox,subpel_refine);
 
-          MK_UINT(quantiserMinSpinBox,ratecontrol.qp_min);
-          MK_UINT(quantiserMaxSpinBox,ratecontrol.qp_max);
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
-          MK_UINT(chromaLumaOffsetSpinBox,analyze.chroma_offset);
+          MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
+          MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset);
           uint32_t aq_mode = myCopy.ratecontrol.aq_mode;
           if (aq_mode > 0)
           {
@@ -330,36 +300,18 @@ bool x265Dialog::upload(void)
                 MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
           }
 
-          MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
-          MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
+          MK_UINT(lookaheadSpinBox,lookahead);
+          MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
           
           MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
-          MK_UINT(alphaC0SpinBox,i_deblocking_filter_alphac0);
-          MK_UINT(betaSpinBox,i_deblocking_filter_beta);
 
-          MK_MENU(meMethodComboBox,analyze.me_method);
-          MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
+          MK_MENU(meMethodComboBox,me_method);
+          MK_MENU(weightedPPredictComboBox,weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
 
-          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
-          MK_UINT(mvRangeSpinBox,analyze.me_range);
-          
-          int32_t mv_range = myCopy.analyze.mv_range;
-          if(mv_range >= 0)
-          {
-              ui.mvLengthCheckBox->setChecked(true);
-              MK_UINT(mvLengthSpinBox,analyze.mv_range);
-          }
-          
-          int32_t mv_range_thread = myCopy.analyze.mv_range_thread;
-          
-          if(mv_range_thread >= 0)
-          {
-              ui.minThreadBufferCheckBox->setChecked(true);
-              MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
-          }
+          MK_UINT(mvRangeSpinBox,me_range);
 
           // preset
           MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
@@ -472,56 +424,38 @@ bool x265Dialog::upload(void)
 bool x265Dialog::download(void)
 {
           MK_CHECKBOX(useAdvancedConfigurationCheckBox,useAdvancedConfiguration);
-          MK_CHECKBOX(fastDecodeCheckBox,general.fast_decode);
-          MK_CHECKBOX(zeroLatencyCheckBox,general.zero_latency);
-          MK_CHECKBOX(fastFirstPassCheckBox,general.fast_first_pass);
-          MK_CHECKBOX(fastPSkipCheckBox,analyze.fast_pskip);
-          MK_CHECKBOX(weightedPredictCheckBox,analyze.weighted_bipred);
-          MK_CHECKBOX(dct8x8CheckBox,analyze.b_8x8);
-          MK_CHECKBOX(i4x4CheckBox,analyze.b_i4x4);
-          MK_CHECKBOX(i8x8CheckBox,analyze.b_i8x8);
-          MK_CHECKBOX(p4x4CheckBox,analyze.b_p8x8);
-          MK_CHECKBOX(p8x8CheckBox,analyze.b_p16x16);
-          MK_CHECKBOX(b8x8CheckBox,analyze.b_b16x16);
+          MK_CHECKBOX(fastPSkipCheckBox,fast_pskip);
+          MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
 
-          MK_CHECKBOX(cabacCheckBox,cabac);
           if (ui.interlacedCheckBox->isChecked()) {
-        	  myCopy.interlaced = (ui.interlacedComboBox->currentIndex() < 2);
-        	  myCopy.fake_interlaced = (ui.interlacedComboBox->currentIndex() == 2);
-        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+                  myCopy.interlaced_mode = ui.interlacedComboBox->currentIndex() + 1;
           } else {
-        	  myCopy.interlaced = false;
-        	  myCopy.fake_interlaced = false;
-        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+        	  myCopy.interlaced_mode = 0;
           }
     
-          MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
-          MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
-          MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
+          MK_CHECKBOX(dctDecimateCheckBox,dct_decimate);
 
           MK_UINT(maxBFramesSpinBox,MaxBFrame);
           MK_UINT(refFramesSpinBox,MaxRefFrames);
           MK_UINT(minGopSizeSpinBox,MinIdr);
           MK_UINT(maxGopSizeSpinBox,MaxIdr);
           MK_UINT(IFrameThresholdSpinBox,i_scenecut_threshold);
-          MK_CHECKBOX(intraRefreshCheckBox,intra_refresh);
-          MK_UINT(meSpinBox,analyze.subpel_refine);
+          MK_UINT(meSpinBox,subpel_refine);
           MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
 
-          MK_MENU(meMethodComboBox,analyze.me_method);
-          MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
+          MK_MENU(meMethodComboBox,me_method);
+          MK_MENU(weightedPPredictComboBox,weighted_pred);
           MK_MENU(bFrameRefComboBox,i_bframe_pyramid);
           MK_MENU(adaptiveBFrameComboBox,i_bframe_adaptive);
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
 
-          MK_UINT(quantiserMinSpinBox,ratecontrol.qp_min);
-          MK_UINT(quantiserMaxSpinBox,ratecontrol.qp_max);
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
           MK_UINT(avgBitrateToleranceSpinBox, ratecontrol.rate_tolerance);
           myCopy.ratecontrol.rate_tolerance /= 100.0;
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
-          MK_UINT(chromaLumaOffsetSpinBox,analyze.chroma_offset);
+          MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
+          MK_UINT(crChromaLumaOffsetSpinBox,cr_chroma_offset);
           int a=ui.aqAlgoComboBox->currentIndex();
           if(!ui.aqVarianceCheckBox->isChecked())
           {
@@ -532,31 +466,15 @@ bool x265Dialog::download(void)
                 MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
           }
           
-          MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
-          MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
+          MK_UINT(lookaheadSpinBox,lookahead);
+          MK_CHECKBOX(cuTreeCheckBox,ratecontrol.cu_tree);
 
           MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
-          MK_UINT(alphaC0SpinBox,i_deblocking_filter_alphac0);
-          MK_UINT(betaSpinBox,i_deblocking_filter_beta);
 
-          MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
-          MK_UINT(mvRangeSpinBox,analyze.me_range);
-          
-          if(ui.mvLengthCheckBox->isChecked())
-              MK_UINT(mvLengthSpinBox,analyze.mv_range);
-          else
-              myCopy.analyze.mv_range=-1;
-          
-          if(ui.minThreadBufferCheckBox->isChecked())
-              MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
-          else
-              myCopy.analyze.mv_range_thread=-1;
+          MK_UINT(mvRangeSpinBox,me_range);
 
-          MK_UINT(psychoRdoSpinBox,analyze.psy_rd);
-          MK_UINT(psychoTrellisSpinBox,analyze.psy_trellis);
-          MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
-          MK_UINT(intraLumaSpinBox,analyze.intra_luma);
-          MK_UINT(interLumaSpinBox,analyze.inter_luma);
+          MK_UINT(psychoRdoSpinBox,psy_rd);
+          MK_UINT(noiseReductionSpinBox,noise_reduction);
           
           MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
           MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
@@ -584,9 +502,9 @@ bool x265Dialog::download(void)
           int t=ui.trellisComboBox->currentIndex();
           if(!ui.trellisCheckBox->isChecked())
           {
-                myCopy.analyze.trellis=0;
+                myCopy.trellis=0;
           }else
-                myCopy.analyze.trellis=t+1;
+                myCopy.trellis=t+1;
 
           if(ui.sarPredefinedRadioButton->isChecked())
           {
@@ -684,32 +602,23 @@ void x265Dialog::targetRateControlSpinBox_valueChanged(int value)
 		lastBitrate = value;
 }
 
-void x265Dialog::loopFilterCheckBox_toggled(bool checked)
-{
-	if (!checked)
-	{
-                ui.alphaC0SpinBox->setValue(0);
-                ui.betaSpinBox->setValue(0);
-	}
-}
-
-void x265Dialog::mbTreeCheckBox_toggled(bool checked)
+void x265Dialog::cuTreeCheckBox_toggled(bool checked)
 {
 	if (checked && !ui.aqVarianceCheckBox->isChecked())
 	{
 		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
 			ui.aqVarianceCheckBox->setChecked(true);
 		else
-			ui.mbTreeCheckBox->setChecked(false);
+			ui.cuTreeCheckBox->setChecked(false);
 	}
 }
 
 void x265Dialog::aqVarianceCheckBox_toggled(bool checked)
 {
-	if (!checked && ui.mbTreeCheckBox->isChecked())
+	if (!checked && ui.cuTreeCheckBox->isChecked())
 	{
 		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
-			ui.mbTreeCheckBox->setChecked(false);
+			ui.cuTreeCheckBox->setChecked(false);
 		else
 			ui.aqVarianceCheckBox->setChecked(true);
 	}
@@ -746,7 +655,7 @@ void x265Dialog::configurationComboBox_currentIndexChanged(int index)
     text=QString(rootPath.c_str())+text+QString(".json");
     char *t=ADM_strdup(text.toUtf8().constData());
     ADM_info("Loading preset %s\n",t);
-    if(false==x265_configuration_jdeserialize(t,x265_configuration_param,&myCopy))
+    if(false==x265_settings_jdeserialize(t,x265_settings_param,&myCopy))
     {
         GUI_Error_HIG("Error","Cannot load preset");
         ADM_error("Cannot read from %s\n",t);
@@ -815,7 +724,7 @@ void x265Dialog::saveAsButton_pressed(void)
         }
   }
   ADM_dealloc(out);
-  if(false==x265_configuration_jserialize(fullpath.c_str(),&myCopy))
+  if(false==x265_settings_jserialize(fullpath.c_str(),&myCopy))
   {
         GUI_Error_HIG("Error","Cannot save preset");
         ADM_error("Cannot write to %s\n",out);

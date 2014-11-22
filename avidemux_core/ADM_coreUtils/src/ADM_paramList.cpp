@@ -305,6 +305,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
            SWAL(ADM_param_uint32_t,uint32_t,u32,Uint32)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
+	   SWAL(ADM_param_double,  double,  d,Double)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
            case ADM_param_video_encode:
                         {
@@ -413,6 +414,7 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
            SWAL(ADM_param_uint32_t,uint32_t,u32,Uint32)
            SWAL(ADM_param_int32_t, int32_t, i32,Int32)
            SWAL(ADM_param_float,   float ,  f,Float)
+           SWAL(ADM_param_double,  double,  d,Double)
            SWAL(ADM_param_bool,    bool ,   b,Bool)
             case ADM_param_video_encode:
               {

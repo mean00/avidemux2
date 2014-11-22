@@ -38,6 +38,7 @@ public:
         bool addUint32(const char *key,const uint32_t value);
         bool addInt32(const char *key,const int32_t value);
         bool addFloat(const char *key,const float value);
+	bool addDouble(const char *key,const double value);
         bool addBool(const char *key,const bool value);
         bool addCompressParam(const char *key, const COMPRES_PARAMS &param);
 

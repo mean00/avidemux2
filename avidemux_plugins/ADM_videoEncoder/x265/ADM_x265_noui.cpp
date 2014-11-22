@@ -22,7 +22,7 @@
 #include "DIA_factory.h"
 
 
-bool x265_ui(x265_configuration *settings)
+bool x265_ui(x265_settings *settings)
 {
         return true;
 }

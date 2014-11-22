@@ -37,8 +37,7 @@ private slots:
         void quantiserSlider_valueChanged(int value);
         void quantiserSpinBox_valueChanged(int value);
         void targetRateControlSpinBox_valueChanged(int value);
-        void loopFilterCheckBox_toggled(bool checked);
-        void mbTreeCheckBox_toggled(bool checked);
+        void cuTreeCheckBox_toggled(bool checked);
         void aqVarianceCheckBox_toggled(bool checked);
 	
         void configurationComboBox_currentIndexChanged(int index);

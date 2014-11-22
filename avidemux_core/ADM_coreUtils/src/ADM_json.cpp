@@ -100,6 +100,14 @@ bool admJson::addFloat(const char *key,const float value)
 /**
 
 */
+bool admJson::addDouble(const char *key,const double value)
+{
+    json_push_back(COOKIE, json_new_f(key,value));
+    return true;
+}
+/**
+
+*/
 bool admJson::addBool(const char *key,const bool value)
 {
     json_push_back(COOKIE, json_new_b(key,value));

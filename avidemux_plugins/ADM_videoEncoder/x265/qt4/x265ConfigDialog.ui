@@ -319,27 +319,6 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="fastDecodeCheckBox">
-            <property name="text">
-             <string>Fast Decode</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="zeroLatencyCheckBox">
-            <property name="text">
-             <string>Zero Latency</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="fastFirstPassCheckBox">
-            <property name="text">
-             <string>Fast First Pass</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QLabel" name="labelThread">
@@ -831,9 +810,9 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="mbTreeCheckBox">
+           <widget class="QCheckBox" name="cuTreeCheckBox">
             <property name="text">
-             <string>Macroblock-tree Rate Control</string>
+             <string>Coding Unit-tree Rate Control</string>
             </property>
            </widget>
           </item>
@@ -980,7 +959,7 @@
               <item>
                <widget class="QComboBox" name="meMethodComboBox">
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <item>
                  <property name="text">
@@ -999,7 +978,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Exhaustive Search</string>
+                  <string>Star Search</string>
                  </property>
                 </item>
                 <item>
@@ -1169,79 +1148,6 @@
          <layout class="QVBoxLayout">
           <item>
            <layout class="QGridLayout">
-            <item row="1" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="mvLengthSpinBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>32</number>
-                </property>
-                <property name="maximum">
-                 <number>512</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_14">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="mvLengthCheckBox">
-              <property name="text">
-               <string>Maximum Motion Vector Length:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="minThreadBufferSpinBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>0</number>
-                </property>
-                <property name="maximum">
-                 <number>2147483647</number>
-                </property>
-                <property name="singleStep">
-                 <number>1</number>
-                </property>
-                <property name="value">
-                 <number>0</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_16">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
             <item row="0" column="1">
              <layout class="QHBoxLayout">
               <item>
@@ -1269,13 +1175,6 @@
               </item>
              </layout>
             </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="minThreadBufferCheckBox">
-              <property name="text">
-               <string>Minimum Buffer Between Threads:</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_39">
               <property name="text">
@@ -1294,9 +1193,30 @@
           <string>Prediction</string>
          </property>
          <layout class="QGridLayout">
-          <item row="0" column="0">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="weightedPredictCheckBox">
+            <property name="text">
+             <string>Weighted Prediction for B-frames</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="constrainedIntraCheckBox">
+            <property name="text">
+             <string>Constrained Intra Prediction</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
            <layout class="QGridLayout">
-            <item row="1" column="1">
+            <item row="0" column="0">
+             <widget class="QLabel" name="lblWeightedPPredict">
+              <property name="text">
+               <string>Weighted Prediction for P-frames:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QComboBox" name="weightedPPredictComboBox">
@@ -1332,160 +1252,13 @@
               </item>
              </layout>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_40">
-              <property name="text">
-               <string>Direct Prediction Mode:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="lblWeightedPPredict">
-              <property name="text">
-               <string>Weighted Prediction for P-frames:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QComboBox" name="predictModeComboBox">
-                <property name="currentIndex">
-                 <number>1</number>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>None</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Spatial</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Temporal</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Auto</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_17">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
            </layout>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="weightedPredictCheckBox">
-            <property name="text">
-             <string>Weighted Prediction for B-frames</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="constrainedIntraCheckBox">
-            <property name="text">
-             <string>Constrained Intra Prediction</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
         <spacer name="spacer_19">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabPartition">
-      <attribute name="title">
-       <string>Partition</string>
-      </attribute>
-      <layout class="QVBoxLayout">
-       <item>
-        <widget class="QGroupBox" name="groupBox_10">
-         <property name="title">
-          <string>Partition Search</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <layout class="QVBoxLayout">
-            <item>
-             <widget class="QCheckBox" name="dct8x8CheckBox">
-              <property name="text">
-               <string>8x8 DCT Spatial Transform</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="p8x8CheckBox">
-              <property name="text">
-               <string>8x8, 8x16 and 16x8 P-frame Intra-predicted Blocks</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="b8x8CheckBox">
-              <property name="text">
-               <string>8x8, 8x16 and 16x8 B-frame Intra-predicted Blocks</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="p4x4CheckBox">
-              <property name="text">
-               <string>4x4, 4x8 and 8x4 P-frame Intra-predicted Blocks</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="i8x8CheckBox">
-              <property name="text">
-               <string>8x8 Intra-predicted Blocks</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="i4x4CheckBox">
-              <property name="text">
-               <string>4x4 Intra-predicted Blocks</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacer_20">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -1511,100 +1284,14 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="cabacCheckBox">
+           <widget class="QCheckBox" name="loopFilterCheckBox">
             <property name="text">
-             <string>CABAC</string>
+             <string>Loop Filter:</string>
             </property>
            </widget>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="0">
-             <widget class="QCheckBox" name="loopFilterCheckBox">
-              <property name="text">
-               <string>Loop Filter:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QLabel" name="alphaC0Label">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Strength:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="alphaC0SpinBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>-6</number>
-                </property>
-                <property name="maximum">
-                 <number>6</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_23">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>10</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QLabel" name="betaLabel">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Threshold:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QSpinBox" name="betaSpinBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="minimum">
-                 <number>-6</number>
-                </property>
-                <property name="maximum">
-                 <number>6</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
             <item row="1" column="0">
              <widget class="QCheckBox" name="openGopCheckBox">
               <property name="text">
@@ -1662,17 +1349,12 @@
                 </property>
                 <item>
                  <property name="text">
-                  <string>Bottom Field First</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
                   <string>Top Field First</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Fake Interlaced</string>
+                  <string>Bottom Field First</string>
                  </property>
                 </item>
                </widget>
@@ -2016,13 +1698,6 @@
             </item>
            </layout>
           </item>
-          <item>
-           <widget class="QCheckBox" name="intraRefreshCheckBox">
-            <property name="text">
-             <string>Periodic Intra Refresh</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -2052,20 +1727,6 @@
           <string>Analysis</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item>
-           <widget class="QCheckBox" name="mixedRefsCheckBox">
-            <property name="text">
-             <string>Mixed References</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="chromaMotionEstCheckBox">
-            <property name="text">
-             <string>Chroma Motion Estimation</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <layout class="QHBoxLayout">
             <item>
@@ -2158,53 +1819,13 @@
           <item>
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="0" column="0">
-             <widget class="QLabel" name="lblPsyTrellis">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Psychovisual Trellis:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_8">
-              <item>
-               <widget class="QDoubleSpinBox" name="psychoTrellisSpinBox">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <double>20.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_6">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="0">
              <widget class="QLabel" name="label_42">
               <property name="text">
                <string>Noise Reduction:</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
+            <item row="0" column="1">
              <layout class="QHBoxLayout" name="horizontalLayout_9">
               <item>
                <widget class="QSpinBox" name="noiseReductionSpinBox">
@@ -2222,87 +1843,6 @@
                  <size>
                   <width>13</width>
                   <height>13</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_13">
-         <property name="title">
-          <string>Luma Quantisation Deadzone</string>
-         </property>
-         <layout class="QVBoxLayout">
-          <item>
-           <layout class="QGridLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_44">
-              <property name="text">
-               <string>Intra Luma Quantisation Deadzone:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_43">
-              <property name="text">
-               <string>Inter Luma Quantisation Deadzone:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="intraLumaSpinBox">
-                <property name="maximum">
-                 <number>32</number>
-                </property>
-                <property name="value">
-                 <number>21</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_36">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="interLumaSpinBox">
-                <property name="maximum">
-                 <number>32</number>
-                </property>
-                <property name="value">
-                 <number>21</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_37">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
                  </size>
                 </property>
                </spacer>
@@ -2406,7 +1946,14 @@
          <layout class="QVBoxLayout">
           <item>
            <layout class="QGridLayout">
-            <item row="2" column="1">
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Chroma to Luma Quantiser Offset:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QSpinBox" name="quantiserMaxStepSpinBox">
@@ -2433,48 +1980,14 @@
               </item>
              </layout>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>Maximum Quantiser:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
+            <item row="2" column="0">
              <widget class="QLabel" name="label_6">
               <property name="text">
                <string>I and P-frame Quantiser Ratio:</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="quantiserMinSpinBox">
-                <property name="maximum">
-                 <number>69</number>
-                </property>
-                <property name="value">
-                 <number>0</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_40">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="5" column="1">
+            <item row="3" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QDoubleSpinBox" name="quantiserPbRatioSpinBox">
@@ -2510,7 +2023,7 @@
               </item>
              </layout>
             </item>
-            <item row="3" column="1">
+            <item row="1" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QSpinBox" name="avgBitrateToleranceSpinBox">
@@ -2547,22 +2060,52 @@
               </item>
              </layout>
             </item>
-            <item row="2" column="0">
+            <item row="0" column="0">
              <widget class="QLabel" name="label_17">
               <property name="text">
                <string>Maximum Quantiser Step:</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
+            <item row="4" column="1">
              <layout class="QHBoxLayout">
               <item>
-               <widget class="QSpinBox" name="chromaLumaOffsetSpinBox">
+               <widget class="QSpinBox" name="cbChromaLumaOffsetSpinBox">
                 <property name="minimum">
                  <number>-12</number>
                 </property>
                 <property name="maximum">
                  <number>12</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_40">
+                <property name="text">
+                 <string>Cb</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="crChromaLumaOffsetSpinBox"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_54">
+                <property name="text">
+                 <string>Cr</string>
                 </property>
                </widget>
               </item>
@@ -2581,62 +2124,21 @@
               </item>
              </layout>
             </item>
-            <item row="5" column="0">
+            <item row="3" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
                <string>P and B-frame Quantiser Ratio:</string>
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="1" column="0">
              <widget class="QLabel" name="label_5">
               <property name="text">
                <string>Average Bitrate Tolerance:</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_20">
-              <property name="text">
-               <string>Chroma to Luma Quantiser Offset:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <layout class="QHBoxLayout">
-              <item>
-               <widget class="QSpinBox" name="quantiserMaxSpinBox">
-                <property name="maximum">
-                 <number>69</number>
-                </property>
-                <property name="value">
-                 <number>69</number>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="spacer_46">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>Minimum Quantiser:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
+            <item row="2" column="1">
              <layout class="QHBoxLayout">
               <item>
                <widget class="QDoubleSpinBox" name="quantiserIpRatioSpinBox">
@@ -4057,29 +3559,13 @@
   <tabstop>targetRateControlSpinBox</tabstop>
   <tabstop>quantiserSlider</tabstop>
   <tabstop>quantiserSpinBox</tabstop>
-  <tabstop>psychoTrellisSpinBox</tabstop>
   <tabstop>meMethodComboBox</tabstop>
   <tabstop>meSlider</tabstop>
   <tabstop>meSpinBox</tabstop>
   <tabstop>mvRangeSpinBox</tabstop>
-  <tabstop>mvLengthCheckBox</tabstop>
-  <tabstop>mvLengthSpinBox</tabstop>
-  <tabstop>minThreadBufferCheckBox</tabstop>
-  <tabstop>minThreadBufferSpinBox</tabstop>
-  <tabstop>predictModeComboBox</tabstop>
   <tabstop>weightedPPredictComboBox</tabstop>
   <tabstop>weightedPredictCheckBox</tabstop>
   <tabstop>constrainedIntraCheckBox</tabstop>
-  <tabstop>dct8x8CheckBox</tabstop>
-  <tabstop>p8x8CheckBox</tabstop>
-  <tabstop>b8x8CheckBox</tabstop>
-  <tabstop>p4x4CheckBox</tabstop>
-  <tabstop>i8x8CheckBox</tabstop>
-  <tabstop>i4x4CheckBox</tabstop>
-  <tabstop>cabacCheckBox</tabstop>
-  <tabstop>loopFilterCheckBox</tabstop>
-  <tabstop>alphaC0SpinBox</tabstop>
-  <tabstop>betaSpinBox</tabstop>
   <tabstop>openGopCheckBox</tabstop>
   <tabstop>openGopComboBox</tabstop>
   <tabstop>interlacedCheckBox</tabstop>
@@ -4092,28 +3578,21 @@
   <tabstop>minGopSizeSpinBox</tabstop>
   <tabstop>maxGopSizeSpinBox</tabstop>
   <tabstop>IFrameThresholdSpinBox</tabstop>
-  <tabstop>intraRefreshCheckBox</tabstop>
-  <tabstop>mixedRefsCheckBox</tabstop>
-  <tabstop>chromaMotionEstCheckBox</tabstop>
   <tabstop>trellisCheckBox</tabstop>
   <tabstop>trellisComboBox</tabstop>
   <tabstop>fastPSkipCheckBox</tabstop>
   <tabstop>dctDecimateCheckBox</tabstop>
   <tabstop>psychoRdoSpinBox</tabstop>
   <tabstop>noiseReductionSpinBox</tabstop>
-  <tabstop>intraLumaSpinBox</tabstop>
-  <tabstop>interLumaSpinBox</tabstop>
   <tabstop>matrixFlatRadioButton</tabstop>
   <tabstop>matrixJvtRadioButton</tabstop>
   <tabstop>matrixCustomRadioButton</tabstop>
   <tabstop>matrixCustomEditButton</tabstop>
-  <tabstop>quantiserMinSpinBox</tabstop>
-  <tabstop>quantiserMaxSpinBox</tabstop>
   <tabstop>quantiserMaxStepSpinBox</tabstop>
   <tabstop>avgBitrateToleranceSpinBox</tabstop>
   <tabstop>quantiserIpRatioSpinBox</tabstop>
   <tabstop>quantiserPbRatioSpinBox</tabstop>
-  <tabstop>chromaLumaOffsetSpinBox</tabstop>
+  <tabstop>cbChromaLumaOffsetSpinBox</tabstop>
   <tabstop>quantiserCurveCompressSpinBox</tabstop>
   <tabstop>quantiserBeforeCompressSpinBox</tabstop>
   <tabstop>quantiserAfterCompressSpinBox</tabstop>
@@ -4218,134 +3697,6 @@
     <hint type="destinationlabel">
      <x>237</x>
      <y>251</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mvLengthCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>mvLengthSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>133</x>
-     <y>261</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>256</x>
-     <y>261</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>minThreadBufferCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>minThreadBufferSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>133</x>
-     <y>289</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>256</x>
-     <y>289</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>p8x8CheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>p4x4CheckBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>109</x>
-     <y>156</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>109</x>
-     <y>204</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>dct8x8CheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>i8x8CheckBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>109</x>
-     <y>132</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>109</x>
-     <y>228</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>alphaC0Label</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>117</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>alphaC0SpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>169</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>betaLabel</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>235</x>
-     <y>168</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>loopFilterCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>betaSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>169</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>331</x>
-     <y>168</y>
     </hint>
    </hints>
   </connection>
@@ -4462,18 +3813,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>interlacedCheckBox</sender>
+   <sender>aqVarianceCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>interlacedComboBox</receiver>
+   <receiver>aqAlgoComboBox</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
-     <y>149</y>
+     <x>71</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
-     <x>151</x>
-     <y>149</y>
+     <x>378</x>
+     <y>472</y>
     </hint>
    </hints>
   </connection>
@@ -4494,50 +3845,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>aqVarianceCheckBox</sender>
+   <sender>interlacedCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>aqAlgoComboBox</receiver>
+   <receiver>interlacedComboBox</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>472</y>
+     <x>70</x>
+     <y>149</y>
     </hint>
     <hint type="destinationlabel">
-     <x>378</x>
-     <y>472</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>trellisCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lblPsyTrellis</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>89</x>
-     <y>166</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>149</x>
-     <y>268</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>trellisCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>psychoTrellisSpinBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>89</x>
-     <y>166</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>298</x>
-     <y>268</y>
+     <x>151</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
