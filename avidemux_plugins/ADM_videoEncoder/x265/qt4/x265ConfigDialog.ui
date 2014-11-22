@@ -98,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -983,7 +983,7 @@
                 </item>
                 <item>
                  <property name="text">
-                  <string>Hadamard Exhaustive Search</string>
+                  <string>Exhaustive Search</string>
                  </property>
                 </item>
                </widget>
