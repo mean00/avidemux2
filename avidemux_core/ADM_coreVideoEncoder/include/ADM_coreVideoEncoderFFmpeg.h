@@ -46,6 +46,7 @@ protected:
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
                double           timeScaler;
+               bool             _closeCodec;
               
 protected:
 
