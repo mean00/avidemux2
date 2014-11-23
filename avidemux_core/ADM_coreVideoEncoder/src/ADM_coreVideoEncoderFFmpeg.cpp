@@ -51,13 +51,8 @@ uint32_t w,h;
     h=getHeight();
 
     image=new ADMImageDefault(w,h);
-    _context = avcodec_alloc_context3 (NULL);
-    ADM_assert (_context);
     memset (&_frame, 0, sizeof (_frame));
     _frame.pts = AV_NOPTS_VALUE;
-    _context->width = w;
-    _context->height = h;
-    _context->strict_std_compliance = -1;
     rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
@@ -77,11 +72,6 @@ uint32_t w,h;
      else
             encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
-    if(_globalHeader)
-    {
-                ADM_info("Codec configured to use global header\n");
-                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
-    }
 
 }
 /**
@@ -265,6 +255,18 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
     {
         printf("[ff] Cannot find codec\n");
         return false;
+    }
+
+    _context = avcodec_alloc_context3 (codec);
+    ADM_assert (_context);
+    _context->width = getWidth();
+    _context->height = getHeight();
+    _context->strict_std_compliance = -1;
+
+    if(_globalHeader)
+    {
+                ADM_info("Codec configured to use global header\n");
+                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
     }
    prolog(image);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
