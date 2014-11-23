@@ -37,10 +37,15 @@ class ADM_COREVIDEOCODEC6_EXPORT decoderFF:public decoders
 {
 protected:
   bool  hurryUp;
+  bool _setBpp;
+  bool _setFcc;
   int codecId;
   uint8_t _refCopy;
+  uint32_t _bpp;
   AVCodecContext *_context;
   uint8_t  *_extraDataCopy;
+  int _extraDataLen;
+  uint32_t _fcc;
   AVFrame _frame;
   uint8_t _allowNull;
   uint32_t frameType (void);
@@ -48,6 +53,7 @@ protected:
   void decoderMultiThread ();
   uint32_t _gmc;
   uint32_t _usingMT;
+  uint32_t _threads;
 
 	typedef struct {
 		bool swapUv;
