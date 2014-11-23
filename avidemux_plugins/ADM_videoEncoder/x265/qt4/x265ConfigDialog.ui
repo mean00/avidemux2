@@ -1065,7 +1065,7 @@
                   <item>
                    <widget class="QLabel" name="label_37">
                     <property name="text">
-                     <string>10 (Best)</string>
+                     <string>7 (Best)</string>
                     </property>
                    </widget>
                   </item>
@@ -1089,13 +1089,13 @@
                    <number>1</number>
                   </property>
                   <property name="maximum">
-                   <number>10</number>
+                   <number>7</number>
                   </property>
                   <property name="pageStep">
                    <number>1</number>
                   </property>
                   <property name="value">
-                   <number>7</number>
+                   <number>5</number>
                   </property>
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -1113,10 +1113,10 @@
                  <number>1</number>
                 </property>
                 <property name="maximum">
-                 <number>10</number>
+                 <number>7</number>
                 </property>
                 <property name="value">
-                 <number>7</number>
+                 <number>5</number>
                 </property>
                </widget>
               </item>
