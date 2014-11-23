@@ -165,7 +165,8 @@ ADM_byteBuffer   byteBuffer;
     if(!context) 
     {
         printf("[saveAsJpg] Cannot allocate context\n");
-        goto jpgCleanup;
+        delete codec;
+        return false;
     }
 
     context->pix_fmt =PIX_FMT_YUV420P;
