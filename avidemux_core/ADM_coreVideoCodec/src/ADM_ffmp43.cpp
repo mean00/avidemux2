@@ -66,6 +66,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
                                 } \
                                 else \
                                 { \
+                                        _closeCodec = true;\
                                         printf("[lavc] Decoder init: "display" video decoder initialized! (%s)\n",codec->long_name); \
                                 } \
 }
@@ -216,6 +217,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _allowNull = 0;
   _gmc = 0;
   _context = NULL;
+  _closeCodec = false;
   _refCopy = 0;
   _usingMT = 0;
   _bpp = bpp;
@@ -248,12 +250,11 @@ decoderFF::~decoderFF ()
     }
   if(_context)
   {
-        avcodec_close (_context);
-        #if LIBAVCODEC_BUILD >= 4624
-                av_free(_context);
-        #else
-                delete _context;
-        #endif
+        if (_closeCodec) {
+          avcodec_close (_context);
+        }
+
+        av_free(_context);
         _context=NULL;
         printf ("[lavc] Destroyed\n");
     }

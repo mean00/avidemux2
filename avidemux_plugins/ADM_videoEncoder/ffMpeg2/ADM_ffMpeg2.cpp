@@ -42,11 +42,10 @@ ADM_ffMpeg2Encoder::ADM_ffMpeg2Encoder(ADM_coreVideoFilter *src,bool globalHeade
 }
 
 /**
-    \fn setup
+    \fn pre-open
 */
-bool ADM_ffMpeg2Encoder::setup(void)
+bool ADM_ffMpeg2Encoder::configureContext(void)
 {
-    
     switch(Settings.params.mode)
     {
       case COMPRESS_2PASS:
@@ -89,6 +88,15 @@ bool ADM_ffMpeg2Encoder::setup(void)
     _context->rc_max_rate=Mp2Settings.lavcSettings.maxBitrate*1000;
     _context->rc_max_rate_header=Mp2Settings.lavcSettings.maxBitrate*1000;
     // /Override some parameters specific to this codec
+    
+    return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffMpeg2Encoder::setup(void)
+{
 
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG2VIDEO))
         return false;

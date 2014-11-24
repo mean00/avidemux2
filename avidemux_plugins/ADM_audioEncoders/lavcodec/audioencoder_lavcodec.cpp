@@ -74,7 +74,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globalHeader,
         CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
-
+  _closeCodec=false;
   _context=NULL;
   _globalHeader=globalHeader;
    printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
@@ -122,7 +122,10 @@ AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
   printf("[Lavcodec] Deleting Lavcodec\n");
   if(_context)
   {
-    avcodec_close(CONTEXT);
+    if(_closeCodec) {
+      avcodec_close(CONTEXT);
+    }
+
     av_free(_context);
   }
   _context=NULL;
@@ -196,6 +199,9 @@ bool AUDMEncoder_Lavcodec::initialize(void)
                 }
      
    }
+
+   _closeCodec = true;
+
     //ADM_info("Frame size : %d, %d\n",CONTEXT->frame_size,_chunk/wavheader.channels);
     _frame->format=CONTEXT->sample_fmt;    
     outputFlavor=asFloatPlanar;

@@ -35,6 +35,7 @@ public:
 
                            ADM_ffDvEncoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffDvEncoder();
+virtual        bool        configureContext(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DVSD";}
                bool         setup(void);

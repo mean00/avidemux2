@@ -268,7 +268,10 @@ decoderFFLIBVA::~decoderFFLIBVA()
     if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
                  // released
     {
-        avcodec_close (_context);
+        if(_closeCodec) {
+          avcodec_close (_context);
+        }
+
         av_free(_context);
         _context=NULL;
     }

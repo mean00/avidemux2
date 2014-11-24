@@ -88,8 +88,11 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
           printf ("[lavc] killing threads\n");
           _isMT = false;
         }
-        if(_closeCodec)
-          avcodec_close (_context);
+
+        if (_closeCodec) {
+          avcodec_close(_context);
+        }
+
         av_free (_context);
         _context = NULL;
     }
@@ -244,6 +247,16 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     }
     return true;
 }
+
+/**
+    \fn configure-context
+    \brief To be overriden in classes which need to preform operations to the context prior to opening the codec.
+*/
+bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
+{
+    return true;
+}
+
 /**
     \fn setup
     \brief put flags before calling setup!
@@ -275,6 +288,11 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
     {
         encoderMT();
     }
+
+   if(!configureContext()) {
+     return false;
+   }
+
    res=avcodec_open2(_context, codec, NULL);
    if(res<0)
     {   printf("[ff] Cannot open codec\n");

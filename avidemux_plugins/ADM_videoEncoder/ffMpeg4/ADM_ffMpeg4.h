@@ -89,6 +89,7 @@ public:
 
                            ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffMpeg4Encoder();
+virtual        bool        configureContext(void);
 virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DIVX";}

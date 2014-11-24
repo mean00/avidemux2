@@ -40,11 +40,10 @@ ADM_ffFlv1Encoder::ADM_ffFlv1Encoder(ADM_coreVideoFilter *src,bool globalHeader)
 }
 
 /**
-    \fn setup
+    \fn pre-open
 */
-bool ADM_ffFlv1Encoder::setup(void)
+bool ADM_ffFlv1Encoder::configureContext(void)
 {
-    
     switch(Settings.params.mode)
     {
       case COMPRESS_2PASS:
@@ -66,6 +65,15 @@ bool ADM_ffFlv1Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
+    
+    return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffFlv1Encoder::setup(void)
+{
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_FLV1))
         return false;
 

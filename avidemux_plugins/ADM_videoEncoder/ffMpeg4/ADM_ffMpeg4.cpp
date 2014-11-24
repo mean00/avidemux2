@@ -40,9 +40,9 @@ ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeade
 }
 
 /**
-    \fn setup
+    \fn pre-open
 */
-bool ADM_ffMpeg4Encoder::setup(void)
+bool ADM_ffMpeg4Encoder::configureContext(void)
 {
 
     switch(Settings.params.mode)
@@ -67,6 +67,16 @@ bool ADM_ffMpeg4Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
+    
+    return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffMpeg4Encoder::setup(void)
+{
+
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
         return false;
 
