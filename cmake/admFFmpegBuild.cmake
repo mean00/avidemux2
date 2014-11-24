@@ -29,7 +29,15 @@ set(FFMPEG_PARSERS  ac3  h263  h264  hevc  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
 xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
-xadd("--enable-swscale --disable-swresample --enable-libx265")
+xadd("--enable-swscale --disable-swresample")
+
+FIND_HEADER_AND_LIB(_X265 x265.h)
+FIND_HEADER_AND_LIB(_X265_CONFIG x265_config.h)
+
+IF (_X265_FOUND AND _X265_CONFIG_FOUND)
+	xadd("--enable-libx265")
+	message("adding --enable-libx265 to ffmpeg protocols")
+ENDIF (_X265_FOUND AND _X265_CONFIG_FOUND)
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
