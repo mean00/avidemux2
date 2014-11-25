@@ -89,6 +89,29 @@ bool isH264Compatible (uint32_t fourcc)
 
 #undef CHECK
 }
+
+/**
+    \fn isH265Compatible
+*/
+
+bool isH265Compatible (uint32_t fourcc)
+{
+#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
+                                                {h265=1; }
+
+  uint8_t h265 = 0;
+
+  CHECK ("X265");
+  CHECK ("x265");
+  CHECK ("h265");
+  CHECK ("H265");
+  CHECK ("HEVC");
+  CHECK ("hevc");
+  return h265;
+
+#undef CHECK
+}
+
 /**
     \fn isMSMpeg4Compatible
 */

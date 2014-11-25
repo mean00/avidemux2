@@ -20,6 +20,7 @@
 
 ADM_COREUTILS6_EXPORT bool isMpeg4Compatible  (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isH264Compatible   (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isH265Compatible   (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isMSMpeg4Compatible(uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isDVCompatible     (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isVP6Compatible    (uint32_t fourcc);

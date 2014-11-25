@@ -200,7 +200,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 }
         }else
         {
-                if(isH264Compatible(fcc))
+                if(isH264Compatible(fcc) || isH265Compatible(fcc))
                 {
                         if(stream->providePts()==true)
                         {
@@ -212,8 +212,14 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                             c->has_b_frames=0; // No PTS=cannot handle CTS...
                             c->max_b_frames=0;
                         }
-                        c->codec_id = CODEC_ID_H264;
-                         setAvCodec(c,CODEC_ID_H264);
+                        
+                        if(isH265Compatible(fcc)) {
+                            c->codec_id = AV_CODEC_ID_HEVC;
+                             setAvCodec(c,AV_CODEC_ID_HEVC);
+                        } else {
+                            c->codec_id = CODEC_ID_H264;
+                             setAvCodec(c,CODEC_ID_H264);
+                        }
                 }
                 else
                 {
