@@ -45,7 +45,13 @@ ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,
                     : ADM_coreVideoEncoder(src)
 {
 uint32_t w,h;
-    if(set) memcpy(&Settings,set,sizeof(*set));
+_hasSettings=false;
+
+    if(set) {
+        memcpy(&Settings,set,sizeof(*set));
+        _hasSettings=true;
+    }
+
     targetColorSpace=ADM_COLOR_YV12;
     w=getWidth();
     h=getHeight();
@@ -68,7 +74,7 @@ uint32_t w,h;
             inc*=2;
             ADM_warning("It is probably field encoded, doubling increment\n");
      }
-     if(LAVS(max_b_frames))
+     if(_hasSettings && LAVS(max_b_frames))
             encoderDelay=inc*2;
      else
             encoderDelay=0;
@@ -284,7 +290,7 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
     }
    prolog(image);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
-   if(LAVS(MultiThreaded))
+   if(_hasSettings && LAVS(MultiThreaded))
     {
         encoderMT();
     }

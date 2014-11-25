@@ -47,6 +47,7 @@ protected:
                bool             _globalHeader;
                double           timeScaler;
                bool             _closeCodec;
+               bool             _hasSettings;
               
 protected:
 
