@@ -59,18 +59,18 @@ muxerMP4::~muxerMP4()
 
 bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
-    if(!isMpeg4Compatible(s->getFCC()) && !isH264Compatible(s->getFCC()))
+    if(!isMpeg4Compatible(s->getFCC()) && !isH264Compatible(s->getFCC()) && !isH265Compatible(s->getFCC()))
     {
-            GUI_Error_HIG("Unsupported","Only MP4Video & H264 supported for video");
+            GUI_Error_HIG("Unsupported","Only MP4Video, H264, and H265 supported for video");
             return false;
     }
     if(nbAudioTrack)
         for(int i=0;i<nbAudioTrack;i++)
         {
             uint32_t acc=a[i]->getInfo()->encoding;
-            if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC)
+            if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC && acc!=WAV_AC3)
             {
-                GUI_Error_HIG("Unsupported","Only AAC & mpegaudio supported for audio");
+                GUI_Error_HIG("Unsupported","Only AAC, AC3, and mpegaudio supported for audio");
                 return false;
             }
         }

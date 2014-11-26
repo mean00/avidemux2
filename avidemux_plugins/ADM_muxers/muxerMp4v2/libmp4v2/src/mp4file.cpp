@@ -30,8 +30,6 @@
 
 #include "src/impl.h"
 
-extern void ADM_MP4_progressCallback(int p); // MEANX
-
 namespace mp4v2 { namespace impl {
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -332,8 +330,6 @@ void MP4File::RewriteMdat( File& src, File& dst )
     MP4ChunkId* maxChunkIds = new MP4ChunkId[numTracks];
     MP4Timestamp* nextChunkTimes = new MP4Timestamp[numTracks];
 
-    uint64_t sourceSize=src.size;
-
     for( uint32_t i = 0; i < numTracks; i++ ) {
         chunkIds[i] = 1;
         maxChunkIds[i] = m_pTracks[i]->GetNumberOfChunks();
@@ -378,17 +374,6 @@ void MP4File::RewriteMdat( File& src, File& dst )
 
         // point back at the new mp4 file for write chunk
         m_file = &dst;
-
-        {
-            uint64_t destSize=dst.position; //MEANX
-            if(sourceSize>10)
-            {
-                    double p=sourceSize;
-                    p=(destSize*100)/sourceSize;
-                    ADM_MP4_progressCallback((int)p);
-            }
-            
-        }
         m_pTracks[nextTrackIndex]->RewriteChunk( chunkIds[nextTrackIndex], pChunk, chunkSize );
 
         MP4Free( pChunk );
@@ -999,23 +984,9 @@ void MP4File::AddTrackToIod(MP4TrackId trackId)
 void MP4File::RemoveTrackFromIod(MP4TrackId trackId, bool shallHaveIods)
 {
     MP4DescriptorProperty* pDescriptorProperty = NULL;
-    if (!m_pRootAtom->FindProperty("moov.iods.esIds",
-                                   (MP4Property**)&pDescriptorProperty))
+    if (!m_pRootAtom->FindProperty("moov.iods.esIds",(MP4Property**)&pDescriptorProperty)
+        || pDescriptorProperty == NULL)
         return;
-#if 0
-    // we may not have iods
-    if (shallHaveIods) {
-        ASSERT(pDescriptorProperty);
-    } else {
-        if (!pDescriptorProperty) {
-            return;
-        }
-    }
-#else
-    if (pDescriptorProperty == NULL) {
-        return;
-    }
-#endif
 
     for (uint32_t i = 0; i < pDescriptorProperty->GetCount(); i++) {
         /* static */
@@ -1174,13 +1145,7 @@ MP4TrackId MP4File::AddSystemsTrack(const char* type, uint32_t timeScale)
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.mp4s.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
@@ -1430,13 +1395,7 @@ MP4TrackId MP4File::AddAudioTrack(
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.mp4a.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
@@ -1614,11 +1573,6 @@ MP4TrackId MP4File::AddEncAudioTrack(uint32_t timeScale,
         SetTrackStringProperty(trackId,
                                "mdia.minf.stbl.stsd.enca.sinf.schi.iKMS.kms_URI",
                                kms_uri);
-#if 0
-        if (kms_uri != NULL) {
-            free((void *)kms_uri);
-        }
-#endif
 
         SetTrackIntegerProperty(trackId,
                                 "mdia.minf.stbl.stsd.enca.sinf.schi.iSFM.selective-encryption",
@@ -1639,13 +1593,7 @@ MP4TrackId MP4File::AddEncAudioTrack(uint32_t timeScale,
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.enca.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
@@ -1758,13 +1706,7 @@ MP4TrackId MP4File::AddMP4VideoTrack(
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.mp4v.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
@@ -1842,21 +1784,9 @@ MP4TrackId MP4File::AddEncVideoTrack(uint32_t timeScale,
                             "mdia.minf.stbl.stsd.encv.sinf.schi.iSFM.IV-length",
                             icPp->iv_len);
 
-#if 0
-    if (icPp->kms_uri != NULL) {
-        free(icPp->kms_uri);
-    }
-#endif
-
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.encv.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
@@ -2277,13 +2207,7 @@ MP4TrackId MP4File::AddSubpicTrack(uint32_t timescale,
 
     SetTrackIntegerProperty(trackId,
                             "mdia.minf.stbl.stsd.mp4s.esds.ESID",
-#if 0
-                            // note - for a file, these values need to
-                            // be 0 - wmay - 04/16/2003
-                            trackId
-#else
                             0
-#endif
                            );
 
     SetTrackIntegerProperty(trackId,
