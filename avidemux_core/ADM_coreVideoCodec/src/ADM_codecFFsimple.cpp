@@ -28,8 +28,16 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     hasBFrame=false;
     ADM_assert(c);
+    
     AVCodecID id=c->codecId;
+    AVCodec *codec=avcodec_find_decoder(id);
+    if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
+    codecId=id; 
     ADM_assert(id!=CODEC_ID_NONE);
+    
+    _context = avcodec_alloc_context3(codec);
+    ADM_assert(_context);
+    
     if(true==c->extraData)
     {
          _context->extradata = (uint8_t *) _extraDataCopy;
@@ -39,9 +47,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
-    AVCodec *codec=avcodec_find_decoder(id);
-    if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
-    codecId=id; 
+
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
     _context->error_concealment=3; 
     // Hack
