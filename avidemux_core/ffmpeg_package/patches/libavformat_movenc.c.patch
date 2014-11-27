@@ -1,0 +1,11 @@
+--- libavformat/movenc.orig	2014-11-26 22:41:58.167026386 -0500
++++ libavformat/movenc.c	2014-11-26 22:42:16.055218770 -0500
+@@ -840,7 +840,7 @@
+         return 0;
+ 
+     if      (track->enc->codec_id == AV_CODEC_ID_H264)      tag = MKTAG('a','v','c','1');
+-    else if (track->enc->codec_id == AV_CODEC_ID_HEVC)      tag = MKTAG('h','e','v','1');
++    else if (track->enc->codec_id == AV_CODEC_ID_HEVC)      tag = MKTAG('h','v','c','1');
+     else if (track->enc->codec_id == AV_CODEC_ID_AC3)       tag = MKTAG('a','c','-','3');
+     else if (track->enc->codec_id == AV_CODEC_ID_DIRAC)     tag = MKTAG('d','r','a','c');
+     else if (track->enc->codec_id == AV_CODEC_ID_MOV_TEXT)  tag = MKTAG('t','x','3','g');
