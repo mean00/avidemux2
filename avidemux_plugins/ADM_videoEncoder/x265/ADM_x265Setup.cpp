@@ -24,13 +24,8 @@
 #include "ADM_vidMisc.h"
 #include "ADM_coreUtils.h"
 
-#if 1
-    #define aprintf(...) {}
-    #define avsnprintf(...) {}
-#else
-    #define aprintf ADM_info
-    #define avsnprintf vsnprintf
-#endif
+#define aprintf(...) {}
+#define avsnprintf(...) {}
 static const char *TrueFalse[2]={"False","True"};
 static void dumpx265Setup(x265_param *param);
 #define MMSET(x) memset(&(x),0,sizeof(x))
@@ -353,8 +348,17 @@ void dumpx265Setup(x265_param *param)
     PI(bEnableTSkipFast);
     PI(bEnableLoopFilter);
     PI(bEnableSAO);
+    
+#if X265_BUILD >= 33
+    PI(bSaoNonDeblocked);
+#else
     PI(saoLcuBoundary);
+#endif
+    
+#if X265_BUILD < 32
     PI(saoLcuBasedOptimization);
+#endif
+    
     PI(cbQpOffset);
     PI(crQpOffset);
     PI(bIntraInBFrames);
