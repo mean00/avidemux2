@@ -68,7 +68,7 @@ extern "C"
     0, /*    uint32_t cr_chroma_offset */ \
     3, /*    uint32_t me_method */ \
     16, /*   uint32_t me_range */ \
-    7, /*    uint32_t subpel_refine */ \
+    5, /*    uint32_t subpel_refine */ \
     1, /*    uint32_t trellis */ \
     1.0, /*     float psy_rd */ \
     true, /*    bool fast_pskip */ \
