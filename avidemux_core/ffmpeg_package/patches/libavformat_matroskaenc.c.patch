@@ -1,6 +1,6 @@
---- /d/admDev/adm_all_dev/avidemux_2.6_branch_mean/avidemux_core/ffmpeg_package/patches/ffmpeg/libavformat/matroskaenc.c	2012-12-06 12:26:25 +1100
-+++ libavformat/matroskaenc.c	2012-12-06 12:26:25 +1100
-@@ -418,6 +418,7 @@
+--- libavformat/matroskaenc.c.orig	2014-11-01 21:47:35.000000000 -0400
++++ libavformat/matroskaenc.c		2014-11-28 02:45:05.026419859 -0500
+@@ -491,6 +491,7 @@
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecContext *codec)
  {
@@ -8,7 +8,7 @@
      uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -442,6 +443,28 @@
+@@ -515,6 +516,28 @@
          avio_write(pb, header_start[j], header_len[j]);
  
      return 0;
@@ -36,11 +36,11 @@
 +#endif
  }
  
- static void get_aac_sample_rates(AVFormatContext *s, AVCodecContext *codec, int *sample_rate, int *output_sample_rate)
-@@ -561,6 +584,24 @@
-         put_ebml_uint (pb, MATROSKA_ID_TRACKNUMBER     , i + 1);
-         put_ebml_uint (pb, MATROSKA_ID_TRACKUID        , i + 1);
-         put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
+ static int put_wv_codecpriv(AVIOContext *pb, AVCodecContext *codec)
+@@ -824,6 +847,24 @@
+     put_ebml_uint (pb, MATROSKA_ID_TRACKUID,
+                    mkv->is_dash ? mkv->dash_track_number : i + 1);
+     put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
 + 		/**  MEANX : Add a default duration for video **/
 + 		if(codec->codec_type==AVMEDIA_TYPE_VIDEO)
 + 		{
@@ -60,5 +60,5 @@
 + 		/**  MEANX : Add a default duration for video **/
 +
  
-         if ((tag = av_dict_get(st->metadata, "title", NULL, 0)))
-             put_ebml_string(pb, MATROSKA_ID_TRACKNAME, tag->value);
+     if ((tag = av_dict_get(st->metadata, "title", NULL, 0)))
+         put_ebml_string(pb, MATROSKA_ID_TRACKNAME, tag->value);

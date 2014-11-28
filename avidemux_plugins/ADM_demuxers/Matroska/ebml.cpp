@@ -30,11 +30,8 @@
 #define vprintf(...) {}
 #endif
 
-extern "C"
-{
-  double av_int2dbl(int64_t v);
-  float av_int2flt(int32_t v);
-}
+#include "libavutil/intfloat.h"
+
 
 /*
   It is slow , optimize later
@@ -199,12 +196,12 @@ float       ADM_ebml::readFloat(uint32_t n)
     case 4:
     {
         uint32_t u4=readUnsignedInt(4);
-        return av_int2flt(u4);
+        return av_int2float(u4);
       }
     case 8:
     {
         uint64_t u8=readUnsignedInt(8);
-        return  av_int2dbl(u8);
+        return  av_int2double(u8);
     }
     default:
         ADM_assert(0);

@@ -157,7 +157,7 @@ static bool setAvCodec(AVCodecContext *c,enum AVCodecID id)
 bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 {
     audioDelay=stream->getVideoDelay();
-    video_st = av_new_stream(oc, 0);
+    video_st = avformat_new_stream(oc, NULL);
 	if (!video_st)
 	{
 		printf("[FF] new stream failed\n");
@@ -311,7 +311,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
 
           audio[i]->getExtraData(&audioextraSize,&audioextraData);
 
-          audio_st[i] = av_new_stream(oc, 1+i);
+          audio_st[i] = avformat_new_stream(oc, NULL);
           if (!audio_st[i])
           {
                   printf("[FF]: new stream failed (audio)\n");

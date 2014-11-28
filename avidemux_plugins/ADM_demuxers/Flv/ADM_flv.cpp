@@ -32,6 +32,7 @@ Not sure if the timestamp is PTS or DTS (...)
 #endif
 // Borrowed from lavformt/flv.h
 #include "libavformat/flv.h"
+#include "libavutil/intfloat.h"
 // Borrowed from lavformt/flv.h
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 
@@ -119,9 +120,6 @@ static uint8_t stringz[FLV_MAX_STRING+1];
     read(size,stringz);
     stringz[size]=0;
     return (char *)stringz;
-}
-extern "C" {
-double av_int2dbl(int64_t v);
 }
 
 /**
@@ -225,7 +223,7 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
                                             uint64_t hi,lo;
                                             hi=read32();lo=read32();
                                             hi=(hi<<32)+lo;
-                                            val=(float)av_int2dbl(hi);
+                                            val=(float)av_int2double(hi);
                                             printf("->%f",val);
                                             setProperties(stri,val);
                                         }
