@@ -66,7 +66,6 @@ _hasSettings=false;
     statFile=NULL;
     _globalHeader=globalHeader;
     _isMT=false;
-    _closeCodec=false;
 
     uint64_t inc=source->getInfo()->frameIncrement;
     if(inc<30000) // Less than 30 ms , fps > 30 fps it is probably field
@@ -95,9 +94,7 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
           _isMT = false;
         }
 
-        if (_closeCodec) {
-          avcodec_close(_context);
-        }
+        avcodec_close(_context);
 
         av_free (_context);
         _context = NULL;
@@ -304,8 +301,6 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
     {   printf("[ff] Cannot open codec\n");
         return false;
     }
-
-    _closeCodec=true;
 
     // Now allocate colorspace
     int w,h;

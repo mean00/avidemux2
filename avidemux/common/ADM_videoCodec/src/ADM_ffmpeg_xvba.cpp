@@ -260,9 +260,7 @@ decoderFFXVBA::~decoderFFXVBA()
     if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
                  // released
     {
-        if(_closeCodec) {
-          avcodec_close (_context);
-        }
+        avcodec_close (_context);
 
         av_free(_context);
         _context=NULL;

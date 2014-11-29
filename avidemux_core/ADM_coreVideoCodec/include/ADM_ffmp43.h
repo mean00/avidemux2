@@ -43,7 +43,6 @@ protected:
   uint8_t _refCopy;
   uint32_t _bpp;
   AVCodecContext *_context;
-  bool _closeCodec;
   uint8_t  *_extraDataCopy;
   int _extraDataLen;
   uint32_t _fcc;

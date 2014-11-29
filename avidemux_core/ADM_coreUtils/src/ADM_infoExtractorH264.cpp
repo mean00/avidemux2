@@ -713,8 +713,6 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
 
-    closeCodec=true;
-
     ADM_info("Context created\n");
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
@@ -757,9 +755,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
 theEnd:
     if(ctx)
     {
-        if (closeCodec) {
-          avcodec_close(ctx);
-        }
+        avcodec_close(ctx);
 
         av_free(ctx);
     }

@@ -86,7 +86,6 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
                                 } \
                                 else \
                                 { \
-					_closeCodec = true;\
                                         printf("[lavc] Decoder init: "display" video decoder initialized! (%s)\n",codec->long_name); \
                                 } \
 }

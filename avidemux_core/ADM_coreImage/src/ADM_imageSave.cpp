@@ -165,7 +165,6 @@ ADM_byteBuffer   byteBuffer;
     if(!context) 
     {
         printf("[saveAsJpg] Cannot allocate context\n");
-        delete codec;
         return false;
     }
 

@@ -36,7 +36,6 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
                 ADM_outputFlavor        outputFlavor;
 		AVCodecContext          *_context;
 		uint8_t    _buffer[ ADMWA_BUF];
-                bool       _closeCodec;
 		uint32_t   _tail,_head;
 		uint32_t   _blockalign;
         uint32_t    channels;
@@ -97,7 +96,6 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
  ADM_AudiocoderLavcodec::ADM_AudiocoderLavcodec(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
        :  ADM_Audiocodec(fourcc,*info)
  {
-    _closeCodec = false;
     ADM_info(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
@@ -198,8 +196,6 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
          
     }
 
-    _closeCodec = true;
-
         switch(_context->sample_fmt)
         {
         case AV_SAMPLE_FMT_FLT:
@@ -240,10 +236,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 */
  ADM_AudiocoderLavcodec::~ADM_AudiocoderLavcodec()
  {
-        if (_closeCodec) {
-          avcodec_close(_context);
-        }
-
+        avcodec_close(_context);
         av_free(_context);
 }
 /**

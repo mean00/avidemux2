@@ -24,7 +24,6 @@ class AUDMEncoder_Lavcodec : public ADM_AudioEncoder
                 asInt16,asFloat,asFloatPlanar
             }ADM_outputFlavor;
   protected:
-    bool                 _closeCodec;
     void                *_context;
     uint32_t             _chunk;
     bool                 _globalHeader;
