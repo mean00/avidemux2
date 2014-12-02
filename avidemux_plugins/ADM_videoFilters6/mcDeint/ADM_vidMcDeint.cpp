@@ -241,7 +241,7 @@ uint8_t AVDMVideoMCDeint::init( void )
             avcodec_open(avctx_enc, enc);
 
         }
-        priv.frame= avcodec_alloc_frame();
+        priv.frame= av_frame_alloc();
 
         priv.outbuf_size= info.width*info.height*10;
         priv.outbuf= (uint8_t *)ADM_alloc(priv.outbuf_size);

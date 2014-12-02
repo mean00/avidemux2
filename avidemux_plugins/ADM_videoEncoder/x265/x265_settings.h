@@ -5,7 +5,8 @@ typedef struct {
 bool useAdvancedConfiguration;
 struct  {
 	COMPRES_PARAMS params;
-	uint32_t threads;
+	uint32_t poolThreads;
+	uint32_t frameThreads;
 	char * preset;
 	char * tuning;
 	char * profile;

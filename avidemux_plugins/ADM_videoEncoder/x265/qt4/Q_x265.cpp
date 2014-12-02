@@ -59,8 +59,6 @@ static const idcToken listOfThreads[]={
         {1,"1"},      
         {2,"2"},      
         {4,"4"},
-        {4,"8"},
-        {4,"16"},
 };
 
 #define NB_THREADS sizeof(listOfThreads)/sizeof(idcToken)
@@ -170,13 +168,22 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
             idc->addItem(QString(t->idcString));
         }
 
-        QComboBox *threads=ui.comboBoxThreads;
-        threads->clear();
+        QComboBox *poolThreads=ui.comboBoxPoolThreads;
+        poolThreads->clear();
         for(int i=0;i<NB_THREADS;i++)
         {
             const idcToken *t=listOfThreads+i;
-            threads->addItem(QString(t->idcString));
+            poolThreads->addItem(QString(t->idcString));
         }
+        
+        QComboBox *frameThreads=ui.comboBoxFrameThreads;
+        frameThreads->clear();
+        for(int i=0;i<NB_THREADS;i++)
+        {
+            const idcToken *t=listOfThreads+i;
+            frameThreads->addItem(QString(t->idcString));
+        }
+        
         QComboBox* presets=ui.presetComboBox;
         presets->clear();
         for(int i=0;i<NB_PRESET;i++)
@@ -330,13 +337,24 @@ bool x265Dialog::upload(void)
                 }
           }
         // update threads
-          QComboBox *threads=ui.comboBoxThreads;
+          QComboBox *poolThreads=ui.comboBoxPoolThreads;
           for(int i=0;i<NB_THREADS;i++)
           {
                 const idcToken *t=listOfThreads+i;
-                if(myCopy.general.threads==t->idcValue)
+                if(myCopy.general.poolThreads==t->idcValue)
                 {
-                        threads->setCurrentIndex(i);
+                        poolThreads->setCurrentIndex(i);
+                        break;
+                }
+          }
+          
+          QComboBox *frameThreads=ui.comboBoxFrameThreads;
+          for(int i=0;i<NB_THREADS;i++)
+          {
+                const idcToken *t=listOfThreads+i;
+                if(myCopy.general.frameThreads==t->idcValue)
+                {
+                        frameThreads->setCurrentIndex(i);
                         break;
                 }
           }
@@ -494,10 +512,13 @@ bool x265Dialog::download(void)
             case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
           }
           // update thread count
-          QComboBox *threads=ui.comboBoxThreads;
-          int threadIndex=threads->currentIndex();
-          myCopy.general.threads=listOfThreads[threadIndex].idcValue;
-
+          QComboBox *poolThreads=ui.comboBoxPoolThreads;
+          int poolThreadIndex=poolThreads->currentIndex();
+          myCopy.general.poolThreads=listOfThreads[poolThreadIndex].idcValue;
+          
+          QComboBox *frameThreads=ui.comboBoxFrameThreads;
+          int frameThreadIndex=frameThreads->currentIndex();
+          myCopy.general.frameThreads=listOfThreads[frameThreadIndex].idcValue;
           
           int t=ui.trellisComboBox->currentIndex();
           if(!ui.trellisCheckBox->isChecked())

@@ -43,7 +43,8 @@ extern "C"
         ADM_ENC_CAP_GLOBAL+ \
         0*ADM_ENC_CAP_SAME \
     }, \
-    99, /* Threads : auto */ \
+    99, /* Pool Threads : auto */ \
+    99, /* Frame Threads : auto */ \
     NULL, /* Preset */ \
     NULL, /* Tuning */ \
     NULL, /* Profile */ \

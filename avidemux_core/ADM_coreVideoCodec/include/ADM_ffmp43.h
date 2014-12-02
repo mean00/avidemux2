@@ -46,7 +46,7 @@ protected:
   uint8_t  *_extraDataCopy;
   int _extraDataLen;
   uint32_t _fcc;
-  AVFrame _frame;
+  AVFrame *_frame;
   uint8_t _allowNull;
   uint32_t frameType (void);
   uint8_t clonePic (AVFrame * src, ADMImage * out);
@@ -140,6 +140,16 @@ public:
       return true;
   }
   bool   uncompress (ADMCompressedImage * in, ADMImage * out);
+};
+
+class decoderFFH265:public decoderFF
+{
+public:
+  decoderFFH265 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+  virtual bool bFramePossible (void)
+  {
+      return true;
+  }
 };
 
 class decoderFFhuff:public decoderFF

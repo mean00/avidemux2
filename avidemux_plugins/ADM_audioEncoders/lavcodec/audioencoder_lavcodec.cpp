@@ -125,7 +125,7 @@ AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
     av_free(_context);
   }
   _context=NULL;
-  if(_frame)   avcodec_free_frame(&_frame);
+  if(_frame)   av_frame_free(&_frame);
   _frame=NULL;
   if(planarBuffer) delete [] planarBuffer;
   planarBuffer=NULL;;
@@ -150,7 +150,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   codec = avcodec_find_encoder(codecID);
   ADM_assert(codec);
   _context=( void *)avcodec_alloc_context3(codec);
-  _frame=avcodec_alloc_frame();
+  _frame=av_frame_alloc();
   
   wavheader.byterate=(_config.bitrate*1000)>>3;
 

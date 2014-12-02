@@ -54,9 +54,9 @@ bool         ADM_jpegEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
     _context->flags |= CODEC_FLAG_QSCALE;
-    _frame.quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
+    _frame->quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
     int sz=0;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
     {
         ADM_error("[jpeg] Error %d encoding video\n",sz);
         return false;

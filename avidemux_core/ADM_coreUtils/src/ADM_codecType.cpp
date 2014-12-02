@@ -107,6 +107,8 @@ bool isH265Compatible (uint32_t fourcc)
   CHECK ("H265");
   CHECK ("HEVC");
   CHECK ("hevc");
+  CHECK ("HVC1");
+  CHECK ("hvc1");
   return h265;
 
 #undef CHECK
@@ -173,6 +175,27 @@ bool isVP6Compatible (uint32_t fourcc)
 
 #undef CHECK
 }
+
+/**
+    \fn isVP9Compatible
+*/
+
+bool isVP9Compatible (uint32_t fourcc)
+{
+
+#define CHECK(x) if(fourCC::check(fourcc,(uint8_t *)x)) \
+						{vp9=1; }
+
+  uint8_t vp9 = 0;
+
+  CHECK ("VP9 ");
+  CHECK ("VP90");
+
+  return vp9;
+
+#undef CHECK
+}
+
 /**
     \fn isDVCompatible
 */

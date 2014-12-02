@@ -269,7 +269,6 @@ decoderFFLIBVA::~decoderFFLIBVA()
                  // released
     {
         avcodec_close (_context);
-
         av_free(_context);
         _context=NULL;
     }

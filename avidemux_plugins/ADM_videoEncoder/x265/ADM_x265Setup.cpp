@@ -53,9 +53,15 @@ bool x265Encoder::setup(void)
   param.logLevel=x265Settings.level; 
 
   // Threads..
-  switch(x265Settings.general.threads)
+  switch(x265Settings.general.poolThreads)
   {
-    case 0: case 1: case 2:  param.poolNumThreads = x265Settings.general.threads;break;
+    case 0: case 1: case 2: param.poolNumThreads = x265Settings.general.poolThreads;break;
+    case 99:break; //auto
+    default: ADM_error("UNKNOWN NB OF THREADS\n");break;
+  }
+  switch(x265Settings.general.frameThreads)
+  {
+    case 0: case 1: case 2: param.frameNumThreads = x265Settings.general.frameThreads;break;
     case 99:break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }

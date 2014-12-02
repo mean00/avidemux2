@@ -78,7 +78,7 @@ bool         ADM_huffEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
     int sz=0;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
     {
         printf("[huff] Error %d encoding video\n",sz);
         return false;

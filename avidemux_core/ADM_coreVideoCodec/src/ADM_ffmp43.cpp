@@ -216,12 +216,17 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _allowNull = 0;
   _gmc = 0;
   _context = NULL;
+  _frame = NULL;
   _refCopy = 0;
   _usingMT = 0;
   _bpp = bpp;
   _fcc = fcc;
 
-  memset (&_frame, 0, sizeof (_frame));
+  _frame=av_frame_alloc();
+  if(!_frame)
+  {
+      ADM_assert (_frame);
+  }
 
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
   _extraDataCopy=NULL;
@@ -253,6 +258,13 @@ decoderFF::~decoderFF ()
         _context=NULL;
         printf ("[lavc] Destroyed\n");
     }
+  
+  if(_frame)
+  {
+      av_frame_free(&_frame);
+      _frame=NULL;
+  }
+  
   if(_extraDataCopy)
   {
       delete [] _extraDataCopy;
@@ -269,23 +281,19 @@ uint32_t decoderFF::frameType (void)
   uint32_t
     flag = 0;
 
-  AVFrame *
-    target;
 #define SET(x) {flag=x;aprintf("Frame is %s\n",#x);}
 
-
-  target = &_frame;
-  switch (target->pict_type)
+  switch (_frame->pict_type)
     {
     case AV_PICTURE_TYPE_B:
       SET (AVI_B_FRAME);
-      if (target->key_frame)
+      if (_frame->key_frame)
 	aprintf ("\n But keyframe is set\n");
       break;
 
     case AV_PICTURE_TYPE_I:
       SET (AVI_KEY_FRAME);
-      if (!target->key_frame)
+      if (!_frame->key_frame)
 	{
 	  if (codecId == CODEC_ID_H264)
 	    {
@@ -299,7 +307,7 @@ uint32_t decoderFF::frameType (void)
       _gmc = 1;			// No break, just inform that gmc is there
     case AV_PICTURE_TYPE_P:
       SET (AVI_P_FRAME);
-      if (target->key_frame)
+      if (_frame->key_frame)
 	aprintf ("\n But keyframe is set\n");
       break;
     default:
@@ -307,10 +315,10 @@ uint32_t decoderFF::frameType (void)
       break;
     }
     flag&=~AVI_STRUCTURE_TYPE_MASK;
-    if(target->interlaced_frame)
+    if(_frame->interlaced_frame)
     {
         flag|=AVI_FIELD_STRUCTURE;
-        if(target->top_field_first)
+        if(_frame->top_field_first)
             flag|=AVI_TOP_FIELD;
         else
             flag|=AVI_BOTTOM_FIELD;
@@ -403,7 +411,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   else
     pkt.flags=0;
 
-  ret = avcodec_decode_video2 (_context, &_frame, &got_picture, &pkt);
+  ret = avcodec_decode_video2 (_context, _frame, &got_picture, &pkt);
   if(!bFramePossible())
   {
     // No delay, the value is sure, no need to hide it in opaque
@@ -524,7 +532,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       printf ("[lavc] Unhandled colorspace: %d\n", _context->pix_fmt);
       return 0;
     }
-    clonePic (&_frame, out);
+    clonePic (_frame, out);
     //printf("[AvCodec] Pts : %"PRIu64" Out Pts:%"PRIu64" \n",_frame.pts,out->Pts);
 
   return 1;
@@ -624,6 +632,15 @@ bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
   }
 #endif
   return true;
+}
+decoderFFH265::decoderFFH265 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
+{
+  _refCopy = 1;			// YUV420 only
+  decoderMultiThread ();
+  ADM_info ("[lavc] Initializing H265 decoder with %d extradata\n", (int)extraDataLen);
+  WRAP_Open(AV_CODEC_ID_HEVC);
+  
 }
 //*********************
 decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):

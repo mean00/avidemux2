@@ -2,7 +2,8 @@
 extern const ADM_paramList x265_settings_param[]={
  {"useAdvancedConfiguration",offsetof(x265_settings,useAdvancedConfiguration),"bool",ADM_param_bool},
  {"general.params",offsetof(x265_settings,general.params),"COMPRES_PARAMS",ADM_param_video_encode},
- {"general.threads",offsetof(x265_settings,general.threads),"uint32_t",ADM_param_uint32_t},
+ {"general.poolThreads",offsetof(x265_settings,general.poolThreads),"uint32_t",ADM_param_uint32_t},
+ {"general.frameThreads",offsetof(x265_settings,general.frameThreads),"uint32_t",ADM_param_uint32_t},
  {"general.preset",offsetof(x265_settings,general.preset),"char *",ADM_param_string},
  {"general.tuning",offsetof(x265_settings,general.tuning),"char *",ADM_param_string},
  {"general.profile",offsetof(x265_settings,general.profile),"char *",ADM_param_string},

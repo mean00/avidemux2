@@ -89,11 +89,6 @@ int x265Encoder::encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount
         \fn createHeader
         \brief create esds header, needed for mp4/mov
 */
-#define MAX_HEADER_X265 1024	// should be enough
-#define H265_NAL_TYPE_SEI       0x6
-#define H265_NAL_TYPE_SEQ_PARAM 0x7
-#define H265_NAL_TYPE_PIC_PARAM 0x8
-
 bool x265Encoder::createHeader (void)
 {
 

@@ -98,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -321,14 +321,24 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QLabel" name="labelThread">
+             <widget class="QLabel" name="labelPoolThread">
               <property name="text">
-               <string>Threads </string>
+               <string>Pool Threads </string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxThreads"/>
+             <widget class="QComboBox" name="comboBoxPoolThreads"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelFrameThreads">
+              <property name="text">
+               <string>Frame Threads </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBoxFrameThreads"/>
             </item>
             <item>
              <spacer name="horizontalSpacer_12">

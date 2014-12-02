@@ -134,8 +134,8 @@ again:
     if(!q) q=2;
    
     
-    _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) <= 0)
+    _frame->reordered_opaque=image->Pts;
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) <= 0)
     {
         printf("[Dv] Error %d encoding video\n",sz);
         return false;

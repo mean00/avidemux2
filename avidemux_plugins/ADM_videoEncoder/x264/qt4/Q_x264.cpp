@@ -61,9 +61,7 @@ static const idcToken listOfThreads[]={
         {0,"Auto"},
         {1,"1"},      
         {2,"2"},      
-        {4,"4"},
-        {4,"8"},
-        {4,"16"},
+        {4,"4"},      
 };
 
 #define NB_THREADS sizeof(listOfThreads)/sizeof(idcToken)

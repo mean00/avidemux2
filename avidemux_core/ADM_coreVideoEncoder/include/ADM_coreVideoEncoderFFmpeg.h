@@ -35,7 +35,7 @@ class ADM_COREVIDEOENCODER6_EXPORT ADM_coreVideoEncoderFFmpeg :public ADM_coreVi
 protected:
                FFcodecSettings  Settings;
                AVCodecContext   *_context;      // Context 
-               AVFrame          _frame;     
+               AVFrame          *_frame;     
                ADMColorScalerSimple    *colorSpace;    // Colorspace converter if needed
                ADM_byteBuffer   rgbByteBuffer;     // Buffer for colorspace converter if needed
                ADM_colorspace   targetColorSpace; // Wanted colorspace

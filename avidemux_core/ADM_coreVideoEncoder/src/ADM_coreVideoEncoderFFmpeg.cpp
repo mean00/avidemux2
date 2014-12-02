@@ -57,8 +57,8 @@ _hasSettings=false;
     h=getHeight();
 
     image=new ADMImageDefault(w,h);
-    memset (&_frame, 0, sizeof (_frame));
-    _frame.pts = AV_NOPTS_VALUE;
+    _frame=av_frame_alloc();
+    _frame->pts = AV_NOPTS_VALUE;
     rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
@@ -99,6 +99,13 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
         av_free (_context);
         _context = NULL;
     }
+    
+    if (_frame)
+    {
+        av_frame_free(&_frame);
+        _frame=NULL;
+    }
+    
     if(colorSpace)
     {
         delete colorSpace;
@@ -123,17 +130,17 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 
   switch(targetColorSpace)
     {
-        case ADM_COLOR_YV12:    _frame.linesize[0] = img->GetPitch(PLANAR_Y);
-                                _frame.linesize[1] = img->GetPitch(PLANAR_U);
-                                _frame.linesize[2] = img->GetPitch(PLANAR_V);
+        case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
+                                _frame->linesize[1] = img->GetPitch(PLANAR_U);
+                                _frame->linesize[2] = img->GetPitch(PLANAR_V);
                                 _context->pix_fmt =PIX_FMT_YUV420P;break;
-        case ADM_COLOR_YUV422P: _frame.linesize[0] = w;
-                                _frame.linesize[1] = w>>1;
-                                _frame.linesize[2] = w>>1;
+        case ADM_COLOR_YUV422P: _frame->linesize[0] = w;
+                                _frame->linesize[1] = w>>1;
+                                _frame->linesize[2] = w>>1;
                                 _context->pix_fmt =PIX_FMT_YUV422P;break;
-        case ADM_COLOR_RGB32A : _frame.linesize[0] = w*4;
-                                _frame.linesize[1] = 0;//w >> 1;
-                                _frame.linesize[2] = 0;//w >> 1;
+        case ADM_COLOR_RGB32A : _frame->linesize[0] = w*4;
+                                _frame->linesize[1] = 0;//w >> 1;
+                                _frame->linesize[2] = 0;//w >> 1;
                                 _context->pix_fmt =PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
@@ -201,23 +208,23 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     queueOfDts.push_back(p);
     aprintf("Incoming frame PTS=%"PRIu64", delay=%"PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
-    _frame.pts= timingToLav(p);    //
-    if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
+    _frame->pts= timingToLav(p);    //
+    if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
-    map.internalTS=_frame.pts;
+    map.internalTS=_frame->pts;
     mapper.push_back(map);
 
     aprintf("Codec> incoming pts=%"PRIu64"\n",image->Pts);
-    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
+    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
     {
         case ADM_COLOR_YV12:
-                _frame.data[0] = image->GetWritePtr(PLANAR_Y);
-                _frame.data[2] = image->GetWritePtr(PLANAR_U);
-                _frame.data[1] = image->GetWritePtr(PLANAR_V);
+                _frame->data[0] = image->GetWritePtr(PLANAR_Y);
+                _frame->data[2] = image->GetWritePtr(PLANAR_U);
+                _frame->data[1] = image->GetWritePtr(PLANAR_V);
                 break;
 
         case ADM_COLOR_YUV422P:
@@ -230,9 +237,9 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbByteBuffer.at(0);
-                _frame.data[2] = rgbByteBuffer.at(0)+(w*h);
-                _frame.data[1] = rgbByteBuffer.at(0)+(w*h*3)/2;
+                _frame->data[0] = rgbByteBuffer.at(0);
+                _frame->data[2] = rgbByteBuffer.at(0)+(w*h);
+                _frame->data[1] = rgbByteBuffer.at(0)+(w*h*3)/2;
                 break;
         }
         case ADM_COLOR_RGB32A:
@@ -241,9 +248,9 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbByteBuffer.at(0);
-                _frame.data[2] = NULL;
-                _frame.data[1] = NULL;
+                _frame->data[0] = rgbByteBuffer.at(0);
+                _frame->data[2] = NULL;
+                _frame->data[1] = NULL;
                 break;
         default:
                 ADM_assert(0);
@@ -405,7 +412,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 
     // Update quant
     if(!_context->coded_frame->quality)
-      out->out_quantizer=(int) floor (_frame.quality / (float) FF_QP2LAMBDA);
+      out->out_quantizer=(int) floor (_frame->quality / (float) FF_QP2LAMBDA);
     else
       out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
 
