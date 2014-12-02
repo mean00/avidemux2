@@ -1,0 +1,12 @@
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/put_bits.h	2012-05-29 18:18:34 +1000
++++ libavcodec/put_bits.h	2012-05-29 18:18:34 +1000
+@@ -35,7 +35,9 @@
+ #include "libavutil/log.h"
+ #include "libavutil/avassert.h"
+ #include "mathops.h"
++#ifndef ADM_LAV_NO_CONFIG
+ #include "config.h"
++#endif// ADM_LAV_NO_CONFIG
+ 
+ typedef struct PutBitContext {
+     uint32_t bit_buf;
