@@ -27,7 +27,7 @@ extern "C" {
 typedef struct
 {
     const char *string;
-    CodecID    codecId;
+    AVCodecID  codecId;
     bool       extraData;
     bool       refCopy;
     bool       hasBFrame;
@@ -37,5 +37,5 @@ typedef struct
     \fn getCodecIdFromFourcc
 */
 ADM_COREUTILS6_EXPORT const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc);
-ADM_COREUTILS6_EXPORT CodecID ADM_codecIdFindByFourcc(const char *fcc);
+ADM_COREUTILS6_EXPORT AVCodecID ADM_codecIdFindByFourcc(const char *fcc);
 #endif

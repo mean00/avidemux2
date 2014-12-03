@@ -27,14 +27,38 @@ extern "C"
 
 #define aprintf(...) {}
 
+#define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
+
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\
 AVCodec *codec=funcz(argz);\
 if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"display));ADM_assert(0);} \
   codecId=codecid; \
+  _context = avcodec_alloc_context3 (codec);\
+  ADM_assert (_context);\
+  _context->max_b_frames = 0;\
+  _context->width = _w;\
+  _context->height = _h;\
+  _context->pix_fmt = PIX_FMT_YUV420P;\
+  _context->debug_mv |= FF_SHOW;\
+  _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;\
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
-  if (avcodec_open(_context, codec) < 0)  \
+  if (_setBpp) {\
+    _context->bits_per_coded_sample = _bpp;\
+  }\
+  if (_setFcc) {\
+    _context->codec_tag=_fcc;\
+    _context->stream_codec_tag=_fcc;\
+  }\
+  if (_extraDataCopy) {\
+    _context->extradata = _extraDataCopy;\
+    _context->extradata_size = _extraDataLen;\
+  }\
+  if (_usingMT) {\
+    _context->thread_count = _threads;\
+  }\
+  if (avcodec_open2(_context, codec, NULL) < 0)  \
                       { \
                                         printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
                                         GUI_Error_HIG("Codec","Internal error opening "display); \
@@ -128,7 +152,7 @@ void decoderFF::decoderMultiThread (void)
   if (threads)
   {
       printf ("[lavc] Enabling MT decoder with %u threads\n", threads);
-      _context->thread_count=threads;
+      _threads = threads;
       _usingMT = 1;
   }
 }
@@ -185,38 +209,31 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
 	resetConfiguration();
 
   hurryUp=false;
+  _setBpp=false;
+  _setFcc=false;
   codecId = 0;
 //                              memset(&_context,0,sizeof(_context));
   _allowNull = 0;
   _gmc = 0;
   _context = NULL;
+  _frame = NULL;
   _refCopy = 0;
   _usingMT = 0;
-#if LIBAVCODEC_BUILD >= 4624
-  _context = avcodec_alloc_context ();
-#else
-  _context = new AVCodecContext;
-  memset (_context, 0, sizeof (AVCodecContext));
-#endif
-  ADM_assert (_context);
-  memset (&_frame, 0, sizeof (_frame));
+  _bpp = bpp;
+  _fcc = fcc;
 
-  _context->max_b_frames = 0;
+  _frame=av_frame_alloc();
+  if(!_frame)
+  {
+      ADM_assert (_frame);
+  }
 
-  _context->width = _w;
-  _context->height = _h;
-  _context->pix_fmt = PIX_FMT_YUV420P;	//PIX_FMT_RGBA32
-  //_context->debug=1;
-
-#define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
-//#define FF_SHOW               (FF_DEBUG_VIS_MV_P_FOR)
   printf ("[lavc] Build: %d\n", LIBAVCODEC_BUILD);
-  _context->debug_mv |= FF_SHOW;
-  _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;
   _extraDataCopy=NULL;
   
   if(extraDataLen)
     {
+            _extraDataLen=(int)extraDataLen;
             _extraDataCopy=new uint8_t[extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE];
             memset(_extraDataCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(_extraDataCopy,extraData,extraDataLen);
@@ -237,14 +254,17 @@ decoderFF::~decoderFF ()
   if(_context)
   {
         avcodec_close (_context);
-        #if LIBAVCODEC_BUILD >= 4624
-                av_free(_context);
-        #else
-                delete _context;
-        #endif
+        av_free(_context);
         _context=NULL;
         printf ("[lavc] Destroyed\n");
     }
+  
+  if(_frame)
+  {
+      av_frame_free(&_frame);
+      _frame=NULL;
+  }
+  
   if(_extraDataCopy)
   {
       delete [] _extraDataCopy;
@@ -261,23 +281,19 @@ uint32_t decoderFF::frameType (void)
   uint32_t
     flag = 0;
 
-  AVFrame *
-    target;
 #define SET(x) {flag=x;aprintf("Frame is %s\n",#x);}
 
-
-  target = &_frame;
-  switch (target->pict_type)
+  switch (_frame->pict_type)
     {
     case AV_PICTURE_TYPE_B:
       SET (AVI_B_FRAME);
-      if (target->key_frame)
+      if (_frame->key_frame)
 	aprintf ("\n But keyframe is set\n");
       break;
 
     case AV_PICTURE_TYPE_I:
       SET (AVI_KEY_FRAME);
-      if (!target->key_frame)
+      if (!_frame->key_frame)
 	{
 	  if (codecId == CODEC_ID_H264)
 	    {
@@ -291,7 +307,7 @@ uint32_t decoderFF::frameType (void)
       _gmc = 1;			// No break, just inform that gmc is there
     case AV_PICTURE_TYPE_P:
       SET (AVI_P_FRAME);
-      if (target->key_frame)
+      if (_frame->key_frame)
 	aprintf ("\n But keyframe is set\n");
       break;
     default:
@@ -299,10 +315,10 @@ uint32_t decoderFF::frameType (void)
       break;
     }
     flag&=~AVI_STRUCTURE_TYPE_MASK;
-    if(target->interlaced_frame)
+    if(_frame->interlaced_frame)
     {
         flag|=AVI_FIELD_STRUCTURE;
-        if(target->top_field_first)
+        if(_frame->top_field_first)
             flag|=AVI_TOP_FIELD;
         else
             flag|=AVI_BOTTOM_FIELD;
@@ -395,7 +411,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   else
     pkt.flags=0;
 
-  ret = avcodec_decode_video2 (_context, &_frame, &got_picture, &pkt);
+  ret = avcodec_decode_video2 (_context, _frame, &got_picture, &pkt);
   if(!bFramePossible())
   {
     // No delay, the value is sure, no need to hide it in opaque
@@ -516,7 +532,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       printf ("[lavc] Unhandled colorspace: %d\n", _context->pix_fmt);
       return 0;
     }
-    clonePic (&_frame, out);
+    clonePic (_frame, out);
     //printf("[AvCodec] Pts : %"PRIu64" Out Pts:%"PRIu64" \n",_frame.pts,out->Pts);
 
   return 1;
@@ -539,14 +555,8 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   ADM_info ("[lavc] Using %d bytes of extradata for MPEG4 decoder\n", (int)extraDataLen);
 
   _refCopy = 1;			// YUV420 only
-   
-    
-  _context->extradata = _extraDataCopy;
-  _context->extradata_size = (int)extraDataLen  ;
-  _context->codec_tag=fcc;
-  _context->stream_codec_tag=fcc;
+  _setFcc=true;
   decoderMultiThread ();
-  //  _context->flags|=FF_DEBUG_VIS_MV;
   WRAP_Open (CODEC_ID_MPEG4);
   
 }
@@ -566,9 +576,6 @@ decoderFFDV::decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDat
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
     
-   
-    _context->extradata = _extraDataCopy;
-    _context->extradata_size = (int)extraDataLen  ;
     WRAP_Open (CODEC_ID_DVVIDEO);
   
 
@@ -590,22 +597,15 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
 :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
     
-   
-  _context->extradata = _extraDataCopy;
-  _context->extradata_size = (int)extraDataLen  ;
-  _context->bits_per_coded_sample=bpp;
+  _setBpp=true;
   ADM_info ("[lavc] FFhuff: We have %d bytes of extra data\n", (int)extraDataLen);
-  WRAP_Open (CODEC_ID_FFVHUFF);
-  
+  WRAP_Open (CODEC_ID_FFVHUFF);  
 
 }
 decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
         :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-   
-  _context->extradata = _extraDataCopy;
   _refCopy = 1;			// YUV420 only
-  _context->extradata_size = (int) extraDataLen;
   decoderMultiThread ();
   ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
   WRAP_Open(CODEC_ID_H264);
@@ -633,16 +633,21 @@ bool   decoderFFH264::uncompress (ADMCompressedImage * in, ADMImage * out)
 #endif
   return true;
 }
+decoderFFH265::decoderFFH265 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
+        :decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
+{
+  _refCopy = 1;			// YUV420 only
+  decoderMultiThread ();
+  ADM_info ("[lavc] Initializing H265 decoder with %d extradata\n", (int)extraDataLen);
+  WRAP_Open(AV_CODEC_ID_HEVC);
+  
+}
 //*********************
 decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
-   
-  _context->extradata = _extraDataCopy;    
-  _context->extradata_size = (int) extraDataLen;
-  _context->bits_per_coded_sample = bpp;
+  _setBpp=true;
   WRAP_Open (CODEC_ID_HUFFYUV);
- 
 }
 
 //***************

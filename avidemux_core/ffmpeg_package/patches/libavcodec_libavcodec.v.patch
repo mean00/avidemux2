@@ -1,9 +1,9 @@
---- libavcodec/libavcodec.v.org	2012-10-08 09:26:51.041964900 +0200
-+++ libavcodec/libavcodec.v	2012-10-08 09:27:25.229965347 +0200
-@@ -29,5 +29,10 @@
-                 ff_vdpau_vc1_decode_picture;
-                 ff_dnxhd_get_cid_table;
-                 ff_dnxhd_cid_table;
+--- libavcodec/libavcodec.v.orig	2014-11-01 21:47:34.000000000 -0400
++++ libavcodec/libavcodec.v		2014-11-28 03:28:34.500032881 -0500
+@@ -3,5 +3,10 @@
+                 #deprecated, remove after next bump
+                 audio_resample;
+                 audio_resample_close;
 +                # Avidemux
 +                ff_h264_info;
 +                ff_golomb_vlc_len;

@@ -52,11 +52,13 @@ MKVCC mkvCC[]=
   {"A_MS/ACM",0,0x100001,"ACMX"}, 
 
   // Video
+  {"V_VP9",1,0,"VP9"},
   {"V_VP8",1,0,"VP8 "}, // Mpeg2
   {"V_MPEG2",1,0,"MPEG"}, // Mpeg2
   {"V_MPEG1",1,0,"MPEG"}, // Mpeg1
   {"V_MPEG4/MS/V3",1,0,"DIV3"}, // MS MPEG4 (Divx3)
   {"V_MPEG4/ISO/AVC",1,0,"AVC1"}, //H264
+  {"V_MPEGH/ISO/HEVC",1,0,"HEVC"},  //H265
   {"V_MS/VFW/FOURCC",1,0,"VFWX"}, // Divx 2.
   {"V_MPEG4/ISO/ASP",1,0,"DIVX"},
   // Filler

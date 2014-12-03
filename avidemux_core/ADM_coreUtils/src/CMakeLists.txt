@@ -7,6 +7,7 @@ ADM_quota.cpp
 fourcc.cpp
 ADM_infoExtractor.cpp
 ADM_infoExtractorH264.cpp
+ADM_infoExtractorH265.cpp
 ADM_frameType.cpp
 ADM_codecType.cpp
 ADM_file.cpp

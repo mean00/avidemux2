@@ -35,7 +35,7 @@ class ADM_COREVIDEOENCODER6_EXPORT ADM_coreVideoEncoderFFmpeg :public ADM_coreVi
 protected:
                FFcodecSettings  Settings;
                AVCodecContext   *_context;      // Context 
-               AVFrame          _frame;     
+               AVFrame          *_frame;     
                ADMColorScalerSimple    *colorSpace;    // Colorspace converter if needed
                ADM_byteBuffer   rgbByteBuffer;     // Buffer for colorspace converter if needed
                ADM_colorspace   targetColorSpace; // Wanted colorspace
@@ -46,12 +46,15 @@ protected:
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
                double           timeScaler;
+               bool             _closeCodec;
+               bool             _hasSettings;
               
 protected:
 
     virtual               bool             prolog(ADMImage *img); 
     virtual               bool             preEncode(void); 
-    virtual               bool             setup(CodecID codecId);
+    virtual		  bool		   configureContext(void);
+    virtual               bool             setup(AVCodecID codecId);
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
                           bool             presetContext(FFcodecSettings *set);
                           bool             postEncode(ADMBitstream *out, uint32_t size);

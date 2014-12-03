@@ -679,6 +679,7 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
 bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
+    bool closeCodec=false;
         
     // duplicate
     int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
@@ -705,12 +706,13 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
     ADM_info("Codec created\n");
-    ctx=avcodec_alloc_context();
-   if (avcodec_open(ctx, codec) < 0)  
+    ctx=avcodec_alloc_context3(codec);
+   if (avcodec_open2(ctx, codec, NULL) < 0)  
    {
         ADM_error("cannot create h264 context\n");
         goto theEnd;
     }
+
     ADM_info("Context created\n");
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
@@ -754,6 +756,7 @@ theEnd:
     if(ctx)
     {
         avcodec_close(ctx);
+
         av_free(ctx);
     }
     if(parser)

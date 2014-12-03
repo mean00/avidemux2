@@ -66,10 +66,7 @@ static const dvProfileClass  *findProfile(int width, int height,int fps)
     return NULL;
 }
 
-/**
-    \fn setup
-*/
-bool ADM_ffDvEncoder::setup(void)
+bool ADM_ffDvEncoder::configureContext(void)
 {
    double frameIn=this->getFrameIncrement();
    frameIn=1/frameIn;
@@ -86,6 +83,15 @@ bool ADM_ffDvEncoder::setup(void)
    {
        targetColorSpace=ADM_COLOR_YUV422P;
    }
+   
+   return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffDvEncoder::setup(void)
+{
    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_DVVIDEO))
         return false;
    return true;
@@ -128,8 +134,8 @@ again:
     if(!q) q=2;
    
     
-    _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) <= 0)
+    _frame->reordered_opaque=image->Pts;
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) <= 0)
     {
         printf("[Dv] Error %d encoding video\n",sz);
         return false;

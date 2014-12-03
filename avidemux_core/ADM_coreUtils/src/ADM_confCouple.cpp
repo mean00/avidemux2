@@ -95,6 +95,24 @@ bool CONFcouple::writeAsFloat(const char *myname,float val)
 	cur++;
 	return 1;
 }
+
+bool CONFcouple::writeAsDouble(const char *myname,double val)
+{
+	ADM_assert(cur<nb);
+
+	name[cur]=strupDupeAsNew(myname);
+	sprintf(tmpstring,"%f",val);
+	value[cur]=strupDupeAsNew(tmpstring);
+        // make sure the decimal separator is a .
+        for(char * pos = value[cur]; *pos; ++pos)
+        {
+                if(*pos==',') {*pos='.'; break;}
+        }
+       
+	cur++;
+	return 1;
+}
+
 bool CONFcouple::writeAsInt32(const char *myname,int32_t val)
 {
 	ADM_assert(cur<nb);
@@ -238,6 +256,18 @@ bool CONFcouple::readAsFloat(const char *myname,float *val)
 	//sscanf(value[index],"%f",val);;
 	return 1;
 }
+
+bool CONFcouple::readAsDouble(const char *myname,double *val)
+{
+	int32_t index=lookupName(myname);
+
+	ADM_assert(index!=-1);
+	ADM_assert(index<(int)nb);
+        *val=safeAtoF(value[index]);
+	//sscanf(value[index],"%f",val);;
+	return 1;
+}
+
 /**
     \fn lookupName
     \brief Return index of name in the couples, -1 if not fount

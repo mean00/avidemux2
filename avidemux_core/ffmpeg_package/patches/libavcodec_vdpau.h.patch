@@ -1,11 +1,10 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/vdpau.h	2012-05-29 18:18:34 +1000
-+++ libavcodec/vdpau.h	2012-05-29 18:18:34 +1000
-@@ -72,7 +72,7 @@
-     VdpVideoSurface surface; ///< Used as rendered surface, never changed.
- 
+--- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/vdpau.h	2014-11-01 08:52:42 -0400
++++ libavcodec/vdpau.h	2014-11-21 02:24:01 -0500
+@@ -191,6 +191,7 @@
+
      int state; ///< Holds FF_VDPAU_STATE_* values.
--
+
 +    int refCount; /// Used by how many client
-     /** Describe size/location of the compressed video data.
-         Set to 0 when freeing bitstream_buffers. */
-     int bitstream_buffers_allocated;
+ #if AV_HAVE_INCOMPATIBLE_LIBAV_ABI
+     /** picture parameter information for all supported codecs */
+     union AVVDPAUPictureInfo info;

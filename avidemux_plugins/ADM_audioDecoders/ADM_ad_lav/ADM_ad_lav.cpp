@@ -34,7 +34,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
             }ADM_outputFlavor;
             
                 ADM_outputFlavor        outputFlavor;
-		void      *_contextVoid;
+		AVCodecContext          *_context;
 		uint8_t    _buffer[ ADMWA_BUF];
 		uint32_t   _tail,_head;
 		uint32_t   _blockalign;
@@ -80,8 +80,6 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 			"Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
 //********************************************************
 
-#define _context ((AVCodecContext *)_contextVoid)
-
 uint8_t scratchPad[SCRATCH_PAD_SIZE];
 /**
         \fn resetAfterSeek
@@ -102,58 +100,52 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
     _tail=_head=0;
     channels=info->channels;
-    _contextVoid=(void *)avcodec_alloc_context();
-    ADM_assert(_contextVoid);
-    // Fills in some values...
-    _context->codec_type=AVMEDIA_TYPE_AUDIO;
-    _context->sample_rate = info->frequency;
-    _context->channels = info->channels;
-    _blockalign=_context->block_align = info->blockalign;
-    _context->bit_rate = info->byterate*8;
+    _blockalign=0;
+    AVCodecID codecID = AV_CODEC_ID_NONE;
     outputFrequency=info->frequency;
     bool wantFloat=true;
     switch(fourcc)
     {
       case WAV_WMAPRO:
-        _context->codec_id = CODEC_ID_WMAPRO;
+        codecID = CODEC_ID_WMAPRO;
         break;
       case WAV_WMA:
-        _context->codec_id = CODEC_ID_WMAV2;
+        codecID = CODEC_ID_WMAV2;
         break;
       case WAV_QDM2:
-        _context->codec_id = CODEC_ID_QDM2;
+        codecID = CODEC_ID_QDM2;
         break;
       case WAV_AMV_ADPCM:
-        _context->codec_id = CODEC_ID_ADPCM_IMA_AMV;
+        codecID = CODEC_ID_ADPCM_IMA_AMV;
         _blockalign=1;
         break;
       case WAV_NELLYMOSER:
-        _context->codec_id = CODEC_ID_NELLYMOSER;
+        codecID = CODEC_ID_NELLYMOSER;
         _blockalign=1;
         break;
       case WAV_DTS:
-        _context->codec_id = CODEC_ID_DTS;
+        codecID = CODEC_ID_DTS;
         _blockalign = 1;
         break;
       case WAV_MP3:
-        _context->codec_id = CODEC_ID_MP3;
+        codecID = CODEC_ID_MP3;
         _blockalign = 1;
         break;
       case WAV_MP2:
-        _context->codec_id = CODEC_ID_MP2;
+        codecID = CODEC_ID_MP2;
         _blockalign = 1;
         break;
       case WAV_AC3:
-        _context->codec_id = CODEC_ID_AC3;
+        codecID = CODEC_ID_AC3;
         _blockalign = 1;
         break;
       case WAV_EAC3:
-        _context->codec_id = CODEC_ID_EAC3;
+        codecID = CODEC_ID_EAC3;
         _blockalign = 1;
         break;
       case WAV_AAC:
       case 0x706D:
-        _context->codec_id = CODEC_ID_AAC;
+        codecID = CODEC_ID_AAC;
         _blockalign = 1;
         break;
       default:
@@ -165,25 +157,37 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
         fmt=AV_SAMPLE_FMT_FLT;
     }
     
-        _context->sample_fmt=fmt;
-        _context->request_sample_fmt=fmt;
-    
+    AVCodec *codec=avcodec_find_decoder(codecID);
+    if(!codec) {ADM_assert(0);}
 
+    _context=avcodec_alloc_context3(codec);
+    ADM_assert(_context);
+
+    // Fills in some values...
+    _context->codec_type=AVMEDIA_TYPE_AUDIO;
+    _context->sample_rate = info->frequency;
+    _context->channels = info->channels;
+    _context->block_align = info->blockalign;
+    _context->bit_rate = info->byterate*8;
+    _context->sample_fmt=fmt;
+    _context->request_sample_fmt=fmt;
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;
+    _context->sample_fmt=AV_SAMPLE_FMT_FLT;
+
+    if (!_blockalign) {
+      _blockalign = _context->block_align;
+    }
+
     printf("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
     printf("\n");
 
-   AVCodec *codec=avcodec_find_decoder(_context->codec_id);
-   if(!codec) {ADM_assert(0);}
-
-    _context->sample_fmt=AV_SAMPLE_FMT_FLT;
-    if (avcodec_open(_context, codec) < 0)
+    if (avcodec_open2(_context, codec, NULL) < 0)
     {
          ADM_warning("[audioCodec] Cannot use float, retrying with int16 \n");
          _context->sample_fmt=AV_SAMPLE_FMT_S16;
-         if (avcodec_open(_context, codec) < 0)
+         if (avcodec_open2(_context, codec, NULL) < 0)
           {
               ADM_warning("[audioCodec] int16 failed also. Crashing.. \n");
               ADM_assert(0);
@@ -191,6 +195,7 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
           ADM_info("Decoder created using int16..\n");
          
     }
+
         switch(_context->sample_fmt)
         {
         case AV_SAMPLE_FMT_FLT:
@@ -233,7 +238,6 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
  {
         avcodec_close(_context);
         av_free(_context);
-        _contextVoid=NULL;
 }
 /**
     \fn decodeToS16

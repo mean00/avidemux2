@@ -44,6 +44,7 @@ const ffVideoCodec ffCodec[]=
   {"WVC1", CODEC_ID_VC1,        true, false,    true},
   {"WMVA", CODEC_ID_VC1,        true, false,    true},
   {"VP8 ", CODEC_ID_VP8,        true, false,    false},
+  {"VP9 ", AV_CODEC_ID_VP9,     true, false,    false},
   {"tscc", CODEC_ID_TSCC,       false,false,    false},
   {"CSCD", CODEC_ID_CSCD,       false,false,    false},
 
@@ -85,7 +86,7 @@ const ffVideoCodec *getCodecIdFromFourcc(uint32_t fcc)
     \fn ADM_codecIdFindByFourcc
     \brief get lav codec if from fourcc (used by muxer)
 */
-CodecID ADM_codecIdFindByFourcc(const char *fcc)
+AVCodecID ADM_codecIdFindByFourcc(const char *fcc)
 {
     uint32_t fid=fourCC::get((uint8_t *)fcc);
     // Special cases
@@ -100,6 +101,10 @@ CodecID ADM_codecIdFindByFourcc(const char *fcc)
   if (isH264Compatible (fid))
     {
         return CODEC_ID_H264;
+    }
+  if (isH265Compatible (fid))
+    {
+      return AV_CODEC_ID_HEVC;
     }
   if (isMpeg4Compatible (fid) == 1)
     {

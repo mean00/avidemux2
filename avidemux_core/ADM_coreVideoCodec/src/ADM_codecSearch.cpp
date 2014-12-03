@@ -78,7 +78,11 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
 #endif
             return (decoders *) (new decoderFFH264 (w,h,fcc,extraLen,extraData,bpp));
     }
-
+  
+  if (isH265Compatible (fcc))
+    {
+            return (decoders *) (new decoderFFH265 (w,h,fcc,extraLen,extraData,bpp));
+    }
 
 /*
 	Could be either divx5 packed crap or xvid or ffmpeg

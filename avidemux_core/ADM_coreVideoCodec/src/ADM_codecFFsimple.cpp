@@ -28,8 +28,16 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     hasBFrame=false;
     ADM_assert(c);
-    CodecID id=c->codecId;
+    
+    AVCodecID id=c->codecId;
+    AVCodec *codec=avcodec_find_decoder(id);
+    if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
+    codecId=id; 
     ADM_assert(id!=CODEC_ID_NONE);
+    
+    _context = avcodec_alloc_context3(codec);
+    ADM_assert(_context);
+    
     if(true==c->extraData)
     {
          _context->extradata = (uint8_t *) _extraDataCopy;
@@ -39,9 +47,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         _refCopy=1;
     if(true==c->hasBFrame)
         hasBFrame=true;
-    AVCodec *codec=avcodec_find_decoder(id);
-    if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
-    codecId=id; 
+
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
     _context->error_concealment=3; 
     // Hack
@@ -51,7 +57,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
          _context->bits_per_coded_sample = bpp;
     }
     //
-    if (avcodec_open(_context, codec) < 0)  
+    if (avcodec_open2(_context, codec, NULL) < 0)  
                       { 
                             printf("[lavc] Decoder init: %x video decoder failed!\n",fcc); 
                             GUI_Error_HIG("Codec","Internal error opening 0x%x",fcc); 
@@ -70,7 +76,7 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
 {
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     if(!c) return NULL;
-    CodecID id=c->codecId;
+    AVCodecID id=c->codecId;
     if(id==CODEC_ID_NONE) return NULL;
     return new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
 }

@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "1.2.7")
+set(FFMPEG_VERSION "2.4.3")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -19,17 +19,25 @@ set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
 set(FFMPEG_BINARY_DIR "${FFMPEG_BASE_DIR}/build")
 
-set(FFMPEG_DECODERS  aac ac3 eac3 adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  huffyuv  mjpeg
+set(FFMPEG_DECODERS  aac ac3 eac3 adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  hevc  huffyuv  mjpeg
 					 mjpegb  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3  msvideo1  nellymoser  png  qdm2  rawvideo  snow
 					 svq3  theora  tscc  mp2 mp3 mp2_float mp3_float
-					 vc1  vp3  vp6  vp6a  vp6f  vp8 wmapro wmav2  wmv1  wmv2  wmv3 cscd)
+					 vc1  vp3  vp6  vp6a  vp6f  vp8 vp9 wmapro wmav2  wmv1  wmv2  wmv3 cscd)
 set(FFMPEG_ENCODERS  ac3  ac3_float dvvideo  ffv1  ffvhuff  flv  h263  huffyuv  mjpeg  mp2  mpeg1video  mpeg2video  mpeg4  snow aac dca)
 set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp)
-set(FFMPEG_PARSERS  ac3  h263  h264  mpeg4video)
+set(FFMPEG_PARSERS  ac3  h263  h264  hevc  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
 xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
 xadd("--enable-swscale --disable-swresample")
+
+FIND_HEADER_AND_LIB(_X265 x265.h)
+FIND_HEADER_AND_LIB(_X265_CONFIG x265_config.h)
+
+IF (_X265_FOUND AND _X265_CONFIG_FOUND)
+	xadd("--enable-libx265")
+	message("adding --enable-libx265 to ffmpeg protocols")
+ENDIF (_X265_FOUND AND _X265_CONFIG_FOUND)
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
@@ -290,6 +298,7 @@ add_custom_command(OUTPUT
 # Add and install libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 include_directories("${FFMPEG_SOURCE_DIR}")
+include_directories("${FFMPEG_BINARY_DIR}")
 
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
 ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
@@ -314,11 +323,13 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavformat/version.h" 
 	"${FFMPEG_SOURCE_DIR}/libavformat/flv.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavformat")
 install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/buffer.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
-	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/intfloat_readwrite.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/frame.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/intfloat_readwrite.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
-	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/old_pix_fmts.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/macros.h" "${FFMPEG_SOURCE_DIR}/libavutil/old_pix_fmts.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/channel_layout.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/error.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/dict.h" 

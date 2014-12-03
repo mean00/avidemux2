@@ -234,7 +234,23 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
 
-    }else if(isMpeg12Compatible(_videostream.fccHandler))
+    }/*else if(isH265Compatible(_videostream.fccHandler))
+    {
+                
+                uint32_t flags=AVI_KEY_FRAME;
+                
+                if(rpt)
+                        memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+                parser->readBin(readBuffer+rpt,size-3);
+                extractH265FrameType(2,readBuffer,rpt+size-3,&flags); // Nal size is not used in that case
+                if(flags & AVI_KEY_FRAME)
+                {
+                    printf("[MKV/H265] Frame %"PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
+                }
+                ix.flags=flags;
+                if(Track->index.size()) ix.Dts=ADM_NO_PTS;
+
+    }*/else if(isMpeg12Compatible(_videostream.fccHandler))
     {
 
                 if(rpt)

@@ -40,11 +40,10 @@ ADM_ffFlv1Encoder::ADM_ffFlv1Encoder(ADM_coreVideoFilter *src,bool globalHeader)
 }
 
 /**
-    \fn setup
+    \fn pre-open
 */
-bool ADM_ffFlv1Encoder::setup(void)
+bool ADM_ffFlv1Encoder::configureContext(void)
 {
-    
     switch(Settings.params.mode)
     {
       case COMPRESS_2PASS:
@@ -66,6 +65,15 @@ bool ADM_ffFlv1Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
+    
+    return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffFlv1Encoder::setup(void)
+{
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_FLV1))
         return false;
 
@@ -111,7 +119,7 @@ again:
                         break; // Get Qz for this frame...
             }
       case COMPRESS_CQ:
-            _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
+            _frame->quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
             break;
       case COMPRESS_CBR:
             break;
@@ -120,10 +128,10 @@ again:
             return false;
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
+                                     _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
-    _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) <= 0)
+    _frame->reordered_opaque=image->Pts;
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) <= 0)
     {
         printf("[ffFlv1] Error %d encoding video\n",sz);
         return false;

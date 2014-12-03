@@ -45,19 +45,20 @@ ADM_coreVideoEncoderFFmpeg::ADM_coreVideoEncoderFFmpeg(ADM_coreVideoFilter *src,
                     : ADM_coreVideoEncoder(src)
 {
 uint32_t w,h;
-    if(set) memcpy(&Settings,set,sizeof(*set));
+_hasSettings=false;
+
+    if(set) {
+        memcpy(&Settings,set,sizeof(*set));
+        _hasSettings=true;
+    }
+
     targetColorSpace=ADM_COLOR_YV12;
     w=getWidth();
     h=getHeight();
 
     image=new ADMImageDefault(w,h);
-    _context = avcodec_alloc_context2 (AVMEDIA_TYPE_VIDEO);
-    ADM_assert (_context);
-    memset (&_frame, 0, sizeof (_frame));
-    _frame.pts = AV_NOPTS_VALUE;
-    _context->width = w;
-    _context->height = h;
-    _context->strict_std_compliance = -1;
+    _frame=av_frame_alloc();
+    _frame->pts = AV_NOPTS_VALUE;
     rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
@@ -72,16 +73,11 @@ uint32_t w,h;
             inc*=2;
             ADM_warning("It is probably field encoded, doubling increment\n");
      }
-     if(LAVS(max_b_frames))
+     if(_hasSettings && LAVS(max_b_frames))
             encoderDelay=inc*2;
      else
             encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
-    if(_globalHeader)
-    {
-                ADM_info("Codec configured to use global header\n");
-                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
-    }
 
 }
 /**
@@ -97,11 +93,19 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
           printf ("[lavc] killing threads\n");
           _isMT = false;
         }
-        if(_context->codec)
-        avcodec_close (_context);
+
+        avcodec_close(_context);
+
         av_free (_context);
         _context = NULL;
     }
+    
+    if (_frame)
+    {
+        av_frame_free(&_frame);
+        _frame=NULL;
+    }
+    
     if(colorSpace)
     {
         delete colorSpace;
@@ -126,17 +130,17 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 
   switch(targetColorSpace)
     {
-        case ADM_COLOR_YV12:    _frame.linesize[0] = img->GetPitch(PLANAR_Y);
-                                _frame.linesize[1] = img->GetPitch(PLANAR_U);
-                                _frame.linesize[2] = img->GetPitch(PLANAR_V);
+        case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
+                                _frame->linesize[1] = img->GetPitch(PLANAR_U);
+                                _frame->linesize[2] = img->GetPitch(PLANAR_V);
                                 _context->pix_fmt =PIX_FMT_YUV420P;break;
-        case ADM_COLOR_YUV422P: _frame.linesize[0] = w;
-                                _frame.linesize[1] = w>>1;
-                                _frame.linesize[2] = w>>1;
+        case ADM_COLOR_YUV422P: _frame->linesize[0] = w;
+                                _frame->linesize[1] = w>>1;
+                                _frame->linesize[2] = w>>1;
                                 _context->pix_fmt =PIX_FMT_YUV422P;break;
-        case ADM_COLOR_RGB32A : _frame.linesize[0] = w*4;
-                                _frame.linesize[1] = 0;//w >> 1;
-                                _frame.linesize[2] = 0;//w >> 1;
+        case ADM_COLOR_RGB32A : _frame->linesize[0] = w*4;
+                                _frame->linesize[1] = 0;//w >> 1;
+                                _frame->linesize[2] = 0;//w >> 1;
                                 _context->pix_fmt =PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
@@ -204,23 +208,23 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     queueOfDts.push_back(p);
     aprintf("Incoming frame PTS=%"PRIu64", delay=%"PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
-    _frame.pts= timingToLav(p);    //
-    if(!_frame.pts) _frame.pts=AV_NOPTS_VALUE;
+    _frame->pts= timingToLav(p);    //
+    if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
-    map.internalTS=_frame.pts;
+    map.internalTS=_frame->pts;
     mapper.push_back(map);
 
     aprintf("Codec> incoming pts=%"PRIu64"\n",image->Pts);
-    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame.pts,image->Pts,_context->time_base.num,_context->time_base.den);
+    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
     {
         case ADM_COLOR_YV12:
-                _frame.data[0] = image->GetWritePtr(PLANAR_Y);
-                _frame.data[2] = image->GetWritePtr(PLANAR_U);
-                _frame.data[1] = image->GetWritePtr(PLANAR_V);
+                _frame->data[0] = image->GetWritePtr(PLANAR_Y);
+                _frame->data[2] = image->GetWritePtr(PLANAR_U);
+                _frame->data[1] = image->GetWritePtr(PLANAR_V);
                 break;
 
         case ADM_COLOR_YUV422P:
@@ -233,9 +237,9 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbByteBuffer.at(0);
-                _frame.data[2] = rgbByteBuffer.at(0)+(w*h);
-                _frame.data[1] = rgbByteBuffer.at(0)+(w*h*3)/2;
+                _frame->data[0] = rgbByteBuffer.at(0);
+                _frame->data[2] = rgbByteBuffer.at(0)+(w*h);
+                _frame->data[1] = rgbByteBuffer.at(0)+(w*h*3)/2;
                 break;
         }
         case ADM_COLOR_RGB32A:
@@ -244,20 +248,30 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
                     printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
                     return false;
                 }
-                _frame.data[0] = rgbByteBuffer.at(0);
-                _frame.data[2] = NULL;
-                _frame.data[1] = NULL;
+                _frame->data[0] = rgbByteBuffer.at(0);
+                _frame->data[2] = NULL;
+                _frame->data[1] = NULL;
                 break;
         default:
                 ADM_assert(0);
     }
     return true;
 }
+
+/**
+    \fn configure-context
+    \brief To be overriden in classes which need to preform operations to the context prior to opening the codec.
+*/
+bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
+{
+    return true;
+}
+
 /**
     \fn setup
     \brief put flags before calling setup!
 */
-bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
+bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
 {
     int res;
     AVCodec *codec=avcodec_find_encoder(codecId);
@@ -266,13 +280,30 @@ bool ADM_coreVideoEncoderFFmpeg::setup(CodecID codecId)
         printf("[ff] Cannot find codec\n");
         return false;
     }
+
+    _context = avcodec_alloc_context3 (codec);
+    ADM_assert (_context);
+    _context->width = getWidth();
+    _context->height = getHeight();
+    _context->strict_std_compliance = -1;
+
+    if(_globalHeader)
+    {
+                ADM_info("Codec configured to use global header\n");
+                _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
+    }
    prolog(image);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
-   if(LAVS(MultiThreaded))
+   if(_hasSettings && LAVS(MultiThreaded))
     {
         encoderMT();
     }
-   res=avcodec_open(_context, codec);
+
+   if(!configureContext()) {
+     return false;
+   }
+
+   res=avcodec_open2(_context, codec, NULL);
    if(res<0)
     {   printf("[ff] Cannot open codec\n");
         return false;
@@ -381,7 +412,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 
     // Update quant
     if(!_context->coded_frame->quality)
-      out->out_quantizer=(int) floor (_frame.quality / (float) FF_QP2LAMBDA);
+      out->out_quantizer=(int) floor (_frame->quality / (float) FF_QP2LAMBDA);
     else
       out->out_quantizer =(int) floor (_context->coded_frame->quality / (float) FF_QP2LAMBDA);
 
@@ -406,8 +437,7 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
 	  //_context->gop_size = 250;
 
 #define SETX(x) _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);
-#define SETX_COND(x) if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %d\n",set->lavcSettings.x);} else\
-		{ printf(#x" is not activated\n");}
+
       SETX (me_method);
       SETX (qmin);
       SETX (qmax);
@@ -415,11 +445,8 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
       SETX (mpeg_quant);
       SETX (max_qdiff);
       SETX (gop_size);
-      SETX_COND (luma_elim_threshold);
-      SETX_COND (chroma_elim_threshold);
 
 #undef SETX
-#undef SETX_COND
 
 #define SETX(x)  _context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);
 #define SETX_COND(x)  if(set->lavcSettings.is_##x) {_context->x=set->lavcSettings.x; printf("[LAVCODEC]"#x" : %f\n",set->lavcSettings.x);} else  \

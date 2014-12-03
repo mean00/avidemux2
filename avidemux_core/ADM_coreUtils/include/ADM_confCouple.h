@@ -38,6 +38,7 @@ static      CONFcouple *duplicate(CONFcouple *source);
 			bool writeAsInt32(const char *name,int32_t value);
 			bool writeAsString(const char *name,const char *value);
 			bool writeAsFloat(const char *name,float value);
+			bool writeAsDouble(const char *name,double value);
             bool writeAsBool(const char *name,bool value);
 			
 
@@ -46,6 +47,7 @@ static      CONFcouple *duplicate(CONFcouple *source);
 			bool readAsInt32(const char *name,int32_t *value);
 			bool readAsString(const char *name,char **value);
 			bool readAsFloat(const char *name,float *value);
+			bool readAsDouble(const char *name,double *value);
             bool readAsBool(const char *name,bool *value);
 
             bool exist(const char *name);

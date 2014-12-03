@@ -40,9 +40,9 @@ ADM_ffMpeg4Encoder::ADM_ffMpeg4Encoder(ADM_coreVideoFilter *src,bool globalHeade
 }
 
 /**
-    \fn setup
+    \fn pre-open
 */
-bool ADM_ffMpeg4Encoder::setup(void)
+bool ADM_ffMpeg4Encoder::configureContext(void)
 {
 
     switch(Settings.params.mode)
@@ -67,6 +67,16 @@ bool ADM_ffMpeg4Encoder::setup(void)
             return false;
     }
     presetContext(&Settings);
+    
+    return true;
+}
+
+/**
+    \fn setup
+*/
+bool ADM_ffMpeg4Encoder::setup(void)
+{
+
     if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
         return false;
 
@@ -111,11 +121,11 @@ again:
     {
       case COMPRESS_SAME:
                 // Keep same frame type & same Qz as the incoming frame...
-            _frame.quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
+            _frame->quality = (int) floor (FF_QP2LAMBDA * q+ 0.5);
 
-            if(image->flags & AVI_KEY_FRAME)    _frame.pict_type = AV_PICTURE_TYPE_I;
-            else if(image->flags & AVI_B_FRAME) _frame.pict_type = AV_PICTURE_TYPE_B;
-            else                                _frame.pict_type = AV_PICTURE_TYPE_P;
+            if(image->flags & AVI_KEY_FRAME)    _frame->pict_type = AV_PICTURE_TYPE_I;
+            else if(image->flags & AVI_B_FRAME) _frame->pict_type = AV_PICTURE_TYPE_B;
+            else                                _frame->pict_type = AV_PICTURE_TYPE_P;
 
             break;
       case COMPRESS_2PASS:
@@ -128,7 +138,7 @@ again:
                         break; // Get Qz for this frame...
             }
       case COMPRESS_CQ:
-            _frame.quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
+            _frame->quality = (int) floor (FF_QP2LAMBDA * Settings.params.qz+ 0.5);
             break;
       case COMPRESS_CBR:
             break;
@@ -137,10 +147,10 @@ again:
             return false;
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
-                                     _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);
+                                     _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
 
-    _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    _frame->reordered_opaque=image->Pts;
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
     {
         printf("[ffmpeg4] Error %d encoding video\n",sz);
         return false;

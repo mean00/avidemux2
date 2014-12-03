@@ -74,7 +74,6 @@ SET(${ADM_LIB}_SRCS
 	./src/mp4file.cpp
 	./src/mp4file_io.cpp
 	./src/mp4info.cpp
-	#./src/mp4meta.cpp
 	./src/mp4property.cpp
 	./src/mp4track.cpp
 	./src/mp4util.cpp

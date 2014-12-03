@@ -39,15 +39,46 @@ typedef struct
 
 #define VDPAU ((vdpauContext *)vdpau)
 
+#define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
 
 #define WRAP_Open_Template(funcz,argz,display,codecid) \
 {\
 AVCodec *codec=funcz(argz);\
 if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"display));ADM_assert(0);} \
   codecId=codecid; \
+  _context = avcodec_alloc_context3 (codec);\
+  ADM_assert (_context);\
+  _context->max_b_frames = 0;\
+  _context->width = _w;\
+  _context->height = _h;\
+  _context->pix_fmt = PIX_FMT_YUV420P;\
+  _context->debug_mv |= FF_SHOW;\
+  _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;\
+  _context->opaque          = this;\
+  _context->get_buffer      = ADM_VDPAUgetBuffer;\
+  _context->release_buffer  = ADM_VDPAUreleaseBuffer;\
+  _context->draw_horiz_band = draw;\
+  _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;\
+  _context->extradata = (uint8_t *) _extraDataCopy;\
+  _context->extradata_size  = (int) extraDataLen;\
+  _context->get_format      = vdpauGetFormat;\
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
-  if (avcodec_open(_context, codec) < 0)  \
+  if (_setBpp) {\
+    _context->bits_per_coded_sample = _bpp;\
+  }\
+  if (_setFcc) {\
+    _context->codec_tag=_fcc;\
+    _context->stream_codec_tag=_fcc;\
+  }\
+  if (_extraDataCopy) {\
+    _context->extradata = _extraDataCopy;\
+    _context->extradata_size = _extraDataLen;\
+  }\
+  if (_usingMT) {\
+    _context->thread_count = _threads;\
+  }\
+  if (avcodec_open2(_context, codec, NULL) < 0)  \
                       { \
                                         printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
                                         GUI_Error_HIG("Codec","Internal error opening "display); \

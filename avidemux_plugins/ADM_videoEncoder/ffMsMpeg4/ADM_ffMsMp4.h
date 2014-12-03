@@ -36,6 +36,7 @@ public:
 
                            ADM_ffMsMp4Encoder(ADM_coreVideoFilter *src,bool globalHeader);
 virtual                    ~ADM_ffMsMp4Encoder();
+virtual        bool        configureContext(void);
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "DIV3";}

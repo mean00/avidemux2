@@ -157,7 +157,7 @@ static bool setAvCodec(AVCodecContext *c,enum AVCodecID id)
 bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 {
     audioDelay=stream->getVideoDelay();
-    video_st = av_new_stream(oc, 0);
+    video_st = avformat_new_stream(oc, NULL);
 	if (!video_st)
 	{
 		printf("[FF] new stream failed\n");
@@ -200,7 +200,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 }
         }else
         {
-                if(isH264Compatible(fcc))
+                if(isH264Compatible(fcc) || isH265Compatible(fcc))
                 {
                         if(stream->providePts()==true)
                         {
@@ -212,8 +212,14 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                             c->has_b_frames=0; // No PTS=cannot handle CTS...
                             c->max_b_frames=0;
                         }
-                        c->codec_id = CODEC_ID_H264;
-                         setAvCodec(c,CODEC_ID_H264);
+                        
+                        if(isH265Compatible(fcc)) {
+                            c->codec_id = AV_CODEC_ID_HEVC;
+                             setAvCodec(c,AV_CODEC_ID_HEVC);
+                        } else {
+                            c->codec_id = CODEC_ID_H264;
+                             setAvCodec(c,CODEC_ID_H264);
+                        }
                 }
                 else
                 {
@@ -258,7 +264,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                             {
                                                 uint32_t id=stream->getFCC();
 
-                                                CodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
+                                                AVCodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
                                                 if(cid==CODEC_ID_NONE)
                                                 {
                                                     printf("[FF] Unknown video codec\n");
@@ -305,7 +311,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
 
           audio[i]->getExtraData(&audioextraSize,&audioextraData);
 
-          audio_st[i] = av_new_stream(oc, 1+i);
+          audio_st[i] = avformat_new_stream(oc, NULL);
           if (!audio_st[i])
           {
                   printf("[FF]: new stream failed (audio)\n");

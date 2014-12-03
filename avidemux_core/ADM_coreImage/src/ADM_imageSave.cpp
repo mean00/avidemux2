@@ -149,24 +149,33 @@ bool  ADMImage::saveAsJpg(const char *filename)
 {
 
 AVCodecContext   *context=NULL;   
-AVFrame          frame;     
+AVFrame          *frame=NULL;
 bool             result=false;
 AVCodec          *codec=NULL;
 int              sz=0,r=0;
 ADM_byteBuffer   byteBuffer;
 
-    context=avcodec_alloc_context();
-    if(!context) 
+    frame=av_frame_alloc();
+    if(!frame)
     {
-        printf("[saveAsJpg] Cannot allocate context\n");
-        return false;
+        printf("[saveAsJpg] Cannot allocate frame\n");
+        goto  jpgCleanup;
     }
+
     codec=avcodec_find_encoder(CODEC_ID_MJPEG);
     if(!codec)
     {
         printf("[saveAsJpg] Cannot allocate codec\n");
-        goto jpgCleanup;
+        goto  jpgCleanup;
     }
+
+    context=avcodec_alloc_context3(codec);
+    if(!context) 
+    {
+        printf("[saveAsJpg] Cannot allocate context\n");
+        goto  jpgCleanup;
+    }
+
     context->pix_fmt =PIX_FMT_YUV420P;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
@@ -174,7 +183,7 @@ ADM_byteBuffer   byteBuffer;
     context->width=_width;
     context->height=_height;
     context->flags |= CODEC_FLAG_QSCALE;
-    r=avcodec_open(context, codec); 
+    r=avcodec_open2(context, codec, NULL); 
     if(r<0)
     {
         printf("[saveAsJpg] Cannot mix codec and context\n");
@@ -184,23 +193,23 @@ ADM_byteBuffer   byteBuffer;
     // Setup our image & stuff....
         
 
-        frame.linesize[0] = GetPitch(PLANAR_Y); 
-        frame.linesize[1] = GetPitch(PLANAR_U); 
-        frame.linesize[2] = GetPitch(PLANAR_V); 
+        frame->linesize[0] = GetPitch(PLANAR_Y); 
+        frame->linesize[1] = GetPitch(PLANAR_U); 
+        frame->linesize[2] = GetPitch(PLANAR_V); 
         
-        frame.data[0] = GetWritePtr(PLANAR_Y);
-        frame.data[2] = GetWritePtr(PLANAR_U);
-        frame.data[1] = GetWritePtr(PLANAR_V);
+        frame->data[0] = GetWritePtr(PLANAR_Y);
+        frame->data[2] = GetWritePtr(PLANAR_U);
+        frame->data[1] = GetWritePtr(PLANAR_V);
     // Grab a temp buffer
     
     // Encode!
      
-      frame.quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
+      frame->quality = (int) floor (FF_QP2LAMBDA * 2+ 0.5);
 
       byteBuffer.setSize(_width*_height*4);
 	  
 
-        if ((sz = avcodec_encode_video (context, byteBuffer.at(0), _width*_height*4, &frame)) < 0)
+        if ((sz = avcodec_encode_video (context, byteBuffer.at(0), _width*_height*4, frame)) < 0)
         {
             printf("[jpeg] Error %d encoding video\n",sz);
             goto  jpgCleanup;
@@ -226,8 +235,20 @@ jpgCleanup:
     {
         avcodec_close (context);
         av_free (context);
+        context=NULL;
     }
 
-    context=NULL;
+    if(codec)
+    {
+        delete codec;
+        codec=NULL;
+    }
+
+    if(frame)
+    {
+        av_frame_free(&frame);
+        frame=NULL;
+    }
+
     return result;
 }

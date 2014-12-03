@@ -1,18 +1,18 @@
---- libavcodec/mpeg12enc.c.org	2013-02-09 15:07:32.870660318 +0100
-+++ libavcodec/mpeg12enc.c	2013-02-09 15:05:13.658658493 +0100
-@@ -245,7 +245,7 @@
+--- libavcodec/mpeg12enc.c.orig		2014-11-01 21:47:34.000000000 -0400
++++ libavcodec/mpeg12enc.c		2014-11-28 01:57:48.057727418 -0500
+@@ -254,7 +254,7 @@
  
-             put_sbits(&s->pb, 12, s->width  & 0xFFF);
-             put_sbits(&s->pb, 12, s->height & 0xFFF);
+         put_sbits(&s->pb, 12, s->width  & 0xFFF);
+         put_sbits(&s->pb, 12, s->height & 0xFFF);
 -
 +#if 0 // MEANX
-             for(i=1; i<15; i++){
-                 float error= aspect_ratio;
-                 if(s->codec_id == AV_CODEC_ID_MPEG1VIDEO || i <=1)
-@@ -260,12 +260,41 @@
-                     s->aspect_ratio_info= i;
-                 }
+         for (i = 1; i < 15; i++) {
+             int64_t error = aspect_ratio.num * (1LL<<32) / aspect_ratio.den;
+             if (s->codec_id == AV_CODEC_ID_MPEG1VIDEO || i <= 1)
+@@ -269,12 +269,41 @@
+                 s->aspect_ratio_info = i;
              }
+         }
 +#endif // MEANX
 +            // MEANX put_bits(&s->pb, 4, s->aspect_ratio_info);
 +            // MEANX put_bits(&s->pb, 4, s->frame_rate_index);
@@ -48,19 +48,19 @@
 +            {
 +                vbv_buffer_size = s->avctx->rc_buffer_size_header;
  
--            put_bits(&s->pb, 4, s->aspect_ratio_info);
--            put_bits(&s->pb, 4, s->frame_rate_index);
+-        put_bits(&s->pb, 4, s->aspect_ratio_info);
+-        put_bits(&s->pb, 4, s->frame_rate_index);
 -
--            if(s->avctx->rc_max_rate){
--                v = (s->avctx->rc_max_rate + 399) / 400;
-                 if (v > 0x3ffff && s->codec_id == AV_CODEC_ID_MPEG1VIDEO)
-                     v = 0x3ffff;
-             }else{
-@@ -307,7 +336,19 @@
-                 put_bits(&s->pb, 3, s->avctx->profile); //profile
-                 put_bits(&s->pb, 4, s->avctx->level); //level
+-        if (s->avctx->rc_max_rate) {
+-            v = (s->avctx->rc_max_rate + 399) / 400;
+             if (v > 0x3ffff && s->codec_id == AV_CODEC_ID_MPEG1VIDEO)
+                 v = 0x3ffff;
+         } else {
+@@ -324,7 +353,19 @@
+             put_bits(&s->pb, 3, s->avctx->profile); // profile
+             put_bits(&s->pb, 4, s->avctx->level);   // level
  
--                put_bits(&s->pb, 1, s->progressive_sequence);
+-            put_bits(&s->pb, 1, s->progressive_sequence);
 +   // MEANX pulldown put_bits(&s->pb, 1, s->progressive_sequence);
 +  // MEANX Pulldown
 + if(s->flags2 & CODEC_FLAG2_32_PULLDOWN) //MEANX
@@ -74,21 +74,21 @@
 +
 +
 +// MEANX                 put_bits(&s->pb, 1, s->progressive_sequence);
-                 put_bits(&s->pb, 2, s->chroma_format);
-                 put_bits(&s->pb, 2, s->width >>12);
-                 put_bits(&s->pb, 2, s->height>>12);
-@@ -372,6 +413,7 @@
+             put_bits(&s->pb, 2, s->chroma_format);
+             put_bits(&s->pb, 2, s->width  >> 12);
+             put_bits(&s->pb, 2, s->height >> 12);
+@@ -425,6 +466,7 @@
  
  void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
-+    int tff,rff; //MEANX
++    int tff, rff; //MEANX
+     AVFrameSideData *side_data;
      mpeg1_encode_sequence_header(s);
  
-     /* mpeg1 picture header */
-@@ -408,6 +450,46 @@
+@@ -463,6 +505,46 @@
  
      s->frame_pred_frame_dct = 1;
-     if(s->codec_id == AV_CODEC_ID_MPEG2VIDEO){
+     if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
 +// MEANX
 +        if(s->flags2 & CODEC_FLAG2_32_PULLDOWN)
 +        {
@@ -122,7 +122,7 @@
 +                        tff=0; /* no repeat */
 +                } else 
 +                {
-+                        tff=s->current_picture_ptr->f.top_field_first;
++                        tff=s->current_picture_ptr->f->top_field_first;
 +                }
 +                rff=s->repeat_first_field;
 +        
@@ -130,31 +130,30 @@
 +
 +// /MEANX
          put_header(s, EXT_START_CODE);
-         put_bits(&s->pb, 4, 8); //pic ext
-         if (s->pict_type == AV_PICTURE_TYPE_P || s->pict_type == AV_PICTURE_TYPE_B) {
-@@ -426,11 +508,15 @@
+         put_bits(&s->pb, 4, 8);                 /* pic ext */
+         if (s->pict_type == AV_PICTURE_TYPE_P ||
+@@ -482,10 +564,14 @@
  
          av_assert0(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
 +#if 0 // MEANX
-         if (s->progressive_sequence) {
-             put_bits(&s->pb, 1, 0); /* no repeat */
-         } else {
-             put_bits(&s->pb, 1, s->current_picture_ptr->f.top_field_first);
-         }
+         if (s->progressive_sequence)
+             put_bits(&s->pb, 1, 0);             /* no repeat */
+         else
+             put_bits(&s->pb, 1, s->current_picture_ptr->f->top_field_first);
 +#endif // MEANX
 +        put_bits(&s->pb, 1, tff);  //MEANX PULLDOWN
 +
-         /* XXX: optimize the generation of this flag with entropy
-            measures */
+         /* XXX: optimize the generation of this flag with entropy measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
-@@ -440,7 +526,8 @@
+ 
+@@ -494,7 +580,8 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);
 -        put_bits(&s->pb, 1, s->repeat_first_field);
-+        // MEANX put_bits(&s->pb, 1, s->repeat_first_field);
++        // MEANX put_bits(&s->pb, 1, s->top_field_first);
 +        put_bits(&s->pb, 1, rff); // MEANX
          s->progressive_frame = s->progressive_sequence;
-         put_bits(&s->pb, 1, s->chroma_format == CHROMA_420 ? s->progressive_frame : 0); /* chroma_420_type */
-         put_bits(&s->pb, 1, s->progressive_frame);
+         /* chroma_420_type */
+         put_bits(&s->pb, 1, s->chroma_format ==

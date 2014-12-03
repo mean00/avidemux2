@@ -38,7 +38,7 @@ ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 */
 bool ADM_huffEncoder::setup(void)
 {
-    CodecID id=CODEC_ID_HUFFYUV;
+    AVCodecID id=CODEC_ID_HUFFYUV;
     if(huffType.encoderType==ADM_FF_HUFF_YUV) id=CODEC_ID_FFVHUFF;
     return ADM_coreVideoEncoderFFmpeg::setup(id);
 }
@@ -78,7 +78,7 @@ bool         ADM_huffEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
     int sz=0;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) < 0)
+    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
     {
         printf("[huff] Error %d encoding video\n",sz);
         return false;
