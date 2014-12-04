@@ -1,8 +1,8 @@
---- libavcodec/h264_parser.c.old	2012-10-08 09:23:37.457962360 +0200
-+++ libavcodec/h264_parser.c	2012-10-08 09:25:16.417963657 +0200
-@@ -31,6 +31,68 @@
- #include "h264data.h"
- #include "golomb.h"
+--- libavcodec/h264_parser.c.orig	2014-12-04 19:30:32.778317809 +0100
++++ libavcodec/h264_parser.c	2014-12-04 19:23:17.358322228 +0100
+@@ -34,6 +34,88 @@
+ #include "internal.h"
+ #include "mpegutils.h"
  
 +#include "ff_spsinfo.h" // MEANX
 +#include <assert.h>
@@ -11,21 +11,41 @@
 +/**
 +    \fn AVCodecParserContext
 +*/
++/// find a valid sps
++static SPS *findValidSPS(H264Context *ctx)
++{
++    if(ctx->sps.mb_width!=0) return &(ctx->sps);
++    for(int i=0;i<MAX_SPS_COUNT;i++)
++    {
++        SPS *s=ctx->sps_buffers[i];
++        if(!s) continue;
++        if(!s->mb_width || !s->mb_height) continue;
++        return s;
++    }
++    return NULL;
++}
 +int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
 +{
 +    H264Context *ctx = parser->priv_data;
-+    int f;
++    int f;   
++    SPS *sps;
++    
++    
++    
 +    memset(info,0,sizeof(*info));
-+    if(!ctx->sps.mb_width || !ctx->sps.mb_height)
++    sps=findValidSPS(ctx);
++    
++    
++    if(!sps)
 +    {
 +        return 0;
 +    }
-+    info->width=ctx->sps.mb_width  * 16;
-+    info->height=(2-ctx->sps.frame_mbs_only_flag)*ctx->sps.mb_height * 16;
-+    if(ctx->sps.timing_info_present_flag)
++    info->width=sps->mb_width  * 16;
++    info->height=(2-sps->frame_mbs_only_flag)*sps->mb_height * 16;
++    if(sps->timing_info_present_flag)
 +    {
-+            float scale=ctx->sps.time_scale ;
-+            float ticks=ctx->sps.num_units_in_tick;
++            float scale=sps->time_scale ;
++            float ticks=sps->num_units_in_tick;
 +            info->fps1000 =  (uint32_t) ((scale/ticks) *    1000.);
 +#undef printf
 +            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
@@ -36,30 +56,30 @@
 +    }
 +    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
 +    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
-+    f=ctx->sps.nal_hrd_parameters_present_flag | ctx->sps.vcl_hrd_parameters_present_flag;
-+    info->hasStructInfo=f | ctx->sps.pic_struct_present_flag;;
++    f=sps->nal_hrd_parameters_present_flag | sps->vcl_hrd_parameters_present_flag;
++    info->hasStructInfo=f | sps->pic_struct_present_flag;;
 +    // While decoding SEI, if CpbDpbDelaysPresentFlags is there we skip cpb_removal_delay + dpb_output_delay
 +
 +    info->CpbDpbToSkip=0;
 +    if(f)
 +    {
-+        info->CpbDpbToSkip=ctx->sps.cpb_removal_delay_length+ctx->sps.dpb_output_delay_length;
++        info->CpbDpbToSkip=sps->cpb_removal_delay_length+sps->dpb_output_delay_length;
 +    }
 +#warning fixme sar vs dar
-+    info->darNum=ctx->sps.sar.num;
-+    info->darDen=ctx->sps.sar.den;
++    info->darNum=sps->sar.num;
++    info->darDen=sps->sar.den;
 +/* */
-+    printf("Crop L: %d\n",(int)ctx->sps.crop_left);
-+    printf("Crop R: %d\n",(int)ctx->sps.crop_right);
-+    printf("Crop T: %d\n",(int)ctx->sps.crop_top);
-+    printf("Crop B: %d\n",(int)ctx->sps.crop_bottom);
-+    if(ctx->sps.crop_bottom)
++    printf("Crop L: %d\n",(int)sps->crop_left);
++    printf("Crop R: %d\n",(int)sps->crop_right);
++    printf("Crop T: %d\n",(int)sps->crop_top);
++    printf("Crop B: %d\n",(int)sps->crop_bottom);
++    if(sps->crop_bottom)
 +    {
 +         int mul=4;
 +         printf("Taking crop bottom into account\n");
-+         if(ctx->sps.frame_mbs_only_flag)
++         if(sps->frame_mbs_only_flag)
 +              mul=2;
-+         info->height-=ctx->sps.crop_bottom*mul;
++         info->height-=sps->crop_bottom*mul;
 +
 +    }
 +    return 1;
@@ -67,5 +87,5 @@
 +// /MEANX
 +
  
- static int ff_h264_find_frame_end(H264Context *h, const uint8_t *buf, int buf_size)
- {
+ static int h264_find_frame_end(H264Context *h, const uint8_t *buf,
+                                int buf_size)
