@@ -40,6 +40,8 @@ double psy_rd;
 bool fast_pskip;
 bool dct_decimate;
 uint32_t noise_reduction;
+uint32_t noise_reduction_intra;
+uint32_t noise_reduction_inter;
 struct  {
 	uint32_t rc_method;
 	uint32_t qp_constant;

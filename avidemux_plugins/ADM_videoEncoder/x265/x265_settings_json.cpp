@@ -43,6 +43,8 @@ json.addDouble("psy_rd",key->psy_rd);
 json.addBool("fast_pskip",key->fast_pskip);
 json.addBool("dct_decimate",key->dct_decimate);
 json.addUint32("noise_reduction",key->noise_reduction);
+json.addUint32("noise_reduction_intra",key->noise_reduction_intra);
+json.addUint32("noise_reduction_inter",key->noise_reduction_inter);
 json.addNode("ratecontrol");
 json.addUint32("rc_method",key->ratecontrol.rc_method);
 json.addUint32("qp_constant",key->ratecontrol.qp_constant);

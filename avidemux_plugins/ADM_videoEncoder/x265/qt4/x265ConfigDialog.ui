@@ -98,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1840,7 +1840,7 @@
               <item>
                <widget class="QSpinBox" name="noiseReductionSpinBox">
                 <property name="maximum">
-                 <number>65536</number>
+                 <number>1000</number>
                 </property>
                </widget>
               </item>
@@ -1853,6 +1853,58 @@
                  <size>
                   <width>13</width>
                   <height>13</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <item>
+               <widget class="QLabel" name="label_15">
+                <property name="text">
+                 <string>Noise Reduction Intra:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="noiseReductionIntraSpinBox">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>Noise Reduction Inter:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="noiseReductionInterSpinBox">
+                <property name="maximum">
+                 <number>2000</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>

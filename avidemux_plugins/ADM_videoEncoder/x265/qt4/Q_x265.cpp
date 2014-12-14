@@ -271,7 +271,6 @@ bool x265Dialog::upload(void)
           MK_CHECKBOX(weightedPredictCheckBox,weighted_bipred);
           MK_CHECKBOX(trellisCheckBox,trellis);
           MK_UINT(psychoRdoSpinBox,psy_rd);
-          MK_UINT(noiseReductionSpinBox,noise_reduction);
           if(myCopy.trellis)
           {
                 ui.trellisComboBox->setCurrentIndex(myCopy.trellis-1);
@@ -409,6 +408,16 @@ bool x265Dialog::upload(void)
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
 	}
 
+#if X265_BUILD >= 40
+    DISABLE(noiseReductionSpinBox);
+    MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
+    MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
+#else
+    DISABLE(noiseReductionIntraSpinBox);
+    DISABLE(noiseReductionInterSpinBox);
+    MK_UINT(noiseReductionSpinBox,noise_reduction);
+#endif
+        
 	      DISABLE(spsiComboBox);
 	      DISABLE(openGopCheckBox);
           DISABLE(groupBox_14); // quant matrix
@@ -492,7 +501,13 @@ bool x265Dialog::download(void)
           MK_UINT(mvRangeSpinBox,me_range);
 
           MK_UINT(psychoRdoSpinBox,psy_rd);
+          
+#if X265_BUILD >= 40
+          MK_UINT(noiseReductionIntraSpinBox,noise_reduction_intra);
+          MK_UINT(noiseReductionInterSpinBox,noise_reduction_inter);
+#else
           MK_UINT(noiseReductionSpinBox,noise_reduction);
+#endif
           
           MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
           MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);

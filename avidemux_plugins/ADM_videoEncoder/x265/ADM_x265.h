@@ -75,6 +75,8 @@ extern "C"
     true, /*    bool fast_pskip */ \
     true, /*    bool dct_decimate */ \
     0, /*    uint32_t noise_reduction */ \
+    0, /*    uint32_t noise_reduction_intra */ \
+    0, /*    uint32_t noise_reduction_inter */ \
 	{ /* Rate Control */ \
 	0,	/* uint32_t rc_method; */ \
 	0,	/* uint32_t qp_constant; */ \

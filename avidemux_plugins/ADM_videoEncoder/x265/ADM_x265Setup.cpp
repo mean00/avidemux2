@@ -198,7 +198,13 @@ bool x265Encoder::setup(void)
     MKPARAMB(bEnableEarlySkip,fast_pskip) 
     MKPARAMB(bEnableTSkipFast,dct_decimate) 
     MKPARAMD(psyRd,psy_rd)
+            
+#if X265_BUILD >= 40
+    MKPARAM (noiseReductionIntra,noise_reduction_intra)
+    MKPARAM (noiseReductionInter,noise_reduction_inter)
+#else
     MKPARAM (noiseReduction,noise_reduction)
+#endif
 
      //---------------- ratecontrol -------------------
   #undef MKPARAM
@@ -368,7 +374,14 @@ void dumpx265Setup(x265_param *param)
     PI(cbQpOffset);
     PI(crQpOffset);
     PI(bIntraInBFrames);
+    
+#if X265_BUILD >= 40
+    PI(noiseReductionIntra);
+    PI(noiseReductionInter);
+#else
     PI(noiseReduction);
+#endif
+    
     PI(bLossless);
     PI(bCULossless);
 

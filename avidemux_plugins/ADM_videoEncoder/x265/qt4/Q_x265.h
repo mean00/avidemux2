@@ -9,6 +9,11 @@
 #ifndef Q_X265_H
 #define Q_X265_H
 #include "ui_x265ConfigDialog.h"
+extern "C"
+{
+#include "x265.h"
+};
+
 /**
     \class x265Dialog
 */
