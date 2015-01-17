@@ -37,6 +37,7 @@
 #include "GUI_ui.h"
 #include "config.h"
 #include "ADM_preview.h"
+#include "DIA_defaultAskAvisynthPort.hxx"
 using namespace std;
 
 #ifdef USE_OPENGL

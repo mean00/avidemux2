@@ -1473,6 +1473,12 @@ int value;
     update=0; 
 }
 
+bool avisynthPortAsCommandLineArgument = false;
+bool A_getCommandLinePort(uint32_t &port) {
+	if (avisynthPortAsCommandLineArgument)
+		prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &port);
+	return avisynthPortAsCommandLineArgument;
+}
 void A_set_avisynth_port(char *port_number_as_text){
 	// somehow strtol seems to die with EAGAIN
 	int input_length = strlen(port_number_as_text);
@@ -1494,7 +1500,8 @@ void A_set_avisynth_port(char *port_number_as_text){
 		fflush(stderr);
 		exit(-1);
 	}
-	prefs->set(AVISYNTH_AVISYNTH_LOCALPORT,portNumber );
+	avisynthPortAsCommandLineArgument = true;
+	prefs->set(AVISYNTH_AVISYNTH_LOCALPORT, portNumber);
 }
 /**
  * \fn A_RunScript

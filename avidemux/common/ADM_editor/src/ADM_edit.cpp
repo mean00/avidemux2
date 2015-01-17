@@ -175,28 +175,42 @@ bool ADM_Composer::addFile (const char *name)
     }
 
 	// First find the demuxer....
-   	video._aviheader=ADM_demuxerSpawn(magic,name);
-    if(!video._aviheader)
-    {
-     char str[512+1];
-     snprintf(str,512,QT_TR_NOOP("Cannot find a demuxer for %s"), name);
-      str[512] = '\0';
-      GUI_Error_HIG(str,NULL);
-      return false;
-    }
+	video._aviheader=ADM_demuxerSpawn(magic,name);
+	if(!video._aviheader)
+	{
+		char str[512+1];
+		snprintf(str,512,QT_TR_NOOP("Cannot find a demuxer for %s"), name);
+		str[512] = '\0';
+		GUI_Error_HIG(str,NULL);
+		return false;
+	}
 
 	// use "file name" to share the port number (using little endian)
-    if(avisynth_used)
-    {
-    	uint32_t portValue;
-    	if(!prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &portValue) || portValue == 0)
+	if(avisynth_used)
+	{
+		uint32_t portValue = 0;
+		bool useCmdLine = A_getCommandLinePort(portValue);
+		if (!useCmdLine)
 			if(!prefs->get(AVISYNTH_AVISYNTH_DEFAULTPORT, &portValue))
 				portValue = 9999;
-    	uint8_t dummy[] = { portValue , portValue >> 8};
-    	ret = video._aviheader->open((char *)dummy);
-    }
-    else
-    	ret = video._aviheader->open(name);
+
+		bool askPortAvisynth = false;
+		prefs->get(AVISYNTH_AVISYNTH_ALWAYS_ASK, &askPortAvisynth);
+		if(askPortAvisynth)
+		{
+			uint32_t localPort = 0;
+			if (useCmdLine || !prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &localPort) || localPort == 0)
+				localPort = portValue;
+			if (UI_askAvisynthPort(localPort)) {
+				portValue = localPort;
+				prefs->set(AVISYNTH_AVISYNTH_LOCALPORT, localPort);
+			}
+		}
+		uint8_t dummy[] = { portValue , portValue >> 8};
+		ret = video._aviheader->open((char *)dummy);
+	}
+	else
+		ret = video._aviheader->open(name);
 
    // check opening was successful
    if (ret == 0) {

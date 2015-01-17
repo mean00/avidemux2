@@ -47,6 +47,7 @@
 #define MKICON(x) NULL
 #define MENU_DECLARE
 #include "myOwnMenu.h"
+#include "DIA_defaultAskAvisynthPort.hxx"
 
 using std::vector;
 

@@ -58,5 +58,7 @@ void UI_closeGui(void);
 bool UI_getTimeShift(int *onoff,int *value);
 bool UI_setTimeShift(int onoff,int value);
 void UI_setAudioTrackCount( int nb );
+
+bool UI_askAvisynthPort(uint32_t &port);
 #endif
 // EOF
