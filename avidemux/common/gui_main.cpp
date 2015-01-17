@@ -1487,7 +1487,7 @@ void A_set_avisynth_port(char *port_number_as_text){
 
 	for ( ; idx<input_length ; idx++ )
 		if(port_number_as_text[idx] <= '9' && port_number_as_text[idx] >= '0')
-			portNumber = portNumber*10 + port_number_as_text[0] - '0';
+			portNumber = portNumber*10 + port_number_as_text[idx] - '0';
 		else
 		{
 			fprintf(stderr,"Invalid character in port number\n");
