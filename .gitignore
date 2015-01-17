@@ -12,5 +12,7 @@ addons/*
 install/*
 avidemux/qt4/common
 oldcrap/*
-*nbproject/*
+nbproject
 avidemux/oldFiles/
+myBuild*
+oprofile_data
