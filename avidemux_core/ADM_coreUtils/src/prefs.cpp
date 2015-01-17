@@ -231,148 +231,110 @@ static bool lookupOption(options option, const ADM_paramList **desc, const optio
     
     return true;
 }
+template<typename T>
+void _getAssign(T *v, char *src)
+{
+	*v=*(reinterpret_cast<T *>(src));
+}
+template<>
+void _getAssign(char **v, char *src)
+{
+	const char *st=*(char **)(src);
+	*v=ADM_strdup(st);
+}
+template<typename T>
+static bool _get(options option, T *v, ADM_paramType expectedType)
+{
+	ADM_assert(v!=NULL);
+	const ADM_paramList *desc;
+	const optionDesc *tpl;
+	float m,n;
+
+	lookupOption(option,&desc,&tpl,m,n);
+
+	ADM_assert(desc->type==expectedType);
+	int offset=desc->offset;
+	char *dummy=(char *)&myPrefs;
+	_getAssign(v, dummy+offset);
+	return true;
+}
 
 /**
     \fn get
 */
 bool preferences::get(options option, uint32_t *v)
 {
-  const ADM_paramList *desc;
-  const optionDesc *tpl;
-  float m,n;
-
-    lookupOption(option,&desc,&tpl,m,n);
-
-    ADM_assert(desc->type==ADM_param_uint32_t);
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *v=*(uint32_t *)(dummy+offset);
-    return true;
-    
+	return _get(option, v, ADM_param_uint32_t);
+}
+/**
+    \fn get
+*/
+bool preferences::get(options option, int32_t *v)
+{
+	return _get(option, v, ADM_param_int32_t);
 }
 /**
     \fn get
 */
 bool preferences::get(options option, float *v)
 {
-  const ADM_paramList *desc;
-  const optionDesc *tpl;
-  float m,n;
-
-    lookupOption(option,&desc,&tpl,m,n);
-
-    ADM_assert(desc->type==ADM_param_float);
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *v=*(float *)(dummy+offset);
-    return true;
+	return _get(option, v, ADM_param_float);
 }
 /**
     \fn get
 */
 bool preferences::get(options option, bool *v)
 {
-  const ADM_paramList *desc;
-  const optionDesc *tpl;
-  float m,n;
-
-    lookupOption(option,&desc,&tpl,m,n);
-
-    ADM_assert(desc->type==ADM_param_bool);
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *v=*(bool *)(dummy+offset);
-    return true;
+	return _get(option, v, ADM_param_bool);
 }
 /**
     \fn get
 */
 bool preferences::get(options option, char **v)
 {
-  const ADM_paramList *desc;
-  const optionDesc *tpl;
-  float m,n;
-
-    lookupOption(option,&desc,&tpl,n,m);
-
-    ADM_assert(desc->type==ADM_param_string);
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    const char *st=*(char **)(dummy+offset);
-    *v=ADM_strdup(st);
-    return true;
-
+	return _get(option, v, ADM_param_string);
 }
 //---------------------------------------
 
-/**
-    \fn set
-*/
+template<typename T>
+bool _set(options option, const T v, ADM_paramType expectedType)
+{
+	const ADM_paramList *desc;
+	const optionDesc *tpl;
+	float m,n;
+
+	lookupOption(option,&desc,&tpl,n,m);
+
+	ADM_assert(desc->type==expectedType);
+
+	if(v<n || v>m)
+	{
+		ADM_error("Parameter  %s value %d not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
+		return false;
+	}
+	int offset=desc->offset;
+	char *dummy=(char *)&myPrefs;
+	dummy += offset;
+	*(reinterpret_cast<T *>(dummy))=v;
+	return true;
+}
 bool preferences::set(options option, const uint32_t v)
 {
-    const ADM_paramList *desc;
-    const optionDesc *tpl;
-    float m,n;
-
-    lookupOption(option,&desc,&tpl,n,m);
-
-    ADM_assert(desc->type==ADM_param_uint32_t);
-    
-    if(v<n || v>m)
-    {
-        ADM_error("Parameter  %s value %d not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
-        return false;
-    }
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *(uint32_t *)(dummy+offset)=v;
-    return true;
+	return _set(option, v, ADM_param_uint32_t);
 }
 /**
     \fn set
 */
 bool preferences::set(options option, const float v)
 {
-    const ADM_paramList *desc;
-    const optionDesc *tpl;
-    float m,n;
-
-    lookupOption(option,&desc,&tpl,n,m);
-
-    ADM_assert(desc->type==ADM_param_float);
-    
-    if(v<n || v>m)
-    {
-        ADM_error("Parameter  %s value %f not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
-        return false;
-    }
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *(float *)(dummy+offset)=v;
-    return true;
+	return _set(option, v, ADM_param_float);
 }
 /**
     \fn set
 */
 bool preferences::set(options option, const bool v)
 {
-    const ADM_paramList *desc;
-    const optionDesc *tpl;
-    float m,n;
-
-    lookupOption(option,&desc,&tpl,n,m);
-
-    ADM_assert(desc->type==ADM_param_bool);
-    
-    if(v<n || v>m)
-    {
-        ADM_error("Parameter  %d value %f not in range (%f -- %f )!\n",tpl->name2,v,tpl->min,tpl->max);
-        return false;
-    }
-    int offset=desc->offset;
-    char *dummy=(char *)&myPrefs;
-    *(bool *)(dummy+offset)=v;
-    return true;
+	return _set(option, v, ADM_param_bool);
 }
 /**
     \fn set
