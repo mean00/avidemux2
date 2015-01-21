@@ -46,6 +46,9 @@
 #include "ADM_edScriptGenerator.h"
 
 #include "ADM_edAudioTrackExternal.h"
+#include "ADM_threads.h"
+
+admMutex singleThread;
 
 renderZoom currentZoom=ZOOM_1_1;
 #include "DIA_audioTracks.h"
@@ -138,6 +141,8 @@ void HandleAction (Action action)
   uint32_t nf = 0;
   uint32_t old;
 
+  admScopedMutex autolock(&singleThread); // make sure only one thread at a time calls this
+  
   ADM_warning("************ %s **************\n",getActionName(action));
 
   // handle out of band actions
