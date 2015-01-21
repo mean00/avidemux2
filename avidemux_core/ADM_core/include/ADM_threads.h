@@ -44,4 +44,18 @@ class ADM_CORE6_EXPORT admCond
                 
 };
 
+
+class ADM_CORE6_EXPORT admScopedMutex
+{
+  private:
+    admMutex       *_tex;
+    
+  public: 
+    admScopedMutex( admMutex *tex);
+    ~admScopedMutex();        
+    uint8_t lock(void);
+    uint8_t unlock(void);
+    uint8_t isLocked(void);
+};
+
 #endif

@@ -26,8 +26,11 @@
 admMutex::admMutex(const char *name)
 {
   _name=name; // Should always be const, so it is okay to not copy
-  THR_CHECK(pthread_mutex_init(&_tex,NULL));
-  _locked=0;
+  pthread_mutexattr_t attr;
+   THR_CHECK(pthread_mutexattr_init(&attr));
+   THR_CHECK(pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE));
+   THR_CHECK(pthread_mutex_init(&_tex,&attr));
+   _locked=0;
 }
 admMutex::~admMutex()
 {
@@ -92,4 +95,27 @@ uint8_t admCond::abort( void )
   if(waiting) wakeup();
   return 1;
 
+}
+
+ admScopedMutex::admScopedMutex( admMutex *tex)
+ {
+     _tex=tex;
+     lock();
+ }
+ 
+admScopedMutex::~admScopedMutex()
+{
+    if(_tex->isLocked()) _tex->unlock();
+}
+uint8_t admScopedMutex::lock(void)
+{
+    return _tex->lock();
+}
+uint8_t admScopedMutex::unlock(void)
+{
+      return _tex->unlock();
+}
+uint8_t admScopedMutex::isLocked(void)
+{
+      return _tex->isLocked();
 }
