@@ -513,7 +513,32 @@ uint8_t    MP4Header::open(const char *name)
         ADM_info("Last video PTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].pts));
         ADM_info("Last video DTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].dts));
 
+        checkDuplicatedPts();
+        
         return 1;
+}
+bool MP4Header::checkDuplicatedPts(void)
+{
+        int nb=(int)_tracks[0].nbIndex;
+        for(int i=0;i<nb;i++)
+        {
+            int mn,mx;
+            mn=i-10;
+            if(mn<0) mn=0;
+            mx=i+10;
+            if(mx>=nb-1) mx=nb-1;
+            for(int j=mn;j<mx;j++)
+            {
+                if(j==i) continue;
+                if(_tracks[0].index[i].pts==_tracks[0].index[j].pts)
+                {
+                    ADM_warning("Duplicate pts %s at %d and %d\n",ADM_us2plain(_tracks[0].index[i].pts),i,j);
+                    _tracks[0].index[j].pts+=1000; // add 1 ms
+                }
+            }
+                
+        }
+        return true;
 }
 /**
  * \fn adjustElstDelay
