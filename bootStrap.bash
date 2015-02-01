@@ -90,10 +90,10 @@ usage()
 #
 
 export FAKEROOT_COMMAND="fakeroot"
-CMAKE_VERSION=`cmake --version | sed "s/^.* 2\.\([0-9]*\.[0-9]*\).*/2\.\1/g"`
+CMAKE_VERSION=`cmake --version | head -n 1 | sed "s/^.* \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/g"`
 echo "CMAKE Version : $CMAKE_VERSION"
 case "$CMAKE_VERSION" in
-         2.8.8|2.8.7|2.8.9|2.8.10|2.8.11|2.8.12|2.8.13)
+         2.8.[7-9]|2.8.[1-9][0-9]|3*)
                 echo "Cmake version >=2.8.7 doesnt need fakeroot"
                 export FAKEROOT_COMMAND=""
         ;;
