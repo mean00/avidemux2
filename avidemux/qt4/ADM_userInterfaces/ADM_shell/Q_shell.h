@@ -4,7 +4,7 @@
 #ifndef Q_SHELL_H
 #define Q_SHELL_H
 
-#include <QtGui/QItemDelegate>
+#include <QItemDelegate>
 #include "ui_shell.h"
 
 #include "ADM_inttype.h"

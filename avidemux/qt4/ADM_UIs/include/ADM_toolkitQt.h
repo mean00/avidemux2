@@ -1,6 +1,6 @@
 #ifndef QT_TOOLKIT_H
 #define QT_TOOLKIT_H
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "ADM_UIQT46_export.h"
 #include "ADM_inttype.h"
 

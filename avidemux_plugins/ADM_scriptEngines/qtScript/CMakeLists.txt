@@ -1,8 +1,8 @@
 OPTION(QTSCRIPT "" ON)
 
 if (QTSCRIPT)
-	include(admCheckQt4)
-	checkQt4()
+	include(admCheckQt)
+	checkQt()
 endif (QTSCRIPT)
 
 if (QT_QTSCRIPT_FOUND)

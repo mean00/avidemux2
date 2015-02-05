@@ -9,18 +9,25 @@ MESSAGE("#########################################")
 MESSAGE("")
 
 include(../commonCmakeApplication.cmake)
-INCLUDE(admCheckQt4)
+INCLUDE(admCheckQt)
 INCLUDE(admWindRes)
 
-checkQt4()
+MESSAGE(STATUS "Checking Qt")
+checkQt()
 
-IF (NOT QT4_FOUND)
-	MESSAGE(FATAL_ERROR "Qt4 NOT FOUND")
-ENDIF (NOT QT4_FOUND)
+IF (NOT QT_FOUND)
+	MESSAGE(FATAL_ERROR "Qt NOT FOUND")
+ENDIF (NOT QT_FOUND)
 
 # Qt4 openGL
 include(admCheckOpenGl)
+#
+#--
+INCLUDE_DIRECTORIES(${QT_INCLUDES})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+#--
 
+#
 ##########################################
 # Config
 ##########################################
@@ -78,21 +85,21 @@ endif (WIN32)
 # Executable
 ###########################################
 include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_EXECUTABLE(avidemux3_qt4 ${ADM_EXE_SRCS})
+ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} ${ADM_EXE_SRCS})
 
 ###########################################
 # Construct common libraries
 ###########################################
 FOREACH (_libName ${commonLibs1})
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${_libName})
 ENDFOREACH (_libName ${commonLibs1})
 
 FOREACH (_libName ${commonLibs2})
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${_libName})
 ENDFOREACH (_libName ${commonLibs2})
 
 FOREACH (_libName ${coreLibs})
-	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${_libName})
+	TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${_libName})
 ENDFOREACH (_libName ${coreLibs})
 
 #TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_filter6)
@@ -100,7 +107,7 @@ ENDFOREACH (_libName ${coreLibs})
 #############################################
 # Add qt specific libs
 #############################################
-TARGET_LINK_LIBRARIES(avidemux3_qt4
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
 	ADM_guiQt4
 	ADM_filtersQt4
 	ADM_UIQT46
@@ -122,64 +129,64 @@ TARGET_LINK_LIBRARIES(avidemux3_qt4
 ###########################################
 # gettext
 IF (GETTEXT_FOUND)
-	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${GETTEXT_LIBRARY_DIR})
+	TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${GETTEXT_LIBRARY_DIR})
 ENDIF (GETTEXT_FOUND)
 
 
 # SDL
 IF (USE_SDL)
-	TARGET_LINK_LIBRARIES(avidemux3_qt4 ${SDL_LIBRARY})
+	TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${SDL_LIBRARY})
 ENDIF (USE_SDL)
 
 
 ###########################################
 # UI Specific
 ###########################################
-TARGET_LINK_LIBRARIES(avidemux3_qt4 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${PTHREAD_LIBRARIES})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${PTHREAD_LIBRARIES})
 
 ###########################################
 # OS Specific
 ###########################################
 if (WIN32 OR APPLE)
-	set_property(TARGET avidemux3_qt4 PROPERTY OUTPUT_NAME avidemux)
+	set_property(TARGET avidemux3_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux)
 endif (WIN32 OR APPLE)
 
 IF (MINGW)
-	target_link_libraries(avidemux3_qt4 winmm -mwindows -Wl,--export-all-symbols)
+	target_link_libraries(avidemux3_${QT_EXTENSION} winmm -mwindows -Wl,--export-all-symbols)
 ENDIF (MINGW)
 
 IF (APPLE)
 	IF (USE_SDL)
-		TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_libsdl)
+		TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_libsdl)
 	ENDIF(USE_SDL)
 
-	target_link_libraries(avidemux3_qt4 "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
+	target_link_libraries(avidemux3_${QT_EXTENSION} "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
 
 	# for Leopard but it doesn't hurt Tiger
-	target_link_libraries(avidemux3_qt4 "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+	target_link_libraries(avidemux3_${QT_EXTENSION} "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF (APPLE)
 #
 # Needed for cross compiling
 #
 if(CROSS)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UI_QT46)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_UI_QT46)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_render6_qt4)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_coreUtils6)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
-        TARGET_LINK_LIBRARIES(avidemux3_qt4 ADM_core6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_QT46)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_QT46)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_render6_qt4)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_coreUtils6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
 endif(CROSS)
 
-target_link_libraries(avidemux3_qt4 "-lm -lstdc++")
+target_link_libraries(avidemux3_${QT_EXTENSION} "-lm -lstdc++")
 #
 # i18n
 #
-ADD_SUBDIRECTORY(i18n)
+# FIXME ADD_SUBDIRECTORY(i18n)
 ###########################################
 # Install
 ###########################################
-ADM_LINK_THREAD(avidemux3_qt4)
-ADM_INSTALL_BIN(avidemux3_qt4)
+ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
+ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
 
 DISPLAY_SUMMARY_LIST()
 

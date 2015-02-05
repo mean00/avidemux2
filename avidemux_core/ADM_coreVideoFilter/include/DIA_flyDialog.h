@@ -38,8 +38,8 @@ The yuv/rgb specific part is implement through ADM_flyDialogAction (yuv/rgb)
 #include "DIA_uiTypes.h"
 
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4
-        #include <QtGui/QWidget>
-        #include <QtGui/QDialog>
+        #include <QWidget>
+        #include <QDialog>
 #endif //UI_BUILD_TYPE
 #endif //ADM_FLY_INTERNAL 
 

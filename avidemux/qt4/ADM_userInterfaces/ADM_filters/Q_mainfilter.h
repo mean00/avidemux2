@@ -1,7 +1,7 @@
 #ifndef Q_mainfilter_h
 #define Q_mainfilter_h
 
-#include <QtGui/QItemDelegate>
+#include <QItemDelegate>
 #include "ui_mainfilter.h"
 #include "ADM_inttype.h"
 #include "Q_seekablePreview.h"

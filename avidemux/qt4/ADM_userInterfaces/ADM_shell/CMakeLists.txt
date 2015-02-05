@@ -7,8 +7,8 @@ SET(headers
 	Q_shell.h
 )
 
-QT4_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
-QT4_WRAP_CPP(${ADM_LIB}_source ${headers})
+ADM_QT_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
+ADM_QT_WRAP_CPP(${ADM_LIB}_source ${headers})
 
 SET(${ADM_LIB}_SRCS 
 	${${ADM_LIB}_headers}  ${${ADM_LIB}_source} 

@@ -17,9 +17,9 @@ SET(headers
         Q_audioTracks.h Q_audioTrackClass.h
 	Q_license.h  Q_jobs.h  Q_props.h  Q_vobsub.h  Q_working.h  Q_processing.h T_index_pg.h)
 
-QT4_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
-QT4_WRAP_CPP(${ADM_LIB}_source ${headers})
-QT4_ADD_RESOURCES(${ADM_LIB}_resource  about.qrc)
+ADM_QT_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
+ADM_QT_WRAP_CPP(${ADM_LIB}_source ${headers})
+ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  about.qrc)
 
 SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 	${${ADM_LIB}_headers}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource}

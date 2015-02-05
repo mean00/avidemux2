@@ -12,9 +12,9 @@ INCLUDE(admWindRes)
 #
 SET(UI uiJobs.ui uiProgress.ui)
 SET(headers ../include/T_jobs.h ../include/T_progress.h)
-QT4_ADD_RESOURCES(resource  jobs.rsc)
-QT4_WRAP_UI(ADM_JOBS_headers ${UI})
-QT4_WRAP_CPP(ADM_JOBS_source ${headers}
+ADM_QT_ADD_RESOURCES(resource  jobs.rsc)
+ADM_QT_WRAP_UI(ADM_JOBS_headers ${UI})
+ADM_QT_WRAP_CPP(ADM_JOBS_source ${headers}
                 ADM_jobControl.cpp)
 SET(ADM_JOB_SRCS 
                 ADM_jobs.cpp

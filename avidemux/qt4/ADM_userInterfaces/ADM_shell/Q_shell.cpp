@@ -20,7 +20,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QGraphicsView>
+#include <QGraphicsView>
 #include "Q_shell.h"
 #include "ADM_default.h"
 #include "ui_shell.h"

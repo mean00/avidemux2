@@ -1,8 +1,8 @@
 SET(ADM_LIB ADM_filtersQt4)
 
-QT4_WRAP_UI(${ADM_LIB}_header  mainfilter.ui  seekablePreview.ui)
-QT4_WRAP_CPP(${ADM_LIB}_source  Q_mainfilter.h  Q_seekablePreview.h)
-QT4_ADD_RESOURCES(${ADM_LIB}_resource  filter.qrc)
+ADM_QT_WRAP_UI(${ADM_LIB}_header  mainfilter.ui  seekablePreview.ui)
+ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_mainfilter.h  Q_seekablePreview.h)
+ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  filter.qrc)
 
 SET(${ADM_LIB}_SRCS
 	filter_none.cpp  

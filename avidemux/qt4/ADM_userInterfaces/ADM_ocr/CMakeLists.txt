@@ -1,7 +1,7 @@
 SET(ADM_LIB ADM_ocrQt4)
 
-QT4_WRAP_UI(${ADM_LIB}_header  ocr.ui)
-QT4_WRAP_CPP(${ADM_LIB}_source  Q_ocr.h)
+ADM_QT_WRAP_UI(${ADM_LIB}_header  ocr.ui)
+ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_ocr.h)
 
 SET(${ADM_LIB}_SRCS
 	Q_ocr.cpp  ${${ADM_LIB}_header}  ${${ADM_LIB}_source})
