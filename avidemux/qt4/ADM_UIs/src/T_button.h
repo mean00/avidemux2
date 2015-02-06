@@ -1,9 +1,9 @@
 #ifndef T_button_h
 #define T_button_h
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QWidget>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QWidget>
 
 #include "ADM_inttype.h"
 #include "DIA_factory.h"

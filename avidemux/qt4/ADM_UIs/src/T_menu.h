@@ -1,7 +1,7 @@
 #ifndef T_menu_h
 #define T_menu_h
 
-#include <QtGui/QComboBox>
+#include <QComboBox>
 
 #include "ADM_inttype.h"
 #include "DIA_factory.h"

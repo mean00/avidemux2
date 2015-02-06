@@ -17,7 +17,7 @@ Indexer progress dialog
  ***************************************************************************/
 #include <math.h>
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
 #include "T_index_pg.h"
 #include "ADM_default.h"
@@ -61,9 +61,9 @@ void Ui_iDialog::setupUi(QDialog *Dialog)
 
 void Ui_iDialog::retranslateUi(QDialog *Dialog)
 {
-	Dialog->setWindowTitle(QApplication::translate("Dialog", "Indexing", 0, QApplication::UnicodeUTF8));
-	labelTimeLeft->setText(QApplication::translate("Dialog", "Time Left : Infinity", 0, QApplication::UnicodeUTF8));
-	labelImages->setText(QApplication::translate("Dialog", "# Images :", 0, QApplication::UnicodeUTF8));
+	Dialog->setWindowTitle(QApplication::translate("Dialog", "Indexing", 0));
+	labelTimeLeft->setText(QApplication::translate("Dialog", "Time Left : Infinity", 0));
+	labelImages->setText(QApplication::translate("Dialog", "# Images :", 0));
 
 	Q_UNUSED(Dialog);
 }

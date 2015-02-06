@@ -2,7 +2,7 @@
 #define T_dialogFactory_h
 
 #include "ADM_UIQT46_export.h"
-#include <QtGui/QDialog>
+#include <QDialog>
 
 ADM_UIQT46_EXPORT void InitFactory(void);
 

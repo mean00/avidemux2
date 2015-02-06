@@ -14,9 +14,9 @@
  ***************************************************************************/
 
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"
@@ -125,7 +125,7 @@ void diaElemText::getMe(void)
   QLineEdit *lineEdit=(QLineEdit *)myWidget;
   ADM_assert(lineEdit);
   if(*c) ADM_dealloc(*c);
-  *c=ADM_strdup(lineEdit->text().toAscii().data());
+  *c=ADM_strdup(lineEdit->text().toLatin1().data());
  
 }
 void diaElemText::enable(uint32_t onoff)
@@ -134,9 +134,9 @@ void diaElemText::enable(uint32_t onoff)
  QLineEdit *lineEdit=(QLineEdit *)myWidget;
   ADM_assert(lineEdit);
   if(onoff)
-    lineEdit->setEnabled(TRUE);
+    lineEdit->setEnabled(true);
   else
-    lineEdit->setDisabled(TRUE);
+    lineEdit->setDisabled(true);
 }
 
 int diaElemText::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }

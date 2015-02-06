@@ -3,9 +3,10 @@
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
 #include <QtCore/QUrl>
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopServices>
-#include <QtGui/QWidget>
+#include <QApplication>
+#include <QDesktopServices>
+#include <QWidget>
+#include <QString>
 
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
@@ -119,7 +120,7 @@ void loadTranslator(void)
 	{
 		mapIterator.next();
 
-		QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toAscii().constData()).toUtf8();
+		QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toLatin1().constData()).toUtf8();
 		char *buffer = mapIterator.value();
 		int copyLength = translatedMessage.length() + 1;
 

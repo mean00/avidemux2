@@ -1,10 +1,10 @@
 #ifndef T_bitrate_h
 #define T_bitrate_h
 
-#include <QtGui/QComboBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QSpinBox>
+#include <QComboBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QSpinBox>
 
 #include "ADM_inttype.h"
 #include "ADM_encoderConf.h"

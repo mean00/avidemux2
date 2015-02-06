@@ -1,7 +1,7 @@
 #ifndef FileAction_h
 #define FileAction_h
 
-#include <QtGui/QAction>
+#include <QAction>
 
 class FileAction : public QAction
 {

@@ -14,9 +14,9 @@
  ***************************************************************************/
 
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QGroupBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QGroupBox>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"

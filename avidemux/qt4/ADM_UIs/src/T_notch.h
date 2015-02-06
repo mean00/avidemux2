@@ -1,8 +1,8 @@
 #ifndef T_NOTCH_H
 #define T_NOTCH_H
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QCheckBox>
+#include <QGridLayout>
+#include <QCheckBox>
 
 #include "DIA_factory.h"
 

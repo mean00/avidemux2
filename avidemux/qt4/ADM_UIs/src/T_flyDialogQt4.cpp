@@ -16,8 +16,8 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QCoreApplication>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QSlider>
+#include <QGraphicsView>
+#include <QSlider>
 
 #include "ADM_default.h"
 #include "DIA_flyDialog.h"

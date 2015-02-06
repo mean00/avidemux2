@@ -1,8 +1,8 @@
 #ifndef T_preview_h
 #define T_preview_h
 
-#include <QtGui/QPaintEvent>
-#include <QtGui/QWidget>
+#include <QPaintEvent>
+#include <QWidget>
 /**
     \class ADM_Qvideo
 */

@@ -1,6 +1,6 @@
 #include <QtCore/QStack>
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
+#include <QApplication>
+#include <QDesktopWidget>
 
 #include "ADM_toolkitQt.h"
 #include "ADM_assert.h"

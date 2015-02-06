@@ -14,9 +14,9 @@
  ***************************************************************************/
 
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QSpinBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QSpinBox>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"

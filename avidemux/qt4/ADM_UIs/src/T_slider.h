@@ -1,9 +1,9 @@
 #ifndef T_slider_h
 #define T_slider_h
 
-#include <QtGui/QSlider>
-#include <QtGui/QSpinBox>
-#include <QtGui/QWidget>
+#include <QSlider>
+#include <QSpinBox>
+#include <QWidget>
 
 namespace ADM_qt4Factory
 {

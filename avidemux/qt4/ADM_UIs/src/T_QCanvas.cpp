@@ -12,9 +12,9 @@
 *                                                                         *
 ***************************************************************************///
 
-#include <QtGui/QPainter>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QSlider>
+#include <QPainter>
+#include <QGraphicsView>
+#include <QSlider>
 
 #include "ADM_default.h"
 #include "DIA_flyDialogQt4.h"

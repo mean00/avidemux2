@@ -1,11 +1,11 @@
 #ifndef T_index_pg_h
 #define T_index_pg_h
 
-#include <QtGui/QDialog>
-#include <QtGui/QLabel>
-#include <QtGui/QProgressBar>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QWidget>
+#include <QDialog>
+#include <QLabel>
+#include <QProgressBar>
+#include <QVBoxLayout>
+#include <QWidget>
 
 class Ui_iDialog
 {

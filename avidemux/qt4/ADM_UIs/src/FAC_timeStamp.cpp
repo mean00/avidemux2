@@ -14,10 +14,10 @@
  ***************************************************************************/
 
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QProgressBar>
-#include <QtGui/QSpinBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QProgressBar>
+#include <QSpinBox>
 
 
 

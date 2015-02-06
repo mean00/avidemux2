@@ -18,9 +18,9 @@
 #include "DIA_factory.h"
 #include "ADM_dialogFactoryQt4.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 
 extern const char *shortkey(const char *);
 

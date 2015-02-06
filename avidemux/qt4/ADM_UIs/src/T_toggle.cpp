@@ -13,8 +13,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QSpinBox>
+#include <QGridLayout>
+#include <QSpinBox>
 
 #include "T_toggle.h"
 #include "ADM_default.h"
@@ -151,9 +151,9 @@ void diaElemToggle::enable(uint32_t onoff)
   ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
   ADM_assert(box);
   if(onoff)
-    box->setEnabled(TRUE);
+    box->setEnabled(true);
   else
-    box->setDisabled(TRUE);
+    box->setDisabled(true);
 }
 
 void   diaElemToggle::finalize(void)
@@ -276,7 +276,7 @@ void   diaElemToggleUint::finalize(void)
 void   diaElemToggleUint::updateMe(void)
 {
   uint32_t val;
-  uint32_t rank=FALSE;
+  uint32_t rank=false;
   ADM_assert(myWidget);
   
   ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
@@ -284,7 +284,7 @@ void   diaElemToggleUint::updateMe(void)
   
   if(Qt::Checked==box->checkState())
   {
-    rank=TRUE;
+    rank=true;
   }
   spin->setEnabled(rank);
 }
@@ -295,13 +295,13 @@ void   diaElemToggleUint::enable(uint32_t onoff)
   ADM_assert(box);
   if(onoff)
   {
-    box->setEnabled(TRUE);
-    spin->setEnabled(TRUE);
+    box->setEnabled(true);
+    spin->setEnabled(true);
   }
   else
   {
-    box->setEnabled(FALSE);
-    spin->setEnabled(FALSE);
+    box->setEnabled(false);
+    spin->setEnabled(false);
   }
 }
 
@@ -384,7 +384,7 @@ void   diaElemToggleInt::finalize(void)
 void   diaElemToggleInt::updateMe(void)
 {
   uint32_t val;
-  uint32_t rank=FALSE;
+  uint32_t rank=false;
   ADM_assert(myWidget);
   
   ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
@@ -392,7 +392,7 @@ void   diaElemToggleInt::updateMe(void)
   
   if(Qt::Checked==box->checkState())
   {
-    rank=TRUE;
+    rank=true;
   }
   spin->setEnabled(rank);
 }
@@ -403,13 +403,13 @@ void   diaElemToggleInt::enable(uint32_t onoff)
   ADM_assert(box);
   if(onoff)
   {
-    box->setEnabled(TRUE);
-    spin->setEnabled(TRUE);
+    box->setEnabled(true);
+    spin->setEnabled(true);
   }
   else
   {
-    box->setEnabled(FALSE);
-    spin->setEnabled(FALSE);
+    box->setEnabled(false);
+    spin->setEnabled(false);
   }
 }
 

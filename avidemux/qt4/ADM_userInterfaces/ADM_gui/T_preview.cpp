@@ -15,16 +15,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui/QFrame>
-#include <QtGui/QImage>
-#include <QtGui/QPainter>
-#include <QtGui/QPaintEngine>
+#include <QFrame>
+#include <QImage>
+#include <QPainter>
+#include <QPaintEngine>
 
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #elif !defined(_WIN32)
-#include <QtGui/QX11Info>
+#include <QX11Info>
 #endif
 
 #include "ADM_assert.h"

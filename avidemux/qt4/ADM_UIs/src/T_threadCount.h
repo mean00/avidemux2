@@ -1,11 +1,11 @@
 #ifndef T_threadCount_h
 #define T_threadCount_h
-#include <QtGui/QButtonGroup>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QRadioButton>
-#include <QtGui/QSpinBox>
-#include <QtGui/QWidget>
+#include <QButtonGroup>
+#include <QGridLayout>
+#include <QLabel>
+#include <QRadioButton>
+#include <QSpinBox>
+#include <QWidget>
 #include "ADM_default.h"
 
 namespace ADM_qt4Factory

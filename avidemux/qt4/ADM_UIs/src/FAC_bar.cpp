@@ -14,9 +14,9 @@
  ***************************************************************************/
 
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QProgressBar>
+#include <QGridLayout>
+#include <QLabel>
+#include <QProgressBar>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"

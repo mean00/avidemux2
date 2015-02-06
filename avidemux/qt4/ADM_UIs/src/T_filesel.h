@@ -1,12 +1,12 @@
 #ifndef T_filesel_h
 #define T_filesel_h
 
-#include <QtGui/QAbstractButton>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QWidget>
+#include <QAbstractButton>
+#include <QDialogButtonBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QWidget>
 
 namespace ADM_Qt4Factory
 {

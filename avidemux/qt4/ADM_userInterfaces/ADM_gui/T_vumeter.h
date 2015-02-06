@@ -1,9 +1,9 @@
 #ifndef T_vumeter_h
 #define T_vumeter_h
 
-#include <QtGui/QPaintEvent>
-#include <QtGui/QWidget>
-#include <QtGui/QFrame>
+#include <QPaintEvent>
+#include <QWidget>
+#include <QFrame>
 #include "ADM_inttype.h"
 /**
     \fn class ADM_Qvumeter

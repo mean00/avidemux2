@@ -12,10 +12,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QTabWidget>
+#include <QDialogButtonBox>
+#include <QGridLayout>
+#include <QSpacerItem>
+#include <QTabWidget>
 
 #include "T_dialogFactory.h"
 #include "ADM_default.h"

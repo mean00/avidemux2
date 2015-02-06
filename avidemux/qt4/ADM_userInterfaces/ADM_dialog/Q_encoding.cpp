@@ -121,7 +121,7 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encoding
         
         
         qtRegisterDialog(this);
-        setModal(TRUE);
+        setModal(true);
         show();
         tray=NULL;
         if(_useSystray)

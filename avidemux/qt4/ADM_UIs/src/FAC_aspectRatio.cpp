@@ -13,10 +13,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui/QDialog>
-#include <QtGui/QSpinBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QDialog>
+#include <QSpinBox>
+#include <QGridLayout>
+#include <QLabel>
 
 #include "ADM_default.h"
 #include "DIA_factory.h"

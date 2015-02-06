@@ -38,7 +38,7 @@ audioTrackQt4::audioTrackQt4( PoolOfAudioTracks *pool, ActiveAudioTracks *xactiv
         // create windows
         window=new audioTrackWindow();
         qtRegisterDialog(window);
-        window->setModal(TRUE);
+        window->setModal(true);
         
         languages=ADM_getLanguageList();
         nbLanguage=ADM_getLanguageListSize();

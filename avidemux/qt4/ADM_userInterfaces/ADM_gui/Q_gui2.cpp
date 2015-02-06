@@ -13,9 +13,10 @@
  ***************************************************************************/
 
 #include <QtCore/QFileInfo>
+#include <QMimeData>
 #include <QtCore/QUrl>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QGraphicsView>
+#include <QKeyEvent>
+#include <QGraphicsView>
 #include <QtCore/QDir>
 
 #include "ADM_cpp.h"
@@ -134,10 +135,10 @@ void MainWindow::comboChanged(int z)
 
 	if (obj == ui.comboBoxVideo)
 	{
-		bool b=FALSE;
+		bool b=false;
 		if(ui.comboBoxVideo->currentIndex())
 		{
-			b=TRUE;
+			b=true;
 		}
 		ui.pushButtonVideoConf->setEnabled(b);
 		ui.pushButtonVideoFilter->setEnabled(b);
@@ -145,10 +146,10 @@ void MainWindow::comboChanged(int z)
 	}
 	else if (obj == ui.comboBoxAudio)
 	{
-		bool b=FALSE;
+		bool b=false;
 		if(ui.comboBoxAudio->currentIndex())
 		{
-			b=TRUE;
+			b=true;
 		}
 		ui.pushButtonAudioConf->setEnabled(b);
 		ui.pushButtonAudioFilter->setEnabled(b);

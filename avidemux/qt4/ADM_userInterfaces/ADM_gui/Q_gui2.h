@@ -5,8 +5,8 @@
 
 #include <vector>
 #include <QtCore/QUrl>
-#include <QtGui/QSlider>
-#include <QtGui/QWidget>
+#include <QSlider>
+#include <QWidget>
 #include <QtCore/QTimer>
 
 #include "ADM_qslider.h"

@@ -1,8 +1,8 @@
 #ifndef T_toggle_h
 #define T_toggle_h
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QWidget>
+#include <QCheckBox>
+#include <QWidget>
 
 namespace ADM_qt4Factory
 {

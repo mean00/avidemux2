@@ -17,8 +17,8 @@
 #include "ADM_default.h"
 #include "ADM_dialogFactoryQt4.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QLabel>
 
 extern const char *shortkey(const char *);
 
@@ -205,10 +205,10 @@ void diaElemMenuDynamic::finalize(void)
     dialElemLink *l=&(links[i]);
     if(l->value==val)
     {
-      if(!l->onoff)  l->widget->enable(FALSE);
+      if(!l->onoff)  l->widget->enable(false);
     }else
     {
-       if(l->onoff)  l->widget->enable(FALSE);
+       if(l->onoff)  l->widget->enable(false);
     }
     
   }
@@ -218,10 +218,10 @@ void diaElemMenuDynamic::finalize(void)
     dialElemLink *l=&(links[i]);
     if(l->value==val)
     {
-      if(l->onoff)  l->widget->enable(TRUE);
+      if(l->onoff)  l->widget->enable(true);
     }else
     {
-       if(!l->onoff)  l->widget->enable(TRUE);
+       if(!l->onoff)  l->widget->enable(true);
     }
     
   }

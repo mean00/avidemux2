@@ -16,10 +16,10 @@
 #ifndef T_THUMBSLIDER_H
 #define T_THUMBSLIDER_H
 
-#include <QtGui/QPainter>
-#include <QtGui/QPaintEvent>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QSlider>
+#include <QPainter>
+#include <QPaintEvent>
+#include <QMouseEvent>
+#include <QSlider>
 
 class ThumbSlider : public QAbstractSlider
 {

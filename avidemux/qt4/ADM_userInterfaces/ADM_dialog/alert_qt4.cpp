@@ -14,9 +14,9 @@
  ***************************************************************************/
 #include "ADM_inttype.h"
 #include <QtCore/QCoreApplication>
-#include <QtGui/QDialog>
-#include <QtGui/QMessageBox>
-#include <QtGui/QWidget>
+#include <QDialog>
+#include <QMessageBox>
+#include <QWidget>
 #include "DIA_coreToolkit.h"
 #include "DIA_coreUI_internal.h"
 #include "ADM_default.h"
