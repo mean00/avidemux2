@@ -1,6 +1,6 @@
 
 MACRO(checkQt5)
-        SET(QT5_CHECKED 1)
+        #SET(QT5_CHECKED 1)
 	IF (NOT QT5_CHECKED)
 		OPTION(QT5 "" ON)
 
