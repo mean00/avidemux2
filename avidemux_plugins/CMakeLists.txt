@@ -144,7 +144,7 @@ APPEND_SUMMARY_LIST("User Interface" "GTK+" "${DO_GTK}")
 # QT4
 #*****
 if(DO_QT4)
-    INCLUDE(admCheckQt)
+    INCLUDE(admCheckQt) 
     checkQt()
     IF (NOT QT_FOUND)
         SET(DO_QT4 0)
@@ -152,7 +152,7 @@ if(DO_QT4)
 		MESSAGE("")
     ELSE (NOT QT_FOUND)
         MESSAGE(STATUS "QT4 libraries found, good")
-        CHECK_ADM_CONFIG_H(qt4 ADM_INC)
+        CHECK_ADM_CONFIG_H(${QT_EXTENSION} ADM_INC)
 		MESSAGE("")
 
         INCLUDE(admCheckOpenGl)
