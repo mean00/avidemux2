@@ -39,36 +39,36 @@ endif (WIN32)
 ###########################################
 include(admCoreIncludes)
 include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_EXECUTABLE(avidemux3_jobs ${ADM_JOB_SRCS})
+ADD_EXECUTABLE(avidemux3_jobs_${QT_EXTENSION} ${ADM_JOB_SRCS})
 ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
 
 ###########################################
-TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreSocket6)
-TARGET_LINK_LIBRARIES(avidemux3_jobs ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
-TARGET_LINK_LIBRARIES(avidemux3_jobs ${PTHREAD_LIBRARIES})
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreSocket6)
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ${PTHREAD_LIBRARIES})
 ###########################################
 # OS Specific
 ###########################################
 if (WIN32 OR APPLE)
-	set_property(TARGET avidemux3_jobs PROPERTY OUTPUT_NAME avidemux_jobs)
+	set_property(TARGET avidemux3_jobs_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux_jobs)
 endif (WIN32 OR APPLE)
 
 IF (MINGW)
-	target_link_libraries(avidemux3_jobs winmm -mwindows)
+	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} winmm -mwindows)
 ENDIF (MINGW)
 
 IF (APPLE)
-	target_link_libraries(avidemux3_jobs "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
+	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
 
 	# for Leopard but it doesn't hurt Tiger
-	target_link_libraries(avidemux3_jobs "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+	target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
 ENDIF (APPLE)
 
-TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreJobs)
-TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_coreUtils6)
-TARGET_LINK_LIBRARIES(avidemux3_jobs ADM_core6)
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreJobs)
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreUtils6)
+TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_core6)
 #
-target_link_libraries(avidemux3_jobs "-lm -lstdc++")
+target_link_libraries(avidemux3_jobs_${QT_EXTENSION} "-lm -lstdc++")
 #
 #
 
@@ -76,8 +76,8 @@ target_link_libraries(avidemux3_jobs "-lm -lstdc++")
 ###########################################
 # Install
 ###########################################
-ADM_LINK_THREAD(avidemux3_jobs)
-ADM_INSTALL_BIN(avidemux3_jobs)
+ADM_LINK_THREAD(avidemux3_jobs_${QT_EXTENSION})
+ADM_INSTALL_BIN(avidemux3_jobs_${QT_EXTENSION})
 #
 # Packaging
 #

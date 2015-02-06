@@ -14,15 +14,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui/QFrame>
-#include <QtGui/QImage>
-#include <QtGui/QPainter>
+#include <QFrame>
+#include <QImage>
+#include <QPainter>
 
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #elif !defined(_WIN32)
-#include <QtGui/QX11Info>
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
+#include <QX11Info>
+#endif
 #endif
 #include "ADM_default.h"
 #include "T_vumeter.h"

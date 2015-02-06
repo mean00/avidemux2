@@ -19,9 +19,9 @@
 #ifndef ADM_QTRAY_H
 #define ADM_QTRAY_H
 
-#include <QtGui/QAction>
-#include <QtGui/QIcon>
-#include <QtGui/QSystemTrayIcon>
+#include <QAction>
+#include <QIcon>
+#include <QSystemTrayIcon>
 #include "ADM_default.h"
 #include "ADM_tray.h"
 

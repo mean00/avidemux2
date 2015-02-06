@@ -1,7 +1,7 @@
 #ifndef Q_job_h
 #define Q_job_h
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "ui_uiJobs.h"
 #include <vector>
 #include <string>

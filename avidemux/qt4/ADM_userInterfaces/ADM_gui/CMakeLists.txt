@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_guiQt4)
+SET(ADM_LIB ADM_gui${QT_LIBRARY_EXTENSION})
 INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_icons/")
 ADM_QT_WRAP_UI(${ADM_LIB}_header  gui2.ui )
 ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h  T_preview.h T_vumeter.h T_thumbSlider.h ADM_qtray.h FileAction.h)

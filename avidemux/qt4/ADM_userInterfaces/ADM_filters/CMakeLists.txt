@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_filtersQt4)
+SET(ADM_LIB ADM_filters${QT_LIBRARY_EXTENSION})
 
 ADM_QT_WRAP_UI(${ADM_LIB}_header  mainfilter.ui  seekablePreview.ui)
 ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_mainfilter.h  Q_seekablePreview.h)

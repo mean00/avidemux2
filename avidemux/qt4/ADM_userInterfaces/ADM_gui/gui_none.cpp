@@ -10,8 +10,8 @@
 
 #include "config.h"
 #include "ADM_inttype.h"
-#include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
+#include <QApplication>
+#include <QDesktopWidget>
 
 void UI_setAProcessToggleStatus( uint8_t status ) {}
 void UI_setVProcessToggleStatus( uint8_t status ) {}

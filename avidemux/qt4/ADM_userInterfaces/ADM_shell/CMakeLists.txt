@@ -1,4 +1,4 @@
-SET(ADM_LIB ADM_shellQt4)
+SET(ADM_LIB ADM_shell${QT_LIBRARY_EXTENSION})
 
 SET(    uiFiles
         shell.ui  

@@ -18,8 +18,8 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <QtGui/QDialog>
-#include <QtGui/QMenu>
+#include <QDialog>
+#include <QMenu>
 
 #include "ADM_default.h"
 #include "ADM_qtray.h"

@@ -12,7 +12,7 @@
 #include <dirent.h>
 
 #include <QtCore/QVariant>
-#include <QtGui/qfiledialog.h>
+#include <qfiledialog.h>
 
 #include "ADM_default.h"
 

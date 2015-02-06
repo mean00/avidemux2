@@ -1,7 +1,7 @@
 #ifndef Q_jobProgress_h
 #define Q_jobProgress_h
 #include "string"
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "ui_uiProgress.h"
 #include "ADM_default.h"
 using std::string;

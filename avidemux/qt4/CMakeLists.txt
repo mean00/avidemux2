@@ -33,12 +33,12 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ##########################################
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
-SET(UI_SUFFIX qt4)
+SET(UI_SUFFIX ${QT_EXTENSION})
 
-CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/qt4/config.h")
-MESSAGE(STATUS "QT4 config.h generated")
+CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/config.h.cmake" "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h")
+MESSAGE(STATUS "${QT_EXTENSION} config.h generated")
 
-INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/qt4/")
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 
 
 ###########################################
@@ -67,7 +67,7 @@ else (WIN32)
 endif (WIN32)
 
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
-ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesQT4)
+ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 
 SDLify(../common/main.cpp)
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
@@ -108,16 +108,16 @@ ENDFOREACH (_libName ${coreLibs})
 # Add qt specific libs
 #############################################
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
-	ADM_guiQt4
-	ADM_filtersQt4
-	ADM_UIQT46
+	ADM_gui${QT_LIBRARY_EXTENSION}
+	ADM_filters${QT_LIBRARY_EXTENSION}
+	ADM_UI${QT_LIBRARY_EXTENSION}6
 	ADM_dialogQt4
            #ADM_editor6
 	ADM_internalVideoFilter6
-	ADM_UIQT46
-	ADM_guiQt4
-	ADM_UI_QT46
-	ADM_shellQt4
+	ADM_UI${QT_LIBRARY_EXTENSION}6
+	ADM_gui${QT_LIBRARY_EXTENSION}
+	ADM_UI_${QT_LIBRARY_EXTENSION}6
+	ADM_shell${QT_LIBRARY_EXTENSION}
 	ADM_toolkit6
 	ADM_coreAudio6
 	ADM_coreAudioDevice6
@@ -169,9 +169,9 @@ ENDIF (APPLE)
 # Needed for cross compiling
 #
 if(CROSS)
-        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_QT46)
-        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_QT46)
-        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_render6_qt4)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_${QT_LIBRARY_EXTENSION}6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_${QT_LIBRARY_EXTENSION}6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_render6${QT_LIBRARY_EXTENSION})
         TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_coreUtils6)
         TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
         TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
@@ -192,5 +192,5 @@ DISPLAY_SUMMARY_LIST()
 
 include(admPackager)
 admPackager(qt4Package)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/qt4/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/qt4") 
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${QT_EXTENSION}") 
 MESSAGE("")

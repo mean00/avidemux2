@@ -14,7 +14,7 @@
  ***************************************************************************/
 #include "T_thumbSlider.h"
 
-#include <QtGui/QStyle>
+#include <QStyle>
 
 ThumbSlider::ThumbSlider(QWidget *parent) : QAbstractSlider(parent)
 {

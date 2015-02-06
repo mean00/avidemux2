@@ -81,7 +81,7 @@ bool            qShell::evaluate(bool x)
     ui.textBrowser->append(text);
     ui.textBrowser->setFontItalic(false);
     ui.textBrowser_2->setPlainText("");
-    _engine->runScript(text.toAscii().constData(), IScriptEngine::Normal);
+    _engine->runScript(text.toLatin1().constData(), IScriptEngine::Normal);
     return true;
 }
 /**
