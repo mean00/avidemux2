@@ -15,7 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+
 #include <QFrame>
+
+
 #include <QImage>
 #include <QPainter>
 #include <QPaintEngine>
@@ -27,6 +30,14 @@
 
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
         #include <QX11Info> // removed in qt5
+#else
+extern "C"
+{
+        extern void *XOpenDisplay(    char *name);
+}
+#endif
+
+
 #endif
 
 #include "ADM_assert.h"
@@ -195,12 +206,12 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 {
     ADM_assert(videoWindow);
-	QWidget* widget = videoWindow->parentWidget();
+    QWidget* widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
 
 #if defined(_WIN32)
 	xinfo->display=videoWindow->winId();
-    #elif defined(__APPLE__)
+#elif defined(__APPLE__)
 	#if defined(ADM_CPU_X86_64)
 		xinfo->display = (void*)videoWindow->winId();
 		xinfo->window = 0;
@@ -208,17 +219,16 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 		xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
 		xinfo->window = 0;
 	#endif
-    #else
+#else
         #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
                 const QX11Info &info=videoWindow->x11Info();
                 xinfo->display=info.display();
                 // xinfo->window=videoWindow->winId();
                 xinfo->window=videoWindow->winId();
         #else
-                xinfo->display=0;
-                xinfo->window=0;
+                xinfo->window=videoWindow->winId();
+                xinfo->display=XOpenDisplay(NULL);
         #endif
-    #endif
 #endif
 
 	xinfo->x = widget->x();

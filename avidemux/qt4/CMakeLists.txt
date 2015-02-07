@@ -149,6 +149,8 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_
 ###########################################
 if (WIN32 OR APPLE)
 	set_property(TARGET avidemux3_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux)
+else (WIN32 OR APPLE)
+	target_link_libraries(avidemux3_${QT_EXTENSION} X11)
 endif (WIN32 OR APPLE)
 
 IF (MINGW)
