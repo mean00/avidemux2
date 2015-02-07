@@ -16,8 +16,8 @@ SET(mpdelogoQT_SRCS  qt4/Q_mpdelogo.cpp)
 SET(mpdelogoQT_HEADERS  qt4/Q_mpdelogo.h)
 SET(mpdelogoQT_UI    qt4/mpdelogo)
 IF(DO_QT4)
-  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogoQt4 ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS})
-  addDeps(ADM_vf_mpdelogoQt4)
+  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION} ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS})
+  addDeps(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION})
 ENDIF(DO_QT4)
 # /QT4
 

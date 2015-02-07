@@ -9,7 +9,7 @@ INCLUDE(vf_plugin_qt4)
 SET(HueQT_SRCS  qt4/Q_hue.cpp)
 SET(HueQT_HEADERS  qt4/Q_hue.h)
 SET(HueQT_UI    qt4/hue)
-INIT_VIDEO_FILTER_QT4(ADM_vf_HueQt4 ${HueQT_SRCS} ${HueQT_HEADERS} ${HueQT_UI} ${HueCommon_SRCS})
+INIT_VIDEO_FILTER_QT4(ADM_vf_Hue${QT_LIBRARY_EXTENSION} ${HueQT_SRCS} ${HueQT_HEADERS} ${HueQT_UI} ${HueCommon_SRCS})
 # /QT4
 
 

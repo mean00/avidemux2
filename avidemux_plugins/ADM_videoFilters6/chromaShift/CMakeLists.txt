@@ -10,7 +10,7 @@ INCLUDE(vf_plugin_qt4)
 SET(chromaShiftQT_SRCS     qt4/Q_chromashift.cpp)
 SET(chromaShiftQT_HEADERS  qt4/Q_chromashift.h)
 SET(chromaShiftQT_UI       qt4/chromashift)
-INIT_VIDEO_FILTER_QT4(ADM_vf_chromaShiftQt4 ${chromaShiftQT_SRCS} ${chromaShiftQT_HEADERS} ${chromaShiftQT_UI} ${chromaShiftCommon_SRCS})
+INIT_VIDEO_FILTER_QT4(ADM_vf_chromaShift${QT_LIBRARY_EXTENSION} ${chromaShiftQT_SRCS} ${chromaShiftQT_HEADERS} ${chromaShiftQT_UI} ${chromaShiftCommon_SRCS})
 # /QT4
 
 

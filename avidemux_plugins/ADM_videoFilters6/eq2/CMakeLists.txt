@@ -10,7 +10,7 @@ INCLUDE(vf_plugin_qt4)
 SET(eq2QT_SRCS     qt4/Q_eq2.cpp)
 SET(eq2QT_HEADERS  qt4/Q_eq2.h)
 SET(eq2QT_UI       qt4/eq2)
-INIT_VIDEO_FILTER_QT4(ADM_vf_eq2Qt4 ${eq2QT_SRCS} ${eq2QT_HEADERS} ${eq2QT_UI} ${eq2Common_SRCS})
+INIT_VIDEO_FILTER_QT4(ADM_vf_eq2${QT_LIBRARY_EXTENSION} ${eq2QT_SRCS} ${eq2QT_HEADERS} ${eq2QT_UI} ${eq2Common_SRCS})
 # /QT4
 
 

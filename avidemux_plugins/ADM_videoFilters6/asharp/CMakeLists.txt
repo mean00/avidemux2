@@ -9,7 +9,7 @@ INCLUDE(vf_plugin_qt4)
 SET(asharpQT_SRCS  qt4/Q_asharp.cpp)
 SET(asharpQT_HEADERS  qt4/Q_asharp.h)
 SET(asharpQT_UI    qt4/asharp)
-INIT_VIDEO_FILTER_QT4(ADM_vf_asharpQt4 ${asharpQT_SRCS} ${asharpQT_HEADERS} ${asharpQT_UI} ${asharpCommon_SRCS})
+INIT_VIDEO_FILTER_QT4(ADM_vf_asharp${QT_LIBRARY_EXTENSION} ${asharpQT_SRCS} ${asharpQT_HEADERS} ${asharpQT_UI} ${asharpCommon_SRCS})
 # /QT4
 
 

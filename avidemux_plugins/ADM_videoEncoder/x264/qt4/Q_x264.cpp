@@ -7,10 +7,10 @@
  ***************************************************************************/
 #include <math.h>
 #include <vector>
-#include <QtGui/QFileDialog>
-#include <QtGui/QDialog>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLineEdit>
+#include <QFileDialog>
+#include <QDialog>
+#include <QTextEdit>
+#include <QLineEdit>
 using std::vector;
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"
