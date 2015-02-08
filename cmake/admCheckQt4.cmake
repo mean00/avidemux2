@@ -31,7 +31,7 @@ MACRO(checkQt4)
                         	SET(QT_QTOPENGL_INCLUDE_DIR ${QT_HOME}/include/QtOpenGL)
 
                         	SET(QT_HEADERS_DIR "${QT_HOME}/include/ ${QT_HOME}/include/QtGui")
-                        	SET(QT_INCLUDES "-I${QT_HOME}/include -I{QT_HOME}/include/QtGui")
+                        	SET(QT_INCLUDES "-I${QT_HOME}/include -I${QT_HOME}/include/QtGui")
                         	SET(QT_INCLUDE_DIR "${QT_HEADERS_DIR}")
                         	SET(QT_BINARY_DIR ${QT_HOME}/bin)
                         	SET(QT_LIBRARY_DIR ${QT_HOME}/lib)
