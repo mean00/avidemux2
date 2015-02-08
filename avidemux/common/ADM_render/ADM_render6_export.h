@@ -7,7 +7,7 @@
 #  define ADM_RENDER6_NO_EXPORT
 #else
 #  ifndef ADM_RENDER6_EXPORT
-#    if defined(ADM_render6_cli_EXPORTS) || defined(ADM_render6_gtk_EXPORTS) || defined(ADM_render6_QT4_EXPORTS || defined(ADM_render6_QT5_EXPORTS))
+#    if defined(ADM_render6_cli_EXPORTS) || defined(ADM_render6_gtk_EXPORTS) || defined(ADM_render6_QT4_EXPORTS) || defined(ADM_render6_QT5_EXPORTS)
        /* We are building this library */
 #      ifdef _WIN32
 #        define ADM_RENDER6_EXPORT __declspec(dllexport)
