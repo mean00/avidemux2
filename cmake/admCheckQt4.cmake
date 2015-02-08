@@ -23,19 +23,16 @@ MACRO(checkQt4)
                         	SET(QT_QTGUI_LIBRARY  "-framework QtGui -framework Cocoa")
 
                         	MESSAGE(STATUS "[QT4IncludeDir] ${QT_INCLUDE_DIR}")
-			ELSE(APPLE)
+			ELSE(APPLE) # WIN32/64 cross
                         	SET(QT_QTOPENGL_FOUND 1)
                         	SET(QT_VERSION_MINOR 7)
 	
                         	SET(QT_QTOPENGL_LIBRARY ${QT_HOME}/lib/libQtOpenGL4.a)
                         	SET(QT_QTOPENGL_INCLUDE_DIR ${QT_HOME}/include/QtOpenGL)
 
-                        	SET(QT_HEADERS_DIR "${QT_HOME}/include/")
-
-                        	SET(QT_INCLUDES "-I${QT_HOME}/include")
-                                SET(QT_INCLUDES ${QT_INCLUDES} ${QT_INCLUDES}/QtGui)
-                        	SET(QT_INCLUDE_DIR "${QT_HOME}/include")
-                                SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} ${QT_INCLUDE_DIR}/QtGui)
+                        	SET(QT_HEADERS_DIR "${QT_HOME}/include/ ${QT_HOME}/include/QtGui")
+                        	SET(QT_INCLUDES "-I${QT_HOME}/include -I{QT_HOME}/include/QtGui")
+                        	SET(QT_INCLUDE_DIR "${QT_HEADERS_DIR}")
                         	SET(QT_BINARY_DIR ${QT_HOME}/bin)
                         	SET(QT_LIBRARY_DIR ${QT_HOME}/lib)
                         	SET(QT_QTCORE_LIBRARY ${QT_HOME}/lib/libQtCore4.a)
