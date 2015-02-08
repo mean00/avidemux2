@@ -47,6 +47,9 @@ MACRO(checkQt4)
                         	SET(QT_UIC_EXECUTABLE uic-qt4)
                         	MESSAGE(STATUS "[QT4Include] ${QT_INCLUDES}")
                         	MESSAGE(STATUS "[QT4IncludeDir] ${QT_INCLUDE_DIR}")
+                                SET(QT_EXTENSION qt4)
+                                SET(QT_LIBRARY_EXTENSION QT4)
+                                SET(ADM_QT_VERSION 4)
                         	include(admCrossQt4)
                         
                                
