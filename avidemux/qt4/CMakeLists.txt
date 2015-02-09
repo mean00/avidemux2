@@ -23,6 +23,7 @@ ENDIF (NOT QT_FOUND)
 include(admCheckOpenGl)
 #
 #--
+MESSAGE(STATUS "Adding Qt inc paths : <${QT_INCLUDES}> and definitions <${QT_DEFINITIONS}>")
 INCLUDE_DIRECTORIES(${QT_INCLUDES})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 #--
