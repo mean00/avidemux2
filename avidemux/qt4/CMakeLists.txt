@@ -52,9 +52,9 @@ ADD_SUBDIRECTORY(ADM_jobs)
 ########################################
 INCLUDE_DIRECTORIES(ADM_UIs/include/)
 
-if (WIN32)
+if (WIN32 AND NOT CROSS)
 	ADD_SUBDIRECTORY(../common ./commonQt4)
-else (WIN32)
+else (WIN32 AND NOT CROSS)
 	# Make symlink else eclipe and kdev4 are puzzled by the tree structure
 	# Not needed for plain build
 	MESSAGE(STATUS "Creating common symlink in ${CMAKE_CURRENT_SOURCE_DIR}") 
@@ -65,7 +65,7 @@ else (WIN32)
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 	ADD_SUBDIRECTORY(common ./commonQt4)
-endif (WIN32)
+endif (WIN32 AND NOT CROSS)
 
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
