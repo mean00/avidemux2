@@ -13,7 +13,7 @@
  ***************************************************************************/
 
 #include <QtCore/QFileInfo>
-#include <QMimeData>
+#include <QtCore/QMimeData>
 #include <QtCore/QUrl>
 #include <QKeyEvent>
 #include <QGraphicsView>
