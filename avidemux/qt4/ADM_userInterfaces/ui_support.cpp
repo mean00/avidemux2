@@ -6,7 +6,7 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QWidget>
-#include <QString>
+#include <QtCore/QString>
 
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
