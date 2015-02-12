@@ -49,5 +49,6 @@ extern const ADM_paramList x265_settings_param[]={
  {"ratecontrol.aq_mode",offsetof(x265_settings,ratecontrol.aq_mode),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.aq_strength",offsetof(x265_settings,ratecontrol.aq_strength),"double",ADM_param_double},
  {"ratecontrol.cu_tree",offsetof(x265_settings,ratecontrol.cu_tree),"bool",ADM_param_bool},
+ {"ratecontrol.strict_cbr",offsetof(x265_settings,ratecontrol.strict_cbr),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };

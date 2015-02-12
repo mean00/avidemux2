@@ -293,7 +293,6 @@ bool x265Dialog::upload(void)
           MK_UINT(meSpinBox,subpel_refine);
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
-          MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
           MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
@@ -417,6 +416,13 @@ bool x265Dialog::upload(void)
     DISABLE(noiseReductionInterSpinBox);
     MK_UINT(noiseReductionSpinBox,noise_reduction);
 #endif
+    
+#if X265_BUILD >= 41
+    DISABLE(avgBitrateToleranceSpinBox);
+    MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
+#else
+    MK_UINT(avgBitrateToleranceSpinBox,ratecontrol.rate_tolerance*100.0);
+#endif
         
 	      DISABLE(spsiComboBox);
 	      DISABLE(openGopCheckBox);
@@ -477,8 +483,14 @@ bool x265Dialog::download(void)
           MK_CHECKBOX(constrainedIntraCheckBox,constrained_intra);
 
           MK_UINT(quantiserMaxStepSpinBox,ratecontrol.qp_step);
+          
+#if X265_BUILD >= 41
+          MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
+#else
           MK_UINT(avgBitrateToleranceSpinBox, ratecontrol.rate_tolerance);
           myCopy.ratecontrol.rate_tolerance /= 100.0;
+#endif
+          
           MK_UINT(quantiserIpRatioSpinBox,ratecontrol.ip_factor);
           MK_UINT(quantiserPbRatioSpinBox,ratecontrol.pb_factor);
           MK_UINT(cbChromaLumaOffsetSpinBox,cb_chroma_offset);
@@ -559,7 +571,7 @@ bool x265Dialog::download(void)
 // General tab
 void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 {
-	bool enableQp = false, enableMaxCrf = false;
+	bool enableQp = false, enableMaxCrf = false, enableStrictCbr = false;
 
 	switch (index)
 	{
@@ -567,6 +579,7 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 			ui.targetRateControlLabel1->setText(tr("Target Bitrate:"));
 			ui.targetRateControlLabel2->setText(tr("kbit/s"));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
+                        enableStrictCbr = true;
 			break;
 		case 1: // Constant Quality - 1 pass
 			ui.quantiserLabel2->setText(tr("Quantiser:"));
@@ -598,6 +611,10 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 	ui.targetRateControlLabel1->setEnabled(!enableQp);
 	ui.targetRateControlLabel2->setEnabled(!enableQp);
 	ui.targetRateControlSpinBox->setEnabled(!enableQp);
+        
+#if X265_BUILD >= 41
+        ui.strictCbrCheckBox->setEnabled(enableStrictCbr);
+#endif
 
 #if 0
 	if (!enableMaxCrf)

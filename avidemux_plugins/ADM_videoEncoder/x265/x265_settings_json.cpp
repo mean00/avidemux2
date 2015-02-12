@@ -59,6 +59,7 @@ json.addDouble("pb_factor",key->ratecontrol.pb_factor);
 json.addUint32("aq_mode",key->ratecontrol.aq_mode);
 json.addDouble("aq_strength",key->ratecontrol.aq_strength);
 json.addBool("cu_tree",key->ratecontrol.cu_tree);
+json.addBool("strict_cbr",key->ratecontrol.strict_cbr);
 json.endNode();
 return json.dumpToFile(file);
 };

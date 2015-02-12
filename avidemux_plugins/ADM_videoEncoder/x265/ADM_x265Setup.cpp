@@ -215,7 +215,13 @@ bool x265Encoder::setup(void)
   #define MKPARAMB(x,y) {param.rc.x = x265Settings.ratecontrol.y ;aprintf("[x265] rc."#x" = %s\n",TrueFalse[param.rc.x&1]);}
 
       MKPARAM(qpStep,qp_step);
+    
+#if X265_BUILD >= 41
+      MKPARAMB(bStrictCbr,strict_cbr);
+#else
       MKPARAM(rateTolerance,rate_tolerance);
+#endif
+      
       MKPARAM(ipFactor,ip_factor);
       MKPARAM(pbFactor,pb_factor);
       MKPARAMB(cuTree,cu_tree);
@@ -394,7 +400,13 @@ void dumpx265Setup(x265_param *param)
     RI(rateControlMode);
     RI(qp);
     RI(bitrate);
+    
+#if X265_BUILD >= 41
+    RI(bStrictCbr);
+#else
     RD(rateTolerance);
+#endif
+    
     RD(qCompress);
     RD(ipFactor);
     RD(pbFactor);

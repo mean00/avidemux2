@@ -56,6 +56,7 @@ struct  {
 	uint32_t aq_mode;
 	double aq_strength;
 	bool cu_tree;
+	bool strict_cbr;
 }ratecontrol;
 }x265_settings;
 #endif

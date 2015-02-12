@@ -90,7 +90,8 @@ extern "C"
 	1.3,	/* float pb_factor; */ \
 	2,	/* uint32_t aq_mode; */ \
 	1.0,	/* float aq_strength; */ \
-	true 	/* bool cu_tree; */ \
+	true, 	/* bool cu_tree; */ \
+        false   /* bool strict_cbr; */ \
 	} \
 }
 
