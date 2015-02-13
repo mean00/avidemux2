@@ -351,7 +351,9 @@ void dumpx265Setup(x265_param *param)
     
     PI(bEnableAMP);
     PI(bEnableRectInter);
+#if X265_BUILD < 45
     PI(bEnableCbfFastMode);
+#endif
     PI(bEnableEarlySkip);
     PI(rdPenalty);
     PI(rdLevel);
