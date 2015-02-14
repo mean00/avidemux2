@@ -220,6 +220,24 @@ void UI_purge( void )
 {
 }
 
+class cliProcessing: public DIA_processingBase
+{
+public:
+        cliProcessing(const char *title, uint64_t _totalToProcess ) : DIA_processingBase(title,_totalToProcess)
+        {
+            
+        }
+        ~cliProcessing()
+        {
+            
+        }
+        
+};
+ DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
+ {
+     return new cliProcessing(title,totalToProcess);
+ }
+
 }; // namespace
 static CoreToolkitDescriptor CliCoreToolkitDescriptor=
 {
@@ -236,7 +254,8 @@ static CoreToolkitDescriptor CliCoreToolkitDescriptor=
                 &ADM_CliCoreUIToolkit::createWorking,
                 &ADM_CliCoreUIToolkit::createEncoding,
                 &ADM_CliCoreUIToolkit::createAudioTrack,
-                &ADM_CliCoreUIToolkit::UI_purge
+                &ADM_CliCoreUIToolkit::UI_purge,         
+                &ADM_CliCoreUIToolkit::createProcessing
 };
 
 
