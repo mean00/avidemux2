@@ -213,17 +213,37 @@ bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const ch
         *desc=a->info.desc;
         return 1;
 }
+/**
+ * \fn parseOneFolder
+ * @param folder
+ */
+#define MAX_EXTERNAL_FILTER 100
+static void parseOneFolder(const char *folder,uint32_t featureMask )
+{  
+    char *files[MAX_EXTERNAL_FILTER];
+    uint32_t nbFile;
+    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+    if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    {
+            printf("[ADM_vf_plugin] Cannot parse plugin\n");
+            return ;
+    }
 
+
+    ADM_info("Feature Mask = 0x%x\n",featureMask);
+    for(int i=0;i<nbFile;i++)
+            tryLoadingVideoFilterPlugin(files[i],featureMask);
+
+    printf("[ADM_vf_plugin] Scanning done, found %d video filer(s) so far\n", (int)ADM_vf_getNbFilters());
+    clearDirectoryContent(nbFile,files);  
+}
 /**
  * 	\fn ADM_ad_GetPluginVersion
  *  \brief load all audio plugins
  */
-uint8_t ADM_vf_loadPlugins(const char *path)
+uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
 {
-#define MAX_EXTERNAL_FILTER 100
-
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
+	
         uint32_t featureMask=0;
 
 #ifdef USE_LIBVA               
@@ -238,25 +258,16 @@ uint8_t ADM_vf_loadPlugins(const char *path)
         if(hasOpenGl)
             featureMask|=ADM_FEATURE_OPENGL;
 #endif
-
         
-        
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+	
 	printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
-	{
-		printf("[ADM_vf_plugin] Cannot parse plugin\n");
-		return 0;
-	}
-
-
-        ADM_info("Feature Mask = 0x%x\n",featureMask);
-	for(int i=0;i<nbFile;i++)
-		tryLoadingVideoFilterPlugin(files[i],featureMask);
-
-	printf("[ADM_vf_plugin] Scanning done, found %d video filer(s)\n", (int)ADM_vf_getNbFilters());
-        clearDirectoryContent(nbFile,files);
+        std::string myPath=std::string(path);
+        parseOneFolder(myPath.c_str(),featureMask);
+        myPath+=std::string("/")+std::string(subFolder);
+        parseOneFolder(myPath.c_str(),featureMask);
+        
+        
         sortVideoFiltersByName();
 	return 1;
 }

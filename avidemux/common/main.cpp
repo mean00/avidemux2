@@ -63,7 +63,7 @@ extern void destroyGUI(void);
 extern void initFileSelector(void);
 extern void getUIDescription(char*);
 extern uint8_t ADM_ad_loadPlugins(const char *path);
-extern uint8_t ADM_vf_loadPlugins(const char *path);
+extern uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder);
 extern uint8_t ADM_vd6_loadPlugins(const char *path);
 extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
@@ -336,7 +336,7 @@ int startAvidemux(int argc, char *argv[])
     ADM_ve6_loadPlugins(vePlugins,getUISpecifSubfolder());
     delete [] vePlugins;
 
-    ADM_vf_loadPlugins(vfPlugins);
+    ADM_vf_loadPlugins(vfPlugins,getUISpecifSubfolder());
     delete [] vfPlugins;
 
     ADM_vd6_loadPlugins(vdPlugins);
@@ -344,14 +344,14 @@ int startAvidemux(int argc, char *argv[])
 
 
     // load local audio decoder plugins
-	adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");
-	ADM_ad_loadPlugins(adPlugins);
-	delete [] adPlugins;
+    adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");
+    ADM_ad_loadPlugins(adPlugins);
+    delete [] adPlugins;
 
-	// load local video filter plugins
-	vfPlugins=ADM_getHomeRelativePath("plugins6","videoFilter");
-	ADM_vf_loadPlugins(vfPlugins);
-	delete [] vfPlugins;
+    // load local video filter plugins
+    vfPlugins=ADM_getHomeRelativePath("plugins6","videoFilter");
+    ADM_vf_loadPlugins(vfPlugins,getUISpecifSubfolder());
+    delete [] vfPlugins;
 
 
 	
