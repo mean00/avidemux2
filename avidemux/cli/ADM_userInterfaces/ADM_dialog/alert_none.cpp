@@ -235,7 +235,7 @@ public:
 };
  DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
  {
-     return new cliProcessing(title,totalToProcess);cd 
+     return new cliProcessing(title,totalToProcess); 
  }
 
 }; // namespace
