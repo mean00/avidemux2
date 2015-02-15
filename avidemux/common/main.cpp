@@ -67,7 +67,7 @@ extern uint8_t ADM_vf_loadPlugins(const char *path);
 extern uint8_t ADM_vd6_loadPlugins(const char *path);
 extern uint8_t ADM_av_loadPlugins(const char *path);
 extern uint8_t ADM_ae_loadPlugins(const char *path);
-extern uint8_t ADM_ve6_loadPlugins(const char *path);
+extern uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder);
 
 extern bool ADM_ad_cleanup(void);
 extern bool ADM_ae_cleanup(void);
@@ -89,6 +89,9 @@ extern int UI_Init(int nargc,char **nargv);
 extern int UI_RunApp(void);
 extern bool UI_End(void);
 extern void cleanUp (void);
+
+extern ADM_UI_TYPE UI_GetCurrentUI(void);
+
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -133,7 +136,28 @@ int main(int _argc, char *_argv[])
 
 	return exitVal;
 }
-
+/**
+ * \fn getUISpecifSubfolder
+ * @return 
+ */
+static const char *getUISpecifSubfolder()
+{
+    switch(UI_GetCurrentUI())
+    {
+        case ADM_UI_QT4:
+            return "qt4";
+            break;
+        case ADM_UI_CLI:
+            return "cli";
+            break;
+        case ADM_UI_GTK:
+            return "gtk";
+            break;
+        default:     
+            break;
+    }
+    return "unknown";
+}
 int startAvidemux(int argc, char *argv[])
 {
     printf("*************************\n");
@@ -306,10 +330,10 @@ int startAvidemux(int argc, char *argv[])
     ADM_ae_loadPlugins(aePlugins);
     delete [] aePlugins;
 
-	ADM_dm_loadPlugins(dmPlugins);
+    ADM_dm_loadPlugins(dmPlugins);
     delete [] dmPlugins;
 
-    ADM_ve6_loadPlugins(vePlugins);
+    ADM_ve6_loadPlugins(vePlugins,getUISpecifSubfolder());
     delete [] vePlugins;
 
     ADM_vf_loadPlugins(vfPlugins);

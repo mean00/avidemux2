@@ -89,49 +89,69 @@ er:
 	return false;
 
 }
+#define MAX_EXTERNAL_FILTER 100
+/**
+ * \fn sortEncoder
+ */
+static void sortEncoder(void)
+{
+   int nb=ListOfEncoders.size();
+        for(int i=1;i<nb;i++)
+                for(int j=i+1;j<nb;j++)
+                {
+                        ADM_videoEncoder6 *a,*b;
+                        a=ListOfEncoders[i];
+                        b=ListOfEncoders[j];
+                        if(strcmp(a->desc->menuName,b->desc->menuName)>0)
+                        {
+                                ListOfEncoders[j]=a;
+                                ListOfEncoders[i]=b;
+                        }
+                }
+}
+/**
+ * \fn parseFolder
+ * @param folder
+ */
+static void parseFolder(const char *folder) 
+{
+        char *files[MAX_EXTERNAL_FILTER];
+	uint32_t nbFile;
+
+	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+	printf("[ADM_ve6_plugin] Scanning directory %s\n",folder);
+
+	if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+	{
+		printf("[ADM_ve6_plugin] Cannot parse plugin\n");
+		return ;
+	}   
+
+	for(int i=0;i<nbFile;i++)
+		tryLoadingEncoderPlugin(files[i]);
+        
+        printf("[ADM_ve6_plugin] Scanning done\n");
+        clearDirectoryContent(nbFile,files);        
+}
 /**
  * 	\fn ADM_ve6_loadPlugins
  *  \brief load all audio device plugins
  */
-uint8_t ADM_ve6_loadPlugins(const char *path)
+uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder)
 {
-#define MAX_EXTERNAL_FILTER 100
-// FIXME Factorize
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
-
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_ve6_plugin] Scanning directory %s\n",path);
-
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
-	{
-		printf("[ADM_ve6_plugin] Cannot parse plugin\n");
-		return 0;
-	}
-    // Add our copy encoder....
-    ADM_videoEncoder6 *dll=new ADM_videoEncoder6("copyADM");
-    dll->desc=&copyDesc;
-    ListOfEncoders.append(dll);
-
-	for(int i=0;i<nbFile;i++)
-		tryLoadingEncoderPlugin(files[i]);
-
-	printf("[ADM_ve6_plugin] Scanning done\n");
-    int nb=ListOfEncoders.size();
-    for(int i=1;i<nb;i++)
-        for(int j=i+1;j<nb;j++)
-        {
-             ADM_videoEncoder6 *a,*b;
-             a=ListOfEncoders[i];
-             b=ListOfEncoders[j];
-             if(strcmp(a->desc->menuName,b->desc->menuName)>0)
-             {
-                ListOfEncoders[j]=a;
-                ListOfEncoders[i]=b;
-             }
-        }
-        clearDirectoryContent(nbFile,files);
+        // Add our copy encoder....
+        ADM_videoEncoder6 *dll=new ADM_videoEncoder6("copyADM");
+        dll->desc=&copyDesc;
+        ListOfEncoders.append(dll);
+        
+        std::string myPath=std::string(path);
+        parseFolder(myPath.c_str());
+        
+        myPath+=std::string("/")+std::string(subFolder);
+        parseFolder(myPath.c_str());
+        
+	sortEncoder();
 
 	return 1;
 }
