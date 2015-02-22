@@ -9,6 +9,7 @@ do_gtk=0
 do_qt4=1
 do_plugins=1
 debug=0
+qt_ext=Qt4
 export O_PARAL="-j 2"
 fail()
 {
@@ -33,7 +34,7 @@ Process()
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $PKG $FAKEROOT -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
@@ -60,7 +61,7 @@ config()
         fi
         printModule $do_core Core
         printModule $do_gtk Gtk
-        printModule $do_qt4 Qt4
+        printModule $do_qt4 ${qt_ext}
         printModule $do_cli Cli
         printModule $do_plugins Plugins
 }
@@ -83,6 +84,7 @@ usage()
         echo "  --without-qt4     : Dont build qt4"
         echo "  --with-plugins    : Build plugins"
         echo "  --without-plugins : Dont build plugins"
+        echo "  --enable-qt5      : Try to use qt5 instead of qt4"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -136,6 +138,10 @@ while [ $# != 0 ] ;do
          --without-core)
                 do_core=0
              ;;
+         --enable-qt5)
+                QT_FLAVOR="-DENABLE_QT5=True"
+                qt_ext=Qt5
+             ;;
          --with-qt4)
                 do_qt4=1
              ;;
@@ -187,11 +193,11 @@ if [ "x$do_core" = "x1" ] ; then
 fi
 export PARAL="$O_PARAL"
 if [ "x$do_qt4" = "x1" ] ; then 
-        echo "** QT4 **"
+        echo "** $qt_ext **"
         cd $TOP
-        Process buildQt4 ../avidemux/qt4
-        echo " Installing Qt4"
-        cd $TOP/buildQt4${POSTFIX} 
+        Process build${qt_ext} ../avidemux/qt4
+        echo " Installing ${qt_ext}"
+        cd $TOP/build${qt_ext}${POSTFIX} 
 fi
 if [ "x$do_cli" = "x1" ] ; then 
         echo "** CLI **"
@@ -213,9 +219,9 @@ if [ "x$do_plugins" = "x1" ] ; then
         Process buildPluginsCommon ../avidemux_plugins -DPLUGIN_UI=COMMON
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then 
-        echo "** Plugins Qt4 **"
+        echo "** Plugins ${qt_ext} **"
         cd $TOP
-        Process buildPluginsQt4 ../avidemux_plugins -DPLUGIN_UI=QT4
+        Process buildPlugins${qt_ext} ../avidemux_plugins -DPLUGIN_UI=QT4
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_gtk" = "x1" ] ; then 
         echo "** Plugins Gtk **"

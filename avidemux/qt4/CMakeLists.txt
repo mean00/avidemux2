@@ -184,7 +184,7 @@ target_link_libraries(avidemux3_${QT_EXTENSION} "-lm -lstdc++")
 #
 # i18n
 #
-# FIXME ADD_SUBDIRECTORY(i18n)
+ADD_SUBDIRECTORY(i18n)
 ###########################################
 # Install
 ###########################################
