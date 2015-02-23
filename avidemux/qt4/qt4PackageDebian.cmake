@@ -3,7 +3,7 @@
 ##############################
 include(debianArch)
 SET(CPACK_SET_DESTDIR "ON")
-SET(CPACK_DEBIAN_PACKAGE_NAME "avidemux3-qt4")
+SET(CPACK_DEBIAN_PACKAGE_NAME "avidemux3-${QT_EXTENSION}")
 SET (CPACK_GENERATOR "DEB")
 # ARCH
 SET_DEBIAN_ARCH()
@@ -21,7 +21,7 @@ SET(CPACK_DEBIAN_PACKAGE_SECTION "extra")
 SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 # Some more infos
 #
-SET(CPACK_PACKAGE_NAME "avidemux3-qt4")
+SET(CPACK_PACKAGE_NAME "avidemux3-${QT_EXTENSION}")
 #
 
 include(CPack)
