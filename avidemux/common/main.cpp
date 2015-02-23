@@ -145,7 +145,11 @@ static const char *getUISpecifSubfolder()
     switch(UI_GetCurrentUI())
     {
         case ADM_UI_QT4:
+#if ADM_UI_TYPE_BUILD == ADM_UI_QT4            
+            return QT_FLAVOR;
+#else
             return "qt4";
+#endif            
             break;
         case ADM_UI_CLI:
             return "cli";

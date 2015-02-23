@@ -73,6 +73,7 @@ ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 SDLify(../common/main.cpp)
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION='\"${AVIDEMUX_VERSION}\"'")
+ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR='\"${QT_EXTENSION}\"'")
 
 ###########################################
 # Version Info
