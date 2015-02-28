@@ -28,20 +28,20 @@ include_directories(
 	"${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common")
 
 add_definitions(-Werror -Wall)
-ADD_SCRIPT_ENGINE(ADM_script_qt SHARED ${ADM_qtScript_SRCS})
+ADD_SCRIPT_ENGINE(ADM_script_${QT_EXTENSION} SHARED ${ADM_qtScript_SRCS})
 target_link_libraries(
-	ADM_script_qt  ADM_coreAudioEncoder6  ADM_core6  ADM_coreDemuxer6  ADM_coreMuxer6
+	ADM_script_${QT_EXTENSION}  ADM_coreAudioEncoder6  ADM_core6  ADM_coreDemuxer6  ADM_coreMuxer6
 	ADM_coreUI6  ADM_coreVideoEncoder6  ADM_coreVideoFilter6  ADM_coreUtils6  ADM_coreAudio6
 	${QT_QTSCRIPT_LIBRARY}  ${QT_QTCORE_LIBRARY})
-INSTALL_SCRIPT_ENGINE(ADM_script_qt)
+INSTALL_SCRIPT_ENGINE(ADM_script_${QT_EXTENSION})
 
 if (NOT APPLE)
-	target_link_libraries(ADM_script_qt -Wl,--version-script,"${CMAKE_CURRENT_SOURCE_DIR}/ADM_script_qt.v")
+	target_link_libraries(ADM_script_${QT_EXTENSION} -Wl,--version-script,"${CMAKE_CURRENT_SOURCE_DIR}/ADM_script_qt.v")
 endif (NOT APPLE)
 
 if (QT_QTSCRIPTTOOLS_FOUND)
     add_definitions(-DQT_SCRIPTTOOLS)
-    target_link_libraries(ADM_script_qt ${QT_QTSCRIPTTOOLS_LIBRARY} ${QT_QTGUI_LIBRARY})
+    target_link_libraries(ADM_script_${QT_EXTENSION} ${QT_QTSCRIPTTOOLS_LIBRARY} ${QT_QTGUI_LIBRARY})
 endif (QT_QTSCRIPTTOOLS_FOUND)
 
 APPEND_SUMMARY_LIST("Scripting" "QtScript Debugger" "${QT_QTSCRIPTTOOLS_FOUND}")
