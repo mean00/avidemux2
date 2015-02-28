@@ -1,4 +1,4 @@
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "DIA_factory.h"
 
 #include "Dialog.h"

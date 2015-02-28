@@ -21,6 +21,11 @@ MACRO(checkQt5)
 			        STRING(REGEX REPLACE "[\\]" "/" QT_INCLUDES "${QT_INCLUDES}")	# backslashes aren't taken care of properly on Windows
 			        PRINT_LIBRARY_INFO("Qt 5" QT5_FOUND ": ${QT_INCLUDES} : ${QT_DEFINITIONS}" ": ${QT_QTCORE_LIBRARY} : ${QT_QTGUI_LIBRARY}")
 
+			        FIND_PACKAGE(Qt5Script)
+                                IF(Qt5Script_FOUND)
+                                        SET(QT_QTSCRIPT_FOUND 1)	
+                                        SET(QT_QTSCRIPT_LIBRARY ${Qt5Script_LIBRARIES})
+                                ENDIF(Qt5Script_FOUND)
 			        MARK_AS_ADVANCED(LRELEASE_EXECUTABLE)
 			        MARK_AS_ADVANCED(QT_MKSPECS_DIR)
 			        MARK_AS_ADVANCED(QT_PLUGINS_DIR)

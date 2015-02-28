@@ -5,8 +5,7 @@ set(ADM_script_headers
 	Muxer.h  	Segment.h  SegmentCollectionPrototype.h  SliderControl.h  SpinBoxControl.h  VideoDecoder.h  VideoEncoder.h
 	VideoFileProperties.h  VideoFilter.h  VideoFilterCollectionPrototype.h  VideoOutput.h)
 
-QT4_WRAP_CPP(ADM_qtScript_SRCS
-	${ADM_script_headers}  QtScriptObject.h  QtScriptConfigObject.h)
+ADM_QT_WRAP_CPP(ADM_qtScript_SRCS ${ADM_script_headers}  QtScriptObject.h  QtScriptConfigObject.h)
 
 set(ADM_script_headers
 	${ADM_script_headers}  Doxygen_MainPage.h  Doxygen_Functions.h  Doxygen_Examples.h)
@@ -23,7 +22,7 @@ set(ADM_qtScript_SRCS
 
 include_directories(
 	"${CMAKE_CURRENT_BINARY_DIR}"
-	"${QT_INCLUDE_DIR}"
+	"${QT_INCLUDES}"
 	../include
 	"${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common")
 

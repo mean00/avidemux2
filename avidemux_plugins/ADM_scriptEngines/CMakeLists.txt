@@ -1,5 +1,7 @@
 include(se_plugin)
 
 add_subdirectory(qtScript)
-add_subdirectory(spiderMonkey)
-add_subdirectory(tinyPy)
+IF(DO_COMMON)
+        add_subdirectory(spiderMonkey)
+        add_subdirectory(tinyPy)
+ENDIF(DO_COMMON)

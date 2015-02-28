@@ -181,6 +181,8 @@ if [ "x$packages_ext" = "x" ]; then
 else
 	rm -Rf $FAKEROOT_DIR
 	mkdir -p $FAKEROOT_DIR
+        echo "Cleaning packages"
+        find . -name "*.$packages_ext" | grep -vi cpa | xargs rm -f
 fi
 
 if [ "x$do_core" = "x1" ] ; then 
