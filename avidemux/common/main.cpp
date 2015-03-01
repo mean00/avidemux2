@@ -282,7 +282,7 @@ int startAvidemux(int argc, char *argv[])
 
     //***************Plugins *********************
 
-	if(!initGUI(initialiseScriptEngines(sePlugins, video_body)))
+	if(!initGUI(initialiseScriptEngines(sePlugins, video_body,getUISpecifSubfolder())))
 	{
 		printf("\n Fatal : could not init GUI\n");
 		exit(-1);

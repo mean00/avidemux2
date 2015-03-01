@@ -39,11 +39,11 @@ bool compareEngineRank(IScriptEngine *engine1, IScriptEngine *engine2)
 {
 	return engine1->maturityRanking() > engine2->maturityRanking();
 }
-
-const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor *editor)
+/**
+ * 
+ */
+static void tryLoadingEngine(const char* path, IEditor *editor)
 {
-    ADM_assert(engines.size() == 0);
-
     const int maxEngineCount = 50;
     char *files[maxEngineCount];
     uint32_t fileCount;
@@ -55,7 +55,7 @@ const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor 
     {
         printf("[Script] Cannot parse plugin\n");
 
-        return engines;
+        return ;
     }
 
     for (int index = 0; index < fileCount; index++)
@@ -71,6 +71,7 @@ const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor 
 
             engineLoaders.push_back(loader);
             engines.push_back(engine);
+            printf("[Script] loaded %s\n", files[index]);
         }
         else
         {
@@ -78,9 +79,23 @@ const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor 
             printf("[Script] ERROR - Unable to load %s\n", files[index]);
         }
     }
+}
 
-	sort(engines.begin(), engines.end(), compareEngineRank);
+/**
+ * 
+ * @param path
+ * @param editor
+ * @return 
+ */
+const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor *editor,const char *subFolder)
+{
+    ADM_assert(engines.size() == 0);
 
+    std::string p=std::string(path);
+    tryLoadingEngine(p.c_str(),editor);
+    p+=std::string("/")+std::string(subFolder);
+    tryLoadingEngine(p.c_str(),editor);
+    sort(engines.begin(), engines.end(), compareEngineRank);
     return engines;
 }
 
