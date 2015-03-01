@@ -104,10 +104,10 @@ void loadTranslator(void)
                 
                 
 #ifdef __APPLE__
-	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/"+partialPath;
+	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/"+QString(partialPath.c_str());
                 
 #elif defined(_WIN32)
-	QString appdir = QCoreApplication::applicationDirPath() + +partialPath;
+	QString appdir = QCoreApplication::applicationDirPath() + QString(partialPath.c_str());
 #else
 	QString appdir = ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
 #endif
