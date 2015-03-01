@@ -95,13 +95,21 @@ void loadTranslator(void)
             ADM_info("Language forced \n");
         }
         ADM_info("Initializing language %s\n",lang);
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
+        std::string flavor="/qt4";
+#else        
+        std::string flavor="/qt5";
+#endif
+        std::string partialPath=std::string(flavor)+std::string("/i18n");
+                
+                
 #ifdef __APPLE__
-	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/i18n/";
+	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/"+partialPath;
                 
 #elif defined(_WIN32)
-	QString appdir = QCoreApplication::applicationDirPath() + "/i18n/";
+	QString appdir = QCoreApplication::applicationDirPath() + +partialPath;
 #else
-	QString appdir = ADM_getInstallRelativePath("share","avidemux6","i18n");
+	QString appdir = ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
 #endif
         QString languageFile=QString(lang);
     int nbLoaded=0;
