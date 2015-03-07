@@ -53,12 +53,15 @@ bool x265Encoder::setup(void)
   param.logLevel=x265Settings.level; 
 
   // Threads..
+#if X265_BUILD < 47
   switch(x265Settings.general.poolThreads)
   {
     case 0: case 1: case 2: param.poolNumThreads = x265Settings.general.poolThreads;break;
     case 99:break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }
+#endif
+
   switch(x265Settings.general.frameThreads)
   {
     case 0: case 1: case 2: param.frameNumThreads = x265Settings.general.frameThreads;break;
@@ -274,13 +277,18 @@ void dumpx265Setup(x265_param *param)
 {
 #define PI(x) printf(#x"\t:%d\n",(int)param->x)
 #define PD(x) printf(#x"\t:%d\n",(double)param->x)
+#define PS(x) printf(#x"\t:%s\n",param->x)
     printf("*************************************\n");
     printf("***      Encoder Environment      ***\n");
     printf("*************************************\n");
     
     PI(cpuid);
     PI(bEnableWavefront);
+#if X265_BUILD >= 47
+    PS(numaPools);
+#else
     PI(poolNumThreads);
+#endif
     PI(frameNumThreads);
     PI(logLevel);
     PI(bLogCuStats); 

@@ -335,6 +335,10 @@ bool x265Dialog::upload(void)
                 }
           }
         // update threads
+    
+#if X265_BUILD >= 47
+          DISABLE(comboBoxPoolThreads);
+#else
           QComboBox *poolThreads=ui.comboBoxPoolThreads;
           for(int i=0;i<NB_THREADS;i++)
           {
@@ -345,6 +349,7 @@ bool x265Dialog::upload(void)
                         break;
                 }
           }
+#endif
           
           QComboBox *frameThreads=ui.comboBoxFrameThreads;
           for(int i=0;i<NB_THREADS;i++)
@@ -538,10 +543,13 @@ bool x265Dialog::download(void)
             case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
             case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
           }
+          
+#if X265_BUILD < 47
           // update thread count
           QComboBox *poolThreads=ui.comboBoxPoolThreads;
           int poolThreadIndex=poolThreads->currentIndex();
           myCopy.general.poolThreads=listOfThreads[poolThreadIndex].idcValue;
+#endif
           
           QComboBox *frameThreads=ui.comboBoxFrameThreads;
           int frameThreadIndex=frameThreads->currentIndex();
