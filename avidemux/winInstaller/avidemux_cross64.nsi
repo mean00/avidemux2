@@ -338,7 +338,7 @@ SectionGroup /e "User interfaces" SecGrpUI
         SetOverwrite on
         ${File} ${ADM_DIR}/avidemux.exe
         ${File} ${ADM_DIR}/avidemux_jobs.exe
-        ${File} ${ADM_DIR}/libADM_render6_qt4.dll
+        ${File} ${ADM_DIR}/libADM_render6_QT4.dll
         ${File} ${ADM_DIR}/libADM_UIQT46.dll
         ${File} ${QT_DIR}/QtOpenGL4.dll
         #${File} ${QT_DIR}/libgcc_s_dw2-1.dll
@@ -703,7 +703,9 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		SetOutPath $INSTDIR\plugins\videoEncoders
 
 		${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_x264_other.dll
-		${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_x264_qt4.dll
+
+		SetOutPath $INSTDIR\plugins\videoEncoders\qt4
+		${File} ${ADM_DIR}/plugins/videoEncoders/qt4/libADM_ve_x264_QT4.dll
 
 		SetOutPath $INSTDIR\plugins\pluginSettings\x264
 		${Folder} ${ADM_DIR}/plugins/pluginSettings/x264
@@ -711,7 +713,23 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${File} ${ADM_SYSDIR}/libx264-*.dll
 		#${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
 	${MementoSectionEnd}
-	${MementoSection} "PNG" SecVidEncLavPng
+	${MementoSection} "MPEG-4 HEC" SecVidEncX265
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\videoEncoders
+
+		${File} ${ADM_DIR}/plugins/videoEncoders/libADM_ve_x265_other.dll
+
+		SetOutPath $INSTDIR\plugins\videoEncoders\qt4
+		${File} ${ADM_DIR}/plugins/videoEncoders/qt4/libADM_ve_x265_QT4.dll
+
+		SetOutPath $INSTDIR\plugins\pluginSettings\x265
+		${Folder} ${ADM_DIR}/plugins/pluginSettings/x265
+		SetOutPath $INSTDIR
+		${File} ${ADM_SYSDIR}/libx265-*.dll
+		#${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
+	${MementoSectionEnd}
+${MementoSection} "PNG" SecVidEncLavPng
 		SectionIn 1 2
 		SetOverwrite on
 		SetOutPath $INSTDIR\plugins\videoEncoders
@@ -761,7 +779,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_CropCli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_cropQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/qt4/libADM_vf_cropQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Fade" SecVidFltFade
 			SectionIn 1 2
@@ -786,7 +805,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_swscaleResize_cli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_swscaleResize_qt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_swscaleResizeQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Resample FPS" SecVidFltResampleFps
 			SectionIn 1 2
@@ -887,28 +907,32 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_chromaShiftCli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_chromaShiftQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_chromaShiftQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Contrast" SecVidFltContrast
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_contrastCli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_contrastQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_contrastQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "MPlater Eq2" SecVidFltMplayerEq2
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_eq2Cli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_eq2Qt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_eq2QT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "MPlater Hue" SecVidFltMplayerHue
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_HueCli.dll
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_HueQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_HueQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Remove Plane" SecVidFltRemovePlane
 			SectionIn 1 2
@@ -978,13 +1002,15 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_asharpQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_asharpQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "MPlayer Delogo" SecVidFltMPlayerDelogo
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_mpdelogoQt4.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt4
+			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_mpdelogoQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Sharpen" SecVidFltSharpen
 			SectionIn 1 2
