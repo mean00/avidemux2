@@ -723,8 +723,6 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		SetOutPath $INSTDIR\plugins\videoEncoders\qt4
 		${File} ${ADM_DIR}/plugins/videoEncoders/qt4/libADM_ve_x265_QT4.dll
 
-		SetOutPath $INSTDIR\plugins\pluginSettings\x265
-		${Folder} ${ADM_DIR}/plugins/pluginSettings/x265
 		SetOutPath $INSTDIR
 		${File} ${ADM_SYSDIR}/libx265-*.dll
 		#${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
