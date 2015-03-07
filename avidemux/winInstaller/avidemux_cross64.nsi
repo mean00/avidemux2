@@ -724,7 +724,7 @@ SectionGroup "Video Encoders" SecGrpVideoEncoder
 		${File} ${ADM_DIR}/plugins/videoEncoders/qt4/libADM_ve_x265_QT4.dll
 
 		SetOutPath $INSTDIR
-		${File} ${ADM_SYSDIR}/libx265-*.dll
+		${File} ${ADM_SYSDIR}/libx265*.dll
 		#${File} ${ADM_SYSDIR}/pthreadGC2-w64.dll
 	${MementoSectionEnd}
 ${MementoSection} "PNG" SecVidEncLavPng
