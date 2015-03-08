@@ -799,7 +799,7 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ADM_DIR}/plugins/videoFilters/libADM_vf_swscaleResize_cli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt4
-			${File} ${ADM_DIR}/plugins/videoFilters/qt4/libADM_vf_swscaleResize_qt4.dll
+			${File} ${ADM_DIR}/plugins/videoFilters/qt4/libADM_vf_swscaleResizeQT4.dll
 		${MementoSectionEnd}
 		${MementoSection} "Resample FPS" SecVidFltResampleFps
 			SectionIn 1 2
