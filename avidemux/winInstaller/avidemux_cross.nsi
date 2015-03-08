@@ -345,8 +345,6 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ADM_DIR}/libADM_render6_QT4.dll
         ${File} ${ADM_DIR}/libADM_UIQT46.dll
         ${File} ${QT_DIR}/QtOpenGL4.dll
-	SetOutPath $INSTDIR\i18n
-	${Folder} ${ADM_DIR}/i18n
     ${MementoSectionEnd}
 SectionGroupEnd
 
