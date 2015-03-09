@@ -7,7 +7,7 @@
 #  define ADM_UIQT46_NO_EXPORT
 #else
 #  ifndef ADM_UIQT46_EXPORT
-#    ifdef ADM_UIQT46_EXPORTS
+#    if defined( ADM_UIQT46_EXPORTS) || defined (ADM_UIQT56_EXPORTS)
        /* We are building this library */
 #      ifdef _WIN32
 #        define ADM_UIQT46_EXPORT __declspec(dllexport)

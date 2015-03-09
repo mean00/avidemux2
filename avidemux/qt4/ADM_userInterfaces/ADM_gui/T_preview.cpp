@@ -210,7 +210,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->widget = videoWindow;
 
 #if defined(_WIN32)
-	xinfo->display=videoWindow->winId();
+	xinfo->display=(void *)videoWindow->winId();
 #elif defined(__APPLE__)
 	#if defined(ADM_CPU_X86_64)
 		xinfo->display = (void*)videoWindow->winId();

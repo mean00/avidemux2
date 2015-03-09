@@ -1,0 +1,23 @@
+#!/bin/bash
+export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
+export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
+export PATH=$MINGW/bin:$PATH
+pkg-config --list-all
+#export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug -G \"CodeBlocks - Unix Makefiles\"   "
+echo "<<<<<<<<<<<<Cross compiling plugins>>>>>>>>>>>>>>>"
+cmake   -DCROSS=$MINGW \
+	-DTOOLCHAIN_LOCATION=$TOOLCHAIN_LOCATION \
+        -DCMAKE_INSTALL_PREFIX=$MINGW/Release \
+	-DENABLE_QT5=True \
+	-DCMAKE_CROSS_PREFIX=$CROSS_PREFIX \
+        -DCMAKE_C_COMPILER:STRING=$CROSS_PREFIX-gcc \
+        -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
+        -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
+        -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
+  	-DCMAKE_RC_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-windres \
+        -DCMAKE_SYSTEM_NAME:STRING=Windows \
+        -DQT_HOME:STRING=$QT_HOME \
+         $DEBUG \
+        -DAVIDEMUX_SOURCE_DIR="$TOP"  \
+        $@ \
+        $TOP/avidemux_plugins
