@@ -37,7 +37,7 @@ echo "Top dir : $TOP"
 echo "** CORE **"
 cd $TOP
 export PARAL=""
-#Process buildMingwCore cross_mingw64_core
+Process buildMingwCore cross_mingw64_core
 export PARAL="$O_PARAL"
 echo "** QT4 **"
 cd $TOP
@@ -49,10 +49,10 @@ export PARAL="$O_PARAL"
 #Process buildGtk ../avidemux/gtk
 echo "** Plugins **"
 cd $TOP
-#Process buildMingwPluginsCommon cross_mingw64_plugins -DPLUGIN_UI=COMMON
+Process buildMingwPluginsCommon cross_mingw64_plugins -DPLUGIN_UI=COMMON
 Process buildMingwPluginsQt4 cross_mingw64_qt5_plugins -DPLUGIN_UI=QT4
-#Process buildMingwPluginsCli cross_mingw64_plugins -DPLUGIN_UI=CLI
-#Process buildMingwPluginsSettings cross_mingw64_plugins -DPLUGIN_UI=SETTINGS
+Process buildMingwPluginsCli cross_mingw64_plugins -DPLUGIN_UI=CLI
+Process buildMingwPluginsSettings cross_mingw64_plugins -DPLUGIN_UI=SETTINGS
 echo "** All done **"
 cd $TOP
 echo "** ALL DONE **"
