@@ -38,9 +38,8 @@ MACRO(admGetGitRevision _dir _rev)
 	set(svn 0)
         	MESSAGE(STATUS "Getting git-svn version from ${_dir}")
       		EXECUTE_PROCESS(
-                        COMMAND ${GIT_EXECUTABLE} log -l3  ${_dir}
-                        COMMAND head -1
-                        COMMAND tail -c 12 
+                        COMMAND ${GIT_EXECUTABLE} log --format=oneline -1  ${_dir}
+                        COMMAND head -c 11
                         WORKING_DIRECTORY ${_dir} 
                         RESULT_VARIABLE result 
                         OUTPUT_VARIABLE output
