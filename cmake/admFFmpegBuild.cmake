@@ -35,9 +35,10 @@ FIND_HEADER_AND_LIB(_X265 x265.h)
 FIND_HEADER_AND_LIB(_X265_CONFIG x265_config.h)
 
 IF (_X265_FOUND AND _X265_CONFIG_FOUND)
-	xadd("--enable-libx265")
-	message("adding --enable-libx265 to ffmpeg protocols")
+#	xadd("--enable-libx265")
+#	message("adding --enable-libx265 to ffmpeg protocols")
 ENDIF (_X265_FOUND AND _X265_CONFIG_FOUND)
+	xadd("--disable-libx265")
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
