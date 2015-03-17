@@ -295,6 +295,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libiculx51.dll  
     ${File} ${ROOT_FOLDER}/libicutu51.dll  
     ${File} ${ROOT_FOLDER}/libicuuc51.dll
+    ${File} ${ROOT_FOLDER}/libintl-8.dll
     SetOutPath $INSTDIR\platforms
     ${File} ${ROOT_FOLDER}/platforms/qminimal.dll  
     ${File} ${ROOT_FOLDER}/platforms/qwindows.dll
