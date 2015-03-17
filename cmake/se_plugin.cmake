@@ -9,7 +9,7 @@ macro (INSTALL_SCRIPT_ENGINE _lib)
 endmacro (INSTALL_SCRIPT_ENGINE)
 macro (INSTALL_SCRIPT_ENGINE_QT4 _lib)
 	install(TARGETS ${_lib} DESTINATION "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/scriptEngines/${QT_EXTENSION}")
-endmacro (INSTALL_SCRIPT_ENGINE)
+endmacro (INSTALL_SCRIPT_ENGINE_QT4)
 
 macro (INSTALL_SCRIPT_ENGINE_HELP _engineName _sourceDirectory)
 if (WIN32)
