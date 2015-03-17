@@ -283,6 +283,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libz-1.dll
     ${File} ${ROOT_FOLDER}/libfreetype-6.dll
     ${File} ${ROOT_FOLDER}/libgcc_s_seh-1.dll
+    ${File} ${ROOT_FOLDER}/libintl-8.dll
     ${File} ${ROOT_FOLDER}/SDL2.dll
 # Qt
     ${File} ${ROOT_FOLDER}/Qt5Core.dll  
