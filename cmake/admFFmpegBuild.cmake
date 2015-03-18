@@ -39,6 +39,7 @@ IF (_X265_FOUND AND _X265_CONFIG_FOUND)
 #	message("adding --enable-libx265 to ffmpeg protocols")
 ENDIF (_X265_FOUND AND _X265_CONFIG_FOUND)
 	xadd("--disable-libx265")
+	xadd("--disable-libx264")
 
 if (NOT CROSS)
 	xadd(--prefix ${CMAKE_INSTALL_PREFIX})
