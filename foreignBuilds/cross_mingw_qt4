@@ -5,6 +5,7 @@ export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
 export PATH=$MINGW/bin:$PATH
 pkg-config --list-all
 export DEBUG="-DVERBOSE=1   -DCMAKE_BUILD_TYPE=Debug "
+export DEBUG="-G \"Unix Makefiles\""
 echo "<<<<<<<<<<<<Cross compiling core>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
 	-DTOOLCHAIN_LOCATION=$TOOLCHAIN_LOCATION \
