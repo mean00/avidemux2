@@ -16,7 +16,6 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
-        $DEBUG \
-         -G "CodeBlocks - Unix Makefiles"  \
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
+        -G "Unix Makefiles" \
         $TOP/avidemux/cli

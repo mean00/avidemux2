@@ -20,7 +20,7 @@ cmake   -DCROSS=$XSDK \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Darwin \
         -DQT_HOME:STRING=$QT_HOME \
-         $DEBUG -G "CodeBlocks - Unix Makefiles"  \
+        -G "Unix Makefiles" \
         -DAVIDEMUX_SOURCE_DIR="$TOP"  \
         $@ \
         $TOP/avidemux_plugins

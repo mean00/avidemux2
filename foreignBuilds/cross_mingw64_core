@@ -4,7 +4,6 @@ export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
 export PATH=$MINGW/bin:$PATH
 pkg-config --list-all
 #export DEBUG="-DVERBOSE=1 -DDEBUG=1  -DCMAKE_BUILD_TYPE=Debug    "
-export DEBUG="-G \"Unix Makefiles\""
 echo "<<<<<<<<<<<<Cross compiling core ($MINGW)>>>>>>>>>>>>>>>>"
 cmake   -DCROSS=$MINGW \
 	-DTOOLCHAIN_LOCATION=$TOOLCHAIN_LOCATION \
@@ -16,6 +15,6 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DCMAKE_RC_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-windres \
-        $DEBUG\
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
+        -G "Unix Makefiles" \
         $TOP/avidemux_core

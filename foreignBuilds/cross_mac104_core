@@ -18,6 +18,6 @@ cmake   -DCROSS=$XSDK \
         -DCMAKE_CXX_COMPILER:STRING=$CROSS_PREFIX-g++ \
         -DCMAKE_LINKER:STRING=$CROSS_PREFIX-ld \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
-        $DEBUG\
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
+        -G "Unix Makefiles" \
         $TOP/avidemux_core

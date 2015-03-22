@@ -16,8 +16,8 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DQT_HOME:STRING=$QT_HOME \
-         $DEBUG -G "CodeBlocks - Unix Makefiles"  \
         -DAVIDEMUX_SOURCE_DIR="$TOP"  \
         -DOPENGL=OFF \
         $@ \
+        -G "Unix Makefiles" \
         $TOP/avidemux_plugins
