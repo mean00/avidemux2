@@ -820,8 +820,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSection} "libswscale Resize" SecVidFltSwscaleResize
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_swscaleResize_cli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_swscaleResize_cli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_swscaleResizeQT5.dll
 		${MementoSectionEnd}
