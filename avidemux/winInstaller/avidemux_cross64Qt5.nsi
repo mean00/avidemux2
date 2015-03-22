@@ -794,8 +794,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSection} "Crop" SecVidFltCrop
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_CropCli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_CropCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_cropQT5.dll
 		${MementoSectionEnd}
@@ -820,8 +820,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSection} "libswscale Resize" SecVidFltSwscaleResize
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_swscaleResize_cli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_swscaleResize_cli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_swscaleResizeQT5.dll
 		${MementoSectionEnd}
@@ -922,32 +922,32 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSection} "ChromaShift" SecVidFltChromaShift
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_chromaShiftCli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_chromaShiftCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_chromaShiftQT5.dll
 		${MementoSectionEnd}
 		${MementoSection} "Contrast" SecVidFltContrast
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_contrastCli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_contrastCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_contrastQT5.dll
 		${MementoSectionEnd}
 		${MementoSection} "MPlater Eq2" SecVidFltMplayerEq2
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_eq2Cli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_eq2Cli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_eq2QT5.dll
 		${MementoSectionEnd}
 		${MementoSection} "MPlater Hue" SecVidFltMplayerHue
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_HueCli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_HueCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_HueQT5.dll
 		${MementoSectionEnd}
