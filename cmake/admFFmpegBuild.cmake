@@ -28,8 +28,9 @@ set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp
 set(FFMPEG_PARSERS  ac3  h263  h264  hevc  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
-xadd("--enable-runtime-cpudetect --disable-network --disable-ffplay --disable-ffprobe")
+xadd("--enable-runtime-cpudetect --disable-network ")
 xadd("--enable-swscale --disable-swresample")
+xadd("--disable-doc --disable-programs")
 
 FIND_HEADER_AND_LIB(_X265 x265.h)
 FIND_HEADER_AND_LIB(_X265_CONFIG x265_config.h)
