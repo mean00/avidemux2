@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "2.4.3")
+set(FFMPEG_VERSION "2.6.1")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -328,7 +328,6 @@ install(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/buffer.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/frame.h"
-	"${FFMPEG_SOURCE_DIR}/libavutil/intfloat_readwrite.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/macros.h" "${FFMPEG_SOURCE_DIR}/libavutil/old_pix_fmts.h"
