@@ -295,7 +295,6 @@ add_custom_command(OUTPUT
 						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
 						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
 						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
-						"${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
 				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
 # Add and install libraries
