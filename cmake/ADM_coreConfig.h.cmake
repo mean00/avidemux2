@@ -16,6 +16,8 @@
 // GCC - Operating System
 #cmakedefine ADM_BSD_FAMILY
 
+// use nvidia hw encoding 
+#cmakedefine USE_NVENC
 // use vdpau h264 hw decoding 
 #cmakedefine USE_VDPAU
 // use xvba h264 hw decoding 
