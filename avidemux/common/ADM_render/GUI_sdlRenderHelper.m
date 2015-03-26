@@ -3,7 +3,7 @@
 
 static NSWindow* nsParentWindow = nil;
 static NSWindow* nsWindow = nil;
-static NSQuickDrawView* nsView = nil;
+static NSView* nsView = nil;
 static bool cocoaApplication = false;
 static id oldDelegate = nil;
 static int widgetX = 0, widgetY = 0;
@@ -79,7 +79,7 @@ void initSdlCocoaView(void* parent, int x, int y, int width, int height, bool ca
 
 	if (!nsView)
 	{
-		nsView = [[NSQuickDrawView alloc] initWithFrame:contentRect];
+		nsView = [[NSView alloc] initWithFrame:contentRect];
 
 		[[nsWindow contentView] addSubview:nsView];
 		[nsView release];
@@ -108,7 +108,7 @@ void initSdlCocoaView(void* parent, int x, int y, int width, int height, bool ca
 	sprintf(SDL_windowhack,"SDL_NSWindowPointer=%ld",(int)nsWindow);
 	putenv(SDL_windowhack);
 
-	sprintf(SDL_windowhack,"SDL_NSQuickDrawViewPointer=%ld",(int)nsView);
+	sprintf(SDL_windowhack,"SDL_NSViewPointer=%ld",(int)nsView);
 	putenv(SDL_windowhack);
 }
 
