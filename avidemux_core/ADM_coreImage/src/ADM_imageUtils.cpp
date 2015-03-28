@@ -722,10 +722,8 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
 /**
         \fn nv12_to_uv_c
 */
-static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int strideUV, uint8_t *dst)
+static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int dstride, uint8_t *dst)
 { 
-        int dstride=strideUV;
-               
         for(int y=0;y<h;y++)
         {                
                 uint8_t *u=srcu;
@@ -958,15 +956,26 @@ bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, in
             src+=sstride;
             dst+=dstride;
         }
-#if 0        
-        #ifdef ADM_CPU_X86
-                if(CpuCaps::hasMMX())
-                    uv_to_nv12_mmx(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
-                else
-        #endif   
-#endif
-                    uv_to_nv12_c(w/2,h/2,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
+        interleaveUV(uvData,strideUV);
         return true;
+}
+/**
+ * 
+ * @param target
+ * @param stride
+ * @return 
+ */
+bool    ADMImage::interleaveUV(uint8_t *target, int stride)
+{    
+        int w=_width/2;
+        int h=_height/2;    
+#if defined(ADM_CPU_X86) && 0
+        if(CpuCaps::hasMMX())
+            uv_to_nv12_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),stride,target);
+        else
+#endif   
+            uv_to_nv12_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetReadPtr(PLANAR_U),GetReadPtr(PLANAR_V),stride,target);
+    
 }
 /**
  * \fn convertFromYUV444

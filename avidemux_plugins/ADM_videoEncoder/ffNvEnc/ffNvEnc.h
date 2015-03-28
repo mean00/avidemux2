@@ -49,9 +49,7 @@ class ADM_ffNvEncEncoder : public ADM_coreVideoEncoderFFmpeg
 protected:
 
                uint8_t      *nv12;
-               int          strides[2];
-               uint8_t      *planes[2];
-
+               int          nv12Stride;               
 public:
 
                            ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeader);

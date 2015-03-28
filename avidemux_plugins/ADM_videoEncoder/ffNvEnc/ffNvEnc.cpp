@@ -27,6 +27,11 @@
 #define aprintf printf
 #endif
 
+extern "C"
+{
+    #include "libavutil/opt.h"
+}
+
 ffnvenc_encoder NvEncSettings = NVENC_CONF_DEFAULT;
 
 /**
@@ -48,11 +53,10 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 {
     switch(NvEncSettings.preset)
     {
-#define MIAOU(x,y) //case NV_FF_PRESET_##x: _context->  preset(y)break;  AVOption options[]
+#define MIAOU(x,y) case NV_FF_PRESET_##x: ADM_assert(!av_opt_set(_context->priv_data,"preset",y, 0));break;  
         
      MIAOU(HP,"hp")   
      MIAOU(BD,"bd")   
-     MIAOU(LL,"ll")   
      MIAOU(LL,"ll")   
      MIAOU(LLHP,"llhp")   
      MIAOU(LLHQ,"llhq")   
@@ -85,14 +89,14 @@ bool ADM_ffNvEncEncoder::setup(void)
     ADM_info("[ffMpeg] Setup ok\n");
     
     int w= getWidth();
-    int h=getHeight();
-    w=(w+15)&~15;
+    int h= getHeight();
+    
+    w=(w+31)&~31;
     h=(h+15)&~15;
-    nv12=new uint8_t[w*h*2];
-    strides[0]=w;
-    strides[1]=w;
-    planes[0]=nv12;
-    planes[1]=nv12+w*h;
+    
+    nv12=new uint8_t[(w*h)/2]; 
+    nv12Stride=w;
+    
     return true;
 }
 
@@ -139,17 +143,17 @@ again:
     _frame->reordered_opaque=image->Pts;
 // convert to nv12
 #ifdef USE_NV12
-    image->convertToNV12(planes[0],planes[1],strides[0],strides[1]);
-    _frame->data[0] = planes[0];
-    _frame->data[1] = planes[1];
+    image->interleaveUV(nv12,nv12Stride);
+    _frame->data[0] = image->GetReadPtr(PLANAR_Y);
+    _frame->data[1] = nv12;
     _frame->data[2] = NULL;
 
-    _frame->linesize[0]=strides[0];
-    _frame->linesize[1]=strides[1];
+    _frame->linesize[0]=image->GetPitch(PLANAR_Y);
+    _frame->linesize[1]=nv12Stride;
     _frame->linesize[2]=0;
+    _frame->format=  AV_PIX_FMT_NV12;    
     _frame->width=image->GetWidth(PLANAR_Y);
     _frame->height=image->GetHeight(PLANAR_Y);
-    _frame->format=  AV_PIX_FMT_NV12;    
 #else
     _frame->format=  AV_PIX_FMT_YUV420P;    
 #endif        
@@ -184,12 +188,12 @@ bool         ADM_ffNvEncEncoder::isDualPass(void)
 bool         ffNvEncConfigure(void)
 {
 diaMenuEntry mePreset[]={ 
-  {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","hp")},
-  {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","hq")},
-  {NV_FF_PRESET_BD,QT_TRANSLATE_NOOP("ffnvenc","bd")},
-  {NV_FF_PRESET_LL,QT_TRANSLATE_NOOP("ffnvenc","ll")},
-  {NV_FF_PRESET_LLHP,QT_TRANSLATE_NOOP("ffnvenc","llhp")},
-  {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","llhq")}
+  {NV_FF_PRESET_HP,QT_TRANSLATE_NOOP("ffnvenc","Low Quality")},
+  {NV_FF_PRESET_HQ,QT_TRANSLATE_NOOP("ffnvenc","High Quality")},
+  {NV_FF_PRESET_BD,QT_TRANSLATE_NOOP("ffnvenc","BluRay")},
+  {NV_FF_PRESET_LL,QT_TRANSLATE_NOOP("ffnvenc","Low Latency")},
+  {NV_FF_PRESET_LLHP,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (LQ)")},
+  {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HQ)")}
 };
 
         ffnvenc_encoder *conf=&NvEncSettings;

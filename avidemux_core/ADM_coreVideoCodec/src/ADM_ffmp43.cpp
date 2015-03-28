@@ -667,7 +667,7 @@ void ADM_lavInit(void)
     av_log_set_callback(adm_lavLogCallback);
 
 #ifdef ADM_DEBUG
-  //  av_log_set_level(AV_LOG_DEBUG);
+    av_log_set_level(AV_LOG_DEBUG);
 #endif
 
 }
