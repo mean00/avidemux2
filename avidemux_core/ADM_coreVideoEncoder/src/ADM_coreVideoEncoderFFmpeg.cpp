@@ -266,21 +266,14 @@ bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
 {
     return true;
 }
-
 /**
-    \fn setup
-    \brief put flags before calling setup!
-*/
-bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
+ * 
+ * @param codecId
+ * @return 
+ */
+bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
 {
     int res;
-    AVCodec *codec=avcodec_find_encoder(codecId);
-    if(!codec)
-    {
-        printf("[ff] Cannot find codec\n");
-        return false;
-    }
-
     _context = avcodec_alloc_context3 (codec);
     ADM_assert (_context);
     _context->width = getWidth();
@@ -324,6 +317,36 @@ bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
         }
     }
     return true;
+}
+/**
+    \fn setup
+    \brief put flags before calling setup!
+*/
+bool ADM_coreVideoEncoderFFmpeg::setup(AVCodecID codecId)
+{
+   
+    AVCodec *codec=avcodec_find_encoder(codecId);
+    if(!codec)
+    {
+        printf("[ff] Cannot find codec\n");
+        return false;
+    }
+    return setupInternal(codec);
+}
+
+/**
+    \fn setup
+    \brief put flags before calling setup!
+*/
+bool ADM_coreVideoEncoderFFmpeg::setupByName(const char *name)
+{
+    AVCodec *codec=avcodec_find_encoder_by_name(name);
+    if(!codec)
+    {
+        ADM_warning("[ff] Cannot find codec with name %s\n",name);
+        return false;
+    }
+    return setupInternal(codec);
 }
 /**
     \fn getExtraData
@@ -503,15 +526,15 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
   _context->strict_std_compliance = 0;
   _context->i_quant_factor = 0.8;
   _context->i_quant_offset = 0.0;
-  _context->rc_qsquish = 1.0;
-  _context->rc_qmod_amp = 0;
-  _context->rc_qmod_freq = 0;
-  _context->rc_eq = av_strdup("tex^qComp");
+//  _context->rc_qsquish = 1.0;
+//  _context->rc_qmod_amp = 0;
+//  _context->rc_qmod_freq = 0;
+//  _context->rc_eq = av_strdup("tex^qComp");
   _context->rc_max_rate = 000;
   _context->rc_min_rate = 000;
   _context->rc_buffer_size = 000;
-  _context->rc_buffer_aggressivity = 1.0;
-  _context->rc_initial_cplx = 0;
+//  _context->rc_buffer_aggressivity = 1.0;
+//  _context->rc_initial_cplx = 0;
   _context->dct_algo = 0;
   _context->idct_algo = 0;
   _context->p_masking = 0.0;

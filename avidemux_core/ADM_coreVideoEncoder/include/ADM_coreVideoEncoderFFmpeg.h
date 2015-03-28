@@ -25,7 +25,6 @@
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
 #include "FFcodecSettings.h"
 
-
 /**
     \class ADM_coreVideoEncoderFFmpeg
     \brief base class for VideoEncoder based on libavcodec
@@ -55,6 +54,8 @@ protected:
     virtual               bool             preEncode(void); 
     virtual		  bool		   configureContext(void);
     virtual               bool             setup(AVCodecID codecId);
+    virtual               bool             setupByName(const char *name);
+                          bool             setupInternal(AVCodec *codec);
     virtual               bool             getExtraData(uint32_t *l,uint8_t **d) ;
                           bool             presetContext(FFcodecSettings *set);
                           bool             postEncode(ADMBitstream *out, uint32_t size);
