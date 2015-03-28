@@ -19,7 +19,8 @@ set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
 set(FFMPEG_BINARY_DIR "${FFMPEG_BASE_DIR}/build")
 
-set(FFMPEG_DECODERS  aac ac3 eac3 adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  hevc  huffyuv  mjpeg
+set(FFMPEG_DECODERS  aac ac3 eac3 adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  dvbsub  dvvideo  ffv1  ffvhuff  flv  fraps  h263  h264  
+                                         hevc  huffyuv  mjpeg
 					 mjpegb  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3  msvideo1  nellymoser  png  qdm2  rawvideo  snow
 					 svq3  theora  tscc  mp2 mp3 mp2_float mp3_float
 					 vc1  vp3  vp6  vp6a  vp6f  vp8 vp9 wmapro wmav2  wmv1  wmv2  wmv3 cscd)
@@ -42,6 +43,7 @@ ENDIF (_X265_FOUND AND _X265_CONFIG_FOUND)
 xadd("--disable-libx265")
 xadd("--disable-libx264")
 IF(USE_NVENC)
+   SET(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} nvenc)
    xadd("--enable-nonfree")
    xadd("--enable-nvenc")
 ENDIF(USE_NVENC)
