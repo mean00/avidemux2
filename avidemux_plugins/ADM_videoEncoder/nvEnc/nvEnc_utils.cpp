@@ -16,7 +16,6 @@
 
 static bool probeDone=false;
 static bool nvEncAvailable=false;
-
 /**
  */
 
@@ -50,7 +49,7 @@ class ADM_nvCudaLoader : public ADM_LibWrapper
 public:
     ADM_nvCudaLoader()
     {
-        this->initialised = loadLibrary(NVENC_LIB) && getSymbols(8,  &init,               "cuInit",
+        this->initialised = loadLibrary(CUDA_LIB) && getSymbols(8,  &init,               "cuInit",
                                                                     &getDeviceCount,      "cuDeviceGetCount",
                                                                     &getDevice,           "cuDeviceGet",
                                                                     &getDeviceName,       "cuDeviceGetName",
@@ -58,7 +57,6 @@ public:
                                                                     &createContext,       "cuCtxCreate_v2",
                                                                     &popCurrentContext,   "cuCtxPopCurrent_v2",               
                                                                     &contextDestroy,      "cuCtxDestroy_v2"                
-                
                             );
     }
     bool isAvailable()
@@ -94,8 +92,6 @@ public:
                 initialised=false;
             }
         }
-        
-
     }
     bool isAvailable()
     {
@@ -109,7 +105,26 @@ public:
 };
 static ADM_nvCudaLoader   *cudaLoader=NULL; 
 static ADM_nvNvEncLoader  *nvEncLoader=NULL;
-static CUdevice         selectedDevice=-1;
+static CUdevice            selectedDevice=-1;
+/**
+ * 
+ */
+class nvEncSession
+{
+public:
+                nvEncSession();
+                ~nvEncSession();
+        bool    init(void);
+public:
+        bool    createContext(void);
+        bool    openSession(void);
+protected:
+        bool                            inited;
+        void                            *encoder;
+        NV_ENCODE_API_FUNCTION_LIST     *fonctions;
+        CUcontext                       context;
+};
+
 /**
  * 
  * @param avctx
@@ -143,7 +158,7 @@ static bool cudaCheck(int er, const char *c)
     return true;
 }
 //#define cudaCall(x) cudaLoader->x //return cudaCheck(cudaLoader->x,#x);
-#define cudaCall(x)  cudaCheck(cudaLoader->x,#x)
+#define cudaCall(x)         cudaCheck(cudaLoader->x,#x)
 #define cudaAbortOnFail(x) if(!cudaCall(x)) goto abortCudaProbe;
 /**
  * 
@@ -211,8 +226,7 @@ bool loadNvEnc()
    if(probeDone) return nvEncAvailable;
     probeDone=true;
     nvEncAvailable=false;
-    if(!probeCuda) return false;
-    nvEncAvailable=true;
+    if(!probeCuda()) return false;    
     
      nvEncLoader=new ADM_nvNvEncLoader;
      nvEncAvailable=nvEncLoader->isAvailable();
@@ -223,9 +237,88 @@ bool loadNvEnc()
      }
      if(nvEncAvailable) ADM_info("NvEnc lib loaded OK\n");
      else ADM_warning("NvEnc lib failed to load\n");
+     
+     nvEncSession s;
+     s.init();
+     s.createContext();
+     s.openSession();
+             
+     
      return nvEncAvailable;
-
 }
+
+
+#define CHECK_ERROR(a,b) {int z=a;if(z!=NV_ENC_SUCCESS) {ADM_warning("Error : %d\n",z);b;}}
+#define INIT_CHECK() {if(!inited) {ADM_warning("nvEncSession not initialized\n");return false;}}
+/*
+ * 
+ */
+nvEncSession::nvEncSession()
+{
+    inited=false;  
+}
+/**
+ * 
+ */
+nvEncSession::~nvEncSession()
+{
+    fonctions=NULL;
+    inited=false;  
+}
+/**
+ * 
+ * @return 
+ */
+bool    nvEncSession::init(void)
+{
+    if(!nvEncAvailable)
+    {
+        return false;
+    }
+    fonctions=&(nvEncLoader->functionList);
+    inited=true;
+    return true;
+}
+/**
+ * 
+ * @return 
+ */
+bool nvEncSession::createContext(void)
+{
+     INIT_CHECK();
+    
+     
+     if(!cudaCall(createContext(&context,0,selectedDevice)))
+     {
+         context=NULL;
+         return false;
+     }
+     return true;
+}
+
+/**
+ * 
+ */
+bool    nvEncSession::openSession(void)    
+{
+    INIT_CHECK();
+    ADM_assert(fonctions->nvEncOpenEncodeSessionEx);
+    if(!context)
+    {
+        ADM_warning("No context\n");
+        return false;
+    }
+    NV_ENC_OPEN_ENCODE_SESSION_EX_PARAMS params;
+        params.version=   NV_ENC_OPEN_ENCODE_SESSION_EX_PARAMS_VER;
+        params.deviceType=NV_ENC_DEVICE_TYPE_CUDA; 
+        params.device=context;
+        params.apiVersion=NVENCAPI_VERSION;
+
+    CHECK_ERROR(fonctions->nvEncOpenEncodeSessionEx(&params, &encoder),return false;);
+    return true;
+}
+//--
+
 // EOF
 
 
