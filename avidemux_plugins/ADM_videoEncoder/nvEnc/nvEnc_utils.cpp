@@ -13,6 +13,7 @@
 #include "ADM_default.h"
 #include "nvEncodeAPI.h"
 #include "ADM_dynamicLoading.h"
+#include "nvEnc_utils.h"
 
 static bool probeDone=false;
 static bool nvEncAvailable=false;
@@ -39,7 +40,6 @@ typedef enum cudaError_enum {
     CUDA_SUCCESS = 0
 } CUresult;
 typedef int CUdevice;
-typedef void* CUcontext;
 /**
  * 
  * @param file
@@ -106,24 +106,7 @@ public:
 static ADM_nvCudaLoader   *cudaLoader=NULL; 
 static ADM_nvNvEncLoader  *nvEncLoader=NULL;
 static CUdevice            selectedDevice=-1;
-/**
- * 
- */
-class nvEncSession
-{
-public:
-                nvEncSession();
-                ~nvEncSession();
-        bool    init(void);
-public:
-        bool    createContext(void);
-        bool    openSession(void);
-protected:
-        bool                            inited;
-        void                            *encoder;
-        NV_ENCODE_API_FUNCTION_LIST     *fonctions;
-        CUcontext                       context;
-};
+
 
 /**
  * 
@@ -238,10 +221,7 @@ bool loadNvEnc()
      if(nvEncAvailable) ADM_info("NvEnc lib loaded OK\n");
      else ADM_warning("NvEnc lib failed to load\n");
      
-     nvEncSession s;
-     s.init();
-     s.createContext();
-     s.openSession();
+    
              
      
      return nvEncAvailable;
@@ -261,8 +241,7 @@ nvEncSession::nvEncSession()
  * 
  */
 nvEncSession::~nvEncSession()
-{
-    fonctions=NULL;
+{   
     inited=false;  
 }
 /**
@@ -275,7 +254,6 @@ bool    nvEncSession::init(void)
     {
         return false;
     }
-    fonctions=&(nvEncLoader->functionList);
     inited=true;
     return true;
 }
@@ -295,14 +273,26 @@ bool nvEncSession::createContext(void)
      }
      return true;
 }
-
+/**
+ * 
+ * @return 
+ */
+bool nvEncSession::deleteContext(void)
+{
+     INIT_CHECK();
+     ADM_assert(context);
+     if(!cudaCall(contextDestroy(context)))
+     context=NULL;
+     return true;
+}
+#define nvFuntions(x) nvEncLoader->functionList.x
 /**
  * 
  */
 bool    nvEncSession::openSession(void)    
 {
     INIT_CHECK();
-    ADM_assert(fonctions->nvEncOpenEncodeSessionEx);
+    ADM_assert(nvFuntions(nvEncOpenEncodeSessionEx));
     if(!context)
     {
         ADM_warning("No context\n");
@@ -314,11 +304,19 @@ bool    nvEncSession::openSession(void)
         params.device=context;
         params.apiVersion=NVENCAPI_VERSION;
 
-    CHECK_ERROR(fonctions->nvEncOpenEncodeSessionEx(&params, &encoder),return false;);
+    CHECK_ERROR(nvFuntions(nvEncOpenEncodeSessionEx)(&params, &encoder),return false;);
     return true;
 }
-//--
-
+/**
+ * \fn close
+ * @return 
+ */
+bool    nvEncSession::closeSession(void)
+{
+    INIT_CHECK();
+   
+    return true;
+}
 // EOF
 
 
