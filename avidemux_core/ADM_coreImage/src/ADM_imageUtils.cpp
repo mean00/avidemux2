@@ -719,28 +719,7 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
         src+=4*w*2*2;
     }
 }
-/**
-        \fn nv12_to_uv_c
-*/
-static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int dstride, uint8_t *dst)
-{ 
-        for(int y=0;y<h;y++)
-        {                
-                uint8_t *u=srcu;
-                uint8_t *v=srcv;
-                uint8_t *d=dst;
-                srcu+=upitch;
-                srcv+=vpitch;
-                dst+=dstride;
 
-                for(int x=0;x<w;x++)
-                {
-                    d[0]=*u++;
-                    d[1]=*v++;
-                    d+=2;
-                }
-        }
- } 
  #ifdef ADM_CPU_X86
 static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int strideUV, uint8_t *dst)
 {
@@ -794,26 +773,7 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
         return ;
 }
 #endif
-static void nv12_to_uv_c(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
-{
-        
-        for(int y=0;y<h;y++)
-        {
-                uint8_t *ssrc=src;                
-                uint8_t *u=dstu;
-                uint8_t *v=dstv;
-                src+=srcPitch;
-                dstu+=upitch;
-                dstv+=vpitch;
 
-                for(int x=0;x<w;x++)
-                {
-                    *u++=ssrc[1];
-                    *v++=ssrc[0];
-                    ssrc+=2;
-                }
-        }
-}
 #ifdef ADM_CPU_X86
 /**
  * \fn nv12_to_uv_mmx
@@ -892,6 +852,27 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
 }
 
 #endif
+static void nv12_to_uv_c(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
+{
+        
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=srcPitch;
+                dstu+=upitch;
+                dstv+=vpitch;
+
+                for(int x=0;x<w;x++)
+                {
+                    *u++=ssrc[1];
+                    *v++=ssrc[0];
+                    ssrc+=2;
+                }
+        }
+}
+
 /**
  * \fn convertFromNV12
  * @param yData
@@ -959,6 +940,28 @@ bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, in
         interleaveUV(uvData,strideUV);
         return true;
 }
+/**
+        \fn nv12_to_uv_c
+*/
+static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int dstride, uint8_t *dst)
+{ 
+        for(int y=0;y<h;y++)
+        {                
+                uint8_t *u=srcu;
+                uint8_t *v=srcv;
+                uint8_t *d=dst;
+                srcu+=upitch;
+                srcv+=vpitch;
+                dst+=dstride;
+
+                for(int x=0;x<w;x++)
+                {
+                    d[0]=*u++;
+                    d[1]=*v++;
+                    d+=2;
+                }
+        }
+ } 
 /**
  * 
  * @param target
