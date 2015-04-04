@@ -75,10 +75,10 @@
 +    printf("Crop B: %d\n",(int)sps->crop_bottom);
 +    if(sps->crop_bottom)
 +    {
-+         int mul=4;
++         int mul=1;
 +         printf("Taking crop bottom into account\n");
 +         if(sps->frame_mbs_only_flag)
-+              mul=2;
++              mul=1;
 +         info->height-=sps->crop_bottom*mul;
 +
 +    }
