@@ -74,14 +74,14 @@ bool ADMImage::duplicate(ADMImage *src)
 */
 bool ADMImage::duplicateFull(ADMImage *src)
 {
-	// Sanity check
-	ADM_assert(src->_width==_width);
-	ADM_assert(src->_height==_height);
+    // Sanity check
+    ADM_assert(src->_width==_width);
+    ADM_assert(src->_height==_height);
 
 
-	copyInfo(src);
+    copyInfo(src);
     duplicate(src);
-	return 1;
+    return 1;
 }
 /**
     \fn copyInfo
@@ -89,9 +89,9 @@ bool ADMImage::duplicateFull(ADMImage *src)
 */
 bool ADMImage::copyInfo(ADMImage *src)
 {
-	_Qp=src->_Qp;
-	flags=src->flags;
-	_aspect=src->_aspect;
+    _Qp=src->_Qp;
+    flags=src->flags;
+    _aspect=src->_aspect;
     Pts=src->Pts;
     return 1;
 }
