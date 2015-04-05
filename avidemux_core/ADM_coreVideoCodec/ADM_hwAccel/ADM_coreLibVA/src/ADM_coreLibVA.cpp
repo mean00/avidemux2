@@ -797,6 +797,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
         case VA_FOURCC_YV12:
                 {
                         ADMImageRef ref(src->_width,src->_height);
+                        ref.copyInfo(src);
                         for(int i=0;i<3;i++)
                         {
                                 ref._planes[i]= ptr+dest->offsets[i];
