@@ -116,7 +116,7 @@ bool        ADM_vaEncodingContext::createExtraData()
 {
         int xError;
         CHECK_WORKING(false);
-
+#if 0
         
         VAEncSequenceParameterBufferH264 seq_h264 = {0};
         VABufferID seq_param_buf;
@@ -138,7 +138,8 @@ bool        ADM_vaEncodingContext::createExtraData()
             CHECK_ERROR (vaRenderPicture(ADM_coreLibVA::display, contextId, &seq_param_buf, 1));
             if(xError) return false;
             return true;
-
+#endif
+            return false;
 
 }
 /**
@@ -151,6 +152,7 @@ bool        ADM_vaEncodingContext::createExtraData()
 bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer)
 {
         int xError;
+#if 0
         CHECK_WORKING(false);
 
         CHECK_ERROR(vaBeginPicture(ADM_coreLibVA::display, contextId, src->surface));
@@ -218,6 +220,8 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
         out->pts=ADM_NO_PTS;
         out->flags=AVI_KEY_FRAME;
         return true;   
+#endif
+        return false;
 }
 
 
