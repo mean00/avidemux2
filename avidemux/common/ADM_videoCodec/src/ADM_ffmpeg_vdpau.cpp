@@ -300,15 +300,15 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         switch(vdpauType)
         {
             case ADM_VDPAU_VC1  : vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
-                                  WRAP_OpenByName(vc1_vdpau,CODEC_ID_VC1);
+                                  WRAP_Open_TemplateVdpauByName("vc1_vdpau",CODEC_ID_VC1);
                                   break;
 
             case ADM_VDPAU_H264 : vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
-                                  WRAP_OpenByName(h264_vdpau,CODEC_ID_H264);
+                                  WRAP_Open_TemplateVdpauByName("h264_vdpau",CODEC_ID_H264);
                                   break;
             case ADM_VDPAU_MPEG2: 
                                   vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
-                                  WRAP_OpenByName(mpegvideo_vdpau,CODEC_ID_MPEG2VIDEO);
+                                  WRAP_Open_TemplateVdpauByName("mpegvideo_vdpau",CODEC_ID_MPEG2VIDEO);
                                   break;
             default: ADM_assert(0);break;
         }
