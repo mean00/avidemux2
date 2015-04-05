@@ -58,5 +58,6 @@ public:
       }
     virtual const   char        *getDecoderName(void) {return "LIBVA";}
     virtual         bool        initializedOk(void)  {return alive;};
+static              bool        fccSupported(uint32_t fcc);
 };
 #endif

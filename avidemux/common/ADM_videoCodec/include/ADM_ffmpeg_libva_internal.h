@@ -18,9 +18,8 @@
 
 
 #define NB_SURFACE 25
-
-#define WRAP_Open_TemplateLibVAByName(argz,codecid) \
-    WRAP_Open_Template(avcodec_find_decoder_by_name,argz,,codecid,{\
+#define WRAP_Open_TemplateLibVAByName(codecs) \
+ WRAP_Open_Template(avcodec_find_decoder,codecs,#codecs,codecs,{\
             _context->opaque          = this; \
             _context->thread_count    = 1; \
             _context->get_buffer      = ADM_LIBVAgetBuffer; \

@@ -87,8 +87,8 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
 #endif // XVBA  
 #if defined(USE_LIBVA) 
   ADM_info("Searching decoder in libva (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isH264Compatible (fcc) )
-    {
+  if(decoderFFLIBVA::fccSupported(fcc))
+  {
         ADM_info("This is libva compatible\n");
         if(true==libvaUsable())
         {
@@ -101,7 +101,7 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
                 delete dec;
             }
         }else ADM_info("LIBVA is not active\n");
-    }        
+    }
 #endif // XVBA  
   
   

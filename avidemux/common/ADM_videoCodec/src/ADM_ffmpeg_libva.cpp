@@ -185,8 +185,27 @@ static enum AVPixelFormat ADM_LIBVA_getFormat( struct AVCodecContext * avctx , c
 
     
 }
-
-// dummy
+/**
+ * 
+ * @param fcc
+ * @return 
+ */
+bool        decoderFFLIBVA::fccSupported(uint32_t fcc)
+{
+    if(isH264Compatible(fcc)) return true;
+    //if(isMpeg12Compatible(fcc)) return true;
+    //        if(isVC1Compatible(fcc))
+    return false;
+}
+/**
+ * 
+ * @param w
+ * @param h
+ * @param fcc
+ * @param extraDataLen
+ * @param extraData
+ * @param bpp
+ */
 decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
         uint8_t *extraData,uint32_t bpp)
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
@@ -233,21 +252,30 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         return ;
     }
     va_context->context_id=libva;
-#if 0    
-    WRAP_Open_TemplateLibVAByName("h264_vaapi",CODEC_ID_H264);
-#else
-      WRAP_Open_Template(avcodec_find_decoder,CODEC_ID_H264,"CODEC_ID_H264",CODEC_ID_H264,{\
-            _context->opaque          = this; \
-            _context->thread_count    = 1; \
-            _context->get_buffer      = ADM_LIBVAgetBuffer; \
-            _context->release_buffer  = ADM_LIBVAreleaseBuffer ;    \
-            _context->draw_horiz_band = NULL; \
-            _context->get_format      = ADM_LIBVA_getFormat; \
-            _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD; \
-            _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD; \
-            _context->hwaccel_context = va_context;})
-      
-#endif
+   
+    
+    if(isH264Compatible(fcc))
+    {
+             WRAP_Open_TemplateLibVAByName(CODEC_ID_H264);
+    }else
+    {
+        if(isMpeg12Compatible(fcc))
+        {
+            WRAP_Open_TemplateLibVAByName(CODEC_ID_MPEG2VIDEO);
+        }
+        else
+        {
+            if(isVC1Compatible(fcc))
+            {
+                WRAP_Open_TemplateLibVAByName(CODEC_ID_VC1);
+            }
+            else
+            {
+                GUI_Error_HIG("Error","LibVA does not support this, configuration error"); 
+                ADM_assert(0);
+            }
+        }
+    }
     nbSurface=0;
    
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
@@ -306,13 +334,13 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     // First let ffmpeg prepare datas...
 
     aprintf("[LIBVA]>-------------uncompress>\n");
-    printf("Incoming Pts=%s\n",ADM_us2plain(in->demuxerPts));
+    //printf("Incoming Pts=%s\n",ADM_us2plain(in->demuxerPts));
     if(!decoderFF::uncompress (in, scratch))
     {
-        aprintf("[LIBVA] No data from libavcodec\n");
+        ADM_warning("[LibVA] No data\n ");
         return false;
     }
-    printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
+    //printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
     uint64_t p=(uint64_t )scratch->GetReadPtr(PLANAR_Y);
     VASurfaceID id=(VASurfaceID)p;
     out->Pts=scratch->Pts;
@@ -327,8 +355,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
     aprintf("uncompress : Got surface =0x%x\n",id);
-    printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
-    printf("Out Dts =%s\n",ADM_us2plain(out->Pts));
+    //printf("Out Dts =%s,flags =%x\n",ADM_us2plain(out->Pts),out->flags);
     return true;
     
 }
