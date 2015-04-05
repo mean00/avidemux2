@@ -806,22 +806,11 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
                         src->duplicate(&ref);
                 }
                 break;
-        case VA_FOURCC_NV12:src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);break;
+        case VA_FOURCC_NV12:
+                        src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);
+                        break;
         default: ADM_assert(0);
     }
-int w=src->_width;
-    int h=src->_height;
-    int dstStride= dest->pitches[0];
-    int srcStride= src->GetPitch(PLANAR_Y);
-    uint8_t *s=    src->GetReadPtr(PLANAR_Y);
-    uint8_t *d=    ptr+dest->offsets[0];
-    for(int y=0;y<h;y++)
-    {
-        memcpy(s,d,w);
-        s+=srcStride;
-        d+=dstStride;
-    }
-    
     CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
     return true;
 }
