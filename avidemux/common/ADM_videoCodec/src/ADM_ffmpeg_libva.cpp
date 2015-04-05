@@ -190,6 +190,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         uint8_t *extraData,uint32_t bpp)
 :decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
 {
+    
     VASurfaceID sid[ADM_MAX_SURFACE+1];
     
     alive=false;
@@ -232,15 +233,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     }
     va_context->context_id=libva;
     
-    _context->opaque          = this;
-    _context->thread_count    = 1;
-    _context->get_buffer      = ADM_LIBVAgetBuffer;
-    _context->release_buffer  = ADM_LIBVAreleaseBuffer ;   
-    _context->draw_horiz_band = NULL;
-    _context->get_format      = ADM_LIBVA_getFormat;
-    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD;
-    _context->hwaccel_context = va_context;
+  WRAP_Open_TemplateLibVAByName("h264_vaapi",CODEC_ID_H264);
     nbSurface=0;
     
     
@@ -250,11 +243,6 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             _context->extradata_size  = (int) extraDataLen;
     } 
     
-     WRAP_Open(CODEC_ID_H264);
-    //
-
-     
-     
    
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;

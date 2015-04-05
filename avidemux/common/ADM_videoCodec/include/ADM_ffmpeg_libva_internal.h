@@ -13,43 +13,22 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_ffmpeg_libva_internal_H
-#define ADM_ffmpeg_libva_internal_H
+#pragma once
 #include <vector>
 
 
 #define NB_SURFACE 25
-typedef struct 
-{
-        //VdpDecoder            vdpDecoder;
-        //vdpau_render_state *renders[NB_SURFACE];
-        //std::vector <vdpau_render_state *>freeQueue;
 
-}xvbaContext;
+#define WRAP_Open_TemplateLibVAByName(argz,codecid) \
+    WRAP_Open_Template(avcodec_find_decoder_by_name,argz,,codecid,{\
+            _context->opaque          = this; \
+            _context->thread_count    = 1; \
+            _context->get_buffer      = ADM_LIBVAgetBuffer; \
+            _context->release_buffer  = ADM_LIBVAreleaseBuffer ;    \
+            _context->draw_horiz_band = NULL; \
+            _context->get_format      = ADM_LIBVA_getFormat; \
+            _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD; \
+            _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD; \
+            _context->hwaccel_context = va_context;})
 
-#define XVBAX ((xvbaContext *)xvba)
 
-
-#define WRAP_Open_Template(funcz,argz,display,codecid) \
-{\
-AVCodec *codec=funcz(argz);\
-if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec :"display));ADM_assert(0);} \
-  codecId=codecid; \
-  _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
-  _context->error_concealment=3; \
-  if (avcodec_open2(_context, codec,NULL) < 0)  \
-                      { \
-                                        printf("[lavc] Decoder init: "display" video decoder failed!\n"); \
-                                        GUI_Error_HIG("Codec","Internal error opening "display); \
-                                        ADM_assert(0); \
-                                } \
-                                else \
-                                { \
-                                        printf("[lavc] Decoder init: "display" video decoder initialized! (%s)\n",codec->long_name); \
-                                } \
-}
-
-#define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x);}
-#define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y);}
-
-#endif

@@ -545,12 +545,13 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h)
        
        aprintf("Creating surface %d x %d\n",w,h);
        VASurfaceID s;
-#if 0
+ 
         CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
-                        w,h,
                         VA_RT_FORMAT_YUV420,
-                        1,&s));
-#endif
+                        w,h,
+                        &s,1,
+                        NULL,0));
+
         if(!xError)
         {
             return s;
