@@ -25,6 +25,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
 #include "libavcodec/vaapi.h"
+#include "libavcodec/internal.h"
 }
 
 #include "ADM_codec.h"
@@ -232,17 +233,22 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         return ;
     }
     va_context->context_id=libva;
-    
-  WRAP_Open_TemplateLibVAByName("h264_vaapi",CODEC_ID_H264);
+#if 0    
+    WRAP_Open_TemplateLibVAByName("h264_vaapi",CODEC_ID_H264);
+#else
+      WRAP_Open_Template(avcodec_find_decoder,CODEC_ID_H264,"CODEC_ID_H264",CODEC_ID_H264,{\
+            _context->opaque          = this; \
+            _context->thread_count    = 1; \
+            _context->get_buffer      = ADM_LIBVAgetBuffer; \
+            _context->release_buffer  = ADM_LIBVAreleaseBuffer ;    \
+            _context->draw_horiz_band = NULL; \
+            _context->get_format      = ADM_LIBVA_getFormat; \
+            _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD; \
+            _context->pix_fmt         = AV_PIX_FMT_VAAPI_VLD; \
+            _context->hwaccel_context = va_context;})
+      
+#endif
     nbSurface=0;
-    
-    
-    if(extraDataLen)
-    {
-            _context->extradata = (uint8_t *) _extraDataCopy;
-            _context->extradata_size  = (int) extraDataLen;
-    } 
-    
    
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
@@ -300,12 +306,13 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     // First let ffmpeg prepare datas...
 
     aprintf("[LIBVA]>-------------uncompress>\n");
-   
+    printf("Incoming Pts=%s\n",ADM_us2plain(in->demuxerPts));
     if(!decoderFF::uncompress (in, scratch))
     {
         aprintf("[LIBVA] No data from libavcodec\n");
-        return 0;
+        return false;
     }
+    printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
     uint64_t p=(uint64_t )scratch->GetReadPtr(PLANAR_Y);
     VASurfaceID id=(VASurfaceID)p;
     out->Pts=scratch->Pts;
@@ -320,6 +327,8 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
     aprintf("uncompress : Got surface =0x%x\n",id);
+    printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
+    printf("Out Dts =%s\n",ADM_us2plain(out->Pts));
     return true;
     
 }
@@ -417,12 +426,19 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->linesize[2]=0;
     pic->linesize[3]=0;
     pic->type=FF_BUFFER_TYPE_USER;
-//    render->state  =0;
-//    render->state |= FF_LIBVA_STATE_USED_FOR_REFERENCE;
-//    render->state &= ~FF_LIBVA_STATE_DECODED;
-//    render->psf=0;
     pic->reordered_opaque= avctx->reordered_opaque;
-   // pic->opaque= avctx->opaque;
+ // I dont really understand what it is used for ....
+    if(pic->reference)
+    {
+        ip_age[0]=ip_age[1]+1;
+        ip_age[1]=1;
+        b_age++;
+    }else
+    {
+        ip_age[0]++;
+        ip_age[1]++;
+        b_age=1;
+    }    
     return 0;
 }
 

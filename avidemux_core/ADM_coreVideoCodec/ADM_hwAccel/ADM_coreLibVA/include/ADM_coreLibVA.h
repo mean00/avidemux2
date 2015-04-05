@@ -42,11 +42,11 @@ protected:
     static GUI_WindowInfo      myWindowInfo;
 public:
     
-    typedef enum LIBVA_TRANSFER_MODE
+    typedef enum 
     {
         ADM_LIBVA_NONE,
         ADM_LIBVA_DIRECT, ADM_LIBVA_INDIRECT_NV12, ADM_LIBVA_INDIRECT_YV12
-    };
+    }LIBVA_TRANSFER_MODE;
 
     
     static bool         init(GUI_WindowInfo *x);
