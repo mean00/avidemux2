@@ -1,0 +1,151 @@
+--- libavcodec/nvenc.c.old	2015-04-06 08:32:55.673666059 +0200
++++ libavcodec/nvenc.c	2015-04-06 08:56:50.201627562 +0200
+@@ -752,19 +752,19 @@
+ 
+         switch (avctx->pix_fmt) {
+         case AV_PIX_FMT_YUV420P:
+-            allocSurf.bufferFmt = NV_ENC_BUFFER_FORMAT_YV12_PL;
+-            break;
++            //allocSurf.bufferFmt = NV_ENC_BUFFER_FORMAT_YV12_PL;
++            //break;
+ 
+         case AV_PIX_FMT_NV12:
+             allocSurf.bufferFmt = NV_ENC_BUFFER_FORMAT_NV12_PL;
+             break;
+ 
+-        case AV_PIX_FMT_YUV444P:
+-            allocSurf.bufferFmt = NV_ENC_BUFFER_FORMAT_YUV444_PL;
+-            break;
++        //case AV_PIX_FMT_YUV444P:
++            //allocSurf.bufferFmt = NV_ENC_BUFFER_FORMAT_YUV444_PL;
++            //break;
+ 
+         default:
+-            av_log(avctx, AV_LOG_FATAL, "Invalid input pixel format\n");
++            av_log(avctx, AV_LOG_FATAL, "NVENC: Invalid input pixel format\n");
+             res = AVERROR(EINVAL);
+             goto error;
+         }
+@@ -975,6 +975,28 @@
+ 
+     return res;
+ }
++/**
++        MEANX
++*/
++static void interleave_nv12(unsigned char *dest, int dest_stride,unsigned char *u,int u_stride,unsigned char *v,int v_stride,int width, int height)
++{
++        int x,y;
++        unsigned char *d;
++        unsigned char *pu;
++        unsigned char *pv;
++        for(y=0;y<height;y++)
++        {
++                d=dest;dest+=dest_stride;
++                pu=u;u+=u_stride;
++                pv=v;v+=v_stride;
++                for(x=0;x<width;x++)
++                {
++                        *(d++)=*(pu++);
++                        *(d++)=*(pv++);
++                }
++
++        }
++} 
+ 
+ static int nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
+     const AVFrame *frame, int *got_packet)
+@@ -1012,62 +1034,34 @@
+         if (nv_status != NV_ENC_SUCCESS) {
+             av_log(avctx, AV_LOG_ERROR, "Failed locking nvenc input buffer\n");
+             return 0;
+-        }
+-
+-        if (avctx->pix_fmt == AV_PIX_FMT_YUV420P) {
+-            uint8_t *buf = lockBufferParams.bufferDataPtr;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
+-                frame->data[0], frame->linesize[0],
+-                avctx->width, avctx->height);
+-
+-            buf += inSurf->height * lockBufferParams.pitch;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch >> 1,
+-                frame->data[2], frame->linesize[2],
+-                avctx->width >> 1, avctx->height >> 1);
+-
+-            buf += (inSurf->height * lockBufferParams.pitch) >> 2;
++        }  
++        { 
++        uint8_t *buf = lockBufferParams.bufferDataPtr;
+ 
+-            av_image_copy_plane(buf, lockBufferParams.pitch >> 1,
+-                frame->data[1], frame->linesize[1],
+-                avctx->width >> 1, avctx->height >> 1);
+-        } else if (avctx->pix_fmt == AV_PIX_FMT_NV12) {
+-            uint8_t *buf = lockBufferParams.bufferDataPtr;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
++        av_image_copy_plane(buf, lockBufferParams.pitch,
+                 frame->data[0], frame->linesize[0],
+                 avctx->width, avctx->height);
++// MEANX : We accept YV12 and interleave while copying, it saves us one intermediate image buffer
++        buf += inSurf->height * lockBufferParams.pitch;
++        switch(avctx->pix_fmt)
++        {
++                case AV_PIX_FMT_YUV420P:
++                        // Interleave U & V to NV12
++                        interleave_nv12(buf, lockBufferParams.pitch,frame->data[1],frame->linesize[1],frame->data[2],frame->linesize[2],avctx->width>>1, avctx->height>>1); 
++                        break;
++
++                case AV_PIX_FMT_NV12:
++                        av_image_copy_plane(buf, lockBufferParams.pitch,
++                                frame->data[1], frame->linesize[1],
++                                avctx->width, avctx->height >> 1);
++                        break;
++                default:
++                        av_log(avctx, AV_LOG_FATAL, "NVENC: Invalid pixel format!\n");
++                        return AVERROR(EINVAL);
+ 
+-            buf += inSurf->height * lockBufferParams.pitch;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
+-                frame->data[1], frame->linesize[1],
+-                avctx->width, avctx->height >> 1);
+-        } else if (avctx->pix_fmt == AV_PIX_FMT_YUV444P) {
+-            uint8_t *buf = lockBufferParams.bufferDataPtr;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
+-                frame->data[0], frame->linesize[0],
+-                avctx->width, avctx->height);
+-
+-            buf += inSurf->height * lockBufferParams.pitch;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
+-                frame->data[1], frame->linesize[1],
+-                avctx->width, avctx->height);
+-
+-            buf += inSurf->height * lockBufferParams.pitch;
+-
+-            av_image_copy_plane(buf, lockBufferParams.pitch,
+-                frame->data[2], frame->linesize[2],
+-                avctx->width, avctx->height);
+-        } else {
+-            av_log(avctx, AV_LOG_FATAL, "Invalid pixel format!\n");
+-            return AVERROR(EINVAL);
+         }
+-
+-        nv_status = p_nvenc->nvEncUnlockInputBuffer(ctx->nvencoder, inSurf->input_surface);
++       }
++       nv_status = p_nvenc->nvEncUnlockInputBuffer(ctx->nvencoder, inSurf->input_surface);
+         if (nv_status != NV_ENC_SUCCESS) {
+             av_log(avctx, AV_LOG_FATAL, "Failed unlocking input buffer!\n");
+             return AVERROR_EXTERNAL;
+@@ -1177,6 +1171,7 @@
+ 
+ static enum AVPixelFormat pix_fmts_nvenc[] = {
+     AV_PIX_FMT_NV12,
++    AV_PIX_FMT_YUV420P,
+     AV_PIX_FMT_NONE
+ };
+ 

@@ -20,7 +20,7 @@
 #include "ffNvEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-#define USE_NV12 
+//#define USE_NV12 
 #if 1
 #define aprintf(...) {}
 #else
@@ -141,6 +141,9 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
 
     _frame->reordered_opaque=image->Pts;
+    _frame->width=image->GetWidth(PLANAR_Y);
+    _frame->height=image->GetHeight(PLANAR_Y);
+
 // convert to nv12
 #ifdef USE_NV12
     image->interleaveUV(nv12,nv12Stride);
@@ -152,8 +155,6 @@ again:
     _frame->linesize[1]=nv12Stride;
     _frame->linesize[2]=0;
     _frame->format=  AV_PIX_FMT_NV12;    
-    _frame->width=image->GetWidth(PLANAR_Y);
-    _frame->height=image->GetHeight(PLANAR_Y);
 #else
     _frame->format=  AV_PIX_FMT_YUV420P;    
 #endif        
