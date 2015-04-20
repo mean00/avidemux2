@@ -52,7 +52,7 @@ MKVCC mkvCC[]=
   {"A_MS/ACM",0,0x100001,"ACMX"}, 
 
   // Video
-  {"V_VP9",1,0,"VP9"},
+  {"V_VP9",1,0,"VP9 "},
   {"V_VP8",1,0,"VP8 "}, // Mpeg2
   {"V_MPEG2",1,0,"MPEG"}, // Mpeg2
   {"V_MPEG1",1,0,"MPEG"}, // Mpeg1
