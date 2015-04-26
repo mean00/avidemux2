@@ -115,6 +115,12 @@ public:
 class MP4Header         :public vidHeader
 {
 protected:
+        enum Mp4Flavor
+        {
+            Mp4Regular,
+            Mp4Dash
+        };
+protected:
           /*****************************/
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
@@ -148,6 +154,7 @@ protected:
         MP4Track                      _tracks[_3GP_MAX_TRACKS];
         int64_t                      _audioDuration;
         uint32_t                      _currentAudioTrack;
+        Mp4Flavor                     _flavor;
         uint8_t                       parseAtomTree(adm_atom *atom);
         ADM_mp4AudioAccess            *audioAccess[_3GP_MAX_TRACKS-1];
         ADM_audioStream               *audioStream[_3GP_MAX_TRACKS-1];

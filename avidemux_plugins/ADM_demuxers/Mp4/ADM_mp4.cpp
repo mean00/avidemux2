@@ -227,6 +227,7 @@ MP4Header::MP4Header(void)
         _videoScale=1;
         _videoFound=0;
         delayRelativeToVideo=0;
+        _flavor=Mp4Regular;
 }
 /**
     \fn getAudioInfo

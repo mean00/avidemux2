@@ -33,6 +33,7 @@ MKMP4LEAF('hdlr',HDLR,0),
 /*   stbl atom            */
 MKMP4LEAF('stsd',STSD,0),
 MKMP4LEAF('stts',STTS,0),
+MKMP4LEAF('sidx',SIDX,0),
 MKMP4LEAF('stsc',STSC,0),
 MKMP4LEAF('stsz',STSZ,0),
 MKMP4LEAF('stco',STCO,0),

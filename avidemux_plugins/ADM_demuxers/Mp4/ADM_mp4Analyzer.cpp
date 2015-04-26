@@ -89,10 +89,12 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
 {
 
   adm_atom *tom=(adm_atom *)ztom;
-  adm_atom *moov;
+  adm_atom *moov,*sidx=NULL;
+  bool success=true;
   ADMAtoms id;
   uint32_t container;
   printf("Analyzing file and atoms\n");
+  
   if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOV,&moov))
   {
        ADM_warning("Cannot locate moov atom\n");
@@ -115,7 +117,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
             if(!parseTrack(&son))
             {
                 printf("Parse Track failed\n");
-                return false;
+                success=false;
             } ;
             break;
         default :
@@ -128,8 +130,22 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
     son.skipAtom();
   }
   delete moov;
+  if(!success)
+  {
+    if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_SIDX,&sidx))
+    {
+         ADM_info("Cannot find all needed atoms\n");
+    }else
+    {
+         ADM_info("It is a Dash file\n");
+         delete sidx;
+         sidx=NULL;
+         _flavor=Mp4Dash;
+   }
+  }
+  
   printf("Done finding main atoms\n");
-  return 1;
+  return success;
 }
 /**
       \fn parseMvhd

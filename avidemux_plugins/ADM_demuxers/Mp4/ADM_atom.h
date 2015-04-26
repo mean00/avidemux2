@@ -33,7 +33,7 @@ public:
 		uint8_t	        skipAtom( void );
                 uint32_t        getStartPos(void) {return _atomStart;}
 		uint32_t	getFCC( void );
-		int64_t        getRemainingSize( void );
+		int64_t         getRemainingSize( void );
 		uint8_t		readPayload( uint8_t *whereto, uint32_t rd );
 		uint8_t		isDone(void );
 		uint8_t		skipBytes(uint32_t nb );
