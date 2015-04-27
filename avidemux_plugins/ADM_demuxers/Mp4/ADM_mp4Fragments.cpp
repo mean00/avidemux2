@@ -54,7 +54,7 @@ bool MP4Header::parseMoof(adm_atom &tom)
             switch(id)
             {
                 case ADM_MP4_MFHD: son.skipAtom();break;
-                case ADM_MP4_TRAF: parseTraf(son);break;
+                case ADM_MP4_TRAF: parseTraf(son,tom.getStartPos());break;
                 
             }
             aprintf("[MOOF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
@@ -69,11 +69,13 @@ bool MP4Header::parseMoof(adm_atom &tom)
  * @param tom
  * @return 
  */
-bool MP4Header::parseTraf(adm_atom &tom)
+bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
 {        
         ADMAtoms id;
         uint32_t container;
         aprintf("[TRAF]\n");
+        uint32_t trafFlags=0;
+        mp4TrafInfo info;
         while(!tom.isDone())
         {
             adm_atom son(&tom);
@@ -86,9 +88,29 @@ bool MP4Header::parseTraf(adm_atom &tom)
             switch(id)
             {
                 case ADM_MP4_TRUN:
-                    parseTrun(son);
+                    parseTrun(son,info);
                     break;
                 case ADM_MP4_TFHD:
+                {
+                    trafFlags=son.read32()&0xfffff;
+                    aprintf("[TFHD] flags =0x%x\n",trafFlags);
+#define TRAF_INFO(a,b,s)   if(trafFlags&a)  info.b=son.read##s();
+                    
+                    TRAF_INFO(1,base,64);
+                    TRAF_INFO(2,sampleDesc,32);
+                    TRAF_INFO(8,defaultDuration,32);
+                    TRAF_INFO(0x10,defaultSize,32);
+                    TRAF_INFO(0x20,defaultFlags,32);                    
+                   
+                    if(trafFlags&0x10000) {aprintf("Empty duration\n");info.emptyDuration=true;}
+                    if(trafFlags&0x20000) 
+                    {
+                            
+                            info.baseIsMoof=true;
+                            info.base=moofStart;
+                            aprintf("base is moof at %llx\n",info.base);
+                    }
+                }
                 case ADM_MP4_TFDT:
                     aprintf("[TRAF]Found atom %s \n",fourCC::tostringBE(son.getFCC()));
                     break;
@@ -106,31 +128,38 @@ bool MP4Header::parseTraf(adm_atom &tom)
  * @param tom
  * @return 
  */
-bool MP4Header::parseTrun(adm_atom &tom)
+bool MP4Header::parseTrun(adm_atom &tom,const mp4TrafInfo &info)
 {
     uint32_t version_flags=tom.read32()& 0xfffff;
     aprintf("[TRUN] Flags=%x\n",version_flags);
     uint32_t count=tom.read32();
-    int32_t  offset=0;
+    int64_t  firstOffset=0;
     uint32_t  firstSampleFlags=0;
     if(version_flags & 0x1)
-            offset=tom.read32(); // Signed!
+            firstOffset=tom.read32(); // Signed!
     if(version_flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!
-    aprintf("[TRUN] count=%d, offset=0x%x,flags=%x\n",count,offset,firstSampleFlags);
+    aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,firstOffset+info.base,firstSampleFlags);
     for(int i=0;i<count;i++)
     {
-        uint32_t duration;
-        uint32_t size;
-        uint32_t flags;
-        uint32_t composition; // signed ?
+       mp4Fragment frag;
         
-#define FLAGS(a,b,c) if(version_flags & a)         b=tom.read32(); else b=c;
-        FLAGS(0x100,duration,0);
-        FLAGS(0x200,size,0);
+#define FLAGS(a,b,c) if(version_flags & a)         frag.b=tom.read32(); else frag.b=c;
+        FLAGS(0x100,duration,0);        
         FLAGS(0x400,flags,firstSampleFlags);
+        if(version_flags & 0x200)
+        {
+            FLAGS(0x200,size,0);
+            frag.offset=firstOffset;
+            firstOffset+=frag.size;
+        }else
+        {
+            printf("No size!\n");
+        }
         FLAGS(0x800,composition,0);
-        aprintf("[TRUN] duration=%d, size=%d,flags=%x,composition=%d\n",duration,size,flags,composition);
+        aprintf("[TRUN] duration=%d, size=%d,flags=%x,composition=%d\n",frag.duration,frag.size,frag.flags,frag.composition);
+        fragments.push_back(frag);
+        
     }
     tom.skipAtom();
     return true;

@@ -21,7 +21,7 @@
 #define __3GPHEADER__
 #include "ADM_Video.h"
 #include "ADM_atom.h"
-
+#include <vector>
 class MPsampleinfo
 {
   public:
@@ -110,6 +110,47 @@ public:
 #define VDEO _tracks[0]
 #define ADIO _tracks[nbAudioTrack+1]._rdWav
 /**
+ * 
+ */
+class mp4TrafInfo
+{
+public:
+    uint64_t base;
+    uint32_t sampleDesc;
+    uint32_t defaultDuration;
+    uint32_t defaultSize;
+    uint32_t defaultFlags;
+    bool     emptyDuration;
+    bool     baseIsMoof;
+    mp4TrafInfo()
+    {
+        base=0;
+        sampleDesc=defaultDuration=defaultSize=defaultFlags=0;
+        emptyDuration=baseIsMoof=false;
+    }
+};
+/**
+ * 
+ */
+class mp4Fragment
+{
+public:
+        mp4Fragment()
+        {
+            duration=0;
+            size=0;
+            flags=0;
+            composition=0;
+            offset=0;
+        }
+        uint32_t duration;
+        uint32_t size;
+        uint32_t flags;
+        int32_t  composition;
+        uint64_t offset;
+};
+
+/**
     \class MP4Header
 */
 class MP4Header         :public vidHeader
@@ -121,6 +162,7 @@ protected:
             Mp4Dash
         };
 protected:
+          std::vector <mp4Fragment>     fragments;
           /*****************************/
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
@@ -128,8 +170,8 @@ protected:
           uint8_t                       parseTrack(void *ztom);
           uint8_t                       parseElst(void *tom,uint32_t trackType);
           bool                          parseMoof(adm_atom &son);
-          bool                          parseTraf(adm_atom &son);
-          bool                          parseTrun(adm_atom &son);
+          bool                          parseTraf(adm_atom &son,uint64_t moofStart);
+          bool                          parseTrun(adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
           uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
           uint8_t                       parseEdts(void *ztom,uint32_t trackType);
