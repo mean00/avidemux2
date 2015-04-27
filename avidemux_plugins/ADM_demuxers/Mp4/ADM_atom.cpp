@@ -27,7 +27,7 @@
 
 #include "fourcc.h"
 #include "ADM_atom.h"
-#if 1
+#if 0
         #define aprintf(...) {}
 #else
     #define aprintf printf
@@ -60,12 +60,28 @@ adm_atom::adm_atom(adm_atom *atom)
 #endif
 }
 /**
-    \fn duplicate constructor
+    \fn duplicate 
     \brief returns a copy of the current atom
 */
-adm_atom::adm_atom(adm_atom *atom,int duplicate)
+adm_atom        *adm_atom::duplicate()
 {
-   memcpy(this,atom,sizeof(adm_atom));
+    adm_atom *t  =new adm_atom(0);
+    t->_fd       =_fd;
+    t->_atomStart=_atomStart;
+    t->_atomSize =_atomSize;
+    t->_atomFCC  =_atomFCC;
+#ifdef _3G_LOGO
+
+#endif    
+    return t;
+}
+/**
+ * 
+ * @param x
+ */
+adm_atom::adm_atom(int x)
+{
+    
 }
 adm_atom::adm_atom(FILE *fd )
 {
@@ -88,7 +104,7 @@ int64_t orgpos;
 #endif
 
 }
-uint8_t adm_atom::skipBytes( uint32_t nb )
+bool adm_atom::skipBytes( uint32_t nb )
 {
 int64_t pos;
 #ifdef ATOM_DEBUG
@@ -152,7 +168,7 @@ int64_t adm_atom::getRemainingSize( void )
         return _atomStart+_atomSize-pos;
 }
 
-uint8_t adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
+bool adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
 {
 	int64_t pos;
 
@@ -173,7 +189,7 @@ uint8_t adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
 	return 1;
 
 }
-uint8_t adm_atom::dumpAtom( void )
+bool adm_atom::dumpAtom( void )
 {
 
 	aprintf("Atom :");
@@ -183,11 +199,11 @@ uint8_t adm_atom::dumpAtom( void )
 
 }
 
-uint8_t adm_atom::skipAtom( void )
+bool adm_atom::skipAtom( void )
 {
 	fseeko(_fd,_atomStart+_atomSize,SEEK_SET);
 #ifdef _3G_LOGO
-        printf("Branching to %x ending atom ",_atomStart+_atomSize);
+        printf("skipping to %x ending atom ",_atomStart+_atomSize);
         fourCC::printBE(_atomFCC);
         printf("\n");
 #endif
@@ -195,7 +211,7 @@ uint8_t adm_atom::skipAtom( void )
 
 
 }
-uint8_t adm_atom::isDone( void )
+bool adm_atom::isDone( void )
 {
 	int64_t pos=ftello(_fd);
 

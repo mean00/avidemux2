@@ -4,6 +4,8 @@
     begin                : Mon Jun 3 2002
     copyright            : (C) 2002 by mean
     email                : fixounet@free.fr
+ * 
+ * 
  ***************************************************************************/
 
 /***************************************************************************
@@ -89,13 +91,14 @@ uint8_t ADM_mp4SimpleSearchAtom(adm_atom *rootAtom, ADMAtoms atomToFind,adm_atom
   while(!rootAtom->isDone())
   {
       adm_atom son(rootAtom);
+      printf("Found atom %s size=%d \n",fourCC::tostringBE(son.getFCC()),(int)son.getRemainingSize());
       // lookup our atom
        if(ADM_mp4SearchAtomName(son.getFCC(), &curAtom,&isContainer))
        {
          if(curAtom==atomToFind) // Got it, duplicate
          {
-             *atomFound=new adm_atom(&son,1); // Duplicate atom
-             // adm_printf(ADM_PRINT_DEBUG,"Searching atom %s :found\n",fourCC::tostringBE(son.getFCC()));
+             *atomFound=son.duplicate(); // Duplicate atom
+             //adm_printf(ADM_PRINT_DEBUG,"Searching atom %s :found\n",fourCC::tostringBE(son.getFCC()));
              return 1;
          }
          

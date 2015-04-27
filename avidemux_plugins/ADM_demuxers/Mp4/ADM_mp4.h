@@ -127,6 +127,9 @@ protected:
           void                          parseMvhd(void *tom);
           uint8_t                       parseTrack(void *ztom);
           uint8_t                       parseElst(void *tom,uint32_t trackType);
+          bool                          parseMoof(adm_atom &son);
+          bool                          parseTraf(adm_atom &son);
+          bool                          parseTrun(adm_atom &son);
           uint8_t                       decodeVideoAtom(void *ztom);
           uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
           uint8_t                       parseEdts(void *ztom,uint32_t trackType);

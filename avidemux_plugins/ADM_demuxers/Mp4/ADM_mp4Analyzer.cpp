@@ -1,7 +1,8 @@
 /***************************************************************************
 
-    copyright            : (C) 2007 by mean
+    copyright            : (C) 2007/2015 by mean
     email                : fixounet@free.fr
+ * https://arashafiei.wordpress.com/2012/11/13/quick-dash/
  ***************************************************************************/
 
 /***************************************************************************
@@ -89,7 +90,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
 {
 
   adm_atom *tom=(adm_atom *)ztom;
-  adm_atom *moov,*sidx=NULL;
+  adm_atom *moov,*moof=NULL;
   bool success=true;
   ADMAtoms id;
   uint32_t container;
@@ -132,15 +133,26 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
   delete moov;
   if(!success)
   {
-    if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_SIDX,&sidx))
+    if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOF,&moof))
     {
          ADM_info("Cannot find all needed atoms\n");
     }else
     {
-         ADM_info("It is a Dash file\n");
-         delete sidx;
-         sidx=NULL;
-         _flavor=Mp4Dash;
+         ADM_info("It is a Dash/fragmented file\n");
+          _flavor=Mp4Dash;
+          int moofFound=1;
+         while(1)
+         {
+             parseMoof(*moof);
+             delete moof;         
+             moof=NULL;
+             if(!ADM_mp4SimpleSearchAtom(tom, ADM_MP4_MOOF,&moof))
+             {
+                 break;
+             }
+             moofFound++;
+         }
+          ADM_info("Found %d fragments\n",moofFound);        
    }
   }
   

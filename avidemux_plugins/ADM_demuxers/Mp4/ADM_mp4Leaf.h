@@ -17,14 +17,18 @@ http://developer.apple.com/library/mac/#documentation/QuickTime/QTFF/QTFFChap2/q
 
 /* Container atom */
 MKMP4LEAF('moov',MOOV,1),
+MKMP4LEAF('moof',MOOF,1),
 MKMP4LEAF('trak',TRACK,1),
 MKMP4LEAF('mdia',MDIA,1),
 MKMP4LEAF('minf',MINF,1),
 MKMP4LEAF('dinf',DINF,1),
 MKMP4LEAF('stbl',STBL,1),
-
+MKMP4LEAF('traf',TRAF,1),
 /* Regular atoms (header) */
-
+MKMP4LEAF('tfhd',TFHD,0),
+MKMP4LEAF('tfdt',TFDT,0),
+MKMP4LEAF('trun',TRUN,0),
+MKMP4LEAF('mfhd',MFHD,0),
 MKMP4LEAF('mvhd',MVHD,0),
 MKMP4LEAF('tkhd',TKHD,0),
 MKMP4LEAF('mdhd',MDHD,0),
