@@ -94,7 +94,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                 {
                     trafFlags=son.read32()&0xfffff;
                     aprintf("[TFHD] flags =0x%x\n",trafFlags);
-#define TRAF_INFO(a,b,s)   if(trafFlags&a)  info.b=son.read##s();
+#define TRAF_INFO(a,b,s)   if(trafFlags&a)  {info.b=son.read##s();aprintf("TFHD:"#b"=%d\n",info.b);}
                     
                     TRAF_INFO(1,base,64);
                     TRAF_INFO(2,sampleDesc,32);
@@ -133,16 +133,17 @@ bool MP4Header::parseTrun(adm_atom &tom,const mp4TrafInfo &info)
     uint32_t version_flags=tom.read32()& 0xfffff;
     aprintf("[TRUN] Flags=%x\n",version_flags);
     uint32_t count=tom.read32();
-    int64_t  firstOffset=0;
+    int64_t  firstOffset=info.base;
     uint32_t  firstSampleFlags=0;
     if(version_flags & 0x1)
     {
-            firstOffset=tom.read32(); // Signed!
+            firstOffset+=tom.read32(); // Signed!
     }
     if(version_flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!
     else 
             firstSampleFlags=info.defaultFlags;
+   
     aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,firstOffset+info.base,firstSampleFlags);
     for(int i=0;i<count;i++)
     {
@@ -154,6 +155,8 @@ bool MP4Header::parseTrun(adm_atom &tom,const mp4TrafInfo &info)
         FLAGS(0x400,flags,firstSampleFlags); // FIXME
         
         frag.offset=firstOffset;
+        
+            
         firstOffset+=frag.size;
         FLAGS(0x800,composition,0);
         aprintf("[TRUN] duration=%d, size=%d,flags=%x,composition=%d\n",frag.duration,frag.size,frag.flags,frag.composition);
@@ -177,14 +180,15 @@ bool MP4Header::indexFragments()
         MP4Index *dex=trk->index+i;
         dex->offset=fragments[i].offset;
         dex->size=fragments[i].size;
-        dex->pts=ADM_NO_PTS;
-        dex->dts=ADM_NO_PTS;
-        dex->intra=0;        
+        dex->pts=i;
+        dex->dts=i;
+        dex->intra=0;    
+        aprintf("[FRAG] offset=0x%llx size=%d\n",dex->offset,dex->size);
     }
     MP4Index *ff=trk->index;
     ff->intra=AVI_KEY_FRAME;
     ff->dts=0;
-    ff->pts=60000;
+    ff->pts=0;
     _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
     return true;
 }
