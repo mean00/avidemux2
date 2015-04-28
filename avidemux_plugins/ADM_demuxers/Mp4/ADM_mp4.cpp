@@ -346,21 +346,24 @@ uint8_t    MP4Header::open(const char *name)
         if(!lookupMainAtoms((void*) atom))
         {
           printf("Cannot find needed atom\n");
-          fclose(_fd);
-          _fd=NULL;
-		  delete atom;
-          return 0;
+          if(!fragments.size() || !indexFragments())
+          {
+            fclose(_fd);
+            _fd=NULL;
+            delete atom;
+            return 0;
+          }
         }
 
         delete atom;
 
-	      _isvideopresent=1;
-	      _isaudiopresent=0;
+        _isvideopresent=1;
+        _isaudiopresent=0;
 
-              _videostream.fccType=fourCC::get((uint8_t *)"vids");
-              _video_bih.biBitCount=24;
-              _videostream.dwInitialFrames= 0;
-              _videostream.dwStart= 0;
+        _videostream.fccType=fourCC::get((uint8_t *)"vids");
+        _video_bih.biBitCount=24;
+        _videostream.dwInitialFrames= 0;
+        _videostream.dwStart= 0;
 
 	printf("\n");
 
@@ -640,8 +643,8 @@ bool    MP4Header::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 
     if(frame>=VDEO.nbIndex)
     {
-      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
-      return 0;
+      printf("[MP4] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
+      return false;
     }
 
     MP4Index *idx=&(VDEO.index[frame]);
@@ -657,7 +660,7 @@ bool    MP4Header::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     if(frame>=VDEO.nbIndex)
     {
-      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
+      printf("[MP4] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,VDEO.nbIndex);
       return 0;
     }
 

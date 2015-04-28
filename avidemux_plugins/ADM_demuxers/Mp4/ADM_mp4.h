@@ -163,6 +163,7 @@ protected:
         };
 protected:
           std::vector <mp4Fragment>     fragments;
+          bool                          indexFragments();
           /*****************************/
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
@@ -236,18 +237,18 @@ virtual        bool                     unreliableBFramePts (void);
   //				 video
   //__________________________
 
-virtual 	uint8_t  setFlag(uint32_t frame,uint32_t flags);
-virtual 	uint32_t getFlags(uint32_t frame,uint32_t *flags);
-virtual 	uint8_t  getFrame(uint32_t framenum,ADMCompressedImage *img);
-virtual     uint8_t getFrameSize (uint32_t frame, uint32_t * size);
-// Multi track
-uint8_t        changeAudioStream(uint32_t newstream);
-uint32_t       getCurrentAudioStreamNumber(void);
-uint8_t        getAudioStreamsInfo(uint32_t *nbStreams, audioInfo **infos);
-virtual   uint64_t                   getTime(uint32_t frameNum);
-virtual   uint64_t                   getVideoDuration(void);
-virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
-virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
+virtual 	uint8_t         setFlag(uint32_t frame,uint32_t flags);
+virtual 	uint32_t        getFlags(uint32_t frame,uint32_t *flags);
+virtual 	uint8_t         getFrame(uint32_t framenum,ADMCompressedImage *img);
+virtual         uint8_t         getFrameSize (uint32_t frame, uint32_t * size);
+                // Multi track
+                uint8_t         changeAudioStream(uint32_t newstream);
+                uint32_t        getCurrentAudioStreamNumber(void);
+                uint8_t         getAudioStreamsInfo(uint32_t *nbStreams, audioInfo **infos);
+virtual         uint64_t        getTime(uint32_t frameNum);
+virtual         uint64_t        getVideoDuration(void);
+virtual         bool            getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
+virtual         bool            setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
 
 };
 

@@ -136,32 +136,56 @@ bool MP4Header::parseTrun(adm_atom &tom,const mp4TrafInfo &info)
     int64_t  firstOffset=0;
     uint32_t  firstSampleFlags=0;
     if(version_flags & 0x1)
+    {
             firstOffset=tom.read32(); // Signed!
+    }
     if(version_flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!
+    else 
+            firstSampleFlags=info.defaultFlags;
     aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,firstOffset+info.base,firstSampleFlags);
     for(int i=0;i<count;i++)
     {
        mp4Fragment frag;
         
 #define FLAGS(a,b,c) if(version_flags & a)         frag.b=tom.read32(); else frag.b=c;
-        FLAGS(0x100,duration,0);        
-        FLAGS(0x400,flags,firstSampleFlags);
-        if(version_flags & 0x200)
-        {
-            FLAGS(0x200,size,0);
-            frag.offset=firstOffset;
-            firstOffset+=frag.size;
-        }else
-        {
-            printf("No size!\n");
-        }
+        FLAGS(0x100,duration,info.defaultDuration);        
+        FLAGS(0x200,size,info.defaultSize);        
+        FLAGS(0x400,flags,firstSampleFlags); // FIXME
+        
+        frag.offset=firstOffset;
+        firstOffset+=frag.size;
         FLAGS(0x800,composition,0);
         aprintf("[TRUN] duration=%d, size=%d,flags=%x,composition=%d\n",frag.duration,frag.size,frag.flags,frag.composition);
         fragments.push_back(frag);
         
     }
     tom.skipAtom();
+    return true;
+}
+/**
+ * 
+ * @return 
+ */
+bool MP4Header::indexFragments()
+{
+    MP4Track *trk=_tracks;
+    trk->nbIndex=fragments.size();
+    trk->index=new MP4Index[trk->nbIndex];
+    for(int i=0;i<trk->nbIndex;i++)
+    {
+        MP4Index *dex=trk->index+i;
+        dex->offset=fragments[i].offset;
+        dex->size=fragments[i].size;
+        dex->pts=ADM_NO_PTS;
+        dex->dts=ADM_NO_PTS;
+        dex->intra=0;        
+    }
+    MP4Index *ff=trk->index;
+    ff->intra=AVI_KEY_FRAME;
+    ff->dts=0;
+    ff->pts=60000;
+    _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
     return true;
 }
 // EOF
