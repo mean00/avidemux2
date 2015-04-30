@@ -49,7 +49,8 @@ class MPsampleinfo
       MPsampleinfo(void);
       ~MPsampleinfo(void);
 };
-
+/**
+ */
 typedef struct MP4Index
 {
 	uint64_t offset; // Offset in file to get frame
@@ -59,6 +60,9 @@ typedef struct MP4Index
     uint64_t dts; // Delta in frame between pts & dts
 
 }MP4Index;
+class mp4Fragment;
+/**
+ */
 class MP4Track
 {
 public:
@@ -69,6 +73,7 @@ public:
     uint32_t    extraDataSize;
     uint8_t     *extraData;
     WAVHeader   _rdWav;
+    std::vector <mp4Fragment>     fragments;
                 MP4Track(void);
                 ~MP4Track();
 };
@@ -115,16 +120,18 @@ public:
 class mp4TrafInfo
 {
 public:
-    uint64_t base;
+    uint64_t baseOffset;
+    uint64_t baseDts;
     uint32_t sampleDesc;
     uint32_t defaultDuration;
     uint32_t defaultSize;
     uint32_t defaultFlags;
     bool     emptyDuration;
     bool     baseIsMoof;
+    
     mp4TrafInfo()
     {
-        base=0;
+        baseOffset=baseDts=0;
         sampleDesc=defaultDuration=defaultSize=defaultFlags=0;
         emptyDuration=baseIsMoof=false;
     }
@@ -162,8 +169,8 @@ protected:
             Mp4Dash
         };
 protected:
-          std::vector <mp4Fragment>     fragments;
-          bool                          indexFragments();
+          
+          bool                          indexFragments(int trackNo);
           /*****************************/
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);
@@ -172,7 +179,7 @@ protected:
           uint8_t                       parseElst(void *tom,uint32_t trackType);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
-          bool                          parseTrun(adm_atom &son,const mp4TrafInfo &info);
+          bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
           uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
           uint8_t                       parseEdts(void *ztom,uint32_t trackType);

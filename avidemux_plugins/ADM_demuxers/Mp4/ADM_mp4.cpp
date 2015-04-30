@@ -345,8 +345,8 @@ uint8_t    MP4Header::open(const char *name)
 
         if(!lookupMainAtoms((void*) atom))
         {
-          printf("Cannot find needed atom\n");
-          if(!fragments.size() || !indexFragments())
+          printf("Cannot find needed atom\n");          
+          if(!_tracks[0].fragments.size() || !indexFragments(0)) // fixme audio
           {
             fclose(_fd);
             _fd=NULL;
