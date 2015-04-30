@@ -424,11 +424,11 @@ uint32_t i,j,cur;
 	}
 	else // there is not ssts
 	{
-          GUI_Error_HIG(QT_TR_NOOP("No stts table"), NULL);
-          return 0;
+          //GUI_Error_HIG(QT_TR_NOOP("No stts table"), NULL);
+          return false;
 	}
         printf("Index done\n");
-	return 1;
+	return true;
 }
 /**
       \fn sample2byte

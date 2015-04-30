@@ -352,6 +352,13 @@ uint8_t    MP4Header::open(const char *name)
             _fd=NULL;
             delete atom;
             return 0;
+          }else
+          { // do other tracks as well
+              for(int i=1;i<=nbAudioTrack;i++)
+              {
+                  if(_tracks[i].fragments.size())
+                      indexFragments(i);
+              }
           }
         }
 

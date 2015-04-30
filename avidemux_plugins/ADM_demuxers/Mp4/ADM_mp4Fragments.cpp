@@ -186,20 +186,25 @@ bool MP4Header::indexFragments(int trackNo)
      std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
     trk->nbIndex=fragList.size();
     trk->index=new MP4Index[trk->nbIndex];
+    uint64_t sum=0;
     for(int i=0;i<trk->nbIndex;i++)
     {
         MP4Index *dex=trk->index+i;
         dex->offset=fragList[i].offset;
         dex->size=fragList[i].size;
-        dex->pts=i;
-        dex->dts=i;
+        
+        double dts=sum;
+        dts=sum;
+        
+        dts*=30000; // us FIXME
+        dex->dts=dts;
+        dex->pts=dex->dts+fragList[i].composition*10;
         dex->intra=0;    
-        aprintf("[FRAG] offset=0x%llx size=%d\n",dex->offset,(int)dex->size);
+        sum+=fragList[i].duration;
+        aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
     }
     MP4Index *ff=trk->index;
-    ff->intra=AVI_KEY_FRAME;
-    ff->dts=0;
-    ff->pts=0;
+    ff->intra=AVI_KEY_FRAME;   
     if(!trackNo)
         _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
     fragList.clear();
