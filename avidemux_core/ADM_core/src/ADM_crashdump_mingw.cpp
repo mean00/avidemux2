@@ -16,20 +16,33 @@
 
 #include "ADM_crashdump.h"
 #include <stdio.h>
+#include <string>
 #include <imagehlp.h>
 #include <cxxabi.h>
 
 static ADM_saveFunction *mysaveFunction = NULL;
 static ADM_fatalFunction *myFatalFunction = NULL;
-
+/**
+ * 
+ * @param save
+ * @param fatal
+ */
 void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
 {
 	mysaveFunction = save;
 	myFatalFunction = fatal;
 }
-
-static void PrintFunction(const char *moduleName, const char *functionName, DWORD_PTR frameAddress, DWORD_PTR frameOffset)
+/**
+ * 
+ * @param moduleName
+ * @param functionName
+ * @param frameAddress
+ * @param frameOffset
+ * @return 
+ */
+static std::string PrintFunction(const char *moduleName, const char *functionName, DWORD_PTR frameAddress, DWORD_PTR frameOffset)
 {
+    std::string s;
 	if (functionName)
 	{
 		char *cxaFunction = (char*)malloc(strlen(functionName) + 2);
@@ -51,21 +64,29 @@ static void PrintFunction(const char *moduleName, const char *functionName, DWOR
 			free(demangledName);
 	}
 	else
-		printf("unknown function");
+		s=std::string("unknown function");
 
-	if (frameOffset)
-		printf(" <+0x%X>", frameOffset);
+//	if (frameOffset)
+//		s+=std::string(" <+0x%X>", frameOffset);
 
 	if (moduleName)
-		printf("  [%s]\n", moduleName);
+		s+=std::string("  [")+std::string(moduleName)+std::string("] ");
 	else
-		printf("  [unknown module]\n");
-
-	fflush(stdout);
+		s+=std::string("  [unknown module]\n");
+    
+        fflush(stdout);
+        s+=std::string("\r");
+        return s;
 }
-
-static bool DumpFrame(void *process, DWORD_PTR frameAddress)
+/**
+ * 
+ * @param process
+ * @param frameAddress
+ * @return 
+ */
+static std::string  DumpFrame(void *process, DWORD_PTR frameAddress)
 {
+    std::string s;
 	const int functionLength = 255;
 	IMAGEHLP_SYMBOL *symbol = (IMAGEHLP_SYMBOL*)malloc(sizeof(IMAGEHLP_SYMBOL) + functionLength);
 	DWORD_PTR moduleBase = SymGetModuleBase(process, frameAddress);
@@ -82,22 +103,30 @@ static bool DumpFrame(void *process, DWORD_PTR frameAddress)
 	if (SymGetSymFromAddr(process, frameAddress, &displacement, symbol))
 		functionName = symbol->Name;
 
-	PrintFunction(moduleName, functionName, frameAddress, displacement);
+	s+=PrintFunction(moduleName, functionName, frameAddress, displacement);
 
 	free(symbol);
+        return s;
 }
-
-static void DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *exceptionRec, struct _CONTEXT *contextRecord)
+/**
+ * 
+ * @param processId
+ * @param exceptionRec
+ * @param contextRecord
+ * @return 
+ */
+static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *exceptionRec, struct _CONTEXT *contextRecord)
 {
-	printf("\n*********** EXCEPTION **************\n");
-	printf("Registers:\n");
+    std::string s;
+	s+=std::string("\n*********** EXCEPTION **************\n");
+	s+=std::string("Registers:\n");
 #ifdef _WIN64
 	printf("RAX: %08X  RBX: %08X  RCX: %08X  RDX: %08X  RSI: %08X  RDI: %08X  RSP: %08X  RBP: %08X\n", contextRecord->Rax, contextRecord->Rbx, contextRecord->Rcx, contextRecord->Rdx, contextRecord->Rsi, contextRecord->Rdi, contextRecord->Rsp, contextRecord->Rbp);
 	printf("R8: %08X  R9: %08X  R10: %08X  R11: %08X  R12: %08X  R13: %08X  R14: %08X  R15: %08X\n", contextRecord->R8, contextRecord->R9, contextRecord->R10, contextRecord->R11, contextRecord->R12, contextRecord->R13, contextRecord->R14, contextRecord->R15);
 	printf("RIP: %08X  EFlags: %08X\n\n", contextRecord->Rip, contextRecord->EFlags);
 #else
-	printf("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X  ESI: %08X\n", contextRecord->Eax, contextRecord->Ebx, contextRecord->Ecx, contextRecord->Edx, contextRecord->Esi);
-	printf("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", contextRecord->Edi, contextRecord->Esp, contextRecord->Ebp, contextRecord->Eip, contextRecord->EFlags);
+	s+=std::string("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X  ESI: %08X\n", contextRecord->Eax, contextRecord->Ebx, contextRecord->Ecx, contextRecord->Edx, contextRecord->Esi);
+	s+=std::string("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", contextRecord->Edi, contextRecord->Esp, contextRecord->Ebp, contextRecord->Eip, contextRecord->EFlags);
 #endif
 
 	printf("Exception Code: ");
@@ -105,87 +134,95 @@ static void DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *excepti
 	switch (exceptionRec->ExceptionCode)
 	{
 		case EXCEPTION_ACCESS_VIOLATION:
-			printf("EXCEPTION_ACCESS_VIOLATION");
+			s+=std::string("EXCEPTION_ACCESS_VIOLATION");
 			break;
 		case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
-			printf("EXCEPTION_ARRAY_BOUNDS_EXCEEDED");
+			s+=std::string("EXCEPTION_ARRAY_BOUNDS_EXCEEDED");
 			break;
 		case EXCEPTION_BREAKPOINT:
-			printf("EXCEPTION_BREAKPOINT");
+			s+=std::string("EXCEPTION_BREAKPOINT");
 			break;
 		case EXCEPTION_DATATYPE_MISALIGNMENT:
-			printf("EXCEPTION_DATATYPE_MISALIGNMENT");
+			s+=std::string("EXCEPTION_DATATYPE_MISALIGNMENT");
 			break;
 		case EXCEPTION_FLT_DENORMAL_OPERAND:
-			printf("EXCEPTION_FLT_DENORMAL_OPERAND");
+			s+=std::string("EXCEPTION_FLT_DENORMAL_OPERAND");
 			break;
 		case EXCEPTION_FLT_DIVIDE_BY_ZERO:
-			printf("EXCEPTION_FLT_DIVIDE_BY_ZERO");
+			s+=std::string("EXCEPTION_FLT_DIVIDE_BY_ZERO");
 			break;
 		case EXCEPTION_FLT_INEXACT_RESULT:
-			printf("EXCEPTION_FLT_INEXACT_RESULT");
+			s+=std::string("EXCEPTION_FLT_INEXACT_RESULT");
 			break;
 		case EXCEPTION_FLT_INVALID_OPERATION:
-			printf("EXCEPTION_FLT_INVALID_OPERATION");
+			s+=std::string("EXCEPTION_FLT_INVALID_OPERATION");
 			break;
 		case EXCEPTION_FLT_OVERFLOW:
-			printf("EXCEPTION_FLT_OVERFLOW");
+			s+=std::string("EXCEPTION_FLT_OVERFLOW");
 			break;
 		case EXCEPTION_FLT_STACK_CHECK:
-			printf("EXCEPTION_FLT_STACK_CHECK");
+			s+=std::string("EXCEPTION_FLT_STACK_CHECK");
 			break;
 		case EXCEPTION_FLT_UNDERFLOW:
 			printf("EXCEPTION_FLT_UNDERFLOW");
 			break;
 		case EXCEPTION_ILLEGAL_INSTRUCTION:
-			printf("EXCEPTION_ILLEGAL_INSTRUCTION");
+			s+=std::string("EXCEPTION_ILLEGAL_INSTRUCTION");
 			break;
 		case EXCEPTION_IN_PAGE_ERROR:
-			printf("EXCEPTION_IN_PAGE_ERROR");
+			s+=std::string("EXCEPTION_IN_PAGE_ERROR");
 			break;
 		case EXCEPTION_INT_DIVIDE_BY_ZERO:
-			printf("EXCEPTION_INT_DIVIDE_BY_ZERO");
+			s+=std::string("EXCEPTION_INT_DIVIDE_BY_ZERO");
 			break;
 		case EXCEPTION_INT_OVERFLOW:
-			printf("EXCEPTION_INT_OVERFLOW");
+			s+=std::string("EXCEPTION_INT_OVERFLOW");
 			break;
 		case EXCEPTION_INVALID_DISPOSITION:
-			printf("EXCEPTION_INVALID_DISPOSITION");
+			s+=std::string("EXCEPTION_INVALID_DISPOSITION");
 			break;
 		case EXCEPTION_NONCONTINUABLE_EXCEPTION:
-			printf("EXCEPTION_NONCONTINUABLE_EXCEPTION");
+			s+=std::string("EXCEPTION_NONCONTINUABLE_EXCEPTION");
 			break;
 		case EXCEPTION_PRIV_INSTRUCTION:
-			printf("EXCEPTION_PRIV_INSTRUCTION");
+			s+=std::string("EXCEPTION_PRIV_INSTRUCTION");
 			break;
 		case EXCEPTION_SINGLE_STEP:
-			printf("EXCEPTION_SINGLE_STEP");
+			s+=std::string("EXCEPTION_SINGLE_STEP");
 			break;
 		case EXCEPTION_STACK_OVERFLOW:
-			printf("EXCEPTION_STACK_OVERFLOW");
+			s+=std::string("EXCEPTION_STACK_OVERFLOW");
 			break;
 		default:
-			printf("UNKNOWN");
+			s+=std::string("UNKNOWN");
 	}
 	
-	printf(" (%08X)\n", exceptionRec->ExceptionCode);
-	printf("Exception Flags: %08X\n", exceptionRec->ExceptionFlags);
+	//s+=std::string(" (%08X)\n", exceptionRec->ExceptionCode);
+	//s+=std::string("Exception Flags: %08X\n", exceptionRec->ExceptionFlags);
 
-	printf("\nOrigin:\n");
+	s+=std::string("\nOrigin:\n");
 
 #ifdef _WIN64
-	DumpFrame(processId, contextRecord->Rip);
+    #define REGISTER_RECORD Rip
 #else
-	DumpFrame(processId, contextRecord->Eip);
+    #define REGISTER_RECORD Eip
 #endif
+	s+=DumpFrame(processId, contextRecord->REGISTER_RECORD);
 
-	printf("*********** EXCEPTION **************\n");
+	s+=std::string("*********** EXCEPTION **************\n");
+        printf(s.c_str());
 	fflush(stdout);
+        return s;
 }
-
-void DumpBackTrace(void *processId)
+/**
+ * 
+ * @param processId
+ * @return 
+ */
+std::string DumpBackTrace(void *processId)
 {
-	printf("\n*********** BACKTRACE **************\n");
+    std::string s;
+	s=std::string("\n*********** BACKTRACE **************\n");
 
 	typedef VOID NTAPI RtlCaptureContext_(PCONTEXT ContextRecord);
 
@@ -207,7 +244,7 @@ void DumpBackTrace(void *processId)
 #if _WIN64
 	machineType = IMAGE_FILE_MACHINE_AMD64;
 
-    frame.AddrPC.Offset = context.Rip;
+        frame.AddrPC.Offset = context.Rip;
 	frame.AddrStack.Offset = context.Rsp;
 	frame.AddrFrame.Offset = context.Rbp;
 #else
@@ -222,19 +259,27 @@ void DumpBackTrace(void *processId)
     frame.AddrStack.Mode = AddrModeFlat;
     frame.AddrFrame.Mode = AddrModeFlat;
 
+    
+    
 	while (StackWalk(machineType, process, thread, &frame, &context, 0, SymFunctionTableAccess, SymGetModuleBase, 0))
 	{
         if (limit-- == 0)
 			break;
 
-		DumpFrame(process, frame.AddrPC.Offset);
+		s+=DumpFrame(process, frame.AddrPC.Offset);
 	}
 
-	printf("*********** BACKTRACE **************\n\n");
+	s+=std::string("*********** BACKTRACE **************\n\n");
+        return s;
 }
-
+/**
+ * 
+ * @param exceptionRecord
+ * @param contextRecord
+ */
 void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT *contextRecord)
 {
+    std::string s;
 	fflush(stderr);
 	fflush(stdout);	
 
@@ -248,8 +293,7 @@ void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT 
 	if (mysaveFunction)
 		mysaveFunction();
 
-	if (myFatalFunction)
-		myFatalFunction("Crash", "Press OK to build crash info");
+	
 
 	void *process = GetCurrentProcess();
 
@@ -257,25 +301,43 @@ void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT 
 
 	if (exceptionRecord != NULL && contextRecord != NULL)
 	{
-		DumpExceptionInfo(process, exceptionRecord, contextRecord);
+		s+=DumpExceptionInfo(process, exceptionRecord, contextRecord);
 	}
 
-	DumpBackTrace(process);
+	s+=DumpBackTrace(process);
+        if (myFatalFunction)
+		myFatalFunction("Crash", s.c_str());
 	SymCleanup(process);
 
 	exit(1);
 }
-
+/**
+ * 
+ * @param exceptionRecord
+ * @param establisherFrame
+ * @param contextRecord
+ * @param dispatcherContext
+ * @return 
+ */
 EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext)
 {
 	HandleException(exceptionRecord, contextRecord);
 }
-
+/**
+ * 
+ * @param exceptionInfo
+ * @return 
+ */
 LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
 {
 	HandleException(exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
 }
-
+/**
+ * 
+ * @param info
+ * @param lineno
+ * @param file
+ */
 void ADM_backTrack(const char *info, int lineno, const char *file)
 {	
 	HandleException(NULL, NULL);
