@@ -1,6 +1,7 @@
 #!/bin/bash
 mkdir -p install
 rm -f install/*
+sh genlog.sh
 echo "#* Preparing 7z svn build *#*"
 echo "** Getting svn revision **"
 export REV=`git log | grep branch_mean | head -1 | sed 's/^.*branch_mean.//g' | sed 's/ .*$//g'`

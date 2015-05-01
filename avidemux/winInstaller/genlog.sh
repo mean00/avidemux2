@@ -1,4 +1,1 @@
-svn log --stop-on-copy --xml $SOURCEDIR > "svn [$BUILDBITS].xml"
-xsltproc svnlog.xslt "svn [$BUILDBITS].xml" > "$BUILDDIR/Change Log.html"
-xsltproc revision.xslt "svn [$BUILDBITS].xml" > revision.nsh
-rm "svn [$BUILDBITS].xml"
+git log --sparse --no-decorate | grep -v "^commit" | grep -v "^Author" | grep -v "^Date" | grep -v "git-svn" | sed '/^[\t ]*$/d' | head -10 > "Change Log.html"

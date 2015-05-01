@@ -1,4 +1,5 @@
 #!/bin/bash
+sh genlog.sh
 mkdir -p install
 rm -f install/*
 echo "#* Preparing 7z svn build *#*"
