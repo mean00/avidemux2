@@ -32,6 +32,14 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
 	mysaveFunction = save;
 	myFatalFunction = fatal;
 }
+std::string shortModuleName(const char *module)
+{
+    std::string s=std::string(module);    
+    std::size_t last=s.find_last_of('\\');
+    if(last==std::string::npos)
+        return s;
+    return s.substr(last+1);
+}
 /**
  * 
  * @param moduleName
@@ -43,22 +51,17 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
 static std::string PrintFunction(const char *moduleName, const char *functionName, DWORD_PTR frameAddress, DWORD_PTR frameOffset)
 {
     std::string s;
+    int status;
+
 	if (functionName)
 	{
-		char *cxaFunction = (char*)malloc(strlen(functionName) + 2);
-
-		cxaFunction[0] = '_';
-		strcpy(cxaFunction + 1, functionName);
-
-		int status;
-		char *demangledName = __cxxabiv1::__cxa_demangle(cxaFunction, NULL, NULL, &status);
-
-		free(cxaFunction);
-
+            std::string cxaFunction=std::string("_");
+                cxaFunction+=std::string(functionName);
+		char *demangledName = __cxxabiv1::__cxa_demangle(cxaFunction.c_str(), NULL, NULL, &status);
 		if (status == 0)
-			printf(demangledName);
+			s+=std::string(demangledName);
 		else
-			printf(functionName);
+			s+=std::string(functionName);
 
 		if (demangledName)
 			free(demangledName);
@@ -70,12 +73,10 @@ static std::string PrintFunction(const char *moduleName, const char *functionNam
 //		s+=std::string(" <+0x%X>", frameOffset);
 
 	if (moduleName)
-		s+=std::string("  [")+std::string(moduleName)+std::string("] ");
+		s+=std::string("  [")+shortModuleName(moduleName)+std::string("] ");
 	else
-		s+=std::string("  [unknown module]\n");
-    
-        fflush(stdout);
-        s+=std::string("\r");
+		s+=std::string("  [unknown module]");            
+        s+=std::string("\n");
         return s;
 }
 /**
@@ -118,8 +119,6 @@ static std::string  DumpFrame(void *process, DWORD_PTR frameAddress)
 static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *exceptionRec, struct _CONTEXT *contextRecord)
 {
     std::string s;
-	s+=std::string("\n*********** EXCEPTION **************\n");
-	s+=std::string("Registers:\n");
 #ifdef _WIN64
 	printf("RAX: %08X  RBX: %08X  RCX: %08X  RDX: %08X  RSI: %08X  RDI: %08X  RSP: %08X  RBP: %08X\n", contextRecord->Rax, contextRecord->Rbx, contextRecord->Rcx, contextRecord->Rdx, contextRecord->Rsi, contextRecord->Rdi, contextRecord->Rsp, contextRecord->Rbp);
 	printf("R8: %08X  R9: %08X  R10: %08X  R11: %08X  R12: %08X  R13: %08X  R14: %08X  R15: %08X\n", contextRecord->R8, contextRecord->R9, contextRecord->R10, contextRecord->R11, contextRecord->R12, contextRecord->R13, contextRecord->R14, contextRecord->R15);
@@ -129,7 +128,6 @@ static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *
 	s+=std::string("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", contextRecord->Edi, contextRecord->Esp, contextRecord->Ebp, contextRecord->Eip, contextRecord->EFlags);
 #endif
 
-	printf("Exception Code: ");
 
 	switch (exceptionRec->ExceptionCode)
 	{
@@ -196,11 +194,10 @@ static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *
 		default:
 			s+=std::string("UNKNOWN");
 	}
-	
+	s+=std::string("\n");
 	//s+=std::string(" (%08X)\n", exceptionRec->ExceptionCode);
 	//s+=std::string("Exception Flags: %08X\n", exceptionRec->ExceptionFlags);
 
-	s+=std::string("\nOrigin:\n");
 
 #ifdef _WIN64
     #define REGISTER_RECORD Rip
@@ -208,8 +205,6 @@ static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *
     #define REGISTER_RECORD Eip
 #endif
 	s+=DumpFrame(processId, contextRecord->REGISTER_RECORD);
-
-	s+=std::string("*********** EXCEPTION **************\n");
         printf(s.c_str());
 	fflush(stdout);
         return s;
@@ -221,9 +216,7 @@ static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *
  */
 std::string DumpBackTrace(void *processId)
 {
-    std::string s;
-	s=std::string("\n*********** BACKTRACE **************\n");
-
+        std::string s;
 	typedef VOID NTAPI RtlCaptureContext_(PCONTEXT ContextRecord);
 
 	HANDLE process = GetCurrentProcess();
@@ -263,13 +256,10 @@ std::string DumpBackTrace(void *processId)
     
 	while (StackWalk(machineType, process, thread, &frame, &context, 0, SymFunctionTableAccess, SymGetModuleBase, 0))
 	{
-        if (limit-- == 0)
-			break;
-
-		s+=DumpFrame(process, frame.AddrPC.Offset);
+            if (limit-- == 0)
+                break;
+            s+=DumpFrame(process, frame.AddrPC.Offset);
 	}
-
-	s+=std::string("*********** BACKTRACE **************\n\n");
         return s;
 }
 /**
