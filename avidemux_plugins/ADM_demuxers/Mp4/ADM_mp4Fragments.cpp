@@ -28,7 +28,7 @@
 #include "ADM_mp4Tree.h"
 #include "ADM_vidMisc.h"
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -93,8 +93,10 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                 case ADM_MP4_TFHD:
                 {
                     trafFlags=son.read32()&0xfffff;
-                    aprintf("[TFHD] flags =0x%x\n",trafFlags);
-#define TRAF_INFO(a,b,s)   if(trafFlags&a)  {info.b=son.read##s();aprintf("TFHD:"#b"=%d\n",info.b);}
+                    
+                    info.trackID=son.read32();
+                    aprintf("[TFHD] Track=%d flags =0x%x\n",info.trackID,trafFlags);
+#define TRAF_INFO(a,b,s)   if(trafFlags&a)  {info.b=son.read##s();aprintf("TFHD:"#b"=%d\n",(int)info.b);}
                     
                     TRAF_INFO(1,baseOffset,64);
                     TRAF_INFO(2,sampleDesc,32);
@@ -108,7 +110,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                             
                             info.baseIsMoof=true;
                             info.baseOffset=moofStart;
-                            aprintf("base is moof at %llx\n",info.baseOffset);
+                            aprintf("base is moof at %llx\n",(long long int)info.baseOffset);
                     }
                 }
                 case ADM_MP4_TFDT:
@@ -139,34 +141,35 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
  */
 bool MP4Header::parseTrun(int trackNo,adm_atom &tom,const mp4TrafInfo &info)
 {
-    uint32_t version_flags=tom.read32()& 0xfffff;
-    aprintf("[TRUN] Flags=%x\n",version_flags);
+    uint32_t flags=tom.read32()& 0xfffffff;
+    aprintf("[TRUN] Flags=%x\n",flags);
     uint32_t count=tom.read32();
     int64_t  firstOffset=info.baseOffset;
     uint32_t  firstSampleFlags=0;
     std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
-    if(version_flags & 0x1)
+    if(flags & 0x1)
     {
-            firstOffset+=tom.read32(); // Signed!
+            firstOffset+=tom.read32()&0xffff; // Signed!
     }
-    if(version_flags & 0x4)    
+    if(flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!
     else 
             firstSampleFlags=info.defaultFlags;
    
-    aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,firstOffset+info.baseOffset,firstSampleFlags);
+    aprintf("[TRUN] count=%d, offset=0x%x,synth=0x%x, flags=%x\n",count,firstOffset,(long long int)firstOffset+info.baseOffset,firstSampleFlags);
     for(int i=0;i<count;i++)
     {
        mp4Fragment frag;
         
-#define FLAGS(a,b,c) if(version_flags & a)         frag.b=tom.read32(); else frag.b=c;
+#define FLAGS(a,b,c) {if(flags & a)         frag.b=tom.read32(); else frag.b=c;}
         FLAGS(0x100,duration,info.defaultDuration);        
-        FLAGS(0x200,size,info.defaultSize);        
-        FLAGS(0x400,flags,firstSampleFlags); // FIXME
+        FLAGS(0x200,size,info.defaultSize);    
+        if(!i)
+            FLAGS(0x400,flags,firstSampleFlags)
+        else
+            FLAGS(0x400,flags,info.defaultFlags)
         
         frag.offset=firstOffset;
-        
-            
         firstOffset+=frag.size;
         FLAGS(0x800,composition,0);
         aprintf("[TRUN] duration=%d, size=%d,flags=%x,composition=%d\n",frag.duration,frag.size,frag.flags,frag.composition);
@@ -180,7 +183,56 @@ bool MP4Header::parseTrun(int trackNo,adm_atom &tom,const mp4TrafInfo &info)
  * 
  * @return 
  */
-bool MP4Header::indexFragments(int trackNo)
+bool MP4Header::indexVideoFragments(int trackNo)
+{
+     MP4Track *trk=&_tracks[trackNo];
+     std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
+    trk->nbIndex=fragList.size();
+    trk->index=new MP4Index[trk->nbIndex];
+    uint64_t sum=0;
+    int intra=0;
+    for(int i=0;i<trk->nbIndex;i++)
+    {
+        MP4Index *dex=trk->index+i;
+        dex->offset=fragList[i].offset;
+        dex->size=fragList[i].size;
+        
+        double dts=sum;
+        double ctts=fragList[i].composition;
+        dts=sum;
+        
+        dts=dts/_videoScale;
+        dts*=1000000.;
+        ctts=ctts/_videoScale;
+        ctts*=1000000.;
+        
+        
+        dex->dts=dts;
+        dex->pts=dex->dts+ctts;
+        if(!(fragList[i].flags &(0x00010000|0x01000000)))
+        {
+            dex->intra=AVI_KEY_FRAME;
+            intra++;
+        }
+        else
+            dex->intra=0;    
+        sum+=fragList[i].duration;
+        aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
+    }
+    printf("Found %d intra\n");
+    MP4Index *ff=trk->index;
+    ff->intra=AVI_KEY_FRAME;   
+    if(!trackNo)
+        _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
+    fragList.clear();
+    return true;
+}
+
+/**
+ * 
+ * @return 
+ */
+bool MP4Header::indexAudioFragments(int trackNo)
 {
      MP4Track *trk=&_tracks[trackNo];
      std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
@@ -195,19 +247,12 @@ bool MP4Header::indexFragments(int trackNo)
         
         double dts=sum;
         dts=sum;
-        
-        dts*=30000; // us FIXME
         dex->dts=dts;
         dex->pts=dex->dts+fragList[i].composition*10;
         dex->intra=0;    
         sum+=fragList[i].duration;
         aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
-    }
-    MP4Index *ff=trk->index;
-    ff->intra=AVI_KEY_FRAME;   
-    if(!trackNo)
-        _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
-    fragList.clear();
+    }   
     return true;
 }
 // EOF

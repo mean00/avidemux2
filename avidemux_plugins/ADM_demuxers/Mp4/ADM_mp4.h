@@ -120,6 +120,7 @@ public:
 class mp4TrafInfo
 {
 public:
+    uint32_t trackID;
     uint64_t baseOffset;
     uint64_t baseDts;
     uint32_t sampleDesc;
@@ -132,6 +133,7 @@ public:
     mp4TrafInfo()
     {
         baseOffset=baseDts=0;
+        trackID=0;
         sampleDesc=defaultDuration=defaultSize=defaultFlags=0;
         emptyDuration=baseIsMoof=false;
     }
@@ -170,7 +172,8 @@ protected:
         };
 protected:
           
-          bool                          indexFragments(int trackNo);
+          bool                          indexVideoFragments(int trackNo);
+          bool                          indexAudioFragments(int trackNo);
           /*****************************/
           uint64_t                      delayRelativeToVideo;
           uint8_t                       lookupMainAtoms(void *tom);

@@ -107,7 +107,7 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
     adm_atom son(moov);
     if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
     {
-      aprintf("Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+      aprintf("[Lookup]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
     }
     else
     {
@@ -213,7 +213,7 @@ uint8_t MP4Header::parseTrack(void *ztom)
      adm_atom son(tom);
      if(!ADM_mp4SearchAtomName(son.getFCC(), &id,&container))
      {
-       aprintf("Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
+       aprintf("[Track]Found atom %s unknown\n",fourCC::tostringBE(son.getFCC()));
        son.skipAtom();
        continue;
      }

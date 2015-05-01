@@ -27,7 +27,7 @@
 
 #include "fourcc.h"
 #include "ADM_atom.h"
-#if 0
+#if 1
         #define aprintf(...) {}
 #else
     #define aprintf printf

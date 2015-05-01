@@ -91,7 +91,7 @@ uint8_t ADM_mp4SimpleSearchAtom(adm_atom *rootAtom, ADMAtoms atomToFind,adm_atom
   while(!rootAtom->isDone())
   {
       adm_atom son(rootAtom);
-      printf("Found atom %s size=%d \n",fourCC::tostringBE(son.getFCC()),(int)son.getRemainingSize());
+      //printf("Found atom %s size=%d \n",fourCC::tostringBE(son.getFCC()),(int)son.getRemainingSize());
       // lookup our atom
        if(ADM_mp4SearchAtomName(son.getFCC(), &curAtom,&isContainer))
        {
