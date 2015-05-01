@@ -19,6 +19,7 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_C_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-gcc \
         -DCMAKE_CXX_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-g++ \
         -DCMAKE_LINKER:STRING=$MINGW/bin/$CROSS_PREFIX-ld \
+        ${EXTRA_CMAKE_ARG} \
         -DCMAKE_AR:STRING=$MINGW/bin/$CROSS_PREFIX-ar \
         -G "Unix Makefiles" \
         $TOP/avidemux/qt4

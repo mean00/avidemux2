@@ -18,6 +18,7 @@ cmake   -DCROSS=$MINGW \
   	-DCMAKE_RC_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-windres \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DQT_HOME:STRING=$QT_HOME \
+        ${EXTRA_CMAKE_ARG} \
         -DAVIDEMUX_SOURCE_DIR="$TOP"  \
         $@ \
         -G "Unix Makefiles" \

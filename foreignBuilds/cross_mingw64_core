@@ -15,6 +15,7 @@ cmake   -DCROSS=$MINGW \
         -DCMAKE_AR:STRING=$CROSS_PREFIX-ar \
         -DCMAKE_SYSTEM_NAME:STRING=Windows \
         -DCMAKE_RC_COMPILER:STRING=$MINGW/bin/$CROSS_PREFIX-windres \
+        ${EXTRA_CMAKE_ARG} \
         -DAVIDEMUX_TOP_SOURCE_DIR="$TOP"  \
         -G "Unix Makefiles" \
         $TOP/avidemux_core
