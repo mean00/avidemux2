@@ -124,8 +124,8 @@ static std::string DumpExceptionInfo(void *processId, struct _EXCEPTION_RECORD *
 	printf("R8: %08X  R9: %08X  R10: %08X  R11: %08X  R12: %08X  R13: %08X  R14: %08X  R15: %08X\n", contextRecord->R8, contextRecord->R9, contextRecord->R10, contextRecord->R11, contextRecord->R12, contextRecord->R13, contextRecord->R14, contextRecord->R15);
 	printf("RIP: %08X  EFlags: %08X\n\n", contextRecord->Rip, contextRecord->EFlags);
 #else
-	s+=std::string("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X  ESI: %08X\n", contextRecord->Eax, contextRecord->Ebx, contextRecord->Ecx, contextRecord->Edx, contextRecord->Esi);
-	s+=std::string("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", contextRecord->Edi, contextRecord->Esp, contextRecord->Ebp, contextRecord->Eip, contextRecord->EFlags);
+	//s+=std::string("EAX: %08X  EBX: %08X  ECX: %08X  EDX: %08X  ESI: %08X\n", contextRecord->Eax, contextRecord->Ebx, contextRecord->Ecx, contextRecord->Edx, contextRecord->Esi);
+	//s+=std::string("EDI: %08X  ESP: %08X  EBP: %08X  EIP: %08X  EFlags: %08X\n\n", contextRecord->Edi, contextRecord->Esp, contextRecord->Ebp, contextRecord->Eip, contextRecord->EFlags);
 #endif
 
 
