@@ -4,7 +4,10 @@
 
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
-export REV=`git log | grep branch_mean | head -1 | sed 's/^.*branch_mean.//g' | sed 's/ .*$//g'`
+export DAT=`date +"%Y_%m_%d"`
+export gt=`git log --format=oneline -1 | head -c 11`
+export REV="${DAT}_$gt"
+#
 export BASE_INSTALL_DIR="/";
 export BASE_APP="$HOME/Avidemux2.6.app/"
 export PREFIX="${BASE_APP}/Contents/Resources/"
