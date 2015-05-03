@@ -553,7 +553,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 							HandleAction(ACT_Back1Second);
 						else if (keyEvent->modifiers() == Qt::ControlModifier)
 							HandleAction(ACT_Back2Seconds);
-						else if (keyEvent->modifiers() == Qt::ControlModifier | Qt::ShiftModifier)
+						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
 							HandleAction(ACT_Back4Seconds);
 						else
 							HandleAction(ACT_PreviousFrame);
@@ -564,7 +564,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 							HandleAction(ACT_Forward1Second);
 						else if (keyEvent->modifiers() == Qt::ControlModifier) 
 							HandleAction(ACT_Forward2Seconds);
-						else if (keyEvent->modifiers() == Qt::ControlModifier | Qt::ShiftModifier) 
+						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
 							HandleAction(ACT_Forward4Seconds);
 						else 
 							HandleAction(ACT_NextFrame);

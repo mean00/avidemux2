@@ -194,7 +194,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
             sum+=sum16[i];
 	return sum;
 }
-#endif ADM_CPU_X86
+#endif //ADM_CPU_X86
   /**
    * 
    * @param target
@@ -208,6 +208,7 @@ bool ADMDolbyContext::setOneValue(float *target,int offset, float value)
         offset+=NZEROS+1;
     target[offset + NZEROS] = value;
     target[offset -1] = value;
+    return true;
 }
   /**
    * 
@@ -222,6 +223,7 @@ bool ADMDolbyContext::setValue(float **target,int offset, float value)
     {
         setOneValue(target[i],offset-i,value);
     }
+    return true;
 }
  /**
   * 

@@ -842,6 +842,7 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
 bool        ADM_EditorSegment::dumpClipBoard()
 {
     dumpSegmentsInternal(clipboard);
+    return true;
 }
 
 /**

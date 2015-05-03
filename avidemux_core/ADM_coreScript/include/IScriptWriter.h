@@ -16,6 +16,7 @@ class EditableAudioTrack;
 class IScriptWriter
 {
 public:
+    virtual ~IScriptWriter() {}
     virtual void addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track) = 0;
     virtual void addSegment(uint32_t videoIndex, uint64_t startTime, uint64_t duration) = 0;
     virtual void addVideoFilter(ADM_vf_plugin *plugin, ADM_VideoFilterElement *element) = 0;

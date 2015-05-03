@@ -11,7 +11,7 @@
 #pragma once
 
 typedef const char *ADM_translator(const char *domain, const char *stringToTranslate);
-ADM_CORE6_EXPORT void ADM_InitTranslator(const ADM_translator &trans);
+ADM_CORE6_EXPORT void ADM_InitTranslator( ADM_translator &trans);
 
 // EOF
 

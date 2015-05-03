@@ -1476,6 +1476,7 @@ int value;
     ed->audioEncodingConfig.shiftEnabled=onoff;
     ed->audioEncodingConfig.shiftInMs=value;
     update=0; 
+    return true;
 }
 
 bool avisynthPortAsCommandLineArgument = false;

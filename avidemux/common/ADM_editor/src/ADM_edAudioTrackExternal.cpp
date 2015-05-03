@@ -208,7 +208,7 @@ again:
     decodedSample/=wavHeader.channels;
     if(!decodedSample) goto again;
 #define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
-    if(abs(decodedSample-packetBufferSamples)>ADM_MAX_JITTER)
+    if(labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
     {
         ADM_warning("[PCMPacketExt::getPCMPacket] Track %d:%x Demuxer was wrong %d vs %d samples!\n",
                     0,0,packetBufferSamples,decodedSample);

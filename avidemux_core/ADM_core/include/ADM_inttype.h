@@ -58,7 +58,8 @@ typedef unsigned char ADM_filename;
 #define uint32_t 	unsigned long  int
 #endif	// GOT_TYPES
 
-#define UNUSED_ARG(a) do {/* null */} while (&a == 0)
+#define UNUSED_ARG(a) (void)a
+
 
 #define MKFCC(a,b,c,d)   ((d<<24)+(c<<16)+(b<<8)+a)
 #define MKFCCR(a,b,c,d)   ((a<<24)+(b<<16)+(c<<8)+d)

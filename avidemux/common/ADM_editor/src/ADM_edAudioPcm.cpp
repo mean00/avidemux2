@@ -103,7 +103,7 @@ again:
     // Check if the Dts matches
     if(lastDts!=ADM_AUDIO_NO_DTS &&packetBufferDts!=ADM_AUDIO_NO_DTS)
     {
-        if(abs(lastDts-packetBufferDts)>ADM_ALLOWED_DRIFT_US)
+        if(labs((int64_t)lastDts-(int64_t)packetBufferDts)>ADM_ALLOWED_DRIFT_US)
         {
             printf("[Composer::getPCMPacket] Track %d,%"PRIx64" : drift %d, computed :%"PRIu64" got %"PRIu64"\n",
                         (int)myTrackNumber,(uint64_t)trk,(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
@@ -164,7 +164,7 @@ again:
     decodedSample/=trk->wavheader.channels;
     if(!decodedSample) goto again;
 #define ADM_MAX_JITTER 5000  // in samples, due to clock accuracy, it can be +er, -er, + er, -er etc etc
-    if(abs(decodedSample-packetBufferSamples)>ADM_MAX_JITTER)
+    if(labs((int64_t)decodedSample-(int64_t)packetBufferSamples)>ADM_MAX_JITTER)
     {
         ADM_warning("[Composer::getPCMPacket] Track %d:%x Demuxer was wrong %d vs %d samples!\n",
                     myTrackNumber,trk,packetBufferSamples,decodedSample);

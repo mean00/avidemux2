@@ -221,7 +221,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     for(int i=0;i<nbSurface;i++)
     {
         surfaces[i]=admLibVA::allocateSurface(w,h);
-        if(!surfaces[i]==VA_INVALID)
+        if(!(surfaces[i]==VA_INVALID))
         {
             nbSurface=i;
             return;

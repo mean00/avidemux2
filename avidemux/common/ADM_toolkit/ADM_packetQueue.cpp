@@ -191,7 +191,7 @@ uint8_t   PacketQueue::Pop(uint8_t *ptr, uint32_t *size,uint32_t *sample)
   sz=*size=_slots[slot].size;
   *sample=_slots[slot].sample;
   //printf("Poping slot %d at %u\n",slot,_bufferQueue,_slots[slot].startAt);
-  if(!_bufferQueue==_slots[slot].startAt)
+  if(!(_bufferQueue==_slots[slot].startAt))
   {
     printf("Buffer Q:%u\n",_bufferQueue);
     printf("Slot :%u\n",_slots[slot].startAt);

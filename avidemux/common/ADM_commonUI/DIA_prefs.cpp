@@ -370,7 +370,7 @@ uint32_t defaultPortAvisynth = 9999;
         uint32_t nbLanguages=sizeof(myLanguages)/sizeof(languageDescriptor);
         char *currentLanguage;
         int currentIndex=0;
-        if(!prefs->get(DEFAULT_LANGUAGE,&currentLanguage)) currentLanguage="auto";
+        if(!prefs->get(DEFAULT_LANGUAGE,&currentLanguage)) currentLanguage=(char *)"auto";
   
         diaMenuEntryDynamic **languagesMenuItems=new diaMenuEntryDynamic *[nbLanguages+1];
         for(int i=0;i<nbLanguages;i++)
