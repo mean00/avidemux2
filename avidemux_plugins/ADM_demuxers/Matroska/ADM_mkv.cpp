@@ -263,7 +263,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     ADM_info("Maximum delta found %"PRId64" us\n",maxDelta);
     if(minDelta)
     {
-        if(minDelta<track->_defaultFrameDuration && abs(minDelta-track->_defaultFrameDuration)>1000)
+        if(minDelta<track->_defaultFrameDuration && labs((long int)minDelta-(long int)track->_defaultFrameDuration)>1000)
         {
             ADM_info("Changing default frame duration from %"PRIu64" to %"PRIu64" us\n",
                     track->_defaultFrameDuration,minDelta);

@@ -265,7 +265,7 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                             bprintf("Current audio Dts=%"PRId64"\n",currentDts);
                             bprintf("Incoming block, dts=%"PRId64"\n",currentBlock->dts);
                             bprintf("Delta =%d ms\n",(int)(currentDts-currentBlock->dts));
-                            if( abs(currentBlock->dts-currentDts)>MP4V2_MAX_JITTER)
+                            if( labs((long int)currentBlock->dts-(long int)currentDts)>MP4V2_MAX_JITTER)
                             {
                                 if(currentBlock->dts<currentDts)
                                     {

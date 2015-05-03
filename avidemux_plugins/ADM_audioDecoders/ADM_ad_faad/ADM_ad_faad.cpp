@@ -129,7 +129,7 @@ unsigned char chan;
         memcpy(extraData,d,l);
         extraDataSize=l;
     }
-    
+    return true;
 }
 /**
     \fn ctor

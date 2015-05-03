@@ -108,6 +108,7 @@ uint64_t  ADM_tsAccess::getDurationInUs(void)
         }
         return dts;
     }
+    return 0; // ?
 }
 /**
     \fn goToTime

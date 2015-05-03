@@ -156,6 +156,7 @@ bool vdpauVideoFilter::cleanupVdpau(void)
     tempBuffer=NULL;
     if(scaler) delete scaler;
     scaler=NULL;
+    return true;
 }
 
 /**

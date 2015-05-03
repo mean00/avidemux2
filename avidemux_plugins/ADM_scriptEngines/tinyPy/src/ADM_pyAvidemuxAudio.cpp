@@ -222,6 +222,7 @@ int pySetNormalizeMode(IEditor *editor, int dex,int mode)
 	editor->getAudioFilterNormalise(dex,&m, &gain);
 	m = (ADM_GAINMode)mode;
 	editor->setAudioFilterNormalise(dex,m, gain);
+        return true;
 }
 /**
     \fn
@@ -236,6 +237,7 @@ int pySetNormalizeValue(IEditor *editor, int dex,int value)
 	editor->getAudioFilterNormalise(dex,&m, &gain);
 	gain = (uint32_t)value;
 	editor->setAudioFilterNormalise(dex,m, gain);
+        return true;
 }
 /**
     \fn

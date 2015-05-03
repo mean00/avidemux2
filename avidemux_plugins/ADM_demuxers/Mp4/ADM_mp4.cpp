@@ -166,6 +166,7 @@ bool MP4Header::refineFps(void)
            _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
         }
     }
+    return true;
     
 }
 uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
@@ -606,6 +607,7 @@ bool MP4Header::shiftAudioTimeBy(uint64_t shift)
                         _tracks[audioTrack+1].index[i].dts=dts;
              }
         }
+    return true;
 }
 
 //

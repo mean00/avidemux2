@@ -424,6 +424,7 @@ bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
                     break;
           }
         }
+        return true;
 }
 /**
     \fn encode

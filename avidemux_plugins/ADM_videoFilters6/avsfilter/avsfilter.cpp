@@ -346,6 +346,7 @@ void *parse_wine_stdout(void *arg)
     }
 
   }
+  return NULL;
 }
 
 bool wine_start(char *wine_app, char *avsloader, AVS_PIPES *avs_pipes, int pipe_timeout)
@@ -915,12 +916,14 @@ bool send_bit_blt(int h,
   data += row_size;
   cp_sz = data - org_data;
   if (cp_sz >= PIPE_MAX_TRANSFER_SZ || y == 1)
+  {
    if (ppwrite(h, (void*)org_data, cp_sz) != cp_sz) return false;
    else
    {
     data = org_data;
     DEBUG_PRINTF("avsfilter : send_bit_blt copy %d\n", cp_sz);
    }
+  }
  }
  return true;
 }
@@ -959,6 +962,8 @@ bool avsfilter::getNextFrame(uint32_t *fn, ADMImage *data)
   {
     switch(msg.avs_cmd)
     {
+    default:
+            break;
     case SEND_PITCH_DATA_AVSLOADER:
         DEBUG_PRINTF("avsfilter : receive SEND_PITCH_DATA_AVSLOADER\n");
         if (!receive_data(wine_loader->avs_pipes[PIPE_LOADER_READ].hpipe, &msg, &pd_avsloader))

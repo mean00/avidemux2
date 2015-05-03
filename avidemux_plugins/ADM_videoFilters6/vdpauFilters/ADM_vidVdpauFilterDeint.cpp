@@ -455,6 +455,7 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
     VDPSlot *s=&(slots[0]);
     ADMImage *img=slots[0].image;
     if(s->surface!=VDP_INVALID_HANDLE)
+    {
         if(!s->isExternal)
         {
             freeSurface.push_back(s->surface);
@@ -465,6 +466,7 @@ bool vdpauVideoFilterDeint::rotateSlots(void)
             s->image->hwDecRefCount();
             s->surface=VDP_INVALID_HANDLE;
         }
+    }
     slots[0]=slots[1];
     slots[1]=slots[2];
     slots[2].surface=VDP_INVALID_HANDLE;

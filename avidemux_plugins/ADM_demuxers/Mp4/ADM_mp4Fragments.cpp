@@ -238,7 +238,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
         sum+=fragList[i].duration;
         aprintf("[FRAG] offset=0x%llx size=%d dts=%s pts=%s\n",dex->offset,(int)dex->size,ADM_us2plain(dex->dts),ADM_us2plain(dex->pts));
     }
-    printf("Found %d intra\n");
+    printf("Found %d intra\n",intra);
     MP4Index *ff=trk->index;
     ff->intra=AVI_KEY_FRAME;   
     _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;

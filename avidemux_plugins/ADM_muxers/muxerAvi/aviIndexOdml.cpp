@@ -47,6 +47,7 @@ bool aviIndexOdml::commonInit()
     riffCount=0;
     legacyIndex=NULL;
     memset(audioFrameCount,0,sizeof(audioFrameCount));
+    return true;
 }
 /**
     \fn convertIndex
