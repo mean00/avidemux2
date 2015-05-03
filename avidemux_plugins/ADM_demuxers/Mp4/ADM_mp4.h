@@ -22,6 +22,8 @@
 #include "ADM_Video.h"
 #include "ADM_atom.h"
 #include <vector>
+/**
+ */
 class MPsampleinfo
 {
   public:
@@ -78,7 +80,8 @@ public:
                 ~MP4Track();
 };
 
-
+/**
+ */
 class ADM_mp4AudioAccess : public ADM_audioAccess
 {
 protected:
@@ -107,7 +110,7 @@ public:
                 virtual uint64_t  getPos(){ADM_assert(0); return 0;};
                                     /// Go to a given time
                 virtual bool      goToTime(uint64_t timeUs);
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
 };
 
 
@@ -182,6 +185,7 @@ protected:
           uint8_t                       parseElst(void *tom,uint32_t trackType);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
+          int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
           uint8_t                       decodeVideoAtom(void *ztom);
           uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t h);
@@ -208,7 +212,7 @@ protected:
         uint8_t                       _reordered;		
         FILE                          *_fd;
         MP4Track                      _tracks[_3GP_MAX_TRACKS];
-        int64_t                      _audioDuration;
+        int64_t                       _audioDuration;
         uint32_t                      _currentAudioTrack;
         Mp4Flavor                     _flavor;
         uint8_t                       parseAtomTree(adm_atom *atom);
@@ -223,13 +227,13 @@ protected:
 	uint32_t                         readPackedLen(adm_atom *tom );
 	
 public:
-virtual   void 	                Dump(void) {};
+virtual   void                          Dump(void) {};
 
-                                MP4Header( void ) ;
-virtual	                        ~MP4Header(  ) ;
+                                        MP4Header( void ) ;
+virtual                                 ~MP4Header(  ) ;
 // AVI io
-virtual 	uint8_t	       open(const char *name);
-virtual 	uint8_t	       close(void) ;
+virtual 	uint8_t                 open(const char *name);
+virtual 	uint8_t                 close(void) ;
   //__________________________
   //				 Info
   //__________________________
@@ -240,8 +244,8 @@ virtual   uint8_t                       getExtraHeaderData(uint32_t *len, uint8_
 
 virtual 	WAVHeader              *getAudioInfo(uint32_t i )  ;
 virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio);
-virtual     uint8_t                     getNbAudioStreams(void);
-virtual        bool                     unreliableBFramePts (void);
+virtual         uint8_t                 getNbAudioStreams(void);
+virtual         bool                    unreliableBFramePts (void);
 // Frames
   //__________________________
   //				 video

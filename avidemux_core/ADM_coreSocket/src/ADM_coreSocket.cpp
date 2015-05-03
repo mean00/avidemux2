@@ -128,7 +128,8 @@ int rx;
 */
 bool ADM_socket::txData(uint32_t howmuch, const uint8_t *where)
 {
-uint32_t got=0,tx;
+uint32_t got=0;
+int tx;
     while(got<howmuch)
     {
         tx=send(mySocket,(char *)where,howmuch-got,0);

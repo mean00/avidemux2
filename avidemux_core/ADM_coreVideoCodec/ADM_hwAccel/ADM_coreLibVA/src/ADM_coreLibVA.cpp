@@ -459,7 +459,7 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
     int xError=1;
     CHECK_WORKING(NULL);
     VAImage *image=new VAImage;
-    memset(image,0,sizeof(image));
+    memset(image,0,sizeof(*image));
     CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatNV12,
                 w,    h,    
                 image));
@@ -482,7 +482,7 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
     int xError=1;
     CHECK_WORKING(NULL);
     VAImage *image=new VAImage;
-    memset(image,0,sizeof(image));
+    memset(image,0,sizeof(*image));
     CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatYV12,
                 w,    h,    
                 image));

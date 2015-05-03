@@ -289,6 +289,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
         const char *name=params[i].paramName;
         int index=couples->lookupName(name);
         if(index==-1) // not found ?
+        {
             if(false==partial)
             {
                 ADM_assert(index!=-1); // Should be replaced later by a return false
@@ -297,6 +298,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                // ADM_info("%s not found\n",name);
                 continue; // this parameter is not in the param list and we are doing a partial update
             }
+        }
         switch(params[i].type)
         {
 #define SWAL(entry,type,var,access) case  entry: {type   var;\

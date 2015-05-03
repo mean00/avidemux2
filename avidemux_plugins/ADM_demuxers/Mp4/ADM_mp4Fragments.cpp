@@ -66,6 +66,18 @@ bool MP4Header::parseMoof(adm_atom &tom)
 }
 /**
  * 
+ * @param desc
+ * @return 
+ */
+int  MP4Header::lookupIndex(int desc)
+{
+    for(int i=0;i<=this->nbAudioTrack;i++)
+        if(_tracks[i].id==desc)
+            return i;
+    return -1;
+}
+/**
+ * 
  * @param tom
  * @return 
  */
@@ -76,6 +88,7 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
         aprintf("[TRAF]\n");
         uint32_t trafFlags=0;
         mp4TrafInfo info;
+        int trackIndex=-1;
         while(!tom.isDone())
         {
             adm_atom son(&tom);
@@ -88,7 +101,10 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
             switch(id)
             {
                 case ADM_MP4_TRUN:
-                    parseTrun(0,son,info);
+                    if(trackIndex==-1)
+                        break;
+                    else
+                        parseTrun(trackIndex,son,info);
                     break;
                 case ADM_MP4_TFHD:
                 {
@@ -111,6 +127,11 @@ bool MP4Header::parseTraf(adm_atom &tom,uint64_t moofStart)
                             info.baseIsMoof=true;
                             info.baseOffset=moofStart;
                             aprintf("base is moof at %llx\n",(long long int)info.baseOffset);
+                    }
+                    trackIndex=lookupIndex(info.sampleDesc);
+                    if(-1==trackIndex)
+                    {
+                        ADM_warning("Cannot find track for %d\n",info.sampleDesc);
                     }
                 }
                 case ADM_MP4_TFDT:
@@ -205,8 +226,6 @@ bool MP4Header::indexVideoFragments(int trackNo)
         dts*=1000000.;
         ctts=ctts/_videoScale;
         ctts*=1000000.;
-        
-        
         dex->dts=dts;
         dex->pts=dex->dts+ctts;
         if(!(fragList[i].flags &(0x00010000|0x01000000)))
@@ -222,8 +241,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
     printf("Found %d intra\n");
     MP4Index *ff=trk->index;
     ff->intra=AVI_KEY_FRAME;   
-    if(!trackNo)
-        _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
+    _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].nbIndex;
     fragList.clear();
     return true;
 }

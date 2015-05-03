@@ -164,6 +164,7 @@ bool loadSrt(const char *file,ListOfSubtitleLines &lines)
                         
                         entry.texts.push_back(std::string(buffer));
                         break;
+            case STATE_IDLE: break;                        
         }
     }
     fclose(fd);

@@ -27,10 +27,12 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
     lastDtsBase=0;
     sampleElapsed=0;
     if(access)
+    {
         if(access->canGetDuration()==true)
                 durationInUs=access->getDurationInUs();
         else    
                 durationInUs=0;
+    }
     language=ADM_UNKNOWN_LANGUAGE;
 }
 /**

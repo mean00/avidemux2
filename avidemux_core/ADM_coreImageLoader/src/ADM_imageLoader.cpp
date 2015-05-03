@@ -78,6 +78,7 @@ ADMImage *createImageFromFile(const char *filename)
 
 	}
 	ADM_assert(0);
+        return NULL;
 }
 /**
  * 	\fn createImageFromFile_jpeg

@@ -118,7 +118,7 @@ bool ADM_commandSocket::pollMessage(ADM_socketMessage &msg)
         if(!mySocket)
         {
             ADM_error("Wait for connect called with no socket opened\n");
-            return NULL;        
+            return false;        
         }
     // Wait for connect...
         fd_set set,er;

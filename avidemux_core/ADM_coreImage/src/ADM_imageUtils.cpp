@@ -980,7 +980,7 @@ bool    ADMImage::interleaveUV(uint8_t *target, int stride)
         else
 #endif   
             uv_to_nv12_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetReadPtr(PLANAR_U),GetReadPtr(PLANAR_V),stride,target);
-    
+        return true;
 }
 /**
  * \fn convertFromYUV444
