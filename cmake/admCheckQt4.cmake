@@ -27,8 +27,8 @@ MACRO(checkQt4)
                         	SET(QT_QTOPENGL_FOUND 1)
                         	SET(QT_VERSION_MINOR 7)
 	
-                        	SET(QT_QTOPENGL_LIBRARY ${QT_HOME}/lib/libQtOpenGL4.a)
-                        	SET(QT_QTOPENGL_INCLUDE_DIR ${QT_HOME}/include/QtOpenGL)
+                        	SET(QT_QTOPENGL_LIBRARY ${QT_HOME}/lib/libQtOpenGl4.a)
+                        	SET(QT_QTOPENGL_INCLUDE_DIR ${QT_HOME}/include/QtOpenGl)
 
                         	SET(QT_HEADERS_DIR   ${QT_HOME}/include/  ${QT_HOME}/include/QtGui)
                         	SET(QT_INCLUDES    -I${QT_HOME}/include -I${QT_HOME}/include/QtGui)
