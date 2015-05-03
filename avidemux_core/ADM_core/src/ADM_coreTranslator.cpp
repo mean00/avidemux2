@@ -16,12 +16,12 @@
 #include "ADM_default.h"
 #include "ADM_coreTranslator.h"
 
-static const ADM_translator *myTranslator=NULL;
+static ADM_translator *myTranslator=NULL;
 
 /**
  * \fn ADM_InitTranslator
  */
-void ADM_InitTranslator(const ADM_translator &trans)
+void ADM_InitTranslator(ADM_translator &trans)
 {
     myTranslator=&trans;
     
