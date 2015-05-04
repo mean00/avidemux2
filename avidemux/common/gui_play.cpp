@@ -31,6 +31,7 @@
 #include "ADM_filterChain.h"
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
+#include "ADM_vidMisc.h"
 
 //___________________________________
 // In 10 ms chunks
@@ -87,6 +88,7 @@ GUIPlayback::GUIPlayback(void)
     videoChain=NULL;
     initialized=false;
     vuMeterPts=0;
+    audioLatency=0;
 }
 /**
     \fn ~GUIPlayback
@@ -263,7 +265,11 @@ bool GUIPlayback::run(void)
         systemTime = ticktock.getElapsedMS();
         movieTime=(uint32_t)((lastPts-firstPts*0)/1000);
         movieTime+=audioLatency;
-       // printf("[Playback] systemTime: %lu movieTime : %lu  \r",systemTime,movieTime);
+        //printf("[Playback] systemTime: %lu movieTime : %lu audioLatency=%lu \r",systemTime,movieTime,(uint32_t)audioLatency);
+        //printf("[LastPTS]=%s \n",ADM_us2plain(lastPts));
+        //printf("[firstPts]=%s \n",ADM_us2plain(firstPts));
+        
+        
         if(systemTime>movieTime) // We are late, the current PTS is after current closk
         {
             if(systemTime >movieTime+20)
