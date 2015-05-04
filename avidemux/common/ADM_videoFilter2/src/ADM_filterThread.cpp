@@ -141,6 +141,7 @@ bool         ADM_videoFilterQueue::runAction(void)
         if(!freeList.size())
         {
             cond->wait(); // Will unlock mutex
+            mutex->unlock();
             continue;
         }
         if(threadState==RunStateStopOrder)  
