@@ -238,12 +238,6 @@ jpgCleanup:
         context=NULL;
     }
 
-    if(codec)
-    {
-        delete codec;
-        codec=NULL;
-    }
-
     if(frame)
     {
         av_frame_free(&frame);
