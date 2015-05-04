@@ -190,6 +190,7 @@ MP4Index *idx=&(VDEO.index[framenum]);
     img->demuxerDts=idx->dts;
     img->demuxerPts=idx->pts;
     aprintf("[MP4] Pts=%s\n",ADM_us2plain(idx->pts));
+    aprintf("[MP4] Dts=%s\n",ADM_us2plain(idx->dts));
     /*
     if(img->demuxerPts==ADM_COMPRESSED_NO_PTS)
         img->demuxerPts=img->demuxerDts;
@@ -589,7 +590,7 @@ bool MP4Header::shiftTimeBy(uint64_t shift)
             VDEO.index[i].pts=pts;
         }
 
-       shiftAudioTimeBy(shift);
+        shiftAudioTimeBy(shift);
         return true;        
 }
 bool MP4Header::shiftAudioTimeBy(uint64_t shift)
