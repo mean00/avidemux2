@@ -86,6 +86,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
   fromColor=(ADM_colorspace)intColor;
   switch(fromColor)
   {
+    case ADM_COLOR_YUV444: return PIX_FMT_YUV444P;
     case ADM_COLOR_YUV411: return PIX_FMT_YUV411P;
     case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
     case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
