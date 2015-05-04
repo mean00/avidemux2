@@ -49,7 +49,7 @@ extern "C" {
 
 #include "ADM_render/GUI_sdlRender.h"
 #endif
-
+extern uint8_t GUI_close(void);
 static bool setPrefsDefault(void);
 extern bool  vdpauProbe(void);
 extern bool  libvaProbe(void);
@@ -371,26 +371,32 @@ int startAvidemux(int argc, char *argv[])
     printf("Normal exit\n");
     return 0;
 }
-extern uint8_t GUI_close(void);
+
+/**
+ * 
+ */
 void onexit( void )
 {
-	printf("Cleaning up\n");
-    if(video_body) video_body->cleanup ();
+    printf("Cleaning up\n");
+    if(video_body) 
+        video_body->cleanup ();
     delete video_body;
+    video_body=NULL;
     // wait for thread to finish executing
+    ADM_setCrashHook(NULL,NULL);
     destroyScriptEngines();
 //    filterCleanUp();
-	ADM_lavDestroy();
+    ADM_lavDestroy();
 
 #ifdef USE_SDL
 	quitSdl();
 #endif
 
 
-	AVDM_cleanup();
+    AVDM_cleanup();
 
 
-	destroyGUI();
+    destroyGUI();
     destroyPrefs();
 
     admPreview::destroy();
