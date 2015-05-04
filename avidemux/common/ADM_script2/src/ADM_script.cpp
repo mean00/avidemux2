@@ -106,10 +106,12 @@ void destroyScriptEngines()
         delete engines[i];
     }
 
-	for (int i = 0; i < engines.size(); i++)
-	{
-		delete engineLoaders[i];
-	}
+    for (int i = 0; i < engines.size(); i++)
+    {
+            delete engineLoaders[i];
+    }
+    engines.clear();
+    engineLoaders.clear();
 }
 
 IScriptEngine* getDefaultScriptEngine()
