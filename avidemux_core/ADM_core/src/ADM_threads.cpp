@@ -20,8 +20,14 @@
 #include "ADM_default.h"
 #include "ADM_threads.h"
 
+#if 0
 #define THR_CHECK(x) {int r=(x);if(r) {printf("Threading error :%d %s\n", \
                       r,strerror(r));ADM_assert(0);}}
+#else // there is a static mutex being held at exit. which one ???
+#define THR_CHECK(x) {int r=(x);if(r) {printf("Threading error :%d %s\n", \
+                      r,strerror(r));}}
+
+#endif
 //**************** Mutex *******************
 admMutex::admMutex(const char *name)
 {
