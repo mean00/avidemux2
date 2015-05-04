@@ -277,25 +277,27 @@ bool GUIPlayback::run(void)
                 refreshCounter=0;
             }
         }
-	    else
-	    {
-            int32_t delta;
-                delta=movieTime-systemTime;
-                // a call to whatever sleep function will last at leat 10 ms
-                // give some time to GTK
-                while(delta > 10)
+        else
+        {
+        int32_t delta;
+            delta=(int32_t)movieTime-(int32_t)systemTime;
+            // a call to whatever sleep function will last at leat 10 ms
+            // give some time to GTK
+            while(delta > 10)
+            {
+                if(stop_req)
+                    break;
+                if(delta>10)
                 {
-                    if(delta>10)
-                    {
-                        audioPump(true);
-                    }else
-                        audioPump(false);
+                    audioPump(true);
+                }else
+                    audioPump(false);
 
-                    UI_purge();
-                    refreshCounter=0;
-                    systemTime = ticktock.getElapsedMS();
-                    delta=movieTime-systemTime;
-                }
+                UI_purge();
+                refreshCounter=0;
+                systemTime = ticktock.getElapsedMS();
+                delta=(int32_t)movieTime-(int32_t)systemTime;
+            }
         }
       }
     while (!stop_req);
