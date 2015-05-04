@@ -141,12 +141,12 @@ bool         ADM_videoFilterQueue::runAction(void)
         if(!freeList.size())
         {
             cond->wait(); // Will unlock mutex
-            mutex->unlock();
             continue;
         }
         if(threadState==RunStateStopOrder)  
         {
             ADM_info("Audio Thread, received stop order\n");
+            mutex->unlock();
             goto theEnd;
         }
         uint32_t fn=0;
