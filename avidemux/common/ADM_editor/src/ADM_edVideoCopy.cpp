@@ -20,7 +20,7 @@
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
-#if defined(ADM_DEBUG) && 0
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}// printf
@@ -132,7 +132,8 @@ againGet:
         ADM_info("Failed to get next frame for ref %"PRIu32"\n",seg->_reference);
         goto nextSeg;
     }
-
+    aprintf("Got frame %d, PTS=%s  ",img->demuxerFrameNo,ADM_us2plain(img->demuxerPts));
+    aprintf("DTS=%s  \n",ADM_us2plain(img->demuxerDts));
     vid->lastSentFrame++;
     //
     aviInfo    info;
@@ -157,7 +158,7 @@ againGet:
             }
         }
     }
-    aprintf("Bframe droppable=%d, lastSentFrame=%d\n",seg->_dropBframes,vid->lastSentFrame);
+    //aprintf("Bframe droppable=%d, lastSentFrame=%d\n",seg->_dropBframes,vid->lastSentFrame);
     // after a segment switch, we may have some frames from "the past"
     // if the cut point is not a keyframe, drop them
 #if 1
@@ -223,7 +224,8 @@ againGet:
             signedPts=(int64_t)img->demuxerPts;
             recalibrateSigned(&(signedPts),seg);
     }
-    
+    aprintf("Signed Pts=%s ",ADM_us2plain(signedPts));
+    aprintf("Signed Dts=%s \n",ADM_us2plain(signedDts));
     // From here we are in linear time, guess DTS if missing...
     if(signedDts==ADM_NO_PTS)
     {
@@ -244,7 +246,7 @@ againGet:
 // we add a bit of timeIncrement to compensate for rounding
         if(_nextFrameDts!=ADM_NO_PTS)
         {
-            if(_nextFrameDts>signedDts+vid->timeIncrementInUs/10)
+            if(_nextFrameDts>(signedDts+vid->timeIncrementInUs/10))
             {
                 ADM_error("Frame %"PRIu32" DTS is going back in time : expected : %"PRId64" ms got : %"PRId64" ms\n",
                                                 fn,_nextFrameDts/1000,signedDts/1000);
@@ -277,8 +279,19 @@ againGet:
     }
 // **
    // ADM_info("Frame after RECAL: Flags :%X, DTS:%"PRId64" PTS=%"PRId64" tail=%"PRId64"\n",img->flags,img->demuxerDts/1000,img->demuxerPts/1000,tail);
-    img->demuxerDts=signedDts+videoDelay;
-    img->demuxerPts=signedPts+videoDelay;
+    {
+    int64_t finalDts=signedDts+(int64_t)videoDelay;
+    if(finalDts<0) 
+    {
+        ADM_warning("Final DTS <0, fixing \n");
+        finalDts=0;
+    }
+    img->demuxerDts=finalDts;
+    }
+    img->demuxerPts=signedPts+(int64_t)videoDelay;
+    aprintf("Final Pts=%s ",ADM_us2plain(img->demuxerPts));
+    aprintf("Final Dts=%s ",ADM_us2plain(img->demuxerDts));    
+    aprintf("Delay =%s ",ADM_us2plain(videoDelay));    
     return true;
 
 nextSeg:
