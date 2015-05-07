@@ -10,8 +10,8 @@ rootFolder=home+"/Avidemux2.6.app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
-qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript']
+qtPluginFolder=rootFolder+"/../PlugIns"
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets']
 
 #
 #
@@ -39,7 +39,7 @@ def getGlobalDeps(target):
     for line in cmd.stdout:
        line = re.sub('[ \t\r\n]*', '', line)
        line = re.sub('\(.*$', '', line)
-       if(not line.startswith('/opt/local')):
+       if(not line.startswith('/opt/local') and not line.startswith('/usr/local/opt') and not line.startswith('/usr/local/Cellar/qt5/')):
               continue
        if(":" in line):
               continue
@@ -124,6 +124,7 @@ def copyQtDeps(components,libFolder):
                        copied+=1
     # copy plugins deps too
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
+    copyFiles(qtPluginFolder+'/platforms',libFolder)
     return copied
 ##
 def changeSymbol(target,oldName,newName):
@@ -197,8 +198,14 @@ def changePluginLinkPath(folder,relFolder):
 #
 #
 #
+def myChmod(dst):
+        log("chmod <"+dst+">")
+        cmd="/bin/chmod" + " -R 755  "+dst
+        log("Exec <"+cmd+">")
+        subprocess.call(cmd, shell=True)
+
 def changeQtFileSelfLinkPath(fl,modu):
-           shortName="@executable_path/../../Frameworks/"+modu+".framework/Versions/4/"+modu
+           shortName="@executable_path/../../Frameworks/"+modu+".framework/Versions/5/"+modu
            cmd="/usr/bin/install_name_tool -id "+shortName+" "+fl
            log(cmd)
            subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -206,7 +213,7 @@ def changeQtLinkPathForOne(f):
     deps=getGlobalDepsQtOnly(f)
     for d in deps:
         shortName=getShortName(d)
-        shortName="@executable_path/../../Frameworks/"+shortName+".framework/Versions/4/"+shortName
+        shortName="@executable_path/../../Frameworks/"+shortName+".framework/Versions/5/"+shortName
         changeSymbol(f,d,shortName)
 
 #
@@ -216,13 +223,16 @@ def myMkDir(target):
         os.makedirs(target)   
 #         
 def myCopyTree(src,dst):
+	log(src+"->"+dst)
         if(not os.path.exists(src)):
                 return
         shutil.copytree(src,dst)            
+        myChmod(dst)
 def myCopyFile(src,dst):
         if(not os.path.exists(src)):
                 return
         shutil.copy(src,dst)            
+        myChmod(dst)
 ##
 def copyQtFiles(targetFolder):
         myMkDir(targetFolder)
@@ -238,7 +248,7 @@ def copyQtFiles(targetFolder):
                    src=src+'/Versions/5/'
                    dst=dst+'/Versions/'
                    myMkDir(dst)
-                   dst=dst+'/4/'
+                   dst=dst+'/5/'
                    myMkDir(dst)
                    print "Copying "+dst+'Resources'
                    myCopyTree(src+'Resources',dst+'Resources')
@@ -249,7 +259,9 @@ def copyQtFiles(targetFolder):
                    changeGlobalLinkPathForOne(dst+q)
         # Also copy plugins
         myMkDir(qtPluginFolder)
-        myCopyTree('/opt/local/share/qt4/plugins/imageformats',qtPluginFolder+'/imageformats')
+	myCopyTree('/usr/local/opt/qt5/plugins/imageformats',qtPluginFolder+'/imageformats')
+	myCopyTree('/usr/local/opt/qt5/plugins/platforms',qtPluginFolder+'/platforms')
+        #myCopyTree('/usr/local/opt/local/share/qt4/plugins/imageformats',qtPluginFolder+'/imageformats')
 #################################################################
 # Step 1 : Copy system files so we have a standalone package
 #

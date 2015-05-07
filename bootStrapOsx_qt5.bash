@@ -192,7 +192,7 @@ fi
 echo "** Copying Qt nib files**"
 cp -Rap /opt/local/Library/Frameworks/QtGui.framework/Resources/qt_menu.nib $PREFIX/bin/
 echo "**  Changing link path**"
-python $TOP/cmake/osx_libs.py
+python $TOP/cmake/osx_libs_qt5.py
 echo "* Copying make files **"
 cp $TOP/cmake/osx/Info.plist $PREFIX/../
 mkdir -p $PREFIX/../MacOS
