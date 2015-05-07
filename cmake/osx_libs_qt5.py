@@ -111,7 +111,7 @@ def copyFiles(folder,libFolder):
 def copyQtDeps(components,libFolder):
     copied=0
     for modul in components:
-        absPath='/opt/local/Library/Frameworks/'+modul+'.framework/Versions/4/'+modul
+        absPath='/usr/local/opt/qt5/lib/'+modul+'.framework/Versions/5/'+modul
         print("Copy deps for "+modul+" ("+absPath+")")
         deps=getGlobalDepsNoQt(absPath)
         for dep in deps:
@@ -232,10 +232,10 @@ def copyQtFiles(targetFolder):
                                log(q+" already copied")
                else:
                    log("Copying"+q+' to '+targetFolder)
-                   src='/opt/local/Library/Frameworks/'+q+'.framework'
+                   src='/usr/local/opt/qt5/lib/'+q+'.framework'
                    dst=targetFolder+'/'+q+'.framework'
                    myMkDir(dst)
-                   src=src+'/Versions/4/'
+                   src=src+'/Versions/5/'
                    dst=dst+'/Versions/'
                    myMkDir(dst)
                    dst=dst+'/4/'
