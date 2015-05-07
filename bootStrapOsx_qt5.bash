@@ -34,7 +34,7 @@ fail()
         echo "** Failed at $1**"
         exit 1
 }
-
+rm -Rf $PREFIX/*
 Process()
 {
         export BUILDDIR=$1
