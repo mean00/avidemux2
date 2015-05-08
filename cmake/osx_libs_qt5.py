@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../PlugIns"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets']
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport']
 
 #
 #
@@ -124,13 +124,13 @@ def copyQtDeps(components,libFolder):
                        copied+=1
     # copy plugins deps too
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
-    copyFiles(qtPluginFolder+'/platforms',libFolder)
     return copied
 ##
 def changeSymbol(target,oldName,newName):
         cmd="/usr/bin/install_name_tool -change "+oldName+" "+newName+" "+target
         log(cmd)
         subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+#
 def changeId(target,newId):
            cmd="/usr/bin/install_name_tool -id "+newId+" "+target
            log(cmd)
@@ -167,6 +167,16 @@ def changeLibLinkPath(folder):
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
            shortName="@executable_path/../lib/"+re.sub("^.*\/","",absPath)
+           changeId(absPath,shortName)
+#
+def changeQtPlatformLinkPath(folder):
+    for dirname, dirnames, filenames in os.walk(folder):
+       for filename in filenames:
+           absPath=os.path.join(dirname, filename)
+           changeGlobalLinkPathForOne(absPath)
+           changeLocalLinkPathForOne(absPath)
+           changeQtLinkPathForOne(absPath)
+           shortName="@executable_path/platforms/"+re.sub("^.*\/","",absPath)
            changeId(absPath,shortName)
 def changeQtPluginLinkPath(folder):
     for dirname, dirnames, filenames in os.walk(folder):
@@ -260,8 +270,7 @@ def copyQtFiles(targetFolder):
         # Also copy plugins
         myMkDir(qtPluginFolder)
 	myCopyTree('/usr/local/opt/qt5/plugins/imageformats',qtPluginFolder+'/imageformats')
-	myCopyTree('/usr/local/opt/qt5/plugins/platforms',qtPluginFolder+'/platforms')
-        #myCopyTree('/usr/local/opt/local/share/qt4/plugins/imageformats',qtPluginFolder+'/imageformats')
+	myCopyTree('/usr/local/opt/qt5/plugins/platforms',binFolder+'/platforms')
 #################################################################
 # Step 1 : Copy system files so we have a standalone package
 #
@@ -288,5 +297,6 @@ subFolders=["audioDecoder",    "audioEncoders",   "autoScripts",     "demuxers",
 for s in subFolders:
         relFolder="ADM_plugins6/"+s
         changePluginLinkPath(libFolder+"/"+relFolder,relFolder)
+changeQtPlatformLinkPath(binFolder+'/platforms')
         
 

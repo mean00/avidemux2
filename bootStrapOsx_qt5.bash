@@ -190,7 +190,7 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI 
 fi
 echo "** Copying Qt nib files**"
-cp -Rap /opt/local/Library/Frameworks/QtGui.framework/Resources/qt_menu.nib $PREFIX/bin/
+cp -Rap /usr/local/Cellar/qt5/5.4.1/qt_menu.nib   $PREFIX/bin/
 echo "**  Changing link path**"
 python $TOP/cmake/osx_libs_qt5.py
 echo "* Copying make files **"
