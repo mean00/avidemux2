@@ -28,9 +28,7 @@
 #include "ADM_default.h"
 #include "Telecide.h"
 #include "DIA_factory.h"
-
-#define aprintf(...) {}
-
+#include "Telecide_debug.h"
 /**
     \fn PutChosen
 */
@@ -68,6 +66,7 @@ void Telecide::CacheInsert(int frame, unsigned int p, unsigned int pblock,
 */
 bool Telecide::CachePurge(void)
 {
+        aprintf("Cache purge\n");
         for (int i = 0; i < CACHE_SIZE; i++)
 		{
 			cache[i].frame = 0xffffffff;

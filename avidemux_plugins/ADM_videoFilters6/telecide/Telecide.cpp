@@ -34,12 +34,8 @@
 #include "Telecide.h"
 #include "DIA_factory.h"
 #include "telec_desc.cpp"
-#if 0
-    #define aprintf printf
-#else
-    #define aprintf(...) {}
-#endif
-
+#include "ADM_vidMisc.h"
+#include "Telecide_debug.h"
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   Telecide,   // Class
                         1,0,0,              // Version
@@ -61,10 +57,10 @@ Telecide::Telecide(	ADM_coreVideoFilter *in,CONFcouple *couples)      :
         ADM_coreVideoFilterCached(16,in,couples)
 {
 
-		int i;		
-		int count;
-		char *d, *dsaved;
-		unsigned int *p, *x;
+        int i;		
+        int count;
+        char *d, *dsaved;
+        unsigned int *p, *x;
         teleCide *_param=&configuration;		
 		
 
@@ -141,15 +137,15 @@ Telecide::~Telecide()
 #ifdef WINDOWED_MATCH
 		if (matchp != NULL) ADM_dealloc(matchp);
 		if (matchc != NULL) ADM_dealloc(matchc);
-        matchp=NULL;
-        matchc=NULL;
+                matchp=NULL;
+                matchc=NULL;
 
 #endif
 		if (sump != NULL) ADM_dealloc(sump);
 		if (sumc != NULL) ADM_dealloc(sumc);
-        cache=NULL;
-        sump=NULL;
-        sumc=NULL;
+                cache=NULL;
+                sump=NULL;
+                sumc=NULL;
 }
 /**
     \fn getCoupledConf
@@ -170,6 +166,7 @@ void Telecide::setCoupledConf(CONFcouple *couples)
 */
 bool                Telecide::goToTime(uint64_t usSeek)
 {
+    aprintf("Go to time %s\n",ADM_us2plain(usSeek));
     CachePurge();
     return ADM_coreVideoFilterCached::goToTime(usSeek);
 }

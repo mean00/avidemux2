@@ -32,16 +32,12 @@
 */
 #include "ADM_default.h"
 #include "Telecide.h"
-#if 0
-    #define aprintf printf
-#else
-    #define aprintf(...) {}
-#endif
-
+#include "Telecide_debug.h"
 #define GETFRAME(g, fp) { \
         int no=g; fp=NULL;\
         if (no < 0) no = 0; \
-        aprintf("Cache query : %d - %d\n",no,__LINE__);\
+        aprintf("Cache query : %d - Line:%d\n",no,__LINE__);\
+        vidCache->dump();\
         fp=vidCache->getImage(no); }
 
 #define guide _param->guide
@@ -135,7 +131,7 @@ teleCide *_param=&configuration;
         GETFRAME(frame, fc);
         if(!fc)
         {
-            ADM_info("Telecide:Cannot get frame\n");
+            ADM_warning("Telecide:Cannot get frame\n");
             vidCache->unlockAll();
             return false;
         }
@@ -146,7 +142,7 @@ teleCide *_param=&configuration;
         pframe = frame == 0 ? 0 : frame - 1;
         GETFRAME(pframe, fp);
 
-        // Get the next frame metrics if we might need them.
+        // Get the next frame metrics, we might need them.        
         nframe = frame + 1;
         GETFRAME(nframe, fn);
         if(!fn)
