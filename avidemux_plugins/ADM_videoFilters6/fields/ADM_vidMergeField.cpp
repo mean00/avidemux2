@@ -111,17 +111,18 @@ AVDMVideoMergeField::~AVDMVideoMergeField()
 bool AVDMVideoMergeField::getNextFrame(uint32_t *fn,ADMImage *image)
 {
    
-ADMImage *cur,*next;
-uint32_t frame=nextFrame++;        
-		cur=vidCache->getImage(2*frame);
-		next=vidCache->getImage(2*frame+1);
-		
-		if(!cur )
-		{
-			ADM_warning("Merge field : cannot read\n");
-			vidCache->unlockAll();
-		 	return 0;
-		}
+        ADMImage *cur,*next;
+        uint32_t frame=nextFrame++;        
+        
+        cur=vidCache->getImage(2*frame);
+        next=vidCache->getImage(2*frame+1);
+        *fn=frame;
+        if(!cur )
+        {
+                ADM_warning("Merge field : cannot read\n");
+                vidCache->unlockAll();
+                return 0;
+        }
         if(!next)
         {
             image->duplicateFull(cur);
@@ -145,6 +146,6 @@ uint32_t frame=nextFrame++;
             BitBlit(dst1+pitchDst, pitchDst*2,src2,pitchSrc,w,h);
         }
         image->copyInfo(cur);
-		vidCache->unlockAll();
+        vidCache->unlockAll();
         return 1;
 }
