@@ -37,7 +37,6 @@
         int no=g; fp=NULL;\
         if (no < 0) no = 0; \
         aprintf("Cache query : %d - Line:%d\n",no,__LINE__);\
-        vidCache->dump();\
         fp=vidCache->getImage(no); }
 
 #define guide _param->guide
