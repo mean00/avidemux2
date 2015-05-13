@@ -18,9 +18,9 @@
 #include "ADM_videoFilterCache.h"
 #include "ADM_coreVideoFilter.h"
 #if 1
-#define aprintf(...) {}
+    #define aprintf(...) {}
 #else
-#define aprintf printf
+    #define aprintf(a,...) ADM_info(a,##__VA_ARGS__)
 #endif
 /**
     \fn ctor
@@ -127,20 +127,19 @@ int VideoCache::searchFreeEntry(void)
     }
     // Search the oldest one
     uint32_t deltamax=0,delta;
-	uint32_t target=0xfff;
-	aprintf("Cache : Cache miss %d\n",frame);
-	//for(uint32_t i=0;i<nbEntry;i++) printf("%d(%d) ",frameNum[i],frameLock[i]);printf("\n");
-	for(uint32_t i=0;i<nbEntry;i++)
-	{
-		if(entry[i].frameLock) continue; 	// don"t consider locked frames
+    uint32_t target=0xfff;
+    //for(uint32_t i=0;i<nbEntry;i++) printf("%d(%d) ",frameNum[i],frameLock[i]);printf("\n");
+    for(uint32_t i=0;i<nbEntry;i++)
+    {
+            if(entry[i].frameLock) continue; 	// don"t consider locked frames
 
-		delta=abs((int)counter-(int)entry[i].lastUse);
-		if(delta>deltamax)
-		{
-			deltamax=delta;
-			target=i;
-		}
-	}
+            delta=abs((int)counter-(int)entry[i].lastUse);
+            if(delta>deltamax)
+            {
+                    deltamax=delta;
+                    target=i;
+            }
+    }
     ADM_assert(target!=0xfff);
     return target;
 }
@@ -154,20 +153,21 @@ int32_t i;
 uint32_t tryz=nbEntry;
 uint32_t len,flags;
 
-	// Already there ?
-	if((i=searchFrame(frame))>=0)
-	{
-        ADMImage *img=entry[i].image;
-		aprintf("[cache]  old image  frame %d with PTS=%"PRIu64"\n",(int)frame,img->Pts);
-		entry[i].frameLock++;
-		entry[i].lastUse=counter;
-		counter++;
-		return img;	
-	}
-	int target=searchFreeEntry();
+    // Already there ?
+    if((i=searchFrame(frame))>=0)
+    {
+            ADMImage *img=entry[i].image;
+            aprintf("[cache]  old image  frame %d with PTS=%"PRIu64"\n",(int)frame,img->Pts);
+            entry[i].frameLock++;
+            entry[i].lastUse=counter;
+            counter++;
+            return img;	
+    }
+    int target=searchFreeEntry();
     uint32_t nb;
     ADMImage *img=entry[target].image;
-    if(!incoming->getNextFrameAs(ADM_HW_ANY,&nb,img)) return NULL;
+    if(!incoming->getNextFrameAs(ADM_HW_ANY,&nb,img)) 
+        return NULL;
     if(nb!=frame)
     {
         ADM_error("Cache inconsistency :\n");
