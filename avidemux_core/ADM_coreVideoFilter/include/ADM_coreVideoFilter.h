@@ -66,7 +66,7 @@ public:
        virtual bool         getNextFrameAs(ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image);              /// Request frame as type (hw accel)
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples)=0 ;   /// Return the current filter configuration
-	   virtual void         setCoupledConf(CONFcouple *couples)=0;
+       virtual void         setCoupledConf(CONFcouple *couples)=0;
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
        virtual uint64_t     getAbsoluteStartTime(void)                 /// Return the absolute offset of the current frame. Used to display time of for filter
                 {return previousFilter->getAbsoluteStartTime();}       /// Like subtitlers who need that
