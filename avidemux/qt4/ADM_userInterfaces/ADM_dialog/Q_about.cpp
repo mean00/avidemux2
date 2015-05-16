@@ -30,8 +30,17 @@ Ui_aboutWindow::Ui_aboutWindow(QWidget* parent) : QDialog(parent)
 
 	connect(ui.licenseButton, SIGNAL(clicked(bool)), this, SLOT(licenseButton_clicked(bool)));
 
-	char subversion[128];
-        sprintf(subversion,"%s <br><small>(%s)</small>", ADM_VERSION, ADM_SUBVERSION);// 
+	char subversion[128]={0};
+#if defined(ADM_SUBVERSION)
+        int l=strlen(ADM_SUBVERSION);
+        if(l>1)
+        {
+                sprintf(subversion,"%s <br><small>(%s)</small>", ADM_VERSION, ADM_SUBVERSION);// 
+        }else
+        {
+                sprintf(subversion,"%s - Release",ADM_VERSION);
+        }
+#endif
         QString  sv(subversion);
         ui.versionLabel->setTextFormat(Qt::RichText);
 	ui.versionLabel->setText(ui.versionLabel->text() + sv);
