@@ -29,7 +29,7 @@ RequestExecutionLevel user
 !define EXEDIR "${NSIDIR}/install"
 
 !define CORE_VERSION "2.6"
-!define POINT_RELEASE "8"
+!define POINT_RELEASE "9"
 !define PRODUCT_VERSION "${CORE_VERSION}.${POINT_RELEASE}.${SVN_VERSION}"
 !define PRODUCT_NAME "Avidemux ${CORE_VERSION} - 64bits"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
