@@ -107,7 +107,7 @@ IF(WIN32)
         FILE(WRITE   ${NSI_FILE} "!define CORE_VERSION \"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}\"\n")
         FILE(APPEND  ${NSI_FILE} "!define POINT_RELEASE \"${CPACK_PACKAGE_VERSION_P}\"\n")
         ADM_TIMESTAMP(date)
-        FILE(APPEND  ${NSI_FILE} "!define SVN_REVISION \"${date}\"\n")
+        FILE(APPEND  ${NSI_FILE} "!define SVN_VERSION \"${date}\"\n")
 ENDIF(WIN32)
 
 ########################################
