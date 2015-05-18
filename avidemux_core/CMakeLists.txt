@@ -106,6 +106,8 @@ IF(WIN32)
         SET(NSI_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../avidemux/winInstaller/AvidemuxVersion.nsh")
         FILE(WRITE   ${NSI_FILE} "!define CORE_VERSION \"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}\"\n")
         FILE(APPEND  ${NSI_FILE} "!define POINT_RELEASE \"${CPACK_PACKAGE_VERSION_P}\"\n")
+        ADM_TIMESTAMP(date)
+        FILE(APPEND  ${NSI_FILE} "!define SVN_REVISION \"${date}\"\n")
 ENDIF(WIN32)
 
 ########################################
