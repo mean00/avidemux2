@@ -101,6 +101,13 @@ add_subdirectory(ADM_coreImageLoader)
 add_subdirectory(ADM_coreScript)
 add_subdirectory(ADM_coreSubtitles)
 
+# Update nsi version now
+IF(WIN32)
+        SET(NSI_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../avidemux/winInstaller/AvidemuxVersion.nsh")
+        FILE(WRITE   ${NSI_FILE} "!define CORE_VERSION \"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}\"\n")
+        FILE(APPEND  ${NSI_FILE} "!define POINT_RELEASE \"${CPACK_PACKAGE_VERSION_P}\"\n")
+ENDIF(WIN32)
+
 ########################################
 # Config Summary
 ########################################

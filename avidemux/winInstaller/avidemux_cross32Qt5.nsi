@@ -13,6 +13,7 @@
 !include WinVer.nsh
 !include WordFunc.nsh
 #!include revision.nsh
+!include AvidemuxVersion.nsh
 
 SetCompressor /SOLID lzma
 SetCompressorDictSize 96
@@ -28,8 +29,6 @@ RequestExecutionLevel user
 !define REVISION ${SVN_VERSION}
 !define EXEDIR "${NSIDIR}/install"
 
-!define CORE_VERSION "2.6"
-!define POINT_RELEASE "9"
 !define PRODUCT_VERSION "${CORE_VERSION}.${POINT_RELEASE}.${SVN_VERSION}"
 !define PRODUCT_NAME "Avidemux ${CORE_VERSION} - 32 bits"
 !define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
