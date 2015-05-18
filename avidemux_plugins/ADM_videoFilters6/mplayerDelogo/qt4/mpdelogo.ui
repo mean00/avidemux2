@@ -147,6 +147,13 @@
     <widget class="QGraphicsView" name="graphicsView"/>
    </item>
    <item>
+    <widget class="QCheckBox" name="checkBoxPreview">
+     <property name="text">
+      <string>Preview. Click in the image above to coarsly set the box coordinates</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

@@ -27,15 +27,21 @@ class flyMpDelogo : public FLY_DIALOG_TYPE
   
   public:
    delogo      param;
+   bool        preview;
   public:
-   uint8_t     processRgb(uint8_t *imageIn, uint8_t *imageOut);
+   uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
    uint8_t     upload(void);
                flyMpDelogo (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     void *canvas, void *slider) : 
-                FLY_DIALOG_TYPE(width, height,in,canvas, slider,0,RESIZE_AUTO) 
+                FLY_DIALOG_TYPE(width, height,in,canvas, slider,true,RESIZE_AUTO) 
                 {};
-         virtual ~flyMpDelogo() {};
+   virtual     ~flyMpDelogo() {};
+   bool         setXy(int x,int y);
+   bool         setPreview(bool onoff)
+                {
+                    preview=onoff;
+                }
 };
 // EOF
 

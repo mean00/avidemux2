@@ -25,72 +25,52 @@
 
 #include "delogo.h"
 #include "DIA_flyMpDelogo.h"
+#include "ADM_vidMPdelogo.h"
 
 
 /************* COMMON PART *********************/
 /**
     \fn process
 */
-uint8_t    flyMpDelogo::processRgb(uint8_t *imageIn, uint8_t *imageOut)
+uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
 {
-    printf("Process\n");
-    uint32_t x,y;
-    uint8_t  *in;
-    uint32_t w=_w,h=_h;
+    out->duplicate(in);
+    if(preview)
+        MPDelogo::doDelogo(out, param.xoff, param.yoff,
+                             param.lw,  param.lh,param.band,param.show);        
+    else
+    {
+        uint8_t *y=out->GetWritePtr(PLANAR_Y);
+        int stride=out->GetPitch(PLANAR_Y);
+        int mx=param.lw+param.xoff;
+        int my=param.lh+param.yoff;
+        if(mx>=out->GetWidth(PLANAR_Y)) mx=out->GetWidth(PLANAR_Y)-1;
+        if(my>=out->GetHeight(PLANAR_Y)) my=out->GetHeight(PLANAR_Y)-1;
         
-    memcpy(imageOut,imageIn,_w*_h*4);
-
-    int lineTop=param.yoff;
-    int lineBottom=param.yoff+param.lh;
-
-    if(lineTop >= _h) lineTop=_h-1;
-    if(lineBottom >= _h) lineBottom=_h-1;
-
-    int lineLeft=param.xoff;
-    int lineRight=param.xoff+param.lw;
-
-    if(lineLeft >= _w) lineLeft=_w-1;
-    if(lineRight >= _w) lineRight=_w-1;
-
-    uint8_t *ptrTop=imageOut+4*_w*lineTop+lineLeft*4;
-    uint8_t *ptrBottom=imageOut+4*_w*lineBottom+lineLeft*4;
-
-    int r=lineRight-lineLeft;
-    if(!r) r=1;
-    for(int x=0;x<r;x++)
-    {
-            ptrTop[0]=0;
-            ptrTop[1]=0xff;
-            ptrTop[2]=0;
-            ptrTop[3]=0;
-
-            ptrBottom[0]=0;
-            ptrBottom[1]=0xff;
-            ptrBottom[2]=0;
-            ptrBottom[3]=0;
-            ptrTop+=4;
-            ptrBottom+=4;
+        
+        // hz
+        uint8_t *p=y+stride*param.yoff;
+        uint8_t *p2=y+stride*(my);
+        
+        uint8_t toggle=0;
+        for(int x=param.xoff;x<mx;x++)
+        {
+            *(p+x)=toggle;
+            toggle=0xff^toggle;
+            *(p2+x)=toggle;
+        }
+        // vz
+         p=y+stride*(param.yoff)+param.xoff;
+         p2=y+stride*(param.yoff)+mx;
+         
+         for(int yy=param.yoff;yy<my;yy++)
+         {
+            *(p)=toggle;
+            toggle=0xff^toggle;
+            *(p2)=toggle;
+            p+=stride;   p2+=stride;
+         }
     }
-    r=lineBottom-lineTop;
-    ptrTop=imageOut+4*_w*lineTop+lineLeft*4;
-    ptrBottom=imageOut+4*_w*lineTop+lineRight*4;
-
-    if(!r) r=1;
-    for(int x=0;x<r;x++)
-    {
-            ptrTop[0]=0;
-            ptrTop[1]=0xff;
-            ptrTop[2]=0;
-            ptrTop[3]=0;
-
-            ptrBottom[0]=0;
-            ptrBottom[1]=0xff;
-            ptrBottom[2]=0;
-            ptrBottom[3]=0;
-            ptrTop+=4*w;
-            ptrBottom+=4*w;
-    }
-  
     return 1;
 }
 //EOF

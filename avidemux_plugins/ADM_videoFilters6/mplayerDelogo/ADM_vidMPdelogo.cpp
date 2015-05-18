@@ -25,23 +25,7 @@ extern "C" {
     \class ADMVideoMPdelogo
 */
 extern bool DIA_getMpDelogo(delogo *param, ADM_coreVideoFilter *previousFilter);
-class  MPDelogo:public ADM_coreVideoFilter
- {
- protected:
-                    delogo          param;
 
- public:
-
-                            MPDelogo(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                            MPDelogo(ADM_coreVideoFilter *in,int x,int y)   ;
-       virtual              ~MPDelogo();
-       virtual const char   *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	   virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-	   virtual void setCoupledConf(CONFcouple *couples);
-       virtual bool         configure(void) ;                 /// Start graphical user interface     
-
- }     ;
 
 extern uint8_t DIA_getMPdelogo(delogo *param,ADM_coreVideoFilter *in);
 static void xdelogo(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int width, int height,
@@ -54,9 +38,9 @@ DECLARE_VIDEO_FILTER(   MPDelogo,   // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
-                        "mpdelogo",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("delogo","MPlayer delogo"),            // Display name
-                        QT_TRANSLATE_NOOP("delogo","Blend a logo by interpolating its surrounding box.") // Description
+                        "mpdelogo2",            // internal name (must be uniq!)
+                        QT_TRANSLATE_NOOP("delogo2","MPlayer delogo2"),            // Display name
+                        QT_TRANSLATE_NOOP("delogo2","Blend a logo by interpolating its surrounding box.") // Description
                     );
 //******************************************
 /**
@@ -121,7 +105,33 @@ uint8_t r=0;
         }
         return r;
 }
+/**
+ *  \fn delogo
+ */
+bool         MPDelogo::doDelogo(ADMImage *img,  int x,  int y, 
+                             int w,  int h,int band, int show)
+{
+     for(int i=0;i<3;i++)
+        {
+            ADM_PLANE p=(ADM_PLANE)i;
 
+            int width=img->GetWidth(p);
+            int height=img->GetHeight(p);
+            int stride=img->GetPitch(p);
+            if(i==1)
+            {
+                    x>>=1;y>>=1;w>>=1;h>>=1;
+            }
+            if(x+w>=width) w=width-x-1;
+            if(y+h>=height) h=height-y-1;
+
+            xdelogo(img->GetWritePtr(p), img->GetReadPtr(p),
+                stride,stride,width,height,
+                x,y,w,h, band, show, true);
+
+        }
+    return true;
+}
 /**
     \fn getNextFrame
 */
@@ -134,30 +144,8 @@ ADMImage *dst;
         if(!previousFilter->getNextFrame(fn,dst)) return false;
         if(param.xoff>=info.width ) return true;
         if(param.yoff>=info.height ) return true;
-        for(int i=0;i<3;i++)
-        {
-            ADM_PLANE p=(ADM_PLANE)i;
-            int x=param.xoff,y=param.yoff;
-            int w=param.lw,h=param.lh;
-
-            int width=data->GetWidth(p);
-            int height=data->GetHeight(p);
-            int stride=data->GetPitch(p);
-            if(i)
-            {
-                    x>>=1;y>>=1;w>>=1;h>>=1;
-            }
-            if(x+w>=width) w=width-x-1;
-            if(y+h>=height) h=height-y-1;
-
-//void xdelogo(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, int width, int height,
-//		   int logo_x, int logo_y, int logo_w, int logo_h, int band, int show, int direct)
-            xdelogo(data->GetWritePtr(p), data->GetReadPtr(p),
-                stride,stride,width,height,
-                x,y,w,h, param.band, param.show, true);
-
-        }
-        return 1;
+        doDelogo(dst,param.xoff,param.yoff,param.lw,param.lh, param.band,param.show);
+        return true;
 }
 
 
