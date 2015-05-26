@@ -246,9 +246,9 @@ FunctionEnd
 	!insertmacro SectionFlagIsSet ${SecUiQt} ${SF_SELECTED} installQt${LANG_CODE} endQt${LANG_CODE}
 
 installQt${LANG_CODE}:
-	SetOutPath $INSTDIR\i18n
-    ${File} i18n/avidemux_${LANG_CODE}.qm
-    ${File} i18n/qt_${LANG_CODE}.qm
+	SetOutPath $INSTDIR\qt5\i18n
+    ${File} qt5/i18n/avidemux_${LANG_CODE}.qm
+    ${File} qt5/i18n/qt_${LANG_CODE}.qm
 
 endQt${LANG_CODE}:
 !macroend
