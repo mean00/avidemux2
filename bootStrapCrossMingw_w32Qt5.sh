@@ -1,5 +1,6 @@
 #!/bin/bash
 # ** Put your config here **
+export QT_SELECT=5
 export PATH=$PATH:/mingw/bin
 export CROSS_PREFIX=i686-w64-mingw32
 export SDLDIR=/mingw
