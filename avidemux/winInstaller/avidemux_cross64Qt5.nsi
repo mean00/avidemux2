@@ -356,9 +356,9 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ROOT_FOLDER}/avidemux_jobs.exe
         ${File} ${ROOT_FOLDER}/libADM_render6_QT5.dll
         ${File} ${ROOT_FOLDER}/libADM_UIQT56.dll
-        #${File} ${ROOT_FOLDER}/QtOpenGL4.dll
-        #${File} ${ROOT_FOLDER}/libgcc_s_dw2-1.dll
-        #${File} ${ROOT_FOLDER}/mingwm10.dll
+
+        SetOutPath $INSTDIR\qt5\i18n
+        ${File} ${ROOT_FOLDER}/qt5/i18n/*.qm
     ${MementoSectionEnd}
 SectionGroupEnd
 
