@@ -100,7 +100,7 @@ void loadTranslator(void)
 #else        
         std::string flavor="/qt5";
 #endif
-        std::string partialPath=std::string(flavor)+std::string("/i18n");
+        std::string partialPath=std::string(flavor)+std::string("/i18n/");
                 
                 
 #ifdef __APPLE__
