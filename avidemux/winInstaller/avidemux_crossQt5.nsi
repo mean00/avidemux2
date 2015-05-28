@@ -441,7 +441,7 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		${File} ${ROOT_FOLDER}/libvorbisfile-3.dll
 	${MementoSectionEnd}
 SectionGroupEnd
-#SectionGroup "Avisynth" SecGrpAvisynth
+SectionGroup "Avisynth" SecGrpAvisynth
 	#${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
 		#SectionIn 2
 		#SetOutPath $INSTDIR
@@ -449,13 +449,13 @@ SectionGroupEnd
 		#${File} ${ROOT_FOLDER}/avsproxy.exe
 		#${File} ${ROOT_FOLDER}/avsproxy_gui.exe
 	#${MementoSectionEnd}
-	#${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
-		#SectionIn 2
-		#SetOverwrite on
-		#SetOutPath $INSTDIR\plugins\demuxers
-		#${File} ${ROOT_FOLDER}/plugins/demuxers/libADM_dm_avsproxy.dll
-	#${MementoSectionEnd}
-#SectionGroupEnd
+	${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
+		SectionIn 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\demuxers
+		${File} ${ROOT_FOLDER}/plugins/demuxers/libADM_dm_avsproxy.dll
+	${MementoSectionEnd}
+SectionGroupEnd
 SectionGroup "Demuxers" SecGrpDemuxers
 	${MementoSection} "ASF" SecDemuxAsf
 		SectionIn 1 2
@@ -683,6 +683,18 @@ ${MementoSection} "PNG" SecVidEncLavPng
 		SetOverwrite on
 		SetOutPath $INSTDIR\plugins\videoEncoders
 		${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_yv12.dll
+	${MementoSectionEnd}
+	${MementoSection} "DV" SecVidEncDV
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\videoEncoders
+		${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_ffDv.dll
+	${MementoSectionEnd}
+	${MementoSection} "NVenc" SecVidEncffNvenc
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\videoEncoders
+		${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_ffNvenc.dll
 	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Video Filters" SecGrpVideoFilter
@@ -945,7 +957,8 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 		${MementoSection} "MPlayer Delogo" SecVidFltMPlayerDelogo
 			SectionIn 1 2
 			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_mpdelogoCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_mpdelogoQT5.dll
 		${MementoSectionEnd}
