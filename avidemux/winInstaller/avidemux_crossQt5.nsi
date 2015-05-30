@@ -442,13 +442,13 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Avisynth" SecGrpAvisynth
-	#${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
-		#SectionIn 2
-		#SetOutPath $INSTDIR
-		#SetOverwrite on
-		#${File} ${ROOT_FOLDER}/avsproxy.exe
-		#${File} ${ROOT_FOLDER}/avsproxy_gui.exe
-	#${MementoSectionEnd}
+	${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
+		SectionIn 2
+		SetOutPath $INSTDIR
+		SetOverwrite on
+		${File} ${ROOT_FOLDER}/avsproxy.exe
+		${File} ${ROOT_FOLDER}/avsproxy_gui.exe
+	${MementoSectionEnd}
 	${MementoUnselectedSection} "Avisynth Proxy Demuxer" SecDemuxAvisynth
 		SectionIn 2
 		SetOverwrite on
