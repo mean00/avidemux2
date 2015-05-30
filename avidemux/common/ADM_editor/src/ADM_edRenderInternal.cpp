@@ -330,7 +330,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         {
             printf("[decompressImage] NoPicture\n");
             // Fill in with black
-            return true;
+            return false;
         }
         aprintf("[::Decompress] in:%"PRIu32" out:%"PRIu32" flags:%x\n",in->demuxerPts,out->Pts,out->flags);
 	// If not quant and it is already YV12, we can stop here

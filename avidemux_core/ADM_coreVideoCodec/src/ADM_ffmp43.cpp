@@ -389,8 +389,10 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 	  printf ("[lavc] Probably pseudo black frame...\n");
 	  out->_Qp = 2;
 	  out->flags = 0;	// assume P ?
-
-	  clonePic (_context->coded_frame, out);
+          if(_context->coded_frame)
+            clonePic (_context->coded_frame, out);
+          else
+             out->_noPicture = 1;
           out->Pts=ADM_NO_PTS; // not sure
 	  return 1;
 	}
