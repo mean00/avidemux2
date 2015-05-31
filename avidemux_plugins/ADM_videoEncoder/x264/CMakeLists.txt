@@ -1,7 +1,7 @@
 
 INCLUDE(ve_plugin)
 INCLUDE(ve_settings_plugin)
-
+ADD_DEFINITIONS(-DX264_USE_UTF8=1)
 SET(x264_SRCS 
         ADM_x264.cpp
         ADM_x264Plugin.cpp
