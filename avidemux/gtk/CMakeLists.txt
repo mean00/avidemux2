@@ -142,5 +142,5 @@ DISPLAY_SUMMARY_LIST()
 
 include(admPackager)
 admPackager(gtkPackage)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk") 
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/gtk/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/gtk" COMPONENT dev) 
 MESSAGE("")

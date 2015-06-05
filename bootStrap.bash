@@ -39,7 +39,8 @@ Process()
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
 	fi
-    	make install DESTDIR=$FAKEROOT_DIR
+        # we need the make install so that other packcges can be built against this one
+        make install DESTDIR=$FAKEROOT_DIR
 }
 printModule()
 {

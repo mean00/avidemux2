@@ -43,7 +43,7 @@ MACRO(INSTALL_I18N _files)
         ELSE(WIN32)
                 SET(i18dir "${CMAKE_INSTALL_PREFIX}/share/avidemux6/${QT_EXTENSION}/i18n")
         ENDIF(WIN32)
-        INSTALL(FILES ${_files} DESTINATION "${i18dir}")
+        INSTALL(FILES ${_files} DESTINATION "${i18dir}" COMPONENT runtime)
 ENDMACRO(INSTALL_I18N _files)
 #
 #
