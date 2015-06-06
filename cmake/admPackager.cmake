@@ -14,10 +14,6 @@ MACRO(admPackager _prog)
                 include("./${_prog}Rpm.cmake")
         elseif("${AVIDEMUX_PACKAGER}" STREQUAL "deb")
                 SET(CPACK_DEB_COMPONENT_INSTALL ON)
-                #SET(CPACK_COMPONENTS_IGNORE_GROUPS 1)
-                #SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY True)
-                #SET(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY True)
-                set(CPACK_COMPONENTS_ALL runtime dev plugins)
                 #
                 include("./${_prog}Debian.cmake")
                 #

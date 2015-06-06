@@ -1,6 +1,7 @@
 ##############################
 # DEBIAN
 ##############################
+set(CPACK_COMPONENTS_ALL plugins)
 
 SET(PLUGIN_EXT ${PLUGIN_UI})
 IF(${PLUGIN_UI} MATCHES "QT4")

@@ -1,6 +1,8 @@
 ##############################
 # DEBIAN
 ##############################
+set(CPACK_COMPONENTS_ALL runtime dev )
+
 include(debianArch)
 SET(CPACK_SET_DESTDIR "ON")
 SET(CPACK_DEBIAN_PACKAGE_NAME "avidemux3-cli")
