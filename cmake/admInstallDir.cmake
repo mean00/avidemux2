@@ -55,6 +55,7 @@ ENDMACRO(ADM_INSTALL_LIB )
 MACRO (ADM_INSTALL_LIB_FILES files)
         INSTALL(FILES ${files} 
                         DESTINATION ${AVIDEMUX_LIB_DIR}
+                        PERMISSIONS WORLD_READ WORLD_EXECUTE OWNER_WRITE
                         COMPONENT  runtime
                 )
 ENDMACRO (ADM_INSTALL_LIB_FILES)
