@@ -64,8 +64,8 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                                         label,  // caption
                                         str,    // folder
                                         filterFile,   // filter
-                                        NULL,   // selected filter
-                                        opts);
+                                        NULL);   // selected filter
+                                        
                 
 		if (fileName.isNull() ) return;
                 

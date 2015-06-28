@@ -253,7 +253,7 @@ void MainWindow::searchRecentFiles(QAction *action, QAction **actionList, int fi
 
 		if (a == action)
 		{
-			HandleAction((Action)(firstEventId + i));
+			sendAction((Action)(firstEventId + i));
 			return;
 		}
 	}

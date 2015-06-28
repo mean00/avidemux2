@@ -84,10 +84,19 @@ protected:
     QMenu *recentFiles;
     QMenu *recentProjects;
     QAction *recentFileAction[NB_LAST_FILES];
-	QAction *recentProjectAction[NB_LAST_FILES];
+    QAction *recentProjectAction[NB_LAST_FILES];
     ThumbSlider *thumbSlider;
 
 public slots:
+        void actionSlot(Action a)
+        {
+            HandleAction(a);
+        }
+        void sendAction(Action a)
+        {
+            //printf("Sending internal event %d\n",(int)a);
+            emit actionSignal(a);
+        }
 	void timeChanged(int);
         void checkChanged(int);
 	void buttonPressed(void);
@@ -127,9 +136,11 @@ public slots:
         {
                 printf("Close event!\n");
                 //QMainWindow::closeEvent(event);
-                HandleAction(ACT_EXIT);
+                sendAction(ACT_EXIT);
         }
 
+signals:
+        void actionSignal(Action a);
 protected:
 	const std::vector<IScriptEngine*>& _scriptEngines;
 
@@ -142,7 +153,7 @@ protected:
 	void buildRecentMenu(QMenu *menu, const char **files, QAction **actions);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
-	bool eventFilter(QObject* watched, QEvent* event);
+	//bool eventFilter(QObject* watched, QEvent* event);
 	void mousePressEvent(QMouseEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);

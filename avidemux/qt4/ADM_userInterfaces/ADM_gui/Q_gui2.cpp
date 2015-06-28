@@ -52,7 +52,7 @@ extern int global_argc;
 extern char **global_argv;
 
 extern int automation(void );
-extern void HandleAction(Action a);
+extern void sendAction(Action a);
 extern int encoderGetEncoderCount (void);
 extern const char *encoderGetIndexedName (uint32_t i);
 uint32_t audioEncoderGetNumberOfEncoders(void);
@@ -142,7 +142,7 @@ void MainWindow::comboChanged(int z)
 		}
 		ui.pushButtonVideoConf->setEnabled(b);
 		ui.pushButtonVideoFilter->setEnabled(b);
-		HandleAction (ACT_VIDEO_CODEC_CHANGED) ;
+		sendAction (ACT_VIDEO_CODEC_CHANGED) ;
 	}
 	else if (obj == ui.comboBoxAudio)
 	{
@@ -153,14 +153,14 @@ void MainWindow::comboChanged(int z)
 		}
 		ui.pushButtonAudioConf->setEnabled(b);
 		ui.pushButtonAudioFilter->setEnabled(b);
-		HandleAction (ACT_AUDIO_CODEC_CHANGED) ;
+		sendAction (ACT_AUDIO_CODEC_CHANGED) ;
 	}
 }
 
 void MainWindow::sliderValueChanged(int u)
 {
 	if(!_upd_in_progres)
-		HandleAction(ACT_Scale);
+		sendAction(ACT_Scale);
 }
 
 void MainWindow::sliderMoved(int value)
@@ -204,7 +204,7 @@ void MainWindow::audioToggled(bool checked)
 
 void MainWindow::previewModeChanged(int  flop)
 {
-	HandleAction(ACT_PreviewChanged);
+	sendAction(ACT_PreviewChanged);
 }
 
 void MainWindow::timeChangeFinished(void)
@@ -214,14 +214,14 @@ void MainWindow::timeChangeFinished(void)
 
 void MainWindow::currentFrameChanged(void)
 {
-//	HandleAction(ACT_JumpToFrame);
+//	sendAction(ACT_JumpToFrame);
 
 	this->setFocus(Qt::OtherFocusReason);
 }
 
 void MainWindow::currentTimeChanged(void)
 {
-	HandleAction(ACT_GotoTime);
+	sendAction(ACT_GotoTime);
 
 	this->setFocus(Qt::OtherFocusReason);
 }
@@ -239,7 +239,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.actionPreferences->setMenuRole(QAction::NoRole);
 	ui.actionQuit->setMenuRole(QAction::NoRole);
 #endif
-
+        //
+        connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
+        //
         connect( ui.checkDisplayOut,SIGNAL(stateChanged(int)),this,SLOT(previewModeChanged(int)));
 
 	/*
@@ -365,7 +367,7 @@ void MainWindow::searchToolBar(QAction *action)
         {
             if(!strcmp(name,t->name))
             {
-                HandleAction(t->event);
+                sendAction(t->event);
                 ADM_dealloc( name);
                 return;
             }
@@ -477,7 +479,7 @@ void MainWindow::checkChanged(int state)
 */
 void MainWindow::timeChanged(int)
 {
-	HandleAction (ACT_TimeShift) ;
+	sendAction (ACT_TimeShift) ;
 }
 /**
     \fn searchMenu
@@ -489,7 +491,7 @@ void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
         MenuEntry *m=menu+i;
         if(m->cookie==(void*)action)
         {
-            HandleAction (m->event);
+            sendAction (m->event);
         }
     }
 }
@@ -527,14 +529,14 @@ void MainWindow::buttonPressed(void)
 
 
 	if(action!=ACT_DUMMY)
-		HandleAction (action);
+		sendAction (action);
 
 }
 void MainWindow::toolButtonPressed(bool i)
 {
 	buttonPressed();
 }
-
+#if 1
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
 	QKeyEvent *keyEvent;
@@ -550,31 +552,31 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 				{
 					case Qt::Key_Left:
 						if (keyEvent->modifiers() == Qt::ShiftModifier)
-							HandleAction(ACT_Back1Second);
+							sendAction(ACT_Back1Second);
 						else if (keyEvent->modifiers() == Qt::ControlModifier)
-							HandleAction(ACT_Back2Seconds);
+							sendAction(ACT_Back2Seconds);
 						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-							HandleAction(ACT_Back4Seconds);
+							sendAction(ACT_Back4Seconds);
 						else
-							HandleAction(ACT_PreviousFrame);
+							sendAction(ACT_PreviousFrame);
 
 						return true;
 					case Qt::Key_Right:
 						if (keyEvent->modifiers() == Qt::ShiftModifier) 
-							HandleAction(ACT_Forward1Second);
+							sendAction(ACT_Forward1Second);
 						else if (keyEvent->modifiers() == Qt::ControlModifier) 
-							HandleAction(ACT_Forward2Seconds);
+							sendAction(ACT_Forward2Seconds);
 						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
-							HandleAction(ACT_Forward4Seconds);
+							sendAction(ACT_Forward4Seconds);
 						else 
-							HandleAction(ACT_NextFrame);
+							sendAction(ACT_NextFrame);
 
 						return true;
 					case Qt::Key_Up:
-						HandleAction(ACT_NextKFrame);
+						sendAction(ACT_NextKFrame);
 						return true;
 					case Qt::Key_Down:
-						HandleAction(ACT_PreviousKFrame);
+						sendAction(ACT_PreviousKFrame);
 						return true;
 					case Qt::Key_Shift:
 						shiftKeyHeld = 1;
@@ -582,18 +584,18 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 					case Qt::Key_BracketLeft:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier)
-                                                        HandleAction(ACT_GotoMarkA);
+                                                        sendAction(ACT_GotoMarkA);
                                                 return true;
 
 					case Qt::Key_BracketRight:
 						if (keyEvent->modifiers() == Qt::ControlModifier)
-							HandleAction(ACT_GotoMarkB);
+							sendAction(ACT_GotoMarkB);
 						return true;
 				}
 			}
 			/* else */ if (keyEvent->key() == Qt::Key_Space)
 			{
-				HandleAction(ACT_PlayAvi);
+				sendAction(ACT_PlayAvi);
 				return true;
 			}
 
@@ -620,7 +622,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 	return QObject::eventFilter(watched, event);
 }
-
+#endif
 void MainWindow::mousePressEvent(QMouseEvent* event)
 {
 	this->setFocus(Qt::OtherFocusReason);
@@ -666,7 +668,7 @@ void MainWindow::previousIntraFrame(void)
 	if (ui.spinBox_TimeValue->hasFocus())
 		ui.spinBox_TimeValue->stepDown();
 	else
-		HandleAction(ACT_PreviousKFrame);
+		sendAction(ACT_PreviousKFrame);
 }
 
 void MainWindow::nextIntraFrame(void)
@@ -674,7 +676,7 @@ void MainWindow::nextIntraFrame(void)
 	if (ui.spinBox_TimeValue->hasFocus())
 		ui.spinBox_TimeValue->stepUp();
 	else
-		HandleAction(ACT_NextKFrame);
+		sendAction(ACT_NextKFrame);
 }
 
 MainWindow::~MainWindow()
