@@ -2,7 +2,7 @@
                           \fn ADM_x264
                           \brief Front end for x264 Mpeg4 asp encoder
                              -------------------
-    
+
     copyright            : (C) 2011 gruntster/mean
  ***************************************************************************/
 #include <math.h>
@@ -77,7 +77,7 @@ static const aspectRatio predefinedARs[]={
     {64,45},
     {8,9},
     {32,27},
-    
+
 };
 
 #define NB_SAR sizeof(predefinedARs)/sizeof(aspectRatio)
@@ -97,10 +97,10 @@ static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "h
 */
 bool x264_ui(x264_encoder *settings)
 {
-	bool success = false;
+        bool success = false;
     x264Dialog dialog(qtLastRegisteredDialog(), settings);
 
-	qtRegisterDialog(&dialog);
+        qtRegisterDialog(&dialog);
 
     if (dialog.exec() == QDialog::Accepted)
     {
@@ -118,7 +118,7 @@ bool x264_ui(x264_encoder *settings)
             success = true;
     }
 
-	qtUnregisterDialog(&dialog);
+        qtUnregisterDialog(&dialog);
 
     return success;
 }
@@ -240,6 +240,7 @@ bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
   ui.tabFrame->setEnabled(advancedEnabled);
   ui.tabAnalysis->setEnabled(advancedEnabled);
   ui.tabQuantiser->setEnabled(advancedEnabled);
+  ui.tabAdvanced1->setEnabled(advancedEnabled);
 }
 
 /**
@@ -282,6 +283,11 @@ bool x264Dialog::upload(void)
           MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
+          MK_UINT(vbvMaxBitrateSpinBox,ratecontrol.vbv_max_bitrate);
+          MK_UINT(vbvBufferSizeSpinBox,ratecontrol.vbv_buffer_size);
+          MK_UINT(vbvBufferOccupancySpinBox,ratecontrol.vbv_buffer_init);
+
+
           if(myCopy.analyze.trellis)
           {
                 ui.trellisComboBox->setCurrentIndex(myCopy.analyze.trellis-1);
@@ -289,20 +295,20 @@ bool x264Dialog::upload(void)
 
           MK_CHECKBOX(cabacCheckBox,cabac);
           if (myCopy.interlaced || myCopy.fake_interlaced) {
-        	  ui.interlacedCheckBox->setChecked(true);
+                  ui.interlacedCheckBox->setChecked(true);
           } else {
-        	  ui.interlacedCheckBox->setChecked(false);
+                  ui.interlacedCheckBox->setChecked(false);
           }
           if (myCopy.fake_interlaced) {
-        	  ui.interlacedComboBox->setCurrentIndex(2);
+                  ui.interlacedComboBox->setCurrentIndex(2);
           } else {
-        	  if (myCopy.tff) {
-        		  ui.interlacedComboBox->setCurrentIndex(1);
-        	  } else {
-        		  ui.interlacedComboBox->setCurrentIndex(0);
-        	  }
+                  if (myCopy.tff) {
+                          ui.interlacedComboBox->setCurrentIndex(1);
+                  } else {
+                          ui.interlacedComboBox->setCurrentIndex(0);
+                  }
           }
-    
+
           MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
           MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
           MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
@@ -332,7 +338,7 @@ bool x264Dialog::upload(void)
 
           MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
-          
+
           MK_CHECKBOX(loopFilterCheckBox,b_deblocking_filter);
           MK_UINT(alphaC0SpinBox,i_deblocking_filter_alphac0);
           MK_UINT(betaSpinBox,i_deblocking_filter_beta);
@@ -345,16 +351,16 @@ bool x264Dialog::upload(void)
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
           MK_UINT(mvRangeSpinBox,analyze.me_range);
-          
+
           int32_t mv_range = myCopy.analyze.mv_range;
           if(mv_range >= 0)
           {
               ui.mvLengthCheckBox->setChecked(true);
               MK_UINT(mvLengthSpinBox,analyze.mv_range);
           }
-          
+
           int32_t mv_range_thread = myCopy.analyze.mv_range_thread;
-          
+
           if(mv_range_thread >= 0)
           {
               ui.minThreadBufferCheckBox->setChecked(true);
@@ -422,7 +428,7 @@ bool x264Dialog::upload(void)
         bool predefined = false;
 
         for (int i= 0;i<NB_SAR;i++)
-	{
+        {
                 if (myCopy.vui.sar_width == predefinedARs[i].sarWidth && myCopy.vui.sar_height == predefinedARs[i].sarHeight)
                 {
                      MK_RADIOBUTTON(sarPredefinedRadioButton);
@@ -430,26 +436,26 @@ bool x264Dialog::upload(void)
                      predefined = true;
                      break;
                 }
-	}
+        }
 
-	if (!predefined)
-	{
+        if (!predefined)
+        {
                 MK_RADIOBUTTON(sarCustomRadioButton);
                 MK_UINT(sarCustomSpinBox1,vui.sar_width);
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
-	}
+        }
 
-	      DISABLE(spsiComboBox);
-	      DISABLE(openGopCheckBox);
-          DISABLE(groupBox_14); // quant matrix
-          DISABLE(tabAdvanced1);
-          DISABLE(tabAdvanced2);
-          DISABLE(tabOutput2);
-          DISABLE(maxCrfCheckBox);
-          DISABLE(sarAsInputRadioButton);
-          DISABLE(groupBox_3);
-          DISABLE(accessUnitCheckBox);
-          return true;
+        DISABLE(spsiComboBox);
+        DISABLE(openGopCheckBox);
+        DISABLE(groupBox_14); // quant matrix
+        //DISABLE(tabAdvanced1);
+        DISABLE(tabAdvanced2);
+        DISABLE(tabOutput2);
+        DISABLE(maxCrfCheckBox);
+        DISABLE(sarAsInputRadioButton);
+        DISABLE(groupBox_3);
+        DISABLE(accessUnitCheckBox);
+        return true;
 }
 #undef MK_CHECKBOX
 #undef MK_UINT
@@ -486,15 +492,15 @@ bool x264Dialog::download(void)
 
           MK_CHECKBOX(cabacCheckBox,cabac);
           if (ui.interlacedCheckBox->isChecked()) {
-        	  myCopy.interlaced = (ui.interlacedComboBox->currentIndex() < 2);
-        	  myCopy.fake_interlaced = (ui.interlacedComboBox->currentIndex() == 2);
-        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+                  myCopy.interlaced = (ui.interlacedComboBox->currentIndex() < 2);
+                  myCopy.fake_interlaced = (ui.interlacedComboBox->currentIndex() == 2);
+                  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
           } else {
-        	  myCopy.interlaced = false;
-        	  myCopy.fake_interlaced = false;
-        	  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
+                  myCopy.interlaced = false;
+                  myCopy.fake_interlaced = false;
+                  myCopy.tff = (ui.interlacedComboBox->currentIndex() == 1);
           }
-    
+
           MK_CHECKBOX(mixedRefsCheckBox,analyze.mixed_references);
           MK_CHECKBOX(chromaMotionEstCheckBox,analyze.chroma_me);
           MK_CHECKBOX(dctDecimateCheckBox,analyze.dct_decimate);
@@ -507,6 +513,10 @@ bool x264Dialog::download(void)
           MK_CHECKBOX(intraRefreshCheckBox,intra_refresh);
           MK_UINT(meSpinBox,analyze.subpel_refine);
           MK_UINT(BFrameBiasSpinBox,i_bframe_bias);
+          MK_UINT(vbvMaxBitrateSpinBox,ratecontrol.vbv_max_bitrate);
+          MK_UINT(vbvBufferSizeSpinBox,ratecontrol.vbv_buffer_size);
+          MK_UINT(vbvBufferOccupancySpinBox,ratecontrol.vbv_buffer_init);
+
 
           MK_MENU(meMethodComboBox,analyze.me_method);
           MK_MENU(weightedPPredictComboBox,analyze.weighted_pred);
@@ -531,7 +541,7 @@ bool x264Dialog::download(void)
                 myCopy.ratecontrol.aq_mode=a+1;
                 MK_UINT(aqStrengthSpinBox,ratecontrol.aq_strength);
           }
-          
+
           MK_UINT(lookaheadSpinBox,ratecontrol.lookahead);
           MK_CHECKBOX(mbTreeCheckBox,ratecontrol.mb_tree);
 
@@ -541,12 +551,12 @@ bool x264Dialog::download(void)
 
           MK_MENU(predictModeComboBox,analyze.direct_mv_pred);
           MK_UINT(mvRangeSpinBox,analyze.me_range);
-          
+
           if(ui.mvLengthCheckBox->isChecked())
               MK_UINT(mvLengthSpinBox,analyze.mv_range);
           else
               myCopy.analyze.mv_range=-1;
-          
+
           if(ui.minThreadBufferCheckBox->isChecked())
               MK_UINT(minThreadBufferSpinBox,analyze.mv_range_thread);
           else
@@ -557,7 +567,7 @@ bool x264Dialog::download(void)
           MK_UINT(noiseReductionSpinBox,analyze.noise_reduction);
           MK_UINT(intraLumaSpinBox,analyze.intra_luma);
           MK_UINT(interLumaSpinBox,analyze.inter_luma);
-          
+
           MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
           MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
           MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
@@ -580,7 +590,7 @@ bool x264Dialog::download(void)
           int threadIndex=threads->currentIndex();
           myCopy.general.threads=listOfThreads[threadIndex].idcValue;
 
-          
+
           int t=ui.trellisComboBox->currentIndex();
           if(!ui.trellisCheckBox->isChecked())
           {
@@ -605,51 +615,51 @@ bool x264Dialog::download(void)
 // General tab
 void x264Dialog::encodingModeComboBox_currentIndexChanged(int index)
 {
-	bool enableQp = false, enableMaxCrf = false;
+        bool enableQp = false, enableMaxCrf = false;
 
-	switch (index)
-	{
-		case 0:
-			ui.targetRateControlLabel1->setText(tr("Target Bitrate:"));
-			ui.targetRateControlLabel2->setText(tr("kbit/s"));
-			ui.targetRateControlSpinBox->setValue(lastBitrate);
-			break;
-		case 1: // Constant Quality - 1 pass
-			ui.quantiserLabel2->setText(tr("Quantiser:"));
-			enableQp = true;
-			break;
-		case 2: // Average Quantiser - 1 pass
-			ui.quantiserLabel2->setText(tr("Quality:"));
-			enableQp = true;
-			enableMaxCrf = true;
-			break;
-		case 3: // Video Size - 2 pass
-			ui.targetRateControlLabel1->setText(tr("Target Video Size:"));
-			ui.targetRateControlLabel2->setText(tr("MB"));
-			ui.targetRateControlSpinBox->setValue(lastVideoSize);
-			break;
-		case 4: // Average Bitrate - 2 pass
-			ui.targetRateControlLabel1->setText(tr("Average Bitrate:"));
-			ui.targetRateControlLabel2->setText(tr("kbit/s"));
-			ui.targetRateControlSpinBox->setValue(lastBitrate);
-			break;
-	}
+        switch (index)
+        {
+                case 0:
+                        ui.targetRateControlLabel1->setText(tr("Target Bitrate:"));
+                        ui.targetRateControlLabel2->setText(tr("kbit/s"));
+                        ui.targetRateControlSpinBox->setValue(lastBitrate);
+                        break;
+                case 1: // Constant Quality - 1 pass
+                        ui.quantiserLabel2->setText(tr("Quantiser:"));
+                        enableQp = true;
+                        break;
+                case 2: // Average Quantiser - 1 pass
+                        ui.quantiserLabel2->setText(tr("Quality:"));
+                        enableQp = true;
+                        enableMaxCrf = true;
+                        break;
+                case 3: // Video Size - 2 pass
+                        ui.targetRateControlLabel1->setText(tr("Target Video Size:"));
+                        ui.targetRateControlLabel2->setText(tr("MB"));
+                        ui.targetRateControlSpinBox->setValue(lastVideoSize);
+                        break;
+                case 4: // Average Bitrate - 2 pass
+                        ui.targetRateControlLabel1->setText(tr("Average Bitrate:"));
+                        ui.targetRateControlLabel2->setText(tr("kbit/s"));
+                        ui.targetRateControlSpinBox->setValue(lastBitrate);
+                        break;
+        }
 
-	ui.quantiserLabel1->setEnabled(enableQp);
-	ui.quantiserLabel2->setEnabled(enableQp);
-	ui.quantiserLabel3->setEnabled(enableQp);
-	ui.quantiserSlider->setEnabled(enableQp);
-	ui.quantiserSpinBox->setEnabled(enableQp);
+        ui.quantiserLabel1->setEnabled(enableQp);
+        ui.quantiserLabel2->setEnabled(enableQp);
+        ui.quantiserLabel3->setEnabled(enableQp);
+        ui.quantiserSlider->setEnabled(enableQp);
+        ui.quantiserSpinBox->setEnabled(enableQp);
 
-	ui.targetRateControlLabel1->setEnabled(!enableQp);
-	ui.targetRateControlLabel2->setEnabled(!enableQp);
-	ui.targetRateControlSpinBox->setEnabled(!enableQp);
+        ui.targetRateControlLabel1->setEnabled(!enableQp);
+        ui.targetRateControlLabel2->setEnabled(!enableQp);
+        ui.targetRateControlSpinBox->setEnabled(!enableQp);
 
 #if 0
-	if (!enableMaxCrf)
-		ui.maxCrfCheckBox->setChecked(false);
+        if (!enableMaxCrf)
+                ui.maxCrfCheckBox->setChecked(false);
 
-	ui.maxCrfCheckBox->setEnabled(enableMaxCrf);
+        ui.maxCrfCheckBox->setEnabled(enableMaxCrf);
 #endif
 }
 
@@ -660,69 +670,69 @@ void x264Dialog::useAdvancedConfigurationCheckBox_toggled(bool checked)
 
 void x264Dialog::quantiserSlider_valueChanged(int value)
 {
-	ui.quantiserSpinBox->setValue(value);
+        ui.quantiserSpinBox->setValue(value);
 }
 
 void x264Dialog::meSlider_valueChanged(int value)
 {
-	ui.meSpinBox->setValue(value);
+        ui.meSpinBox->setValue(value);
 }
 void x264Dialog::quantiserSpinBox_valueChanged(int value)
 {
-	ui.quantiserSlider->setValue(value);
+        ui.quantiserSlider->setValue(value);
 }
 void x264Dialog::meSpinBox_valueChanged(int value)
 {
-	ui.meSlider->setValue(value);
+        ui.meSlider->setValue(value);
 }
 
 void x264Dialog::targetRateControlSpinBox_valueChanged(int value)
 {
-	if (ui.encodingModeComboBox->currentIndex() == 3)	// Video Size - 2 pass
-		lastVideoSize = value;
-	else
-		lastBitrate = value;
+        if (ui.encodingModeComboBox->currentIndex() == 3)	// Video Size - 2 pass
+                lastVideoSize = value;
+        else
+                lastBitrate = value;
 }
 
 void x264Dialog::loopFilterCheckBox_toggled(bool checked)
 {
-	if (!checked)
-	{
+        if (!checked)
+        {
                 ui.alphaC0SpinBox->setValue(0);
                 ui.betaSpinBox->setValue(0);
-	}
+        }
 }
 
 void x264Dialog::mbTreeCheckBox_toggled(bool checked)
 {
-	if (checked && !ui.aqVarianceCheckBox->isChecked())
-	{
-		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
-			ui.aqVarianceCheckBox->setChecked(true);
-		else
-			ui.mbTreeCheckBox->setChecked(false);
-	}
+        if (checked && !ui.aqVarianceCheckBox->isChecked())
+        {
+                if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                        ui.aqVarianceCheckBox->setChecked(true);
+                else
+                        ui.mbTreeCheckBox->setChecked(false);
+        }
 }
 
 void x264Dialog::aqVarianceCheckBox_toggled(bool checked)
 {
-	if (!checked && ui.mbTreeCheckBox->isChecked())
-	{
-		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
-			ui.mbTreeCheckBox->setChecked(false);
-		else
-			ui.aqVarianceCheckBox->setChecked(true);
-	}
+        if (!checked && ui.mbTreeCheckBox->isChecked())
+        {
+                if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                        ui.mbTreeCheckBox->setChecked(false);
+                else
+                        ui.aqVarianceCheckBox->setChecked(true);
+        }
 }
 #if 0
 void x264Dialog::maxCrfSlider_valueChanged(int value)
 {
-	ui.maxCrfSpinBox->setValue(value);
+        ui.maxCrfSpinBox->setValue(value);
 }
 
 void x264Dialog::maxCrfSpinBox_valueChanged(int value)
 {
-	ui.maxCrfSlider->setValue(value);
+        ui.maxCrfSlider->setValue(value);
 }
 #endif
 
@@ -773,7 +783,7 @@ static char *getProfileName(void)
 
   QLineEdit *text=new QLineEdit;
 //  text->setAcceptRichText(false);
-  
+
   text->setText("my profile");
   text->selectAll();
 
