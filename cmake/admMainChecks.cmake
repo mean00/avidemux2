@@ -83,6 +83,10 @@ ENDIF (WIN32)
 if (CMAKE_COMPILER_IS_GNUCC)
 	add_definitions("-Werror=attributes")
 endif (CMAKE_COMPILER_IS_GNUCC)
+# Clang
+IF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
+        ADD_DEFINITIONS(-Qunused-arguments)
+ENDIF()
 # MacOsX stuff
 IF(APPLE)
 	set (CMAKE_OSX_ARCHITECTURES "x86_64")
