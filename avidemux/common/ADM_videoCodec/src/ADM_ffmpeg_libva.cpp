@@ -221,8 +221,9 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     for(int i=0;i<nbSurface;i++)
     {
         surfaces[i]=admLibVA::allocateSurface(w,h);
-        if(!(surfaces[i]==VA_INVALID))
+        if(surfaces[i]==VA_INVALID)
         {
+            ADM_warning("Cannot allocate surface (%d x %d)\n",(int)w,(int)h);
             nbSurface=i;
             return;
         }
@@ -279,6 +280,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
    
       b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
      alive=true;
+     ADM_warning("Libva decoder created.\n");
 }
 
 /**
