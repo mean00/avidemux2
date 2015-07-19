@@ -39,7 +39,7 @@ void SwapMe(uint8_t *tgt,uint8_t *src,int nb)
     \fn saveAsBmp
     \brief save current image into filename, into bmp format
 */
-bool  ADMImage::saveAsBmp(const char *filename)
+bool  ADMImage::saveAsBmpInternal(const char *filename)
 {
   ADM_BITMAPFILEHEADER bmfh;
   ADM_BITMAPINFOHEADER bmph;
@@ -69,11 +69,6 @@ bool  ADMImage::saveAsBmp(const char *filename)
 	bmph.origin=0;
 	bmph.colorEncoding=0;
 */
-
-  ADMImageDefault image(_width,_height);
-
-
-  printf ("\n %u x %u=%u\n", bmph.biWidth, bmph.biHeight, sz);
 
   uint8_t *out;
 
@@ -142,10 +137,26 @@ bool  ADMImage::saveAsBmp(const char *filename)
         return 1;
 }
 /**
+    \fn saveAsBmp
+    \brief save current image into filename, into bmp format
+*/
+bool  ADMImage::saveAsBmp(const char *filename)
+{
+    if(refType==ADM_HW_NONE)
+        return saveAsBmpInternal(filename);
+    
+    ADMImageDefault clone(_width, _height);
+    
+    clone.duplicateFull(this);
+    clone.hwDownloadFromRef();
+    return clone.saveAsBmpInternal(filename);
+    
+}
+/**
     \fn saveAsJpg
     \brief save current image into filename, into jpg format
 */
-bool  ADMImage::saveAsJpg(const char *filename)
+bool  ADMImage::saveAsJpgInternal(const char *filename)
 {
 
 AVCodecContext   *context=NULL;   
@@ -245,4 +256,22 @@ jpgCleanup:
     }
 
     return result;
+}
+
+
+/**
+    \fn saveAsBmp
+    \brief save current image into filename, into bmp format
+*/
+bool  ADMImage::saveAsJpg(const char *filename)
+{
+    if(refType==ADM_HW_NONE)
+        return saveAsJpgInternal(filename);
+    
+    ADMImageDefault clone(_width, _height);
+    
+    clone.duplicateFull(this);
+    clone.hwDownloadFromRef();
+    return clone.saveAsJpgInternal(filename);
+    
 }
