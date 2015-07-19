@@ -455,6 +455,11 @@ bool x264Dialog::upload(void)
         DISABLE(sarAsInputRadioButton);
         DISABLE(groupBox_3);
         DISABLE(accessUnitCheckBox);
+        
+        //
+        MK_CHECKBOX(blueRayCompat,general.blueray_compatibility);
+        MK_CHECKBOX(fakeInterlaced,general.fake_interlaced);
+        
         return true;
 }
 #undef MK_CHECKBOX
@@ -608,8 +613,9 @@ bool x264Dialog::download(void)
                 MK_UINT(sarCustomSpinBox1,vui.sar_width);
                 MK_UINT(sarCustomSpinBox2,vui.sar_height);
           }
-
-          return true;
+        MK_CHECKBOX(blueRayCompat,general.blueray_compatibility);
+        MK_CHECKBOX(fakeInterlaced,general.fake_interlaced);
+        return true;
 }
 
 // General tab

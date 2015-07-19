@@ -15,6 +15,8 @@ json.addString("profile",key->general.profile);
 json.addBool("fast_decode",key->general.fast_decode);
 json.addBool("zero_latency",key->general.zero_latency);
 json.addBool("fast_first_pass",key->general.fast_first_pass);
+json.addBool("blueray_compatibility",key->general.blueray_compatibility);
+json.addBool("fake_interlaced",key->general.fake_interlaced);
 json.endNode();
 json.addInt32("level",key->level);
 json.addNode("vui");

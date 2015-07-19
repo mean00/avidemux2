@@ -74,6 +74,10 @@ bool x264Encoder::setup(void)
       strcat(tune, "zero_latency");
     }
     x264_param_default_preset(&param, x264Settings.general.preset, tune);
+  }else
+  {
+        param.b_bluray_compat=x264Settings.general.blueray_compatibility;
+        param.b_fake_interlaced=x264Settings.general.fake_interlaced;
   }
   param.i_level_idc=x264Settings.level; 
 
@@ -396,6 +400,7 @@ void dumpx264Setup(x264_param_t *param)
     PI(b_interlaced);
     PI(b_tff);
     PI(b_fake_interlaced);
+    PI(b_bluray_compat);
     PI(b_constrained_intra);
 
 #define AI(x) printf(#x"\t:%d\n",(int)param->analyse.x);

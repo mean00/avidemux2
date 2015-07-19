@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>567</width>
-    <height>770</height>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -98,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>9</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -3403,6 +3403,20 @@
            <widget class="QCheckBox" name="accessUnitCheckBox">
             <property name="text">
              <string>Generate Access Unit Delimiters</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="blueRayCompat">
+            <property name="text">
+             <string>BluRay compatibility</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="fakeInterlaced">
+            <property name="text">
+             <string>Generate fake interlaced</string>
             </property>
            </widget>
           </item>

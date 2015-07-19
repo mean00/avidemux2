@@ -9,6 +9,8 @@ extern const ADM_paramList x264_encoder_param[]={
  {"general.fast_decode",offsetof(x264_encoder,general.fast_decode),"bool",ADM_param_bool},
  {"general.zero_latency",offsetof(x264_encoder,general.zero_latency),"bool",ADM_param_bool},
  {"general.fast_first_pass",offsetof(x264_encoder,general.fast_first_pass),"bool",ADM_param_bool},
+ {"general.blueray_compatibility",offsetof(x264_encoder,general.blueray_compatibility),"bool",ADM_param_bool},
+ {"general.fake_interlaced",offsetof(x264_encoder,general.fake_interlaced),"bool",ADM_param_bool},
  {"level",offsetof(x264_encoder,level),"int32_t",ADM_param_int32_t},
  {"vui.sar_height",offsetof(x264_encoder,vui.sar_height),"uint32_t",ADM_param_uint32_t},
  {"vui.sar_width",offsetof(x264_encoder,vui.sar_width),"uint32_t",ADM_param_uint32_t},

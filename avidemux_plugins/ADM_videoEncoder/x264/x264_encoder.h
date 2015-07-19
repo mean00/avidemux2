@@ -12,6 +12,8 @@ struct  {
 	bool fast_decode;
 	bool zero_latency;
 	bool fast_first_pass;
+	bool blueray_compatibility;
+	bool fake_interlaced;
 }general;
 int32_t level;
 struct  {
