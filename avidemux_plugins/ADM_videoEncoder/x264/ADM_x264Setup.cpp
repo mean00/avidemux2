@@ -275,6 +275,11 @@ bool x264Encoder::setup(void)
       MKPARAM(i_lookahead,lookahead);
       MKPARAM(i_aq_mode,aq_mode);
       MKPARAMF(f_aq_strength,aq_strength);
+      
+      MKPARAM(i_vbv_max_bitrate,vbv_max_bitrate)
+      MKPARAM(i_vbv_buffer_size,vbv_buffer_size)
+              
+      param.rc.f_vbv_buffer_init=((float)x264Settings.ratecontrol.vbv_buffer_init)/100.;
   }
   
   if(!param.i_bframe)  encoderDelay=0;
