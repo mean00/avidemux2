@@ -17,6 +17,7 @@
 #include "IScriptEngine.h"
 #include "prefs.h"
 
+#define ENABLE_EVENT_FILTER
 
 /**
  * \class myQApplication
@@ -153,7 +154,9 @@ protected:
 	void buildRecentMenu(QMenu *menu, const char **files, QAction **actions);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
-	//bool eventFilter(QObject* watched, QEvent* event);
+#ifdef   ENABLE_EVENT_FILTER      
+	bool eventFilter(QObject* watched, QEvent* event);
+#endif
 	void mousePressEvent(QMouseEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);

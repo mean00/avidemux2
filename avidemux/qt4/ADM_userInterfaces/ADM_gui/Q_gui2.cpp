@@ -536,7 +536,7 @@ void MainWindow::toolButtonPressed(bool i)
 {
 	buttonPressed();
 }
-#if 0
+#ifdef ENABLE_EVENT_FILTER
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
 	QKeyEvent *keyEvent;
