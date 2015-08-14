@@ -314,7 +314,7 @@ bool configure (CONFcouple **setup)
 
 #define BITRATE(x) {x,QT_TRANSLATE_NOOP("lame",#x)}
   diaMenuEntry bitrateM[] = {
-    BITRATE (56),
+    BITRATE (56),//56
     BITRATE (64),
     BITRATE (80),
     BITRATE (96),
@@ -322,7 +322,9 @@ bool configure (CONFcouple **setup)
     BITRATE (128),
     BITRATE (160),
     BITRATE (192),
-    BITRATE (224)
+    BITRATE (224),
+    BITRATE (256),
+    BITRATE (320)
   };
 
 //***
