@@ -98,7 +98,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>9</number>
+      <number>7</number>
      </property>
      <widget class="QWidget" name="tabGeneral">
       <attribute name="title">
@@ -1668,11 +1668,6 @@
                 <item>
                  <property name="text">
                   <string>Top Field First</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Fake Interlaced</string>
                  </property>
                 </item>
                </widget>
