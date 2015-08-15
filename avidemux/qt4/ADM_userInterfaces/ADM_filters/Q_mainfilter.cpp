@@ -66,54 +66,54 @@ FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) 
 
 bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
-	QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
 
-	if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseButtonPress)
-	{
-		QCoreApplication::sendEvent(view, event);
+        if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseButtonPress)
+        {
+                QCoreApplication::sendEvent(view, event);
 
-		return true;
-	}
-	else if (event->type() == QEvent::FocusIn)
-	{
-		view->setFocus();
+                return true;
+        }
+        else if (event->type() == QEvent::FocusIn)
+        {
+                view->setFocus();
 
-		return true;
-	}
-	else
-		return QObject::eventFilter(object, event);
+                return true;
+        }
+        else
+                return QObject::eventFilter(object, event);
 }
 
 FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
 {
-	filter = new FilterItemEventFilter(parent);
+        filter = new FilterItemEventFilter(parent);
 }
 
 void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-	QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-	QLabel *label;
+        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+        QLabel *label;
 
-	if (view->indexWidget(index) == 0)
-	{
-		label = new QLabel();
+        if (view->indexWidget(index) == 0)
+        {
+                label = new QLabel();
 
-		label->installEventFilter(filter);
-		label->setAutoFillBackground(true);
-		label->setFocusPolicy(Qt::TabFocus);
-		label->setText(index.data().toString());
-		view->setIndexWidget(index, label);
-	}
+                label->installEventFilter(filter);
+                label->setAutoFillBackground(true);
+                label->setFocusPolicy(Qt::TabFocus);
+                label->setText(index.data().toString());
+                view->setIndexWidget(index, label);
+        }
 
-	label = (QLabel*)view->indexWidget(index);
+        label = (QLabel*)view->indexWidget(index);
 
-	if (option.state & QStyle::State_Selected)
-		if (option.state & QStyle::State_HasFocus)
-			label->setBackgroundRole(QPalette::Highlight);
-		else
-			label->setBackgroundRole(QPalette::Window);
-	else
-		label->setBackgroundRole(QPalette::Base);
+        if (option.state & QStyle::State_Selected)
+                if (option.state & QStyle::State_HasFocus)
+                        label->setBackgroundRole(QPalette::Highlight);
+                else
+                        label->setBackgroundRole(QPalette::Window);
+        else
+                label->setBackgroundRole(QPalette::Base);
 }
 /**
     \fn preview
@@ -134,27 +134,27 @@ void filtermainWindow::preview(bool b)
      ADM_info("Rank : %d\n",itag);
      ADM_coreVideoFilter     *filter=ADM_vf_getInstance(itag);
      ADM_assert(filter);
-	if (previewDialog)
-		previewDialog->resetVideoStream(filter);
-	else
-	{
-		previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
-		connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
+    if (previewDialog)
+            previewDialog->resetVideoStream(filter);
+    else
+    {
+            previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+            connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
 #if 0
-		if (previewDialogX != INT_MIN)
-			previewDialog->move(previewDialogX, previewDialogY);
+            if (previewDialogX != INT_MIN)
+                    previewDialog->move(previewDialogX, previewDialogY);
 #endif
-	}
-	previewDialog->show();
+    }
+    previewDialog->show();
 }
 
 void filtermainWindow::closePreview()
 {
-	if (previewDialog)
-	{
-		delete previewDialog;
-		previewDialog = NULL;
-	}
+    if (previewDialog)
+    {
+        delete previewDialog;
+        previewDialog = NULL;
+    }
 
 }
 
@@ -241,7 +241,7 @@ void filtermainWindow::button( bool b) \
     call(); \
     getFirstVideoFilter (); \
     buildActiveFilterList ();  \
-	setSelected(nb_active_filter - 1); \
+        setSelected(nb_active_filter - 1); \
 }
 #endif
 MAKE_BUTTON(DVD,setDVD)
@@ -273,7 +273,7 @@ void filtermainWindow::configure( bool b)
      /**/
         ADM_vf_configureFilterAtIndex(itag);
         buildActiveFilterList ();
-		setSelected(itag);
+                setSelected(itag);
 }
 /**
         \fn     up( bool b)
@@ -369,7 +369,7 @@ void filtermainWindow::displayFamily(uint32_t family)
      }
 
   if (nb)
-	  availableList->setCurrentRow(0);
+          availableList->setCurrentRow(0);
 }
 
 /**
@@ -390,57 +390,7 @@ void filtermainWindow::allDoubleClick( QListWidgetItem  *item)
 
     add(0);
 }
-/**
-        \fn     filtermainWindow::partial( bool b)
-        \brief  Partialize one filter
-*/
-void filtermainWindow::partial( bool b)
-{
-#if 0
-  printf("partial\n");
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      printf("No selection\n");
-      return;
-   }
 
-     int itag=item->type();
-     ADM_assert(itag>=ACTIVE_FILTER_BASE);
-     itag-=ACTIVE_FILTER_BASE;
-     /* Filter 0 is the decoder ...*/
-      ADM_info("Rank : %d\n",itag);
-      //ADM_assert(itag);
-
-        AVDMGenericVideoStream *replace;
-        CONFcouple *conf;
-        conf = videofilters[itag].conf;
-        if (videofilters[itag].tag == VF_PARTIAL_FILTER)	// cannot recurse
-        {
-            GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","The filter is already partial"), NULL);
-            return;
-        }
-
-        replace =new ADMVideoPartial (videofilters[itag - 1].
-                                      filter,
-                                      videofilters[itag].tag,
-                                      conf);
-
-        if(replace->configure (videofilters[itag - 1].filter))
-        {
-            delete videofilters[itag].filter;
-            if (conf) delete conf;
-            videofilters[itag].filter = replace;
-            replace->getCoupledConf (&conf);
-            videofilters[itag].conf = conf;
-            videofilters[itag].tag = VF_PARTIAL_FILTER;
-            getFirstVideoFilter ();
-            buildActiveFilterList ();
-			setSelected(itag);
-        }
-        else delete replace;
-#endif
-}
 /**
         \fn setup
         \brief Prepare
@@ -457,35 +407,20 @@ void filtermainWindow::setupFilters(void)
 void filtermainWindow::buildActiveFilterList(void)
 {
 
-	activeList->clear();
+        activeList->clear();
     int nb=ADM_vf_getSize();
     printf("%d active filters\n",nb);
-	for (uint32_t i = 0; i < nb; i++)
-	{
+        for (uint32_t i = 0; i < nb; i++)
+        {
             uint32_t                instanceTag=ADM_vf_getTag(i);
             ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
             const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
             const char *conf=instance->getConfiguration();
             printf("%d %s\n",i,name);
-#if 0
-		const char *name = instance->;
-		const char *conf = videofilters[i].filter->printConf ();
-		int namelen = strlen (name);
-
-		while (*conf == ' ')
-			++conf;
-
-		if (strncasecmp (name, conf, namelen) == 0)
-		{
-			conf += namelen;
-			while (*conf == ' ' || *conf == ':')
-				++conf;
-		}
-#endif
-		QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
-		QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
-		activeList->addItem(item);
-	}
+            QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
+            QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
+            activeList->addItem(item);
+        }
 
 }
   /**
@@ -515,24 +450,18 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushLoad, SIGNAL(clicked(bool)), this, SLOT(loadFilters(bool)));
     connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
-#if 0
-    connect(ui.pushButtonDVD, SIGNAL(clicked(bool)), this, SLOT(DVD(bool)));
-    connect(ui.pushButtonVCD, SIGNAL(clicked(bool)), this, SLOT(VCD(bool)));
-    connect(ui.pushButtonSVCD, SIGNAL(clicked(bool)), this, SLOT(SVCD(bool)));
-    connect(ui.pushButtonHalfDVD, SIGNAL(clicked(bool)), this, SLOT(halfD1(bool)));
-#endif
-	connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
+    connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-	activeList->setItemDelegate(new FilterItemDelegate(activeList));
-	availableList->setItemDelegate(new FilterItemDelegate(availableList));
+    activeList->setItemDelegate(new FilterItemDelegate(activeList));
+    availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
     buildActiveFilterList();
-	setSelected(nb_active_filter - 1);
+        setSelected(nb_active_filter - 1);
 
-	previewDialog = NULL;
-	previewDialogX = INT_MIN;
-	previewDialogY = INT_MIN;
+        previewDialog = NULL;
+        previewDialogX = INT_MIN;
+        previewDialogY = INT_MIN;
     //____________________
     //  Context Menu
     //____________________
@@ -541,7 +470,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->addAction(add );
     connect(add,SIGNAL(activated()),this,SLOT(add()));
 
-	//previewFrameIndex = curframe;
+        //previewFrameIndex = curframe;
     QAction *remove = new  QAction(QString("Remove"),this);
     QAction *configure = new  QAction(QString("Configure"),this);
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -573,55 +502,15 @@ static void updateFilterList (filtermainWindow *dialog);
 */
 int GUI_handleVFilter(void)
 {
-	filtermainWindow dialog(qtLastRegisteredDialog());
-	qtRegisterDialog(&dialog);
+        filtermainWindow dialog(qtLastRegisteredDialog());
+        qtRegisterDialog(&dialog);
 
-	dialog.exec();
+        dialog.exec();
 
-	qtUnregisterDialog(&dialog);
+        qtUnregisterDialog(&dialog);
 
-	return 0;
+        return 0;
 }
-/**
-    \fn partialCb
-    \brief Partial callback to configure the swallowed filter
-
-*/
-static void partialCb(void *cookie);
-void partialCb(void *cookie)
-{
-#if 0
-  void **params=(void **)cookie;
-  AVDMGenericVideoStream *son=(AVDMGenericVideoStream *)params[0];
-  AVDMGenericVideoStream *previous=(AVDMGenericVideoStream *)params[1];
-  son->configure(previous);
-#endif
-}
-/**
-    \fn DIA_getPartial
-    \brief Partial dialog
-
-*/
-#if 0
-uint8_t DIA_getPartial(PARTIAL_CONFIG *param,AVDMGenericVideoStream *son,AVDMGenericVideoStream *previous)
-{
-
-#define PX(x) &(param->x)
-  void *params[2]={son,previous};
-         uint32_t fmax=previous->getInfo()->nb_frames;
-         if(fmax) fmax--;
-
-         diaElemUInteger  start(PX(_start),QT_TRANSLATE_NOOP("adm","Partial Start Frame:"),0,fmax);
-         diaElemUInteger  end(PX(_end),QT_TRANSLATE_NOOP("adm","Partial End Frame:"),0,fmax);
-         diaElemButton    button(QT_TRANSLATE_NOOP("adm","Configure child"), partialCb,params);
-
-         diaElem *tabs[]={&start,&end,&button};
-        return diaFactoryRun(QT_TRANSLATE_NOOP("adm","Partial Video Filter"),3,tabs);
-
-
-}
-#endif
-
 /**
     \fn    Add
     \brief Right click on an available filer
@@ -657,7 +546,7 @@ void filtermainWindow::loadFilters( bool b)
     printf("Load filters\n");
 
     char name[1024];
-    
+
     if(!FileSel_SelectRead(QT_TR_NOOP("Load video filters.."),name,1023,NULL))
         return;
     call_scriptEngine(name);
@@ -672,13 +561,13 @@ void filtermainWindow::saveFilters( bool b)
 {
     printf("save filters\n");
     char name[1024];
-    
+
     if(!FileSel_SelectWrite(QT_TR_NOOP("Save video filters.."),name,1023,NULL))
         return;
     printf("save filters, part 2\n");
     IScriptEngine *engine=getPythonScriptEngine();
     IScriptWriter *writer = engine->createScriptWriter();
-    
+
     ADM_ScriptGenerator generator(video_body, writer);
     std::stringstream stream(std::stringstream::in | std::stringstream::out);
     std::string fileName = std::string(name);
