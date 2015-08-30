@@ -7,7 +7,7 @@ ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  filter.qrc)
 SET(${ADM_LIB}_SRCS
 	filter_none.cpp  
         Q_mainfilter.cpp 
-        Q_partialize.cpp 
+#        Q_partialize.cpp 
         Q_seekablePreview.cpp 
         ${${ADM_LIB}_header}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource})
 

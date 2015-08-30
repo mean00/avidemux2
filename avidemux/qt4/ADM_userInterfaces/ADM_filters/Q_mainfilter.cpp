@@ -589,5 +589,13 @@ void filtermainWindow::saveFilters( bool b)
     ADM_fclose(file);
 }
 
+/**
+ * // Stubb
+ * @param b
+ */
+void filtermainWindow::partial(bool b)
+{
+    
+}
 //EOF
 
