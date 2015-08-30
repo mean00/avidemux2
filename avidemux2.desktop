@@ -1,7 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=avidemux2
-Comment=Video Editor
+GenericName=Video Editor
+Comment=Multiplatform video editor
 Exec=avidemux2_gtk
 MimeType=video/mpeg;video/quicktime;video/x-msvideo;video/x-anim;audio/x-mp3;audio/x-mp2;
 Icon=avidemux
