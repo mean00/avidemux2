@@ -103,45 +103,45 @@ static bool sortVideoFiltersByName(void)
  */
 static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask)
 {
-        ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
-        admVideoFilterInfo          *info=NULL;
-     
+    ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
+    admVideoFilterInfo          *info=NULL;
 
-	if (!plugin->isAvailable())
-	{
-		printf("[ADM_vf_plugin] Unable to load %s\n", ADM_GetFileName(file));
-		goto Err_ad;
-	}
 
-	// Check API version
-	if (plugin->getApiVersion() != VF_API_VERSION)
-	{
-		printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
-			ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
-		goto Err_ad;
-	}
-        if(!(plugin->supportedUI() & UI_GetCurrentUI()))
-        {  // FIXME
-            ADM_info("==> wrong UI\n");
+    if (!plugin->isAvailable())
+    {
+            printf("[ADM_vf_plugin] Unable to load %s\n", ADM_GetFileName(file));
             goto Err_ad;
+    }
 
-        }
+    // Check API version
+    if (plugin->getApiVersion() != VF_API_VERSION)
+    {
+            printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
+                    ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
+            goto Err_ad;
+    }
+    if(!(plugin->supportedUI() & UI_GetCurrentUI()))
+    {  // FIXME
+        ADM_info("==> wrong UI\n");
+        goto Err_ad;
+
+    }
+    {
+        int needed=plugin->neededFeatures();
+        if(needed)
         {
-            int needed=plugin->neededFeatures();
-            if(needed)
+            if(  ((needed & featureMask)!=needed))
             {
-                if(  ((needed & featureMask)!=needed))
-                {
-                    ADM_info("[ADM_vf_plugin] %s needs features that are not active\n",plugin->getDisplayName());
-                    goto Err_ad;
-                }
+                ADM_info("[ADM_vf_plugin] %s needs features that are not active\n",plugin->getDisplayName());
+                goto Err_ad;
             }
         }
-	// Get infos
-	uint32_t major, minor, patch;
+    }
+    // Get infos
+    uint32_t major, minor, patch;
 
-	plugin->getFilterVersion(&major, &minor, &patch);
-	plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(file));
+    plugin->getFilterVersion(&major, &minor, &patch);
+    plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(file));
 
     info=&(plugin->info);
 
@@ -151,7 +151,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     info->displayName=plugin->getDisplayName();
     info->category=plugin->getCategory();
 
-	printf("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n",
+    printf("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n",
 		major, minor, patch, info->internalName, info->displayName);
     if(info->category>=VF_MAX)
     {
@@ -164,11 +164,11 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
         ADM_videoFilterPluginsList[info->category].append(plugin);
     }
 
-	return 1;
+    return 1;
 
 Err_ad:
-	delete plugin;
-	return 0;
+    delete plugin;
+    return 0;
 }
 /**
     \fn ADM_vf_getNbFilters

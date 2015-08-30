@@ -63,11 +63,10 @@ bool ADM_vf_configureFilterAtIndex(int index)
     ADM_coreVideoFilter *instance=e->instance;
     ADM_assert(instance);
 
-        if(instance->configure())
-        {
-            return ADM_vf_recreateChain();
-        }
-
+    if(instance->configure())
+    {
+        return ADM_vf_recreateChain();
+    }
     return true;
 }
 
