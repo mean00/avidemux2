@@ -127,13 +127,13 @@ bool x265Encoder::setup(void)
                         {
                              param.rc.bStatWrite=1;
                              param.rc.bStatRead=0;
-                             param.rc.statFileName=logFile;
+                             param.rc.statFileName=strdup(logFile);
  
                         }else
                         {
                              param.rc.bStatWrite=0;
                              param.rc.bStatRead=1;
-                             param.rc.statFileName=logFile;
+                             param.rc.statFileName=strdup(logFile);
                              if(!ADM_fileExist(logFile))
                              {
                                    ADM_error("Logfile %s does not exist \n",logFile);
