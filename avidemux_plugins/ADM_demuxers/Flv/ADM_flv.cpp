@@ -166,6 +166,9 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
             aprintf("nesting = %d, at %d, : ,end=%d",nesting,ftello(_fd),endPos);
             switch(type)
             {
+                case AMF_DATA_TYPE_NULL:
+                                fseek(_fd,endPos,SEEK_SET);
+                                break;
                 case AMF_DATA_TYPE_OBJECT_END:
                                 Nest(); printf("** Object end**.\n");
                                 if(ftello(_fd)>=endPos-4)
