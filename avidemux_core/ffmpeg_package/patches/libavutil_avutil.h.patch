@@ -1,6 +1,8 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavutil/avutil.h	2012-05-29 18:18:34 +1000
-+++ libavutil/avutil.h	2012-05-29 18:18:34 +1000
-@@ -107,6 +107,13 @@
+diff --git libavutil/avutil.h libavutil/avutil.h
+index e6ebb6c..4698ee8 100644
+--- libavutil/avutil.h
++++ libavutil/avutil.h
+@@ -159,6 +159,13 @@
   * @}
   */
  
@@ -13,4 +15,4 @@
 +
  
  /**
-  * @defgroup preproc_misc Preprocessor String Macros
+  * @addtogroup lavu_ver

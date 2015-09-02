@@ -1,6 +1,8 @@
---- libavformat/matroskaenc.c.org	2015-03-23 08:03:45.989896697 +0100
-+++ libavformat/matroskaenc.c	2015-03-23 08:05:47.433893438 +0100
-@@ -493,6 +493,8 @@
+diff --git libavformat/matroskaenc.c libavformat/matroskaenc.c
+index 3b525ad..cd4f628 100644
+--- libavformat/matroskaenc.c
++++ libavformat/matroskaenc.c
+@@ -500,6 +500,8 @@ static int64_t mkv_write_cues(AVFormatContext *s, mkv_cues *cues, mkv_track *tra
  
  static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecContext *codec)
  {
@@ -9,7 +11,7 @@
      const uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -517,6 +519,29 @@
+@@ -524,6 +526,29 @@ static int put_xiph_codecpriv(AVFormatContext *s, AVIOContext *pb, AVCodecContex
          avio_write(pb, header_start[j], header_len[j]);
  
      return 0;
@@ -39,7 +41,7 @@
  }
  
  static int put_wv_codecpriv(AVIOContext *pb, AVCodecContext *codec)
-@@ -837,6 +862,23 @@
+@@ -848,6 +873,23 @@ static int mkv_write_track(AVFormatContext *s, MatroskaMuxContext *mkv,
      put_ebml_uint (pb, MATROSKA_ID_TRACKUID,
                     mkv->is_dash ? mkv->dash_track_number : i + 1);
      put_ebml_uint (pb, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)

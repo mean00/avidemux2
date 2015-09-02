@@ -1,8 +1,10 @@
---- libavcodec/h264_parser.c.orig	2014-12-04 19:30:32.778317809 +0100
-+++ libavcodec/h264_parser.c	2014-12-04 19:23:17.358322228 +0100
-@@ -34,6 +34,88 @@
- #include "internal.h"
- #include "mpegutils.h"
+diff --git libavcodec/h264_parser.c libavcodec/h264_parser.c
+index 19d1aa3..a10e636 100644
+--- libavcodec/h264_parser.c
++++ libavcodec/h264_parser.c
+@@ -40,6 +40,88 @@ typedef struct H264ParseContext {
+     int got_first;
+ } H264ParseContext;
  
 +#include "ff_spsinfo.h" // MEANX
 +#include <assert.h>
@@ -87,5 +89,5 @@
 +// /MEANX
 +
  
- static int h264_find_frame_end(H264Context *h, const uint8_t *buf,
+ static int h264_find_frame_end(H264ParseContext *p, const uint8_t *buf,
                                 int buf_size)

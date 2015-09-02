@@ -1,9 +1,11 @@
---- /e/dev/adm_2.6_dev/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/vdpau.h	2014-11-01 08:52:42 -0400
-+++ libavcodec/vdpau.h	2014-11-21 02:24:01 -0500
-@@ -191,6 +191,7 @@
-
+diff --git libavcodec/vdpau.h libavcodec/vdpau.h
+index a42ca01..4b70be3 100644
+--- libavcodec/vdpau.h
++++ libavcodec/vdpau.h
+@@ -231,6 +231,7 @@ struct vdpau_render_state {
+ 
      int state; ///< Holds FF_VDPAU_STATE_* values.
-
+ 
 +    int refCount; /// Used by how many client
  #if AV_HAVE_INCOMPATIBLE_LIBAV_ABI
      /** picture parameter information for all supported codecs */

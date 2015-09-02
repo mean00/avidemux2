@@ -1,6 +1,8 @@
---- libavcodec/nvenc.c.old	2015-04-06 08:32:55.673666059 +0200
-+++ libavcodec/nvenc.c	2015-04-06 08:56:50.201627562 +0200
-@@ -752,19 +752,19 @@
+diff --git libavcodec/nvenc.c libavcodec/nvenc.c
+index 87ce6f3..83f2ea1 100644
+--- libavcodec/nvenc.c
++++ libavcodec/nvenc.c
+@@ -930,19 +930,19 @@ static av_cold int nvenc_encode_init(AVCodecContext *avctx)
  
          switch (avctx->pix_fmt) {
          case AV_PIX_FMT_YUV420P:
@@ -26,7 +28,7 @@
              res = AVERROR(EINVAL);
              goto error;
          }
-@@ -975,6 +975,28 @@
+@@ -1168,6 +1168,28 @@ error:
  
      return res;
  }
@@ -55,7 +57,7 @@
  
  static int nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
      const AVFrame *frame, int *got_packet)
-@@ -1012,62 +1034,34 @@
+@@ -1205,62 +1227,34 @@ static int nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
          if (nv_status != NV_ENC_SUCCESS) {
              av_log(avctx, AV_LOG_ERROR, "Failed locking nvenc input buffer\n");
              return 0;
@@ -141,9 +143,9 @@
          if (nv_status != NV_ENC_SUCCESS) {
              av_log(avctx, AV_LOG_FATAL, "Failed unlocking input buffer!\n");
              return AVERROR_EXTERNAL;
-@@ -1177,6 +1171,7 @@
+@@ -1377,6 +1371,7 @@ static int nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
  
- static enum AVPixelFormat pix_fmts_nvenc[] = {
+ static const enum AVPixelFormat pix_fmts_nvenc[] = {
      AV_PIX_FMT_NV12,
 +    AV_PIX_FMT_YUV420P,
      AV_PIX_FMT_NONE

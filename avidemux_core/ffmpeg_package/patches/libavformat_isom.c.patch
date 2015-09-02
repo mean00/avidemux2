@@ -1,6 +1,8 @@
---- libavformat/isom.c.org	2012-10-08 09:20:59.857960294 +0200
-+++ libavformat/isom.c	2012-10-08 09:20:28.589959891 +0200
-@@ -265,8 +265,11 @@
+diff --git libavformat/isom.c libavformat/isom.c
+index c99f2dc..1663332 100644
+--- libavformat/isom.c
++++ libavformat/isom.c
+@@ -281,8 +281,11 @@ const AVCodecTag ff_codec_movaudio_tags[] = {
      { AV_CODEC_ID_MACE3,           MKTAG('M', 'A', 'C', '3') },
      { AV_CODEC_ID_MACE6,           MKTAG('M', 'A', 'C', '6') },
      { AV_CODEC_ID_MP1,             MKTAG('.', 'm', 'p', '1') },

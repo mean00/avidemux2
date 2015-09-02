@@ -1,6 +1,8 @@
---- libavcodec/libavcodec.v.orig	2014-11-01 21:47:34.000000000 -0400
-+++ libavcodec/libavcodec.v		2014-11-28 03:28:34.500032881 -0500
-@@ -3,5 +3,10 @@
+diff --git libavcodec/libavcodec.v libavcodec/libavcodec.v
+index c923cd3..84223d8 100644
+--- libavcodec/libavcodec.v
++++ libavcodec/libavcodec.v
+@@ -3,5 +3,10 @@ LIBAVCODEC_$MAJOR {
                  #deprecated, remove after next bump
                  audio_resample;
                  audio_resample_close;

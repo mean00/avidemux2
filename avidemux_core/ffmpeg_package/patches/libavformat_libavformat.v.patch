@@ -1,6 +1,8 @@
---- libavformat/libavformat.v.orig	2014-11-01 21:47:35.000000000 -0400
-+++ libavformat/libavformat.v		2014-11-28 03:51:11.827512157 -0500
-@@ -16,5 +16,7 @@
+diff --git libavformat/libavformat.v libavformat/libavformat.v
+index e90aef7..f144689 100644
+--- libavformat/libavformat.v
++++ libavformat/libavformat.v
+@@ -16,5 +16,7 @@ LIBAVFORMAT_$MAJOR {
                  ffurl_write;
                  #those are deprecated, remove on next bump
                  url_feof;

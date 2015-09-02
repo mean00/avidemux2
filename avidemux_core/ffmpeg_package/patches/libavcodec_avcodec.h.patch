@@ -1,6 +1,8 @@
---- libavcodec/avcodec.h.orig	2014-11-01 13:39:55.000000000 -0400
-+++ libavcodec/avcodec.h	2014-11-22 18:19:03.126342676 -0500
-@@ -756,6 +756,10 @@
+diff --git libavcodec/avcodec.h libavcodec/avcodec.h
+index 4aeb57a..076721a 100644
+--- libavcodec/avcodec.h
++++ libavcodec/avcodec.h
+@@ -768,6 +768,10 @@ typedef struct RcOverride{
  #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format. DEPRECATED!!!!
  #define CODEC_FLAG2_IGNORE_CROP   0x00010000 ///< Discard cropping information from SPS.
  
@@ -10,8 +12,8 @@
 +
  #define CODEC_FLAG2_CHUNKS        0x00008000 ///< Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries.
  #define CODEC_FLAG2_SHOW_ALL      0x00400000 ///< Show all frames before the first keyframe
- 
-@@ -2245,6 +2249,7 @@
+ #define CODEC_FLAG2_EXPORT_MVS    0x10000000 ///< Export motion vectors through frame side data
+@@ -2302,6 +2306,7 @@ typedef struct AVCodecContext {
       * - decoding: unused
       */
      int rc_buffer_size;
@@ -19,8 +21,8 @@
  
      /**
       * ratecontrol override, see RcOverride
-@@ -2267,6 +2272,7 @@
-      * - decoding: unused
+@@ -2325,6 +2330,7 @@ typedef struct AVCodecContext {
+      * - decoding: Set by libavcodec.
       */
      int rc_max_rate;
 +    int rc_max_rate_header; /*< That one is set in the header MEANX */

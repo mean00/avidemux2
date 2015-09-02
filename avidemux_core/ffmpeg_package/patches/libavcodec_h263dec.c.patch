@@ -1,6 +1,8 @@
---- /d/admDev/adm_all_dev/avidemux_2.6_branch_mean/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/h263dec.c	2012-12-06 12:26:23 +1100
-+++ libavcodec/h263dec.c	2012-12-06 12:26:23 +1100
-@@ -125,6 +125,25 @@
+diff --git libavcodec/h263dec.c libavcodec/h263dec.c
+index 15f073a..cf4a100 100644
+--- libavcodec/h263dec.c
++++ libavcodec/h263dec.c
+@@ -145,6 +145,25 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
  
      return 0;
  }

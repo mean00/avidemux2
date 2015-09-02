@@ -1,5 +1,5 @@
---- libavcodec/mpeg12enc.c.orig		2014-11-01 21:47:34.000000000 -0400
-+++ libavcodec/mpeg12enc.c		2014-11-28 01:57:48.057727418 -0500
+--- libavcodec/mpeg12enc.org	2015-09-02 10:16:30.063910853 +0200
++++ libavcodec/mpeg12enc.c	2015-09-02 10:16:13.036243005 +0200
 @@ -254,7 +254,7 @@
  
          put_sbits(&s->pb, 12, s->width  & 0xFFF);
@@ -31,7 +31,7 @@
 +             }
 + // /MEANX
 +// MEANX : Pulldown
-+            if((s->flags2 & CODEC_FLAG2_32_PULLDOWN) && (s->codec_id == CODEC_ID_MPEG2VIDEO))
++            if((s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN) && (s->codec_id == CODEC_ID_MPEG2VIDEO))
 +             {           
 +                 put_bits(&s->pb, 4,4);
 +             }
@@ -63,7 +63,7 @@
 -            put_bits(&s->pb, 1, s->progressive_sequence);
 +   // MEANX pulldown put_bits(&s->pb, 1, s->progressive_sequence);
 +  // MEANX Pulldown
-+ if(s->flags2 & CODEC_FLAG2_32_PULLDOWN) //MEANX
++ if(s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN) //MEANX
 +                        put_bits(&s->pb, 1, 0);
 +                else
 +                        put_bits(&s->pb, 1, s->progressive_sequence);
@@ -90,7 +90,7 @@
      s->frame_pred_frame_dct = 1;
      if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
 +// MEANX
-+        if(s->flags2 & CODEC_FLAG2_32_PULLDOWN)
++        if(s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN)
 +        {
 +        
 +                switch((s->picture_number - 

@@ -1,6 +1,8 @@
---- /d/dev/adm_2.6_vc/avidemux_core/ffmpeg_package/patches/ffmpeg/libavcodec/golomb.h	2012-08-07 11:32:06 +1000
-+++ libavcodec/golomb.h	2012-08-07 11:32:06 +1000
-@@ -36,9 +36,16 @@
+diff --git libavcodec/golomb.h libavcodec/golomb.h
+index d30bb6b..c19cee9 100644
+--- libavcodec/golomb.h
++++ libavcodec/golomb.h
+@@ -37,9 +37,16 @@
  
  #define INVALID_VLC           0x80000000
  
