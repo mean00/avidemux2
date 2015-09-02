@@ -166,7 +166,7 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
 */
 void update_lut(Eq2Settings *settings,eq2 *_param)
 {
-     memset(settings,0,sizeof(settings));
+     memset(settings,0,sizeof(*settings));
 
     settings->param[0].lut_clean=0;
     settings->param[1].lut_clean=0;

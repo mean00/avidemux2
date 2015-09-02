@@ -241,6 +241,7 @@ bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
   ui.tabAnalysis->setEnabled(advancedEnabled);
   ui.tabQuantiser->setEnabled(advancedEnabled);
   ui.tabAdvanced1->setEnabled(advancedEnabled);
+  return true;
 }
 
 /**

@@ -242,6 +242,7 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
   ui.tabFrame->setEnabled(advancedEnabled);
   ui.tabAnalysis->setEnabled(advancedEnabled);
   ui.tabQuantiser->setEnabled(advancedEnabled);
+  return true;
 }
 
 /**

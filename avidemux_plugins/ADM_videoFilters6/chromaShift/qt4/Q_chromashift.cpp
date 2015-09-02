@@ -95,7 +95,7 @@ uint8_t flyChromaShift::download(void)
        Ui_chromashiftDialog *w=(Ui_chromashiftDialog *)_cookie;
        param.u= MYSPIN(U)->value();
        param.v= MYSPIN(V)->value();
-       
+       return true;
 }
 
 /**

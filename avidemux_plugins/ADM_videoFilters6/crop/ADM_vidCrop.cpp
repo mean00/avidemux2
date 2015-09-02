@@ -186,7 +186,8 @@ bool CropFilter::configure(void)
 {
 		uint8_t r;
 		uint32_t w,h;
-    	if(r = (DIA_getCropParams("Crop Settings",&configuration,previousFilter )))
+    	r = DIA_getCropParams("Crop Settings",&configuration,previousFilter );
+        if(r)
     	{
 			w=configuration.left+configuration.right;
 			h=configuration.top+configuration.bottom;
@@ -194,7 +195,7 @@ bool CropFilter::configure(void)
 			ADM_assert(h<previousFilter->getInfo()->height);
 			info.width=previousFilter->getInfo()->width-w;
 			info.height=previousFilter->getInfo()->height-h;
-		}
-		return r;
+        }
+        return r;
 }
 // EOF

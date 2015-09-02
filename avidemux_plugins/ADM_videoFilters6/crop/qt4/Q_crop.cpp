@@ -145,6 +145,7 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
                                 }
                         if(reject)
                                 upload();
+                        return true;
 }
 
 /**

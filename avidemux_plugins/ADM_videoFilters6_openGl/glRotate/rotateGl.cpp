@@ -245,6 +245,7 @@ bool rotateGl::genQuad(void)
 
   glEnd();
   glEndList();
+  return true;
 }
 /**
     \fn render

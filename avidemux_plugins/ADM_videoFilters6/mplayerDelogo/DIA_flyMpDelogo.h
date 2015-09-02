@@ -41,6 +41,7 @@ class flyMpDelogo : public FLY_DIALOG_TYPE
    bool         setPreview(bool onoff)
                 {
                     preview=onoff;
+                    return true;
                 }
 };
 // EOF

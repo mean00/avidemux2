@@ -91,6 +91,7 @@ uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
                 in+=4*w;
   
         }
+        return true;
 
 }
 
