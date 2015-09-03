@@ -3,13 +3,13 @@ SET(ADM_editor_SRCS
 ADM_edit.cpp
 ADM_edRender.cpp
 ADM_edRenderInternal.cpp
-ADM_edMarker.cpp
 ADM_edStub.cpp
-ADM_edPtsDts.cpp
 ADM_edVideoCopy.cpp
 ADM_segment.cpp
-ADM_edCheckForInvalidPts.cpp
 ADM_edSearch.cpp
+utils/ADM_edCheckForInvalidPts.cpp
+utils/ADM_edMarker.cpp
+utils/ADM_edPtsDts.cpp
 utils/ADM_edIdentify.cpp
 utils/ADM_editIface.cpp
 utils/ADM_edScriptGenerator.cpp
