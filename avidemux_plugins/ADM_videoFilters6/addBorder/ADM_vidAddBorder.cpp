@@ -28,7 +28,7 @@
 */
 const char *addBorders::getConfiguration(void)
 {
-    static char conf[80];
+    static char conf[250];
     conf[0]=0;
     snprintf(conf,80,"Add Border : Left:%"PRIu32" Right:%"PRIu32" Top:%"PRIu32" Bottom:%"PRIu32" => %"PRIu32"x%"PRIu32"\n",
                 param.left,param.right,param.top,param.bottom,
@@ -40,7 +40,7 @@ const char *addBorders::getConfiguration(void)
 */
 addBorders::addBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
-	 if(!setup || !ADM_paramLoad(setup,addBorder_param,&param))
+    if(!setup || !ADM_paramLoad(setup,addBorder_param,&param))
     {
         // Default value
         param.left=0;
@@ -49,7 +49,7 @@ addBorders::addBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVid
         param.bottom=0;
 
     }
-	info.width=in->getInfo()->width+param.left+param.right;
+    info.width=in->getInfo()->width+param.left+param.right;
     info.height=in->getInfo()->height+param.top+param.bottom;
 
 }
