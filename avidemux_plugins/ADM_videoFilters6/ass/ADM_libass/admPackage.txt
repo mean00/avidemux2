@@ -1,5 +1,5 @@
 Name    : libass
 URL     : https://github.com/libass/libass.git
 License : GPL >=2
-Version : commit 23de9995103c16ceceba19cae87e328be12fa8e4 / 3 August
+Version : commit 23de9995103c16ceceba19cae87e328be12fa8e4 / 3 August , slightly more recent than 0.12.3
 
