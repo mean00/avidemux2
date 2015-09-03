@@ -476,6 +476,7 @@ bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint
         }
     }
     ADM_warning("Cannot find segment matching time %"PRIu64"ms \n",frameTime/1000);
+    dump();
     return false;
 }
 bool        ADM_EditorSegment::convertSegTimeToLinear(  uint32_t seg,uint64_t segTime, uint64_t *frameTime)
