@@ -1,12 +1,5 @@
 include_directories(../include)
 SET(ADM_editor_SRCS
-ADM_edActiveAudioTracks.cpp
-ADM_edCache.cpp
-ADM_edEditableAudioTrack.cpp
-ADM_edIdentify.cpp
-ADM_edPoolOfAudioTracks.cpp
-ADM_edSearch.cpp
-ADM_edFrameType.cpp
 ADM_edit.cpp
 ADM_edRender.cpp
 ADM_edRenderInternal.cpp
@@ -15,14 +8,21 @@ ADM_edStub.cpp
 ADM_edPtsDts.cpp
 ADM_edVideoCopy.cpp
 ADM_segment.cpp
-ADM_edAudioPacket.cpp
-ADM_edAudioPcm.cpp
-ADM_edAudioTrackFromVideo.cpp
-ADM_edAudioTrack.cpp
-ADM_editIface.cpp
-ADM_edAudioTrackExternal.cpp
-ADM_edScriptGenerator.cpp
 ADM_edCheckForInvalidPts.cpp
+ADM_edSearch.cpp
+utils/ADM_edIdentify.cpp
+utils/ADM_editIface.cpp
+utils/ADM_edScriptGenerator.cpp
+utils/ADM_edFrameType.cpp
+utils/ADM_edCache.cpp
+audio/ADM_edEditableAudioTrack.cpp
+audio/ADM_edPoolOfAudioTracks.cpp
+audio/ADM_edActiveAudioTracks.cpp
+audio/ADM_edAudioTrackExternal.cpp
+audio/ADM_edAudioPacket.cpp
+audio/ADM_edAudioPcm.cpp
+audio/ADM_edAudioTrackFromVideo.cpp
+audio/ADM_edAudioTrack.cpp
 )
 
 ADD_LIBRARY(ADM_editor6 STATIC ${ADM_editor_SRCS})
