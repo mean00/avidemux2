@@ -20,9 +20,12 @@
 #include FT_OUTLINE_H
 #include FT_BBOX_H
 #include <math.h>
+#include <stdbool.h>
+#include <limits.h>
 
 #include "ass_utils.h"
 #include "ass_drawing.h"
+#include "ass_font.h"
 
 #define CURVE_ACCURACY 64.0
 #define GLYPH_INITIAL_POINTS 100
@@ -31,41 +34,42 @@
 /*
  * \brief Add a single point to a contour.
  */
-static inline void drawing_add_point(ASS_Drawing *drawing,
-                                     FT_Vector *point)
+static inline bool drawing_add_point(ASS_Drawing *drawing,
+                                     const FT_Vector *point, char tags)
 {
-    FT_Outline *ol = &drawing->outline;
-
-    if (ol->n_points >= drawing->max_points) {
-        drawing->max_points *= 2;
-        ol->points = realloc(ol->points, sizeof(FT_Vector) *
-                             drawing->max_points);
-        ol->tags = realloc(ol->tags, drawing->max_points);
+    ASS_Outline *ol = &drawing->outline;
+    if (ol->n_points >= ol->max_points) {
+        size_t new_size = 2 * ol->max_points;
+        if (!ASS_REALLOC_ARRAY(ol->points, new_size))
+            return false;
+        if (!ASS_REALLOC_ARRAY(ol->tags, new_size))
+            return false;
+        ol->max_points = new_size;
     }
 
     ol->points[ol->n_points].x = point->x;
     ol->points[ol->n_points].y = point->y;
-    ol->tags[ol->n_points] = 1;
+    ol->tags[ol->n_points] = tags;
     ol->n_points++;
+    return true;
 }
 
 /*
  * \brief Close a contour and check outline size overflow.
  */
-static inline void drawing_close_shape(ASS_Drawing *drawing)
+static inline bool drawing_close_shape(ASS_Drawing *drawing)
 {
-    FT_Outline *ol = &drawing->outline;
-
-    if (ol->n_contours >= drawing->max_contours) {
-        drawing->max_contours *= 2;
-        ol->contours = realloc(ol->contours, sizeof(short) *
-                               drawing->max_contours);
+    ASS_Outline *ol = &drawing->outline;
+    if (ol->n_contours >= ol->max_contours) {
+        size_t new_size = 2 * ol->max_contours;
+        if (!ASS_REALLOC_ARRAY(ol->contours, new_size))
+            return false;
+        ol->max_contours = new_size;
     }
 
-    if (ol->n_points) {
-        ol->contours[ol->n_contours] = ol->n_points - 1;
-        ol->n_contours++;
-    }
+    ol->contours[ol->n_contours] = ol->n_points - 1;
+    ol->n_contours++;
+    return true;
 }
 
 /*
@@ -74,10 +78,8 @@ static inline void drawing_close_shape(ASS_Drawing *drawing)
 static void drawing_prepare(ASS_Drawing *drawing)
 {
     // Scaling parameters
-    drawing->point_scale_x = drawing->scale_x *
-                             64.0 / (1 << (drawing->scale - 1));
-    drawing->point_scale_y = drawing->scale_y *
-                             64.0 / (1 << (drawing->scale - 1));
+    drawing->point_scale_x = drawing->scale_x / (1 << (drawing->scale - 1));
+    drawing->point_scale_y = drawing->scale_y / (1 << (drawing->scale - 1));
 }
 
 /*
@@ -86,13 +88,10 @@ static void drawing_prepare(ASS_Drawing *drawing)
  */
 static void drawing_finish(ASS_Drawing *drawing, int raw_mode)
 {
-    int i, offset;
+    int i;
     double pbo;
     FT_BBox bbox = drawing->cbox;
-    FT_Outline *ol = &drawing->outline;
-
-    // Close the last contour
-    drawing_close_shape(drawing);
+    ASS_Outline *ol = &drawing->outline;
 
     if (drawing->library)
         ass_msg(drawing->library, MSGL_V,
@@ -104,15 +103,13 @@ static void drawing_finish(ASS_Drawing *drawing, int raw_mode)
 
     drawing->advance.x = bbox.xMax - bbox.xMin;
 
-    pbo = drawing->pbo / (64.0 / (1 << (drawing->scale - 1)));
-    drawing->desc = double_to_d6(-pbo * drawing->scale_y);
-    drawing->asc = bbox.yMax - bbox.yMin + drawing->desc;
+    pbo = drawing->pbo / (1 << (drawing->scale - 1));
+    drawing->desc = double_to_d6(pbo * drawing->scale_y);
+    drawing->asc = bbox.yMax - bbox.yMin - drawing->desc;
 
     // Place it onto the baseline
-    offset = (bbox.yMax - bbox.yMin) + double_to_d6(-pbo *
-                                                    drawing->scale_y);
     for (i = 0; i < ol->n_points; i++)
-        ol->points[i].y += offset;
+        ol->points[i].y += drawing->asc;
 }
 
 /*
@@ -136,12 +133,14 @@ static int token_check_values(ASS_DrawingToken *token, int i, int type)
 static ASS_DrawingToken *drawing_tokenize(char *str)
 {
     char *p = str;
-    int i, val, type = -1, is_set = 0;
+    int i, type = -1, is_set = 0;
+    double val;
     FT_Vector point = {0, 0};
 
     ASS_DrawingToken *root = NULL, *tail = NULL, *spline_start = NULL;
 
-    while (*p) {
+    while (p && *p) {
+        int got_coord = 0;
         if (*p == 'c' && spline_start) {
             // Close b-splines: add the first three points of the b-spline
             // back to the end
@@ -156,13 +155,15 @@ static ASS_DrawingToken *drawing_tokenize(char *str)
                 }
                 spline_start = NULL;
             }
-        } else if (!is_set && mystrtoi(&p, &val)) {
-            point.x = val;
+        } else if (!is_set && mystrtod(&p, &val)) {
+            point.x = double_to_d6(val);
             is_set = 1;
+            got_coord = 1;
             p--;
-        } else if (is_set == 1 && mystrtoi(&p, &val)) {
-            point.y = val;
+        } else if (is_set == 1 && mystrtod(&p, &val)) {
+            point.y = double_to_d6(val);
             is_set = 2;
+            got_coord = 1;
             p--;
         } else if (*p == 'm')
             type = TOKEN_MOVE;
@@ -179,6 +180,10 @@ static ASS_DrawingToken *drawing_tokenize(char *str)
         // We're simply ignoring TOKEN_EXTEND_B_SPLINE here.
         // This is not harmful at all, since it can be ommitted with
         // similar result (the spline is extended anyway).
+
+        // Ignore the odd extra value, it makes no sense.
+        if (!got_coord)
+            is_set = 0;
 
         if (type != -1 && is_set == 2) {
             if (root) {
@@ -241,92 +246,39 @@ static inline void translate_point(ASS_Drawing *drawing, FT_Vector *point)
  * This curve evaluator is also used in VSFilter (RTS.cpp); it's a simple
  * implementation of the De Casteljau algorithm.
  */
-static void drawing_evaluate_curve(ASS_Drawing *drawing,
+static bool drawing_evaluate_curve(ASS_Drawing *drawing,
                                    ASS_DrawingToken *token, char spline,
                                    int started)
 {
-    double cx3, cx2, cx1, cx0, cy3, cy2, cy1, cy0;
-    double t, h, max_accel, max_accel1, max_accel2;
-    FT_Vector cur = {0, 0};
-
-    cur = token->point;
-    translate_point(drawing, &cur);
-    int x0 = cur.x;
-    int y0 = cur.y;
-    token = token->next;
-    cur = token->point;
-    translate_point(drawing, &cur);
-    int x1 = cur.x;
-    int y1 = cur.y;
-    token = token->next;
-    cur = token->point;
-    translate_point(drawing, &cur);
-    int x2 = cur.x;
-    int y2 = cur.y;
-    token = token->next;
-    cur = token->point;
-    translate_point(drawing, &cur);
-    int x3 = cur.x;
-    int y3 = cur.y;
+    FT_Vector p[4];
+    for (int i = 0; i < 4; ++i) {
+        p[i] = token->point;
+        translate_point(drawing, &p[i]);
+        token = token->next;
+    }
 
     if (spline) {
-        // 1   [-1 +3 -3 +1]
-        // - * [+3 -6 +3  0]
-        // 6   [-3  0 +3  0]
-        //	   [+1 +4 +1  0]
+        int x01 = (p[1].x - p[0].x) / 3;
+        int y01 = (p[1].y - p[0].y) / 3;
+        int x12 = (p[2].x - p[1].x) / 3;
+        int y12 = (p[2].y - p[1].y) / 3;
+        int x23 = (p[3].x - p[2].x) / 3;
+        int y23 = (p[3].y - p[2].y) / 3;
 
-        double div6 = 1.0/6.0;
-
-        cx3 = div6*(-  x0+3*x1-3*x2+x3);
-        cx2 = div6*( 3*x0-6*x1+3*x2);
-        cx1 = div6*(-3*x0	   +3*x2);
-        cx0 = div6*(   x0+4*x1+1*x2);
-
-        cy3 = div6*(-  y0+3*y1-3*y2+y3);
-        cy2 = div6*( 3*y0-6*y1+3*y2);
-        cy1 = div6*(-3*y0     +3*y2);
-        cy0 = div6*(   y0+4*y1+1*y2);
-    } else {
-        // [-1 +3 -3 +1]
-        // [+3 -6 +3  0]
-        // [-3 +3  0  0]
-        // [+1  0  0  0]
-
-        cx3 = -  x0+3*x1-3*x2+x3;
-        cx2 =  3*x0-6*x1+3*x2;
-        cx1 = -3*x0+3*x1;
-        cx0 =    x0;
-
-        cy3 = -  y0+3*y1-3*y2+y3;
-        cy2 =  3*y0-6*y1+3*y2;
-        cy1 = -3*y0+3*y1;
-        cy0 =    y0;
+        p[0].x = p[1].x + ((x12 - x01) >> 1);
+        p[0].y = p[1].y + ((y12 - y01) >> 1);
+        p[3].x = p[2].x + ((x23 - x12) >> 1);
+        p[3].y = p[2].y + ((y23 - y12) >> 1);
+        p[1].x += x12;
+        p[1].y += y12;
+        p[2].x -= x12;
+        p[2].y -= y12;
     }
 
-    max_accel1 = fabs(2 * cy2) + fabs(6 * cy3);
-    max_accel2 = fabs(2 * cx2) + fabs(6 * cx3);
-
-    max_accel = FFMAX(max_accel1, max_accel2);
-    h = 1.0;
-
-    if (max_accel > CURVE_ACCURACY)
-        h = sqrt(CURVE_ACCURACY / max_accel);
-
-    if (!started) {
-        cur.x = cx0;
-        cur.y = cy0;
-        drawing_add_point(drawing, &cur);
-    }
-
-    for (t = 0; t < 1.0; t += h) {
-        cur.x = cx0 + t * (cx1 + t * (cx2 + t * cx3));
-        cur.y = cy0 + t * (cy1 + t * (cy2 + t * cy3));
-        drawing_add_point(drawing, &cur);
-    }
-
-    cur.x = cx0 + cx1 + cx2 + cx3;
-    cur.y = cy0 + cy1 + cy2 + cy3;
-    drawing_add_point(drawing, &cur);
+    return (started || drawing_add_point(drawing, &p[0], FT_CURVE_TAG_ON)) &&
+        drawing_add_point(drawing, &p[1], FT_CURVE_TAG_CUBIC) &&
+        drawing_add_point(drawing, &p[2], FT_CURVE_TAG_CUBIC) &&
+        drawing_add_point(drawing, &p[3], FT_CURVE_TAG_ON);
 }
 
 /*
@@ -334,25 +286,17 @@ static void drawing_evaluate_curve(ASS_Drawing *drawing,
  */
 ASS_Drawing *ass_drawing_new(ASS_Library *lib, FT_Library ftlib)
 {
-    ASS_Drawing *drawing;
-
-    drawing = calloc(1, sizeof(*drawing));
-    drawing->text = calloc(1, DRAWING_INITIAL_SIZE);
-    drawing->size = DRAWING_INITIAL_SIZE;
+    ASS_Drawing *drawing = calloc(1, sizeof(*drawing));
+    if (!drawing)
+        return NULL;
     drawing->cbox.xMin = drawing->cbox.yMin = INT_MAX;
     drawing->cbox.xMax = drawing->cbox.yMax = INT_MIN;
     drawing->ftlibrary = ftlib;
     drawing->library   = lib;
     drawing->scale_x = 1.;
     drawing->scale_y = 1.;
-    drawing->max_contours = GLYPH_INITIAL_CONTOURS;
-    drawing->max_points = GLYPH_INITIAL_POINTS;
 
-    FT_Outline_New(drawing->ftlibrary, GLYPH_INITIAL_POINTS,
-            GLYPH_INITIAL_CONTOURS, &drawing->outline);
-    drawing->outline.n_contours = 0;
-    drawing->outline.n_points = 0;
-
+    outline_alloc(&drawing->outline, GLYPH_INITIAL_POINTS, GLYPH_INITIAL_CONTOURS);
     return drawing;
 }
 
@@ -363,23 +307,18 @@ void ass_drawing_free(ASS_Drawing* drawing)
 {
     if (drawing) {
         free(drawing->text);
-        FT_Outline_Done(drawing->ftlibrary, &drawing->outline);
+        outline_free(&drawing->outline);
     }
     free(drawing);
 }
 
 /*
- * \brief Add one ASCII character to the drawing text buffer
+ * \brief Copy an ASCII string to the drawing text buffer
  */
-void ass_drawing_add_char(ASS_Drawing* drawing, char symbol)
+void ass_drawing_set_text(ASS_Drawing* drawing, char *str, size_t len)
 {
-    drawing->text[drawing->i++] = symbol;
-    drawing->text[drawing->i] = 0;
-
-    if (drawing->i + 1 >= drawing->size) {
-        drawing->size *= 2;
-        drawing->text = realloc(drawing->text, drawing->size);
-    }
+    free(drawing->text);
+    drawing->text = strndup(str, len);
 }
 
 /*
@@ -388,13 +327,15 @@ void ass_drawing_add_char(ASS_Drawing* drawing, char symbol)
  */
 void ass_drawing_hash(ASS_Drawing* drawing)
 {
+    if (!drawing->text)
+        return;
     drawing->hash = fnv_32a_str(drawing->text, FNV1_32A_INIT);
 }
 
 /*
  * \brief Convert token list to outline.  Calls the line and curve evaluators.
  */
-FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
+ASS_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
 {
     int started = 0;
     ASS_DrawingToken *token;
@@ -416,7 +357,8 @@ FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
             pen = token->point;
             translate_point(drawing, &pen);
             if (started) {
-                drawing_close_shape(drawing);
+                if (!drawing_close_shape(drawing))
+                    goto error;
                 started = 0;
             }
             token = token->next;
@@ -425,8 +367,10 @@ FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
             FT_Vector to;
             to = token->point;
             translate_point(drawing, &to);
-            if (!started) drawing_add_point(drawing, &pen);
-            drawing_add_point(drawing, &to);
+            if (!started && !drawing_add_point(drawing, &pen, FT_CURVE_TAG_ON))
+                goto error;
+            if (!drawing_add_point(drawing, &to, FT_CURVE_TAG_ON))
+                goto error;
             started = 1;
             token = token->next;
             break;
@@ -434,7 +378,8 @@ FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
         case TOKEN_CUBIC_BEZIER:
             if (token_check_values(token, 3, TOKEN_CUBIC_BEZIER) &&
                 token->prev) {
-                drawing_evaluate_curve(drawing, token->prev, 0, started);
+                if (!drawing_evaluate_curve(drawing, token->prev, 0, started))
+                    goto error;
                 token = token->next;
                 token = token->next;
                 token = token->next;
@@ -445,7 +390,8 @@ FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
         case TOKEN_B_SPLINE:
             if (token_check_values(token, 3, TOKEN_B_SPLINE) &&
                 token->prev) {
-                drawing_evaluate_curve(drawing, token->prev, 1, started);
+                if (!drawing_evaluate_curve(drawing, token->prev, 1, started))
+                    goto error;
                 token = token->next;
                 started = 1;
             } else
@@ -457,7 +403,15 @@ FT_Outline *ass_drawing_parse(ASS_Drawing *drawing, int raw_mode)
         }
     }
 
+    // Close the last contour
+    if (started && !drawing_close_shape(drawing))
+        goto error;
+
     drawing_finish(drawing, raw_mode);
     drawing_free_tokens(drawing->tokens);
     return &drawing->outline;
+
+error:
+    drawing_free_tokens(drawing->tokens);
+    return NULL;
 }

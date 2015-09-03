@@ -31,18 +31,17 @@ typedef struct cache Cache;
 typedef struct {
     Bitmap *bm;               // the actual bitmaps
     Bitmap *bm_o;
-    Bitmap *bm_s;
 } BitmapHashValue;
 
 typedef struct {
-    unsigned char *a;
-    unsigned char *b;
+    Bitmap *bm;
+    Bitmap *bm_o;
+    Bitmap *bm_s;
 } CompositeHashValue;
 
 typedef struct {
-    FT_Library lib;
-    FT_Outline *outline;
-    FT_Outline *border;
+    ASS_Outline *outline;
+    ASS_Outline *border;
     FT_BBox bbox_scaled;        // bbox after scaling, but before rotation
     FT_Vector advance;          // 26.6, advance distance to the next outline in line
     int asc, desc;              // ascender/descender
@@ -85,6 +84,24 @@ typedef struct bitmap_hash_key {
         ClipMaskHashKey clip;
     } u;
 } BitmapHashKey;
+
+typedef struct {
+    BitmapHashValue *image;
+    int x, y;
+} BitmapRef;
+
+enum {
+    FILTER_BORDER_STYLE_3 = 1,
+    FILTER_NONZERO_BORDER = 2,
+    FILTER_NONZERO_SHADOW = 4,
+    FILTER_DRAW_SHADOW    = 8,  // VSFilter compatibility
+};
+
+typedef struct {
+    FilterDesc filter;
+    size_t bitmap_count;
+    BitmapRef *bitmaps;
+} CompositeHashKey;
 
 Cache *ass_cache_create(HashFunction hash_func, HashCompare compare_func,
                         CacheItemDestructor destruct_func, ItemSize size_func,

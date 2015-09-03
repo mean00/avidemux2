@@ -19,41 +19,123 @@
 #ifndef LIBASS_BITMAP_H
 #define LIBASS_BITMAP_H
 
+#include <stdbool.h>
 #include <ft2build.h>
 #include FT_GLYPH_H
 
 #include "ass.h"
 
-typedef struct ass_synth_priv ASS_SynthPriv;
 
-ASS_SynthPriv *ass_synth_init(double);
-void ass_synth_done(ASS_SynthPriv *priv);
+struct segment;
+typedef void (*FillSolidTileFunc)(uint8_t *buf, ptrdiff_t stride, int set);
+typedef void (*FillHalfplaneTileFunc)(uint8_t *buf, ptrdiff_t stride,
+                                      int32_t a, int32_t b, int64_t c, int32_t scale);
+typedef void (*FillGenericTileFunc)(uint8_t *buf, ptrdiff_t stride,
+                                    const struct segment *line, size_t n_lines,
+                                    int winding);
+
+typedef void (*BitmapBlendFunc)(uint8_t *dst, intptr_t dst_stride,
+                                uint8_t *src, intptr_t src_stride,
+                                intptr_t height, intptr_t width);
+typedef void (*BitmapMulFunc)(uint8_t *dst, intptr_t dst_stride,
+                              uint8_t *src1, intptr_t src1_stride,
+                              uint8_t *src2, intptr_t src2_stride,
+                              intptr_t width, intptr_t height);
+
+typedef void (*BeBlurFunc)(uint8_t *buf, intptr_t w, intptr_t h,
+                           intptr_t stride, uint16_t *tmp);
+
+// intermediate bitmaps represented as sets of verical stripes of int16_t[alignment / 2]
+typedef void (*Convert8to16Func)(int16_t *dst, const uint8_t *src, ptrdiff_t src_stride,
+                                 uintptr_t width, uintptr_t height);
+typedef void (*Convert16to8Func)(uint8_t *dst, ptrdiff_t dst_stride, const int16_t *src,
+                                 uintptr_t width, uintptr_t height);
+typedef void (*FilterFunc)(int16_t *dst, const int16_t *src,
+                           uintptr_t src_width, uintptr_t src_height);
+typedef void (*ParamFilterFunc)(int16_t *dst, const int16_t *src,
+                                uintptr_t src_width, uintptr_t src_height,
+                                const int16_t *param);
+
+#define C_ALIGN_ORDER 5
+
+typedef struct {
+    int align_order;  // log2(alignment)
+
+    // rasterizer functions
+#if CONFIG_RASTERIZER
+    int tile_order;  // log2(tile_size)
+    FillSolidTileFunc fill_solid;
+    FillHalfplaneTileFunc fill_halfplane;
+    FillGenericTileFunc fill_generic;
+#endif
+
+    // blend functions
+    BitmapBlendFunc add_bitmaps, sub_bitmaps;
+    BitmapMulFunc mul_bitmaps;
+
+    // be blur function
+    BeBlurFunc be_blur;
+
+    // gaussian blur functions
+    Convert8to16Func stripe_unpack;
+    Convert16to8Func stripe_pack;
+    FilterFunc shrink_horz, shrink_vert;
+    FilterFunc expand_horz, expand_vert;
+    FilterFunc pre_blur_horz[3], pre_blur_vert[3];
+    ParamFilterFunc main_blur_horz[3], main_blur_vert[3];
+} BitmapEngine;
+
+extern const BitmapEngine ass_bitmap_engine_c;
+extern const BitmapEngine ass_bitmap_engine_sse2;
+extern const BitmapEngine ass_bitmap_engine_avx2;
+
+
+typedef struct {
+    size_t n_contours, max_contours;
+    size_t *contours;
+    size_t n_points, max_points;
+    FT_Vector *points;
+    char *tags;
+} ASS_Outline;
+
+#define EFFICIENT_CONTOUR_COUNT 8
 
 typedef struct {
     int left, top;
     int w, h;                   // width, height
     int stride;
-    unsigned char *buffer;      // w x h buffer
+    unsigned char *buffer;      // h * stride buffer
 } Bitmap;
 
-Bitmap *outline_to_bitmap(ASS_Library *library, FT_Library ftlib,
-                          FT_Outline *outline, int bord);
+Bitmap *alloc_bitmap(const BitmapEngine *engine, int w, int h);
+bool realloc_bitmap(const BitmapEngine *engine, Bitmap *bm, int w, int h);
+Bitmap *copy_bitmap(const BitmapEngine *engine, const Bitmap *src);
+void ass_free_bitmap(Bitmap *bm);
+
+Bitmap *outline_to_bitmap(ASS_Renderer *render_priv,
+                          ASS_Outline *outline, int bord);
+
+void ass_synth_blur(const BitmapEngine *engine, int opaque_box, int be,
+                    double blur_radius, Bitmap *bm_g, Bitmap *bm_o);
+
 /**
  * \brief perform glyph rendering
- * \param glyph original glyph
- * \param outline_glyph "border" glyph, produced from original by FreeType's glyph stroker
+ * \param outline original glyph
+ * \param border "border" glyph, produced from outline by FreeType's glyph stroker
  * \param bm_g out: pointer to the bitmap of original glyph is returned here
- * \param bm_o out: pointer to the bitmap of outline (border) glyph is returned here
- * \param bm_g out: pointer to the bitmap of glyph shadow is returned here
- * \param be 1 = produces blurred bitmaps, 0 = normal bitmaps
- * \param border_visible whether border is visible if border_style is 3
+ * \param bm_o out: pointer to the bitmap of border glyph is returned here
  */
-int outline_to_bitmap3(ASS_Library *library, ASS_SynthPriv *priv_blur,
-                       FT_Library ftlib, FT_Outline *outline, FT_Outline *border,
-                       Bitmap **bm_g, Bitmap **bm_o, Bitmap **bm_s,
-                       int be, double blur_radius, FT_Vector shadow_offset,
-                       int border_style, int border_visible);
+int outline_to_bitmap2(ASS_Renderer *render_priv,
+                       ASS_Outline *outline, ASS_Outline *border,
+                       Bitmap **bm_g, Bitmap **bm_o);
 
-void ass_free_bitmap(Bitmap *bm);
+int be_padding(int be);
+void be_blur_pre(uint8_t *buf, intptr_t w,
+                 intptr_t h, intptr_t stride);
+void be_blur_post(uint8_t *buf, intptr_t w,
+                  intptr_t h, intptr_t stride);
+bool ass_gaussian_blur(const BitmapEngine *engine, Bitmap *bm, double r2);
+void shift_bitmap(Bitmap *bm, int shift_x, int shift_y);
+void fix_outline(Bitmap *bm_g, Bitmap *bm_o);
 
 #endif                          /* LIBASS_BITMAP_H */

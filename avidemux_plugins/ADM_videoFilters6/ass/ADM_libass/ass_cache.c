@@ -81,8 +81,6 @@ static void bitmap_destruct(void *key, void *value)
         ass_free_bitmap(v->bm);
     if (v->bm_o)
         ass_free_bitmap(v->bm_o);
-    if (v->bm_s)
-        ass_free_bitmap(v->bm_s);
     if (k->type == BITMAP_CLIP)
         free(k->u.clip.text);
     free(key);
@@ -92,11 +90,12 @@ static void bitmap_destruct(void *key, void *value)
 static size_t bitmap_size(void *value, size_t value_size)
 {
     BitmapHashValue *val = value;
+    size_t size = sizeof(BitmapHashKey) + sizeof(BitmapHashValue);
+    if (val->bm)
+        size += sizeof(Bitmap) + val->bm->stride * val->bm->h;
     if (val->bm_o)
-        return val->bm_o->w * val->bm_o->h * 3;
-    else if (val->bm)
-        return val->bm->w * val->bm->h * 3;
-    return 0;
+        size += sizeof(Bitmap) + val->bm_o->stride * val->bm_o->h;
+    return size;
 }
 
 static unsigned bitmap_hash(void *key, size_t key_size)
@@ -125,10 +124,56 @@ static unsigned bitmap_compare (void *a, void *b, size_t key_size)
 static void composite_destruct(void *key, void *value)
 {
     CompositeHashValue *v = value;
-    free(v->a);
-    free(v->b);
+    CompositeHashKey *k = key;
+    if (v->bm)
+        ass_free_bitmap(v->bm);
+    if (v->bm_o)
+        ass_free_bitmap(v->bm_o);
+    if (v->bm_s)
+        ass_free_bitmap(v->bm_s);
+    free(k->bitmaps);
     free(key);
     free(value);
+}
+
+static size_t composite_size(void *value, size_t value_size)
+{
+    CompositeHashValue *val = value;
+    size_t size = sizeof(CompositeHashKey) + sizeof(CompositeHashValue);
+    if (val->bm)
+        size += sizeof(Bitmap) + val->bm->stride * val->bm->h;
+    if (val->bm_o)
+        size += sizeof(Bitmap) + val->bm_o->stride * val->bm_o->h;
+    if (val->bm_s)
+        size += sizeof(Bitmap) + val->bm_s->stride * val->bm_s->h;
+    return size;
+}
+
+static unsigned composite_hash(void *key, size_t key_size)
+{
+    CompositeHashKey *k = key;
+    unsigned hval = filter_hash(&k->filter, key_size);
+    for (size_t i = 0; i < k->bitmap_count; ++i) {
+        hval = fnv_32a_buf(&k->bitmaps[i].image, sizeof(k->bitmaps[i].image), hval);
+        hval = fnv_32a_buf(&k->bitmaps[i].x, sizeof(k->bitmaps[i].x), hval);
+        hval = fnv_32a_buf(&k->bitmaps[i].y, sizeof(k->bitmaps[i].y), hval);
+    }
+    return hval;
+}
+
+static unsigned composite_compare(void *a, void *b, size_t key_size)
+{
+    CompositeHashKey *ak = a;
+    CompositeHashKey *bk = b;
+    if (ak->bitmap_count != bk->bitmap_count)
+        return 0;
+    for (size_t i = 0; i < ak->bitmap_count; ++i) {
+        if (ak->bitmaps[i].image != bk->bitmaps[i].image ||
+            ak->bitmaps[i].x != bk->bitmaps[i].x ||
+            ak->bitmaps[i].y != bk->bitmaps[i].y)
+            return 0;
+    }
+    return filter_compare(&ak->filter, &bk->filter, key_size);
 }
 
 // outline cache
@@ -159,10 +204,10 @@ static void outline_destruct(void *key, void *value)
 {
     OutlineHashValue *v = value;
     OutlineHashKey *k = key;
-    if (v->outline)
-        outline_free(v->lib, v->outline);
-    if (v->border)
-        outline_free(v->lib, v->border);
+    outline_free(v->outline);
+    free(v->outline);
+    outline_free(v->border);
+    free(v->border);
     if (k->type == OUTLINE_DRAWING)
         free(k->u.drawing.text);
     free(key);
@@ -221,6 +266,8 @@ Cache *ass_cache_create(HashFunction hash_func, HashCompare compare_func,
                         size_t key_size, size_t value_size)
 {
     Cache *cache = calloc(1, sizeof(*cache));
+    if (!cache)
+        return NULL;
     cache->buckets = 0xFFFF;
     cache->hash_func = hash_simple;
     cache->compare_func = compare_simple;
@@ -235,6 +282,10 @@ Cache *ass_cache_create(HashFunction hash_func, HashCompare compare_func,
     cache->key_size = key_size;
     cache->value_size = value_size;
     cache->map = calloc(cache->buckets, sizeof(CacheItem *));
+    if (!cache->map) {
+        free(cache);
+        return NULL;
+    }
 
     return cache;
 }
@@ -242,14 +293,24 @@ Cache *ass_cache_create(HashFunction hash_func, HashCompare compare_func,
 void *ass_cache_put(Cache *cache, void *key, void *value)
 {
     unsigned bucket = cache->hash_func(key, cache->key_size) % cache->buckets;
-    CacheItem **item = &cache->map[bucket];
-    while (*item)
-        item = &(*item)->next;
-    (*item) = calloc(1, sizeof(CacheItem));
-    (*item)->key = malloc(cache->key_size);
-    (*item)->value = malloc(cache->value_size);
-    memcpy((*item)->key, key, cache->key_size);
-    memcpy((*item)->value, value, cache->value_size);
+    CacheItem **bucketptr = &cache->map[bucket];
+
+    CacheItem *item = calloc(1, sizeof(CacheItem));
+    if (!item)
+        return NULL;
+    item->key = malloc(cache->key_size);
+    item->value = malloc(cache->value_size);
+    if (!item->key || !item->value) {
+        free(item->key);
+        free(item->value);
+        free(item);
+        return NULL;
+    }
+    memcpy(item->key, key, cache->key_size);
+    memcpy(item->value, value, cache->value_size);
+
+    item->next = *bucketptr;
+    *bucketptr = item;
 
     cache->items++;
     if (cache->size_func)
@@ -257,7 +318,7 @@ void *ass_cache_put(Cache *cache, void *key, void *value)
     else
         cache->cache_size++;
 
-    return (*item)->value;
+    return item->value;
 }
 
 void *ass_cache_get(Cache *cache, void *key)
@@ -347,6 +408,6 @@ Cache *ass_bitmap_cache_create(void)
 Cache *ass_composite_cache_create(void)
 {
     return ass_cache_create(composite_hash, composite_compare,
-            composite_destruct, (ItemSize)NULL, sizeof(CompositeHashKey),
+            composite_destruct, composite_size, sizeof(CompositeHashKey),
             sizeof(CompositeHashValue));
 }

@@ -6,6 +6,8 @@
         type member;
 #define STRING(member) \
         char *member;
+#define BINSTRING(member) \
+        struct { size_t size; void *data; } member;
 #define FTVECTOR(member) \
         FT_Vector member;
 #define BITMAPHASHKEY(member) \
@@ -25,6 +27,9 @@
             a->member == b->member &&
 #define STRING(member) \
             strcmp(a->member, b->member) == 0 &&
+#define BINSTRING(member) \
+            a->member.size == b->member.size && \
+            memcmp(a->member.data, b->member.data, a->member.size) == 0 &&
 #define FTVECTOR(member) \
             a->member.x == b->member.x && a->member.y == b->member.y &&
 #define BITMAPHASHKEY(member) \
@@ -44,6 +49,9 @@
         hval = fnv_32a_buf(&p->member, sizeof(p->member), hval);
 #define STRING(member) \
         hval = fnv_32a_str(p->member, hval);
+#define BINSTRING(member) \
+        hval = fnv_32a_buf(&p->member.size, sizeof(p->member.size), hval); \
+        hval = fnv_32a_buf(p->member.data, p->member.size, hval);
 #define FTVECTOR(member) GENERIC(, member.x); GENERIC(, member.y);
 #define BITMAPHASHKEY(member) { \
         unsigned temp = bitmap_hash(&p->member, sizeof(p->member)); \
@@ -62,11 +70,9 @@
 // describes an outline bitmap
 START(outline_bitmap, outline_bitmap_hash_key)
     GENERIC(OutlineHashValue *, outline)
-    GENERIC(char, be) // blur edges
-    GENERIC(double, blur) // gaussian blur
-    GENERIC(int, frx) // signed 16.16
-    GENERIC(int, fry) // signed 16.16
-    GENERIC(int, frz) // signed 16.16
+    GENERIC(int, frx) // signed 10.22
+    GENERIC(int, fry) // signed 10.22
+    GENERIC(int, frz) // signed 10.22
     GENERIC(int, fax) // signed 16.16
     GENERIC(int, fay) // signed 16.16
     // shift vector that was added to glyph before applying rotation
@@ -75,7 +81,6 @@ START(outline_bitmap, outline_bitmap_hash_key)
     GENERIC(int, shift_x)
     GENERIC(int, shift_y)
     FTVECTOR(advance) // subpixel shift vector
-    FTVECTOR(shadow_offset) // shadow subpixel shift
 END(OutlineBitmapHashKey)
 
 // describe a clip mask bitmap
@@ -96,6 +101,7 @@ START(glyph, glyph_hash_key)
     FTVECTOR(outline) // border width, 16.16
     GENERIC(unsigned, flags)    // glyph decoration flags
     GENERIC(unsigned, border_style)
+    GENERIC(int, hspacing) // 16.16
 END(GlyphHashKey)
 
 START(glyph_metrics, glyph_metrics_hash_key)
@@ -114,31 +120,24 @@ START(drawing, drawing_hash_key)
     GENERIC(int, pbo)
     FTVECTOR(outline)
     GENERIC(unsigned, border_style)
+    GENERIC(int, hspacing)
     GENERIC(int, scale)
     GENERIC(unsigned, hash)
     STRING(text)
 END(DrawingHashKey)
 
-// Cache for composited bitmaps
-START(composite, composite_hash_key)
-    GENERIC(int, aw)
-    GENERIC(int, ah)
-    GENERIC(int, bw)
-    GENERIC(int, bh)
-    GENERIC(int, ax)
-    GENERIC(int, ay)
-    GENERIC(int, bx)
-    GENERIC(int, by)
-    GENERIC(int, as)
-    GENERIC(int, bs)
-    GENERIC(unsigned char *, a)
-    GENERIC(unsigned char *, b)
-END(CompositeHashKey)
-
+// describes post-combining effects
+START(filter, filter_desc)
+    GENERIC(int, flags)
+    GENERIC(int, be)
+    GENERIC(double, blur)
+    FTVECTOR(shadow)
+END(FilterDesc)
 
 #undef START
 #undef GENERIC
 #undef STRING
 #undef FTVECTOR
 #undef BITMAPHASHKEY
+#undef BINSTRING
 #undef END

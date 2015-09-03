@@ -41,9 +41,12 @@ typedef struct ass_shaper ASS_Shaper;
 #include "ass_fontconfig.h"
 #include "ass_library.h"
 #include "ass_drawing.h"
+#include "ass_bitmap.h"
+#include "ass_rasterizer.h"
 
-#define GLYPH_CACHE_MAX 1000
-#define BITMAP_CACHE_MAX_SIZE 30 * 1048576
+#define GLYPH_CACHE_MAX 10000
+#define BITMAP_CACHE_MAX_SIZE 500 * 1048576
+#define COMPOSITE_CACHE_MAX_SIZE 500 * 1048576
 
 #define PARSED_FADE (1<<0)
 #define PARSED_A    (1<<1)
@@ -68,8 +71,8 @@ typedef struct free_list {
 typedef struct {
     int frame_width;
     int frame_height;
-    int storage_width;          // width of the source image
-    int storage_height;         // height of the source image
+    int storage_width;          // video width before any rescaling
+    int storage_height;         // video height before any rescaling
     double font_size_coeff;     // font size multiplier
     double line_spacing;        // additional line spacing (in frame pixels)
     double line_position;       // vertical position for subtitles, 0-100 (0 = no change)
@@ -82,6 +85,7 @@ typedef struct {
     double par;                 // user defined pixel aspect ratio (0 = unset)
     ASS_Hinting hinting;
     ASS_ShapingLevel shaper;
+    int selective_style_overrides; // ASS_OVERRIDE_* flags
 
     char *default_font;
     char *default_family;
@@ -103,6 +107,31 @@ typedef enum {
     EF_KARAOKE_KO
 } Effect;
 
+typedef struct
+{
+    int x_min, y_min, x_max, y_max;
+} Rectangle;
+
+// describes a combined bitmap
+typedef struct {
+    FilterDesc filter;
+    uint32_t c[4];              // colors
+    Effect effect_type;
+    int effect_timing;          // time duration of current karaoke word
+    // after process_karaoke_effects: distance in pixels from the glyph origin.
+    // part of the glyph to the left of it is displayed in a different color.
+
+    int first_pos_x;
+
+    size_t bitmap_count, max_bitmap_count;
+    BitmapRef *bitmaps;
+
+    int x, y;
+    Rectangle rect, rect_o;
+    Bitmap *bm, *bm_o, *bm_s;   // glyphs, outline, shadow bitmaps
+    size_t n_bm, n_bm_o;
+} CombinedBitmapInfo;
+
 // describes a glyph
 // GlyphInfo and TextInfo are used for text centering and word-wrapping operations
 typedef struct glyph_info {
@@ -118,11 +147,8 @@ typedef struct glyph_info {
 #endif
     double font_size;
     ASS_Drawing *drawing;
-    FT_Outline *outline;
-    FT_Outline *border;
-    Bitmap *bm;                 // glyph bitmap
-    Bitmap *bm_o;               // outline bitmap
-    Bitmap *bm_s;               // shadow bitmap
+    ASS_Outline *outline;
+    ASS_Outline *border;
     FT_BBox bbox;
     FT_Vector pos;
     FT_Vector offset;
@@ -130,6 +156,7 @@ typedef struct glyph_info {
     uint32_t c[4];              // colors
     FT_Vector advance;          // 26.6
     FT_Vector cluster_advance;
+    char effect;                // the first (leading) glyph of some effect ?
     Effect effect_type;
     int effect_timing;          // time duration of current karaoke word
     // after process_karaoke_effects: distance in pixels from the glyph origin.
@@ -151,10 +178,10 @@ typedef struct glyph_info {
     unsigned bold;
     int flags;
 
-    int bm_run_id;
     int shape_run_id;
 
     BitmapHashKey hash_key;
+    BitmapHashValue *image;
 
     // next glyph in this cluster
     struct glyph_info *next;
@@ -170,9 +197,12 @@ typedef struct {
     int length;
     LineInfo *lines;
     int n_lines;
+    CombinedBitmapInfo *combined_bitmaps;
+    unsigned n_bitmaps;
     double height;
     int max_glyphs;
     int max_lines;
+    unsigned max_bitmaps;
 } TextInfo;
 
 // Renderer state.
@@ -181,6 +211,7 @@ typedef struct {
     ASS_Event *event;
     ASS_Style *style;
     int parsed_tags;
+    int has_clips;              // clips that conflict with cache change detection
 
     ASS_Font *font;
     double font_size;
@@ -209,22 +240,19 @@ typedef struct {
     int clip_x0, clip_y0, clip_x1, clip_y1;
     char clip_mode;             // 1 = iclip
     char detect_collisions;
-    uint32_t fade;              // alpha from \fad
+    int fade;                   // alpha from \fad
     char be;                    // blur edges
     double blur;                // gaussian blur
     double shadow_x;
     double shadow_y;
-    int drawing_mode;           // not implemented; when != 0 text is discarded, except for style override tags
-    ASS_Drawing *drawing;       // current drawing
+    int drawing_scale;          // currently reading: regular text if 0, drawing otherwise
+    double pbo;                 // drawing baseline offset
     ASS_Drawing *clip_drawing;  // clip vector
     int clip_drawing_mode;      // 0 = regular clip, 1 = inverse clip
 
     Effect effect_type;
     int effect_timing;
     int effect_skip_timing;
-
-    // bitmap run id (used for final bitmap rendering)
-    int bm_run_id;
 
     enum {
         SCROLL_LR,              // left-to-right
@@ -241,6 +269,16 @@ typedef struct {
     int treat_family_as_pattern;
     int wrap_style;
     int font_encoding;
+
+    // combination of ASS_OVERRIDE_BIT_* flags that apply right now
+    unsigned overrides;
+    // whether to apply font_scale
+    int apply_font_scale;
+    // whether this is assumed to be explicitly positioned
+    int explicit;
+
+    // used to store RenderContext.style when doing selective style overrides
+    ASS_Style override_style_temp_storage;
 } RenderContext;
 
 typedef struct {
@@ -250,6 +288,7 @@ typedef struct {
     Cache *composite_cache;
     size_t glyph_max;
     size_t bitmap_max_size;
+    size_t composite_max_size;
 } CacheStore;
 
 struct ass_renderer {
@@ -258,7 +297,6 @@ struct ass_renderer {
     FCInstance *fontconfig_priv;
     ASS_Settings settings;
     int render_id;
-    ASS_SynthPriv *synth_priv;
     ASS_Shaper *shaper;
 
     ASS_Image *images_root;     // rendering result is stored here
@@ -274,8 +312,6 @@ struct ass_renderer {
     int orig_width;             // frame width ( = screen width - margins )
     int orig_height_nocrop;     // frame height ( = screen height - margins + cropheight)
     int orig_width_nocrop;      // frame width ( = screen width - margins + cropwidth)
-    int storage_height;         // video height before any rescaling
-    int storage_width;          // video width before any rescaling
     ASS_Track *track;
     long long time;             // frame's timestamp, ms
     double font_scale;
@@ -287,8 +323,15 @@ struct ass_renderer {
     TextInfo text_info;
     CacheStore cache;
 
+    const BitmapEngine *engine;
+#if CONFIG_RASTERIZER
+    RasterizerData rasterizer;
+#endif
+
     FreeList *free_head;
     FreeList *free_tail;
+
+    ASS_Style user_override_style;
 };
 
 typedef struct render_priv {
