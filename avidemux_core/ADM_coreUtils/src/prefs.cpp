@@ -79,7 +79,10 @@ static int searchDescByName(const char *name)
 {
     int nb=sizeof( my_prefs_struct_param) /sizeof(ADM_paramList  );
     for(int i=0;i<nb;i++)
-        if(!strcmp(my_prefs_struct_param[i].paramName,name)) return i;
+    {
+        if(my_prefs_struct_param[i].paramName) 
+            if(!strcmp(my_prefs_struct_param[i].paramName,name)) return i;
+    }
     return -1;
 }
 
@@ -220,7 +223,8 @@ static bool lookupOption(options option, const ADM_paramList **desc, const optio
     const optionDesc *o=myOptions+d;
     // Get full name
     d=searchDescByName(o->name2);
-    ADM_assert(d!=-1);
+    if(d==-1)
+        return false;
     const ADM_paramList *dsc=my_prefs_struct_param+d;
 
     *tpl=o;
@@ -250,9 +254,11 @@ static bool _get(options option, T *v, ADM_paramType expectedType)
 	const optionDesc *tpl;
 	float m,n;
 
-	lookupOption(option,&desc,&tpl,m,n);
+	if(!lookupOption(option,&desc,&tpl,m,n))
+            return false;
 
-	ADM_assert(desc->type==expectedType);
+	if(desc->type!=expectedType)
+            return false;
 	int offset=desc->offset;
 	char *dummy=(char *)&myPrefs;
 	_getAssign(v, dummy+offset);
@@ -303,9 +309,12 @@ bool _set(options option, const T v, ADM_paramType expectedType)
 	const optionDesc *tpl;
 	float m,n;
 
-	lookupOption(option,&desc,&tpl,n,m);
+	if(!lookupOption(option,&desc,&tpl,n,m))
+            return false;
 
-	ADM_assert(desc->type==expectedType);
+        
+	if(desc->type!=expectedType)
+            return false;
 
 	if(v<n || v>m)
 	{
@@ -345,7 +354,8 @@ bool preferences::set(options option, const char *v)
     const optionDesc *tpl;
     float m,n;
 
-    lookupOption(option,&desc,&tpl,n,m);
+    if(!lookupOption(option,&desc,&tpl,n,m))
+        return false;
 
     ADM_assert(desc->type==ADM_param_string);
     

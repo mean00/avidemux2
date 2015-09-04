@@ -54,6 +54,7 @@ json.addUint32("postproc_type",key->Default.postproc_type);
 json.addUint32("postproc_value",key->Default.postproc_value);
 json.addUint32("downmixing",key->Default.downmixing);
 json.addString("language",key->Default.language);
+json.addBool("warn_for_fonts",key->Default.warn_for_fonts);
 json.endNode();
 json.addUint32("mpegsplit_autosplit",key->mpegsplit_autosplit);
 json.addNode("avisynth");
