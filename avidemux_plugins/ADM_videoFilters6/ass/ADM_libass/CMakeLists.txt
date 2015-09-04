@@ -33,7 +33,8 @@ ass_font.c ass_parse.c ass_drawing.c ass_render_api.c ass_strtod.c ass_shaper.c
 ass_rasterizer_c.c ass_blur.c ass_font.c 
 ${Asm}
 )
-
+#
+ADD_DEFINITIONS(" -std=gnu99 ")
 #
 ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
 ADD_DEFINITIONS(${FREETYPE2_CFLAGS} ${FRIDIBI_CFLAGS})
