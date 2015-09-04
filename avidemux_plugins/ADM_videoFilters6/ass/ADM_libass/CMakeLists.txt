@@ -19,11 +19,14 @@ IF(ADM_CPU_X86) # We have yasm, we use it to build ffmpeg. Borrowed from x265
         )
         MESSAGE(STATUS "Yasm found as ${YASM_EXECUTABLE}")
         enable_language(ASM_YASM)
-        SET(Asm x86/be_blur.asm x86/blend_bitmaps.asm  
+        SET(Asm x86/blend_bitmaps.asm  
                 x86/blur.asm    x86/cpuid.asm  
                 x86/rasterizer.asm  x86/utils.asm  
                 x86/x86inc.asm
         )
+        IF(ADM_CPU_X86_64)
+        SET(Asm ${Asm} x86/be_blur.asm )
+        ENDIF(ADM_CPU_X86_64)
         ADD_DEFINITIONS(-DCONFIG_ASM) 
 ENDIF(ADM_CPU_X86)
 #
