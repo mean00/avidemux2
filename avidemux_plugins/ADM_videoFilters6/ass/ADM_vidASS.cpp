@@ -21,7 +21,7 @@
 #include "ass_ssa.h"
 #include "ass_ssa_desc.cpp"
 #include "ADM_coreSubtitles/inc/ADM_coreSubtitles.h"
-
+#include "prefs.h"
 extern "C"
 {
 #include "ADM_libass/ass.h"
@@ -41,14 +41,14 @@ protected:
         bool            cleanup(void);
         ADMImage        *src;
 public:
-                    subAss(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                    ~subAss();
+                            subAss(ADM_coreVideoFilter *previous,CONFcouple *conf);
+                            ~subAss();
 
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-        virtual void setCoupledConf(CONFcouple *couples);
+        virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;           /// Start graphical user interface
 };
 
@@ -117,8 +117,10 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     _ass_track = NULL;
     _ass_rend = NULL;
 
-    if (param.subtitleFile) {
-        if (!this->setup()) {
+    if (param.subtitleFile) 
+    {
+        if (!this->setup()) 
+        {
             GUI_Error_HIG("Format ?", "Are you sure this is an ass file ?");
         }
     }
@@ -251,8 +253,16 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         // update outpur image size
         memcpy(&info,previousFilter->getInfo(),sizeof(info));
         info.height += param.topMargin + param.bottomMargin;
-
-
+        
+        bool warn;
+        if(!prefs->get(DEFAULT_WARN_FOR_FONTS,&warn))
+            warn=true;
+        if(warn)
+        {
+            GUI_Info_HIG(ADM_LOG_INFO,"Fonts","Preparing the fonts can take a few minutes the first time.\nThis message will not be displayed again.");
+            prefs->set(DEFAULT_WARN_FOR_FONTS,false);
+        }
+        
         _ass_lib=ass_library_init();
         ADM_assert(_ass_lib);
 
