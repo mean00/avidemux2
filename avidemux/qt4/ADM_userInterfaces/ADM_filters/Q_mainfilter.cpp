@@ -370,7 +370,7 @@ void filtermainWindow::displayFamily(uint32_t family)
   ADM_assert(family<VF_MAX);
 
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
-    ADM_info("Video filter Family :%u, nb %d\n",family,nb);
+  ADM_info("Video filter Family :%u, nb %d\n",family,nb);
   QSize sz;
   availableList->clear();
   for (uint32_t i = 0; i < nb; i++)
@@ -458,14 +458,14 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
 
     connect((ui.toolButtonConfigure),SIGNAL(clicked(bool)),this,SLOT(configure(bool)));
-    connect((ui.toolButtonAdd),SIGNAL(clicked(bool)),this,SLOT(add(bool)));
+    //connect((ui.toolButtonAdd),SIGNAL(clicked(bool)),this,SLOT(add(bool)));
     connect((ui.pushButtonRemove),SIGNAL(clicked(bool)),this,SLOT(remove(bool)));
     connect((ui.toolButtonUp),SIGNAL(clicked(bool)),this,SLOT(up(bool)));
     connect((ui.toolButtonDown),SIGNAL(clicked(bool)),this,SLOT(down(bool)));
-    connect((ui.toolButtonPartial),SIGNAL(clicked(bool)),this,SLOT(partial(bool)));
+   // connect((ui.toolButtonPartial),SIGNAL(clicked(bool)),this,SLOT(partial(bool)));
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
-    connect(ui.pushLoad, SIGNAL(clicked(bool)), this, SLOT(loadFilters(bool)));
-    connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
+    //connect(ui.pushLoad, SIGNAL(clicked(bool)), this, SLOT(loadFilters(bool)));
+    //connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
@@ -514,6 +514,26 @@ void filtermainWindow::add(void)
 {
     add(true);
 }
+
+
+/*******************************************************/
+
+int GUI_handleVFilter(void);
+/**
+      \fn     GUI_handleVFilter(void)
+      \brief  Show the main filter window allowing user to add/remove/configure video filters
+*/
+int GUI_handleVFilter(void)
+{
+        filtermainWindow dialog(qtLastRegisteredDialog());
+        qtRegisterDialog(&dialog);
+        dialog.exec();
+        qtUnregisterDialog(&dialog);
+        return 0;
+}
+//EOF
+#if 0
+
 /**
  * \fn loadFilters
  * \brief load a filter from .py
@@ -576,28 +596,5 @@ void filtermainWindow::partial(bool b)
 {
     
 }
-
-/*******************************************************/
-
-int GUI_handleVFilter(void);
-static void updateFilterList (filtermainWindow *dialog);
-
-/**
-      \fn     GUI_handleVFilter(void)
-      \brief  Show the main filter window allowing user to add/remove/configure video filters
-
-
-*/
-int GUI_handleVFilter(void)
-{
-        filtermainWindow dialog(qtLastRegisteredDialog());
-        qtRegisterDialog(&dialog);
-
-        dialog.exec();
-
-        qtUnregisterDialog(&dialog);
-
-        return 0;
-}
-//EOF
+#endif
 

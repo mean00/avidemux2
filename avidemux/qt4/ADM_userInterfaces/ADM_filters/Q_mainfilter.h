@@ -84,9 +84,6 @@ public slots:
     void down(bool b);
     void remove(bool b);
     void configure(bool b);
-    void saveFilters(bool b);
-    void loadFilters(bool b);
-    void partial(bool b);
     void activeDoubleClick( QListWidgetItem  *item);
     void allDoubleClick( QListWidgetItem  *item);
     void filterFamilyClick(QListWidgetItem *item);
