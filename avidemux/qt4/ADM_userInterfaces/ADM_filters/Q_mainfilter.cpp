@@ -51,7 +51,7 @@ using std::string;
 #define NB_TREE 8
 #define myFg 0xFF
 #define myBg 0xF0
-static int max=0;
+
 /******************************************************/
 #define ALL_FILTER_BASE       1000
 #define ACTIVE_FILTER_BASE    3000
@@ -63,7 +63,12 @@ static int max=0;
 extern ADM_Composer *video_body;
 
 FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) {}
-
+/**
+ * 
+ * @param object
+ * @param event
+ * @return 
+ */
 bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
@@ -71,61 +76,66 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
         if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseButtonPress)
         {
                 QCoreApplication::sendEvent(view, event);
-
                 return true;
         }
         else if (event->type() == QEvent::FocusIn)
         {
                 view->setFocus();
-
                 return true;
         }
         else
                 return QObject::eventFilter(object, event);
 }
-
+/**
+ * 
+ * @param parent
+ */
 FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
 {
         filter = new FilterItemEventFilter(parent);
 }
-
+/**
+ * 
+ * @param painter
+ * @param option
+ * @param index
+ */
 void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-        QLabel *label;
+    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+    QLabel *label;
 
-        if (view->indexWidget(index) == 0)
-        {
-                label = new QLabel();
+    if (view->indexWidget(index) == 0)
+    {
+            label = new QLabel();
+            label->installEventFilter(filter);
+            label->setAutoFillBackground(true);
+            label->setFocusPolicy(Qt::TabFocus);
+            label->setText(index.data().toString());
+            view->setIndexWidget(index, label);
+    }
 
-                label->installEventFilter(filter);
-                label->setAutoFillBackground(true);
-                label->setFocusPolicy(Qt::TabFocus);
-                label->setText(index.data().toString());
-                view->setIndexWidget(index, label);
-        }
+    label = (QLabel*)view->indexWidget(index);
 
-        label = (QLabel*)view->indexWidget(index);
-
-        if (option.state & QStyle::State_Selected)
-                if (option.state & QStyle::State_HasFocus)
-                        label->setBackgroundRole(QPalette::Highlight);
-                else
-                        label->setBackgroundRole(QPalette::Window);
-        else
-                label->setBackgroundRole(QPalette::Base);
+    if (option.state & QStyle::State_Selected)
+            if (option.state & QStyle::State_HasFocus)
+                    label->setBackgroundRole(QPalette::Highlight);
+            else
+                    label->setBackgroundRole(QPalette::Window);
+    else
+            label->setBackgroundRole(QPalette::Base);
 }
 /**
     \fn preview
 */
 void filtermainWindow::preview(bool b)
 {
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      printf("No selection\n");
-      return;
-   }
+    QListWidgetItem *item=activeList->currentItem();
+    if(!item)
+    {
+       printf("No selection\n");
+       return;
+    }
 
      int itag=item->type();
      ADM_assert(itag>=ACTIVE_FILTER_BASE);
@@ -138,16 +148,14 @@ void filtermainWindow::preview(bool b)
             previewDialog->resetVideoStream(filter);
     else
     {
-            previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
-            connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
-#if 0
-            if (previewDialogX != INT_MIN)
-                    previewDialog->move(previewDialogX, previewDialogY);
-#endif
+        previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+        connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
     }
     previewDialog->show();
 }
-
+/**
+ * \fn closePreview
+ */
 void filtermainWindow::closePreview()
 {
     if (previewDialog)
@@ -155,7 +163,6 @@ void filtermainWindow::closePreview()
         delete previewDialog;
         previewDialog = NULL;
     }
-
 }
 
 /**
@@ -201,9 +208,16 @@ void filtermainWindow::add( bool b)
         {
             ADM_warning("Cannot add filter from tag\n");
         }
-
    }
+}
 
+/**
+    \fn    Add
+    \brief Right click on an available filer
+*/
+void filtermainWindow::removeAction(void)
+{
+   remove(true);
 }
 /**
         \fn     remove( bool b)
@@ -219,10 +233,18 @@ void filtermainWindow::remove( bool b)
       ADM_warning("No selection\n");
       return;
    }
-
-     int itag=item->type();
-     ADM_assert(itag>=ACTIVE_FILTER_BASE);
-     itag-=ACTIVE_FILTER_BASE;
+   removeAtIndex(item);
+}
+/**
+ * \fn removeAtIndex
+ * @param itag
+ */
+void     filtermainWindow::removeAtIndex(QListWidgetItem *item) 
+{
+    int itag=item->type();
+    ADM_assert(itag>=ACTIVE_FILTER_BASE);
+    itag-=ACTIVE_FILTER_BASE;
+    
      ADM_info("Deleting item %d\n",itag);
      ADM_vf_removeFilterAtIndex(itag);
      buildActiveFilterList ();
@@ -231,23 +253,15 @@ void filtermainWindow::remove( bool b)
           setSelected(nb_active_filter-1);
      }
 }
-#if 1
-#define MAKE_BUTTON(button,call) \
-void filtermainWindow::button( bool b)  {}
-#else
-#define MAKE_BUTTON(button,call) \
-void filtermainWindow::button( bool b) \
-{ \
-    call(); \
-    getFirstVideoFilter (); \
-    buildActiveFilterList ();  \
-        setSelected(nb_active_filter - 1); \
+
+/**
+    \fn    Add
+    \brief Right click on an available filer
+*/
+void filtermainWindow::configureAction(void)
+{
+    configure(true);
 }
-#endif
-MAKE_BUTTON(DVD,setDVD)
-MAKE_BUTTON(VCD,setVCD)
-MAKE_BUTTON(SVCD,setSVCD)
-MAKE_BUTTON(halfD1,setHalfD1)
 /**
         \fn     configure( bool b)
         \brief  Configure the selected active filter
@@ -345,6 +359,10 @@ void filtermainWindow::filterFamilyClick(int  m)
                 displayFamily(m);
 
 }
+/**
+ * \fn displayFamily
+ * @param family
+ */
 void filtermainWindow::displayFamily(uint32_t family)
 {
 
@@ -378,7 +396,6 @@ void filtermainWindow::displayFamily(uint32_t family)
 */
 void filtermainWindow::activeDoubleClick( QListWidgetItem  *item)
 {
-
     configure(0);
 }
 /**
@@ -387,7 +404,6 @@ void filtermainWindow::activeDoubleClick( QListWidgetItem  *item)
 */
 void filtermainWindow::allDoubleClick( QListWidgetItem  *item)
 {
-
     add(0);
 }
 
@@ -407,20 +423,20 @@ void filtermainWindow::setupFilters(void)
 void filtermainWindow::buildActiveFilterList(void)
 {
 
-        activeList->clear();
+    activeList->clear();
     int nb=ADM_vf_getSize();
     printf("%d active filters\n",nb);
-        for (uint32_t i = 0; i < nb; i++)
-        {
-            uint32_t                instanceTag=ADM_vf_getTag(i);
-            ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
-            const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
-            const char *conf=instance->getConfiguration();
-            printf("%d %s\n",i,name);
-            QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
-            QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
-            activeList->addItem(item);
-        }
+    for (uint32_t i = 0; i < nb; i++)
+    {
+        uint32_t                instanceTag=ADM_vf_getTag(i);
+        ADM_coreVideoFilter     *instance=ADM_vf_getInstance(i);
+        const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
+        const char *conf=instance->getConfiguration();
+        printf("%d %s\n",i,name);
+        QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
+        QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
+        activeList->addItem(item);
+    }
 
 }
   /**
@@ -457,11 +473,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     displayFamily(0);
     buildActiveFilterList();
-        setSelected(nb_active_filter - 1);
+    setSelected(nb_active_filter - 1);
 
-        previewDialog = NULL;
-        previewDialogX = INT_MIN;
-        previewDialogY = INT_MIN;
+    previewDialog = NULL;
+    previewDialogX = INT_MIN;
+    previewDialogY = INT_MIN;
     //____________________
     //  Context Menu
     //____________________
@@ -476,8 +492,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
     activeList->addAction(remove);
     activeList->addAction(configure);
-    connect(remove,SIGNAL(activated()),this,SLOT(remove()));
-    connect(configure,SIGNAL(activated()),this,SLOT(configure()));
+    connect(remove,SIGNAL(activated()),this,SLOT(removeAction()));
+    connect(configure,SIGNAL(activated()),this,SLOT(configureAction()));
 
  }
 /**
@@ -489,28 +505,7 @@ filtermainWindow::~filtermainWindow()
     previewDialog=NULL;
 
 }
-/*******************************************************/
 
-int GUI_handleVFilter(void);
-static void updateFilterList (filtermainWindow *dialog);
-
-/**
-      \fn     GUI_handleVFilter(void)
-      \brief  Show the main filter window allowing user to add/remove/configure video filters
-
-
-*/
-int GUI_handleVFilter(void)
-{
-        filtermainWindow dialog(qtLastRegisteredDialog());
-        qtRegisterDialog(&dialog);
-
-        dialog.exec();
-
-        qtUnregisterDialog(&dialog);
-
-        return 0;
-}
 /**
     \fn    Add
     \brief Right click on an available filer
@@ -518,22 +513,6 @@ int GUI_handleVFilter(void)
 void filtermainWindow::add(void)
 {
     add(true);
-}
-/**
-    \fn    Add
-    \brief Right click on an available filer
-*/
-void filtermainWindow::remove(void)
-{
-    remove(true);
-}
-/**
-    \fn    Add
-    \brief Right click on an available filer
-*/
-void filtermainWindow::configure(void)
-{
-    configure(true);
 }
 /**
  * \fn loadFilters
@@ -596,6 +575,29 @@ void filtermainWindow::saveFilters( bool b)
 void filtermainWindow::partial(bool b)
 {
     
+}
+
+/*******************************************************/
+
+int GUI_handleVFilter(void);
+static void updateFilterList (filtermainWindow *dialog);
+
+/**
+      \fn     GUI_handleVFilter(void)
+      \brief  Show the main filter window allowing user to add/remove/configure video filters
+
+
+*/
+int GUI_handleVFilter(void)
+{
+        filtermainWindow dialog(qtLastRegisteredDialog());
+        qtRegisterDialog(&dialog);
+
+        dialog.exec();
+
+        qtUnregisterDialog(&dialog);
+
+        return 0;
 }
 //EOF
 
