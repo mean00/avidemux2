@@ -157,94 +157,80 @@ ADM_coreVideoEncoder *admSaver::handleFirstPass(ADM_coreVideoEncoder *pass1)
 {
 #define BUFFER_SIZE 1920*1800*3
 ADM_coreVideoFilter  *last;
-                int sze=chain->size();
-                ADM_assert(sze);
-                last=(*chain)[sze-1]; // Grab last filter
+bool skip=false;
+    int sze=chain->size();
+    ADM_assert(sze);
+    last=(*chain)[sze-1]; // Grab last filter
+    uint64_t videoDuration=last->getInfo()->totalDuration;
 
+    if(videoDuration<5000) videoDuration=5000;
+    printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
+    
+    if(ADM_fileExist(logFileName.c_str()))
+    {
+        if(GUI_Question(QT_TRANSLATE_NOOP("adm","Reuse previous first pass data ?\nWarning, the settings must be close.")))
+        {
+            skip=true;
+        }
+    }
+    
+    if(!skip)
+    {
+        pass1->setPassAndLogFile(1,logFileName.c_str());
+        if(false==pass1->setup())
+        {
+            printf("[Save] setup failed for pass1 encoder\n");
+            delete pass1;
+            return NULL;
+        }
+        ADMBitstream bitstream;
 
-uint64_t videoDuration=last->getInfo()->totalDuration;
+        uint8_t *buffer=new uint8_t[BUFFER_SIZE];
+        bitstream.data=buffer;
+        bitstream.bufferSize=BUFFER_SIZE;
+        DIA_workingBase  *encoding=createWorking("Pass1");
+        int nbFrames=0;
+        while(pass1->encode(&bitstream))
+        {
+            if(bitstream.pts!=ADM_NO_PTS)
+            {
+                float f=100;
+                f/=videoDuration;
+                f*=bitstream.pts;
+                uint32_t percent=(uint32_t)f;
+                encoding->update(percent);
+            }
+            nbFrames++;
+        }
+        delete encoding;
+        delete [] buffer;
+        delete pass1;
+        encoding=NULL;
+        buffer=NULL;
+        pass1=NULL;
 
+        printf("[Save] Pass 1 done, encoded %d frames, restarting for pass 2\n",nbFrames);
+        // Destroy filter chain & create the new encoder
+        destroyVideoFilterChain(chain);
+        chain=NULL;
+    }
+    chain=createVideoFilterChain(markerA,markerB);
 
-
-                if(videoDuration<5000) videoDuration=5000;
-                printf("[Save] Performing Pass one,using %s as log file\n",logFileName.c_str());
-                pass1->setPassAndLogFile(1,logFileName.c_str());
-                if(false==pass1->setup())
-                {
-                    printf("[Save] setup failed for pass1 encoder\n");
-                    delete pass1;
-                    return NULL;
-                }
-                ADMBitstream bitstream;
-
-                uint8_t *buffer=new uint8_t[BUFFER_SIZE];
-                bitstream.data=buffer;
-                bitstream.bufferSize=BUFFER_SIZE;
-                DIA_workingBase  *encoding=createWorking("Pass1");
-                int nbFrames=0;
-                while(pass1->encode(&bitstream))
-                {
-                    if(bitstream.pts!=ADM_NO_PTS)
-                    {
-                        float f=100;
-                        f/=videoDuration;
-                        f*=bitstream.pts;
-                        uint32_t percent=(uint32_t)f;
-                        encoding->update(percent);
-                    }
-                    nbFrames++;
-                }
-                delete encoding;
-                delete [] buffer;
-                delete pass1;
-                encoding=NULL;
-                buffer=NULL;
-                pass1=NULL;
-
-                printf("[Save] Pass 1 done, encoded %d frames, restarting for pass 2\n",nbFrames);
-                // Destroy filter chain & create the new encoder
-                destroyVideoFilterChain(chain);
-                chain=NULL;
-                chain=createVideoFilterChain(markerA,markerB);
-
-                if(!chain)
-                {
-                    printf("[Save] Cannot recreate video filter chain\n");
-                    return NULL;
-                }
-                int sz=chain->size();
-                ADM_assert(sz);
-                last=(*chain)[sz-1]; // Grab last filter
-                ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex,muxer->useGlobalHeader()); 
-                if(!pass2)
-                {
-                    printf("[Save] Cannot create encoder for pass 2\n");
-                    return NULL;
-                }
-                pass2->setPassAndLogFile(2,logFileName.c_str());
-#if 0
-                buffer=new uint8_t[BUFFER_SIZE];
-                pass2->setup();
-                nbFrames=0;
-                bitstream.data=buffer;
-                encoding=createWorking("Pass2");
-                while(pass2->encode(&bitstream))
-                {
-                    if(bitstream.pts!=ADM_NO_PTS)
-                    {
-                        float f=100;
-                        f/=videoDuration;
-                        f*=bitstream.pts;
-                        uint32_t percent=(uint32_t)f;
-                        encoding->update(percent);
-                    }
-                    nbFrames++;
-                }
-                printf(": Pass2 done : %d frames this time\n",nbFrames);
-                delete [] buffer;
-                delete encoding;
-
-#endif
+    if(!chain)
+    {
+        printf("[Save] Cannot recreate video filter chain\n");
+        return NULL;
+    }
+    int sz=chain->size();
+    ADM_assert(sz);
+    last=(*chain)[sz-1]; // Grab last filter
+    ADM_coreVideoEncoder *pass2=createVideoEncoderFromIndex(last,videoEncoderIndex,muxer->useGlobalHeader()); 
+    if(!pass2)
+    {
+        printf("[Save] Cannot create encoder for pass 2\n");
+        return NULL;
+    }
+    pass2->setPassAndLogFile(2,logFileName.c_str());
     return pass2;
 }
 /**
