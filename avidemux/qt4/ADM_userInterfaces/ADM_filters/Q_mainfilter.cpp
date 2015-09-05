@@ -73,18 +73,20 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
 
-        if (event->type() == QEvent::KeyPress || event->type() == QEvent::MouseButtonPress)
+        switch(event->type())
         {
+            case QEvent::KeyPress :
+            case QEvent::MouseButtonPress:
+            //case QEvent::ContextMenu:
                 QCoreApplication::sendEvent(view, event);
                 return true;
-        }
-        else if (event->type() == QEvent::FocusIn)
-        {
+            case QEvent::FocusIn:       
                 view->setFocus();
                 return true;
-        }
-        else
+            default:
                 return QObject::eventFilter(object, event);
+        }
+        return false;
 }
 /**
  * 
@@ -484,7 +486,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     QAction *add = new  QAction(QString("Add"),this);
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
-    connect(add,SIGNAL(activated()),this,SLOT(add()));
+    connect(add,SIGNAL(activated()),this,SLOT(addSlot()));
 
         //previewFrameIndex = curframe;
     QAction *remove = new  QAction(QString("Remove"),this);
@@ -510,7 +512,7 @@ filtermainWindow::~filtermainWindow()
     \fn    Add
     \brief Right click on an available filer
 */
-void filtermainWindow::add(void)
+void filtermainWindow::addSlot(void)
 {
     add(true);
 }

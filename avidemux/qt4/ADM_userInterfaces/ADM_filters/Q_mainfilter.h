@@ -91,7 +91,7 @@ public slots:
     void preview(bool b);
     void closePreview(void);
     // context menu
-    void add(void);
+    void addSlot(void);
     void removeAction(void);
     void configureAction(void);
 protected:
