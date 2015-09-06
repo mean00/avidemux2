@@ -94,6 +94,8 @@ public slots:
     void addSlot(void);
     void removeAction(void);
     void configureAction(void);
+    // Move filters around
+    void indexesMoved(const QModelIndexList & indexes);
 protected:
     void removeAtIndex(QListWidgetItem *item) ;
 private:

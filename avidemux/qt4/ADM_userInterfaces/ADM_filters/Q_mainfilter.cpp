@@ -60,7 +60,7 @@ using std::string;
 
 /*******************************************************/
 
-#define NO_DELEGATE
+//#define NO_DELEGATE
 
 extern ADM_Composer *video_body;
 
@@ -74,7 +74,7 @@ FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) 
 bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
         QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-
+        //printf("Event %d\n",event->type());
         switch(event->type())
         {
             case QEvent::KeyPress :
@@ -453,15 +453,15 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     availableList=ui.listWidgetAvailable;
     activeList=ui.listWidgetActive;
-#ifdef NO_DELEGATE    
+#if 1 //def NO_DELEGATE    
     activeList->setSelectionMode(QAbstractItemView::SingleSelection);
     activeList->setDragEnabled(true);
     activeList->setDragDropMode(QAbstractItemView::InternalMove);
     activeList->setDropIndicatorShown(true);
     activeList->viewport()->setAcceptDrops(true);
-#else    
+    connect(activeList,SIGNAL(indexesMoved(const QModelIndexList &)),this,SLOT(indexesMoved(const QModelIndexList &)));
+#endif    
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
-#endif
     
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
@@ -483,7 +483,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
 
-    availableList->setItemDelegate(new FilterItemDelegate(availableList));
+    //availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
     buildActiveFilterList();
@@ -499,16 +499,15 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(activated()),this,SLOT(addSlot()));
-#if 1
-        //previewFrameIndex = curframe;
+    //previewFrameIndex = curframe;
     QAction *remove = new  QAction(QString("Remove"),this);
     QAction *configure = new  QAction(QString("Configure"),this);
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
     activeList->addAction(remove);
     activeList->addAction(configure);
-    connect(remove,SIGNAL(activated()),this,SLOT(removeAction()));
-    connect(configure,SIGNAL(activated()),this,SLOT(configureAction()));
-#endif
+    connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
+    connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+
  }
 /**
     \fn dtor
@@ -528,8 +527,20 @@ void filtermainWindow::addSlot(void)
 {
     add(true);
 }
-
-
+/**
+ * 
+ * @return 
+ */
+void filtermainWindow::indexesMoved(const QModelIndexList & indexes)
+{
+    int n=indexes.size();
+    printf(" -- Moved with %d inputs\n",n);
+    for(int i=0;i<n;i++)
+    {
+        //indexes[i].
+        
+    }
+}
 /*******************************************************/
 
 int GUI_handleVFilter(void);
