@@ -60,6 +60,8 @@ using std::string;
 
 /*******************************************************/
 
+#define NO_DELEGATE
+
 extern ADM_Composer *video_body;
 
 FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) {}
@@ -451,6 +453,16 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     availableList=ui.listWidgetAvailable;
     activeList=ui.listWidgetActive;
+#ifdef NO_DELEGATE    
+    activeList->setSelectionMode(QAbstractItemView::SingleSelection);
+    activeList->setDragEnabled(true);
+    activeList->setDragDropMode(QAbstractItemView::InternalMove);
+    activeList->setDropIndicatorShown(true);
+    activeList->viewport()->setAcceptDrops(true);
+#else    
+    activeList->setItemDelegate(new FilterItemDelegate(activeList));
+#endif
+    
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
@@ -470,7 +482,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     //connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-    activeList->setItemDelegate(new FilterItemDelegate(activeList));
+
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
@@ -487,7 +499,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(activated()),this,SLOT(addSlot()));
-
+#if 1
         //previewFrameIndex = curframe;
     QAction *remove = new  QAction(QString("Remove"),this);
     QAction *configure = new  QAction(QString("Configure"),this);
@@ -496,7 +508,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     activeList->addAction(configure);
     connect(remove,SIGNAL(activated()),this,SLOT(removeAction()));
     connect(configure,SIGNAL(activated()),this,SLOT(configureAction()));
-
+#endif
  }
 /**
     \fn dtor
