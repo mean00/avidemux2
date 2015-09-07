@@ -1,5 +1,6 @@
 PROJECT(mkv)
 INCLUDE_DIRECTORIES( .) 
+INCLUDE_DIRECTORIES( /usr/include/avidemux/2.6) 
 set(MKV ../../avidemux_plugins/ADM_demuxers/Matroska/)
 INCLUDE_DIRECTORIES( ${MKV})
 #LINK_DIRECTORIES(${ITK_LIBRARY_DIRS})
