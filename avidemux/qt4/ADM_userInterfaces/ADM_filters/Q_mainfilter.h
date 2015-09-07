@@ -80,8 +80,8 @@ protected:
     Ui_seekablePreviewWindow *previewDialog;
 public slots:   
     void add(bool b);
-    void up(bool b);
-    void down(bool b);
+    void moveUp();
+    void moveDown();
     void remove(bool b);
     void configure(bool b);
     void activeDoubleClick( QListWidgetItem  *item);

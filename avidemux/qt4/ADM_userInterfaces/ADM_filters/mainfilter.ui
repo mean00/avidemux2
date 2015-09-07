@@ -110,54 +110,6 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QToolButton" name="toolButtonConfigure">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>C&amp;onfigure</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButtonPartial">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>P&amp;artial</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButtonDown">
-         <property name="text">
-          <string>Down</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/down.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/down.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButtonUp">
-         <property name="text">
-          <string>Up</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/up.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/up.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -169,17 +121,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QToolButton" name="pushButtonRemove">
-         <property name="text">
-          <string>Remove</string>
-         </property>
-         <property name="icon">
-          <iconset resource="filter.qrc">
-           <normaloff>:/new/prefix1/common/ADM_icons/videoFilter/remove.png</normaloff>:/new/prefix1/common/ADM_icons/videoFilter/remove.png</iconset>
-         </property>
-        </widget>
        </item>
       </layout>
      </item>
@@ -400,11 +341,6 @@
   <tabstop>listFilterCategory</tabstop>
   <tabstop>listWidgetAvailable</tabstop>
   <tabstop>listWidgetActive</tabstop>
-  <tabstop>toolButtonConfigure</tabstop>
-  <tabstop>toolButtonPartial</tabstop>
-  <tabstop>toolButtonDown</tabstop>
-  <tabstop>toolButtonUp</tabstop>
-  <tabstop>pushButtonRemove</tabstop>
   <tabstop>pushButtonPreview</tabstop>
   <tabstop>buttonClose</tabstop>
  </tabstops>

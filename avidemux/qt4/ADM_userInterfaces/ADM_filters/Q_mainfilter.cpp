@@ -292,7 +292,7 @@ void filtermainWindow::configure( bool b)
         \fn     up( bool b)
         \brief  Move selected filter one place up
 */
-void filtermainWindow::up( bool b)
+void filtermainWindow::moveUp( )
 {
     int itag=getTagForActiveSelection();
     if(-1==itag)
@@ -305,7 +305,7 @@ void filtermainWindow::up( bool b)
         \fn     down( bool b)
         \brief  Move selected filter one place down
 */
-void filtermainWindow::down( bool b)
+void filtermainWindow::moveDown( )
 {
     int itag=getTagForActiveSelection();
     if(-1==itag)
@@ -447,15 +447,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(activeList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(activeDoubleClick(QListWidgetItem *)));
     connect(availableList,SIGNAL(itemDoubleClicked(QListWidgetItem *)),this,SLOT(allDoubleClick(QListWidgetItem *)));
 
-    connect((ui.toolButtonConfigure),SIGNAL(clicked(bool)),this,SLOT(configure(bool)));
-    //connect((ui.toolButtonAdd),SIGNAL(clicked(bool)),this,SLOT(add(bool)));
-    connect((ui.pushButtonRemove),SIGNAL(clicked(bool)),this,SLOT(remove(bool)));
-    connect((ui.toolButtonUp),SIGNAL(clicked(bool)),this,SLOT(up(bool)));
-    connect((ui.toolButtonDown),SIGNAL(clicked(bool)),this,SLOT(down(bool)));
-   // connect((ui.toolButtonPartial),SIGNAL(clicked(bool)),this,SLOT(partial(bool)));
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
-    //connect(ui.pushLoad, SIGNAL(clicked(bool)), this, SLOT(loadFilters(bool)));
-    //connect(ui.pushSave, SIGNAL(clicked(bool)), this, SLOT(saveFilters(bool)));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
 
@@ -475,14 +467,23 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(activated()),this,SLOT(addSlot()));
-    //previewFrameIndex = curframe;
+    
+    
     QAction *remove = new  QAction(QString("Remove"),this);
     QAction *configure = new  QAction(QString("Configure"),this);
+    QAction *up = new  QAction(QString("Move up"),this);
+    QAction *down = new  QAction(QString("Move down"),this);
+    
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
-    activeList->addAction(remove);
+    activeList->addAction(up);
+    activeList->addAction(down);
     activeList->addAction(configure);
+    activeList->addAction(remove);
+    
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+    connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
+    connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
 
  }
 /**
