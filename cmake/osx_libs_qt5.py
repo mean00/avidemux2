@@ -10,7 +10,7 @@ rootFolder=home+"/Avidemux2.6.app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
-qtPluginFolder=rootFolder+"/../PlugIns"
+qtPluginFolder=rootFolder+"/../plugins"
 qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport']
 
 #
@@ -176,7 +176,7 @@ def changeQtPlatformLinkPath(folder):
            changeGlobalLinkPathForOne(absPath)
            changeLocalLinkPathForOne(absPath)
            changeQtLinkPathForOne(absPath)
-           shortName="@executable_path/platforms/"+re.sub("^.*\/","",absPath)
+           shortName="@executable_path/../../plugins/platforms/"+re.sub("^.*\/","",absPath)
            changeId(absPath,shortName)
 def changeQtPluginLinkPath(folder):
     for dirname, dirnames, filenames in os.walk(folder):
@@ -270,7 +270,7 @@ def copyQtFiles(targetFolder):
         # Also copy plugins
         myMkDir(qtPluginFolder)
 	myCopyTree('/usr/local/opt/qt5/plugins/imageformats',qtPluginFolder+'/imageformats')
-	myCopyTree('/usr/local/opt/qt5/plugins/platforms',binFolder+'/platforms')
+	myCopyTree('/usr/local/opt/qt5/plugins/platforms',qtPluginFolder+'/platforms')
 #################################################################
 # Step 1 : Copy system files so we have a standalone package
 #
