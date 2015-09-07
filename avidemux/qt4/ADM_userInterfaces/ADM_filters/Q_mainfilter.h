@@ -97,7 +97,7 @@ public slots:
     // Move filters around
     void indexesMoved(const QModelIndexList & indexes);
 protected:
-    void removeAtIndex(QListWidgetItem *item) ;
+    int  getTagForActiveSelection();
 private:
     void setSelected(int sel);
     void displayFamily(uint32_t family);

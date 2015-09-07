@@ -59,7 +59,7 @@ using std::string;
 #define nb_active_filter ADM_vf_getSize()
 
 /*******************************************************/
-
+#define zprintf(...) {}
 //#define NO_DELEGATE
 
 extern ADM_Composer *video_body;
@@ -73,22 +73,29 @@ FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) 
  */
 bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
 {
-        QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-        //printf("Event %d\n",event->type());
-        switch(event->type())
-        {
-            case QEvent::KeyPress :
-            case QEvent::MouseButtonPress:
-            //case QEvent::ContextMenu:
-                QCoreApplication::sendEvent(view, event);
-                return true;
-            case QEvent::FocusIn:       
-                view->setFocus();
-                return true;
-            default:
-                return QObject::eventFilter(object, event);
-        }
-        return false;
+    zprintf("Object : %p\n",object);
+    zprintf("Parent : %p\n",parent());
+#if !defined(NO_EVENT_FILTER)
+    QListWidget *list=qobject_cast<QListWidget*>(parent());
+    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
+    //printf("Event %d\n",event->type());
+    switch(event->type())
+    {
+        case QEvent::KeyPress :
+        case QEvent::MouseButtonPress:
+        //case QEvent::ContextMenu:
+            QCoreApplication::sendEvent(list, event);
+            return true;
+        case QEvent::FocusIn:       
+            list->setFocus();
+            return true;
+        default:
+            return QObject::eventFilter(object, event);
+    }
+    return false;
+#else
+      return QObject::eventFilter(object, event);
+#endif
 }
 /**
  * 
@@ -96,7 +103,8 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
  */
 FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
 {
-        filter = new FilterItemEventFilter(parent);
+    zprintf("Delegate : %p\n",this);
+    filter = new FilterItemEventFilter(parent);
 }
 /**
  * 
@@ -229,35 +237,17 @@ void filtermainWindow::removeAction(void)
 */
 void filtermainWindow::remove( bool b)
 {
-   /* Get selection if any */
-  /* Now that we have the tab, get the selection */
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      ADM_warning("No selection\n");
-      return;
-   }
-   removeAtIndex(item);
-}
-/**
- * \fn removeAtIndex
- * @param itag
- */
-void     filtermainWindow::removeAtIndex(QListWidgetItem *item) 
-{
-    int itag=item->type();
-    ADM_assert(itag>=ACTIVE_FILTER_BASE);
-    itag-=ACTIVE_FILTER_BASE;
-    
-     ADM_info("Deleting item %d\n",itag);
-     ADM_vf_removeFilterAtIndex(itag);
-     buildActiveFilterList ();
-     if(nb_active_filter)
-     {
+    int itag=getTagForActiveSelection();
+    if(-1==itag)
+        return;
+    ADM_info("Deleting item %d\n",itag);
+    ADM_vf_removeFilterAtIndex(itag);
+    buildActiveFilterList ();
+    if(nb_active_filter)
+    {
           setSelected(nb_active_filter-1);
-     }
+    }
 }
-
 /**
     \fn    Add
     \brief Right click on an available filer
@@ -266,32 +256,37 @@ void filtermainWindow::configureAction(void)
 {
     configure(true);
 }
+
+/**
+ * \fn getTagForActiveSelection
+ */
+int filtermainWindow::getTagForActiveSelection()
+{
+   QListWidgetItem *item=activeList->currentItem();
+   if(!item)
+   {
+      ADM_warning("No selection\n");
+      return -1;
+   }
+
+    int itag=item->type();
+    ADM_assert(itag>=ACTIVE_FILTER_BASE);
+    itag-=ACTIVE_FILTER_BASE;
+    /* Filter 0 is the decoder ...*/ 
+    return itag;
+}
 /**
         \fn     configure( bool b)
         \brief  Configure the selected active filter
 */
 void filtermainWindow::configure( bool b)
 {
-   /* Get selection if any */
-  /* Now that we have the tab, get the selection */
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      ADM_warning("No selection\n");
-      return;
-   }
-
-     int itag=item->type();
-     ADM_assert(itag>=ACTIVE_FILTER_BASE);
-     itag-=ACTIVE_FILTER_BASE;
-     /* Filter 0 is the decoder ...*/
-     ADM_info("Rank : %d\n",itag);
-
-   //   ADM_assert(itag);
-     /**/
-        ADM_vf_configureFilterAtIndex(itag);
-        buildActiveFilterList ();
-                setSelected(itag);
+    int itag=getTagForActiveSelection();
+    if(-1==itag)
+        return;
+    ADM_vf_configureFilterAtIndex(itag);
+    buildActiveFilterList ();
+    setSelected(itag);
 }
 /**
         \fn     up( bool b)
@@ -299,22 +294,12 @@ void filtermainWindow::configure( bool b)
 */
 void filtermainWindow::up( bool b)
 {
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      ADM_warning("No selection\n");
-      return;
-   }
-
-     int itag=item->type();
-     ADM_assert(itag>=ACTIVE_FILTER_BASE);
-     itag-=ACTIVE_FILTER_BASE;
-      ADM_info("Rank : %d\n",itag);
-
-        if (!itag ) return;
-        ADM_vf_moveFilterUp(itag);
-        buildActiveFilterList ();
-        setSelected(itag-1);
+    int itag=getTagForActiveSelection();
+    if(-1==itag)
+        return;
+    ADM_vf_moveFilterUp(itag);
+    buildActiveFilterList ();
+    setSelected(itag-1);
 }
 /**
         \fn     down( bool b)
@@ -322,26 +307,15 @@ void filtermainWindow::up( bool b)
 */
 void filtermainWindow::down( bool b)
 {
-   QListWidgetItem *item=activeList->currentItem();
-   if(!item)
-   {
-      ADM_warning("No selection\n");
-      return;
-   }
-
-     int itag=item->type();
-     ADM_assert(itag>=ACTIVE_FILTER_BASE);
-     itag-=ACTIVE_FILTER_BASE;
-     /* Filter 0 is the decoder ...*/
-      ADM_info("Rank : %d\n",itag);
-     //ADM_assert(itag);
-
+    int itag=getTagForActiveSelection();
+    if(-1==itag)
+        return;
     if (((int) itag < (int) (nb_active_filter - 1)))
-        {
-            ADM_vf_moveFilterDown(itag);
-            buildActiveFilterList ();
-            setSelected(itag+1);
-        }
+    {
+        ADM_vf_moveFilterDown(itag);
+        buildActiveFilterList ();
+        setSelected(itag+1);
+    }
 }
 /**
         \fn     filtermainWindow::filterFamilyClick( QListWidgetItem  *item)
@@ -359,8 +333,8 @@ void filtermainWindow::filterFamilyClick(QListWidgetItem *item)
 void filtermainWindow::filterFamilyClick(int  m)
 {
 
-        if(m>=0)
-                displayFamily(m);
+    if(m>=0)
+            displayFamily(m);
 
 }
 /**
@@ -369,8 +343,6 @@ void filtermainWindow::filterFamilyClick(int  m)
  */
 void filtermainWindow::displayFamily(uint32_t family)
 {
-
-
   ADM_assert(family<VF_MAX);
 
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
@@ -391,7 +363,7 @@ void filtermainWindow::displayFamily(uint32_t family)
      }
 
   if (nb)
-          availableList->setCurrentRow(0);
+    availableList->setCurrentRow(0);
 }
 
 /**
@@ -439,6 +411,7 @@ void filtermainWindow::buildActiveFilterList(void)
         printf("%d %s\n",i,name);
         QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
         QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
+        printf("Active item :%p\n",item);
         activeList->addItem(item);
     }
 
@@ -453,6 +426,9 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     availableList=ui.listWidgetAvailable;
     activeList=ui.listWidgetActive;
+    
+    printf("active : %p\n",activeList);
+    
 #if 1 //def NO_DELEGATE    
     activeList->setSelectionMode(QAbstractItemView::SingleSelection);
     activeList->setDragEnabled(true);
@@ -483,7 +459,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
 
-    //availableList->setItemDelegate(new FilterItemDelegate(availableList));
+    availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
     buildActiveFilterList();
@@ -514,7 +490,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 */
 filtermainWindow::~filtermainWindow()
 {
-    if(previewDialog) delete previewDialog;
+    if(previewDialog) 
+        delete previewDialog;
     previewDialog=NULL;
 
 }
@@ -550,11 +527,11 @@ int GUI_handleVFilter(void);
 */
 int GUI_handleVFilter(void)
 {
-        filtermainWindow dialog(qtLastRegisteredDialog());
-        qtRegisterDialog(&dialog);
-        dialog.exec();
-        qtUnregisterDialog(&dialog);
-        return 0;
+    filtermainWindow dialog(qtLastRegisteredDialog());
+    qtRegisterDialog(&dialog);
+    dialog.exec();
+    qtUnregisterDialog(&dialog);
+    return 0;
 }
 //EOF
 #if 0
