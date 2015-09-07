@@ -714,15 +714,16 @@ int UI_Init(int nargc, char **nargv)
         Q_INIT_RESOURCE(avidemux);
 	Q_INIT_RESOURCE(filter);
 
-	myApplication=new myQApplication (global_argc, global_argv);
 #if defined(__APPLE__)
  printf("Setting qt plugin folder\n");
  QDir dir(QApplication::applicationDirPath());
  dir.cdUp();
  dir.cdUp();
  dir.cd("plugins");
+ printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
+	myApplication=new myQApplication (global_argc, global_argv);
 	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
 
 	loadTranslator();
