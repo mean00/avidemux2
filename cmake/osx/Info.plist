@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Avidemux2.6.app</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Avidemux 2.6 Copyright 2001-2013 Mean</string>
+	<string>Avidemux 2.6 Copyright 2001-2015 Mean</string>
 	<key>CFBundleIconFile</key>
 	<string>appIcon.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -35,7 +35,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Avidemux 2.6.x Copyright 2001-2013 Mean</string>
+	<string>Avidemux 2.6.x Copyright 2001-2015 Mean</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
