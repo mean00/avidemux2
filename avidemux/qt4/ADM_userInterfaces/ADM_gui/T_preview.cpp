@@ -2,7 +2,7 @@
 /***************************************************************************
     Handle all redraw operation for QT4 
     
-    copyright            : (C) 2006 by mean
+    copyright            : (C) 2006/2015 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -81,19 +81,29 @@ bool ADM_QPreviewCleanup(void)
     rgbDataBuffer=NULL;
     return true;
 }
+/**
+ * 
+ * @param z
+ */
 #ifdef __HAIKU__
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)  {}
 #else
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
 {    
-setAttribute( Qt::WA_PaintOnScreen, true );
-// Put a transparent background
-//setAutoFillBackground(true);
-QPalette p =  palette();
-QColor color(Qt::black);
-color.setAlpha(0);
-p.setColor( QPalette::Window, color );
-setPalette( p );
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
+    setAttribute( Qt::WA_PaintOnScreen, true );
+   // Put a transparent background
+    //setAutoFillBackground(true);
+    QPalette p =  palette();
+    QColor color(Qt::black);
+    color.setAlpha(0);
+    p.setColor( QPalette::Window, color );
+    setPalette( p );
+   
+#else
+    setAttribute(Qt::WA_UpdatesDisabled);
+    
+#endif
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -102,29 +112,44 @@ ADM_Qvideo::~ADM_Qvideo()
     printf("[Qvideo]Destroying QVideo\n");
     callBackQtWindowDestroyed();
 }
-
+/**
+ * 
+ * @param ev
+ */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
-{
-	if (paintEngineType == -1)
-	{
-		QPainter painter(this);
+{	
+     if (paintEngineType == -1)
+     {
+               QPainter painter(this);
 
-		if (painter.isActive())
-			paintEngineType = painter.paintEngine()->type();
+               if (painter.isActive())
+                       paintEngineType = painter.paintEngine()->type();
 
-		painter.end();
-	}
+               painter.end();
+      }
 
 	if (!displayW || !displayH || !rgbDataBuffer )
 		return;
 
-	if (renderExposeEventFromUI())
-	{
-		QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-		QPainter painter(this);
-		painter.drawImage(QPoint(0,0),image);
-		painter.end();
-	}
+            if (renderExposeEventFromUI())
+            {
+                    QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+                    QPainter painter(this);
+                    if (painter.isActive())
+                    {
+                        //painter.drawImage(QPoint(0,0),image);
+                        const QRect rec=ev->rect();
+                        int x=rec.x();
+                        int y=rec.y();
+                        int w=rec.width();
+                        int h=rec.height();
+                        painter.drawImage(x,y,image,x,y,w,h);
+                        painter.end();
+                    }else
+                    {
+                        printf("Painter inactive!\n");
+                    }
+            }
 }
 
 ADM_Qvideo *videoWindow=NULL;
@@ -135,10 +160,6 @@ void UI_QT4VideoWidget(QFrame *host)
    hostFrame=host;
    videoWindow->resize(hostFrame->size());
    videoWindow->show();
-#if 0
-   host->setAutoFillBackground(false);
-   host->setEnabled(false);
-#endif   
    
 }
 //*************************
