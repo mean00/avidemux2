@@ -101,7 +101,7 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
     setPalette( p );
    
 #else
-    setAttribute(Qt::WA_UpdatesDisabled);
+    
     
 #endif
 
