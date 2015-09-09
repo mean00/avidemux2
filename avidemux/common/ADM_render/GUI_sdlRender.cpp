@@ -40,30 +40,114 @@ extern "C" {
 #include "GUI_accelRender.h"
 #include "GUI_sdlRender.h"
 
+/**
+ * \class sdlRenderImpl
+ * \brief implementation
+ */
+class sdlRenderImpl: public VideoRenderBase
+{
+  protected:
+              bool     useYV12;
+  public:
+                             sdlRenderImpl( void ) ;
+              virtual        ~sdlRenderImpl();
+              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              virtual	bool stop(void);				
+              virtual   bool displayImage(ADMImage *pic);
+              virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool usingUIRedraw(void) {return true;};
+              virtual   bool refresh(void) ;
+protected:
+                        bool cleanup(void);
+                        bool sdl_running;
+                        SDL_Window   *sdl_window;
+                        SDL_Renderer *sdl_renderer;
+                        SDL_Texture  *sdl_texture;
+                        #ifdef _WIN32
+                        HWND sdlWin32;
+                        #endif
+                        
+};
+
+
+static sdlRenderImpl *impl=NULL;
+
+/**
+ * 
+ */
+sdlRender::sdlRender()
+{
+    if(!impl)
+        impl=new sdlRenderImpl;
+}
+/**
+ * 
+ * @param window
+ * @param w
+ * @param h
+ * @param zoom
+ * @return 
+ */
+bool sdlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+{
+    ADM_assert(impl);
+    return impl->init(window,w,h,zoom);
+}
+bool sdlRender::stop()
+{
+    ADM_assert(impl);
+    return impl->stop();
+}
+bool  sdlRender::displayImage(ADMImage *pic)
+{
+    ADM_assert(impl);
+    return impl->displayImage(pic);
+}
+bool  sdlRender::changeZoom(renderZoom newZoom)
+{
+    ADM_assert(impl);
+    return impl->changeZoom(newZoom);
+}
+bool  sdlRender::usingUIRedraw()
+{
+    ADM_assert(impl);
+    return impl->usingUIRedraw();
+}
+bool sdlRender::refresh(void) 
+{
+    ADM_assert(impl);
+    return impl->refresh();
+}
+
+
+          
+
 
 //******************************************
-static uint8_t sdl_running=0;
-//static SDL_Overlay *sdl_overlay=NULL;
-static SDL_Surface *sdl_display=NULL;
-static SDL_Window  *sdl_window=NULL;
-static SDL_Renderer *sdl_renderer=NULL;
-static SDL_Texture *sdl_texture=NULL;
-static SDL_Rect disp;
-#ifdef _WIN32
-HWND sdlWin32;
-#endif
 /**
     \fn sdlRender
 */
-sdlRender::sdlRender( void)
+sdlRenderImpl::sdlRenderImpl( void)
 {
         useYV12=true;
+        sdl_running=false;
         ADM_info("[SDL] Init rendered\n");
+        sdl_window=NULL;
+        sdl_renderer=NULL;
+        sdl_texture=NULL;
 }
+/**
+ * 
+ */
+sdlRenderImpl::~sdlRenderImpl()
+{
+    stop();
+}
+
 /**
     \fn stop
 */
-bool sdlRender::stop( void)
+bool sdlRenderImpl::stop( void)
 {
         cleanup();
         if(sdl_running)
@@ -77,18 +161,13 @@ bool sdlRender::stop( void)
 /**
     \fn init
 */
-bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
+bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
     ADM_info("[SDL] Initialising video subsystem\n");
 
     int bpp;
     int flags;
     baseInit(w,h,zoom);
-    // Ask for the position of the drawing window at start
-    disp.w=w;
-    disp.h=h;
-    disp.x=window->x;
-    disp.y=window->y;
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
@@ -103,11 +182,14 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
     ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
     
     int nbDriver=SDL_GetNumRenderDrivers();
+    int sdlDriverIndex=0;
     for(int i=0;i<nbDriver;i++)
     {
         SDL_RendererInfo info;
         SDL_GetRenderDriverInfo(i,&info);
         ADM_info("[%d] %s\n",i,info.name);
+        if(info.flags & SDL_RENDERER_SOFTWARE)
+            sdlDriverIndex=i;
     }
     
 #if 0
@@ -127,7 +209,7 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
         cleanup();
         return false;
     }
-    int sdlDriverIndex=2;
+    
     sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, SDL_RENDERER_ACCELERATED |  SDL_RENDERER_PRESENTVSYNC);
     if(!sdl_renderer)
         sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, 0);
@@ -166,14 +248,29 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
  * 
  * @return 
  */
-bool sdlRender::cleanup()
+bool sdlRenderImpl::cleanup()
 {
+    if(sdl_texture)
+    {
+        SDL_DestroyTexture(sdl_texture);
+        sdl_texture=NULL;
+    }
+    if(sdl_renderer)
+    {
+        SDL_DestroyRenderer(sdl_renderer);
+        sdl_renderer=NULL;
+    }
+    if(sdl_window)
+    {
+        //SDL_DestroyWindow(sdl_window);
+        sdl_window=NULL;
+    }
     return true;
 }
 /**
     \fn displayImage
 */
-bool sdlRender::displayImage(ADMImage *pic)
+bool sdlRenderImpl::displayImage(ADMImage *pic)
 {
     if(!sdl_texture)
         return false;
@@ -202,7 +299,7 @@ bool sdlRender::displayImage(ADMImage *pic)
  * 
  * @return 
  */
-bool sdlRender::refresh(void)
+bool sdlRenderImpl::refresh(void)
 {
     if(!sdl_texture)
         return false;
@@ -214,7 +311,7 @@ bool sdlRender::refresh(void)
 /**
     \fn changeZoom
 */
-bool sdlRender::changeZoom(renderZoom newZoom)
+bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 {
         ADM_info("changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);
@@ -270,10 +367,12 @@ bool initSdl(int videoDevice)
 */
 void quitSdl(void)
 {
-	if (SDL_WasInit(SDL_INIT_EVERYTHING))
-	{
-		ADM_info("[SDL] Quitting...\n");
-		SDL_Quit();
-	}
+
+    if(impl)
+    {
+        delete impl;
+        impl=NULL;
+    }
+
 }
 #endif
