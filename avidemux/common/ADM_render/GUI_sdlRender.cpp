@@ -101,7 +101,16 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
 
     sdl_running=1;
     ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
-#if 1
+    
+    int nbDriver=SDL_GetNumRenderDrivers();
+    for(int i=0;i<nbDriver;i++)
+    {
+        SDL_RendererInfo info;
+        SDL_GetRenderDriverInfo(i,&info);
+        ADM_info("[%d] %s\n",i,info.name);
+    }
+    
+#if 0
     sdl_window = SDL_CreateWindow("avidemux_sdl2",
                           SDL_WINDOWPOS_UNDEFINED,
                           SDL_WINDOWPOS_UNDEFINED,
@@ -118,9 +127,10 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
         cleanup();
         return false;
     }
-    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED |  SDL_RENDERER_PRESENTVSYNC);
+    int sdlDriverIndex=2;
+    sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, SDL_RENDERER_ACCELERATED |  SDL_RENDERER_PRESENTVSYNC);
     if(!sdl_renderer)
-        sdl_renderer = SDL_CreateRenderer(sdl_window, -1, 0);
+        sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, 0);
     if(!sdl_renderer)
     {
         ADM_warning("[SDL] FAILED to create a renderer\n");
@@ -236,8 +246,7 @@ bool initSdl(int videoDevice)
     ADM_info("[SDL] Version: %u.%u.%u\n",ver->major, ver->minor, ver->patch);
 
     uint32_t sdlInitFlags;
-
-    sdlInitFlags = SDL_INIT_EVERYTHING;
+    sdlInitFlags = SDL_INIT_AUDIO |SDL_INIT_VIDEO ;
     ADM_info("[SDL] Initialisation ");
 
     if (SDL_Init(sdlInitFlags))

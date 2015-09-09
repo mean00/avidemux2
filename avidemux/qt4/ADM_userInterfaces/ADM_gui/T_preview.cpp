@@ -229,26 +229,24 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     ADM_assert(videoWindow);
     QWidget* widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
+    xinfo->window = 0;
 
 #if defined(_WIN32)
 	xinfo->display=(void *)videoWindow->winId();
 #elif defined(__APPLE__)
 	#if defined(ADM_CPU_X86_64)
 		xinfo->display = (void*)videoWindow->winId();
-		xinfo->window = 0;
 	#else
 		xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
-		xinfo->window = 0;
 	#endif
 #else
         #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
                 const QX11Info &info=videoWindow->x11Info();
                 xinfo->display=info.display();
-                xinfo->window=videoWindow->effectiveWinId();
         #else
-                xinfo->window=videoWindow->effectiveWinId();
                 xinfo->display=XOpenDisplay(NULL);
         #endif
+        xinfo->window=videoWindow->winId();
 #endif
         QPoint localPoint(0,0);
         QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        
