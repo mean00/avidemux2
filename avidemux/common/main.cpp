@@ -100,6 +100,12 @@ extern const char* new_progname;
 void onexit(void);
 int startAvidemux(int argc, char *argv[]);
 bool isPortableMode(int argc, char *argv[]);
+#ifdef main
+extern "C"
+{
+int main(int _argc, char *_argv[]);
+}
+#endif // main
 
 int main(int _argc, char *_argv[])
 {
@@ -125,6 +131,7 @@ int main(int _argc, char *_argv[])
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 	new_progname = argv[0];
 #endif
+
 
 	int exitVal = startAvidemux(argc, argv);
 
@@ -463,5 +470,4 @@ bool isPortableMode(int argc, char *argv[])
 
 	return portableMode;
 }
-
 //EOF

@@ -90,7 +90,7 @@ ENDIF (GETTEXT_FOUND)
 
 # SDL
 IF (USE_SDL)
-        TARGET_LINK_LIBRARIES(avidemux3_cli ${SDL2_LIBRARY})
+        TARGET_LINK_LIBRARIES(avidemux3_cli ${SDL2_LIBRARY} ${SDL2_MAIN})
 ENDIF (USE_SDL)
 
 ###########################################

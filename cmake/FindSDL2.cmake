@@ -80,6 +80,7 @@ FIND_PATH(SDL2_INCLUDE_DIR SDL.h
   /Library/Frameworks
   /usr/local/include/SDL2
   /usr/include/SDL2
+  /mingw/include/SDL2
   /sw # Fink
   /opt/local # DarwinPorts
   /opt/csw # Blastwave
@@ -140,9 +141,7 @@ SET(SDL2_FOUND "NO")
 IF(SDL2_LIBRARY_TEMP)
   # For SDL2main
   IF(NOT SDL2_BUILDING_LIBRARY)
-    IF(SDL2MAIN_LIBRARY)
-      SET(SDL2_LIBRARY_TEMP ${SDL2MAIN_LIBRARY} ${SDL2_LIBRARY_TEMP})
-    ENDIF(SDL2MAIN_LIBRARY)
+      SET(SDL2_MAIN_TEMP ${SDL2MAIN_LIBRARY})
   ENDIF(NOT SDL2_BUILDING_LIBRARY)
 
   # For OS X, SDL2 uses Cocoa as a backend so it must link to Cocoa.
@@ -169,8 +168,15 @@ IF(SDL2_LIBRARY_TEMP)
 
   # Set the final string here so the GUI reflects the final state.
   SET(SDL2_LIBRARY ${SDL2_LIBRARY_TEMP} CACHE STRING "Where the SDL2 Library can be found")
+  SET(SDL2_MAIN    ${SDL2_MAIN_TEMP} CACHE STRING "Where the SDL2 Library can be found")
+if(WIN32)
+  SET(SDL2_CFLAGS  "-Dmain=SDL_main")
+else(WIN32)
+  SET(SDL2_CFLAGS  "")
+endif(WIN32)
   # Set the temp variable to INTERNAL so it is not seen in the CMake GUI
   SET(SDL2_LIBRARY_TEMP "${SDL2_LIBRARY_TEMP}" CACHE INTERNAL "")
+  SET(SDL2_MAIN_TEMP    "${SDL2_MAIN_TEMP}" CACHE INTERNAL "")
 
   SET(SDL2_FOUND "YES")
 ENDIF(SDL2_LIBRARY_TEMP)
