@@ -244,17 +244,17 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
         #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
                 const QX11Info &info=videoWindow->x11Info();
                 xinfo->display=info.display();
-                // xinfo->window=videoWindow->winId();
-                xinfo->window=videoWindow->winId();
+                xinfo->window=videoWindow->effectiveWinId();
         #else
-                xinfo->window=videoWindow->winId();
+                xinfo->window=videoWindow->effectiveWinId();
                 xinfo->display=XOpenDisplay(NULL);
         #endif
 #endif
-
-	xinfo->x = widget->x();
-	xinfo->y = widget->parentWidget()->height() - (widget->y() + displayH);
-	xinfo->width = displayW;
+        QPoint localPoint(0,0);
+        QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        
+	xinfo->x = windowPoint.x();
+	xinfo->y = windowPoint.y();
+	xinfo->width  = displayW;
 	xinfo->height = displayH;
 }
 

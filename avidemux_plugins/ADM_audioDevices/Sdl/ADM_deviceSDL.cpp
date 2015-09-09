@@ -8,7 +8,7 @@
 */
 
 #include "ADM_default.h"
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 #include  "ADM_audiodevice.h"
 #include  "ADM_audioDeviceInternal.h"

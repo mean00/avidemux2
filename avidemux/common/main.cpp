@@ -41,9 +41,9 @@
 #ifdef USE_SDL
 extern "C" {
 	#ifdef __HAIKU__
-	#include "SDL/SDL.h"
+	#include "SDL2/SDL.h"
 	#else
-	#include "SDL.h"
+	#include "SDL2/SDL.h"
 	#endif
 }
 

@@ -1,6 +1,8 @@
 /***************************************************************************
-    copyright            : (C) 2006 by mean
+    copyright            : (C) 2006/2015 by mean
     email                : fixounet@free.fr
+ * 
+ * SDL2 version : See http://wiki.libsdl.org/MigrationGuide
 ***************************************************************************/
 
 /***************************************************************************
@@ -26,10 +28,10 @@ extern "C" {
 #undef HAVE_STDINT_H
 #undef HAVE_SYS_TYPES_H
 #ifdef __HAIKU__
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 #else
-#include "SDL.h"
-#include "SDL_syswm.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_syswm.h"
 #endif
 }
 #include "ADM_default.h"
@@ -39,18 +41,13 @@ extern "C" {
 #include "GUI_sdlRender.h"
 
 
-#ifdef __APPLE__
-extern "C"
-{
-	void initSdlCocoaView(void* parent, int x, int y, int width, int height, bool carbonParent);
-	void destroyCocoaView(void);
-}
-#endif
-
 //******************************************
 static uint8_t sdl_running=0;
-static SDL_Overlay *sdl_overlay=NULL;
+//static SDL_Overlay *sdl_overlay=NULL;
 static SDL_Surface *sdl_display=NULL;
+static SDL_Window  *sdl_window=NULL;
+static SDL_Renderer *sdl_renderer=NULL;
+static SDL_Texture *sdl_texture=NULL;
 static SDL_Rect disp;
 #ifdef _WIN32
 HWND sdlWin32;
@@ -68,26 +65,12 @@ sdlRender::sdlRender( void)
 */
 bool sdlRender::stop( void)
 {
-        if(sdl_overlay)
-        {
-                SDL_FreeYUVOverlay(sdl_overlay);
-        }
-        if(sdl_display)
-        {
-        		SDL_UnlockSurface(sdl_display);
-                SDL_FreeSurface(sdl_display);
-        }
+        cleanup();
         if(sdl_running)
         {
-                SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
-#ifdef __APPLE__
-				destroyCocoaView();
-#endif
+            SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
         sdl_running=0;
-        sdl_overlay=NULL;
-        sdl_display=NULL;
         ADM_info("[SDL] Video subsystem closed and destroyed\n");
         return true;
 }
@@ -96,34 +79,16 @@ bool sdlRender::stop( void)
 */
 bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-	ADM_info("[SDL] Initialising video subsystem\n");
+    ADM_info("[SDL] Initialising video subsystem\n");
 
-#ifdef __APPLE__
-	if (window->width > w && window->height > h)
-	{
-		ADM_info("[SDL] Disabling acceleration.  Zoom increase not supported on Mac\n");
-		return 0;
-	}
-#endif
-
-	int bpp;
-	int flags;
+    int bpp;
+    int flags;
     baseInit(w,h,zoom);
     // Ask for the position of the drawing window at start
     disp.w=w;
     disp.h=h;
-    disp.x=0;
-    disp.y=0;
-
-
-    // Hack to get SDL to use GTK window, ugly but works
-#if !defined(_WIN32) && !defined(__APPLE__)
-	char SDL_windowhack[32];
-    int winId=(int)window->window;
-
-    sprintf(SDL_windowhack,"SDL_WINDOWID=%d",winId);
-    putenv(SDL_windowhack);
-#endif
+    disp.x=window->x;
+    disp.y=window->y;
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
@@ -132,206 +97,110 @@ bool sdlRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom
 
         return 0;
     }
-    ADM_info("SDL subsystem init ok\n");
-    // Do it twice as the 1st time does not work
-    // Hack to get SDL to use GTK window, ugly but works
-#if !defined(_WIN32) && !defined(__APPLE__)
-    putenv(SDL_windowhack);
-    SDL_QuitSubSystem(SDL_INIT_VIDEO);
-    if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-    {
-                ADM_warning("[SDL] FAILED initialising video subsystem\n");
-                ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
-                return 0;
-    }
-#endif
+    ADM_info("[SDL] Video subsystem init ok\n");
 
     sdl_running=1;
-    flags = SDL_ANYFORMAT | SDL_HWPALETTE | SDL_HWSURFACE | SDL_NOFRAME;
-    bpp= SDL_VideoModeOK( w, h,  32, flags );
-
-#ifdef _WIN32
-	// SDL window is created and displayed before we get a chance to set the parent.
-	// Therefore, align the SDL overlay with the client area before it is displayed.
-	POINT screenPoint = {};
-	char origin[43];
-
-	ClientToScreen((HWND)window->display, &screenPoint);
-	snprintf(origin, 43, "SDL_VIDEO_WINDOW_POS=%i,%i", screenPoint.x, screenPoint.y);
-	putenv(origin);
-#endif
-
-#ifdef __APPLE__
-	void* parent;
-
-	if (window->display)
-		// Carbon parent (Qt4)
-		parent = window->display;
-	else
-		// Cocoa parent (GTK)
-		parent = (void*)window->window;
-
-	if (parent)
-		// Create Cocoa view and attach to Carbon window using custom Objective-C function.
-		// It's a retarded way of doing things but that's what Apple has imposed...
-		initSdlCocoaView(parent, window->x, window->y, window->width, window->height, (window->display != NULL));
-#endif
-
-	// SDL will resize our window to width and height passed to SetVideoMode.
-	// This is fine until we use zoomed views so pass window dimensions instead.
-    ADM_info("SDL setting video mode %d,%d\n",(int)window->width,(int)window->height);
-	sdl_display= SDL_SetVideoMode(window->width,window->height, bpp, flags);
-
-    if (!sdl_display)
+    ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
+#if 1
+    sdl_window = SDL_CreateWindow("avidemux_sdl2",
+                          SDL_WINDOWPOS_UNDEFINED,
+                          SDL_WINDOWPOS_UNDEFINED,
+                          w, h,
+                          SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN*1);    
+    SDL_SetWindowPosition(sdl_window,window->x,window->y);
+#else
+    sdl_window=SDL_CreateWindowFrom((void*)window->window);    
+#endif    
+    
+    if(!sdl_window)
     {
-        stop();
-        ADM_warning("[SDL] Cannot create surface\n");
-		ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
-        return 0;
+        ADM_info("[SDL] Creating window failed!\n");
+        cleanup();
+        return false;
     }
-
-    SDL_LockSurface(sdl_display);
-
-#ifdef _WIN32
-	struct SDL_SysWMinfo wmInfo;
-	SDL_VERSION(&wmInfo.version);
-
-	if (-1 != SDL_GetWMInfo(&wmInfo))
-	{
-		sdlWin32 = wmInfo.window;
-
-		// Make SDL window a child to prevent it from gaining focus
-		int windowFlags = GetWindowLongPtr(sdlWin32, GWL_STYLE);
-
-		SetWindowLongPtr(sdlWin32, GWL_STYLE, (windowFlags & ~WS_POPUP) | WS_CHILD);
-
-		// Set the SDL window's parent to the main window and reposition
-		SetParent(sdlWin32, (HWND)window->display);
-		SetWindowPos(sdlWin32, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-
-		// The SDL window stole focus before it was made a child, so set focus back to the main window
-		SetFocus((HWND)window->display);
-	}
-	else
-	{
-		printf("[SDL] Reparenting failed\n");
-	}
-#endif
-
-        int cspace;
-
-        if(useYV12) cspace=SDL_YV12_OVERLAY;
-            else    cspace=SDL_YUY2_OVERLAY;
-        //_______________________________________________________
-        ADM_info("Creating overlay\n");
-        sdl_overlay=SDL_CreateYUVOverlay((w),(h), cspace, sdl_display);
-
-		// DirectX may fail but overlay still created.
-		// Not a showstopper but log failure.
-		if (strlen(SDL_GetError()))
-		{
-			ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
-		}
-
-        if(!sdl_overlay)
+    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED |  SDL_RENDERER_PRESENTVSYNC);
+    if(!sdl_renderer)
+        sdl_renderer = SDL_CreateRenderer(sdl_window, -1, 0);
+    if(!sdl_renderer)
+    {
+        ADM_warning("[SDL] FAILED to create a renderer\n");
+        cleanup();
+        return false;
+    }
+    
+    sdl_texture = SDL_CreateTexture(sdl_renderer,
+                               SDL_PIXELFORMAT_YV12,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               w, h);
+    if(sdl_texture)
+    {
+        useYV12=true;
+    }else
+    {
+        useYV12=false;
+        sdl_texture = SDL_CreateTexture(sdl_renderer,
+                               SDL_PIXELFORMAT_ARGB8888,
+                               SDL_TEXTUREACCESS_STREAMING,
+                               w, h);
+        if(!sdl_texture)
         {
-			stop();
-			ADM_warning("[SDL] Cannot create SDL overlay\n");
-			ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
-
-			return 0;
+            ADM_warning("[SDL] FAILED to create a texture (rgb)\n");
+            cleanup();
+            return false;
         }
-
-        printf("[SDL] Overlay created; type: %d, planes: %d, pitch: %d\n", sdl_overlay->hw_overlay, sdl_overlay->planes, sdl_overlay->pitches[0]);
-
-        if(!sdl_overlay->hw_overlay)
-            printf("[SDL] Hardware acceleration disabled\n");
-
-        if(!useYV12)
-        {
-          // Create YV12->YUY2 here!
-        }
-		ADM_info("[SDL] Video subsystem initalised successfully\n");
-
-        return 1;
+    }
+    changeZoom(zoom);
+    return true;
 }
-
+/**
+ * 
+ * @return 
+ */
+bool sdlRender::cleanup()
+{
+    return true;
+}
 /**
     \fn displayImage
 */
 bool sdlRender::displayImage(ADMImage *pic)
 {
-#ifdef _WIN32
-	// DirectX playback doesn't refresh correctly if the parent window is moved.
-	// Detect when the parent window has moved and force a coordinate update.
-	if (strcmp(getenv("SDL_VIDEODRIVER"), "directx") == 0)
-	{
-		static RECT lastPos;
+    if(!sdl_texture)
+        return false;
+    if(useYV12)
+    {
+        uint32_t imagePitch[3];
+        uint8_t  *imagePtr[3];
+        pic->GetPitches(imagePitch);
+        pic->GetWritePlanes(imagePtr);
+        SDL_UpdateYUVTexture(sdl_texture,
+                                             NULL,
+                                             imagePtr[0], imagePitch[0],
+                                             imagePtr[2], imagePitch[2],
+                                             imagePtr[1], imagePitch[1]);
 
-		RECT currentPos;
-		GetWindowRect(sdlWin32, &currentPos);
+    }else
+    { // YUYV
+        ADM_warning("[SDL] YUYV disabled\n");
+        return false;
+    }
 
-		if (currentPos.left != lastPos.left || currentPos.top != lastPos.top)
-		{
-			// By default SetWindowPos doesn't work if the new coordinates are the same as the
-			// current so use SWP_FRAMECHANGED to force an update.
-			SetWindowPos(sdlWin32, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
-			lastPos = currentPos;
-		}
-	}
-#endif
-#warning FIXME
-int pitch;
-int w=imageWidth;
-int h=imageHeight;
-int page=w*h;
-
-        ADM_assert(sdl_overlay);
-        SDL_LockYUVOverlay(sdl_overlay);
-        pitch=sdl_overlay->pitches[0];
-//	printf("SDL: new pitch :%d\n",pitch);
-        if(useYV12)
-        {
-            uint32_t imagePitch[3];
-            uint8_t  *imagePtr[3];
-            pic->GetPitches(imagePitch);
-            pic->GetWritePlanes(imagePtr);
-            //
-            BitBlit(sdl_overlay->pixels[0],sdl_overlay->pitches[0],imagePtr[0],imagePitch[0],w, h);
-            BitBlit(sdl_overlay->pixels[1],sdl_overlay->pitches[1],imagePtr[1],imagePitch[1],w/2, h/2);
-            BitBlit(sdl_overlay->pixels[2],sdl_overlay->pitches[2],imagePtr[2],imagePitch[2],w/2, h/2);
-
-        }else
-
-        { // YUYV
-#if 0
-	        scaler->changeWidthHeight(w,h);
-	        if(pitch==2*w)
-	        {
-	            scaler->convert(pic,sdl_overlay->pixels[0]);
-	        }
-	        else
-	        {
-	            scaler->convert(pic,decoded);
-                BitBlit(sdl_overlay->pixels[0],sdl_overlay->pitches[0],decoded,2*w,h);
-	        }
-#else
-            ADM_warning("[SDL] YUYV disabled\n");
-            return false;
-#endif
-        }
-       
-        disp.w=displayWidth;
-        disp.h=displayHeight;
-        disp.x=0;
-        disp.y=0;
-
-        SDL_UnlockYUVOverlay(sdl_overlay);
-        SDL_DisplayYUVOverlay(sdl_overlay,&disp);
-
-        return 1;
+    refresh();
+    return true;
 }
-
+/**
+ * 
+ * @return 
+ */
+bool sdlRender::refresh(void)
+{
+    if(!sdl_texture)
+        return false;
+    SDL_RenderClear(sdl_renderer);
+    SDL_RenderCopy(sdl_renderer, sdl_texture, NULL, NULL);
+    SDL_RenderPresent(sdl_renderer);
+    return true;
+}
 /**
     \fn changeZoom
 */
@@ -340,60 +209,52 @@ bool sdlRender::changeZoom(renderZoom newZoom)
         ADM_info("changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
+        if(sdl_renderer)
+        {
+            float scaleX=(float)displayWidth/(float)imageWidth;
+            float scaleY=(float)displayWidth/(float)imageHeight;
+            
+            SDL_RenderSetScale(sdl_renderer,   scaleX, scaleY);
+            SDL_SetWindowSize(sdl_window,displayWidth,displayHeight);
+        }
         return true;
 }
 /**
     \fn initSdl
 */
-void initSdl(int videoDevice)
+bool initSdl(int videoDevice)
 {
-	printf("\n");
-	quitSdl();
+    printf("\n");
+    quitSdl();
+    SDL_version version;
+    SDL_version *ver=&version;
+    
+    SDL_GetVersion(ver);
+    
+    int sdl_version = (ver->major*1000)+(ver->minor*100) + (ver->patch);
 
-    int sdl_version = (SDL_Linked_Version()->major*1000)+(SDL_Linked_Version()->minor*100) + (SDL_Linked_Version()->patch);
+    ADM_info("[SDL] Version: %u.%u.%u\n",ver->major, ver->minor, ver->patch);
 
-    printf("[SDL] Version: %u.%u.%u\n",SDL_Linked_Version()->major, SDL_Linked_Version()->minor, SDL_Linked_Version()->patch);
+    uint32_t sdlInitFlags;
 
-#ifdef _WIN32
-	if(videoDevice == RENDER_DIRECTX)
-	{
-		printf("[SDL] Setting video driver to Microsoft DirectX\n");
-		putenv("SDL_VIDEODRIVER=directx");
-	}
-	else
-	{
-		printf("[SDL] Setting video driver to Microsoft Windows GDI\n");
-		putenv("SDL_VIDEODRIVER=windib");
-	}
-#endif
+    sdlInitFlags = SDL_INIT_EVERYTHING;
+    ADM_info("[SDL] Initialisation ");
 
-	uint32_t sdlInitFlags;
+    if (SDL_Init(sdlInitFlags))
+    {
+            ADM_info("\tFAILED\n");
+            ADM_info("[SDL] ERROR: %s\n", SDL_GetError());
+            return false;
+    }
+    ADM_info("\tsucceeded\n");
 
-	if (sdl_version > 1209)
-		sdlInitFlags = SDL_INIT_EVERYTHING;
-	else
-		sdlInitFlags = 0;
-
-	printf("[SDL] Initialisation ");
-
-	if (SDL_Init(sdlInitFlags) == 0)
-	{
-		printf("succeeded\n");
-
-		char driverName[100];
-
-		if (SDL_VideoDriverName(driverName, 100) != NULL)
-		{
-			printf("[SDL] Video Driver: %s\n", driverName);
-		}
-	}
-	else
-	{
-		printf("FAILED\n");
-		printf("[SDL] ERROR: %s\n", SDL_GetError());
-	}
-
-	printf("\n");
+    const char *driverName=SDL_GetVideoDriver(0);
+    if(driverName)
+    {
+            ADM_info("[SDL] Video Driver: %s\n", driverName);
+    }
+    return true;
+	
 }
 /**
     \fn quitSdl
@@ -402,7 +263,7 @@ void quitSdl(void)
 {
 	if (SDL_WasInit(SDL_INIT_EVERYTHING))
 	{
-		printf("[SDL] Quitting...\n");
+		ADM_info("[SDL] Quitting...\n");
 		SDL_Quit();
 	}
 }
