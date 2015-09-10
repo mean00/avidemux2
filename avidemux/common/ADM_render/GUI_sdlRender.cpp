@@ -75,7 +75,10 @@ protected:
 
 static sdlRenderImpl *impl=NULL;
 static std::vector<sdlDriverInfo>listOfSDLDrivers;
-
+static void SDL_Logger(void *userdata, int category, SDL_LogPriority priority, const char *message)
+{
+    ADM_info("[SDK] %s\n",message);
+}
 /**
  * 
  * @return 
@@ -102,6 +105,7 @@ static bool initDrivers()
             sdlSoftwareDriverIndex=i;
     }
     sdlDriverIndex=sdlSoftwareDriverIndex;
+    SDL_LogSetOutputFunction(SDL_Logger,NULL);
     return true;
 }
 
