@@ -122,8 +122,7 @@ unsigned char chan;
             {
                     ADM_warning("Workaround Faad mono stream handling... \n");
                     monoFaadBug=true;
-            }
-            
+            }            
         }
         ADM_assert(l<FAAD_EXTRA_BUFFER_SIZE);
         memcpy(extraData,d,l);
@@ -207,7 +206,11 @@ bool ADM_faad::resetAfterSeek( void )
            
             faacDecClose(_instance);
             ADM_info("Resetting faad\n");
-            initFaad(&wavHeader,extraDataSize,extraData);
+            uint8_t *copy=new uint8_t[extraDataSize];
+            memcpy(copy,extraData,extraDataSize);
+            initFaad(&wavHeader,extraDataSize,copy);
+            delete [] copy;
+            copy=NULL;
      }
 #endif
      return 1;
