@@ -332,6 +332,7 @@ int startAvidemux(int argc, char *argv[])
             free(drv);
         }
     }
+    printf("Calling initSDL with driver=%s\n",sdlDriver.c_str());
     initSdl(sdlDriver);
 #endif        
     //
