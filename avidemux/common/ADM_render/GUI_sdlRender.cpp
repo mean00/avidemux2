@@ -240,6 +240,7 @@ sdlRenderImpl::~sdlRenderImpl()
 */
 bool sdlRenderImpl::stop( void)
 {
+        ADM_info("[SDL] Stopping\n");
         cleanup();
         if(sdl_running)
         {
@@ -333,7 +334,9 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
             return false;
         }
     }
+    ADM_info("[SDL] Setting final size\n");
     changeZoom(zoom);
+    ADM_info("[SDL] All init done.\n");
     return true;
 }
 /**
@@ -342,6 +345,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
  */
 bool sdlRenderImpl::cleanup()
 {
+    ADM_info("[SDL] Cleaning up\n");
     if(sdl_texture)
     {
         SDL_DestroyTexture(sdl_texture);
@@ -403,7 +407,7 @@ bool sdlRenderImpl::refresh(void)
 */
 bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 {
-        ADM_info("changing zoom, sdl render.\n");
+        ADM_info("[SDL]changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
         if(sdl_renderer)
@@ -421,7 +425,7 @@ bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 */
 bool initSdl(const std::string &sdlDriverName)
 {
-    printf("\n");
+    printf("\n[SDL] Initializing SDL\n");
     quitSdl();
     SDL_version version;
     SDL_version *ver=&version;
@@ -450,6 +454,7 @@ bool initSdl(const std::string &sdlDriverName)
     {
             ADM_info("[SDL] Video Driver: %s\n", driverName);
     }
+    ADM_info("[SDL] initSDL done successfully.\n");
     return true;
 	
 }
@@ -458,7 +463,7 @@ bool initSdl(const std::string &sdlDriverName)
 */
 void quitSdl(void)
 {
-
+    ADM_info("[SDL] quitSDL.\n");
     if(impl)
     {
         delete impl;
