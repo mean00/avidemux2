@@ -266,9 +266,33 @@ uint8_t renderExpose(void)
     \fn spawnRenderer
     \brief Create renderer according to prefs
 */
+#if ADM_UI_TYPE_BUILD == ADM_UI_CLI
+
 bool spawnRenderer(void)
 {
-#if ADM_UI_TYPE_BUILD != ADM_UI_CLI
+    renderer=new nullRender();
+    return true; 
+}
+#else
+
+#define TRY_RENDERER_INTERNAL(clss,create,name) \
+                renderer=create clss(); \
+                r=renderer->init(&xinfo,phyW,phyH,lastZoom); \
+                if(!r) \
+                { \
+                    delete renderer; \
+                    renderer=NULL; \
+                    ADM_warning(name" init failed\n"); \
+                }\
+                else \
+                { \
+                    ADM_info(name" init ok\n"); \
+                }
+#define TRY_RENDERER(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
+#define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
+
+bool spawnRenderer(void)
+{
         int prefRenderer=MUI_getPreferredRender();
         bool r=false;
 
@@ -278,7 +302,7 @@ bool spawnRenderer(void)
         {
 #if defined(USE_OPENGL)
        case RENDER_QTOPENGL:
-       {
+            {
                 bool hasOpenGl=false;
                 prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
                 if(!hasOpenGl)
@@ -287,108 +311,43 @@ bool spawnRenderer(void)
                     renderer=NULL;
                 }else
                 {
-                    renderer=RenderSpawnQtGl();
-                    r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                    if(!r)
-                    {
-                        delete renderer;
-                        renderer=NULL;
-                        ADM_warning("QtGl init failed\n");
-                    }
-                    else
-                    {
-                        ADM_info("QtGl init ok\n");
-                    }
+                    TRY_RENDERER_FUNC(RenderSpawnQtGl,"QtGl");
                 }
-       }
                 break;
+            }
 #endif
 
 #if defined(USE_VDPAU)
        case RENDER_VDPAU:
-                renderer=new vdpauRender();
-                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                if(!r)
-                {
-                    delete renderer;
-                    renderer=NULL;
-                    ADM_warning("vdpau init failed\n");
-                }
-                else
-                {
-                    ADM_info("vdpau init ok\n");
-                }
+                TRY_RENDERER(vdpauRender,"VDPAU")
                 break;
 #endif
 #if defined(USE_LIBVA)
        case RENDER_LIBVA:
-                renderer=new libvaRender();
-                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                if(!r)
-                {
-                    delete renderer;
-                    renderer=NULL;
-                    ADM_warning("libva init failed\n");
-                }
-                else
-                {
-                    ADM_info("libva init ok\n");
-                }
+                TRY_RENDERER(libvaRender,"LIBVA")
                 break;
 #endif
 
 #if defined(USE_XV)
        case RENDER_XV:
-                renderer=new XvRender();
-                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                if(!r)
-                {
-                    delete renderer;
-                    renderer=NULL;
-                    ADM_warning("Xv init failed\n");
-                }
-                else
-                {
-                    ADM_info("Xv init ok\n");
-                }
+                TRY_RENDERER(XvRender,"Xv")
                 break;
 #endif
 
 #if  defined(USE_SDL)
-			case RENDER_SDL:
-#ifdef _WIN32
-			case RENDER_DIRECTX:
-#endif
-				renderer=new sdlRender();
-                r=renderer->init(&xinfo,phyW,phyH,lastZoom);
-                if(!r)
-                {
-                    delete renderer;
-                    renderer=NULL;
-                    ADM_warning("SDL init failed\n");
-                }
-                else
-                {
-                    ADM_info("SDL init ok\n");
-                }
-                break;
+    case RENDER_SDL:
+                TRY_RENDERER(sdlRender,"SDL")
+                break;        
 #endif
         }
         if(!renderer)
         {
-            ADM_info("Using simple renderer\n");
-            renderer=new simpleRender();
-            GUI_WindowInfo xinfo;
-            MUI_getWindowInfo(draw, &xinfo);
-
-            renderer->init(&xinfo,phyW,phyH,lastZoom);
+            TRY_RENDERER(simpleRender,"simpleRenderer");
+            ADM_assert(renderer);
         }
         return true;
-#else  // CLI render
-        renderer=new nullRender();
-        return true;
-#endif
 }
+#endif
 
 /**
     \fn 

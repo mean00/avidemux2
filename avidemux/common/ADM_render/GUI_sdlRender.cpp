@@ -43,6 +43,7 @@ extern "C" {
 
 static int  sdlDriverIndex=-1;
 static int  sdlSoftwareDriverIndex=0;
+static std::vector<sdlDriverInfo>listOfSDLDrivers;
 /**
  * \class sdlRenderImpl
  * \brief implementation
@@ -66,18 +67,18 @@ protected:
                         SDL_Window   *sdl_window;
                         SDL_Renderer *sdl_renderer;
                         SDL_Texture  *sdl_texture;
-                        #ifdef _WIN32
-                        HWND sdlWin32;
-                        #endif
-                        
 };
 
-
-static sdlRenderImpl *impl=NULL;
-static std::vector<sdlDriverInfo>listOfSDLDrivers;
+/**
+ * 
+ * @param userdata
+ * @param category
+ * @param priority
+ * @param message
+ */
 static void SDL_Logger(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    ADM_info("[SDK] %s\n",message);
+    ADM_info("[SDKL] %s\n",message);
 }
 /**
  * 
@@ -111,88 +112,13 @@ static bool initDrivers()
 
 /**
  * 
- */
-sdlRender::sdlRender()
-{
-    if(!impl)
-        impl=new sdlRenderImpl;
-}
-/**
- * 
- * @param window
- * @param w
- * @param h
- * @param zoom
- * @return 
- */
-bool sdlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
-{
-    ADM_assert(impl);
-    return impl->init(window,w,h,zoom);
-}
-/**
- * 
- * @return 
- */
-bool sdlRender::stop()
-{
-    ADM_assert(impl);
-    return impl->stop();
-}
-/**
- * 
- * @param pic
- * @return 
- */
-bool  sdlRender::displayImage(ADMImage *pic)
-{
-    ADM_assert(impl);
-    return impl->displayImage(pic);
-}
-/**
- * 
- * @param newZoom
- * @return 
- */
-bool  sdlRender::changeZoom(renderZoom newZoom)
-{
-    ADM_assert(impl);
-    return impl->changeZoom(newZoom);
-}
-/**
- * 
- * @return 
- */
-bool  sdlRender::usingUIRedraw()
-{
-    ADM_assert(impl);
-    return impl->usingUIRedraw();
-}
-/**
- * 
- * @return 
- */
-bool sdlRender::refresh(void) 
-{
-    ADM_assert(impl);
-    return impl->refresh();
-}
-/**
- * 
  * @return 
  */
 const std::vector<sdlDriverInfo> &getListOfSdlDrivers()
 {
     return listOfSDLDrivers;
 }
-/**
- * 
- * @return 
- */
-std::string  getSdlDriverName()
-{
-    return listOfSDLDrivers[sdlDriverIndex].driverName;
-}
+
 /**
  * 
  * @param name
@@ -201,7 +127,8 @@ std::string  getSdlDriverName()
 bool  setSdlDriverByName(const std::string &name)
 {
     ADM_info("[SDL] Trying to switch to SDL driver %s\n",name.c_str());
-    for(int i=0;i<listOfSDLDrivers.size();i++)
+    int nb=listOfSDLDrivers.size();
+    for(int i=0;i<nb;i++)
     {
         if(!listOfSDLDrivers[i].driverName.compare(name))
         {
@@ -215,6 +142,99 @@ bool  setSdlDriverByName(const std::string &name)
     return false;
 }
 
+/**
+ * 
+ * @return 
+ */
+std::string  getSdlDriverName()
+{
+    int nb=listOfSDLDrivers.size();
+    ADM_assert(sdlDriverIndex<nb);
+    return listOfSDLDrivers[sdlDriverIndex].driverName;
+}
+/**
+ * 
+ */
+sdlRender::sdlRender()
+{
+        impl=(void *)new sdlRenderImpl;
+}
+sdlRender::~sdlRender()
+{
+    if(impl)
+    {
+        sdlRenderImpl *i=(sdlRenderImpl *)impl;
+        impl=NULL;
+        delete i;
+    }
+        
+}
+/**
+ * 
+ * @param window
+ * @param w
+ * @param h
+ * @param zoom
+ * @return 
+ */
+bool sdlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->init(window,w,h,zoom);
+}
+/**
+ * 
+ * @return 
+ */
+bool sdlRender::stop()
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->stop();
+}
+/**
+ * 
+ * @param pic
+ * @return 
+ */
+bool  sdlRender::displayImage(ADMImage *pic)
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->displayImage(pic);
+}
+/**
+ * 
+ * @param newZoom
+ * @return 
+ */
+bool  sdlRender::changeZoom(renderZoom newZoom)
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->changeZoom(newZoom);
+}
+/**
+ * 
+ * @return 
+ */
+bool  sdlRender::usingUIRedraw()
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->usingUIRedraw();
+}
+/**
+ * 
+ * @return 
+ */
+bool sdlRender::refresh(void) 
+{
+    sdlRenderImpl *im=(sdlRenderImpl *)impl;
+    ADM_assert(im);
+    return im->refresh();
+}
 
 //******************************************
 /**
@@ -245,11 +265,12 @@ bool sdlRenderImpl::stop( void)
         ADM_info("[SDL] Stopping\n");
         cleanup();
         if(sdl_running)
-        {
-            //SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        {            
+            ADM_info("[SDL] Video subsystem closed\n");
+            SDL_QuitSubSystem(SDL_INIT_VIDEO);
+            sdl_running=0;
         }
-        sdl_running=0;
-        ADM_info("[SDL] Video subsystem closed and destroyed\n");
+        
         return true;
 }
 /**
@@ -271,7 +292,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
     }
     ADM_info("[SDL] Video subsystem init ok\n");
 
-    sdl_running=1;
+    sdl_running=true;
     ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
     
     int nbDriver=listOfSDLDrivers.size();
@@ -280,7 +301,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
         ADM_warning("[SDL] No driver loaded\n");
         return false;
     }
-    if(sdlDriverIndex==-1)
+    if(sdlDriverIndex==-1 || sdlDriverIndex>=nbDriver)
     {
         ADM_warning("[SDL] No available driver found\n");
         return false;
@@ -300,6 +321,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
     if(!sdl_window)
     {
         ADM_info("[SDL] Creating window failed!\n");
+        ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
         cleanup();
         return false;
     }
@@ -360,10 +382,13 @@ bool sdlRenderImpl::cleanup()
     if(sdl_window)
     {
         // SDL_HideWindow(sdl_window);
-        // buggy .... SDL_DestroyWindow(sdl_window);
-        // IF we call it, it will cause a deadlock
+        // buggy .... 
+#if defined(_WIN32)  || defined(__APPLE__)
+        SDL_DestroyWindow(sdl_window);
+#endif        
+        // With x11, if we call it, it will cause a deadlock
         // if we dont, it will cause a crash at exit
-        // see 
+        // 
         sdl_window=NULL;
     }
     return true;
@@ -430,7 +455,7 @@ bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 */
 bool initSdl(const std::string &sdlDriverName)
 {
-    printf("\n[SDL] Initializing SDL\n");
+    printf("\n[SDL] System Wide:  Initializing SDL\n");
     SDL_version version;
     SDL_version *ver=&version;
     
@@ -470,12 +495,6 @@ bool initSdl(const std::string &sdlDriverName)
 void quitSdl(void)
 {
     ADM_info("[SDL] quitSDL.\n");
-    if(impl)
-    {
-        delete impl;
-        impl=NULL;
-    }
-    SDL_Quit(); // ...
-
+    SDL_Quit(); 
 }
 #endif
