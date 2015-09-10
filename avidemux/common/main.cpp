@@ -241,34 +241,13 @@ int startAvidemux(int argc, char *argv[])
         setPrefsDefault();
     }
     CpuCaps::init();
-
-#ifdef USE_SDL
-	uint32_t videoDevice = RENDER_LAST;
-
-	prefs->get(VIDEODEVICE, &videoDevice);
-        char *drv=NULL;
-        if(prefs->get(FEATURES_SDLDRIVER,&drv))
-        {
-            if(!drv || !strlen(drv))
-                drv=strdup("dummy");
-        }else
-        {
-             drv=strdup("dummy");
-        }
-	initSdl(std::string(drv));
-        
-        if(drv)
-            free(drv);
-            
-#endif
-
-	atexit(onexit);
+    atexit(onexit);
 
 #ifdef _WIN32
     win32_netInit();
 #endif
 
-	video_body = new ADM_Composer;
+    video_body = new ADM_Composer;
 
     UI_Init(argc, argv);
     AUDMEncoder_initDither();
@@ -338,7 +317,23 @@ int startAvidemux(int argc, char *argv[])
     printf("Cannot use LIBVA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
   #endif
 #endif    
-        
+
+#ifdef USE_SDL
+    char *drv=NULL;
+    std::string sdlDriver=std::string("dummy");
+    if(prefs->get(FEATURES_SDLDRIVER,&drv))
+    {
+        if(drv)
+        {
+            if(strlen(drv))
+            {
+                sdlDriver=std::string(drv);
+            }
+            free(drv);
+        }
+    }
+    initSdl(sdlDriver);
+#endif        
     //
     
     ADM_mx_loadPlugins(mxPlugins);

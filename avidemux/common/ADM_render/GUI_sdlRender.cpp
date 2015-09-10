@@ -42,6 +42,7 @@ extern "C" {
 
 
 static int  sdlDriverIndex=-1;
+static int  sdlSoftwareDriverIndex=0;
 /**
  * \class sdlRenderImpl
  * \brief implementation
@@ -90,13 +91,17 @@ static bool initDrivers()
         SDL_GetRenderDriverInfo(i,&info);
         sdlDriverInfo sdlInfo;
         sdlInfo.index=i;
-        sdlInfo.driverName=std::string(info.name);
+        if(info.name)
+            sdlInfo.driverName=std::string(info.name);
+        else
+            sdlInfo.driverName=std::string("Invalid driver");
         sdlInfo.flags=info.flags;
         listOfSDLDrivers.push_back(sdlInfo);
-        printf("[SDK]Found driver [%d] %s, with flags=%x\n",i,info.name,info.flags);
+        printf("[SDK]Found driver [%d] %s, with flags=%x\n",i,sdlInfo.driverName.c_str(),info.flags);
         if(info.flags & SDL_RENDERER_SOFTWARE) // by default we peek the software one
-            sdlDriverIndex=i;
+            sdlSoftwareDriverIndex=i;
     }
+    sdlDriverIndex=sdlSoftwareDriverIndex;
     return true;
 }
 
@@ -191,22 +196,18 @@ std::string  getSdlDriverName()
  */
 bool  setSdlDriverByName(const std::string &name)
 {
-    int defaultOne=-1;
     ADM_info("[SDL] Trying to switch to SDL driver %s\n",name.c_str());
     for(int i=0;i<listOfSDLDrivers.size();i++)
     {
         if(!listOfSDLDrivers[i].driverName.compare(name))
         {
-            ADM_info("[SDL] Picked up driver <%s>\n",listOfSDLDrivers[i].driverName.c_str());
+            ADM_info("[SDL] Got it, selecting driver <%s>\n",listOfSDLDrivers[i].driverName.c_str());
             sdlDriverIndex=i;
             return true;
         }
-        if(listOfSDLDrivers[i].flags & SDL_RENDERER_SOFTWARE) // by default we take the software one
-            defaultOne=i;
     }
-    ADM_warning("No suitable driver found\n");
-    ADM_assert(defaultOne>=0);
-    sdlDriverIndex=defaultOne;
+    ADM_warning("[SDL]No suitable driver found\n");
+    sdlDriverIndex=sdlSoftwareDriverIndex;
     return false;
 }
 
@@ -241,7 +242,7 @@ bool sdlRenderImpl::stop( void)
         cleanup();
         if(sdl_running)
         {
-            SDL_QuitSubSystem(SDL_INIT_VIDEO);
+            //SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
         sdl_running=0;
         ADM_info("[SDL] Video subsystem closed and destroyed\n");
@@ -277,7 +278,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
     }
     if(sdlDriverIndex==-1)
     {
-        ADM_warning("No suitable driver found\n");
+        ADM_warning("[SDL] No available driver found\n");
         return false;
     }
     
@@ -354,7 +355,11 @@ bool sdlRenderImpl::cleanup()
     }
     if(sdl_window)
     {
-        //SDL_DestroyWindow(sdl_window);
+        // SDL_HideWindow(sdl_window);
+        // buggy .... SDL_DestroyWindow(sdl_window);
+        // IF we call it, it will cause a deadlock
+        // if we dont, it will cause a crash at exit
+        // see 
         sdl_window=NULL;
     }
     return true;
@@ -422,7 +427,6 @@ bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 bool initSdl(const std::string &sdlDriverName)
 {
     printf("\n[SDL] Initializing SDL\n");
-    quitSdl();
     SDL_version version;
     SDL_version *ver=&version;
     
@@ -443,13 +447,15 @@ bool initSdl(const std::string &sdlDriverName)
             return false;
     }
     ADM_info("\tsucceeded\n");
-    initDrivers();
-    setSdlDriverByName(sdlDriverName);
+    
     const char *driverName=SDL_GetVideoDriver(0);
     if(driverName)
     {
             ADM_info("[SDL] Video Driver: %s\n", driverName);
     }
+    ADM_info("[SDL] Video drivers initialization\n");
+    initDrivers();
+    setSdlDriverByName(sdlDriverName);
     ADM_info("[SDL] initSDL done successfully.\n");
     return true;
 	
@@ -465,6 +471,7 @@ void quitSdl(void)
         delete impl;
         impl=NULL;
     }
+    SDL_Quit(); // ...
 
 }
 #endif
