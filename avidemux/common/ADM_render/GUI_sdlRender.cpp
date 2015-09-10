@@ -73,11 +73,8 @@ protected:
 
 
 static sdlRenderImpl *impl=NULL;
-
-/**
- */
-
 static std::vector<sdlDriverInfo>listOfSDLDrivers;
+
 /**
  * 
  * @return 
@@ -255,7 +252,7 @@ bool sdlRenderImpl::stop( void)
 */
 bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-    ADM_info("[SDL] Initialising video subsystem\n");
+    ADM_info("[SDL] Initializing video subsystem\n");
 
     int bpp;
     int flags;
@@ -263,10 +260,9 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
-		ADM_warning("[SDL] FAILED initialising video subsystem\n");
-		ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
-
-        return 0;
+        ADM_warning("[SDL] FAILED initialising video subsystem\n");
+        ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
+        return false;
     }
     ADM_info("[SDL] Video subsystem init ok\n");
 
