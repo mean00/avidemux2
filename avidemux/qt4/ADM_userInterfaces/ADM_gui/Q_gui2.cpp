@@ -235,9 +235,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.setupUi(this);
 
 #if defined(__APPLE__) && defined(USE_SDL)
-	ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
-	ui.actionPreferences->setMenuRole(QAction::NoRole);
-	ui.actionQuit->setMenuRole(QAction::NoRole);
+	//ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
+	//ui.actionPreferences->setMenuRole(QAction::NoRole);
+	//ui.actionQuit->setMenuRole(QAction::NoRole);
 #endif
         //
         connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
