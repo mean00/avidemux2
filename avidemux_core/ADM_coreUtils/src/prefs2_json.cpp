@@ -21,6 +21,7 @@ json.addBool("vdpau",key->features.vdpau);
 json.addBool("xvba",key->features.xvba);
 json.addBool("libva",key->features.libva);
 json.addBool("enable_opengl",key->features.enable_opengl);
+json.addString("sdlDriver",key->features.sdlDriver);
 json.endNode();
 json.addNode("lastfiles");
 json.addString("lastdir_read",key->lastfiles.lastdir_read);

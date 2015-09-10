@@ -40,6 +40,8 @@ extern "C" {
 #include "GUI_accelRender.h"
 #include "GUI_sdlRender.h"
 
+
+static int  sdlDriverIndex=-1;
 /**
  * \class sdlRenderImpl
  * \brief implementation
@@ -73,6 +75,35 @@ protected:
 static sdlRenderImpl *impl=NULL;
 
 /**
+ */
+
+static std::vector<sdlDriverInfo>listOfSDLDrivers;
+/**
+ * 
+ * @return 
+ */
+static bool initDrivers()
+{
+    listOfSDLDrivers.clear();
+    int nbDriver=SDL_GetNumRenderDrivers();
+   
+    for(int i=0;i<nbDriver;i++)
+    {
+        SDL_RendererInfo info;
+        SDL_GetRenderDriverInfo(i,&info);
+        sdlDriverInfo sdlInfo;
+        sdlInfo.index=i;
+        sdlInfo.driverName=std::string(info.name);
+        sdlInfo.flags=info.flags;
+        listOfSDLDrivers.push_back(sdlInfo);
+        printf("[SDK]Found driver [%d] %s, with flags=%x\n",i,info.name,info.flags);
+        if(info.flags & SDL_RENDERER_SOFTWARE) // by default we peek the software one
+            sdlDriverIndex=i;
+    }
+    return true;
+}
+
+/**
  * 
  */
 sdlRender::sdlRender()
@@ -93,34 +124,94 @@ bool sdlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoo
     ADM_assert(impl);
     return impl->init(window,w,h,zoom);
 }
+/**
+ * 
+ * @return 
+ */
 bool sdlRender::stop()
 {
     ADM_assert(impl);
     return impl->stop();
 }
+/**
+ * 
+ * @param pic
+ * @return 
+ */
 bool  sdlRender::displayImage(ADMImage *pic)
 {
     ADM_assert(impl);
     return impl->displayImage(pic);
 }
+/**
+ * 
+ * @param newZoom
+ * @return 
+ */
 bool  sdlRender::changeZoom(renderZoom newZoom)
 {
     ADM_assert(impl);
     return impl->changeZoom(newZoom);
 }
+/**
+ * 
+ * @return 
+ */
 bool  sdlRender::usingUIRedraw()
 {
     ADM_assert(impl);
     return impl->usingUIRedraw();
 }
+/**
+ * 
+ * @return 
+ */
 bool sdlRender::refresh(void) 
 {
     ADM_assert(impl);
     return impl->refresh();
 }
-
-
-          
+/**
+ * 
+ * @return 
+ */
+const std::vector<sdlDriverInfo> &getListOfSdlDrivers()
+{
+    return listOfSDLDrivers;
+}
+/**
+ * 
+ * @return 
+ */
+std::string  getSdlDriverName()
+{
+    return listOfSDLDrivers[sdlDriverIndex].driverName;
+}
+/**
+ * 
+ * @param name
+ * @return 
+ */
+bool  setSdlDriverByName(const std::string &name)
+{
+    int defaultOne=-1;
+    ADM_info("[SDL] Trying to switch to SDL driver %s\n",name.c_str());
+    for(int i=0;i<listOfSDLDrivers.size();i++)
+    {
+        if(!listOfSDLDrivers[i].driverName.compare(name))
+        {
+            ADM_info("[SDL] Picked up driver <%s>\n",listOfSDLDrivers[i].driverName.c_str());
+            sdlDriverIndex=i;
+            return true;
+        }
+        if(listOfSDLDrivers[i].flags & SDL_RENDERER_SOFTWARE) // by default we take the software one
+            defaultOne=i;
+    }
+    ADM_warning("No suitable driver found\n");
+    ADM_assert(defaultOne>=0);
+    sdlDriverIndex=defaultOne;
+    return false;
+}
 
 
 //******************************************
@@ -181,15 +272,16 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
     sdl_running=1;
     ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
     
-    int nbDriver=SDL_GetNumRenderDrivers();
-    int sdlDriverIndex=0;
-    for(int i=0;i<nbDriver;i++)
+    int nbDriver=listOfSDLDrivers.size();
+    if(!nbDriver)
     {
-        SDL_RendererInfo info;
-        SDL_GetRenderDriverInfo(i,&info);
-        ADM_info("[%d] %s\n",i,info.name);
-        if(info.flags & SDL_RENDERER_SOFTWARE)
-            sdlDriverIndex=i;
+        ADM_warning("[SDL] No driver loaded\n");
+        return false;
+    }
+    if(sdlDriverIndex==-1)
+    {
+        ADM_warning("No suitable driver found\n");
+        return false;
     }
     
 #if 0
@@ -285,13 +377,13 @@ bool sdlRenderImpl::displayImage(ADMImage *pic)
                                              imagePtr[0], imagePitch[0],
                                              imagePtr[2], imagePitch[2],
                                              imagePtr[1], imagePitch[1]);
-
     }else
     { // YUYV
         ADM_warning("[SDL] YUYV disabled\n");
         return false;
     }
-
+    SDL_RenderClear(sdl_renderer);
+    SDL_RenderCopy(sdl_renderer, sdl_texture, NULL, NULL);
     refresh();
     return true;
 }
@@ -303,8 +395,6 @@ bool sdlRenderImpl::refresh(void)
 {
     if(!sdl_texture)
         return false;
-    SDL_RenderClear(sdl_renderer);
-    SDL_RenderCopy(sdl_renderer, sdl_texture, NULL, NULL);
     SDL_RenderPresent(sdl_renderer);
     return true;
 }
@@ -329,7 +419,7 @@ bool sdlRenderImpl::changeZoom(renderZoom newZoom)
 /**
     \fn initSdl
 */
-bool initSdl(int videoDevice)
+bool initSdl(const std::string &sdlDriverName)
 {
     printf("\n");
     quitSdl();
@@ -353,7 +443,8 @@ bool initSdl(int videoDevice)
             return false;
     }
     ADM_info("\tsucceeded\n");
-
+    initDrivers();
+    setSdlDriverByName(sdlDriverName);
     const char *driverName=SDL_GetVideoDriver(0);
     if(driverName)
     {

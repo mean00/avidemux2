@@ -22,8 +22,7 @@
 
 
 #include "DIA_factory.h"
-
-#ifdef _WIN32
+#ifdef USE_SDL
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
@@ -76,6 +75,10 @@ bool     hasOpenGl=false;
 
 bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
+
+#ifdef USE_SDL
+std::string currentSdlDriver=getSdlDriverName();
+#endif
 
 #ifdef USE_OPENGL
           prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
@@ -148,15 +151,15 @@ uint32_t defaultPortAvisynth = 9999;
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
 
-		// Encoding priority
-		if(!prefs->get(PRIORITY_ENCODING, &encodePriority))
-                encodePriority=2;
-		// Indexing / unpacking priority
-		if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
-                indexPriority=2;
-		// Playback priority
-		if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
-                playbackPriority=0;
+        // Encoding priority
+        if(!prefs->get(PRIORITY_ENCODING, &encodePriority))
+        encodePriority=2;
+        // Indexing / unpacking priority
+        if(!prefs->get(PRIORITY_INDEXING, &indexPriority))
+        indexPriority=2;
+        // Playback priority
+        if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
+        playbackPriority=0;
 
         // VCD/SVCD split point		
         if(!prefs->get(MPEGSPLIT_AUTOSPLIT, &autosplit))
@@ -291,16 +294,35 @@ uint32_t defaultPortAvisynth = 9999;
 
                              
 #ifdef USE_SDL
-#ifdef _WIN32
-                             ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","MS Windows GDI (SDL)"),NULL}
-							 ,{RENDER_DIRECTX,      QT_TRANSLATE_NOOP("adm","MS Windows DirectX (SDL)"),NULL}
-#else
 							 ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","SDL (good)"),NULL}
-#endif
 #endif
         };        
         diaElemMenu menuVideoMode(&render,QT_TRANSLATE_NOOP("adm","Video _display:"), sizeof(videoMode)/sizeof(diaMenuEntry),videoMode,"");
-        
+#ifdef USE_SDL
+        const std::vector<sdlDriverInfo> &listOfSdl=getListOfSdlDrivers();
+        int nbSDL=listOfSdl.size();
+        diaElemMenuDynamic *sdlMenu=NULL;
+        diaMenuEntryDynamic **sdlMenuEntries=NULL;
+        uint32_t sdlMenuIndex=0;
+        int current=0;
+        if(nbSDL)
+        {
+            sdlMenuEntries=new diaMenuEntryDynamic*[nbSDL];
+            for(int i=0;i<nbSDL;i++)
+            {
+                if(!currentSdlDriver.compare(listOfSdl[i].driverName))
+                {
+                    current=i;
+                }
+                sdlMenuEntries[i]=new diaMenuEntryDynamic(i,listOfSdl[i].driverName.c_str(),"");
+            }
+            sdlMenuIndex=current;
+            sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),nbSDL,  sdlMenuEntries);
+        }else
+        {
+            sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),0,  NULL);   
+        }
+#endif        
         
         
         diaMenuEntry msgEntries[]={
@@ -415,8 +437,13 @@ uint32_t defaultPortAvisynth = 9999;
 
         
         /* Display */
-        diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl};
-        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),3,(diaElem **)diaVideo);
+        
+#ifdef USE_SDL
+        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&useOpenGl};
+#else
+         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl};
+#endif
+        diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
           diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&hwAccelText};
           diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
@@ -452,106 +479,124 @@ uint32_t defaultPortAvisynth = 9999;
 	{
         	//
 #ifdef USE_OPENGL
-          prefs->set(FEATURES_ENABLE_OPENGL,hasOpenGl);
+            prefs->set(FEATURES_ENABLE_OPENGL,hasOpenGl);
 #endif
-        	// cpu caps
-        		if(capsAll)
-        		{
-        			CpuCaps::myCpuMask=ADM_CPUCAP_ALL;
-        		}else
-        		{
-        			CpuCaps::myCpuMask=0;
-#undef CPU_CAPS
-#define CPU_CAPS(x)    	if(caps##x) CpuCaps::myCpuMask|= ADM_CPUCAP_##x;        	    	
-        	    	CPU_CAPS(MMX);
-        	    	CPU_CAPS(MMXEXT);
-        	    	CPU_CAPS(3DNOW);
-        	    	CPU_CAPS(3DNOWEXT);
-        	    	CPU_CAPS(SSE);
-        	    	CPU_CAPS(SSE2);
-        	    	CPU_CAPS(SSE3);
-        	    	CPU_CAPS(SSSE3);
-        		}
-        		prefs->set(FEATURES_CPU_CAPS,CpuCaps::myCpuMask);
+    // cpu caps
+            if(capsAll)
+            {
+                    CpuCaps::myCpuMask=ADM_CPUCAP_ALL;
+            }else
+            {
+                    CpuCaps::myCpuMask=0;
+    #undef CPU_CAPS
+    #define CPU_CAPS(x)    	if(caps##x) CpuCaps::myCpuMask|= ADM_CPUCAP_##x;        	    	
+            CPU_CAPS(MMX);
+            CPU_CAPS(MMXEXT);
+            CPU_CAPS(3DNOW);
+            CPU_CAPS(3DNOWEXT);
+            CPU_CAPS(SSE);
+            CPU_CAPS(SSE2);
+            CPU_CAPS(SSE3);
+            CPU_CAPS(SSSE3);
+            }
+            prefs->set(FEATURES_CPU_CAPS,CpuCaps::myCpuMask);
 
-                // Postproc
-                #undef DOME
-                #define DOME(x,y) if(y) pp_type |=x;
-                pp_type=0;
-                DOME(1,hzd);
-                DOME(2,vzd);
-                DOME(4,dring);
-                prefs->set(DEFAULT_POSTPROC_TYPE,pp_type);
-                prefs->set(DEFAULT_POSTPROC_VALUE,pp_value);
+            // Postproc
+            #undef DOME
+            #define DOME(x,y) if(y) pp_type |=x;
+            pp_type=0;
+            DOME(1,hzd);
+            DOME(2,vzd);
+            DOME(4,dring);
+            prefs->set(DEFAULT_POSTPROC_TYPE,pp_type);
+            prefs->set(DEFAULT_POSTPROC_VALUE,pp_value);
 
-                // Alsa
+            // Alsa
 #ifdef ALSA_SUPPORT
-                if(alsaDevice)
-                {
-                   prefs->set(DEVICE_AUDIO_ALSA_DEVICE, alsaDevice);
-                   ADM_dealloc(alsaDevice);
-                   alsaDevice=NULL;
-                }
+            if(alsaDevice)
+            {
+               prefs->set(DEVICE_AUDIO_ALSA_DEVICE, alsaDevice);
+               ADM_dealloc(alsaDevice);
+               alsaDevice=NULL;
+            }
 #endif
-                // Device
-                //printf("[AudioDevice] Old : %d, new :%d\n",olddevice,newdevice);
-                if(olddevice!=newdevice)
-                {
-                      AVDM_switch((AUDIO_DEVICE)newdevice); // Change current device
-                      AVDM_audioSave();                     // Save it in prefs
-                      AVDM_audioInit();                     // Respawn
-                }
-                // Downmixing (default)
-                prefs->set(DEFAULT_DOWNMIXING,downmix);
+            // Device
+            //printf("[AudioDevice] Old : %d, new :%d\n",olddevice,newdevice);
+            if(olddevice!=newdevice)
+            {
+                  AVDM_switch((AUDIO_DEVICE)newdevice); // Change current device
+                  AVDM_audioSave();                     // Save it in prefs
+                  AVDM_audioInit();                     // Respawn
+            }
+            // Downmixing (default)
+            prefs->set(DEFAULT_DOWNMIXING,downmix);
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
-                // Master or PCM
-                prefs->set(FEATURES_AUDIOBAR_USES_MASTER, useMaster);
+            // Master or PCM
+            prefs->set(FEATURES_AUDIOBAR_USES_MASTER, useMaster);
 #endif
-                // allow non std audio fq for dvd
-                prefs->set(FEATURES_MPEG_NO_LIMIT, mpeg_no_limit);
-                // Video render
-                prefs->set(VIDEODEVICE,render);
-                // Odml
-                prefs->set(FEATURES_USE_ODML, use_odml);
-				// Split
-                prefs->set(MPEGSPLIT_AUTOSPLIT, autosplit);
-                
-                // number of threads
-                prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
-                // Encoding priority
-                prefs->set(PRIORITY_ENCODING, encodePriority);
-                // Indexing / unpacking priority
-                prefs->set(PRIORITY_INDEXING, indexPriority);
-                // Playback priority
-                prefs->set(PRIORITY_PLAYBACK, playbackPriority);
+            // allow non std audio fq for dvd
+            prefs->set(FEATURES_MPEG_NO_LIMIT, mpeg_no_limit);
+            // Video render
+            prefs->set(VIDEODEVICE,render);
+            // Odml
+            prefs->set(FEATURES_USE_ODML, use_odml);
+                            // Split
+            prefs->set(MPEGSPLIT_AUTOSPLIT, autosplit);
 
-                // Auto swap A/B
-                prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
-                //
-                prefs->set(MESSAGE_LEVEL,msglevel);
-                // Use tray while encoding
-                prefs->set(FEATURES_USE_SYSTRAY,useTray);
+            // number of threads
+            prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
+            // Encoding priority
+            prefs->set(PRIORITY_ENCODING, encodePriority);
+            // Indexing / unpacking priority
+            prefs->set(PRIORITY_INDEXING, indexPriority);
+            // Playback priority
+            prefs->set(PRIORITY_PLAYBACK, playbackPriority);
 
-                // VDPAU
-                prefs->set(FEATURES_VDPAU,bvdpau);
-                // XVBA
-                prefs->set(FEATURES_XVBA,bxvba);
-                // LIBVA
-                prefs->set(FEATURES_LIBVA,blibva);
-                // Alternate mp3 tag (haali)
-                prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
+            // Auto swap A/B
+            prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
+            //
+            prefs->set(MESSAGE_LEVEL,msglevel);
+            // Use tray while encoding
+            prefs->set(FEATURES_USE_SYSTRAY,useTray);
 
-                prefs->set(DEFAULT_LANGUAGE,myLanguages[languageIndex].lang);
-			
-                // Avisynth
-                prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
-                prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
-#if defined(_WIN32) && defined(USE_SDL)
+            // VDPAU
+            prefs->set(FEATURES_VDPAU,bvdpau);
+            // XVBA
+            prefs->set(FEATURES_XVBA,bxvba);
+            // LIBVA
+            prefs->set(FEATURES_LIBVA,blibva);
+            // Alternate mp3 tag (haali)
+            prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
+
+            prefs->set(DEFAULT_LANGUAGE,myLanguages[languageIndex].lang);
+
+            // Avisynth
+            prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
+            prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
+
                 // Initialise SDL again as driver may have changed
-                initSdl(render);
-#endif
-                
+#ifdef USE_SDL                
+            std::string driverName=listOfSdl[sdlMenuIndex].driverName;
+            setSdlDriverByName(driverName);
+            prefs->set(FEATURES_SDLDRIVER,driverName.c_str());
+#endif    
 	}
+#ifdef USE_SDL
+        if(sdlMenu) 
+        {
+            if(nbSDL&&sdlMenuEntries)
+            {
+                for(int i=0;i<nbSDL;i++)
+                {
+                    delete sdlMenuEntries[i];
+                }
+                delete [] sdlMenuEntries;
+                sdlMenuEntries=NULL;
+            }
+            delete sdlMenu;
+            sdlMenu=NULL;
+        }
+#endif                
         for(int i=0;i<nbAudioDevice+1;i++)
         {
             

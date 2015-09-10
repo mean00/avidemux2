@@ -18,6 +18,7 @@ struct  {
 	bool xvba;
 	bool libva;
 	bool enable_opengl;
+	char * sdlDriver;
 }features;
 struct  {
 	char * lastdir_read;

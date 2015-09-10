@@ -15,6 +15,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.xvba",offsetof(my_prefs_struct,features.xvba),"bool",ADM_param_bool},
  {"features.libva",offsetof(my_prefs_struct,features.libva),"bool",ADM_param_bool},
  {"features.enable_opengl",offsetof(my_prefs_struct,features.enable_opengl),"bool",ADM_param_bool},
+ {"features.sdlDriver",offsetof(my_prefs_struct,features.sdlDriver),"char *",ADM_param_string},
  {"lastfiles.lastdir_read",offsetof(my_prefs_struct,lastfiles.lastdir_read),"char *",ADM_param_string},
  {"lastfiles.lastdir_write",offsetof(my_prefs_struct,lastfiles.lastdir_write),"char *",ADM_param_string},
  {"lastfiles.file1",offsetof(my_prefs_struct,lastfiles.file1),"char *",ADM_param_string},
