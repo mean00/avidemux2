@@ -57,7 +57,7 @@ class sdlRenderImpl: public VideoRenderBase
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newZoom);
-              virtual   bool usingUIRedraw(void) {return true;};
+              virtual   bool usingUIRedraw(void) {return false;};
               virtual   bool refresh(void) ;
 protected:
                         bool cleanup(void);
