@@ -25,28 +25,28 @@
 class QtGlAccelWidget : public QGLWidget
 {
 private:
-	int             imageWidth, imageHeight;
-    int             displayWidth,displayHeight;
-	bool            firstRun;
-    
+        int             imageWidth, imageHeight;
+        int             displayWidth,displayHeight;
+        bool            firstRun;
 
-	QGLShaderProgram *glProgram;
-	GLsizei textureRealWidths[3];
-    GLsizei textureStrides[3];
-	GLsizei textureHeights[3];
-	uint8_t *textureOffsets[3];
-    GLuint  textureName[3];
+
+        QGLShaderProgram *glProgram;
+        GLsizei textureRealWidths[3];
+        GLsizei textureStrides[3];
+        GLsizei textureHeights[3];
+        uint8_t *textureOffsets[3];
+        GLuint  textureName[3];
 
 protected:
-	void initializeGL();
-	void paintGL() attribute_align_arg;
-    void updateTexture(void);
+        void initializeGL();
+        void paintGL() attribute_align_arg;
+        void updateTexture(void);
 
 public:
-	QtGlAccelWidget(QWidget *parent, int imagew, int imageh);
-    ~QtGlAccelWidget();
-	bool setImage(ADMImage *pic);
-    bool setDisplaySize(int width,int height);
+             QtGlAccelWidget(QWidget *parent, int imagew, int imageh);
+             ~QtGlAccelWidget();
+        bool setImage(ADMImage *pic);
+        bool setDisplaySize(int width,int height);
 };
 
 /**
@@ -55,7 +55,7 @@ public:
 class QtGlRender: public VideoRenderBase
 {
       protected:
-                            
+
                             GUI_WindowInfo  info;
                             QtGlAccelWidget *glWidget;
       public:
