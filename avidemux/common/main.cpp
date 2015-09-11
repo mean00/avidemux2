@@ -320,6 +320,7 @@ int startAvidemux(int argc, char *argv[])
 
 #ifdef USE_SDL
     char *drv=NULL;
+    printf("Probing for SDL...\n");
     std::string sdlDriver=std::string("dummy");
     if(prefs->get(FEATURES_SDLDRIVER,&drv))
     {
@@ -329,7 +330,7 @@ int startAvidemux(int argc, char *argv[])
             {
                 sdlDriver=std::string(drv);
             }
-            free(drv);
+            ADM_dezalloc(drv);
         }
     }
     printf("Calling initSDL with driver=%s\n",sdlDriver.c_str());
