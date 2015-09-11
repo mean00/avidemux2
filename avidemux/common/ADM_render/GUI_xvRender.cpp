@@ -197,11 +197,11 @@ uint8_t GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
     win = gtk_widget_get_parent_window(window);
     xv_display = GDK_WINDOW_XDISPLAY(win);
 //      xv_win= RootWindow(xv_display,0);
-    xv_win = GDK_WINDOW_XWINDOW(GTK_WIDGET(window)->window);
+    xv_win = GDK_WINDOW_XWINDOW(GTK_WIDGET(window)->systemWindowId);
 #endif
 
     xv_display=(Display *)window->display;
-    xv_win=window->window;
+    xv_win=window->systemWindowId;
 
 
 #define WDN xv_display

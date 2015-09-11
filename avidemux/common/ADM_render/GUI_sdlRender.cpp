@@ -315,7 +315,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,render
                           SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN*1);    
     SDL_SetWindowPosition(sdl_window,window->x,window->y);
 #else
-    sdl_window=SDL_CreateWindowFrom((void*)window->window);    
+    sdl_window=SDL_CreateWindowFrom((void*)window->systemWindowId);
 #endif    
     
     if(!sdl_window)

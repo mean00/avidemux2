@@ -15,9 +15,9 @@
 #define ADM_WINDOW_INFO_H
 typedef struct
 {
-    void *display;
-    void *widget;
-    int  window;
+    void *display;  // X11 display System
+    void *widget;   // QT widget
+    int  systemWindowId;
     int x;
     int y;
     int width;

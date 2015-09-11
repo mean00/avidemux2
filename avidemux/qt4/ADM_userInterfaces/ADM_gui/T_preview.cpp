@@ -229,15 +229,18 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     ADM_assert(videoWindow);
     QWidget* widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
-    xinfo->window = 0;
+    xinfo->systemWindowId = 0;
 
 #if defined(_WIN32)
 	xinfo->display=(void *)videoWindow->winId();
+        xinfo->systemWindowId=videoWindow->winId();
 #elif defined(__APPLE__)
 	#if defined(ADM_CPU_X86_64)
 		xinfo->display = (void*)videoWindow->winId();
+                xinfo->systemWindowId=videoWindow->winId();
 	#else
 		xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
+                xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
 	#endif
 #else
         #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
@@ -246,7 +249,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
         #else
                 xinfo->display=XOpenDisplay(NULL);
         #endif
-        xinfo->window=videoWindow->winId();
+        xinfo->systemWindowId=videoWindow->winId();
 #endif
         QPoint localPoint(0,0);
         QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        

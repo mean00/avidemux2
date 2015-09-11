@@ -108,7 +108,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     if(pic->refType==ADM_HW_LIBVA)
     {
         ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refInstance;
-        admLibVA::putX11Surface(img,info.window,displayWidth,displayHeight);
+        admLibVA::putX11Surface(img,info.systemWindowId,displayWidth,displayHeight);
     }else
     {
         if(!mySurface[0] || !mySurface[1])
@@ -123,7 +123,7 @@ bool libvaRender::displayImage(ADMImage *pic)
             ADM_warning("VaRender] Failed to upload pic \n");
             return false;
         }
-        admLibVA::putX11Surface(dest,info.window,displayWidth,displayHeight);
+        admLibVA::putX11Surface(dest,info.systemWindowId,displayWidth,displayHeight);
     }
     return true;
 }
