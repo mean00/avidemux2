@@ -41,6 +41,10 @@
 #include "DIA_defaultAskAvisynthPort.hxx"
 using namespace std;
 
+#if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
+    #define SDL_ON_LINUX
+#endif
+
 #ifdef USE_OPENGL
 extern bool ADM_glHasActiveTexture(void);
 void UI_Qt4InitGl(void);
@@ -1297,6 +1301,9 @@ void UI_setAudioTrackCount( int nb )
 /**
  * \fn dtor
  */
+#ifdef SDL_ON_LINUX
+extern void disableExitHandler();
+#endif
 myQApplication::~myQApplication()
 {
     
@@ -1316,6 +1323,12 @@ myQApplication::~myQApplication()
   #endif
 #endif
 
+    
+#ifdef SDL_ON_LINUX
+    ADM_warning("This is SDL on linux, exiting brutally to avoid lock.\n");
+    disableExitHandler();
+    ::exit(0); // 
+#endif    
     ADM_warning("Exiting app\n");
 }
                 

@@ -91,7 +91,7 @@ extern bool UI_End(void);
 extern void cleanUp (void);
 
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
-
+static bool performOnExit=true;
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -387,13 +387,18 @@ int startAvidemux(int argc, char *argv[])
     printf("Normal exit\n");
     return 0;
 }
-
+void disableExitHandler()
+{
+    performOnExit=false;
+}
 /**
  * 
  */
 void onexit( void )
 {
     printf("Cleaning up\n");
+    if(!performOnExit)
+        return;
     if(video_body) 
         video_body->cleanup ();
     delete video_body;
