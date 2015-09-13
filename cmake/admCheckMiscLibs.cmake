@@ -14,10 +14,10 @@ SET(ADM_LOCALE "${CMAKE_INSTALL_PREFIX}/share/locale")
 ########################################
 OPTION(SDL "" ON)
 
-MESSAGE(STATUS "Checking for SDL>=2")
-MESSAGE(STATUS "*******************")
+MESSAGE(STATUS "Checking for SDL>=2 (only for windows)")
+MESSAGE(STATUS "**************************************")
 
-IF (SDL)
+IF (SDL AND WIN32)
 	FIND_PACKAGE(SDL2)
 	PRINT_LIBRARY_INFO("SDL2" SDL2_FOUND "${SDL2_INCLUDE_DIR}" "${SDL2_LIBRARY}")
 
@@ -28,9 +28,9 @@ IF (SDL)
 	IF (SDL2_FOUND)
 		SET(USE_SDL 1)
 	ENDIF (SDL2_FOUND)
-ELSE (SDL)
+ELSE (SDL AND WIN32)
 	MESSAGE("${MSG_DISABLE_OPTION}")
-ENDIF (SDL)
+ENDIF (SDL AND WIN32)
 
 APPEND_SUMMARY_LIST("Miscellaneous" "SDL" "${USE_SDL}")
 
