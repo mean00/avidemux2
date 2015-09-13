@@ -72,7 +72,7 @@ const char   *AVDM_black::getConfiguration(void)
         static char conf[1024];
         std::string startTime=std::string(ADM_us2plain(param.startBlack*1000));
         std::string endTime=std::string(ADM_us2plain(param.endBlack*1000));
-	snprintf(conf,255," Fade : Start %s End %s",startTime.c_str(),endTime.c_str());
+	snprintf(conf,255," Black : Start %s End %s",startTime.c_str(),endTime.c_str());
         return conf;
 }
 
