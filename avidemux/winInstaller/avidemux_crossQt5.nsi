@@ -711,6 +711,13 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_logo.dll
 		${MementoSectionEnd}
+                ${MementoSection} "Black" SecVidFltBlack
+			SectionIn 1 2
+			SetOverwrite on
+			SetOutPath $INSTDIR\plugins\videoFilters
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_black.dll
+		${MementoSectionEnd}
+
 		${MementoSection} "Blacken Borders" SecVidFltBlackenBorders
 			SectionIn 1 2
 			SetOverwrite on
