@@ -83,7 +83,8 @@ void indirect_printf_long(int level,const char *modname,int entity,const char *p
 
 #define ADM_COLOR_YELLOW  "\e[33m"
 #define ADM_COLOR_RED     "\e[31m"
-#define ADM_DEFAULT_COLOR "\e[32m"
+#define ADM_COLOR_GREEN   "\e[32m"
+#define ADM_DEFAULT_COLOR "\e[m"
 
 
 static void ADM_prettyPrint(const char *func,const char *color, const char *p)
@@ -105,7 +106,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
 		vsnprintf(print_buffer,1023,prf,list);
 		va_end(list);
 		print_buffer[1023]=0; // ensure the string is terminated
-        ADM_prettyPrint(func,ADM_DEFAULT_COLOR,print_buffer);
+        ADM_prettyPrint(func,ADM_COLOR_GREEN,print_buffer);
 		
   }
  void ADM_warning2( const char *func, const char *prf, ...)
