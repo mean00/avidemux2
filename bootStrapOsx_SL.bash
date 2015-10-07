@@ -51,7 +51,7 @@ Process()
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP  $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make -j 2 > /tmp/log$BUILDDIR || fail make
+        make  > /tmp/log$BUILDDIR || fail make
 	echo "** installing at $FAKEROOT_DIR **"
 	make install DESTDIR=$FAKEROOT_DIR || fail install
 }
