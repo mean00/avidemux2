@@ -54,8 +54,8 @@ MACRO(checkQt4)
                 ELSE(CROSS)
 		IF (QT4)
 			FIND_PACKAGE(Qt4)
-                        SET(QT_INCLUDES ${QT_INCLUDES} ${QT_INCLUDES}/QtGui)
-                        SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} ${QT_INCLUDE_DIR}/QtGui)
+                        SET(QT_INCLUDES ${QT_INCLUDES} -IQtGui)
+                        SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} QtGui)
 	
 			STRING(REGEX REPLACE "[\\]" "/" QT_INCLUDES "${QT_INCLUDES}")	# backslashes aren't taken care of properly on Windows
 			PRINT_LIBRARY_INFO("Qt 4" QT4_FOUND "${QT_INCLUDES} ${QT_DEFINITIONS}" "${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}")
