@@ -54,11 +54,29 @@ MACRO(checkQt4)
                 ELSE(CROSS)
 		IF (QT4)
 			FIND_PACKAGE(Qt4)
-                        SET(QT_INCLUDES ${QT_INCLUDES} -IQtGui)
-                        SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} QtGui)
+                        SET(QT_INCLUDES ${QT_INCLUDES} )
+                        SET(QT_INCLUDE_DIR ${QT_INCLUDE_DIR} )
+
+                        FOREACH(i ${QT_INCLUDES})
+                                LIST(APPEND ONE  ${i})
+                                IF(IS_DIRECTORY ${i}/QtGui)
+                                  LIST(APPEND ONE  ${i}/QtGui)
+                                ENDIF(EXISTS ${i}/QtGui)
+                        ENDFOREACH(i ${QT_INCLUDES})
+                        SET(QT_INCLUDES ${ONE})
+
+                        FOREACH(i ${QT_INCLUDE_DIR})
+                                LIST(APPEND TWO  ${i} )
+                                IF(IS_DIRECTORY ${i}/QtGui)
+                                   LIST(APPEND TWO   ${i}/QtGui)
+                                ENDIF(EXISTS ${i}/QtGui)
+                        ENDFOREACH(i ${QT_INCLUDE_DIR})
+                        SET(QT_INCLUDE_DIR ${TWO})
 	
 			STRING(REGEX REPLACE "[\\]" "/" QT_INCLUDES "${QT_INCLUDES}")	# backslashes aren't taken care of properly on Windows
 			PRINT_LIBRARY_INFO("Qt 4" QT4_FOUND "${QT_INCLUDES} ${QT_DEFINITIONS}" "${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}")
+                
+                        MESSAGE(STATUS " QT_INCLUDE_DIR <${QT_INCLUDE_DIR}>, QT_INCLUDES <${QT_INCLUDES}>")
 
 			MARK_AS_ADVANCED(LRELEASE_EXECUTABLE)
 			MARK_AS_ADVANCED(QT_MKSPECS_DIR)
