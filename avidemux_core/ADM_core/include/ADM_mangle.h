@@ -83,16 +83,16 @@
 #define REG_BP "ebp" 
 #endif
 
-#define REG_ax "%%"REG_a
-#define REG_bx "%%"REG_b
-#define REG_cx "%%"REG_c
-#define REG_dx "%%"REG_d
+#define REG_ax "%%" REG_a
+#define REG_bx "%%" REG_b
+#define REG_cx "%%" REG_c
+#define REG_dx "%%" REG_d
 
-#define REG_si "%%"REG_S
-#define REG_di "%%"REG_D
+#define REG_si "%%" REG_S
+#define REG_di "%%" REG_D
 
-#define REG_sp "%%"REG_SP
-#define REG_bp "%%"REG_BP
+#define REG_sp "%%" REG_SP
+#define REG_bp "%%" REG_BP
 
 #ifndef attribute_used
 #if defined(__GNUC__) && (__GNUC__ > 3 || __GNUC__ == 3 && __GNUC_MINOR__ > 0)
