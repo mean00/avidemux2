@@ -22,6 +22,8 @@
 #include "ADM_vs.h"
 
 #include <math.h>
+
+static const VSAPI *vsapi = NULL;
 #if 0
     #define aprintf printf
 #else
@@ -37,6 +39,57 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
+    
+   
+    
+    if (!vsscript_init()) 
+    {
+          ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
+          return false;
+    }
+    if(!vsapi)
+    {
+        vsapi = vsscript_getVSApi();
+        if(!vsapi)
+        {
+            ADM_warning("Cannot get vsAPI entry point\n");
+            vsscript_finalize();
+            return 0;
+        }
+        
+    }
+      
+    if (vsscript_createScript(&_script))
+    {
+        ADM_warning("Script Init failed <%s>\n", vsscript_getError(_script));
+        vsscript_freeScript(_script);
+        vsscript_finalize();
+        return 0;
+    }
+    _node = vsscript_getOutput(_script, _outputIndex);
+    if (!_node) 
+    {
+       ADM_warning("vsscript_getOutput failed\n");
+       vsscript_freeScript(_script);
+       vsscript_finalize();
+       return 0;
+    }
+    const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
+    if(!vi)
+    {
+          ADM_warning("Cannot get information on node\n");
+          vsscript_freeScript(_script);
+          vsscript_finalize();
+          return 0;
+    }
+    ADM_info("Format    : %s\n",vi->format->name);
+    ADM_info("FrameRate : %d / %d\n",vi->fpsNum,vi->fpsDen);
+    ADM_info("Width     : %d\n",vi->width);
+    ADM_info("Height    : %d\n",vi->height);
+    ADM_info("Frames    : %d\n",vi->numFrames);
+    ADM_info("Flags     : 0x%x\n",vi->flags);
+    
+
 #if 0
   // If it was available from the metadata, use the one from metadata
     if(! _videostream.dwRate)
@@ -225,6 +278,12 @@ uint8_t   vsHeader::getNbAudioStreams(void)
 
 uint8_t vsHeader::close(void)
 {
+    if(_script)
+    {
+          vsscript_freeScript(_script);
+          vsscript_finalize();
+    }
+    // _node ?
    return 1;
 }
 /**
@@ -235,8 +294,8 @@ uint8_t vsHeader::close(void)
  vsHeader::vsHeader( void ) : vidHeader()
 {
     _fd=NULL;
-
-
+    _script=NULL;
+    _node = NULL;
 }
 /**
     \fn vsHeader

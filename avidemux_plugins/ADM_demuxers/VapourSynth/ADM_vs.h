@@ -16,8 +16,16 @@
  ***************************************************************************/
 #pragma once 
 
+//extern "C"
+//{
+#include "vapoursynth/VapourSynth.h"
+#include "vapoursynth/VSHelper.h"
+#include "vapoursynth/VSScript.h"
+//}
+
 #include "ADM_Video.h"
 #include "ADM_audioStream.h"
+
 /**
     \Class vsHeader
     \brief Flash demuxer
@@ -65,7 +73,10 @@ virtual   bool       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts);
 virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
           uint8_t    getFrameSize (uint32_t frame, uint32_t * size);
 
-
+protected:
+    VSScript       *_script;
+    int            _outputIndex;
+    VSNodeRef       *_node;
 };
 
 
