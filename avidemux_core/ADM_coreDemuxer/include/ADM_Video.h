@@ -21,7 +21,7 @@
 #define __VIDHEADER__
 
 #ifdef _WIN32
-#	include <windows.h>
+#    include <windows.h>
 #endif
 
 #include "ADM_coreDemuxer6_export.h"
@@ -44,10 +44,10 @@ typedef struct
 
 typedef struct 
 {
- 	uint32_t   width,height;
-	uint32_t   fps1000;
-	uint32_t   nb_frames;
-  	uint32_t   fcc;	
+    uint32_t   width,height;
+    uint32_t   fps1000;
+    uint32_t   nb_frames;
+    uint32_t   fcc;    
     uint32_t   bpp;
 } aviInfo;
 
@@ -59,27 +59,27 @@ typedef struct
 class ADM_COREDEMUXER6_EXPORT vidHeader
 {
 protected:
-          MainAVIHeader 	_mainaviheader;
-          uint8_t		    _isvideopresent;
-          AVIStreamHeader 	_videostream;
+          MainAVIHeader     _mainaviheader;
+          uint8_t            _isvideopresent;
+          AVIStreamHeader     _videostream;
           ADM_BITMAPINFOHEADER  _video_bih;
-          uint8_t		    _isaudiopresent;
-          AVIStreamHeader 	_audiostream;
-          void			   *_audiostreaminfo;
-          char			   *_name;
-          uint32_t		    _videoExtraLen;
-          uint8_t		   *_videoExtraData;
+          uint8_t            _isaudiopresent;
+          AVIStreamHeader     _audiostream;
+          void               *_audiostreaminfo;
+          char               *_name;
+          uint32_t            _videoExtraLen;
+          uint8_t           *_videoExtraData;
 
                     
 public:
-                                vidHeader();
-virtual                         ~vidHeader() ;
-virtual   void 			Dump(void)=0;
-virtual	  uint8_t		getExtraHeaderData(uint32_t *len, uint8_t **data);
+                           vidHeader();
+virtual                    ~vidHeader() ;
+virtual   void             Dump(void)=0;
+virtual      uint8_t       getExtraHeaderData(uint32_t *len, uint8_t **data);
 // AVI io
-virtual 	uint8_t		open(const char *name)=0;
-virtual 	uint8_t		close(void)=0;
-virtual         uint64_t        frameToUs(uint32_t frame)
+virtual     uint8_t        open(const char *name)=0;
+virtual     uint8_t        close(void)=0;
+virtual     uint64_t       frameToUs(uint32_t frame)
                                 {
                                     double f=frame;
                                     f*=_videostream.dwScale;
@@ -89,29 +89,29 @@ virtual         uint64_t        frameToUs(uint32_t frame)
                                 }
 virtual        bool             unreliableBFramePts (void) { return false;} // By default frames are reliable
   //__________________________
-  //				 Info
+  //                 Info
   //__________________________
-            uint8_t			        getVideoInfo(aviInfo *info);
-            uint32_t			    getWidth( void ) { return _mainaviheader.dwWidth;};
-            uint32_t			    getHeight( void ) { return _mainaviheader.dwHeight;};
-            uint8_t			        setMyName( const char *name);
-            char				    *getMyName( void);
+            uint8_t                 getVideoInfo(aviInfo *info);
+            uint32_t                getWidth( void ) { return _mainaviheader.dwWidth;};
+            uint32_t                getHeight( void ) { return _mainaviheader.dwHeight;};
+            uint8_t                 setMyName( const char *name);
+            char                    *getMyName( void);
   //__________________________
-  //				 Audio
+  //                 Audio
   //__________________________
 
-virtual 	WAVHeader              *getAudioInfo(uint32_t i ) =0 ;
-virtual 	uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio)=0;
+virtual     WAVHeader              *getAudioInfo(uint32_t i ) =0 ;
+virtual     uint8_t                 getAudioStream(uint32_t i,ADM_audioStream  **audio)=0;
 virtual     uint8_t                 getNbAudioStreams(void)=0;
 // Frames
   //__________________________
-  //				 video
+  //                 video
   //__________________________
 
-virtual 	uint8_t                 setFlag(uint32_t frame,uint32_t flags)=0;
-virtual 	uint32_t                getFlags(uint32_t frame,uint32_t *flags)=0;			
-virtual 	uint8_t                 getFrameSize(uint32_t frame,uint32_t *size)=0;
-virtual 	uint8_t                 getFrame(uint32_t framenum,ADMCompressedImage *img)=0;
+virtual     uint8_t                 setFlag(uint32_t frame,uint32_t flags)=0;
+virtual     uint32_t                getFlags(uint32_t frame,uint32_t *flags)=0;            
+virtual     uint8_t                 getFrameSize(uint32_t frame,uint32_t *size)=0;
+virtual     uint8_t                 getFrame(uint32_t framenum,ADMCompressedImage *img)=0;
 virtual     uint64_t                estimatePts(uint32_t frame); // Returns or guess the PTS of given frame
 // New write avi engine
           AVIStreamHeader           *getVideoStreamHeader(void ) { return &_videostream;}
