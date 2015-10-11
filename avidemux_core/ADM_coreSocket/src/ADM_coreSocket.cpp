@@ -172,14 +172,11 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
         return false;
     }
 
+  ADM_info("Binding on %s:%d\n",BIND_ADR,*port);
   sockaddr_in service;
   service.sin_family = AF_INET;
-
-    service.sin_addr.s_addr = inet_addr(BIND_ADR);
-	ADM_info("Binding on %s\n",BIND_ADR);
-
-  *port=0;
-  service.sin_port = 0; // bind to any port
+  service.sin_addr.s_addr = inet_addr(BIND_ADR);
+  service.sin_port = htons(*port); // bind to any port
 
   if (bind( mySocket,  (SADDR *)&service, sizeof(service))) 
   {
