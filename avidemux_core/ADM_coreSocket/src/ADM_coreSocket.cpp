@@ -171,6 +171,11 @@ bool     ADM_socket::createBindAndAccept(uint32_t *port)
         ADM_error("Cannot create socket\n");
         return false;
     }
+#ifndef _WIN32
+int enable = 1;
+if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+    ADM_error("Oops : setsockopt(SO_REUSEADDR) failed\n");
+#endif
 
   ADM_info("Binding on %s:%d\n",BIND_ADR,*port);
   sockaddr_in service;
