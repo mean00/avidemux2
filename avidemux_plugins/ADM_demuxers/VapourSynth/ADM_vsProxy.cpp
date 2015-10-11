@@ -49,6 +49,7 @@ int main(int ac, char **av)
         printf("Failure\n");
         exit(-1);
     }
+    return 0;
 }
 
 /**
@@ -123,17 +124,14 @@ bool vapourSynthProxy::run(const char *name)
           ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
           return false;
     }
+    vsapi = vsscript_getVSApi();
     if(!vsapi)
     {
-        vsapi = vsscript_getVSApi();
-        if(!vsapi)
-        {
-            ADM_warning("Cannot get vsAPI entry point\n");
-            vsscript_finalize();
-            return 0;
-        }
-        
+        ADM_warning("Cannot get vsAPI entry point\n");
+        vsscript_finalize();
+        return 0;
     }
+        
     ADM_info("VapourSynth init ok, opening file..\n");
     if (vsscript_evaluateFile(&_script, name, 0)) 
     {
@@ -155,6 +153,14 @@ bool vapourSynthProxy::run(const char *name)
           abort();
           return 0;
     }
+   if (!isConstantFormat(vi) || !vi->numFrames) 
+   {
+         ADM_warning("Varying format => unsupported\n");
+          vsapi->freeNode(_node);
+          abort();
+          return false;
+    }
+  
     ADM_info("Format    : %s\n",vi->format->name);
     ADM_info("FrameRate : %d / %d\n",vi->fpsNum,vi->fpsDen);
     ADM_info("Width     : %d\n",vi->width);
@@ -171,9 +177,19 @@ bool vapourSynthProxy::run(const char *name)
 
     
     _buffer=new uint8_t[vi->width*vi->height*4];
+    
+  
+    //--
+    
+    
     vsSocket sket;
     uint32_t port=9999;
-    sket.createBindAndAccept(&port);
+    if(!sket.createBindAndAccept(&port))
+    {
+        ADM_error("Cannot bind socket\n");
+        abort();
+        return false;
+    }
     ADM_info("Listening on port %d\n",(int)port);
     vsSocket *slave=sket.waitForConnect(20*1000);
     if(!slave)
@@ -199,19 +215,28 @@ bool vapourSynthProxy::run(const char *name)
  * @return 
  */
 bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
-{// Loop over every row of every plane write to the file
+{
     uint8_t *target=_buffer;
     for (int p = 0; p < vi->format->numPlanes; p++) 
     {
         int stride = vsapi->getStride(frame, p);
         const uint8_t *readPtr = vsapi->getReadPtr(frame, p);
-        int rowSize = vsapi->getFrameWidth(frame, p) * vi->format->bytesPerSample;
-        int height = vsapi->getFrameHeight(frame, p);
+        int rowSize = _info.width;
+        int height  = _info.height;
 
+        if(p)
+        {
+            rowSize>>=1;height>>=1;
+        }
+        ADM_info("Copying plan %d width =%d stride=%d height=%d\n",p,rowSize,stride,height);
         for (int y = 0; y < height; y++) 
         {
+#if 0
             memcpy(target,readPtr,rowSize);
-            target+=rowSize; // useless memcpy...
+#else
+            memset(target,0,rowSize);
+#endif            
+            target  += rowSize; // useless memcpy...
             readPtr += stride;
         }
     }
@@ -225,8 +250,8 @@ bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
  */
 bool vapourSynthProxy::manageSlave(vsSocket *slave,const VSVideoInfo *vi)
 {
-        uint32_t cmd,frame,len;
-        uint8_t payload[1000]; // Never used normally...
+    uint32_t cmd,frame,len;
+    uint8_t payload[1000]; // Never used normally...
     while(1)
     {        
 	if(!slave->receive(&cmd,&frame,&len,payload))
