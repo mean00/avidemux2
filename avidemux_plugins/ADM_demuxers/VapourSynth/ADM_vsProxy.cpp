@@ -23,6 +23,8 @@
 #include "ADM_vsProxy.h"
 #include <math.h>
 
+extern uint8_t ADM_InitMemcpy(void);
+
 static const VSAPI *vsapi = NULL;
 #if 0
     #define aprintf printf
@@ -38,6 +40,7 @@ int main(int ac, char **av)
         printf("vsProxy scriptFile\n");
         exit(-1); 
     }
+    ADM_InitMemcpy();
     vapourSynthProxy proxy;
     bool r=proxy.run(av[1]);
     if(r)
@@ -214,6 +217,7 @@ bool vapourSynthProxy::run(const char *name)
  * @param frame
  * @return 
  */
+
 bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
 {
     uint8_t *target=_buffer;
@@ -228,14 +232,10 @@ bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
         {
             rowSize>>=1;height>>=1;
         }
-        ADM_info("Copying plan %d width =%d stride=%d height=%d\n",p,rowSize,stride,height);
         for (int y = 0; y < height; y++) 
         {
-#if 0
+
             memcpy(target,readPtr,rowSize);
-#else
-            memset(target,0,rowSize);
-#endif            
             target  += rowSize; // useless memcpy...
             readPtr += stride;
         }
