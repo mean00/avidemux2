@@ -15,6 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once 
+#ifdef _WIN32
+        #include "winsock2.h"
+        #define SERROR   SOCKET_ERROR
+#else
+        #include "sys/socket.h"
+        #define SERROR   -1
+#endif
+
 extern "C"
 {
 #undef __cplusplus
@@ -24,14 +32,6 @@ extern "C"
 }
 #include "../../ADM_coreSocket/include/ADM_coreSocket.h"
 #include "../AvsProxy/avsHeader.h"
-#include "sys/socket.h"
-
-#ifdef _WIN32
-          #define SERROR   SOCKET_ERROR
-#else
-          #define SERROR   -1
-#endif
-
 
 /**
  */
