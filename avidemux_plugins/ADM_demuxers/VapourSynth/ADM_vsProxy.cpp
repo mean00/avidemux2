@@ -41,6 +41,24 @@ int main(int ac, char **av)
         exit(-1); 
     }
     ADM_InitMemcpy();
+    
+#ifdef _WIN32
+    WSADATA wsaData;
+    int iResult;
+            ADM_info("Initializing WinSock\n");
+            fflush(stdout);
+            iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+            if (iResult != NO_ERROR)
+            {
+                    printf("Error at WSAStartup()\n");
+                    fflush(stdout);
+                    exit(-1);
+            }	
+            ADM_info("WinSock ok\n");
+
+#endif    
+    
+    
     vapourSynthProxy proxy;
     bool r=proxy.run(av[1]);
     if(r)
