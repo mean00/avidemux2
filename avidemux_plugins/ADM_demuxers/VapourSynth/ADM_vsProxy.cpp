@@ -181,14 +181,7 @@ bool vapourSynthProxy::run(const char *name)
           abort();
           return false;
     }
-  
-    ADM_info("Format    : %s\n",vi->format->name);
-    ADM_info("FrameRate : %d / %d\n",vi->fpsNum,vi->fpsDen);
-    ADM_info("Width     : %d\n",vi->width);
-    ADM_info("Height    : %d\n",vi->height);
-    ADM_info("Frames    : %d\n",vi->numFrames);
-    ADM_info("Flags     : 0x%x\n",vi->flags);
-    
+      
     if(!fillInfo(vi))
     {
         printf("Unsupported settings in script files\n");
@@ -238,9 +231,11 @@ bool vapourSynthProxy::run(const char *name)
 
 bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
 {
+    const int mapp[3]={0,2,1};
     uint8_t *target=_buffer;
-    for (int p = 0; p < vi->format->numPlanes; p++) 
+    for (int plane = 0; plane < vi->format->numPlanes; plane++) 
     {
+        int p=mapp[plane];
         int stride = vsapi->getStride(frame, p);
         const uint8_t *readPtr = vsapi->getReadPtr(frame, p);
         int rowSize = _info.width;
