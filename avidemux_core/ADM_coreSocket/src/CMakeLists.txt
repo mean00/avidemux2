@@ -1,6 +1,8 @@
 SET(ADMcoreSocket_SRCS
         ADM_coreSocket.cpp
-        ADM_coreCommandSocket.cpp)	
+        ADM_coreCommandSocket.cpp
+        ADM_avsProtocol.cpp
+)	
 
 add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_coreSocket6 ${ADMcoreSocket_SRCS})

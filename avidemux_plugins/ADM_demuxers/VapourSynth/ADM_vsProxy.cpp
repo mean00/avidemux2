@@ -196,7 +196,7 @@ bool vapourSynthProxy::run(const char *name)
     //--
     
     
-    vsSocket sket;
+    avsSocket sket;
     uint32_t port=9999;
     if(!sket.createBindAndAccept(&port))
     {
@@ -205,7 +205,7 @@ bool vapourSynthProxy::run(const char *name)
         return false;
     }
     ADM_info("Listening on port %d\n",(int)port);
-    vsSocket *slave=sket.waitForConnect(20*1000);
+    avsSocket *slave=sket.waitForConnect(20*1000);
     if(!slave)
     {
         ADM_warning("No connection , timeout\n");
@@ -261,7 +261,7 @@ bool vapourSynthProxy::packFrame( const VSVideoInfo *vi,const VSFrameRef *frame)
  * @param slave
  * @return 
  */
-bool vapourSynthProxy::manageSlave(vsSocket *slave,const VSVideoInfo *vi)
+bool vapourSynthProxy::manageSlave(avsSocket *slave,const VSVideoInfo *vi)
 {
     uint32_t cmd,frame,len;
     uint8_t payload[1000]; // Never used normally...
