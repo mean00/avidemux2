@@ -392,8 +392,8 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
 		    			    		read8(fd);	// precision
 		    			    		*h = read16(fd);
 		    			    		*w = read16(fd);
-		    		                if(*w&1) *w++;
-		    		                if(*h&1) *h++;
+		    		                if(*w&1) w++;
+		    		                if(*h&1) h++;
 		    			    	}
 		    			    	else
 		    			    	{
