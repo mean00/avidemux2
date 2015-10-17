@@ -87,7 +87,6 @@ if "%BuildBits%" == "x" (
 	mkdir "%sdkBuildDir%\i18n\gtk"
 
 	copy *.ts "%sdkBuildDir%\i18n\qt4"
-	copy qt_filter_context.xslt "%sdkBuildDir%\i18n\qt4\qt_filter_context.xsl"
 	copy "%curDir%\Tools\Build Qt Translations.bat" "%sdkBuildDir%\i18n\qt4\Build Translations.bat"
 
 	del avidemux_blank.ts

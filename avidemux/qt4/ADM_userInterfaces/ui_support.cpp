@@ -49,7 +49,7 @@ const char* qt4Translate(const char *__domainname, const char *__msgid)
 
 	if (!map->contains(msgid))
 	{
-		QByteArray translatedMessage = QApplication::translate("", __msgid).toUtf8();
+		QByteArray translatedMessage = QApplication::translate(__domainname, __msgid).toUtf8();
 		int copyLength = translatedMessage.length() + 1;
 		char* buffer = new char[translatorLoaded ? copyLength : MAX_UNLOADED_MSG_LENGTH + 1];
 

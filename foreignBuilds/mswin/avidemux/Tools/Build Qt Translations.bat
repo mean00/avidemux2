@@ -10,8 +10,7 @@ for %%A in (avidemux*.ts) do (
 	echo.
 	echo Building %%~nA
 	echo.
-	"%1\bin\xmlpatterns" qt_filter_context.xsl "%%A" -output "%%~nA.xml"
-	"%1\bin\lrelease" "%%~nA.xml" -qm "%%~nA.qm"
+	"%1\bin\lrelease" "%%A" -qm "%%~nA.qm"
 	del "%%~nA.xml"
 )
 
