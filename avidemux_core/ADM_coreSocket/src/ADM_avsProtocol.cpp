@@ -35,9 +35,10 @@ avsSocket::avsSocket()
  * 
  * @param newSocket
  */
-avsSocket::avsSocket(int newSocket)
+avsSocket::avsSocket(int newSocket) : ADM_socket(newSocket)
 {
-    mySocket=newSocket;
+    
+    
 }
 /**
  * 

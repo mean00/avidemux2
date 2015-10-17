@@ -58,7 +58,22 @@
         #define SCLOSE          SHUT_RDWR
         #define SSOCKLEN        socklen_t
 #endif
-
+/**
+ * \fn setLowDelay
+ * \brief set the socket in TCP_NO_DELAY mode (or not)
+ * @param value
+ * @return 
+ */
+bool ADM_socket::setNoDelay(bool value)
+{
+#ifndef _WIN32    
+    int flag = value;
+#else    
+    DWORD flag = value;
+#endif    
+    setsockopt(mySocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(flag));
+    return true;
+}
 
 /**
     \fn connectTo
@@ -75,9 +90,6 @@ bool ADM_socket::connectTo(uint32_t port)
     service.sin_addr.s_addr = inet_addr(BIND_ADR);
     service.sin_port = htons(port);
     
-// Set socket to lowdelay, else it will be choppy
-    int flag = 1;
-    setsockopt( mySocket, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(flag) );
 
 
     if(connect(mySocket,(struct sockaddr *)&service,sizeof(service)))
@@ -151,12 +163,7 @@ bool ADM_socket::create(void)
 {
       mySocket = socket(AF_INET, SOCK_STREAM, 0);
       if(mySocket<0) return false;
-      int flag = 1;
-      int result = setsockopt(mySocket,  IPPROTO_TCP,  TCP_NODELAY, (char *) &flag, sizeof(int));
-      if(result<0)
-      {
-          ADM_warning("Cannot set TCP_NO_DELAY\n");
-      }
+      setNoDelay(true);
       return true;
 
 }
@@ -291,6 +298,7 @@ ADM_socket::ADM_socket()
 ADM_socket::ADM_socket(int newSocket)
 {
     mySocket=newSocket;
+    setNoDelay(true);
 }
 
 /**

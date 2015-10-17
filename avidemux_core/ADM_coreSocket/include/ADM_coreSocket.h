@@ -36,6 +36,7 @@ virtual ADM_socket *waitForConnect(uint32_t timeoutMs);
         bool        txData(uint32_t howmuch, const uint8_t *where);
         bool        close(void);
         bool        isAlive(void);
+        bool        setNoDelay(bool value);
     public:
         ADM_socket(int newSocket);
         ADM_socket( void );
