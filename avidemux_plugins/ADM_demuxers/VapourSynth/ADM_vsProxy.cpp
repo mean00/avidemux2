@@ -205,7 +205,7 @@ bool vapourSynthProxy::run(const char *name)
         return false;
     }
     ADM_info("Listening on port %d\n",(int)port);
-    avsSocket *slave=sket.waitForConnect(20*1000);
+    avsSocket *slave=sket.waitForConnect(60*1000);
     if(!slave)
     {
         ADM_warning("No connection , timeout\n");
