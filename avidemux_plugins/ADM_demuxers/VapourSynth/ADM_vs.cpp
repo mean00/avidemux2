@@ -91,6 +91,7 @@ uint8_t vsHeader::open(const char *name)
         fps1000=1000.*((double)vi->fpsNum /(double)vi-> fpsDen);
     }else
     {
+        
         fps1000=25000;
     }
     //--
@@ -226,8 +227,10 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth*3)>>1;
     img->demuxerPts=getTimeForFrame(frame);
     img->demuxerDts=img->demuxerPts;
+    img->demuxerFrameNo=frame; // not sure
     
     uint8_t *target=img->data;
+#if 0    
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
     if(!vi)
     {
@@ -260,8 +263,9 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              readPtr += stride;
          }
     }
+#endif
     vsapi->freeFrame(vsframe);
-    return 1;
+    return true;
 }
 /**
         \fn getExtraHeaderData
