@@ -78,6 +78,7 @@ protected:
     VSScript       *_script;
     int            _outputIndex;
     VSNodeRef       *_node;
+    int             _nbFrames;
 };
 
 
