@@ -89,11 +89,11 @@ uint8_t vsHeader::open(const char *name)
     ADM_info("Flags     : 0x%x\n",vi->flags);
     
     double fps1000;
-    if(vi->fpsDen)
+    if(vi->fpsNum)
     {
-        fps1000=(double)vi->fpsNum/(double)vi->fpsDen;
-        _videostream.dwRate=vi->fpsNum;
-        _videostream.dwScale=vi->fpsDen;
+        fps1000=(double)vi->fpsDen /(double)vi->fpsNum;
+        _videostream.dwRate=vi->fpsDen ;
+        _videostream.dwScale=vi->fpsNum;
     }else
     {
         fps1000=25000;
@@ -106,6 +106,7 @@ uint8_t vsHeader::open(const char *name)
     _video_bih.biWidth=_mainaviheader.dwWidth=vi->height;
     _isaudiopresent=false;
     _nbFrames=vi->numFrames;
+    _videostream.dwLength=_mainaviheader.dwTotalFrames=_nbFrames;
     _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"YV12");
     return true;
 }
@@ -147,7 +148,7 @@ WAVHeader *vsHeader::getAudioInfo(uint32_t i )
  */
  uint64_t vsHeader::getTime(uint32_t frame)
  {
-     return _nbFrames* _mainaviheader.dwMicroSecPerFrame;
+     return frame* _mainaviheader.dwMicroSecPerFrame;
  }
 /**
    \fn getAudioStream
@@ -188,7 +189,6 @@ uint8_t vsHeader::close(void)
 
  vsHeader::vsHeader( void ) : vidHeader()
 {
-    _fd=NULL;
     _script=NULL;
     _node = NULL;
 }
