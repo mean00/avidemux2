@@ -36,7 +36,7 @@ class vapourSynthProxy
 public:
                       vapourSynthProxy();
                       ~vapourSynthProxy();
-   bool              run(const char *name);
+   bool              run(int port, const char *name);
 protected:
 
     uint8_t        *_buffer;

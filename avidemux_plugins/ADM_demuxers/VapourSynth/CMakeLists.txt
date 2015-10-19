@@ -3,10 +3,11 @@ include(dm_plugin)
 checkVapourSynth()
 
 IF(USE_VAPOURSYNTH)
+   IF(DO_COMMON)
         ADD_DEFINITIONS("-g3 -O0")
  #       ADD_DEFINITIONS("-std=c++11")
         ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
-        SET(SRCS ADM_vsProxy.cpp)
+        SET(SRCS ADM_vsProxy.cpp ADM_vsProxy_cli.cpp)
         GET_TARGET_PROPERTY(OLD PROPERTIES LINK_FLAGS)
         IF("${OLD}" MATCHES ".*NOT.*FOUND")
                 SET(OLD "")
@@ -24,17 +25,23 @@ IF(USE_VAPOURSYNTH)
         # Add vs Proxy
         ADD_EXECUTABLE(vsProxy ${SRCS})
         SET_TARGET_PROPERTIES(vsProxy PROPERTIES LINK_FLAGS "${OLD}")
-        TARGET_LINK_LIBRARIES(vsProxy ADM_coreSocket6 ADM_core6 ${LIBS_TO_LINK})
+        TARGET_LINK_LIBRARIES(vsProxy ${LIBS_TO_LINK} ADM_core6 ADM_coreSocket6)
+        #----------------
         # Add direct Loading
         SET(ADM_vs_SRCS 
                 ADM_vs.cpp  ADM_vs.h  ADM_vsPlugin.cpp  
                 )
         #INIT_DEMUXER(ADM_dm_vapoursynth)
         #ADD_DEMUXER(ADM_dm_vapoursynth ${ADM_vs_SRCS})
-        #TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth ${LIBS_TO_LINK} ADM_core6)
+        #TARGET_LINK_LIBRARIES(ADM_dm_vapoursynth ${LIBS_TO_LINK} ADM_core6 ADM_coreSocket6)
         #INSTALL_DEMUXER(ADM_dm_vapoursynth)
+        #----------------
 iF( WIN32)
         TARGET_LINK_LIBRARIES(vsProxy -lwsock32)
 ENDif( WIN32)
         ADM_INSTALL_BIN(vsProxy)
+   ENDIF(DO_COMMON)
+   IF(DO_QT4)
+        ADD_SUBDIRECTORY(qt4)
+   ENDIF(DO_QT4)
 ENDIF(USE_VAPOURSYNTH)

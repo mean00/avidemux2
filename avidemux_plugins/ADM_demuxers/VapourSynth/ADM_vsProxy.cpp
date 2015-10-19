@@ -23,55 +23,9 @@
 #include "ADM_vsProxy.h"
 #include <math.h>
 
-extern uint8_t ADM_InitMemcpy(void);
 
 static const VSAPI *vsapi = NULL;
-#if 0
-    #define aprintf printf
-#else
-    #define aprintf(...) {}
-#endif
-/**
- */
-int main(int ac, char **av)
-{
-    if(ac!=2)
-    {
-        printf("vsProxy scriptFile\n");
-        exit(-1); 
-    }
-    ADM_InitMemcpy();
-    
-#ifdef _WIN32
-    WSADATA wsaData;
-    int iResult;
-            ADM_info("Initializing WinSock\n");
-            fflush(stdout);
-            iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-            if (iResult != NO_ERROR)
-            {
-                    printf("Error at WSAStartup()\n");
-                    fflush(stdout);
-                    exit(-1);
-            }	
-            ADM_info("WinSock ok\n");
 
-#endif    
-    
-    
-    vapourSynthProxy proxy;
-    bool r=proxy.run(av[1]);
-    if(r)
-    {
-        printf("Success\n");
-        exit(0);
-    }else
-    {
-        printf("Failure\n");
-        exit(-1);
-    }
-    return 0;
-}
 
 /**
  */
@@ -133,7 +87,7 @@ bool vapourSynthProxy::fillInfo( const VSVideoInfo *vi)
 }
 /**
  */
-bool vapourSynthProxy::run(const char *name)
+bool vapourSynthProxy::run(int myPort, const char *name)
 {
 
     ADM_info("Opening %s as VapourSynth file\n",name);
@@ -197,7 +151,7 @@ bool vapourSynthProxy::run(const char *name)
     
     
     avsSocket sket;
-    uint32_t port=9999;
+    uint32_t port=myPort;
     if(!sket.createBindAndAccept(&port))
     {
         ADM_error("Cannot bind socket\n");
