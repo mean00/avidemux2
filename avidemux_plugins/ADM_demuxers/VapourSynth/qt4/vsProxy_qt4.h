@@ -18,17 +18,21 @@
 /**
     \class vsWindow
 */
-class vsWindow   : public QDialog 
+class vsWindow   : public QMainWindow 
 {
 Q_OBJECT
 
 public:
-                        vsWindow(QWidget *parent);	                
+                        vsWindow();	                
     virtual             ~vsWindow();
 protected:    
-    uint32_t            localPort;
-    Ui_VapourSynthProxy dialog;
+    int                 localPort;
+    Ui_VapourSynthProxy ui;
 
+public slots: 
+    void                selectFile();
+    void                runOrStop();
+        
 };
 
 
