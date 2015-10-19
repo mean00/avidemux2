@@ -79,6 +79,7 @@ protected:
     int            _outputIndex;
     VSNodeRef       *_node;
     int             _nbFrames;
+    uint64_t        getTimeForFrame(int frame);
 };
 
 

@@ -39,9 +39,6 @@ uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 uint8_t vsHeader::open(const char *name)
 {
     ADM_info("Opening %s as VapourSynth file\n",name);
-    
-   
-    
     if (!vsscript_init()) 
     {
           ADM_warning("Cannot initialize vsapi script_init. Check PYTHONPATH\n");
@@ -91,14 +88,14 @@ uint8_t vsHeader::open(const char *name)
     double fps1000;
     if(vi->fpsDen)
     {
-        fps1000=1000.*(double)vi->fpsNum /(double)vi-> fpsDen;
+        fps1000=1000.*((double)vi->fpsNum /(double)vi-> fpsDen);
     }else
     {
         fps1000=25000;
     }
     //--
-    _videostream.dwRate=fps1000;
-    _videostream.dwScale=1000;
+    _videostream.dwRate=vi->fpsNum;
+    _videostream.dwScale=vi-> fpsDen;
     
     ADM_info("Fps1000=%d\n",(int)fps1000);
     
@@ -227,23 +224,30 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     }   
     img->flags=AVI_KEY_FRAME;
     img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth*3)>>1;
-    img->demuxerPts=_mainaviheader.dwMicroSecPerFrame*frame;
-    img->demuxerDts=_mainaviheader.dwMicroSecPerFrame*frame;
+    img->demuxerPts=getTimeForFrame(frame);
+    img->demuxerDts=img->demuxerPts;
     
     uint8_t *target=img->data;
     const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
+    if(!vi)
+    {
+        ADM_error("Error getting getVideoInfo for frame %d\n",frame);
+        return false;
+    }
     for (int plane = 0; plane < 3; plane++) 
     {
         int p=mapp[plane];
         int stride = vsapi->getStride(vsframe, p);
         const uint8_t *readPtr = vsapi->getReadPtr(vsframe, p);
-        int rowSize = _mainaviheader.dwWidth;
-        int height  = _mainaviheader.dwHeight;
+       
         if(!readPtr)
         {
             ADM_error("Cannot get pointer for frame %p\n",p);
             return false;
         }
+        
+        int rowSize = _mainaviheader.dwWidth;
+        int height  = _mainaviheader.dwHeight;
         if(p)
          {
              rowSize>>=1;height>>=1;
@@ -284,14 +288,25 @@ uint8_t vsHeader::getFrameSize (uint32_t frame, uint32_t * size)
   *size = (_video_bih.biHeight*_video_bih.biWidth*3)>>1;
   return 1;
 }
-//!!
 
+/**
+ * \fn getTimeForFrame
+ * @param frame
+ * @return 
+ */
+uint64_t vsHeader::getTimeForFrame(int frame)
+{
+    double d=1000000.;
+    d*=(double)_videostream.dwScale;
+    d/=(double)_videostream.dwRate;
+    return (uint64_t)d;
+}
 /**
     \fn getPtsDts
 */
 bool    vsHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
-    *dts=_mainaviheader.dwMicroSecPerFrame*frame; // FIXME
+    *dts=getTimeForFrame(frame);
     *pts=*dts;
     return true;
 }
