@@ -91,7 +91,7 @@ uint8_t vsHeader::open(const char *name)
     double fps1000;
     if(vi->fpsDen)
     {
-        fps1000=(double)vi->fpsNum /(double)vi-> fpsDen;
+        fps1000=1000.*(double)vi->fpsNum /(double)vi-> fpsDen;
     }else
     {
         fps1000=25000;
