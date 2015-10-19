@@ -89,21 +89,25 @@ uint8_t vsHeader::open(const char *name)
     ADM_info("Flags     : 0x%x\n",vi->flags);
     
     double fps1000;
-    if(vi->fpsNum)
+    if(vi->fpsDen)
     {
-        fps1000=(double)vi->fpsDen /(double)vi->fpsNum;
-        _videostream.dwRate=vi->fpsDen ;
-        _videostream.dwScale=vi->fpsNum;
+        fps1000=(double)vi->fpsNum /(double)vi-> fpsDen;
     }else
     {
         fps1000=25000;
     }
+    //--
+    _videostream.dwRate=fps1000;
+    _videostream.dwScale=1000;
+    
+    ADM_info("Fps1000=%d\n",(int)fps1000);
+    
     _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(fps1000);
     _video_bih.biBitCount=24;
     _videostream.dwInitialFrames= 0;
     _videostream.dwStart= 0;
-    _video_bih.biHeight=_mainaviheader.dwHeight=vi->width ;
-    _video_bih.biWidth=_mainaviheader.dwWidth=vi->height;
+    _video_bih.biHeight=_mainaviheader.dwHeight=vi->height  ;
+    _video_bih.biWidth=_mainaviheader.dwWidth=vi->width;
     _isaudiopresent=false;
     _nbFrames=vi->numFrames;
     _videostream.dwLength=_mainaviheader.dwTotalFrames=_nbFrames;
@@ -222,7 +226,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         return false;
     }   
     img->flags=AVI_KEY_FRAME;
-    img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth)>>1;
+    img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth*3)>>1;
     img->demuxerPts=_mainaviheader.dwMicroSecPerFrame*frame;
     img->demuxerDts=_mainaviheader.dwMicroSecPerFrame*frame;
     
@@ -252,6 +256,7 @@ uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              readPtr += stride;
          }
     }
+    vsapi->freeFrame(vsframe);
     return 1;
 }
 /**
