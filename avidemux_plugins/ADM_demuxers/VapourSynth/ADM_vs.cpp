@@ -209,7 +209,49 @@ uint8_t vsHeader::close(void)
 
 uint8_t  vsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
+    char errMsg[1024];
+    const int mapp[3]={0,2,1};
+    int error = 0;
+    
     if(frame>=_nbFrames) return false;
+    
+    const VSFrameRef *vsframe = vsapi->getFrame(frame, _node, errMsg, sizeof(errMsg));
+    if (!vsframe) 
+    { 
+        ADM_error("Error getting frame %d\n",frame);
+        return false;
+    }   
+    img->flags=AVI_KEY_FRAME;
+    img->dataLength=(_mainaviheader.dwHeight*_mainaviheader.dwWidth)>>1;
+    img->demuxerPts=_mainaviheader.dwMicroSecPerFrame*frame;
+    img->demuxerDts=_mainaviheader.dwMicroSecPerFrame*frame;
+    
+    uint8_t *target=img->data;
+    const VSVideoInfo *vi = vsapi->getVideoInfo(_node);
+    for (int plane = 0; plane < 3; plane++) 
+    {
+        int p=mapp[plane];
+        int stride = vsapi->getStride(vsframe, p);
+        const uint8_t *readPtr = vsapi->getReadPtr(vsframe, p);
+        int rowSize = _mainaviheader.dwWidth;
+        int height  = _mainaviheader.dwHeight;
+        if(!readPtr)
+        {
+            ADM_error("Cannot get pointer for frame %p\n",p);
+            return false;
+        }
+        if(p)
+         {
+             rowSize>>=1;height>>=1;
+         }
+         for (int y = 0; y < height; y++) 
+         {
+
+             memcpy(target,readPtr,rowSize);
+             target  += rowSize; // useless memcpy...
+             readPtr += stride;
+         }
+    }
     return 1;
 }
 /**
