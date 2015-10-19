@@ -22,7 +22,9 @@
 #include "ADM_memsupport.h"
 #include "ADM_crashdump.h"
 #include "../ADM_vsProxy.h"
-
+#ifdef _WIN32
+#include "ADM_win32.h"
+#endif
 /**
     \fn main
 */
