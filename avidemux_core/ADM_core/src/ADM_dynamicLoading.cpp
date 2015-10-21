@@ -101,7 +101,7 @@ bool ADM_LibWrapper::loadLibrary(const char* path)
 		return true;
 	}
 #else
-	hinstLib = dlopen(path, RTLD_NOW | RTLD_LOCAL  | RTLD_DEEPBIND);
+	hinstLib = dlopen(path, RTLD_NOW | RTLD_LOCAL); //  | RTLD_DEEPBIND);
 	
 	if (hinstLib == NULL)
 	{
