@@ -28,6 +28,7 @@ set(FFMPEG_ENCODERS  ac3  ac3_float dvvideo  ffv1  ffvhuff  flv  h263  huffyuv  
 set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp)
 set(FFMPEG_PARSERS  ac3  h263  h264  hevc  mpeg4video)
 set(FFMPEG_PROTOCOLS  file)
+set(FFMPEG_BSFS h264_mp4toannexb aac_adtstoasc)
 xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
 xadd("--enable-runtime-cpudetect --disable-network ")
 xadd("--enable-swscale --disable-swresample")
@@ -114,7 +115,6 @@ endif (USE_LIBVA)
 #endif(USE_XVBA)
 
 
-xadd(--enable-bsf aac_adtstoasc)
 
 # Configure FFmpeg, if required
 foreach (decoder ${FFMPEG_DECODERS})
@@ -136,6 +136,10 @@ endforeach (parser)
 foreach (protocol ${FFMPEG_PROTOCOLS})
 	xadd(--enable-protocol ${protocol})
 endforeach (protocol)
+
+foreach (bistream ${FFMPEG_BSFS})
+	xadd(--enable-bsf ${bistream})
+endforeach (bistream)
 
 if (WIN32)
 	if (ADM_CPU_X86_32)
