@@ -98,6 +98,7 @@ ADM_coreVideoFilter6
 # Add common libs
 #############################################
 SET(commonLibs1
+
 ADM_muxerGate6
 ADM_audioFilter6
 ADM_editor6
@@ -109,16 +110,15 @@ ADM_commonUI6
 
 if (USE_VDPAU)
 	SET(commonLibs1 ${commonLibs1} ADM_coreVDPAU6)
-	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 endif (USE_VDPAU)
 if (USE_XVBA)
 	SET(commonLibs1 ${commonLibs1} ADM_coreXvba6)
-	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 endif (USE_XVBA)
 if (USE_LIBVA)
 	SET(commonLibs1 ${commonLibs1} ADM_coreLibVA6)
-	SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 endif (USE_LIBVA)
+
+SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 
 
 
