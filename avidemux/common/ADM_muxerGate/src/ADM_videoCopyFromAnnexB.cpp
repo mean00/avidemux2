@@ -22,6 +22,11 @@ using std::string;
 #include "ADM_h264_tag.h"
 #include "ADM_videoInfoExtractor.h"
 
+extern "C" 
+{
+    #include "libavcodec/avcodec.h"
+}
+
 extern ADM_Composer *video_body; // Fixme!
 
 //#warning fixme : double definition
@@ -212,4 +217,130 @@ bool    ADM_videoStreamCopyFromAnnexB::getExtraData(uint32_t *extraLen, uint8_t 
     *extraLen=myExtraLen;
     return true;
 }
+
+//---------------------
+
+
+/**
+    \fn ctor
+*/
+ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint64_t endTime):
+      ADM_videoStreamCopy(startTime,endTime)  
+{
+    uint32_t extraLen;
+    uint8_t  *extraData;
+    
+    ADM_info("Iso to AnnexB  filter\n");
+    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
+    myBitstream->data=buffer;
+    
+    myExtra=NULL;
+    myExtraLen=0;
+    
+    AVCodec *codec=avcodec_find_decoder(AV_CODEC_ID_H264);
+    ADM_assert(codec);
+    AVCodecContext *context = avcodec_alloc_context3(codec);
+    ADM_assert(context);
+    
+    aviInfo info;
+    video_body->getVideoInfo(&info);
+    context->width = info.width;
+    context->height = info.height;
+    context->pix_fmt = PIX_FMT_YUV420P;
+    
+    video_body->getExtraHeaderData(&extraLen,&extraData);
+    context->extradata=extraData;
+    context->extradata_size=extraLen;
+    codecContext=(void *)context;
+    
+ #warning  Ok, should we open the codec by itself ?
+
+    
+    AVBitStreamFilterContext *bsf;
+    bsf = av_bitstream_filter_init("h264_mp4toannexb");
+    ADM_assert(bsf);
+    bsfContext=bsf;
+    ADM_info("Copy to annexB initialized\n");
+
+}
+/**
+ * 
+ */
+ADM_videoStreamCopyToAnnexB::  ~ADM_videoStreamCopyToAnnexB()
+{
+    ADM_info("Destroying iso to AnnexB filtet\n");
+    delete myBitstream;
+    myBitstream=NULL;
+   
+    if(codecContext)
+    {
+        AVCodecContext *context=(AVCodecContext *)codecContext;
+        codecContext=NULL;
+        avcodec_close(context);
+    }
+     
+    
+    if(bsfContext)
+    {
+        AVBitStreamFilterContext *bsf=(AVBitStreamFilterContext *)bsfContext;
+        av_bitstream_filter_close(bsf);
+        bsfContext=NULL;
+    }
+    
+}
+/**
+ * 
+ * @param out
+ * @return 
+ */
+bool ADM_videoStreamCopyToAnnexB::getPacket(ADMBitstream *out)
+{
+    AVPacket pktOut;
+    int size;
+    bool keyFrame=false;
+
+    aprintf("-------%d--------\n",(int)currentFrame);
+    if(false==ADM_videoStreamCopy::getPacket(myBitstream)) return false;
+    
+    // filter!
+    AVBitStreamFilterContext *bsf=(AVBitStreamFilterContext *)bsfContext;
+    AVCodecContext *context=(AVCodecContext *)codecContext;
+    if(myBitstream->flags & AVI_KEY_FRAME)
+        keyFrame=true;
+    int ret= av_bitstream_filter_filter(bsf, context, NULL,
+                                         &pktOut.data, &pktOut.size,
+                                         myBitstream->data, myBitstream->len,
+                                         keyFrame);
+
+    if(ret<0)
+    {
+        ADM_warning("Error while converting to annex B %d\n",ret);
+        return false;
+    }
+    memcpy(out->data,pktOut.data,pktOut.size);
+    out->len=pktOut.size;
+    
+    if(ret>0)
+         av_free(pktOut.data);
+
+    
+    
+    out->dts=myBitstream->dts;
+    out->pts=myBitstream->pts;
+    out->flags=myBitstream->flags;
+    return true;
+}
+/**
+ * 
+ * @param out
+ * @return 
+ */
+bool ADM_videoStreamCopyToAnnexB::getExtraData(uint32_t *extraLen, uint8_t **extraData) 
+{
+    *extraLen=0;
+    *extraData=NULL;
+    return true; // no extra data in annex b
+}
+        
+
 // EOF

@@ -54,5 +54,25 @@ public:
         virtual bool    getPacket(ADMBitstream *out);
         virtual bool    getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
 };
+/**
+        \fn ADM_videoStreamCopyToAnnexB
+        \brief Same as copy but does mp4->annexB on the fly
+*/
+class ADM_videoStreamCopyToAnnexB : public ADM_videoStreamCopy
+{
+protected:
+#define ADM_COPY_FROM_ANNEX_B_SIZE (1920*1200*3)
+        uint8_t         buffer[ADM_COPY_FROM_ANNEX_B_SIZE];
+        ADMBitstream    *myBitstream;
+        uint8_t         *myExtra;
+        uint32_t        myExtraLen;
+        void            *bsfContext;    
+        void            *codecContext;
 
+public:
+                        ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint64_t endTime);
+        virtual         ~ADM_videoStreamCopyToAnnexB();
+        virtual bool    getPacket(ADMBitstream *out);
+        virtual bool    getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
+};
 #endif

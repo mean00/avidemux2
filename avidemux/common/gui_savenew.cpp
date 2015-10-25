@@ -257,13 +257,23 @@ ADM_videoStream *admSaver::setupVideo(void)
             {
                 ADM_info("The video stream is H264\n");
                 ADM_info("The muxer prefers AnnexB H264 bitstream\n");
+                if(extraLen)
+                {
+                    // Need to do mp4 to annexB    
+                    ADM_info("Probably AnnexB bitstream\n");
+                    copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
+                }
+            }else
+            {
+                if(!extraLen)
+                {
+                    ADM_info("Probably AnnexB bitstream\n");
+                    copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
+                }
             }
-        }
-        if(isH264Compatible(info.fcc) && !extraLen && !muxer->preferH264AnnexB())
-        {
-            ADM_info("Probably AnnexB bitstream\n");
-            copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
-        }else   
+         }
+        
+        if(!copy)
         {
             copy=new ADM_videoStreamCopy(markerA,markerB);
         }
