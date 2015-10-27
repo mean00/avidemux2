@@ -17,8 +17,8 @@
 #ifndef ADMAUDIOCODEC
 #define ADMAUDIOCODEC
 #include "ADM_audiodef.h"
-#define SCRATCH_PAD_SIZE (100*1000*2)
-extern uint8_t scratchPad[];
+
+
 //#define  ADMAC_BUFFER (48000*4)
 class ADM_Audiocodec
 {
