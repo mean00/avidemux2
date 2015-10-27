@@ -41,8 +41,9 @@
     \brief
 */
 
- uint8_t scratchPad[SCRATCH_PAD_SIZE];
+
 #define IMA_BUFFER 4096*8
+#define SCRATCH_PAD_SIZE (100*1000*2)
 class ADM_AudiocodecImaAdpcm : public     ADM_Audiocodec
 {
 	protected:
@@ -51,6 +52,7 @@ class ADM_AudiocodecImaAdpcm : public     ADM_Audiocodec
 		void *_contextVoid;
 		uint8_t _buffer[ IMA_BUFFER];
 		uint32_t _head,_tail;
+                 uint8_t scratchPad[SCRATCH_PAD_SIZE];
 
 	public:
 		ADM_AudiocodecImaAdpcm(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);

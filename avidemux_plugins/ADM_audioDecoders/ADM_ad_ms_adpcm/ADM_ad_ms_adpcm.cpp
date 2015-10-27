@@ -36,7 +36,7 @@
     \class ADM_AudiocodecUlaw
     \brief
 */
-uint8_t scratchPad[SCRATCH_PAD_SIZE];
+#define SCRATCH_PAD_SIZE (100*1000*2)
 class ADM_AudiocodecMsAdpcm : public     ADM_Audiocodec
 {
 	protected:
@@ -45,7 +45,7 @@ class ADM_AudiocodecMsAdpcm : public     ADM_Audiocodec
 		void *_contextVoid;
 		uint8_t _buffer[ IMA_BUFFER];
 		uint32_t _head,_tail;
-
+                uint8_t scratchPad[SCRATCH_PAD_SIZE];
 	public:
 		ADM_AudiocodecMsAdpcm(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
 		virtual	~ADM_AudiocodecMsAdpcm();

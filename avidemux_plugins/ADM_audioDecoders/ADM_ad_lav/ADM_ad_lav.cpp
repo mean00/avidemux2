@@ -23,33 +23,38 @@ extern "C" {
 
 #include "ADM_ad_plugin.h"
 #include "fourcc.h"
-
+#define SCRATCH_PAD_SIZE (100*1000*2)
 #define ADMWA_BUF (4*1024*16) // 64 kB internal
+/**
+ * \class ADM_AudiocoderLavcodec
+ */
 class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 {
-	protected:
-            typedef enum 
-            {
-                asInt16,asFloat,asFloatPlanar
-            }ADM_outputFlavor;
-            
+protected:
+        typedef enum 
+        {
+            asInt16,asFloat,asFloatPlanar
+        }ADM_outputFlavor;
+
                 ADM_outputFlavor        outputFlavor;
-		AVCodecContext          *_context;
-		uint8_t    _buffer[ ADMWA_BUF];
-		uint32_t   _tail,_head;
-		uint32_t   _blockalign;
-        uint32_t    channels;
-        bool        decodeToS16(float *outptr,uint32_t *nbOut);
-        bool        decodeToFloat(float *outptr,uint32_t *nbOut);
-        bool        decodeToFloatPlanar(float *outptr,uint32_t *nbOut);
-        uint32_t    outputFrequency;
-	public:
-                        ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
-        virtual         ~ADM_AudiocoderLavcodec() ;
-        virtual	bool    resetAfterSeek(void);
-        virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
-        virtual	uint8_t isCompressed(void) {return 1;}
-        virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
+                AVCodecContext          *_context;
+                uint8_t    _buffer[ ADMWA_BUF];
+                uint32_t   _tail,_head;
+                uint32_t   _blockalign;
+                uint8_t scratchPad[SCRATCH_PAD_SIZE];
+    uint32_t    channels;
+    bool        decodeToS16(float *outptr,uint32_t *nbOut);
+    bool        decodeToFloat(float *outptr,uint32_t *nbOut);
+    bool        decodeToFloatPlanar(float *outptr,uint32_t *nbOut);
+    uint32_t    outputFrequency;
+public:
+                    ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
+    virtual         ~ADM_AudiocoderLavcodec() ;
+    virtual	bool    resetAfterSeek(void);
+    virtual	uint8_t run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut);
+    virtual	uint8_t isCompressed(void) {return 1;}
+    virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
+
 };
 
 
@@ -80,7 +85,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 			"Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
 //********************************************************
 
-uint8_t scratchPad[SCRATCH_PAD_SIZE];
+
 /**
         \fn resetAfterSeek
 */
@@ -172,10 +177,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
     _context->sample_fmt=fmt;
     _context->request_sample_fmt=fmt;
     _context->extradata=(uint8_t *)d;
-    _context->extradata_size=(int)l;
-    _context->sample_fmt=AV_SAMPLE_FMT_FLT;
+    _context->extradata_size=(int)l;    
 
-    if (!_blockalign) {
+    if (!_blockalign) 
+    {
       _blockalign = _context->block_align;
     }
 
@@ -216,7 +221,10 @@ uint8_t scratchPad[SCRATCH_PAD_SIZE];
 
     if(!_blockalign)
     {
-      if(_context->block_align) _blockalign=_context->block_align;
+      if(_context->block_align) 
+      {
+          _blockalign=_context->block_align;
+      }
       else
       {
         ADM_info("[ADM_ad_lav] : no blockalign taking 378\n");
@@ -301,37 +309,37 @@ int out=0;
 int pout=0;
 int nbChunk;
 
-        while(_tail-_head>=_blockalign)
-        {
-          nbChunk=(_tail-_head)/_blockalign;
-          pout=SCRATCH_PAD_SIZE;
+    while(_tail-_head>=_blockalign)
+    {
+      nbChunk=(_tail-_head)/_blockalign;
+      pout=SCRATCH_PAD_SIZE;
 
-          AVPacket pkt;
-          av_init_packet(&pkt);
-          pkt.size=nbChunk*_blockalign;
-          pkt.data=_buffer+_head;
+      AVPacket pkt;
+      av_init_packet(&pkt);
+      pkt.size=nbChunk*_blockalign;
+      pkt.data=_buffer+_head;
 
-          out=avcodec_decode_audio3(_context,(int16_t *)outptr,
-                                   &pout,&pkt);
-            //ADM_info("in %d out %d\n",out,pout);
+      out=avcodec_decode_audio3(_context,(int16_t *)outptr,
+                               &pout,&pkt);
+        //ADM_info("in %d out %d\n",out,pout);
 
-          if(out<0)
-          {
-            ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
-            _head+=1; // Try skipping some bytes
-            continue;
-          }
-          if(pout>=SCRATCH_PAD_SIZE)
-          {
-            ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
-            ADM_assert(0);
-          }
+      if(out<0)
+      {
+        ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
+        _head+=1; // Try skipping some bytes
+        continue;
+      }
+      if(pout>=SCRATCH_PAD_SIZE)
+      {
+        ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
+        ADM_assert(0);
+      }
 
-          _head+=out; // consumed bytes
-          pout/=sizeof(float); // size in bytes -> nb float
-          outptr+=pout;
-          *nbOut+=pout;
-        }
+      _head+=out; // consumed bytes
+      pout/=sizeof(float); // size in bytes -> nb float
+      outptr+=pout;
+      *nbOut+=pout;
+    }
     return true;
 }
 
@@ -345,50 +353,50 @@ int out=0;
 int pout=0;
 int nbChunk;
 
-        while(_tail-_head>=_blockalign)
-        {
-          nbChunk=(_tail-_head)/_blockalign;
-          pout=SCRATCH_PAD_SIZE;
+    while(_tail-_head>=_blockalign)
+    {
+      nbChunk=(_tail-_head)/_blockalign;
+      pout=SCRATCH_PAD_SIZE;
 
-          AVPacket pkt;
-          av_init_packet(&pkt);
-          pkt.size=nbChunk*_blockalign;
-          pkt.data=_buffer+_head;
+      AVPacket pkt;
+      av_init_packet(&pkt);
+      pkt.size=nbChunk*_blockalign;
+      pkt.data=_buffer+_head;
 
-          out=avcodec_decode_audio3(_context,(int16_t *)scratchPad,
-                                   &pout,&pkt);
-            //ADM_info("in %d out %d\n",out,pout);
+      out=avcodec_decode_audio3(_context,(int16_t *)scratchPad,
+                               &pout,&pkt);
+        //ADM_info("in %d out %d\n",out,pout);
 
-          if(out<0)
+      if(out<0)
+      {
+        ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
+        _head+=1; // Try skipping some bytes
+        continue;
+      }
+      if(pout>=SCRATCH_PAD_SIZE)
+      {
+        ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
+        ADM_assert(0);
+      }
+
+      _head+=out; // consumed bytes
+      pout/=sizeof(float); // size in bytes -> nb float
+      int block=pout/channels;
+      //printf("%d blocks\n",block);
+      float *fin=(float *)scratchPad;
+      float *fout=outptr;
+      for(int c=0;c<channels;c++)
+      {
+            for(int i=0;i<block;i++)              
           {
-            ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
-            _head+=1; // Try skipping some bytes
-            continue;
+              fout[channels*i]=*fin;
+              fin++;
           }
-          if(pout>=SCRATCH_PAD_SIZE)
-          {
-            ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
-            ADM_assert(0);
-          }
-
-          _head+=out; // consumed bytes
-          pout/=sizeof(float); // size in bytes -> nb float
-          int block=pout/channels;
-          //printf("%d blocks\n",block);
-          float *fin=(float *)scratchPad;
-          float *fout=outptr;
-          for(int c=0;c<channels;c++)
-          {
-                for(int i=0;i<block;i++)              
-              {
-                  fout[channels*i]=*fin;
-                  fin++;
-              }
-              fout++;
-          }
-          outptr+=pout;
-          *nbOut+=pout;
-        }
+          fout++;
+      }
+      outptr+=pout;
+      *nbOut+=pout;
+    }
     return true;
 }
 /**
