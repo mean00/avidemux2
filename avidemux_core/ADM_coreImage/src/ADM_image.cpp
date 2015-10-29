@@ -150,7 +150,7 @@ bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint
 ADMImageDefault::ADMImageDefault(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAGE_DEFAULT)
 {
     uint32_t pitch=(w+31)&(~31);
-    uint32_t allocatedHeight=(h+16)&(~16);
+    uint32_t allocatedHeight=(h+31)&(~31);
     data.setSize(32+(pitch*allocatedHeight*3)/2);
     _planes[0]=data.at(0);
     _planes[1]=data.at(pitch*allocatedHeight);
