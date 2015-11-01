@@ -17,10 +17,10 @@ audiocopy.cpp
 ADM_audioResample.cpp
 audiofilter.cpp
 audiofilter_thread.cpp
-ADM_libsamplerate/samplerate.c  
-ADM_libsamplerate/src_linear.c  
-ADM_libsamplerate/src_sinc.c  
-ADM_libsamplerate/src_zoh.c
+ADM_libsamplerate/samplerate.cpp  
+ADM_libsamplerate/src_linear.cpp 
+ADM_libsamplerate/src_sinc.cpp 
+ADM_libsamplerate/src_zoh.cpp
 )
 # Needed by libsamplerate
 ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)
