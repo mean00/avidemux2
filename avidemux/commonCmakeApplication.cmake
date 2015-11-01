@@ -125,7 +125,6 @@ SET(commonLibs1 ${commonLibs1} ADM_libavcodec ADM_libavutil)
 SET(commonLibs2
 ADM_coreJobs
 ADM_osSupport6
-ADM_requant6
 ADM_script6
 ADM_videoEncoder6
 ADM_internalVideoFilter6
