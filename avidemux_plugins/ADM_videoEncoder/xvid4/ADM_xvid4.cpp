@@ -92,6 +92,13 @@ bool        xvid4Encoder::setPassAndLogFile(int pass,const char *name)
         ADM_info("Checking pass %d, using stat file =%s\n",pass,logFile.c_str());
         return true;
 }
+
+const  char        *xvid4Encoder::getFourcc(void)
+{
+    if(xvid4Settings.useXvidFCC)
+        return "XVID";
+    return "DIVX";
+}
 /**
     \fn query
     \brief query xvid about version and flags
@@ -121,8 +128,8 @@ bool xvid4Encoder::query(void)
   CPUF (MMXEXT);
   CPUF (SSE);
   CPUF (SSE2);
-  //CPUF (3DNOW);
-  //CPUF (3DNOWEXT);
+  CPUF (3DNOW);
+  CPUF (3DNOWEXT);
 #endif
   return true;
 }

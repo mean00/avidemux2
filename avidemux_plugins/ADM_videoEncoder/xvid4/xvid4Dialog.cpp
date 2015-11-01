@@ -111,6 +111,10 @@ diaMenuEntry arModeE[]={
          diaElemFloat    qzBlur(PX(qblur),QT_TRANSLATE_NOOP("xvid4","Quantizer _blur:"),0,1);
          */
         diaElemUInteger GopSize(PX(maxKeyFrameInterval),QT_TRANSLATE_NOOP("xvid4","_Gop Size:"),1,500); 
+        
+        // DIVX or XVID ?
+        diaElemToggle fcc(PX(useXvidFCC),QT_TRANSLATE_NOOP("xvid4","Use XVID fcc (else DIVX)"));
+        
           /* First Tab : encoding mode */
        
         diaElemFrame frameMe(QT_TRANSLATE_NOOP("xvid4","Advanced Simple Profile"));
@@ -118,6 +122,7 @@ diaMenuEntry arModeE[]={
         frameMe.swallow(&max_b_frames);
         frameMe.swallow(&GopSize);
         frameMe.swallow(&bitrate);
+        frameMe.swallow(&fcc);
        
         
         diaElem *diaME[]={&frameMe};

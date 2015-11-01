@@ -17,5 +17,6 @@ bool rdOnBFrame;
 bool hqAcPred;
 bool optimizeChrome;
 bool trellis;
+bool useXvidFCC;
 }xvid4_encoder;
 #endif

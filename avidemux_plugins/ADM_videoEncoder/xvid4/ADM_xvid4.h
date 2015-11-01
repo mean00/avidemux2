@@ -46,6 +46,7 @@
     true, /*bool:hqAcPred */ \
     true, /*bool:optimizeChrome */ \
     true, /* Trellis */ \
+    false, /* UseXvidFCC */ \
 }
 
 /**
@@ -87,7 +88,7 @@ public:
 virtual                    ~xvid4Encoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "DIVX";}
+virtual const  char        *getFourcc(void);
 
 virtual        bool        isDualPass(void) ;
 static         int         hook (void *handle, int opt, void *param1, void *param2);

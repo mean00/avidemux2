@@ -15,5 +15,6 @@ extern const ADM_paramList xvid4_encoder_param[]={
  {"hqAcPred",offsetof(xvid4_encoder,hqAcPred),"bool",ADM_param_bool},
  {"optimizeChrome",offsetof(xvid4_encoder,optimizeChrome),"bool",ADM_param_bool},
  {"trellis",offsetof(xvid4_encoder,trellis),"bool",ADM_param_bool},
+ {"useXvidFCC",offsetof(xvid4_encoder,useXvidFCC),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };
