@@ -39,7 +39,7 @@
 // Our callback to give UI formatted informations....
 static ADM_saveFunction *mysaveFunction=NULL;
 static ADM_fatalFunction *myFatalFunction=NULL;
-
+void sig_segfault_handler(int signo);
 /**
         \fn ADM_setCrashHook
         \brief install crash handlers (save + display)
@@ -49,11 +49,10 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
         mysaveFunction=save;
         myFatalFunction=fatal;
 }
-void sig_segfault_handler(int signo);
 /**
     \fn installSigHandler
 */
-void installSigHandler()
+void installSigHandler(void)
 {
     signal(11, sig_segfault_handler); // show stacktrace on default
 }
