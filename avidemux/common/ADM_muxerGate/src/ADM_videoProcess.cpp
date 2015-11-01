@@ -28,7 +28,7 @@ ADM_videoStreamProcess::ADM_videoStreamProcess(ADM_coreVideoEncoder *encoder)
     width=encoder->getWidth();
     height=encoder->getHeight();
     fcc=encoder->getFourcc();
-    printf("[StreamProcess] Stream %"PRIu32"x%"PRIu32", codec : %s\n",width,height,fcc);
+    ADM_info("[StreamProcess] Stream %"PRIu32"x%"PRIu32", codec : %s\n",width,height,fcc);
     fourCC=fourCC::get((uint8_t *)fcc);
     frameIncrement=encoder->getFrameIncrement();
     float f=encoder->getFrameIncrement();
