@@ -1,5 +1,4 @@
 SET(ADM_LIB ADM_liba52)
-
 SET(${ADM_LIB}_SRCS 
 	bit_allocate.c  bitstream.c  downmix.c  imdct.c  parse.c)
 
