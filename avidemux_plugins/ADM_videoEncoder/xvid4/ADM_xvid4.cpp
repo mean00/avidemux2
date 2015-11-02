@@ -437,17 +437,17 @@ bool  xvid4Encoder::preAmble (ADMImage * in)
 #endif
   //xvid_enc_frame.bframe_threshold = _param.bframe_threshold;
 
-  xvid_enc_frame.input.csp = XVID_CSP_YV12;
+  xvid_enc_frame.input.csp = XVID_CSP_PLANAR;
   xvid_enc_frame.input.stride[0] = in->GetPitch(PLANAR_Y);
-  xvid_enc_frame.input.stride[1] = in->GetPitch(PLANAR_U);
-  xvid_enc_frame.input.stride[2] = in->GetPitch(PLANAR_V);
+  xvid_enc_frame.input.stride[2] = in->GetPitch(PLANAR_U);
+  xvid_enc_frame.input.stride[1] = in->GetPitch(PLANAR_V);
   xvid_enc_frame.type = XVID_TYPE_AUTO;
 
 
   /* Set up motion estimation flags */
   xvid_enc_frame.input.plane[0] = YPLANE(in);
-  xvid_enc_frame.input.plane[1] = UPLANE(in);
-  xvid_enc_frame.input.plane[2] = VPLANE(in);
+  xvid_enc_frame.input.plane[2] = UPLANE(in);
+  xvid_enc_frame.input.plane[1] = VPLANE(in);
   
 #if 0
   xvid_enc_frame.par_width = _param.par_width;
