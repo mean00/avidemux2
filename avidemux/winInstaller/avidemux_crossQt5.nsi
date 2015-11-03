@@ -441,7 +441,7 @@ SectionGroup "Audio Encoders" SecGrpAudioEncoder
 		${File} ${ROOT_FOLDER}/libvorbisfile-3.dll
 	${MementoSectionEnd}
 SectionGroupEnd
-SectionGroup "Avisynth" SecGrpAvisynth
+SectionGroup "Avisynth_VapourSynth" SecGrpAvisynth
 	${MementoUnselectedSection} "Avisynth Proxy" SecAvsProxy
 		SectionIn 2
 		SetOutPath $INSTDIR
@@ -454,6 +454,18 @@ SectionGroup "Avisynth" SecGrpAvisynth
 		SetOverwrite on
 		SetOutPath $INSTDIR\plugins\demuxers
 		${File} ${ROOT_FOLDER}/plugins/demuxers/libADM_dm_avsproxy.dll
+	${MementoSectionEnd}
+        ${MementoUnselectedSection} "VapourSynth Proxy (cli)" SecDemuxVS_cli
+		SectionIn 2
+		SetOverwrite on
+		SetOutPath $INSTDIR
+		${File} ${ROOT_FOLDER}/vsProxy.exe
+	${MementoSectionEnd}
+        ${MementoUnselectedSection} "VapourSynth Proxy (Qt5)" SecDemuxVS_Qt5
+		SectionIn 2
+		SetOverwrite on
+		SetOutPath $INSTDIR
+		${File} ${ROOT_FOLDER}/vsProxy_gui_qt5.exe
 	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Demuxers" SecGrpDemuxers
