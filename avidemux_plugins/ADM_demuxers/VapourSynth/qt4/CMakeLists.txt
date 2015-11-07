@@ -57,7 +57,7 @@ TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${PTHREAD_LIBRARIES})
 TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} )
 
 IF (MINGW)
-	target_link_libraries(vsProxy_gui_${QT_EXTENSION} -lwsock32)
+	target_link_libraries(vsProxy_gui_${QT_EXTENSION} -lwsock32 winmm -mwindows )
 ENDIF (MINGW)
 target_link_libraries(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} "-lm -lstdc++")
 ADM_INSTALL_BIN(vsProxy_gui_${QT_EXTENSION})
