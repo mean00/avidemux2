@@ -1066,6 +1066,7 @@ ${MementoSection} "-Start menu AVS Proxy GUI" SecStartMenuAvsProxyGui
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\avsproxy_gui.exe"
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\VS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\vsProxy_gui_qt5.exe"
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
