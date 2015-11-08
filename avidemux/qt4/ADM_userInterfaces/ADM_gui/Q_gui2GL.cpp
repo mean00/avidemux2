@@ -21,7 +21,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtGui/QKeyEvent>
-#include <QtGui/QGraphicsView>
+#include <QGraphicsView>
 
 #include <QtOpenGL/QGLWidget>
 #include "Q_dummyWidget.h"
@@ -55,7 +55,7 @@ void UI_Qt4InitGl(void)
     void  *func;
     
 
-    #define PROBE_GL_EXT(funcName, meth)     func=topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
+    #define PROBE_GL_EXT(funcName, meth)     func=(void *)topGlWidgetRoot->context()->getProcAddress(QLatin1String(#funcName));   \
              ADM_glExt::meth(func); \
              if(!func) ADM_warning("Extension "#funcName" missing\n"); \
              else ADM_info("Extension "#funcName" found\n");
