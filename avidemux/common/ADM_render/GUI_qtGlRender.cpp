@@ -12,7 +12,7 @@
 ***************************************************************************///
 #define GL_GLEXT_PROTOTYPES
 
-#include <QtGui/QPainter>
+#include <QPainter>
 
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>

@@ -181,6 +181,9 @@ if(CROSS)
         TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
 endif(CROSS)
 
+IF(QT_QTOPENGL_FOUND)
+        target_link_libraries(avidemux3_${QT_EXTENSION} ${QT_QTOPENGL_LIBRARIES})
+ENDIF(QT_QTOPENGL_FOUND)
 target_link_libraries(avidemux3_${QT_EXTENSION} "-lm -lstdc++")
 #
 # i18n
