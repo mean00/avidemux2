@@ -204,9 +204,11 @@ ADD_SUBDIRECTORY(ADM_videoFilters6)
 IF(DO_QT4)
         add_subdirectory(ADM_demuxers/VapourSynth)
         add_subdirectory(ADM_scriptEngines)
-        IF(USE_OPENGL AND NOT WIN32)
+        #IF(USE_OPENGL AND NOT WIN32)
+        IF(USE_OPENGL )
          ADD_SUBDIRECTORY(ADM_videoFilters6_openGl)
-        ENDIF(USE_OPENGL AND NOT WIN32)
+        ENDIF(USE_OPENGL )
+        #ENDIF(USE_OPENGL AND NOT WIN32)
 ENDIF(DO_QT4)
 
 ########################################
