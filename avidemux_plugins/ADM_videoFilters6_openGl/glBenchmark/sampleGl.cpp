@@ -71,30 +71,30 @@ DECLARE_VIDEO_FILTER(   openGlBenchmark,   // Class
 openGlBenchmark::openGlBenchmark(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
-        widget->makeCurrent();
-        fboY->bind();
-        printf("Compiling shader \n");
-        glProgramY = new QGLShaderProgram(context);
-        ADM_assert(glProgramY);
-        if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
-        {
-                ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
-                ADM_assert(0);
-        }
-        if ( !glProgramY->link())
-        {
-            ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
+    widget->makeCurrent();
+    fboY->bind();
+    ADM_info("Compiling shader \n");
+    glProgramY = new QGLShaderProgram(context);
+    ADM_assert(glProgramY);
+    if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
+    {
+            ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
             ADM_assert(0);
-        }
+    }
+    if ( !glProgramY->link())
+    {
+        ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
+        ADM_assert(0);
+    }
 
-        if ( !glProgramY->bind())
-        {
-                ADM_error("[GL Render] Binding FAILED\n");
-                ADM_assert(0);
-        }
+    if ( !glProgramY->bind())
+    {
+            ADM_error("[GL Render] Binding FAILED\n");
+            ADM_assert(0);
+    }
 
-        fboY->release();
-        widget->doneCurrent();
+    fboY->release();
+    widget->doneCurrent();
 
 }
 /**
@@ -115,7 +115,7 @@ bool openGlBenchmark::getNextFrame(uint32_t *fn,ADMImage *image)
     // since we do nothing, just get the output of previous filter
     if(false==previousFilter->getNextFrame(fn,image))
     {
-        ADM_warning("FlipFilter : Cannot get frame\n");
+        ADM_warning("BenchMark : Cannot get frame\n");
         return false;
     }
     widget->makeCurrent();
@@ -198,7 +198,7 @@ void openGlBenchmark::setCoupledConf(CONFcouple *couples)
 const char *openGlBenchmark::getConfiguration(void)
 {
     
-    return "openGl Sample.";
+    return "openGl benchmark.";
 }
 
 
@@ -211,22 +211,22 @@ bool openGlBenchmark::render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObjec
     int height=image->GetHeight(plane);
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, width, 0, height, -1, 1);
 
     //
     glBegin(GL_QUADS);
-	glTexCoord2i(0, 0);
-	glVertex2i(0, 0);
-	glTexCoord2i(width, 0);
-	glVertex2i(width, 0);
-	glTexCoord2i(width, height);
-	glVertex2i(width ,height);
-	glTexCoord2i(0, height);
-	glVertex2i(0, height);
-	glEnd();	// draw cube background
+    glTexCoord2i(0, 0);
+    glVertex2i(0, 0);
+    glTexCoord2i(width, 0);
+    glVertex2i(width, 0);
+    glTexCoord2i(width, height);
+    glVertex2i(width ,height);
+    glTexCoord2i(0, height);
+    glVertex2i(0, height);
+    glEnd();	// draw cube background
     return true;
 }
 
