@@ -158,14 +158,14 @@ bool openGlBenchmark::getNextFrame(uint32_t *fn,ADMImage *image)
 
     float avg1,avg2;
     int min1,min2,max1,max2;
-    bench.getResult(avg1,min1,max1);
-    bench2.getResult(avg2,min2,max2);
+    bench.getResultUs(avg1,min1,max1);
+    bench2.getResultUs(avg2,min2,max2);
 
     char str1[81];
     char str2[81];
 
-    snprintf(str1,80,"Qt  avg=%03.2f ms, min=%d max=%d ms",avg1,(int)min1,(int)max1);
-    snprintf(str2,80,"DMA avg=%03.2f ms, min=%d max=%d ms",avg2,(int)min2,(int)max2);
+    snprintf(str1,80,"Qt  avg=%03.2f us, min=%d max=%d us",avg1,(int)min1,(int)max1);
+    snprintf(str2,80,"DMA avg=%03.2f us, min=%d max=%d us",avg2,(int)min2,(int)max2);
     image->printString(2,4,str1);
     image->printString(2,8,str2);
 
