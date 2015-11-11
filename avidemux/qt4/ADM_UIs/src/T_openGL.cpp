@@ -279,6 +279,11 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
     return true;
 }
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
+typedef void typeGlUVv444(const uint8_t *src,uint8_t *dstU, uint8_t dstV,const int width);
+
+/**
+ * 
+ */
 #ifdef ADM_CPU_X86
 static inline void glYUV444_MMXInit(void)
 {
@@ -330,6 +335,33 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
             dst[x]  = src[x*4+TEX_Y_OFFSET];
         }
 }
+/**
+ * \fn glYUV444_ChromaC
+ * \brief very stupid downsampler for U & V plane, one line is discarder
+ * @param src
+ * @param toU
+ * @param toV
+ * @param width
+ */
+static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *toV, const int width)
+{
+       // ?
+       const uchar *p=src;
+       for(int x=0;x<width;x++) // Stupid subsample: 1 out of 4
+        {
+            if(!*(uint32_t *)p)
+            {
+                toU[x]=128;
+                toV[x]=128;
+            }else
+            {
+                toU[x]  =  ((int)p[TEX_U_OFFSET]+(int)p[TEX_U_OFFSET+4])>>1;
+                toV[x]  =  ((int)p[TEX_V_OFFSET]+(int)p[TEX_V_OFFSET+4])>>1;
+            }
+            p+=8;
+        }
+}
+
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
 {
 #if 0 // With QT5, download QT is faster ..    
@@ -357,6 +389,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
     int width=image->GetWidth(PLANAR_Y);
     int height=image->GetHeight(PLANAR_Y);
     typeGlYv444 *luma=glYUV444_C;
+    typeGlUVv444 *chroma=glYUV444_ChromaC;
 #ifdef ADM_CPU_X86
       if(CpuCaps::hasMMX())
       {
@@ -368,8 +401,6 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
     for(int y=1;y<=height;y++)
     {
         const uchar *src=qimg.constScanLine(height-y);
-        
-        
         if(!src)
         {
             ADM_error("Can t get pointer to openGl texture\n");
@@ -377,25 +408,19 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
         }
        luma(src,toY,width);
        toY+=strideY;
-       if(y&1)
+       glYUV444_ChromaC(src,toU,toV,width>>1);     
+       toU+=strideU;
+       toV+=strideV;
+       // 2nd line
+       y++;
+       src=qimg.constScanLine(height-y);
+       if(!src)
        {
-            for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
-            {
-                const uchar *p=src+x*4;
-                uint32_t v=*(uint32_t *)p;
-                if(!v)
-                {
-                        toU[x/2]=128;
-                        toV[x/2]=128;
-                }else
-                {
-                    toU[x/2]  =  p[TEX_U_OFFSET];
-                    toV[x/2]  =  p[TEX_V_OFFSET];
-                }
-            }
-            toU+=strideU;
-            toV+=strideV;
+            ADM_error("Can t get pointer to openGl texture\n");
+            return false;
        }
+       luma(src,toY,width);
+       toY+=strideY;        
     }
 #ifdef ADM_CPU_X86
     __asm__( "emms\n"::  );
