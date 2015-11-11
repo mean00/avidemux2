@@ -279,7 +279,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
     return true;
 }
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
-typedef void typeGlUVv444(const uint8_t *src,uint8_t *dstU, uint8_t dstV,const int width);
+typedef void typeGlUVv444(const uint8_t *src,uint8_t *dstU, uint8_t *dstV,const int width);
 
 /**
  * 
@@ -408,7 +408,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
         }
        luma(src,toY,width);
        toY+=strideY;
-       glYUV444_ChromaC(src,toU,toV,width>>1);     
+       chroma(src,toU,toV,width>>1);     
        toU+=strideU;
        toV+=strideV;
        // 2nd line
@@ -430,6 +430,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
 /**
     \fn downloadTexture
     \brief Download YUVA texture into a YV12 image
+ TODO FIXME : Make same optimisation as Qt version
 */
 bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo)
 {
