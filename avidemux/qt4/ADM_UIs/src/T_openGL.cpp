@@ -332,8 +332,10 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
 }
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
 {
+#if 0 // With QT5, download QT is faster ..    
     if(ADM_glHasARB())
         return downloadTexturesDma(image,fbo);
+#endif
     return downloadTexturesQt(image,fbo);
 }
 /**
