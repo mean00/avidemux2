@@ -5,7 +5,11 @@ MACRO(INIT_VIDEO_FILTER_GLQT4  lib  _srcsQt _headersQt _srcQt_ui  )
 		INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/qt4/ADM_UIs/include/)
 		INCLUDE_DIRECTORIES("${OPENGL_INCLUDE_DIR}")
 		INCLUDE_DIRECTORIES("${QT_QTOPENGL_INCLUDE_DIR}")
-		ADM_QT_WRAP_UI(qt4_ui ${_srcQt_ui}.ui)
+                IF("${_srcQt_ui}" STREQUAL "")
+                        # No ui file
+                ELSE("${_srcQt_ui}" STREQUAL "")
+		        ADM_QT_WRAP_UI(qt4_ui ${_srcQt_ui}.ui)
+                ENDIF("${_srcQt_ui}" STREQUAL "")
 		ADM_QT_WRAP_CPP(qt4_cpp ${_headersQt})
 
 		ADD_LIBRARY(${lib} SHARED ${ARGN} ${_srcsQt} ${qt4_cpp} ${qt4_ui})
