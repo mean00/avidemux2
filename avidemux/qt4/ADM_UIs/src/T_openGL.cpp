@@ -549,44 +549,27 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
         int width=image->GetWidth(PLANAR_Y);
         int height=image->GetHeight(PLANAR_Y);
         typeGlYv444 *luma=glYUV444_C;
+        typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
     #ifdef ADM_CPU_X86
           if(CpuCaps::hasMMX())
           {
                 glYUV444_MMXInit();
                 luma=glYUV444_MMX;
+                lumaAndChroma=glYUV444_YUVMMX;
           }
     #endif
         // Do Y
-        for(int y=0;y<height;y++)
+        const uchar *src=ptr;
+        for(int y=0;y<height;y+=2)
         {
-            const uchar *src=4*width*(y)+ptr;
-            
-            if(!src)
-            {
-                ADM_error("Can t get pointer to openGl texture\n");
-                return false;
-            }
            luma(src,toY,width);
            toY+=strideY;
-           if(y&1)
-           {
-                for(int x=0;x<width;x+=2) // Stupid subsample: 1 out of 4
-                {
-                    const uchar *p=src+x*4;
-                    uint32_t v=*(uint32_t *)p;
-                    if(!v)
-                    {
-                            toU[x/2]=128;
-                            toV[x/2]=128;
-                    }else
-                    {
-                        toU[x/2]  =  p[TEX_U_OFFSET];
-                        toV[x/2]  =  p[TEX_V_OFFSET];
-                    }
-                }
-                toU+=strideU;
-                toV+=strideV;
-           }
+           src+=4*width;
+           lumaAndChroma(src,toY,toU,toV,width);
+           toY+=strideY;
+           src+=4*width;
+           toU+=strideU;
+           toV+=strideV;
         }
     #ifdef ADM_CPU_X86
         __asm__( "emms\n"::  );
