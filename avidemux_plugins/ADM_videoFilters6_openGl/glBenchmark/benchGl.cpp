@@ -28,7 +28,7 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 #include "ADM_coreVideoFilterInternal.h"
 #include "T_openGL.h"
 #include "T_openGLFilter.h"
-#include "sampleGl.h"
+#include "benchGl.h"
 #include "ADM_clock.h"
 
 
