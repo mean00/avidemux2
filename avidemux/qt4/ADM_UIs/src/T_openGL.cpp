@@ -279,8 +279,37 @@ bool ADM_coreVideoFilterQtGl::downloadTexture(ADMImage *image, ADM_PLANE plane,
     return true;
 }
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
-typedef void typeGlUVv444(const uint8_t *src,uint8_t *dstU, uint8_t *dstV,const int width);
+typedef void typeGlYUV444(const uint8_t *src,uint8_t *dstY,uint8_t *dstU, uint8_t *dstV,const int width);
 
+/**
+ */
+
+/**
+ * \fn glYUV444_ChromaC
+ * \brief very stupid downsampler for U & V plane, one line is discarder
+ * @param src
+ * @param toU
+ * @param toV
+ * @param width
+ */
+static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *toV, const int width)
+{
+       // ?
+       const uchar *p=src;
+       for(int x=0;x<width;x++) // Stupid subsample: 1 out of 2
+        {
+            if(!*(uint32_t *)p || !*(uint32_t *)(p+4))
+            {
+                toU[x]=128;
+                toV[x]=128;
+            }else
+            {
+                toU[x]  =  ((int)p[TEX_U_OFFSET]+(int)p[TEX_U_OFFSET+4])>>1;
+                toV[x]  =  ((int)p[TEX_V_OFFSET]+(int)p[TEX_V_OFFSET+4])>>1;
+            }
+            p+=8;
+        }
+}
 /**
  * 
  */
@@ -327,6 +356,67 @@ static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int widt
             dst[i]  = src[i*4+TEX_Y_OFFSET];
     }
 }
+/**
+ * 
+ * @param src
+ * @param dstY
+ * @param dstU
+ * @param dstV
+ * @param width
+ */
+static inline void glYUV444_MMX_Chroma(const uint8_t *src, uint8_t *dstY, uint8_t *dstU, uint8_t *dstV,const int width)
+{
+ 
+    int count=width/8;
+                    __asm__(
+                        "1:\n"
+                        "movq           (%0),%%mm0 \n"
+                        "pmov           %mm0,%%mm4 \n"
+                        "pand           %%mm7,%%mm0\n"
+                        "movq           8(%0),%%mm1 \n"
+                        "pmov           %mm1,%%mm5 \n"
+                        "pand           %%mm7,%%mm1\n"
+
+                        "movq           16(%0),%%mm2 \n"
+                        "pmov           %mm2,%%mm6 \n"
+                        "pand           %%mm7,%%mm2\n"
+                        "movq           24(%0),%%mm3 \n"
+                        "packuswb       %%mm1,%%mm0\n"
+                        "pmov           %mm3,%%mm1 \n" // We have a copy in MM4/MM5/MM6/MM1
+                        "pand           %%mm7,%%mm3\n"
+
+                        // Pack luma
+                        "packuswb       %%mm3,%%mm2\n"
+                        "psrlw          $8,%%mm0\n"
+                        "psrlw          $8,%%mm2\n"
+                        "packuswb       %%mm2,%%mm0\n"
+                        "movq           %%mm0,(%1)  \n"  
+                            
+                        // now do chroma, it is similar    
+                            
+                        // Next..
+                        "add            $32,%0      \n"
+                        "add            $8,%1       \n"
+                        "sub            $1,%2        \n"
+                        "jnz             1b         \n"
+                        
+                        :: "r"(src),"r"(dstY),"r"(dstU),"r"(dstV),"r"(count)
+                        );
+    if(width&7)
+    {
+        for(int i=count*8;i<width;i++)
+            dstY[i]  = src[i*4+TEX_Y_OFFSET];
+    }
+}
+/**
+ */
+static inline void glYUV444_YUVMMX(const uint8_t *src, uint8_t *toY,uint8_t *toU, uint8_t *toV, const int width)
+{
+    glYUV444_MMX(src,toY,width);
+    glYUV444_ChromaC(src,toU,toV,width>>1);
+    
+    
+}
 #endif
 static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
 {
@@ -335,31 +425,11 @@ static inline void glYUV444_C(const uint8_t *src, uint8_t *dst, const int width)
             dst[x]  = src[x*4+TEX_Y_OFFSET];
         }
 }
-/**
- * \fn glYUV444_ChromaC
- * \brief very stupid downsampler for U & V plane, one line is discarder
- * @param src
- * @param toU
- * @param toV
- * @param width
- */
-static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *toV, const int width)
+
+static inline void glYUV444_C_withChroma(const uint8_t *src, uint8_t *dstY,uint8_t *dstU, uint8_t *dstV, const int width)
 {
-       // ?
-       const uchar *p=src;
-       for(int x=0;x<width;x++) // Stupid subsample: 1 out of 4
-        {
-            if(!*(uint32_t *)p)
-            {
-                toU[x]=128;
-                toV[x]=128;
-            }else
-            {
-                toU[x]  =  ((int)p[TEX_U_OFFSET]+(int)p[TEX_U_OFFSET+4])>>1;
-                toV[x]  =  ((int)p[TEX_V_OFFSET]+(int)p[TEX_V_OFFSET+4])>>1;
-            }
-            p+=8;
-        }
+       glYUV444_C(src,dstY,width);
+       glYUV444_ChromaC(src,dstU,dstV,width>>1);
 }
 
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
@@ -388,13 +458,14 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
 
     int width=image->GetWidth(PLANAR_Y);
     int height=image->GetHeight(PLANAR_Y);
-    typeGlYv444 *luma=glYUV444_C;
-    typeGlUVv444 *chroma=glYUV444_ChromaC;
+    typeGlYv444  *luma=glYUV444_C;
+    typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
 #ifdef ADM_CPU_X86
       if(CpuCaps::hasMMX())
       {
             glYUV444_MMXInit();
             luma=glYUV444_MMX;
+            lumaAndChroma=glYUV444_YUVMMX;
       }
 #endif
     // Do Y
@@ -406,9 +477,8 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
             ADM_error("Can t get pointer to openGl texture\n");
             return false;
         }
-       luma(src,toY,width);
+       lumaAndChroma(src,toY,toU,toV,width);
        toY+=strideY;
-       chroma(src,toU,toV,width>>1);     
        toU+=strideU;
        toV+=strideV;
        // 2nd line
