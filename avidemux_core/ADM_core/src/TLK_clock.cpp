@@ -58,29 +58,17 @@ Clock::~Clock(  )
 {
 
 }
-uint32_t Clock::getElapsedMS(void )
-{
-   uint32_t ret = getAbsTime()-_startTime;
-	//aprintf("Clock::getElapsedMS() -> %lu\n", ret);
-	return ret;
-}
 
-/** Note:
-*** * gettimeofday() returns seconds since 1.1.1970 in param1.tv_sec
-*** * because we need a AbsTime with milliseconds for benchmarking we have:
-***   max 0x7Fffffff (int32_t casted to uint32_t)
-***    => 2147483647 msec => 2147483 sec => Sun Jan 25 21:31:23 1970
-***   the return value will wrap all 25 days
-*** * workaround:
-***   1) start with an AbsTime of zero if object Clock() is created
-***   2) finish your work within 25 days ;-)
-**/
-uint32_t getAbsTime( void )
+/**
+ * 
+ * @return 
+ */
+static uint64_t getAbsTimeUs( void )
 {
      struct timeval timev;     
      TIMZ timez;
 
-    int32_t tt;
+    int64_t tt;
 
     if(!inited)
     {
@@ -89,16 +77,37 @@ uint32_t getAbsTime( void )
     }
 
     gettimeofday(&timev, &timez);
-    tt = timev.tv_usec;
-    tt /= 1000;
-    tt += 1000 * (timev.tv_sec-_itimev.tv_sec);
-    //aprintf("getAbsTime() -> %lu\n", tt&0x7Fffffff);
-    return (tt&0x7Fffffff);
+    int ref=_itimev.tv_usec;
+    int now= timev.tv_usec;
+    
+    tt=now-ref; // can be negative        
+    tt = timev.tv_usec;    
+    tt += 1000 * 1000*(timev.tv_sec-_itimev.tv_sec);
+    return tt;
 
 }
+/**
+ * 
+ * @return 
+ */
+uint32_t Clock::getElapsedMS(void )
+{
+    uint64_t t=getElapsedUS();
+    return (uint32_t)(t/1000);
+}
+/**
+ * 
+ * @return 
+ */
+uint64_t Clock::getElapsedUS(void )
+{
+    return  getAbsTimeUs()-_startTimeUs;
+}
+
+
 uint8_t Clock::reset(void)
 {
-	_startTime=getAbsTime();
+    _startTimeUs=getAbsTimeUs();
     return true;
 }
 

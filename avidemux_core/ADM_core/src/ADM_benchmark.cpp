@@ -51,7 +51,7 @@ void ADMBenchmark::start(void)
 */
 void ADMBenchmark::end(void)
 {
-    uint32_t r=clk.getElapsedMS();
+    uint64_t r=clk.getElapsedUS();
     if(r<bMin) bMin=r;
     if(r>bMax) bMax=r;
     bCumul+=r;
@@ -64,9 +64,9 @@ void ADMBenchmark::printResult(void)
 {
     float f=bCumul;
     f/=nbRound;
-    ADM_info("Average Time :%f ms\n",f);
-    ADM_info("Min Time     : %d ms\n",bMin);
-    ADM_info("Max Time     : %d ms\n",bMax);
+    ADM_info("Average Time :%f us\n",f);
+    ADM_info("Min Time     : %d us\n",bMin);
+    ADM_info("Max Time     : %d us\n",bMax);
 }
 /**
     \fn getResult
@@ -79,7 +79,19 @@ void ADMBenchmark::getResult(float &avg, int &bmin,int &bmax)
         avg/=nbRound;
     else    
         avg=0;
+    avg=avg/1000;
+    bmin=bMin/1000;
+    bmax=bMax/1000;
+}
+void ADMBenchmark::getResultUs(float &avg, int &bmin,int &bmax)
+{
+    avg=bCumul;
+    if(nbRound)
+        avg/=nbRound;
+    else    
+        avg=0;
     bmin=bMin;
     bmax=bMax;
 }
+
 // EOF

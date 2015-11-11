@@ -25,13 +25,14 @@
 class ADM_CORE6_EXPORT Clock
 {
 	private: 
-            uint32_t    _startTime;
+            uint64_t            _startTimeUs;
 
 	public:
-			Clock(void );
-			~Clock( );
+                                Clock(void );
+                                ~Clock( );
 			uint32_t getElapsedMS( void );
-			uint8_t reset( void );
+                        uint64_t getElapsedUS( void );
+			uint8_t  reset( void );
 };
 /**
         \class ADMCountdown
@@ -57,15 +58,16 @@ public:
 class ADM_CORE6_EXPORT ADMBenchmark
 {
 protected:
-        uint32_t bMin,bMax,bCumul;
+        uint64_t bMin,bMax,bCumul;
         uint32_t nbRound;
         Clock    clk;
 public:
-        ADMBenchmark();
+             ADMBenchmark();
         void start(void);
         void end(void);
         void printResult(void);
         void getResult(float &avg, int &bmin,int &bmax);
+        void getResultUs(float &avg, int &bmin,int &bmax);
 };
 #endif
 //EOF
