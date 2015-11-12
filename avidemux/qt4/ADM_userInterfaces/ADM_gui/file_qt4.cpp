@@ -113,7 +113,7 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
                 QFileDialog::Options opts;
               
                 //printf("Do filer=%d\n",(int)doFilter);
-                if (prefs->get(LASTFILES_LASTDIR_WRITE,&tmpname))
+                if (prefs->get(LASTFILES_LASTDIR_READ,&tmpname))
 		{
                         
                         str = QFileInfo(QString::fromUtf8(tmpname)).path();
