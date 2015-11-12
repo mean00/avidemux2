@@ -434,7 +434,7 @@ static inline void glYUV444_C_withChroma(const uint8_t *src, uint8_t *dstY,uint8
 
 bool ADM_coreVideoFilterQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo)
 {
-#if 0 // With QT5, download QT is faster ..    
+#if 1 // With QT5, download QT is faster ..    
     if(ADM_glHasARB())
         return downloadTexturesDma(image,fbo);
 #endif
@@ -461,40 +461,44 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
     typeGlYv444  *luma=glYUV444_C;
     typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
 #ifdef ADM_CPU_X86
-      if(CpuCaps::hasMMX())
+      if(1 && CpuCaps::hasMMX())
       {
             glYUV444_MMXInit();
             luma=glYUV444_MMX;
             lumaAndChroma=glYUV444_YUVMMX;
       }
 #endif
-    // Do Y
-    for(int y=1;y<=height;y++)
+    const uchar **yy=new const uchar *[height];
+    for(int i=0;i<height;i++)
     {
-        const uchar *src=qimg.constScanLine(height-y);
-        if(!src)
+        yy[i]=qimg.constScanLine(height-i-1);
+        if(!yy[i])
         {
             ADM_error("Can t get pointer to openGl texture\n");
+            delete [] yy;
+            yy=NULL;
             return false;
         }
+    }
+    // Do Y
+    for(int y=0;y<height;y++)
+    {
+       const uchar *src=yy[y];
        lumaAndChroma(src,toY,toU,toV,width);
        toY+=strideY;
        toU+=strideU;
        toV+=strideV;
        // 2nd line
        y++;
-       src=qimg.constScanLine(height-y);
-       if(!src)
-       {
-            ADM_error("Can t get pointer to openGl texture\n");
-            return false;
-       }
+       src=yy[y];
        luma(src,toY,width);
        toY+=strideY;        
     }
 #ifdef ADM_CPU_X86
     __asm__( "emms\n"::  );
 #endif
+    delete [] yy;
+    yy=NULL;
     return true;
 }
 /**
@@ -551,7 +555,7 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
         typeGlYv444 *luma=glYUV444_C;
         typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
     #ifdef ADM_CPU_X86
-          if(CpuCaps::hasMMX())
+          if(1 && CpuCaps::hasMMX())
           {
                 glYUV444_MMXInit();
                 luma=glYUV444_MMX;
