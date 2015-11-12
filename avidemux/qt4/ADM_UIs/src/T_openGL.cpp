@@ -468,14 +468,14 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
             lumaAndChroma=glYUV444_YUVMMX;
       }
 #endif
-    const uchar **yy=new const uchar *[height];
+#define admAlloca alloca
+    const uchar **yy=(const uchar **)admAlloca(height*sizeof(uint8_t *)); // FIXME : Use alloca here
     for(int i=0;i<height;i++)
     {
         yy[i]=qimg.constScanLine(height-i-1);
         if(!yy[i])
         {
             ADM_error("Can t get pointer to openGl texture\n");
-            delete [] yy;
             yy=NULL;
             return false;
         }
@@ -497,7 +497,6 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebuffe
 #ifdef ADM_CPU_X86
     __asm__( "emms\n"::  );
 #endif
-    delete [] yy;
     yy=NULL;
     return true;
 }
