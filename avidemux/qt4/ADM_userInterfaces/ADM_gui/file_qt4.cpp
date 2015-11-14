@@ -49,10 +49,25 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                 //printf("Do filer=%d\n",(int)doFilter);
                 if (prefs->get(LASTFILES_LASTDIR_WRITE,&tmpname))
 		{
-                        
-                        str = QFileInfo(QString::fromUtf8(tmpname)).path();
+                        QString outputPath = QFileInfo(QString::fromUtf8(tmpname)).path();
+
+                        char *tmpinputname = NULL;
+                        QString inputBaseName = QString("");
+                        if (prefs->get(LASTFILES_LASTDIR_READ,&tmpinputname))
+                        {
+                            inputBaseName = QFileInfo(QString::fromUtf8(tmpinputname)).completeBaseName();
+                        }
+
+                        QString outputExt = QString("");
+                        if (doFilter)
+                        {
+                            outputExt = dot+QString(ext);
+                        }
+                        QString separator = QString("/");
+                        str = outputPath+separator+inputBaseName+outputExt;
+
                 	/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
-			if (!QDir(str).exists())
+			if (!QDir(outputPath).exists())
                                 str.clear();
 		}
 		

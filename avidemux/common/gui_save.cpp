@@ -100,12 +100,16 @@ void HandleAction_Save(Action action)
       GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG Sequence to Save"), (SELFILE_CB *)A_saveBunchJpg);
     	break;
     case ACT_SAVE_BMP:
-      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select BMP to Save"), (SELFILE_CB *)A_saveImg);
-      //GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
+    {
+      const char *defaultExtension="bmp";
+      GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select BMP to Save"),defaultExtension,(SELFILE_CB *)A_saveImg); // A_saveImg);
+    }
       break;
     case ACT_SAVE_JPG :
-      GUI_FileSelWrite (QT_TRANSLATE_NOOP("adm","Select JPEG to Save"), (SELFILE_CB *)A_saveJpg);
-      	//GUI_FileSelWrite ("Select Jpg to save ", A_saveJpg);
+    {
+      const char *defaultExtension="jpg";
+      GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select JPEG to Save"),defaultExtension,(SELFILE_CB *)A_saveJpg); // A_saveJpg);
+    }
       	break;
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
@@ -385,7 +389,7 @@ int A_saveImg (const char *name)
   ADMImage *image=admPreview::getBuffer();
     if(!image)
     {
-        ADM_warning("[SaveJpeg] No image\n");
+        ADM_warning("[SaveBmp] No image\n");
         return 0;
 
     }
