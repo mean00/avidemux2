@@ -80,19 +80,19 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                             strcat(*name,"."); strcat(*name,ext);
 
                             fileName=fileName+QString(".")+QString(ext);
-                            QFile newFile(fileName);
-                            if(newFile.exists())
-                            {
-                                QFileInfo fileInfo(newFile);
-                                QString q=QString("Overwrite file ")+fileInfo.fileName()+QString("?");
-                                if(!GUI_Question(q.toUtf8().constData()))
-                                {
-                                    ADM_dezalloc(*name);
-                                    *name=NULL;
-                                    return;
-                                }
-                            }
                         }
+                }
+                QFile newFile(fileName);
+                if(newFile.exists())
+                {
+                    QFileInfo fileInfo(newFile);
+                    QString q=QString("Overwrite file ")+fileInfo.fileName()+QString("?");
+                    if(!GUI_Question(q.toUtf8().constData()))
+                    {
+                        ADM_dezalloc(*name);
+                        *name=NULL;
+                        return;
+                    }
                 }
                 prefs->set(LASTFILES_LASTDIR_WRITE, fileName.toUtf8().constData());
 	}
