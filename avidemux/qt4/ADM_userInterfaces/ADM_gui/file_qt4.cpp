@@ -22,6 +22,7 @@
 #include "DIA_coreUI_internal.h"
 
 #include "prefs.h"
+#include "ADM_last.h"
 
 namespace ADM_QT4_fileSel
 {
@@ -33,7 +34,7 @@ namespace ADM_QT4_fileSel
 	*/
 static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, char **name)
 	{
-		char *tmpname = NULL;
+		
                 *name = NULL;		
                 QString str ;
                 QString fileName,dot=QString(".");
@@ -47,9 +48,11 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                     extSize+=strlen(ext);
                 }
                 //printf("Do filer=%d\n",(int)doFilter);
-                if (prefs->get(LASTFILES_LASTDIR_WRITE,&tmpname))
+                std::string lastFolder;
+                admCoreUtils::getLastWriteFolder(lastFolder);
+                if (lastFolder.size())
 		{
-                        QString outputPath = QFileInfo(QString::fromUtf8(tmpname)).path();
+                        QString outputPath = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
 
                         char *tmpinputname = NULL;
                         QString inputBaseName = QString("");
@@ -109,7 +112,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                         return;
                     }
                 }
-                prefs->set(LASTFILES_LASTDIR_WRITE, fileName.toUtf8().constData());
+                admCoreUtils::setLastWriteFolder( std::string(fileName.toUtf8().constData()));
 	}
 
 	
@@ -119,7 +122,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 	*/
 static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, char **name)
 	{
-		char *tmpname = NULL;
+		
                 *name = NULL;		
                 QString str ;
                 QString fileName,dot=QString(".");
@@ -128,10 +131,12 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
                 QFileDialog::Options opts;
               
                 //printf("Do filer=%d\n",(int)doFilter);
-                if (prefs->get(LASTFILES_LASTDIR_READ,&tmpname))
+                std::string lastFolder;
+                admCoreUtils::getLastReadFolder(lastFolder);
+
+                if (lastFolder.size())
 		{
-                        
-                        str = QFileInfo(QString::fromUtf8(tmpname)).path();
+                        str = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
                 	/* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
 			if (!QDir(str).exists())
                                 str.clear();
@@ -151,8 +156,7 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
 		if (fileName.isNull() ) return;
                 
                 *name=ADM_strdup(fileName.toUtf8().constData());
-                
-                prefs->set(LASTFILES_LASTDIR_READ, fileName.toUtf8().constData());
+                admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
 	}        
         
         void GUI_FileSelRead(const char *label, char **name)

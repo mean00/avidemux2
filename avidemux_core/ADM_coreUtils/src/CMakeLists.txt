@@ -22,6 +22,7 @@ prefs2_json.cpp
 ADM_memio.cpp
 ADM_json.cpp
 ADM_iso639.cpp
+ADM_last.cpp
 )
 
 include_directories(../include Source "${PTHREAD_INCLUDE_DIR}")
