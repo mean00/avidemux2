@@ -163,4 +163,8 @@ bool UI_askAvisynthPort(uint32_t &port)
 {
 	return false;
 }
+bool  	UI_reset(void)
+{
+    return true;
+}
 // EOF
