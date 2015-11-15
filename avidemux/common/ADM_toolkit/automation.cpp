@@ -31,6 +31,7 @@
 #include "DIA_factory.h"
 #include "ADM_slave.h"
 #include "ADM_iso639.h"
+#include "ADM_last.h"
 
 extern void UI_setVideoCodec( int i);
 extern void UI_setAudioCodec( int i);
@@ -60,8 +61,8 @@ static void call_slave(char *p);
 //static void call_v2v(char *a,char *b,char *c);
 static void call_probePat(char *p);
 static void list_audio_languages(char *p);
-static void save(char*name);
-
+static void saveCB(char*name);
+static void loadCB(char *name);
 //extern uint8_t A_setContainer(const char *cont);
 
 static int call_bframe(void);
@@ -97,48 +98,37 @@ typedef struct
 #define avs_port_change "avisynth-port"
 AUTOMATON reaction_table[]=
 {
-	
-	{"nogui",                  0, "Run in silent mode",                                                        (one_arg_type)GUI_Quiet},
-	{"slave",                  1, "run as slave, master is on port arg",                                       (one_arg_type)call_slave},
-	{"run",                    1, "load and run a script",                                                     (one_arg_type)call_scriptEngine},
-
-	{"save-jpg",               1, "save a jpeg",                                                               (one_arg_type)A_saveJpg},
-	{"begin",                  1, "set start frame",                                                           (one_arg_type)setBegin},
-
-	{"end",                    1, "set end frame",                                                             (one_arg_type)setEnd},
-	{"save-raw-audio",         1, "save audio as-is ",                                                         (one_arg_type)A_saveAudioCopy},
-	{"save-uncompressed-audio",1, "save uncompressed audio",                                                   (one_arg_type)A_saveAudioProcessed},
-	{"load",                   1, "load video or workbench",                                                   (one_arg_type)A_openAvi},
-
-	{"load-workbench",         1, "load workbench file",                                                       (one_arg_type)A_openAvi},
-	{"append",                 1, "append video",                                                              (one_arg_type)A_appendAvi},
-	{"save",                   1, "save avi",                                                                  (one_arg_type)save},
-
-	{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             (one_arg_type)call_bframe},
-	{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 (one_arg_type)call_x264},
-
-	{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     (one_arg_type)A_externalAudioTrack},
-	{"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", (one_arg_type)A_setAudioLang},
-
-	{"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       (one_arg_type)call_setAudio},
-	{"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 (one_arg_type)call_audiocodec},
-	{"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          (one_arg_type)call_videocodec},
-
-	{"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", (one_arg_type)call_videoconf},
-	{"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          (one_arg_type)set_reuse_2pass_log},
-	{"autosplit",              1, "split every N MBytes",                                                      (one_arg_type)call_autosplit},
-	{"info",                   0, "show information about loaded video and audio streams",                     (one_arg_type)show_info},
-
-
-	{"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    (one_arg_type)set_output_format},
-	{"rebuild-index",          0, "rebuild index with correct frame type",                                     (one_arg_type)A_rebuildKeyFrame},
-	{"var",                    1, "set var (--var myvar=3)",                                                   (one_arg_type)setVar},
-	{"help",                   0, "print this",                                                                (one_arg_type)call_help},
-	{"quit",                   0, "exit avidemux",                                                             (one_arg_type)call_quit},
-	{"probePat",               1, "Probe for PAT//PMT..",                                                      (one_arg_type)call_probePat},
-	{"list-audio-languages",   0, "list all available audio langues",                                          (one_arg_type)list_audio_languages},
-	{avs_port_change,          1, "set avsproxy port accordingly",                                             (one_arg_type)A_set_avisynth_port}
-
+    
+    {"append",                 1, "append video",                                                              (one_arg_type)A_appendAvi},
+    //{"autosplit",              1, "split every N MBytes",                                                      (one_arg_type)call_autosplit},
+    {"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       (one_arg_type)call_setAudio},
+    {"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 (one_arg_type)call_audiocodec},
+    {avs_port_change,          1, "set avsproxy port accordingly",                                             (one_arg_type)A_set_avisynth_port},    
+    {"begin",                  1, "set start frame",                                                           (one_arg_type)setBegin},    
+    {"end",                    1, "set end frame",                                                             (one_arg_type)setEnd},
+     //{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     (one_arg_type)A_externalAudioTrack},
+    //{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             (one_arg_type)call_bframe},
+    //{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 (one_arg_type)call_x264},    
+    {"help",                   0, "print this",                                                                (one_arg_type)call_help},    
+    {"info",                   0, "show information about loaded video and audio streams",                     (one_arg_type)show_info},    
+    {"list-audio-languages",   0, "list all available audio langues",                                          (one_arg_type)list_audio_languages},        
+    {"load",                   1, "load video or workbench",                                                   (one_arg_type)loadCB},
+    {"nogui",                  0, "Run in silent mode",                                                        (one_arg_type)GUI_Quiet},
+    {"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    (one_arg_type)set_output_format},
+    {"quit",                   0, "exit avidemux",                                                             (one_arg_type)call_quit},
+    {"slave",                  1, "run as slave, master is on port arg",                                       (one_arg_type)call_slave},
+    //{"rebuild-index",          0, "rebuild index with correct frame type",                                     (one_arg_type)A_rebuildKeyFrame},        
+    {"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          (one_arg_type)set_reuse_2pass_log},        
+    {"run",                    1, "load and run a script",                                                     (one_arg_type)call_scriptEngine},
+    {"save",                   1, "save video",                                                                  (one_arg_type)saveCB},
+    {"save-jpg",               1, "save a jpeg",                                                               (one_arg_type)A_saveJpg},
+    {"save-raw-audio",         1, "save audio as-is ",                                                         (one_arg_type)A_saveAudioCopy},
+    {"save-uncompressed-audio",1, "save uncompressed audio",                                                   (one_arg_type)A_saveAudioProcessed},
+    {"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", (one_arg_type)A_setAudioLang},    
+    {"var",                    1, "set var (--var myvar=3)",                                                   (one_arg_type)setVar},    
+    {"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          (one_arg_type)call_videocodec},
+    {"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", (one_arg_type)call_videoconf},
+//{"probePat",               1, "Probe for PAT//PMT..",                                                      (one_arg_type)call_probePat},
 };
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
 //_________________________________________________________________________
@@ -197,7 +187,7 @@ static two_arg_type two;
                       {
                             if(cur==1)
                             {
-								A_openAvi(argv[cur]);
+								loadCB(argv[cur]);
                             }
                             else
                                 printf("\n Found garbage %s\n",argv[cur]);
@@ -438,11 +428,19 @@ void list_audio_languages(char *p){
 	printf("\n\n");
 	call_quit(NULL);
 }
-
-void save(char*name)
+/**
+ * 
+ * @param name
+ */
+void saveCB(char*name)
 {
-    if(!video_body->getNbSegment()) return;
-	A_Save(name);
+   if(!video_body->getNbSegment()) 
+            return;
+   if(A_Save(name))
+   {
+        ADM_info("Updating last write folder with %s\n",name);
+        admCoreUtils::setLastWriteFolder( std::string(name) );
+   }
 }
 
 
@@ -596,4 +594,17 @@ uint8_t scriptAddVar(char *var,char *value)
 void set_reuse_2pass_log(char *p){
    prefs->set(FEATURES_REUSE_2PASS_LOG,true);
 }
+
+/**
+ * 
+ * @param name
+ */
+void  loadCB(char *name)
+{
+    if(A_openAvi(name))
+    {
+        admCoreUtils::setLastReadFolder( std::string(name) );
+    }
+}
+
 //EOF
