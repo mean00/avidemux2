@@ -40,39 +40,19 @@ extern uint8_t audioCodecSetByName( int dex,const char *name);
 static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
 void call_scriptEngine(const char *scriptFile);
-static void call_buildtimemap( char *p);
 static void call_quit(char *p) ;
-static void setBegin(char *p)   ;
-static void setEnd(char *p)      ;
-//static void saveRawAudio(char *p)      ;
-static void call_normalize(char *p) ;
-static void call_resample(char *p) 	;
 static void call_help(char *p) 	;
 static void call_setAudio(char *p) 	;
-//static void call_load(char *p) 	;
-static void call_autosplit(char *p) 	;
-static void call_fps(char *p) 	;
 static void call_audiocodec(char *p) 	;
 static void call_videocodec(char *p) ;
-static void call_videoconf(char *p) ;
 static int searchReactionTable(char *string);
-static void call_setPP(char *v,char *s);
 static void call_slave(char *p);
-//static void call_v2v(char *a,char *b,char *c);
-static void call_probePat(char *p);
 static void list_audio_languages(char *p);
 static void saveCB(char*name);
 static void loadCB(char *name);
-//extern uint8_t A_setContainer(const char *cont);
-
-static int call_bframe(void);
-static int call_x264(void);
-static int call_forcesmart(void);
 static int set_output_format(const char *str);
 static void set_reuse_2pass_log(char *p);
 static void setVar(char *in);
-//
-uint8_t trueFalse(char *p);
 //_________________________________________________________________________
 
 
@@ -100,15 +80,8 @@ AUTOMATON reaction_table[]=
 {
     
     {"append",                 1, "append video",                                                              (one_arg_type)A_appendAvi},
-    //{"autosplit",              1, "split every N MBytes",                                                      (one_arg_type)call_autosplit},
-    {"audio-delay",            1, "set audio time shift in ms (+ or -)",                                       (one_arg_type)call_setAudio},
     {"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 (one_arg_type)call_audiocodec},
     {avs_port_change,          1, "set avsproxy port accordingly",                                             (one_arg_type)A_set_avisynth_port},    
-    {"begin",                  1, "set start frame",                                                           (one_arg_type)setBegin},    
-    {"end",                    1, "set end frame",                                                             (one_arg_type)setEnd},
-     //{"external-audio",         2, "Load an external audio file. {track_index} {filename}",                     (one_arg_type)A_externalAudioTrack},
-    //{"force-b-frame",          0, "Force detection of bframe in next loaded file",                             (one_arg_type)call_bframe},
-    //{"force-alt-h264",         0, "Force use of alternate read mode for h264",                                 (one_arg_type)call_x264},    
     {"help",                   0, "print this",                                                                (one_arg_type)call_help},    
     {"info",                   0, "show information about loaded video and audio streams",                     (one_arg_type)show_info},    
     {"list-audio-languages",   0, "list all available audio langues",                                          (one_arg_type)list_audio_languages},        
@@ -116,29 +89,19 @@ AUTOMATON reaction_table[]=
     {"nogui",                  0, "Run in silent mode",                                                        (one_arg_type)GUI_Quiet},
     {"output-format",          1, "set output format (AVI|OGM|ES|PS|AVI_DUAL|AVI_UNP|...)",                    (one_arg_type)set_output_format},
     {"quit",                   0, "exit avidemux",                                                             (one_arg_type)call_quit},
-    {"slave",                  1, "run as slave, master is on port arg",                                       (one_arg_type)call_slave},
-    //{"rebuild-index",          0, "rebuild index with correct frame type",                                     (one_arg_type)A_rebuildKeyFrame},        
+    {"slave",                  1, "run as slave, master is on port arg",                                       (one_arg_type)call_slave},    
     {"reuse-2pass-log",        0, "reuse 2pass logfile if it exists",                                          (one_arg_type)set_reuse_2pass_log},        
     {"run",                    1, "load and run a script",                                                     (one_arg_type)call_scriptEngine},
-    {"save",                   1, "save video",                                                                  (one_arg_type)saveCB},
+    {"save",                   1, "save video",                                                                (one_arg_type)saveCB},
     {"save-jpg",               1, "save a jpeg",                                                               (one_arg_type)A_saveJpg},
     {"save-raw-audio",         1, "save audio as-is ",                                                         (one_arg_type)A_saveAudioCopy},
     {"save-uncompressed-audio",1, "save uncompressed audio",                                                   (one_arg_type)A_saveAudioProcessed},
     {"set-audio-language",     2, "Set language of an active audio track {track_index} {language_short_name}", (one_arg_type)A_setAudioLang},    
     {"var",                    1, "set var (--var myvar=3)",                                                   (one_arg_type)setVar},    
-    {"video-codec",            1, "set video codec (Divx/Xvid/FFmpeg4/VCD/SVCD/DVD/XVCD/XSVCD/COPY)",          (one_arg_type)call_videocodec},
-    {"video-conf",             1, "set video codec conf (cq=q|cbr=br|2pass=size)[,mbr=br][,matrix=(0|1|2|3)]", (one_arg_type)call_videoconf},
-//{"probePat",               1, "Probe for PAT//PMT..",                                                      (one_arg_type)call_probePat},
+    {"video-codec",            1, "set video codec (x264/...)",                                                (one_arg_type)call_videocodec},    
 };
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
 //_________________________________________________________________________
-
-typedef enum {
-	SOME_UNKNOWN,
-	MPEG2ENC_VCD,    // pseudo codec with profile
-	MPEG2ENC_SVCD,   // pseudo codec with profile
-	MPEG2ENC_DVD     // pseudo codec with profile
-} codec_t;
 
 //void automation(int argc, char **argv)
 int automation(void )
@@ -187,7 +150,7 @@ static two_arg_type two;
                       {
                             if(cur==1)
                             {
-								loadCB(argv[cur]);
+                                loadCB(argv[cur]);
                             }
                             else
                                 printf("\n Found garbage %s\n",argv[cur]);
@@ -276,8 +239,15 @@ void call_scriptEngine(const char *scriptFile)
 		printf("Unable to appropriate script engine for script file\n");
 	}
 }
-
-void call_quit        (char *p) { UNUSED_ARG(p); exit(0);                            }
+/**
+ * 
+ * @param p
+ */
+void call_quit        (char *p) 
+{ 
+    UNUSED_ARG(p); 
+    exit(0);
+}
 // The form is name=value
 // split it in two
 void setVar(char *in)
@@ -301,132 +271,85 @@ char *equal;
 
 }
 
-
-
-
-void call_buildtimemap(char *p) { UNUSED_ARG(p); aprintf("timemap\n");      }
-
-void call_setPP(char *v,char *s)
-{
-// TODO
-
-
-}
-void call_setAudio (char *p)
-{
-
-		int32_t i;
-		sscanf(p,"%"PRIi32,&i);
-//		audioFilterDelay(i);
-}
+/**
+ * 
+ * @param p
+ */
 void call_audiocodec(char *p)
 {
      audioCodecSetByName( 0,p);    
      
 }
-void call_probePat(char *p)
-{
-// BAZOOKA  runProbe(p);
-}
+/**
+ * 
+ * @param p
+ */
 void call_videocodec(char *p)
 {
     int ix=videoEncoder6_GetIndexFromName(p);
     if(ix!=-1)
     {
-
         videoEncoder6_SetCurrentEncoder(ix);
         UI_setVideoCodec(ix);
     }
-	
-
 }
-static void call_videoconf(char *p)
-{
-	//videoCodecConfigure(p,0,NULL);
-
-    //videoEncoder6Configure
-
-}
+/**
+ * 
+ * @param p
+ */
 void call_slave(char *p)
 {
-		uint32_t i;
-		sscanf(p,"%"PRIu32,&i);
-		printf("Slace on port  %"PRIu32"\n",i);
-		if(!ADM_slaveConnect(i))
-        {
-                ADM_error("Cannot connect to master\n");
-                exit(-1);
-        }
+    uint32_t i;
+    sscanf(p,"%"PRIu32,&i);
+    printf("Slace on port  %"PRIu32"\n",i);
+    if(!ADM_slaveConnect(i))
+    {
+            ADM_error("Cannot connect to master\n");
+            exit(-1);
+    }
 }
-void call_fps(char *p)
-{
-
-		float fps;
-		aviInfo info;
-
-		if (avifileinfo)
-		{
-			video_body->getVideoInfo(&info);
-			sscanf(p,"%f",&fps);
-			printf("\n Frames per Second %f\n",fps);
-			info.fps1000 = (uint32_t) (floor (fps * 1000.+0.49));
-			video_body->updateVideoInfo (&info);
-			video_body->getVideoInfo (avifileinfo);
-		} else
-		{
-			printf("\n No Video loaded; ignoring --fps\n");
-		}
-}
-void call_autosplit(char *p)
-{
-
-		int32_t i;
-		sscanf(p,"%"PRIi32,&i);
-//		ADM_aviSetSplitSize(i);
-}
-
-void setBegin(char *p)
-{
-
-}
-void setEnd(char *p)
-{
-}
+/**
+ * 
+ * @param p
+ */
 void call_help(char *p)
 {
     UNUSED_ARG(p);
     printf("\n Command line possible arguments :");
     for(unsigned int i=0;i<NB_AUTO;i++)
       {
-          printf("\n    --%s, %s ", reaction_table[i].string,reaction_table[i].help_string);
-          switch(reaction_table[i].have_arg)
-          {
-                  case 0:	 printf(" ( no arg )");break;
-                  case 1:	 printf(" (one arg )");break;
-                  case 2:	 printf(" (two args )");break;
-                  case 3:	 printf(" (three args) ");break;
-
-          }
-
+        printf("\n    --%s, %s ", reaction_table[i].string,reaction_table[i].help_string);
+        switch(reaction_table[i].have_arg)
+        {
+          case 0:	 printf(" ( no arg )");break;
+          case 1:	 printf(" (one arg )");break;
+          case 2:	 printf(" (two args )");break;
+          case 3:	 printf(" (three args) ");break;
+          default: break;
+        }
       }
     printf("\n");
-
-                    call_quit(NULL);
+    call_quit(NULL);
 }
-
-void list_audio_languages(char *p){
-	UNUSED_ARG(p);
-	printf("\n Available audio languages:\nShort  |  LanguageName\n----------------------");
-	const ADM_iso639_t *languages = ADM_getLanguageList();
-	for(size_t i=0; i<ADM_getLanguageListSize(); i++){
-		int skipAfter = 5-strlen(languages[i].iso639_2);
-		printf("\n\t%s",languages[i].iso639_2);
-		while(skipAfter-- >0)
-			printf(" ");
-		printf("\t-\t%s",languages[i].eng_name);
-	}
-	printf("\n\n");
-	call_quit(NULL);
+/**
+ * 
+ * @param p
+ */
+void list_audio_languages(char *p)
+{
+    UNUSED_ARG(p);
+    printf("\n Available audio languages:\nShort  |  LanguageName\n----------------------");
+    const ADM_iso639_t *languages = ADM_getLanguageList();
+    for(size_t i=0; i<ADM_getLanguageListSize(); i++)
+    {
+        int skipAfter = 5-strlen(languages[i].iso639_2);
+        printf("\n\t%s",languages[i].iso639_2);
+        while(skipAfter-- >0)
+                printf(" ");
+        printf("\t-\t%s",languages[i].eng_name);
+    }
+    printf("\n\n");
+    call_quit(NULL);
 }
 /**
  * 
@@ -442,10 +365,12 @@ void saveCB(char*name)
         admCoreUtils::setLastWriteFolder( std::string(name) );
    }
 }
-
-
-
-void show_info(char *p){
+/**
+ * 
+ * @param p
+ */
+void show_info(char *p)
+{
    UNUSED_ARG(p);
    uint32_t war,har;
    const char *s;
@@ -502,27 +427,8 @@ void show_info(char *p){
    	printf("Nothing to get infos from\n");
    }
 }
-int call_bframe(void)
-{
-	video_body->setEnv(ENV_EDITOR_BFRAME);
-	return 1;
-}
-int call_x264(void)
-{
-	video_body->setEnv(ENV_EDITOR_X264);
-	return 1;
-}
-
-int call_packedvop(void)
-{
-	video_body->setEnv(ENV_EDITOR_PVOP);
-	return 1;
-}
-int call_forcesmart(void)
-{
-	video_body->setEnv(ENV_EDITOR_SMART);
-	return 1;
-}
+/**
+ */
 int set_output_format(const char *str)
 {
     if(false==video_body->setContainer(str,NULL))
@@ -533,35 +439,6 @@ int set_output_format(const char *str)
     return 0;
 }
 
-/*
-        return 0 if p is 0 or false or off
-        else 1
-
-*/
-uint8_t trueFalse(char *p)
-{
-int notdigit=0;
-        if(!p) return 0; // should not happen...
-
-        int l=strlen(p);
-        for(int i=0;i<l;i++) if(!isdigit(p[i])) notdigit=1;
-        if(!notdigit) // looks like a digit
-        {
-                l=atoi(p);
-                if(l) return 1;
-                return 0;
-        }
-        // It is a string
-
-        uint8_t ret=1;
-
-        if(!strcasecmp(p,"off")) ret=0;
-        if(!strcasecmp(p,"false")) ret=0;
-
-
-        return ret;
-
-}
 #define ADM_MAX_VAR 50
 typedef struct scriptVar
 {
@@ -580,18 +457,16 @@ uint32_t nbVar=0;
 */
 uint8_t scriptAddVar(char *var,char *value)
 {
-        video_body->setVar(var,value);
-        return 1;
-
+    video_body->setVar(var,value);
+    return 1;
 }
-/*
-       Retrieve a var in the stack
 
-*/
-
-
-
-void set_reuse_2pass_log(char *p){
+/**
+ * 
+ * @param p
+ */
+void set_reuse_2pass_log(char *p)
+{
    prefs->set(FEATURES_REUSE_2PASS_LOG,true);
 }
 
