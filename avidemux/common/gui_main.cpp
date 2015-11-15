@@ -221,7 +221,7 @@ void HandleAction (Action action)
                 name=prefs->get_lastfiles();
                 rank=(int)action-ACT_RECENT0;
                 ADM_assert(name[rank]);
-                A_openAvi (name[rank]);
+                A_openVideo (name[rank]);
                 return;
 			}
         case ACT_RECENT_PROJECT0:
@@ -333,7 +333,7 @@ void HandleAction (Action action)
           case ACT_JOG:
                 break;
           case ACT_OPEN_VIDEO:
-                GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."), (SELFILE_CB *)A_openAvi);
+                GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."), (SELFILE_CB *)A_openVideo);
                 break;
           default:
             break;
@@ -398,10 +398,10 @@ void HandleAction (Action action)
                 break;
 
     case ACT_OPEN_VIDEO:
-        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."),(SELFILE_CB *) A_openAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File..."),(SELFILE_CB *) A_openVideo);
         break;
     case ACT_APPEND_VIDEO:
-        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File to Append..."),(SELFILE_CB *) A_appendAvi);
+        GUI_FileSelRead (QT_TRANSLATE_NOOP("adm","Select Video File to Append..."),(SELFILE_CB *) A_appendVideo);
         break;
     case ACT_VIDEO_PROPERTIES:
         DIA_properties ();
@@ -571,10 +571,10 @@ void HandleAction (Action action)
 //_____________________________________________________________
 
 /**
-        \fn A_openAvi
+        \fn A_openVideo
         \brief Open (replace mode) a video
 */
-int A_openAvi (const char *name)
+int A_openVideo (const char *name)
 {
     uint8_t res;
     char *longname;
@@ -618,7 +618,7 @@ int A_openAvi (const char *name)
         res = video_body->addFile(longname);
 
     //  DIA_StopBusy ();
-
+    UI_reset();
     // forget last project file
     video_body->setProjectName("");
 
@@ -756,8 +756,7 @@ void  updateLoaded ()
 //___________________________________________
 //  Append an AVI to the existing one
 //___________________________________________
-int
-A_appendAvi (const char *name)
+int A_appendVideo (const char *name)
 {
 
 

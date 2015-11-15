@@ -79,7 +79,7 @@ typedef struct
 AUTOMATON reaction_table[]=
 {
     
-    {"append",                 1, "append video",                                                              (one_arg_type)A_appendAvi},
+    {"append",                 1, "append video",                                                              (one_arg_type)A_appendVideo},
     {"audio-codec",            1, "set audio codec (MP2/MP3/AC3/NONE (WAV PCM)/TWOLAME/COPY)",                 (one_arg_type)call_audiocodec},
     {avs_port_change,          1, "set avsproxy port accordingly",                                             (one_arg_type)A_set_avisynth_port},    
     {"help",                   0, "print this",                                                                (one_arg_type)call_help},    
@@ -476,7 +476,7 @@ void set_reuse_2pass_log(char *p)
  */
 void  loadCB(char *name)
 {
-    if(A_openAvi(name))
+    if(A_openVideo(name))
     {
         admCoreUtils::setLastReadFolder( std::string(name) );
     }

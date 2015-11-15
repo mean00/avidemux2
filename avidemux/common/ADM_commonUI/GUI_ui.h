@@ -1,13 +1,8 @@
-#ifndef ADM_GUI_UI_H
-#define ADM_GUI_UI_H
-
-//#include "ADM_editor/ADM_outputfmt.h"
+#pragma once
 
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_setFrameCount(uint32_t curFrame,uint32_t total);
 
-//void UI_updateTimeCount(uint32_t curFrame, uint32_t fps);
-//void UI_setTimeCount(uint32_t curFrame,uint32_t total, uint32_t fps);
 void UI_setCurrentTime(uint64_t pts);
 void UI_setTotalTime(uint64_t curTime);
 double 	UI_readScale( void );
@@ -60,5 +55,6 @@ bool UI_setTimeShift(int onoff,int value);
 void UI_setAudioTrackCount( int nb );
 
 bool UI_askAvisynthPort(uint32_t &port);
-#endif
+
+bool UI_reset(void);
 // EOF

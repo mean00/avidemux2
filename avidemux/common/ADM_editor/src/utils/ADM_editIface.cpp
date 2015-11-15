@@ -182,7 +182,7 @@ char *ADM_Composer::getVideoCodec(void)
 
 int ADM_Composer::appendFile(const char *name)
 {
-	return A_appendAvi(name);
+	return A_appendVideo(name);
 }
 /**
     \fn saveAudio
@@ -200,7 +200,7 @@ void ADM_Composer::clearFilters()
 
 int	ADM_Composer::openFile(const char *name)
 {
-	return A_openAvi(name);
+	return A_openVideo(name);
 }
 
 int ADM_Composer::saveFile(const char *name)

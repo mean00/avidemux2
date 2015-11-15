@@ -67,8 +67,8 @@ extern void loadTranslator(void);
 extern void initTranslator(void);
 extern void destroyTranslator(void);
 extern ADM_RENDER_TYPE UI_getPreferredRender(void);
-extern int A_openAvi(const char *name);
-extern int A_appendAvi(const char *name);
+extern int A_openVideo(const char *name);
+extern int A_appendVideo(const char *name);
 
 int SliderIsShifted=0;
 static void setupMenus(void);
@@ -660,9 +660,9 @@ void MainWindow::openFiles(QList<QUrl> urlList)
 		if (info.isFile())
 		{
 			if (avifileinfo)
-				A_appendAvi(fileName.toUtf8().constData());
+				A_appendVideo(fileName.toUtf8().constData());
 			else
-				A_openAvi(fileName.toUtf8().constData());
+				A_openVideo(fileName.toUtf8().constData());
 		}
 	}
 }
@@ -702,6 +702,18 @@ static const UI_FUNCTIONS_T UI_Hooks=
 
 
 static myQApplication *myApplication=NULL;
+/**
+ * \fn UI_reset
+ * \brief reset
+ * @return 
+ */
+bool  	UI_reset(void)
+{
+    UI_setVideoCodec(0);
+    UI_setAudioCodec(0);
+    UI_setCurrentPreview(false);
+}
+
 /**
     \fn  UI_Init
     \brief First part of UI initialization
@@ -834,7 +846,7 @@ int UI_getCurrentPreview(void)
 */
 void UI_setCurrentPreview(int ne)
 {
-        WIDGET(checkDisplayOut)->setChecked(true);
+        WIDGET(checkDisplayOut)->setChecked(!!ne);
 }
 /**
         \fn FatalFunctionQt

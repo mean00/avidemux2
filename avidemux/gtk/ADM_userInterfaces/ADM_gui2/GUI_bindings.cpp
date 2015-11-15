@@ -86,7 +86,7 @@ static void volumeChange(GtkScaleButton *button, gdouble value, gpointer user_da
 
 // Needed for DND
 // extern int A_openAvi (char *name);
-extern int A_appendAvi (const char *name);
+extern int A_appendVideo (const char *name);
 
 
 static void on_audio_change(void);
@@ -1253,9 +1253,9 @@ void DNDDataReceived( GtkWidget *widget, GdkDragContext *dc,
       const char *leak=NULL;
 #warning FIXME
 	  if (avifileinfo)
-		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_appendAvi), 0, filename, leak);
+		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_appendVideo), 0, filename, leak);
 	  else
-		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openAvi), 0, filename, leak);
+		  FileSel_ReadWrite(reinterpret_cast <void (*)(const char *)> (A_openVideo), 0, filename, leak);
 
       ADM_dealloc(names[i]);
     }
