@@ -56,9 +56,11 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 
                         char *tmpinputname = NULL;
                         QString inputBaseName = QString("");
-                        if (prefs->get(LASTFILES_LASTDIR_READ,&tmpinputname))
+                        std::string lastRead;
+                        admCoreUtils::getLastReadFolder(lastRead);
+                        if (lastRead.size())
                         {
-                            inputBaseName = QFileInfo(QString::fromUtf8(tmpinputname)).completeBaseName();
+                            inputBaseName = QFileInfo(QString::fromUtf8(lastRead.c_str())).completeBaseName();
                         }
 
                         QString outputExt = QString("");
