@@ -3,7 +3,7 @@
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_systemTrayProgress.h"
-#include <QtWinExtras>
+#include <QtWinExtras/QtWinExtras>
 /**
  */
 class winTaskBarProgress : public admUITaskBarProgress
