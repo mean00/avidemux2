@@ -1,34 +1,38 @@
 #pragma once
+#include <QtWinExtras/QtWinExtras>
+#include <QMainWindow>
 
 #include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "ADM_systemTrayProgress.h"
-#include <QtWinExtras/QtWinExtras>
 /**
  */
 class winTaskBarProgress : public admUITaskBarProgress
 {
     public:
-        winTaskBarProgress(QMainWindow *w)
-        {
-              button = new QWinTaskbarButton(w);
-        }
-        virtual ~winTaskBarProgress()
-        {
-            delete button;
-            button=NULL;
-        }
-    virtual bool enable() 
+    winTaskBarProgress(QMainWindow *w)
+    {
+          button = new QWinTaskbarButton(w);
+    }
+    virtual ~winTaskBarProgress()
+    {
+        delete button;
+        button=NULL;
+    }
+    bool onoff(bool v)
     {
         QWinTaskbarProgress *progress = button->progress();
-        progress->setVisible(true);
+        progress->setVisible(v);
         return true;
+
+    }
+    virtual bool enable() 
+    {
+        return onoff(true);
     }
     virtual bool disable() 
     {
-        QWinTaskbarProgress *progress = button->progress();
-        progress->setVisible(false);
-        return true;
+        return onoff(false);
     }
     virtual bool setProgress(int percent) 
     {
