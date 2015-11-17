@@ -27,6 +27,7 @@
 #include "GUI_ui.h"
 #include "ADM_coreUtils.h"
 #include "ADM_prettyPrint.h"
+#include "../ADM_gui/ADM_systemTrayProgress.h" // this is Qt only
 
 //*******************************************
 #define WIDGET(x) (ui->x)

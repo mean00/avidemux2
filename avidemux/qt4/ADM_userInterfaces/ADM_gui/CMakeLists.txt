@@ -14,7 +14,8 @@ SET(${ADM_LIB}_SRCS
         file_qt4.cpp  gui_none.cpp  ADM_qslider.cpp
 	ADM_qtray.cpp
         Q_dummyWidget.cpp
-		FileAction.cpp
+        FileAction.cpp
+        ADM_systemTrayProgress_default.cpp
 	${${ADM_LIB}_header}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}  ${CMAKE_CURRENT_SOURCE_DIR})

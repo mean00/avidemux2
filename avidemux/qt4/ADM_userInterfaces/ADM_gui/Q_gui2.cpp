@@ -38,7 +38,7 @@
 #include "config.h"
 #include "ADM_preview.h"
 #include "DIA_defaultAskAvisynthPort.hxx"
-
+#include "ADM_systemTrayProgress.h"
 using namespace std;
 
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
@@ -81,20 +81,8 @@ static int currentFrame = 0;
 bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ve6_getNbEncoders(void);
 void UI_refreshCustomMenu(void);
-/**
- */
-class defaultadmUITaskBarProgress : public admUITaskBarProgress
-{
-     virtual bool enable() {return true;}
-     virtual bool disable(){return true;}
-     virtual bool setProgress(int percent) 
-     {
-        //ADM_info("Progress =%d\n",percent);
-        return true;
-     }
-};
-
 admUITaskBarProgress *QuiTaskBarProgress;
+extern admUITaskBarProgress *createADMTaskBarProgress(void *parent);
 QWidget *QuiMainWindows=NULL;
 QWidget *VuMeter=NULL;
 QGraphicsView *drawWindow=NULL;
@@ -356,7 +344,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
 	this->adjustSize();
-        QuiTaskBarProgress=new defaultadmUITaskBarProgress;
+        QuiTaskBarProgress=createADMTaskBarProgress((void *)this);
 }
 /**
     \fn searchToolBar
@@ -1085,6 +1073,10 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 	WIDGET(label_8)->setText(string);
 
 }
+/**
+ * 
+ * @return 
+ */
 admUITaskBarProgress *UI_getTaskBarProgress()
 {
     return QuiTaskBarProgress;
