@@ -83,7 +83,7 @@ static char stringMe[80];
 DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encodingBase(duration,systray)
 {
         stopRequest=false;
-        
+        UI_getTaskBarProgress()->enable();
         ui=new Ui_encodingDialog;
 	ui->setupUi(this);
 
@@ -149,6 +149,7 @@ void DIA_encodingQt4::setFps(uint32_t fps)
 DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
+    UI_getTaskBarProgress()->disable();
     bool shutdownRequired = (ui->checkBoxShutdown->checkState() == Qt::Checked);
     if(tray)
     {
@@ -201,6 +202,7 @@ void DIA_encodingQt4::setPercent(uint32_t p)
           ADM_slaveReportProgress(p);
           if(tray)
                 tray->setPercent(p);
+          UI_getTaskBarProgress()->setProgress(p);
           UI_purge();
 }
 /**

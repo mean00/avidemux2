@@ -1,5 +1,16 @@
 #pragma once
-
+/**
+ * 
+ * @param curFrame
+ */
+class admUITaskBarProgress
+{
+public:    
+    virtual bool enable()=0;
+    virtual bool disable()=0;
+    virtual bool setProgress(int percent)=0; 
+};
+admUITaskBarProgress *UI_getTaskBarProgress();
 void UI_updateFrameCount(uint32_t curFrame);
 void UI_setFrameCount(uint32_t curFrame,uint32_t total);
 
