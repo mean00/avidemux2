@@ -13,33 +13,32 @@ class winTaskBarProgress : public admUITaskBarProgress
     winTaskBarProgress(QMainWindow *w)
     {
           button = new QWinTaskbarButton(w);
+          progress = button->progress();
     }
     virtual ~winTaskBarProgress()
     {
+        progress=NULL;
         delete button;
         button=NULL;
-    }
-    bool onoff(bool v)
-    {
-        QWinTaskbarProgress *progress = button->progress();
-        progress->setVisible(v);
-        return true;
-
-    }
+    }    
     virtual bool enable() 
     {
-        return onoff(true);
+        progress->show();
+        progress->setVisible(true);
+        return true;
     }
     virtual bool disable() 
     {
-        return onoff(false);
+        progress->show();
+        progress->setVisible(false);
+        return true;
     }
     virtual bool setProgress(int percent) 
     {
-        QWinTaskbarProgress *progress = button->progress();
         progress->setValue(percent);
     } 
     QWinTaskbarButton *button;
+    QWinTaskbarProgress *progress;
 };
 
 /**
