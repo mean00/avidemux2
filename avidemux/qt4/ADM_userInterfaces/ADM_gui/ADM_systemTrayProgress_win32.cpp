@@ -1,3 +1,16 @@
+/***************************************************************************
+    copyright            : (C) 2015 by mean
+    email                : fixounet@free.fr
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #pragma once
 #include <QtWinExtras/QtWinExtras>
 #include <QMainWindow>
@@ -14,6 +27,7 @@ class winTaskBarProgress : public admUITaskBarProgress
     {
           button = new QWinTaskbarButton(w);
           progress = button->progress();
+          button->setOverlayIcon(w->style()->standardIcon(QStyle::SP_MediaPlay));
     }
     virtual ~winTaskBarProgress()
     {
@@ -29,7 +43,7 @@ class winTaskBarProgress : public admUITaskBarProgress
     }
     virtual bool disable() 
     {
-        progress->show();
+        progress->hide();
         progress->setVisible(false);
         return true;
     }
