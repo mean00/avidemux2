@@ -14,6 +14,7 @@
 #pragma once
 #include <QtWinExtras/QtWinExtras>
 #include <QMainWindow>
+#include <QStyle>
 
 #include "ADM_cpp.h"
 #include "ADM_default.h"
