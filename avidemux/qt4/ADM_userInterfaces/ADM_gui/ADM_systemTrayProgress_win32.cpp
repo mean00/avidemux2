@@ -26,9 +26,9 @@ class winTaskBarProgress : public admUITaskBarProgress
     public:
     winTaskBarProgress(QMainWindow *w)
     {
-          button = new QWinTaskbarButton(w);
+          button = new QWinTaskbarButton();
+          button->setWindow(w->windowHandle());
           progress = button->progress();
-          button->setOverlayIcon(w->style()->standardIcon(QStyle::SP_MediaPlay));
     }
     virtual ~winTaskBarProgress()
     {
