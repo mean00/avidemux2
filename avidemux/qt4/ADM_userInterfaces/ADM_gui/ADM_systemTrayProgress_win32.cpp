@@ -26,8 +26,7 @@ class winTaskBarProgress : public admUITaskBarProgress
     public:
     winTaskBarProgress(QMainWindow *w)
     {
-          button = new QWinTaskbarButton();
-          button->setWindow(w->windowHandle());
+          button = new QWinTaskbarButton();          
           progress = button->progress();
     }
     virtual ~winTaskBarProgress()
@@ -52,15 +51,21 @@ class winTaskBarProgress : public admUITaskBarProgress
     {
         progress->setValue(percent);
     } 
+    virtual bool setParent(void *qwin)
+    {
+        QMainWindow *win=( QMainWindow *)qwin;
+        button->setWindow(win->windowHandle());
+        return true;
+    }
     QWinTaskbarButton *button;
     QWinTaskbarProgress *progress;
 };
 
 /**
  */
-admUITaskBarProgress *createADMTaskBarProgress(void *parent)
+admUITaskBarProgress *createADMTaskBarProgress()
 {
-        QMainWindow *win=( QMainWindow *)parent;
-        return new winTaskBarProgress(win);
+        
+        return new winTaskBarProgress();
 }
 // EOF

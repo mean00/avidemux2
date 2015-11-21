@@ -22,5 +22,6 @@ public:
     virtual bool enable()=0;
     virtual bool disable()=0;
     virtual bool setProgress(int percent)=0; 
+    virtual bool setParent(void *qwin)=0;
 };
 admUITaskBarProgress *UI_getTaskBarProgress(); 

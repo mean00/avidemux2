@@ -82,7 +82,7 @@ bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
 uint32_t ADM_ve6_getNbEncoders(void);
 void UI_refreshCustomMenu(void);
 admUITaskBarProgress *QuiTaskBarProgress;
-extern admUITaskBarProgress *createADMTaskBarProgress(void *parent);
+extern admUITaskBarProgress *createADMTaskBarProgress();
 QWidget *QuiMainWindows=NULL;
 QWidget *VuMeter=NULL;
 QGraphicsView *drawWindow=NULL;
@@ -344,7 +344,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
 	this->adjustSize();
-        QuiTaskBarProgress=createADMTaskBarProgress((void *)this);
+        QuiTaskBarProgress=createADMTaskBarProgress();
 }
 /**
     \fn searchToolBar
@@ -867,6 +867,7 @@ int UI_RunApp(void)
 {
     uiRunning=true;
     setupMenus();
+    QuiTaskBarProgress->setParent(QuiMainWindows);
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	
           
