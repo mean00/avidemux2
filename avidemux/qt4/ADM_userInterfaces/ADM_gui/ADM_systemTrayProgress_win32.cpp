@@ -24,7 +24,7 @@
 class winTaskBarProgress : public admUITaskBarProgress
 {
     public:
-    winTaskBarProgress(QMainWindow *w)
+    winTaskBarProgress()
     {
           button = new QWinTaskbarButton();          
           progress = button->progress();
