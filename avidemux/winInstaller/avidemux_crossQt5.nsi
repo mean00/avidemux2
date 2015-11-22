@@ -100,7 +100,7 @@ Page custom InstallOptionsPage
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_FUNCTION RunAvidemux
 !define MUI_FINISHPAGE_RUN_TEXT "Run ${PRODUCT_NAME} now"
-!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR/Change Log.html"
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR/ChangeLog.html"
 !define MUI_FINISHPAGE_SHOWREADME_TEXT "View Change Log now"
 !define MUI_FINISHPAGE_LINK "Visit the Avidemux website"
 !define MUI_FINISHPAGE_LINK_LOCATION "http://www.avidemux.org"
@@ -1047,7 +1047,7 @@ ${MementoSection} "-Start menu Change Log" SecStartMenuChangeLog
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk" "$INSTDIR\Change Log.html"
+    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk" "$INSTDIR\ChangeLog.html"
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 

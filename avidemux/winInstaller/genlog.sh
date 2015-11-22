@@ -1,5 +1,7 @@
-export output="Change Log.html"
-echo "<html><head></head><body><h1>Changelog:</h1><br>" > $output
-git log  --pretty=format:'<li> %s <a href="https://github.com/mean00/avidemux2/commit/%H"> *;</a> </li> ' | head -20   >> $output
+export outFile="ChangeLog.html"
+echo "<html><head><link rel="stylesheet" type="text/css" href="change.css"></head>" > $outFile
+echo "<body>Avidemux Changelog:<br>" >> $outFile
+echo "<table><tr><th>Message</th><th>Commit</th></tr>" >> $outFile
+git log  --pretty=format:'<tr><td> %s </td><td><a href="https://github.com/mean00/avidemux2/commit/%H"> commit</td></tr>' | head -20   >> $outFile
 
-echo "</body>" >> $output
+echo "</body>" >> $outFile

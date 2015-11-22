@@ -10,7 +10,8 @@ Section "Avidemux Core" SecCore
     SetOutPath $INSTDIR
     SetOverwrite on
     ${File} "./Build Info.txt"
-    ${File} "./Change Log.html"
+    ${File} "./ChangeLog.html"
+    ${File} "./change.css"
     ${File} ${ROOT_FOLDER}/libexpat-1.dll
     ${File} ${ROOT_FOLDER}/libffi-6.dll
     ${File} ${ROOT_FOLDER}/libglib-2.0-0.dll
