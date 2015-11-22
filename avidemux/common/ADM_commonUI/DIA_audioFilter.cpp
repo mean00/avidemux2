@@ -63,21 +63,29 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config)
   {ADM_GAIN_AUTOMATIC,QT_TRANSLATE_NOOP("adm","Automatic (max -3 dB)")},
   {ADM_GAIN_MANUAL,   QT_TRANSLATE_NOOP("adm","Manual (dB)")}};
   
-   diaElemMenu      eGain(&vGainMode,QT_TRANSLATE_NOOP("adm","_Gain mode:"),3,menuGain);
-   
-    diaElemFloat  eGainValue(&vGainValue,QT_TRANSLATE_NOOP("adm","G_ain value:"),-10,40);
-     eGain.link(&(menuGain[2]),1,&eGainValue);
+  diaElemFrame  frameGain(QT_TRANSLATE_NOOP("adm","Gain"));
+  diaElemMenu   eGain(&vGainMode,QT_TRANSLATE_NOOP("adm","_Gain mode:"),3,menuGain);   
+  diaElemFloat  eGainValue(&vGainValue,QT_TRANSLATE_NOOP("adm","G_ain value:"),-10,40);
+  
+  eGain.link(&(menuGain[2]),1,&eGainValue);
+  frameGain.swallow(&eGain);
+  frameGain.swallow(&eGainValue);
   //****************************
 
  diaElemMenu      eMixer(&vChan,QT_TRANSLATE_NOOP("adm","_Mixer:"),11,menuMixer);
  bool bMixer=config->mixerEnabled;
  diaElemToggle    tMixer(&bMixer,QT_TRANSLATE_NOOP("adm","Remix:"));
  tMixer.link(1,&eMixer);
+ 
+ diaElemFrame frameMixer(QT_TRANSLATE_NOOP("adm","Mixer"));
+ frameMixer.swallow(&tMixer);
+ frameMixer.swallow(&eMixer);
+ 
  //****************************
  diaElemToggleInt eShift(&bShiftEnabled,QT_TRANSLATE_NOOP("adm","Shift audio:"),&vShift, QT_TRANSLATE_NOOP("adm","Shift Value (ms):"),-30000,30000);
  /************************************/
- diaElem *elems[]={&eFPS, &tDRC,&tMixer,&eMixer, &eResample,&eGain,&eGainValue,&eShift};
-  if( diaFactoryRun(QT_TRANSLATE_NOOP("adm","Audio Filters"),4+4,elems))
+ diaElem *elems[]={&eFPS, &tDRC, &eResample,&eShift,&frameMixer,&frameGain};
+  if( diaFactoryRun(QT_TRANSLATE_NOOP("adm","Audio Filters"),4+2,elems))
     {
         config->mixerConf=(CHANNEL_CONF)vChan;
         config->film2pal=(FILMCONV)vFilm;
