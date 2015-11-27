@@ -118,38 +118,39 @@ ADM_Qvideo::~ADM_Qvideo()
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {	
+    //printf("Draw! \n");
      if (paintEngineType == -1)
      {
-               QPainter painter(this);
+        QPainter painter(this);
 
-               if (painter.isActive())
-                       paintEngineType = painter.paintEngine()->type();
+        if (painter.isActive())
+                paintEngineType = painter.paintEngine()->type();
 
-               painter.end();
+        painter.end();
       }
 
-	if (!displayW || !displayH || !rgbDataBuffer )
-		return;
+    if (!displayW || !displayH || !rgbDataBuffer )
+            return;
 
-            if (renderExposeEventFromUI())
+    if (renderExposeEventFromUI())
+    {
+            QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+            QPainter painter(this);
+            if (painter.isActive())
             {
-                    QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-                    QPainter painter(this);
-                    if (painter.isActive())
-                    {
-                        //painter.drawImage(QPoint(0,0),image);
-                        const QRect rec=ev->rect();
-                        int x=rec.x();
-                        int y=rec.y();
-                        int w=rec.width();
-                        int h=rec.height();
-                        painter.drawImage(x,y,image,x,y,w,h);
-                        painter.end();
-                    }else
-                    {
-                        printf("Painter inactive!\n");
-                    }
+                //painter.drawImage(QPoint(0,0),image);
+                const QRect rec=ev->rect();
+                int x=rec.x();
+                int y=rec.y();
+                int w=rec.width();
+                int h=rec.height();
+                painter.drawImage(x,y,image,x,y,w,h);
+                painter.end();
+            }else
+            {
+                printf("Painter inactive!\n");
             }
+    }
 }
 
 ADM_Qvideo *videoWindow=NULL;
