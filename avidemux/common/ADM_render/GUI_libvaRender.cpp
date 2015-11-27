@@ -25,6 +25,7 @@ extern "C" {
 #include "GUI_accelRender.h"
 #include "GUI_libvaRender.h"
 
+static ADM_vaSurface *lastSurface=NULL;
 
 //________________Wrapper around Xv_______________
 /**
@@ -34,15 +35,13 @@ libvaRender::libvaRender( void )
 {
     mySurface[0]=mySurface[1]=NULL;;
     toggle=0;
-    
-    
+    lastSurface=NULL;       
 }
 /**
     \đn dtor
 */
 libvaRender::~libvaRender()
 {
-
     cleanup();
 }
 
@@ -79,6 +78,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
 */
 bool libvaRender::cleanup(void)
 {
+    lastSurface=NULL;
     for(int i=0;i<2;i++)
     {
         if(mySurface[i])
@@ -109,6 +109,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     {
         ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refInstance;
         admLibVA::putX11Surface(img,info.systemWindowId,displayWidth,displayHeight);
+        lastSurface=img;
     }else
     {
         if(!mySurface[0] || !mySurface[1])
@@ -124,6 +125,7 @@ bool libvaRender::displayImage(ADMImage *pic)
             return false;
         }
         admLibVA::putX11Surface(dest,info.systemWindowId,displayWidth,displayHeight);
+        lastSurface=dest;
     }
     return true;
 }
@@ -145,8 +147,11 @@ bool libvaRender::refresh(void)
 {
     // since we dont know how to redraw without help, ask above
     ADM_info("[libva]Rrefresh\n");
-   
-    renderCompleteRedrawRequest();
+    // This is a little bit dangerous, lastSurface might be gone
+    if(lastSurface)
+        admLibVA::putX11Surface(lastSurface,info.systemWindowId,displayWidth,displayHeight);
+    else
+        renderCompleteRedrawRequest();
     return true;
 }
 #endif
