@@ -752,20 +752,22 @@ int UI_Init(int nargc, char **nargv)
 
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
 {
-	MainWindow *mw = new MainWindow(scriptEngines);
-	mw->show();
+    MainWindow *mw = new MainWindow(scriptEngines);
+    mw->show();
 
-	QuiMainWindows = (QWidget*)mw;
+    QuiMainWindows = (QWidget*)mw;
 
-	uint32_t w, h;
+    uint32_t w, h;
 
-	UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
-	printf("The screen seems to be %u x %u px\n",w,h);
+    UI_getPhysicalScreenSize(QuiMainWindows, &w,&h);
+    printf("The screen seems to be %u x %u px\n",w,h);
+    mw->ui.frame_video->setAttribute(Qt::WA_OpaquePaintEvent);
+    
 
-	UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
-        mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
-	UI_updateRecentMenu();
-	UI_updateRecentProjectMenu();
+    UI_QT4VideoWidget(mw->ui.frame_video);  // Add the widget that will handle video display
+    mw->ui.frame_video->setAcceptDrops(true); // needed for drag and drop to work on windows
+    UI_updateRecentMenu();
+    UI_updateRecentProjectMenu();
 
     // Init vumeter
     VuMeter=mw->ui.frameVU;
