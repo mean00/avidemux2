@@ -359,7 +359,9 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         return false;
     }
     glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h);
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
     glWidget->context()->makeCurrent();
+#endif
     bool status= QGLShaderProgram::hasOpenGLShaderPrograms(glWidget->context());
     if(false==status)
     {
