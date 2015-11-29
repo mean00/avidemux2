@@ -111,6 +111,7 @@ ADM_Qvideo::~ADM_Qvideo()
 {
     printf("[Qvideo]Destroying QVideo\n");
     callBackQtWindowDestroyed();
+    
 }
 /**
  * 

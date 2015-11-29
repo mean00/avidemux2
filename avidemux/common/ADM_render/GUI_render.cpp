@@ -124,9 +124,9 @@ static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
 */
 uint8_t renderInit( void )
 {
-	draw=MUI_getDrawWidget(  );
+    draw=MUI_getDrawWidget(  );
     enableDraw=false;
-	return 1;
+    return 1;
 }
 
 void renderDestroy(void)
@@ -421,4 +421,17 @@ bool VideoRenderBase::baseInit(uint32_t w,uint32_t h,renderZoom zoom)
         calcDisplayFromZoom(zoom);
         return true;
 }
+
+/**
+ * \fn renderClearInstance
+ * \brief warn render that the renderer has been deleted by low level (window manager)
+ * Would be prettier to do it with refCounting
+ * @return 
+ */
+bool renderClearInstance(void)
+{
+    renderer=NULL;
+    return true;
+}
+
 //EOF

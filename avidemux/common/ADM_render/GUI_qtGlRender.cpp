@@ -154,6 +154,7 @@ QtGlAccelWidget::~QtGlAccelWidget()
     if(textureName[0])
         glDeleteTextures(3,textureName);
     textureName[0]=0;
+    
 }
 /**
     \fn setImage
@@ -337,7 +338,7 @@ bool QtGlRender::stop(void)
 {
     ADM_info("[GL Render] Renderer closed\n");
     if (glWidget)
-    {
+    {        
         glWidget->setParent(NULL);
         delete glWidget;
     }

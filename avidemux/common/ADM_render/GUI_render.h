@@ -48,7 +48,9 @@ ADM_RENDER6_EXPORT bool    renderExposeEventFromUI(void); // This is called by U
 ADM_RENDER6_EXPORT ADM_HW_IMAGE renderGetPreferedImageFormat(void);
 ADM_RENDER6_EXPORT uint8_t renderLock(void);
 ADM_RENDER6_EXPORT uint8_t renderUnlock(void);
-ADM_RENDER6_EXPORT bool renderHookRefreshRequest(refreshSB cb);
+ADM_RENDER6_EXPORT bool    renderHookRefreshRequest(refreshSB cb);
+ADM_RENDER6_EXPORT bool    renderClearInstance(void);
+
 
 /* These functions are trampolined through render as they are UI dependant */
 
