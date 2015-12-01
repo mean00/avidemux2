@@ -22,6 +22,7 @@
 /**
     \class QtGlAccelWidget
 */
+class QtGlRender;
 class QtGlAccelWidget : public QGLWidget
 {
 private:
@@ -36,14 +37,16 @@ private:
         GLsizei textureHeights[3];
         uint8_t *textureOffsets[3];
         GLuint  textureName[3];
+        
 
 protected:
         void initializeGL();
         void paintGL() attribute_align_arg;
         void updateTexture(void);
+        QtGlRender *_parent;
 
 public:
-             QtGlAccelWidget(QWidget *parent, int imagew, int imageh);
+             QtGlAccelWidget(QWidget *parent, int imagew, int imageh,QtGlRender *glRender);
              ~QtGlAccelWidget();
         bool setImage(ADMImage *pic);
         bool setDisplaySize(int width,int height);
@@ -67,6 +70,12 @@ class QtGlRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newzoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return false;}; // We can! redraw by ourself
+              
+              bool      clearWidget()
+                        {
+                            glWidget=NULL;
+                            return true;
+                        }
 };
 
 #endif

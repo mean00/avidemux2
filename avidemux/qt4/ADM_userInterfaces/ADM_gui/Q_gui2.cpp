@@ -814,7 +814,7 @@ void destroyGUI(void)
 }
 void callBackQtWindowDestroyed()
 {
-    renderClearInstance();	
+    
 }
 /**
 

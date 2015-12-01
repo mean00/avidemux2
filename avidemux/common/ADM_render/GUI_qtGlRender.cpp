@@ -113,7 +113,7 @@ static bool initOnce(QGLWidget *widget)
     \fn ctor
 */
 
-QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(parent)
+QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h,QtGlRender *glRender) : QGLWidget(parent)
 {
     ADM_info("[QTGL]\t Creating glWidget\n");
     memset(textureRealWidths, 0, sizeof(textureRealWidths));
@@ -121,6 +121,7 @@ QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h) : QGLWidget(pare
     memset(textureHeights, 0, sizeof(textureHeights));
     memset(textureOffsets, 0, sizeof(textureOffsets));
 
+    _parent=glRender;
     imageWidth = w;
     imageHeight = h;
     firstRun = true;
@@ -154,7 +155,10 @@ QtGlAccelWidget::~QtGlAccelWidget()
     if(textureName[0])
         glDeleteTextures(3,textureName);
     textureName[0]=0;
-    
+    if(_parent)
+    {
+        _parent->clearWidget();
+    }
 }
 /**
     \fn setImage
@@ -359,7 +363,7 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         ADM_warning("This platform has no openGL support \n");
         return false;
     }
-    glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h);
+    glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h,this);
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
     glWidget->context()->makeCurrent();
 #endif
