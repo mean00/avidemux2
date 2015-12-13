@@ -780,11 +780,11 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_glBenchmark.dll
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_glResize.dll
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_sampleGlFrag2.dll
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_sampleGlVertex.dll
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_rotateGlFrag2.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_glBenchmark.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_glResize.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_sampleGlFrag2.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_sampleGlVertex.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_rotateGlFrag2.dll
 		${MementoSectionEnd}
 ${MementoSection} "Resample FPS" SecVidFltResampleFps
 			SectionIn 1 2
