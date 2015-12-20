@@ -13,7 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_openGL.h"
+#include "ADM_openGl.h"
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"

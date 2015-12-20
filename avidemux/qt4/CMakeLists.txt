@@ -46,6 +46,9 @@ INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 # Add job control
 ###########################################
 ADD_SUBDIRECTORY(ADM_jobs)
+IF(USE_OPENGL)
+    ADD_SUBDIRECTORY(ADM_openGL)
+ENDIF(USE_OPENGL)
 
 ########################################
 # Add subdirectories 

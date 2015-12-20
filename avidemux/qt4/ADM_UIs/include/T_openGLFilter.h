@@ -12,41 +12,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef T_OPENGL_FILTER_H
-#define T_OPENGL_FILTER_H
-
+#pragma once
 #include "ADM_UIQT46_export.h"
-#include "T_openGL.h"
-
 #include "ADM_assert.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_openGl.h"
 
 
-/**
- *  \class ADM_coreQtGl
- *  \brief base class for all QtGl video filters
- */
-class ADM_UIQT46_EXPORT ADM_coreQtGl
-{
-protected:
-                            
-                            QGLWidget            *widget;
-                    const   QGLContext           *_context;
-                            int                   firstRun;
-                            GLuint                texName[3];
-protected:
-                            // image <--> texture
-                            void uploadAllPlanes(ADMImage *image);
-                            void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
-
-public:
-                            ADM_coreQtGl(QGLWidget *parentWidget);
-       virtual             ~ADM_coreQtGl();
-
-        
-                            static bool checkGlError(const char *op);
-protected:
-};
 
 /**
  *  \class ADM_coreVideoFilterQtGl
@@ -79,5 +51,4 @@ public:
 // Get our top widget
 ADM_UIQT46_EXPORT bool ADM_setGlWidget(QGLWidget *w);
 QGLWidget *ADM_getGlWidget(void);
-#endif
 

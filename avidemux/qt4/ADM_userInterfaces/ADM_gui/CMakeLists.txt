@@ -4,6 +4,10 @@ ADM_QT_WRAP_UI(${ADM_LIB}_header  gui2.ui )
 ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h  T_preview.h T_vumeter.h T_thumbSlider.h ADM_qtray.h FileAction.h)
 ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  avidemux.qrc)
 
+IF(USE_OPENGL)
+        INCLUDE_DIRECTORIES(../../ADM_openGL/include/)
+ENDIF(USE_OPENGL)
+
 IF(WIN32)
     SET(TRAYPROGRESS    ADM_systemTrayProgress_win32.cpp)
 ELSE(WIN32)
