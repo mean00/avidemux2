@@ -30,6 +30,7 @@ class nullRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newZoom) {return true;}
               virtual   bool refresh(void)                  {return true;}
               virtual   bool usingUIRedraw(void)            {return false;};
+                        const char *getName() {return "Null";}
 };
 #endif
 
