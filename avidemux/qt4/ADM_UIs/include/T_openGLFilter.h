@@ -31,7 +31,7 @@ class ADM_UIQT46_EXPORT ADM_coreQtGl
 protected:
                             
                             QGLWidget            *widget;
-                    const   QGLContext           *context;
+                    const   QGLContext           *_context;
                             int                   firstRun;
                             GLuint                texName[3];
 protected:

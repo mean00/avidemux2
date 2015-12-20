@@ -158,8 +158,8 @@ ADM_coreQtGl::ADM_coreQtGl(QGLWidget *parent)
         widget->makeCurrent();
         firstRun=0;
         ADM_info("Gl : Allocating context and frameBufferObjects\n");
-        context=QGLContext::currentContext();
-        ADM_assert(context);
+        _context=QGLContext::currentContext();
+        ADM_assert(_context);
         glGenTextures(3,texName);
         checkGlError("GenTex");
         checkGlError("GenBuffer");

@@ -19,30 +19,28 @@
 #include "GUI_render.h"
 #include "GUI_accelRender.h"
 #include "ADM_colorspace.h"
+#include "T_openGLFilter.h"
 /**
     \class QtGlAccelWidget
 */
 class QtGlRender;
-class QtGlAccelWidget : public QGLWidget
+class QtGlAccelWidget : public QGLWidget, public ADM_coreQtGl
 {
 private:
         int             imageWidth, imageHeight;
         int             displayWidth,displayHeight;
-        bool            firstRun;
+        
 
 
         QGLShaderProgram *glProgram;
-        GLsizei textureRealWidths[3];
-        GLsizei textureStrides[3];
-        GLsizei textureHeights[3];
-        uint8_t *textureOffsets[3];
-        GLuint  textureName[3];
+        bool             renderFirstRun;
+        
         
 
 protected:
         void initializeGL();
         void paintGL() attribute_align_arg;
-        void updateTexture(void);
+        void updateTexture(ADMImage *pic);
         QtGlRender *_parent;
 
 public:

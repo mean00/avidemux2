@@ -89,7 +89,7 @@ UNUSED_ARG(setup);
         widget->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
-        glProgramY = new QGLShaderProgram(context);
+        glProgramY = new QGLShaderProgram(_context);
         ADM_assert(glProgramY);
         if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
         {

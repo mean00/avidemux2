@@ -112,32 +112,15 @@ static bool initOnce(QGLWidget *widget)
     \fn ctor
 */
 
-QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h,QtGlRender *glRender) : QGLWidget(parent)
+QtGlAccelWidget::QtGlAccelWidget(QWidget *parent, int w, int h,QtGlRender *glRender) : QGLWidget(parent), ADM_coreQtGl(this)
 {
     ADM_info("[QTGL]\t Creating glWidget\n");
-    memset(textureRealWidths, 0, sizeof(textureRealWidths));
-    memset(textureStrides, 0, sizeof(textureStrides));
-    memset(textureHeights, 0, sizeof(textureHeights));
-    memset(textureOffsets, 0, sizeof(textureOffsets));
 
     _parent=glRender;
     imageWidth = w;
     imageHeight = h;
-    firstRun = true;
     glProgram = NULL;
-    textureName[0]=textureName[1]=textureName[2]=0;
-    glGenTextures(3,textureName);
-}
-/**
-    \fn setDisplaySize
-*/
-bool QtGlAccelWidget::setDisplaySize(int width,int height)
-{
-    displayWidth=width;
-    displayHeight=height;
-    resize(displayWidth,displayHeight);
-    firstRun = true;
-    return true;
+    renderFirstRun=true;
 }
 /**
         \fn dtor
@@ -151,14 +134,23 @@ QtGlAccelWidget::~QtGlAccelWidget()
         delete glProgram;
     }
     glProgram=NULL;
-    if(textureName[0])
-        glDeleteTextures(3,textureName);
-    textureName[0]=0;
     if(_parent)
     {
         _parent->clearWidget();
     }
 }
+/**
+    \fn setDisplaySize
+*/
+bool QtGlAccelWidget::setDisplaySize(int width,int height) 
+{
+    displayWidth=width;
+    displayHeight=height;
+    resize(displayWidth,displayHeight);
+    renderFirstRun = true;
+    return true;
+}
+
 /**
     \fn setImage
 */
@@ -171,17 +163,8 @@ bool QtGlAccelWidget::setImage(ADMImage *pic)
     
     this->imageWidth = imageWidth;
     this->imageHeight = imageHeight;
-
-    for(int i=0;i<3;i++)
-    {
-        ADM_PLANE plane=(ADM_PLANE)i;
-        textureRealWidths[i] = pic->GetWidth(plane);
-        textureStrides[i]    = pic->GetPitch(plane);
-        textureHeights[i]    = pic->GetHeight(plane);
-        textureOffsets[i]    = pic->GetReadPtr(plane);
-
-    }
-    updateTexture();
+  
+    updateTexture(pic);
     return true;
 }
 /**
@@ -227,20 +210,9 @@ void QtGlAccelWidget::initializeGL()
 /**
     \fn updateTexture
 */
-void QtGlAccelWidget::updateTexture()
-{
-    checkGlError("Entering UpdateTexture");
-    if (!textureOffsets[0])
-    {
-        ADM_info("[Render] Buffer not set\n");
-        return;
-    }
-    if(!myGlActiveTexture)
-    {
-        ADM_error("No glActiveTexture\n");
-        return;
-    }
-    if (firstRun)
+void QtGlAccelWidget::updateTexture(ADMImage *pic)
+{   
+    if (renderFirstRun)
     {
         glViewport(0, 0, width(), height());
         glMatrixMode(GL_PROJECTION);
@@ -248,45 +220,9 @@ void QtGlAccelWidget::updateTexture()
         glOrtho(0, width(), 0, height(), -1, 1);
         glProgram->setUniformValue("height", (float)imageHeight);
     }
+    uploadAllPlanes(pic);
+    renderFirstRun=false;
 
-//--
-        
-      // Activate texture unit "tex"
-    for(int xplane=2;xplane>=0;xplane--)
-    //for(int xplane=0;xplane<3;xplane++)
-    {
-        myGlActiveTexture(GL_TEXTURE0+xplane);
-        ADM_PLANE plane=(ADM_PLANE)xplane;
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, textureName[xplane]); // Use tex engine "texNum"
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-        if(firstRun)
-        {
-            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                            textureStrides[xplane],
-                            textureHeights[xplane],
-                            0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                            textureOffsets[xplane]);
-            checkGlError("texImage2D");
-        }else
-        {
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                textureStrides[xplane],
-                textureHeights[xplane],
-                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                textureOffsets[xplane]);
-            checkGlError("subImage2D");
-        }
-    }
-    
-    if (firstRun)
-    {
-        firstRun = false;
-    }
     
 }
 /**

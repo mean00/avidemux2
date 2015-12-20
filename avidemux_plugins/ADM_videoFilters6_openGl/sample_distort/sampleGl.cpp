@@ -75,7 +75,7 @@ UNUSED_ARG(setup);
         // vertex shader 
        
         // frag shader
-        glProgramY = new QGLShaderProgram(context);
+        glProgramY = new QGLShaderProgram(_context);
         ADM_assert(glProgramY);
         if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
         {
