@@ -21,29 +21,50 @@
 #include "ADM_assert.h"
 #include "ADM_coreVideoFilter.h"
 
+
+/**
+ *  \class ADM_coreQtGl
+ *  \brief base class for all QtGl video filters
+ */
+class ADM_UIQT46_EXPORT ADM_coreQtGl
+{
+protected:
+                            
+                            QGLWidget            *widget;
+                    const   QGLContext           *context;
+                            int                   firstRun;
+                            GLuint                texName[3];
+protected:
+                            // image <--> texture
+                            void uploadAllPlanes(ADMImage *image);
+                            void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
+
+public:
+                            ADM_coreQtGl(QGLWidget *parentWidget);
+       virtual             ~ADM_coreQtGl();
+
+        
+                            static bool checkGlError(const char *op);
+protected:
+};
+
 /**
  *  \class ADM_coreVideoFilterQtGl
  *  \brief base class for all QtGl video filters
  */
-class ADM_UIQT46_EXPORT ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter
+class ADM_UIQT46_EXPORT ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter,public ADM_coreQtGl
 {
 protected:
                             GLuint                bufferARB   ;
-                            QGLWidget            *widget;
-                    const   QGLContext           *context;
                             QGLFramebufferObject *fboY;
                             QGLFramebufferObject *fboUV;
                             QGLShaderProgram     *glProgramY;
                             QGLShaderProgram     *glProgramUV;
-                            int                   firstRun;
-                            GLuint                texName[3];
 
                             bool                  resizeFBO(uint32_t w,uint32_t h);
 
 protected:
                             // image <--> texture
-                            void uploadAllPlanes(ADMImage *image);
-                            void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
                             bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);
                             bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
                             bool downloadTexturesDma(ADMImage *target, QGLFramebufferObject *fbo);
@@ -53,9 +74,6 @@ public:
                             ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
        virtual             ~ADM_coreVideoFilterQtGl();
 
-        
-                            static bool checkGlError(const char *op);
-protected:
 };
 // Hooks
 // Get our top widget

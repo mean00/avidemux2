@@ -50,11 +50,13 @@ static PFNGLBUFFERDATAARBPROC myBufferData=NULL;
 }
 
 
+                            
+//-------------                            
 /**
      \fn checkGlError
      \brief pop an error if an operation failed
 */
-bool ADM_coreVideoFilterQtGl::checkGlError(const char *op)
+bool ADM_coreQtGl::checkGlError(const char *op)
 {
     GLenum er=glGetError();
     if(!er) return true;
@@ -68,7 +70,7 @@ bool ADM_coreVideoFilterQtGl::checkGlError(const char *op)
 */
 void ADM_glExt::activeTexture  (GLenum texture)
 {
-    CHECK(myActiveTexture);
+      CHECK(myActiveTexture);
       myActiveTexture(texture);
 }
 void ADM_glExt::bindBuffer     (GLenum target, GLuint buffer)
@@ -147,34 +149,117 @@ QGLWidget *ADM_getGlWidget(void)
         
 }
 /**
+ * 
+ * @param parent
+ */
+ADM_coreQtGl::ADM_coreQtGl(QGLWidget *parent)
+{
+        widget=new QGLWidget(parent);
+        widget->makeCurrent();
+        firstRun=0;
+        ADM_info("Gl : Allocating context and frameBufferObjects\n");
+        context=QGLContext::currentContext();
+        ADM_assert(context);
+        glGenTextures(3,texName);
+        checkGlError("GenTex");
+        checkGlError("GenBuffer");
+        widget->doneCurrent();
+
+    
+}
+ADM_coreQtGl::~ADM_coreQtGl()
+{
+    glDeleteTextures(3,texName);
+    widget=NULL;
+    // MEMLEAK : CAUSE A CRASH
+    // Will be deleted when top level widget is cleared out by Qt
+    //if(widget) delete widget;       
+    
+
+}
+
+
+/**
+    \fn uploadTexture
+*/
+void ADM_coreQtGl::uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
+{
+        ADM_glExt::activeTexture(tex);  // Activate texture unit "tex"
+        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
+
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        if(!firstRun)
+        {
+            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
+                            image->GetPitch(plane),
+                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                            image->GetReadPtr(plane));
+        }else
+        {
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+                image->GetPitch(plane),
+                image->GetHeight(plane),
+                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                image->GetReadPtr(plane));
+        }
+}
+/**
+    \fn uploadTexture
+*/
+void ADM_coreQtGl::uploadAllPlanes(ADMImage *image)
+{
+          // Activate texture unit "tex"
+        for(int xplane=2;xplane>=0;xplane--)
+        {
+            ADM_glExt::activeTexture(GL_TEXTURE0+xplane);
+            ADM_PLANE plane=(ADM_PLANE)xplane;
+            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+                if(!firstRun)
+                {
+                    glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
+                                    image->GetPitch(plane),
+                                    image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                                    image->GetReadPtr(plane));
+                }else
+                {
+                    glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
+                        image->GetPitch(plane),
+                        image->GetHeight(plane),
+                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
+                        image->GetReadPtr(plane));
+                }
+        }
+}
+
+/**
     \fn ctor
 */
 ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf)
-:ADM_coreVideoFilter(previous,conf)
+:ADM_coreVideoFilter(previous,conf),ADM_coreQtGl(ADM_getGlWidget())
 {
     bufferARB=0;
-    context=NULL;
+    widget->makeCurrent();
+    if(ADM_glHasARB())
+            ADM_glExt::genBuffers(1,&bufferARB);        
     glProgramY=NULL;
     glProgramUV=NULL;
     fboY=NULL;
     fboUV=NULL;
-    widget=new QGLWidget(ADM_getGlWidget());
-    widget->makeCurrent();
-    firstRun=0;
-    ADM_info("Gl : Allocating context and frameBufferObjects\n");
-    context=QGLContext::currentContext();
-    ADM_assert(context);
     fboY = new QGLFramebufferObject(info.width,info.height);
     ADM_assert(fboY);
     fboUV = new QGLFramebufferObject(info.width/2,info.height/2);
     ADM_assert(fboUV);
-    glGenTextures(3,texName);
-    checkGlError("GenTex");
-    if(ADM_glHasARB())
-        ADM_glExt::genBuffers(1,&bufferARB);
-    checkGlError("GenBuffer");
     widget->doneCurrent();
-    // glTexture TODO
 }
 /**
     \fn resizeFBO
@@ -194,7 +279,7 @@ bool ADM_coreVideoFilterQtGl::resizeFBO(uint32_t w,uint32_t h)
 ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
 {
     ADM_info("Gl filter : Destroying..\n");
-    glDeleteTextures(3,texName);
+   
     if(glProgramY) delete glProgramY;
     glProgramY=NULL;
     if(glProgramUV) delete glProgramUV;
@@ -203,10 +288,6 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
     fboY=NULL;
     if(fboUV) delete fboUV;
     fboUV=NULL;
-    // MEMLEAK : CAUSE A CRASH
-    // Will be deleted when top level widget is cleared out by Qt
-    //if(widget) delete widget;       
-    widget=NULL;
     if(ADM_glHasARB())
         ADM_glExt::deleteBuffers(1,&bufferARB);
     bufferARB=0;
@@ -581,67 +662,6 @@ bool ADM_coreVideoFilterQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebuff
     }
     ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,0);
     return r;
-}
-/**
-    \fn uploadTexture
-*/
-void ADM_coreVideoFilterQtGl::uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum )
-{
-        ADM_glExt::activeTexture(tex);  // Activate texture unit "tex"
-        glBindTexture(GL_TEXTURE_RECTANGLE_NV, texNum); // Use texture "texNum"
-
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        if(!firstRun)
-        {
-            glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                            image->GetPitch(plane),
-                            image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                            image->GetReadPtr(plane));
-        }else
-        {
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                image->GetPitch(plane),
-                image->GetHeight(plane),
-                GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                image->GetReadPtr(plane));
-        }
-}
-/**
-    \fn uploadTexture
-*/
-void ADM_coreVideoFilterQtGl::uploadAllPlanes(ADMImage *image)
-{
-          // Activate texture unit "tex"
-        for(int xplane=2;xplane>=0;xplane--)
-        {
-            ADM_glExt::activeTexture(GL_TEXTURE0+xplane);
-            ADM_PLANE plane=(ADM_PLANE)xplane;
-            glBindTexture(GL_TEXTURE_RECTANGLE_NV, texName[xplane]); // Use tex engine "texNum"
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_RECTANGLE_NV, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
-                if(!firstRun)
-                {
-                    glTexImage2D(GL_TEXTURE_RECTANGLE_NV, 0, GL_LUMINANCE, 
-                                    image->GetPitch(plane),
-                                    image->GetHeight(plane), 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                                    image->GetReadPtr(plane));
-                }else
-                {
-                    glTexSubImage2D(GL_TEXTURE_RECTANGLE_NV, 0, 0, 0, 
-                        image->GetPitch(plane),
-                        image->GetHeight(plane),
-                        GL_LUMINANCE, GL_UNSIGNED_BYTE, 
-                        image->GetReadPtr(plane));
-                }
-        }
 }
 
 // EOF
