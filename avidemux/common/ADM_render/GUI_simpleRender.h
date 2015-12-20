@@ -35,6 +35,7 @@ class simpleRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newZoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return true;};
+                        const char *getName() {return "RGB";}
 };
 #endif
 

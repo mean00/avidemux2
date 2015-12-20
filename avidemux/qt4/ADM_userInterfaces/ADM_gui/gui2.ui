@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>671</width>
-    <height>681</height>
+    <width>766</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,8 +99,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>671</width>
-     <height>21</height>
+     <width>766</width>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -255,7 +255,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>6</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -278,8 +278,8 @@
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>12</width>
-             <height>0</height>
+             <width>13</width>
+             <height>53</height>
             </size>
            </property>
           </spacer>
@@ -293,11 +293,22 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="labelVideoDecoder">
-             <property name="text">
-              <string>XXXX</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="labelVideoDecoder">
+               <property name="text">
+                <string>XXXX</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="labelDisplay">
+               <property name="text">
+                <string>XXXX</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="QPushButton" name="pushButtonDecoderConf">
@@ -330,7 +341,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>12</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -368,7 +379,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>6</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -470,7 +481,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>12</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -486,7 +497,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>6</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -673,7 +684,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>12</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>
@@ -705,7 +716,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>6</height>
+           <height>13</height>
           </size>
          </property>
         </spacer>

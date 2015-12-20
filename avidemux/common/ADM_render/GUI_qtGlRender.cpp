@@ -45,8 +45,7 @@ static const char *yuvToRgb =
                             "1.1643,  -0.39173,  -0.81290,  0,"
                             "1.1643,   2.017,      0,       0,"
                             "0,        0,     0,       1);\n"
-    "const mat2 divby2=mat2( 0.5  ,0,"
-                            "0    ,0.5);\n"                            
+    "const vec2 divby2=vec2( 0.5  ,0.5);\n"
     "const vec4 offsetx=vec4(-0.07276875,-0.5,-0.5,0);\n"
     
 

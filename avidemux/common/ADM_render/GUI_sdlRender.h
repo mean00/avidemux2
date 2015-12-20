@@ -46,6 +46,7 @@ class sdlRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newZoom);
               virtual   bool usingUIRedraw(void);
               virtual   bool refresh(void) ;    
+                        const char *getName() {return "SDL2";}
   protected:
               void *impl;
             

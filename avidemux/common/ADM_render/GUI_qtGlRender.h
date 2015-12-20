@@ -76,6 +76,7 @@ class QtGlRender: public VideoRenderBase
                             glWidget=NULL;
                             return true;
                         }
+                        const char *getName() {return "QtGl";}
 };
 
 #endif

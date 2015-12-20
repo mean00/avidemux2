@@ -1283,6 +1283,16 @@ bool UI_setDecoderName(const char *name)
     return true;
 }
 /**
+ * \fn UI_setDisplayName
+ * \brief display current displayEngine name
+ */
+bool UI_setDisplayName(const char *name)
+{
+    WIDGET(labelDisplay)->setText(name);
+    return true;
+}
+
+/**
     \fn UI_hasOpengl
 */
 bool UI_hasOpenGl(void)

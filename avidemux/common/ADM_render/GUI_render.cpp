@@ -49,6 +49,7 @@ extern VideoRenderBase *RenderSpawnQtGl(void);
 #include "DIA_uiTypes.h"
 
 //_____________________________________
+extern bool UI_setDisplayName(const char *name);
 //_____________________________________
 static VideoRenderBase *renderer=NULL;
 static uint8_t         *accelSurface=NULL;
@@ -345,6 +346,7 @@ bool spawnRenderer(void)
             TRY_RENDERER(simpleRender,"simpleRenderer");
             ADM_assert(renderer);
         }
+        UI_setDisplayName(renderer->getName());
         return true;
 }
 #endif

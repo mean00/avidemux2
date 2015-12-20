@@ -33,6 +33,7 @@ class XvRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newzoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourselves
+                        const char *getName() {return "XVideo";}
 };
 #endif
 
