@@ -49,7 +49,6 @@ extern VideoRenderBase *RenderSpawnQtGl(void);
 #include "DIA_uiTypes.h"
 
 //_____________________________________
-extern bool UI_setDisplayName(const char *name);
 //_____________________________________
 static VideoRenderBase *renderer=NULL;
 static uint8_t         *accelSurface=NULL;
@@ -65,6 +64,16 @@ static const UI_FUNCTIONS_T *HookFunc=NULL;
 static bool  enableDraw=true;
 
 refreshSB refreshCallback=NULL;
+/**
+ * \fn renderGetName
+ * @param name
+ */
+void renderGetName(std::string &name)
+{
+    if(!renderer) name=std::string("None");
+    else name=std::string(renderer->getName());
+}
+
 /**
     \fn renderHookRefreshRequest
     \brief Hook the callback when a renderer requests a full redraw
@@ -291,7 +300,11 @@ bool spawnRenderer(void)
                 }
 #define TRY_RENDERER(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
 #define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
-
+/**
+ * 
+ * @param renderName
+ * @return 
+ */
 bool spawnRenderer(void)
 {
         int prefRenderer=MUI_getPreferredRender();
@@ -346,7 +359,6 @@ bool spawnRenderer(void)
             TRY_RENDERER(simpleRender,"simpleRenderer");
             ADM_assert(renderer);
         }
-        UI_setDisplayName(renderer->getName());
         return true;
 }
 #endif

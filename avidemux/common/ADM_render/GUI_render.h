@@ -22,6 +22,7 @@
 #include "ADM_image.h"
 typedef bool (*refreshSB)(void);
 #include "ADM_windowInfo.h"
+#include <string>
 
 typedef enum 
 {
@@ -49,6 +50,7 @@ ADM_RENDER6_EXPORT ADM_HW_IMAGE renderGetPreferedImageFormat(void);
 ADM_RENDER6_EXPORT uint8_t renderLock(void);
 ADM_RENDER6_EXPORT uint8_t renderUnlock(void);
 ADM_RENDER6_EXPORT bool    renderHookRefreshRequest(refreshSB cb);
+ADM_RENDER6_EXPORT void    renderGetName(std::string &name);
 ADM_RENDER6_EXPORT bool    renderClearInstance(void);
 
 

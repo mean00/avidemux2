@@ -115,6 +115,9 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h,renderZoom nzoom)
  // Install our hook, we will do it more than needed
  // but it does not really harm
   renderHookRefreshRequest(admPreview::updateImage);
+  std::string rendererName;
+  renderGetName(rendererName);
+  UI_setDisplayName(rendererName.c_str());
 }
 /**
     \fn getCurrentZoom
