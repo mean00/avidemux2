@@ -27,28 +27,30 @@
 class ADM_UIQT46_EXPORT ADM_coreVideoFilterQtGl:  public ADM_coreVideoFilter,public ADM_coreQtGl
 {
 protected:
-                            GLuint                bufferARB   ;
-                            QGLFramebufferObject *fboY;
-                            QGLFramebufferObject *fboUV;
-                            QGLShaderProgram     *glProgramY;
-                            QGLShaderProgram     *glProgramUV;
+        GLuint                bufferARB   ;
+        QGLFramebufferObject *fboY;
+        QGLFramebufferObject *fboUV;
+        QGLShaderProgram     *glProgramY;
+        QGLShaderProgram     *glProgramUV;
 
-                            bool                  resizeFBO(uint32_t w,uint32_t h);
-
+        bool                  resizeFBO(uint32_t w,uint32_t h);
 protected:
-                            // image <--> texture
-                            bool downloadTexture(ADMImage *target, ADM_PLANE plane,QGLFramebufferObject *fbo);
-                            bool downloadTextures(ADMImage *target, QGLFramebufferObject *fbo);
-                            bool downloadTexturesDma(ADMImage *target, QGLFramebufferObject *fbo);
-                            bool downloadTexturesQt(ADMImage *target, QGLFramebufferObject *fbo);
+        bool downloadTextures(ADMImage *image, QGLFramebufferObject *fbo)
+        {
+            return ADM_coreQtGl::downloadTextures(image, fbo,bufferARB);                                
+        }
+        bool downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo)
+        {
+             return ADM_coreQtGl::downloadTexturesDma(image, fbo,bufferARB);           
+        }
 
 public:
-                            ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
-       virtual             ~ADM_coreVideoFilterQtGl();
+          ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);
+  virtual ~ADM_coreVideoFilterQtGl();
 
 };
 // Hooks
 // Get our top widget
 ADM_UIQT46_EXPORT bool ADM_setGlWidget(QGLWidget *w);
-QGLWidget *ADM_getGlWidget(void);
+ADM_UIQT46_EXPORT QGLWidget *ADM_getGlWidget(void);
 

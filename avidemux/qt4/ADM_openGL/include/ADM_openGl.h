@@ -84,6 +84,11 @@ protected:
                             // image <--> texture
                             void uploadAllPlanes(ADMImage *image);
                             void uploadOnePlane(ADMImage *image, ADM_PLANE plane, GLuint tex,int texNum );
+                            
+                            bool downloadTexture(ADMImage *image, ADM_PLANE plane,  QGLFramebufferObject *fbo);
+                            bool downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferArb);
+                            bool downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *fbo,GLuint bufferArb);
+                            bool downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fbo);
 
 public:
                             ADM_coreQtGl(QGLWidget *parentWidget);
