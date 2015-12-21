@@ -137,8 +137,8 @@ bool ADM_glHasARB(void)
  */
 ADM_coreQtGl::ADM_coreQtGl(QGLWidget *parent)
 {
-        widget=new QGLWidget(parent);
-        widget->makeCurrent();
+        _parentQGL=parent;
+        _parentQGL->makeCurrent();
         firstRun=0;
         ADM_info("Gl : Allocating context and frameBufferObjects\n");
         _context=QGLContext::currentContext();
@@ -146,19 +146,17 @@ ADM_coreQtGl::ADM_coreQtGl(QGLWidget *parent)
         glGenTextures(3,texName);
         checkGlError("GenTex");
         checkGlError("GenBuffer");
-        widget->doneCurrent();
+        _parentQGL->doneCurrent();
 
     
 }
 ADM_coreQtGl::~ADM_coreQtGl()
 {
     glDeleteTextures(3,texName);
-    widget=NULL;
+    _parentQGL=NULL;
     // MEMLEAK : CAUSE A CRASH
     // Will be deleted when top level widget is cleared out by Qt
     //if(widget) delete widget;       
-    
-
 }
 
 

@@ -73,7 +73,7 @@ UNUSED_ARG(setup);
             // Default value
             params.angle=0;
         }
-        widget->makeCurrent();
+        _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(_context);
@@ -97,7 +97,7 @@ UNUSED_ARG(setup);
         glList=glGenLists(1);
         genQuad();
         fboY->release();
-        widget->doneCurrent();
+        _parentQGL->doneCurrent();
 
 }
 /**
@@ -123,7 +123,7 @@ bool rotateGl::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("glRotate : Cannot get frame\n");
         return false;
     }
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     glPushMatrix();
     // size is the last one...
     fboY->bind();
@@ -141,7 +141,7 @@ bool rotateGl::getNextFrame(uint32_t *fn,ADMImage *image)
     fboY->release();
     firstRun=false;
     glPopMatrix();
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
     image->copyInfo(original);
     return true;
 }
@@ -184,9 +184,9 @@ bool rotateGl::configure( void)
      if(diaFactoryRun(QT_TR_NOOP("glRotate"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 ADM_info("New angle : %d \n",params.angle);
-                widget->makeCurrent();
+                _parentQGL->makeCurrent();
                 genQuad();
-                widget->doneCurrent();
+                _parentQGL->doneCurrent();
                 return 1;
      }
     

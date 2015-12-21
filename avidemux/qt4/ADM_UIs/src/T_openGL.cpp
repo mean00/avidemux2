@@ -36,7 +36,7 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
 :ADM_coreVideoFilter(previous,conf),ADM_coreQtGl(ADM_getGlWidget())
 {
     bufferARB=0;
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     if(ADM_glHasARB())
             ADM_glExt::genBuffers(1,&bufferARB);        
     glProgramY=NULL;
@@ -47,17 +47,17 @@ ADM_coreVideoFilterQtGl::ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,C
     ADM_assert(fboY);
     fboUV = new QGLFramebufferObject(info.width/2,info.height/2);
     ADM_assert(fboUV);
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
 }
 /**
     \fn resizeFBO
 */
 bool ADM_coreVideoFilterQtGl::resizeFBO(uint32_t w,uint32_t h)
 {
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     if(fboY) delete fboY;
     fboY=new QGLFramebufferObject(w,h);
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
     checkGlError("resizeFBO");
     return true;
 }

@@ -76,7 +76,7 @@ DECLARE_VIDEO_FILTER(   openGlSample,   // Class
 openGlSample::openGlSample(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
-        widget->makeCurrent();
+        _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(_context);
@@ -99,7 +99,7 @@ UNUSED_ARG(setup);
         }
 
         fboY->release();
-        widget->doneCurrent();
+        _parentQGL->doneCurrent();
 
 }
 /**
@@ -123,7 +123,7 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     glPushMatrix();
     // size is the last one...
     fboY->bind();
@@ -146,7 +146,7 @@ bool openGlSample::getNextFrame(uint32_t *fn,ADMImage *image)
     fboY->release();
     firstRun=false;
     glPopMatrix();
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
     
     return true;
 }

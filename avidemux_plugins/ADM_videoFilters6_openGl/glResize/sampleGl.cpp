@@ -86,7 +86,7 @@ UNUSED_ARG(setup);
         info.width=configuration.width;
         info.height=configuration.height;
         resizeFBO(info.width,info.height);
-        widget->makeCurrent();
+        _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(_context);
@@ -109,7 +109,7 @@ UNUSED_ARG(setup);
         }
 
         fboY->release();
-        widget->doneCurrent();
+        _parentQGL->doneCurrent();
 }
         
 /**
@@ -134,7 +134,7 @@ bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("FlipFilter : Cannot get frame\n");
         return false;
     }
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     glPushMatrix();
     fboY->bind();
     checkGlError("bind");
@@ -148,7 +148,7 @@ bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
     firstRun=false;
     fboY->release();
     glPopMatrix();
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
     checkGlError("last");
     return true;
 }

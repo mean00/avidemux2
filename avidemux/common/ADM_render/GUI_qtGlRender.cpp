@@ -14,19 +14,6 @@
 
 #include <QPainter>
 
-#ifdef __APPLE__
-#    include <OpenGL/gl.h>
-#    include <OpenGL/glu.h>
-#    include <OpenGL/glext.h>
-#    define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
-#else
-#    ifdef _WIN32
-#        include <windows.h>
-#    endif
-#    include <GL/gl.h>
-#    include <GL/glu.h>
-#    include <GL/glext.h>
-#endif
 #define ADM_LEGACY_PROGGY // Dont clash with free/malloc etc..
 #include "ADM_default.h"
 #include "GUI_render.h"
@@ -64,8 +51,6 @@ static const char *yuvToRgb =
     "  gl_FragColor = outx;\n"
     "}\n";
 
-typedef void (*_glActiveTexture) (GLenum);
-static _glActiveTexture myGlActiveTexture=NULL;
 
 static bool initedOnced=false;
 static bool initedValue=false;
@@ -91,17 +76,8 @@ static bool checkGlError(const char *op)
 */
 static bool initOnce(QGLWidget *widget)
 {
-    if(initedOnced) return initedValue;
-
-    myGlActiveTexture = (_glActiveTexture)widget->context()->getProcAddress(QLatin1String("glActiveTexture"));
-    initedOnced=true;
-    if (!myGlActiveTexture)
-    {
-        initedValue = false;
-        ADM_info("[GL Render] Active Texture function not found!\n");
-        return false;
-    }
-    initedValue=true;
+    if(initedOnced) return initedValue;  
+    initedOnced=initedValue=true;
     ADM_info("[GL Render] OpenGL Vendor: %s\n", glGetString(GL_VENDOR));
     ADM_info("[GL Render] OpenGL Renderer: %s\n", glGetString(GL_RENDERER));
     ADM_info("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -300,11 +276,14 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     }
     glWidget = new QtGlAccelWidget((QWidget*)window->widget, w, h,this);
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
-    glWidget->context()->makeCurrent();
+    glWidget->makeCurrent();
 #endif
     bool status= QGLShaderProgram::hasOpenGLShaderPrograms(glWidget->context());
     if(false==status)
     {
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
+        glWidget->doneCurrent();
+#endif
         delete glWidget;
         glWidget=NULL;
         ADM_warning("[GL Render] Init failed : OpenGL Shader Program support\n");
@@ -313,6 +292,9 @@ bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     ADM_info("[GL Render] Setting widget display size to %d x %d\n",imageWidth,imageHeight);
     glWidget->setDisplaySize(displayWidth,displayHeight);
     glWidget->show();
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
+    glWidget->doneCurrent();
+#endif    
     return true;
 }
 /**

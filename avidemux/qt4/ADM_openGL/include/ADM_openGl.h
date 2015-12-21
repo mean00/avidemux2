@@ -76,7 +76,7 @@ class  ADM_coreQtGl
 {
 protected:
                             
-                            QGLWidget            *widget;
+                            QGLWidget            *_parentQGL;
                     const   QGLContext           *_context;
                             int                   firstRun;
                             GLuint                texName[3];

@@ -69,7 +69,7 @@ DECLARE_VIDEO_FILTER(   openGlDistort,   // Class
 openGlDistort::openGlDistort(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilterQtGl(in,setup)
 {
 UNUSED_ARG(setup);
-        widget->makeCurrent();
+        _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
         // vertex shader 
@@ -96,7 +96,7 @@ UNUSED_ARG(setup);
         glList=glGenLists(1);
         
         fboY->release();
-        widget->doneCurrent();
+        _parentQGL->doneCurrent();
 
 }
 /**
@@ -120,7 +120,7 @@ bool openGlDistort::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("Distort : Cannot get frame\n");
         return false;
     }
-    widget->makeCurrent();
+    _parentQGL->makeCurrent();
     glPushMatrix();
     
     // size is the last one...
@@ -147,7 +147,7 @@ bool openGlDistort::getNextFrame(uint32_t *fn,ADMImage *image)
     fboY->release();
     firstRun=false;
     glPopMatrix();
-    widget->doneCurrent();
+    _parentQGL->doneCurrent();
     
     return true;
 }
