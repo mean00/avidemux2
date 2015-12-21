@@ -267,7 +267,6 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ROOT_FOLDER}/avidemux_cli.exe
         ${File} ${ROOT_FOLDER}/libADM_render6_cli.dll
         ${File} ${ROOT_FOLDER}/libADM_UI_Cli6.dll
-        ${File} ${ROOT_FOLDER}/libADM_openGLQT56.dll
     ${MementoSectionEnd}
 
     ${MementoSection} Qt SecUiQt
@@ -278,6 +277,7 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ROOT_FOLDER}/avidemux_jobs.exe
         ${File} ${ROOT_FOLDER}/libADM_render6_QT5.dll
         ${File} ${ROOT_FOLDER}/libADM_UIQT56.dll
+        ${File} ${ROOT_FOLDER}/libADM_openGLQT56.dll
 
         SetOutPath $INSTDIR\qt5\i18n
         ${File} ${ROOT_FOLDER}/qt5/i18n/*.qm
