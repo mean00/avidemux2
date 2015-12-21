@@ -267,6 +267,7 @@ SectionGroup /e "User interfaces" SecGrpUI
         ${File} ${ROOT_FOLDER}/avidemux_cli.exe
         ${File} ${ROOT_FOLDER}/libADM_render6_cli.dll
         ${File} ${ROOT_FOLDER}/libADM_UI_Cli6.dll
+        ${File} ${ROOT_FOLDER}/libADM_openGLQT56.dll
     ${MementoSectionEnd}
 
     ${MementoSection} Qt SecUiQt
