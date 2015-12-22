@@ -107,7 +107,7 @@ static inline void glYUV444_MMX_Chroma(const uint8_t *src, uint8_t *dstY, uint8_
                     __asm__(
                         "1:\n"
                         "movq           (%0),%%mm0 \n"
-                        "pmov           %mm0,%%mm4 \n"
+                        "pmov           %%mm0,%%mm4 \n"
                         "pand           %%mm7,%%mm0\n"
                         "movq           8(%0),%%mm1 \n"
                         "pmov           %mm1,%%mm5 \n"
