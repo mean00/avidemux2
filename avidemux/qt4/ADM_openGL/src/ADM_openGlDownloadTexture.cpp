@@ -110,15 +110,15 @@ static inline void glYUV444_MMX_Chroma(const uint8_t *src, uint8_t *dstY, uint8_
                         "pmov           %%mm0,%%mm4 \n"
                         "pand           %%mm7,%%mm0\n"
                         "movq           8(%0),%%mm1 \n"
-                        "pmov           %mm1,%%mm5 \n"
+                        "pmov           %%mm1,%%mm5 \n"
                         "pand           %%mm7,%%mm1\n"
 
                         "movq           16(%0),%%mm2 \n"
-                        "pmov           %mm2,%%mm6 \n"
+                        "pmov           %%mm2,%%mm6 \n"
                         "pand           %%mm7,%%mm2\n"
                         "movq           24(%0),%%mm3 \n"
                         "packuswb       %%mm1,%%mm0\n"
-                        "pmov           %mm3,%%mm1 \n" // We have a copy in MM4/MM5/MM6/MM1
+                        "pmov           %%mm3,%%mm1 \n" // We have a copy in MM4/MM5/MM6/MM1
                         "pand           %%mm7,%%mm3\n"
 
                         // Pack luma
