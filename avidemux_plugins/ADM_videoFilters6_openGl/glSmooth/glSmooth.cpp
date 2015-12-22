@@ -21,7 +21,6 @@
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
-#include "T_openGL.h"
 #include "T_openGLFilter.h"
 #include "glSmooth.h"
 #include "ADM_clock.h"

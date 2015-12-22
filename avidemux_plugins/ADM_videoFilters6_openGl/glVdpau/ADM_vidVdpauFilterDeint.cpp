@@ -34,7 +34,6 @@ extern "C" {
 #include "DIA_factory.h"
 #include "ADM_vidMisc.h"
 
-#include "T_openGL.h"
 #include "T_openGLFilter.h"
 
 

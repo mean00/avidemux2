@@ -22,7 +22,6 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
-#include "T_openGL.h"
 #include "T_openGLFilter.h"
 #include "glYadif.h"
 #include "ADM_clock.h"

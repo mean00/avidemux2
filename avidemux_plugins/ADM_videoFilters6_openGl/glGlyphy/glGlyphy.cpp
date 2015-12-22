@@ -26,7 +26,6 @@ bench : 1280*720, null shader, 20 ms, 95% of it in download texture.
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
-#include "T_openGL.h"
 #include "T_openGLFilter.h"
 #include "glGlyphy.h"
 #include "ADM_clock.h"

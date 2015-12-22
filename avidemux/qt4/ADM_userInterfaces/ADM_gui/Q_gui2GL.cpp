@@ -16,7 +16,6 @@
 #ifdef USE_OPENGL
 
 #include "ADM_inttype.h"
-#include "T_openGL.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
