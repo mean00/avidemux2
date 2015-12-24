@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport']
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtDBus']
 
 #
 #
@@ -39,7 +39,7 @@ def getGlobalDeps(target):
     for line in cmd.stdout:
        line = re.sub('[ \t\r\n]*', '', line)
        line = re.sub('\(.*$', '', line)
-       if(not line.startswith('/opt/local') and not line.startswith('/usr/local/opt') and not line.startswith('/usr/local/Cellar/qt5/')):
+       if(not line.startswith('/opt/local') and not line.startswith('/usr/local/opt') and not line.startswith('/usr/local/Cellar/qt5/') and not line.startswith('@rpath')):
               continue
        if(":" in line):
               continue
@@ -56,7 +56,7 @@ def getGlobalDepsNoQt(target):
     for line in p:
        if not getShortName(line).startswith('Qt'):
           q.append(line)
-    return q;
+    return q
 #
 def getGlobalDepsQtOnly(target):
     q= []
@@ -64,7 +64,15 @@ def getGlobalDepsQtOnly(target):
     for line in p:
        if getShortName(line).startswith('Qt'):
           q.append(line)
-    return q;
+    return q
+#
+def getRpathDepsOnly(target):
+    q= []
+    p = getGlobalDeps(target)
+    for line in p:
+       if getShortName(line).startswith('@rpath'):
+          q.append(line)
+    return q
 #
 # Returns the list of libs as dependencies  to local installation folder (
 #
@@ -225,6 +233,10 @@ def changeQtLinkPathForOne(f):
         shortName=getShortName(d)
         shortName="@executable_path/../../Frameworks/"+shortName+".framework/Versions/5/"+shortName
         changeSymbol(f,d,shortName)
+    deps2=getRpathDepsOnly(f)
+    for d in deps2:
+        shortName2=re.sub('@rpath','@executable_path/../../Frameworks/')
+        changeSymbol(f,d,shortName2)
 
 #
 def myMkDir(target):
