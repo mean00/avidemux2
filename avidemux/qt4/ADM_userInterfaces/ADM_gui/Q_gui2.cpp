@@ -715,6 +715,7 @@ bool  	UI_reset(void)
     UI_setVideoCodec(0);
     UI_setAudioCodec(0);
     UI_setCurrentPreview(false);
+    return true;
 }
 
 /**
