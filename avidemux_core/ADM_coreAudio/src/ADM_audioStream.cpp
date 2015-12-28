@@ -206,6 +206,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_WMA:  return QT_TR_NOOP("WMA");
               case WAV_LPCM: return QT_TR_NOOP("LPCM");
               case WAV_AC3:  return QT_TR_NOOP("AC3");
+              case WAV_OPUS:  return QT_TR_NOOP("OPUS");
               case WAV_EAC3:  return QT_TR_NOOP("E-AC3");
               case WAV_OGG_VORBIS: return QT_TR_NOOP("Ogg Vorbis");
               case WAV_MP4: return QT_TR_NOOP("MP4");
@@ -217,6 +218,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_IMAADPCM: return QT_TR_NOOP("IMA ADPCM");
               case WAV_8BITS_UNSIGNED:return QT_TR_NOOP("8-bit PCM");
       }
+      ADM_warning("Unkown audio codec :%d (0x%x)\n",codec,codec);
       return QT_TR_NOOP("Unknown codec");
 }
 
