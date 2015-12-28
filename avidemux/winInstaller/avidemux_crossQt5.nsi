@@ -299,6 +299,14 @@ SectionGroup "Audio Decoders" SecGrpAudioDecoder
 		#SetOutPath $INSTDIR
 		#${File} ${ROOT_FOLDER}/libfaad2.dll
 	${MementoSectionEnd}
+	${MementoSection} "Opus (libOpus)" SecAudDecOpus
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\audioDecoder
+		${File} ${ROOT_FOLDER}/plugins/audioDecoder/libADM_ad_opus.dll
+		SetOutPath $INSTDIR
+		${File} ${ROOT_FOLDER}/libopus-0.dll
+	${MementoSectionEnd}
 	${MementoSection} "AAC, AC-3, ADPCM IMA AMV, DTS, E-AC-3, MP2, MP3, Nellymoser, QDesign, WMA (libavcodec)" SecAudDecAvcodec
 		SectionIn 1 2
 		SetOverwrite on
