@@ -24,7 +24,14 @@
 #include "DIA_working.h"
 #include "ADM_codecType.h"
 #include "ADM_videoInfoExtractor.h"
+#include "ADM_vidMisc.h"
 #define VIDEO _tracks[0]
+
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 /**
     \fn videoIndexer
     \brief index the video Track
@@ -184,7 +191,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
   ix.pos=where;
   ix.size=size;
-  ix.flags=AVI_KEY_FRAME;
+  ix.flags=0;
   ix.Dts=timecodeMS*_timeBase;
   ix.Pts=timecodeMS*_timeBase;
    uint32_t rpt=_tracks[0].headerRepeatSize;
@@ -374,6 +381,7 @@ uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
        ADM_ebml_file trackPos(&cue,len);
        uint64_t tid=0;
        uint64_t cluster_position=0;
+       uint64_t cue_position=0;
        while(!trackPos.finished())
        {
          trackPos.readElemId(&id,&len);
@@ -381,6 +389,7 @@ uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
          {
            case MKV_CUE_TRACK: tid=trackPos.readUnsignedInt(len);break;
            case MKV_CUE_CLUSTER_POSITION: cluster_position=trackPos.readUnsignedInt(len);break;
+           case MKV_CUE_RELATIVE_POSITION: cue_position=trackPos.readUnsignedInt(len);break;
            default:
                  ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
                  printf("[MKV] in cluster position found tag %s (0x%"PRIx64")\n",ss,id);
@@ -388,8 +397,11 @@ uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
                  continue;
          }
        }
-       printf("Track %"PRIx64" Position 0x%"PRIx64" time %"PRIu64" final pos:%"PRIx64" \n",tid,cluster_position,time,
-             cluster_position+segmentPos );
+       aprintf("Track %"PRIx64" segmentPos=%"PRIx64" Cluster Position 0x%"PRIx64" Cue position 0x%"PRIx64" Absolute=%"PRIx64" time %"PRIu64"\n",
+             tid,segmentPos,cluster_position,cue_position,cue_position+cluster_position+segmentPos,time);  
+              
+       if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
+            _cuePosition.append(cue_position+cluster_position+segmentPos);
      }
    }
    printf("[MKV] Cues updated\n");
@@ -470,5 +482,62 @@ tryAgain:
    delete work;
    ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
    return 1;
+}
+/**
+ * \fn updateFlagsWithCue
+ * The position is slightly before the actual image
+ * i.e.
+ * position
+ *     timecode
+ *     length
+ *     Actual image <= We point here
+ * Typically the difference is ~ 16 bytes, so we accept anything between 0 and32
+ * @return 
+ */
+bool  mkvHeader::updateFlagsWithCue(void)
+{
+    int nbImages=_tracks[0].index.size();
+    int nbCues=_cuePosition.size();
+    
+    int lastImage=0;
+    ADM_info("Updating Flags with Cue\n");
+    for(int curCue=0;curCue<nbCues;curCue++)
+    {
+        uint64_t pos=_cuePosition[curCue];
+        for(int curImage=lastImage;curImage<nbImages;curImage++)
+        {
+            uint64_t img=_tracks[0].index[curImage].pos;
+            if( pos<img && (pos+0x20)>img)
+            {
+                // match!
+                _tracks[0].index[curImage].flags |=AVI_KEY_FRAME;
+                aprintf("Mapped cue entries %d to image %d (size=%d)\n",curCue,curImage,_tracks[0].index[curImage].size);
+                lastImage=curImage+1;
+                break;
+            }
+            if(img>pos+0x100)
+              {
+                ADM_warning("Cue image not found for image %d at pos 0x%llx\n",curCue,pos);
+              }
+        }
+    }
+    ADM_info("Updating Flags with Cue done\n");
+    return true;   
+}
+/**
+ * 
+ * @param mx
+ * @return 
+ */
+bool mkvHeader::dumpVideoIndex(int mx)
+{
+  int n=_tracks[0].index.size();
+  if(n>mx) n=mx;
+  for(int i=0;i<n;i++)
+  {
+      ADM_info("[%d] Position 0x%llx, size=%d, time=%s, Flags=%x\n",i,
+               _tracks[0].index[i].pos,_tracks[0].index[i].size,ADM_us2plain(_tracks[0].index[i].Pts),_tracks[0].index[i].flags);
+  }
+  return true;
 }
 //EOF

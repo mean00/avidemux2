@@ -152,6 +152,7 @@ class mkvHeader         :public vidHeader
     mkvTrak                 _tracks[ADM_MKV_MAX_TRACKS+1];
 
     BVector <mkvIndex    >   _clusters;
+    BVector <uint64_t>       _cuePosition;
 
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;
@@ -179,7 +180,8 @@ class mkvHeader         :public vidHeader
     bool                    delayTrack(int index,mkvTrak *track, uint64_t value);
     
     bool                    ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent);
-
+    bool                    updateFlagsWithCue(void); // in case we can trust it, update KEY_FRAME_FLAGS
+    bool                    dumpVideoIndex(int maxIndex);
   public:
 
 

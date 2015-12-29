@@ -17,7 +17,9 @@
 #include "ADM_default.h"
 #include "ADM_Video.h"
 #include "ADM_mkv.h"
+#include "ADM_codecType.h"
 #include "mkv_tags.h"
+
 /**
     \fn open
     \brief Try to open the mkv file given as parameter
@@ -165,7 +167,14 @@ uint8_t mkvHeader::open(const char *name)
           duration/=1000;
           uint32_t duration32=(uint32_t)duration;
           printf("[MKV] Video Track duration for %u ms\n",duration32);
-          // Useless.....readCue(&ebml);
+          // Useless.....
+          readCue(&ebml);
+          if(!isH264Compatible(_videostream.fccHandler) && !isMpeg4Compatible(_videostream.fccHandler) && !isMpeg12Compatible(_videostream.fccHandler))
+          {
+               updateFlagsWithCue();
+          }
+          _cuePosition.clear();
+
           for(int i=0;i<_nbAudioTrack;i++)
           {
             rescaleTrack(&(_tracks[1+i]),duration32);
@@ -184,9 +193,8 @@ uint8_t mkvHeader::open(const char *name)
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
         _audioStreams[i]->setLanguage(_tracks[1+i].language);
     }
-  
+  //dumpVideoIndex(200);
   printf("[MKV]Matroska successfully read\n");
-
   return 1;
 }
 /**
