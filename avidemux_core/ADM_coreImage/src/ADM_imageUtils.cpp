@@ -60,12 +60,12 @@ int a1,a2;
 
 
 #ifdef GCC_2_95_X
-         __asm__(
+         __asm__ volatile(
                          "pxor %mm7,%mm7"
                 ::
                  );
 #else
-         __asm__(
+         __asm__ volatile(
                          "pxor %%mm7,%%mm7"
                 ::
                  );
@@ -73,7 +73,7 @@ int a1,a2;
 
           for(int y=0;y<ww;y++)
           {
-                __asm__(
+                __asm__ volatile(
                         "movd           (%0),%%mm0 \n"
                         "movd           (%1),%%mm1 \n"
                         "punpcklbw      %%mm7,%%mm0 \n"
@@ -84,12 +84,13 @@ int a1,a2;
                         "movd           %%mm0,(%2) \n"
 
                 : : "r" (s1),"r" (s2),"r"(d1)
+                :"memory"
                 );
                         s1+=4;
                         s2+=4;
                         d1+=4;
                 }
-        __asm__(
+        __asm__ volatile(
                         "emms\n"
                 ::
                 );
@@ -158,7 +159,7 @@ uint8_t *s1,*s2,*d1;
         rr=width&3;
 
 
-         __asm__(
+         __asm__ volatile(
                          "pxor %%mm7,%%mm7"
                 ::
                  );
@@ -175,7 +176,7 @@ uint8_t *s1,*s2,*d1;
 
                 for(int x=0;x<ww;x++)
                 {
-                    __asm__(
+                    __asm__ volatile(
                             "movd           (%0),%%mm0 \n"
                             "movd           (%1),%%mm1 \n"
                             "punpcklbw      %%mm7,%%mm0 \n"
@@ -186,6 +187,7 @@ uint8_t *s1,*s2,*d1;
                             "movd           %%mm0,(%2) \n"
 
                     : : "r" (s1),"r" (s2),"r"(d1)
+                    :"memory"
                     );
                     s1+=4;
                     s2+=4;
@@ -195,7 +197,7 @@ uint8_t *s1,*s2,*d1;
                 src2+=stride2;
                 target+=stride;
            }
-        __asm__(
+        __asm__ volatile(
                         "emms\n"
                 ::
                 );
@@ -229,7 +231,7 @@ uint8_t *s1,*s2,*d1;
                 }
 
                     
-                __asm__(
+                __asm__ volatile(
                         "1: \n"
                         "movq           (%0),%%mm0  \n"
                         "movq           (%1),%%mm1  \n"
@@ -242,12 +244,13 @@ uint8_t *s1,*s2,*d1;
                         "jnz             1b        \n"
 
                 : : "r" (s1),"r" (s2),"r"(d1),"r"(count)
+                :"memory"
                 );
                 src1+=stride1;
                 src2+=stride2;
                 target+=stride;
            }
-        __asm__(
+        __asm__ volatile(
                         "emms\n"
                 ::
                 );
@@ -320,14 +323,14 @@ uint32_t result=0;
         rr=l&3;
 
 #ifdef GCC_2_95_X
-         __asm__(
+         __asm__ volatile(
                          "pxor %mm7,%mm7\n"
                          "pxor %mm3,%mm3\n"
                          "movq "Mangle(noise64)", %mm6\n"
                 :: 
                  );
 #else
-         __asm__(
+         __asm__ volatile(
                          "pxor %%mm7,%%mm7\n"
                          "pxor %%mm3,%%mm3\n"
                          "movq "Mangle(noise64)", %%mm6\n"
@@ -337,7 +340,7 @@ uint32_t result=0;
 
           for(int y=0;y<ll;y++)
           {
-                __asm__(
+                __asm__ volatile(
                         "movd           (%0),  %%mm0 \n"
                         "movd           (%1),  %%mm1 \n"
                         "punpcklbw      %%mm7, %%mm0 \n"
@@ -371,6 +374,7 @@ uint32_t result=0;
                         "paddw          %%mm0, %%mm3 \n" /* PADDQ is SSE2 */
 
                 : : "r" (s1),"r" (s2)
+                :"memory"
                 );
                         s1+=4;
                         s2+=4;
@@ -378,7 +382,7 @@ uint32_t result=0;
          }
         // Pack result
 #if 1        
-                __asm__(
+                __asm__ volatile(
                        
                         "movd           %%mm3,(%0)\n"
                         "emms\n"
@@ -449,19 +453,19 @@ int ll,rr;
         d1=dst;
       
 #ifdef GCC_2_95_X
-        __asm__(
+        __asm__ volatile(
                          "pxor %mm7,%mm7"
                 ::
                  );
 #else
-        __asm__(
+        __asm__ volatile(
                          "pxor %%mm7,%%mm7"
                 ::
                  );
 #endif
         for(int x=0;x<ll;x++)
                 {
-                        __asm__(
+                        __asm__ volatile(
                         "movd           (%0),%%mm0 \n"
                         "movd           (%1),%%mm1 \n"
                        
@@ -476,12 +480,13 @@ int ll,rr;
                         "packuswb       %%mm0,  %%mm0\n"
                         "movd           %%mm0,(%2) \n"                       
                         :: "r"(s1),"r"(s2),"r"(d1)
+                        :"memory"
                         );
                         s1+=4;
                         s2+=4;
                         d1+=4;
                 }
-                 __asm__(                       
+                 __asm__ volatile(                       
                         "emms\n"
                 :: 
                 );
@@ -594,8 +599,8 @@ static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
 {
 static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
-    __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
-    __asm__(" pxor %%mm6,%%mm6\n" ::);
+    __asm__ volatile(" movq "Mangle(mask)", %%mm7\n" ::);
+    __asm__ volatile(" pxor %%mm6,%%mm6\n" ::);
     
     int step=w/8;
     int left=w-8*step;
@@ -608,7 +613,7 @@ static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
         xdst=dst;
         for(int x=0;x<step;x++)
         {
-                        __asm__(
+                        __asm__ volatile(
                         "movq           (%0),%%mm0 \n"
                         "pand           %%mm7,%%mm0\n"
                         "movq           8(%0),%%mm1 \n"
@@ -629,6 +634,7 @@ static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
                         
                         
                         :: "r"(xsrc),"r"(xdst)
+                        :"memory"
                         );
                         xsrc+=32;
                         xdst+=8;
@@ -638,7 +644,7 @@ static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
         dst+=s;
         src+=4*w;
     }
-     __asm__( "emms\n"::  );
+     __asm__ volatile( "emms\n"::  );
 
 }
 #endif
@@ -659,7 +665,7 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
         xdst2=dst2;
         for(int x=0;x<step;x++)
         {
-                        __asm__(
+                        __asm__ volatile(
                         "movq           (%0),%%mm0 \n"
                         "movq           8(%0),%%mm1 \n"
                         "movq           16(%0),%%mm2 \n"
@@ -688,6 +694,7 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
 
                         "movd           %%mm4,(%2) \n"                       
                         :: "r"(xsrc),"r"(xdst),"r"(xdst2)
+                        :"memory"
                         );
                         xsrc+=32;
                         xdst+=4;
@@ -702,7 +709,7 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
         dst2+=s2;
         src+=4*w*4;
     }
-     __asm__( "emms\n"::  );
+     __asm__ volatile( "emms\n"::  );
 
 }
 #endif
@@ -748,7 +755,7 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                 srcu+=upitch;
                 srcv+=vpitch;   
                 x=mod8;
-                      __asm__(
+                      __asm__ volatile(
                         "1:"
                         "movq           (%1),%%mm0   \n" // U
                         "movq           (%2),%%mm1   \n" // V
@@ -766,6 +773,7 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                         "sub            $1,%3\n"
                         "jnz            1b\n"
                         :: "r"(ddst),"r"(u),"r"(v),"r"(x)
+                        : "memory"
                         );
                 if(leftOver)
                 {
@@ -781,7 +789,7 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                     }
                 }
         }
-        __asm__(
+        __asm__ volatile(
                 "emms\n"
                 ::
             );
@@ -804,7 +812,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                 dstv+=vpitch;                        
 
                         x=mod16;
-                      __asm__(
+                      __asm__ volatile(
                         "1:"
                         "movq           (%0),%%mm0   \n"
                         "movq           8(%0),%%mm1  \n"                              
@@ -834,6 +842,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                         "sub            $1,%3\n"
                         "jnz            1b\n"
                         :: "r"(ssrc),"r"(u),"r"(v),"r"(x)
+                        : "memory"
                         );
                 if(leftOver)
                 {
@@ -846,7 +855,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                     }
                 }
         }
-        __asm__(
+        __asm__ volatile(
                 "emms\n"
                 ::
             );
