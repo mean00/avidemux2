@@ -18,6 +18,12 @@
 #include "ADM_bitstream.h"
 #include "DIA_coreToolkit.h"
 
+
+#define ADM_CLEAR_MM7()         __asm__ volatile( "pxor %%mm7,%%mm7"      ::    )
+#define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
+
+
+
 static uint8_t tinyAverage(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
 {
 
@@ -58,19 +64,7 @@ int a1,a2;
         ww=l>>2;
         rr=l&3;
 
-
-#ifdef GCC_2_95_X
-         __asm__ volatile(
-                         "pxor %mm7,%mm7"
-                ::
-                 );
-#else
-         __asm__ volatile(
-                         "pxor %%mm7,%%mm7"
-                ::
-                 );
-#endif
-
+        ADM_CLEAR_MM7();
           for(int y=0;y<ww;y++)
           {
                 __asm__ volatile(
@@ -90,10 +84,7 @@ int a1,a2;
                         s2+=4;
                         d1+=4;
                 }
-        __asm__ volatile(
-                        "emms\n"
-                ::
-                );
+       ADM_EMMS();
         if(rr) tinyAverage(d1, s1, s2,rr);
         return 1;
 }
@@ -159,10 +150,7 @@ uint8_t *s1,*s2,*d1;
         rr=width&3;
 
 
-         __asm__ volatile(
-                         "pxor %%mm7,%%mm7"
-                ::
-                 );
+         ADM_CLEAR_MM7();
 
           for(int y=0;y<height;y++)
           {
@@ -197,11 +185,7 @@ uint8_t *s1,*s2,*d1;
                 src2+=stride2;
                 target+=stride;
            }
-        __asm__ volatile(
-                        "emms\n"
-                ::
-                );
-
+        ADM_EMMS();
         return true;
 }
 /**
@@ -232,6 +216,7 @@ uint8_t *s1,*s2,*d1;
 
                     
                 __asm__ volatile(
+                        
                         "1: \n"
                         "movq           (%0),%%mm0  \n"
                         "movq           (%1),%%mm1  \n"
@@ -241,7 +226,8 @@ uint8_t *s1,*s2,*d1;
                         "add           $8,%1      \n"
                         "add           $8,%2      \n"
                         "sub           $1,%3      \n"
-                        "jnz             1b        \n"
+                        "jnz           1b        \n"
+                        
 
                 : : "r" (s1),"r" (s2),"r"(d1),"r"(count)
                 :"memory"
@@ -250,11 +236,7 @@ uint8_t *s1,*s2,*d1;
                 src2+=stride2;
                 target+=stride;
            }
-        __asm__ volatile(
-                        "emms\n"
-                ::
-                );
-
+        ADM_EMMS();
         return true;
 }
 
@@ -322,21 +304,12 @@ uint32_t result=0;
         ll=l>>2;
         rr=l&3;
 
-#ifdef GCC_2_95_X
-         __asm__ volatile(
-                         "pxor %mm7,%mm7\n"
-                         "pxor %mm3,%mm3\n"
-                         "movq "Mangle(noise64)", %mm6\n"
-                :: 
-                 );
-#else
          __asm__ volatile(
                          "pxor %%mm7,%%mm7\n"
                          "pxor %%mm3,%%mm3\n"
                          "movq "Mangle(noise64)", %%mm6\n"
-                :: 
+                :::  "memory"
                  );
-#endif
 
           for(int y=0;y<ll;y++)
           {
@@ -452,19 +425,9 @@ int ll,rr;
         
         d1=dst;
       
-#ifdef GCC_2_95_X
-        __asm__ volatile(
-                         "pxor %mm7,%mm7"
-                ::
-                 );
-#else
-        __asm__ volatile(
-                         "pxor %%mm7,%%mm7"
-                ::
-                 );
-#endif
+        ADM_CLEAR_MM7();
         for(int x=0;x<ll;x++)
-                {
+        {
                         __asm__ volatile(
                         "movd           (%0),%%mm0 \n"
                         "movd           (%1),%%mm1 \n"
@@ -485,11 +448,8 @@ int ll,rr;
                         s1+=4;
                         s2+=4;
                         d1+=4;
-                }
-                 __asm__ volatile(                       
-                        "emms\n"
-                :: 
-                );
+        }
+        ADM_EMMS();
         if(rr) tinySubstractMMX(d1, s1, s2,rr);
         return 1;
 }
@@ -644,7 +604,7 @@ static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
         dst+=s;
         src+=4*w;
     }
-     __asm__ volatile( "emms\n"::  );
+     ADM_EMMS();
 
 }
 #endif
@@ -709,7 +669,7 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
         dst2+=s2;
         src+=4*w*4;
     }
-     __asm__ volatile( "emms\n"::  );
+     ADM_EMMS();
 
 }
 #endif
@@ -730,7 +690,7 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
 
 #ifdef ADM_CPU_X86
 /**
- * \fn nv12_to_uv_mmx
+ * \fn uv_to_nv12_mmx
  * \brief unpack nv12 interleaved uv into planar uv
  * @param w
  * @param h
@@ -754,25 +714,27 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                 dst+=strideUV;
                 srcu+=upitch;
                 srcv+=vpitch;   
-                x=mod8;
                       __asm__ volatile(
-                        "1:"
+                        "mov            (%3),%4      \n" // local copy
+                        "1:\n"
                         "movq           (%1),%%mm0   \n" // U
                         "movq           (%2),%%mm1   \n" // V
                         "movq           %%mm0,%%mm2  \n"                       
                         "movq           %%mm1,%%mm3  \n"   
 
-                        "punpcklbw      %%mm1,%%mm0 \n"
-                        "punpckhbw      %%mm3,%%mm2 \n"
-                        "movq           %%mm0,(%0)  \n"                       
+                        "punpcklbw      %%mm1,%%mm0  \n"
+                        "punpckhbw      %%mm3,%%mm2  \n"
+                        "movq           %%mm0,(%0)   \n"                       
                         "movq           %%mm2,8(%0)  \n"     
                         
-                        "add            $16,%0\n"
-                        "add            $8,%1\n"
-                        "add            $8,%2\n"
-                        "sub            $1,%3\n"
-                        "jnz            1b\n"
-                        :: "r"(ddst),"r"(u),"r"(v),"r"(x)
+                        "add            $16,%0       \n"
+                        "add            $8,%1        \n"
+                        "add            $8,%2        \n"
+                        "sub            $1,%3        \n"
+                        "jnz            1b           \n"
+                        
+                        :
+                        : "r"(ddst),"r"(u),"r"(v),"r"(x),"r"(mod8)
                         : "memory"
                         );
                 if(leftOver)
@@ -789,14 +751,21 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                     }
                 }
         }
-        __asm__ volatile(
-                "emms\n"
-                ::
-            );
+        ADM_EMMS();
         return ;
 }
 
-
+/**
+ * \fn nv12_to_uv_mmx
+ * @param w
+ * @param h
+ * @param upitch
+ * @param vpitch
+ * @param dstu
+ * @param dstv
+ * @param srcPitch
+ * @param src
+ */
 static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
 {
         int mod16=w>>3;
@@ -811,39 +780,43 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                 dstu+=upitch;
                 dstv+=vpitch;                        
 
-                        x=mod16;
-                      __asm__ volatile(
-                        "1:"
-                        "movq           (%0),%%mm0   \n"
-                        "movq           8(%0),%%mm1  \n"                              
-                        "movq           %%mm0,%%mm2  \n"                       
-                        "movq           %%mm1,%%mm3  \n"   
+                __asm__ volatile(
 
-                        "psllw          $8,%%mm0    \n"                              
-                        "psrlw          $8,%%mm0    \n"    
 
-                        "psllw          $8,%%mm1    \n"                              
-                        "psrlw          $8,%%mm1    \n"    
+                  "1:\n"
+                  "mov            (%3),%4      \n" // local copy
+                  "movq           (%0),%%mm0   \n"
+                  "movq           8(%0),%%mm1  \n"                              
+                  "movq           %%mm0,%%mm2  \n"                       
+                  "movq           %%mm1,%%mm3  \n"   
 
-                              
-                        "packuswb       %%mm1,%%mm0 \n"
-                        
-                        "psrlw          $8,%%mm2    \n"                              
-                        "psrlw          $8,%%mm3    \n"    
-                              
-                        "packuswb       %%mm3,%%mm2 \n"
-                        
-                        "movq           %%mm0,(%2)  \n"                       
-                        "movq           %%mm2,(%1)  \n"     
-                        
-                        "add            $16,%0\n"
-                        "add            $8,%1\n"
-                        "add            $8,%2\n"
-                        "sub            $1,%3\n"
-                        "jnz            1b\n"
-                        :: "r"(ssrc),"r"(u),"r"(v),"r"(x)
-                        : "memory"
-                        );
+                  "psllw          $8,%%mm0    \n"                              
+                  "psrlw          $8,%%mm0    \n"    
+
+                  "psllw          $8,%%mm1    \n"                              
+                  "psrlw          $8,%%mm1    \n"    
+
+
+                  "packuswb       %%mm1,%%mm0 \n"
+
+                  "psrlw          $8,%%mm2    \n"                              
+                  "psrlw          $8,%%mm3    \n"    
+
+                  "packuswb       %%mm3,%%mm2 \n"
+
+                  "movq           %%mm0,(%2)  \n"                       
+                  "movq           %%mm2,(%1)  \n"     
+
+                  "add            $16,%0\n"
+                  "add            $8,%1\n"
+                  "add            $8,%2\n"
+                  "sub            $1,%3\n"
+                  "jnz            1b\n"
+
+                  :
+                  : "r"(ssrc),"r"(u),"r"(v),"r"(x),"r"(mod16)
+                  : "memory"
+                  );
                 if(leftOver)
                 {
                     x=mod16*8;
@@ -855,11 +828,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                     }
                 }
         }
-        __asm__ volatile(
-                "emms\n"
-                ::
-            );
-
+        ADM_EMMS();
 }
 
 #endif
