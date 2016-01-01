@@ -162,9 +162,11 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
   
   image->Pts=next->Pts;
   
+  uint64_t absPts=next->Pts+getAbsoluteStartTime();
+  
   bool out_of_scope=false;
-  if(next->Pts<param.startFade*1000LL) out_of_scope=true;
-  if(next->Pts>param.endFade*1000LL)   out_of_scope=true;
+  if(absPts<param.startFade*1000LL) out_of_scope=true;
+  if(absPts>param.endFade*1000LL)   out_of_scope=true;
   
   
   if( out_of_scope)
@@ -183,7 +185,7 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
       in=1;
   }else
   {
-        in=next->Pts-param.startFade*1000LL;
+        in=absPts-param.startFade*1000LL;
   }
     in=in/scope;
     in*=255;
