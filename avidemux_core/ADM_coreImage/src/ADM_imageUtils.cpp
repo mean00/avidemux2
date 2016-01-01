@@ -22,7 +22,7 @@
 #define ADM_CLEAR_MM7()         __asm__ volatile( "pxor %%mm7,%%mm7"      ::    )
 #define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
 
-
+//#undef ADM_CPU_X86
 
 static uint8_t tinyAverage(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
 {
@@ -701,7 +701,7 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
  * @param srcPitch
  * @param src
  */
-static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, uint8_t *srcv,int strideUV, uint8_t *dst)
+static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcv, uint8_t *srcu,int strideUV, uint8_t *dst)
 {
         int mod8=w>>3;
         int leftOver=w&7;
@@ -766,27 +766,15 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
  * @param srcPitch
  * @param src
  */
-static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
+
+static void nv12_to_u_v_mmx_one_line(int w8, uint8_t *dstu, uint8_t *dstv, uint8_t *src)
 {
-        int mod16=w>>3;
-        int leftOver=w&7;
-        int x;
-        for(int y=0;y<h;y++)
-        {
-                uint8_t *ssrc=src;                
-                uint8_t *u=dstu;
-                uint8_t *v=dstv;
-                src+=srcPitch;
-                dstu+=upitch;
-                dstv+=vpitch;                        
-
-                __asm__ volatile(
+      __asm__ volatile(
 
 
-                  "1:\n"
-                  "mov            %4,%3      \n" // local copy
-                  "movq           (%0),%%mm0   \n"
-                  "movq           8(%0),%%mm1  \n"                              
+                  "1:\n"                  
+                  "movq           (%4),%%mm0   \n"
+                  "movq           8(%4),%%mm1  \n"                              
                   "movq           %%mm0,%%mm2  \n"                       
                   "movq           %%mm1,%%mm3  \n"   
 
@@ -804,23 +792,40 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
 
                   "packuswb       %%mm3,%%mm2 \n"
 
-                  "movq           %%mm0,(%2)  \n"                       
-                  "movq           %%mm2,(%1)  \n"     
+                  "movq           %%mm0,(%6)  \n"                       
+                  "movq           %%mm2,(%5)  \n"     
 
-                  "add            $16,%0\n"
-                  "add            $8,%1\n"
-                  "add            $8,%2\n"
-                  "sub            $1,%3\n"
+                  "add            $16,%4\n"
+                  "add            $8,%5\n"
+                  "add            $8,%6\n"
+                  "sub            $1,%7\n"
                   "jnz            1b\n"
 
-                  :
-                  : "r"(ssrc),"r"(u),"r"(v),"r"(x),"r"(mod16)
+                  : "=r"(src),"=r"(dstu),"=r"(dstv),"=r"(w8) //00..3
+                  : "0"(src),"1"(dstu),"2"(dstv),"3"(w8)     //4..7
                   : "memory"
                   );
+}
+
+static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
+{
+        int mod8=w>>3;
+        int leftOver=w&7;
+        int x;
+        for(int y=0;y<h;y++)
+        {
+                uint8_t *ssrc=src;                
+                uint8_t *u=dstu;
+                uint8_t *v=dstv;
+                src+=srcPitch;
+                dstu+=upitch;
+                dstv+=vpitch;                        
+
+                nv12_to_u_v_mmx_one_line(mod8,u,v,ssrc);
                 if(leftOver)
                 {
-                    x=mod16*8;
-                    for(;x<w;x++)
+                    int c=mod8*8;
+                    for(;c<w;c++)
                     {
                         *u++=ssrc[1];
                         *v++=ssrc[0];
@@ -883,7 +888,7 @@ bool    ADMImage::convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, 
         h/=2;
         w/=2;
         
-        #ifdef ADM_CPU_X86
+        #if defined(ADM_CPU_X86) && 1
                 if(CpuCaps::hasMMX())
                     nv12_to_uv_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),strideUV,uvData);
                 else
@@ -936,8 +941,8 @@ static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uin
 
                 for(int x=0;x<w;x++)
                 {
-                    d[0]=*u++;
-                    d[1]=*v++;
+                    d[0]=*v++;
+                    d[1]=*u++;
                     d+=2;
                 }
         }
@@ -952,7 +957,7 @@ bool    ADMImage::interleaveUV(uint8_t *target, int stride)
 {    
         int w=_width/2;
         int h=_height/2;    
-#if defined(ADM_CPU_X86) && 0
+#if defined(ADM_CPU_X86) && 1
         if(CpuCaps::hasMMX())
             uv_to_nv12_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),stride,target);
         else
@@ -973,7 +978,7 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
     uint8_t *dst=this->GetWritePtr(PLANAR_Y);
     uint8_t *src=from;
 
-    #ifdef ADM_CPU_X86
+    #if defined(ADM_CPU_X86) && 1
         if(CpuCaps::hasMMX())
             yuv444_MMX(src,dst,width,height,stride);            
         else
