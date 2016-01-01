@@ -715,7 +715,7 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcu, u
                 srcu+=upitch;
                 srcv+=vpitch;   
                       __asm__ volatile(
-                        "mov            (%3),%4      \n" // local copy
+                        "mov            %4,%3      \n" // local copy
                         "1:\n"
                         "movq           (%1),%%mm0   \n" // U
                         "movq           (%2),%%mm1   \n" // V
@@ -784,7 +784,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
 
 
                   "1:\n"
-                  "mov            (%3),%4      \n" // local copy
+                  "mov            %4,%3      \n" // local copy
                   "movq           (%0),%%mm0   \n"
                   "movq           8(%0),%%mm1  \n"                              
                   "movq           %%mm0,%%mm2  \n"                       
