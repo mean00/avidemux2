@@ -825,6 +825,9 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                 if(leftOver)
                 {
                     int c=mod8*8;
+                    ssrc+=mod8*16;
+                    u+=mod8*8;
+                    v+=mod8*8;
                     for(;c<w;c++)
                     {
                         *u++=ssrc[1];
