@@ -138,9 +138,10 @@ bool AVDM_black::getNextFrame(uint32_t *fn,ADMImage *image)
   
   image->copyInfo(next);  
   bool out_of_scope=false;
+  uint64_t absPts=next->Pts+getAbsoluteStartTime();
   
-  if(next->Pts<param.startBlack*1000LL) out_of_scope=true;
-  if(next->Pts>=param.endBlack*1000LL)   out_of_scope=true;
+  if(absPts<param.startBlack*1000LL) out_of_scope=true;
+  if(absPts>=param.endBlack*1000LL)   out_of_scope=true;
   
   if( out_of_scope)
   {
