@@ -330,6 +330,10 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                 ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                 break;
                   case WAV_DTS: c->codec_id = CODEC_ID_DTS;c->frame_size=1024;break;
+                  case WAV_OPUS:    c->codec_id = CODEC_ID_OPUS;
+                                    c->frame_size=1024;
+                                    ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                                    break;
                   case WAV_EAC3: c->codec_id = CODEC_ID_EAC3;c->frame_size=6*256;break;
                   case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
                   case WAV_MP2: c->codec_id = CODEC_ID_MP2;c->frame_size=1152;break;
