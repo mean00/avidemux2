@@ -83,3 +83,4 @@ Section "Avidemux Core" SecCore
 		WriteRegStr HKLM "${REGKEY}" CreateQuickLaunchIcon $CreateQuickLaunchIcon
 	${EndIf}
 SectionEnd
+!include avidemux_crossQt5Tail.nsi
