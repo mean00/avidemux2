@@ -814,6 +814,29 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                   case MKFCCR('A','V','D','J'): //'jpeg':
                                           commonPart(MJPG);
                                           break;
+//
+                                 case MKFCCR('h','e','v','1'): // hev1 / hevc
+                                          {
+                                                commonPart(H265);
+                                                while(!son.isDone())
+                                                {
+                                                 adm_atom avcc(&son);
+                                                 printf("Reading hev1, got %s\n",fourCC::tostringBE(avcc.getFCC()));
+                                                 if( avcc.getFCC()== MKFCCR('h','v','c','C'))
+                                                 {
+                                                        VDEO.extraDataSize=avcc.getRemainingSize();
+                                                        ADM_info("Found %d bytes of extradata \n",VDEO.extraDataSize);
+                                                        VDEO.extraData=new uint8_t [VDEO.extraDataSize];
+                                                        avcc.readPayload(VDEO.extraData,VDEO.extraDataSize);
+                                                        mixDump(VDEO.extraData,VDEO.extraDataSize);
+                                                        avcc.skipAtom();
+                                                 }
+                                                } // while
+                                                son.skipAtom();
+                                                left=0;
+                                          }
+                                          break;
+//
                                   case MKFCCR('a','v','c','1'): // avc1
                                           {
                                           commonPart(H264);
