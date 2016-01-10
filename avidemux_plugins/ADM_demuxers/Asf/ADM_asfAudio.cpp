@@ -23,7 +23,8 @@
 */
 uint64_t  asfAudioAccess::getDurationInUs(void)
 {
-    // could use that : father->getVideoDuration()...
+    // this is a guesstimate at best
+   // return _father->getVideoDuration();;
     return 0;
 }
 /**
