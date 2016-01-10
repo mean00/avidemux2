@@ -283,8 +283,9 @@ againGet:
     int64_t finalDts=signedDts+(int64_t)videoDelay;
     if(finalDts<0) 
     {
-        ADM_warning("Final DTS <0, fixing \n");
+        ADM_warning("Final DTS <0, dropping it \n");
         finalDts=0;
+        goto againGet;
     }
     img->demuxerDts=finalDts;
     }
