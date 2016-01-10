@@ -257,8 +257,8 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
 			break;
 	} while(refTime != pts);
 
-	if (pts > refTime)
-		curFrame--;
+	if (pts < refTime)
+		curFrame++;
 	for (int i=curFrame; i>=0; i--) 
         {
         uint64_t p;
