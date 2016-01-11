@@ -152,7 +152,7 @@ class mkvHeader         :public vidHeader
     mkvTrak                 _tracks[ADM_MKV_MAX_TRACKS+1];
 
     BVector <mkvIndex    >   _clusters;
-    BVector <uint64_t>       _cuePosition;
+    BVector <uint64_t>       _cueTime;
 
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;

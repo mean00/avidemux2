@@ -203,7 +203,10 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
        readBufferSize=size*2;
        readBuffer=new uint8_t[readBufferSize];
    }
-   
+   if(!track)
+   {
+       aprintf("adding image at 0x%llx , time = %d\n",where,timecodeMS);
+   }
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
   // Hackish, we already read the 3 bytes header
@@ -401,7 +404,7 @@ uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
              tid,segmentPos,cluster_position,cue_position,cue_position+cluster_position+segmentPos,time);  
               
        if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
-            _cuePosition.append(cue_position+cluster_position+segmentPos);
+            _cueTime.append(time);
      }
    }
    printf("[MKV] Cues updated\n");
@@ -497,17 +500,17 @@ tryAgain:
 bool  mkvHeader::updateFlagsWithCue(void)
 {
     int nbImages=_tracks[0].index.size();
-    int nbCues=_cuePosition.size();
+    int nbCues=_cueTime.size();
     
     int lastImage=0;
     ADM_info("Updating Flags with Cue\n");
     for(int curCue=0;curCue<nbCues;curCue++)
     {
-        uint64_t pos=_cuePosition[curCue];
+        uint64_t tim=_cueTime[curCue];
         for(int curImage=lastImage;curImage<nbImages;curImage++)
         {
-            uint64_t img=_tracks[0].index[curImage].pos;
-            if( pos<img && (pos+0x20)>img)
+            uint64_t thisTime=_tracks[0].index[curImage].Pts/_timeBase;            
+            if( tim== thisTime)
             {
                 // match!
                 _tracks[0].index[curImage].flags |=AVI_KEY_FRAME;
@@ -515,10 +518,6 @@ bool  mkvHeader::updateFlagsWithCue(void)
                 lastImage=curImage+1;
                 break;
             }
-            if(img>pos+0x100)
-              {
-                ADM_warning("Cue image not found for image %d at pos 0x%llx\n",curCue,pos);
-              }
         }
     }
     ADM_info("Updating Flags with Cue done\n");

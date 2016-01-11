@@ -86,6 +86,7 @@ uint8_t mkvHeader::open(const char *name)
     printf("[MKV] Cluster indexing failed\n");
     return 0;
   }
+  readCue(&ebml);
   printf("[MKV]Found %u clusters\n",_clusters.size());
   printf("[MKV] Indexing video\n");
     if(!videoIndexer(&ebml))
@@ -96,6 +97,13 @@ uint8_t mkvHeader::open(const char *name)
   // update some infos
   _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].index.size();;
 
+    if(!isH264Compatible(_videostream.fccHandler) && !isMpeg4Compatible(_videostream.fccHandler) && !isMpeg12Compatible(_videostream.fccHandler))
+    {
+        updateFlagsWithCue();
+    }
+    _cueTime.clear();
+  
+  
   _parser=new ADM_ebml_file();
   ADM_assert(_parser->open(name));
   _filename=ADM_strdup(name);
@@ -168,12 +176,8 @@ uint8_t mkvHeader::open(const char *name)
           uint32_t duration32=(uint32_t)duration;
           printf("[MKV] Video Track duration for %u ms\n",duration32);
           // Useless.....
-          readCue(&ebml);
-          if(!isH264Compatible(_videostream.fccHandler) && !isMpeg4Compatible(_videostream.fccHandler) && !isMpeg12Compatible(_videostream.fccHandler))
-          {
-               updateFlagsWithCue();
-          }
-          _cuePosition.clear();
+
+        
 
           for(int i=0;i<_nbAudioTrack;i++)
           {
