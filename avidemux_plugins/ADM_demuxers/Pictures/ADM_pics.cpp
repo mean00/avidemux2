@@ -317,7 +317,7 @@ char realstring[250];
 	    _offset = 0;
 	    fseek(fd, 0, SEEK_SET);
 	    read16(fd);	// skip jpeg ffd8
-	    while (count < 10 && tag != 0xFFC0) {
+	    while (count < 15 && tag != 0xFFC0) {
 
 		tag = read16(fd);
 		if ((tag >> 8) != 0xff) {
