@@ -8,11 +8,13 @@
  ***************************************************************************/
 
 #include <math.h>
-
+#include <string>
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_factory.h"
+#include <ADM_vidMisc.h>
+
 #include "fade.h"
 #include "fade_desc.cpp"
 /**
@@ -91,9 +93,11 @@ while(1)
  */
 const char   *AVDM_Fade::getConfiguration(void)
 {
-        static char conf[256];
-	snprintf(conf,255," Fade : Start %u End %u",param.startFade,param.endFade);
-        return conf;
+ static char conf[256];
+    std::string start=std::string(ADM_us2plain(param.startFade*1000LL));
+    std::string end=std::string(ADM_us2plain(param.endFade*1000LL));
+    snprintf(conf,255," Fade : Start %s End %s",start.c_str(),end.c_str());
+    return conf;
 }
 
 /**
@@ -219,7 +223,7 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
                 d[x]=indx[s[x]]>>8;
             }
             d+=dpitches[i];
-            s+=dpitches[i];
+            s+=spitches[i];
         }        
     }
     vidCache->unlockAll();
