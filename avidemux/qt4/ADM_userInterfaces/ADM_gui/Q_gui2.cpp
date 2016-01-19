@@ -265,6 +265,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	slider=ui.horizontalSlider;
 	slider->setMinimum(0);
 	slider->setMaximum(1000000000);
+#if 1        
+        slider->setTickInterval(10000000);
+        slider->setTickPosition(QSlider::TicksBothSides);
+        slider->setTracking(false);
+#endif
 	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
 	connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
 	connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
