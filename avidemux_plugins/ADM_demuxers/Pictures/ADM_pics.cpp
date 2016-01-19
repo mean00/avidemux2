@@ -84,23 +84,24 @@ uint8_t                 picHeader::getFrameSize(uint32_t frame,uint32_t *size)
 */
 uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 {
-	if (framenum >= (uint32_t)_videostream.dwLength)
-		return 0;
+    if (framenum >= (uint32_t)_videostream.dwLength)
+            return 0;
 
-	img->flags = AVI_KEY_FRAME;
+    img->flags = AVI_KEY_FRAME;
 
-	FILE* fd = openFrameFile(framenum);
-
-	fread(img->data, _imgSize[framenum] - _offset, 1, fd);
-	img->dataLength = _imgSize[framenum] - _offset;
+    FILE* fd = openFrameFile(framenum);
+    if(!fd)
+        return false;
+    fread(img->data, _imgSize[framenum] - _offset, 1, fd);
+    img->dataLength = _imgSize[framenum] - _offset;
 
     uint64_t timeP=US_PER_PIC;
     timeP*=framenum;
     img->demuxerDts=timeP;
     img->demuxerPts=timeP;
-	fclose(fd);
+    fclose(fd);
 
-	return 1;
+    return 1;
 }
 //****************************************************************
 uint8_t picHeader::close(void)
@@ -469,11 +470,9 @@ uint32_t picHeader::getFlags(uint32_t frame, uint32_t * flags)
 
 FILE* picHeader::openFrameFile(uint32_t frameNum)
 {
-	char filename[250];
-
-	sprintf(filename, _fileMask, frameNum + _first);
-
-	return ADM_fopen(filename, "rb");
+    char filename[250];
+    sprintf(filename, _fileMask, frameNum + _first);
+    return ADM_fopen(filename, "rb");
 }
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
@@ -482,7 +481,6 @@ bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
     *pts=timeP;
     *dts=timeP;
     return true;
-
 }
 bool       picHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
