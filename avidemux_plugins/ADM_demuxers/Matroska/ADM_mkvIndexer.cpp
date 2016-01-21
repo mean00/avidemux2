@@ -27,7 +27,7 @@
 #include "ADM_vidMisc.h"
 #define VIDEO _tracks[0]
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
