@@ -16,6 +16,7 @@
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "ADM_edCache.h"
+#include "ADM_vidMisc.h"
 
 #if 1
 #define aprintf(...) {}
@@ -173,8 +174,8 @@ void EditorCache::dump( void)
         {
             case ADM_NO_PTS:  printf("Not used %d\n",i);break;
             default:
-                printf("Edcache content[%d]: PTS : %"PRIu64" us%"PRIu64" ms\n",i,
-                                                                    e->image->Pts,e->image->Pts/1000);
+                printf("Edcache content[%d]: PTS : %s %"PRIu64" ms\n",i,
+                                                                    ADM_us2plain(e->image->Pts),e->image->Pts/1000);
                 break;
         }
     }
@@ -198,8 +199,19 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
             ADMImage *candidate=_elem[index].image;
             if(candidate->Pts<=pts)
             {
-                ADM_error("The next frame has a PTS <= the one we started from, ignoring %"PRIu64" %"PRIu64"\n",
-                                        candidate->Pts,pts);
+                ADM_error("The next frame has a PTS <= the one we started from. We got timing %s\n", ADM_us2plain(candidate->Pts));
+                ADM_error("We are looking for the one after %s\n",ADM_us2plain(pts));
+                // in that case try to find a the next valid one
+                for(int k=i+2;k<writeIndex-1;k++)
+                {
+                    int otherIndex=k%_nbImage;
+                    if(_elem[otherIndex].pts>pts)
+                      {
+                        return _elem[otherIndex].image;
+                      }
+                    ADM_error("Cannot find a second valid candidate after bad timing\n");
+                    dump();
+                }
             }else
                 return candidate;
         }
