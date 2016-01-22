@@ -41,6 +41,9 @@
 #include "ADM_systemTrayProgress.h"
 using namespace std;
 
+#define ADM_SLIDER_REFRESH_PERIOD 500
+
+
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
     #define SDL_ON_LINUX
 #endif
@@ -162,23 +165,76 @@ void MainWindow::comboChanged(int z)
 		sendAction (ACT_AUDIO_CODEC_CHANGED) ;
 	}
 }
-
+/**
+ * \fn sliderValueChanged
+ * @param u
+ */
 void MainWindow::sliderValueChanged(int u)
 {
-	if(!_upd_in_progres)
-		sendAction(ACT_Scale);
+  
+    if(_upd_in_progres)
+      return;
+    switch(dragState)
+      {
+        default:
+        case dragState_Normal:
+            sendAction(ACT_Scale);
+            break;
+        case dragState_Active:
+            dragTimer.stop();
+            dragTimer.start(ADM_SLIDER_REFRESH_PERIOD);
+            dragState=dragState_HoldOff;
+            break;            
+        case dragState_HoldOff:
+          break;            
+      }
 }
-
+/**
+ * \fn dragTimerTimeout
+ */
+void MainWindow::dragTimerTimeout(void)
+{
+  ADM_info("Drag timeout\n");
+  switch(dragState)
+    {
+        default:
+        case dragState_Normal:           
+        case dragState_Active:           
+            break;            
+        case dragState_HoldOff:
+            dragState=dragState_Active;
+            sendAction(ACT_Scale);
+            break;
+    }
+}
+/**
+ * \fn sliderMoved
+ */
 void MainWindow::sliderMoved(int value)
 {
+    //ADM_info("Moved\n");
 	SliderIsShifted = shiftKeyHeld;
 }
-
+/**
+ * \fn sliderReleased
+ */
 void MainWindow::sliderReleased(void)
 {
+  //ADM_info("Released\n");
 	SliderIsShifted = 0;
+    dragTimer.stop();
+    dragState=dragState_Normal;
+    sendAction(ACT_Scale);
 }
-
+/**
+ * \fn sliderPressed
+ */
+void MainWindow::sliderPressed(void)
+{ 
+  dragTimer.stop();
+  dragState=dragState_Active;
+//  ADM_info("Pressed\n");
+}
 void MainWindow::thumbSlider_valueEmitted(int value)
 {
         if (value > 0)
@@ -239,6 +295,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 {
 	qtRegisterDialog(this);
 	ui.setupUi(this);
+    dragState=dragState_Normal;
 
 #if defined(__APPLE__) && defined(USE_SDL)
 	//ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
@@ -265,14 +322,16 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	slider=ui.horizontalSlider;
 	slider->setMinimum(0);
 	slider->setMaximum(1000000000);
-#if 1        
+#if 1
         slider->setTickInterval(10000000);
         slider->setTickPosition(QSlider::TicksBothSides);
-        slider->setTracking(false);
 #endif
 	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
 	connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
 	connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
+    connect( slider,SIGNAL(sliderPressed()),this,SLOT(sliderPressed()));
+    connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
+    
 
    // Thumb slider
     ui.sliderPlaceHolder->installEventFilter(this);

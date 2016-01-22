@@ -59,7 +59,15 @@ class myQApplication : public QApplication
                                 automation();
                 }
 };
-
+/**
+ * \enum ADM_dragState
+ */
+enum ADM_dragState
+{
+    dragState_Normal=0, // no drag
+    dragState_Active=1, // drag on, we process the refresh
+    dragState_HoldOff=2 // Cdrag off, we ignore the refresh
+};
 
 /**
     \class MainWindow
@@ -89,6 +97,7 @@ protected:
     ThumbSlider *thumbSlider;
 
 public slots:
+        void dragTimerTimeout(void);
         void actionSlot(Action a)
         {
             HandleAction(a);
@@ -107,6 +116,7 @@ public slots:
 	void sliderValueChanged(int u);
 	void sliderMoved(int value);
 	void sliderReleased(void);
+        void sliderPressed(void);
 	void volumeChange( int u );
 	void audioToggled(bool checked);
 	void previewModeChanged(int status);
@@ -143,7 +153,9 @@ public slots:
 signals:
         void actionSignal(Action a);
 protected:
-	const std::vector<IScriptEngine*>& _scriptEngines;
+        ADM_dragState    dragState;        
+        QTimer dragTimer;
+	const  std::vector<IScriptEngine*>& _scriptEngines;
 
 	void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
 	void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
