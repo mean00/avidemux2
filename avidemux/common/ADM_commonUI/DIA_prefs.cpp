@@ -73,6 +73,9 @@ bool     hzd,vzd,dring;
 bool     capsMMX,capsMMXEXT,caps3DNOW,caps3DNOWEXT,capsSSE,capsSSE2,capsSSE3,capsSSSE3,capsAll;
 bool     hasOpenGl=false;
 
+bool     refreshCapEnabled=false;
+uint32_t refreshCapValue=100;
+
 bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
@@ -86,6 +89,10 @@ std::string currentSdlDriver=getSdlDriverName();
 
 	olddevice=newdevice=AVDM_getCurrentDevice();
 
+        prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
+        prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+        
+        
         // Default pp
          if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=3;
          if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=3;
@@ -437,11 +444,14 @@ std::string currentSdlDriver=getSdlDriverName();
 
         
         /* Display */
-        
+        diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,"_Limit Refresh Rate");
+        diaElemUInteger displayRefreshCap(&refreshCapValue,"Refresh Rate Cap (ms)",10,1000);
+
+            
 #ifdef USE_SDL
-        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&useOpenGl};
+        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&useOpenGl,&togDisplayRefreshCap,&displayRefreshCap};
 #else
-         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl};
+         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl,&togDisplayRefreshCap,&displayRefreshCap};
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
@@ -500,6 +510,9 @@ std::string currentSdlDriver=getSdlDriverName();
             CPU_CAPS(SSSE3);
             }
             prefs->set(FEATURES_CPU_CAPS,CpuCaps::myCpuMask);
+            //
+            prefs->set(FEATURES_CAP_REFRESH_ENABLED,refreshCapEnabled);
+            prefs->set(FEATURES_CAP_REFRESH_VALUE,refreshCapValue);
 
             // Postproc
             #undef DOME

@@ -95,6 +95,10 @@ protected:
     QAction *recentFileAction[NB_LAST_FILES];
     QAction *recentProjectAction[NB_LAST_FILES];
     ThumbSlider *thumbSlider;
+    
+    bool     refreshCapEnabled;
+    uint32_t refreshCapValue;
+
 
 public slots:
         void dragTimerTimeout(void);

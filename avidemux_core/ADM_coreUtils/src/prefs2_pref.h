@@ -26,6 +26,8 @@ static optionDesc myOptions[]={
 { FEATURES_XVBA,"features.xvba"                                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_LIBVA,"features.libva"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ENABLE_OPENGL,"features.enable_opengl"                     ,ADM_param_bool    	,"0",	0,	1},
+{ FEATURES_CAP_REFRESH_ENABLED,"features.cap_refresh_enabled"         ,ADM_param_bool    	,"0",	0,	1},
+{ FEATURES_CAP_REFRESH_VALUE,"features.cap_refresh_value"             ,ADM_param_uint32_t	,"100",	10,	1000},
 { FEATURES_SDLDRIVER,"features.sdlDriver"                             ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_LASTDIR_READ,"lastfiles.lastdir_read"                     ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_LASTDIR_WRITE,"lastfiles.lastdir_write"                   ,ADM_param_string  	,"",	0,	0},

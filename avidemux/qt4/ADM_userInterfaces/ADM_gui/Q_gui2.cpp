@@ -174,20 +174,23 @@ void MainWindow::sliderValueChanged(int u)
   
     if(_upd_in_progres)
       return;
-    switch(dragState)
-      {
-        default:
-        case dragState_Normal:
-            sendAction(ACT_Scale);
-            break;
-        case dragState_Active:
-            dragTimer.stop();
-            dragTimer.start(ADM_SLIDER_REFRESH_PERIOD);
-            dragState=dragState_HoldOff;
-            break;            
-        case dragState_HoldOff:
-          break;            
-      }
+    if(refreshCapEnabled)
+        switch(dragState)
+        { 
+            default:
+            case dragState_Normal:
+                sendAction(ACT_Scale);
+                break;
+            case dragState_Active:
+                dragTimer.stop();
+                dragTimer.start(refreshCapValue);
+                dragState=dragState_HoldOff;
+                break;            
+            case dragState_HoldOff:
+              break;            
+          }
+    else
+         sendAction(ACT_Scale);
 }
 /**
  * \fn dragTimerTimeout
@@ -295,7 +298,10 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 {
 	qtRegisterDialog(this);
 	ui.setupUi(this);
-    dragState=dragState_Normal;
+        dragState=dragState_Normal;
+        refreshCapEnabled=false;
+        prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
+        prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
 
 #if defined(__APPLE__) && defined(USE_SDL)
 	//ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
