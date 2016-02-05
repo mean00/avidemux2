@@ -10,6 +10,7 @@ do_qt4=1
 do_plugins=1
 debug=0
 qt_ext=Qt4
+export QT_SELECT=4 # default for ubuntu, harmless for others
 export O_PARAL="-j 2"
 fail()
 {
@@ -141,6 +142,7 @@ while [ $# != 0 ] ;do
              ;;
          --enable-qt5)
                 QT_FLAVOR="-DENABLE_QT5=True"
+                export QT_SELECT=5
                 qt_ext=Qt5
              ;;
          --with-qt4)
