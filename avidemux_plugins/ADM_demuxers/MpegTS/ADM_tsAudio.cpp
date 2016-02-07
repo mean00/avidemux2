@@ -210,8 +210,6 @@ uint64_t p,d,start;
                 again:
                 if(latm.empty()==true) // fetch next LOAS frame, it will contain several frames
                 {
-                    
-               
                     if(!retries)
                     {
                         ADM_error("Cannot get AAC packet from LATM\n");
