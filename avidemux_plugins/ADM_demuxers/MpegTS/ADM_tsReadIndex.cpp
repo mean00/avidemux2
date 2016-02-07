@@ -85,7 +85,10 @@ bool tsHeader::processAudioIndex(char *buffer)
             }
             head=tail+1;
             ADM_tsAccess *track=listOfAudioTracks[trackNb]->access;
-            track->push(startAt,dts,size);
+            if(dts!=ADM_NO_PTS)
+                track->push(startAt,dts,size);
+            else
+                ADM_warning("No audio DTS\n");
 
             trackNb++;
             //printf("[%s] => %"PRIx32" Dts:%"PRId64" Size:%"PRId64"\n",buffer,pes,dts,size);
