@@ -105,8 +105,9 @@ again:
     {
         if(labs((int64_t)lastDts-(int64_t)packetBufferDts)>ADM_ALLOWED_DRIFT_US)
         {
-            printf("[Composer::getPCMPacket] Track %d,%"PRIx64" : drift %d, computed :%"PRIu64" got %"PRIu64"\n",
-                        (int)myTrackNumber,(uint64_t)trk,(int)(lastDts-packetBufferDts),lastDts,packetBufferDts);
+            ADM_info("[Composer::getPCMPacket] Track %d,%"PRIx64" : drift %d, computed :%s",
+                        (int)myTrackNumber,(uint64_t)trk,(int)(lastDts-packetBufferDts),ADM_us2plain(lastDts));
+            ADM_info(" got %s\n", ADM_us2plain(packetBufferDts));
             if(packetBufferDts<lastDts)
             {
                 printf("[Composer::getPCMPacket] Track %d:%"PRIx64" : Dropping packet %"PRIu32" last =%"PRIu32"\n",myTrackNumber,(uint64_t)trk,(uint32_t)(lastDts/1000),(uint32_t)(packetBufferDts/1000));
