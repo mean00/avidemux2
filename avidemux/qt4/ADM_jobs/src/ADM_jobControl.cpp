@@ -153,10 +153,10 @@ jobWindow::jobWindow(void) : QDialog()
    ui.tableWidget->addAction(runNow);
    ui.tableWidget->addAction(setOk);
    ui.tableWidget->addAction(setReady);
-   connect(del,SIGNAL(activated()),this,    SLOT(del()));
-   connect(runNow,SIGNAL(activated()),this, SLOT(runNow()));
-   connect(setOk,SIGNAL(activated()),this,  SLOT(setOk()));
-   connect(setReady,SIGNAL(activated()),this,SLOT(setReady()));
+   connect(del,SIGNAL(triggered()),this,    SLOT(del()));
+   connect(runNow,SIGNAL(triggered()),this, SLOT(runNow()));
+   connect(setOk,SIGNAL(triggered()),this,  SLOT(setOk()));
+   connect(setReady,SIGNAL(triggered()),this,SLOT(setReady()));
 
    connect(ui.pushButtonQuit,SIGNAL(pressed()),this,SLOT(quit()));
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
@@ -263,18 +263,22 @@ void jobWindow::runAction(JobAction action)
 
 void jobWindow::del(void)
 {
+    ADM_info("Del\n");
     runAction(JobAction_delete);
 }
 void jobWindow::setOk(void)
 {
+    ADM_info("Ok\n");
     runAction(JobAction_setOk);
 }
 void jobWindow::setReady(void)
 {
+    ADM_info("setReady\n");
     runAction(JobAction_setReady);
 }
 void jobWindow::runNow(void)
 {
+    ADM_info("runNow\n");
     runAction(JobAction_runNow);
 }
  
