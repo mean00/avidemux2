@@ -588,6 +588,12 @@ SectionGroup "Muxers" SecGrpMuxers
 		SetOutPath $INSTDIR\plugins\muxers
 		${File} ${ROOT_FOLDER}/plugins/muxers/libADM_mx_raw.dll
 	${MementoSectionEnd}
+	${MementoSection} "Raw Video" SecMuxWebm
+		SectionIn 1 2
+		SetOverwrite on
+		SetOutPath $INSTDIR\plugins\muxers
+		${File} ${ROOT_FOLDER}/plugins/muxers/libADM_mx_Webm.dll
+	${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Script Engines" SecGrpScriptEngine
 	#${MementoSection} "QtScript" SecScriptQt
