@@ -13,6 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <windows.h>
+#include <excpt.h>
 
 #include "ADM_crashdump.h"
 #include <stdio.h>
@@ -20,8 +22,30 @@
 #include <imagehlp.h>
 #include <cxxabi.h>
 
+
+static LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo);
 static ADM_saveFunction *mysaveFunction = NULL;
 static ADM_fatalFunction *myFatalFunction = NULL;
+
+
+/**
+ * \fn installSigHandler
+ * \brief add hook to catch exception (null pointers etc...)
+ */
+void installSigHandler(void)
+{    
+    SetUnhandledExceptionFilter(ExceptionFilter);
+}
+/**
+ * \fn uninstallSigHandler
+ * \brief
+ */
+void uninstallSigHandler(void)
+{
+    
+}
+
+
 /**
  * 
  * @param save
