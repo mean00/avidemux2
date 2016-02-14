@@ -8,6 +8,7 @@ do_cli=0
 do_gtk=0
 do_qt4=1
 do_plugins=1
+do_asan=0
 debug=0
 qt_ext=Qt4
 export QT_SELECT=4 # default for ubuntu, harmless for others
@@ -24,18 +25,23 @@ Process()
         export SOURCEDIR=$2
         export EXTRA=$3
         export DEBUG=""
+        export ASAN=""
         BUILDER="Unix Makefiles"
         if [ "x$debug" = "x1" ] ; then 
                 DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
                 BUILDDIR="${BUILDDIR}_debug"
                 BUILDER="CodeBlocks - Unix Makefiles"
         fi
+        if [ "x$do_asan" = "x1" ] ; then 
+                BUILDDIR="${BUILDDIR}_asan"
+                ASAN="-DASAN=True"
+        fi
 	FAKEROOT=" -DFAKEROOT=$FAKEROOT_DIR "
         echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
         rm -Rf ./$BUILDDIR
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
@@ -87,6 +93,7 @@ usage()
         echo "  --with-plugins    : Build plugins"
         echo "  --without-plugins : Dont build plugins"
         echo "  --enable-qt5      : Try to use qt5 instead of qt4"
+        echo "  --enable-asan     : Enable Clang/llvm address sanitizer"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -144,6 +151,9 @@ while [ $# != 0 ] ;do
                 QT_FLAVOR="-DENABLE_QT5=True"
                 export QT_SELECT=5
                 qt_ext=Qt5
+             ;;
+         --enable-asan)
+                do_asan=1
              ;;
          --with-qt4)
                 do_qt4=1

@@ -188,7 +188,9 @@ if (FF_INHERIT_BUILD_ENV)
 	xadd(--ld "${CMAKE_C_COMPILER}")
 	xadd(--ar "${CMAKE_AR}")
 	# nm should be ok if we do not cross compile
-
+        if(CMAKE_LD_FLAGS)
+		xadd(--extra-ldflags ${CMAKE_LD_FLAGS})
+        endif(CMAKE_LD_FLAGS)
 	if (CMAKE_C_FLAGS)
 		xadd(--extra-cflags ${CMAKE_C_FLAGS})
 	endif (CMAKE_C_FLAGS)

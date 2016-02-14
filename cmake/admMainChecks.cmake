@@ -54,6 +54,18 @@ ENDIF (NOT CMAKE_BUILD_TYPE)
 ########################################
 INCLUDE(admDetermineSystem)
 
+# Address sanitizer only works with llvm/clang
+IF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
+        IF (ASAN)
+                MESSAGE(STATUS "Address Sanitizer activated")
+	        SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+	        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+                SET(CMAKE_LD_FLAGS  "${CMAKE_LD_FLAGS}  -fsanitize=address ")
+        ELSE (ASAN)
+                MESSAGE(STATUS "Address Sanitizer not activated")
+        ENDIF (ASAN)
+ENDIF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
+
 IF (ADM_CPU_ALTIVEC)
 	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ADM_ALTIVEC_FLAGS}")
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ADM_ALTIVEC_FLAGS}")
