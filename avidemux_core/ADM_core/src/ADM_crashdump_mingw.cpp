@@ -317,12 +317,18 @@ void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT 
 	{
 		s+=DumpExceptionInfo(process, exceptionRecord, contextRecord);
 	}
+        fflush(stderr);
+	fflush(stdout);	
 
 	s+=DumpBackTrace(process);
+        fflush(stderr);
+	fflush(stdout);	
+        
         if (myFatalFunction)
 		myFatalFunction("Crash", s.c_str());
 	SymCleanup(process);
-
+        fflush(stderr);
+	fflush(stdout);	
 	exit(1);
 }
 /**
@@ -345,7 +351,19 @@ EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord
 LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
 {
 	HandleException(exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
+        return EXCEPTION_CONTINUE_SEARCH;
 }
+/**
+ * 
+ * @param pExceptionInfo
+ * @return 
+ */
+LONG WINAPI TopLevelExceptionHandler(struct _EXCEPTION_POINTERS *exceptionInfo)
+{
+    HandleException(exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
 /**
  * 
  * @param info
