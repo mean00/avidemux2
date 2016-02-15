@@ -816,6 +816,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                           break;
 //
                                  case MKFCCR('h','e','v','1'): // hev1 / hevc
+                                 case MKFCCR('h','v','c','1'): // hev1 / hevc
                                           {
                                                 commonPart(H265);
                                                 while(!son.isDone())
