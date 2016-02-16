@@ -616,6 +616,16 @@ extern "C"
 {
   void adm_lavLogCallback(void  *instance, int level, const char* fmt, va_list list);
 }
+
+
+extern "C" 
+{
+static  void ffFatalError(const char *what)
+{
+        ADM_backTrack(what,0,"");
+}
+
+}
 /**
     \fn ADM_lavInit
     \brief Init both lavcodec and lavformat
@@ -624,7 +634,7 @@ void ADM_lavInit(void)
 {
     avcodec_register_all();
     av_log_set_callback(adm_lavLogCallback);
-
+    av_setFatalHandler(ffFatalError);
 #ifdef ADM_DEBUG
     av_log_set_level(AV_LOG_DEBUG);
 #endif

@@ -20,9 +20,11 @@
 #pragma once
 
 #include "ADM_coreVideoCodec6_export.h"
+typedef void (AV_FATAL_HANDLER)(const char *why);
 
 extern "C" {
 #include "libavcodec/avcodec.h"
+extern void av_setFatalHandler(AV_FATAL_HANDLER *func);
 }
 
 #include "ADM_codec.h"
