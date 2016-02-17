@@ -164,49 +164,42 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 {
 	if(mysaveFunction)
 		mysaveFunction();
-
-#if !defined(__HAIKU__)
-	char wholeStuff[2048];
-#if !defined(__sun__)
+#define MAX_BACKTRACK 30
+#if !defined(__HAIKU__) && !defined(__sun__)
+    char wholeStuff[2048];
     char buffer[4096];
     char in[2048];
-	void *stack[20];
+	void *stack[MAX_BACKTRACK+1];
 	char **functions;
 	int count, i;
-#endif
 	wholeStuff[0]=0;
 
 	printf("\n*********** BACKTRACK **************\n");
 
-#if !defined(__sun__)
-	count = backtrace(stack, 20);
+	count = backtrace(stack, MAX_BACKTRACK);
 	functions = backtrace_symbols(stack, count);
-#endif
 	sprintf(wholeStuff,"%s\n at line %d, file %s",info,lineno,file);
-#if !defined(__sun__)
-    int status;
-    size_t size=2047;
+        int status;
+        size_t size=2047;
     // it looks like that xxxx (functionName+0x***) XXXX
 	for (i=0; i < count; i++)
 	{
-        char *s=strstr(functions[i],"(");
-        buffer[0]=0;
-        if(s && strstr(s+1,"+"))
-        {
-            strcpy(in,s+1);
-            char *e=strstr(in,"+");
-            *e=0;
-            __cxxabiv1::__cxa_demangle(in,buffer,&size,&status);
-            if(status) strcpy(buffer,in);
-        }else
-            strcpy(buffer,functions[i]);
-        printf("%s:%d:<%s>:%d\n",functions[i],i,buffer,status);
-		strcat(wholeStuff,buffer);
-		strcat(wholeStuff,"\n");
-	}
-#else
-	backtrace(fileno(stdout));
-#endif
+            char *s=strstr(functions[i],"(");
+            buffer[0]=0;
+            if(s && strstr(s+1,"+"))
+            {
+                strcpy(in,s+1);
+                char *e=strstr(in,"+");
+                *e=0;
+                __cxxabiv1::__cxa_demangle(in,buffer,&size,&status);
+                if(status) 
+                    strcpy(buffer,in);
+            }else
+                strcpy(buffer,functions[i]);
+            printf("%s:%d:<%s>:%d\n",functions[i],i,buffer,status);
+            strcat(wholeStuff,buffer);
+            strcat(wholeStuff,"\n");
+        }
 	printf("*********** BACKTRACK **************\n");
 
 	if(myFatalFunction)

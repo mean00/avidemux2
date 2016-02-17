@@ -249,7 +249,7 @@ std::string DumpBackTrace(void *processId)
 	RtlCaptureContext_* contextFunc = (RtlCaptureContext_*)GetProcAddress(hinstLib, "RtlCaptureContext");
 	STACKFRAME frame;
 	CONTEXT context;
-	int limit = 50;
+	int limit = 70;
 	DWORD machineType;
 
 	memset(&frame, 0, sizeof(STACKFRAME));

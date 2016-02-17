@@ -18,6 +18,7 @@
 #include <QKeyEvent>
 #include <QGraphicsView>
 #include <QtCore/QDir>
+#include <qt5/QtWidgets/qmessagebox.h>
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
@@ -928,7 +929,17 @@ void UI_setCurrentPreview(int ne)
 */
 static void FatalFunctionQt(const char *title, const char *info)
 {
-	GUI_Info_HIG(ADM_LOG_IMPORTANT, title, info);
+    printf("Crash Dump for %s\n",title);
+    printf("%s\n",info);
+    fflush(stdout);
+    
+    QMessageBox msgBox;
+    msgBox.setText(title);
+    msgBox.setInformativeText(QT_TR_NOOP("The application has encountered a fatal problem\nThe current editing has been saved and will be reloaded at next start"));
+    msgBox.setDetailedText(info);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+    abort();
 }
 
 /**
