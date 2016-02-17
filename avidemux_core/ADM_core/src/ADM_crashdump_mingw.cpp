@@ -291,7 +291,7 @@ std::string DumpBackTrace(void *processId)
  * @param exceptionRecord
  * @param contextRecord
  */
-void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT *contextRecord)
+void HandleException(const char *message,struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT *contextRecord)
 {
     std::string s;
 	fflush(stderr);
@@ -324,8 +324,11 @@ void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT 
         fflush(stderr);
 	fflush(stdout);	
         
+        const char *title;
+        if(!message) title="Crash";
+            else     title=message;
         if (myFatalFunction)
-		myFatalFunction("Crash", s.c_str());
+		myFatalFunction(title, s.c_str());
 	SymCleanup(process);
         fflush(stderr);
 	fflush(stdout);	
@@ -341,7 +344,7 @@ void HandleException(struct _EXCEPTION_RECORD *exceptionRecord, struct _CONTEXT 
  */
 EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord, void *establisherFrame, struct _CONTEXT *contextRecord, void *dispatcherContext)
 {
-	HandleException(exceptionRecord, contextRecord);
+	HandleException("ExceptionHandler",exceptionRecord, contextRecord);
 }
 /**
  * 
@@ -350,7 +353,7 @@ EXCEPTION_DISPOSITION ExceptionHandler(struct _EXCEPTION_RECORD *exceptionRecord
  */
 LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
 {
-	HandleException(exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
+	HandleException("ExceptionFilter",exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
         return EXCEPTION_CONTINUE_SEARCH;
 }
 /**
@@ -360,7 +363,7 @@ LONG WINAPI ExceptionFilter(struct _EXCEPTION_POINTERS *exceptionInfo)
  */
 LONG WINAPI TopLevelExceptionHandler(struct _EXCEPTION_POINTERS *exceptionInfo)
 {
-    HandleException(exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
+    HandleException("TopLevelExceptionHandler",exceptionInfo->ExceptionRecord, exceptionInfo->ContextRecord);
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
@@ -372,5 +375,7 @@ LONG WINAPI TopLevelExceptionHandler(struct _EXCEPTION_POINTERS *exceptionInfo)
  */
 void ADM_backTrack(const char *info, int lineno, const char *file)
 {	
-	HandleException(NULL, NULL);
+    char title[2048]={0};
+        snprintf(title,2000,"%s at line %d, file %s",info,lineno,file);
+	HandleException(title,NULL, NULL);
 }
