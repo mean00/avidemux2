@@ -620,9 +620,9 @@ extern "C"
 
 extern "C" 
 {
-static  void ffFatalError(const char *what)
+static  void ffFatalError(const char *what,int lineno, const char *filez)
 {
-        ADM_backTrack(what,0,"");
+        ADM_backTrack(what,lineno,filez);
 }
 
 }

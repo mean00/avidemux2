@@ -1,5 +1,5 @@
---- libavutil/log.c.old	2016-02-16 07:29:29.585823781 +0100
-+++ libavutil/log.c	2016-02-16 07:53:03.593024546 +0100
+--- libavutil/log.c.old	2016-01-31 00:43:51.000000000 +0100
++++ libavutil/log.c	2016-02-16 21:24:19.943656163 +0100
 @@ -39,6 +39,7 @@
  #include "common.h"
  #include "internal.h"
@@ -17,7 +17,7 @@
  static void check_color_terminal(void)
  {
  #if defined(_WIN32) && !defined(__MINGW32CE__) && HAVE_SETCONSOLETEXTATTRIBUTE
-@@ -430,7 +431,22 @@
+@@ -430,7 +431,21 @@
      missing_feature_sample(0, avc, msg, argument_list);
      va_end(argument_list);
  }
@@ -26,11 +26,10 @@
 +void av_fatalHandler(const char *why,const char *filez, int lineno)
 +{
 +char *cleartext[2048];
-+        snprintf((char *)cleartext,2000,"FFmpeg fatal error %s, in file %s at line %d\n",why,filez,lineno);
 +        if(!fatalHandler)
-+                printf("[CRASH] %s\n",cleartext);
++                printf("[CRASH] %s, file %s, lineno=%d\n",cleartext,filez,lineno);
 +        else
-+                (fatalHandler)(cleartext);
++                (fatalHandler)(cleartext,lineno,filez);
 +}
 +void av_setFatalHandler(AV_FATAL_HANDLER *func)
 +{

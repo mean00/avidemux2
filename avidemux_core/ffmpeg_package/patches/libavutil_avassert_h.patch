@@ -1,11 +1,11 @@
---- libavutil/avassert.h.old	2016-02-16 07:21:39.607914857 +0100
-+++ libavutil/avassert.h	2016-02-16 07:52:57.249184323 +0100
+--- libavutil/avassert.h.old	2016-01-31 00:43:51.000000000 +0100
++++ libavutil/avassert.h	2016-02-16 21:21:02.768117422 +0100
 @@ -30,14 +30,17 @@
  #include <stdlib.h>
  #include "avutil.h"
  #include "log.h"
 +extern void av_fatalHandler(const char *why,const char *file, int lineno);
-+typedef void (AV_FATAL_HANDLER)(const char *why);
++typedef void (AV_FATAL_HANDLER)(const char *why,int lineno, const char *file);
 +
 +extern void av_setFatalHandler(AV_FATAL_HANDLER *func);
  
