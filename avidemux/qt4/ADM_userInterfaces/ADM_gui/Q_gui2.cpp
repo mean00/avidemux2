@@ -18,7 +18,7 @@
 #include <QKeyEvent>
 #include <QGraphicsView>
 #include <QtCore/QDir>
-#include <qt5/QtWidgets/qmessagebox.h>
+#include <QMessageBox>
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
