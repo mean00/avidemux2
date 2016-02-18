@@ -84,7 +84,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                                         label,  // caption
                                         str,    // folder
                                         filterFile,   // filter
-                                        NULL);   // selected filter
+                                        NULL,QFileDialog::DontConfirmOverwrite);   // selected filter
                                         
                 
 		if (fileName.isNull() ) return;
