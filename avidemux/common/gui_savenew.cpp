@@ -250,24 +250,27 @@ ADM_videoStream *admSaver::setupVideo(void)
         uint32_t extraLen;
         video_body->getExtraHeaderData(&extraLen,&extra);
 //#warning do something better
-        ADM_videoStreamCopy *copy=NULL;
+        ADM_videoStreamCopy *copy=NULL;        
         if(isH264Compatible(info.fcc))
         {
+            bool isAnnexB=!extraLen; // this is not very good
             if(muxer->preferH264AnnexB())
             {
-                ADM_info("The video stream is H264\n");
+                ADM_info("The video stream is a flavor of H264\n");
                 ADM_info("The muxer prefers AnnexB H264 bitstream\n");
-                if(extraLen)
+                if(!isAnnexB)
                 {
                     // Need to do mp4 to annexB    
-                    ADM_info("Probably AnnexB bitstream\n");
+                    ADM_info("Input is probably MP4 bitstream\n");
                     copy=new ADM_videoStreamCopyToAnnexB(markerA,markerB);
                 }
             }else
             {
-                if(!extraLen)
+                ADM_info("The video stream is a flavor of H264\n");
+                ADM_info("The muxer prefers MP4 style H264 bitstream\n");
+                if(isAnnexB)
                 {
-                    ADM_info("Probably AnnexB bitstream\n");
+                    ADM_info("Input is probably AnnexB bitstream\n");
                     copy=new ADM_videoStreamCopyFromAnnexB(markerA,markerB);
                 }
             }
@@ -275,6 +278,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         
         if(!copy)
         {
+            ADM_info("Simple copy mode engaged\n");
             copy=new ADM_videoStreamCopy(markerA,markerB);
         }
         video=copy;
