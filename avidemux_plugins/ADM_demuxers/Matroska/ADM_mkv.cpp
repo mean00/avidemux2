@@ -89,13 +89,13 @@ uint8_t mkvHeader::open(const char *name)
     printf("[MKV] No video\n");
     return 0;
   }
+  readCue(&ebml);
   printf("[MKV] Indexing clusters\n");
   if(!indexClusters(&ebml))
   {
     printf("[MKV] Cluster indexing failed\n");
     return 0;
-  }
-  readCue(&ebml);
+  }  
   printf("[MKV]Found %u clusters\n",_clusters.size());
   printf("[MKV] Indexing video\n");
     if(!videoIndexer(&ebml))

@@ -178,6 +178,16 @@ static int mkvFindStartCode(uint8_t *& start, uint8_t *end)
         }
         return -1;
 }
+
+static bool canRederiveFrameType(uint32_t fcc)
+{
+    if(isMpeg4Compatible(fcc)) return true;
+    if(isH264Compatible(fcc)) return true;
+    if(isMpeg12Compatible(fcc)) return true;
+    return false;
+    
+}
+
 /**
     \fn addVideoEntry
     \brief add an entry to the video index
@@ -211,7 +221,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   // For the 2 most common cases : mp4 & h264.
   // Hackish, we already read the 3 bytes header
   // But they are already taken into account in the size part 
-  if(!track) // Track 0 is video
+  if(!track && canRederiveFrameType(_videostream.fccHandler)) // Track 0 is video
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
