@@ -80,7 +80,7 @@ uint8_t ADM_AudiocodecOpus::run(uint8_t *inptr, uint32_t nbIn, float *outptr, ui
 
 
     int err=opus_decode_float(opus_handle,inptr,nbIn,outptr,5760,false); //??
-    ADM_info("Incoming = %d bytes, out samples=%d\n",nbIn,err);
+    //ADM_info("Incoming = %d bytes, out samples=%d\n",nbIn,err);
     if(err>0)
     {
         *nbOut=err*wavHeader.channels;
