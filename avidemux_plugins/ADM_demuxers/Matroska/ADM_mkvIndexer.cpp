@@ -324,33 +324,20 @@ int mkvHeader::searchTrackFromTid(uint32_t tid)
 */
 bool     mkvHeader::readCue(ADM_ebml_file *parser)
 {
-  uint64_t fileSize,len,bsize;
-  uint64_t alen,vlen;
+  uint64_t len,vlen;
   uint64_t id;
   ADM_MKV_TYPE type;
   const char *ss;
   uint64_t time;
-  uint64_t segmentPos;
+  
+  
 
-    if(!_cuePosition)
-    {
-        ADM_warning("No cue position found, not even trying\n");
-        return false;
-    }
-   parser->seek(_cuePosition);
-   parser->readElemId(&id,&vlen);
-   if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
-    {
-      printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+  if(!goBeforeAtomAtPosition(parser, _cuePosition,vlen, MKV_CUES,"MKV_CUES"))
+  {
+      ADM_warning("Cannot go to the CUES atom\n");
       return false;
-    }
-   if(id!=MKV_CUES)
-    {
-        printf("Found %s instead of CUES, ignored \n",ss);
-        return false;
-    }
-   
-    segmentPos=_segmentPosition;
+  }
+
     ADM_ebml_file cues(parser,vlen);
     while(!cues.finished())
     {
@@ -408,7 +395,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
               }
             }
             aprintf("Track %"PRIx64" segmentPos=%"PRIx64" Cluster Position 0x%"PRIx64" Cue position 0x%"PRIx64" Absolute=%"PRIx64" time %"PRIu64"\n",
-                  tid,segmentPos,cluster_position,cue_position,cue_position+cluster_position+segmentPos,time);  
+                  tid,_segmentPosition,cluster_position,cue_position,cue_position+cluster_position+_segmentPosition,time);  
 
             if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
             {

@@ -160,9 +160,10 @@ class mkvHeader         :public vidHeader
     //
     uint64_t                _segmentPosition;
     uint64_t                _cuePosition;
+    uint64_t                _trackPosition;
 
     uint8_t                 checkHeader(void *head,uint32_t headlen);
-    uint8_t                 analyzeTracks(void *head,uint32_t headlen);
+    bool                    analyzeTracks(ADM_ebml_file *parser);
     uint8_t                 analyzeOneTrack(void *head,uint32_t headlen);
     uint8_t                 walk(void *seed);
     uint64_t                walkAndFind(void *seed,MKV_ELEM_ID searched);
@@ -186,6 +187,8 @@ class mkvHeader         :public vidHeader
     bool                    ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent);
     bool                    updateFlagsWithCue(void); // in case we can trust it, update KEY_FRAME_FLAGS
     bool                    dumpVideoIndex(int maxIndex);
+    bool                    goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,uint64_t &outputLen, 
+                                                MKV_ELEM_ID searchedId,const char *txt);
   public:
 
 

@@ -70,7 +70,7 @@ uint8_t mkvHeader::open(const char *name)
       return false;
   }
   _segmentPosition=ebml.tell();
-  printf("[MKV] found Segment at 0x%x\n",_segmentPosition);
+  printf("[MKV] found Segment at 0x%llx\n",(uint64_t)_segmentPosition);
    /* Now find tracks */
   if(ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_SEEK_HEAD,&alen))
   {
@@ -78,13 +78,8 @@ uint8_t mkvHeader::open(const char *name)
        readSeekHead(&seekHead);       
   }
   /* Now find tracks */
-  if(!ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_TRACKS,&alen))
-  {
-     printf("[MKV] Cannot find tracks\n");
-    return 0;
-  }
   /* And analyze them */
-  if(!analyzeTracks(&ebml,alen))
+  if(!analyzeTracks(&ebml))
   {
       printf("[MKV] incorrect tracks\n");
   }
@@ -357,18 +352,62 @@ uint8_t mkvHeader::checkHeader(void *head,uint32_t headlen)
  return 1;
 
 }
+
+/**
+ * \fn goBeforeAtomAtPosition
+ * \brief check and position the read at the payload for atom searchedId, return payloadSize in outputLen
+ */
+bool mkvHeader::goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,uint64_t &outputLen, MKV_ELEM_ID searchedId,const char *txt)
+{
+    uint64_t id,len;
+    ADM_MKV_TYPE type;
+    const char *ss;
+
+    if(!position)
+    {
+        ADM_warning("No offset available for %s\n",txt);
+        return false;
+    }
+    parser->seek(position);
+    if(!parser->readElemId(&id,&len))
+    {
+        ADM_warning("No element  available for %s\n",txt);
+        return false;
+    }
+    if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+    {
+      printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+      return false;
+    }
+    if(id!=searchedId)
+    {
+        printf("Found %s instead of %s, ignored \n",ss,txt);
+        return false;
+    }    
+    outputLen=len;
+    return true;
+}
+
 /**
     \fn analyzeTracks
     \brief Read Tracks Info.
 */
-uint8_t mkvHeader::analyzeTracks(void *head,uint32_t headlen)
+bool mkvHeader::analyzeTracks(ADM_ebml_file *parser)
 {
-  uint64_t id,len;
-  ADM_MKV_TYPE type;
+  uint64_t len;
+  uint64_t id;
   const char *ss;
- ADM_ebml_file father( (ADM_ebml_file *)head,headlen);
- while(!father.finished())
- {
+  ADM_MKV_TYPE type;
+  
+  if(!goBeforeAtomAtPosition(parser, _trackPosition,len, MKV_TRACKS,"MKV_TRACKS"))
+  {
+      ADM_warning("Cannot go to the TRACKS atom\n");
+      return false;
+  }
+  
+    ADM_ebml_file father( parser,len);
+    while(!father.finished())
+    {
       father.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
@@ -384,7 +423,7 @@ uint8_t mkvHeader::analyzeTracks(void *head,uint32_t headlen)
         continue;
       }
       if(!analyzeOneTrack(&father,len)) return 0;
- }
+    }
  return 1;
 }
 
@@ -559,6 +598,7 @@ uint8_t mkvHeader::close(void)
   readBuffer=NULL;
   _cuePosition=0;
   _segmentPosition=0;
+  _trackPosition=0;
 }
 /**
     \fn ~mkvHeader
@@ -783,6 +823,7 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 }
 /**
  * \fn readSeekHead
+ * \bried used to locate the interesting parts of the file
  */
 bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
 {
@@ -834,14 +875,20 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
         {
             case MKV_CUES:
                     _cuePosition=position+_segmentPosition;
-                    ADM_info("Found Cue position at 0x%llx\n",_cuePosition);
+                    ADM_info("   at position  0x%llx\n",_cuePosition);
                     break;
+            case MKV_TRACKS:
+                    _trackPosition=position+_segmentPosition;;
+                    ADM_info("   at position at 0x%llx\n",_trackPosition);
+            case MKV_INFO:
             default:
                     break;
         }
               
     }
     ADM_info("Parsing SeekHead done successfully\n");
+    if(!_trackPosition )
+        return false;
     return true;
 }
 
