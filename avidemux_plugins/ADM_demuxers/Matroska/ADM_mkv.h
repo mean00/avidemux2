@@ -157,6 +157,9 @@ class mkvHeader         :public vidHeader
     uint32_t                _nbAudioTrack;
     uint32_t                _currentAudioTrack;
     uint32_t                _reordered;
+    //
+    uint64_t                _segmentPosition;
+    uint64_t                _cuePosition;
 
     uint8_t                 checkHeader(void *head,uint32_t headlen);
     uint8_t                 analyzeTracks(void *head,uint32_t headlen);
@@ -164,6 +167,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 walk(void *seed);
     uint64_t                walkAndFind(void *seed,MKV_ELEM_ID searched);
     int                     searchTrackFromTid(uint32_t tid);
+    bool                    readSeekHead(ADM_ebml_file *body);
     //
     uint8_t                 reformatVorbisHeader(mkvTrak *trk);
     // Indexers
@@ -171,7 +175,7 @@ class mkvHeader         :public vidHeader
     uint8_t                 addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,
                                             uint32_t timecodeMS);
     uint8_t                 videoIndexer(ADM_ebml_file *parser);
-    uint8_t                 readCue(ADM_ebml_file *parser);
+    bool                    readCue(ADM_ebml_file *parser);
     uint8_t                 indexClusters(ADM_ebml_file *parser);
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
 

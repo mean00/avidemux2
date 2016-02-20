@@ -63,6 +63,20 @@ uint8_t mkvHeader::open(const char *name)
             _timeBase=timeBase/1000; // We work in us
         }
   }
+  /* --*/
+  if(!ebml.simplefind(MKV_SEGMENT,&len,true))
+  {
+      printf("[MKV] Cannot find Segment\n");      
+      return false;
+  }
+  _segmentPosition=ebml.tell();
+  printf("[MKV] found Segment at 0x%x\n",_segmentPosition);
+   /* Now find tracks */
+  if(ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_SEEK_HEAD,&alen))
+  {
+       ADM_ebml_file seekHead( &ebml,alen);
+       readSeekHead(&seekHead);       
+  }
   /* Now find tracks */
   if(!ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_TRACKS,&alen))
   {
@@ -543,6 +557,8 @@ uint8_t mkvHeader::close(void)
   _audioStreams=NULL;
   
   readBuffer=NULL;
+  _cuePosition=0;
+  _segmentPosition=0;
 }
 /**
     \fn ~mkvHeader
@@ -765,8 +781,69 @@ bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
     return true;
 
 }
+/**
+ * \fn readSeekHead
+ */
+bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
+{
+    uint64_t vlen,len;
+    ADM_info("Parsing SeekHead\n");
+    while(!body->finished())
+    {
+        if(!body->simplefind(MKV_SEEK,&vlen,false))
+             break;         
+        ADM_ebml_file item(body,vlen);              
+        uint64_t id;
+        ADM_MKV_TYPE type;
+        const char *ss;
 
-
+        item.readElemId(&id,&len);
+        if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+        {
+          printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+          return false;
+        }
+        if(id!=MKV_ID)
+        {
+          printf("Found %s in CUES, ignored \n",ss);
+          item.skip(len);
+          return false;
+        }
+        // read id
+        uint64_t t=item.readEBMCode_Full();
+        if(!ADM_searchMkvTag( (MKV_ELEM_ID)t,&ss,&type))
+        {
+          printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+          return false;
+        }
+        ADM_info("Found entry for %s\n",ss);
+        item.readElemId(&id,&len);
+        if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+        {
+          printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+          return false;
+        }
+        if(id!=MKV_SEEK_POSITION)
+        {
+          printf("Found %s in CUES, ignored \n",ss);
+          item.skip(len);
+          return false;
+        }
+        uint64_t position=item.readUnsignedInt(len);
+        switch(t)
+        {
+            case MKV_CUES:
+                    _cuePosition=position+_segmentPosition;
+                    ADM_info("Found Cue position at 0x%llx\n",_cuePosition);
+                    break;
+            default:
+                    break;
+        }
+              
+    }
+    ADM_info("Parsing SeekHead done successfully\n");
+    return true;
+}
 
 //****************************************
 //EOF

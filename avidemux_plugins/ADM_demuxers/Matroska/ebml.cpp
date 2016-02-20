@@ -264,7 +264,12 @@ ADM_ebml_file::~ADM_ebml_file()
   }
   fp=NULL;
 }
-uint8_t ADM_ebml_file::open(const char *name)
+/**
+ * 
+ * @param name
+ * @return 
+ */
+bool  ADM_ebml_file::open(const char *name)
 {
 
   fp=ADM_fopen(name,"rb");
@@ -281,14 +286,24 @@ uint8_t ADM_ebml_file::open(const char *name)
   fseeko(fp,0,SEEK_SET);
   return 1;
 }
-uint8_t  ADM_ebml_file::readBin(uint8_t *whereto,uint32_t len)
+/**
+ * 
+ * @param whereto
+ * @param len
+ * @return 
+ */
+bool  ADM_ebml_file::readBin(uint8_t *whereto,uint32_t len)
 {
   ADM_assert(fp);
   if(!fread(whereto,len,1,fp)) return 0;
   return 1;
 }
-
-uint8_t ADM_ebml_file::skip(uint32_t vv)
+/**
+ * 
+ * @param vv
+ * @return 
+ */
+bool ADM_ebml_file::skip(uint32_t vv)
 {
   fseeko(fp,vv,SEEK_CUR);
   return 1;
@@ -297,12 +312,21 @@ uint64_t ADM_ebml_file::tell(void)
 {
   return ftello(fp);
 }
-uint8_t ADM_ebml_file::seek(uint64_t pos)
+/**
+ * 
+ * @param pos
+ * @return 
+ */
+bool ADM_ebml_file::seek(uint64_t pos)
 {
   fseeko(fp,pos,SEEK_SET);
   return 1;
 }
-uint8_t ADM_ebml_file::finished(void)
+/**
+ * 
+ * @return 
+ */
+bool ADM_ebml_file::finished(void)
 {
   if(tell()>(_fileSize-2)) return 1;
   if(tell()>(_begin+_size-2)) return 1;
@@ -312,7 +336,7 @@ uint8_t ADM_ebml_file::finished(void)
   \fn find
   \brief Search for the tag given and returns the corresponding atom
 */
- uint8_t ADM_ebml_file::find(ADM_MKV_SEARCHTYPE search,MKV_ELEM_ID  prim,MKV_ELEM_ID second,uint64_t *len,uint32_t rewind)
+ bool ADM_ebml_file::find(ADM_MKV_SEARCHTYPE search,MKV_ELEM_ID  prim,MKV_ELEM_ID second,uint64_t *len,bool rewind)
 {
   uint64_t id,pos;
   ADM_MKV_TYPE type;
@@ -349,7 +373,7 @@ uint8_t ADM_ebml_file::finished(void)
   \fn find
   \brief Search for the tag given and returns the corresponding atom
 */
-uint8_t ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,uint32_t rewind)
+bool ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind)
 {
   uint64_t id,alen;
   ADM_MKV_TYPE type;
@@ -361,6 +385,7 @@ uint8_t ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,uint32_t rewin
 
       while(!finished())
       {
+          //printf("Offset is %d\n",(int)(this->tell()>>10));
           readElemId(&id,&alen);
           if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
           {

@@ -322,7 +322,7 @@ int mkvHeader::searchTrackFromTid(uint32_t tid)
   \brief Update index with cue content
 
 */
-uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
+bool     mkvHeader::readCue(ADM_ebml_file *parser)
 {
   uint64_t fileSize,len,bsize;
   uint64_t alen,vlen;
@@ -332,83 +332,101 @@ uint8_t                 mkvHeader::readCue(ADM_ebml_file *parser)
   uint64_t time;
   uint64_t segmentPos;
 
-   parser->seek(0);
+    if(!_cuePosition)
+    {
+        ADM_warning("No cue position found, not even trying\n");
+        return false;
+    }
+   parser->seek(_cuePosition);
+   parser->readElemId(&id,&vlen);
+   if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+    {
+      printf("[MKV/SeekHead] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+      return false;
+    }
+   if(id!=MKV_CUES)
+    {
+        printf("Found %s instead of CUES, ignored \n",ss);
+        return false;
+    }
+   
+    segmentPos=_segmentPosition;
+    ADM_ebml_file cues(parser,vlen);
+    while(!cues.finished())
+    {
+           cues.readElemId(&id,&len);
+           if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
+           {
+             printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+             cues.skip(len);
+             continue;
+           }
+           if(id!=MKV_CUE_POINT)
+           {
+             printf("Found %s in CUES, ignored \n",ss);
+             cues.skip(len);
+             continue;
+           }
+           ADM_ebml_file cue(&cues,len);
+           // Cue TIME normally
+            cue.readElemId(&id,&len);
+            if(id!=MKV_CUE_TIME)
+            {
+               ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
+               printf("Found %s(0x%"PRIx64"), expected CUE_TIME  (0x%x)\n", ss,id,MKV_CUE_TIME);
+               cue.skip(cue.remaining());
+               continue;
+            }
+            time=cue.readUnsignedInt(len);
 
-   if(!parser->simplefind(MKV_SEGMENT,&vlen,1))
-   {
-     printf("[MKV] Cannot find CLUSTER atom\n");
-     return 0;
+
+            cue.readElemId(&id,&len);
+            if(id!=MKV_CUE_TRACK_POSITION)
+            {
+               ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
+               printf("Found %s (0x%"PRIx64"), expected MKV_CUE_TRACK_POSITION (0x%x)\n", ss,id,MKV_CUE_TRACK_POSITION);
+               cue.skip(cues.remaining());
+               continue;
+            }
+            ADM_ebml_file trackPos(&cue,len);
+            uint64_t tid=0;
+            uint64_t cluster_position=0;
+            uint64_t cue_position=0;
+            while(!trackPos.finished())
+            {
+              trackPos.readElemId(&id,&len);
+              switch(id)
+              {
+                case MKV_CUE_TRACK: tid=trackPos.readUnsignedInt(len);break;
+                case MKV_CUE_CLUSTER_POSITION: cluster_position=trackPos.readUnsignedInt(len);break;
+                case MKV_CUE_RELATIVE_POSITION: cue_position=trackPos.readUnsignedInt(len);break;
+                default:
+                      ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
+                      printf("[MKV] in cluster position found tag %s (0x%"PRIx64")\n",ss,id);
+                      trackPos.skip(len);
+                      continue;
+              }
+            }
+            aprintf("Track %"PRIx64" segmentPos=%"PRIx64" Cluster Position 0x%"PRIx64" Cue position 0x%"PRIx64" Absolute=%"PRIx64" time %"PRIu64"\n",
+                  tid,segmentPos,cluster_position,cue_position,cue_position+cluster_position+segmentPos,time);  
+
+            if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
+            {
+                //printf("Adding cue entry\n");
+                 _cueTime.append(time);
+            }
    }
-   ADM_ebml_file segment(parser,vlen);
-   segmentPos=segment.tell();
-
-   while(segment.simplefind(MKV_CUES,&alen,0))
-  {
-   ADM_ebml_file cues(&segment,alen);
-   while(!cues.finished())
+   if(_cueTime.size())
    {
-      cues.readElemId(&id,&len);
-      if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
-      {
-        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
-        cues.skip(len);
-        continue;
-      }
-      if(id!=MKV_CUE_POINT)
-      {
-        printf("Found %s in CUES, ignored \n",ss);
-        cues.skip(len);
-        continue;
-      }
-      ADM_ebml_file cue(&cues,len);
-      // Cue TIME normally
-       cue.readElemId(&id,&len);
-       if(id!=MKV_CUE_TIME)
-       {
-          ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-          printf("Found %s(0x%"PRIx64"), expected CUE_TIME  (0x%x)\n", ss,id,MKV_CUE_TIME);
-          cue.skip(cue.remaining());
-          continue;
-       }
-       time=cue.readUnsignedInt(len);
-
-
-       cue.readElemId(&id,&len);
-       if(id!=MKV_CUE_TRACK_POSITION)
-       {
-          ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-          printf("Found %s (0x%"PRIx64"), expected MKV_CUE_TRACK_POSITION (0x%x)\n", ss,id,MKV_CUE_TRACK_POSITION);
-          cue.skip(cues.remaining());
-          continue;
-       }
-       ADM_ebml_file trackPos(&cue,len);
-       uint64_t tid=0;
-       uint64_t cluster_position=0;
-       uint64_t cue_position=0;
-       while(!trackPos.finished())
-       {
-         trackPos.readElemId(&id,&len);
-         switch(id)
-         {
-           case MKV_CUE_TRACK: tid=trackPos.readUnsignedInt(len);break;
-           case MKV_CUE_CLUSTER_POSITION: cluster_position=trackPos.readUnsignedInt(len);break;
-           case MKV_CUE_RELATIVE_POSITION: cue_position=trackPos.readUnsignedInt(len);break;
-           default:
-                 ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-                 printf("[MKV] in cluster position found tag %s (0x%"PRIx64")\n",ss,id);
-                 trackPos.skip(len);
-                 continue;
-         }
-       }
-       aprintf("Track %"PRIx64" segmentPos=%"PRIx64" Cluster Position 0x%"PRIx64" Cue position 0x%"PRIx64" Absolute=%"PRIx64" time %"PRIu64"\n",
-             tid,segmentPos,cluster_position,cue_position,cue_position+cluster_position+segmentPos,time);  
-              
-       if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
-            _cueTime.append(time);
-     }
+        ADM_info("[MKV] Cues updated\n");
+        return true;
    }
-   printf("[MKV] Cues updated\n");
-   return 1;
+   else
+   {
+       ADM_info("[MKV] No Cue found\n");
+       return false;
+   }
+   
 }
 /**
         \fn indexClusters
