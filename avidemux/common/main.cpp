@@ -172,7 +172,7 @@ static const char *getUISpecifSubfolder()
 int startAvidemux(int argc, char *argv[])
 {
     printf("*************************\n");
-    printf("  Avidemux v"ADM_VERSION);
+    printf("  Avidemux v%s", ADM_VERSION);
 
 #if defined( ADM_SUBVERSION )
 #define MKSTRING(x) x

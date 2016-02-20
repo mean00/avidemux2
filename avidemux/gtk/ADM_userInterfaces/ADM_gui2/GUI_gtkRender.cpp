@@ -112,7 +112,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 		xinfo->display = 0;
 		xinfo->window = getMainNSWindow();
 #else
-		xinfo->window = GDK_WINDOW_XID(win);
+		xinfo->systemWindowId = GDK_WINDOW_XID(win);
 		xinfo->display = GDK_WINDOW_XDISPLAY(parentWin);
 #endif
 

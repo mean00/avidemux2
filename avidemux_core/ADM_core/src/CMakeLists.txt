@@ -44,8 +44,8 @@ elseif (UNIX)
 ENDIF (WIN32)
 
 if (HAVE_EXECINFO)
-	include_directories("${LIBEXECINFO_INCLUDE_DIR}")
-	target_link_libraries(ADM_core6 "${LIBEXECINFO_LIBRARY_DIR}")
+	include_directories("${EXECINFO_INCLUDE_DIR}")
+	target_link_libraries(ADM_core6 "${EXECINFO_LIBRARY_DIR}")
 endif (HAVE_EXECINFO)
 
 if (ADM_DEBUG AND FIND_LEAKS)
