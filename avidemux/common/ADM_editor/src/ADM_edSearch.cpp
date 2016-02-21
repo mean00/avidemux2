@@ -20,6 +20,9 @@ using std::string;
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 #include "ADM_vidMisc.h"
+
+#define pivotPrintf(...) {}
+
 /**
     \fn getNKFramePTS
 */
@@ -216,6 +219,65 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
     }
     return false;
 }
+/** 
+ * \fn getFrameNumberBeforePts
+ * \brief Searcg the framenumber that has a valid PTS before and closer to refTime
+ *         it can be equal to refTime
+ * @param v
+ * @param refTime
+ * @param frameNumber
+ * @return 
+ */
+bool ADM_Composer::getFrameNumberBeforePts(_VIDEOS *v,uint64_t refTime,int &frameNumber)
+{
+    uint32_t nbFrame = v->_nb_video_frames;
+    uint64_t pts, dts;
+    uint32_t curFrame=nbFrame >> 1;
+    uint32_t splitMoval = curFrame >> 1;
+    pivotPrintf("Looking for frame with a pts   %s\n",ADM_us2plain(refTime));
+    // Try to find the frame that as the timestamp close enough to refTime, while being smaller
+    do 
+    {
+        // seems like the pts determination, not always works -> retry if necessary
+        bool worked;
+        do {
+                pts=ADM_NO_PTS;
+                worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
+                if (worked && pts != ADM_NO_PTS) 
+                    break; // found
+                
+                curFrame--;
+                if (!curFrame)
+                {
+                        ADM_warning("The whole segment is corrupted. Abort the search");
+                        return false;
+                }
+        } while(true);
+        pivotPrintf("SplitMoval=%d\n",splitMoval);
+        if(pts==refTime)
+            break;
+        if (splitMoval) 
+        {
+            pivotPrintf("Pivot time is %d, %s\n",curFrame,ADM_us2plain(pts));
+            if (pts >= refTime)
+                    curFrame -= splitMoval;
+            else
+                    curFrame += splitMoval;
+            splitMoval >>= 1;
+            pivotPrintf("Split=%d\n",splitMoval);
+        } else
+        {
+                pivotPrintf("End of pivot\n");
+                break;
+        }
+    } while(refTime != pts);
+
+    pivotPrintf("-Matching frame is %d, time is  %s\n",curFrame,ADM_us2plain(pts));
+    if (pts > refTime && curFrame)
+            curFrame--;
+    frameNumber=curFrame;
+    return true;
+}
 /**
     \fn searchPreviousKeyFrameInRef
     \brief Search next key frame in ref video ref
@@ -224,57 +286,55 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
     @param nkTime : Time of the ref video
 
 */
+
 bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime)
 {
     // Search for the current frame with quick search
     _VIDEOS *v = _segments.getRefVideo(ref);
     uint32_t nbFrame = v->_nb_video_frames;
     uint64_t pts, dts;
-	uint32_t curFrame=nbFrame >> 1;
-	uint32_t splitMoval = curFrame >> 1;
-	do {
-		// seems like the pts determination, not always works -> retry if necessary
-		bool worked;
-		do {
-			worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
-			if (!worked || pts == ADM_NO_PTS) {
-				curFrame++;
-				if (curFrame == nbFrame) {
-					ADM_warning("The whole segment is corrupted. Abort the search");
-					return false;
-				}
-			} else
-				break;
-		} while(true);
+    int curFrame;
 
-		if (splitMoval != 0) {
-			if (pts >= refTime)
-				curFrame -= splitMoval;
-			else
-				curFrame += splitMoval;
-			splitMoval >>= 1;
-		} else
-			break;
-	} while(refTime != pts);
-
-	if (pts < refTime)
-		curFrame++;
-	for (int i=curFrame; i>=0; i--) 
-        {
-        uint64_t p;
-        uint32_t flags;
-                v->_aviheader->getFlags(i,&flags);
-                if(!(flags & AVI_KEY_FRAME)) continue;
-		if(!v->_aviheader->getPtsDts(i,&pts,&dts) || pts == ADM_NO_PTS)
-                {
-			ADM_warning("The keyframe with PTS less than %"PRIu32"ms is corrupted\n",refTime/1000);
-                        continue;
-                }
-                if(pts>=refTime) continue;
-		*nkTime = pts;
-		return true;
-	}
-    ADM_warning("Cannot find keyframe with PTS less than %"PRIu32"ms\n",refTime/1000);
+    if(!getFrameNumberBeforePts(v,refTime,curFrame))
+    {
+        ADM_warning("Cannot locate the frame we are talking about at PTS=%s\n",ADM_us2plain(refTime));
+        return false;
+    }
+    // rewing until we find a keyframe
+    for (int i=curFrame; i>=0; i--) 
+    {
+    uint64_t p;
+    uint32_t flags;
+            v->_aviheader->getFlags(i,&flags);
+            if(!(flags & AVI_KEY_FRAME)) 
+            {
+                continue;
+            }
+            if(!v->_aviheader->getPtsDts(i,&pts,&dts))
+            {
+                pivotPrintf("Cant get PTS\n");
+                continue;
+            }
+            if(pts == ADM_NO_PTS)
+            {
+                    pivotPrintf("No PTS\n");
+                    continue;
+            }
+            pivotPrintf("-- Previous Kf ! This one is %s\n",ADM_us2plain(pts));
+            pivotPrintf("-- Ref is %s\n",ADM_us2plain(refTime));
+            pivotPrintf("-- DTS %s\n",ADM_us2plain(dts));
+            if(pts>=refTime) continue;
+            *nkTime = pts; // ok found it
+#if 0            
+            for(int j=0;j<5;j++)
+            {
+                 if(!v->_aviheader->getPtsDts(i+j,&pts,&dts)) continue ;
+                 printf("Neighbor [%d] = %s\n",j,ADM_us2plain(pts));
+            }
+#endif            
+            return true;
+    }
+    ADM_warning("Cannot find keyframe with PTS less than %s\n",ADM_us2plain(refTime));
     return false;
 }
 
