@@ -1605,4 +1605,14 @@ void UI_setAudioTrackCount( int nb )
 {
         return;
 }
+/**
+*/
+bool UI_setDisplayName(const char *name)
+{
+        return true;
+}
+bool         UI_reset(void)
+{
+        return true;
+}
 // EOF
