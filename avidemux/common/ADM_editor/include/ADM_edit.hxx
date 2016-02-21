@@ -116,7 +116,7 @@ class ADM_Composer : public IEditor
                     bool        updateImageTiming(_SEGMENT *seg,ADMImage *image);
                     // Need to get the image just before targetPts
                     bool        decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image);
-                    bool        getFrameNumberBeforePts(_VIDEOS *v,uint64_t refTime,int &frameNumber);
+                    bool        getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &frameNumber);
 
 protected:
                                 /// Decode frame and on until frame is popped out of decoders

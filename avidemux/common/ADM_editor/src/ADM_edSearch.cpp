@@ -221,14 +221,14 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
 }
 /** 
  * \fn getFrameNumberBeforePts
- * \brief Searcg the framenumber that has a valid PTS before and closer to refTime
+ * \brief Search the framenumber that has a valid PTS = what's given or  before
  *         it can be equal to refTime
  * @param v
  * @param refTime
  * @param frameNumber
  * @return 
  */
-bool ADM_Composer::getFrameNumberBeforePts(_VIDEOS *v,uint64_t refTime,int &frameNumber)
+bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &frameNumber)
 {
     uint32_t nbFrame = v->_nb_video_frames;
     uint64_t pts, dts;
@@ -244,8 +244,7 @@ bool ADM_Composer::getFrameNumberBeforePts(_VIDEOS *v,uint64_t refTime,int &fram
                 pts=ADM_NO_PTS;
                 worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
                 if (worked && pts != ADM_NO_PTS) 
-                    break; // found
-                
+                    break; // found                
                 curFrame--;
                 if (!curFrame)
                 {
@@ -256,20 +255,15 @@ bool ADM_Composer::getFrameNumberBeforePts(_VIDEOS *v,uint64_t refTime,int &fram
         pivotPrintf("SplitMoval=%d\n",splitMoval);
         if(pts==refTime)
             break;
-        if (splitMoval) 
-        {
-            pivotPrintf("Pivot time is %d, %s\n",curFrame,ADM_us2plain(pts));
-            if (pts >= refTime)
-                    curFrame -= splitMoval;
-            else
-                    curFrame += splitMoval;
-            splitMoval >>= 1;
-            pivotPrintf("Split=%d\n",splitMoval);
-        } else
-        {
-                pivotPrintf("End of pivot\n");
-                break;
-        }
+        if (!splitMoval) 
+            break;        
+        pivotPrintf("Pivot time is %d, %s\n",curFrame,ADM_us2plain(pts));
+        if (pts >= refTime)
+                curFrame -= splitMoval;
+        else
+                curFrame += splitMoval;
+        splitMoval >>= 1;
+        pivotPrintf("Split=%d\n",splitMoval);        
     } while(refTime != pts);
 
     pivotPrintf("-Matching frame is %d, time is  %s\n",curFrame,ADM_us2plain(pts));
@@ -295,35 +289,29 @@ bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t
     uint64_t pts, dts;
     int curFrame;
 
-    if(!getFrameNumberBeforePts(v,refTime,curFrame))
+    // look up the frame we are starting from...
+    if(!getFrameNumFromPtsOrBefore(v,refTime,curFrame))
     {
         ADM_warning("Cannot locate the frame we are talking about at PTS=%s\n",ADM_us2plain(refTime));
         return false;
     }
-    // rewing until we find a keyframe
+    // rewind until we find a keyframe
     for (int i=curFrame; i>=0; i--) 
     {
     uint64_t p;
     uint32_t flags;
             v->_aviheader->getFlags(i,&flags);
             if(!(flags & AVI_KEY_FRAME)) 
-            {
                 continue;
-            }
             if(!v->_aviheader->getPtsDts(i,&pts,&dts))
-            {
-                pivotPrintf("Cant get PTS\n");
                 continue;
-            }
             if(pts == ADM_NO_PTS)
-            {
-                    pivotPrintf("No PTS\n");
-                    continue;
-            }
+                continue;
             pivotPrintf("-- Previous Kf ! This one is %s\n",ADM_us2plain(pts));
             pivotPrintf("-- Ref is %s\n",ADM_us2plain(refTime));
             pivotPrintf("-- DTS %s\n",ADM_us2plain(dts));
-            if(pts>=refTime) continue;
+            if(pts>=refTime) 
+                continue;
             *nkTime = pts; // ok found it
 #if 0            
             for(int j=0;j<5;j++)
