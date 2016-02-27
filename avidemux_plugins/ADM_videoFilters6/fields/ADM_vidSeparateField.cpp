@@ -22,6 +22,7 @@ Same idea as for avisynth separatefield
 
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_vidMisc.h"
 
 /**
     \class AVDMVideoSeparateField
@@ -83,10 +84,8 @@ const char *AVDMVideoSeparateField::getConfiguration(void)
 AVDMVideoSeparateField::AVDMVideoSeparateField(  ADM_coreVideoFilter *in,CONFcouple *setup) 
         : ADM_coreVideoFilterCached(4,in,setup)
 {
-
-	info.height>>=1;
-    info.frameIncrement/=2;
-    
+    info.height>>=1;
+    info.frameIncrement/=2;    
 }
 /**
     \fn AVDMVideoSeparateField
@@ -114,14 +113,14 @@ bool AVDMVideoSeparateField::getNextFrame(uint32_t *fn,ADMImage *image)
 ADMImage *cur,*next;
 uint32_t frame=nextFrame++; 
         *fn=frame;
-		cur=vidCache->getImage(frame/2);
-		if(!cur)
-		{
-			ADM_warning("Seoarate field : cannot read\n");
-			vidCache->unlockAll();
-		 	return 0;
-		}
-        
+        cur=vidCache->getImage(frame/2);
+        if(!cur)
+        {
+                ADM_warning("Seoarate field : cannot read\n");
+                vidCache->unlockAll();
+                return 0;
+        }
+
         for(int i=0;i<3;i++)
         {
             ADM_PLANE plane=(ADM_PLANE)i;
@@ -141,7 +140,8 @@ uint32_t frame=nextFrame++;
         image->copyInfo(cur);
         if(frame&1)
             image->Pts+=info.frameIncrement;
-		vidCache->unlockAll();
+        vidCache->unlockAll();
+        //ADM_info("Output PTS=%s\n",ADM_us2plain(image->Pts));
         return 1;
 }
 // EOF
