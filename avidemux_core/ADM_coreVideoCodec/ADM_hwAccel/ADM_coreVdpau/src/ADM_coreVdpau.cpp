@@ -102,6 +102,8 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(putBitsYV12OutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_PUT_BITS_Y_CB_CR);
     GetMe(putBitsCapsOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_QUERY_PUT_BITS_Y_CB_CR_CAPABILITIES);
     GetMe(getBitsNativeOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_GET_BITS_NATIVE);
+    
+    
 
     GetMe(presentationQueueDestroy,VDP_FUNC_ID_PRESENTATION_QUEUE_DESTROY);
     GetMe(presentationQueueCreate,VDP_FUNC_ID_PRESENTATION_QUEUE_CREATE);
@@ -119,7 +121,8 @@ bool admVdpau::init(GUI_WindowInfo *x)
 
     GetMe(mixerGetAttributesValue,VDP_FUNC_ID_VIDEO_MIXER_GET_ATTRIBUTE_VALUES);
     GetMe(mixerSetAttributesValue,VDP_FUNC_ID_VIDEO_MIXER_SET_ATTRIBUTE_VALUES);
-
+    GetMe(mixerGetOutputSurfaceParameters,VDP_FUNC_ID_OUTPUT_SURFACE_GET_PARAMETERS); ///
+    GetMe(mixerGetSurfaceParameters,VDP_FUNC_ID_VIDEO_SURFACE_GET_PARAMETERS); ///
     if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.presentationQueueDisplayX11Create(ADM_coreVdpau::vdpDevice,x->systemWindowId,&queueX11))
     {
         ADM_warning("Cannot create X11 Presentation Queue\n");
@@ -335,6 +338,24 @@ VdpStatus admVdpau::outputSurfaceGetBitsNative_FieldWeave(VdpOutputSurface     s
      ( void * const *)ptr,
     pitches));
 }
+
+
+/**
+    \fn
+    \brief
+*/
+VdpStatus admVdpau::outputSurfaceGetParameters(  VdpOutputSurface surface,    VdpRGBAFormat *  rgba_format,
+                            uint32_t *       width,    uint32_t *       height)
+{
+    CHECK(ADM_coreVdpau::funcs.mixerGetOutputSurfaceParameters(surface,rgba_format,width,height));
+}
+/**
+ */
+VdpStatus admVdpau::surfaceGetParameters(VdpVideoSurface surface,VdpChromaType *chroma,uint32_t *w,uint32_t *h)
+{
+    CHECK(ADM_coreVdpau::funcs.mixerGetSurfaceParameters(surface,chroma,w,h));
+}
+
 /**
     \fn
     \brief

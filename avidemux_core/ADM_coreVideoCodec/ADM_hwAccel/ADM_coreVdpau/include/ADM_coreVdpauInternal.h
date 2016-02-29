@@ -57,6 +57,9 @@ typedef struct
     VdpVideoMixerGetAttributeValues   *mixerGetAttributesValue;
     VdpVideoMixerSetAttributeValues   *mixerSetAttributesValue;
 
+    VdpOutputSurfaceGetParameters     *mixerGetOutputSurfaceParameters;
+    VdpVideoSurfaceGetParameters      *mixerGetSurfaceParameters;
+    
     VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
 }VdpFunctions;
 

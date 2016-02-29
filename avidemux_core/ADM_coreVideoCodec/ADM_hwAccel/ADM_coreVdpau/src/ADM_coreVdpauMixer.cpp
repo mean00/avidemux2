@@ -77,6 +77,7 @@ VdpVideoMixerParameter parameters[MIXER_NB_PARAM]=
 uint32_t color=VDP_CHROMA_TYPE_420;
 void    *values[MIXER_NB_PARAM]={&width,&height,&color};
     int nbFeature=0;
+    ADM_info("Creating vdpauMixer with width=%d, height=%d color=%d\n",width,height,color);
     //features[nbFeature++]=VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L5;
     if(deinterlace)
     {
@@ -131,11 +132,27 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
                 NULL,                               // dest video Rec
                 0,NULL);                            // Layers
                 
-            
+#if 0      
+  ADM_info("Target width=%d height=%d\n", targetWidth,targetHeight);
+  VdpRGBAFormat fmt;
+  VdpChromaType chroma;
+  uint32_t tw,th;
+  
+  if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.mixerGetOutputSurfaceParameters(targetOutputSurface,&fmt,&tw,&th))
+  {
+      ADM_warning("VdpOutputSurfaceGetParameters failed\n");
+  }
+  ADM_info("output surface width=%d height=%d fmt=%d\n", tw,th,fmt);
+  if(VDP_STATUS_OK!=ADM_coreVdpau::funcs.mixerGetSurfaceParameters(sourceSurface,&chroma,&tw,&th))
+  {
+        ADM_warning("mixerGetSurfaceParameters failed\n");
+  }
+  ADM_info("input surface width=%d height=%d fmt=%d\n", tw,th,chroma);
+#endif
   if(VDP_STATUS_OK!=e)
     {
         
-        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
+        ADM_warning("MixerRender  failed :%s\n",getErrorString(e));
         
     }
     return e;

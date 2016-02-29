@@ -102,6 +102,9 @@ public:
     {
                 return (x+15) & ~15;
     }
+    static VdpStatus outputSurfaceGetParameters(  VdpOutputSurface surface,    VdpRGBAFormat *  rgba_format,
+                            uint32_t *       width,    uint32_t *       height);
+    static VdpStatus surfaceGetParameters(VdpVideoSurface surface,VdpChromaType *chomra,uint32_t *w,uint32_t *h);
 
 #endif
 };
