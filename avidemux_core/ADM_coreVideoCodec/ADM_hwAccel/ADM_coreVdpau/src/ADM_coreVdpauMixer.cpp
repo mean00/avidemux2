@@ -15,11 +15,11 @@
 #include "ADM_default.h"
 #include "../include/ADM_coreVdpau.h"
 
-#ifdef USE_VDPAU
+#if defined(USE_VDPAU) 
 #include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
 
-#if 1
+#if 0
     #define aprintf ADM_info
 #else
     #define aprintf(...) {}
@@ -157,6 +157,64 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
     }
     return e;
 }
+/**
+ * \fn mixerRenderWithCropping
+ * \brief Same as above but allow to take only top/left of the input image
+ * @param mixer
+ * @param sourceSurface
+ * @param targetOutputSurface
+ * @param targetWidth
+ * @param targetHeight
+ * @param sourceWidth
+ * @param sourceHeight
+ * @return 
+ */
+VdpStatus admVdpau::mixerRenderWithCropping(VdpVideoMixer mixer,
+                                VdpVideoSurface sourceSurface,
+                                VdpOutputSurface targetOutputSurface, 
+                                uint32_t targetWidth, 
+                                uint32_t targetHeight,uint32_t sourceWidth, uint32_t sourceHeight )
+{
+const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
+
+    VdpRect rect;
+    rect.x0=rect.y0=0;
+    rect.x1=sourceWidth;
+    rect.y1=sourceHeight;
+#if 0
+    VdpChromaType sourceChroma;
+    uint32_t sourceW,sourceH;
+    ADM_coreVdpau::funcs.mixerGetSurfaceParameters(sourceSurface,&sourceChroma,&sourceW,&sourceH);
+    ADM_info("Source is %d %d x %d\n",sourceChroma,sourceW,sourceH);
+    VdpRGBAFormat rgb;
+    ADM_coreVdpau::funcs.mixerGetOutputSurfaceParameters(targetOutputSurface,&rgb,&sourceW,&sourceH);
+    ADM_info("Target is %d %d x %d\n",rgb,sourceW,sourceH);
+    ADM_info("Cropped to %d x %d ==> %d x %d\n",sourceWidth,sourceHeight,targetWidth,targetHeight);
+    ADM_info("Rect %d %d %d %d\n",rect.x0,rect.y0,rect.x1,rect.y1);
+#endif    
+      VdpStatus e=ADM_coreVdpau::funcs.mixerRender(mixer,
+                VDP_INVALID_HANDLE,NULL,    // Background
+                VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
+                
+                0,            listOfInvalidSurface, // Past...
+                sourceSurface,                      // current
+                0,            listOfInvalidSurface, // Future
+                &rect,                               // source RECT
+                targetOutputSurface,
+                NULL,                               // dest Rec
+                NULL,                               // dest video Rec
+                0,NULL);                            // Layers
+                
+            
+  if(VDP_STATUS_OK!=e)
+    {
+        
+        ADM_warning("MixerCreate  failed :%s\n",getErrorString(e));
+        
+    }
+    return e;
+}
+
 /**
     \fn mixerGetAttributesValue
 */

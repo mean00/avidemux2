@@ -108,6 +108,7 @@ bool vdpauVideoFilter::setupVdpau(void)
     // check if we have something to do
     if(info.width==previousFilter->getInfo()->width &&  info.height==previousFilter->getInfo()->height)
         return false;
+    
     if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,
                         info.width,info.height,&outputSurface)) 
     {
@@ -123,12 +124,15 @@ bool vdpauVideoFilter::setupVdpau(void)
             goto badInit;
         }
     }
+    {
+    int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            previousFilter->getInfo()->height,&mixer)) 
+                                            paddedHeight,&mixer)) 
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
-    } 
+    }
+    }
     setIdentityCSC();
     tempBuffer=new uint8_t[info.width*info.height*4];
     scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
@@ -305,19 +309,20 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     {
         //printf("Uploading image to vdpau\n");
         if(false==uploadImage(next,0,nextFrame)) 
-                {
-                    vidCache->unlockAll();
-                    return false;
-                }
+        {
+            vidCache->unlockAll();
+            return false;
+        }
         tmpSurface=input[0];
     }
     
     // Call mixer...
-    if(VDP_STATUS_OK!=admVdpau::mixerRender( 
+    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithCropping( 
                 mixer,
                 tmpSurface,
                 outputSurface, 
-                info.width,info.height))
+                info.width,info.height, // target
+                previousFilter->getInfo()->width,previousFilter->getInfo()->height))
 
     {
         ADM_warning("[Vdpau] Cannot mixerRender\n");
