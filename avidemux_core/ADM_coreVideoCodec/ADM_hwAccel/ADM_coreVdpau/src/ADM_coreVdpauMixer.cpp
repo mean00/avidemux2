@@ -262,7 +262,9 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(
                                 VdpVideoSurface sourceSurface[3], // Past present future
                                 VdpOutputSurface targetOutputSurface, 
                                 uint32_t targetWidth, 
-                                uint32_t targetHeight )
+                                uint32_t targetHeight,
+                                uint32_t sourceWidth, 
+                                uint32_t sourceHeight        )
 {
     int nbPrev=2,nbNext=2;
     VdpVideoMixerPictureStructure fieldType=VDP_VIDEO_MIXER_PICTURE_STRUCTURE_TOP_FIELD;
@@ -273,6 +275,11 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(
     VdpVideoSurface future[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
     VdpVideoSurface present;
 
+    VdpRect rect;
+    rect.x0=rect.y0=0;
+    rect.x1=sourceWidth;
+    rect.y1=sourceHeight;
+    
     present=sourceSurface[1];
     int index=0;
     if(!topField) index=1;
@@ -299,7 +306,7 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(
                 nbPrev,       past, // Past...
                               present, // current
                 nbNext,       future, // Future
-                NULL,                               // source RECT
+                &rect,                               // source RECT
                 targetOutputSurface,
                 NULL,                               // dest Rec
                 NULL,                               // dest video Rec

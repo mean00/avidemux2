@@ -196,6 +196,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     scaler=NULL;
     secondField=false;
     nextFrame=0;
+    int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
     if(!admVdpau::isOperationnal())
     {
         ADM_warning("Vdpau not operationnal\n");
@@ -223,9 +224,9 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
     for(int i=0;i<3;i++)
         slots[i].image=new ADMImageDefault( previousFilter->getInfo()->width, 
                                             previousFilter->getInfo()->height);
-                                            
+    
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            previousFilter->getInfo()->height,&mixer,true)) 
+                                            paddedHeight,&mixer,true)) 
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
@@ -527,6 +528,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
                 mixer,
                 in,
                 outputSurface, 
+                getInfo()->width,getInfo()->height,
                 previousFilter->getInfo()->width,previousFilter->getInfo()->height))
 
     {

@@ -90,8 +90,7 @@ public:
                                             uint32_t sourceWidth, uint32_t sourceHeight);
     static VdpStatus mixerRenderWithPastAndFuture(bool topField,VdpVideoMixer mixer,
                                 VdpVideoSurface sourceSurface[3], // Past present future
-                                VdpOutputSurface targetOutputSurface,
-                                uint32_t targetWidth, uint32_t targetHeight );
+                                VdpOutputSurface targetOutputSurface, uint32_t targetWidth,     uint32_t targetHeight,uint32_t sourceWidth,     uint32_t sourceHeight );
     static VdpStatus mixerGetAttributesValue(VdpVideoMixer mixer,
                                 uint32_t attrCount,
                                 const  VdpVideoMixerAttribute *xkeys,
