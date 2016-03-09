@@ -31,7 +31,12 @@ IF(${PLUGIN_UI} MATCHES "COMMON")
         SETDEBIANDEPS(USE_FAAC libfaac0 DEPS)
         # Audio device
         SETDEBIANDEPS(USE_AFTEN libpulse0 DEPS)
+        # Demuxer
+        # Muxer
+        # Video Encode
+        SETDEBIANDEPS(USE_XVID libxvidcore4 DEPS)
 ENDIF(${PLUGIN_UI} MATCHES "COMMON")
+#
 # Add optional DEPS here
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "${DEPS}")
 #
