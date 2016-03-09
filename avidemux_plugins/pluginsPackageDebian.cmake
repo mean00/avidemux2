@@ -37,6 +37,14 @@ IF(${PLUGIN_UI} MATCHES "COMMON")
         SETDEBIANDEPS(USE_XVID libxvidcore4 DEPS)
 ENDIF(${PLUGIN_UI} MATCHES "COMMON")
 #
+#
+#
+IF((${PLUGIN_UI} MATCHES "QT4") OR (${PLUGIN_UI} MATCHES "CLI"))
+       # 
+        SETDEBIANDEPS(USE_X264 "libx264-dev" DEPS) # libx264 contains the lib revision, pull the -dev package to get the latest one
+        SETDEBIANDEPS(USE_X265 "libx265-dev" DEPS) # libx265 contains the lib revision, pull the -dev package to get the latest one
+ENDIF((${PLUGIN_UI} MATCHES "QT4") OR (${PLUGIN_UI} MATCHES "CLI"))
+#
 # Add optional DEPS here
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "${DEPS}")
 #

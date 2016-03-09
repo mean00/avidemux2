@@ -10,7 +10,7 @@ SET(x264_SRCS
 )
 include(admCheckX264)
 checkX264()
-IF(X264_FOUND)
+IF(USE_X264)
   MESSAGE(STATUS "x264 plugin activated.")
   INCLUDE_DIRECTORIES(${X264_INCLUDE_DIR})
 
@@ -28,21 +28,21 @@ IF(X264_FOUND)
   endif(DO_QT4)
   #-----------------------/QT4 VERSION---------------------
   #-----------------------GTK or CLI VERSION---------------------
-  if((DO_GTK) OR (DO_CLI))
+  if(DO_COMMON)
     ADD_VIDEO_ENCODER(ADM_ve_x264_other   ADM_x264_noui.cpp ${x264_SRCS})
     ADD_TARGET_CFLAGS(ADM_ve_x264_other "-DADM_UI_TYPE_BUILD=1") # CLI!
     TARGET_LINK_LIBRARIES(ADM_ve_x264_other "${X264_LIBRARY_DIR}")
     TARGET_LINK_LIBRARIES(ADM_ve_x264_other ADM_core6)
     INIT_VIDEO_ENCODER(ADM_ve_x264_other)
     INSTALL_VIDEO_ENCODER(ADM_ve_x264_other)
-  endif((DO_GTK) OR (DO_CLI))
+  endif(DO_COMMON)
   # ------------- PRESET -----------
   if(DO_SETTINGS)
     FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
     message(STATUS "Presets found : ${json_files}")
     INSTALL_VIDEO_ENCODER_SETTINGS(x264 VERSION 3 FILES ${json_files})
   endif(DO_SETTINGS)
-ELSE(X264_FOUND)
+ELSE(USE_X264)
   MESSAGE(STATUS "x264 disabled.")
-ENDIF(X264_FOUND)
+ENDIF(USE_X264)
 
