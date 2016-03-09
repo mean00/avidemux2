@@ -28,14 +28,14 @@ IF(USE_X265)
   endif(DO_QT4)
   #-----------------------/QT4 VERSION---------------------
   #-----------------------GTK or CLI VERSION---------------------
-  if(DO_COMMON))
+  if(DO_COMMON)
     ADD_VIDEO_ENCODER(ADM_ve_x265_other   ADM_x265_noui.cpp ${x265_SRCS})
     ADD_TARGET_CFLAGS(ADM_ve_x265_other "-DADM_UI_TYPE_BUILD=1") # CLI!
     TARGET_LINK_LIBRARIES(ADM_ve_x265_other "${X265_LIBRARY_DIR}")
     TARGET_LINK_LIBRARIES(ADM_ve_x265_other ADM_core6)
     INIT_VIDEO_ENCODER(ADM_ve_x265_other)
     INSTALL_VIDEO_ENCODER(ADM_ve_x265_other)
-  endif((DO_GTK) OR (DO_COMMON))
+  endif(DO_COMMON)
   # ------------- PRESET -----------
   if(DO_SETTINGS)
     FILE(GLOB json_files ${CMAKE_CURRENT_SOURCE_DIR}/preset/*.json)
