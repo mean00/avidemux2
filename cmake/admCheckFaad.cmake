@@ -30,7 +30,7 @@ MACRO(checkFaad)
 
 			IF (FAAD_FOUND)
 				CHECK_CFLAGS_REQUIRED(faad_check.cpp "-DOLD_FAAD_PROTO" "${FAAD_INCLUDE_DIR}" "${FAAD_LIBRARY_DIR}" FAAD_CFLAGS_REQUIRED)
-                                SET(USE_FAAD 1)
+                                SET(USE_FAAD True CACHE BOOL "")
 				IF (FAAD_CFLAGS_REQUIRED)
 					SET(FAAD_OLD_PROTOTYPE 1)
 				ENDIF (FAAD_CFLAGS_REQUIRED)

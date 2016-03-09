@@ -16,5 +16,5 @@ MACRO(checkVpxDec)
 		ENDIF (VPXDEC)
 		MESSAGE("")
 
-		APPEND_SUMMARY_LIST("Audio Decoder" "libvpx" "${VPX_FOUND}")
+		APPEND_SUMMARY_LIST("Video Decoder" "libvpx" "${VPX_FOUND}")
 ENDMACRO(checkVpxDec)

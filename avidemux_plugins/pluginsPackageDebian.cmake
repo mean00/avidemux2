@@ -1,7 +1,7 @@
 ##############################
 # DEBIAN
 ##############################
-
+include(admDebianUtils)
 SET(PLUGIN_EXT ${PLUGIN_UI})
 IF(${PLUGIN_UI} MATCHES "QT4")
         SET(PLUGIN_EXT ${QT_EXTENSION})
@@ -18,33 +18,20 @@ ELSE(DO_SETTINGS)
 ELSE(DO_SETTINGS)
 ENDIF(DO_SETTINGS)
 #
-
 # Build our deps list
+#
 SET(DEPS "libc6 (>=2.4), libstdc++6 (>=4.2.1),libx11-6,  libxv1, zlib1g (>=1:1.1.4), avidemux3-core-runtime (>=${AVIDEMUX_VERSION})")
-# Audio decoder
-IF(USE_FAAD)
-    SET(DEPS "${DEPS},libfaad2")
-ENDIF(USE_FAAD)
-IF(USE_VORBIS)
-    SET(DEPS "${DEPS},libvorbis0a, libvorbisenc2, libogg")
-ENDIF(USE_VORBIS)
-IF(USE_OPUS)
-    SET(DEPS "${DEPS},libopus0")
-ENDIF(USE_OPUS)
-# Audio encoder
-IF(USE_LAME)
-    SET(DEPS "${DEPS},libmp3lame0")
-ENDIF(USE_LAME)
-IF(USE_FAAC)
-    SET(DEPS "${DEPS},libfaac0")
-ENDIF(USE_FAAC)
-IF(USE_AFTEN)
-    SET(DEPS "${DEPS},libaften0")
-ENDIF(USE_AFTEN)
-# Audio device
-IF(USE_PULSE_SIMPLE)
-    SET(DEPS "${DEPS},libpulse0")
-ENDIF(USE_PULSE_SIMPLE)
+IF(${PLUGIN_UI} MATCHES "COMMON")
+        # Audio decoder
+        SETDEBIANDEPS(USE_FAAD libfaad2 DEPS)
+        SETDEBIANDEPS(USE_VORBIS "libvorbis0a, libvorbisenc2, libogg0" DEPS)
+        SETDEBIANDEPS(USE_LIBOPUS libopus0 DEPS)
+        # Audio encoder
+        SETDEBIANDEPS(USE_LAME libmp3lame0 DEPS)
+        SETDEBIANDEPS(USE_FAAC libfaac0 DEPS)
+        # Audio device
+        SETDEBIANDEPS(USE_AFTEN libpulse0 DEPS)
+ENDIF(${PLUGIN_UI} MATCHES "COMMON")
 # Add optional DEPS here
 SET(CPACK_DEBIAN_PACKAGE_DEPENDS "${DEPS}")
 #
