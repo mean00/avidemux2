@@ -83,14 +83,18 @@ public:
     static VdpStatus presentationQueueDestroy(VdpPresentationQueue queue);
     static VdpStatus presentationQueueDisplay(VdpPresentationQueue queue,VdpOutputSurface outputSurface);
     /* Mixer */
-    static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer,bool deinterlace=false);
+    static VdpStatus mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer,bool deinterlace=false,bool ivtc=false);
     static VdpStatus mixerDestroy(VdpVideoMixer mixer);
     static VdpStatus mixerRender(VdpVideoMixer mixer,VdpVideoSurface sourceSurface,VdpOutputSurface targetOutputSurface, uint32_t targetWidth, uint32_t targetHeight );
     static VdpStatus mixerRenderWithCropping(VdpVideoMixer mixer,VdpVideoSurface sourceSurface,VdpOutputSurface targetOutputSurface, uint32_t targetWidth, uint32_t targetHeight ,
                                             uint32_t sourceWidth, uint32_t sourceHeight);
-    static VdpStatus mixerRenderWithPastAndFuture(bool topField,VdpVideoMixer mixer,
+    static VdpStatus mixerRenderFieldWithPastAndFuture(bool topField,VdpVideoMixer mixer,
                                 VdpVideoSurface sourceSurface[3], // Past present future
                                 VdpOutputSurface targetOutputSurface, uint32_t targetWidth,     uint32_t targetHeight,uint32_t sourceWidth,     uint32_t sourceHeight );
+    static VdpStatus mixerRenderFrameWithPastAndFuture(VdpVideoMixer mixer,
+                                VdpVideoSurface sourceSurface[3], // Past present future
+                                VdpOutputSurface targetOutputSurface, uint32_t targetWidth,     uint32_t targetHeight,uint32_t sourceWidth,     uint32_t sourceHeight );
+    
     static VdpStatus mixerGetAttributesValue(VdpVideoMixer mixer,
                                 uint32_t attrCount,
                                 const  VdpVideoMixerAttribute *xkeys,

@@ -226,7 +226,7 @@ bool vdpauVideoFilterDeint::setupVdpau(void)
                                             previousFilter->getInfo()->height);
     
     if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            paddedHeight,&mixer,true)) 
+                                            paddedHeight,&mixer,true,configuration.enableIvtc)) 
     {
         ADM_error("Cannot create mixer\n");
         goto badInit;
@@ -290,6 +290,7 @@ vdpauVideoFilterDeint::vdpauVideoFilterDeint(ADM_coreVideoFilter *in, CONFcouple
         configuration.deintMode=ADM_KEEP_TOP;
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
+        configuration.enableIvtc=false;
     }
     
     myName="vdpauDeint";
@@ -319,16 +320,19 @@ bool vdpauVideoFilterDeint::configure( void)
                              
           };
      bool doResize=configuration.resizeToggle;
-     diaElemToggle    tResize(&(doResize),   QT_TR_NOOP("_Resize:"));
+     bool doIvtc=configuration.enableIvtc;
+     diaElemToggle    tIvtc(&(doIvtc),   QT_TR_NOOP("_Ivtc:"));
+     diaElemToggle    tResize(&(doResize),   QT_TR_NOOP("_Resize:"));     
      diaElemMenu      mMode(&(configuration.deintMode),   QT_TR_NOOP("_Deint Mode:"), 3,tMode);
      diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TR_NOOP("Width :"),16,2048);
      diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TR_NOOP("Height :"),16,2048);
      
-     diaElem *elems[]={&mMode,&tResize,&tWidth,&tHeight};
+     diaElem *elems[]={&mMode,&tIvtc,&tResize,&tWidth,&tHeight};
      
      if(diaFactoryRun(QT_TR_NOOP("vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 configuration.resizeToggle=(bool)doResize;
+                configuration.enableIvtc=doIvtc;
                 if(doResize)
                 {
                     info.width=configuration.targetWidth;
@@ -524,7 +528,7 @@ bool vdpauVideoFilterDeint::sendField(bool topField)
     
        
     // ---------- Top field ------------
-    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithPastAndFuture(topField, 
+    if(VDP_STATUS_OK!=admVdpau::mixerRenderFieldWithPastAndFuture(topField, 
                 mixer,
                 in,
                 outputSurface, 

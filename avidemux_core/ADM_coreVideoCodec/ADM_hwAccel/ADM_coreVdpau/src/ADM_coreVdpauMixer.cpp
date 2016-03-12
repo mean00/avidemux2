@@ -61,7 +61,7 @@ VdpBool supported=VDP_TRUE;
 /**
     \fn mixerCreate
 */
-VdpStatus admVdpau::mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer,bool deinterlace)
+VdpStatus admVdpau::mixerCreate(uint32_t width,uint32_t height, VdpVideoMixer *mixer,bool deinterlace,bool ivtc)
 {
 #define MIXER_NB_PARAM 3
 #define MIXER_NB_FEATURE_MAX 7
@@ -71,19 +71,25 @@ VdpVideoMixerParameter parameters[MIXER_NB_PARAM]=
                                                VDP_VIDEO_MIXER_PARAMETER_VIDEO_SURFACE_HEIGHT,
                                                VDP_VIDEO_MIXER_PARAMETER_CHROMA_TYPE
                                                };
- VdpVideoMixerFeature features[MIXER_NB_FEATURE_MAX];
- VdpBool              enabledFeatures[MIXER_NB_FEATURE_MAX]={VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE};
-
-uint32_t color=VDP_CHROMA_TYPE_420;
-void    *values[MIXER_NB_PARAM]={&width,&height,&color};
+    VdpVideoMixerFeature features[MIXER_NB_FEATURE_MAX];
+    VdpBool              enabledFeatures[MIXER_NB_FEATURE_MAX]={VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE,VDP_TRUE};
+    uint32_t color=VDP_CHROMA_TYPE_420;
+    void    *values[MIXER_NB_PARAM]={&width,&height,&color};
     int nbFeature=0;
     ADM_info("Creating vdpauMixer with width=%d, height=%d color=%d\n",width,height,color);
     //features[nbFeature++]=VDP_VIDEO_MIXER_FEATURE_HIGH_QUALITY_SCALING_L5;
+   
+    if(ivtc)
+    {
+        ADM_info("Vdpau: Enabling ivtc\n");
+        features[nbFeature++]=VDP_VIDEO_MIXER_FEATURE_INVERSE_TELECINE;
+        deinterlace=true; // we need a sort of deinterlacing
+    }
     if(deinterlace)
     {
+        ADM_info("Vdpau: Enabling temporal spatial deint\n");
         features[nbFeature++]=VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL;
     }
-    
     int nbParam=MIXER_NB_PARAM;
     
     VdpStatus e=ADM_coreVdpau::funcs.mixerCreate(ADM_coreVdpau::vdpDevice,
@@ -96,6 +102,7 @@ void    *values[MIXER_NB_PARAM]={&width,&height,&color};
         
     }else   
     {
+        ADM_info("Vdpau Mixer : Enabling %d features\n",nbFeature);
         mixerEnableFeature(*mixer, nbFeature, features, enabledFeatures);
     }
     return e;
@@ -256,7 +263,7 @@ VdpStatus admVdpau::mixerSetAttributesValue(VdpVideoMixer mixer,
     \fn mixerRenderWithPastAndFuture
 */
 
-VdpStatus admVdpau::mixerRenderWithPastAndFuture(
+VdpStatus admVdpau::mixerRenderFieldWithPastAndFuture(
                                 bool topField,
                                 VdpVideoMixer mixer,
                                 VdpVideoSurface sourceSurface[3], // Past present future
@@ -318,6 +325,65 @@ VdpStatus admVdpau::mixerRenderWithPastAndFuture(
         
         ADM_warning("mixerRenderWithPastAndFuture  failed :%s\n",getErrorString(e));
         
+    }
+    return e;
+}
+
+/**
+    \fn mixerRenderWithPastAndFuture
+*/
+
+VdpStatus admVdpau::mixerRenderFrameWithPastAndFuture(                                
+                                VdpVideoMixer mixer,
+                                VdpVideoSurface sourceSurface[3], // Past present future
+                                VdpOutputSurface targetOutputSurface, 
+                                uint32_t targetWidth, 
+                                uint32_t targetHeight,
+                                uint32_t sourceWidth, 
+                                uint32_t sourceHeight        )
+{
+    VdpVideoSurface past=VDP_INVALID_HANDLE;
+    VdpVideoSurface future=VDP_INVALID_HANDLE;
+    VdpVideoSurface present;
+
+    VdpRect rect;
+    rect.x0=rect.y0=0;
+    rect.x1=sourceWidth;
+    rect.y1=sourceHeight;
+    
+    present=sourceSurface[1];
+    
+    int nbPrev=0,nbNext=0;
+    
+    if(VDP_INVALID_HANDLE!=sourceSurface[0] ) 
+    {
+        nbPrev=1;
+        past=sourceSurface[0];
+    }
+    if(VDP_INVALID_HANDLE!=sourceSurface[2] ) 
+    {
+        nbNext=1;
+        future=sourceSurface[2];
+    }
+    // 0 & 1 p
+    //ADM_info("Deint : %d\n",(int)mixerIsFeatureEnabled(mixer,VDP_VIDEO_MIXER_FEATURE_DEINTERLACE_TEMPORAL_SPATIAL));
+
+    VdpStatus e=ADM_coreVdpau::funcs.mixerRender(mixer,
+                VDP_INVALID_HANDLE,NULL,    // Background
+                VDP_VIDEO_MIXER_PICTURE_STRUCTURE_FRAME,
+                nbPrev,       &past, // Past...
+                              present, // current
+                nbNext,       &future, // Future
+                &rect,                               // source RECT
+                targetOutputSurface,
+                NULL,                               // dest Rec
+                NULL,                               // dest video Rec
+                0,NULL);                            // Layers
+                
+            
+  if(VDP_STATUS_OK!=e)
+    {        
+        ADM_warning("mixerRenderIvtcWithPastAndFuture  failed :%s\n",getErrorString(e));        
     }
     return e;
 }
