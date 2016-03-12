@@ -1,17 +1,20 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux deb/rpm from source
-# (c) Mean 2009
+# (c) Mean 2009/2016
+#
+# By default we use qt5 now
 #
 packages_ext=""
 do_core=1
-do_cli=0
-do_gtk=0
+do_cli=1
+do_gtk=0  # Gtk is obsolete!
 do_qt4=1
 do_plugins=1
 do_asan=0
 debug=0
-qt_ext=Qt4
-export QT_SELECT=4 # default for ubuntu, harmless for others
+qt_ext=Qt5
+QT_FLAVOR="-DENABLE_QT5=True"
+export QT_SELECT=5 # default for ubuntu, harmless for others
 export O_PARAL="-j 2"
 fail()
 {
@@ -92,7 +95,7 @@ usage()
         echo "  --without-qt4     : Dont build qt4"
         echo "  --with-plugins    : Build plugins"
         echo "  --without-plugins : Dont build plugins"
-        echo "  --enable-qt5      : Try to use qt5 instead of qt4"
+        echo "  --enable-qt4      : Try to use qt4 instead of qt5"
         echo "  --enable-asan     : Enable Clang/llvm address sanitizer"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
@@ -147,10 +150,10 @@ while [ $# != 0 ] ;do
          --without-core)
                 do_core=0
              ;;
-         --enable-qt5)
-                QT_FLAVOR="-DENABLE_QT5=True"
-                export QT_SELECT=5
-                qt_ext=Qt5
+         --enable-qt4)
+                QT_FLAVOR=""
+                export QT_SELECT=4
+                qt_ext=Qt4
              ;;
          --enable-asan)
                 do_asan=1
