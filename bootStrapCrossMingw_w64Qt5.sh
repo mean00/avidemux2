@@ -31,8 +31,8 @@ Process()
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
         make  $PARAL VERBOSE=1 || fail make
 	make preinstall
-	cmake -DCOMPONENT=runtime -P cmake_install.cmake || fail make_install
-	cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install
+        make install || fail make_install
+        # Only install  component=dev for dev package
 	DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
 }
 
