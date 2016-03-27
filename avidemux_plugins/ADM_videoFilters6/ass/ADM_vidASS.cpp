@@ -20,7 +20,7 @@
 
 #include "ass_ssa.h"
 #include "ass_ssa_desc.cpp"
-#include "ADM_coreSubtitles/inc/ADM_coreSubtitles.h"
+#include "ADM_coreSubtitles/include/ADM_coreSubtitles.h"
 #include "prefs.h"
 extern "C"
 {
