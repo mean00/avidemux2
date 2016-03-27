@@ -7,22 +7,38 @@ MESSAGE("")
 SET(ADM_PROJECT AdmLogoVideoFilter)
 SET(PLUGINS TRUE)
 SET(DO_COMMON TRUE)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7 FATAL_ERROR)
+SET(AVIDEMUX_VERSION 2.6)
+SET(AVIDEMUX_EXTERNAL_BUILD True)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0 FATAL_ERROR)
 ########################################
 # Where is the top dir ?
 ########################################
 
-MESSAGE(STATUS "Checking for AVIDEMUX_SOURCE_DIR, AVIDEMUX_LIB_DIR, AVIDEMUX_INCLUDE_DIR...")
-IF (NOT AVIDEMUX_SOURCE_DIR)
-	MESSAGE(FATAL_ERROR "Please add -DAVIDEMUX_SOURCE_DIR=path_to_avidemux_source. You just need the source tree.")
-ELSE (NOT AVIDEMUX_TOP_SOURCE_DIR)
-        # We need TOP_SOURCE_DIR 
-	SET(AVIDEMUX_TOP_SOURCE_DIR "${AVIDEMUX_SOURCE_DIR}" CACHE STRING "")
-ENDIF (NOT AVIDEMUX_SOURCE_DIR)
+MESSAGE(STATUS "Checking for installed files ..")
+
+SET(ADM_HEADER_DIR ${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_VERSION})
+SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 
 # Common definitions...
-SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
-include(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/commonCmakeApplication.cmake)
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+MESSAGE(STATUS  "Checking for avidemux include folder (/include/avidemux/${AVIDEMUX_VERSION}")
+if(NOT EXISTS "${ADM_HEADER_DIR}")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_HEADER_DIR}")
+
+MESSAGE(STATUS "Found avidemux include folder. good.")
+MESSAGE(STATUS "Checking for cmake subfolder")
+
+if(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find content of the cmake subfolder .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(STATUS  "i was looing in  ${ADM_CMAKE_DIR}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+MESSAGE(STATUS "Found cmake subfolder.good.")
+
+
+include(${ADM_CMAKE_DIR}/commonCmakeApplication.cmake)
 ########################################
 # Add include dirs
 ########################################
@@ -32,9 +48,9 @@ include(admInstallDir)
 #########################################
 # Get regular stuff from main app
 #########################################
-include(admCoreIncludes)
+include(admCoreIncludesExternalBuild)
 LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
-INCLUDE_DIRECTORIES(${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/)
+INCLUDE_DIRECTORIES(${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_VERSION}/)
 
 IF (FRESH_BUILD)
 	MESSAGE("")

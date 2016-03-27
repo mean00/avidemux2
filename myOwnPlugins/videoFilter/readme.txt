@@ -2,4 +2,7 @@
 On Linux
 =========
 mkdir obj && cd obj && 
-cmake -G "CodeBlocks - Unix Makefiles" -DAVIDEMUX_SOURCE_DIR=path-to-avidemux-source/ -DCMAKE_INSTALL_PREFIX=/usr .. && make && sudo make install
+cmake -DCMAKE_INSTALL_PREFIX=/usr .. && make && sudo make install
+
+You *NEED* to have avidemux_core-dev package installed
+If it was not installed  in /usr, adjust CMAKE_INSTALL_PREFIX accordingly
