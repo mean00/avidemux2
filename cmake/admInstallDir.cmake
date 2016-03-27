@@ -48,7 +48,7 @@ MACRO(ADM_INSTALL_LIB lib)
         INSTALL(TARGETS ${lib} RUNTIME 
                 DESTINATION ${AVIDEMUX_BIN_DIR}          COMPONENT runtime
                 LIBRARY DESTINATION ${AVIDEMUX_LIB_DIR}  COMPONENT runtime
-                ARCHIVE DESTINATION ${AVIDEMUX_LIB_DIR}  COMPONENT runtime
+                ARCHIVE DESTINATION ${AVIDEMUX_LIB_DIR}  COMPONENT dev
                 )
 ENDMACRO(ADM_INSTALL_LIB )
 
@@ -71,4 +71,35 @@ MACRO(ADM_INSTALL_BIN lib)
                 )
 ENDMACRO(ADM_INSTALL_BIN )
 #
+# Macro to install include folder
+#
+MACRO(ADM_INSTALL_INCLUDE_FOLDER folder targetName)
+        INSTALL(DIRECTORY ${folder} 
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${targetName}
+                COMPONENT dev
+                FILES_MATCHING PATTERN "*.h*"
+                )
+ENDMACRO(ADM_INSTALL_INCLUDE_FOLDER )
+##
+#
+# Macro to install cmake folder
+#
+MACRO(ADM_INSTALL_CMAKE_FOLDER folder targetName)
+        INSTALL(DIRECTORY ${folder} 
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${targetName}
+                COMPONENT dev
+                FILES_MATCHING PATTERN "*.cmake*"
+                )
+ENDMACRO(ADM_INSTALL_CMAKE_FOLDER )
+#
+#
+# Macro to install cmake folder
+#
+MACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER folder targetName)
+        INSTALL(DIRECTORY ${folder} 
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cmake/${targetName}
+                COMPONENT dev
+                FILES_MATCHING PATTERN "*.c*"
+                )
+ENDMACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER )
 

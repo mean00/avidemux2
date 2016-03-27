@@ -80,9 +80,15 @@ MACRO (ADM_COMPILE _file _def _include _lib _varToSet _output)
 	IF (NOT DEFINED ${_varToSet}_COMPILED)
 		SET(${_varToSet}_COMPILED 1 CACHE INTERNAL "")
 
+                IF(AVIDEMUX_EXTERNAL_BUILD)
+			  SET(src ${CMAKE_INSTALL_PREFIX}/include/avidemux/${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}/cmake/cmake_compile_check/${_file})
+                ELSE()
+			  SET(src ${AVIDEMUX_TOP_SOURCE_DIR}/cmake_compile_check/${_file})
+                ENDIF()
+
 		TRY_COMPILE(${_varToSet}
 			  ${CMAKE_BINARY_DIR}
-			  ${AVIDEMUX_TOP_SOURCE_DIR}/cmake_compile_check/${_file}
+			  ${src}
 			  CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${_include}" "-DLINK_LIBRARIES:STRING=${_lib}"
 			  COMPILE_DEFINITIONS ${_def}
 			  OUTPUT_VARIABLE ${_output})

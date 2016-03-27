@@ -79,27 +79,32 @@ include(admFFmpegBuild)
 ########################################
 # Directories to build
 ########################################
-ADD_SUBDIRECTORY(ADM_core)
-ADD_SUBDIRECTORY(ADM_coreAudioParser)
-ADD_SUBDIRECTORY(ADM_coreAudio)
-ADD_SUBDIRECTORY(ADM_coreAudioFilter)
-ADD_SUBDIRECTORY(ADM_coreAudioDevice)
-ADD_SUBDIRECTORY(ADM_coreAudioEncoder)
-ADD_SUBDIRECTORY(ADM_coreDemuxer)
-ADD_SUBDIRECTORY(ADM_coreDemuxerMpeg)
-ADD_SUBDIRECTORY(ADM_coreVideoCodec)
-ADD_SUBDIRECTORY(ADM_coreImage)
-ADD_SUBDIRECTORY(ADM_coreMuxer)
-ADD_SUBDIRECTORY(ADM_coreUI)
-ADD_SUBDIRECTORY(ADM_coreUtils)
-ADD_SUBDIRECTORY(ADM_coreVideoEncoder)
-ADD_SUBDIRECTORY(ADM_coreVideoFilter)
-ADD_SUBDIRECTORY(ADM_coreSqlLight3)
-ADD_SUBDIRECTORY(ADM_coreJobs)
-ADD_SUBDIRECTORY(ADM_coreSocket)
-add_subdirectory(ADM_coreImageLoader)
-add_subdirectory(ADM_coreScript)
-add_subdirectory(ADM_coreSubtitles)
+SET(SUBFOLDERS
+    ADM_core
+    ADM_coreAudioParser
+    ADM_coreAudio
+    ADM_coreAudioFilter
+    ADM_coreAudioDevice
+    ADM_coreAudioEncoder
+    ADM_coreDemuxer
+    ADM_coreDemuxerMpeg
+    ADM_coreVideoCodec
+    ADM_coreImage
+    ADM_coreMuxer
+    ADM_coreUI
+    ADM_coreUtils
+    ADM_coreVideoEncoder
+    ADM_coreVideoFilter
+    ADM_coreSqlLight3
+    ADM_coreJobs
+    ADM_coreSocket
+    ADM_coreImageLoader
+    ADM_coreScript
+    ADM_coreSubtitles
+)
+FOREACH( subfolder ${SUBFOLDERS})
+   ADD_SUBDIRECTORY(${subfolder})
+ENDFOREACH( subfolder ${SUBFOLDERS})
 
 # Update nsi version now
 IF(WIN32)
@@ -117,6 +122,18 @@ DISPLAY_SUMMARY_LIST()
 
 include(admPackager)
 admPackager(corePackage)
+
+# install headers
+FOREACH( subfolder ${SUBFOLDERS})
+   ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/${subfolder}/include/" ${subfolder})     
+ENDFOREACH( subfolder ${SUBFOLDERS})
+
+SET(CMAKE_TOP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cmake/")
+
+ADM_INSTALL_CMAKE_FOLDER("${CMAKE_TOP_SOURCE_DIR}/" cmake)     
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_SOURCE_DIR}/../cmake_compile_check/" cmake_compile_check)     
+# 
+
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
 MESSAGE("")
