@@ -21,7 +21,7 @@ include_directories(modules/re)
 include_directories(../../ADM_coreScript/include)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_editor/include)
-include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreSubtitles/inc)
+include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ADM_coreSubtitles/include)
 
 target_link_libraries(ADM_script_tinyPy ADM_coreScript ADM_coreUtils6 ADM_core6 ADM_coreUI6 ADM_coreSubtitle m)
 
