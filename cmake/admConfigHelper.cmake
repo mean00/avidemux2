@@ -83,7 +83,7 @@ MACRO (ADM_COMPILE _file _def _include _lib _varToSet _output)
                 IF(AVIDEMUX_EXTERNAL_BUILD)
 			  SET(src ${CMAKE_INSTALL_PREFIX}/include/avidemux/${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}/cmake/cmake_compile_check/${_file})
                 ELSE()
-			  SET(src ${AVIDEMUX_TOP_SOURCE_DIR}/cmake_compile_check/${_file})
+			  SET(src ${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_compile_check/${_file})
                 ENDIF()
 
 		TRY_COMPILE(${_varToSet}

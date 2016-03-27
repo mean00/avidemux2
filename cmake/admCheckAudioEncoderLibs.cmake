@@ -22,7 +22,7 @@ IF (AFTEN)
 			        TRY_RUN(AFTEN_TEST_RUN_RESULT
 				        AFTEN_TEST_COMPILE_RESULT
 				        ${CMAKE_BINARY_DIR}
-				        "${AVIDEMUX_TOP_SOURCE_DIR}/cmake_compile_check/aften_check.cpp"
+				        "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_compile_check/aften_check.cpp"
 				        CMAKE_FLAGS -DINCLUDE_DIRECTORIES:PATH=${AFTEN_INCLUDE_DIR}   -DLINK_LIBRARIES:STRING=${TMP_LIBS}
                                         OUTPUT_VARIABLE AFTEN_OUTPUT)
 		        ENDIF (NOT DEFINED AFTEN_TEST_RUN_RESULT)
