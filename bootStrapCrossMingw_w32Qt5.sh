@@ -36,8 +36,9 @@ Process()
 }
 
 echo "**BootStrapping avidemux **"
-rm -Rf ${MINGWDEV}
+rm -Rf ${MINGWDEV}/*
 rm -Rf ${MINGW}/Release
+mkdir -p ${MINGW}/Release
 export TOP=$PWD
 echo "Top dir : $TOP"
 echo "** CORE **"
