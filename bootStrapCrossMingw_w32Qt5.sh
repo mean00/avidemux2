@@ -5,6 +5,7 @@ export PATH=$PATH:/mingw/bin
 export CROSS_PREFIX=i686-w64-mingw32
 export SDLDIR=/mingw
 export MINGW=/mingw
+export MINGWDEV=/mingw_dev
 export QT_HOME=/mingw/Qt/current
 #export CFLAGS="-fpermissive"
 export O_PARAL="-j 2"
@@ -30,9 +31,13 @@ Process()
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
         make  $PARAL VERBOSE=1 || fail make
         make install || fail make_install
+        # Only install  component=dev for dev package
+	DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
 }
 
 echo "**BootStrapping avidemux **"
+rm -Rf ${MINGWDEV}
+rm -Rf ${MINGW}/Release
 export TOP=$PWD
 echo "Top dir : $TOP"
 echo "** CORE **"
