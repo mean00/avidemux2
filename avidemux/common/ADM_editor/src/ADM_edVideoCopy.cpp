@@ -248,8 +248,10 @@ againGet:
         {
             if(_nextFrameDts>(signedDts+vid->timeIncrementInUs/10))
             {
-                ADM_error("Frame %"PRIu32" DTS is going back in time : expected : %"PRId64" ms got : %"PRId64" ms\n",
-                                                fn,_nextFrameDts/1000,signedDts/1000);
+                ADM_error("Frame %"PRIu32" DTS is going back in time :");
+                ADM_error("\t expected:%s ", ADM_us2plain(_nextFrameDts));
+                ADM_error("\t got:%s \n", ADM_us2plain(signedDts));
+                goto againGet;
             }
         }
         _nextFrameDts=signedDts;
