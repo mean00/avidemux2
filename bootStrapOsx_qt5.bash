@@ -1,7 +1,8 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-export PATH=$PATH:/usr/local/Cellar/qt5/5.4.1/bin/
+export MYQT=/usr/local/Cellar/qt5/5.6.0/
+export PATH=$PATH:$MYQT/bin/
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
 export DAT=`date +"%Y_%m_%d"`
@@ -190,7 +191,7 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI 
 fi
 echo "** Copying Qt nib files**"
-cp -Rap /usr/local/Cellar/qt5/5.4.1/qt_menu.nib   $PREFIX/bin/
+cp -Rap $MYQT/qt_menu.nib   $PREFIX/bin/
 echo "**  Changing link path**"
 python $TOP/cmake/osx_libs_qt5.py
 echo "* Copying make files **"
