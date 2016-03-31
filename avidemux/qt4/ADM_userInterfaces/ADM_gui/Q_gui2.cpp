@@ -43,7 +43,8 @@
 using namespace std;
 
 #define ADM_SLIDER_REFRESH_PERIOD 500
-
+#define ADM_LARGE_SCALE     1000000000LL
+#define ADM_SCALE_INCREMENT (ADM_LARGE_SCALE/100LL)
 
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
     #define SDL_ON_LINUX
@@ -328,9 +329,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	// Slider
 	slider=ui.horizontalSlider;
 	slider->setMinimum(0);
-	slider->setMaximum(1000000000);
+	slider->setMaximum(ADM_LARGE_SCALE);
 #if 1
-        slider->setTickInterval(10000000);
+        slider->setTickInterval(ADM_SCALE_INCREMENT);
         slider->setTickPosition(QSlider::TicksBothSides);
 #endif
 	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
@@ -1053,14 +1054,14 @@ double 	UI_readScale( void )
 	double v;
 	if(!slider) v=0;
 	v= (double)(slider->value());
-	v/=10000000;
+	v/=ADM_SCALE_INCREMENT;
 	return v;
 }
 void UI_setScale( double val )
 {
 	if(_upd_in_progres) return;
 	_upd_in_progres++;
-	slider->setValue( (int)(val * 10000000));
+	slider->setValue( (int)(val * ADM_SCALE_INCREMENT));
 	_upd_in_progres--;
 }
 
