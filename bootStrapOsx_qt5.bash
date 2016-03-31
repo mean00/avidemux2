@@ -2,7 +2,7 @@
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
 export MYQT=/usr/local/Cellar/qt5/5.6.0/
-export PATH=$PATH:$MYQT/bin/
+export PATH=$PATH:$MYQT/bin/:/usr/local/bin
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
 export DAT=`date +"%Y_%m_%d"`
