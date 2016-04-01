@@ -43,7 +43,7 @@
 using namespace std;
 
 #define ADM_SLIDER_REFRESH_PERIOD 500
-#define ADM_LARGE_SCALE     1000000000LL
+#define ADM_LARGE_SCALE     (10LL*1000LL)
 #define ADM_SCALE_INCREMENT (ADM_LARGE_SCALE/100LL)
 
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
