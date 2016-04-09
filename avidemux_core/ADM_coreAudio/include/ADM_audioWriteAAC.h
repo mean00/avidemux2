@@ -1,5 +1,5 @@
 /**
-    \file  ADM_audioWriteWav
+    \file  ADM_audioWriteAAC
     \brief Writer
 
     copyright            : (C) 2002/2009 by mean
@@ -14,24 +14,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_AUDIO_WRITE_WAV_H
-#define ADM_AUDIO_WRITE_WAV_H
+#pragma once
 #include "ADM_audioWrite.h"
-#include "ADM_writeRiff.h"
-class ADM_audioWriteWav: public ADM_audioWrite
+/**
+ * 
+ * @param stream
+ * @return 
+ */
+class ADM_audioWriteAAC: public ADM_audioWrite
 {
 protected:
              bool          writeHeader(ADM_audioStream *stream);
              bool          updateHeader(void);
-             riffWritter   *writter;
              uint64_t      dataPosition;
 
 public:
 virtual      bool close(void);
 virtual      bool init(ADM_audioStream *stream, const char *fileName);
-                  ADM_audioWriteWav();
-
+             ADM_audioWriteAAC();
+virtual      bool canBeBuffered() {return false;}; 
 };
 
 
-#endif

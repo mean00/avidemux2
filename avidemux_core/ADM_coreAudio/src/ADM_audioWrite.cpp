@@ -19,6 +19,7 @@
 #include "ADM_audioStream.h"
 #include "ADM_audioWrite.h"
 #include "ADM_audioWriteWav.h"
+#include "ADM_audioWriteAAC.h"
 /**
 
 */
@@ -69,6 +70,7 @@ ADM_audioWrite *admCreateAudioWriter(ADM_audioStream *stream)
     switch(hdr->encoding)
     {
         case WAV_PCM: return new ADM_audioWriteWav();break;
+        case WAV_AAC: return new ADM_audioWriteAAC();break;
         default: return new ADM_audioWrite();break;
     }
 }

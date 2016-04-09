@@ -1,8 +1,7 @@
 /**
-    \file  ADM_audioWriteWav
-    \brief Writer
-
-    copyright            : (C) 2002/2009 by mean
+    \file  ADM_audioWriteAAC
+    \brief Write AAC packets inside ADTS container
+    copyright            : (C) 2016 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -14,24 +13,43 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_AUDIO_WRITE_WAV_H
-#define ADM_AUDIO_WRITE_WAV_H
-#include "ADM_audioWrite.h"
-#include "ADM_writeRiff.h"
-class ADM_audioWriteWav: public ADM_audioWrite
+
+#include "ADM_default.h"
+#include "ADM_audioStream.h"
+#include "ADM_audioWriteAAC.h"
+/**
+    \fn ctor
+*/
+ADM_audioWriteAAC::ADM_audioWriteAAC()
 {
-protected:
-             bool          writeHeader(ADM_audioStream *stream);
-             bool          updateHeader(void);
-             riffWritter   *writter;
-             uint64_t      dataPosition;
+    dataPosition=0;
+}
+/**
+    \fn writeHeader
+*/
+bool ADM_audioWriteAAC::writeHeader(ADM_audioStream *stream)
+{
 
-public:
-virtual      bool close(void);
-virtual      bool init(ADM_audioStream *stream, const char *fileName);
-                  ADM_audioWriteWav();
-
-};
+          return true;
+}
 
 
-#endif
+/**
+    \fn close
+*/
+
+bool ADM_audioWriteAAC::close(void)
+{
+    return ADM_audioWrite::close();
+}
+/**
+    \fn init
+    \brief write wavHeader
+*/
+
+bool ADM_audioWriteAAC::init(ADM_audioStream *stream, const char *fileName)
+{
+    if(false==ADM_audioWrite::init(stream,fileName)) return false;
+    return true;
+}
+//EOF

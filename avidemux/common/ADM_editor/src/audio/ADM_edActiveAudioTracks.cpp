@@ -19,24 +19,24 @@ ActiveAudioTracks::~ActiveAudioTracks() {}
 
 unsigned int ActiveAudioTracks::size() const
 {
-	return tracks.size();
+        return tracks.size();
 }
 
 EditableAudioTrack* ActiveAudioTracks::atEditable(int ix)
 {
-	if (ix >= size())
-	{
-		ADM_warning("Request to get track at %d, only %d tracks available\n", ix, size());
-		return NULL;
-	}
+    if (ix >= size())
+    {
+            ADM_warning("Request to get track at %d, only %d tracks available\n", ix, size());
+            return NULL;
+    }
 
-	return tracks[ix];
+    return tracks[ix];
 }
 
 ADM_edAudioTrack* ActiveAudioTracks::atEdAudio(int ix)
 {
-	EditableAudioTrack *e = atEditable(ix);
-	return e->edTrack;
+    EditableAudioTrack *e = atEditable(ix);
+    return e->edTrack;
 }
 
 bool ActiveAudioTracks::dump()
@@ -58,66 +58,68 @@ bool ActiveAudioTracks::dump()
 
 bool ActiveAudioTracks::addTrack(EditableAudioTrack *x)
 {
-	if (!x)
-	{
-		ADM_warning("Cannot add editable track to active track! \n");
-		return false;
-	}
+    if (!x)
+    {
+            ADM_warning("Cannot add editable track to active track! \n");
+            return false;
+    }
 
-	tracks.append(x) ;
-	return true;
+    tracks.append(x) ;
+    return true;
 }
 
 bool ActiveAudioTracks::addTrack(int poolIndex,ADM_edAudioTrack *x)
 {
-	if (!x)
-	{
-		ADM_warning("Cannot add track to active track! \n");
-		return false;
-	}
+    if (!x)
+    {
+            ADM_warning("Cannot add track to active track! \n");
+            return false;
+    }
 
-	EditableAudioTrack *e = new EditableAudioTrack;
+    EditableAudioTrack *e = new EditableAudioTrack;
     e->poolIndex=poolIndex;
-	e->edTrack = x;
-	tracks.append(e) ;
-	return true;
+    e->edTrack = x;
+    tracks.append(e) ;
+    return true;
 }
 
 bool ActiveAudioTracks::clear()
 {
-	int n = size();
+    int n = size();
 
-	for (int i = 0; i < n; i++)
-	{
-		EditableAudioTrack *t = atEditable(i);
+    for (int i = 0; i < n; i++)
+    {
+            EditableAudioTrack *t = atEditable(i);
 
 
-		delete t;
-	}
+            delete t;
+    }
 
-	tracks.clear();
-	return true;
+    tracks.clear();
+    return true;
 }
 
 bool ActiveAudioTracks::insertTrack(int index, int poolIndex, ADM_edAudioTrack *x)
 {
-	if (!x)
-	{
-		ADM_warning("Cannot add track to active track! \n");
-		return false;
-	}
+    if (!x)
+    {
+            ADM_warning("Cannot add track to active track! \n");
+            return false;
+    }
 
-	EditableAudioTrack *e = new EditableAudioTrack;
+    EditableAudioTrack *e = new EditableAudioTrack;
 
-	e->poolIndex = poolIndex;
-	e->edTrack = x;
-	tracks.insert(index, e);
+    e->poolIndex = poolIndex;
+    e->edTrack = x;
+    tracks.insert(index, e);
 
-	return true;
+    return true;
 }
 
 void ActiveAudioTracks::removeTrack(int activeIndex)
 {
-	delete tracks[activeIndex];
-	tracks.removeAt(activeIndex);
+    delete tracks[activeIndex];
+    tracks.removeAt(activeIndex);
 }
+
+// EOF

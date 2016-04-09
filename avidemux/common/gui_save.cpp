@@ -163,7 +163,8 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
   DIA_workingBase *work;
 #define ONE_STRIKE (64*1024)
   uint8_t *buffer=NULL;
-
+  bool buffered=true;
+  
   ADM_audioWrite *saver=admCreateAudioWriter(stream);
   if(!saver)
   {
@@ -194,13 +195,15 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
    hold=0;
    buffer=new uint8_t[ONE_STRIKE*2];
 
+   buffered=saver->canBeBuffered();
+   
    while (1)
     {
     	if(!stream->getPacket(buffer+hold,&len,ONE_STRIKE,&sample,&dts)) break;
         hold+=len;
         written+=len;
         cur_sample+=sample;
-        if(hold>ONE_STRIKE) // flush
+        if(hold>ONE_STRIKE || !buffered) // flush
         {
             saver->write(hold,buffer);
             hold=0;
