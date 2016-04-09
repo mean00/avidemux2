@@ -57,7 +57,8 @@ bool ADM_audioWrite::init(ADM_audioStream *stream, const char *fileName)
 */
 bool ADM_audioWrite::write(uint32_t size, uint8_t *buffer)
 {
-      fwrite(buffer,size,1,_file);
+      if(1!=fwrite(buffer,size,1,_file))
+          return false;
       return true;
 }
 /**

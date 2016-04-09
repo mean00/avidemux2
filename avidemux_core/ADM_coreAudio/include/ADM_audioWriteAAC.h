@@ -26,13 +26,17 @@ class ADM_audioWriteAAC: public ADM_audioWrite
 protected:
              bool          writeHeader(ADM_audioStream *stream);
              bool          updateHeader(void);
-             uint64_t      dataPosition;
 
 public:
+                  ADM_audioWriteAAC();
 virtual      bool close(void);
 virtual      bool init(ADM_audioStream *stream, const char *fileName);
-             ADM_audioWriteAAC();
+                  
 virtual      bool canBeBuffered() {return false;}; 
+virtual      bool write(uint32_t size, uint8_t *buffer);
+
+protected:
+            uint8_t  aacHeader[7];
 };
 
 
