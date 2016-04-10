@@ -1,6 +1,6 @@
 /***************************************************************************
-    \file ADM_audioAccessfile
-    \brief read audio from a file
+    \file ADM_audioAccessfileAACADTS
+    \brief read audio from a file, AAC inside ADTS
     \author mean (c) 2012 fixounet@free.fr
  ***************************************************************************/
 
@@ -15,36 +15,56 @@
 #pragma once
 #include "ADM_coreAudio6_export.h"
 #include "ADM_audioStream.h"
+#include "vector"
+#include "ADM_audioClock.h"
 
 /**
         \fn      ADM_audioAccessFile
         \brief   Input is a plain file
 */
 
-class ADM_COREAUDIO6_EXPORT ADM_audioAccessFile  : public ADM_audioAccess
+class aacAdtsSeek
 {
+    uint64_t position;
+    uint64_t dts;
+};
+
+class ADM_COREAUDIO6_EXPORT ADM_audioAccessFileAACADTS  : public ADM_audioAccess
+{
+protected:    
+                std::vector <aacAdtsSeek>seek;
 protected:
-                        /// must be allocated/freed if needed by derived class
-                        FILE     *_fd;
-                        uint64_t fileLength;
-                        int       _offset;
+                FILE     *_fd;
+                uint64_t payloadSize;
+                uint64_t fileSize;
+                uint64_t durationUs;
+                bool     inited;
+                audioClock *clock;
+
+protected:
+                bool            init(void);
 
 public:
-                                  ADM_audioAccessFile(const char *fileName,int offset);
-                virtual           ~ADM_audioAccessFile() ;
+                                  ADM_audioAccessFileAACADTS(const char *fileName,int offset);
+                virtual           ~ADM_audioAccessFileAACADTS() ;
+                
+                virtual bool        getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,
+                            uint64_t *dts);
+                                    /// Go to a given time
+                virtual bool      goToTime(uint64_t timeUs);
+
+                // stubs
                                     /// Hint, the stream is pure CBR (AC3,MP2,MP3)
                 virtual bool      isCBR(void) { return false;}
                                     /// Return true if the demuxer can seek in time
-                virtual bool      canSeekTime(void) {return false;};
+                virtual bool      canSeekTime(void) {return true;};
                                     /// Return true if the demuxer can seek by offser
-                virtual bool      canSeekOffset(void) {return true;};
+                virtual bool      canSeekOffset(void) {return false;};
                                     /// Return true if we can have the audio duration
-                virtual bool      canGetDuration(void) {return false;};
+                virtual bool      canGetDuration(void) {return true;};
                                     /// Returns audio duration in us
-                virtual uint64_t  getDurationInUs(void) {return 0;}
+                virtual uint64_t  getDurationInUs(void) {return durationUs;}
 
-                                    /// Go to a given time
-                virtual bool      goToTime(uint64_t timeUs){ADM_assert(0); return false;}
                                     /// Grab extra data
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d)
                                     {
@@ -53,18 +73,15 @@ public:
                                             return true;
                                     };
                                     /// Returns length in bytes of the audio stream
-                virtual uint32_t  getLength(void) {return fileLength;};
+                virtual uint32_t  getLength(void) {return payloadSize;};
 
                                     /// Set position in bytes
-                virtual bool      setPos(uint64_t pos);
+                virtual bool      setPos(uint64_t pos) { ADM_assert(0);return true;};
                                     /// Get position in bytes
-                virtual uint64_t  getPos();
+                virtual uint64_t  getPos() { ADM_assert(0);return true;};
 
                 
-                virtual bool    getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,
-                                            uint64_t *dts);
 };
-
 
 // EOF
 

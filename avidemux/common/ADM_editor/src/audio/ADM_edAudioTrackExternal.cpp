@@ -133,21 +133,30 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
         return NULL;
     }
     // Try to create an access for the file...
+    ADM_audioAccess *access=NULL;
     switch(hdr.encoding)
     {
+        case WAV_AAC:
+                access=new ADM_audioAccessFileAACADTS(name,offset);
+                break;
         case WAV_PCM:
         case WAV_AC3:
         case WAV_MP2:
         case WAV_MP3:
+                ADM_info("Found external audio track, encoding =%d offset=%d\n",(int)hdr.encoding,(int)offset);
+                // create access
+                access=new ADM_audioAccessFile(name,offset);
                 break;
         default:
                 ADM_warning("Unsupported external audio tracks \n");
                 return NULL;
                 break;
     }
-    ADM_info("Found external audio track, encoding =%d offset=%d\n",(int)hdr.encoding,(int)offset);
-    // create access
-    ADM_audioAccessFile *access=new ADM_audioAccessFile(name,offset);
+    if(!access)
+    {
+        ADM_warning("Cannot initialize access for audio track");
+        return NULL;
+    }
     // create ADM_edAudioTrack
     ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, &hdr,access);
     if(!external->create())

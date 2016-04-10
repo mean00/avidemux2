@@ -14,6 +14,7 @@ ADM_audioWriteWav.cpp
 ADM_audioWriteAAC.cpp
 ADM_audioIdentify.cpp
 ADM_audioAccessFile.cpp
+ADM_audioAccessFileAACADTS.cpp
 ADM_audioClock.cpp
 )	
 

@@ -34,8 +34,9 @@ public:
     {
         ADTS_OK,ADTS_ERROR,ADTS_MORE_DATA_NEEDED
     }ADTS_STATE;
-		bool getExtraData(uint32_t *len,uint8_t **data);
-		ADTS_STATE convert2(int incomingLen,uint8_t *intData,int *outLen,uint8_t *out);
+    
+        bool getExtraData(uint32_t *len,uint8_t **data);
+        ADTS_STATE convert2(int incomingLen,uint8_t *intData,int *outLen,uint8_t *out);
         int  getFrequency(void);
         int  getChannels(void);
              ADM_adts2aac();
