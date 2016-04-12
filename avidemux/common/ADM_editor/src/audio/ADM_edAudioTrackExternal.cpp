@@ -23,6 +23,7 @@
 #include "ADM_edAudioTrackExternal.h"
 #include "ADM_audioIdentify.h"
 #include "ADM_audioAccessFile.h"
+#include "ADM_audioAccessFileAACADTS.h"
 #include "ADM_vidMisc.h"
 
 #ifdef _MSC_VER

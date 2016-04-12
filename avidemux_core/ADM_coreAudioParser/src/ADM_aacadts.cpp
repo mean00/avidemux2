@@ -93,7 +93,7 @@ int ADM_adts2aac::getChannels(void)
     \brief strip adts header. Out can be null if you just want to get headers
 */
 
-ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,uint8_t *inData,int *outLen,uint8_t *out)
+ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *inData,int *outLen,uint8_t *out)
 {
     bool r=false;
     // Step 1 : append to our buffer...

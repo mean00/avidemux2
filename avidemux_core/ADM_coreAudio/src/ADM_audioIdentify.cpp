@@ -21,6 +21,7 @@
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioIdentify.h"
 #include "fourcc.h"
+#include "ADM_aacadts.h"
 
 extern void Endian_WavHeader(WAVHeader *w);
 #define INVALID_OFFSET 0XFFFFFFF
@@ -211,6 +212,53 @@ static bool idAC3(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
     return false;
 }
 /**
+ * 
+ * @param bufferSize
+ * @param data
+ * @param info
+ * @param offset
+ * @return 
+ */
+static bool idAAACADTS(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
+{
+    ADM_adts2aac aac;
+    const uint8_t *start=data;
+    const uint8_t *end=data+bufferSize;
+    while(start<end)
+    {
+        int incoming=500;
+        int outLen;
+        if(start+500>end) incoming=end-start;
+        ADM_adts2aac::ADTS_STATE state=aac.convert2(incoming,start,&outLen,NULL);
+        start+=incoming;
+        switch(state)
+        {
+            case ADM_adts2aac::ADTS_ERROR: 
+                    return false;
+                    break;
+            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: 
+                    continue;
+                    break;
+            case ADM_adts2aac::ADTS_OK:
+                    // Got sync
+                    info.encoding=WAV_AAC;
+                    info.channels=aac.getChannels();
+                    info.blockalign=0;
+                    info.bitspersample=16;
+                    info.byterate=128000>>3;
+                    info.frequency=aac.getFrequency();
+                    ADM_info("Detected as AAC, fq=%d, channels=%d\n",info.frequency,info.channels);
+                    return true;
+                    break;
+            default:
+                ADM_assert(0);
+                break;
+        }
+    }
+    return false;
+}
+
+/**
     \fn ADM_identifyAudioStream
     \param bufferSize : nb of bytes available for scanning
     \param buffer     : buffer containing the data to scan
@@ -222,7 +270,9 @@ bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &inf
     memset(&info,0,sizeof(info));
     if(idWAV(bufferSize,buffer,info,offset)) return true;
     if(idMP2(bufferSize,buffer,info,offset)) return true;
+    if(idAAACADTS(bufferSize,buffer,info,offset)) return true;
     if(idAC3(bufferSize,buffer,info,offset)) return true;
+    
 
     return false;
 }
