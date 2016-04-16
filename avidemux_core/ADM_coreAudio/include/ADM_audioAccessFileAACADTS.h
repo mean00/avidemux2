@@ -17,6 +17,7 @@
 #include "ADM_audioStream.h"
 #include "vector"
 #include "ADM_audioClock.h"
+#include "ADM_aacadts.h"
 
 /**
         \fn      ADM_audioAccessFile
@@ -34,12 +35,15 @@ class ADM_COREAUDIO6_EXPORT ADM_audioAccessFileAACADTS  : public ADM_audioAccess
 protected:    
                 std::vector <aacAdtsSeek>seek;
 protected:
-                FILE     *_fd;
-                uint64_t payloadSize;
-                uint64_t fileSize;
-                uint64_t durationUs;
-                bool     inited;
-                audioClock *clock;
+                FILE            *_fd;
+                uint64_t        payloadSize;
+                uint64_t        fileSize;
+                uint64_t        durationUs;
+                bool            inited;
+                audioClock      *clock;
+                ADM_adts2aac    *aac;
+                bool            refill(void);
+                WAVHeader       headerInfo;
 
 protected:
                 bool            init(void);
@@ -47,6 +51,8 @@ protected:
 public:
                                   ADM_audioAccessFileAACADTS(const char *fileName,int offset);
                 virtual           ~ADM_audioAccessFileAACADTS() ;
+                
+            const WAVHeader       &getHeaderInfo() {return headerInfo;};
                 
                 virtual bool        getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,
                             uint64_t *dts);
