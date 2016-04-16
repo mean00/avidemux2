@@ -88,16 +88,21 @@ int ADM_adts2aac::getChannels(void)
     return aacChannels[dex];
 }
 
-/**
-    \fn convert
-    \brief strip adts header. Out can be null if you just want to get headers
-*/
 
-ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *inData,int *outLen,uint8_t *out)
+/**
+    \fn addData
+    \brief Add data to our pool
+*/
+bool ADM_adts2aac::reset()
 {
-    bool r=false;
-    // Step 1 : append to our buffer...
-    *outLen=0;
+     head=tail=0;
+     hasExtra=false;
+     return true;
+}
+bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
+{
+     // Step 1 : append to our buffer...
+    
     if(head==tail)
     {
         head=tail=0;
@@ -117,6 +122,13 @@ ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *i
     }
     memcpy(buffer.at(head),inData,incomingLen);
     head+=incomingLen;
+    return true;
+}
+ADM_adts2aac::ADTS_STATE ADM_adts2aac::getAACFrame(int *outLen,uint8_t *out)
+{
+    bool r=false;
+    if(outLen)
+        *outLen=0;
     // ok , done
     aprintf("********** LOOP (incoming =%d)*******\n",incomingLen);
 again:
@@ -135,40 +147,41 @@ again:
     int match;
     for( p=(buffer.at(tail));p<(buffer.at(head-2));p++)
     {
-        if(p[0]==0xff && ((p[1]&0xf0)==0xf0))
+        if(p[0]!=0xff || ((p[1]&0xf0)!=0xf0))
+            continue;
+        
+        match=p-buffer.at(0); // offset of syncword
+        packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
+        nbFrames=1+(p[6]&3);
+        if(!(p[1]&1))
         {
-            match=p-buffer.at(0); // offset of syncword
-            packetLen=((p[3]&0x3)<<11)+(p[4]<<3)+(p[5]>>5);
-            nbFrames=1+(p[6]&3);
-            if(!(p[1]&1))
-            {
-                crc=true;
-            }
-            if(nbFrames!=1) continue;
-            aprintf("[ADTS] Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
-            aprintf("[ADTS] Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
-            aprintf("[ADTS] Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
-            if(match==tail && match+packetLen==head)
-            {
-                aprintf("[ADTS] Perfect match\n");
-                found=true;
-                break;
-            }
-            if(match+packetLen+2>head && match+packetLen!=head)
-            {
-                aprintf("[ADTS]** not enough data, r=%d **\n",(int)r);
-                return ADTS_MORE_DATA_NEEDED;
-            }
-            // do we have sync at the end ?
-            if(p[packetLen]!=0xff)
-            {
-                aprintf("[ADTS] no ff marker at the end\n");
-                continue;
-            }
-            aprintf("[ADTS] End marker found\n");
+            crc=true;
+        }
+        if(nbFrames!=1) continue;
+        aprintf("[ADTS] Packet len=%d, nbframes=%d\n",packetLen,nbFrames);
+        aprintf("[ADTS] Found sync at offset %d, buffer size=%d\n",(int)(p-buffer.at(0)),(int)(head-tail));
+        aprintf("[ADTS] Dropping %d bytes\n",(int)(p-buffer.at(0)-tail));
+        if(match==tail && match+packetLen==head)
+        {
+            aprintf("[ADTS] Perfect match\n");
             found=true;
             break;
         }
+        if(match+packetLen+2>head && match+packetLen!=head)
+        {
+            aprintf("[ADTS]** not enough data, r=%d **\n",(int)r);
+            return ADTS_MORE_DATA_NEEDED;
+        }
+        // do we have sync at the end ?
+        if(p[packetLen]!=0xff)
+        {
+            aprintf("[ADTS] no ff marker at the end\n");
+            continue;
+        }
+        aprintf("[ADTS] End marker found\n");
+        found=true;
+        break;
+        
     }
     if(found==false)
     {
@@ -192,15 +205,15 @@ again:
     // filter!
     //-------
 
-        if(crc) 
-            {
-                o=p+9;
-                produced=packetLen-9;
-            }else
-            {
-                o=p+7;
-                produced=packetLen-7;
-            }
+    if(crc) 
+    {
+        o=p+9;
+        produced=packetLen-9;
+    }else
+    {
+        o=p+7;
+        produced=packetLen-7;
+    }
     //
     //---------
     if(!produced)
@@ -215,11 +228,23 @@ again:
         memcpy(out,o,produced);
         out+=produced;
         *outLen+=produced;
-    }
-    
-    tail=match+packetLen; // ~ skip 
+        tail=match+packetLen; // ~ skip 
+    }   
     ADM_assert(tail<=head);
     return ADTS_OK;
+}
+/**
+    \fn convert
+    \brief strip adts header. Out can be null if you just want to get headers
+*/
+
+ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *inData,int *outLen,uint8_t *out)
+{
+    bool r=false;
+    *outLen=0;
+    if(incomingLen)
+        addData(incomingLen,inData);
+    return getAACFrame(outLen,out);
 }
 /**
     \fn ctor

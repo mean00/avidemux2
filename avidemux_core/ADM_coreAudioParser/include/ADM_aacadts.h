@@ -35,7 +35,13 @@ public:
         ADTS_OK,ADTS_ERROR,ADTS_MORE_DATA_NEEDED
     }ADTS_STATE;
     
+        bool reset();                                         // reset parser
+        bool  addData(int incomingLen,const uint8_t *inData); // inject data to buffer
+        ADTS_STATE getAACFrame(int *outLen,uint8_t *out); // try to extract a frame from buffer
+    
+    
         bool getExtraData(uint32_t *len,uint8_t **data);
+        // combined addData/getAACFRame, deprecated
         ADTS_STATE convert2(int incomingLen,const uint8_t *intData,int *outLen,uint8_t *out);
         int  getFrequency(void);
         int  getChannels(void);

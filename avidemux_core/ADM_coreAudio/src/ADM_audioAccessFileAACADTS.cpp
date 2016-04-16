@@ -111,7 +111,7 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
         state=aac->getAACFrame(0,NULL);
         switch(state)
         {
-            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: keepGoing=true;refill();break;
+            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: keepGoing=refill();break;
             case ADM_adts2aac::ADTS_ERROR: inited=false;ADM_warning("AAC/ADTS parser gone to error\n");break;
             case ADM_adts2aac::ADTS_OK: break;
             default: ADM_assert(0); break;
@@ -143,7 +143,10 @@ bool      ADM_audioAccessFileAACADTS::goToTime(uint64_t timeUs)
 {
     if(!inited)
         return false;
-    return false;
+    aac->reset();
+    clock->setTimeUs(0);
+    fseek(_fd,0,SEEK_SET);     // no seek ATM
+    return true;
 }
 
 // EOF
