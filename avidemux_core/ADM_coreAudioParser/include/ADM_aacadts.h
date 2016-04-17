@@ -17,10 +17,13 @@
 
 #include "ADM_audioParser6_export.h"
 #include "ADM_byteBuffer.h"
+#include <vector>
 /**
     \class ADM_adts2aac
 */
 #define ADTS_BUFFER_SIZE 16000
+
+
 class ADM_AUDIOPARSER6_EXPORT ADM_adts2aac
 {
 private:
@@ -28,7 +31,7 @@ private:
         uint8_t extra[2];
         ADM_byteBuffer buffer;
         int     head,tail;
-		
+       
 public:
     typedef enum
     {

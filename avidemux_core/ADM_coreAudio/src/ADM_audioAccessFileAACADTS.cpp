@@ -6,6 +6,86 @@
 #include "ADM_default.h"
 #include "ADM_audioStream.h"
 #include "ADM_audioAccessFileAACADTS.h"
+#include "ADM_vidMisc.h"
+/**
+ * 
+ * @param fd
+ */
+class adtsIndexer
+{
+public:
+    
+            adtsIndexer(FILE *fd,int fq)
+            {
+                f=fd;
+                this->fq=fq;
+            }
+    virtual ~adtsIndexer()
+            {
+                
+            }
+    bool    index(std::vector<aacAdtsSeek> &seekPoints);    
+    
+protected:
+    FILE *f;
+    int  fq;
+    
+};
+/**
+ * 
+ * @param seekPoints
+ * @return 
+ */
+bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
+{
+   uint8_t  buffer[5*1024];
+   int      fileOffset=0;;
+   uint64_t lastPoint=0;
+   int len;
+   audioClock clk(fq);
+   ADM_adts2aac aac;
+   while(1)
+   {
+       ADM_adts2aac::ADTS_STATE s=aac.getAACFrame(&len,buffer);
+       switch(s)
+       {
+           case ADM_adts2aac::ADTS_OK:
+            {
+                clk.advanceBySample(1024);
+                continue;
+                break;
+            }
+           case ADM_adts2aac::ADTS_ERROR:
+           {
+               return true;
+               break;
+           }
+           case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
+           {
+               uint64_t currentPoint=clk.getTimeUs();
+               if(!lastPoint || (currentPoint-lastPoint)>10000000) // one seek point every 10 s
+               {
+                   aacAdtsSeek s;
+                   s.dts=lastPoint;
+                   s.position=fileOffset;
+                   lastPoint=currentPoint;
+                   seekPoints.push_back(s);
+               }
+               int n=fread(buffer,1,5*1024,f);
+               if(n<=0)
+                   return true;
+               fileOffset+=n;
+               aac.addData(n,buffer);
+               break;
+           }
+           default:
+               ADM_assert(0);
+               break;
+       }
+    
+   }
+   return true; 
+}
 
 /**
  * 
@@ -14,7 +94,7 @@
 bool ADM_audioAccessFileAACADTS::init(void)
 {
     aac=new  ADM_adts2aac();    
-    // extract data frequency etc.. to initialize clock
+    // ----- extract data frequency etc.. to initialize clock
 #define PROBE_SIZE 8000
     uint8_t buffer[PROBE_SIZE+1];
     int n=fread(buffer,1,PROBE_SIZE,_fd);
@@ -27,7 +107,7 @@ bool ADM_audioAccessFileAACADTS::init(void)
         ADM_warning("Cannot sync\n");
         return false;
     }
-    // Get extraData
+    // ----- Get extraData
     uint8_t *p=NULL;
     aac->getExtraData(&extraDataLen,&p);
     if(extraDataLen)
@@ -35,7 +115,7 @@ bool ADM_audioAccessFileAACADTS::init(void)
         extraData=new uint8_t[extraDataLen];
         memcpy(extraData,p,extraDataLen);
     }
-    // fillup header
+    // -----  fillup header
     headerInfo.encoding=WAV_AAC;
     headerInfo.frequency=aac->getFrequency();
     headerInfo.channels=aac->getChannels();
@@ -44,6 +124,13 @@ bool ADM_audioAccessFileAACADTS::init(void)
     aac->reset();
     
     clock= new audioClock(headerInfo.frequency);
+    
+    // ----- build time map
+    adtsIndexer dexer(_fd,headerInfo.frequency);
+    ADM_info("Indexing adts/aac file\n");
+    dexer.index(seekPoints);  
+    ADM_info("found %d seekPoints\n",seekPoints.size());
+    fseek(_fd,0,SEEK_SET);
     return true;
 }
 
@@ -137,15 +224,30 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
 /**
  * 
  * @param timeUs
+ * \brief We can be off by one frame (~ 10 ms)
  * @return 
  */
 bool      ADM_audioAccessFileAACADTS::goToTime(uint64_t timeUs)
 {
     if(!inited)
         return false;
+
+    // Search for the seek point just before timeUS
+    int n=seekPoints.size();
+    int s=n-1;
+    for(int i=0;i<n-1;i++)
+    {
+        if(seekPoints[i+1].dts>timeUs)
+        {
+            s=i;
+            break;
+        }
+    }
+    ADM_info("AAC/ADTS seek to %s requested ",ADM_us2plain(timeUs));
+    ADM_info(" done at index %d,  %s requested ",s,ADM_us2plain(seekPoints[s].dts));
+    clock->setTimeUs(seekPoints[s].dts);
+    fseek(_fd,seekPoints[s].position,SEEK_SET);     // no seek ATM
     aac->reset();
-    clock->setTimeUs(0);
-    fseek(_fd,0,SEEK_SET);     // no seek ATM
     return true;
 }
 

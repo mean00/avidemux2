@@ -18,6 +18,7 @@
 #include "vector"
 #include "ADM_audioClock.h"
 #include "ADM_aacadts.h"
+#include <vector>
 
 /**
         \fn      ADM_audioAccessFile
@@ -26,14 +27,13 @@
 
 class aacAdtsSeek
 {
+public:
     uint64_t position;
     uint64_t dts;
 };
 
 class ADM_COREAUDIO6_EXPORT ADM_audioAccessFileAACADTS  : public ADM_audioAccess
 {
-protected:    
-                std::vector <aacAdtsSeek>seek;
 protected:
                 FILE            *_fd;
                 uint64_t        payloadSize;
@@ -44,6 +44,7 @@ protected:
                 ADM_adts2aac    *aac;
                 bool            refill(void);
                 WAVHeader       headerInfo;
+                 std::vector<aacAdtsSeek>seekPoints;
 
 protected:
                 bool            init(void);
