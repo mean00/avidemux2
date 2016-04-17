@@ -7,6 +7,9 @@
 #include "ADM_audioStream.h"
 #include "ADM_audioAccessFileAACADTS.h"
 #include "ADM_vidMisc.h"
+
+#define AAC_SEEK_PERIOD (10000000LL) // 10 sec
+
 /**
  * 
  * @param fd
@@ -15,11 +18,14 @@ class adtsIndexer
 {
 public:
     
-            adtsIndexer(FILE *fd,int fq)
+            adtsIndexer(FILE *fd,int fq,int chan)
             {
                 f=fd;
                 this->fq=fq;
+                this->channels=chan;
+                payload=0;
             }
+            int getPayloadSize() {return payload;}
     virtual ~adtsIndexer()
             {
                 
@@ -29,6 +35,8 @@ public:
 protected:
     FILE *f;
     int  fq;
+    int  channels;
+    int  payload;
     
 };
 /**
@@ -44,6 +52,10 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
    int len;
    audioClock clk(fq);
    ADM_adts2aac aac;
+   aacAdtsSeek start;
+   start.dts=0;start.position=0;
+    seekPoints.push_back(start);
+   
    while(1)
    {
        ADM_adts2aac::ADTS_STATE s=aac.getAACFrame(&len,buffer);
@@ -51,6 +63,7 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
        {
            case ADM_adts2aac::ADTS_OK:
             {
+                payload+=len;
                 clk.advanceBySample(1024);
                 continue;
                 break;
@@ -63,13 +76,12 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
            case ADM_adts2aac::ADTS_MORE_DATA_NEEDED:
            {
                uint64_t currentPoint=clk.getTimeUs();
-               if(!lastPoint || (currentPoint-lastPoint)>10000000) // one seek point every 10 s
+               if( (currentPoint-lastPoint)>AAC_SEEK_PERIOD) // one seek point every 10 s
                {
-                   aacAdtsSeek s;
-                   s.dts=lastPoint;
-                   s.position=fileOffset;
-                   lastPoint=currentPoint;
-                   seekPoints.push_back(s);
+                   start.dts=currentPoint; // we have an error of 1 block ~ 1024 samples ~ 10 ms
+                   start.position=fileOffset;
+                   seekPoints.push_back(start);
+                   lastPoint=currentPoint;   
                }
                int n=fread(buffer,1,5*1024,f);
                if(n<=0)
@@ -126,11 +138,17 @@ bool ADM_audioAccessFileAACADTS::init(void)
     clock= new audioClock(headerInfo.frequency);
     
     // ----- build time map
-    adtsIndexer dexer(_fd,headerInfo.frequency);
+    adtsIndexer dexer(_fd,headerInfo.frequency,headerInfo.channels);
     ADM_info("Indexing adts/aac file\n");
-    dexer.index(seekPoints);  
+    dexer.index(seekPoints );  
     ADM_info("found %d seekPoints\n",seekPoints.size());
     fseek(_fd,0,SEEK_SET);
+    payloadSize=dexer.getPayloadSize();
+    // 
+    double nbBlock=seekPoints.size()+1;
+    nbBlock*=AAC_SEEK_PERIOD; // each seekpoint is 10 sec
+    durationUs=nbBlock;
+    ADM_info("AAC total duration %s\n",ADM_us2plain(durationUs));
     return true;
 }
 
@@ -190,12 +208,13 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
 {
     if(!inited) return false;
     // Search sync
-    bool keepGoing=true;
+    bool keepGoing;
+    int  outSize;
     ADM_adts2aac::ADTS_STATE state;
-    while(keepGoing)
-    {
+    
+    do{
         keepGoing=false;
-        state=aac->getAACFrame(0,NULL);
+        state=aac->getAACFrame(&outSize,buffer);
         switch(state)
         {
             case ADM_adts2aac::ADTS_MORE_DATA_NEEDED: keepGoing=refill();break;
@@ -203,7 +222,8 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
             case ADM_adts2aac::ADTS_OK: break;
             default: ADM_assert(0); break;
         }
-    }
+    }while(keepGoing);
+    
     if(state!=ADM_adts2aac::ADTS_OK)
     {
         ADM_warning("AAC/ADTS : Cannot get packet\n");
@@ -211,9 +231,6 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
     }
     // Now do it
        //ADTS_STATE convert2(int incomingLen,const uint8_t *intData,int *outLen,uint8_t *out);
-    int outSize;
-    state=aac->getAACFrame(&outSize,buffer);
-    ADM_assert(ADM_adts2aac::ADTS_OK==state);
     *size=outSize;
     ADM_assert(outSize<maxSize);
     *dts=clock->getTimeUs();
