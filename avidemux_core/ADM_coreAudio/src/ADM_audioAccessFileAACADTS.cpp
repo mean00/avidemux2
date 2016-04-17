@@ -46,15 +46,17 @@ protected:
  */
 bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
 {
-   uint8_t  buffer[5*1024];
+#define CHUNK_SIZE (5*1024)
+   uint8_t  buffer[CHUNK_SIZE];
    int      fileOffset=0;;
    uint64_t lastPoint=0;
    int len;
    audioClock clk(fq);
    ADM_adts2aac aac;
    aacAdtsSeek start;
+   
    start.dts=0;start.position=0;
-    seekPoints.push_back(start);
+   seekPoints.push_back(start);
    
    while(1)
    {
@@ -78,12 +80,12 @@ bool adtsIndexer::index(std::vector<aacAdtsSeek>& seekPoints)
                uint64_t currentPoint=clk.getTimeUs();
                if( (currentPoint-lastPoint)>AAC_SEEK_PERIOD) // one seek point every 10 s
                {
-                   start.dts=currentPoint; // we have an error of 1 block ~ 1024 samples ~ 10 ms
+                   start.dts=currentPoint; // we have an error of 1 block ~ 1024 samples ~ 10 ms 
                    start.position=fileOffset;
                    seekPoints.push_back(start);
                    lastPoint=currentPoint;   
                }
-               int n=fread(buffer,1,5*1024,f);
+               int n=fread(buffer,1,CHUNK_SIZE,f);
                if(n<=0)
                    return true;
                fileOffset+=n;
@@ -192,8 +194,8 @@ ADM_audioAccessFileAACADTS::~ADM_audioAccessFileAACADTS()
 bool ADM_audioAccessFileAACADTS::refill(void)
 {
     // Read in temp buffer
-    uint8_t tmp[1024];
-    int n=fread(tmp,1,1024,_fd);
+    uint8_t tmp[4024];
+    int n=fread(tmp,1,4024,_fd);
     if(n<1) return false;
     // feed
     aac->addData(n,tmp);

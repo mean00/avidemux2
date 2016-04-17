@@ -38,25 +38,23 @@ bool           audioClock::advanceBySample(uint32_t samples)
  * */
 uint64_t       audioClock::getTimeUs(void)
 {
-        float f=_nbSamples;
-                f=f*1000*1000;
-                f/=_frequency;
-                return _baseClock+(uint64_t)(f+0.5);
+float f=_nbSamples;
+        f=f*1000*1000;
+        f/=_frequency;
+        return _baseClock+(uint64_t)(f+0.5);
 }
 /**
  *
  * */
 bool           audioClock::setTimeUs(uint64_t clk)
 {
-                uint64_t curTime=getTimeUs();
-                int64_t delta=(int64_t)clk-(int64_t)curTime;
-                if(labs((long int)delta)<2000) return true;
-                printf("[audioClock] Drift detected :%"PRIu64" vs %"PRIu64", delta=%"PRId64"\n",curTime,clk,delta);
-                _nbSamples=0;
-                _baseClock=clk;
-                return true; 
-
-
+        uint64_t curTime=getTimeUs();
+        int64_t delta=(int64_t)clk-(int64_t)curTime;
+        if(labs((long int)delta)<2000) return true;
+        printf("[audioClock] Drift detected :%"PRIu64" vs %"PRIu64", delta=%"PRId64"\n",curTime,clk,delta);
+        _nbSamples=0;
+        _baseClock=clk;
+        return true; 
 }
 
 // EOF
