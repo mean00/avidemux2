@@ -31,6 +31,7 @@ private:
         uint8_t extra[2];
         ADM_byteBuffer buffer;
         int     head,tail;
+        int     headOffset;
        
 public:
     typedef enum
@@ -38,9 +39,9 @@ public:
         ADTS_OK,ADTS_ERROR,ADTS_MORE_DATA_NEEDED
     }ADTS_STATE;
     
-        bool reset();                                         // reset parser
+        bool  reset();                                         // reset parser
         bool  addData(int incomingLen,const uint8_t *inData); // inject data to buffer
-        ADTS_STATE getAACFrame(int *outLen,uint8_t *out); // try to extract a frame from buffer
+        ADTS_STATE getAACFrame(int *outLen,uint8_t *out,int *offset=NULL); // try to extract a frame from buffer
     
     
         bool getExtraData(uint32_t *len,uint8_t **data);

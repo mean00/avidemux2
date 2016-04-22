@@ -43,6 +43,28 @@ static 	uint32_t aacSampleRate[16]=
 	16000, 12000, 11025,  8000,
 	0,     0,     0,     0 
 };
+
+/**
+    \fn ctor
+*/
+
+ADM_adts2aac::ADM_adts2aac(void)
+{
+    hasExtra=false;
+    extra[0]=extra[1]=0;
+    head=tail=0;
+    buffer.setSize(ADTS_BUFFER_SIZE*2);
+    headOffset=0;
+}
+/**
+    \fn dtor
+*/
+
+ADM_adts2aac::~ADM_adts2aac()
+{
+   
+}
+
 /**
     \fn getExtraData
     \brief extract extradata from adts/aac stream. You must have converted successfully at leat one frame.
@@ -97,6 +119,7 @@ bool ADM_adts2aac::reset()
 {
      head=tail=0;
      hasExtra=false;
+     headOffset=0;
      return true;
 }
 bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
@@ -105,14 +128,17 @@ bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
     
     if(head==tail)
     {
+        headOffset+=tail; 
         head=tail=0;
     }
     if(tail>ADTS_BUFFER_SIZE)
     {
+        headOffset+=tail; 
         int size=head-tail;
         memmove(buffer.at(0),buffer.at(tail),size);
         head=size;
         tail=0;
+        
     }
     if(head+incomingLen>ADTS_BUFFER_SIZE*2)
     {
@@ -124,7 +150,15 @@ bool  ADM_adts2aac::addData(int incomingLen,const uint8_t *inData)
     head+=incomingLen;
     return true;
 }
-ADM_adts2aac::ADTS_STATE ADM_adts2aac::getAACFrame(int *outLen,uint8_t *out)
+/**
+ * \fn getAACFrame
+ * \brief try to extract a valid frame from ADTS
+ * @param outLen
+ * @param out
+ * @param offset, offset from the beginning of the stream i.e. 1st add Data
+ * @return 
+ */
+ADM_adts2aac::ADTS_STATE ADM_adts2aac::getAACFrame(int *outLen,uint8_t *out,int *offset)
 {
     bool r=false;
     if(outLen)
@@ -222,6 +256,10 @@ again:
         aprintf("[ADTS] No data produced\n");
         goto again;
     }
+    if(offset)
+    {
+        *offset=headOffset+(int)(p-buffer.at(0));
+    }
     aprintf("[ADTS] Found adts packet of size %d, extradataLen=%d\n",produced,2);
     if(out)
     {
@@ -246,24 +284,4 @@ ADM_adts2aac::ADTS_STATE ADM_adts2aac::convert2(int incomingLen,const uint8_t *i
         addData(incomingLen,inData);
     return getAACFrame(outLen,out);
 }
-/**
-    \fn ctor
-*/
-
-ADM_adts2aac::ADM_adts2aac(void)
-{
-    hasExtra=false;
-    extra[0]=extra[1]=0;
-    head=tail=0;
-    buffer.setSize(ADTS_BUFFER_SIZE*2);
-}
-/**
-    \fn dtor
-*/
-
-ADM_adts2aac::~ADM_adts2aac()
-{
-   
-}
-
 //EOF
