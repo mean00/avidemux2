@@ -172,7 +172,7 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
     *size=outSize;
     ADM_assert(outSize<maxSize);
     *dts=clock->getTimeUs();
-    printf("Time = %s\n",ADM_us2plain(*dts));
+    //printf("Time = %s\n",ADM_us2plain(*dts));
     clock->advanceBySample(1024);
     return true;         
 }
