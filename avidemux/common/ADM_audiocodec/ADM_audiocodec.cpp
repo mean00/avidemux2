@@ -22,67 +22,63 @@ ADM_Audiocodec	*getAudioCodec(uint32_t fourcc,WAVHeader *info,uint32_t extra,uin
 {
 ADM_Audiocodec *out = NULL;
 
-		// fake codec for 8 bits
-		if(fourcc==WAV_PCM)
-			{
-				if(info)
-					if(info->bitspersample==8)
-                        {
-                            info->encoding=fourcc=WAV_8BITS_UNSIGNED;
-                        }
+    // fake codec for 8 bits
+    if(fourcc==WAV_PCM)
+    {
+        if(info)
+            if(info->bitspersample==8)
+            {
+                info->encoding=fourcc=WAV_8BITS_UNSIGNED;
+            }
+    }
 
-			}
-
- 		switch(fourcc)
-   			{
-
-				case WAV_PCM:
-                    printf("[audioCodec] Audio codec:  WAV\n");
+    switch(fourcc)
+    {
+        case WAV_PCM:
+                    ADM_info("[audioCodec] Audio codec:  WAV\n");
 #ifdef ADM_BIG_ENDIAN
                     out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc,*info);
 #else
-					out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc,*info);
+                    out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc,*info);
 #endif
-                  			break;
-				case WAV_8BITS:
-					printf("[audioCodec] 8 BIts pseudo codec\n");
+                    break;
+        case WAV_8BITS:
+                    ADM_info("[audioCodec] 8 BIts pseudo codec\n");
                     out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc,*info);
-					break;
-				case WAV_8BITS_UNSIGNED:
-					printf("[audioCodec] 8 BIts pseudo codec unsigned\n");
-    					out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc,*info);
-					break;
-		  		case WAV_LPCM:
-					printf("[audioCodec] Audio codec:  LPCM swapped\n");
+                    break;
+        case WAV_8BITS_UNSIGNED:
+                    ADM_info("[audioCodec] 8 BIts pseudo codec unsigned\n");
+                    out= (ADM_Audiocodec *)new ADM_Audiocodec8Bits(fourcc,*info);
+                    break;
+        case WAV_LPCM:
+                    ADM_info("[audioCodec] Audio codec:  LPCM swapped\n");
 #ifndef ADM_BIG_ENDIAN
                     out= (ADM_Audiocodec *)new ADM_AudiocodecWavSwapped(fourcc,*info);
 #else
-					out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc,*info);
+                    out= (ADM_Audiocodec *)new ADM_AudiocodecWav(fourcc,*info);
 #endif
-                  		break;
-            default:
-            	out= ADM_ad_searchCodec(fourcc,info,extra,extraData);
-            	break;
-        	}
+                    break;
+        default:
+                    out= ADM_ad_searchCodec(fourcc,info,extra,extraData);
+                    break;
+        }
 
-	if (out == NULL)
-	{
-		printf("[audioCodec] Unknown codec : %"PRIu32"\n",fourcc);
-		out = (ADM_Audiocodec *) new ADM_AudiocodecUnknown(fourcc,*info);
-	}
-	// For channel mapping, simple case we do it here so that the decoder does not have
-	// to worry.
-	// For more complicated case (channel >2) , it is up to the decoder to do it...
-	switch(info->channels)
-	{
-			case 1: out->channelMapping[0] = ADM_CH_MONO;
-					break;
-			case 2: out->channelMapping[0] = ADM_CH_FRONT_LEFT;
-					out->channelMapping[1] = ADM_CH_FRONT_RIGHT;
-					break;
-			default:break;
-
-
-	}
-	return out;
+        if (out == NULL)
+        {
+                ADM_warning("[audioCodec] Unknown codec : %"PRIu32"\n",fourcc);
+                out = (ADM_Audiocodec *) new ADM_AudiocodecUnknown(fourcc,*info);
+        }
+        // For channel mapping, simple case we do it here so that the decoder does not have
+        // to worry.
+        // For more complicated case (channel >2) , it is up to the decoder to do it...
+        switch(info->channels)
+        {
+                        case 1: out->channelMapping[0] = ADM_CH_MONO;
+                                        break;
+                        case 2: out->channelMapping[0] = ADM_CH_FRONT_LEFT;
+                                        out->channelMapping[1] = ADM_CH_FRONT_RIGHT;
+                                        break;
+                        default:break;
+        }
+        return out;
 }
