@@ -35,7 +35,7 @@ public:
                                  ADM_edAudioTrackExternal(const char *file, WAVHeader *hdr,ADM_audioAccess *ccess);
             virtual            ~ADM_edAudioTrackExternal();
                     bool        destroyable() {return true;};
-                    bool        create(void);
+                    bool        create(uint32_t extraLen, uint8_t *extraData);
 
                     std::string   &getMyName() {return sourceFile; }
 // We need the codec etc for external audio tracks
@@ -57,7 +57,7 @@ virtual uint8_t         getPacket(uint8_t *buffer,uint32_t *size, uint32_t sizeM
                             }
 virtual bool            goToTime(uint64_t nbUs);
 virtual bool            getExtraData(uint32_t *l, uint8_t **d){return internalAudioStream->getExtraData(l,d);}
-         uint64_t        getDurationInUs(void) {return internalAudioStream->getDurationInUs();}
+         uint64_t       getDurationInUs(void) {return internalAudioStream->getDurationInUs();}
 
 };
 /// spawn

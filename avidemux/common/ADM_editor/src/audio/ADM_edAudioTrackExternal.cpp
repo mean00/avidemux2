@@ -68,10 +68,10 @@ ADM_edAudioTrackExternal::~ADM_edAudioTrackExternal()
     \fn create
     \brief actually create the track, can fail
 */
-bool ADM_edAudioTrackExternal::create(void)
+bool ADM_edAudioTrackExternal::create(uint32_t extraLen, uint8_t *extraData)
 {
     ADM_info("Initializing audio track from external %s \n",sourceFile.c_str());
-    codec=getAudioCodec(wavHeader.encoding,&wavHeader,0,NULL);;
+    codec=getAudioCodec(wavHeader.encoding,&wavHeader,extraLen,extraData);;
     size=internalAccess->getLength();
     internalAudioStream=ADM_audioCreateStream(&wavHeader,internalAccess,true);
     return true;
@@ -160,7 +160,11 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
     }
     // create ADM_edAudioTrack
     ADM_edAudioTrackExternal *external=new ADM_edAudioTrackExternal(name, &hdr,access);
-    if(!external->create())
+    uint32_t extraDataLen=0;
+    uint8_t  *extraData=NULL;
+    access->getExtraData(&extraDataLen,&extraData);
+    ADM_info("Trying to create external audio track with %d bytes of extraData %d\n",extraDataLen);
+    if(!external->create(extraDataLen,extraData))
     {
         delete external;
         external=NULL;
@@ -242,9 +246,12 @@ bool            ADM_edAudioTrackExternal::goToTime(uint64_t nbUs)
 {
         if(codec)
         {
+            ADM_info("Resetting audio track");
             codec->resetAfterSeek();
         }
         lastDts=ADM_NO_PTS;
+        packetBufferSize=0; // reset
+        packetBufferSamples=0;
         return internalAudioStream->goToTime(nbUs);
 }
 // EOF
