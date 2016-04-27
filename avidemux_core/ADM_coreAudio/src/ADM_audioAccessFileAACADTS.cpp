@@ -52,6 +52,8 @@ bool ADM_audioAccessFileAACADTS::init(void)
     headerInfo.channels=aac->getChannels();
     headerInfo.bitspersample=16;
     headerInfo.blockalign=0;
+    
+    
     aac->reset();
     
     clock= new audioClock(headerInfo.frequency);
@@ -69,7 +71,13 @@ bool ADM_audioAccessFileAACADTS::init(void)
     audioClock ck(headerInfo.frequency);
     ck.advanceBySample(1024*dexer.getNbPackets());
     durationUs=ck.getTimeUs();
+    double byteRate=dexer.getPayloadSize();
+    byteRate=byteRate/(1+durationUs);
+    headerInfo.byterate=byteRate*1000000.; // b/us -> b/ss
+
     ADM_info("AAC total duration %s\n",ADM_us2plain(durationUs));
+    ADM_info("# of packets found : %d\n",dexer.getNbPackets());
+    ADM_info("Byterate : %d\n",headerInfo.byterate);
     return true;
 }
 
@@ -164,7 +172,7 @@ bool    ADM_audioAccessFileAACADTS::getPacket(uint8_t *buffer, uint32_t *size, u
     *size=outSize;
     ADM_assert(outSize<maxSize);
     *dts=clock->getTimeUs();
-    //printf("Time = %s\n",ADM_us2plain(*dts));
+    printf("Time = %s\n",ADM_us2plain(*dts));
     clock->advanceBySample(1024);
     return true;         
 }
@@ -191,10 +199,11 @@ bool      ADM_audioAccessFileAACADTS::goToTime(uint64_t timeUs)
             break;
         }
     }
+    aacAdtsSeek seek=seekPoints[s];
     ADM_info("AAC/ADTS seek to %s requested \n",ADM_us2plain(timeUs));
-    ADM_info(" done at index %d,  %s requested \n",s,ADM_us2plain(seekPoints[s].dts));
-    clock->setTimeUs(seekPoints[s].dts);
-    fseek(_fd,seekPoints[s].position,SEEK_SET);
+    ADM_info(" done at index %d,  %s requested \n",s,ADM_us2plain(seek.dts));
+    clock->setTimeUs(seek.dts);
+    fseek(_fd,seek.position,SEEK_SET);
     aac->reset();
     return true;
 }
