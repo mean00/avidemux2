@@ -121,6 +121,7 @@ public slots:
 	void sliderMoved(int value);
 	void sliderReleased(void);
         void sliderPressed(void);
+        void sliderWheel(int way);
 	void volumeChange( int u );
 	void audioToggled(bool checked);
 	void previewModeChanged(int status);

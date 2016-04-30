@@ -94,5 +94,12 @@ void ADM_QSlider::setTotalDuration(uint64_t duration)
 	totalDuration = duration;
 	repaint();
 }
-
+/*
+    \fn Intercept Event
+ */
+void ADM_QSlider::wheelEvent(QWheelEvent *e)
+{
+    //printf("Wheel : %d\n",e->delta());
+    emit sliderAction(e->delta());
+}
 //EOF 

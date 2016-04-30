@@ -240,6 +240,21 @@ void MainWindow::sliderPressed(void)
   dragState=dragState_Active;
 //  ADM_info("Pressed\n");
 }
+/**
+ * \fn sliderWheel
+ */
+void MainWindow::sliderWheel(int way)
+{ 
+    if(way>0)
+    {
+        sendAction(ACT_NextKFrame);
+        return;
+    }
+    if(way<0)
+        sendAction(ACT_PreviousKFrame);
+    
+}
+
 void MainWindow::thumbSlider_valueEmitted(int value)
 {
         if (value > 0)
@@ -328,6 +343,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
 	// Slider
 	slider=ui.horizontalSlider;
+        ADM_QSlider *qslider=(ADM_QSlider *)slider;
 	slider->setMinimum(0);
 	slider->setMaximum(ADM_LARGE_SCALE);
 #if 1
@@ -337,14 +353,16 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
 	connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
 	connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
-    connect( slider,SIGNAL(sliderPressed()),this,SLOT(sliderPressed()));
-    connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
+        connect( slider,SIGNAL(sliderPressed()),this,SLOT(sliderPressed()));
+        connect( qslider,SIGNAL(sliderAction(int)),this,SLOT(sliderWheel(int)));
+        
+        connect( &dragTimer, SIGNAL(timeout()), this, SLOT(dragTimerTimeout()));
     
 
    // Thumb slider
-    ui.sliderPlaceHolder->installEventFilter(this);
-    thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
-    connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
+        ui.sliderPlaceHolder->installEventFilter(this);
+        thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
+        connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
 	// Volume slider
 	QSlider *volSlider=ui.horizontalSlider_2;
