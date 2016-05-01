@@ -21,6 +21,7 @@
 #include "fourcc.h"
 #include "muxerAvi.h"
 #include "ADM_vidMisc.h"
+#include "ADM_codecType.h"
 
 
 avi_muxer muxerConfig={AVI_MUXER_AUTO};
@@ -67,6 +68,12 @@ muxerAvi::~muxerAvi()
 
 bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,ADM_audioStream **a)
 {
+       uint32_t fcc=s->getFCC();
+       if(isH264Compatible(fcc) || isH265Compatible(fcc))
+       {
+           if(!GUI_YesNo(QT_TRANSLATE_NOOP("adm","Bad Idea"),QT_TRANSLATE_NOOP("adm","Using H264/H265 in AVI is a bad idea, MKV is better for that.\n Do you want to continue anyway ?")))
+               return false;
+       }
         audioDelay=s->getVideoDelay();
         if(!writter.saveBegin (
              file,
