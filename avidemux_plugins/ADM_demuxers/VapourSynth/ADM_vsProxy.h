@@ -17,13 +17,8 @@
 #pragma once 
 
 
-extern "C"
-{
-#undef __cplusplus
 #include "VSScript.h"
 #include "VSHelper.h"
-#define __cplusplus
-}
 #include "../../ADM_coreSocket/include/ADM_coreAvsProtocol.h"
 
 /**
