@@ -321,8 +321,8 @@ bool  GUIPlayback::audioPump(bool wait)
 {
     uint32_t oaf = 0;
     uint32_t load = 0;
-	uint8_t channels;
-	uint32_t fq;
+    uint8_t channels;
+    uint32_t fq;
     static bool errorMet=false;
 
     if (!playbackAudio)	    return false;
