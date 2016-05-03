@@ -1,6 +1,7 @@
 ##########################################
 # Config
 ##########################################
+ADD_DEFINITIONS("-std=c++11")
 
 ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
 GET_TARGET_PROPERTY(OLD PROPERTIES LINK_FLAGS)
