@@ -241,7 +241,7 @@ bool ADM_Composer::addFile (const char *name)
                  (strlen(str)?" and ":""),
                  (strlen(str)?" are ":" is ") );
          str[512] = '\0';
-         GUI_Error_HIG(str,QT_TR_NOOP("You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:\n1.) \"resize\" / \"add border\" / \"crop\" each stream to the same resolution\n2.) concatinate them together"));
+         GUI_Error_HIG(str,QT_TR_NOOP("You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:\n1.) \"resize\" / \"add border\" / \"crop\" each stream to the same resolution\n2.) concatenate them together"));
          delete video._aviheader;
          return false;
       }

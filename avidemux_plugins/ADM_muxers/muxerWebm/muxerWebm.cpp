@@ -63,7 +63,7 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
     uint32_t fcc=s->getFCC();
     if(!fourCC::check(fcc,(const uint8_t *)"VP8 ") && !fourCC::check(fcc,(const uint8_t *)"VP9 "))
     {
-        GUI_Error_HIG("Webm","Unsupported Video.\nOnly VP8/VP9 Video and Vorbis/Opus audio supported");
+        GUI_Error_HIG("Webm","Unsupported Video.\nOnly VP8/VP9 video and Vorbis/Opus audio supported");
         return false;
     }
     for( int i=0;i<nbAudioTrack;i++)
@@ -75,7 +75,7 @@ bool muxerWebm::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
             case WAV_OPUS:
                 break;
             default:
-                GUI_Error_HIG("Webm","Unsupported Audio.\nOnly VP8/VP9 Video and Vorbis/Opus audio supported");
+                GUI_Error_HIG("Webm","Unsupported Audio.\nOnly VP8/VP9 video and Vorbis/Opus audio supported");
                 return false;
         }
     }

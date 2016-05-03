@@ -179,7 +179,7 @@ bool x264Encoder::setup(void)
                         param.rc.f_rf_constant = 0;
                         break;
         default:
-                        GUI_Error_HIG("Not coded","this mode has notbeen implemented\n");
+                        GUI_Error_HIG("Not coded","this mode has not been implemented\n");
                         return false;
                         break;
 
