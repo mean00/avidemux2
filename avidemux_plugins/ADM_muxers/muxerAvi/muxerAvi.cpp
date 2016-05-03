@@ -81,7 +81,7 @@ bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
              nbAudioTrack,
              a))
         {
-            GUI_Error_HIG("Error","Cannot create avi file");
+            GUI_Error_HIG("Error","Cannot create AVI file");
             return false;
 
         }

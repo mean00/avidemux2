@@ -50,7 +50,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
                 case 32000: fscod=2;break;
                 default: 
                     {
-                    GUI_Error_HIG("", "invalid frequency for AC3. Only 32, 44.1 & 48 kHz");
+                    GUI_Error_HIG("", "Invalid frequency for AC3. Only 32, 44.1 & 48 kHz");
                     return false;
                     }
         }
@@ -82,7 +82,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
                 case 6: acmod=7;lfe=1;break;
                 default: 
                         {
-                                  GUI_Error_HIG("","Invalid number of channel for AC3");
+                                  GUI_Error_HIG("","Invalid number of channels for AC3");
                                   return false;
                         }
         }

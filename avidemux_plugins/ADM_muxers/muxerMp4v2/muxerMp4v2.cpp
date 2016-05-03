@@ -237,7 +237,7 @@ bool muxerMp4v2::save(void)
         ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
         if(in[other].pts==ADM_NO_PTS || in[other].pts==ADM_NO_PTS)
         {
-            GUI_Error_HIG("Video","Video does not have enough timing information. Are you copying from AVI ?");
+            GUI_Error_HIG("Video","Video does not have enough timing information. Are you copying from AVI?");
             goto theEnd;
         }
 

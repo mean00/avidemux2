@@ -154,7 +154,7 @@ uint8_t A_autoDrive(Action action)
                             if(!videoCodecSelectByName("FFMpeg4"))            
 #endif
                             {
-                              GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select mpeg4 sp codec."));
+                              GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select MPEG-4 SP codec."));
                                 return 0;
                             }
                             // Set mode & bitrate 

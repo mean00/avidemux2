@@ -1137,7 +1137,7 @@ void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 		}
 		if (assumedIdx == -1) {
 			// This should never happen, but who knows?
-			GUI_Error_HIG("Error","Audio file not found in list, even than it should be there. Create a bug report!");
+			GUI_Error_HIG("Error","Audio file not found in list, even though it should be there. Create a bug report!");
 			return;
 		}
 		printf("assumed Idx = %d\n", assumedIdx);

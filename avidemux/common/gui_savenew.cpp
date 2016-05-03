@@ -295,7 +295,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         chain=createVideoFilterChain(markerA,markerB);
         if(!chain)
         {
-                GUI_Error_HIG("Video","Cannot instantiante video Chain");
+                GUI_Error_HIG("Video","Cannot instantiate video chain");
                 return NULL;
         }
         // 2- Create Encoder
@@ -323,7 +323,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         }
         if(encoder->setup()==false)
         {
-            GUI_Error_HIG("Video","Cannot setup codec. Bitrate too low ?");
+            GUI_Error_HIG("Video","Cannot setup codec. Bitrate too low?");
             delete encoder;
             encoder=NULL;
             return NULL;
@@ -409,7 +409,7 @@ bool admSaver::save(void)
 
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
-        GUI_Error_HIG("Muxer","Cannot instantiante muxer");
+        GUI_Error_HIG("Muxer","Cannot instantiate muxer");
         return 0;
     }
      

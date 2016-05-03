@@ -155,7 +155,7 @@ bool x265Encoder::setup(void)
                         param.rc.rfConstant = 0;
                         break;
         default:
-                        GUI_Error_HIG("Not coded","this mode has notbeen implemented\n");
+                        GUI_Error_HIG("Not coded","this mode has not been implemented\n");
                         return false;
                         break;
 

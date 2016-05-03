@@ -80,7 +80,7 @@ bool libvaProbe(void)
 #ifdef USE_LIBVA
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_LIBVA)==false)
     {
-        GUI_Error_HIG("Error","Core has been compiled without libva support, but the application has been compiled with it.\nInstallation mismatch");
+        GUI_Error_HIG("Error","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch");
         libvaWorking=false;
     }
 
@@ -271,7 +271,7 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             }
             else
             {
-                GUI_Error_HIG("Error","LibVA does not support this, configuration error"); 
+                GUI_Error_HIG("Error","LIBVA does not support this, configuration error");
                 ADM_assert(0);
             }
         }

@@ -459,7 +459,7 @@ bool GUI_GoToTime(uint64_t time)
     // We have to call the editor as the frames needed to decode the target frame may be hidden
     if(false==video_body->goToTimeVideo(time))
     {
-        GUI_Error_HIG("Seek", "Error seekting to %"PRIu64" ms",time/1000);
+        GUI_Error_HIG("Seek", "Error seeking to %"PRIu64" ms",time/1000);
     }
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
