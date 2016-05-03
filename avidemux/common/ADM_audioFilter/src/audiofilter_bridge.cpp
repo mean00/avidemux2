@@ -27,6 +27,17 @@ using std::string;
 #else
 #define aprintf printf
 #endif
+/**
+ * 
+ * @param in
+ * @return 
+ */
+static int64_t  _ms2us(int32_t in)
+{
+   int64_t us=(int64_t ) in;
+   us*=1000LL;
+   return us;
+}
 
 /**
     \fn AUDMAudioFilter_Bridge
@@ -34,45 +45,48 @@ using std::string;
 AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
                           uint32_t startInMs,int32_t shiftMs) : AUDMAudioFilter(NULL)
 {
+  shiftMs=-shiftMs;
   _incoming=incoming;
   memcpy(&_wavHeader,_incoming->getInfo(),sizeof(_wavHeader));
   // For SBR TEST
   //_wavHeader.frequency*=2;
   _wavHeader.frequency=_incoming->getOutputFrequency();
   // /For SBR Test
-  _startTime=startInMs;
-  shiftMs=-shiftMs;
-  _shift=shiftMs;
+  _startTimeUs=_ms2us(startInMs);
+  _shiftUs=_ms2us(shiftMs);
+  
   _hold=0;
   rewind();
   
-  ADM_info("[Bridge] Starting with time %"PRIu32" ms, shift %"PRIi32" ms\n",startInMs,-shiftMs);
-  // If shiftMS is > 0, it means we have to go in the future, just increse _startTime
+  ADM_info("[Bridge] Starting with time %s , shift %"PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
+  // If shiftMS is > 0, it means we have to go in the future, just increase _startTime
   if(shiftMs>0)
   {
-    _startTime+=_shift;
+    _startTimeUs+=_shiftUs;
   }
   else if(shiftMs<0) // In that case we have to go either in the past and/or duplicate frames
   {
     shiftMs=-shiftMs;
-    if(_startTime>shiftMs)  
+    _shiftUs=-_shiftUs;
+    if(_startTimeUs>_shiftUs)  
     {
-      _startTime-=shiftMs;
+      _startTimeUs-=_shiftUs;
     }else
     {
       double nbSample;
       
-      shiftMs-=_startTime;
-      _startTime=0;
-      nbSample=shiftMs;
-      nbSample*=_wavHeader.frequency; 
-      nbSample/=1000.;
-      nbSample*=_wavHeader.channels;
-      _hold=(int32_t)nbSample;
+      _shiftUs-=_startTimeUs;
+      _startTimeUs=0;
+      double dNbSample=_shiftUs;
+      
+      dNbSample*=_wavHeader.frequency; 
+      dNbSample/=1000000.;
+      dNbSample*=_wavHeader.channels;
+      _hold=(int32_t)dNbSample;
     }
     
   }
-  printf("[Bridge] Ending with time %u, sample %u\n",_startTime,_hold);
+  ADM_info("[Bridge] Ending with time %s, sample %u\n",ADM_us2plain(_startTimeUs),_hold);
   rewind();
 }
 /**
@@ -88,10 +102,8 @@ AUDMAudioFilter_Bridge::~AUDMAudioFilter_Bridge()
 */
 uint8_t AUDMAudioFilter_Bridge::rewind(void)
 {
-uint64_t ttime=_startTime;
-  ttime*=1000; // ms->us
-  ADM_info("[AudioBridge] Going to time %d\n",_startTime);
-  uint8_t r= _incoming->goToTime(ttime);
+  ADM_info("[AudioBridge] Going to time %s\n",ADM_us2plain(_startTimeUs));
+  uint8_t r= _incoming->goToTime(_startTimeUs);
   if(!r) ADM_warning("[AudioBridge] Failed!\n");
   return r;
 }
@@ -147,14 +159,14 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
           dts=ADM_NO_PTS;
       }
       uint64_t endDts=dts+got*sampleToUs;
-      aprintf("StartTime : %s\n",ADM_us2plain(_startTime*1000));
+      aprintf("StartTime : %s\n",ADM_us2plain(_startTimeUs));
       aprintf("packet start : %s\n",ADM_us2plain(dts));
       aprintf("packet end : %s\n",ADM_us2plain(endDts));
       
-      if(dts!=ADM_NO_PTS && endDts < _startTime*1000)
+      if(dts!=ADM_NO_PTS && endDts < _startTimeUs)
       {
           ADM_info("Packet too early, dropping it... :%s",ADM_us2plain(dts));
-          ADM_info("/ start is at :%s\n",ADM_us2plain(_startTime*1000));
+          ADM_info("\n start is at :%s\n",ADM_us2plain(_startTimeUs));
           continue;
       }
       got*=_wavHeader.channels; // sample->float

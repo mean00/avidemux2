@@ -24,8 +24,8 @@ class AUDMAudioFilter_Bridge : public AUDMAudioFilter
 {
   protected:
     ADM_edAudioTrack    *_incoming;
-    uint32_t            _startTime; /*< Starting time in ms */
-    int32_t             _shift;  /*< Shift in Ms */
+    uint64_t            _startTimeUs; /*< Starting time in us */
+    int64_t             _shiftUs;  /*< Shift in Ms */
     int32_t             _hold;   /*< Nb Sample to repeat */
     virtual uint8_t             fillIncomingBuffer(AUD_Status *status);
   public:
