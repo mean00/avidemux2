@@ -272,48 +272,76 @@ bool ADMImage::blend(ADMImage *src1,ADMImage *src2)
 
 */
 /* 3000 * 3000 max size, using uint32_t is safe... */
-static uint32_t computeDiff(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t l)
+static uint32_t computeDiff(uint8_t  *s1,uint8_t *s2,uint32_t noise,int w,int h, int stride1, int stride2)
 {
 uint32_t df=0;
 uint32_t delta;
-uint32_t ww,hh;
 
-
-        for(int x=0;x<l;x++)
+    for(int y=0;y<h;y++)
+    {
+        for(int x=0;x<w;x++)
         {
-                delta=abs(*s1-*s2);
+                delta=abs((int)(s1[x])-(int)(s2[x]));
                 if(delta>noise)
                         df+=delta;
-                s1++;
-                s2++;
-
         }
-        return df;
+        s1+=stride1;
+        s2+=stride2;
+    }
+    return df;
+}
+/**
+ * 
+ * @param s1
+ * @param s2
+ * @param noise
+ * @param w
+ * @param h
+ * @param stride1
+ * @param stride2
+ * @return 
+ */
+static uint32_t smallDiff(uint8_t  *s1,uint8_t *s2,uint32_t noise, int count)
+{
+uint32_t df=0;
+uint32_t delta;
+    for(int x=0;x<count;x++)
+    {
+            delta=abs((int)(s1[x])-(int)(s2[x]));
+            if(delta>noise)
+                    df+=delta;
+    }
+    return df;
 }
 #ifdef ADM_CPU_X86
 static uint64_t __attribute__((used)) FUNNY_MANGLE(noise64);
-static uint32_t computeDiffMMX(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t l)
+static uint32_t computeDiffMMX(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t w,uint32_t l, uint32_t pitch1, uint32_t pitch2)
 {
-uint32_t df=0;
-uint32_t delta;
-uint32_t ll,rr;
+uint32_t mod4,leftOver;
 uint64_t noise2=(uint64_t )noise;
 
-uint32_t result=0;
+uint32_t result=0,tmpResult;
         noise64=noise2+(noise2<<16)+(noise2<<32)+(noise2<<48);
-        ll=l>>2;
-        rr=l&3;
+        
+        leftOver=w&3;
 
          __asm__ volatile(
-                         "pxor %%mm7,%%mm7\n"
-                         "pxor %%mm3,%%mm3\n"
+                         "pxor %%mm7,%%mm7\n"                       
                          "movq "Mangle(noise64)", %%mm6\n"
                 :::  "memory"
                  );
 
-          for(int y=0;y<ll;y++)
+          for(int y=0;y<l;y++)
           {
+                mod4=w>>2;
+                if(leftOver)
+                    result+=smallDiff(s1+mod4*4,s2+mod4*4,noise,leftOver);
+                uint8_t *tmpS1=s1;
+                uint8_t *tmpS2=s2;
+                
                 __asm__ volatile(
+                        "pxor           %%mm3,%%mm3\n"
+                        "1:"
                         "movd           (%0),  %%mm0 \n"
                         "movd           (%1),  %%mm1 \n"
                         "punpcklbw      %%mm7, %%mm0 \n"
@@ -326,7 +354,7 @@ uint32_t result=0;
                                            
                         "movq           %%mm2, %%mm0 \n"
                         "pcmpgtw        %%mm6, %%mm2 \n" // Threshold against noise
-                        "pand           %%mm2, %%mm0 \n" // MM0 is the 4 diff, time to pack
+                        "pand           %%mm2, %%mm0 \n" // %mm0 is the 4 diff, time to pack
 
                         "movq           %%mm0, %%mm1 \n" // MM0 is a b c d and we want
                         "psrlq          $16,  %%mm1 \n"  // mm3+=a+b+c+d
@@ -339,30 +367,31 @@ uint32_t result=0;
 
                         "paddw          %%mm1, %%mm0 \n"
                         "paddw          %%mm2, %%mm4 \n"
-                        "paddw          %%mm4, %%mm0 \n"
+                        "paddw          %%mm4, %%mm0 \n" // MM0 is the sum
 
                         "psllq          $48,  %%mm0 \n"
-                        "psrlq          $48,  %%mm0 \n"
+                        "psrlq          $48,  %%mm0 \n" // Only keep 16 bits
 
-                        "paddw          %%mm0, %%mm3 \n" /* PADDQ is SSE2 */
+                        "paddw          %%mm0, %%mm3 \n" /* PADDQ is SSE2 */                        
+                        "add            $4,%0      \n"
+                        "add            $4,%1      \n"
+                        "sub            $1,%2      \n"
+                        "jnz            1b         \n"
 
-                : : "r" (s1),"r" (s2)
+                : : "r" (tmpS1),"r" (tmpS2),"r"(mod4)
                 :"memory"
                 );
-                        s1+=4;
-                        s2+=4;
-                        
-         }
-        // Pack result
-#if 1        
                 __asm__ volatile(
                        
                         "movd           %%mm3,(%0)\n"
                         "emms\n"
-                :: "r"(&result)
+                :: "r"(&tmpResult)
                 );
-#endif                
-        if(rr) result+=computeDiff(s1, s2, noise,rr);
+                result+=tmpResult;
+                s1+=pitch1;
+                s2+=pitch2;
+         }
+        // Pack result
         return result;
 }
 
@@ -376,10 +405,22 @@ uint32_t ADMImage::lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise)
 uint32_t r1,r2;
         if(CpuCaps::hasMMX())
         {
-                return computeDiffMMX(YPLANE(src1),YPLANE(src2),noise,src1->_width*src1->_height);                
+                uint32_t a= computeDiffMMX(YPLANE(src1),YPLANE(src2),noise,  
+                    src1->GetWidth(PLANAR_Y),src1->GetHeight(PLANAR_Y),
+                    src1->GetPitch(PLANAR_Y),src2->GetPitch(PLANAR_Y));                
+#if 0
+                uint32_t b= computeDiff(YPLANE(src1),YPLANE(src2),noise,
+                    src1->GetWidth(PLANAR_Y),src1->GetHeight(PLANAR_Y),
+                    src1->GetPitch(PLANAR_Y),src2->GetPitch(PLANAR_Y));
+                printf("MMX = %u, native =%u\n",a,b);
+#endif
+                return a;
+                
         }
 #endif
-        return computeDiff(YPLANE(src1),YPLANE(src2),noise,src1->_width*src1->_height);
+        return computeDiff(YPLANE(src1),YPLANE(src2),noise,
+                src1->GetWidth(PLANAR_Y),src1->GetHeight(PLANAR_Y),
+                src1->GetPitch(PLANAR_Y),src2->GetPitch(PLANAR_Y));
 }
 
 //******************************************************************************
