@@ -323,7 +323,7 @@ uint64_t noise2=(uint64_t )noise;
 uint32_t result=0,tmpResult;
         noise64=noise2+(noise2<<16)+(noise2<<32)+(noise2<<48);
         
-        leftOver=w&3;
+        leftOver=w&7;
 
          __asm__ volatile(
                          "pxor %%mm7,%%mm7\n"                       
@@ -333,15 +333,16 @@ uint32_t result=0,tmpResult;
 
           for(int y=0;y<l;y++)
           {
-                mod4=w>>2;
+                mod4=w>>3;
                 if(leftOver)
-                    result+=smallDiff(s1+mod4*4,s2+mod4*4,noise,leftOver);
+                    result+=smallDiff(s1+mod4*8,s2+mod4*8,noise,leftOver);
                 uint8_t *tmpS1=s1;
                 uint8_t *tmpS2=s2;
                 
                 __asm__ volatile(
                         "pxor           %%mm3,%%mm3\n"
                         "1:"
+                // LEFT
                         "movd           (%0),  %%mm0 \n"
                         "movd           (%1),  %%mm1 \n"
                         "punpcklbw      %%mm7, %%mm0 \n"
@@ -354,8 +355,26 @@ uint32_t result=0,tmpResult;
                                            
                         "movq           %%mm2, %%mm0 \n"
                         "pcmpgtw        %%mm6, %%mm2 \n" // Threshold against noise
-                        "pand           %%mm2, %%mm0 \n" // %mm0 is the 4 diff, time to pack
-
+                        "pand           %%mm2, %%mm0 \n" //
+                        "movq           %%mm0, %%mm5 \n" //  %mm5 is the  A1 A2 A3 A4, we want the sum later
+                // RIGHT
+                        "movd           4(%0),  %%mm0 \n"
+                        "movd           4(%1),  %%mm1 \n"
+                        "punpcklbw      %%mm7, %%mm0 \n"
+                        "punpcklbw      %%mm7, %%mm1 \n"
+                        
+                        "movq           %%mm0, %%mm2 \n"
+                        "psubusw        %%mm1, %%mm2 \n"
+                        "psubusw        %%mm0, %%mm1 \n"
+                        "por            %%mm1, %%mm2 \n" // SAD  
+                                           
+                        "movq           %%mm2, %%mm0 \n"
+                        "pcmpgtw        %%mm6, %%mm2 \n" // Threshold against noise
+                        "pand           %%mm2, %%mm0 \n" // mm0 is B1 B2 B3 B4
+                
+                        "paddW          %%mm5, %%mm0 \n"
+                
+                // PACK
                         "movq           %%mm0, %%mm1 \n" // MM0 is a b c d and we want
                         "psrlq          $16,  %%mm1 \n"  // mm3+=a+b+c+d
 
@@ -373,8 +392,8 @@ uint32_t result=0,tmpResult;
                         "psrlq          $48,  %%mm0 \n" // Only keep 16 bits
 
                         "paddw          %%mm0, %%mm3 \n" /* PADDQ is SSE2 */                        
-                        "add            $4,%0      \n"
-                        "add            $4,%1      \n"
+                        "add            $8,%0      \n"
+                        "add            $8,%1      \n"
                         "sub            $1,%2      \n"
                         "jnz            1b         \n"
 
