@@ -336,8 +336,8 @@ uint32_t result=0,tmpResult;
                 mod4=w>>3;
                 if(leftOver)
                     result+=smallDiff(s1+mod4*8,s2+mod4*8,noise,leftOver);
-                uint8_t *tmpS1=s1;
-                uint8_t *tmpS2=s2;
+                volatile uint8_t *tmpS1=s1;
+                volatile uint8_t *tmpS2=s2;
                 
                 __asm__ volatile(
                         "pxor           %%mm3,%%mm3\n"
