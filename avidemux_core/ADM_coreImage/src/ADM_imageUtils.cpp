@@ -535,50 +535,50 @@ uint32_t r1,r2;
   */
  bool ADMImage::copyLeftSideTo(ADMImage *dest)
  {
-		uint8_t *src,*dst;
-		uint32_t srcStride,dstStride;
-        uint32_t len=this->_width;
- 
-			ADM_assert(_width==dest->_width);
-			ADM_assert(_height==dest->_height);
-		
-	 		dst=dest->GetWritePtr(PLANAR_Y);
-		    src=this->GetWritePtr(PLANAR_Y);
-		    srcStride=this->GetPitch(PLANAR_Y);
-            dstStride=dest->GetPitch(PLANAR_Y);
-		    for(uint32_t y=0;y<_height;y++)   // We do both u & v!
-		    {
-		        memcpy(dst,src,len>>1);
-		        dst+=dstStride;
-		        src+=srcStride;
-		    }
-            len>>=1;
-		        // U
-	 		dst=dest->GetWritePtr(PLANAR_U);
-		    src=this->GetWritePtr(PLANAR_U);
-		    srcStride=this->GetPitch(PLANAR_U);
-            dstStride=dest->GetPitch(PLANAR_U);
-		    
-		    uint32_t h2=_height>>1;
-		    for(uint32_t y=0;y<h2;y++)   // We do both u & v!
-		    {
-		        memcpy(dst,src,len>>1);
-		        dst+=dstStride;
-		        src+=srcStride;
-		    }
-		        // V
-            dst=dest->GetWritePtr(PLANAR_V);
-		    src=this->GetWritePtr(PLANAR_V);
-		    srcStride=this->GetPitch(PLANAR_V);
-            dstStride=dest->GetPitch(PLANAR_V);
-		    for(uint32_t y=0;y<h2;y++)   // We do both u & v!
-		    {
-		        memcpy(dst,src,len>>1);
-		        dst+=dstStride;
-		        src+=srcStride;
-		    }
-		    return 1;
- }
+    uint8_t *src,*dst;
+    uint32_t srcStride,dstStride;
+    uint32_t len=this->_width;
+
+        ADM_assert(_width==dest->_width);
+        ADM_assert(_height==dest->_height);
+
+        dst=dest->GetWritePtr(PLANAR_Y);
+        src=this->GetWritePtr(PLANAR_Y);
+        srcStride=this->GetPitch(PLANAR_Y);
+        dstStride=dest->GetPitch(PLANAR_Y);
+        for(uint32_t y=0;y<_height;y++)   // We do both u & v!
+        {
+            memcpy(dst,src,len>>1);
+            dst+=dstStride;
+            src+=srcStride;
+        }
+        len>>=1;
+                    // U
+        dst=dest->GetWritePtr(PLANAR_U);
+        src=this->GetWritePtr(PLANAR_U);
+        srcStride=this->GetPitch(PLANAR_U);
+        dstStride=dest->GetPitch(PLANAR_U);
+
+        uint32_t h2=_height>>1;
+        for(uint32_t y=0;y<h2;y++)   // We do both u & v!
+        {
+            memcpy(dst,src,len>>1);
+            dst+=dstStride;
+            src+=srcStride;
+        }
+                    // V
+        dst=dest->GetWritePtr(PLANAR_V);
+        src=this->GetWritePtr(PLANAR_V);
+        srcStride=this->GetPitch(PLANAR_V);
+        dstStride=dest->GetPitch(PLANAR_V);
+        for(uint32_t y=0;y<h2;y++)   // We do both u & v!
+        {
+            memcpy(dst,src,len>>1);
+            dst+=dstStride;
+            src+=srcStride;
+        }
+        return 1;
+}
 
 
 /**
