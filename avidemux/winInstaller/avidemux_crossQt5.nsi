@@ -821,11 +821,11 @@ ${MementoSection} "Resample FPS" SecVidFltResampleFps
 		${MementoSectionEnd}
 	SectionGroupEnd
 	SectionGroup "Interlacing Filters" SecGrpVideoFilterInterlacing
-		${MementoSection} "Decomb Decimate" SecVidFltDecombDecimate
+		${MementoSection} "Ivtc Dupe Removal" SecVidFltIvtcDupeRemoval
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_decimate.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_ivtcDupeRemover.dll
 		${MementoSectionEnd}
 		${MementoSection} "Decomb Telecide" SecVidFltDecombTelecide
 			SectionIn 1 2
