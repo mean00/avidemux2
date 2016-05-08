@@ -398,7 +398,7 @@ uint32_t result=0,tmpResult;
                         "jnz            1b         \n"
 
                 : : "r" (tmpS1),"r" (tmpS2),"r"(mod4)
-                :"memory"
+                :"memory","0","1","2"
                 );
                 __asm__ volatile(
                        
