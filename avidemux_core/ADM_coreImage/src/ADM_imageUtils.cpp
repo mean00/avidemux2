@@ -315,6 +315,17 @@ uint32_t delta;
 }
 #ifdef ADM_CPU_X86
 static uint64_t __attribute__((used)) FUNNY_MANGLE(noise64);
+/**
+ * \fn computeDiffMMX
+ * @param s1
+ * @param s2
+ * @param noise
+ * @param w
+ * @param l
+ * @param pitch1
+ * @param pitch2
+ * @return 
+ */
 static uint32_t computeDiffMMX(uint8_t  *s1,uint8_t *s2,uint32_t noise,uint32_t w,uint32_t l, uint32_t pitch1, uint32_t pitch2)
 {
 uint32_t mod4,leftOver;
@@ -336,8 +347,8 @@ uint32_t result=0,tmpResult;
                 mod4=w>>3;
                 if(leftOver)
                     result+=smallDiff(s1+mod4*8,s2+mod4*8,noise,leftOver);
-                volatile uint8_t *tmpS1=s1;
-                volatile uint8_t *tmpS2=s2;
+                uint8_t *tmpS1=s1;
+                uint8_t *tmpS2=s2;
                 
                 __asm__ volatile(
                         "pxor           %%mm3,%%mm3\n"
@@ -397,8 +408,9 @@ uint32_t result=0,tmpResult;
                         "sub            $1,%2      \n"
                         "jnz            1b         \n"
 
-                : : "r" (tmpS1),"r" (tmpS2),"r"(mod4)
-                :"memory","0","1","2"
+                : "=r" (tmpS1),"=r" (tmpS2),"=r"(mod4)
+                : "0"(tmpS1),"1"(tmpS2),"2"(mod4)
+                : "memory","0","1","2"
                 );
                 __asm__ volatile(
                        
