@@ -23,7 +23,11 @@
 #include "ivtcDupeRemover_desc.cpp"
 
 #define PERIOD 4
+#if 0
 #define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 /**
     \class ivtcDupeRemover
 */
@@ -48,7 +52,8 @@ public:
                 uint64_t        phaseStartPts; // its PTS
                 int             dupeOffset;  // offset of the duplicate to drop,  i.e. abs number = phaseStart+dupeOffset
                 dupeState       state;       // Current finite state machine
-                uint32_t        delta[PERIOD]; // List of image difference
+                uint32_t        delta[PERIOD+1]; // List of image difference
+                unsigned int    hints[PERIOD+1]; // From D. Graft ivtc if used
 protected:
                 dupeRemover        configuration;
                 dupeState          searchSync();
@@ -88,7 +93,9 @@ ivtcDupeRemover::ivtcDupeRemover(  ADM_coreVideoFilter *in,CONFcouple *setup) : 
     {
         // Default value
         configuration.threshold=5;
-        configuration.show=true;
+        configuration.show=false;
+        configuration.mode=1; // fast!
+        
     }
     myName="ivtcDupeRemover";
     
@@ -152,6 +159,10 @@ ivtcDupeRemover::dupeState ivtcDupeRemover::searchSync()
         {
             vidCache->unlockAll();
             return dupeSyncing;
+        }
+        if(GetHintingData(images[i]->GetReadPtr(PLANAR_Y),hints+i))
+        {
+            hints[i]=0;
         }
     }
     
@@ -233,11 +244,16 @@ bool ivtcDupeRemover::postProcess(ADMImage *in,ADMImage *out,uint64_t newPts)
             char s[256];
             const char *m=dupeState2string(state);
             out->printString(2,2,m);
-            for(int i=0;i<PERIOD;i++)
+            for(int i=0;i<PERIOD;i++) 
             {
-                sprintf(s,"%u",delta[i]);
+                sprintf(s,"Diff:%u",delta[i]);
                 out->printString(2,4+i,s);
+                sprintf(s,"Hint:%x",hints[i]);
+                out->printString(2,11+i,s);
             }
+            sprintf(s,"Hint:%x",hints[PERIOD]);
+            out->printString(2,11+PERIOD,s);
+
         }
     }
     return true;
