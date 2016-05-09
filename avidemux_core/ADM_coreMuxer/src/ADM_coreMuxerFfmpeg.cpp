@@ -187,7 +187,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 
         if(isMpeg4Compatible(fcc))
         {
-                c->codec_id = CODEC_ID_MPEG4;
+                c->codec_id = AV_CODEC_ID_MPEG4;
                 if(stream->providePts()==true)
                 {
                     c->has_b_frames=1; // in doubt...
@@ -217,26 +217,26 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                             c->codec_id = AV_CODEC_ID_HEVC;
                              setAvCodec(c,AV_CODEC_ID_HEVC);
                         } else {
-                            c->codec_id = CODEC_ID_H264;
-                             setAvCodec(c,CODEC_ID_H264);
+                            c->codec_id = AV_CODEC_ID_H264;
+                             setAvCodec(c,AV_CODEC_ID_H264);
                         }
                 }
                 else
                 {
                         if(isDVCompatible(fcc))
                         {
-                          c->codec_id = CODEC_ID_DVVIDEO;
+                          c->codec_id = AV_CODEC_ID_DVVIDEO;
                         }else
                         {
                           if(fourCC::check(fcc,(uint8_t *)"H263"))
                           {
-                                    c->codec_id=CODEC_ID_H263;
+                                    c->codec_id= AV_CODEC_ID_H263;
                             }else
 
                            if(isVP6Compatible(stream->getFCC()))
                                 {
-                                         c->codec_id=CODEC_ID_VP6F;
-                                         setAvCodec(c,CODEC_ID_VP6F);
+                                         c->codec_id= AV_CODEC_ID_VP6F;
+                                         setAvCodec(c,AV_CODEC_ID_VP6F);
                                          c->has_b_frames=0; // No PTS=cannot handle CTS...
                                          c->max_b_frames=0;
                                 }else
@@ -244,8 +244,8 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                         {
                                                 c->has_b_frames=0; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=0;
-                                                c->codec_id=CODEC_ID_FLV1;
-                                                setAvCodec(c,CODEC_ID_FLV1);
+                                                c->codec_id= AV_CODEC_ID_FLV1;
+                                                setAvCodec(c,AV_CODEC_ID_FLV1);
 
                                         }else
                                         {
@@ -253,19 +253,19 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                             {
                                                 c->has_b_frames=1; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=2;
-                                                c->codec_id=CODEC_ID_MPEG1VIDEO;
+                                                c->codec_id= AV_CODEC_ID_MPEG1VIDEO;
                                             }
                                             else if(fourCC::check(stream->getFCC(),(uint8_t *)"MPEG2"))
                                             {
                                                 c->has_b_frames=1; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=2;
-                                                c->codec_id=CODEC_ID_MPEG2VIDEO;
+                                                c->codec_id= AV_CODEC_ID_MPEG2VIDEO;
                                             }else
                                             {
                                                 uint32_t id=stream->getFCC();
 
                                                 AVCodecID cid=ADM_codecIdFindByFourcc(fourCC::tostring(id));
-                                                if(cid==CODEC_ID_NONE)
+                                                if(cid== AV_CODEC_ID_NONE)
                                                 {
                                                     printf("[FF] Unknown video codec\n");
                                                     return false;
@@ -326,29 +326,29 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           switch(audioheader->encoding)
           {
                   case WAV_OGG_VORBIS:
-                                c->codec_id = CODEC_ID_VORBIS;c->frame_size=6*256;
+                                c->codec_id = AV_CODEC_ID_VORBIS;c->frame_size=6*256;
                                 ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                 break;
-                  case WAV_DTS: c->codec_id = CODEC_ID_DTS;c->frame_size=1024;break;
-                  case WAV_OPUS:    c->codec_id = CODEC_ID_OPUS;
+                  case WAV_DTS: c->codec_id = AV_CODEC_ID_DTS;c->frame_size=1024;break;
+                  case WAV_OPUS:    c->codec_id = AV_CODEC_ID_OPUS;
                                     c->frame_size=1024;
                                     ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                     break;
-                  case WAV_EAC3: c->codec_id = CODEC_ID_EAC3;c->frame_size=6*256;break;
-                  case WAV_AC3: c->codec_id = CODEC_ID_AC3;c->frame_size=6*256;break;
-                  case WAV_MP2: c->codec_id = CODEC_ID_MP2;c->frame_size=1152;break;
+                  case WAV_EAC3: c->codec_id = AV_CODEC_ID_EAC3;c->frame_size=6*256;break;
+                  case WAV_AC3: c->codec_id = AV_CODEC_ID_AC3;c->frame_size=6*256;break;
+                  case WAV_MP2: c->codec_id = AV_CODEC_ID_MP2;c->frame_size=1152;break;
                   case WAV_MP3:
 //  #warning FIXME : Probe deeper
                               c->frame_size=1152;
-                              c->codec_id = CODEC_ID_MP3;
+                              c->codec_id = AV_CODEC_ID_MP3;
                               break;
                   case WAV_PCM:
                                   // One chunk is 10 ms (1/100 of fq)
                                   c->frame_size=4;
-                                  c->codec_id = CODEC_ID_PCM_S16LE;break;
+                                  c->codec_id = AV_CODEC_ID_PCM_S16LE;break;
                   case WAV_AAC:
                                   ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
-                                  c->codec_id = CODEC_ID_AAC;
+                                  c->codec_id = AV_CODEC_ID_AAC;
                                   c->frame_size=1024;
                                   break;
                   default:

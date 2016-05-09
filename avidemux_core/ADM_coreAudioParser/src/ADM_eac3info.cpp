@@ -43,7 +43,7 @@ uint32_t of=0;
 			of++;
 			continue;
 		 }
-            AC3HeaderInfo hdr;
+            AC3HeaderInfo *hdr=NULL;
             GetBitContext gb;
             init_get_bits(&gb,buf,len*8);
             if(avpriv_ac3_parse_header(&gb, &hdr))
@@ -56,11 +56,13 @@ uint32_t of=0;
             }
 //            printf("Sync found at offset %"PRIu32"\n",of);
             *syncoff=of;
-            info->frequency=(uint32_t)hdr.sample_rate;
-            info->byterate=(uint32_t)hdr.bit_rate>>3;
-            info->channels=hdr.channels;
-            info->frameSizeInBytes=hdr.frame_size;
+            info->frequency=(uint32_t)hdr->sample_rate;
+            info->byterate=(uint32_t)hdr->bit_rate>>3;
+            info->channels=hdr->channels;
+            info->frameSizeInBytes=hdr->frame_size;
             info->samples=265*6; // ??
+            av_free(hdr);
+            hdr=NULL;
             return 1;
 		}
 		return 1;

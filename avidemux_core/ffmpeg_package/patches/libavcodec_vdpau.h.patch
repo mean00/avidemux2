@@ -1,12 +1,10 @@
-diff --git libavcodec/vdpau.h libavcodec/vdpau.h
-index a42ca01..4b70be3 100644
---- libavcodec/vdpau.h
-+++ libavcodec/vdpau.h
-@@ -231,6 +231,7 @@ struct vdpau_render_state {
+--- libavcodec/vdpau.h.org	2016-05-09 07:48:57.259062279 +0200
++++ libavcodec/vdpau.h	2016-05-09 07:50:00.221652161 +0200
+@@ -235,6 +235,7 @@
+     VdpVideoSurface surface; ///< Used as rendered surface, never changed.
  
      int state; ///< Holds FF_VDPAU_STATE_* values.
++    int refCount; /// Used by how many client MEANX
  
-+    int refCount; /// Used by how many client
- #if AV_HAVE_INCOMPATIBLE_LIBAV_ABI
      /** picture parameter information for all supported codecs */
      union AVVDPAUPictureInfo info;

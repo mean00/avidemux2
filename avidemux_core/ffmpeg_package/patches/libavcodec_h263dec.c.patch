@@ -16,7 +16,7 @@ index 15f073a..cf4a100 100644
 +    *vop_packed=0;
 +    *gmc=0;
 +    *qpel=0;
-+    if(avctx->codec->id!=CODEC_ID_MPEG4) return 0;
++    if(avctx->codec->id!=AV_CODEC_ID_MPEG4) return 0;
 +    	
 +  	*vop_packed=(s->divx_packed);
 +	*qpel=s->quarter_sample;

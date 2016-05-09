@@ -24,14 +24,14 @@
 +             }
 +             else        //4:3
 +             {
-+               if(s->codec_id == CODEC_ID_MPEG2VIDEO)
++               if(s->codec_id == AV_CODEC_ID_MPEG2VIDEO)
 +                 put_bits(&s->pb, 4, 2);
 +               else
 +                 put_bits(&s->pb, 4, 12); // MPEG1
 +             }
 + // /MEANX
 +// MEANX : Pulldown
-+            if((s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN) && (s->codec_id == CODEC_ID_MPEG2VIDEO))
++            if((s->avctx->flags2 & AV_CODEC_FLAG2_32_PULLDOWN) && (s->codec_id == AV_CODEC_ID_MPEG2VIDEO))
 +             {           
 +                 put_bits(&s->pb, 4,4);
 +             }
@@ -63,7 +63,7 @@
 -            put_bits(&s->pb, 1, s->progressive_sequence);
 +   // MEANX pulldown put_bits(&s->pb, 1, s->progressive_sequence);
 +  // MEANX Pulldown
-+ if(s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN) //MEANX
++ if(s->avctx->flags2 & AV_CODEC_FLAG2_32_PULLDOWN) //MEANX
 +                        put_bits(&s->pb, 1, 0);
 +                else
 +                        put_bits(&s->pb, 1, s->progressive_sequence);
@@ -90,7 +90,7 @@
      s->frame_pred_frame_dct = 1;
      if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
 +// MEANX
-+        if(s->avctx->flags2 & CODEC_FLAG2_32_PULLDOWN)
++        if(s->avctx->flags2 & AV_CODEC_FLAG2_32_PULLDOWN)
 +        {
 +        
 +                switch((s->picture_number - 

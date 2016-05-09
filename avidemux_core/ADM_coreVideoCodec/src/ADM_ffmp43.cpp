@@ -67,7 +67,7 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
   out->flags = frameType ();
 
   // Quant ?
-  if (src->qstride && src->qscale_table && codecId != CODEC_ID_H264)
+  if (src->qstride && src->qscale_table && codecId != AV_CODEC_ID_H264)
     {
       out->quant = (uint8_t *) src->qscale_table;
       out->_qStride = src->qstride;
@@ -249,7 +249,7 @@ uint32_t decoderFF::frameType (void)
       SET (AVI_KEY_FRAME);
       if (!_frame->key_frame)
 	{
-	  if (codecId == CODEC_ID_H264)
+	  if (codecId == AV_CODEC_ID_H264)
 	    {
 	      SET (AVI_P_FRAME);
 	    }
@@ -384,7 +384,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // vop flag set to 0
       // it is meant to mean frame skipped but very dubious
       if (in->dataLength <= 8)
-        if(codecId == CODEC_ID_MPEG4||codecId==CODEC_ID_FRAPS)
+        if(codecId == AV_CODEC_ID_MPEG4||codecId==AV_CODEC_ID_FRAPS)
 	{
 	  printf ("[lavc] Probably pseudo black frame...\n");
 	  out->_Qp = 2;
@@ -430,52 +430,52 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   // We have an image....
   switch (_context->pix_fmt)
     {
-    case PIX_FMT_YUV411P:
+    case AV_PIX_FMT_YUV411P:
       out->_colorspace = ADM_COLOR_YUV411;
       break;
-    case PIX_FMT_YUYV422:
+    case AV_PIX_FMT_YUYV422:
       out->_colorspace = ADM_COLOR_YUV422;
       break;
-    case PIX_FMT_YUV422P:
-    case PIX_FMT_YUVJ422P:
+    case AV_PIX_FMT_YUV422P:
+    case AV_PIX_FMT_YUVJ422P:
       out->_colorspace = ADM_COLOR_YUV422P;
       break;
-    case PIX_FMT_GRAY8:
+    case AV_PIX_FMT_GRAY8:
        out->_colorspace = ADM_COLOR_Y8;
        break;
-    case PIX_FMT_YUV444P:
-    case PIX_FMT_YUVJ444P:
+    case AV_PIX_FMT_YUV444P:
+    case AV_PIX_FMT_YUVJ444P:
       out->_colorspace = ADM_COLOR_YUV444;
       break;
-    case PIX_FMT_YUV420P:
-    case PIX_FMT_YUVJ420P:
-    case PIX_FMT_YUVA420P:
+    case AV_PIX_FMT_YUV420P:
+    case AV_PIX_FMT_YUVJ420P:
+    case AV_PIX_FMT_YUVA420P:
       // Default is YV12 or I420
       // In that case depending on swap u/v
       // we do it or not
       out->_colorspace = ADM_COLOR_YV12;
       break;
-   case PIX_FMT_BGR24:
-   case PIX_FMT_RGB24:
+   case AV_PIX_FMT_BGR24:
+   case AV_PIX_FMT_RGB24:
 	  out->_colorspace = ADM_COLOR_BGR24;
 	  break;
-    case PIX_FMT_BGRA:
+    case AV_PIX_FMT_BGRA:
       out->_colorspace = ADM_COLOR_BGR32A;
       break;
-    case PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
+    case AV_PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
       out->_colorspace = ADM_COLOR_RGB32A;
       break;
-    case PIX_FMT_RGB555:
+    case AV_PIX_FMT_RGB555:
       out->_colorspace = ADM_COLOR_RGB555;
       break;
-    case PIX_FMT_VDPAU_MPEG1:
-    case PIX_FMT_VDPAU_MPEG2:
-    case PIX_FMT_VDPAU_WMV3:
-    case PIX_FMT_VDPAU_VC1:
-    case PIX_FMT_VDPAU_H264:
+    case AV_PIX_FMT_VDPAU_MPEG1:
+    case AV_PIX_FMT_VDPAU_MPEG2:
+    case AV_PIX_FMT_VDPAU_WMV3:
+    case AV_PIX_FMT_VDPAU_VC1:
+    case AV_PIX_FMT_VDPAU_H264:
         out->_colorspace=ADM_COLOR_VDPAU;
         break;
-    case PIX_FMT_VAAPI_VLD:
+    case AV_PIX_FMT_VAAPI_VLD:
         out->_colorspace=ADM_COLOR_LIBVA;
         break;
         
@@ -504,7 +504,7 @@ decoderFFDiv3::decoderFFDiv3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extr
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _refCopy = 1;			// YUV420 only
-  WRAP_Open (CODEC_ID_MSMPEG4V3);
+  WRAP_Open (AV_CODEC_ID_MSMPEG4V3);
 }
 
 decoderFFMpeg4::decoderFFMpeg4 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp):
@@ -516,7 +516,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
   _refCopy = 1;			// YUV420 only
   _setFcc=true;
   decoderMultiThread ();
-  WRAP_Open (CODEC_ID_MPEG4);
+  WRAP_Open (AV_CODEC_ID_MPEG4);
   
 }
 bool decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
@@ -535,7 +535,7 @@ decoderFFDV::decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDat
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
     
-    WRAP_Open (CODEC_ID_DVVIDEO);
+    WRAP_Open (AV_CODEC_ID_DVVIDEO);
   
 
 }
@@ -544,12 +544,12 @@ decoderFFMpeg12::decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
 {
   _refCopy = 1;			// YUV420 only
   decoderMultiThread ();
-  WRAP_Open (CODEC_ID_MPEG2VIDEO);
+  WRAP_Open (AV_CODEC_ID_MPEG2VIDEO);
 }
 
 decoderFFPng::decoderFFPng(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp) : decoderFF(w, h, fcc, extraDataLen, extraData, bpp)
 {
-	WRAP_Open (CODEC_ID_PNG);
+	WRAP_Open (AV_CODEC_ID_PNG);
 }
 
 decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
@@ -558,7 +558,7 @@ decoderFF_ffhuff::decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_
     
   _setBpp=true;
   ADM_info ("[lavc] FFhuff: We have %d bytes of extra data\n", (int)extraDataLen);
-  WRAP_Open (CODEC_ID_FFVHUFF);  
+  WRAP_Open (AV_CODEC_ID_FFVHUFF);  
 
 }
 decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
@@ -567,7 +567,7 @@ decoderFFH264::decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extr
   _refCopy = 1;			// YUV420 only
   decoderMultiThread ();
   ADM_info ("[lavc] Initializing H264 decoder with %d extradata\n", (int)extraDataLen);
-  WRAP_Open(CODEC_ID_H264);
+  WRAP_Open(AV_CODEC_ID_H264);
   
 }
 //*********************
@@ -606,7 +606,7 @@ decoderFFhuff::decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extr
 decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 {
   _setBpp=true;
-  WRAP_Open (CODEC_ID_HUFFYUV);
+  WRAP_Open (AV_CODEC_ID_HUFFYUV);
 }
 
 //***************

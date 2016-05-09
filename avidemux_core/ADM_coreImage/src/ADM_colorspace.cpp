@@ -78,7 +78,7 @@ static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
     \brief Convert ADM colorspace type swscale/lavcodec colorspace name
 
 */
-static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
+static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
 {
   ADM_colorspace fromColor=fromColor_;
   int intColor=(int)fromColor;
@@ -86,21 +86,21 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
   fromColor=(ADM_colorspace)intColor;
   switch(fromColor)
   {
-    case ADM_COLOR_YUV444: return PIX_FMT_YUV444P;
-    case ADM_COLOR_YUV411: return PIX_FMT_YUV411P;
-    case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
-    case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
-    case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
-    case ADM_COLOR_RGB555: return PIX_FMT_RGB555LE;
-    case ADM_COLOR_RGB32A: return PIX_FMT_RGBA;
-    case ADM_COLOR_BGR32A: return PIX_FMT_RGBA; // Faster that way...PIX_FMT_BGR32;
-    case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
-    case ADM_COLOR_BGR24: return PIX_FMT_BGR24;
+    case ADM_COLOR_YUV444: return AV_PIX_FMT_YUV444P;
+    case ADM_COLOR_YUV411: return AV_PIX_FMT_YUV411P;
+    case ADM_COLOR_YUV422: return AV_PIX_FMT_YUYV422;
+    case ADM_COLOR_YV12: return AV_PIX_FMT_YUV420P;
+    case ADM_COLOR_YUV422P: return AV_PIX_FMT_YUV422P;
+    case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
+    case ADM_COLOR_RGB32A: return AV_PIX_FMT_RGBA;
+    case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...AV_PIX_FMT_BGR32;
+    case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
+    case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
     case ADM_COLOR_YV12_10BITS: return AV_PIX_FMT_YUV420P10LE;
-    case ADM_COLOR_Y8: return PIX_FMT_GRAY8;
+    case ADM_COLOR_Y8: return AV_PIX_FMT_GRAY8;
     default : ADM_assert(0); 
   }
-  return PIX_FMT_YUV420P;
+  return AV_PIX_FMT_YUV420P;
 }
 /**
       \fn getStrideAndPointers
@@ -280,10 +280,11 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     SETAL(SPLINE);
     default: ADM_assert(0);
     }
-
+#if 0 // this is gone, we need to patch av_get_cpu_flags directly now
     {
         FLAGS();
     }
+#endif
   
     srcWidth=sw;
     srcHeight=sh;
@@ -293,8 +294,8 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
 
     fromColor=from;
     toColor=to;
-    PixelFormat lavFrom=ADMColor2LAVColor(fromColor );
-    PixelFormat lavTo=ADMColor2LAVColor(toColor );
+    AVPixelFormat lavFrom=ADMColor2LAVColor(fromColor );
+    AVPixelFormat lavTo=ADMColor2LAVColor(toColor );
     
     context=(void *)sws_getContext(
                       srcWidth,srcHeight,

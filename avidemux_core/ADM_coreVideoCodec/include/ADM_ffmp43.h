@@ -189,7 +189,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec"displ
   _context->max_b_frames = 0;\
   _context->width = _w;\
   _context->height = _h;\
-  _context->pix_fmt = PIX_FMT_YUV420P;\
+  _context->pix_fmt = AV_PIX_FMT_YUV420P;\
   _context->debug_mv |= FF_SHOW;\
   _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;\
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \

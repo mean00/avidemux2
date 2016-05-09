@@ -133,15 +133,15 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
         case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
                                 _frame->linesize[1] = img->GetPitch(PLANAR_U);
                                 _frame->linesize[2] = img->GetPitch(PLANAR_V);
-                                _context->pix_fmt =PIX_FMT_YUV420P;break;
+                                _context->pix_fmt =AV_PIX_FMT_YUV420P;break;
         case ADM_COLOR_YUV422P: _frame->linesize[0] = w;
                                 _frame->linesize[1] = w>>1;
                                 _frame->linesize[2] = w>>1;
-                                _context->pix_fmt =PIX_FMT_YUV422P;break;
+                                _context->pix_fmt =AV_PIX_FMT_YUV422P;break;
         case ADM_COLOR_RGB32A : _frame->linesize[0] = w*4;
                                 _frame->linesize[1] = 0;//w >> 1;
                                 _frame->linesize[2] = 0;//w >> 1;
-                                _context->pix_fmt =PIX_FMT_RGB32;break;
+                                _context->pix_fmt =AV_PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
     }

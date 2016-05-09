@@ -33,7 +33,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     AVCodec *codec=avcodec_find_decoder(id);
     if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
     codecId=id; 
-    ADM_assert(id!=CODEC_ID_NONE);
+    ADM_assert(id!=AV_CODEC_ID_NONE);
     
     _context = avcodec_alloc_context3(codec);
     ADM_assert(_context);
@@ -50,12 +50,12 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
  
     _context->width = _w;
     _context->height = _h;
-    _context->pix_fmt = PIX_FMT_YUV420P;
+    _context->pix_fmt = AV_PIX_FMT_YUV420P;
     
     _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
     _context->error_concealment=3; 
     // Hack
-    if(codecId==CODEC_ID_TSCC || codecId==CODEC_ID_CSCD)
+    if(codecId==AV_CODEC_ID_TSCC || codecId==AV_CODEC_ID_CSCD)
     {
         ADM_warning("Forcing bit per coded sample to %d\n",bpp);
          _context->bits_per_coded_sample = bpp;
@@ -81,7 +81,7 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     const ffVideoCodec *c=getCodecIdFromFourcc(fcc);
     if(!c) return NULL;
     AVCodecID id=c->codecId;
-    if(id==CODEC_ID_NONE) return NULL;
+    if(id==AV_CODEC_ID_NONE) return NULL;
     return new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
 }
 /**
