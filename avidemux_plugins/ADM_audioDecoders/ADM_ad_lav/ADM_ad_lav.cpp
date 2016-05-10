@@ -200,11 +200,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
               ADM_assert(0);
           }
           ADM_info("Decoder created using int16..\n");
-
     }
 
-        switch(_context->sample_fmt)
-        {
+    switch(_context->sample_fmt)
+    {
         case AV_SAMPLE_FMT_FLT:
             outputFlavor=asFloat;
             ADM_info("Decoder created using float..\n");
@@ -217,7 +216,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
             ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
             ADM_assert(0);
             break;
-        }
+    }
 
 
 
@@ -267,7 +266,7 @@ bool ADM_AudiocoderLavcodec::decodeToS16(float **outptr,uint32_t *nbOut)
        }
        *outptr+=channels;
     }
-    *nbOut+=nbSample*channels;
+    (*nbOut)+=nbSample*channels;
     return true;
 }
 
@@ -281,7 +280,7 @@ bool ADM_AudiocoderLavcodec::decodeToFloat(float **outptr,uint32_t *nbOut)
     // copy
     memcpy(*outptr,_frame[0].data,sizeof(float)*nbSample*channels); // not sure...     
     (*outptr)+=nbSample*channels;
-    *nbOut+=nbSample*channels;
+    (*nbOut)+=nbSample*channels;
     return true;
 }
 
@@ -293,18 +292,18 @@ bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
 {
 
     // Interleave
-       int nbSample=  _frame->nb_samples; 
-       for(int i=0;i<nbSample;i++)
-       {
-           for(int c=0;c<channels;c++)
-           {
-              float *p=(float *)_frame->data[c];
-              (*outptr)[c]=*p; // we can do better here
-           }
-           (*outptr)+=channels;
-       }
-      *nbOut+=nbSample*channels;
-      return true;
+    int nbSample=  _frame->nb_samples; 
+    for(int i=0;i<nbSample;i++)
+    {
+        for(int c=0;c<channels;c++)
+        {
+           float *p=(float *)_frame->data[c];
+           (*outptr)[c]=p[i]; // we can do better here
+        }
+        (*outptr)+=channels;
+    }
+   (*nbOut)+=nbSample*channels;
+   return true;
 }
 /**
     \fn run
