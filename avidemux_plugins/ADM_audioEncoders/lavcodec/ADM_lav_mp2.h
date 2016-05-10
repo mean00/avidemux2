@@ -1,6 +1,7 @@
 #define Join(x,y) x##_##y
 #define AUDMEncoder_Lavcodec AUDMEncoder_Lavcodec_MP2
 #define makeName(x) Join(x,MP2)
+#define avMakeName          AV_CODEC_ID_MP2
 #define ADM_LAV_VERSION     1,0,0
 #define ADM_LAV_NAME        "LavMP2" 
 #define ADM_LAV_MENU        "MP2 (lav)" 

@@ -1,6 +1,7 @@
 #define Join(x,y) x##_##y
 #define AUDMEncoder_Lavcodec AUDMEncoder_Lavcodec_DTS
 #define makeName(x) Join(x,DTS)
+#define avMakeName          AV_CODEC_ID_DTS
 #define ADM_LAV_VERSION     1,0,0
 #define ADM_LAV_NAME        "LavDTS" 
 #define ADM_LAV_MENU        "DTS (lav)" 

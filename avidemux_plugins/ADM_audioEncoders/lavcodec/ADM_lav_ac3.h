@@ -1,6 +1,7 @@
 #define Join(x,y) x##_##y
 #define AUDMEncoder_Lavcodec AUDMEncoder_Lavcodec_AC3
 #define makeName(x) Join(x,AC3)
+#define avMakeName          AV_CODEC_ID_AC3
 #define ADM_LAV_VERSION     1,0,0
 #define ADM_LAV_NAME        "LavAC3" 
 #define ADM_LAV_MENU        "AC3 (lav)" 
