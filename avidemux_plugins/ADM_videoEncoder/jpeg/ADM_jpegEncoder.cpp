@@ -20,6 +20,8 @@
 #include "ADM_jpegEncoder.h"
 #include "DIA_factory.h"
 
+
+
 jpeg_encoder jpegConf= JPEG_CONF_DEFAULT;
 /**
         \fn ADM_jpegEncoder
@@ -34,7 +36,7 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 */
 bool ADM_jpegEncoder::setup(void)
 {
-    return ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MJPEG);
+    return ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_MJPEG);
 }
 
 
@@ -55,12 +57,27 @@ bool         ADM_jpegEncoder::encode (ADMBitstream * out)
     if(false==preEncode()) return false;
     _context->flags |= CODEC_FLAG_QSCALE;
     _frame->quality = (int) floor (FF_QP2LAMBDA * jpegConf.quantizer+ 0.5);
-    int sz=0;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
-    {
-        ADM_error("[jpeg] Error %d encoding video\n",sz);
+    
+    if(false==preEncode()) 
         return false;
-    }
+    int sz=0,r,gotData;
+    AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+        r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
+        if(r<0)
+        {
+            ADM_warning("[ffHuff] Error %d encoding video\n",r);
+            return false;
+        }
+        if(!gotData)
+        {
+            ADM_warning("[ffHuff] Encoder produced no data\n");
+            pkt.size=0;
+        }
+                
+        sz=pkt.size;    
     
     out->len=sz;
     out->pts=out->dts=image->Pts;

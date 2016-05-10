@@ -77,7 +77,7 @@ bool ADM_ffMpeg4Encoder::configureContext(void)
 bool ADM_ffMpeg4Encoder::setup(void)
 {
 
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG4))
+    if(false== ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_MPEG4))
         return false;
 
     printf("[ffMpeg] Setup ok\n");
@@ -100,16 +100,29 @@ ADM_ffMpeg4Encoder::~ADM_ffMpeg4Encoder()
 */
 bool         ADM_ffMpeg4Encoder::encode (ADMBitstream * out)
 {
-int sz,q;
+int sz,q,r,gotData;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
-        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
+        AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+
+        r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+        if(r<0)
         {
-            printf("[ffmpeg4] Error %d encoding video\n",sz);
+            ADM_warning("[ffMpeg4] Error %d encoding video\n",r);
             return false;
         }
+        if(!gotData)
+        {
+            ADM_warning("[ffMpeg4] Encoder produced no data\n");
+            pkt.size=0;
+        }
+                
+        sz=pkt.size;            
         printf("[ffmpeg4] Popping delayed bframes (%d)\n",sz);
         goto link;
         return false;
@@ -150,12 +163,24 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
 
     _frame->reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
+    
+    AVPacket pkt;
+    pkt.data=out->data;
+    pkt.size=out->bufferSize;
+
+    
+    r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
+    if(r<0)
     {
-        printf("[ffmpeg4] Error %d encoding video\n",sz);
+        ADM_warning("[ffMpeg4] Error %d encoding video\n",r);
         return false;
     }
-
+    if(!gotData)
+    {
+        ADM_warning("[ffMpeg4] Encoder produced no data\n");
+        pkt.size=0;
+    }
+    sz=pkt.size;    
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
 link:

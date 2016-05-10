@@ -74,7 +74,7 @@ bool ADM_ffFlv1Encoder::configureContext(void)
 */
 bool ADM_ffFlv1Encoder::setup(void)
 {
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_FLV1))
+    if(false== ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_FLV1))
         return false;
 
     printf("[ffFlv1] Setup ok\n");
@@ -131,12 +131,24 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) <= 0)
+    
+    AVPacket pkt;
+    pkt.data=out->data;
+    pkt.size=out->bufferSize;
+    
+    int gotData;
+    int r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
+    if(r<0)
     {
-        printf("[ffFlv1] Error %d encoding video\n",sz);
+        ADM_warning("[ffFlv1] Error %d encoding video\n",r);
         return false;
     }
-    postEncode(out,sz);
+    if(!gotData)
+    {
+        ADM_warning("[ffFlv1] Encoder produced no data\n");
+        pkt.size=0;
+    }
+    postEncode(out,pkt.size);
     return true;
 }
 

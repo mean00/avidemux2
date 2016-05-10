@@ -38,8 +38,8 @@ ADM_huffEncoder::ADM_huffEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 */
 bool ADM_huffEncoder::setup(void)
 {
-    AVCodecID id=CODEC_ID_HUFFYUV;
-    if(huffType.encoderType==ADM_FF_HUFF_YUV) id=CODEC_ID_FFVHUFF;
+    AVCodecID id=AV_CODEC_ID_HUFFYUV;
+    if(huffType.encoderType==ADM_FF_HUFF_YUV) id=AV_CODEC_ID_FFVHUFF;
     return ADM_coreVideoEncoderFFmpeg::setup(id);
 }
 
@@ -77,13 +77,25 @@ bool         ADM_huffEncoder::getExtraData(uint32_t *l,uint8_t **d)
 bool         ADM_huffEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
-    int sz=0;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
-    {
-        printf("[huff] Error %d encoding video\n",sz);
-        return false;
-    }
-    
+    int sz=0,r,gotData;
+    AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+        r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
+        if(r<0)
+        {
+            ADM_warning("[ffHuff] Error %d encoding video\n",r);
+            return false;
+        }
+        if(!gotData)
+        {
+            ADM_warning("[ffHuff] Encoder produced no data\n");
+            pkt.size=0;
+        }
+                
+        sz=pkt.size;     
+
     out->len=sz;
     out->pts=out->dts=image->Pts;
     out->flags=AVI_KEY_FRAME;
