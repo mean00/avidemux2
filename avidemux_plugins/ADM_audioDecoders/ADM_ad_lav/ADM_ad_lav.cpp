@@ -33,7 +33,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 protected:
         typedef enum 
         {
-            asInt16,asFloat,asFloatPlanar
+            asFloat,asFloatPlanar
         }ADM_outputFlavor;
 
                 ADM_outputFlavor        outputFlavor;
@@ -252,6 +252,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 }
 /**
     \fn decodeToS16
+ * \brief THIS IS NOT USED ANY LONGER
 */
 bool ADM_AudiocoderLavcodec::decodeToS16(float **outptr,uint32_t *nbOut)
 {
@@ -347,7 +348,6 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         
             switch(outputFlavor)
             {
-                    case asInt16:        decodeToS16(&outptr,nbOut);break;
                     case asFloat:        decodeToFloat(&outptr,nbOut);break;
                     case asFloatPlanar:  decodeToFloatPlanar(&outptr,nbOut);break;
                     default: ADM_error("unknown output flavor\n");break;
