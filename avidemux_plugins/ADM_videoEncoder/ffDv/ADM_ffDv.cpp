@@ -135,24 +135,13 @@ again:
    
     
     _frame->reordered_opaque=image->Pts;
-     AVPacket pkt;
-    pkt.data=out->data;
-    pkt.size=out->bufferSize;
-    
-    int gotData;
-    int r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
+    int r=encodeWrapper(_frame,out);
     if(r<0)
     {
         ADM_warning("[ffDV] Error %d encoding video\n",r);
         return false;
     }
-    if(!gotData)
-    {
-        ADM_warning("[ffDV] Encoder produced no data\n");
-        pkt.size=0;
-    }
-    
-    postEncode(out,pkt.size);
+    postEncode(out,r);
     return true;
 }
 

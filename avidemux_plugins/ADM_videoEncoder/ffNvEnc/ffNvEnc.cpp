@@ -125,7 +125,8 @@ again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
-        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
+        sz=encodeWrapper(NULL,out);
+        if ((sz<= 0)
         {
             ADM_info("[ffnvenc] Error %d encoding video\n",sz);
             return false;
@@ -158,7 +159,8 @@ again:
 #else
     _frame->format=  AV_PIX_FMT_YUV420P;    
 #endif        
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
+    sz=encodeWrapper(_frame,out);
+    if(sz<0)
     {
         ADM_warning("[ffnvenc] Error %d encoding video\n",sz);
         return false;

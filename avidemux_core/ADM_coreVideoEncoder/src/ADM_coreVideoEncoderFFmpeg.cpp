@@ -266,6 +266,31 @@ bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
 {
     return true;
 }
+
+/**
+ * \fn encodeWrapper
+ */
+int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
+{
+    int r,gotData;
+        AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+
+        r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+        if(r<0)
+        {
+            ADM_warning("Error %d encoding video\n",r);
+            return r;
+        }
+        if(!gotData)
+        {
+            ADM_warning("Encoder produced no data\n");
+            pkt.size=0;
+        }
+        return pkt.size;            
+}
 /**
  * 
  * @param codecId

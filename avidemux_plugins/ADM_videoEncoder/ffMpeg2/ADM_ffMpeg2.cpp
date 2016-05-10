@@ -131,21 +131,14 @@ again:
         pkt.data=out->data;
         pkt.size=out->bufferSize;
 
-
-        r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+        r=encodeWrapper(NULL,out);
         if(r<0)
         {
             ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
             return false;
         }
-        if(!gotData)
-        {
-            ADM_warning("[ffMpeg2] Encoder produced no data\n");
-            pkt.size=0;
-        }
-        
+        sz=r;
         ADM_info("[ffMpeg2] Popping delayed bframes (%d)\n",sz);
-        sz=pkt.size;
         goto link;
         return false;
     }
@@ -185,24 +178,13 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
-    
-    AVPacket pkt;
-    pkt.data=out->data;
-    pkt.size=out->bufferSize;
-
-    
-    r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+    r=encodeWrapper(_frame,out);
     if(r<0)
     {
         ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
         return false;
     }
-    if(!gotData)
-    {
-        ADM_warning("[ffMpeg2] Encoder produced no data\n");
-        pkt.size=0;
-    }
-    sz=pkt.size;
+    sz=r;
     
     if(sz==0) // no pic, probably pre filling, try again
         goto again;

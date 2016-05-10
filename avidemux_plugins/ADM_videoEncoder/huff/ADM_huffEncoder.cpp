@@ -78,23 +78,13 @@ bool         ADM_huffEncoder::encode (ADMBitstream * out)
 {
     if(false==preEncode()) return false;
     int sz=0,r,gotData;
-    AVPacket pkt;
-        pkt.data=out->data;
-        pkt.size=out->bufferSize;
-
-        r= avcodec_encode_video2 (_context,&pkt,_frame, &gotData);
-        if(r<0)
-        {
-            ADM_warning("[ffHuff] Error %d encoding video\n",r);
-            return false;
-        }
-        if(!gotData)
-        {
-            ADM_warning("[ffHuff] Encoder produced no data\n");
-            pkt.size=0;
-        }
-                
-        sz=pkt.size;     
+    r=encodeWrapper(_frame,out);
+    if(r<0)
+    {
+        ADM_warning("[ffHuff] Error %d encoding video\n",r);
+        return false;
+    }
+    sz=r;     
 
     out->len=sz;
     out->pts=out->dts=image->Pts;
