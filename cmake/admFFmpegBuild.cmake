@@ -348,6 +348,7 @@ INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/time.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/opt.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/intfloat.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/macros.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/samplefmt.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
