@@ -77,7 +77,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                             getBits bits(sei_size,payload);
                             payload+=sei_size;
                             *recoveryLength=bits.getUEG();
-                            aprintf("[SEI] Recovery :%"PRIu32"\n",*recoveryLength);
+                            aprintf("[SEI] Recovery :%" PRIu32"\n",*recoveryLength);
                             r=true;
                             break;
                         }
@@ -179,8 +179,8 @@ bool bAppend=false;
             pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
             if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
             {
-              ADM_info("[TsIndexer] Found video %"PRIu32"x%"PRIu32", fps=%"PRIu32"\n",video.w,video.h,video.fps);
-              ADM_info("[TsIndexer] SPS says %"PRIu32"x%"PRIu32"\n",spsInfo.width,spsInfo.height);
+              ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
+              ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
               seq_found=1;
               video.w=spsInfo.width;
               video.h=spsInfo.height;
@@ -319,7 +319,7 @@ resume:
                             default : thisUnit.imageType=2;break; // SP/SI
                         }
                       if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
-                      aprintf("[>>>>>>>>] Pic Type %"PRIu32" Recovery %"PRIu32"\n",thisUnit.imageType,recoveryCount);
+                      aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
                       if(thisUnit.imageType==1 && !thisUnit.recoveryCount) 
                                 thisUnit.imageType=4; //I  + Recovery=0 = IDR!
 

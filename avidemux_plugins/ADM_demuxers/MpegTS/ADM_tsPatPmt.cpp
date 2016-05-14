@@ -382,7 +382,7 @@ bool   decodeProgrameDescriptor(uint8_t *r, uint32_t maxlen,std::string &languag
                         case 0x0a: 
                         {
                             printf("Language descriptor :%c%c%c",p[2],p[3],p[4]);
-                            char lang[4]={p[2],p[3],p[4],0};
+                            char lang[4]={(char)p[2],(char)p[3],(char)p[4],0};
                             language=std::string(lang);
                             break;
                         }

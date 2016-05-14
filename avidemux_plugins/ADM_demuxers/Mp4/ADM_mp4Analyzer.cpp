@@ -180,7 +180,7 @@ void MP4Header::parseMvhd(void *ztom)
 
 	_videoScale = scale;
 
-	printf("Warning: scale is not in ms %"PRIu32"!\n", _videoScale);
+	printf("Warning: scale is not in ms %" PRIu32"!\n", _videoScale);
 
 	if (_videoScale)
 	{
@@ -231,12 +231,12 @@ uint8_t MP4Header::parseTrack(void *ztom)
 				  else
 					  tom->skipBytes(8);
 
-				  aprintf("Track Id: %"PRIu32"\n", son.read32());
+				  aprintf("Track Id: %" PRIu32"\n", son.read32());
 				  son.skipBytes(4);
 
 				  uint64_t duration = (version == 1) ? son.read64() : son.read32();
 
-				  aprintf( "Duration: %"PRIu32" (ms)\n", (duration * 1000) / _videoScale);
+				  aprintf( "Duration: %" PRIu32" (ms)\n", (duration * 1000) / _videoScale);
 				  son.skipBytes(8);
 				  son.skipBytes(8);
 				  son.skipBytes(36);
@@ -410,13 +410,13 @@ uint8_t                       MP4Header::parseElst(void *ztom,uint32_t trackType
     adm_atom *tom=(adm_atom *)ztom;
     tom->skipBytes(4);
     uint32_t nb=tom->read32();
-    ADM_info("Found %"PRIu32" entries in list:\n",nb);
+    ADM_info("Found %" PRIu32" entries in list:\n",nb);
     for(int i=0;i<nb;i++)
       {
           editDuration=tom->read32();
           mediaTime=tom->read32();
           playbackSpeed=tom->read32();
-          ADM_info("Duration : %"PRIu32", mediaTime:%"PRIu32" speed=%"PRIu32"\n",editDuration,mediaTime,playbackSpeed);
+          ADM_info("Duration : %" PRIu32", mediaTime:%" PRIu32" speed=%" PRIu32"\n",editDuration,mediaTime,playbackSpeed);
       } 
      if(trackType==TRACK_VIDEO && nb==1 && mediaTime>0 && _videoScale )
      {
@@ -515,10 +515,10 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
        }
        case ADM_MP4_STTS:
             {
-                printf("stts:%"PRIu32"\n",son.read32()); // version & flags
+                printf("stts:%" PRIu32"\n",son.read32()); // version & flags
                 info.nbStts=son.read32();
-                printf("Time stts atom found (%"PRIu32")\n",info.nbStts);
-                printf("Using myscale %"PRIu32"\n",trackScale);
+                printf("Time stts atom found (%" PRIu32")\n",info.nbStts);
+                printf("Using myscale %" PRIu32"\n",trackScale);
                 info.SttsN=new uint32_t[info.nbStts];
                 info.SttsC=new uint32_t[info.nbStts];
                 //double dur;
@@ -557,10 +557,10 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
               n=son.read32();
               info.nbSz=son.read32();
               info.SzIndentical=0;
-              printf("%"PRIu32" frames /%"PRIu32" nbsz..\n",n,info.nbSz);
+              printf("%" PRIu32" frames /%" PRIu32" nbsz..\n",n,info.nbSz);
               if(n)
                       {
-                            aprintf("\t\t%"PRIu32" frames of the same size %"PRIu32" , n=%"PRIu32"\n",
+                            aprintf("\t\t%" PRIu32" frames of the same size %" PRIu32" , n=%" PRIu32"\n",
                                 info.nbSz,info.SzIndentical,n);
                             info.SzIndentical=n;
                             info.Sz=NULL;
@@ -579,7 +579,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
             {
                 uint32_t n,i,j,k,v;
 
-                  printf("ctts:%"PRIu32"\n",son.read32()); // version & flags
+                  printf("ctts:%" PRIu32"\n",son.read32()); // version & flags
                   n=son.read32();
                   if(n==1) // all the same , ignore
                   {
@@ -635,7 +635,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
 		   for(int j = 0; j < info.nbCo; j++)
 		   {
 			   info.Co[j] = son.read32();
-			   aprintf( "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+			   aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
 		   }
        }
        break;
@@ -651,7 +651,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
 		   for(int j = 0; j< info.nbCo; j++)
 		   {
 			   info.Co[j] = son.read64();
-			   aprintf( "Chunk offset: %u / %u : %"PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+			   aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
 		   }
        }
        break;
@@ -794,7 +794,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                             VDEO.extraData[1]='V';
                                             VDEO.extraData[2]='Q';
                                             VDEO.extraData[3]='3';
-                                            printf("SVQ3 Header size : %"PRIu32"",_videoExtraLen);
+                                            printf("SVQ3 Header size : %" PRIu32"",_videoExtraLen);
                                             commonPart(SVQ3);
                                             left=0;
                                   }
@@ -1233,14 +1233,14 @@ nextAtom:
 #if 0
           if(info.SzIndentical ==1 && (ADIO.encoding==WAV_LPCM || ADIO.encoding==WAV_PCM ))
             {
-              printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*2*ADIO.channels);
+              printf("Overriding size %" PRIu32" -> %" PRIu32"\n", info.SzIndentical,info.SzIndentical*2*ADIO.channels);
               info.SzIndentical=info.SzIndentical*2*ADIO.channels;
             }
 
 
             if(info.SzIndentical ==1 && (ADIO.encoding==WAV_ULAW ))
             {
-              printf("Overriding size %"PRIu32" -> %"PRIu32"\n", info.SzIndentical,info.SzIndentical*ADIO.channels);
+              printf("Overriding size %" PRIu32" -> %" PRIu32"\n", info.SzIndentical,info.SzIndentical*ADIO.channels);
               info.SzIndentical=info.SzIndentical*ADIO.channels;
             }
 #endif

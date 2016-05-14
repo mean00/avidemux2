@@ -232,11 +232,11 @@ char realstring[250];
     nnum--;
     end++;
     _first = atoi(end);
-	printf("\n First: %"PRIu32", Digit count: %"PRIu32"\n", _first, nnum);
+	printf("\n First: %" PRIu32", Digit count: %" PRIu32"\n", _first, nnum);
     *(end) = 0;
 	printf(" Path: %s\n", name);
 
-	sprintf(realstring, "%s%%0%"PRIu32"d.%s", name, nnum, extension);
+	sprintf(realstring, "%s%%0%" PRIu32"d.%s", name, nnum, extension);
 	_fileMask = ADM_strdup(realstring);
 	printf(" File Mask: %s\n\n", _fileMask);
 
@@ -245,7 +245,7 @@ char realstring[250];
 	for (uint32_t i = 0; i < MAX_ACCEPTED_OPEN_FILE; i++)
 	{
 		sprintf(realname, realstring, i + _first);
-		printf(" %"PRIu32" : %s\n", i, realname);
+		printf(" %" PRIu32" : %s\n", i, realname);
 
 		fd = ADM_fopen(realname, "rb");
 
@@ -256,7 +256,7 @@ char realstring[250];
 		_nb_file++;
 	}
 	}
-    printf("\n found %"PRIu32" images\n", _nb_file);
+    printf("\n found %" PRIu32" images\n", _nb_file);
 
     _imgSize = new uint32_t[_nb_file];
     //_________________________________
@@ -350,7 +350,7 @@ char realstring[250];
 		fclose(fd);
 		return 0;
 	    }
-	    printf("\n %"PRIu32" x %"PRIu32"..\n", w, h);
+	    printf("\n %" PRIu32" x %" PRIu32"..\n", w, h);
 	}
 	break;
 
@@ -450,7 +450,7 @@ char realstring[250];
         default:
             ADM_assert(0);
     }
-    printf("Offset : %"PRIu32"\n", _offset);
+    printf("Offset : %" PRIu32"\n", _offset);
     return 1;
 }
 //****************************************************************

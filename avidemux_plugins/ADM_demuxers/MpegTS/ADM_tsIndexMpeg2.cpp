@@ -190,7 +190,7 @@ bool bAppend=false;
                           type=7 & (val>>3);
                           if( type<1 ||  type>3)
                           {
-                                  printf("[Indexer]Met illegal pic at %"PRIx64" + %"PRIx32"\n",
+                                  printf("[Indexer]Met illegal pic at %" PRIx64" + %" PRIx32"\n",
                                                   thisUnit.packetInfo.startAt,thisUnit.packetInfo.offset);
                                   continue;
                           }
@@ -211,9 +211,9 @@ bool bAppend=false;
     
         printf("\n");
         qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %"PRIu32" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"PRIu32" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %"PRIu32" field pictures\n",video.fieldCount); // Size
+        qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
         qfclose(index);
         index=NULL;
         audioTracks=NULL;

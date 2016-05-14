@@ -55,7 +55,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
     int nbCluster=_clusters.size();
    for(int clusters=0;clusters<nbCluster;clusters++)
     {
-        printf("[Cluster] %d/%d StartTimecode=%"PRIu64" ms\n",clusters,nbCluster,_clusters[clusters].Dts);
+        printf("[Cluster] %d/%d StartTimecode=%" PRIu64" ms\n",clusters,nbCluster,_clusters[clusters].Dts);
     }
 #endif
     int nbClusters=_clusters.size();
@@ -70,7 +70,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
       cluster.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         cluster.skip(len);
         continue;
       }
@@ -96,7 +96,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
                                 blockGroup.readElemId(&id,&len);
                                 if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
                                 {
-                                  printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+                                  printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
                                   blockGroup.skip(len);
                                   continue;
                                 }
@@ -121,7 +121,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
      }
    // printf("[MKV] ending cluster at 0x%llx\n",segment.tell());
   }
-     printf("Found %"PRIu32" images in this cluster\n",(uint32_t)VIDEO.index.size());
+     printf("Found %" PRIu32" images in this cluster\n",(uint32_t)VIDEO.index.size());
      delete work;
      delete [] readBuffer;
      readBuffer=NULL;
@@ -249,7 +249,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 extractH264FrameType(2,readBuffer,rpt+size-3,&flags); // Nal size is not used in that case
                 if(flags & AVI_KEY_FRAME)
                 {
-                    printf("[MKV/H264] Frame %"PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
+                    printf("[MKV/H264] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
                 }
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
@@ -265,7 +265,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 extractH265FrameType(2,readBuffer,rpt+size-3,&flags); // Nal size is not used in that case
                 if(flags & AVI_KEY_FRAME)
                 {
-                    printf("[MKV/H265] Frame %"PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
+                    printf("[MKV/H265] Frame %" PRIu32" is a keyframe\n",(uint32_t)Track->index.size());
                 }
                 ix.flags=flags;
                 if(Track->index.size()) ix.Dts=ADM_NO_PTS;
@@ -354,7 +354,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
            cues.readElemId(&id,&len);
            if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
            {
-             printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+             printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
              cues.skip(len);
              continue;
            }
@@ -370,7 +370,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
             if(id!=MKV_CUE_TIME)
             {
                ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-               printf("Found %s(0x%"PRIx64"), expected CUE_TIME  (0x%x)\n", ss,id,MKV_CUE_TIME);
+               printf("Found %s(0x%" PRIx64"), expected CUE_TIME  (0x%x)\n", ss,id,MKV_CUE_TIME);
                cue.skip(cue.remaining());
                continue;
             }
@@ -381,7 +381,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
             if(id!=MKV_CUE_TRACK_POSITION)
             {
                ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-               printf("Found %s (0x%"PRIx64"), expected MKV_CUE_TRACK_POSITION (0x%x)\n", ss,id,MKV_CUE_TRACK_POSITION);
+               printf("Found %s (0x%" PRIx64"), expected MKV_CUE_TRACK_POSITION (0x%x)\n", ss,id,MKV_CUE_TRACK_POSITION);
                cue.skip(cues.remaining());
                continue;
             }
@@ -399,12 +399,12 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
                 case MKV_CUE_RELATIVE_POSITION: cue_position=trackPos.readUnsignedInt(len);break;
                 default:
                       ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-                      printf("[MKV] in cluster position found tag %s (0x%"PRIx64")\n",ss,id);
+                      printf("[MKV] in cluster position found tag %s (0x%" PRIx64")\n",ss,id);
                       trackPos.skip(len);
                       continue;
               }
             }
-            aprintf("Track %"PRIx64" segmentPos=%"PRIx64" Cluster Position 0x%"PRIx64" Cue position 0x%"PRIx64" Absolute=%"PRIx64" time %"PRIu64"\n",
+            aprintf("Track %" PRIx64" segmentPos=%" PRIx64" Cluster Position 0x%" PRIx64" Cue position 0x%" PRIx64" Absolute=%" PRIx64" time %" PRIu64"\n",
                   tid,_segmentPosition,cluster_position,cue_position,cue_position+cluster_position+_segmentPosition,time);  
 
             if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
@@ -450,7 +450,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
    }
     // In case the segment is ridiculously small take file size....
    pos=parser->tell();
-   ADM_info("FileSize = %"PRIu64", pos=%"PRIu64" size=%"PRIu64",pos+size=%"PRIu64"\n",fileSize,pos,vlen,pos+vlen);
+   ADM_info("FileSize = %" PRIu64", pos=%" PRIu64" size=%" PRIu64",pos+size=%" PRIu64"\n",fileSize,pos,vlen,pos+vlen);
    if(pos+vlen<fileSize)
     {
         ADM_warning("Segment is way too small, trying to guess the right value\n");
@@ -486,7 +486,7 @@ tryAgain:
        {
           ss=NULL;
           ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type);
-          ADM_warning("[MKV] Cluster : no time code Found %s(0x%"PRIx64"), expected MKV_TIMECODE  (0x%x)\n",
+          ADM_warning("[MKV] Cluster : no time code Found %s(0x%" PRIx64"), expected MKV_TIMECODE  (0x%x)\n",
                   ss,id,MKV_TIMECODE);
        }
        else // timecode

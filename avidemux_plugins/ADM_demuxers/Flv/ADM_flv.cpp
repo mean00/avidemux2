@@ -212,7 +212,7 @@ bool flvHeader::parseOneMeta(const char *stri,uint64_t endPos,bool &end)
                 case AMF_DATA_TYPE_ARRAY:
                                     {
                                             uint32_t len=read32();
-                                            Nest();printf("\n**[FLV] Array : %"PRIu32" entries**\n",len);
+                                            Nest();printf("\n**[FLV] Array : %" PRIu32" entries**\n",len);
                                             bool theend;
                                             for(int i=0;i<len && ftello(_fd)<endPos-4;i++) 
                                                 if(false==parseOneMeta("",endPos,theend)) return false;
@@ -345,7 +345,7 @@ bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,int32_t 
         }
         else    
         {
-            ADM_info("[FLV] found some extradata %"PRIu32"\n",r);
+            ADM_info("[FLV] found some extradata %" PRIu32"\n",r);
             trk->extraData=new uint8_t[r];
             trk->extraDataLen=r;
             read(r,trk->extraData);
@@ -568,7 +568,7 @@ uint8_t flvHeader::open(const char *name)
     }
     _videostream.dwScale=1000;
     _mainaviheader.dwMicroSecPerFrame=ADM_UsecFromFps1000(_videostream.dwRate);
-   printf("[FLV] Duration %"PRIu64" ms\n",videoTrack->_index[videoTrack->_nbIndex-1].dtsUs/1000);
+   printf("[FLV] Duration %" PRIu64" ms\n",videoTrack->_index[videoTrack->_nbIndex-1].dtsUs/1000);
 
    //
     _videostream.fccType=fourCC::get((uint8_t *)"vids");
@@ -969,7 +969,7 @@ bool    flvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 
     if(frame>=videoTrack->_nbIndex)
     {
-      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,videoTrack->_nbIndex);
+      printf("[MKV] Frame %" PRIu32" exceeds # of frames %" PRIu32"\n",frame,videoTrack->_nbIndex);
       return 0;
     }
 
@@ -986,7 +986,7 @@ bool    flvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     if(frame>=videoTrack->_nbIndex)
     {
-      printf("[MKV] Frame %"PRIu32" exceeds # of frames %"PRIu32"\n",frame,videoTrack->_nbIndex);
+      printf("[MKV] Frame %" PRIu32" exceeds # of frames %" PRIu32"\n",frame,videoTrack->_nbIndex);
       return 0;
     }
 

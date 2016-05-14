@@ -79,7 +79,7 @@ bool AUDMEncoder_PCM::initialize(void)
 
 
 
-  printf("[PCM]Incoming :fq : %"PRIu32", channel : %"PRIu32" \n",wavheader.frequency,wavheader.channels);
+  printf("[PCM]Incoming :fq : %" PRIu32", channel : %" PRIu32" \n",wavheader.frequency,wavheader.channels);
   printf("[PCM]PCM successfully initialized\n");
   return 1;
 }

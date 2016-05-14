@@ -99,7 +99,7 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
     
     if(timeUs<seekPoints[0].dts)
     {
-            aprintf("[PsAudio] Requested %"PRIu32" tick before 1st seek point at :%"PRIu32"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
+            aprintf("[PsAudio] Requested %" PRIu32" tick before 1st seek point at :%" PRIu32"\n",(uint32_t)timeUs/1000,(uint32_t)seekPoints[0].dts/1000);
             demuxer.setPos(seekPoints[0].position);
             return true;
     }
@@ -108,7 +108,7 @@ bool      ADM_psAccess::goToTime(uint64_t timeUs)
     {
         if(seekPoints[i].dts >=timeUs )
         {
-            aprintf("[PsAudio] Requested %"PRIu32" tick seeking to  at :%"PRIu32" us (next is %"PRIu32"ms \n",(uint32_t)timeUs/1000,
+            aprintf("[PsAudio] Requested %" PRIu32" tick seeking to  at :%" PRIu32" us (next is %" PRIu32"ms \n",(uint32_t)timeUs/1000,
                     (uint32_t)seekPoints[i-1].dts/1000,
                     (uint32_t)seekPoints[i].dts/1000);
             demuxer.setPos(seekPoints[i-1].position);
@@ -174,7 +174,7 @@ uint64_t p,d,start;
     *dts=timeConvert(*dts);
     if(*dts!=ADM_NO_PTS) 
     {
-        aprintf("[psAudio] getPacket dts = %"PRIu32" ms\n",(uint32_t)*dts/1000);
+        aprintf("[psAudio] getPacket dts = %" PRIu32" ms\n",(uint32_t)*dts/1000);
     }
 
     return true;

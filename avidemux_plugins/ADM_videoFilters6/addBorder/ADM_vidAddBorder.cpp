@@ -30,7 +30,7 @@ const char *addBorders::getConfiguration(void)
 {
     static char conf[250];
     conf[0]=0;
-    snprintf(conf,80,"Add Border : Left:%"PRIu32" Right:%"PRIu32" Top:%"PRIu32" Bottom:%"PRIu32" => %"PRIu32"x%"PRIu32"\n",
+    snprintf(conf,80,"Add Border : Left:%" PRIu32" Right:%" PRIu32" Top:%" PRIu32" Bottom:%" PRIu32" => %" PRIu32"x%" PRIu32"\n",
                 param.left,param.right,param.top,param.bottom,
                 info.width,info.height);
     return conf;

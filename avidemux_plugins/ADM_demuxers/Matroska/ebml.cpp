@@ -395,7 +395,7 @@ bool ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind)
            }
           if(!alen)
           {
-            printf("[MKV] WARNING ZERO SIZED ATOM %s %"PRIu64"/%"PRIu64"\n",ss,tell(),_fileSize);
+            printf("[MKV] WARNING ZERO SIZED ATOM %s %" PRIu64"/%" PRIu64"\n",ss,tell(),_fileSize);
             continue;
           }
           vprintf("Found Tag : %x (%s)\n",id,ss);

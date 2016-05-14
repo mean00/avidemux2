@@ -128,7 +128,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                                 aPacket->dts+=audioDelay;
                                 aPacket->dts-=firstPacketOffset;
                             }
-                            aprintf("[Audio] Packet size %"PRIu32" sample:%"PRIu32" dts:%"PRIu64" target :%"PRIu64"\n",
+                            aprintf("[Audio] Packet size %" PRIu32" sample:%" PRIu32" dts:%" PRIu64" target :%" PRIu64"\n",
                                             aPacket->sizeInBytes,aPacket->nbSamples,aPacket->dts,targetDts);
                             if(aPacket->dts!=ADM_NO_PTS)
                                 if( labs((long int)aPacket->dts-(long int)clk->getTimeUs())>32000)

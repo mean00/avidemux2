@@ -266,7 +266,7 @@ uint32_t i,j,cur;
         ADM_info("Build Track index\n");
 	*outNbChunk=0;
 	aprintf("+_+_+_+_+_+\n");
-	aprintf("co : %lu sz: %lu sc: %lu co[0] %"PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
+	aprintf("co : %lu sz: %lu sc: %lu co[0] %" PRIu64"\n",info->nbCo,info->nbSz,info->nbSc,info->Co[0]);
 	aprintf("+_+_+_+_+_+\n");
 
 	ADM_assert(info->Sc);

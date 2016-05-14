@@ -212,7 +212,7 @@ bool  AviListAvi::writeDummyChunk(int size, uint64_t *pos)
 {
 	// save file position
 		*pos=Tell();
-		aprintf("[ODML]write dummy chunk at file position %"PRIu64" with data size %"PRIu32"\n",*pos, size);
+		aprintf("[ODML]write dummy chunk at file position %" PRIu64" with data size %" PRIu32"\n",*pos, size);
 		// generate dummy data
 		uint8_t* dummy=(uint8_t*)ADM_alloc (size);
 		memset(dummy,0,size);
@@ -242,7 +242,7 @@ bool  AviListAvi::fill(uint32_t maxSize)
         return true;
     }
     int toFill=(int)(end-pos);
-    printf("Current pos=%"PRIu64", next chunk at %"PRIu64", filling with %d\n",pos,end,toFill);
+    printf("Current pos=%" PRIu64", next chunk at %" PRIu64", filling with %d\n",pos,end,toFill);
     uint8_t *buffer=new uint8_t[toFill];
     memset(buffer,0,toFill);
     Write(buffer,toFill);

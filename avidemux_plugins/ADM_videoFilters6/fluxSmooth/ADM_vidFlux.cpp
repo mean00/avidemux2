@@ -103,7 +103,7 @@ const char *ADMVideoFlux::getConfiguration(void)
 {
     static char conf[80];
     conf[0]=0;
-    snprintf(conf,80,"FluxSmooth: Spatial :%02"PRIu32" Temporal:%02"PRIu32,
+    snprintf(conf,80,"FluxSmooth: Spatial :%02" PRIu32" Temporal:%02" PRIu32,
 						_param.spatial_threshold,
 						_param.temporal_threshold);
     return conf;

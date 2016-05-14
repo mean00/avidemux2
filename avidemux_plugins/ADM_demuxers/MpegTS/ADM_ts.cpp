@@ -71,7 +71,7 @@ uint8_t tsHeader::open(const char *name)
         goto abt;
     }
     append=index.getAsUint32("Append");
-    printf("[tsDemux] Append=%"PRIu32"\n",append);
+    printf("[tsDemux] Append=%" PRIu32"\n",append);
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))
     {
@@ -294,11 +294,11 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     // Need to rewind, then forward
     int startPoint=frame;
     while(startPoint && !ListOfFrames[startPoint]->startAt) startPoint--;
-    printf("[tsDemux] Wanted frame %"PRIu32", going back to frame %"PRIu32", last frame was %"PRIu32",\n",frame,startPoint,lastFrame);
+    printf("[tsDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
     pk=ListOfFrames[startPoint];
     if(!tsPacket->seek(pk->startAt,pk->index)) 
     {
-            printf("[tsDemux] Failed to rewind to frame %"PRIu32"\n",startPoint);
+            printf("[tsDemux] Failed to rewind to frame %" PRIu32"\n",startPoint);
             return false;
     }
     // Now forward
@@ -307,7 +307,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         pk=ListOfFrames[startPoint];
         if(!tsPacket->read(pk->len,img->data))
         {
-            printf("[tsDemux] Read fail for frame %"PRIu32"\n",startPoint);
+            printf("[tsDemux] Read fail for frame %" PRIu32"\n",startPoint);
             lastFrame=0xffffffff;
             return false;
         }

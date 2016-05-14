@@ -44,7 +44,7 @@ typedef struct
 
 static const dvProfileClass supportedProfiles[]=
 {
-    {720,480,29.97,dvColor422},
+    {720,480,30,dvColor422},
     {720,576,25,dvColor420},
 };
 

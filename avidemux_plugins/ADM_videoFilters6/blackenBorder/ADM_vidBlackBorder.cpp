@@ -30,7 +30,7 @@ const char *blackenBorders::getConfiguration(void)
 {
     static char conf[100];
     conf[0]=0;
-    snprintf(conf,100,"blacken Borders : Left:%"PRIu32" Right:%"PRIu32" Top:%"PRIu32" Bottom:%"PRIu32"\n",
+    snprintf(conf,100,"blacken Borders : Left:%" PRIu32" Right:%" PRIu32" Top:%" PRIu32" Bottom:%" PRIu32"\n",
                 param.left,param.right,param.top,param.bottom);
     return conf;
 }

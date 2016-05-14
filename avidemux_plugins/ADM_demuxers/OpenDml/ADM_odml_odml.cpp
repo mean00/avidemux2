@@ -191,12 +191,12 @@ uint32_t 	i,j;
 			return 0;
 		}
 	printf("[AVI]Master index of "),fourCC::print(masterIndex.chunkId);printf(" found\n");
-	printf("[AVI]SubType : %"PRIu32"\n",masterIndex.indexSubType);
+	printf("[AVI]SubType : %" PRIu32"\n",masterIndex.indexSubType);
 
 
 
 	OPENDML_ENTRY *superEntries=(OPENDML_ENTRY *)malloc(masterIndex.nbEntryInUse*sizeof(OPENDML_ENTRY));
-	printf("[AVI]We have %"PRIu32" indeces\n",masterIndex.nbEntryInUse);
+	printf("[AVI]We have %" PRIu32" indeces\n",masterIndex.nbEntryInUse);
         if(!readSuperEntries(superEntries,masterIndex.nbEntryInUse,_fd)) //if(1!=fread(superEntries,sizeof(OPENDML_ENTRY)*masterIndex.nbEntryInUse,1,_fd))
 	{
                 free(superEntries);
@@ -221,7 +221,7 @@ uint32_t 	i,j;
 		total+=second.nbEntryInUse;
 	}
 _cntue:
-	printf("Found a grand total of %"PRIu32" frames\n",total);
+	printf("Found a grand total of %" PRIu32" frames\n",total);
 	*nbElem=total;
 
 	// second pass, actually assign them
@@ -232,9 +232,9 @@ _cntue:
 		fseeko(_fd,superEntries[i].offset,SEEK_SET);
 		fcc=read32();
 		len=read32();
-                aprintf("subindex : %"PRIu32" size %"PRIu32" (%lx)",i,len,len);
+                aprintf("subindex : %" PRIu32" size %" PRIu32" (%lx)",i,len,len);
 
-                aprintf("Seeking to %"PRIx64"\n",superEntries[i].offset);
+                aprintf("Seeking to %" PRIx64"\n",superEntries[i].offset);
 		fourCC::print(fcc);aprintf("\n");
 		//if(1!=fread(&second,sizeof(second),1,_fd))
                 if(!readSecondary(&second,_fd))
@@ -244,7 +244,7 @@ _cntue:
 			return 1;
 		}
 
-                aprintf("Base : %"PRIx64"\n",second.base);
+                aprintf("Base : %" PRIx64"\n",second.base);
 		uint32_t sizeflag;
 		for( j=0;j<second.nbEntryInUse;j++)
 		{
@@ -264,7 +264,7 @@ _cntue:
 				else
 					(*index)[count].intra=AVI_KEY_FRAME;
 
-                                aprintf("Frame.off : %"PRIx64", size %"PRIx64"\n",
+                                aprintf("Frame.off : %" PRIx64", size %" PRIx64"\n",
                                         _idx[count].offset,
                                         _idx[count].size);
 

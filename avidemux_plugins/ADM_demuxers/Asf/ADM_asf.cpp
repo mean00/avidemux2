@@ -37,7 +37,7 @@ WAVHeader *asfHeader::getAudioInfo(uint32_t i )
   if(!_nbAudioTrack) return NULL;
   
   ADM_assert(i<_nbAudioTrack);
-  if(!_audioAccess) return NULL;
+  if(NULL==_audioAccess) return NULL;
   return &(_allAudioTracks[i].wavHeader);
 }
 /**
@@ -320,7 +320,7 @@ uint8_t  asfHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
             bit=NULL;
             if(delta<230)
             {
-              printf("[ASF] Very suspicious delta :%"PRIu32"\n",delta);
+              printf("[ASF] Very suspicious delta :%" PRIu32"\n",delta);
             }
             continue; 
           }
