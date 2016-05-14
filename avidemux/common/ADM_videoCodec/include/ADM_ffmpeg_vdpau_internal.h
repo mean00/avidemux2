@@ -41,9 +41,6 @@ typedef struct
 #define WRAP_Open_TemplateVdpauByName(argz,codecid) \
     WRAP_Open_Template(avcodec_find_decoder_by_name,argz,,codecid,{\
             _context->opaque          = this;\
-            _context->get_buffer      = ADM_VDPAUgetBuffer;\
-            _context->release_buffer  = ADM_VDPAUreleaseBuffer;\
-            _context->draw_horiz_band = draw;\
             _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;\
             _context->get_format      = vdpauGetFormat;})
 

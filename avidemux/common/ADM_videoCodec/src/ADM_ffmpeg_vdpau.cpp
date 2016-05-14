@@ -201,21 +201,9 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->linesize[0]=0;
     pic->linesize[1]=0;
     pic->linesize[2]=0;
-    pic->type=FF_BUFFER_TYPE_USER;
+
     render->state |= FF_VDPAU_STATE_USED_FOR_REFERENCE;
     pic->reordered_opaque= avctx->reordered_opaque;
-    // I dont really understand what it is used for ....
-    if(pic->reference)
-    {
-        ip_age[0]=ip_age[1]+1;
-        ip_age[1]=1;
-        b_age++;
-    }else
-    {
-        ip_age[0]++;
-        ip_age[1]++;
-        b_age=1;
-    }
 
     return 0;
 }
@@ -251,26 +239,26 @@ void decoderFFVDPAU::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
 */
 extern "C"
 {
-static enum PixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum PixelFormat *fmt)
+static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
 
-    for(i=0;fmt[i]!=PIX_FMT_NONE;i++)
+    for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
-        PixelFormat c=fmt[i];
+        AVPixelFormat c=fmt[i];
         switch(c)
         {
-            case PIX_FMT_VDPAU_H264:
-            case PIX_FMT_VDPAU_MPEG1:
-            case PIX_FMT_VDPAU_MPEG2:
-            case PIX_FMT_VDPAU_WMV3:
-            case PIX_FMT_VDPAU_VC1:
+            case AV_PIX_FMT_VDPAU_H264:
+            case AV_PIX_FMT_VDPAU_MPEG1:
+            case AV_PIX_FMT_VDPAU_MPEG2:
+            case AV_PIX_FMT_VDPAU_WMV3:
+            case AV_PIX_FMT_VDPAU_VC1:
                         return c;
             default:break;
 
         }
     }
-    return PIX_FMT_NONE;
+    return AV_PIX_FMT_NONE;
 }
 }
 /**
