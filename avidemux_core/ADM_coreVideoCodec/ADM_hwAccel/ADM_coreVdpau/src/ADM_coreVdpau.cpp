@@ -81,7 +81,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
         return false;
     }
     // Now that we have the vdpProcAddress, time to get the functions....
-#define GetMe(fun,id)         ADM_coreVdpau::funcs.fun= (typeof(ADM_coreVdpau::funcs.fun))getFunc(id);ADM_assert(ADM_coreVdpau::funcs.fun); 
+#define GetMe(fun,id)         ADM_coreVdpau::funcs.fun= (decltype(ADM_coreVdpau::funcs.fun))getFunc(id);ADM_assert(ADM_coreVdpau::funcs.fun); 
         
     GetMe(deviceDestroy,VDP_FUNC_ID_DEVICE_DESTROY);
     GetMe(getErrorString,VDP_FUNC_ID_GET_ERROR_STRING);
