@@ -54,7 +54,7 @@ static inline void glYUV444_MMXInit(void)
 {
    static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
-    __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
+    __asm__(" movq " Mangle(mask)", %%mm7\n" ::);
 }
 static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width)
 {

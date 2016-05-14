@@ -88,7 +88,7 @@ ADMImage	*EditorCache::getFreeImage(void)
     int r,w;
     r=readIndex%_nbImage;
     w=(writeIndex)%_nbImage;
-    aprintf("Read: %"PRIu32" write :%"PRIu32"\n",readIndex,writeIndex);
+    aprintf("Read: %" PRIu32" write :%" PRIu32"\n",readIndex,writeIndex);
     if(r==w && readIndex!=writeIndex) //full
     {
         readIndex++; // free older
@@ -131,7 +131,7 @@ void        EditorCache::invalidate(ADMImage *image)
                 uint32_t prev=(writeIndex+_nbImage-1)%_nbImage;
                  ADM_assert(i==prev);
                  ADM_assert(_elem[i].pts==ADM_NO_PTS);
-                 aprintf("Invalidate writeIndex %"PRIu32"\n",writeIndex);
+                 aprintf("Invalidate writeIndex %" PRIu32"\n",writeIndex);
                  writeIndex--;
                  return;
             }
@@ -152,7 +152,7 @@ bool		EditorCache::validate(ADMImage *image)
 		{
             ADM_assert(_elem[i].pts==ADM_NO_PTS);
 			_elem[i].pts=image->Pts;
-            aprintf("validate Index %"PRIu32" with pts=%"PRIu64"ms\n",i,image->Pts);
+            aprintf("validate Index %" PRIu32" with pts=%" PRIu64"ms\n",i,image->Pts);
 			return true;
 		}
 
@@ -166,7 +166,7 @@ bool		EditorCache::validate(ADMImage *image)
 */
 void EditorCache::dump( void)
 {
-    printf("ReadIndex:%"PRIu32", WriteIndex:%"PRIu32"\n",readIndex,writeIndex);
+    printf("ReadIndex:%" PRIu32", WriteIndex:%" PRIu32"\n",readIndex,writeIndex);
     for(int i=0;i<_nbImage;i++)
     {
       cacheElem *e=&(_elem[i]);
@@ -174,7 +174,7 @@ void EditorCache::dump( void)
         {
             case ADM_NO_PTS:  printf("Not used %d\n",i);break;
             default:
-                printf("Edcache content[%d]: PTS : %s %"PRIu64" ms\n",i,
+                printf("Edcache content[%d]: PTS : %s %" PRIu64" ms\n",i,
                                                                     ADM_us2plain(e->image->Pts),e->image->Pts/1000);
                 break;
         }
@@ -216,7 +216,7 @@ ADMImage    *EditorCache::getAfter(uint64_t pts)
                 return candidate;
         }
     }
-    aADM_warning("Cannot find image after %"PRIu64" ms in cache\n",pts/1000);
+    aADM_warning("Cannot find image after %" PRIu64" ms in cache\n",pts/1000);
     return NULL;
 }
 /**
@@ -234,11 +234,11 @@ ADMImage    *EditorCache::getBefore(uint64_t pts)
         {
             index+=_nbImage-1;
             index%=_nbImage;
-            printf("GetBefore : Looking for %"PRIu64" ms get %"PRIu64" ms\n",pts/1000,_elem[index].image->Pts/1000);
+            printf("GetBefore : Looking for %" PRIu64" ms get %" PRIu64" ms\n",pts/1000,_elem[index].image->Pts/1000);
             return _elem[index].image;
         }
     }
-    aADM_warning("Cannot find image before %"PRIu64" ms in cache\n",pts/1000);
+    aADM_warning("Cannot find image before %" PRIu64" ms in cache\n",pts/1000);
     return NULL;
 }
 

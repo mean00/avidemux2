@@ -74,7 +74,7 @@ bool CONFcouple::writeAsUint32(const char *myname,uint32_t val)
 	ADM_assert(cur<nb);
 
 	name[cur]=strupDupeAsNew(myname);
-	sprintf(tmpstring,"%"PRIu32,val);
+	sprintf(tmpstring,"%" PRIu32,val);
 	value[cur]=strupDupeAsNew(tmpstring);
 	cur++;
 	return 1;
@@ -118,7 +118,7 @@ bool CONFcouple::writeAsInt32(const char *myname,int32_t val)
 	ADM_assert(cur<nb);
 
 	name[cur]=strupDupeAsNew(myname);
-	sprintf(tmpstring,"%"PRIi32,val);
+	sprintf(tmpstring,"%" PRIi32,val);
 	value[cur]=strupDupeAsNew(tmpstring);
 	cur++;
 	return 1;

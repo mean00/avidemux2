@@ -273,9 +273,9 @@ unsigned long num_adaptors;
 	  goto failed;
       }
 #ifdef 	COLORSPACE_YV12
-    printf("[Xvideo] Xv YV12 found at port :%d, format : %"PRIi32"\n", port, xv_format);
+    printf("[Xvideo] Xv YV12 found at port :%d, format : %" PRIi32"\n", port, xv_format);
 #else
-    printf("[Xvideo] Xv YUY2 found at port :%d, format : %"PRIi32"\n", port, xv_format);
+    printf("[Xvideo] Xv YUY2 found at port :%d, format : %" PRIi32"\n", port, xv_format);
 #endif
 
     if (Success != XvGrabPort(WDN, port, 0))
@@ -368,7 +368,7 @@ uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 	for (k = 0; !f && (k < imgfmt); k++)
 	  {
 #ifdef VERBOSE_XV
-	      printf("[Xvideo]%d/%d: %"PRIx32" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
+	      printf("[Xvideo]%d/%d: %" PRIx32" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
 #endif
 
 	      if (!strcmp(formatValues[k].guid, "YV12"))

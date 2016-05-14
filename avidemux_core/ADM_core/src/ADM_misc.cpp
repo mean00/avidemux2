@@ -218,7 +218,7 @@ uint32_t ms=(uint32_t)(ams/1000);
     else    
     {
         ms2time(ms,&hh,&mm,&ss,&mms);
-        sprintf(buffer,"%02"PRIu32":%02"PRIu32":%02"PRIu32",%03"PRIu32,hh,mm,ss,mms);
+        sprintf(buffer,"%02" PRIu32":%02" PRIu32":%02" PRIu32",%03" PRIu32,hh,mm,ss,mms);
     }
     return buffer;
 

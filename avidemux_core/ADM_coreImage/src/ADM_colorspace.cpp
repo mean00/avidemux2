@@ -215,8 +215,8 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
 bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3])
 {
-    int xs[4]={sourceStride[0],sourceStride[1],sourceStride[2],0};
-    int xd[4]={destStride[0],destStride[1],destStride[2],0};
+    int xs[4]={(int)sourceStride[0],(int)sourceStride[1],(int)sourceStride[2],0};
+    int xd[4]={(int)destStride[0],(int)destStride[1],(int)destStride[2],0};
     uint8_t *src[4]={NULL,NULL,NULL,NULL};
     uint8_t *dst[4]={NULL,NULL,NULL,NULL};
      for(int i=0;i<3;i++)

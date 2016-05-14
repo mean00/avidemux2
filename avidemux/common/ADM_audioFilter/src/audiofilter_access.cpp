@@ -33,7 +33,7 @@ ADMAudioFilter_Access::ADMAudioFilter_Access(AUDMAudioFilter *incoming,ADM_Audio
     startTimeUs=timeUs;
     samplesSeen=0;
     editable=ed;
-    printf("[FilterAccess] Created, starting at %"PRIu32" ms\n",(uint32_t)(timeUs/1000));
+    printf("[FilterAccess] Created, starting at %" PRIu32" ms\n",(uint32_t)(timeUs/1000));
 }
 /**
     \fn ~ADMAudioFilter_Access

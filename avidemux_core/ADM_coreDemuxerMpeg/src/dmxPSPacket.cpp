@@ -92,7 +92,7 @@ bool    psPacket::setPos(uint64_t pos)
 {
     if(!_file->setpos(pos))
     {
-        printf("[psPacket] Cannot seek to %"PRIx64"\n", pos);
+        printf("[psPacket] Cannot seek to %" PRIx64"\n", pos);
         return false;
     }
     return true;
@@ -113,7 +113,7 @@ _again2:
         {
                 uint64_t pos;
                 _file->getpos(&pos);
-                printf("[DmxPS] cannot sync  at %"PRIu64"/%"PRIu64"\n",pos,_size);
+                printf("[DmxPS] cannot sync  at %" PRIu64"/%" PRIu64"\n",pos,_size);
                 return false;
         }
 // Position of this packet just before startcode
@@ -574,12 +574,12 @@ bool    psPacketLinear::seek(uint64_t packetStart, uint32_t offset)
 {
     if(!_file->setpos(packetStart))
     {
-        printf("[psPacket] Cannot seek to %"PRIx64"\n",packetStart);
+        printf("[psPacket] Cannot seek to %" PRIx64"\n",packetStart);
         return 0;
     }
     if(!refill())
     {
-        printf("[PsPacketLinear] Seek to %"PRIx64":%"PRIx32" failed\n",packetStart,offset);
+        printf("[PsPacketLinear] Seek to %" PRIx64":%" PRIx32" failed\n",packetStart,offset);
         return false;
     }
     ADM_assert(offset<bufferLen);

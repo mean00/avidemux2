@@ -446,9 +446,9 @@ bool muxerFFmpeg::saveLoop(const char *title)
             int64_t xdts=(int64_t)out.dts;
             if(out.pts==ADM_NO_PTS) xpts=-1;
             if(out.dts==ADM_NO_PTS) xdts=-1;
-            aprintf("[FF:V] Pts: %"PRId64" DTS:%"PRId64" ms\n",xpts/1000,xdts/1000);
+            aprintf("[FF:V] Pts: %" PRId64" DTS:%" PRId64" ms\n",xpts/1000,xdts/1000);
 
-            aprintf("[FF:V] LastDts:%08"PRIu64" Dts:%08"PRIu64" (%04"PRIu64") Delta : %"PRIu64"\n",
+            aprintf("[FF:V] LastDts:%08" PRIu64" Dts:%08" PRIu64" (%04" PRIu64") Delta : %" PRIu64"\n",
                         lastVideoDts,out.dts,out.dts/1000000,out.dts-lastVideoDts);
             rawDts=out.dts;
             if(rawDts==ADM_NO_PTS)
@@ -460,7 +460,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             }
             if(out.pts==ADM_NO_PTS)
             {
-                ADM_warning("No PTS information for frame %"PRIu32"\n",written);
+                ADM_warning("No PTS information for frame %" PRIu32"\n",written);
                 missingPts++;
                 out.pts=lastVideoDts;
             }
@@ -470,7 +470,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
             muxerRescaleVideoTime(&(out.pts));
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
-            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%"PRIu64" Dts:%"PRIu64"\n",out.len,out.flags,out.pts,out.dts);
+            aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%" PRIu64" Dts:%" PRIu64"\n",out.len,out.flags,out.pts,out.dts);
 
             av_init_packet(&pkt);
             pkt.dts=out.dts;

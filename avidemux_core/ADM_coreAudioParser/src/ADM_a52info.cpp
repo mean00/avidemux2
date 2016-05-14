@@ -120,7 +120,7 @@ uint32_t of=0;
 			printf("Sync failed..continuing\n");
 			continue;
 		}
-		printf("Sync found at offset %"PRIu32"\n",of);
+		printf("Sync found at offset %" PRIu32"\n",of);
 		*syncoff=of;
 		*fq=(uint32_t)ifq;
 		*br=(uint32_t)ibr>>3;

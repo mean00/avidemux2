@@ -139,7 +139,7 @@ static two_arg_type two;
 			      runParaSearch += 1;
 		  }
 
-          printf("\n *** Automated : %"PRIu32" entries*************\n",(uint32_t)NB_AUTO);
+          printf("\n *** Automated : %" PRIu32" entries*************\n",(uint32_t)NB_AUTO);
           // we need to process
           argc-=1;
           cur=1;
@@ -300,8 +300,8 @@ void call_videocodec(char *p)
 void call_slave(char *p)
 {
     uint32_t i;
-    sscanf(p,"%"PRIu32,&i);
-    printf("Slace on port  %"PRIu32"\n",i);
+    sscanf(p,"%" PRIu32,&i);
+    printf("Slace on port  %" PRIu32"\n",i);
     if(!ADM_slaveConnect(i))
     {
             ADM_error("Cannot connect to master\n");

@@ -75,9 +75,9 @@ void ADM_QSlider::setMarkerB(uint64_t frameIndex)
 void ADM_QSlider::setMarkers(uint64_t frameIndexA, uint64_t frameIndexB)
 {
 	if (frameIndexA > totalDuration)
-		printf("[ADM_QSlider] Marker A is out of bounds (%"PRIu64", %"PRIu64")\n", markerATime, totalDuration);
+		printf("[ADM_QSlider] Marker A is out of bounds (%" PRIu64", %" PRIu64")\n", markerATime, totalDuration);
 	else if (frameIndexB > totalDuration)
-		printf("[ADM_QSlider] Marker B is out of bounds (%"PRIu64", %"PRIu64")\n", markerBTime, totalDuration);
+		printf("[ADM_QSlider] Marker B is out of bounds (%" PRIu64", %" PRIu64")\n", markerBTime, totalDuration);
 	else
 	{
 		markerATime = frameIndexA;

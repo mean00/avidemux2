@@ -153,7 +153,7 @@ bool        audioDeviceThreaded::writeData(uint8_t *data,uint32_t lenInByte)
     }
     if(wrIndex+lenInByte>ADM_THREAD_BUFFER_SIZE)
     {
-        printf("[AudioDevice] Overflow rd:%"PRIu32"  start(wr):%u len%u limit%u\n",rdIndex,wrIndex,lenInByte,ADM_THREAD_BUFFER_SIZE);
+        printf("[AudioDevice] Overflow rd:%" PRIu32"  start(wr):%u len%u limit%u\n",rdIndex,wrIndex,lenInByte,ADM_THREAD_BUFFER_SIZE);
         mutex.unlock();
         return false;
     }

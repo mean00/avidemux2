@@ -57,12 +57,12 @@ int64_t t=(int64_t)*time;
         t-=seg->_refStartTimeUs;
         if(t<0)
         {
-            ADM_warning("Segment time is negative time : %"PRIu64" ms, refStartTime:%"PRIu64" ms!\n",*time/1000,seg->_refStartTimeUs/1000);
+            ADM_warning("Segment time is negative time : %" PRIu64" ms, refStartTime:%" PRIu64" ms!\n",*time/1000,seg->_refStartTimeUs/1000);
         }
         t+=seg->_startTimeUs;
         if(t<0)
         {
-            ADM_error("Absolute time is negative time : %"PRId64" ms, _startTime:%"PRIu64" ms!\n",t/1000,seg->_startTimeUs/1000);
+            ADM_error("Absolute time is negative time : %" PRId64" ms, _startTime:%" PRIu64" ms!\n",t/1000,seg->_startTimeUs/1000);
             t=0;
         }
         *time=(uint64_t )t;
@@ -104,7 +104,7 @@ bool        ADM_Composer::GoToIntraTime_noDecoding(uint64_t time,uint32_t *tofra
     {
         if(false==switchToSegment(s))
         {
-            ADM_warning("Cannot go to segment %"PRIu32"\n",s);
+            ADM_warning("Cannot go to segment %" PRIu32"\n",s);
             return false;
         }
     }
@@ -175,7 +175,7 @@ uint64_t segTime;
 uint32_t seg;
     if(false==_segments.convertLinearTimeToSeg(startTime,&seg,&segTime))
     {
-        ADM_warning("Cannot find segment for time %"PRIu64" ms\n",startTime/1000);
+        ADM_warning("Cannot find segment for time %" PRIu64" ms\n",startTime/1000);
         return false;
     }
     
@@ -185,17 +185,17 @@ uint32_t seg;
     if(!s->_reference && !segTime && s->_refStartTimeUs<v->firstFramePts)
     {
         segTime=v->firstFramePts;
-        ADM_warning("Fixating start time to %"PRIu64" ms\n",segTime/1000);
+        ADM_warning("Fixating start time to %" PRIu64" ms\n",segTime/1000);
     }
     uint64_t to=segTime+s->_refStartTimeUs;
     if(false==seektoTime(s->_reference,to))
     {
-            ADM_warning("Cannot seek to beginning of segment %"PRIu32" at  %"PRIu64" ms\n",s,to/1000);
+            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",s,to/1000);
             return false;
     }
     _currentSegment=seg;
     int64_t newTime=(int64_t)v->lastDecodedPts+(int64_t)s->_startTimeUs-(int64_t)s->_refStartTimeUs;
-    ADM_info("Seek done, in reference, gone to %"PRIu64" with segment start at %"PRIu64"\n",v->lastDecodedPts,s->_refStartTimeUs);
+    ADM_info("Seek done, in reference, gone to %" PRIu64" with segment start at %" PRIu64"\n",v->lastDecodedPts,s->_refStartTimeUs);
     SET_CURRENT_PTS(newTime);
     return true;
 
@@ -241,7 +241,7 @@ uint64_t tail;
         tail=seg->_startTimeUs+seg->_durationUs;
         if(pts>=tail)
         {
-                ADM_info("Got an image (%"PRIu32" ms, but is out of this segment (%"PRIu32"+%"PRIu32"=%"PRIu32" ms)\n",
+                ADM_info("Got an image (%" PRIu32" ms, but is out of this segment (%" PRIu32"+%" PRIu32"=%" PRIu32" ms)\n",
                                                                     pts,seg->_startTimeUs,seg->_durationUs,tail);
                 _segments.dump();
                 goto np_nextSeg;
@@ -297,13 +297,13 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 uint64_t previousKf;
                 if(false==searchPreviousKeyFrameInRef(ref,refTime,&previousKf))
                 {
-                    ADM_warning("Cannot find previous keyframe in ref %d, time=%"PRIu64" \n",ref,refTime);
+                    ADM_warning("Cannot find previous keyframe in ref %d, time=%" PRIu64" \n",ref,refTime);
                     return false;
                 }
                 // go to it...
                 if(false==seektoTime(ref,previousKf,false))
                 {
-                    ADM_warning("Cannot seek to time=%"PRIu64" \n",previousKf);
+                    ADM_warning("Cannot seek to time=%" PRIu64" \n",previousKf);
                     return false;            
                 }
                 // Now forward till we reach out frame
@@ -321,7 +321,7 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 }
                 if(image->Pts!=targetPts)
                 {
-                    ADM_error("Could not retrieve our own frame at PTS=%"PRIu64" ms\n",targetPts/1000);
+                    ADM_error("Could not retrieve our own frame at PTS=%" PRIu64" ms\n",targetPts/1000);
                     return false;
                 }
                 return true;
@@ -354,7 +354,7 @@ uint64_t targetPts=_currentPts;
                 return true;
             }
         }
-        ADM_info("while looking for frame %"PRIu64"\n",_currentPts);
+        ADM_info("while looking for frame %" PRIu64"\n",_currentPts);
         vid->_videoCache->dump();
         // The previous is not available
         // either it is in the same segment but we have decoded later in that segment
@@ -393,7 +393,7 @@ uint64_t targetPts=_currentPts;
                     }
                     ADM_warning("The image found is before refStartTime ???\n");
                 }
-                ADM_error("Find our frame and its predecessor (%"PRIu64"), but it is out of range\n",refPts);
+                ADM_error("Find our frame and its predecessor (%" PRIu64"), but it is out of range\n",refPts);
                 vid->_videoCache->dump();
                 return false;
         }
@@ -468,7 +468,7 @@ uint32_t segNo;
             return true;
       }
       ADM_error("Cannot find same image in cache\n"); 
-      ADM_info("Looking for PTS=%"PRIu64" ms\n",refPts/1000);
+      ADM_info("Looking for PTS=%" PRIu64" ms\n",refPts/1000);
       ref->_videoCache->dump();
       return false;
 }
@@ -546,7 +546,7 @@ bool        ADM_Composer::switchToNextSegment(bool dontdecode)
 {
     if(_currentSegment==_segments.getNbSegments()-1)
     {
-        ADM_warning("This is the last segment (%"PRIu32")\n",_currentSegment);
+        ADM_warning("This is the last segment (%" PRIu32")\n",_currentSegment);
         return false;
     }
     if(true==switchToSegment(_currentSegment+1,dontdecode)) return true;
@@ -561,12 +561,12 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
 {
     if(s+1>_segments.getNbSegments())
     {
-        ADM_warning("Cannot switch to segment:%"PRIu32"\n",s);
+        ADM_warning("Cannot switch to segment:%" PRIu32"\n",s);
         return false;
     }
     _SEGMENT *seg=_segments.getSegment(s);
     ADM_assert(seg);
-    ADM_info("Trying to switch to seg %"PRIu32" with startTime in reference pic= %"PRIu32" ms\n",s,seg->_refStartTimeUs/1000);
+    ADM_info("Trying to switch to seg %" PRIu32" with startTime in reference pic= %" PRIu32" ms\n",s,seg->_refStartTimeUs/1000);
         // If the refStartTime is 0, it is the first image
         // But the fist image might not be = 0
       _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
@@ -580,11 +580,11 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
     
     if(false==seektoTime(seg->_reference,from,dontdecode))
     {
-            ADM_warning("Cannot seek to beginning of segment %"PRIu32" at  %"PRIu64" ms\n",s,from/1000);
+            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",s,from/1000);
             return false;
     }
     _currentSegment=s;
-    ADM_info("Switched ok to segment %"PRIu32" (dontdecode=%d)\n",s,dontdecode);
+    ADM_info("Switched ok to segment %" PRIu32" (dontdecode=%d)\n",s,dontdecode);
     return true;
 }
 /**

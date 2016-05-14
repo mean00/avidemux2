@@ -188,7 +188,7 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
    duration/=1000000; // in seconds to have samples
    tgt_sample=(uint64_t)floor(duration);
    printf("[saveAudio]Duration:%f ms\n",duration/1000);
-   printf("[saveAudio]Samples:%"PRIu64" ms\n",tgt_sample);
+   printf("[saveAudio]Samples:%" PRIu64" ms\n",tgt_sample);
 
    cur_sample=0;
    written = 0;
@@ -223,7 +223,7 @@ static bool A_saveAudioCommon (const char *name,ADM_audioStream *stream,double d
   delete saver;
   delete work;
   delete[] buffer;
-  ADM_info ("\n wanted %"PRIu64" samples, goto %"PRIu64" samples, written %"PRIu32" bytes\n", tgt_sample,cur_sample, written);
+  ADM_info ("\n wanted %" PRIu64" samples, goto %" PRIu64" samples, written %" PRIu32" bytes\n", tgt_sample,cur_sample, written);
   return true;
 }
 

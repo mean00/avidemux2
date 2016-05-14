@@ -157,7 +157,7 @@ uint32_t len,flags;
     if((i=searchFrame(frame))>=0)
     {
             ADMImage *img=entry[i].image;
-            aprintf("[cache]  old image  frame %d with PTS=%"PRIu64"\n",(int)frame,img->Pts);
+            aprintf("[cache]  old image  frame %d with PTS=%" PRIu64"\n",(int)frame,img->Pts);
             entry[i].frameLock++;
             entry[i].lastUse=counter;
             counter++;
@@ -176,7 +176,7 @@ uint32_t len,flags;
         ADM_assert(0);
     }
     ADM_assert(nb==frame);
-    aprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>[cache] New image Got frame %d with PTS=%"PRIu64"\n",(int)nb,img->Pts);
+    aprintf(">>>>>>>>>>>>>>>>>>>>>>>>>>[cache] New image Got frame %d with PTS=%" PRIu64"\n",(int)nb,img->Pts);
     // Update LRU info
     entry[target].frameLock++;
     entry[target].frameNum=nb;

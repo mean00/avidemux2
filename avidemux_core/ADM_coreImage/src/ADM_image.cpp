@@ -23,10 +23,10 @@ void ADMImage_stat( void )
 {
 	printf("\nImages stat:\n");
 	printf("___________\n");
-	printf("Max memory consumed (MB)     : %"PRIu32"\n",imgMaxMem>>20);
-	printf("Current memory consumed (MB) : %"PRIu32"\n",imgCurMem>>20);
-	printf("Max image used               : %"PRIu32"\n",imgMaxNb);
-	printf("Cur image used               : %"PRIu32"\n",imgCurNb);
+	printf("Max memory consumed (MB)     : %" PRIu32"\n",imgMaxMem>>20);
+	printf("Current memory consumed (MB) : %" PRIu32"\n",imgCurMem>>20);
+	printf("Max image used               : %" PRIu32"\n",imgMaxNb);
+	printf("Cur image used               : %" PRIu32"\n",imgCurNb);
 
 }
 /**

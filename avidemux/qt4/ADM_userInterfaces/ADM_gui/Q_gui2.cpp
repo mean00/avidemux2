@@ -1264,12 +1264,12 @@ void UI_setMarkers(uint64_t a, uint64_t b)
 
     timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"PRIu32":%02"PRIu32":%02"PRIu32".%02"PRIu32,hh,mm,ss,ms);
+	snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerA)->setText(text);
 
 	timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02"PRIu32":%02"PRIu32":%02"PRIu32".%02"PRIu32,hh,mm,ss,ms);
+	snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
 	WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
 	slider->setMarkers(absoluteA, absoluteB);

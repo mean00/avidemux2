@@ -38,9 +38,9 @@ extern "C"{
 
 #define cpuid(index,eax,ebx,ecx,edx)\
     __asm __volatile\
-        ("mov %%"REG_b", %%"REG_S"\n\t"\
+        ("mov %%" REG_b", %%" REG_S"\n\t"\
          "cpuid\n\t"\
-         "xchg %%"REG_b", %%"REG_S\
+         "xchg %%" REG_b", %%" REG_S\
          : "=a" (eax), "=S" (ebx),\
            "=c" (ecx), "=d" (edx)\
          : "0" (index));

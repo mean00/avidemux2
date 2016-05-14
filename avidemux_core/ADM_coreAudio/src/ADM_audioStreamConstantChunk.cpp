@@ -23,15 +23,15 @@ ADM_audioStreamConstantChunk::ADM_audioStreamConstantChunk(WAVHeader *header,ADM
         ADM_warning("[ADM_audioStreamConstantChunk] Blockalign is null expect problems\n");
         chunkSize=8192; // dummy value
     }
-    ADM_info("[ADM_audioStreamConstantChunk] Chunk size %"PRIu32"\n",chunkSize);
-    ADM_info("[ADM_audioStreamConstantChunk] Byterate   %"PRIu32"\n",header->byterate);
+    ADM_info("[ADM_audioStreamConstantChunk] Chunk size %" PRIu32"\n",chunkSize);
+    ADM_info("[ADM_audioStreamConstantChunk] Byterate   %" PRIu32"\n",header->byterate);
     // Compute sample per chunk from wavHeader...
     float f;
     f=chunkSize;
     f/=header->byterate; // F is in seconds
     f*=header->frequency; // in sample
     samplesPerChunk=(uint32_t)f;
-    ADM_info("[ADM_audioStreamConstantChunk] About %"PRIu32" samples per chunk\n",samplesPerChunk);
+    ADM_info("[ADM_audioStreamConstantChunk] About %" PRIu32" samples per chunk\n",samplesPerChunk);
     //samplesPerChunk=16;
     // If hinted..., compute the duration ourselves
     if(access->isCBR()==true && access->canSeekOffset()==true)
