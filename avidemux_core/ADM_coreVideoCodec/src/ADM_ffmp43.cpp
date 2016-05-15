@@ -225,59 +225,61 @@ decoderFF::~decoderFF ()
       _extraDataCopy=NULL;
   }
 }
-
+/**
+ * 
+ * @param pic
+ * @return 
+ */
+uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
+{
+    uint32_t outFlags=0;
+#define SET(x)      {outFlags=x;}
+#define SET_ADD(x)  {outFlags|=x;}
+    
+  switch (pic->pict_type)
+    {
+        case AV_PICTURE_TYPE_B:
+                SET (AVI_B_FRAME);
+                break;
+        case AV_PICTURE_TYPE_I:
+                SET (AVI_KEY_FRAME);
+                if (!pic->key_frame)
+                  {
+                    if (codecId == AV_CODEC_ID_H264)
+                        SET (AVI_P_FRAME)
+                    else
+                      ADM_info ("\n But keyframe is not set\n");
+                  }
+                break;
+        case AV_PICTURE_TYPE_S:
+                _gmc = 1;			// No break, just inform that gmc is there
+        case AV_PICTURE_TYPE_P:
+                SET (AVI_P_FRAME);
+                if (pic->key_frame)
+                        aprintf ("\n But keyframe is set\n");
+                break;
+        default:
+                break;
+    }
+    outFlags&=~AVI_STRUCTURE_TYPE_MASK;
+    if(pic->interlaced_frame)
+    {
+        SET_ADD(AVI_FIELD_STRUCTURE)
+        if(pic->top_field_first)
+            SET_ADD(AVI_TOP_FIELD)
+        else
+            SET_ADD(AVI_BOTTOM_FIELD)
+    }
+  return outFlags;
+}
 /**
     \fn frameType
     \return frametype of the last decoded frame
 */
 uint32_t decoderFF::frameType (void)
 {
-  uint32_t
-    flag = 0;
+    return admFrameTypeFromLav(_frame);
 
-#define SET(x) {flag=x;aprintf("Frame is %s\n",#x);}
-
-  switch (_frame->pict_type)
-    {
-    case AV_PICTURE_TYPE_B:
-      SET (AVI_B_FRAME);
-      if (_frame->key_frame)
-	aprintf ("\n But keyframe is set\n");
-      break;
-
-    case AV_PICTURE_TYPE_I:
-      SET (AVI_KEY_FRAME);
-      if (!_frame->key_frame)
-	{
-	  if (codecId == AV_CODEC_ID_H264)
-	    {
-	      SET (AVI_P_FRAME);
-	    }
-	  else
-	    printf ("\n But keyframe is not set\n");
-	}
-      break;
-    case AV_PICTURE_TYPE_S:
-      _gmc = 1;			// No break, just inform that gmc is there
-    case AV_PICTURE_TYPE_P:
-      SET (AVI_P_FRAME);
-      if (_frame->key_frame)
-	aprintf ("\n But keyframe is set\n");
-      break;
-    default:
-//                              printf("\n OOops XXX frame ?\n");
-      break;
-    }
-    flag&=~AVI_STRUCTURE_TYPE_MASK;
-    if(_frame->interlaced_frame)
-    {
-        flag|=AVI_FIELD_STRUCTURE;
-        if(_frame->top_field_first)
-            flag|=AVI_TOP_FIELD;
-        else
-            flag|=AVI_BOTTOM_FIELD;
-    }
-  return flag;
 }
 bool decoderFF::decodeHeaderOnly (void)
 {

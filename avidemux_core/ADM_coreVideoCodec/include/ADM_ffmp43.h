@@ -37,39 +37,46 @@ extern void av_setFatalHandler(AV_FATAL_HANDLER *func);
 class ADM_COREVIDEOCODEC6_EXPORT decoderFF:public decoders
 {
 protected:
-  bool  hurryUp;
-  bool _setBpp;
-  bool _setFcc;
-  int codecId;
-  uint8_t _refCopy;
-  uint32_t _bpp;
+
+    typedef struct 
+    {
+            bool swapUv;
+            bool showMv;
+    } decoderFF_param_t;    
+    
+    
+  bool      hurryUp;
+  bool      _setBpp;
+  bool      _setFcc;
+  int       codecId;
+  uint8_t   _refCopy;
+  uint32_t  _bpp;
   AVCodecContext *_context;
-  uint8_t  *_extraDataCopy;
-  int _extraDataLen;
-  uint32_t _fcc;
-  AVFrame *_frame;
-  uint8_t _allowNull;
-  uint32_t frameType (void);
-  uint8_t clonePic (AVFrame * src, ADMImage * out);
-  void decoderMultiThread ();
-  uint32_t _gmc;
-  uint32_t _usingMT;
-  uint32_t _threads;
+  uint8_t   *_extraDataCopy;
+  int        _extraDataLen;
+  uint32_t  _fcc;
+  AVFrame   *_frame;
+  uint32_t  _gmc;
+  uint32_t  _usingMT;
+  uint32_t  _threads;
+  
+  uint8_t   _allowNull;
+  uint32_t  frameType (void);
+  uint32_t  admFrameTypeFromLav (AVFrame *pic);
+  uint8_t   clonePic (AVFrame * src, ADMImage * out);
+  void      decoderMultiThread ();
 
-	typedef struct {
-		bool swapUv;
-		bool showMv;
-	} decoderFF_param_t;
+	
 
-	decoderFF_param_t decoderFF_params;
-	static const decoderFF_param_t defaultConfig;
-	static const ADM_paramList decoderFF_param_template[];
+    decoderFF_param_t decoderFF_params;
+    static const decoderFF_param_t defaultConfig;
+    static const ADM_paramList decoderFF_param_template[];
 
 public:
 
-    decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-    virtual ~ decoderFF ();
-  virtual bool dontcopy (void)
+                decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+                virtual ~ decoderFF ();
+  virtual bool  dontcopy (void)
   {
     return true;
   }
@@ -198,8 +205,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
     _context->bits_per_coded_sample = _bpp;\
   }\
   if (_setFcc) {\
-    _context->codec_tag=_fcc;\
-    _context->stream_codec_tag=_fcc;\
+    _context->codec_tag=_fcc; \
   }\
   if (_extraDataCopy) {\
     _context->extradata = _extraDataCopy;\

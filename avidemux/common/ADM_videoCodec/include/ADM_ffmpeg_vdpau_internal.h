@@ -21,9 +21,8 @@
 #pragma once
 #include <vector>
 extern "C" {
-static void draw(struct AVCodecContext *s,    const AVFrame *src, int offset[4],    int y, int type, int height);
-static int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic);
-static void ADM_VDPAUreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
+static int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
+static void ADM_VDPAUreleaseBuffer(void *opaque, uint8_t *data);
 }
 
 
