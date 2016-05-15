@@ -81,10 +81,10 @@ bool admVdpau::init(GUI_WindowInfo *x)
         return false;
     }
     // Now that we have the vdpProcAddress, time to get the functions....
-#ifdef HAS_MOVE_SEMANTICS
-#define myTypeOf decltype
+#if 1 //def HAS_MOVE_SEMANTICS
+#define myTypeOf   decltype
 #else
-#define myTypeOf typeof
+#define myTypeOf   typeof
 #endif
 #define GetMe(fun,id)         ADM_coreVdpau::funcs.fun= (myTypeOf(ADM_coreVdpau::funcs.fun))getFunc(id);ADM_assert(ADM_coreVdpau::funcs.fun); 
         

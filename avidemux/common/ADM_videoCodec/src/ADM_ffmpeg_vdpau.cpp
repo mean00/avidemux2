@@ -270,7 +270,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
 {
         alive=true;
         scratch=NULL;
-     
+        avVdCtx=NULL;
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
@@ -328,7 +328,19 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
         scratch=new ADMImageRef(w,h);
-        b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
+        avVdCtx=av_vdpau_alloc_context();
+        avVdCtx->render=admVdpau::decoderRender;
+        VdpDevice dev=(VdpDevice)(uint64_t)admVdpau::getVdpDevice();
+        if (av_vdpau_bind_context(_context, 
+                                    dev,
+                                    (VdpGetProcAddress*)admVdpau::getProcAddress(),
+                                    AV_HWACCEL_FLAG_IGNORE_LEVEL))
+        {
+            ADM_warning("Binding context failed\n");
+            alive=false;
+            return;
+        }
+
 
 }
 /**
