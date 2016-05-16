@@ -18,6 +18,11 @@
 #include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
 
+#if 1
+#define VDP_TRACK printf
+#else
+#define VDP_TRACK(...) {}
+#endif
 
 GUI_WindowInfo      admVdpau::myWindowInfo;
 
@@ -56,7 +61,13 @@ void        *admVdpau::getVdpDevice(void)
 */
 void        *admVdpau::getProcAddress(void)
 {
+    printf("==> GetProcAddress called\n");
     return (void *)vdpProcAddress;
+}
+VdpGetProcAddress        *admVdpau::getProcAddress2(void)
+{
+    printf("==> GetProcAddress called\n");
+    return vdpProcAddress;
 }
 
 /**
@@ -205,10 +216,11 @@ bool admVdpau::isOperationnal(void)
     \fn
     \brief
 */
-VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
+VdpStatus admVdpau::decoderCreate(  VdpDevice dev,VdpDecoderProfile profile,    uint32_t  width,uint32_t  height,
             uint32_t  max_references,VdpDecoder *      decoder)
 {
-    CHECK(ADM_coreVdpau::funcs.decoderCreate(ADM_coreVdpau::vdpDevice,profile,width,height,max_references,decoder));
+    VDP_TRACK("Creating decoder\n");
+    CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,width,height,max_references,decoder));
 }
 /**
     \fn
@@ -216,6 +228,7 @@ VdpStatus admVdpau::decoderCreate( VdpDecoderProfile profile,    uint32_t  width
 */
 VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 {
+    VDP_TRACK("Destroying decoder\n");
     CHECK(ADM_coreVdpau::funcs.decoderDestroy(decoder));
 }
 /**
@@ -278,6 +291,7 @@ VdpStatus admVdpau::decoderRender(
     uint32_t                   bitstream_buffer_count,
     VdpBitstreamBuffer const * bitstream_buffers)
 {
+    VDP_TRACK("Calling VDPAU decoder , target surface=%d\n",target);
     CHECK(ADM_coreVdpau::funcs.decoderRender(decoder, target, (void * const *)info,bitstream_buffer_count, bitstream_buffers));
 }
 /**
