@@ -20,7 +20,11 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
 }
-
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 #include "GUI_render.h"
 
@@ -161,9 +165,10 @@ bool vdpauRender::displayImage(ADMImage *pic)
         // cookie is a render...
         struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refCookie;
         myInput=rndr->surface;
-        //printf("Skipping blit surface=%d\n",(int)myInput);
+        aprintf("VDPAU: This is already vdpau image, just passing along surface=%d\n",rndr->surface);
     }else
     {
+        aprintf("VDPAU: This is NOT a  vdpau image, converting\n");
         //printf("Blitting surface\n");
         if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
                 input,
