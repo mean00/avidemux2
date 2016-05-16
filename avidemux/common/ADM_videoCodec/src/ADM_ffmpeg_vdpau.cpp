@@ -271,19 +271,34 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     AVPixelFormat found=AV_PIX_FMT_NONE;
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
+    AVPixelFormat outPix;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
         ADM_info("VDPAU: Evaluating %d\n",c);
-        
-        found=c;
-        switch(c)
+        if(c!=AV_PIX_FMT_VDPAU) continue;
+        switch(avctx->codec_id)
         {
-            case AV_PIX_FMT_VDPAU_H264: id=AV_CODEC_ID_H264;break;
-            case AV_PIX_FMT_VDPAU_MPEG1:id=AV_CODEC_ID_MPEG1VIDEO;break;
-            case AV_PIX_FMT_VDPAU_MPEG2:id=AV_CODEC_ID_MPEG2VIDEO;break;
-            case AV_PIX_FMT_VDPAU_WMV3: id=AV_CODEC_ID_WMV3;break;
-            case AV_PIX_FMT_VDPAU_VC1:  id=AV_CODEC_ID_VC1;break;
+            case AV_CODEC_ID_H264 : 
+                    outPix=AV_PIX_FMT_VDPAU_H264;
+                    id=AV_CODEC_ID_H264;
+                    break;
+            case AV_CODEC_ID_MPEG1VIDEO:
+                    outPix=AV_PIX_FMT_VDPAU_MPEG1;
+                    id=AV_CODEC_ID_MPEG1VIDEO;
+                    break;
+            case AV_CODEC_ID_MPEG2VIDEO:
+                    outPix=AV_PIX_FMT_VDPAU_MPEG2;
+                    id=AV_CODEC_ID_MPEG2VIDEO;
+                    break;
+            case AV_CODEC_ID_WMV3:
+                    outPix=AV_PIX_FMT_VDPAU_WMV3;
+                    id=AV_CODEC_ID_WMV3;
+                    break;
+            case AV_CODEC_ID_VC1:
+                    outPix=AV_PIX_FMT_VDPAU_VC1;
+                    id=AV_CODEC_ID_VC1;
+                    break;
             default: 
                     found=AV_PIX_FMT_NONE;
                     continue;
@@ -291,10 +306,12 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         }
         break;
     }
-    if(found==AV_PIX_FMT_NONE)
+    if(id==AV_PIX_FMT_NONE)
+    {
         return AV_PIX_FMT_NONE;
+    }
     // Finish intialization of Vdpau decoder
-    const AVHWAccel *accel=parseHwAccel(c,id);
+    const AVHWAccel *accel=parseHwAccel(outPix,id);
     if(accel)
     {
         ADM_info("Found matching hw accelerator : %s\n",accel->name);
@@ -302,9 +319,9 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         {
             // something fishy here : setup_hwaccel is not called due to it being vdpau, so no one is doing it ....
             // I missed something obviously.
+            ADM_warning("RESETTING hwaccel_priv_data\n");
             avctx->internal->hwaccel_priv_data = av_mallocz(accel->priv_data_size); // dafuq ?
         }
-        avctx->sw_pix_fmt = AV_PIX_FMT_YUV420P; // dafuq 2 ?
         int r=accel->init(avctx);
         if(r<0)
         {
@@ -312,7 +329,7 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
             return AV_PIX_FMT_NONE;
         }                         
         ADM_info("Successfully setup hw accel\n");
-        return c;
+        return AV_PIX_FMT_VDPAU;
     }
     return AV_PIX_FMT_NONE;
 #endif
@@ -493,7 +510,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         }
         
      
-        AVCodec *codec=avcodec_find_decoder_by_name(name);
+        AVCodec *codec=avcodec_find_decoder_by_name("h264");
         if(!codec) 
                 {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codecd\n"));ADM_assert(0);}
         codecId=codecID; 
