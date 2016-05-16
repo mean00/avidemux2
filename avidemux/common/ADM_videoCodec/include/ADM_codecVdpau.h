@@ -10,6 +10,8 @@ protected:
                     void     *vdpau;
                     bool     decode_status;   
                     AVVDPAUContext *avVdCtx;
+protected:
+                    bool        initVdpContext();
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(struct vdpau_render_state *rdr);

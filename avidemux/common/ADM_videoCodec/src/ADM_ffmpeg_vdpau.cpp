@@ -29,6 +29,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
 #include "libavutil/buffer.h"
+#include "libavcodec/internal.h"
 }
 
 #include "ADM_codec.h"
@@ -48,7 +49,12 @@ extern "C" {
 
 static bool         vdpauWorking=false;
 static admMutex     surfaceMutex;
+
+#if 1
+#define aprintf printf
+#else
 #define aprintf(...) {}
+#endif
 
 typedef enum 
 {
@@ -58,6 +64,27 @@ typedef enum
     ADM_VDPAU_VC1=3
 }ADM_VDPAU_TYPE;
 
+/**
+    \fn vdpauGetFormat
+    \brief Borrowed from mplayer/ffmpeg
+ 
+ 
+
+*/
+
+static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id)
+{
+    AVHWAccel *hw=av_hwaccel_next(NULL);
+    
+    while(hw)
+    {
+        ADM_info("Trying %s, %d : %d, codec =%d : %d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
+        if (hw->pix_fmt == AV_PIX_FMT_VDPAU && id==hw->id)
+            return hw;
+        hw=av_hwaccel_next(hw);
+    }
+    return NULL;
+}
 
 /**
     \fn markSurfaceUsed
@@ -207,6 +234,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->data[0]=(uint8_t *)render;
     pic->data[3]=(uint8_t *)(uintptr_t)render->surface;
     pic->reordered_opaque= avctx->reordered_opaque;
+    aprintf("Alloc ===> Got buffer = %d\n",render->surface);
     return 0;
 }
 /**
@@ -217,6 +245,7 @@ void decoderFFVDPAU::releaseBuffer(struct vdpau_render_state *rdr)
   ADM_assert(rdr);
   ADM_assert(rdr->refCount);
   rdr->state &= ~FF_VDPAU_STATE_USED_FOR_REFERENCE;
+  aprintf("Release ===> Release buffer = %d\n",rdr->surface);
   vdpauMarkSurfaceUnused(VDPAU,(void *)rdr);
 }
 /**
@@ -231,34 +260,177 @@ void decoderFFVDPAU::releaseBuffer(struct vdpau_render_state *rdr)
       struct vdpau_render_state *rdr=( struct vdpau_render_state  *)data;
       dec->releaseBuffer(rdr);
 }
-/**
-    \fn vdpauGetFormat
-    \brief Borrowed from mplayer
 
-*/
 extern "C"
 {
+
 static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
-
+    ADM_info("VDPAU: GetFormat\n");
+    AVPixelFormat found=AV_PIX_FMT_NONE;
+    AVCodecID id=AV_CODEC_ID_NONE;
+    AVPixelFormat c;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
-        AVPixelFormat c=fmt[i];
+        c=fmt[i];
+        ADM_info("VDPAU: Evaluating %d\n",c);
+        
+        found=c;
         switch(c)
         {
-            case AV_PIX_FMT_VDPAU_H264:
-            case AV_PIX_FMT_VDPAU_MPEG1:
-            case AV_PIX_FMT_VDPAU_MPEG2:
-            case AV_PIX_FMT_VDPAU_WMV3:
-            case AV_PIX_FMT_VDPAU_VC1:
-                        return c;
-            default:break;
-
+            case AV_PIX_FMT_VDPAU_H264: id=AV_CODEC_ID_H264;break;
+            case AV_PIX_FMT_VDPAU_MPEG1:id=AV_CODEC_ID_MPEG1VIDEO;break;
+            case AV_PIX_FMT_VDPAU_MPEG2:id=AV_CODEC_ID_MPEG2VIDEO;break;
+            case AV_PIX_FMT_VDPAU_WMV3: id=AV_CODEC_ID_WMV3;break;
+            case AV_PIX_FMT_VDPAU_VC1:  id=AV_CODEC_ID_VC1;break;
+            default: 
+                    found=AV_PIX_FMT_NONE;
+                    continue;
+                    break;
         }
+        break;
+    }
+    if(found==AV_PIX_FMT_NONE)
+        return AV_PIX_FMT_NONE;
+    // Finish intialization of Vdpau decoder
+    const AVHWAccel *accel=parseHwAccel(c,id);
+    if(accel)
+    {
+        ADM_info("Found matching hw accelerator : %s\n",accel->name);
+        if(!avctx->internal->hwaccel_priv_data)
+        {
+            // something fishy here : setup_hwaccel is not called due to it being vdpau, so no one is doing it ....
+            // I missed something obviously.
+            avctx->internal->hwaccel_priv_data = av_mallocz(accel->priv_data_size); // dafuq ?
+        }
+        avctx->sw_pix_fmt = AV_PIX_FMT_YUV420P; // dafuq 2 ?
+        int r=accel->init(avctx);
+        if(r<0)
+        {
+            ADM_warning("Error initializing hw accel (%d)\n",r);
+            return AV_PIX_FMT_NONE;
+        }                         
+        ADM_info("Successfully setup hw accel\n");
+        return c;
     }
     return AV_PIX_FMT_NONE;
+#endif
 }
+}
+
+extern "C"
+{
+/**
+ * 
+ * @param s
+ * @param f
+ * @param info
+ * @param count
+ * @param buffers
+ * @return 
+ */
+static int render2Wrapper(AVCodecContext *ctx, AVFrame *frame, const VdpPictureInfo *info, uint32_t count, const VdpBitstreamBuffer *buffers)
+{
+    /**
+    mp_image_t *mpi = f->opaque;
+    sh_video_t *sh = s->opaque;
+    struct vdpau_frame_data data;
+    uint8_t *planes[4] = {(void *)&data};
+    data.surface = (VdpVideoSurface)mpi->priv;
+    data.info = info;
+    data.bitstream_buffers_used = count;
+    data.bitstream_buffers = buffers;
+    mpcodecs_draw_slice(sh, planes, NULL, sh->disp_w, sh->disp_h, 0, 0);
+    */
+            
+    ADM_info("render2Wrapper called \n");
+    return 0;
+}
+
+    
+    
+    /**
+     * \fn vdpGetProcAddressWrapper
+     * @param device
+     * @param function_id
+     * @param function_pointer
+     * @return 
+     */
+static VdpStatus vdpGetProcAddressWrapper(    VdpDevice device,    VdpFuncId function_id,       void * *  function_pointer)
+{
+    ADM_info("Calling vdpGetProcAddressWrapper for function %d\n",function_id);
+    VdpStatus r=VDP_STATUS_ERROR;
+    
+#define ADD_WRAPPER(x,y)     case VDP_FUNC_ID_##x: ADM_info("Wrapping "#x" "#y"\n"); *function_pointer= (void *)admVdpau::y;\
+                                        r=VDP_STATUS_OK;\
+                                        break;        
+    
+    switch(function_id)
+    {
+        ADD_WRAPPER(DECODER_CREATE,decoderCreate)
+        ADD_WRAPPER(DECODER_RENDER,decoderRender)
+        ADD_WRAPPER(DECODER_DESTROY,decoderDestroy)
+                
+        case VDP_FUNC_ID_VIDEO_SURFACE_QUERY_CAPABILITIES:
+        case VDP_FUNC_ID_DECODER_QUERY_CAPABILITIES:            
+        default:
+            VdpGetProcAddress *p=admVdpau::getProcAddress2();
+            ADM_assert(p);
+            r= p(device,function_id,function_pointer);
+    }
+    if(r==VDP_STATUS_OK)
+    {
+        ADM_info("Ok\n");
+    }else
+    {
+        ADM_warning("Failed with er=%d\n",(int)r);
+    }
+    return r;
+    
+}
+}
+/**
+ * 
+ * @return 
+ */
+bool decoderFFVDPAU::initVdpContext()
+{
+       ADM_assert (_context);
+        _context->max_b_frames = 0;
+        _context->width =  _w;
+        _context->height = _h;
+        _context->pix_fmt = AV_PIX_FMT_YUV420P;
+        _context->debug_mv |= FF_SHOW;
+        _context->debug |= FF_DEBUG_VIS_MB_TYPE*0 + FF_DEBUG_VIS_QP*0;
+        _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
+        _context->error_concealment=3; 
+        if (_setFcc) {
+          _context->codec_tag=_fcc; 
+        }
+        if (_extraDataCopy) {
+          _context->extradata = _extraDataCopy;
+          _context->extradata_size = _extraDataLen;
+        }        
+        _context->thread_count    =0;        
+        _context->opaque          = this;
+        _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
+    
+       
+        AVVDPAUContext *v= av_alloc_vdpaucontext();;
+        _context->hwaccel_context = v;
+        v->render2=render2Wrapper;
+        v->render=NULL;
+        v->decoder=VDP_INVALID_HANDLE; 
+        
+        if(0>av_vdpau_bind_context(_context, (VdpDevice)(uint64_t) admVdpau::getVdpDevice(),
+                          vdpGetProcAddressWrapper, AV_HWACCEL_FLAG_IGNORE_LEVEL))
+        {
+             ADM_error("Cannot bind\n");
+                return false;
+        }
+        ADM_info("Init VDP context ok\n");
+        return true;
 }
 /**
     \fn decoderFFVDPAU
@@ -272,46 +444,40 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         vdpau=(void *)new vdpauContext;
         VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
+        AVCodecID codecID;
+        int vdpDecoder=0;
+        const char *name="";
+        VdpDevice dev=(VdpDevice)(uint64_t)admVdpau::getVdpDevice();
+        
         if(isH264Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_H264;
+            name="h264_vdpau";
+            codecID=AV_CODEC_ID_H264;  
+            vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
         }else if(isMpeg12Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_MPEG2;
+            vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
+            name="mpegvideo_vdpau";
+            codecID=AV_CODEC_ID_MPEG2VIDEO;            
+        
         }else if(isVC1Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_VC1;
+            name="vc1_vdpau";
+            codecID=AV_CODEC_ID_VC1;
+            vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
         }else ADM_assert(0);
-        int vdpDecoder;
-        switch(vdpauType)
-        {
-            case ADM_VDPAU_VC1  : vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
-                                  WRAP_Open_TemplateVdpauByName("vc1_vdpau",AV_CODEC_ID_VC1);
-                                  break;
-
-            case ADM_VDPAU_H264 : vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
-                                  WRAP_Open_TemplateVdpauByName("h264_vdpau",AV_CODEC_ID_H264);
-                                  break;
-            case ADM_VDPAU_MPEG2: 
-                                  vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
-                                  WRAP_Open_TemplateVdpauByName("mpegvideo_vdpau",AV_CODEC_ID_MPEG2VIDEO);
-                                  break;
-            default: ADM_assert(0);break;
-        }
-        ADM_info("[VDPAU] Decoder created \n");
+        
+       
         // Now instantiate our VDPAU surface & decoder
         for(int i=0;i<NB_SURFACE;i++)
             VDPAU->renders[i]=NULL;
        
         int widthToUse=admVdpau::dimensionRoundUp(w);
         int heightToUse=admVdpau::dimensionRoundUp(h);
- 
-        if(VDP_STATUS_OK!=admVdpau::decoderCreate(vdpDecoder, widthToUse,heightToUse,15,&(VDPAU->vdpDecoder)))
-        {
-            ADM_error("Cannot create VDPAU decoder\n");
-            alive=false;
-            return;
-        }
+
         // Create our surfaces...
         for(int i=0;i<NB_SURFACE;i++)
         {
@@ -326,22 +492,36 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             VDPAU->freeQueue.push_back(VDPAU->renders[i]);
         }
         
-        avVdCtx=av_vdpau_alloc_context();
-        avVdCtx->render=admVdpau::decoderRender;
-        VdpDevice dev=(VdpDevice)(uint64_t)admVdpau::getVdpDevice();
-        if (av_vdpau_bind_context(_context, 
-                                    dev,
-                                    (VdpGetProcAddress*)admVdpau::getProcAddress(),
-                                    AV_HWACCEL_FLAG_IGNORE_LEVEL))
+     
+        AVCodec *codec=avcodec_find_decoder_by_name(name);
+        if(!codec) 
+                {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codecd\n"));ADM_assert(0);}
+        codecId=codecID; 
+        _context = avcodec_alloc_context3 (codec);
+     
+        if(!initVdpContext())
         {
-            ADM_warning("Binding context failed\n");
+            ADM_warning("Cannot setup context\n");
             alive=false;
-            return;
+            return ;
         }
-        _context->get_buffer2=ADM_VDPAUgetBuffer;
-        _context->get_format =vdpauGetFormat;
-
-
+        
+        if (avcodec_open2(_context, codec, NULL) < 0)  
+        { 
+            printf("[lavc] Decoder init: video decoder failed!\n"); 
+            GUI_Error_HIG("Codec","Internal error opening " ); 
+            ADM_assert(0); 
+        } 
+        else 
+        { 
+            printf("[lavc] Decoder init: " " video decoder initialized! (%s)\n",codec->long_name); 
+        }
+        
+        _context->get_format      = vdpauGetFormat;
+        _context->get_buffer2     = ADM_VDPAUgetBuffer;
+        _context->draw_horiz_band = NULL;
+        _context->slice_flags     =0;        
+        ADM_info("Successfully setup hw accel\n");              
 }
 /**
     \fn ~            void    goOn( const AVFrame *d);
@@ -352,9 +532,14 @@ decoderFFVDPAU::~decoderFFVDPAU()
         if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
         // released
         {
-                avcodec_close (_context);
-                av_free(_context);
-                _context=NULL;
+            if(_context->hwaccel_context)
+            {
+                av_freep(&_context->hwaccel_context);
+                _context->hwaccel_context=NULL;
+            }
+            avcodec_close (_context);
+            av_free(_context);
+            _context=NULL;
         }
         // Delete free only, the ones still used will be deleted later
         int n=VDPAU->freeQueue.size();        
@@ -386,7 +571,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
 */
 bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-
+    aprintf("==> uncompress %s\n",_context->codec->long_name);
     if(out->refType==ADM_HW_VDPAU)
     {
             vdpauMarkSurfaceUnused(VDPAU,out->refDescriptor.refCookie);
@@ -426,6 +611,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     if(_frame->pict_type==AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture=true;
+        out->Pts= (uint64_t)(_frame->reordered_opaque);
         return true;
     }
     return readBackBuffer(_frame,in,out);
@@ -442,6 +628,7 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
    // VdpSurface *surface=decodedFrame->data[3];
     struct vdpau_render_state *rndr = (struct vdpau_render_state *)decodedFrame->data[0];
     ADM_assert(rndr);
+    aprintf("Decoding ===> Got surface = %d\n",rndr->surface);
     out->refType=ADM_HW_VDPAU;
     out->refDescriptor.refCookie=(void *)rndr;
     out->refDescriptor.refInstance=VDPAU;
@@ -456,6 +643,4 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     return true;
 }
 
-
-#endif
 // EOF
