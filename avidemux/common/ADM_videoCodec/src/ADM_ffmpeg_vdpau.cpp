@@ -315,21 +315,6 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     if(accel)
     {
         ADM_info("Found matching hw accelerator : %s\n",accel->name);
-        if(!avctx->internal->hwaccel_priv_data)
-        {
-            // something fishy here : setup_hwaccel is not called due to it being vdpau, so no one is doing it ....
-            // I missed something obviously.
-            ADM_warning("RESETTING hwaccel_priv_data\n");
-            avctx->internal->hwaccel_priv_data = av_mallocz(accel->priv_data_size); // dafuq ?
-        }
-        int r=accel->init(avctx);
-        if(r<0)
-        {
-            ADM_warning("Error initializing hw accel (%d)\n",r);
-            decoderFFVDPAU *me=(decoderFFVDPAU *)avctx->opaque ;
-            me->initFail();
-            return AV_PIX_FMT_NONE;
-        }                         
         ADM_info("Successfully setup hw accel\n");
         return AV_PIX_FMT_VDPAU;
     }
