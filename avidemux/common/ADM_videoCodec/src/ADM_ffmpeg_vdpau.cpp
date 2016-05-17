@@ -326,6 +326,8 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         if(r<0)
         {
             ADM_warning("Error initializing hw accel (%d)\n",r);
+            decoderFFVDPAU *me=(decoderFFVDPAU *)avctx->opaque ;
+            me->initFail();
             return AV_PIX_FMT_NONE;
         }                         
         ADM_info("Successfully setup hw accel\n");
@@ -469,20 +471,20 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         if(isH264Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_H264;
-            name="h264_vdpau";
+            name="h264";
             codecID=AV_CODEC_ID_H264;  
             vdpDecoder=VDP_DECODER_PROFILE_H264_HIGH;
         }else if(isMpeg12Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_MPEG2;
             vdpDecoder=VDP_DECODER_PROFILE_MPEG2_MAIN;
-            name="mpegvideo_vdpau";
+            name="mpegvideo";
             codecID=AV_CODEC_ID_MPEG2VIDEO;            
         
         }else if(isVC1Compatible(fcc))
         {
             vdpauType=ADM_VDPAU_VC1;
-            name="vc1_vdpau";
+            name="vc1";
             codecID=AV_CODEC_ID_VC1;
             vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
         }else ADM_assert(0);
@@ -510,7 +512,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         }
         
      
-        AVCodec *codec=avcodec_find_decoder_by_name("h264");
+        AVCodec *codec=avcodec_find_decoder_by_name(name);
         if(!codec) 
                 {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codecd\n"));ADM_assert(0);}
         codecId=codecID; 
@@ -604,7 +606,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
 
    // Put a safe value....
-   out->Pts=in->demuxerPts;
+    out->Pts=in->demuxerPts;
     _context->reordered_opaque=in->demuxerPts;
     int got_picture;
     AVPacket pkt;

@@ -6,15 +6,16 @@ struct AVVDPAUContext;
 class decoderFFVDPAU:public decoderFF
 {
 protected:
-                    bool    alive;
-                    void     *vdpau;
-                    bool     decode_status;   
+                    bool            alive;
+                    void            *vdpau;
+                    bool            decode_status;   
                     AVVDPAUContext *avVdCtx;
 protected:
                     bool        initVdpContext();
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(struct vdpau_render_state *rdr);
+                    bool        initFail(void) {alive=false;return true;}
 public:
             // public API
                                 decoderFFVDPAU (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
