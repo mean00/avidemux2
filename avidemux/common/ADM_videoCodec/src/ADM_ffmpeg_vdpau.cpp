@@ -50,7 +50,7 @@ extern "C" {
 static bool         vdpauWorking=false;
 static admMutex     surfaceMutex;
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -225,7 +225,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     
     render->state=0;
     // It only works because surface is the 1st field of render!
-    pic->buf[0]=av_buffer_create((uint8_t *)&(render->surface), 
+    pic->buf[0]=av_buffer_create((uint8_t *)&(render->surface),  // Maybe a memleak here...
                                      sizeof(render->surface),
                                      ADM_VDPAUreleaseBuffer, 
                                      (void *)this,
@@ -268,7 +268,6 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
 {
     int i;
     ADM_info("VDPAU: GetFormat\n");
-    AVPixelFormat found=AV_PIX_FMT_NONE;
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
@@ -277,32 +276,17 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         c=fmt[i];
         ADM_info("VDPAU: Evaluating %d\n",c);
         if(c!=AV_PIX_FMT_VDPAU) continue;
+#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VDPAU_##y;id=avctx->codec_id;break;
         switch(avctx->codec_id)
         {
-            case AV_CODEC_ID_H264 : 
-                    outPix=AV_PIX_FMT_VDPAU_H264;
-                    id=AV_CODEC_ID_H264;
-                    break;
-            case AV_CODEC_ID_MPEG1VIDEO:
-                    outPix=AV_PIX_FMT_VDPAU_MPEG1;
-                    id=AV_CODEC_ID_MPEG1VIDEO;
-                    break;
-            case AV_CODEC_ID_MPEG2VIDEO:
-                    outPix=AV_PIX_FMT_VDPAU_MPEG2;
-                    id=AV_CODEC_ID_MPEG2VIDEO;
-                    break;
-            case AV_CODEC_ID_WMV3:
-                    outPix=AV_PIX_FMT_VDPAU_WMV3;
-                    id=AV_CODEC_ID_WMV3;
-                    break;
-            case AV_CODEC_ID_VC1:
-                    outPix=AV_PIX_FMT_VDPAU_VC1;
-                    id=AV_CODEC_ID_VC1;
-                    break;
+            FMT_V_CHECK(H264,H264)
+            FMT_V_CHECK(MPEG1VIDEO,MPEG1)
+            FMT_V_CHECK(MPEG2VIDEO,MPEG2)
+            FMT_V_CHECK(WMV3,WMV3)
+            FMT_V_CHECK(VC1,VC1)
             default: 
-                    found=AV_PIX_FMT_NONE;
-                    continue;
-                    break;
+                continue;
+                break;
         }
         break;
     }
@@ -409,10 +393,12 @@ bool decoderFFVDPAU::initVdpContext()
         _context->debug |= FF_DEBUG_VIS_MB_TYPE*0 + FF_DEBUG_VIS_QP*0;
         _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; 
         _context->error_concealment=3; 
-        if (_setFcc) {
+        if (_setFcc) 
+        {
           _context->codec_tag=_fcc; 
         }
-        if (_extraDataCopy) {
+        if (_extraDataCopy) 
+        {
           _context->extradata = _extraDataCopy;
           _context->extradata_size = _extraDataLen;
         }        
