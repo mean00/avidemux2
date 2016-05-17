@@ -92,7 +92,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
         return false;
     }
     // Now that we have the vdpProcAddress, time to get the functions....
-#if 1 //def HAS_MOVE_SEMANTICS
+#if 0 //def HAS_MOVE_SEMANTICS
 #define myTypeOf   decltype
 #else
 #define myTypeOf   typeof
