@@ -47,6 +47,7 @@ protected:
     bool        decodeToS16(float **outptr,uint32_t *nbOut);
     bool        decodeToFloat(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
+    bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
     uint32_t    outputFrequency;
 public:
                     ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -284,14 +285,47 @@ bool ADM_AudiocoderLavcodec::decodeToFloat(float **outptr,uint32_t *nbOut)
     (*nbOut)+=nbSample*channels;
     return true;
 }
+/**
+ * \fn decodeToFloatPlanarStereo
+ * @param outptr
+ * @param nbOut
+ * @return 
+ */
+bool ADM_AudiocoderLavcodec::decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut)
+{
 
+    // Interleave
+    int nbSample=  _frame->nb_samples; 
+    float *left =(float *)_frame->data[0];
+    float *right=(float *)_frame->data[1];
+    float *out=*outptr;
+    for(int i=0;i<nbSample;i++)
+    {
+        out[0]=*(left++);
+        out[1]=*(right++);
+        out+=2;
+    }
+   *outptr=out;
+   (*nbOut)+=nbSample*2;
+   return true;
+}
 /**
     \fn decodeToFloat
 */
 
 bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
 {
-
+    switch(channels)
+    {
+        case 1:
+            return decodeToFloat(outptr,nbOut);
+            break;
+        case 2:
+            return decodeToFloatPlanarStereo(outptr,nbOut);
+            break;
+        default:
+            break;
+    }
     // Interleave
     int nbSample=  _frame->nb_samples; 
     for(int i=0;i<nbSample;i++)
