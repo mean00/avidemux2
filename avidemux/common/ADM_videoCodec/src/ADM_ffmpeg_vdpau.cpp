@@ -147,7 +147,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     vdpau_render_state * render=NULL;
     if(VDPAU->freeQueue.size()==0)
     {
-        ADM_warning("[VDPAU] No more available surface\n");
+        ADM_info("[VDPAU] No more available surface, creating a new one\n");
         render=new vdpau_render_state;
         memset(render,0,sizeof( vdpau_render_state));
         int widthToUse = (avctx->coded_width+ 1)  & ~1;
