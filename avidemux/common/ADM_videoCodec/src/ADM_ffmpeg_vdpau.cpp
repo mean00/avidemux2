@@ -64,27 +64,10 @@ typedef enum
     ADM_VDPAU_VC1=3
 }ADM_VDPAU_TYPE;
 
-/**
-    \fn vdpauGetFormat
-    \brief Borrowed from mplayer/ffmpeg
- 
- 
+#ifdef USE_VDPAU
+#include "ADM_ffmpeg_vdpau_utils.cpp"
+#endif
 
-*/
-
-static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id)
-{
-    AVHWAccel *hw=av_hwaccel_next(NULL);
-    
-    while(hw)
-    {
-        ADM_info("Trying %s, %d : %d, codec =%d : %d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
-        if (hw->pix_fmt == AV_PIX_FMT_VDPAU && id==hw->id)
-            return hw;
-        hw=av_hwaccel_next(hw);
-    }
-    return NULL;
-}
 
 /**
     \fn markSurfaceUsed
@@ -156,54 +139,6 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
 }
 
 /**
-    \fn vdpauUsable
-    \brief Return true if  vdpau can be used...
-*/
-bool vdpauUsable(void)
-{
-    bool v=false;
-    if(!vdpauWorking) return false;
-    if(!prefs->get(FEATURES_VDPAU,&v)) v=false;
-    return v;
-}
-/**
-    \fn vdpauProbe
-    \brief Try loading vdpau...
-*/
-bool vdpauProbe(void)
-{
-    GUI_WindowInfo xinfo;
-    void *draw;
-    draw=UI_getDrawWidget();
-    UI_getWindowInfo(draw,&xinfo );
-#ifdef USE_VDPAU
-    if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_VDPAU)==false)
-    {
-        GUI_Error_HIG("Error","Core has been compiled without VDPAU support, but the application has been compiled with it.\nInstallation mismatch");
-        vdpauWorking=false;
-    }
-#endif
-    if(false==admVdpau::init(&xinfo)) return false;
-    vdpauWorking=true;
-    return true;
-}
-/**
-    \fn vdpauCleanup
-*/
-bool vdpauCleanup(void)
-{
-   return admVdpau::cleanup();
-}
-/**
-    \fn ADM_VDPAUgetBuffer
-    \brief trampoline to get a VDPAU surface
-*/
-int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
-{
-    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
-    return dec->getBuffer(avctx,pic);
-}
-/**
     \fn getBuffer
     \brief returns a VDPAU render masquerading as a AVFrame
 */
@@ -247,18 +182,6 @@ void decoderFFVDPAU::releaseBuffer(struct vdpau_render_state *rdr)
   rdr->state &= ~FF_VDPAU_STATE_USED_FOR_REFERENCE;
   aprintf("Release ===> Release buffer = %d\n",rdr->surface);
   vdpauMarkSurfaceUnused(VDPAU,(void *)rdr);
-}
-/**
-    \fn ADM_VDPAUreleaseBuffer
- *  \param opaque is decoderFFVDPAU
-*   \param data   is surface
- * 
-*/
- void ADM_VDPAUreleaseBuffer(void *opaque, uint8_t *data)
-{
-      decoderFFVDPAU *dec=(decoderFFVDPAU *)opaque;
-      struct vdpau_render_state *rdr=( struct vdpau_render_state  *)data;
-      dec->releaseBuffer(rdr);
 }
 
 extern "C"
@@ -307,77 +230,6 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
 }
 }
 
-extern "C"
-{
-/**
- * 
- * @param s
- * @param f
- * @param info
- * @param count
- * @param buffers
- * @return 
- */
-static int render2Wrapper(AVCodecContext *ctx, AVFrame *frame, const VdpPictureInfo *info, uint32_t count, const VdpBitstreamBuffer *buffers)
-{
-    /**
-    mp_image_t *mpi = f->opaque;
-    sh_video_t *sh = s->opaque;
-    struct vdpau_frame_data data;
-    uint8_t *planes[4] = {(void *)&data};
-    data.surface = (VdpVideoSurface)mpi->priv;
-    data.info = info;
-    data.bitstream_buffers_used = count;
-    data.bitstream_buffers = buffers;
-    mpcodecs_draw_slice(sh, planes, NULL, sh->disp_w, sh->disp_h, 0, 0);
-    */
-            
-    ADM_info("render2Wrapper called \n");
-    return 0;
-}
-
-    
-    
-    /**
-     * \fn vdpGetProcAddressWrapper
-     * @param device
-     * @param function_id
-     * @param function_pointer
-     * @return 
-     */
-static VdpStatus vdpGetProcAddressWrapper(    VdpDevice device,    VdpFuncId function_id,       void * *  function_pointer)
-{
-    ADM_info("Calling vdpGetProcAddressWrapper for function %d\n",function_id);
-    VdpStatus r=VDP_STATUS_ERROR;
-    
-#define ADD_WRAPPER(x,y)     case VDP_FUNC_ID_##x: ADM_info("Wrapping "#x" "#y"\n"); *function_pointer= (void *)admVdpau::y;\
-                                        r=VDP_STATUS_OK;\
-                                        break;        
-    
-    switch(function_id)
-    {
-        ADD_WRAPPER(DECODER_CREATE,decoderCreate)
-        ADD_WRAPPER(DECODER_RENDER,decoderRender)
-        ADD_WRAPPER(DECODER_DESTROY,decoderDestroy)
-                
-        case VDP_FUNC_ID_VIDEO_SURFACE_QUERY_CAPABILITIES:
-        case VDP_FUNC_ID_DECODER_QUERY_CAPABILITIES:            
-        default:
-            VdpGetProcAddress *p=admVdpau::getProcAddress2();
-            ADM_assert(p);
-            r= p(device,function_id,function_pointer);
-    }
-    if(r==VDP_STATUS_OK)
-    {
-        ADM_info("Ok\n");
-    }else
-    {
-        ADM_warning("Failed with er=%d\n",(int)r);
-    }
-    return r;
-    
-}
-}
 /**
  * 
  * @return 
@@ -409,7 +261,6 @@ bool decoderFFVDPAU::initVdpContext()
        
         AVVDPAUContext *v= av_alloc_vdpaucontext();;
         _context->hwaccel_context = v;
-        v->render2=render2Wrapper;
         v->render=NULL;
         v->decoder=VDP_INVALID_HANDLE; 
         
