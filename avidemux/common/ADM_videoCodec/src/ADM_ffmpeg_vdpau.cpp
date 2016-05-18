@@ -602,7 +602,8 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture=true;
         out->Pts= (uint64_t)(_frame->reordered_opaque);
-        return true;
+        ADM_info("[VDPAUDec] No picture \n");
+        return false;
     }
     return readBackBuffer(_frame,in,out);
 }
