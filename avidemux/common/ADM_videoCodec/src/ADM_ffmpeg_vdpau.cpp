@@ -144,21 +144,37 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
 */
 int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-    vdpau_render_state * render;
+    vdpau_render_state * render=NULL;
     if(VDPAU->freeQueue.size()==0)
     {
         ADM_warning("[VDPAU] No more available surface\n");
-        return -1;
+        render=new vdpau_render_state;
+        memset(render,0,sizeof( vdpau_render_state));
+        int widthToUse = (avctx->coded_width+ 1)  & ~1;
+        int heightToUse= (avctx->coded_height+3)  & ~3;
+        if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(render->surface)))
+        {
+            ADM_error("Cannot create surface \n");
+            delete render;
+            alive=false;
+            return -1;
+        }
+        render->state=0;
+        vdpauMarkSurfaceUsed(VDPAU,(void *)render);
+        surfaceMutex.lock();
+        VDPAU->fullQueue.push_back(render);
+        surfaceMutex.unlock();
+    }else
+    {
+        surfaceMutex.lock();
+        render=VDPAU->freeQueue.front();
+        ADM_assert(render);
+        VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
+        surfaceMutex.unlock();
     }
-    // Get an image   
-    surfaceMutex.lock();
-    render=VDPAU->freeQueue.front();
     render->refCount=0;
-    VDPAU->freeQueue.erase(VDPAU->freeQueue.begin());
-    surfaceMutex.unlock();
-    vdpauMarkSurfaceUsed(VDPAU,(void *)render);
-    
-    render->state=0;
+    render->state=0;  
+    vdpauMarkSurfaceUsed(VDPAU,(void *)render); // it is out of the queue, no need to lock it
     // It only works because surface is the 1st field of render!
     pic->buf[0]=av_buffer_create((uint8_t *)&(render->surface),  // Maybe a memleak here...
                                      sizeof(render->surface),
@@ -213,7 +229,7 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
         }
         break;
     }
-    if(id==AV_PIX_FMT_NONE)
+    if(id==AV_CODEC_ID_NONE)
     {
         return AV_PIX_FMT_NONE;
     }
@@ -283,7 +299,6 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
         alive=true;
         avVdCtx=NULL;
         vdpau=(void *)new vdpauContext;
-        VDPAU->vdpDecoder=VDP_INVALID_HANDLE;
         ADM_VDPAU_TYPE vdpauType=ADM_VDPAU_INVALID;
         AVCodecID codecID;
         int vdpDecoder=0;
@@ -310,30 +325,7 @@ decoderFFVDPAU::decoderFFVDPAU(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
             codecID=AV_CODEC_ID_VC1;
             vdpDecoder=VDP_DECODER_PROFILE_VC1_ADVANCED;
         }else ADM_assert(0);
-        
        
-        // Now instantiate our VDPAU surface & decoder
-        for(int i=0;i<NB_SURFACE;i++)
-            VDPAU->renders[i]=NULL;
-       
-        int widthToUse=admVdpau::dimensionRoundUp(w);
-        int heightToUse=admVdpau::dimensionRoundUp(h);
-
-        // Create our surfaces...
-        for(int i=0;i<NB_SURFACE;i++)
-        {
-            VDPAU->renders[i]=new vdpau_render_state;
-            memset(VDPAU->renders[i],0,sizeof( vdpau_render_state));
-            if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(VDPAU->renders[i]->surface)))
-            {
-                ADM_error("Cannot create surface %d/%d\n",i,NB_SURFACE);
-                alive=false;
-                return;
-            }
-            VDPAU->freeQueue.push_back(VDPAU->renders[i]);
-        }
-        
-     
         AVCodec *codec=avcodec_find_decoder_by_name(name);
         if(!codec) 
                 {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codecd\n"));ADM_assert(0);}
@@ -383,10 +375,10 @@ decoderFFVDPAU::~decoderFFVDPAU()
             _context=NULL;
         }
         // Delete free only, the ones still used will be deleted later
-        int n=VDPAU->freeQueue.size();        
+        int n=VDPAU->fullQueue.size();        
         for(int i=0;i<n;i++)
         {
-            vdpau_render_state *r=VDPAU->freeQueue[i];
+            vdpau_render_state *r=VDPAU->fullQueue[i];
             if(r)
             {
                 if(r->surface)
@@ -396,12 +388,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
                 }
                 delete r;
             }
-            VDPAU->freeQueue.clear();
-        }
-        if (VDPAU->vdpDecoder) {
-            ADM_info("[VDPAU] Destroying decoder\n");
-            if(VDP_STATUS_OK!=admVdpau::decoderDestroy(VDPAU->vdpDecoder))
-                ADM_error("Error destroying VDPAU decoder\n");
+            VDPAU->fullQueue.clear();
         }
         delete VDPAU;
         vdpau=NULL;

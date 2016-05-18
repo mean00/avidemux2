@@ -25,13 +25,13 @@ static int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_VDPAUreleaseBuffer(void *opaque, uint8_t *data);
 }
 
-
-#define NB_SURFACE 50
+/**
+ */
 typedef struct 
 {
-        VdpDecoder            vdpDecoder;
-        vdpau_render_state *renders[NB_SURFACE];
         std::vector <vdpau_render_state *>freeQueue;
+        std::vector <vdpau_render_state *>fullQueue;
+
 
 }vdpauContext;
 
