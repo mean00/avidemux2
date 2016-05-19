@@ -187,6 +187,7 @@ echo "**BootStrapping avidemux **"
 export TOP=$PWD
 export POSTFIX=""
 export FAKEROOT_DIR=$PWD/install
+export PARAL="$O_PARAL"
 echo "Top dir : $TOP"
 echo "Fake installation directory=$FAKEROOT_DIR"
 if [ "x$debug" = "x1" ] ; then echo   
@@ -204,12 +205,10 @@ fi
 if [ "x$do_core" = "x1" ] ; then 
         echo "** CORE **"
         cd $TOP
-        export PARAL=""
         Process buildCore ../avidemux_core
         echo " Installing core"
         cd $TOP/buildCore${POSTFIX} 
 fi
-export PARAL="$O_PARAL"
 if [ "x$do_qt4" = "x1" ] ; then 
         echo "** $qt_ext **"
         cd $TOP
