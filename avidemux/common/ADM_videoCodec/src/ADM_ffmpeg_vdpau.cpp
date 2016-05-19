@@ -29,7 +29,6 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
 #include "libavutil/buffer.h"
-#include "libavcodec/internal.h"
 }
 
 #include "ADM_codec.h"
