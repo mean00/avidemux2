@@ -38,9 +38,9 @@
 #include "GUI_accelRender.h"
 #include "GUI_xvRender.h"
 
-static uint8_t 	GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
-static uint8_t 	GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
-static void 	GUI_XvEnd( void );
+static uint8_t     GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
+static uint8_t     GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h);
+static void     GUI_XvEnd( void );
 static uint8_t  GUI_XvDisplay(ADMImage *src, uint32_t w, uint32_t h,uint32_t destW,uint32_t destH);
 static uint8_t  GUI_XvRedraw( void );
 static uint8_t  getAtom(const char *string);
@@ -65,26 +65,26 @@ XvRender::~XvRender()
 */
 bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-	ADM_info("[Xvideo]Xv start\n");
+    ADM_info("[Xvideo]Xv start\n");
     info=*window;
     baseInit(w,h,zoom);
-	return  GUI_XvInit( window,  w,  h);
+    return  GUI_XvInit( window,  w,  h);
 }
 /**
     \fn stop
 */
 bool XvRender::stop(void)
 {
-	 GUI_XvEnd( );
-	 printf("[Xvideo]Xv end\n");
-	 return 1;
+     GUI_XvEnd( );
+     printf("[Xvideo]Xv end\n");
+     return 1;
 }
 /**
     \fn displayImage
 */
 bool XvRender::displayImage(ADMImage *pic)
 {
-	return GUI_XvDisplay(pic, imageWidth, imageHeight,displayWidth,displayHeight);
+    return GUI_XvDisplay(pic, imageWidth, imageHeight,displayWidth,displayHeight);
 }
 
 /**
@@ -125,15 +125,15 @@ static uint8_t GUI_XvExpose( void );
 */
 void GUI_XvEnd( void )
 {
-	ADM_assert(xv_port);
- 	ADM_assert(xv_display);
+    ADM_assert(xv_port);
+     ADM_assert(xv_display);
 
 
-  	ADM_info("[Xvideo] Releasing Xv Port\n");
-  	XLockDisplay (xv_display);
-	if(XvUngrabPort(xv_display,xv_port,0)!=Success)
- 				printf("[Xvideo] Trouble releasing port...\n");
-	XUnlockDisplay (xv_display);
+      ADM_info("[Xvideo] Releasing Xv Port\n");
+      XLockDisplay (xv_display);
+    if(XvUngrabPort(xv_display,xv_port,0)!=Success)
+                 printf("[Xvideo] Trouble releasing port...\n");
+    XUnlockDisplay (xv_display);
 
 
      xvimage=NULL;
@@ -149,13 +149,13 @@ bool xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH)
         if(!xvimage) return false;
         XLockDisplay (xv_display);
 #if 1
-        XvShmPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
-			0, 0, destW, destH,	// dst
-			False);
+        XvShmPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,    // src
+            0, 0, destW, destH,    // dst
+            False);
 #else
-        XvPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,	// src
-			0, 0, w, h	// dst
-			);
+        XvPutImage(xv_display, xv_port, xv_win, xv_gc, xvimage, 0, 0, w, h,    // src
+            0, 0, w, h    // dst
+            );
 #endif
           XUnlockDisplay (xv_display);
           XSync(xv_display, False);
@@ -209,15 +209,15 @@ uint8_t GUI_XvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     if (Success != XvQueryExtension(WDN, &ver, &rel, &req, &ev, &err))
       {
-	  printf("[Xvideo] Query Extension failed\n");
-	  goto failed;
+      printf("[Xvideo] Query Extension failed\n");
+      goto failed;
       }
     /* check for Xvideo support */
     if (Success != XvQueryAdaptors(WDN,
-				   DefaultRootWindow(WDN), &adaptors, &ai))
+                   DefaultRootWindow(WDN), &adaptors, &ai))
       {
-	  printf("[Xvideo] Query Adaptor failed\n");
-	  goto failed;
+      printf("[Xvideo] Query Adaptor failed\n");
+      goto failed;
       }
     curai = ai;
     XvFormat *formats;
@@ -235,54 +235,54 @@ XvFormat *formats;
 unsigned long num_adaptors;
 */
 #ifdef VERBOSE_XV
-	  printf("[Xvideo]_______________________________\n");
-	  printf("[Xvideo] Adaptor 		: %d\n", i);
-	  printf("[Xvideo] Base ID		: %ld\n", curai->base_id);
-	  printf("[Xvideo] Nb Port	 	: %lu\n", curai->num_ports);
-	  printf("[Xvideo] Type			 	: %d,", curai->type);
+      printf("[Xvideo]_______________________________\n");
+      printf("[Xvideo] Adaptor         : %d\n", i);
+      printf("[Xvideo] Base ID        : %ld\n", curai->base_id);
+      printf("[Xvideo] Nb Port         : %lu\n", curai->num_ports);
+      printf("[Xvideo] Type                 : %d,", curai->type);
 #define CHECK(x) if(curai->type & x) printf("|"#x);
-	  CHECK(XvInputMask);
-	  CHECK(XvOutputMask);
-	  CHECK(XvVideoMask);
-	  CHECK(XvStillMask);
-	  CHECK(XvImageMask);
+      CHECK(XvInputMask);
+      CHECK(XvOutputMask);
+      CHECK(XvVideoMask);
+      CHECK(XvStillMask);
+      CHECK(XvImageMask);
 
-	  printf("\n[Xvideo] Name			 	: %s\n",
-		 curai->name);
-	  printf("[Xvideo] Num Adap	 	: %lu\n", curai->num_adaptors);
-	  printf("[Xvideo] Num fmt	 	: %lu\n", curai->num_formats);
+      printf("\n[Xvideo] Name                 : %s\n",
+         curai->name);
+      printf("[Xvideo] Num Adap         : %lu\n", curai->num_adaptors);
+      printf("[Xvideo] Num fmt         : %lu\n", curai->num_formats);
 #endif
-	  formats = curai->formats;
+      formats = curai->formats;
 
-	  //
-	  uint16_t k;
+      //
+      uint16_t k;
 
-	  for (k = 0; (k < curai->num_ports) && !port; k++)
-	    {
-		if (GUI_XvList(WDN, k + curai->base_id, &xv_format))
-		    port = k + curai->base_id;
-	    }
+      for (k = 0; (k < curai->num_ports) && !port; k++)
+        {
+        if (GUI_XvList(WDN, k + curai->base_id, &xv_format))
+            port = k + curai->base_id;
+        }
 
 
-	  curai++;
+      curai++;
       }
     //
     if (!port)
       {
-	  printf("[Xvideo] no port found\n");
-	  goto failed;
+      printf("[Xvideo] no port found\n");
+      goto failed;
       }
-#ifdef 	COLORSPACE_YV12
+#ifdef     COLORSPACE_YV12
     printf("[Xvideo] Xv YV12 found at port :%d, format : %" PRIi32"\n", port, xv_format);
 #else
     printf("[Xvideo] Xv YUY2 found at port :%d, format : %" PRIi32"\n", port, xv_format);
 #endif
 
     if (Success != XvGrabPort(WDN, port, 0))
-	goto failed;
+    goto failed;
     {
 
-	xv_port = port;
+    xv_port = port;
 /*
    Display *display,
    XvPortID port,
@@ -310,36 +310,36 @@ unsigned long num_adaptors;
 
         /* if we have to deal with colorkeying ... */
 
-	xvimage = XvShmCreateImage(WDN, xv_port,
-				   xv_format, 0, w, h, &Shminfo);
+    xvimage = XvShmCreateImage(WDN, xv_port,
+                   xv_format, 0, w, h, &Shminfo);
 
-	Shminfo.shmid = shmget(IPC_PRIVATE, xvimage->data_size,
-			       IPC_CREAT | 0777);
+    Shminfo.shmid = shmget(IPC_PRIVATE, xvimage->data_size,
+                   IPC_CREAT | 0777);
         if(Shminfo.shmid<=0)
         {
                 printf("shmget failed\n");
         }
-	Shminfo.shmaddr = (char *) shmat(Shminfo.shmid, 0, 0);
-	Shminfo.readOnly = False;
+    Shminfo.shmaddr = (char *) shmat(Shminfo.shmid, 0, 0);
+    Shminfo.readOnly = False;
         if(Shminfo.shmaddr==(char *)-1)
         {
                 printf("Shmat failed\n");
         }
-	xvimage->data = Shminfo.shmaddr;
-	XShmAttach(WDN, &Shminfo);
-	XSync(WDN, False);
-	erCode=shmctl(Shminfo.shmid, IPC_RMID, 0);
+    xvimage->data = Shminfo.shmaddr;
+    XShmAttach(WDN, &Shminfo);
+    XSync(WDN, False);
+    erCode=shmctl(Shminfo.shmid, IPC_RMID, 0);
         if(erCode)
         {
                 printf("Shmctl failed :%d\n",erCode);
         }
-	memset(xvimage->data, 0, xvimage->data_size);
+    memset(xvimage->data, 0, xvimage->data_size);
 
-	xv_xgc.graphics_exposures = False;
+    xv_xgc.graphics_exposures = False;
 
-	xv_gc = XCreateGC(xv_display, xv_win, 0L, &xv_xgc);
+    xv_gc = XCreateGC(xv_display, xv_win, 0L, &xv_xgc);
 
-	//ADM_assert(BadWindow!=XSelectInput(xv_display, xv_win, ExposureMask | VisibilityChangeMask));
+    //ADM_assert(BadWindow!=XSelectInput(xv_display, xv_win, ExposureMask | VisibilityChangeMask));
 
     }
     printf("[Xvideo] Xv init succeedeed\n");
@@ -364,22 +364,22 @@ uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
 //    if (formatValues)
 
 // this will run endless or segfault if the colorspace searched for isn't found
-//	for (k = 0; !f || (k < imgfmt); k++)
-	for (k = 0; !f && (k < imgfmt); k++)
-	  {
+//    for (k = 0; !f || (k < imgfmt); k++)
+    for (k = 0; !f && (k < imgfmt); k++)
+      {
 #ifdef VERBOSE_XV
-	      printf("[Xvideo]%d/%d: %" PRIx32" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
+          printf("[Xvideo]%d/%d: %" PRIx32" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
 #endif
 
-	      if (!strcmp(formatValues[k].guid, "YV12"))
-		{
-		    f = 1;
-		    *fmt = formatValues[k].id;
-		}
+          if (!strcmp(formatValues[k].guid, "YV12"))
+        {
+            f = 1;
+            *fmt = formatValues[k].id;
+        }
     }// else
-     //	f = 0; // f has already been initialized zero
-	if (formatValues) //checking if it's no NULL-pointer won't hurt
-	    XFree(formatValues);
+     //    f = 0; // f has already been initialized zero
+    if (formatValues) //checking if it's no NULL-pointer won't hurt
+        XFree(formatValues);
     return f;
 }
 /**
@@ -425,7 +425,7 @@ void GUI_XvBuildAtom(Display * dis, Atom * atom, char *string)
 */
 uint8_t GUI_XvRedraw( void )
 {
-	printf("Xv need redraw !\n");
+    printf("Xv need redraw !\n");
     return true;
 }
 #endif
