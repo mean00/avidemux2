@@ -301,13 +301,22 @@ set(ffmpeg_gnumake_executable ${GNUMAKE_EXECUTABLE})
 convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
 configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
 
-add_custom_command(OUTPUT
-						"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
-						"${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
-						"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
-						"${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
-						"${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
+add_custom_command(                OUTPUT          "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
 				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+
+MACRO(FF_ADD_SUBLIB lib)
+        add_custom_command(
+				   OUTPUT       "${lib}"	
+                                   DEPENDS 	"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
+				   COMMAND ${BASH_EXECUTABLE} -c echo "placeHolder")
+
+ENDMACRO(FF_ADD_SUBLIB lib)
+
+FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"       )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"   )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"   )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
+
 
 # Add and INSTALL libraries
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)

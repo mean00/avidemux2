@@ -40,16 +40,14 @@ rm -Rf ${MINGWDEV}/*
 rm -Rf ${MINGW}/Release
 mkdir -p ${MINGW}/Release
 export TOP=$PWD
+export PARAL="$O_PARAL"
 echo "Top dir : $TOP"
 echo "** CORE **"
 cd $TOP
-export PARAL=""
 Process buildMingwCore cross_mingw64_core
-export PARAL="$O_PARAL"
 echo "** QT4 **"
 cd $TOP
 Process buildMingwQt4 cross_mingw64_qt5
-export PARAL="$O_PARAL"
 Process buildMingwCli cross_mingw_cli 
 #echo "** GTK **"
 #cd $TOP
