@@ -21,8 +21,8 @@
 extern QWidget *QuiMainWindows;
 
 #define MAX_UNLOADED_MSG_LENGTH 400
-static QTranslator qtTranslator;
-static QTranslator avidemuxTranslator;
+static QTranslator *qtTranslator;
+static QTranslator *avidemuxTranslator;
 static QMap<QString, char*> *map = NULL;
 static bool translatorLoaded = false;
 
@@ -112,9 +112,12 @@ void loadTranslator(void)
 	QString appdir = ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
 #endif
         QString languageFile=QString(lang);
+
     int nbLoaded=0;
-	nbLoaded+=loadTranslation(&qtTranslator, appdir + "qt_" + languageFile);
-	nbLoaded+=loadTranslation(&avidemuxTranslator, appdir + "avidemux_" + languageFile);
+        qtTranslator=new QTranslator();
+        avidemuxTranslator=new QTranslator();
+	nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
+	nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
 	translatorLoaded = true;
     if(!nbLoaded) // Nothing to translate..
         return;
