@@ -398,6 +398,7 @@ decoderFFVDPAU::~decoderFFVDPAU()
 */
 bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
+    
     aprintf("==> uncompress %s\n",_context->codec->long_name);
     if(out->refType==ADM_HW_VDPAU)
     {

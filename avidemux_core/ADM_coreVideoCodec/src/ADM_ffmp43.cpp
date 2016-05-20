@@ -18,6 +18,7 @@
 #include "ADM_default.h"
 #include "ADM_ffmp43.h"
 #include "DIA_coreToolkit.h"
+#include "../ADM_hwAccel/include/ADM_hwAccel.h"
 
 extern "C"
 {
@@ -192,7 +193,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
             memset(_extraDataCopy,0,extraDataLen+FF_INPUT_BUFFER_PADDING_SIZE);
             memcpy(_extraDataCopy,extraData,extraDataLen);
     }
-  
+   hwDecoder=NULL;
 
 }
 
@@ -224,6 +225,8 @@ decoderFF::~decoderFF ()
       delete [] _extraDataCopy;
       _extraDataCopy=NULL;
   }
+  delete hwDecoder;
+  hwDecoder=NULL;
 }
 /**
  * 
@@ -318,6 +321,11 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
+  
+  if(hwDecoder)
+        return hwDecoder->uncompress(in,out);
+ 
+  
   if (decoderFF_params.showMv)
     {
       _context->debug_mv |= FF_SHOW;

@@ -25,10 +25,12 @@ typedef void (AV_FATAL_HANDLER)(const char *why,int fileno,const char *filewhere
 extern "C" {
 #include "libavcodec/avcodec.h"
 extern void av_setFatalHandler(AV_FATAL_HANDLER *func);
+extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt);
 }
 
 #include "ADM_codec.h"
 #include "ADM_paramList.h"
+#include "../ADM_hwAccel/include/ADM_hwAccel.h"
 
 /**
     \class decoderFF
@@ -59,6 +61,7 @@ protected:
   uint32_t  _gmc;
   uint32_t  _usingMT;
   uint32_t  _threads;
+  ADM_acceleratedDecoder *hwDecoder;
   
   uint8_t   _allowNull;
   uint32_t  frameType (void);
@@ -201,6 +204,8 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
   _context->debug |= FF_DEBUG_VIS_MB_TYPE + FF_DEBUG_VIS_QP;\
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
+  _context->opaque=this; \
+  _context->get_format=ADM_FFgetFormat; \
   if (_setBpp) {\
     _context->bits_per_coded_sample = _bpp;\
   }\
@@ -218,13 +223,13 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
   \
   if (avcodec_open2(_context, codec, NULL) < 0)  \
                       { \
-                                        printf("[lavc] Decoder init: " display" video decoder failed!\n"); \
+                                        ADM_info("[lavc] Decoder init: " display" video decoder failed!\n"); \
                                         GUI_Error_HIG("Codec","Internal error opening " display); \
                                         ADM_assert(0); \
                                 } \
                                 else \
                                 { \
-                                        printf("[lavc] Decoder init: " display" video decoder initialized! (%s)\n",codec->long_name); \
+                                        ADM_info("[lavc] Decoder init: " display" video decoder initialized! (%s)\n",codec->long_name); \
                                 } \
 }
 

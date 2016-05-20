@@ -6,6 +6,7 @@ ADM_rgb16.cpp
 ADM_uyvy.cpp
 ADM_codecSearch.cpp
 DIA_lavDecoder.cpp
+ADM_ffHwAccel.cpp
 )
 
 add_compiler_export_flags()
