@@ -35,7 +35,7 @@ class ADM_hwAccelEntry
 public:    
      const char             *name;
      virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)=0;
-     virtual                ADM_acceleratedDecoder *spawn( void )=0;     
+     virtual                ADM_acceleratedDecoder *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )=0;     
      virtual                ~ADM_hwAccelEntry()= 0;
 };
 }
@@ -46,7 +46,7 @@ class ADM_COREVIDEOCODEC6_EXPORT ADM_hwAccelManager
 {
 public:       
        static bool                registerDecoder(ADM_hwAccelEntry *);
-       static ADM_hwAccelEntry    *lookup(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt);
+       static ADM_hwAccelEntry    *lookup(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
        static ADM_acceleratedDecoder *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat );     
 };
 // EOF

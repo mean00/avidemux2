@@ -79,6 +79,7 @@ public:
 
                 decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
                 virtual ~ decoderFF ();
+                bool    setHwDecoder(ADM_acceleratedDecoder *h) {hwDecoder=h;return true;}
   virtual bool  dontcopy (void)
   {
     return true;
@@ -205,7 +206,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
   _context->workaround_bugs=1*FF_BUG_AUTODETECT +0*FF_BUG_NO_PADDING; \
   _context->error_concealment=3; \
   _context->opaque=this; \
-  _context->get_format=ADM_FFgetFormat; \
+  _context->get_format=ADM_FFgetFormat; \
   if (_setBpp) {\
     _context->bits_per_coded_sample = _bpp;\
   }\
