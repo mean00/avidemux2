@@ -120,18 +120,18 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
 
     //ADM_info("Getting surface %d\n",(int)surface);
     // Copy back the decoded image to our output ADM_image
-    aprintf("[&vdpau] Getting datas from surface %d\n",surface);
+    aprintf("[VDPAU] Getting datas from surface %d\n",surface);
  
     VdpStatus status=admVdpau::getDataSurface(surface,planes, stride );
     if(VDP_STATUS_OK!=status)
     {
-        ADM_error("[&vdpau] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
+        ADM_error("[VDPAU] Cannot get data from surface <%s>\n",admVdpau::getErrorString(status));
     }
     image->refType=ADM_HW_NONE;
     bool r=vdpauMarkSurfaceUnused(instance,cookie);
     if(r==false || status!=VDP_STATUS_OK) 
     {
-        ADM_warning("Cannot get &vdpau content from surface %d\n",(int)surface);
+        ADM_warning("Cannot get VDPAU content from surface %d\n",(int)surface);
         return false;
     }
     return true;
@@ -146,7 +146,7 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     vdpau_render_state * render=NULL;
     if(vdpau.freeQueue.size()==0)
     {
-        ADM_info("[&vdpau] No more available surface, creating a new one\n");
+        ADM_info("[VDPAU] No more available surface, creating a new one\n");
         render=new vdpau_render_state;
         memset(render,0,sizeof( vdpau_render_state));
         int widthToUse = (avctx->coded_width+ 1)  & ~1;
@@ -308,10 +308,9 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
             return ;
         }
               
-        _context->get_format      = vdpauGetFormat;
         _context->get_buffer2     = ADM_VDPAUgetBuffer;
         _context->draw_horiz_band = NULL;
-        _context->slice_flags     =0;        
+        //_context->slice_flags     =0;        
         ADM_info("Successfully setup hw accel\n");              
 }
 /**
@@ -385,7 +384,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture=true;
         out->Pts= (uint64_t)(frame->reordered_opaque);
-        ADM_info("[&vdpauDec] No picture \n");
+        ADM_info("[VDPAU] No picture \n");
         return false;
     }
     return readBackBuffer(frame,in,out);

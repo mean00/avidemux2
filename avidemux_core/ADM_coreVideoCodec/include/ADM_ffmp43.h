@@ -1,11 +1,8 @@
 /***************************************************************************
-                          ADM_ffmp43.h  -  description
-                             -------------------
-
-	Mpeg4 ****decoder******** using ffmpeg
-
-    begin                : Wed Sep 25 2002
-    copyright            : (C) 2002 by mean
+  \name    ADM_ffmp43.h 
+  \brief   Interface to libavcodec
+ 
+    copyright            : (C) 2002/2016 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -20,17 +17,25 @@
 #pragma once
 
 #include "ADM_coreVideoCodec6_export.h"
-typedef void (AV_FATAL_HANDLER)(const char *why,int fileno,const char *filewhereitcrashed);
-
-extern "C" {
+#include "ADM_codec.h"
+#include "ADM_paramList.h"
+extern "C" 
+{
 #include "libavcodec/avcodec.h"
+}
+#include "../ADM_hwAccel/include/ADM_hwAccel.h"
+
+extern "C"
+{
+typedef void (AV_FATAL_HANDLER)(const char *why,int fileno,const char *filewhereitcrashed);
 extern void av_setFatalHandler(AV_FATAL_HANDLER *func);
 extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt);
 }
-
-#include "ADM_codec.h"
-#include "ADM_paramList.h"
-#include "../ADM_hwAccel/include/ADM_hwAccel.h"
+/**
+ * 
+ */
+ADM_COREVIDEOCODEC6_EXPORT void ADM_lavInit(void);
+ADM_COREVIDEOCODEC6_EXPORT void ADM_lavDestroy(void);
 
 /**
     \class decoderFF
@@ -39,156 +44,108 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
 class ADM_COREVIDEOCODEC6_EXPORT decoderFF:public decoders
 {
 friend class ADM_acceleratedDecoderFF;
+public:
+            typedef struct 
+             {
+                     bool swapUv;
+                     bool showMv;
+             } decoderFF_param_t;    
+
 protected:
-
-    typedef struct 
-    {
-            bool swapUv;
-            bool showMv;
-    } decoderFF_param_t;    
-    
-    
-  bool      hurryUp;
-  bool      _setBpp;
-  bool      _setFcc;
-  int       codecId;
-  uint8_t   _refCopy;
-  uint32_t  _bpp;
-  AVCodecContext *_context;
-  uint8_t   *_extraDataCopy;
-  int        _extraDataLen;
-  uint32_t  _fcc;
-  AVFrame   *_frame;
-  uint32_t  _gmc;
-  uint32_t  _usingMT;
-  uint32_t  _threads;
-  ADM_acceleratedDecoderFF *hwDecoder;
-  
-  uint8_t   _allowNull;
-  uint32_t  frameType (void);
-  
-  uint8_t   clonePic (AVFrame * src, ADMImage * out);
-  void      decoderMultiThread ();
-  uint32_t  admFrameTypeFromLav (AVFrame *pic);
-	
-
-    decoderFF_param_t decoderFF_params;
     static const decoderFF_param_t defaultConfig;
     static const ADM_paramList decoderFF_param_template[];
 
-public:
+           uint8_t      _allowNull;
+           bool         hurryUp;
+           bool         _setBpp;
+           bool         _setFcc;
+           int          codecId;
+           uint8_t      _refCopy;
+           uint32_t     _bpp;
+           AVCodecContext *_context;
+           uint8_t      *_extraDataCopy;
+           int          _extraDataLen;
+           uint32_t     _fcc;
+           AVFrame      *_frame;
+           uint32_t     _gmc;
+           uint32_t     _usingMT;
+           uint32_t     _threads;
+           ADM_acceleratedDecoderFF *hwDecoder;
+           decoderFF_param_t decoderFF_params;
+   
 
-                decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-                virtual ~ decoderFF ();
-                bool    setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
-  virtual bool  dontcopy (void)
-  {
-    return true;
-  }
-  virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
-  virtual bool getConfiguration(CONFcouple **conf);
-  virtual bool resetConfiguration();
-  virtual bool setConfiguration(CONFcouple * conf);
-  virtual bool setParam (void);
-  virtual bool bFramePossible (void)
-  {
-    return false;
-  }
-  virtual bool decodeHeaderOnly (void);
-  virtual bool decodeFull (void);
-//  virtual uint32_t getSpecificMpeg4Info (void);
-  virtual uint8_t getPARWidth (void);
-  virtual uint8_t getPARHeight (void);
-  virtual bool    flush(void);
-  virtual const char *getDecoderName(void) {return "Lavcodec";}
-  // for hw accel
-  AVFrame *getFramePointer() {return _frame;}
-};
-
-class decoderFFDiv3:public decoderFF
-{
 protected:
+           uint32_t     frameType (void);
+           uint8_t      clonePic (AVFrame * src, ADMImage * out);
+           void         decoderMultiThread ();
+           uint32_t     admFrameTypeFromLav (AVFrame *pic);
+	
+
+
 public:
-  decoderFFDiv3 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+                        decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+        virtual         ~ decoderFF ();
+            bool        setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
+            ADM_acceleratedDecoderFF    *getHwDecoder() {return hwDecoder;}
+        virtual bool    dontcopy (void)
+        {
+          return true;
+        }
+        virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+        virtual bool getConfiguration(CONFcouple **conf);
+        virtual bool resetConfiguration();
+        virtual bool setConfiguration(CONFcouple * conf);
+        virtual bool setParam (void);
+        virtual bool bFramePossible (void)
+        {
+          return false;
+        }
+        virtual bool decodeHeaderOnly (void);
+        virtual bool decodeFull (void);
+      //  virtual uint32_t getSpecificMpeg4Info (void);
+        virtual uint8_t getPARWidth (void);
+        virtual uint8_t getPARHeight (void);
+        virtual bool    flush(void);
+        virtual const char *getDecoderName(void) 
+                          {
+                              if(hwDecoder)
+                                  return hwDecoder->getName();
+
+                              return "Lavcodec";
+                          }
+        // for hw accel
+        AVFrame *getFramePointer() {return _frame;}
 };
 
-class decoderFFMpeg4:public decoderFF
-{
-protected:
-public:
-        decoderFFMpeg4 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-  bool uncompress (ADMCompressedImage * in, ADMImage * out);
-  // mpeg4 can have B-frame
-  virtual bool bFramePossible (void)
-  {
-    return 1;
-  }
-};
-class decoderFFMpeg12:public decoderFF
-{
-protected:
-public:
-  decoderFFMpeg12 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-  // mpeg1/2 can have B-frame
-  virtual bool bFramePossible (void)
-  {
-    return 1;
-  }
+#define FF_SIMPLE_DECLARE(x,y) \
+        class x:public decoderFF \
+        {\
+            protected: \
+            public: \
+                    x (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp); \
+                    y \
+        };
 
-};
+FF_SIMPLE_DECLARE(decoderFFDiv3,)
+FF_SIMPLE_DECLARE(decoderFFDV,)
+FF_SIMPLE_DECLARE(decoderFFhuff,)
+FF_SIMPLE_DECLARE(decoderFF_ffhuff,)
+FF_SIMPLE_DECLARE(decoderFFPng,)
+FF_SIMPLE_DECLARE(decoderFFMpeg4, bool uncompress (ADMCompressedImage * in, ADMImage * out);
+                                // mpeg4 can have B-frame
+                                virtual bool bFramePossible (void)   {  return 1;   })
+FF_SIMPLE_DECLARE(decoderFFMpeg12,
+                                // mpeg1/2 can have B-frame
+                                virtual bool bFramePossible (void)   {  return 1;
+                                  })
+FF_SIMPLE_DECLARE(decoderFFH264,
+                                 virtual bool bFramePossible (void)   {    return true;    }
+                                bool   uncompress (ADMCompressedImage * in, ADMImage * out);
+                                )
 
-class decoderFFDV:public decoderFF
-{
-protected:
-public:
-  decoderFFDV (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-
-class decoderFFH264:public decoderFF
-{
-protected:
-  uint32_t _lowDelay;
-public:
-  decoderFFH264 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-  virtual bool bFramePossible (void)
-  {
-      return true;
-  }
-  bool   uncompress (ADMCompressedImage * in, ADMImage * out);
-};
-
-class decoderFFH265:public decoderFF
-{
-public:
-  decoderFFH265 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-  virtual bool bFramePossible (void)
-  {
-      return true;
-  }
-};
-
-class decoderFFhuff:public decoderFF
-{
-protected:
-public:
-  decoderFFhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-
-class decoderFF_ffhuff:public decoderFF
-{
-protected:
-public:
-  decoderFF_ffhuff (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
-};
-
-class decoderFFPng : public decoderFF
-{
-public:
-	decoderFFPng(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp);
-};
-
-ADM_COREVIDEOCODEC6_EXPORT void ADM_lavInit(void);
-ADM_COREVIDEOCODEC6_EXPORT void ADM_lavDestroy(void);
+FF_SIMPLE_DECLARE(decoderFFH265,
+                                 virtual bool bFramePossible (void)   {   return true;    }
+                                )
 
 
 #define FF_SHOW		(FF_DEBUG_VIS_MV_P_FOR+	FF_DEBUG_VIS_MV_B_FOR+FF_DEBUG_VIS_MV_B_BACK)
@@ -239,9 +196,6 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
 
 #define WRAP_Open(x)            {WRAP_Open_Template(avcodec_find_decoder,x,#x,x,;);}
 #define WRAP_OpenByName(x,y)    {WRAP_Open_Template(avcodec_find_decoder_by_name,#x,#x,y,;);}
-
-
-
 
 
 // EOF

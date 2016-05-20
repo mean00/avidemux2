@@ -90,7 +90,9 @@ bool vdpauCleanup(void)
 */
 int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
-    decoderFFVDPAU *dec=(decoderFFVDPAU *)avctx->opaque;
+    decoderFF *ff=(decoderFF *)avctx->opaque;
+    decoderFFVDPAU *dec=(decoderFFVDPAU *)ff->getHwDecoder();
+    ADM_assert(dec);
     return dec->getBuffer(avctx,pic);
 }
 
@@ -102,9 +104,11 @@ int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 */
  void ADM_VDPAUreleaseBuffer(void *opaque, uint8_t *data)
 {
-      decoderFFVDPAU *dec=(decoderFFVDPAU *)opaque;
-      struct vdpau_render_state *rdr=( struct vdpau_render_state  *)data;
-      dec->releaseBuffer(rdr);
+    
+    decoderFFVDPAU *dec=(decoderFFVDPAU *)opaque;
+    ADM_assert(dec);
+    struct vdpau_render_state *rdr=( struct vdpau_render_state  *)data;
+    dec->releaseBuffer(rdr);
 }
 
 

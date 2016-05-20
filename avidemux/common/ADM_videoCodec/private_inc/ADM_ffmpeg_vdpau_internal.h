@@ -36,7 +36,6 @@ typedef struct
  *  \class decoderFFVDPAU
  */
 
-
 class decoderFFVDPAU:public ADM_acceleratedDecoderFF
 {
 protected:
@@ -56,6 +55,6 @@ public:
                                 ~decoderFFVDPAU();
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
                     bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);    
-    virtual const   char        *getDecoderName(void)        {return "VDPAU";}
+    virtual const   char        *getName(void)        {return "VDPAU";}
                     
 };

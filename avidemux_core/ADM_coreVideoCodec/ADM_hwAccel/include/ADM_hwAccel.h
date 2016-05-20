@@ -29,6 +29,7 @@ public:
                         _context=NULL;
                         _parent=NULL;
                     }
+        virtual const char      *getName()=0;
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
 protected:
                 struct AVCodecContext *_context;
