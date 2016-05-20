@@ -52,7 +52,7 @@ ADM_hwAccelEntry    *ADM_hwAccelManager::lookup(struct AVCodecContext *avctx,  c
 /**
  * \fn spawn
  */
-ADM_acceleratedDecoder *ADM_hwAccelManager::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat )
+ADM_acceleratedDecoderFF *ADM_hwAccelManager::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat )
 {
     ADM_hwAccelEntry *e=lookup(avctx,fmt,outputFormat);
     ADM_assert(e);
@@ -82,5 +82,4 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
     ADM_info("No Hw Accel for that\n");
     return avcodec_default_get_format(avctx,fmt);
 }
-
 // EOF

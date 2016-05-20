@@ -31,7 +31,7 @@ extern "C" {
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
-#include "ADM_videoCodec/include/ADM_ffmpeg_vdpau_internal.h"
+#include "ADM_videoCodec/private_inc/ADM_ffmpeg_vdpau_internal.h"
 static VdpOutputSurface     surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
 static VdpVideoSurface      input=VDP_INVALID_HANDLE;
 static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;

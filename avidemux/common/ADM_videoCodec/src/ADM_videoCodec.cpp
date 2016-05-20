@@ -47,25 +47,6 @@ decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLe
   decoders *fromPlugin=tryCreatingVideoDecoder(w,h,fcc,extraLen,extraData,bpp);
   if(fromPlugin) return fromPlugin;
   
-#if defined(USE_VDPAU) 
-  ADM_info("Searching decoder in vdpau (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isH264Compatible (fcc) || isMpeg12Compatible(fcc) || 1*isVC1Compatible(fcc))
-    {
-        ADM_info("This is vdpau compatible\n");
-        if(true==vdpauUsable())
-        {
-            decoderFFVDPAU *dec=new decoderFFVDPAU (w,h,fcc,extraLen,extraData,bpp);
-            if(dec->initializedOk()==true)
-                return (decoders *) (dec);
-            else
-            {
-                GUI_Error_HIG("VDPAU","Cannot initialize VDPAU, make sure it is not already used by another application.\nSwitching to default decoder.");
-                delete dec;
-            }
-        }else ADM_info("Vdpau is not active\n");
-    }        
-#endif // VDPAU
-  
 
 #if defined(USE_XVBA) 
   ADM_info("Searching decoder in xvba (%d x %d, extradataSize:%d)...\n",w,h,extraLen);

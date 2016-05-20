@@ -13,16 +13,26 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-
+#include "ADM_coreVideoCodec6_export.h"
+#include "ADM_compressedImage.h"
 /**
  * 
  */
-class ADM_COREVIDEOCODEC6_EXPORT ADM_acceleratedDecoder
+class decoderFF;
+class ADM_COREVIDEOCODEC6_EXPORT ADM_acceleratedDecoderFF
 {
 public:
-                     ADM_acceleratedDecoder();
-        virtual      ~ADM_acceleratedDecoder();
-        virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
+                     ADM_acceleratedDecoderFF(struct AVCodecContext *avctx,decoderFF *p) 
+                     {_context=avctx;_parent=p;};
+        virtual      ~ADM_acceleratedDecoderFF()
+                    {
+                        _context=NULL;
+                        _parent=NULL;
+                    }
+        virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
+protected:
+                struct AVCodecContext *_context;
+                decoderFF *_parent;
 };
 
 /**
@@ -35,8 +45,8 @@ class ADM_hwAccelEntry
 public:    
      const char             *name;
      virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)=0;
-     virtual                ADM_acceleratedDecoder *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )=0;     
-     virtual                ~ADM_hwAccelEntry()= 0;
+     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )=0;     
+     virtual                ~ADM_hwAccelEntry() {};
 };
 }
 /**
@@ -47,6 +57,8 @@ class ADM_COREVIDEOCODEC6_EXPORT ADM_hwAccelManager
 public:       
        static bool                registerDecoder(ADM_hwAccelEntry *);
        static ADM_hwAccelEntry    *lookup(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
-       static ADM_acceleratedDecoder *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat );     
+       static ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat );     
 };
+
+
 // EOF

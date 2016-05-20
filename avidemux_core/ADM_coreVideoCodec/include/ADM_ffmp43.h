@@ -38,6 +38,7 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
 */
 class ADM_COREVIDEOCODEC6_EXPORT decoderFF:public decoders
 {
+friend class ADM_acceleratedDecoderFF;
 protected:
 
     typedef struct 
@@ -61,14 +62,14 @@ protected:
   uint32_t  _gmc;
   uint32_t  _usingMT;
   uint32_t  _threads;
-  ADM_acceleratedDecoder *hwDecoder;
+  ADM_acceleratedDecoderFF *hwDecoder;
   
   uint8_t   _allowNull;
   uint32_t  frameType (void);
-  uint32_t  admFrameTypeFromLav (AVFrame *pic);
+  
   uint8_t   clonePic (AVFrame * src, ADMImage * out);
   void      decoderMultiThread ();
-
+  uint32_t  admFrameTypeFromLav (AVFrame *pic);
 	
 
     decoderFF_param_t decoderFF_params;
@@ -79,7 +80,7 @@ public:
 
                 decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
                 virtual ~ decoderFF ();
-                bool    setHwDecoder(ADM_acceleratedDecoder *h) {hwDecoder=h;return true;}
+                bool    setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
   virtual bool  dontcopy (void)
   {
     return true;
@@ -100,6 +101,8 @@ public:
   virtual uint8_t getPARHeight (void);
   virtual bool    flush(void);
   virtual const char *getDecoderName(void) {return "Lavcodec";}
+  // for hw accel
+  AVFrame *getFramePointer() {return _frame;}
 };
 
 class decoderFFDiv3:public decoderFF

@@ -19,27 +19,43 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include "../ADM_hwAccel/include/ADM_hwAccel.h"
 #include <vector>
-extern "C" {
-static int ADM_VDPAUgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
-static void ADM_VDPAUreleaseBuffer(void *opaque, uint8_t *data);
-}
-
+/**
+ */
+struct AVVDPAUContext;
 /**
  */
 typedef struct 
 {
         std::vector <vdpau_render_state *>freeQueue;
         std::vector <vdpau_render_state *>fullQueue;
-
-
 }vdpauContext;
 
-#define VDPAU ((vdpauContext *)vdpau)
+/**
+ *  \class decoderFFVDPAU
+ */
 
-#define WRAP_Open_TemplateVdpauByName(argz,codecid) \
-    WRAP_Open_Template(avcodec_find_decoder_by_name,argz,,codecid,{\
-            _context->opaque          = this;\
-            _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;\
-            _context->get_format      = vdpauGetFormat;})
 
+class decoderFFVDPAU:public ADM_acceleratedDecoderFF
+{
+protected:
+                    bool            alive;
+                    vdpauContext    vdpau;
+                    AVVDPAUContext *avVdCtx;
+protected:
+                    bool        initVdpContext();
+                    uint32_t    admFrameTypeFromLav (AVFrame *pic);
+public:     // Callbacks
+                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
+                    void        releaseBuffer(struct vdpau_render_state *rdr);
+                    bool        initFail(void) {alive=false;return true;}
+public:
+            // public API
+                                decoderFFVDPAU (AVCodecContext *avctx,decoderFF *parent);
+                                ~decoderFFVDPAU();
+    virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
+                    bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);    
+    virtual const   char        *getDecoderName(void)        {return "VDPAU";}
+                    
+};

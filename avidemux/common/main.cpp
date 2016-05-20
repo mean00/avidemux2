@@ -107,6 +107,8 @@ int main(int _argc, char *_argv[]);
 }
 #endif // main
 
+extern bool initVDPAUDecoder(void);
+
 int main(int _argc, char *_argv[])
 {
 	ADM_initBaseDir(isPortableMode(_argc, _argv));
@@ -380,7 +382,7 @@ int startAvidemux(int argc, char *argv[])
     AVDM_audioInit();
 
     
-
+    initVDPAUDecoder();
     UI_RunApp();
     cleanUp();
 
