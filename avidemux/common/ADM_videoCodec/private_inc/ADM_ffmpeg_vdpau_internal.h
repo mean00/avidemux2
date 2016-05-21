@@ -19,7 +19,7 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-#include "../ADM_hwAccel/include/ADM_hwAccel.h"
+#include "ADM_hwAccel.h"
 #include <vector>
 /**
  */

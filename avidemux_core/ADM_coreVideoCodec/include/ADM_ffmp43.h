@@ -23,7 +23,7 @@ extern "C"
 {
 #include "libavcodec/avcodec.h"
 }
-#include "../ADM_hwAccel/include/ADM_hwAccel.h"
+#include "ADM_hwAccel.h"
 
 extern "C"
 {
