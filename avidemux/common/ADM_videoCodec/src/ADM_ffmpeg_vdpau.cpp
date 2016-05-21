@@ -39,7 +39,6 @@ extern "C" {
 #include "../private_inc/ADM_ffmpeg_vdpau_internal.h"
 #include "prefs.h"
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
-#include "ADM_codecVdpau.h"
 #include "ADM_threads.h"
 
 #if defined(__sun__)

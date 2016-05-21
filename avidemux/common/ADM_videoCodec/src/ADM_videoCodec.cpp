@@ -20,9 +20,6 @@
 #include "ADM_codec.h"
 #include "ADM_ffmp43.h"
 #include "fourcc.h"
-#include "ADM_codecVdpau.h"
-#include "ADM_codecXvba.h"
-#include "ADM_codecLibVA.h"
 #include "DIA_coreToolkit.h"
 
 #if defined(USE_VPX)
