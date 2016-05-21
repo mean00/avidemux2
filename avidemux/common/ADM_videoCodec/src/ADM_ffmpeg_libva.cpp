@@ -20,7 +20,6 @@
 #include "BVector.h"
 #include "ADM_default.h"
 
-#ifdef USE_LIBVA
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
@@ -35,7 +34,7 @@ extern "C" {
 #include "ADM_ffmpeg_libva_internal.h"
 #include "prefs.h"
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
-#include "ADM_codecLibVA.h"
+#include "../private_inc/ADM_codecLibVA.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"
 
@@ -77,7 +76,6 @@ bool libvaProbe(void)
     void *draw;
     draw=UI_getDrawWidget();
     UI_getWindowInfo(draw,&xinfo );
-#ifdef USE_LIBVA
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_LIBVA)==false)
     {
         GUI_Error_HIG("Error","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch");
@@ -87,8 +85,6 @@ bool libvaProbe(void)
     if(false==admLibVA::init(&xinfo)) return false;
     libvaWorking=true;
     return true;
-#endif
-    return false;
 }
 
 //    out->refDescriptor.refCookie=FFLIBVADecode;
@@ -97,12 +93,10 @@ bool libvaProbe(void)
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
 */
-static bool libvaMarkSurfaceUsed(void *v, void * cookie)
+static bool libvaMarkSurfaceUsed(ADM_vaSurface *s, decoderFFLIBVA *d)
 {
-    ADM_vaSurface    *img=(ADM_vaSurface *)v;
-    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     imageMutex.lock();
-    img->refCount++;
+    s->refCount++;
     imageMutex.unlock();
     return true;
     
@@ -111,43 +105,74 @@ static bool libvaMarkSurfaceUsed(void *v, void * cookie)
     \fn markSurfaceUnused
     \brief mark the surfave as unused by the caller. Can be called multiple time.
 */
-static bool libvaMarkSurfaceUnused(void *v, void * cookie)
+static bool libvaMarkSurfaceUnused(ADM_vaSurface *img, decoderFFLIBVA * dec)
 {
-    ADM_vaSurface    *img=(ADM_vaSurface *)v;
-    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
-    imageMutex.lock();
-    img->refCount--;
-    aprintf("Ref count is now %d\n",img->refCount);
-    if(!img->refCount)
-    {
-        decoder->reclaimImage(img);
-    }
-    imageMutex.unlock();
-    
+        
+   imageMutex.lock();
+   img->refCount--;
+   aprintf("Ref count is now %d\n",img->refCount);
+   if(!img->refCount)
+   {
+        dec->releaseBuffer(img);
+   }
+   imageMutex.unlock();
    return true;
 }
+ 
 /**
- * \fn reclaimImage
- * \brief must be called with mutex held
- * @param image
- * @param instance
- * @param cookie
- * @return 
- */
-bool    decoderFFLIBVA::reclaimImage(ADM_vaSurface *img)
+    \fn ADM_VDPAUgetBuffer
+    \brief trampoline to get a VDPAU surface
+*/
+int ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
-        freeSurfaceQueue.append(img);
-        return true;
+    decoderFF *ff=(decoderFF *)avctx->opaque;
+    decoderFFLIBVA *dec=(decoderFFLIBVA *)ff->getHwDecoder();
+    ADM_assert(dec);
+    return dec->getBuffer(avctx,pic);
+}
+
+/**
+ * \fn ADM_XVBAreleaseBuffer
+ * @param avctx
+ * @param pic
+ */
+void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
+{
+   decoderFFLIBVA *dec=(decoderFFLIBVA *)opaque;
+   ADM_assert(dec);
+   VASurfaceID   surface=(VASurfaceID )(uintptr_t)data;
+#if 0
+   ADM_assert(admSurface->surface==surface);
+   dec->releaseBuffer(avctx,admSurface);
+#endif
+}
+
+/**
+    \fn getBuffer
+    \brief returns a VDPAU render masquerading as a AVFrame
+*/
+int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
+{
+        
+    imageMutex.lock();
+    ADM_assert(!vaPool.freeSurfaceQueue.empty());
+    ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
+    vaPool.freeSurfaceQueue.popFront();
+    imageMutex.unlock();
+    libvaMarkSurfaceUsed(s,this);   
+    aprintf("Alloc Buffer : 0x%llx\n",s);
+    pic->data[0]=(uint8_t *)s;
+    pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
+    pic->reordered_opaque= avctx->reordered_opaque;
+    return 0;
 }
 /**
     \fn vdpauRefDownload
     \brief Convert a VDPAU image to a regular image
 */
 
-static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
+static bool libvaRefDownload(ADMImage *image, ADM_vaSurface *img, decoderFFLIBVA *decoder)
 {
-    ADM_vaSurface    *img=(ADM_vaSurface *)instance;
-    decoderFFLIBVA *decoder=(decoderFFLIBVA *)cookie;
     return        img->toAdmImage(image);
 }
 
@@ -158,44 +183,41 @@ bool libvaCleanup(void)
 {
    return admLibVA::cleanup();
 }
-/**
- * 
- * @param w
- * @param h
- * @param fcc
- * @param extraDataLen
- * @param extraData
- * @param bpp
- */
-static enum AVPixelFormat ADM_LIBVA_getFormat( struct AVCodecContext * avctx , const AVPixelFormat * fmt)
-{
-   const PixelFormat * cur = fmt;
-   while(*cur != AV_PIX_FMT_NONE)
-   {
-       if(*cur==AV_PIX_FMT_VAAPI_VLD) 
-       {
-           aprintf(">---------->Match\n");
-           return AV_PIX_FMT_VAAPI_VLD;
-       }
-       cur++;
-   }
-   ADM_warning(">---------->No LIBVA colorspace\n");
-   return AV_PIX_FMT_NONE;
 
-    
-}
+
 /**
- * 
- * @param fcc
+ * \fn lookupBySurfaceId
+ * @param 
  * @return 
  */
-bool        decoderFFLIBVA::fccSupported(uint32_t fcc)
+ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
 {
-    if(isH264Compatible(fcc)) return true;
-    //if(isMpeg12Compatible(fcc)) return true;
-    //        if(isVC1Compatible(fcc))
-    return false;
+    imageMutex.lock();
+    int n=vaPool.allSurfaceQueue.size();
+    for(int i=0;i<n;i++)
+        if(vaPool.allSurfaceQueue[i]->surface==id)
+        {
+            imageMutex.unlock();
+            return vaPool.allSurfaceQueue[i];
+        }
+    imageMutex.unlock();
+    ADM_warning("Lookup a non existing surface\n");
+    ADM_assert(0);
+    return NULL;
+    
 }
+  
+
+
+/**
+    \fn releaseBuffer
+*/
+void decoderFFLIBVA::releaseBuffer(ADM_vaSurface *s)
+{
+  libvaMarkSurfaceUnused(s,this);
+  
+}
+
 /**
  * 
  * @param w
@@ -205,21 +227,89 @@ bool        decoderFFLIBVA::fccSupported(uint32_t fcc)
  * @param extraData
  * @param bpp
  */
-decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, 
-        uint8_t *extraData,uint32_t bpp)
-:decoderFF (w,h,fcc,extraDataLen,extraData,bpp)
+static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id)
+{
+    AVHWAccel *hw=av_hwaccel_next(NULL);
+    
+    while(hw)
+    {
+        ADM_info("Trying %s, %d : %d, codec =%d : %d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
+        if (hw->pix_fmt == AV_PIX_FMT_VAAPI_VLD && id==hw->id)
+            return hw;
+        hw=av_hwaccel_next(hw);
+    }
+    return NULL;
+}
+
+extern "C"
+{
+
+static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
+{
+    int i;
+    ADM_info("[vdpau]: GetFormat\n");
+    AVCodecID id=AV_CODEC_ID_NONE;
+    AVPixelFormat c;
+    AVPixelFormat outPix;
+    for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
+    {
+        c=fmt[i];
+        ADM_info("[vdpau]: Evaluating %d\n",c);
+        if(c!=AV_PIX_FMT_VAAPI_VLD) continue;
+#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
+        switch(avctx->codec_id)
+        {
+            FMT_V_CHECK(H264,H264)
+            FMT_V_CHECK(MPEG1VIDEO,MPEG1)
+            FMT_V_CHECK(MPEG2VIDEO,MPEG2)
+            FMT_V_CHECK(WMV3,WMV3)
+            FMT_V_CHECK(VC1,VC1)
+            default: 
+                continue;
+                break;
+        }
+        break;
+    }
+    if(id==AV_CODEC_ID_NONE)
+    {
+        return AV_PIX_FMT_NONE;
+    }
+    // Finish intialization of Vdpau decoder
+    const AVHWAccel *accel=parseHwAccel(outPix,id);
+    if(accel)
+    {
+        ADM_info("Found matching hw accelerator : %s\n",accel->name);
+        ADM_info("Successfully setup hw accel\n");
+        return AV_PIX_FMT_VAAPI_VLD;
+    }
+    return AV_PIX_FMT_NONE;
+}
+}
+
+/**
+ * 
+ * @param w
+ * @param h
+ * @param fcc
+ * @param extraDataLen
+ * @param extraData
+ * @param bpp
+ */
+decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
+: ADM_acceleratedDecoderFF(avctx,parent)
 {
     
     VASurfaceID sid[ADM_MAX_SURFACE+1];
-    
     alive=false;
-    va_context=NULL;
-    scratch=new ADMImageRef(w,h);
+    va_context=NULL;    
     
+#if 0    
     // Allocate 17 surfaces, enough for the moment
+    
     nbSurface=ADM_MAX_SURFACE;
     for(int i=0;i<nbSurface;i++)
     {
+
         surfaces[i]=admLibVA::allocateSurface(w,h);
         if(surfaces[i]==VA_INVALID)
         {
@@ -235,52 +325,36 @@ decoderFFLIBVA::decoderFFLIBVA(uint32_t w, uint32_t h,uint32_t fcc, uint32_t ext
     }
     ADM_info("Preallocated %d surfaces\n",nbSurface);
     // Linearize surface
-    
-    libva=admLibVA::createDecoder(w,h,nbSurface,sid);
-    if(VA_INVALID==libva)
-    {
-        ADM_warning("Cannot create libva decoder\n");
-        return;
-    }
-    
+#endif        
     va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
-    
-    if(!admLibVA::fillContext(va_context))
+#if 0
+      _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;           
+        AVVDPAUContext *v= av_alloc_vdpaucontext();;
+        _context->hwaccel_context = v;
+        v->render=NULL;
+        v->decoder=VDP_INVALID_HANDLE; 
+        
+        if(0>av_vdpau_bind_context(_context, (VdpDevice)(uint64_t) admVdpau::getVdpDevice(),
+                          vdpGetProcAddressWrapper, AV_HWACCEL_FLAG_IGNORE_LEVEL))
+        {
+             ADM_error("Cannot bind\n");
+                return false;
+        }
+        ADM_info("Init VDP context ok\n");
+        return true;
+        if(!admLibVA::fillContext(va_context))
     {
         ADM_warning("Cannot get va context initialized for libavcodec\n");
         return ;
     }
-    va_context->context_id=libva;
-   
+#endif
     
-    if(isH264Compatible(fcc))
-    {
-             WRAP_Open_TemplateLibVAByName(CODEC_ID_H264);
-    }else
-    {
-        if(isMpeg12Compatible(fcc))
-        {
-            WRAP_Open_TemplateLibVAByName(CODEC_ID_MPEG2VIDEO);
-        }
-        else
-        {
-            if(isVC1Compatible(fcc))
-            {
-                WRAP_Open_TemplateLibVAByName(CODEC_ID_VC1);
-            }
-            else
-            {
-                GUI_Error_HIG("Error","LIBVA does not support this, configuration error");
-                ADM_assert(0);
-            }
-        }
-    }
-    nbSurface=0;
-   
-      b_age = ip_age[0] = ip_age[1] = 256*256*256*64;
-     alive=true;
-     ADM_warning("Libva decoder created.\n");
+    va_context->context_id=libva;  
+    alive=true;
+    _context->get_buffer2     = ADM_LIBVAgetBuffer;
+    _context->draw_horiz_band = NULL;
+    ADM_info("Successfully setup LIBVA hw accel\n");             
 }
 
 /**
@@ -296,26 +370,24 @@ decoderFFLIBVA::~decoderFFLIBVA()
         _context=NULL;
     }
     imageMutex.lock();
-    int m=this->allSurfaceQueue.size();
-    int n=freeSurfaceQueue.size();
+    int m=vaPool.allSurfaceQueue.size();
+    int n=vaPool.freeSurfaceQueue.size();
     if(n!=m)
     {
         ADM_warning("Some surfaces are not reclaimed! (%d/%d)\n",n,m);
     }
     for(int i=0;i<n;i++)
     {
-        delete freeSurfaceQueue[i];
+        delete vaPool.freeSurfaceQueue[i];
     }
-    freeSurfaceQueue.clear();
+    vaPool.freeSurfaceQueue.clear();
     imageMutex.unlock();
     
     nbSurface=0;
     if(libva!=VA_INVALID)
         admLibVA::destroyDecoder(libva);
     libva=VA_INVALID;
-
-    if(scratch) delete scratch;
-    scratch=NULL;    
+ 
     
     if(va_context)
     {
@@ -332,145 +404,81 @@ decoderFFLIBVA::~decoderFFLIBVA()
  */
 bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-    // First let ffmpeg prepare datas...
-
-    aprintf("[LIBVA]>-------------uncompress>\n");
-    //printf("Incoming Pts=%s\n",ADM_us2plain(in->demuxerPts));
-    if(!decoderFF::uncompress (in, scratch))
+      
+    aprintf("==> uncompress %s\n",_context->codec->long_name);
+    if(out->refType==ADM_HW_LIBVA)
     {
-        ADM_warning("[LibVA] No data\n ");
+            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refCookie;
+            libvaMarkSurfaceUnused(img,this);
+            out->refType=ADM_HW_NONE;
+    }
+
+    if (!in->dataLength )	// Null frame, silently skipped
+    {
+        out->_noPicture = 1;
+        out->Pts=ADM_COMPRESSED_NO_PTS;
+        ADM_info("[LibVa] Nothing to decode -> no Picture\n");
+        return true;
+    }
+
+   // Put a safe value....
+    out->Pts=in->demuxerPts;
+    _context->reordered_opaque=in->demuxerPts;
+    int got_picture;
+    AVPacket pkt;
+    av_init_packet(&pkt);
+    pkt.data=in->data;
+    pkt.size=in->dataLength;
+    if(in->flags&AVI_KEY_FRAME)
+        pkt.flags=AV_PKT_FLAG_KEY;
+    else
+        pkt.flags=0;
+    
+    AVFrame *frame=_parent->getFramePointer();
+    ADM_assert(frame);
+    int ret = avcodec_decode_video2 (_context, frame, &got_picture, &pkt);
+    
+    if(ret<0)
+    {
+        char er[2048]={0};
+        av_make_error_string(er, sizeof(er)-1, ret);
+        ADM_warning("Error %d in lavcodec (%s)\n",ret,er);
         return false;
     }
-    //printf("Out PTs =%s\n",ADM_us2plain(out->Pts));
-    uint64_t p=(uint64_t )scratch->GetReadPtr(PLANAR_Y);
-    VASurfaceID id=(VASurfaceID)p;
-    out->Pts=scratch->Pts;
-    out->flags=scratch->flags;
-    
-    ADM_vaSurface *img=lookupBySurfaceId(id);
-    
-    out->refType=ADM_HW_LIBVA;
-    out->refDescriptor.refCookie=this;
-    out->refDescriptor.refInstance=img;
-    out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
-    out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
-    out->refDescriptor.refDownload=libvaRefDownload;
-    aprintf("uncompress : Got surface =0x%x\n",id);
-    //printf("Out Dts =%s,flags =%x\n",ADM_us2plain(out->Pts),out->flags);
-    return true;
-    
+    if(frame->pict_type==AV_PICTURE_TYPE_NONE)
+    {
+        out->_noPicture=true;
+        out->Pts= (uint64_t)(frame->reordered_opaque);
+        ADM_info("[VDPAU] No picture \n");
+        return false;
+    }
+    return readBackBuffer(frame,in,out);  
 }
 /**
- * \fn lookupBySurfaceId
- * @param 
+ * 
+ * @param decodedFrame
+ * @param in
+ * @param out
  * @return 
  */
-ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
+bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
-    imageMutex.lock();
-    int n=allSurfaceQueue.size();
-    for(int i=0;i<n;i++)
-        if(allSurfaceQueue[i]->surface==id)
-        {
-            imageMutex.unlock();
-            return allSurfaceQueue[i];
-        }
-    imageMutex.unlock();
-    ADM_warning("Lookup a non existing surface\n");
-    ADM_assert(0);
-    return NULL;
-    
+#if 0
+   // VdpSurface *surface=decodedFrame->data[3];
+    struct vdpau_render_state *rndr = (struct vdpau_render_state *)decodedFrame->data[0];
+    ADM_assert(rndr);
+    aprintf("Decoding ===> Got surface = %d\n",rndr->surface);
+    out->refType=ADM_HW_VDPAU;
+    out->refDescriptor.refCookie=(void *)rndr;
+    out->refDescriptor.refInstance  =&vdpau;
+    out->refDescriptor.refMarkUsed  =libvaMarkSurfaceUsed;
+    out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
+    out->refDescriptor.refDownload  =vdpauRefDownload;
+    vdpauMarkSurfaceUsed(&vdpau,(void *)rndr);
+#endif    
+    uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
+    out->Pts= (uint64_t)(pts_opaque);    
+    out->flags=admFrameTypeFromLav(decodedFrame);
+    return true;
 }
-    
-    
-    
-/**
-    \fn ADM_VDPAUgetBuffer
-    \brief trampoline to get a VDPAU surface
-*/
-int ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic)
-{
-    decoderFFLIBVA *dec=(decoderFFLIBVA *)avctx->opaque;
-    return dec->getBuffer(avctx,pic);
-}
-/**
- * \fn ADM_XVBAreleaseBuffer
- * @param avctx
- * @param pic
- */
-void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic)
-{
-   decoderFFLIBVA *dec=(decoderFFLIBVA *)avctx->opaque;
-   return dec->releaseBuffer(avctx,pic);
-}
-
-
-
-/**
-    \fn releaseBuffer
-*/
-void decoderFFLIBVA::releaseBuffer(AVCodecContext *avctx, AVFrame *pic)
-{
-  uint64_t p=(uint64_t )pic->data[0];
-  VASurfaceID s=(VASurfaceID)p;
-  decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
-    
-  ADM_vaSurface *i=lookupBySurfaceId(s);
-  
-  aprintf("Release Buffer : 0x%llx\n",s);
-  
-  for(int i=0; i<4; i++)
-  {
-    pic->data[i]= NULL;
-  }
-  
-  libvaMarkSurfaceUnused(i,this);
-  
-}
-/**
-    \fn getBuffer
-    \brief returns a VDPAU render masquerading as a AVFrame
-*/
-int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
-{
-    
-    decoderFFLIBVA *x=(decoderFFLIBVA *)avctx->opaque;
-    
-    imageMutex.lock();
-    ADM_assert(!freeSurfaceQueue.empty());
-    ADM_vaSurface *s= x->freeSurfaceQueue[0];
-    x->freeSurfaceQueue.popFront();
-    imageMutex.unlock();
-    libvaMarkSurfaceUsed(s,this);
-    
-    aprintf("Alloc Buffer : 0x%llx\n",s);
-    uint8_t *p=(uint8_t *)s->surface;
-    pic->data[0]=p;
-    pic->data[1]=p;
-    pic->data[2]=p;
-    pic->data[3]=p;
-    pic->linesize[0]=0;
-    pic->linesize[1]=0;
-    pic->linesize[2]=0;
-    pic->linesize[3]=0;
-    pic->type=FF_BUFFER_TYPE_USER;
-    pic->reordered_opaque= avctx->reordered_opaque;
- // I dont really understand what it is used for ....
-    if(pic->reference)
-    {
-        ip_age[0]=ip_age[1]+1;
-        ip_age[1]=1;
-        b_age++;
-    }else
-    {
-        ip_age[0]++;
-        ip_age[1]++;
-        b_age=1;
-    }    
-    return 0;
-}
-
-
-
-#endif
 // EOF

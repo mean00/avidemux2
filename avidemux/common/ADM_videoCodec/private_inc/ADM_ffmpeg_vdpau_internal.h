@@ -44,7 +44,6 @@ protected:
                     AVVDPAUContext *avVdCtx;
 protected:
                     bool        initVdpContext();
-                    uint32_t    admFrameTypeFromLav (AVFrame *pic);
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(struct vdpau_render_state *rdr);

@@ -40,49 +40,10 @@ decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc,uint32_t 
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, 
             uint8_t * extraData,uint32_t bpp)
 {
-  ADM_info("\nSearching decoder in plugins\n");
-  decoders *fromPlugin=tryCreatingVideoDecoder(w,h,fcc,extraLen,extraData,bpp);
-  if(fromPlugin) return fromPlugin;
-  
-
-#if defined(USE_XVBA) 
-  ADM_info("Searching decoder in xvba (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if (isH264Compatible (fcc) )
-    {
-        ADM_info("This is xvba compatible\n");
-        if(true==xvbaUsable())
-        {
-            decoderFFXVBA *dec=new decoderFFXVBA (w,h,fcc,extraLen,extraData,bpp);
-            if(dec->initializedOk()==true)
-                return (decoders *) (dec);
-            else
-            {
-                GUI_Error_HIG("XVBA","Cannot initialize XVBA, make sure it is not already used by another application.\nSwitching to default decoder.");
-                delete dec;
-            }
-        }else ADM_info("XVBA is not active\n");
-    }        
-#endif // XVBA  
-#if defined(USE_LIBVA) 
-  ADM_info("Searching decoder in libva (%d x %d, extradataSize:%d)...\n",w,h,extraLen);
-  if(decoderFFLIBVA::fccSupported(fcc))
-  {
-        ADM_info("This is libva compatible\n");
-        if(true==libvaUsable())
-        {
-            decoderFFLIBVA *dec=new decoderFFLIBVA (w,h,fcc,extraLen,extraData,bpp);
-            if(dec->initializedOk()==true)
-                return (decoders *) (dec);
-            else
-            {
-                GUI_Error_HIG("LIBVA","Cannot initialize LIBVA, make sure it is not already used by another application.\nSwitching to default decoder.");
-                delete dec;
-            }
-        }else ADM_info("LIBVA is not active\n");
-    }
-#endif // XVBA  
-  
-  
+    ADM_info("\nSearching decoder in plugins\n");
+    decoders *fromPlugin=tryCreatingVideoDecoder(w,h,fcc,extraLen,extraData,bpp);
+    if(fromPlugin) 
+        return fromPlugin;
     ADM_info("Searching decoder in coreVideoCodec(%d x %d, extradataSize:%d)...\n",w,h,extraLen);
     return ADM_coreCodecGetDecoder(fcc,w,h,extraLen,extraData,bpp);
 }

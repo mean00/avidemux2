@@ -2,7 +2,7 @@
         \file FFLIBVA
  *      \brief wrapper around ffmpeg wrapper around libva
  */
-#ifdef USE_LIBVA
+
 #include "X11/Xlib.h"
 #include "va/va.h"
 
@@ -13,51 +13,40 @@
  * \class decoderFFLIBVA
  */
 #define ADM_MAX_SURFACE 16+6+1
-class decoderFFLIBVA:public decoderFF
+
+typedef struct 
+{
+        BVector <ADM_vaSurface *>freeSurfaceQueue;
+        BVector <ADM_vaSurface *>allSurfaceQueue;
+}libvaContext;
+
+
+class decoderFFLIBVA:public ADM_acceleratedDecoderFF
 {
 friend class ADM_vaSurface;
 protected:
 protected:
                     bool          alive;
-                    int           b_age;
-                    int           ip_age[2];
-                    ADMImage      *scratch;
                     VAContextID   libva;
                     int           nbSurface;
                     vaapi_context *va_context;
                     VASurfaceID   surfaces[ADM_MAX_SURFACE];
+                    libvaContext  vaPool;
 
-                    //
-                    BVector <ADM_vaSurface  *> freeSurfaceQueue;
-                    BVector <ADM_vaSurface  *> allSurfaceQueue;
-                    //
-                    
-                    
+protected:
+                    bool        initVAContext();
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
-                    void        releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-                    void        goOn(  AVFrame *d,int type);   
-                    
-                    bool        reclaimImage(ADM_vaSurface *img);
-                    ADM_vaSurface *lookupBySurfaceId(VASurfaceID id);
+                    void        releaseBuffer(ADM_vaSurface *vaSurface);
+                    bool        initFail(void) {alive=false;return true;}
+public:
+    virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
+                    bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);    
+    virtual const   char        *getName(void)        {return "LIBVA";}
+                  ADM_vaSurface *lookupBySurfaceId(VASurfaceID id);
                     
 public:
             // public API
-                                decoderFFLIBVA (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
+                                decoderFFLIBVA (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFLIBVA();
-    virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
-
-    virtual         bool        dontcopy (void)
-                      {
-                        return 1; // For now, we give a reference to the fully decoded image
-                      }
-
-    virtual         bool        bFramePossible (void)
-      {
-        return 1;
-      }
-    virtual const   char        *getDecoderName(void) {return "LIBVA";}
-    virtual         bool        initializedOk(void)  {return alive;};
-static              bool        fccSupported(uint32_t fcc);
 };
-#endif

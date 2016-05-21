@@ -24,6 +24,7 @@ class ADM_COREVIDEOCODEC6_EXPORT ADM_acceleratedDecoderFF
 public:
                      ADM_acceleratedDecoderFF(struct AVCodecContext *avctx,decoderFF *p) 
                      {_context=avctx;_parent=p;};
+                     uint32_t admFrameTypeFromLav (AVFrame *pic);
         virtual      ~ADM_acceleratedDecoderFF()
                     {
                         _context=NULL;
@@ -31,6 +32,7 @@ public:
                     }
         virtual const char      *getName()=0;
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
+        
 protected:
          struct AVCodecContext  *_context;
                 decoderFF       *_parent;

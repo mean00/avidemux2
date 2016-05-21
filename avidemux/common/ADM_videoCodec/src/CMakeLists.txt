@@ -9,8 +9,10 @@ SET(ADM_videoCodec_SRCS
 IF(USE_VDPAU)
         ADD_IF_ENABLED(USE_VDPAU ADM_ffmpeg_vdpau.cpp)
 ENDIF(USE_VDPAU)
-
-ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_libva.cpp)
-
+                
+IF(USE_LIBVA)
+        ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_libva.cpp)
+ENDIF(USE_LIBVA)
+                
 ADD_LIBRARY(ADM_videocodec6 STATIC ${ADM_videoCodec_SRCS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)

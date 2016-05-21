@@ -77,4 +77,51 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
     ADM_info("No Hw Accel for that\n");
     return avcodec_default_get_format(avctx,fmt);
 }
+
+
+/**
+ * 
+ * @param pic
+ * @return 
+ */
+uint32_t ADM_acceleratedDecoderFF::admFrameTypeFromLav (AVFrame *pic)
+{
+    
+#define SET(x)      {outFlags=x;}
+#define SET_ADD(x)  {outFlags|=x;}
+  uint32_t outFlags=0;
+  switch (pic->pict_type)
+    {
+        case AV_PICTURE_TYPE_B:
+                SET (AVI_B_FRAME);
+                break;
+        case AV_PICTURE_TYPE_I:
+                SET (AVI_KEY_FRAME);
+                if (!pic->key_frame)
+                  {
+                    if (_context->codec_id == AV_CODEC_ID_H264)
+                        SET (AVI_P_FRAME)
+                    else
+                      ADM_info ("\n But keyframe is not set\n");
+                  }
+                break;
+        case AV_PICTURE_TYPE_S:
+        case AV_PICTURE_TYPE_P:
+                SET (AVI_P_FRAME);
+                break;
+        default:
+                break;
+    }
+    outFlags&=~AVI_STRUCTURE_TYPE_MASK;
+    if(pic->interlaced_frame)
+    {
+        SET_ADD(AVI_FIELD_STRUCTURE)
+        if(pic->top_field_first)
+            SET_ADD(AVI_TOP_FIELD)
+        else
+            SET_ADD(AVI_BOTTOM_FIELD)
+    }
+  return outFlags;
+}
+
 // EOF
