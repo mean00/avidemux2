@@ -49,17 +49,7 @@ ADM_hwAccelEntry    *ADM_hwAccelManager::lookup(struct AVCodecContext *avctx,  c
     ADM_info("No Matching Hw accel\n");
     return NULL;;
 }
-/**
- * \fn spawn
- */
-ADM_acceleratedDecoderFF *ADM_hwAccelManager::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat )
-{
-    ADM_hwAccelEntry *e=lookup(avctx,fmt,outputFormat);
-    ADM_assert(e);
-    ADM_assert(e-> canSupportThis(avctx,  fmt,outputFormat));
-    return e->spawn(avctx,fmt);
-    
-}
+
 /**
  * 
  * @param avctx
@@ -73,11 +63,16 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
     if(accel)
     {
         decoderFF *ff=(decoderFF *)avctx->opaque;
-        if(ff->setHwDecoder(accel->spawn(avctx,fmt)))
+        if(ff->getHwDecoder())
         {
-            ADM_info("Using %s as hw accel\n",accel->name);
+            ADM_info("Reusing existing setup\n");        
             return outFmt;
-        }
+        }else
+            if(ff->setHwDecoder(accel->spawn(avctx,fmt)))
+            {
+                ADM_info("Using %s as hw accel\n",accel->name);
+                return outFmt;
+            }
     }
     ADM_info("No Hw Accel for that\n");
     return avcodec_default_get_format(avctx,fmt);

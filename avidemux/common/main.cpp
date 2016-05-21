@@ -107,7 +107,9 @@ int main(int _argc, char *_argv[]);
 }
 #endif // main
 
+#ifdef USE_VDPAU
 extern bool initVDPAUDecoder(void);
+#endif
 
 int main(int _argc, char *_argv[])
 {
@@ -381,8 +383,9 @@ int startAvidemux(int argc, char *argv[])
     ADM_lavInit();
     AVDM_audioInit();
 
-    
+#ifdef USE_VDPAU
     initVDPAUDecoder();
+#endif
     UI_RunApp();
     cleanUp();
 

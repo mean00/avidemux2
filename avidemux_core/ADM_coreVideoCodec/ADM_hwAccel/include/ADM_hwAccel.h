@@ -1,7 +1,7 @@
 /***************************************************************************
          \fn ADM_hwAccel.h
          \brief Top class for ffmpeg hwAccel
-         \author mean, fixounet@free.fr (C) 2006
+         \author mean, fixounet@free.fr (C) 2016
     
  ***************************************************************************/
 /***************************************************************************
@@ -32,8 +32,8 @@ public:
         virtual const char      *getName()=0;
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
 protected:
-                struct AVCodecContext *_context;
-                decoderFF *_parent;
+         struct AVCodecContext  *_context;
+                decoderFF       *_parent;
 };
 
 /**
@@ -58,7 +58,6 @@ class ADM_COREVIDEOCODEC6_EXPORT ADM_hwAccelManager
 public:       
        static bool                registerDecoder(ADM_hwAccelEntry *);
        static ADM_hwAccelEntry    *lookup(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
-       static ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat );     
 };
 
 

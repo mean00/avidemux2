@@ -205,14 +205,14 @@ extern "C"
 static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
-    ADM_info("&vdpau: GetFormat\n");
+    ADM_info("[vdpau]: GetFormat\n");
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
-        ADM_info("&vdpau: Evaluating %d\n",c);
+        ADM_info("[vdpau]: Evaluating %d\n",c);
         if(c!=AV_PIX_FMT_VDPAU) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VDPAU_##y;id=avctx->codec_id;break;
         switch(avctx->codec_id)
@@ -310,7 +310,6 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
               
         _context->get_buffer2     = ADM_VDPAUgetBuffer;
         _context->draw_horiz_band = NULL;
-        //_context->slice_flags     =0;        
         ADM_info("Successfully setup hw accel\n");              
 }
 /**
