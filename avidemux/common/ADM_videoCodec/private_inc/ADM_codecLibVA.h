@@ -35,6 +35,10 @@ protected:
 
 protected:
                     bool        initVAContext();
+public:                    
+                    bool        markSurfaceUsed(ADM_vaSurface *s);
+                    bool        markSurfaceUnused(ADM_vaSurface *s);
+                    bool        markSurfaceUnused(VASurfaceID id);
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     void        releaseBuffer(ADM_vaSurface *vaSurface);

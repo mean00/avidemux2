@@ -110,7 +110,9 @@ int main(int _argc, char *_argv[]);
 #ifdef USE_VDPAU
 extern bool initVDPAUDecoder(void);
 #endif
-
+#ifdef USE_LIBVA
+extern bool initLIBVADecoder(void);
+#endif
 int main(int _argc, char *_argv[])
 {
 	ADM_initBaseDir(isPortableMode(_argc, _argv));
@@ -383,9 +385,14 @@ int startAvidemux(int argc, char *argv[])
     ADM_lavInit();
     AVDM_audioInit();
 
-#ifdef USE_VDPAU
+#if 0//def USE_VDPAU
     initVDPAUDecoder();
 #endif
+    
+#ifdef USE_LIBVA
+    initLIBVADecoder();
+#endif    
+    
     UI_RunApp();
     cleanUp();
 

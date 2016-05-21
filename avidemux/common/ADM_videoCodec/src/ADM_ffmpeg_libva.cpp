@@ -93,7 +93,7 @@ bool libvaProbe(void)
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
 */
-static bool libvaMarkSurfaceUsed(ADM_vaSurface *s, decoderFFLIBVA *d)
+bool decoderFFLIBVA::markSurfaceUsed(ADM_vaSurface *s)
 {
     imageMutex.lock();
     s->refCount++;
@@ -101,11 +101,17 @@ static bool libvaMarkSurfaceUsed(ADM_vaSurface *s, decoderFFLIBVA *d)
     return true;
     
 }
+bool        decoderFFLIBVA::markSurfaceUnused(VASurfaceID id)
+{
+    ADM_vaSurface *s=lookupBySurfaceId(id);
+    ADM_assert(s);
+    return markSurfaceUnused(s);
+}
 /**
     \fn markSurfaceUnused
     \brief mark the surfave as unused by the caller. Can be called multiple time.
 */
-static bool libvaMarkSurfaceUnused(ADM_vaSurface *img, decoderFFLIBVA * dec)
+bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img)
 {
         
    imageMutex.lock();
@@ -113,7 +119,7 @@ static bool libvaMarkSurfaceUnused(ADM_vaSurface *img, decoderFFLIBVA * dec)
    aprintf("Ref count is now %d\n",img->refCount);
    if(!img->refCount)
    {
-        dec->releaseBuffer(img);
+        vaPool.freeSurfaceQueue.append(img);
    }
    imageMutex.unlock();
    return true;
@@ -141,10 +147,7 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
    decoderFFLIBVA *dec=(decoderFFLIBVA *)opaque;
    ADM_assert(dec);
    VASurfaceID   surface=(VASurfaceID )(uintptr_t)data;
-#if 0
-   ADM_assert(admSurface->surface==surface);
-   dec->releaseBuffer(avctx,admSurface);
-#endif
+   dec->markSurfaceUnused(surface);
 }
 
 /**
@@ -159,11 +162,18 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
     vaPool.freeSurfaceQueue.popFront();
     imageMutex.unlock();
-    libvaMarkSurfaceUsed(s,this);   
+    s->refCount=0;
+    markSurfaceUsed(s);
     aprintf("Alloc Buffer : 0x%llx\n",s);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;
+    pic->reordered_opaque= avctx->reordered_opaque;    
+    // It only works because surface is the 1st field of render!
+    pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
+                                     sizeof(s->surface),
+                                     ADM_LIBVAreleaseBuffer, 
+                                     (void *)this,
+                                     AV_BUFFER_FLAG_READONLY);
     return 0;
 }
 /**
@@ -208,15 +218,6 @@ ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
 }
   
 
-
-/**
-    \fn releaseBuffer
-*/
-void decoderFFLIBVA::releaseBuffer(ADM_vaSurface *s)
-{
-  libvaMarkSurfaceUnused(s,this);
-  
-}
 
 /**
  * 
@@ -409,7 +410,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     if(out->refType==ADM_HW_LIBVA)
     {
             ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refCookie;
-            libvaMarkSurfaceUnused(img,this);
+            markSurfaceUnused(img);
             out->refType=ADM_HW_NONE;
     }
 
@@ -481,4 +482,55 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->flags=admFrameTypeFromLav(decodedFrame);
     return true;
 }
+
+//---
+
+class ADM_hwAccelEntryLibVA : public ADM_hwAccelEntry
+{
+public: 
+                            ADM_hwAccelEntryLibVA();
+     virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
+     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt );     
+     virtual                ~ADM_hwAccelEntryLibVA() {};
+};
+/**
+ * 
+ */
+ADM_hwAccelEntryLibVA::ADM_hwAccelEntryLibVA()
+{
+    name="VAAPI";
+}
+/**
+ * 
+ * @param avctx
+ * @param fmt
+ * @param outputFormat
+ * @return 
+ */
+bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)
+{
+    enum AVPixelFormat ofmt=ADM_LIBVA_getFormat(avctx,fmt);
+    if(ofmt==AV_PIX_FMT_NONE)
+        return false;
+    outputFormat=ofmt;
+    ADM_info("This is supported by LIBVA\n");
+    return true;
+}
+ADM_acceleratedDecoderFF *ADM_hwAccelEntryLibVA::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
+{
+    decoderFF *ff=(decoderFF *)avctx->opaque;
+    return new decoderFFLIBVA(avctx,ff);
+}
+static ADM_hwAccelEntryLibVA libvaEntry;
+/**
+ * 
+ * @return 
+ */
+bool initLIBVADecoder(void)
+{
+    ADM_info("Registering LIBVA hw decocer\n");
+    ADM_hwAccelManager::registerDecoder(&libvaEntry);
+    return true;
+}
+
 // EOF
