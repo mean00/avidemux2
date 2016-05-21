@@ -340,6 +340,7 @@ IF(USE_XVBA)
 ENDIF(USE_XVBA)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
 	"${FFMPEG_SOURCE_DIR}/libavcodec/version.h" 
+	"${FFMPEG_SOURCE_DIR}/libavcodec/audioconvert.h"
 	#"${FFMPEG_SOURCE_DIR}/libavcodec/internal.h" 
 	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
