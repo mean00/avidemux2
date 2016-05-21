@@ -37,6 +37,7 @@ extern "C" {
 #include "../private_inc/ADM_codecLibVA.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 
 static bool         libvaWorking=true;
@@ -158,7 +159,22 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
         
     imageMutex.lock();
-    ADM_assert(!vaPool.freeSurfaceQueue.empty());
+    if(vaPool.freeSurfaceQueue.empty())
+    {
+         int widthToUse = (avctx->coded_width+ 1)  & ~1;
+         int heightToUse= (avctx->coded_height+3)  & ~3;
+            VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
+            if(surface==VA_INVALID)
+            {
+                ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
+                imageMutex.unlock();
+                return -1;
+            }
+            ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
+            img->surface=surface;
+            vaPool.freeSurfaceQueue.append(img);
+            vaPool.allSurfaceQueue.append(img);
+    }
     ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
     vaPool.freeSurfaceQueue.popFront();
     imageMutex.unlock();
@@ -329,8 +345,11 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 #endif        
     va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
+    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
+    
+    
 #if 0
-      _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;           
+      
         AVVDPAUContext *v= av_alloc_vdpaucontext();;
         _context->hwaccel_context = v;
         v->render=NULL;
@@ -509,6 +528,13 @@ ADM_hwAccelEntryLibVA::ADM_hwAccelEntryLibVA()
  */
 bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)
 {
+    bool enabled=false;
+    prefs->get(FEATURES_LIBVA,&enabled);
+    if(!enabled)
+    {
+        ADM_info("LibVA not enabled\n");
+        return false;
+    }
     enum AVPixelFormat ofmt=ADM_LIBVA_getFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
         return false;

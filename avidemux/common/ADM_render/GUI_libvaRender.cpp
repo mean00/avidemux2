@@ -66,7 +66,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
             return false;
         }
 
-        mySurface[i]=new ADM_vaSurface(NULL,w,h);
+        mySurface[i]=new ADM_vaSurface(w,h);
         mySurface[i]->surface=surface;
     }    
     

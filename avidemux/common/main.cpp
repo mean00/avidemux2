@@ -385,7 +385,7 @@ int startAvidemux(int argc, char *argv[])
     ADM_lavInit();
     AVDM_audioInit();
 
-#if 0//def USE_VDPAU
+#ifdef USE_VDPAU
     initVDPAUDecoder();
 #endif
     

@@ -40,6 +40,7 @@ extern "C" {
 #include "prefs.h"
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
 #include "ADM_threads.h"
+#include "prefs.h"
 
 #if defined(__sun__)
 #include <alloca.h>
@@ -440,6 +441,14 @@ ADM_hwAccelEntryVdpau::ADM_hwAccelEntryVdpau()
  */
 bool           ADM_hwAccelEntryVdpau::canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)
 {
+    bool enabled=false;
+    prefs->get(FEATURES_VDPAU,&enabled);
+    if(!enabled)
+    {
+        ADM_info("Vdpau not enabled\n");
+        return false;
+    }
+    
     enum AVPixelFormat ofmt=vdpauGetFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
         return false;

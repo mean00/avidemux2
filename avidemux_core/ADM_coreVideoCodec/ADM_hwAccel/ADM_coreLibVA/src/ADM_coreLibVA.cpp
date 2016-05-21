@@ -87,7 +87,7 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     bool r=false;
     ADMImageDefault  image1(640,400),image2(640,400);
     VASurfaceID      surface=admLibVA::allocateSurface(640,400); // freed with admSurface
-    ADM_vaSurface    admSurface(NULL,640,400);            
+    ADM_vaSurface    admSurface(640,400);            
     admSurface.surface=VA_INVALID;
     
     if(surface==VA_INVALID)
