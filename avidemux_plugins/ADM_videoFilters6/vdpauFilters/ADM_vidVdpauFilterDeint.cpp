@@ -440,7 +440,7 @@ bool vdpauVideoFilterDeint::fillSlot(int slot,ADMImage *image)
         img->duplicateFull(image); // increment ref count
         // get surface
         img->hwDownloadFromRef();
-        vdpau_render_state *render=(vdpau_render_state *)img->refDescriptor.refHwImage;
+        vdpau_render_state *render=(vdpau_render_state *)img->refDescriptor.refCookie;
         ADM_assert(render->refCount);
         tgt=render->surface;
         external=true;

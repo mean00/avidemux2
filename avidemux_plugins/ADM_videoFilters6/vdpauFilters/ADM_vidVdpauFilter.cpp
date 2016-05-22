@@ -302,7 +302,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     if(next->refType==ADM_HW_VDPAU)
     {
         
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refHwImage;
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refCookie;
         tmpSurface=rndr->surface;
         printf("image is already vdpau %d\n",(int)tmpSurface);
     }else
