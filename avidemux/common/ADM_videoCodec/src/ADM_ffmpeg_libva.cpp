@@ -102,6 +102,21 @@ bool libvaUsable(void)
     if(!prefs->get(FEATURES_LIBVA,&v)) v=false;
     return v;
 }
+
+static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
+{
+    int widthToUse = (ctx->coded_width+ 1)  & ~1;
+    int heightToUse= (ctx->coded_height+3)  & ~3;
+    VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
+    if(surface==VA_INVALID)
+    {
+            ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
+            return NULL;
+    }
+    ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
+    img->surface=surface;
+    return img;
+}
 /**
     \fn libvaProbe
     \brief Try loading vaapi...
@@ -185,23 +200,6 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
 }
 
 /**
-    \fn getBuffer
-    \brief returns a LIBVA surface masquerading as a AVFrame
-*/
-
-static VASurfaceID allocateNewImage(AVCodecContext  *ctx)
-{
-    int widthToUse = (ctx->coded_width+ 1)  & ~1;
-    int heightToUse= (ctx->coded_height+3)  & ~3;
-    VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
-        if(surface==VA_INVALID)
-        {
-            ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
-            return VA_INVALID;
-        }
-    return surface;
-}
-/**
  * 
  * @param avctx
  * @param pic
@@ -213,17 +211,12 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     imageMutex.lock();
     if(vaPool.freeSurfaceQueue.empty())
     {
-        VASurfaceID surface=allocateNewImage(avctx);
-        if(surface==VA_INVALID)
+        ADM_vaSurface *img=allocateADMVaSurface(avctx);
+        if(!img)
         {
-            ADM_warning("Cannot allocate surface\n");
             imageMutex.unlock();
             return -1;
         }
-        int widthToUse = (avctx->coded_width+ 1)  & ~1;
-        int heightToUse= (avctx->coded_height+3)  & ~3;
-        ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
-        img->surface=surface;
         vaPool.freeSurfaceQueue.append(img);
         vaPool.allSurfaceQueue.append(img);
     }
@@ -280,28 +273,7 @@ ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
   
 
 
-/**
- * 
- * @param w
- * @param h
- * @param fcc
- * @param extraDataLen
- * @param extraData
- * @param bpp
- */
-static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id)
-{
-    AVHWAccel *hw=av_hwaccel_next(NULL);
-    
-    while(hw)
-    {
-        ADM_info("Trying %s, %d : %d, codec =%d : %d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
-        if (hw->pix_fmt == AV_PIX_FMT_VAAPI_VLD && id==hw->id)
-            return hw;
-        hw=av_hwaccel_next(hw);
-    }
-    return NULL;
-}
+
 
 extern "C"
 {
@@ -337,7 +309,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of LIBVA decoder
-    const AVHWAccel *accel=parseHwAccel(outPix,id);
+    const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VAAPI_VLD);
     if(accel)
     {
         ADM_info("Found matching hw accelerator : %s\n",accel->name);
@@ -364,20 +336,32 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     
     alive=false;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    VASurfaceID surface=allocateNewImage(avctx);
-    if(surface==VA_INVALID)
+    
+    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
+        initSurfaceID[i]=VA_INVALID;
+    
+    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
     {
-        ADM_warning("Cannot allocate dummy surface\n");
-        alive=false;
-        return ;
+        ADM_vaSurface *admSurface=allocateADMVaSurface(avctx);
+        if(!admSurface)
+        {
+            ADM_warning("Cannot allocate dummy surface\n");
+            alive=false;
+            return ;
+        }
+        initSurfaceID[i]=admSurface->surface;
+        vaPool.allSurfaceQueue.append(admSurface);
+        vaPool.freeSurfaceQueue.append(admSurface);
     }
+    
+   
     // create decoder
     vaapi_context *va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
     
     
     
-    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,1,&surface); // this is most likely wrong
+    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,8,initSurfaceID); // this is most likely wrong
     if(va_context->context_id==VA_INVALID)
     {
         ADM_warning("Cannot create decoder\n");
@@ -505,8 +489,6 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
-
-    
     return true;
 }
 

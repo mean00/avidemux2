@@ -20,7 +20,7 @@ typedef struct
         BVector <ADM_vaSurface *>allSurfaceQueue;
 }libvaContext;
 
-
+#define ADM_DEFAULT_SURFACE 8
 class decoderFFLIBVA:public ADM_acceleratedDecoderFF
 {
 friend class ADM_vaSurface;
@@ -28,6 +28,7 @@ protected:
 protected:
                     bool          alive;
                     libvaContext  vaPool;
+                    VASurfaceID   initSurfaceID[ADM_DEFAULT_SURFACE];
 
 protected:
                     bool        initVAContext();

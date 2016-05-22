@@ -22,27 +22,6 @@
  ***************************************************************************/
 
 
-/**
-    \fn vdpauGetFormat
-    \brief Borrowed from mplayer/ffmpeg
- 
- 
-
-*/
-
-static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id)
-{
-    AVHWAccel *hw=av_hwaccel_next(NULL);
-    
-    while(hw)
-    {
-        ADM_info("Trying %s, %d : %d, codec =%d : %d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
-        if (hw->pix_fmt == AV_PIX_FMT_VDPAU && id==hw->id)
-            return hw;
-        hw=av_hwaccel_next(hw);
-    }
-    return NULL;
-}
 
 
 /**

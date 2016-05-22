@@ -230,16 +230,18 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     }
     if(id==AV_CODEC_ID_NONE)
     {
+        ADM_info("No matching colrospace compatible hw accelerator found \n");
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of Vdpau decoder
-    const AVHWAccel *accel=parseHwAccel(outPix,id);
+    const AVHWAccel *accel=ADM_acceleratedDecoderFF::parseHwAccel(outPix,id,AV_PIX_FMT_VDPAU);
     if(accel)
     {
         ADM_info("Found matching hw accelerator : %s\n",accel->name);
         ADM_info("Successfully setup hw accel\n");
         return AV_PIX_FMT_VDPAU;
     }
+    ADM_info("No matching hw accelerator Found \n");
     return AV_PIX_FMT_NONE;
 }
 }

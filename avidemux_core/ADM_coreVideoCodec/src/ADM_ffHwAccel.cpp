@@ -123,5 +123,25 @@ uint32_t ADM_acceleratedDecoderFF::admFrameTypeFromLav (AVFrame *pic)
     }
   return outFlags;
 }
+/**
+ * 
+ * @param pix_fmt
+ * @param id
+ * @return 
+ */
+const AVHWAccel *ADM_acceleratedDecoderFF::parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id,AVPixelFormat searchedItem)
+{
+    AVHWAccel *hw=av_hwaccel_next(NULL);
+    
+    while(hw)
+    {
+        ADM_info("Trying %s, hwPixFmt=%d, wantedPixFmt %d, hwCodecId =%d : wantedCodecID=%d\n",hw->name,hw->pix_fmt,pix_fmt,hw->id,id);
+        if (hw->pix_fmt == searchedItem && id==hw->id)
+            return hw;
+        hw=av_hwaccel_next(hw);
+    }
+    return NULL;
+}
+
 
 // EOF

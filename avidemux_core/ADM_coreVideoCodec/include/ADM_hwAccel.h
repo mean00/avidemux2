@@ -34,8 +34,10 @@ public:
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
         
 protected:
-         struct AVCodecContext  *_context;
+        struct AVCodecContext  *_context;
                 decoderFF       *_parent;
+public:                
+  static const AVHWAccel *parseHwAccel(enum AVPixelFormat pix_fmt,AVCodecID id,AVPixelFormat searchedItem);
 };
 
 /**
