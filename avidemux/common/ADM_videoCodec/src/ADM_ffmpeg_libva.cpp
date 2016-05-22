@@ -47,7 +47,7 @@ static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
 
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf ADM_info
@@ -230,7 +230,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     vaPool.freeSurfaceQueue.popFront();
     imageMutex.unlock();
     s->refCount=0;
-    markSurfaceUsed(s);
+    markSurfaceUsed(s); // 1 ref taken by lavcodec
     
     pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
@@ -495,8 +495,10 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCookie=this;
-    out->refDescriptor.refInstance=decodedFrame->data[0];
-    aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)(uintptr_t)decodedFrame->data[3]);
+    ADM_vaSurface *img=(ADM_vaSurface *)(decodedFrame->data[0]);
+    out->refDescriptor.refInstance=img; // the ADM_vaImage in disguise
+    markSurfaceUsed(img); // one ref for us too, it will be free when the image is cycled
+    aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)img->surface);
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
