@@ -47,7 +47,7 @@ static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
 
 
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf ADM_info
@@ -123,8 +123,6 @@ bool libvaProbe(void)
     return true;
 }
 
-//    out->refDescriptor.refCookie=FFLIBVADecode;
-//    out->refDescriptor.refInstance=ADM_vaIMage;
 /**
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
@@ -182,7 +180,7 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
 {
    decoderFFLIBVA *dec=(decoderFFLIBVA *)opaque;
    ADM_assert(dec);
-   VASurfaceID   surface=(VASurfaceID )(uintptr_t)data;
+   VASurfaceID   surface=*(VASurfaceID *)(data);
    dec->markSurfaceUnused(surface);
 }
 
@@ -190,25 +188,44 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
     \fn getBuffer
     \brief returns a LIBVA surface masquerading as a AVFrame
 */
+
+static VASurfaceID allocateNewImage(AVCodecContext  *ctx)
+{
+    int widthToUse = (ctx->coded_width+ 1)  & ~1;
+    int heightToUse= (ctx->coded_height+3)  & ~3;
+    VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
+        if(surface==VA_INVALID)
+        {
+            ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
+            return VA_INVALID;
+        }
+    return surface;
+}
+/**
+ * 
+ * @param avctx
+ * @param pic
+ * @return 
+ */
 int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
         
     imageMutex.lock();
     if(vaPool.freeSurfaceQueue.empty())
     {
-         int widthToUse = (avctx->coded_width+ 1)  & ~1;
-         int heightToUse= (avctx->coded_height+3)  & ~3;
-            VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
-            if(surface==VA_INVALID)
-            {
-                ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
-                imageMutex.unlock();
-                return -1;
-            }
-            ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
-            img->surface=surface;
-            vaPool.freeSurfaceQueue.append(img);
-            vaPool.allSurfaceQueue.append(img);
+        VASurfaceID surface=allocateNewImage(avctx);
+        if(surface==VA_INVALID)
+        {
+            ADM_warning("Cannot allocate surface\n");
+            imageMutex.unlock();
+            return -1;
+        }
+        int widthToUse = (avctx->coded_width+ 1)  & ~1;
+        int heightToUse= (avctx->coded_height+3)  & ~3;
+        ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
+        img->surface=surface;
+        vaPool.freeSurfaceQueue.append(img);
+        vaPool.allSurfaceQueue.append(img);
     }
     ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
     vaPool.freeSurfaceQueue.popFront();
@@ -222,7 +239,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
                                      (void *)this,
                                      AV_BUFFER_FLAG_READONLY);
     
-    aprintf("Alloc Buffer : 0x%llx\n",s);
+    aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
     pic->reordered_opaque= avctx->reordered_opaque;    
@@ -245,6 +262,7 @@ bool libvaCleanup(void)
  */
 ADM_vaSurface *decoderFFLIBVA::lookupBySurfaceId(VASurfaceID id)
 {
+    aprintf("Looking up surface %x\n",(int)id);
     imageMutex.lock();
     int n=vaPool.allSurfaceQueue.size();
     for(int i=0;i<n;i++)
@@ -343,67 +361,41 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
     
-    VASurfaceID sid[ADM_MAX_SURFACE+1];
+    
     alive=false;
-    va_context=NULL;    
-    
-#if 0    
-    // Allocate 17 surfaces, enough for the moment
-    
-    nbSurface=ADM_MAX_SURFACE;
-    for(int i=0;i<nbSurface;i++)
-    {
-
-        surfaces[i]=admLibVA::allocateSurface(w,h);
-        if(surfaces[i]==VA_INVALID)
-        {
-            ADM_warning("Cannot allocate surface (%d x %d)\n",(int)w,(int)h);
-            nbSurface=i;
-            return;
-        }
-        ADM_vaSurface *img=new ADM_vaSurface(this,w,h);
-        img->surface=surfaces[i];
-        freeSurfaceQueue.append(img);
-        allSurfaceQueue.append(img);
-        sid[i]=surfaces[i];
-    }
-    ADM_info("Preallocated %d surfaces\n",nbSurface);
-    // Linearize surface
-#endif        
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    va_context=new vaapi_context;
+    VASurfaceID surface=allocateNewImage(avctx);
+    if(surface==VA_INVALID)
+    {
+        ADM_warning("Cannot allocate dummy surface\n");
+        alive=false;
+        return ;
+    }
+    // create decoder
+    vaapi_context *va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
+    
+    
+    
+    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,1,&surface); // this is most likely wrong
+    if(va_context->context_id==VA_INVALID)
+    {
+        ADM_warning("Cannot create decoder\n");
+        delete va_context;
+        va_context=NULL;
+        alive=false;
+        return;
+    }
+    
+    
     if(!admLibVA::fillContext(va_context))
     {
         ADM_warning("Cannot get va context initialized for libavcodec\n");
         alive=false;
         return ;
-    }
+    }    
+    
     _context->hwaccel_context=va_context;
-    
-#if 0
-      
-        AVVDPAUContext *v= av_alloc_vdpaucontext();;
-        _context->hwaccel_context = v;
-        v->render=NULL;
-        v->decoder=VDP_INVALID_HANDLE; 
-        
-        if(0>av_vdpau_bind_context(_context, (VdpDevice)(uint64_t) admVdpau::getVdpDevice(),
-                          vdpGetProcAddressWrapper, AV_HWACCEL_FLAG_IGNORE_LEVEL))
-        {
-             ADM_error("Cannot bind\n");
-                return false;
-        }
-        ADM_info("Init VDP context ok\n");
-        return true;
-        if(!admLibVA::fillContext(va_context))
-    {
-        ADM_warning("Cannot get va context initialized for libavcodec\n");
-        return ;
-    }
-#endif
-    
-    va_context->context_id=libva;  
     alive=true;
     _context->get_buffer2     = ADM_LIBVAgetBuffer;
     _context->draw_horiz_band = NULL;
@@ -435,18 +427,6 @@ decoderFFLIBVA::~decoderFFLIBVA()
     }
     vaPool.freeSurfaceQueue.clear();
     imageMutex.unlock();
-    
-    nbSurface=0;
-    if(libva!=VA_INVALID)
-        admLibVA::destroyDecoder(libva);
-    libva=VA_INVALID;
- 
-    
-    if(va_context)
-    {
-        delete va_context;
-        va_context=NULL;
-    }
 }
 /**
  * \fn uncompress

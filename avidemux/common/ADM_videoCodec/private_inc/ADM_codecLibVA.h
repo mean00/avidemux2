@@ -27,10 +27,6 @@ friend class ADM_vaSurface;
 protected:
 protected:
                     bool          alive;
-                    VAContextID   libva;
-                    int           nbSurface;
-                    vaapi_context *va_context;
-                    VASurfaceID   surfaces[ADM_MAX_SURFACE];
                     libvaContext  vaPool;
 
 protected:
