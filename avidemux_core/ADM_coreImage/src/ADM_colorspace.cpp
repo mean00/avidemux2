@@ -97,6 +97,7 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
     case ADM_COLOR_BGR24: return PIX_FMT_BGR24;
     case ADM_COLOR_YV12_10BITS: return AV_PIX_FMT_YUV420P10LE;
+    case ADM_COLOR_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
     case ADM_COLOR_Y8: return PIX_FMT_GRAY8;
     default : ADM_assert(0); 
   }
