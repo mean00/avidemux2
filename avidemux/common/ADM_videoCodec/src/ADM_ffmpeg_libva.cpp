@@ -152,6 +152,7 @@ bool decoderFFLIBVA::markSurfaceUsed(ADM_vaSurface *s)
 }
 bool        decoderFFLIBVA::markSurfaceUnused(VASurfaceID id)
 {
+    aprintf("Freeing surface %x\n",(int)id);
     ADM_vaSurface *s=lookupBySurfaceId(id);
     ADM_assert(s);
     return markSurfaceUnused(s);
@@ -165,10 +166,11 @@ bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img)
         
    imageMutex.lock();
    img->refCount--;
-   aprintf("Ref count is now %d\n",img->refCount);
+   aprintf("Surface %x, Ref count is now %d\n",img->surface,img->refCount);
    if(!img->refCount)
    {
         vaPool.freeSurfaceQueue.append(img);
+        img->surface=VA_INVALID;
    }
    imageMutex.unlock();
    return true;
@@ -226,7 +228,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     s->refCount=0;
     markSurfaceUsed(s);
     
-       pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
+    pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
                                      ADM_LIBVAreleaseBuffer, 
                                      (void *)this,
@@ -361,7 +363,7 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     
     
     
-    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,8,initSurfaceID); // this is most likely wrong
+    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,ADM_DEFAULT_SURFACE,initSurfaceID); // this is most likely wrong
     if(va_context->context_id==VA_INVALID)
     {
         ADM_warning("Cannot create decoder\n");
@@ -425,7 +427,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     aprintf("==> uncompress %s\n",_context->codec->long_name);
     if(out->refType==ADM_HW_LIBVA)
     {
-            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refCookie;
+            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refInstance;
             markSurfaceUnused(img);
             out->refType=ADM_HW_NONE;
     }
@@ -434,8 +436,9 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture = 1;
         out->Pts=ADM_COMPRESSED_NO_PTS;
+        out->refType=ADM_HW_NONE;
         ADM_info("[LibVa] Nothing to decode -> no Picture\n");
-        return true;
+        return false;
     }
 
    // Put a safe value....
@@ -460,11 +463,13 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
         char er[2048]={0};
         av_make_error_string(er, sizeof(er)-1, ret);
         ADM_warning("Error %d in lavcodec (%s)\n",ret,er);
+        out->refType=ADM_HW_NONE;
         return false;
     }
     if(frame->pict_type==AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture=true;
+        out->refType=ADM_HW_NONE;
         out->Pts= (uint64_t)(frame->reordered_opaque);
         ADM_info("[LIBVA] No picture \n");
         return false;
@@ -486,6 +491,7 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refType=ADM_HW_LIBVA;
     out->refDescriptor.refCookie=this;
     out->refDescriptor.refInstance=decodedFrame->data[0];
+    aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)(uintptr_t)decodedFrame->data[3]);
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
