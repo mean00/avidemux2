@@ -170,7 +170,6 @@ bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img)
    if(!img->refCount)
    {
         vaPool.freeSurfaceQueue.append(img);
-        img->surface=VA_INVALID;
    }
    imageMutex.unlock();
    return true;
@@ -213,14 +212,19 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     imageMutex.lock();
     if(vaPool.freeSurfaceQueue.empty())
     {
+        aprintf("Allocating new vaSurface\n");
         ADM_vaSurface *img=allocateADMVaSurface(avctx);
         if(!img)
         {
             imageMutex.unlock();
+            ADM_warning("Cannot allocate new vaSurface!\n");
             return -1;
         }
         vaPool.freeSurfaceQueue.append(img);
         vaPool.allSurfaceQueue.append(img);
+    }else
+    {
+        aprintf("Reusing vaSurface from pool\n");
     }
     ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
     vaPool.freeSurfaceQueue.popFront();
@@ -351,6 +355,7 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
             alive=false;
             return ;
         }
+        aprintf("Created initial pool, %d : %x\n",i,admSurface->surface);
         initSurfaceID[i]=admSurface->surface;
         vaPool.allSurfaceQueue.append(admSurface);
         vaPool.freeSurfaceQueue.append(admSurface);
