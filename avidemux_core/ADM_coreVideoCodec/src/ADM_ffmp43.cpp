@@ -484,7 +484,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case AV_PIX_FMT_VDPAU_VC1:
     case AV_PIX_FMT_VDPAU_H264:
         out->_colorspace=ADM_COLOR_VDPAU;
-        break;
+        break;        
     case AV_PIX_FMT_VAAPI_VLD:
         out->_colorspace=ADM_COLOR_LIBVA;
         break;
@@ -494,11 +494,14 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         out->_colorspace=ADM_COLOR_XVBA;
         break;
 #endif        
+  case AV_PIX_FMT_YUV444P10LE:
+        out->_colorspace=ADM_COLOR_YUV444_10BITS;
+        break;
   case  AV_PIX_FMT_YUV420P10LE      :  
         out->_colorspace=ADM_COLOR_YV12_10BITS;
         break;
     default:
-      printf ("[lavc] Unhandled colorspace: %d\n", _context->pix_fmt);
+      printf ("[lavc] Unhandled colorspace: %d (AV_PIX_FMT_YUV444P10BE=%d)\n", _context->pix_fmt,AV_PIX_FMT_YUV444P10BE);
       return 0;
     }
     clonePic (_frame, out);
