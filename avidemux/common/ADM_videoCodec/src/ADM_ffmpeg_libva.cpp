@@ -53,8 +53,43 @@ static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 #define aprintf ADM_info
 #endif
 
+/**
+ * 
+ * @param instance
+ * @param cookie
+ * @return 
+ */
+static  bool libvaMarkSurfaceUsed(void *instance,void *cookie)
+{
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
+    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    inst->markSurfaceUsed(s);
+    return true;
+}
+/**
+ * 
+ * @param instance
+ * @param cookie
+ * @return 
+ */
+static  bool libvaMarkSurfaceUnused(void *instance,void *cookie)
+{
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
+    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    inst->markSurfaceUnused(s);
+    return true;
+}
 
-
+/**
+    \fn vdpauRefDownload
+    \brief Convert a VASurface image to a regular image
+*/
+static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
+{
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
+    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    return        s->toAdmImage(image);
+}
 
 /**
     \fn libvaUsable
@@ -127,8 +162,8 @@ bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img)
 }
  
 /**
-    \fn ADM_VDPAUgetBuffer
-    \brief trampoline to get a VDPAU surface
+    \fn ADM_LIBVAgetBuffer
+    \brief trampoline to get a LIBVA surface
 */
 int ADM_LIBVAgetBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
@@ -153,7 +188,7 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
 
 /**
     \fn getBuffer
-    \brief returns a VDPAU render masquerading as a AVFrame
+    \brief returns a LIBVA surface masquerading as a AVFrame
 */
 int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
@@ -180,30 +215,22 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     imageMutex.unlock();
     s->refCount=0;
     markSurfaceUsed(s);
-    aprintf("Alloc Buffer : 0x%llx\n",s);
-    pic->data[0]=(uint8_t *)s;
-    pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;    
-    // It only works because surface is the 1st field of render!
-    pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
+    
+       pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
                                      ADM_LIBVAreleaseBuffer, 
                                      (void *)this,
                                      AV_BUFFER_FLAG_READONLY);
+    
+    aprintf("Alloc Buffer : 0x%llx\n",s);
+    pic->data[0]=(uint8_t *)s;
+    pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
+    pic->reordered_opaque= avctx->reordered_opaque;    
     return 0;
 }
-/**
-    \fn vdpauRefDownload
-    \brief Convert a VDPAU image to a regular image
-*/
-
-static bool libvaRefDownload(ADMImage *image, ADM_vaSurface *img, decoderFFLIBVA *decoder)
-{
-    return        img->toAdmImage(image);
-}
 
 /**
-    \fn vdpauCleanup
+    \fn libvaCleanup
 */
 bool libvaCleanup(void)
 {
@@ -264,14 +291,14 @@ extern "C"
 static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt)
 {
     int i;
-    ADM_info("[vdpau]: GetFormat\n");
+    ADM_info("[LIBVA]: GetFormat\n");
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
-        ADM_info("[vdpau]: Evaluating %d\n",c);
+        ADM_info("[LIBVA]: Evaluating %d\n",c);
         if(c!=AV_PIX_FMT_VAAPI_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
         switch(avctx->codec_id)
@@ -291,7 +318,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     {
         return AV_PIX_FMT_NONE;
     }
-    // Finish intialization of Vdpau decoder
+    // Finish intialization of LIBVA decoder
     const AVHWAccel *accel=parseHwAccel(outPix,id);
     if(accel)
     {
@@ -343,10 +370,16 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     ADM_info("Preallocated %d surfaces\n",nbSurface);
     // Linearize surface
 #endif        
+    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
-    _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    
+    if(!admLibVA::fillContext(va_context))
+    {
+        ADM_warning("Cannot get va context initialized for libavcodec\n");
+        alive=false;
+        return ;
+    }
+    _context->hwaccel_context=va_context;
     
 #if 0
       
@@ -469,7 +502,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture=true;
         out->Pts= (uint64_t)(frame->reordered_opaque);
-        ADM_info("[VDPAU] No picture \n");
+        ADM_info("[LIBVA] No picture \n");
         return false;
     }
     return readBackBuffer(frame,in,out);  
@@ -483,22 +516,17 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
  */
 bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
-#if 0
-   // VdpSurface *surface=decodedFrame->data[3];
-    struct vdpau_render_state *rndr = (struct vdpau_render_state *)decodedFrame->data[0];
-    ADM_assert(rndr);
-    aprintf("Decoding ===> Got surface = %d\n",rndr->surface);
-    out->refType=ADM_HW_VDPAU;
-    out->refDescriptor.refCookie=(void *)rndr;
-    out->refDescriptor.refInstance  =&vdpau;
-    out->refDescriptor.refMarkUsed  =libvaMarkSurfaceUsed;
-    out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
-    out->refDescriptor.refDownload  =vdpauRefDownload;
-    vdpauMarkSurfaceUsed(&vdpau,(void *)rndr);
-#endif    
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
-    out->Pts= (uint64_t)(pts_opaque);    
+    out->Pts= (uint64_t)(pts_opaque);        
     out->flags=admFrameTypeFromLav(decodedFrame);
+    out->refType=ADM_HW_LIBVA;
+    out->refDescriptor.refCookie=this;
+    out->refDescriptor.refInstance=decodedFrame->data[0];
+    out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
+    out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
+    out->refDescriptor.refDownload=libvaRefDownload;
+
+    
     return true;
 }
 
