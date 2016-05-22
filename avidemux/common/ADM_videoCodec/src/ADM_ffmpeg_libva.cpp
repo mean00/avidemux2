@@ -61,8 +61,8 @@ static void ADM_LIBVAreleaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
  */
 static  bool libvaMarkSurfaceUsed(void *instance,void *cookie)
 {
-    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
-    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)instance;
+    ADM_vaSurface *s=(ADM_vaSurface *)cookie ;
     inst->markSurfaceUsed(s);
     return true;
 }
@@ -74,8 +74,8 @@ static  bool libvaMarkSurfaceUsed(void *instance,void *cookie)
  */
 static  bool libvaMarkSurfaceUnused(void *instance,void *cookie)
 {
-    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
-    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)instance ;
+    ADM_vaSurface *s=(ADM_vaSurface *)cookie ;
     inst->markSurfaceUnused(s);
     return true;
 }
@@ -86,8 +86,8 @@ static  bool libvaMarkSurfaceUnused(void *instance,void *cookie)
 */
 static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
-    decoderFFLIBVA *inst=(decoderFFLIBVA *)cookie;
-    ADM_vaSurface *s=(ADM_vaSurface *)instance ;
+    decoderFFLIBVA *inst=(decoderFFLIBVA *)instance ;
+    ADM_vaSurface *s=(ADM_vaSurface *) cookie;
     return        s->toAdmImage(image);
 }
 
@@ -432,7 +432,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     aprintf("==> uncompress %s\n",_context->codec->long_name);
     if(out->refType==ADM_HW_LIBVA)
     {
-            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refInstance;
+            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refHwImage;
             markSurfaceUnused(img);
             out->refType=ADM_HW_NONE;
     }
@@ -494,9 +494,9 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->Pts= (uint64_t)(pts_opaque);        
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->refType=ADM_HW_LIBVA;
-    out->refDescriptor.refCookie=this;
+    out->refDescriptor.refCodec=this;
     ADM_vaSurface *img=(ADM_vaSurface *)(decodedFrame->data[0]);
-    out->refDescriptor.refInstance=img; // the ADM_vaImage in disguise
+    out->refDescriptor.refHwImage=img; // the ADM_vaImage in disguise
     markSurfaceUsed(img); // one ref for us too, it will be free when the image is cycled
     aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)img->surface);
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;

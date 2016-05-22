@@ -52,8 +52,8 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
          else // it is a hw surface
         {
             refType                    =src->refType;
-            refDescriptor.refCookie    =src->refDescriptor.refCookie;
-            refDescriptor.refInstance  =src->refDescriptor.refInstance;
+            refDescriptor.refHwImage   =src->refDescriptor.refHwImage;
+            refDescriptor.refCodec     =src->refDescriptor.refCodec;
             refDescriptor.refMarkUsed  =src->refDescriptor.refMarkUsed;
             refDescriptor.refMarkUnused=src->refDescriptor.refMarkUnused;
             refDescriptor.refDownload  =src->refDescriptor.refDownload;

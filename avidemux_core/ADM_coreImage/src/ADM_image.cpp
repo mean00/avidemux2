@@ -72,7 +72,7 @@ ADMImage::~ADMImage()
 {
         if(refType==ADM_HW_NONE) return true;
         ADM_assert(refDescriptor.refMarkUsed);
-        return refDescriptor.refMarkUsed(refDescriptor.refInstance,refDescriptor.refCookie); 
+        return refDescriptor.refMarkUsed(refDescriptor.refCodec,refDescriptor.refHwImage); 
 }
 /**
     \fn hwDecRefCount
@@ -84,7 +84,7 @@ ADMImage::~ADMImage()
 {
         if(refType==ADM_HW_NONE) return true;
         ADM_assert(refDescriptor.refMarkUnused);
-        bool r=refDescriptor.refMarkUnused(refDescriptor.refInstance,refDescriptor.refCookie); 
+        bool r=refDescriptor.refMarkUnused(refDescriptor.refCodec,refDescriptor.refHwImage); 
         refType=ADM_HW_NONE;
         return r;
         
@@ -99,7 +99,7 @@ ADMImage::~ADMImage()
 bool r=false;
         if(refType==ADM_HW_NONE) return true;
         ADM_assert(refDescriptor.refDownload);
-        r=refDescriptor.refDownload(this,refDescriptor.refInstance,refDescriptor.refCookie);
+        r=refDescriptor.refDownload(this,refDescriptor.refCodec,refDescriptor.refHwImage);
         hwDecRefCount();
         refType=ADM_HW_NONE;
         return r;

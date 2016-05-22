@@ -67,15 +67,15 @@ typedef enum
 
 
 typedef bool refFunction(void *instance,void *cookie);
-typedef bool refDownloadFunction(ADMImage *image, void *instance, void *cookie);
+typedef bool refDownloadFunction(ADMImage *image, void *refCodec, void *refHwImage);
 /**
     \struct hwRefDescriptor
     \brief  Used to deal with hw accelerated stuff
 */
 typedef struct
 {
-        void            *refInstance;  ///
-        void            *refCookie;  /// Ref to a hw image
+        void            *refCodec;  ///
+        void            *refHwImage;  /// Ref to a hw image
         refFunction     *refMarkUsed;   ///
         refFunction     *refMarkUnused; ///
         refDownloadFunction     *refDownload;

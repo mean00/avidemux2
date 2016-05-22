@@ -345,7 +345,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     aprintf("==> uncompress %s\n",_context->codec->long_name);
     if(out->refType==ADM_HW_VDPAU)
     {
-            vdpauMarkSurfaceUnused(&vdpau,out->refDescriptor.refCookie);
+            vdpauMarkSurfaceUnused(&vdpau,out->refDescriptor.refHwImage);
             out->refType=ADM_HW_NONE;
     }
 
@@ -406,8 +406,8 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     ADM_assert(rndr);
     aprintf("Decoding ===> Got surface = %d\n",rndr->surface);
     out->refType=ADM_HW_VDPAU;
-    out->refDescriptor.refCookie=(void *)rndr;
-    out->refDescriptor.refInstance=&vdpau;
+    out->refDescriptor.refHwImage=(void *)rndr;
+    out->refDescriptor.refCodec=&vdpau;
     out->refDescriptor.refMarkUsed=vdpauMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=vdpauMarkSurfaceUnused;
     out->refDescriptor.refDownload=vdpauRefDownload;

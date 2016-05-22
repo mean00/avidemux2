@@ -163,7 +163,7 @@ bool vdpauRender::displayImage(ADMImage *pic)
     if(pic->refType==ADM_HW_VDPAU)
     {
         // cookie is a render...
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refCookie;
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refHwImage;
         myInput=rndr->surface;
         aprintf("VDPAU: This is already vdpau image, just passing along surface=%d\n",rndr->surface);
     }else

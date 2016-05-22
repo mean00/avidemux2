@@ -107,7 +107,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     // if input is already a VA surface, no need to reupload it...
     if(pic->refType==ADM_HW_LIBVA)
     {
-        ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refInstance;
+        ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refHwImage;
         admLibVA::putX11Surface(img,info.systemWindowId,displayWidth,displayHeight);
         lastSurface=img;
     }else
