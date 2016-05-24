@@ -27,6 +27,12 @@ extern "C" {
 
 static ADM_vaSurface *lastSurface=NULL;
 
+
+VideoRenderBase *spawnLIBVARender()
+{
+    return new libvaRender();
+}
+
 //________________Wrapper around Xv_______________
 /**
     \fn libvaRender

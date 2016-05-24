@@ -20,6 +20,14 @@
 
 extern void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr);
 extern void *MUI_getDrawWidget(void);
+
+
+VideoRenderBase *spawnSimpleRender()
+{
+    return new simpleRender();
+}
+
+
 /**
     \fn simpleRender
 */

@@ -45,6 +45,13 @@ static uint8_t  GUI_XvDisplay(ADMImage *src, uint32_t w, uint32_t h,uint32_t des
 static uint8_t  GUI_XvRedraw( void );
 static uint8_t  getAtom(const char *string);
 static bool     xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH);
+
+//
+VideoRenderBase *spawnXvRender()
+{
+    return new XvRender();
+}
+
 //________________Wrapper around Xv_______________
 /**
     \fn XvRender

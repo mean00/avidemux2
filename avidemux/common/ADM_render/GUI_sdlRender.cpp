@@ -69,7 +69,12 @@ protected:
                         SDL_Renderer *sdl_renderer;
                         SDL_Texture  *sdl_texture;
 };
-
+/**
+ */
+VideoRenderBase *spawnSdlRender()
+{
+    return new sdlRender();
+}
 /**
  * 
  * @param userdata

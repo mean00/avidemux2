@@ -38,6 +38,13 @@ static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;
 static int                  currentSurface=0;
 static VdpPresentationQueue queue=VDP_INVALID_HANDLE;
 //________________Wrapper around Xv_______________
+
+
+VideoRenderBase *spawnVDPAURender()
+{
+    return new vdpauRender;
+}
+
 /**
     \fn vdpauRender
 */
@@ -221,7 +228,7 @@ bool vdpauRender::refresh(void)
         ADM_warning("[Vdpau] Refresh : Cannot display on presenation queue\n");
         return false;
     }
-    renderCompleteRedrawRequest();
+    //renderCompleteRedrawRequest();
     return true;
 }
 #endif
