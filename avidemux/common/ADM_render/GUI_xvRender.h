@@ -31,8 +31,14 @@ class XvRender: public VideoRenderBase
 
       protected:
                              GUI_WindowInfo info;
-                        bool lowLevelXvInit( GUI_WindowInfo *  window, uint32_t w, uint32_t h);
-                        bool xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH);
+                        bool    lowLevelXvInit( GUI_WindowInfo *  window, uint32_t w, uint32_t h);
+                        bool    xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH);
+                        bool    lookupYV12(Display * dis, uint32_t port, uint32_t * fmt);
+                        Atom    getAtom(const char *string,Display *xv_display,unsigned int xv_port);
+                        void    displayAdaptorInfo(int num,XvAdaptorInfo *curai);
+
+                        
+                        
       public:
                              XvRender( void ) ;
               virtual        ~XvRender();

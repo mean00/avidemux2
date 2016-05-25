@@ -37,10 +37,7 @@
 #include "GUI_accelRender.h"
 #include "GUI_xvRender.h"
 
-// Fwd
-static uint8_t  GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt);
-static uint8_t  getAtom(const char *string,Display *xv_display,unsigned int xv_port);
-
+// Instantiator
 //
 VideoRenderBase *spawnXvRender()
 {
@@ -49,6 +46,7 @@ VideoRenderBase *spawnXvRender()
 
 /**
     \fn XvRender
+ *  \brief Ctor
 */
 XvRender::XvRender( void )
 {
@@ -87,12 +85,10 @@ bool XvRender::stop(void)
         ADM_warning("[Xvideo] Trouble releasing port...\n");
     }
     XUnlockDisplay (xv_display);
-
-
-     xvimage=NULL;
-     xv_display=NULL;
-     xv_port=0;
-     return true;
+    xvimage=NULL;
+    xv_display=NULL;
+    xv_port=0;
+    return true;
 }
 /**
     \fn displayImage
@@ -102,7 +98,6 @@ bool XvRender::displayImage(ADMImage *src)
     if (xvimage)
     {
         XLockDisplay (xv_display);
-        // Pack src into xvimage->data
         int plane=imageWidth*imageHeight;
         BitBlit((uint8_t *)xvimage->data, imageWidth,src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),imageWidth,imageHeight);
         BitBlit((uint8_t *)xvimage->data+plane, imageWidth/2,src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),imageWidth/2,imageHeight/2);
@@ -149,10 +144,10 @@ bool XvRender::xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH)
 /**
     \fn lowLevelXvInit
 */
-
+#define WDN xv_display
 bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 {
-    unsigned int ver, rel, req, ev, err;
+    
     unsigned int port, adaptors;
     static XvAdaptorInfo *ai;
     static XvAdaptorInfo *curai;
@@ -161,54 +156,38 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 
     xv_display=(Display *)window->display;
     xv_win=window->systemWindowId;
-
-
-#define WDN xv_display
     xv_port = 0;
-
-    if (Success != XvQueryExtension(WDN, &ver, &rel, &req, &ev, &err))
     {
-      ADM_info("[Xvideo] Query Extension failed\n");
-      return false;
+        unsigned int ver, rel, req, ev, err;
+        if (Success != XvQueryExtension(WDN, &ver, &rel, &req, &ev, &err))
+        {
+            ADM_info("[Xvideo] Query Extension failed\n");
+            return false;
+        }
     }
     /* check for Xvideo support */
     if (Success != XvQueryAdaptors(WDN,
                    DefaultRootWindow(WDN), &adaptors, &ai))
     {
-      ADM_info("[Xvideo] Query Adaptor failed\n");
-     return false;
+        ADM_info("[Xvideo] Query Adaptor failed\n");
+        return false;
     }
     curai = ai;
-    XvFormat *formats;
+
     // Dump infos
     port = 0;
-    for (uint16_t i = 0; (!port) && (i < adaptors); i++)
+    for (int  i = 0; (!port) && (i < adaptors); i++)
     {
-#ifdef VERBOSE_XV
-        ADM_info("[Xvideo]_______________________________\n");
-        ADM_info("[Xvideo] Adaptor         : %d\n", i);
-        ADM_info("[Xvideo] Base ID        : %ld\n", curai->base_id);
-        ADM_info("[Xvideo] Nb Port         : %lu\n", curai->num_ports);
-        ADM_info("[Xvideo] Type                 : %d,", curai->type);
-  #define CHECK(x) if(curai->type & x) printf("|"#x);
-        CHECK(XvInputMask);
-        CHECK(XvOutputMask);
-        CHECK(XvVideoMask);
-        CHECK(XvStillMask);
-        CHECK(XvImageMask);
-
-        ADM_info("\n[Xvideo] Name                 : %s\n", curai->name);
-        ADM_info("[Xvideo] Num Adap         : %lu\n", curai->num_adaptors);
-        ADM_info("[Xvideo] Num fmt         : %lu\n", curai->num_formats);
-#endif
+        XvFormat *formats;
+        displayAdaptorInfo(i,curai);
         formats = curai->formats;
-
-        //
-        uint16_t k;
-        for (k = 0; (k < curai->num_ports) && !port; k++)
+        for (int k = 0; (k < curai->num_ports) && !port; k++)
         {
-          if (GUI_XvList(WDN, k + curai->base_id, &xv_format))
+          if (lookupYV12(WDN, k + curai->base_id, &xv_format))
+          {
               port = k + curai->base_id;
+              break;
+          }
         }
         curai++;
     }
@@ -218,12 +197,7 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
       ADM_info("[Xvideo] no port found\n");
       return false;
     }
-#ifdef     COLORSPACE_YV12
     ADM_info("[Xvideo] Xv YV12 found at port :%d, format : %" PRIi32"\n", port, xv_format);
-#else
-    ADM_info("[Xvideo] Xv YUY2 found at port :%d, format : %" PRIi32"\n", port, xv_format);
-#endif
-
     if (Success != XvGrabPort(WDN, port, 0))
     {
         ADM_warning("Grabbing port failed\n");
@@ -286,57 +260,82 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
 }
 
 /**
-    \fn GUI_XvList
+    \fn lookupYV12
+ *  \brief search for YV12 compatible port, returns it in fmt
 */
-uint8_t GUI_XvList(Display * dis, uint32_t port, uint32_t * fmt)
+bool  XvRender::lookupYV12(Display * dis, uint32_t port, uint32_t * fmt)
 {
     XvImageFormatValues *formatValues;
     int imgfmt;
-    int k, f = 0;
+    int k;
+    bool found = false;
 
     formatValues = XvListImageFormats(dis, port, &imgfmt);
 // when "formatValues" is NULL, imgfmt should be zero, too
 //    if (formatValues)
 // this will run endless or segfault if the colorspace searched for isn't found
-    for (k = 0; !f && (k < imgfmt); k++)
+    for (k = 0; !found && (k < imgfmt); k++)
     {
-#ifdef VERBOSE_XV
         ADM_info("[Xvideo]%d/%d: %" PRIx32" %d --> %s\n", k,imgfmt,port, formatValues[k].id,  formatValues[k].guid);
-#endif
-
         if (!strcmp(formatValues[k].guid, "YV12"))
         {
-            f = 1;
+            found = true;
             *fmt = formatValues[k].id;
         }
     }
     if (formatValues)           //checking if it's no NULL-pointer won't hurt
         XFree(formatValues);
-    return f;
+    return found;
 }
 /**
     \fn getAtom
 */
-uint8_t getAtom(const char *string,Display *xv_display,unsigned int  xv_port)
+Atom XvRender::getAtom(const char *string,Display *xv_display,unsigned int  xv_port)
 {
 XvAttribute * attributes;
 int attrib_count,i;
 Atom xv_atom = None;
 
     attributes = XvQueryPortAttributes( xv_display, xv_port, &attrib_count );
-    if( attributes!=NULL )
+    if(! attributes )
+        return None;
+    
+    for ( i = 0; i < attrib_count; ++i )
     {
-      for ( i = 0; i < attrib_count; ++i )
+      if (! strcmp(attributes[i].name, string ))
       {
-        if (! strcmp(attributes[i].name, string ))
-        {
-          xv_atom = XInternAtom( xv_display, string, False );
-          break; // found what we want, break out
-        }
+        xv_atom = XInternAtom( xv_display, string, False );
+        XFree( attributes );
+        return xv_atom;
       }
-      XFree( attributes );
     }
-    return xv_atom;
+    XFree( attributes );
+    return None;
 
+}
+/**
+ * 
+ * @param curai
+ */
+void XvRender::displayAdaptorInfo(int num, XvAdaptorInfo *curai)
+{
+#ifdef VERBOSE_XV
+        ADM_info("[Xvideo]_______________________________\n");
+        ADM_info("[Xvideo] Adaptor           : %d\n", num);
+        ADM_info("[Xvideo] Base ID           : %ld\n", curai->base_id);
+        ADM_info("[Xvideo] Nb Port           : %lu\n", curai->num_ports);
+        ADM_info("[Xvideo] Type              : %d ,", curai->type);
+  #define CHECK(x) if(curai->type & x) ADM_info("|"#x);
+        CHECK(XvInputMask);
+        CHECK(XvOutputMask);
+        CHECK(XvVideoMask);
+        CHECK(XvStillMask);
+        CHECK(XvImageMask);
+
+        ADM_info("\n");
+        ADM_info("[Xvideo] Name              : %s\n", curai->name);
+        ADM_info("[Xvideo] Num Adap          : %lu\n", curai->num_adaptors);
+        ADM_info("[Xvideo] Num fmt           : %lu\n", curai->num_formats);
+#endif
 }
 //
