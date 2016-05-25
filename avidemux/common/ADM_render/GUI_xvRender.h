@@ -14,28 +14,38 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#ifndef T_XVRENDER_H
-#define T_XVRENDER_H
+#pragma once
 /**
     \fn class XvRender
 */
 class XvRender: public VideoRenderBase
 {
       protected:
-                            GUI_WindowInfo info;
+                        unsigned int xv_port;
+                        uint32_t xv_format;
+                        Display *xv_display;
+                        XvImage *xvimage;
+                        GC xv_gc;
+                        XGCValues xv_xgc;
+                        Window xv_win;
+
+      protected:
+                             GUI_WindowInfo info;
+                        bool lowLevelXvInit( GUI_WindowInfo *  window, uint32_t w, uint32_t h);
+                        bool xvDraw(uint32_t w,uint32_t h,uint32_t destW,uint32_t destH);
       public:
                              XvRender( void ) ;
               virtual        ~XvRender();
               virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
               virtual   bool changeZoom(renderZoom newzoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourselves
-                        const char *getName() {return "XVideo";}
+                  const char *getName() {return "XVideo";}
 };
-#endif
+
 
 
 
