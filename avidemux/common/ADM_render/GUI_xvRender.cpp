@@ -98,10 +98,11 @@ bool XvRender::displayImage(ADMImage *src)
     if (xvimage)
     {
         XLockDisplay (xv_display);
-        int plane=imageWidth*imageHeight;
-        BitBlit((uint8_t *)xvimage->data, imageWidth,src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),imageWidth,imageHeight);
-        BitBlit((uint8_t *)xvimage->data+plane, imageWidth/2,src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),imageWidth/2,imageHeight/2);
-        BitBlit((uint8_t *)xvimage->data+(plane*5)/4, imageWidth/2,src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),imageWidth/2,imageHeight/2);
+        int plane=xvimage->pitches[0]*imageHeight;
+        int plane2=xvimage->pitches[1]*(imageHeight>>1);
+        BitBlit((uint8_t *)xvimage->data, xvimage->pitches[0],src->GetReadPtr(PLANAR_Y),src->GetPitch(PLANAR_Y),imageWidth,imageHeight);
+        BitBlit((uint8_t *)xvimage->data+plane,  xvimage->pitches[1],src->GetReadPtr(PLANAR_U),src->GetPitch(PLANAR_U),imageWidth/2,imageHeight/2);
+        BitBlit((uint8_t *)xvimage->data+plane+plane2,  xvimage->pitches[2],src->GetReadPtr(PLANAR_V),src->GetPitch(PLANAR_V),imageWidth/2,imageHeight/2);
         XUnlockDisplay (xv_display);
         xvDraw(imageWidth,imageHeight,displayWidth,displayHeight);
     }
@@ -228,6 +229,11 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
     xvimage = XvShmCreateImage(WDN, xv_port,
                    xv_format, 0, w, h, &Shminfo);
 
+    if(!xvimage)
+    {
+           ADM_warning("XvShmCreateImage failed\n");
+           return false;
+    }
     Shminfo.shmid = shmget(IPC_PRIVATE, xvimage->data_size,
                    IPC_CREAT | 0777);
     if(Shminfo.shmid<=0)
