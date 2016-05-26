@@ -25,11 +25,9 @@
 uint32_t CpuCaps::myCpuCaps=0;
 uint32_t CpuCaps::myCpuMask=0xffffffff;
 
-/* Cpu caps interface to other libs */
-extern "C"{ 
-	int ADM_lavcodec_mm_support(void);
-	int ADM_mpeg2dec_mm_support(void);
-	
+extern "C"
+{
+#include "libavutil/cpu.h"
 }
 
 
@@ -178,6 +176,29 @@ int ADM_cpu_num_processors(void)
 }
 /**
  * 
+ * @param admMask
+ * @return 
+ */
+static int Cpu2Lav(uint32_t admMask)
+{
+   if(admMask==ADM_CPUCAP_ALL) 
+       return -1; // allow all
+   int out=0;
+ #define LAV_CPU_CAPS(x)    	if(admMask & ADM_CPUCAP_##x) out|=AV_CPU_FLAG_##x;
+    
+    	LAV_CPU_CAPS(MMX);
+    	LAV_CPU_CAPS(MMXEXT);
+    	LAV_CPU_CAPS(3DNOW);
+    	LAV_CPU_CAPS(3DNOWEXT);
+    	LAV_CPU_CAPS(SSE);
+    	LAV_CPU_CAPS(SSE2);
+    	LAV_CPU_CAPS(SSE3);
+    	LAV_CPU_CAPS(SSSE3);
+        return out;
+}
+
+/**
+ * 
  * @param mask
  * @return 
  */
@@ -185,6 +206,10 @@ bool     CpuCaps::setMask(uint32_t mask)
 {
     ADM_info("[CpuCaps] Setting mask to 0x%x\n",mask);
     myCpuMask=mask;
+    
+    int lavCpuMask=Cpu2Lav(myCpuMask);
+    av_set_cpu_flags_mask(lavCpuMask);
+    
     return true;
 }
 /**

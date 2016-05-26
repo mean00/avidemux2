@@ -62,5 +62,6 @@ endif (ADM_DEBUG AND FIND_LEAKS)
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
+target_link_libraries(ADM_core6  ADM_libavutil) # To get the CPU functions of libavutil
 ADM_LINK_THREAD(ADM_core6)
 ADM_INSTALL_LIB(ADM_core6)

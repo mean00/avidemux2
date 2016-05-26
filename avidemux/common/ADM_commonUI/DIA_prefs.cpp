@@ -105,7 +105,7 @@ std::string currentSdlDriver=getSdlDriverName();
 // Cpu caps
 #define CPU_CAPS(x)    	if(cpuMask & ADM_CPUCAP_##x) caps##x=1; else caps##x=0;
     
-    uint32_t cpuMask=CpuCaps::getMask();
+        uint32_t cpuMask=CpuCaps::getMask();
     	if(cpuMask==ADM_CPUCAP_ALL) capsAll=1; else capsAll=0;
     	CPU_CAPS(MMX);
     	CPU_CAPS(MMXEXT);
