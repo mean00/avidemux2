@@ -232,21 +232,29 @@ int startAvidemux(int argc, char *argv[])
 
     printf("Time: %s\n", ADM_epochToString(ADM_getSecondsSinceEpoch()));
 
-	for(int i = 0; i < argc; i++)
-	{
-		printf("%d: %s\n", i, argv[i]);
-	}
+    for(int i = 0; i < argc; i++)
+    {
+            printf("%d: %s\n", i, argv[i]);
+    }
 
 #ifndef __APPLE__
     ADM_InitMemcpy();
 #endif
-	printf("\nInitialising prefs\n");
-	initPrefs();
-	if(false==prefs->load()) // no prefs, set some sane default
+    printf("\nInitialising prefs\n");
+    initPrefs();
+    if(false==prefs->load()) // no prefs, set some sane default
     {
         setPrefsDefault();
     }
+    uint32_t cpuMask;
+     if(!prefs->get(FEATURES_CPU_CAPS,&cpuMask))
+    {
+       cpuMask=0xffffffff;   
+    }
+
     CpuCaps::init();
+    CpuCaps::setMask(cpuMask);
+    
     atexit(onexit);
 
 #ifdef _WIN32
@@ -485,15 +493,15 @@ bool isPortableMode(int argc, char *argv[])
         return true;
     }
 
-	for (int i = 0; i < argc; i++)
-	{
-		if (strcmp(argv[i], "--portable") == 0)
-		{
-			portableMode = true;
-			break;
-		}
-	}
+    for (int i = 0; i < argc; i++)
+    {
+            if (strcmp(argv[i], "--portable") == 0)
+            {
+                    portableMode = true;
+                    break;
+            }
+    }
 
-	return portableMode;
+    return portableMode;
 }
 //EOF
