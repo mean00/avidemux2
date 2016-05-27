@@ -319,20 +319,21 @@ bool ADM_AudiocoderLavcodec::decodeToS32Planar(float **outptr,uint32_t *nbOut)
 {
      // Interleave
     int nbSample=  _frame->nb_samples; 
-    int32_t *data[16];
     float scale=1./(float)(1LL<<31LL);
+    float *p=*outptr;
     for(int c=0;c<channels;c++)
     {
-        float *o=(*outptr)+c;
+        float *o=p+c;
         int32_t *d=(int32_t *)_frame->data[c];
+        
         for(int i=0;i<nbSample;i++)
         {
             *o=((float)d[i])*scale;
             o+=channels;
         }
     }
-   (*nbOut)+=nbSample*channels;
-   (*outptr)+=channels*nbSample;
+   (*nbOut) +=nbSample*channels;
+   (*outptr)+=nbSample*channels;
    return true;
 }
 
@@ -406,13 +407,15 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             _head+=out; // consumed bytes
             if(!gotData)
                 continue;
-        
-            switch(outputFlavor)
+            switch(_context->sample_fmt)
             {
-                    case asFloat:        decodeToFloat(&outptr,nbOut);break;
-                    case asFloatPlanar:  decodeToFloatPlanar(&outptr,nbOut);break;
-                    case asS32Planar:    decodeToS32Planar(&outptr,nbOut);break;
-                    default: ADM_error("unknown output flavor\n");break;
+              case AV_SAMPLE_FMT_FLT:     decodeToFloat(&outptr,nbOut);break;
+              case AV_SAMPLE_FMT_FLTP:    decodeToFloatPlanar(&outptr,nbOut);break;             
+              case AV_SAMPLE_FMT_S32P:    decodeToS32Planar(&outptr,nbOut);break;              
+              default:
+                  ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
+                  ADM_assert(0);
+                  break;
             }
         }
         //------------------
