@@ -58,27 +58,64 @@ static uint32_t read32(FILE *fd)
 */
 ADMImage *createImageFromFile(const char *filename)
 {
-	uint32_t w,h;
-	switch(ADM_identifyImageFile(filename,&w,&h))
-	{
-		case  ADM_PICTURE_UNKNOWN:
-					ADM_warning("[imageLoader] Trouble identifying /loading %s\n",filename);
-					return NULL;
-		case ADM_PICTURE_JPG:
-					return createImageFromFile_jpeg(filename);
-					break;
-		case ADM_PICTURE_PNG:
-					return createImageFromFile_png(filename);
-					break;
-		case ADM_PICTURE_BMP2:
-					return createImageFromFile_Bmp2(filename);
-					break;
-		default:
-				ADM_assert(0);
+    uint32_t w,h;
+    switch(ADM_identifyImageFile(filename,&w,&h))
+    {
+        case  ADM_PICTURE_UNKNOWN:
+                ADM_warning("[imageLoader] Trouble identifying /loading %s\n",filename);
+                return NULL;
+        case ADM_PICTURE_JPG:
+                return createImageFromFile_jpeg(filename);
+                break;
+        case ADM_PICTURE_PNG:
+                return createImageFromFile_png(filename);
+                break;
+        case ADM_PICTURE_BMP2:
+                return createImageFromFile_Bmp2(filename);
+                break;
+        default:
+                ADM_assert(0);
+                break;
 
-	}
-	ADM_assert(0);
-        return NULL;
+    }
+    ADM_assert(0);
+    return NULL;
+}
+/**
+ * 
+ * @param source
+ * @param w
+ * @param h
+ * @return 
+ */
+static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
+{
+   
+    	ADMImage *image=new ADMImageDefault(w,h);        
+        uint32_t srcPitch[3],dstPitch[3];
+        
+        image->GetPitches(dstPitch);
+        source->GetPitches(srcPitch);
+        
+        uint8_t *srcPlanes[3],*dstPlanes[3];
+        image->GetWritePlanes(dstPlanes);
+        source->GetReadPlanes(srcPlanes);
+
+                
+        ADM_colorspace sourceFormat=source->_colorspace;   
+        
+        // swap u & V, dont know why 
+        if(sourceFormat == ADM_COLOR_RGB32A)
+        {
+            uint8_t *s=dstPlanes[1];
+            dstPlanes[1]=dstPlanes[2];
+            dstPlanes[2]=s;
+        }
+
+        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
+        converter.convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes); 
+        
+        return image;
 }
 /**
  * 	\fn createImageFromFile_jpeg
@@ -87,220 +124,82 @@ ADMImage *createImageFromFile(const char *filename)
 ADMImage *createImageFromFile_jpeg(const char *filename)
 {
 
-	FILE *fd;
-	uint32_t _imgSize;
-	uint32_t w = 0, h = 0;
-
-
-		fd = ADM_fopen(filename, "rb");
-		fseek(fd, 0, SEEK_END);
-		_imgSize = ftell(fd);
-		fseek(fd, 0, SEEK_SET);
-
-		//Retrieve width & height
-		//_______________________
-		    uint16_t tag = 0, count = 0, off;
-
-
-		    fseek(fd, 0, SEEK_SET);
-		    read16(fd);	// skip jpeg ffd8
-		    while (count < 15 && tag != 0xFFC0)
-		    {
-
-		    	tag = read16(fd);
-		    	if ((tag >> 8) != 0xff)
-		    	{
-		    		ADM_warning("[imageLoader]invalid jpeg tag found (%x)\n", tag);
-		    	}
-		    	if (tag == 0xFFC0)
-		    	{
-		    		read16(fd);	// size
-		    		read8(fd);	// precision
-		    		h = read16(fd);
-		    		w = read16(fd);
-	                if(w&1) w++;
-	                if(h&1) h++;
-		    	}
-		    	else
-		    	{
-		    		off = read16(fd);
-		    		if (off < 2)
-		    		{
-		    			ADM_warning("[imageLoader]Offset too short!\n");
-		    		    fclose(fd);
-		    		    return NULL;
-		    		}
-		    		fseek(fd, off - 2, SEEK_CUR);
-		    	}
-			count++;
-		    }
-		    if (tag != 0xffc0)
-		    {
-		    	ADM_warning("[imageLoader]Cannot fint start of frame\n");
-				fclose(fd);
-				return NULL;
-		    }
-		    ADM_info("[imageLoader] %" PRIu32" x %" PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
-
-		// Load the binary coded image
-                    ADM_byteBuffer buffer(_imgSize);
-		    fseek(fd, 0, SEEK_SET);
-		    fread(buffer.at(0),_imgSize,1,fd);
-		    fclose(fd);
-		  //
-
-		    ADMImageRef tmpImage(w,h); // It is a reference image
-		    // Now unpack it ...
-            decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
-            if(!dec)
-            {
-                ADM_warning("Cannot find decoder for mpjeg");
-                return NULL;
-            }
-		    ADMCompressedImage bin;
-		    bin.data=buffer.at(0);
-		    bin.dataLength=_imgSize; // This is more than actually, but who cares...
-
-		    dec->uncompress (&bin, &tmpImage);
-		    //
-		    ADMImage *image=NULL;
-		    switch(tmpImage._colorspace)
-		    {
-		    case ADM_COLOR_YV12:
-		    {
-		    	ADM_info("[imageLoader] YV12\n");
-	    		image=new ADMImageDefault(w,h);
-	    		image->duplicate(&tmpImage);
-	    		break;
-		    }
-		    case ADM_COLOR_YUV422:
-		    {
-		    	ADM_info("[imageLoader] YUY2\n");
-		    	image=new ADMImageDefault(w,h);
-                ADMColorScalerSimple convert(w,h,ADM_COLOR_YUV422,ADM_COLOR_YV12);
-                uint32_t dstStride[3]={w,w/2,w/2};
-                uint8_t  *dstData[3]={YPLANE(image),UPLANE(image),VPLANE(image)};
-		    	convert.convertPlanes( tmpImage._planeStride,dstStride, tmpImage._planes,dstData);
-		    	break;
-		    }
-		    default:
-		    	GUI_Error_HIG(QT_TR_NOOP("Wrong Colorspace"),QT_TR_NOOP("Only YV12/I420 or YUY2/I422 JPegs are supported"));
-		    }
-		    // Cannot destroy decoder earlier as tmpImage has pointers to its internals
-		    delete dec;
-		    dec=NULL;
-		    return image;
-}
-/**
- * 	\fn createImageFromFile_jpeg
- *  \brief Create image from Bmp
- */
-ADMImage *createImageFromFile_Bmp(const char *filename)
-{
-
-    FILE *fd;
-    uint32_t _imgSize;
-    uint32_t w = 0, h = 0;
-    uint16_t  s16;
-    uint32_t s32;
+FILE *fd;
+uint32_t _imgSize;
+uint32_t w = 0, h = 0;
 
         fd = ADM_fopen(filename, "rb");
         fseek(fd, 0, SEEK_END);
         _imgSize = ftell(fd);
         fseek(fd, 0, SEEK_SET);
+        uint16_t tag = 0, count = 0, off;
 
-        //Retrieve width & height
-        //_______________________
-            ADM_BITMAPINFOHEADER bmph;
 
-        fread(&s16, 2, 1, fd);
-        if (s16 != 0x4D42)
+        fseek(fd, 0, SEEK_SET);
+        read16(fd);	// skip jpeg ffd8
+        while (count < 15 && tag != 0xFFC0)
         {
-            ADM_warning("[imageLoader] incorrect bmp sig.\n");
+            tag = read16(fd);
+            if ((tag >> 8) != 0xff)
+            {
+                ADM_warning("[imageLoader]invalid jpeg tag found (%x)\n", tag);
+            }
+            if (tag == 0xFFC0)
+            {
+                read16(fd);	// size
+                read8(fd);	// precision
+                h = read16(fd);
+                w = read16(fd);
+                if(w&1) w++;
+                if(h&1) h++;
+            }
+            else
+            {
+                off = read16(fd);
+                if (off < 2)
+                {
+                        ADM_warning("[imageLoader]Offset too short!\n");
+                    fclose(fd);
+                    return NULL;
+                }
+                fseek(fd, off - 2, SEEK_CUR);
+            }
+            count++;
+        }
+        if (tag != 0xffc0)
+        {
+            ADM_warning("[imageLoader]Cannot fint start of frame\n");
             fclose(fd);
             return NULL;
         }
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&bmph, sizeof(bmph), 1, fd);
-        if (bmph.biCompression != 0)
-        {
-            ADM_warning("[imageLoader]cannot handle compressed bmp\n");
-            fclose(fd);
-            return NULL;
-        }
+        ADM_info("[imageLoader] %" PRIu32" x %" PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
 
-        w = bmph.biWidth;
-        h = bmph.biHeight;
-
-
-        ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
-
-    // Load the binary coded image
-        ADM_byteBuffer buffer(w*h*3);
-
-        fread(buffer.at(0),w*h*3,1,fd);
+        // Load the binary coded image
+        ADM_byteBuffer buffer(_imgSize);
+        fseek(fd, 0, SEEK_SET);
+        fread(buffer.at(0),_imgSize,1,fd);
         fclose(fd);
+        //
 
-      // Colorconversion
+        ADMImageRef tmpImage(w,h); // It is a reference image
+        // Now unpack it ...
+        decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"MJPG"),   w,   h, 0 , NULL,0);
+        if(!dec)
+        {
+            ADM_warning("Cannot find decoder for mpjeg");
+            return NULL;
+        }
+        ADMCompressedImage bin;
+        bin.data=buffer.at(0);
+        bin.dataLength=_imgSize; // This is more than actually, but who cares...
 
-        ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(false,w,h,buffer.at(0),YPLANE(image));
-
-
+        dec->uncompress (&bin, &tmpImage);
+        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
+        delete dec;
+        dec=NULL;
         return image;
 }
-/**
- * 	\fn createImageFromFile_bmp2
- *  \brief Create image from Bmp2 (BM6)
- */
-ADMImage *createImageFromFile_Bmp2(const char *filename)
-{
 
-    ADM_BITMAPINFOHEADER bmph;
-    uint8_t fcc_tab[4];
-    uint32_t offset;
-    FILE *fd=NULL;
-    uint32_t w,h;
-
-	fd = ADM_fopen(filename, "rb");
- 	fseek(fd, 10, SEEK_SET);
-
- #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
- 						(fcc_tab[3]<<24))
-
-        fread(fcc_tab, 4, 1, fd);
-        offset = MK32();
-        // size, width height follow as int32
-        fread(&bmph, sizeof(bmph), 1, fd);
- #ifdef ADM_BIG_ENDIAN
- 	    Endian_BitMapInfo(&bmph);
- #endif
-        if (bmph.biCompression != 0)
-        {
-            ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
-            fclose(fd);
-            return NULL;
-        }
-        w = bmph.biWidth;
-        h = bmph.biHeight;
-        ADM_info("[imageLoader] BMP2 W: %" PRIu32" H: %" PRIu32" offset : %" PRIu32"\n", w, h, offset);
-// Load the binary coded image
- 	fseek(fd,offset,SEEK_SET);
-        
-        ADM_byteBuffer buffer(w*h*3);
-        
-        fread(buffer.at(0),w*h*3,1,fd);
-        fclose(fd);
-
-  // Colorconversion
-
-    	ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(true,w,h,buffer.at(0),YPLANE(image));
-
-    	return image;
-}
 /**
  * 	\fn createImageFromFile_png
  *  \brief Create image from PNG
@@ -349,31 +248,132 @@ ADMImage *createImageFromFile_png(const char *filename)
             dec=NULL;
             return NULL;
         }
-
-    	ADMImage *image=new ADMImageDefault(w,h);        
-        uint32_t srcPitch[3],dstPitch[3];
-        
-        image->GetPitches(dstPitch);
-        tmpImage.GetPitches(srcPitch);
-        
-        uint8_t *srcPlanes[3],*dstPlanes[3];
-        image->GetWritePlanes(dstPlanes);
-        tmpImage.GetReadPlanes(srcPlanes);
-
-                
-        ADM_colorspace sourceFormat=tmpImage._colorspace;   
-        
-        // swap u & V, dont know why 
-        uint8_t *s=dstPlanes[1];
-        dstPlanes[1]=dstPlanes[2];
-        dstPlanes[2]=s;
-
-        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
-        converter.convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
+        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
         
         delete dec;
         dec=NULL;
     	return image;
+}
+/**
+ * 	\fn createImageFromFile_jpeg
+ *  \brief Create image from Bmp
+ */
+ADMImage *createImageFromFile_Bmp(const char *filename)
+{
+
+    FILE *fd;
+    uint32_t _imgSize;
+    uint32_t w = 0, h = 0;
+    uint16_t  s16;
+    uint32_t s32;
+
+        fd = ADM_fopen(filename, "rb");
+        fseek(fd, 0, SEEK_END);
+        _imgSize = ftell(fd);
+        fseek(fd, 0, SEEK_SET);
+
+        //Retrieve width & height
+        //_______________________
+        ADM_BITMAPINFOHEADER bmph;
+
+        fread(&s16, 2, 1, fd);
+        if (s16 != 0x4D42)
+        {
+            ADM_warning("[imageLoader] incorrect bmp sig.\n");
+            fclose(fd);
+            return NULL;
+        }
+        fread(&s32, 4, 1, fd);
+        fread(&s32, 4, 1, fd);
+        fread(&s32, 4, 1, fd);
+        fread(&bmph, sizeof(bmph), 1, fd);
+        if (bmph.biCompression != 0)
+        {
+            ADM_warning("[imageLoader]cannot handle compressed bmp\n");
+            fclose(fd);
+            return NULL;
+        }
+
+        w = bmph.biWidth;
+        h = bmph.biHeight;
+
+
+        ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
+
+    // Load the binary coded image
+        ADM_byteBuffer buffer(w*h*3);
+
+        fread(buffer.at(0),w*h*3,1,fd);
+        fclose(fd);
+
+      // Colorconversion
+
+        ADMImage *image=new ADMImageDefault(w,h);
+        ADM_ConvertRgb24ToYV12(false,w,h,buffer.at(0),YPLANE(image));
+        return image;
+}
+/**
+ * 	\fn createImageFromFile_bmp2
+ *  \brief Create image from Bmp2 (BM6)
+ */
+ADMImage *createImageFromFile_Bmp2(const char *filename)
+{
+
+    ADM_BITMAPINFOHEADER bmph;
+    uint8_t fcc_tab[4];
+    uint32_t offset;
+    FILE *fd=NULL;
+    uint32_t w,h;
+
+	fd = ADM_fopen(filename, "rb");
+ 	fseek(fd, 10, SEEK_SET);
+
+ #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
+ 						(fcc_tab[3]<<24))
+
+        fread(fcc_tab, 4, 1, fd);
+        offset = MK32();
+        // size, width height follow as int32
+        fread(&bmph, sizeof(bmph), 1, fd);
+ #ifdef ADM_BIG_ENDIAN
+ 	    Endian_BitMapInfo(&bmph);
+ #endif
+        if (bmph.biCompression != 0)
+        {
+            ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
+            fclose(fd);
+            return NULL;
+        }
+        w = bmph.biWidth;
+        h = bmph.biHeight;
+        ADM_info("[imageLoader] BMP2 W: %" PRIu32" H: %" PRIu32" offset : %" PRIu32"\n", w, h, offset);
+// Load the binary coded image
+ 	fseek(fd,offset,SEEK_SET);
+        
+        ADM_byteBuffer buffer(w*h*4);
+        
+        fread(buffer.at(0),w*h*4,1,fd);
+        fclose(fd);
+
+  // Colorconversion
+
+    	
+        ADMImageRefWrittable ref(w,h);
+        
+        if(0)
+        {
+            ref._planes[0]=buffer.at(0);
+            ref._planeStride[0]=w*4;
+            ref._colorspace=ADM_COLOR_RGB32A;
+        }else
+        {
+            ref._planes[0]=buffer.at(0)+(h-1)*w*3;
+            ref._planeStride[0]=-w*3;
+            ref._colorspace=ADM_COLOR_RGB24;
+        }
+        
+
+    	return convertImageColorSpace(&ref,w,h);
 }
 /**
  * 		\fn ADM_identidyImageFile
@@ -381,102 +381,107 @@ ADMImage *createImageFromFile_png(const char *filename)
  */
 ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h)
 {
-			uint32_t *fcc;
-		    uint8_t fcc_tab[4];
-		    FILE *fd;
-		    uint32_t off,tag=0,count,size;
+    uint32_t *fcc;
+    uint8_t fcc_tab[4];
+    FILE *fd;
+    uint32_t off,tag=0,count,size;
 
-		    // 1- identity the file type
-		    //
-		    fcc = (uint32_t *) fcc_tab;
-		    fd = ADM_fopen(filename, "rb");
-		    if (!fd)
-		    {
-		    	printf("[imageIdentify] Cannot open that file!\n");
-		    	return ADM_PICTURE_UNKNOWN;
-		    }
-		    fread(fcc_tab, 4, 1, fd);
-		    fcc = (uint32_t *) fcc_tab;
-		    // 2- JPEG ?
-		    if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
-		    {
-		    			// JPEG
-		    	  			fseek(fd, 0, SEEK_SET);
-		    			    read16(fd);	// skip jpeg ffd8
-		    			    count=0;
-		    			    while (count < 10 && tag != 0xFFC0)
-		    			    {
+    // 1- identity the file type
+    //
+    fcc = (uint32_t *) fcc_tab;
+    fd = ADM_fopen(filename, "rb");
+    if (!fd)
+    {
+        ADM_info("[imageIdentify] Cannot open that file!\n");
+        return ADM_PICTURE_UNKNOWN;
+    }
+    fread(fcc_tab, 4, 1, fd);
+    fcc = (uint32_t *) fcc_tab;
+    // 2- JPEG ?
+#define MAX_JPEG_TAG 20
+    if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
+    {
+        // JPEG
+            fseek(fd, 0, SEEK_SET);
+            read16(fd);	// skip jpeg ffd8
+            count=0;
+            while (count < MAX_JPEG_TAG && tag != 0xFFC0)
+            {
+                tag = read16(fd);
+                if ((tag >> 8) != 0xff)
+                {
+                        ADM_warning("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
+                }
+                if (tag == 0xFFC0)
+                {
+                    read16(fd);	// size
+                    read8(fd);	// precision
+                    *h = read16(fd);
+                    *w = read16(fd);
+                    ADM_info("Jpeg is %d x %d\n",(int)*w,(int)*h);
+                    if(*w&1) w++;
+                    if(*h&1) h++;
+                }
+                else
+                {
+                    off = read16(fd);
+                    if (off < 2)
+                    {
+                        ADM_warning("[imageIdentify]Offset too short!\n");
+                        fclose(fd);
+                        return ADM_PICTURE_UNKNOWN;
+                    }
+                    fseek(fd, off - 2, SEEK_CUR);
+                }
+                count++;
+            }
+            fclose(fd);
+            if(count>=MAX_JPEG_TAG) 
+            {
+                ADM_warning("Too many jpeg tags\n");
+                return ADM_PICTURE_UNKNOWN;
+            }
+            return ADM_PICTURE_JPG;
+    }
+    // PNG ?
+    if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')
+    {
+        fseek(fd, 0, SEEK_SET);
+        read32(fd);
+        read32(fd);
+        read32(fd);
+        read32(fd);
+        *w=read32(fd);
+        *h=read32(fd);
+        fclose(fd);
+        return ADM_PICTURE_PNG;
+    }
+    // BMP2?
+    if (fcc_tab[0] == 'B' && fcc_tab[1] == 'M')
+    {
+        ADM_BITMAPINFOHEADER bmph;
 
-		    			    	tag = read16(fd);
-		    			    	if ((tag >> 8) != 0xff)
-		    			    	{
-		    			    		ADM_warning("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
-		    			    	}
-		    			    	if (tag == 0xFFC0)
-		    			    	{
-		    			    		read16(fd);	// size
-		    			    		read8(fd);	// precision
-		    			    		*h = read16(fd);
-		    			    		*w = read16(fd);
-		    		                if(*w&1) w++;
-		    		                if(*h&1) h++;
-		    			    	}
-		    			    	else
-		    			    	{
-		    			    		off = read16(fd);
-		    			    		if (off < 2)
-		    			    		{
-		    			    			ADM_warning("[imageIdentify]Offset too short!\n");
-		    			    		    fclose(fd);
-		    			    		    return ADM_PICTURE_UNKNOWN;
-		    			    		}
-		    			    		fseek(fd, off - 2, SEEK_CUR);
-		    			    	}
-		    				count++;
-		    			    }
-		    			    fclose(fd);
-		    			    if(count>=10) return ADM_PICTURE_UNKNOWN;
-		    			    return ADM_PICTURE_JPG;
-		    }
-		    // PNG ?
-		    if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')
-			    {
-		     	    fseek(fd, 0, SEEK_SET);
-		     	    read32(fd);
-		     	    read32(fd);
-		     	    read32(fd);
-		     	    read32(fd);
-		     	    *w=read32(fd);
-		     	    *h=read32(fd);
-		     	    fclose(fd);
-		     	    return ADM_PICTURE_PNG;
-			    }
-		    // BMP2?
-		    if (fcc_tab[0] == 'B' && fcc_tab[1] == 'M')
-		    {
-		    	    ADM_BITMAPINFOHEADER bmph;
-
-		     	    fseek(fd, 10, SEEK_SET);
-		     	    fread(fcc_tab, 4, 1, fd);
-		     	    // size, width height follow as int32
-		     	    fread(&bmph, sizeof(bmph), 1, fd);
-		     #ifdef ADM_BIG_ENDIAN
-		     	    Endian_BitMapInfo(&bmph);
-		     #endif
-		     	    if (bmph.biCompression != 0)
-		     	    {
-		     	    	ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
-		     	    	fclose(fd);
-		     	    	return ADM_PICTURE_UNKNOWN;
-		     	    }
-		     	    *w = bmph.biWidth;
-		     	    *h = bmph.biHeight;
-	     	    	fclose(fd);
-	     	    	return ADM_PICTURE_BMP2;
-		    }
-		    // Unknown filetype...
-		    fclose(fd);
-		    return ADM_PICTURE_UNKNOWN;
+            fseek(fd, 10, SEEK_SET);
+            fread(fcc_tab, 4, 1, fd);
+            // size, width height follow as int32
+            fread(&bmph, sizeof(bmph), 1, fd);
+     #ifdef ADM_BIG_ENDIAN
+            Endian_BitMapInfo(&bmph);
+     #endif
+            if (bmph.biCompression != 0)
+            {
+                ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
+                fclose(fd);
+                return ADM_PICTURE_UNKNOWN;
+            }
+            *w = bmph.biWidth;
+            *h = bmph.biHeight;
+            fclose(fd);
+            return ADM_PICTURE_BMP2;
+    }
+    // Unknown filetype...
+    fclose(fd);
+    return ADM_PICTURE_UNKNOWN;
 }
 //EOF
 
