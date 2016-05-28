@@ -307,28 +307,27 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  */
 ADMImage *createImageFromFile_png(const char *filename)
 {
-
-	ADM_BITMAPINFOHEADER bmph;
+    
     uint32_t offset,size;
     FILE *fd=NULL;
     uint32_t w,h;
 
-		fd = ADM_fopen(filename, "rb");
- 	    fseek(fd, 0, SEEK_END);
- 	    size=ftell(fd);
- 	   fseek(fd, 0, SEEK_SET);
- 	   read32(fd);
- 	   read32(fd);
- 	   read32(fd);
- 	   read32(fd);
- 	   w=read32(fd);
- 	   h=read32(fd);
- 	   fseek(fd,0,SEEK_SET);
-           ADM_byteBuffer buffer(size);
- 	   
- 	   fread(buffer.at(0),size,1,fd);
- 	   fclose(fd);
- 	   ADMImageRef tmpImage(w,h);
+       fd = ADM_fopen(filename, "rb");
+       fseek(fd, 0, SEEK_END);
+       size=ftell(fd);
+       fseek(fd, 0, SEEK_SET);
+       read32(fd);
+       read32(fd);
+       read32(fd);
+       read32(fd);
+       w=read32(fd);
+       h=read32(fd);
+       fseek(fd,0,SEEK_SET);
+       ADM_byteBuffer buffer(size);
+
+       fread(buffer.at(0),size,1,fd);
+       fclose(fd);
+       ADMImageRef tmpImage(w,h);
     	// Decode PNG
         decoders *dec=ADM_coreCodecGetDecoder (fourCC::get((uint8_t *)"PNG "),   w,   h, 0 , NULL,0);
     	if(!dec)
@@ -340,11 +339,38 @@ ADMImage *createImageFromFile_png(const char *filename)
     	bin.data=buffer.at(0);
     	bin.dataLength=size; // This is more than actually, but who cares...
 
-    	dec->uncompress (&bin, &tmpImage);
+    	bool success=dec->uncompress (&bin, &tmpImage);
+   
+        
+        if(!success)
+        {
+            ADM_warning("PNG Decompressing failed\n");
+            delete dec;
+            dec=NULL;
+            return NULL;
+        }
 
-    	ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(true,w,h,tmpImage._planes[0],YPLANE(image));
+    	ADMImage *image=new ADMImageDefault(w,h);        
+        uint32_t srcPitch[3],dstPitch[3];
+        
+        image->GetPitches(dstPitch);
+        tmpImage.GetPitches(srcPitch);
+        
+        uint8_t *srcPlanes[3],*dstPlanes[3];
+        image->GetWritePlanes(dstPlanes);
+        tmpImage.GetReadPlanes(srcPlanes);
 
+                
+        ADM_colorspace sourceFormat=tmpImage._colorspace;   
+        
+        // swap u & V, dont know why 
+        uint8_t *s=dstPlanes[1];
+        dstPlanes[1]=dstPlanes[2];
+        dstPlanes[2]=s;
+
+        ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
+        converter.convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes);
+        
         delete dec;
         dec=NULL;
     	return image;
@@ -453,3 +479,4 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
 		    return ADM_PICTURE_UNKNOWN;
 }
 //EOF
+
