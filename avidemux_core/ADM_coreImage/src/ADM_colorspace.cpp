@@ -229,6 +229,31 @@ bool            ADMColorScalerFull::convertPlanes(int  sourceStride[3],int destS
      return true;
 }
 /**
+    \fn convertPlanes
+    \brief Same as convert but the 3 planes are given separately
+*/
+bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
+{
+    int xs[4];
+    int xd[4];
+    uint8_t *src[4];
+    uint8_t *dst[4];
+    sourceImage->GetPitches(xs);
+    destImage->GetPitches(xd);
+    xs[3]=sourceImage->GetPitch(PLANAR_ALPHA);
+    xd[3]=destImage->GetPitch(PLANAR_ALPHA);
+    
+    destImage->GetWritePlanes(dst);
+    sourceImage->GetReadPlanes(src);
+    
+    src[3]=sourceImage->GetReadPtr(PLANAR_ALPHA);
+    dst[3]=destImage->GetWritePtr(PLANAR_ALPHA);
+    
+    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    return true;
+}
+
+/**
     \fn  ADMColorScaler
     \brief Constructor
   @param w width

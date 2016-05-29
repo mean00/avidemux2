@@ -51,6 +51,7 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
 
     bool            convert(uint8_t  *from, uint8_t *to);
     bool            convertImage(ADMImage *img, uint8_t *to);
+    bool            convertImage(ADMImage *sourceImage, ADMImage *destImage);
     bool            convertPlanes(int  sourceStride[3],int destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3]);
                     ~ADMColorScalerFull();

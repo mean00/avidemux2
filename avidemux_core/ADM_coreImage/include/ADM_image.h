@@ -183,6 +183,7 @@ class ADM_COREIMAGE6_EXPORT ADMImageDefault: public ADMImage
 {
 protected:
                     ADM_byteBuffer  data;
+                    ADM_byteBuffer  alphaChannel;
 public:
                                     ADMImageDefault(uint32_t w, uint32_t h);
         virtual                     ~ADMImageDefault();
@@ -190,6 +191,7 @@ public:
         virtual      uint8_t        *GetWritePtr(ADM_PLANE plane);
         virtual      uint8_t        *GetReadPtr(ADM_PLANE plane);
         virtual      bool           isWrittable(void);
+                     bool           addAlphaChannel();
 };
 /**
     \class ADMImageRef

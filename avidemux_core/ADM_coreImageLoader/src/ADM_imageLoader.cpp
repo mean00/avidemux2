@@ -113,30 +113,15 @@ ADMImage *createImageFromFile(const char *filename)
 static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
 {
    
-    	ADMImage *image=new ADMImageDefault(w,h);        
-        int srcPitch[3],dstPitch[3];
-        
-        image->GetPitches(dstPitch);
-        source->GetPitches(srcPitch);
-        
-        uint8_t *srcPlanes[3],*dstPlanes[3];
-        image->GetWritePlanes(dstPlanes);
-        source->GetReadPlanes(srcPlanes);
-
-                
+    	ADMImageDefault *image=new ADMImageDefault(w,h);        
         ADM_colorspace sourceFormat=source->_colorspace;   
         
-        // swap u & V, dont know why 
-        if(sourceFormat == ADM_COLOR_RGB32A)
+        if(ADM_COLOR_RGB32A==sourceFormat)
         {
-            uint8_t *s=dstPlanes[1];
-            dstPlanes[1]=dstPlanes[2];
-            dstPlanes[2]=s;
+            image->addAlphaChannel();
         }
-
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
-        converter.convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes); 
-        
+        converter.convertImage(source,image); 
         return image;
 }
 

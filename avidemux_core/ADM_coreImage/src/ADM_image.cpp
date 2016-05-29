@@ -187,6 +187,17 @@ bool           ADMImageDefault::isWrittable(void)
         return true;
 }
 /**
+ */
+bool           ADMImageDefault::addAlphaChannel(void)
+{
+    int paddedWidth=(_width+15)& ~15;
+    alphaChannel.setSize(paddedWidth*_height);
+    _alpha=alphaChannel.at(0);
+    _alphaStride=paddedWidth;
+    return true;
+}
+ 
+/**
  * 
  * @param plane
  * @return 
