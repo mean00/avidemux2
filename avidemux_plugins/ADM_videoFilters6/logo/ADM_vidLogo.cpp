@@ -111,11 +111,13 @@ bool addLogopFilter::getNextFrame(uint32_t *fn,ADMImage *image)
         ADM_warning("logoFilter : Cannot get frame\n");
         return false;
     }
-    // do in place flip
-#if 1
     if(myImage)
-        myImage->copyToAlpha(image,configuration.x,configuration.y,configuration.alpha);
-#endif
+    {
+        if(myImage->GetReadPtr(PLANAR_ALPHA))
+            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y);
+        else
+            myImage->copyToAlpha(image,configuration.x,configuration.y,configuration.alpha);
+    }
     return true;
 }
 /**

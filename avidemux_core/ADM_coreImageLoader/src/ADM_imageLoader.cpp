@@ -115,6 +115,7 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
    
     	ADMImageDefault *image=new ADMImageDefault(w,h);        
         ADM_colorspace sourceFormat=source->_colorspace;   
+        bool swap=false;
         
         if(ADM_COLOR_RGB32A==sourceFormat)
         {
@@ -137,9 +138,18 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
                     inAlpha+=4;
                 }
             }
+            swap=true;
         }
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
         converter.convertImage(source,image); 
+        
+        if(swap)
+        {
+            uint8_t **s=image->_planes,*v;
+            v=s[1];
+            s[1]=s[2];
+            s[2]=v;
+        }
         return image;
 }
 
@@ -362,18 +372,9 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     	
         ADMImageRefWrittable ref(w,h);
         
-        if(0)
-        {
-            ref._planes[0]=buffer.at(0);
-            ref._planeStride[0]=w*4;
-            ref._colorspace=ADM_COLOR_RGB32A;
-        }else
-        {
-            ref._planes[0]=buffer.at(0)+(h-1)*w*3;
-            ref._planeStride[0]=-w*3;
-            ref._colorspace=ADM_COLOR_RGB24;
-        }
-        
+        ref._planes[0]=buffer.at(0)+(h-1)*w*3;
+        ref._planeStride[0]=-w*3;
+        ref._colorspace=ADM_COLOR_RGB24;
 
     	return convertImageColorSpace(&ref,w,h);
 }
