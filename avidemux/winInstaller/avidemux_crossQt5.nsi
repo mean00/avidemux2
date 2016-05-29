@@ -717,12 +717,12 @@ ${MementoSection} "PNG" SecVidEncLavPng
 		SetOutPath $INSTDIR\plugins\videoEncoders
 		${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_ffDv.dll
 	${MementoSectionEnd}
-	${MementoSection} "NVenc" SecVidEncffNvenc
-		SectionIn 1 2
-		SetOverwrite on
-		SetOutPath $INSTDIR\plugins\videoEncoders
-		${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_ffNvenc.dll
-	${MementoSectionEnd}
+	#${MementoSection} "NVenc" SecVidEncffNvenc
+		#SectionIn 1 2
+		#SetOverwrite on
+		#SetOutPath $INSTDIR\plugins\videoEncoders
+		#${File} ${ROOT_FOLDER}/plugins/videoEncoders/libADM_ve_ffNvenc.dll
+	#${MementoSectionEnd}
 SectionGroupEnd
 SectionGroup "Video Filters" SecGrpVideoFilter
 	SectionGroup "Transform Filters" SecGrpVideoFilterTransform
