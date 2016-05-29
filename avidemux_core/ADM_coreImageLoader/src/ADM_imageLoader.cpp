@@ -123,26 +123,18 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
         
         return image;
 }
+
 /**
- * 	\fn createImageFromFile_jpeg
- *  \brief Create image from jpeg file
+ * 
+ * @param fd
+ * @param width
+ * @param height
+ * @return 
  */
-ADMImage *createImageFromFile_jpeg(const char *filename)
+static bool readJpegInfo(FILE *fd, int &width, int &height)
 {
-
-FILE *fd;
-uint32_t _imgSize;
-uint32_t w = 0, h = 0;
-
-        fd = ADM_fopen(filename, "rb");
-        if(!fd)
-        {
-            ADM_warning("Cannot open jpeg file\n");
-            return NULL;
-        }
-        _imgSize = getFileSize(fd);
-        
         uint16_t tag = 0, count = 0, off;
+        int w,h;
 
         read16(fd);	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
@@ -166,9 +158,8 @@ uint32_t w = 0, h = 0;
                 off = read16(fd);
                 if (off < 2)
                 {
-                        ADM_warning("[imageLoader]Offset too short!\n");
-                    fclose(fd);
-                    return NULL;
+                    ADM_warning("[imageLoader]Offset too short!\n");
+                    return false;
                 }
                 fseek(fd, off - 2, SEEK_CUR);
             }
@@ -177,10 +168,41 @@ uint32_t w = 0, h = 0;
         if (tag != 0xffc0)
         {
             ADM_warning("[imageLoader]Cannot fint start of frame\n");
-            fclose(fd);
+            return false;
+        }
+        width=w;
+        height=h;
+        return true;
+}
+
+/**
+ * 	\fn createImageFromFile_jpeg
+ *  \brief Create image from jpeg file
+ */
+ADMImage *createImageFromFile_jpeg(const char *filename)
+{
+
+FILE *fd;
+uint32_t _imgSize;
+int  w = 0, h = 0;
+
+        fd = ADM_fopen(filename, "rb");
+        if(!fd)
+        {
+            ADM_warning("Cannot open jpeg file\n");
             return NULL;
         }
-        ADM_info("[imageLoader] %" PRIu32" x %" PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
+        _imgSize = getFileSize(fd);
+
+        if(!readJpegInfo(fd,w,h))
+        {
+            ADM_warning("Cannot get info from jpeg\n");
+            fclose(fd);
+            fd=NULL;
+            return NULL;
+        }
+        
+        ADM_info("[imageLoader] %d x %d.., total Size : %u \n", w, h,_imgSize);
 
         // Load the binary coded image
         ADM_byteBuffer buffer(_imgSize);
@@ -337,16 +359,16 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  * 		\fn ADM_identidyImageFile
  * 		\brief Identidy image type, returns type and width/height
  */
+#define MAX_JPEG_TAG 20
 ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h)
 {
-    uint32_t *fcc;
     uint8_t fcc_tab[4];
     FILE *fd;
     uint32_t off,tag=0,count,size;
 
     // 1- identity the file type
     //
-    fcc = (uint32_t *) fcc_tab;
+    
     fd = ADM_fopen(filename, "rb");
     if (!fd)
     {
@@ -354,52 +376,51 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
         return ADM_PICTURE_UNKNOWN;
     }
     fread(fcc_tab, 4, 1, fd);
-    fcc = (uint32_t *) fcc_tab;
+
     // 2- JPEG ?
-#define MAX_JPEG_TAG 20
     if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
     {
         // JPEG
-            fseek(fd, 0, SEEK_SET);
-            read16(fd);	// skip jpeg ffd8
-            count=0;
-            while (count < MAX_JPEG_TAG && tag != 0xFFC0)
+        fseek(fd, 0, SEEK_SET);
+        read16(fd);	// skip jpeg ffd8
+        count=0;
+        while (count < MAX_JPEG_TAG && tag != 0xFFC0)
+        {
+            tag = read16(fd);
+            if ((tag >> 8) != 0xff)
             {
-                tag = read16(fd);
-                if ((tag >> 8) != 0xff)
-                {
-                        ADM_warning("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
-                }
-                if (tag == 0xFFC0)
-                {
-                    read16(fd);	// size
-                    read8(fd);	// precision
-                    *h = read16(fd);
-                    *w = read16(fd);
-                    ADM_info("Jpeg is %d x %d\n",(int)*w,(int)*h);
-                    if(*w&1) w++;
-                    if(*h&1) h++;
-                }
-                else
-                {
-                    off = read16(fd);
-                    if (off < 2)
-                    {
-                        ADM_warning("[imageIdentify]Offset too short!\n");
-                        fclose(fd);
-                        return ADM_PICTURE_UNKNOWN;
-                    }
-                    fseek(fd, off - 2, SEEK_CUR);
-                }
-                count++;
+                    ADM_warning("[imageIdentify] invalid jpeg tag found (%x)\n", tag);
             }
-            fclose(fd);
-            if(count>=MAX_JPEG_TAG) 
+            if (tag == 0xFFC0)
             {
-                ADM_warning("Too many jpeg tags\n");
-                return ADM_PICTURE_UNKNOWN;
+                read16(fd);	// size
+                read8(fd);	// precision
+                *h = read16(fd);
+                *w = read16(fd);
+                ADM_info("Jpeg is %d x %d\n",(int)*w,(int)*h);
+                if(*w&1) w++;
+                if(*h&1) h++;
             }
-            return ADM_PICTURE_JPG;
+            else
+            {
+                off = read16(fd);
+                if (off < 2)
+                {
+                    ADM_warning("[imageIdentify]Offset too short!\n");
+                    fclose(fd);
+                    return ADM_PICTURE_UNKNOWN;
+                }
+                fseek(fd, off - 2, SEEK_CUR);
+            }
+            count++;
+        }
+        fclose(fd);
+        if(count>=MAX_JPEG_TAG) 
+        {
+            ADM_warning("Too many jpeg tags\n");
+            return ADM_PICTURE_UNKNOWN;
+        }
+        return ADM_PICTURE_JPG;
     }
     // PNG ?
     if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')
