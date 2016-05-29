@@ -135,7 +135,7 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
 {
         uint16_t tag = 0, count = 0, off;
         int w,h;
-
+        fseek(fd, 0, SEEK_SET);
         read16(fd);	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
         {
@@ -380,47 +380,19 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
     // 2- JPEG ?
     if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
     {
-        // JPEG
-        fseek(fd, 0, SEEK_SET);
-        read16(fd);	// skip jpeg ffd8
-        count=0;
-        while (count < MAX_JPEG_TAG && tag != 0xFFC0)
-        {
-            tag = read16(fd);
-            if ((tag >> 8) != 0xff)
-            {
-                    ADM_warning("[imageIdentify] invalid jpeg tag found (%x)\n", tag);
-            }
-            if (tag == 0xFFC0)
-            {
-                read16(fd);	// size
-                read8(fd);	// precision
-                *h = read16(fd);
-                *w = read16(fd);
-                ADM_info("Jpeg is %d x %d\n",(int)*w,(int)*h);
-                if(*w&1) w++;
-                if(*h&1) h++;
-            }
-            else
-            {
-                off = read16(fd);
-                if (off < 2)
-                {
-                    ADM_warning("[imageIdentify]Offset too short!\n");
-                    fclose(fd);
-                    return ADM_PICTURE_UNKNOWN;
-                }
-                fseek(fd, off - 2, SEEK_CUR);
-            }
-            count++;
-        }
-        fclose(fd);
-        if(count>=MAX_JPEG_TAG) 
-        {
-            ADM_warning("Too many jpeg tags\n");
-            return ADM_PICTURE_UNKNOWN;
-        }
-        return ADM_PICTURE_JPG;
+        int width,height;
+         if(readJpegInfo(fd,width,height))
+         {
+             ADM_info("Identified as jpeg (%d x %d)\n",width,height);
+             *w=width;
+             *h=height;
+             fclose(fd);
+             return ADM_PICTURE_JPG;
+         }else
+         {
+             fclose(fd);
+             return ADM_PICTURE_UNKNOWN;
+         }     
     }
     // PNG ?
     if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')
