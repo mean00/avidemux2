@@ -22,7 +22,6 @@
 #include "fourcc.h"
 //**********************************
 static ADMImage *createImageFromFile_jpeg(const char *filename);
-static ADMImage *createImageFromFile_Bmp(const char *filename);
 static ADMImage *createImageFromFile_Bmp2(const char *filename);
 static ADMImage *createImageFromFile_png(const char *filename);
 //***********************************
@@ -49,6 +48,13 @@ static uint32_t read32(FILE *fd)
 	d=fgetc(fd);
 	return (a<<24)+(b<<16)+(c<<8)+d;
 
+}
+static int getFileSize(FILE *fd)
+{
+        fseek(fd, 0, SEEK_END);
+        int imageSize = ftell(fd);
+        fseek(fd, 0, SEEK_SET);
+        return imageSize;
 }
 
 /**
@@ -129,13 +135,15 @@ uint32_t _imgSize;
 uint32_t w = 0, h = 0;
 
         fd = ADM_fopen(filename, "rb");
-        fseek(fd, 0, SEEK_END);
-        _imgSize = ftell(fd);
-        fseek(fd, 0, SEEK_SET);
+        if(!fd)
+        {
+            ADM_warning("Cannot open jpeg file\n");
+            return NULL;
+        }
+        _imgSize = getFileSize(fd);
+        
         uint16_t tag = 0, count = 0, off;
 
-
-        fseek(fd, 0, SEEK_SET);
         read16(fd);	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
         {
@@ -212,9 +220,12 @@ ADMImage *createImageFromFile_png(const char *filename)
     uint32_t w,h;
 
        fd = ADM_fopen(filename, "rb");
-       fseek(fd, 0, SEEK_END);
-       size=ftell(fd);
-       fseek(fd, 0, SEEK_SET);
+       if(!fd)
+       {
+           ADM_warning("Cannot open png file\n");
+           return NULL;
+       }
+       size=getFileSize(fd);
        read32(fd);
        read32(fd);
        read32(fd);
@@ -255,64 +266,6 @@ ADMImage *createImageFromFile_png(const char *filename)
     	return image;
 }
 /**
- * 	\fn createImageFromFile_jpeg
- *  \brief Create image from Bmp
- */
-ADMImage *createImageFromFile_Bmp(const char *filename)
-{
-
-    FILE *fd;
-    uint32_t _imgSize;
-    uint32_t w = 0, h = 0;
-    uint16_t  s16;
-    uint32_t s32;
-
-        fd = ADM_fopen(filename, "rb");
-        fseek(fd, 0, SEEK_END);
-        _imgSize = ftell(fd);
-        fseek(fd, 0, SEEK_SET);
-
-        //Retrieve width & height
-        //_______________________
-        ADM_BITMAPINFOHEADER bmph;
-
-        fread(&s16, 2, 1, fd);
-        if (s16 != 0x4D42)
-        {
-            ADM_warning("[imageLoader] incorrect bmp sig.\n");
-            fclose(fd);
-            return NULL;
-        }
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&bmph, sizeof(bmph), 1, fd);
-        if (bmph.biCompression != 0)
-        {
-            ADM_warning("[imageLoader]cannot handle compressed bmp\n");
-            fclose(fd);
-            return NULL;
-        }
-
-        w = bmph.biWidth;
-        h = bmph.biHeight;
-
-
-        ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
-
-    // Load the binary coded image
-        ADM_byteBuffer buffer(w*h*3);
-
-        fread(buffer.at(0),w*h*3,1,fd);
-        fclose(fd);
-
-      // Colorconversion
-
-        ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(false,w,h,buffer.at(0),YPLANE(image));
-        return image;
-}
-/**
  * 	\fn createImageFromFile_bmp2
  *  \brief Create image from Bmp2 (BM6)
  */
@@ -326,6 +279,11 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     uint32_t w,h;
 
 	fd = ADM_fopen(filename, "rb");
+        if(!fd)
+        {
+            ADM_warning("Cannot open BMP picture\n");
+            return NULL;
+        }
  	fseek(fd, 10, SEEK_SET);
 
  #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
