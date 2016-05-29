@@ -101,8 +101,7 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
     setPalette( p );
    
 #else
-    
-    
+    setAttribute( Qt::WA_PaintOnScreen, true );    
 #endif
 
 } //{setAutoFillBackground(false);}
@@ -118,39 +117,37 @@ ADM_Qvideo::~ADM_Qvideo()
  * @param ev
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
-{	
-    //printf("Draw! \n");
+{	    
      if (paintEngineType == -1)
      {
         QPainter painter(this);
-
         if (painter.isActive())
                 paintEngineType = painter.paintEngine()->type();
-
         painter.end();
       }
-
     if (!displayW || !displayH || !rgbDataBuffer )
             return;
-
     if (renderExposeEventFromUI())
     {
-            QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-            QPainter painter(this);
-            if (painter.isActive())
-            {
-                //painter.drawImage(QPoint(0,0),image);
-                const QRect rec=ev->rect();
-                int x=rec.x();
-                int y=rec.y();
-                int w=rec.width();
-                int h=rec.height();
-                painter.drawImage(x,y,image,x,y,w,h);
-                painter.end();
-            }else
-            {
-                printf("Painter inactive!\n");
-            }
+        QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+        QPainter painter(this);
+        if (painter.isActive())
+        {
+            //painter.drawImage(QPoint(0,0),image);
+            const QRect rec=ev->rect();
+            int x=rec.x();
+            int y=rec.y();
+            int w=rec.width();
+            int h=rec.height();
+            painter.drawImage(x,y,image,x,y,w,h);
+            painter.end();
+        }else
+        {
+            printf("Painter inactive!\n");
+        }
+    }else
+    {
+        printf("Qvideo does not need to redraw\n");
     }
 }
 
