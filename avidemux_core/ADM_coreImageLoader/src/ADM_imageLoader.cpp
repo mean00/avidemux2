@@ -119,6 +119,24 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
         if(ADM_COLOR_RGB32A==sourceFormat)
         {
             image->addAlphaChannel();
+            // Extract alpha channel
+            uint8_t *alpha=source->GetReadPtr(PLANAR_Y);
+            uint8_t *alphaDest=image->GetWritePtr(PLANAR_ALPHA);
+            int   sourceStride=source->GetPitch(PLANAR_Y);
+            int   destStride=image->GetPitch(PLANAR_ALPHA);
+            for(int y=0;y<h;y++)
+            {
+                uint8_t *inAlpha=alpha;
+                alpha+=sourceStride;
+                uint8_t *outAlpha=alphaDest;
+                alphaDest+=destStride;
+                for(int x=0;x<w;x++)
+                {
+                    *outAlpha=*inAlpha;
+                    outAlpha++;
+                    inAlpha+=4;
+                }
+            }
         }
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
         converter.convertImage(source,image); 
