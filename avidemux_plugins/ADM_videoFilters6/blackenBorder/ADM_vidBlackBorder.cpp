@@ -72,7 +72,7 @@ void blackenBorders::setCoupledConf(CONFcouple *couples)
 
 #define Y_BLACK 16
 #define UV_BLACK 128
-static bool blackenHz(uint32_t w,uint32_t nbLine,uint8_t *ptr[3],uint32_t strides[3])
+static bool blackenHz(int w,int nbLine,uint8_t *ptr[3],int strides[3])
 {
     // y
     uint8_t *p=ptr[0];
@@ -115,7 +115,7 @@ bool blackenBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 
     // Top...
     uint8_t *ptr[3];
-    uint32_t stride[3];
+    int      stride[3];
     image->GetPitches(stride);
     image->GetWritePlanes(ptr);
     // top

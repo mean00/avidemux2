@@ -394,10 +394,13 @@ bool vdpauVideoFilterDeint::uploadImage(ADMImage *next,VdpVideoSurface surface)
         return false;
     }
   // Blit our image to surface
+    int      ipitches[3];
     uint32_t pitches[3];
     uint8_t *planes[3];
-    next->GetPitches(pitches);
+    next->GetPitches(ipitches);
     next->GetReadPlanes(planes);
+    
+    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
 
     aprintf("Putting image in surface %d\n",(int)surface);
     // Put out stuff in input...

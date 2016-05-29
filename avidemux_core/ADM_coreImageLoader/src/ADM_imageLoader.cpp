@@ -20,6 +20,22 @@
 #include "ADM_colorspace.h"
 #include "ADM_codec.h"
 #include "fourcc.h"
+
+/**
+ */
+typedef enum 
+{
+        ADM_PICTURE_UNKNOWN=0,
+        ADM_PICTURE_JPG=1,
+        ADM_PICTURE_PNG=2,
+        ADM_PICTURE_BMP=3,
+        ADM_PICTURE_BMP2=4
+        
+} ADM_PICTURE_TYPE;
+
+static ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h);
+
+
 //**********************************
 static ADMImage *createImageFromFile_jpeg(const char *filename);
 static ADMImage *createImageFromFile_Bmp2(const char *filename);
@@ -98,7 +114,7 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
 {
    
     	ADMImage *image=new ADMImageDefault(w,h);        
-        uint32_t srcPitch[3],dstPitch[3];
+        int srcPitch[3],dstPitch[3];
         
         image->GetPitches(dstPitch);
         source->GetPitches(srcPitch);
@@ -224,7 +240,7 @@ int  w = 0, h = 0;
         bin.dataLength=_imgSize; // This is more than actually, but who cares...
 
         dec->uncompress (&bin, &tmpImage);
-        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
+        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);        
         delete dec;
         dec=NULL;
         return image;
@@ -282,7 +298,10 @@ ADMImage *createImageFromFile_png(const char *filename)
             return NULL;
         }
         ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
-        
+        if(tmpImage._alpha)
+        {
+            ADM_info("We do have alpha channel\n");
+        }
         delete dec;
         dec=NULL;
     	return image;

@@ -160,11 +160,14 @@ bool vdpauRender::displayImage(ADMImage *pic)
     // Blit pic into our video Surface
     VdpVideoSurface myInput=input;
     int next=currentSurface^1;
+    int ipitches[3];
     uint32_t pitches[3];
     uint8_t *planes[3];
-    pic->GetPitches(pitches);
+    pic->GetPitches(ipitches);
     pic->GetReadPlanes(planes);
 
+    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
+    
     // Put out stuff in input...
     // if input is already a VDPAU surface, no need to reupload it...
     if(pic->refType==ADM_HW_VDPAU)

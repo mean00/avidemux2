@@ -158,7 +158,7 @@ bool AVDM_FadeTo::process(ADMImage *source,ADMImage *source2, ADMImage *dest,int
 {
   
     uint8_t *splanes[3],*splanes2[3],*dplanes[3];
-    uint32_t spitches[3],spitches2[3],dpitches[3];
+    int      spitches[3],spitches2[3],dpitches[3];
 
     source->GetReadPlanes(splanes);
     source->GetPitches(spitches);

@@ -114,9 +114,12 @@ static bool vdpauRefDownload(ADMImage *image, void *instance, void *cookie)
     surface=render->surface;
     uint8_t *planes[3];
     uint32_t stride[3];
+    int      istride[3];
 
      image->GetWritePlanes(planes);
-     image->GetPitches(stride);
+     image->GetPitches(istride);
+     
+     for(int i=0;i<3;i++) stride[i]=(uint32_t)istride[i];
 
     //ADM_info("Getting surface %d\n",(int)surface);
     // Copy back the decoded image to our output ADM_image

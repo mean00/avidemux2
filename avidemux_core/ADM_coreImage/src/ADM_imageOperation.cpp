@@ -154,7 +154,7 @@ bool ADMImage::copyTo(ADMImage *dest, uint32_t x,uint32_t y)
     dest->GetWritePlanes(dstPlanes);
     GetReadPlanes(srcPlanes);
 
-    uint32_t srcPitches[3],dstPitches[3];
+    int srcPitches[3],dstPitches[3];
     dest->GetPitches(dstPitches);
     GetPitches(srcPitches);
     // do y
@@ -202,7 +202,7 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
     dest->GetWritePlanes(dstPlanes);
     GetReadPlanes(srcPlanes);
 
-    uint32_t srcPitches[3],dstPitches[3];
+    int srcPitches[3],dstPitches[3];
     dest->GetPitches(dstPitches);
     GetPitches(srcPitches);
     // do y

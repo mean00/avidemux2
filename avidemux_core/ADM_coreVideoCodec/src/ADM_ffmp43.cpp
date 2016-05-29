@@ -62,6 +62,9 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out)
 
   ref->_planes[2] = (uint8_t *) src->data[v];
   ref->_planeStride[2] = src->linesize[v];
+  
+  ref->_alphaStride=src->linesize[3];
+  ref->_alpha=(uint8_t *)src->data[3];
 
   _lastQ = 0;			//_context->quality;
   out->_Qp = (src->quality * 32) / FF_LAMBDA_MAX;

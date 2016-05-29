@@ -213,7 +213,7 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
     \fn convertPlanes
     \brief Same as convert but the 3 planes are given separately
 */
-bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
+bool            ADMColorScalerFull::convertPlanes(int  sourceStride[3],int destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3])
 {
     int xs[4]={(int)sourceStride[0],(int)sourceStride[1],(int)sourceStride[2],0};
@@ -238,8 +238,8 @@ bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint
 */
 
 ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
-            uint32_t sw, uint32_t sh,
-            uint32_t dw, uint32_t dh,
+            int sw, int sh,
+            int dw, int dh,
             ADM_colorspace from,ADM_colorspace to)
 {
    context=NULL;
@@ -261,7 +261,7 @@ ADMColorScalerFull::~ADMColorScalerFull()
 /**
     \fn reset
 */
-bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
+bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to)
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
@@ -307,7 +307,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     return true;
 }
 //------------------------------
-bool            ADMColorScalerSimple::changeWidthHeight(uint32_t newWidth, uint32_t newHeight)
+bool            ADMColorScalerSimple::changeWidthHeight(int newWidth, int newHeight)
 {
     if(newWidth==srcWidth && newHeight==srcHeight) return true; // no change
     
@@ -346,8 +346,8 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
 {
     uint8_t *srcPlanes[3];
     uint8_t *dstPlanes[3];
-    uint32_t srcPitch[3];
-    uint32_t dstPitch[3];
+    int srcPitch[3];
+    int dstPitch[3];
     int      idstPitch[3];
     img->GetPitches(srcPitch);
     img->GetReadPlanes(srcPlanes);

@@ -51,6 +51,8 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         quant=NULL;
         _qStride=0;
         _qSize=0;
+        _alpha=NULL;
+        _alphaStride=0;
 };
 /**
     \fn ADMImage
@@ -59,7 +61,7 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
 */
 ADMImage::~ADMImage()
 {
-	imgCurNb--;
+    imgCurNb--;
     hwDecRefCount();
 }
 /**
@@ -129,7 +131,16 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
     }
     return 1;
 }
-
+/**
+ * 
+ * @param dst
+ * @param pitchDst
+ * @param src
+ * @param pitchSrc
+ * @param width
+ * @param height
+ * @return 
+ */
 bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
 {
 
@@ -167,14 +178,43 @@ ADMImageDefault::~ADMImageDefault()
 {
     data.clean();
 }
-bool           ADMImageDefault::isWrittable(void) {return true;}
+/**
+ * 
+ * @return 
+ */
+bool           ADMImageDefault::isWrittable(void)
+{
+        return true;
+}
+/**
+ * 
+ * @param plane
+ * @return 
+ */
 uint32_t       ADMImageDefault::GetPitch(ADM_PLANE plane)
-                    {
-                            return _planeStride[plane];
-                        }
-uint8_t        *ADMImageDefault::GetWritePtr(ADM_PLANE plane) {return GetReadPtr(plane);}
+{
+    if(plane==PLANAR_ALPHA)
+        return _alphaStride;
+    return _planeStride[plane];
+}
+/**
+ * 
+ * @param plane
+ * @return 
+ */
+uint8_t        *ADMImageDefault::GetWritePtr(ADM_PLANE plane) 
+{
+    return GetReadPtr(plane);
+}
+/**
+ * 
+ * @param plane
+ * @return 
+ */
 uint8_t        *ADMImageDefault::GetReadPtr(ADM_PLANE plane)
 {
+    if(plane==PLANAR_ALPHA)
+        return _alpha;
     return _planes[plane];
 }
 //****************************************
@@ -195,15 +235,93 @@ ADMImageRef::ADMImageRef(uint32_t w, uint32_t h) : ADMImage(w,h,ADM_IMAGE_REF)
 ADMImageRef::~ADMImageRef()
 {
 }
-bool           ADMImageRef::isWrittable(void) {return false;}
+bool           ADMImageRef::isWrittable(void) 
+{
+        return false;
+}
 uint32_t       ADMImageRef::GetPitch(ADM_PLANE plane)
-                    {
-                          return _planeStride[plane];
-                        }
+{
+    if(plane==PLANAR_ALPHA)
+        return _alphaStride;
+    return _planeStride[plane];
+ }
+/**
+ * 
+ * @param plane
+ * @return 
+ */
 // Cannot write to a ref, the buffer does not belong to us...
-uint8_t        *ADMImageRef::GetWritePtr(ADM_PLANE plane) {return NULL;}
+uint8_t        *ADMImageRef::GetWritePtr(ADM_PLANE plane) 
+{
+        return NULL;
+}
+/**
+ * 
+ * @param plane
+ * @return 
+ */
 uint8_t        *ADMImageRef::GetReadPtr(ADM_PLANE plane)
 {
     return _planes[plane];
 }
+/**
+ * 
+ * @param plane
+ * @return 
+ */
+int             ADMImage::GetHeight(ADM_PLANE plane)
+{
+    if(plane==PLANAR_Y  || plane==PLANAR_ALPHA) 
+        return _height; 
+    return _height/2;
+}
+/**
+ * 
+ * @param plane
+ * @return 
+ */
+int             ADMImage::GetWidth(ADM_PLANE plane) 
+{
+    if(plane==PLANAR_Y || plane==PLANAR_ALPHA) 
+        return _width; 
+    return _width/2;
+}
+/**
+ * 
+ * @param pitches
+ * @return 
+ */
+bool            ADMImage::GetPitches(int *pitches) 
+{
+    pitches[0]=GetPitch(PLANAR_Y);
+    pitches[1]=GetPitch(PLANAR_U);
+    pitches[2]=GetPitch(PLANAR_V);
+    return true;
+}
+/**
+ * 
+ * @param planes
+ * @return 
+ */
+bool            ADMImage::GetWritePlanes(uint8_t **planes) 
+{
+    planes[0]=GetWritePtr(PLANAR_Y);
+    planes[1]=GetWritePtr(PLANAR_U);
+    planes[2]=GetWritePtr(PLANAR_V);
+    return true;
+}
+/**
+ * 
+ * @param planes
+ * @return 
+ */
+bool            ADMImage::GetReadPlanes(uint8_t **planes) 
+{
+    planes[0]=GetReadPtr(PLANAR_Y);
+    planes[1]=GetReadPtr(PLANAR_U);
+    planes[2]=GetReadPtr(PLANAR_V);
+    return true;
+}
+
+
 //EOF

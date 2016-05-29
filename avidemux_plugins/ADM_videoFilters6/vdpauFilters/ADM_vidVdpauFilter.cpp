@@ -264,11 +264,14 @@ bool vdpauVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t
         return false;
     }
   // Blit our image to surface
+    int      ipitches[3];
     uint32_t pitches[3];
     uint8_t *planes[3];
-    next->GetPitches(pitches);
+    next->GetPitches(ipitches);
     next->GetReadPlanes(planes);
 
+    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
+    
     // Put out stuff in input...
     //printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
 

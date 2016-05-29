@@ -201,7 +201,7 @@ bool AVDM_Fade::getNextFrame(uint32_t *fn,ADMImage *image)
   if(param.toBlack)
   {
     uint8_t *splanes[3],*dplanes[3];
-    uint32_t spitches[3],dpitches[3];
+    int  spitches[3],dpitches[3];
 
     next->GetReadPlanes(splanes);
     next->GetPitches(spitches);

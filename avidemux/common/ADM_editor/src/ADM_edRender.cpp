@@ -492,9 +492,9 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
                         // Since it is not YV12 it MUST be a ref
                         ADM_assert(src->isRef());
                         
-                        uint32_t srcStrides[3];
+                        int       srcStrides[3];
                         uint8_t  *srcPlanes[3];
-                        uint32_t dstStrides[3];
+                        int       dstStrides[3];
                         uint8_t  *dstPlanes[3];
 
                         src->GetPitches(srcStrides);
