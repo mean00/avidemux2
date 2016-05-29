@@ -408,7 +408,7 @@ bool sdlRenderImpl::displayImage(ADMImage *pic)
         return false;
     if(useYV12)
     {
-        uint32_t imagePitch[3];
+        int imagePitch[3];
         uint8_t  *imagePtr[3];
         pic->GetPitches(imagePitch);
         pic->GetWritePlanes(imagePtr);
