@@ -20,7 +20,7 @@
 #include "logo.h"
 #include "DIA_flyLogo.h"
 #include "ADM_vidLogo.h"
-#include "qt4/Q_logo.h"
+
 
 /**
     \fn process

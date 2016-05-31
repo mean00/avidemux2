@@ -171,9 +171,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         
         myLogo=new flyLogo( width, height,in,canvas,ui.horizontalSlider);
-        myLogo->setParent(this);
         myLogo->param=*param;
-        myLogo->_cookie=&ui;
+        myLogo->_cookie=this;
         myLogo->setPreview(false);
 #define SPINENTRY(x) ui.x
         SPINENTRY(spinX)->setMaximum(width);
@@ -302,7 +301,7 @@ bool flyLogo::setXy(int x,int y)
 uint8_t flyLogo::upload(void)
 {
 
-    
+    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
 #define MYSPIN(x) parent->ui.x
     MYSPIN(spinX)->setValue(param.x);
     MYSPIN(spinY)->setValue(param.y);
@@ -314,6 +313,7 @@ uint8_t flyLogo::upload(void)
 */
 uint8_t flyLogo::download(void)
 {
+    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
     param.x= MYSPIN(spinX)->value();
     param.y= MYSPIN(spinY)->value();
     param.alpha= MYSPIN(spinAlpha)->value();
