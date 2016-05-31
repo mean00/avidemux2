@@ -41,27 +41,11 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
     if(param.x>targetWidth) 
         return true;
 
-    
-    // Draw hashed line
-    int box_w=parent->imageWidth+this->param.x;
-    int box_h=parent->imageHeight+this->param.y;;
-    if(box_w>=targetWidth)
-    {
-        box_w=targetWidth;
-    }
-    if(box_h>=targetHeight)
-    {
-        box_h=targetHeight;
-    }
-    
-    uint8_t *top=out->GetWritePtr(PLANAR_Y);
-    int     pitch=out->GetPitch(PLANAR_Y);
-    uint8_t *p=top+param.y*pitch;
-    uint8_t mask=0xFF;
-    for(int x=param.x;x<box_w;x++)     {p[x]=mask;mask^=0xff;}   
-    p=top+(box_h-1)*pitch;    
-    for(int x=param.x;x<box_w;x++)     {p[x]=mask;mask^=0xff;}
-
+    ADMImage *myImage=parent->image;
+    if(myImage->GetReadPtr(PLANAR_ALPHA))
+        myImage->copyWithAlphaChannel(out,param.x,param.y);
+    else
+        myImage->copyToAlpha(out,param.x,param.y,param.alpha);
     return true;
 }
 //EOF
