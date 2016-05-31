@@ -1,13 +1,13 @@
 
 #include "DIA_flyDialog.h"
 #include "ADM_image.h"
-#include "DIA_flyMpDelogo.h"
+#include "DIA_flyLogo.h"
 
 //************************
 /**
     \fn upload
 */
-uint8_t flyMpDelogo::upload(void)
+uint8_t flyLogo::upload(void)
 {
 
         return 1;
@@ -15,7 +15,7 @@ uint8_t flyMpDelogo::upload(void)
 /**
         \fn download
 */
-uint8_t flyMpDelogo::download(void)
+uint8_t flyLogo::download(void)
 {
 
        
