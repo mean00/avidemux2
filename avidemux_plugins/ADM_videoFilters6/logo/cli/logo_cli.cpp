@@ -1,7 +1,7 @@
 
 #include "DIA_flyDialog.h"
 #include "ADM_image.h"
-#include "DIA_flyLogo.h"
+#include "../qt4/DIA_flyLogo.h"
 
 //************************
 /**
