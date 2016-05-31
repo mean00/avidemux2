@@ -171,8 +171,12 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         
         myLogo=new flyLogo( width, height,in,canvas,ui.horizontalSlider);
-        myLogo->param=*param;
+        myLogo->param.x=param->x;
+        myLogo->param.y=param->y;
+        myLogo->param.alpha=param->alpha;
+        myLogo->param.logo=NULL;
         myLogo->_cookie=this;
+        
         myLogo->setPreview(false);
 #define SPINENTRY(x) ui.x
         SPINENTRY(spinX)->setMaximum(width);
@@ -211,6 +215,11 @@ void Ui_logoWindow::gather(logo *param)
     DUPE(x)
     DUPE(y)
     DUPE(alpha)
+    if(param->logo)
+    {
+        free(param->logo);
+        param->logo=NULL;
+    }
     param->logo=ADM_strdup(imageName.c_str());
     
 }
@@ -246,16 +255,8 @@ void Ui_logoWindow::moved(int x,int y)
 {
       if(lock) return;
       lock++;
-#if 0      
-      int max_x=_in->getInfo()->width;
-      if(x>(max_x-myLogo->param.lw)) x=max_x-myLogo->param.lw;
-      
-      int max_y=_in->getInfo()->height;
-      if(y>(max_y-myLogo->param.lh)) y=max_y-myLogo->param.lh;
-#endif      
       myLogo->setXy(x,y);
-      myLogo->sameImage();
-      
+      myLogo->sameImage();      
       lock--;
 }
 /**
@@ -284,13 +285,12 @@ void Ui_logoWindow::moved(int x,int y)
  */
 bool flyLogo::setXy(int x,int y)
 {
-#if 0
-      param.xoff= x;
-      if(param.xoff<0) param.xoff=0;
-      param.yoff= y;
-      if(param.yoff<0) param.yoff=0;
+      param.x= x;
+      param.y= y;
+      
+      if(param.x<0) param.x=0;
+      if(param.y<0) param.y=0;
       upload();
-#endif
       return true;
 }
 
@@ -306,6 +306,7 @@ uint8_t flyLogo::upload(void)
     MYSPIN(spinX)->setValue(param.x);
     MYSPIN(spinY)->setValue(param.y);
     MYSPIN(spinAlpha)->setValue(param.alpha);   
+    parent->ui.labelImage->setText(parent->imageName.c_str());
     return 1;
 }
 /**
@@ -317,6 +318,33 @@ uint8_t flyLogo::download(void)
     param.x= MYSPIN(spinX)->value();
     param.y= MYSPIN(spinY)->value();
     param.alpha= MYSPIN(spinAlpha)->value();
+    return true;
+}
+
+/**
+    \fn process
+*/
+uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
+{
+    out->duplicate(in);
+    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
+    if(!parent->image)
+        return true;
+    
+    int targetHeight=out->GetHeight(PLANAR_Y);
+    int targetWidth =out->GetWidth(PLANAR_Y);
+    
+    
+    if(param.y>targetHeight) 
+        return true;
+    if(param.x>targetWidth) 
+        return true;
+
+    ADMImage *myImage=parent->image;
+    if(myImage->GetReadPtr(PLANAR_ALPHA))
+        myImage->copyWithAlphaChannel(out,param.x,param.y);
+    else
+        myImage->copyToAlpha(out,param.x,param.y,param.alpha);
     return true;
 }
 
