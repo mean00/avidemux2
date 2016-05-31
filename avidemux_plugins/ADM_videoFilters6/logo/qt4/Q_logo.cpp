@@ -180,11 +180,9 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->setPreview(false);
 #define SPINENTRY(x) ui.x
         SPINENTRY(spinX)->setMaximum(width);
-        
         SPINENTRY(spinY)->setMaximum(height);
-        
-        SPINENTRY(spinX)->setSingleStep(5);
-        SPINENTRY(spinY)->setSingleStep(5);
+        SPINENTRY(spinX)->setSingleStep(1);
+        SPINENTRY(spinY)->setSingleStep(1);
         
         myLogo->upload();
         myLogo->sliderChanged();
