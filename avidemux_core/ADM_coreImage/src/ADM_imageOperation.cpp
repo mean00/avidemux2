@@ -220,7 +220,8 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
     return 1;
 }
 /**
- * 
+ * \fn blitWithAlpha
+ * \brief Blie one plane using transparency from alpha Channel
  * @param dest
  * @param x
  * @param y
@@ -251,13 +252,13 @@ bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y)
     // Clip if needed
     if(y>dest->_height)
     {
-        printf("Y out : %u %u\n",y,dest->_height);
-         return 1;
+        ADM_info("Image out of target image height : %d %d\n",y,dest->_height);
+        return true;
     }
     if(x>dest->_width)
     {
-        printf("X out : %u %u\n",x,dest->_width);
-         return 1;
+        ADM_info("Image out of target image width %d %d\n",x,dest->_width);
+        return true;
     }
 
     if(x+box_w>dest->_width) box_w=dest->_width-x;

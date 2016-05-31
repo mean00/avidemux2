@@ -13,36 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "ADM_default.h"
-#include "ADM_coreVideoFilter.h"
-#include "logo.h"
-#include "logo_desc.cpp"
-#include "ADM_imageLoader.h"
-#include "DIA_factory.h"
-#include "DIA_coreToolkit.h"
-/**
-    \class addLogopFilter
-*/
-class addLogopFilter : public  ADM_coreVideoFilter
-{
-protected:
-                ADMImage    *myImage;
-                logo        configuration;
-                bool        reloadImage(void);
-public:
-                    addLogopFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                    ~addLogopFilter();
-
-        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-        virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
-        virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
-		virtual void setCoupledConf(CONFcouple *couples);
-        virtual bool         configure(void);                           /// Start graphical user interface
-};
-
-// Add the hook to make it valid plugin
+#include "ADM_vidLogo.h"
 DECLARE_VIDEO_FILTER(   addLogopFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
@@ -51,6 +22,11 @@ DECLARE_VIDEO_FILTER(   addLogopFilter,   // Class
                         QT_TRANSLATE_NOOP("logo","Add logo."),            // Display name
                         QT_TRANSLATE_NOOP("logo","Put a logo on top of video, with alpha blending.") // Description
                     );
+
+extern bool DIA_getLogo(logo *param, ADM_coreVideoFilter *in);
+
+
+
 
 // Now implements the interesting parts
 /**
@@ -148,21 +124,7 @@ const char *addLogopFilter::getConfiguration(void)
 */
 bool addLogopFilter::configure( void)
 {
-#define PX(x) &(configuration.x)
-	   diaElemFile       file(0,(char **)PX(logo),QT_TRANSLATE_NOOP("logo","_Logo (jpg file):"), NULL, QT_TRANSLATE_NOOP("logo","Select JPEG file"));
-	   diaElemUInteger   positionX(PX(x),QT_TRANSLATE_NOOP("logo","_X Position:"),0,info.width);
-	   diaElemUInteger   positionY(PX(y),QT_TRANSLATE_NOOP("logo","_Y Position:"),0,info.height);
-	   diaElemUInteger   alpha(PX(alpha),QT_TRANSLATE_NOOP("logo","_Alpha:"),0,255);
-
-	   diaElem *elems[4]={&file,&positionX,&positionY,&alpha};
-
-	   if( diaFactoryRun(QT_TRANSLATE_NOOP("logo","Logo"),4,elems))
-	   {
-		   if(false==reloadImage())
-            GUI_Error_HIG("Oops","Cannot load the logo");
-		   return true;
-	   }
-	   return false;
+    return DIA_getLogo(&configuration, this->previousFilter);
 }
 
 
