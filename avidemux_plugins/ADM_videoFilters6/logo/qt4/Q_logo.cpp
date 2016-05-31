@@ -109,28 +109,21 @@ void ADM_LogoCanvas::moveEvent(QMoveEvent * event)
         myCrop->setPreview(false);
 #define SPINENTRY(x) ui.x
         SPINENTRY(spinX)->setMaximum(width);
-        SPINENTRY(spinW)->setMaximum(width);
+        
         SPINENTRY(spinY)->setMaximum(height);
-        SPINENTRY(spinH)->setMaximum(height);
-
+        
         SPINENTRY(spinX)->setSingleStep(5);
         SPINENTRY(spinY)->setSingleStep(5);
-        SPINENTRY(spinW)->setSingleStep(5);
-        SPINENTRY(spinH)->setSingleStep(5);
         
         myCrop->upload();
         myCrop->sliderChanged();
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
 #define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
         SPINNER(spinX);
-        SPINNER(spinY);
-        SPINNER(spinW);
-        SPINNER(spinH);
-        SPINNER(spinBand);
-        
+        SPINNER(spinY);                
         
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
-        connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
+        show();
           
   }
 /**

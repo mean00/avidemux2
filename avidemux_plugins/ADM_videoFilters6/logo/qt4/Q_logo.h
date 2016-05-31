@@ -43,7 +43,7 @@ public:
 	
                             Ui_logoWindow(QWidget *parent, logo *param, ADM_coreVideoFilter *in);
                             ~Ui_logoWindow();
-	Ui_mpdelogoDialog   ui;
+	Ui_logoDialog        ui;
         ADM_coreVideoFilter *_in;
         flyLogo             *myCrop;
 	ADM_LogoCanvas      *canvas;
