@@ -130,6 +130,9 @@
     </spacer>
    </item>
    <item>
+    <widget class="QSpinBox" name="spinAlpha"/>
+   </item>
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

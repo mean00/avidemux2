@@ -20,55 +20,47 @@
 #include "logo.h"
 #include "DIA_flyLogo.h"
 #include "ADM_vidLogo.h"
+#include "qt4/Q_logo.h"
 
-
-/************* COMMON PART *********************/
 /**
     \fn process
 */
 uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 {
     out->duplicate(in);
-#if 0    
-    if(preview)
+    if(!parent->image)
+        return true;
+    
+    int targetHeight=out->GetHeight(PLANAR_Y);
+    int targetWidth =out->GetWidth(PLANAR_Y);
+    
+    
+    if(param.y>targetHeight) 
+        return true;
+    if(param.x>targetWidth) 
+        return true;
+
+    
+    // Draw hashed line
+    int box_w=parent->imageWidth+this->param.x;
+    int box_h=parent->imageHeight+this->param.y;;
+    if(box_w>=targetWidth)
     {
-     //   addLogopFilter::doLogo(out, param.xoff, param.yoff,
-     //                        param.lw,  param.lh,param.band,param.show);        
+        box_w=targetWidth;
     }
-    else
+    if(box_h>=targetHeight)
     {
-        uint8_t *y=out->GetWritePtr(PLANAR_Y);
-        int stride=out->GetPitch(PLANAR_Y);
-        int mx=param.lw+param.xoff;
-        int my=param.lh+param.yoff;
-        if(mx>=out->GetWidth(PLANAR_Y)) mx=out->GetWidth(PLANAR_Y)-1;
-        if(my>=out->GetHeight(PLANAR_Y)) my=out->GetHeight(PLANAR_Y)-1;
-        
-        
-        // hz
-        uint8_t *p=y+stride*param.yoff;
-        uint8_t *p2=y+stride*(my);
-        
-        uint8_t toggle=0;
-        for(int x=param.xoff;x<mx;x++)
-        {
-            *(p+x)=toggle;
-            toggle=0xff^toggle;
-            *(p2+x)=toggle;
-        }
-        // vz
-         p=y+stride*(param.yoff)+param.xoff;
-         p2=y+stride*(param.yoff)+mx;
-         
-         for(int yy=param.yoff;yy<my;yy++)
-         {
-            *(p)=toggle;
-            toggle=0xff^toggle;
-            *(p2)=toggle;
-            p+=stride;   p2+=stride;
-         }
+        box_h=targetHeight;
     }
-#endif    
-    return 1;
+    
+    uint8_t *top=out->GetWritePtr(PLANAR_Y);
+    int     pitch=out->GetPitch(PLANAR_Y);
+    uint8_t *p=top+param.y*pitch;
+    uint8_t mask=0xFF;
+    for(int x=param.x;x<box_w;x++)     {p[x]=mask;mask^=0xff;}   
+    p=top+(box_h-1)*pitch;    
+    for(int x=param.x;x<box_w;x++)     {p[x]=mask;mask^=0xff;}
+
+    return true;
 }
 //EOF

@@ -13,13 +13,12 @@
  ***************************************************************************/
 
 #pragma once
-/**
-    \class flyASharp
-*/
 #include "logo.h"
 /**
-    \class flyMpDelogo
+    \class flyLogo
 */
+class Ui_logoWindow;
+
 class flyLogo : public FLY_DIALOG_TYPE
 {
   
@@ -41,6 +40,14 @@ class flyLogo : public FLY_DIALOG_TYPE
                     preview=onoff;
                     return true;
                 }
+   
+   bool         setParent(Ui_logoWindow *p)
+                {
+                    parent=p;
+                    return true;
+                }
+protected:
+                Ui_logoWindow *parent;
 };
 // EOF
 

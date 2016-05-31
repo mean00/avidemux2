@@ -37,7 +37,13 @@ class Ui_logoWindow : public QDialog
 
 protected: 
 	int lock;
-       
+        
+        bool                enableLowPart(bool enabled);
+        bool                tryToLoadimage(const char *image);
+public:
+        ADMImage            *image;
+        int                 imageWidth,imageHeight;
+        int                 alpha;
 
 public:
 	
@@ -45,8 +51,9 @@ public:
                             ~Ui_logoWindow();
 	Ui_logoDialog        ui;
         ADM_coreVideoFilter *_in;
-        flyLogo             *myCrop;
+        flyLogo             *myLogo;
 	ADM_LogoCanvas      *canvas;
+        std::string         imageName;
 public slots:
 	void                gather(logo *param);
 
@@ -55,6 +62,8 @@ private slots:
 	void                valueChanged(int foo);
         void                moved(int x,int y);
         void                preview(int x);
+        void                imageSelect();
+        
        
     
 };
