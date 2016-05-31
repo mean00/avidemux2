@@ -31,3 +31,11 @@ bool DIA_getLogo(logo *param, ADM_coreVideoFilter *in)
 {
     return true;
 }
+
+/**
+    \fn process
+*/
+uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
+{
+    return true;
+}

@@ -20,7 +20,7 @@
 #include "logo.h"
 #include "DIA_flyLogo.h"
 #include "ADM_vidLogo.h"
-
+#include "Q_logo.h"
 
 /**
     \fn process
@@ -28,6 +28,7 @@
 uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 {
     out->duplicate(in);
+    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
     if(!parent->image)
         return true;
     
