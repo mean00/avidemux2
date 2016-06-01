@@ -109,10 +109,11 @@ void                   Ui_logoWindow::imageSelect()
 {
      
     char buffer[2048];
-    if(FileSel_SelectWrite("Select Logo Image",buffer,2048,""))
+    if(FileSel_SelectRead(QT_TR_NOOP("Select Logo Image"),buffer,2048,""))
     {
         if(tryToLoadimage(buffer))
         {
+            myLogo->sameImage();
         }
     }
 }
@@ -135,7 +136,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             imageHeight=image->GetHeight(PLANAR_Y);            
             this->imageName=std::string(imageName);
             ui.labelImage->setText(this->imageName.c_str());
-            status=true;
+            status=true;    
+           
         }
     }
     enableLowPart(status);
@@ -195,6 +197,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinY);
         SPINNER(spinAlpha);
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
+        myLogo->sameImage();
         show();
           
   }
@@ -285,13 +288,12 @@ void Ui_logoWindow::moved(int x,int y)
  */
 bool flyLogo::setXy(int x,int y)
 {
-      param.x= x;
-      param.y= y;
-      
-      if(param.x<0) param.x=0;
-      if(param.y<0) param.y=0;
-      upload();
-      return true;
+    if(x<0) x=0;
+    if(y<0) y=0;
+    param.x= x;
+    param.y= y;      
+    upload();
+    return true;
 }
 
 //************************
