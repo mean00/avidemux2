@@ -1010,7 +1010,7 @@ ${MementoSection} "Resample FPS" SecVidFltResampleFps
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters\cli
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/ibADM_vf_logoCli.dll
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/libADM_vf_logoCli.dll
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_logoQT5.dll
 		${MementoSectionEnd}
