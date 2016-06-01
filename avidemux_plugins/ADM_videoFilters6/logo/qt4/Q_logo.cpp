@@ -179,8 +179,10 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         
         myLogo->setPreview(false);
 #define SPINENTRY(x) ui.x
-        SPINENTRY(spinX)->setMaximum(width);
+        SPINENTRY(spinX)->setMaximum(width);        
         SPINENTRY(spinY)->setMaximum(height);
+        SPINENTRY(spinAlpha)->setMaximum(255);
+        SPINENTRY(spinAlpha)->setMinimum(0);
         SPINENTRY(spinX)->setSingleStep(1);
         SPINENTRY(spinY)->setSingleStep(1);
         
@@ -190,8 +192,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         connect( ui.pushButtonSelect,SIGNAL(pressed()),this,SLOT(imageSelect()));
 #define SPINNER(x) connect( ui.x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
         SPINNER(spinX);
-        SPINNER(spinY);                
-        
+        SPINNER(spinY);
+        SPINNER(spinAlpha);
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
         show();
           
