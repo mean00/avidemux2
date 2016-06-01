@@ -732,12 +732,12 @@ SectionGroup "Video Filters" SecGrpVideoFilter
 			SetOutPath $INSTDIR\plugins\videoFilters
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_addBorders.dll
 		${MementoSectionEnd}
-		${MementoSection} "Add Logo" SecVidFltLogo
-			SectionIn 1 2
-			SetOverwrite on
-			SetOutPath $INSTDIR\plugins\videoFilters
-			${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_logo.dll
-		${MementoSectionEnd}
+		#${MementoSection} "Add Logo" SecVidFltLogo
+			#SectionIn 1 2
+			#SetOverwrite on
+			#SetOutPath $INSTDIR\plugins\videoFilters
+			#${File} ${ROOT_FOLDER}/plugins/videoFilters/libADM_vf_logo.dll
+		#${MementoSectionEnd}
                 ${MementoSection} "Black" SecVidFltBlack
 			SectionIn 1 2
 			SetOverwrite on
@@ -1006,7 +1006,15 @@ ${MementoSection} "Resample FPS" SecVidFltResampleFps
 			SetOutPath $INSTDIR\plugins\videoFilters\qt5
 			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_mpdelogoQT5.dll
 		${MementoSectionEnd}
-		${MementoSection} "Sharpen" SecVidFltSharpen
+		${MementoSection} "Logo" SecVidFltLogo
+			SectionIn 1 2
+			SetOverwrite on
+			SetOutPath $INSTDIR\plugins\videoFilters\cli
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/ibADM_vf_logoCli.dll
+			SetOutPath $INSTDIR\plugins\videoFilters\qt5
+			${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/libADM_vf_logoQT5.dll
+		${MementoSectionEnd}
+                ${MementoSection} "Sharpen" SecVidFltSharpen
 			SectionIn 1 2
 			SetOverwrite on
 			SetOutPath $INSTDIR\plugins\videoFilters
