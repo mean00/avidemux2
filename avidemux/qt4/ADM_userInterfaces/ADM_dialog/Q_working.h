@@ -13,5 +13,11 @@ public:
 	Ui_workingDialog *ui;
 public slots:
     void stop(bool a);
+protected:
+  void closeEvent(QCloseEvent *event)
+    {
+        stop(true);
+    }
+      
 };
 #endif	// Q_working_h
