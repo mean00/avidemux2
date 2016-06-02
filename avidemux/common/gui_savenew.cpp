@@ -158,6 +158,7 @@ ADM_coreVideoEncoder *admSaver::handleFirstPass(ADM_coreVideoEncoder *pass1)
 #define BUFFER_SIZE 1920*1800*3
 ADM_coreVideoFilter  *last;
 bool skip=false;
+bool abort=false;
     int sze=chain->size();
     ADM_assert(sze);
     last=(*chain)[sze-1]; // Grab last filter
@@ -198,7 +199,11 @@ bool skip=false;
                 f/=videoDuration;
                 f*=bitstream.pts;
                 uint32_t percent=(uint32_t)f;
-                encoding->update(percent);
+                if(encoding->update(percent))
+                {
+                    abort=true;
+                    break;
+                }
             }
             nbFrames++;
         }
@@ -213,6 +218,13 @@ bool skip=false;
         // Destroy filter chain & create the new encoder
         destroyVideoFilterChain(chain);
         chain=NULL;
+        
+        if(abort)
+        {
+            ADM_warning("First pass was cancelled\n");
+            return NULL;
+        }
+        
     }
     chain=createVideoFilterChain(markerA,markerB);
 
