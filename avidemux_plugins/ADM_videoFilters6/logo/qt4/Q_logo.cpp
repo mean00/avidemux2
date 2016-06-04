@@ -344,7 +344,10 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 
     ADMImage *myImage=parent->image;
     if(myImage->GetReadPtr(PLANAR_ALPHA))
+    {
+        ADM_info("We have alpha\n");
         myImage->copyWithAlphaChannel(out,param.x,param.y);
+    }
     else
         myImage->copyToAlpha(out,param.x,param.y,param.alpha);
     return true;

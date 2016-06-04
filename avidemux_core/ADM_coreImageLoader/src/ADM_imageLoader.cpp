@@ -121,10 +121,12 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
         {
             image->addAlphaChannel();
             // Extract alpha channel
-            uint8_t *alpha=source->GetReadPtr(PLANAR_Y);
+#define ALPHA_OFFSET 3            
+            uint8_t *alpha=source->GetReadPtr(PLANAR_Y)+ALPHA_OFFSET;
             uint8_t *alphaDest=image->GetWritePtr(PLANAR_ALPHA);
             int   sourceStride=source->GetPitch(PLANAR_Y);
             int   destStride=image->GetPitch(PLANAR_ALPHA);
+
             for(int y=0;y<h;y++)
             {
                 uint8_t *inAlpha=alpha;
