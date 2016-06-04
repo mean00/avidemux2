@@ -936,7 +936,7 @@ int index=0;
                 oldStartCode=startCode;
                 continue;
             }
-        ADM_assert(index<maxNalu);
+        if(index>=maxNalu) return 0;
         desc[index].start=head;
         desc[index].size=offset-START_CODE_LEN;
         desc[index].nalu=oldStartCode;
