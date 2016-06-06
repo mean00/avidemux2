@@ -97,7 +97,8 @@ bool                Ui_logoWindow::enableLowPart(bool enabled)
 {
     ui.spinX->setEnabled(enabled);
     ui.spinY->setEnabled(enabled);
-    ui.spinAlpha->setEnabled(enabled);
+    if(false==enabled)
+        ui.spinAlpha->setEnabled(enabled);
     ui.horizontalSlider->setEnabled(enabled);
     return true;
 }
@@ -136,6 +137,11 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             imageHeight=image->GetHeight(PLANAR_Y);            
             this->imageName=std::string(imageName);
             ui.labelImage->setText(this->imageName.c_str());
+            
+            if(image->GetReadPtr(PLANAR_ALPHA))
+                ui.spinAlpha->setEnabled(false);
+            else
+                ui.spinAlpha->setEnabled(true);
             status=true;    
            
         }
