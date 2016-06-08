@@ -212,25 +212,26 @@ static enum AVPixelFormat vdpauGetFormat(struct AVCodecContext *avctx,  const en
     AVCodecID id=AV_CODEC_ID_NONE;
     AVPixelFormat c;
     AVPixelFormat outPix;
-    for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
-    {
-        c=fmt[i];
-        ADM_info("[vdpau]: Evaluating %d\n",c);
-        if(c!=AV_PIX_FMT_VDPAU) continue;
-#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VDPAU_##y;id=avctx->codec_id;break;
-        switch(avctx->codec_id)
+    if(avctx->sw_pix_fmt==AV_PIX_FMT_YUV420P) // doont even try non yv12 for the moment
+        for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
         {
-            FMT_V_CHECK(H264,H264)
-            FMT_V_CHECK(MPEG1VIDEO,MPEG1)
-            FMT_V_CHECK(MPEG2VIDEO,MPEG2)
-            FMT_V_CHECK(WMV3,WMV3)
-            FMT_V_CHECK(VC1,VC1)
-            default: 
-                continue;
-                break;
+            c=fmt[i];
+            ADM_info("[vdpau]: Evaluating %d\n",c);
+            if(c!=AV_PIX_FMT_VDPAU) continue;        
+    #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VDPAU_##y;id=avctx->codec_id;break;
+            switch(avctx->codec_id)
+            {
+                FMT_V_CHECK(H264,H264)
+                FMT_V_CHECK(MPEG1VIDEO,MPEG1)
+                FMT_V_CHECK(MPEG2VIDEO,MPEG2)
+                FMT_V_CHECK(WMV3,WMV3)
+                FMT_V_CHECK(VC1,VC1)
+                default: 
+                    continue;
+                    break;
+            }
+            break;
         }
-        break;
-    }
     if(id==AV_CODEC_ID_NONE)
     {
         ADM_info("No matching colrospace compatible hw accelerator found \n");
