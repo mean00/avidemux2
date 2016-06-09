@@ -13,19 +13,26 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef T_SIMPLE_RENDER_H
-#define T_SIMPLE_RENDER_H
+#pragma once
+#include <QWidget>
+#include <QImage>
+#include "ADM_threads.h"
+#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 /**
     \fn class simpleRender
 */
-class simpleRender: public VideoRenderBase
+class simpleRender: public VideoRenderBase, public ADM_QvideoDrawer
 {
       protected:
                              GUI_WindowInfo info;
                              uint8_t *videoBuffer;
                              void    *handle;
+                             int     paintEngineType;
                              bool    cleanup(void);
                              bool    allocateStuff(void);
+                             QImage  myImage;
+                             ADM_Qvideo *videoWidget;
+                             admMutex lock;
       public:
                              simpleRender( void ) ;
                              ~simpleRender();
@@ -35,10 +42,7 @@ class simpleRender: public VideoRenderBase
               virtual   bool changeZoom(renderZoom newZoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return true;};
-                        const char *getName() {return "RGB";}
+                  const char *getName() {return "RGB";}
+                        bool draw(QWidget *widget, QPaintEvent *ev);
 };
-#endif
-
-
-
 

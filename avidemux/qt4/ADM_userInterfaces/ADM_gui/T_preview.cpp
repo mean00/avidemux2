@@ -50,7 +50,7 @@ void UI_QT4VideoWidget(QFrame *host);
 static QFrame *hostFrame=NULL;
 static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
-int paintEngineType = -1;
+
 
 
 void DIA_previewInit(uint32_t width, uint32_t height) {}
@@ -66,7 +66,6 @@ extern void callBackQtWindowDestroyed();
   They are translated to RGB32 by the colorconv instance.
 
 */
-static uint8_t *rgbDataBuffer=NULL;
 static uint32_t displayW=0,displayH=0;
 
 //****************************************************************************************************
@@ -77,8 +76,6 @@ static uint32_t displayW=0,displayH=0;
 */
 bool ADM_QPreviewCleanup(void)
 {
-    if(rgbDataBuffer) delete [] rgbDataBuffer;
-    rgbDataBuffer=NULL;
     return true;
 }
 /**
@@ -89,7 +86,7 @@ bool ADM_QPreviewCleanup(void)
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)  {}
 #else
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
-{    
+{   
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
     setAttribute( Qt::WA_PaintOnScreen, true );
    // Put a transparent background
@@ -103,6 +100,8 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
 #else
     setAttribute( Qt::WA_PaintOnScreen, true );    
 #endif
+    
+    drawer=NULL;
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -114,41 +113,22 @@ ADM_Qvideo::~ADM_Qvideo()
 }
 /**
  * 
+ * @param d
+ */
+void ADM_Qvideo::setDrawer(ADM_QvideoDrawer *d)
+{
+    drawer=d;    
+}
+/**
+ * 
  * @param ev
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {	    
-     if (paintEngineType == -1)
-     {
-        QPainter painter(this);
-        if (painter.isActive())
-                paintEngineType = painter.paintEngine()->type();
-        painter.end();
-      }
-    if (!displayW || !displayH || !rgbDataBuffer )
-            return;
-    if (renderExposeEventFromUI())
-    {
-        QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-        QPainter painter(this);
-        if (painter.isActive())
-        {
-            //painter.drawImage(QPoint(0,0),image);
-            const QRect rec=ev->rect();
-            int x=rec.x();
-            int y=rec.y();
-            int w=rec.width();
-            int h=rec.height();
-            painter.drawImage(x,y,image,x,y,w,h);
-            painter.end();
-        }else
-        {
-            printf("Painter inactive!\n");
-        }
-    }else
-    {
-        printf("Qvideo does not need to redraw\n");
-    }
+    if(!drawer)
+        return;
+    drawer->draw(this,ev);
+    
 }
 
 ADM_Qvideo *videoWindow=NULL;
@@ -169,28 +149,13 @@ void *UI_getDrawWidget(void)
 {
   return (void *) videoWindow;
 }
-/**
-    \brief Display to widget in RGB32
-*/
-void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
-{
-      memcpy(rgbDataBuffer,ptr,w*h*4);
-      videoWindow->repaint();
-    
-}
 
 /**
       \brief Resize the window
 */
 void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 {
-	if(displayW == w && displayH == h && rgbDataBuffer)
-		return;
 
-	if(rgbDataBuffer)
-		delete[] rgbDataBuffer;
-
-	rgbDataBuffer = new uint8_t[w * h * 4]; // 32 bits / color
 	displayW = w;
 	displayH = h;
 
@@ -256,6 +221,14 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 	xinfo->y = windowPoint.y();
 	xinfo->width  = displayW;
 	xinfo->height = displayH;
+}
+/**
+ * \brief DEPRECATED
+ * @return 
+ */
+void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
+{     
+      videoWindow->repaint();    
 }
 
 

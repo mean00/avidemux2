@@ -17,8 +17,9 @@
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_simpleRender.h"
+#include "QPainter"
+#include "QPaintEngine"
 
-extern void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr);
 extern void *MUI_getDrawWidget(void);
 
 
@@ -35,12 +36,17 @@ simpleRender::simpleRender()
 {
     ADM_info("creating simple render.\n");
     videoBuffer=NULL;
+    paintEngineType=-1;
+    videoWidget=NULL;
 }
 /**
     \fn simpleRender
 */
 simpleRender::~simpleRender()
 {
+    lock.lock();
+    videoWidget->setDrawer(NULL);
+    lock.unlock();
     ADM_info("Destroying simple render.\n");
     if(videoBuffer) delete [] videoBuffer;
     videoBuffer=NULL;
@@ -59,7 +65,7 @@ bool simpleRender::stop(void)
 */
 bool simpleRender::refresh(void)
 {
-     MUI_rgbDraw(MUI_getDrawWidget(),displayWidth,displayHeight,videoBuffer);
+     videoWidget->repaint();
      return true;
 }
 /**
@@ -68,8 +74,9 @@ bool simpleRender::refresh(void)
 bool simpleRender::displayImage(ADMImage *pic)
 {
     scaler->convertImage(pic,videoBuffer);
-    // Display RGB data
-    MUI_rgbDraw(MUI_getDrawWidget(),displayWidth,displayHeight,videoBuffer);
+    lock.lock();
+    myImage=QImage(videoBuffer,displayWidth,displayHeight,QImage::Format_RGB32);
+    lock.unlock();
     return true;
 }
 #if !(ADM_UI_TYPE_BUILD == ADM_UI_QT4)
@@ -122,5 +129,43 @@ bool simpleRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,render
     baseInit(w,h,zoom);
     ADM_info("init, simple render. w=%d, h=%d,zoom=%d\n",(int)w,(int)h,(int)zoom);
     allocateStuff();
+    videoWidget=(ADM_Qvideo *)info.widget;
+    videoWidget->setDrawer(this);
+    return true;
+}
+
+/**
+ * \brief This is the callback called when the display wants to redraw
+ * @param widget
+ * @param ev
+ * @return 
+ */
+bool simpleRender::draw(QWidget *widget, QPaintEvent *ev)
+{
+    lock.lock();
+#if 0
+     if (paintEngineType == -1)
+     {
+        QPainter painter(widget);
+        if (painter.isActive())
+                paintEngineType = painter.paintEngine()->type();
+      } 
+#endif  
+   // QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
+    
+    QPainter painter(widget);
+    if (painter.isActive())
+    {
+        const QRect rec=ev->rect();
+        int x=rec.x();
+        int y=rec.y();
+        int w=rec.width();
+        int h=rec.height();
+        painter.drawImage(x,y,myImage,x,y,w,h);
+    }else
+    {
+        ADM_warning("Painter inactive!\n");
+    }
+    lock.unlock();
     return true;
 }

@@ -112,22 +112,17 @@ static void MUI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
    RENDER_CHECK(UI_updateDrawWindowSize);
    HookFunc->UI_updateDrawWindowSize(win,w,h);
 }
-void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
+static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
 {
-    RENDER_CHECK(UI_rgbDraw);
-    HookFunc->UI_rgbDraw(widg, w,  h,ptr);
-  
+  RENDER_CHECK(UI_getPreferredRender);
+  return HookFunc->UI_getPreferredRender();
 }
 void *MUI_getDrawWidget(void)
 {
   RENDER_CHECK(UI_getDrawWidget);
   return HookFunc->UI_getDrawWidget();
 }
-static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
-{
-  RENDER_CHECK(UI_getPreferredRender);
-  return HookFunc->UI_getPreferredRender();
-}
+
 //**************************************
 //**************************************
 //**************************************

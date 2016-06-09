@@ -27,7 +27,7 @@
 #endif
 
 extern void 		AVDM_audioPref( void );
-extern const char* getNativeRendererDesc();
+extern const char* getNativeRendererDesc(int type);
 
 
 
@@ -282,7 +282,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
         
         diaMenuEntry videoMode[]={
-                             {RENDER_GTK, getNativeRendererDesc(), NULL}
+                             {RENDER_GTK, getNativeRendererDesc(0), NULL}
 #ifdef USE_XV
                              ,{RENDER_XV,   QT_TRANSLATE_NOOP("adm","XVideo (best)"),NULL}
 #endif
