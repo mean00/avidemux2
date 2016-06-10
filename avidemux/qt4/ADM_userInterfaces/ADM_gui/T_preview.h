@@ -26,6 +26,9 @@ public:
 	ADM_Qvideo(QWidget *z);
 	~ADM_Qvideo();
 	void paintEvent(QPaintEvent *ev);
-        void setDrawer(ADM_QvideoDrawer *);
+        void setDrawer(ADM_QvideoDrawer *d)
+        {
+            drawer=d;    
+        }
 };
 #endif	// T_preview_h

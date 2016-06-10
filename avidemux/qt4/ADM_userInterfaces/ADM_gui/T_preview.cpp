@@ -109,14 +109,7 @@ ADM_Qvideo::~ADM_Qvideo()
     callBackQtWindowDestroyed();
     
 }
-/**
- * 
- * @param d
- */
-void ADM_Qvideo::setDrawer(ADM_QvideoDrawer *d)
-{
-    drawer=d;    
-}
+
 /**
  * 
  * @param ev
