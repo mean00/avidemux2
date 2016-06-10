@@ -2,13 +2,15 @@ include(admOpenGl)
 
 IF(QT_LIBRARY_EXTENSION)
         SET(ADM_LIB ADM_render6_${QT_LIBRARY_EXTENSION})
+        SET(SIMPLE_RENDER GUI_simpleRender.cpp)
 ELSE(QT_LIBRARY_EXTENSION)
         SET(ADM_LIB ADM_render6_${UI_SUFFIX})
+        SET(SIMPLE_RENDER GUI_simpleRenderStub.cpp)
 ENDIF(QT_LIBRARY_EXTENSION)
 
 SET(${ADM_LIB}_SRCS
 GUI_render.cpp
-GUI_simpleRender.cpp
+${SIMPLE_RENDER}
 )
 
 IF (USE_OPENGL)
