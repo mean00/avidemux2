@@ -96,12 +96,10 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
     color.setAlpha(0);
     p.setColor( QPalette::Window, color );
     setPalette( p );
-   
-#else
-    setAttribute( Qt::WA_PaintOnScreen, true );    
 #endif
     
     drawer=NULL;
+    doOnce=false;
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -125,10 +123,22 @@ void ADM_Qvideo::setDrawer(ADM_QvideoDrawer *d)
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {	    
-    if(!drawer)
-        return;
-    drawer->draw(this,ev);
-    
+    if(drawer)
+    {
+         drawer->draw(this,ev);
+         return;
+    }
+    if(!doOnce)
+    {
+        printf("[QVideo] Using default redraw-------------->\n");
+        QPainter painter(this);
+        QColor blackColor(Qt::black);
+        QImage allBlack(width(),height(),QImage::Format_RGB32);
+        allBlack.fill(blackColor);
+        painter.drawImage(0,0,allBlack);
+        printf("<--------------[QVideo]/ Using default redraw\n");
+        doOnce=true;
+    }
 }
 
 ADM_Qvideo *videoWindow=NULL;

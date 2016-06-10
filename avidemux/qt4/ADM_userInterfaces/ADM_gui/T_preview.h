@@ -21,6 +21,7 @@ class  ADM_Qvideo : public QWidget
 {
 	Q_OBJECT
         ADM_QvideoDrawer *drawer;
+        bool             doOnce;
 public:
 	ADM_Qvideo(QWidget *z);
 	~ADM_Qvideo();

@@ -44,9 +44,8 @@ simpleRender::simpleRender()
 */
 simpleRender::~simpleRender()
 {
-    lock.lock();
+    admScopedMutex autoLock(&lock);
     videoWidget->setDrawer(NULL);
-    lock.unlock();
     ADM_info("Destroying simple render.\n");
     if(videoBuffer) delete [] videoBuffer;
     videoBuffer=NULL;
@@ -77,6 +76,7 @@ bool simpleRender::displayImage(ADMImage *pic)
     lock.lock();
     myImage=QImage(videoBuffer,displayWidth,displayHeight,QImage::Format_RGB32);
     lock.unlock();
+    refresh();
     return true;
 }
 #if !(ADM_UI_TYPE_BUILD == ADM_UI_QT4)
@@ -142,17 +142,7 @@ bool simpleRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,render
  */
 bool simpleRender::draw(QWidget *widget, QPaintEvent *ev)
 {
-    lock.lock();
-#if 0
-     if (paintEngineType == -1)
-     {
-        QPainter painter(widget);
-        if (painter.isActive())
-                paintEngineType = painter.paintEngine()->type();
-      } 
-#endif  
-   // QImage image(rgbDataBuffer,displayW,displayH,QImage::Format_RGB32);
-    
+    admScopedMutex autoLock(&lock); 
     QPainter painter(widget);
     if (painter.isActive())
     {
@@ -166,6 +156,5 @@ bool simpleRender::draw(QWidget *widget, QPaintEvent *ev)
     {
         ADM_warning("Painter inactive!\n");
     }
-    lock.unlock();
     return true;
 }
