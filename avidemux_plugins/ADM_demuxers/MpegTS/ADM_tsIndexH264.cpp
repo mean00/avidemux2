@@ -41,6 +41,10 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 while(payload[0]==0xff) {sei_size+=0xff;payload++;};
                 sei_size+=payload[0];payload++;
                 aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                if(payload+sei_size>=tail)
+                {
+                        return false;
+                }
                 switch(sei_type) // Recovery point
                 {
 
