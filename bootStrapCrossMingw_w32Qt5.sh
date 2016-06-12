@@ -10,6 +10,8 @@ export QT_HOME=/mingw/Qt/current
 #export CFLAGS="-fpermissive"
 export O_PARAL="-j 2"
 export TOOLCHAIN_LOCATION=/mingw
+export C_COMPILER=gcc
+export CXX_COMPILER=g++
 
 # ** Put your config here **
 
