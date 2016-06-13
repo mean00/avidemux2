@@ -15,7 +15,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 
-
+static bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic);
+static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -49,38 +50,15 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 {
 
                        case 1:
-                            {
-                                if(spsInfo.hasStructInfo)
-                                {
-                                    getBits bits(sei_size,payload);
-                                    payload+=sei_size;
-                                    if(spsInfo.CpbDpbToSkip)
-                                    {
-                                            bits.get(spsInfo.CpbDpbToSkip);
-                                    }
-                                    //printf("Consumed: %d,\n",bits.getConsumedBits());
-                                    int pic=bits.get(4);
-                                    aprintf("Pic struct: %d,\n",pic);
-                                    switch(pic) 
-                                    {
-                                        case 0: *picStruct=pictureFrame; break;
-                                        case 3:
-                                        case 4: *picStruct=pictureFrame;
-                                        case 1: *picStruct=pictureTopField;break;
-                                        case 2: *picStruct=pictureBottomField;break;
-                                        default:*picStruct=pictureFrame;
-                                    }
-                                    
-                                }else
-                                        payload+=sei_size;
-                            }
+                        {
+                            decoderSei1(spsInfo,sei_size,payload,picStruct);
+                            payload+=sei_size;
                             break;
-
+                        }
                        case 6:
                         {
-                            getBits bits(sei_size,payload);
+                            decoderSei6(sei_size,payload,recoveryLength);
                             payload+=sei_size;
-                            *recoveryLength=bits.getUEG();
                             aprintf("[SEI] Recovery :%" PRIu32"\n",*recoveryLength);
                             r=true;
                             break;
@@ -365,6 +343,42 @@ the_end:
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/
+
+// Workaround win64 bug
+// Put that in a separate function
+bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic)
+{
+    if(spsInfo.hasStructInfo)
+    {
+      getBits bits(size,bfer);
+      if(spsInfo.CpbDpbToSkip)
+      {
+              bits.get(spsInfo.CpbDpbToSkip);
+      }
+      //printf("Consumed: %d,\n",bits.getConsumedBits());
+      int pic4=bits.get(4);
+      aprintf("Pic struct: %d,\n",pic4);
+      switch(pic4) 
+      {
+          case 0: *pic=pictureFrame; break;
+          case 3:
+          case 4: *pic=pictureFrame;
+          case 1: *pic=pictureTopField;break;
+          case 2: *pic=pictureBottomField;break;
+          default:*pic=pictureFrame;break;
+      }
+    }
+    return true; 
+}
+//
+// 2nd one
+bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery)
+{
+     getBits bits(size,bfer);
+     *recovery=bits.getUEG();
+     return true;
+}
+
 
 //
 
