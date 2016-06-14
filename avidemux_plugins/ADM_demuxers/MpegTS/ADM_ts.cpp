@@ -94,6 +94,11 @@ uint8_t tsHeader::open(const char *name)
         printf("[tsDemux] Cannot read index for file %s\n",idxName);
         goto abt;
     }
+    if(!ListOfFrames.size())
+    {
+        ADM_info("[TSDemux] No video frames\n");
+        goto abt;
+    }
     updateIdr();
     updatePtsDts();
     _videostream.dwLength= _mainaviheader.dwTotalFrames=ListOfFrames.size();
