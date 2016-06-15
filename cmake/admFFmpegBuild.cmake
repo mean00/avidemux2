@@ -170,6 +170,9 @@ if (CROSS)
 		xadd(--host-cc gcc)
 		xadd(--nm ${CMAKE_CROSS_PREFIX}-nm) 
 		#xadd(--sysroot /mingw/include)
+		if (CMAKE_C_FLAGS)
+			xadd(--extra-cflags ${CMAKE_C_FLAGS})
+		endif (CMAKE_C_FLAGS)
 
 		set(CROSS_OS mingw32)	
 
