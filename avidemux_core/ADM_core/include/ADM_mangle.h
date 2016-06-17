@@ -5,9 +5,7 @@
     copyright            : (C) 2008 by mean
     
  ***************************************************************************/
-
-#ifndef ADM_MANGLE_H
-#define ADM_MANGLE_H
+#pragma once
 
 #include "ADM_coreConfig.h"
 
@@ -103,5 +101,18 @@
 #endif
 
 #define ASM_CONST attribute_used __attribute__ ((aligned(8)))
+/**
+        In some assembly part, gcc optimize way too much and reorganize the code
+        The right fix would be to use yasm for those, but i' m lazy
+*/
+#if defined(__clang__) && (__clang__==3 && __clang_minor__ >=7)
+        #define ADM_NO_OPTIMIZE  __attribute__((optnone)) 
+#elif defined(__GNUC__) && (__GNUC__ == 5 || (__GNUC__ ==4   && __GNUC_MINOR__ > 4))
+        #define ADM_NO_OPTIMIZE __attribute__((optimize("O0"))) 
+#else
+        #define ADM_NO_OPTIMIZE 
 #endif
+
+
+
 

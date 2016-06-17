@@ -56,7 +56,7 @@ static inline void glYUV444_MMXInit(void)
 
     __asm__(" movq " Mangle(mask)", %%mm7\n" ::);
 }
-static inline void glYUV444_MMX(const uint8_t *src2, uint8_t *dst2, const int width2)
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src2, uint8_t *dst2, const int width2)
 {
     uint8_t *src=(uint8_t *)src2;
     uint8_t *dst=(uint8_t *)dst2;
@@ -104,7 +104,7 @@ static inline void glYUV444_MMX(const uint8_t *src2, uint8_t *dst2, const int wi
  * @param dstV
  * @param width
  */
-static inline void glYUV444_MMX_Chroma(const uint8_t *src2, uint8_t *dstY2, uint8_t *dstU2, uint8_t *dstV2,const int width)
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX_Chroma(const uint8_t *src2, uint8_t *dstY2, uint8_t *dstU2, uint8_t *dstV2,const int width)
 {
     const uint8_t *src=src2;
     uint8_t *dstY=dstY2, *dstU=dstU2, *dstV=dstV2;
