@@ -82,6 +82,17 @@ MACRO(ADM_INSTALL_INCLUDE_FOLDER folder targetName)
 ENDMACRO(ADM_INSTALL_INCLUDE_FOLDER )
 ##
 #
+# Macro to install include folder
+#
+MACRO(ADM_INSTALL_QT_INCLUDE_FOLDER folder targetName)
+        INSTALL(DIRECTORY ${folder} 
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${QT_EXTENSION}/${targetName}
+                COMPONENT dev
+                FILES_MATCHING PATTERN "*.h*"
+                )
+ENDMACRO(ADM_INSTALL_QT_INCLUDE_FOLDER )
+##
+#
 # Macro to install cmake folder
 #
 MACRO(ADM_INSTALL_CMAKE_FOLDER folder targetName)
