@@ -3,6 +3,7 @@
 ##########################
 !define BUILD_BITS 32
 !define ROOT_FOLDER /mingw/avidemux_32
+!define DEV_FOLDER  /mingw_dev/mingw/Release/
 !include avidemux_crossQt5.nsi
 
 Section "Avidemux Core" SecCore
