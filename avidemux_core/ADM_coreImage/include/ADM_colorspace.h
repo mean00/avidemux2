@@ -45,13 +45,14 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
                                             uint8_t **srcData,int *srcStride);
   public :
     
-                    ADMColorScalerFull(ADMColorScaler_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
-    bool            reset(ADMColorScaler_algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to);
+                    ADMColorScalerFull(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to);
+    bool            reset(ADMColorScaler_algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to);
     
 
     bool            convert(uint8_t  *from, uint8_t *to);
     bool            convertImage(ADMImage *img, uint8_t *to);
-    bool            convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
+    bool            convertImage(ADMImage *sourceImage, ADMImage *destImage);
+    bool            convertPlanes(int  sourceStride[3],int destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3]);
                     ~ADMColorScalerFull();
 };
@@ -62,8 +63,8 @@ class ADM_COREIMAGE6_EXPORT ADMColorScalerFull
 class ADMColorScalerSimple :public ADMColorScalerFull
 {
 public:
-    bool            changeWidthHeight(uint32_t newWidth, uint32_t newHeight);
-                    ADMColorScalerSimple( uint32_t width, uint32_t height, ADM_colorspace from,ADM_colorspace to,ADMColorScaler_algo algo=ADM_CS_BICUBIC):
+    bool            changeWidthHeight(int newWidth, int newHeight);
+                    ADMColorScalerSimple( int width, int height, ADM_colorspace from,ADM_colorspace to,ADMColorScaler_algo algo=ADM_CS_BICUBIC):
                         ADMColorScalerFull(algo, width, height, width,height, from, to)
                      {
 
@@ -72,7 +73,7 @@ public:
 };
 
 // Some misc functions
-ADM_COREIMAGE6_EXPORT bool ADM_ConvertRgb24ToYV12(bool inverted,uint32_t w, uint32_t h, uint8_t *source, uint8_t *destination);
+ADM_COREIMAGE6_EXPORT bool ADM_ConvertRgb24ToYV12(bool inverted,int w, int h, uint8_t *source, uint8_t *destination);
 #endif
 //EOF
 

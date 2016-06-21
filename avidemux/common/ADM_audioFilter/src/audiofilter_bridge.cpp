@@ -58,7 +58,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   _hold=0;
   rewind();
   
-  ADM_info("[Bridge] Starting with time %s , shift %"PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
+  ADM_info("[Bridge] Starting with time %s , shift %" PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
   // If shiftMS is > 0, it means we have to go in the future, just increase _startTime
   if(shiftMs>0)
   {

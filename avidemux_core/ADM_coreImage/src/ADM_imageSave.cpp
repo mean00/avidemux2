@@ -173,7 +173,7 @@ ADM_byteBuffer   byteBuffer;
         goto  jpgCleanup;
     }
 
-    codec=avcodec_find_encoder(CODEC_ID_MJPEG);
+    codec=avcodec_find_encoder(AV_CODEC_ID_MJPEG);
     if(!codec)
     {
         printf("[saveAsJpg] Cannot allocate codec\n");
@@ -187,7 +187,7 @@ ADM_byteBuffer   byteBuffer;
         goto  jpgCleanup;
     }
 
-    context->pix_fmt =PIX_FMT_YUV420P;
+    context->pix_fmt =AV_PIX_FMT_YUV420P;
     context->strict_std_compliance = -1;
     context->time_base.den=1;
     context->time_base.num=1;
@@ -220,17 +220,23 @@ ADM_byteBuffer   byteBuffer;
       byteBuffer.setSize(_width*_height*4);
 	  
 
-        if ((sz = avcodec_encode_video (context, byteBuffer.at(0), _width*_height*4, frame)) < 0)
-        {
-            printf("[jpeg] Error %d encoding video\n",sz);
+      AVPacket pkt;
+      int gotSomething;
+      pkt.size=_width*_height*4;
+      pkt.data=byteBuffer.at(0);
+      r=avcodec_encode_video2(context,&pkt,frame,&gotSomething);
+      if(r || !gotSomething)
+      {
+            ADM_error("[jpeg] Error %d encoding video\n",r);
             goto  jpgCleanup;
-        }
+      }
+      
         // Ok now write our file...
         {
             FILE *f=ADM_fopen(filename,"wb");
             if(f)
             {
-                fwrite(byteBuffer.at(0),sz,1,f);
+                fwrite(byteBuffer.at(0),pkt.size,1,f);
                 fclose(f);
                 result=true;
             }else

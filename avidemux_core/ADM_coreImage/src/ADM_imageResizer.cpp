@@ -60,8 +60,8 @@ uint8_t ADMImageResizer::resize(ADMImage *source, ADMImage *dest)
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
     ADM_assert(dest->isWrittable()==true)
-    uint32_t srcStride[3];
-    uint32_t dstStride[3];
+    int srcStride[3];
+    int dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
     source->GetPitches(srcStride);
@@ -75,8 +75,8 @@ uint8_t ADMImageResizer::resize(ADMImage *source, uint8_t *dest)
 {
     ADM_assert(source->_width == orgWidth);
     ADM_assert(source->_height == orgHeight);
-    uint32_t srcStride[3];
-    uint32_t dstStride[3];
+    int srcStride[3];
+    int dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
     source->GetPitches(srcStride);
@@ -97,8 +97,8 @@ uint8_t ADMImageResizer::resize(uint8_t *source, ADMImage *dest)
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
     ADM_assert(dest->isWrittable()==true)
-    uint32_t srcStride[3];
-    uint32_t dstStride[3];
+    int srcStride[3];
+    int dstStride[3];
     uint8_t  *srcPtr[3];
     uint8_t  *dstPtr[3];
     dest->GetPitches(dstStride);

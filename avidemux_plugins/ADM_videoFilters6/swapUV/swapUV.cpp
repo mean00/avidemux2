@@ -90,7 +90,7 @@ bool swapUv::getNextFrame(uint32_t *fn,ADMImage *image)
 {
     ADMImageRefWrittable ref(info.width,info.height);
  
-    uint32_t strides[3];
+    int      strides[3];
     uint8_t  *ptr[3];
     image->GetWritePlanes(ptr);
     image->GetPitches(strides);

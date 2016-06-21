@@ -246,7 +246,7 @@ bool muxerMp4v2::save(void)
         uint64_t nextDts=in[nextWrite].dts;   // Delta between dts=duration of the frame (sort of)     
         uint64_t myDts=in[other].dts;
         uint64_t myPts=in[other].pts;        
-        cprintf(">>next DTS=%"PRIu64", last DTS=%"PRIu64"delta=%"PRIu64"\n",nextDts,lastSentDts,nextDts-lastSentDts);
+        cprintf(">>next DTS=%" PRIu64", last DTS=%" PRIu64"delta=%" PRIu64"\n",nextDts,lastSentDts,nextDts-lastSentDts);
 
         encoding->pushVideoFrame(in[other].len,in[other].out_quantizer,myDts);
         uint64_t delta=myPts-lastSentDts; // composition time...
@@ -256,7 +256,7 @@ bool muxerMp4v2::save(void)
         uint64_t scaled_duration=timeScale(duration);
         duration=inverseTimeScale(scaled_duration); // handle rounding error
         nbFrame++;
-        cprintf("Sending frame duration=%"PRIu64", pts/dts=%"PRIu64"\n",lastSentDts,delta);
+        cprintf("Sending frame duration=%" PRIu64", pts/dts=%" PRIu64"\n",lastSentDts,delta);
         if(false==MP4WriteSample(handle,videoTrackId,in[other].data,in[other].len,
                         scaled_duration, // duration
                         delta, // pts/dts offset
@@ -270,7 +270,7 @@ bool muxerMp4v2::save(void)
         // update lastSentDts
         lastSentDts+=duration; // beginning of next frame...
         //
-        cprintf("lastSendDts=%"PRIu64", next Dts=%"PRIu64", skew=%"PRId64"\n",lastSentDts,nextDts,
+        cprintf("lastSendDts=%" PRIu64", next Dts=%" PRIu64", skew=%" PRId64"\n",lastSentDts,nextDts,
                         (int64_t)nextDts-(int64_t)lastSentDts);
         //
         fillAudio(lastSentDts);

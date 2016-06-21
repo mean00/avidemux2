@@ -27,6 +27,12 @@ extern "C" {
 
 static ADM_vaSurface *lastSurface=NULL;
 
+
+VideoRenderBase *spawnLIBVARender()
+{
+    return new libvaRender();
+}
+
 //________________Wrapper around Xv_______________
 /**
     \fn libvaRender
@@ -66,7 +72,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
             return false;
         }
 
-        mySurface[i]=new ADM_vaSurface(NULL,w,h);
+        mySurface[i]=new ADM_vaSurface(w,h);
         mySurface[i]->surface=surface;
     }    
     
@@ -107,7 +113,7 @@ bool libvaRender::displayImage(ADMImage *pic)
     // if input is already a VA surface, no need to reupload it...
     if(pic->refType==ADM_HW_LIBVA)
     {
-        ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refInstance;
+        ADM_vaSurface *img=(ADM_vaSurface *)pic->refDescriptor.refHwImage;
         admLibVA::putX11Surface(img,info.systemWindowId,displayWidth,displayHeight);
         lastSurface=img;
     }else

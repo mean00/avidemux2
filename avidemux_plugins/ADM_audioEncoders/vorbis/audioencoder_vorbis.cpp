@@ -217,7 +217,7 @@ bool AUDMEncoder_Vorbis::initialize(void)
   switch(_config.mode)
   {
     case ADM_VORBIS_VBR:
-      printf("[Vorbis]CBR Bitrate:%"PRIu32"\n",_config.bitrate);
+      printf("[Vorbis]CBR Bitrate:%" PRIu32"\n",_config.bitrate);
       break;
     case ADM_VORBIS_QUALITY: //FIXME FIXME FIXME
       printf("[Vorbis]VBR Quality:%.1f\n",_config.quality);
@@ -226,8 +226,8 @@ bool AUDMEncoder_Vorbis::initialize(void)
       ADM_assert(0);
   }
 
-  printf("[Vorbis]Channels  :%"PRIu32"\n",wavheader.channels);
-  printf("[Vorbis]Frequency :%"PRIu32"\n",wavheader.frequency);
+  printf("[Vorbis]Channels  :%" PRIu32"\n",wavheader.channels);
+  printf("[Vorbis]Frequency :%" PRIu32"\n",wavheader.frequency);
   return 1;
 }
 

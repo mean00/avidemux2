@@ -32,7 +32,6 @@ workWindow::workWindow(QWidget *parent) : QDialog(parent)
 {
     ADM_info("Stop Request\n");
     active=false;
-    delete ui;
 }
 //*******************************************
 
@@ -51,7 +50,7 @@ public:
         virtual uint8_t  	update(uint32_t percent);
         virtual uint8_t 	update(uint32_t current,uint32_t total);
         virtual uint8_t  	isAlive (void );
-                void        closeDialog(void);
+                void            closeDialog(void);
         
 };
 //********************************************************
@@ -72,53 +71,62 @@ void DIA_workingQt4 :: postCtor( void )
       lastper=0;
       _nextUpdate=0;
 }
+/**
+ * 
+ * @param percent
+ * @return 
+ */
 uint8_t DIA_workingQt4::update(uint32_t percent)
 {
-		#define GUI_UPDATE_RATE 1000
+#define GUI_UPDATE_RATE 1000
 
-        UI_purge();
-
-        if(!_priv) return 1;
-        if(!percent) return 0;
-        if(percent==lastper)
-        {
-
-            return 0;
-        }
-
-        elapsed=_clock.getElapsedMS();
-
-        if(elapsed<_nextUpdate) 
-        {
-          return 0;
-        }
-
-        _nextUpdate=elapsed+1000;
-        lastper=percent;
-
-		uint32_t hh,mm,ss,mms;
-		char string[9];
-
-		ms2time(elapsed,&hh,&mm,&ss,&mms);
-		sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
-
-        workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
-        
-        if(percent>=1)
-        {
-            double totalTime=(100*elapsed)/percent;
-            double remaining=totalTime-elapsed;
-            if(remaining<0)
-                remaining=0;
-            uint32_t remainingMs=(uint32_t)remaining;
-            wind->ui->labelTimeLeft->setText(ms2timedisplay(remainingMs));
-        }
-        
-        
-        wind->ui->labelElapsed->setText(string);
-        wind->ui->progressBar->setValue(percent);
-       
+    UI_purge();
+    if(!_priv) 
+        return 1;
+    workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
+    if(!wind->active)
+    {
+        return true;
+    }
+    if(!percent) 
         return 0;
+    if(percent==lastper)
+    {
+        return 0;
+    }
+
+    elapsed=_clock.getElapsedMS();
+    if(elapsed<_nextUpdate) 
+    {
+      return 0;
+    }
+
+    _nextUpdate=elapsed+1000;
+    lastper=percent;
+
+    uint32_t hh,mm,ss,mms;
+    char string[9];
+
+    ms2time(elapsed,&hh,&mm,&ss,&mms);
+    sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
+
+
+
+    if(percent>=1)
+    {
+        double totalTime=(100*elapsed)/percent;
+        double remaining=totalTime-elapsed;
+        if(remaining<0)
+            remaining=0;
+        uint32_t remainingMs=(uint32_t)remaining;
+        wind->ui->labelTimeLeft->setText(ms2timedisplay(remainingMs));
+    }
+
+
+    wind->ui->labelElapsed->setText(string);
+    wind->ui->progressBar->setValue(percent);
+
+    return 0;
 }
 
 uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)

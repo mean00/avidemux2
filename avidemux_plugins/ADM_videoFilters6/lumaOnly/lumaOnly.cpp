@@ -81,7 +81,7 @@ bool lumaOnlyFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     // do in place flip
     int w=info.width;
     int h=info.height;
-    uint32_t pitches[3];
+    int      pitches[3];
     uint8_t *ptr[3];
     image->GetPitches(pitches);
     image->GetWritePlanes((uint8_t **)ptr);

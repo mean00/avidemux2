@@ -246,7 +246,7 @@ ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint
     video_body->getVideoInfo(&info);
     context->width = info.width;
     context->height = info.height;
-    context->pix_fmt = PIX_FMT_YUV420P;
+    context->pix_fmt = AV_PIX_FMT_YUV420P;
     
     video_body->getExtraHeaderData(&extraLen,&extraData);
     // duplicate extraData with malloc scheme, it will be freed by the bitstream filter

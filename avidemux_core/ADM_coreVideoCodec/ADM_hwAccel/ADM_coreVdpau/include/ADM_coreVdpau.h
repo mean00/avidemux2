@@ -42,6 +42,7 @@ public:
 #ifdef USE_VDPAU
     static  void        *getVdpDevice(void);
     static  void        *getProcAddress(void);
+    static  VdpGetProcAddress   *getProcAddress2(void)    ;
     static  const char  *getErrorString(VdpStatus er);
     static  bool        mixerIsFeatureEnabled( VdpVideoMixer mixer,VdpVideoMixerFeature feature);
     static  VdpStatus   surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface);
@@ -49,7 +50,7 @@ public:
     static  VdpStatus   getDataSurface(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
     static  VdpStatus   surfacePutBits(VdpVideoSurface surface,uint8_t *planes[3],uint32_t stride[3]);
     /* Decoder */
-    static  VdpStatus   decoderCreate( VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
+    static  VdpStatus   decoderCreate( VdpDevice dev,VdpDecoderProfile profile,    uint32_t          width,    uint32_t          height,    uint32_t          max_references,       VdpDecoder *      decoder);
     static  VdpStatus   decoderDestroy(VdpDecoder decoder);
 
     static  VdpStatus   decoderRender(

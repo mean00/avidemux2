@@ -65,7 +65,7 @@ ADM_Audiocodec *out = NULL;
 
         if (out == NULL)
         {
-                ADM_warning("[audioCodec] Unknown codec : %"PRIu32"\n",fourcc);
+                ADM_warning("[audioCodec] Unknown codec : %" PRIu32"\n",fourcc);
                 out = (ADM_Audiocodec *) new ADM_AudiocodecUnknown(fourcc,*info);
         }
         // For channel mapping, simple case we do it here so that the decoder does not have

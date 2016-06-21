@@ -20,9 +20,24 @@
 #include "ADM_colorspace.h"
 #include "ADM_codec.h"
 #include "fourcc.h"
+
+/**
+ */
+typedef enum 
+{
+        ADM_PICTURE_UNKNOWN=0,
+        ADM_PICTURE_JPG=1,
+        ADM_PICTURE_PNG=2,
+        ADM_PICTURE_BMP=3,
+        ADM_PICTURE_BMP2=4
+        
+} ADM_PICTURE_TYPE;
+
+static ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h);
+
+
 //**********************************
 static ADMImage *createImageFromFile_jpeg(const char *filename);
-static ADMImage *createImageFromFile_Bmp(const char *filename);
 static ADMImage *createImageFromFile_Bmp2(const char *filename);
 static ADMImage *createImageFromFile_png(const char *filename);
 //***********************************
@@ -49,6 +64,13 @@ static uint32_t read32(FILE *fd)
 	d=fgetc(fd);
 	return (a<<24)+(b<<16)+(c<<8)+d;
 
+}
+static int getFileSize(FILE *fd)
+{
+        fseek(fd, 0, SEEK_END);
+        int imageSize = ftell(fd);
+        fseek(fd, 0, SEEK_SET);
+        return imageSize;
 }
 
 /**
@@ -91,50 +113,59 @@ ADMImage *createImageFromFile(const char *filename)
 static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
 {
    
-    	ADMImage *image=new ADMImageDefault(w,h);        
-        uint32_t srcPitch[3],dstPitch[3];
-        
-        image->GetPitches(dstPitch);
-        source->GetPitches(srcPitch);
-        
-        uint8_t *srcPlanes[3],*dstPlanes[3];
-        image->GetWritePlanes(dstPlanes);
-        source->GetReadPlanes(srcPlanes);
-
-                
+    	ADMImageDefault *image=new ADMImageDefault(w,h);        
         ADM_colorspace sourceFormat=source->_colorspace;   
+        bool swap=false;
         
-        // swap u & V, dont know why 
-        if(sourceFormat == ADM_COLOR_RGB32A)
+        if(ADM_COLOR_RGB32A==sourceFormat)
         {
-            uint8_t *s=dstPlanes[1];
-            dstPlanes[1]=dstPlanes[2];
-            dstPlanes[2]=s;
-        }
+            image->addAlphaChannel();
+            // Extract alpha channel
+#define ALPHA_OFFSET 3            
+            uint8_t *alpha=source->GetReadPtr(PLANAR_Y)+ALPHA_OFFSET;
+            uint8_t *alphaDest=image->GetWritePtr(PLANAR_ALPHA);
+            int   sourceStride=source->GetPitch(PLANAR_Y);
+            int   destStride=image->GetPitch(PLANAR_ALPHA);
 
+            for(int y=0;y<h;y++)
+            {
+                uint8_t *inAlpha=alpha;
+                alpha+=sourceStride;
+                uint8_t *outAlpha=alphaDest;
+                alphaDest+=destStride;
+                for(int x=0;x<w;x++)
+                {
+                    *outAlpha=*inAlpha;
+                    outAlpha++;
+                    inAlpha+=4;
+                }
+            }
+            swap=true;
+        }
         ADMColorScalerSimple converter(w,h,sourceFormat,ADM_COLOR_YV12);     
-        converter.convertPlanes(srcPitch,dstPitch,srcPlanes,dstPlanes); 
+        converter.convertImage(source,image); 
         
+        if(swap)
+        {
+            uint8_t **s=image->_planes,*v;
+            v=s[1];
+            s[1]=s[2];
+            s[2]=v;
+        }
         return image;
 }
+
 /**
- * 	\fn createImageFromFile_jpeg
- *  \brief Create image from jpeg file
+ * 
+ * @param fd
+ * @param width
+ * @param height
+ * @return 
  */
-ADMImage *createImageFromFile_jpeg(const char *filename)
+static bool readJpegInfo(FILE *fd, int &width, int &height)
 {
-
-FILE *fd;
-uint32_t _imgSize;
-uint32_t w = 0, h = 0;
-
-        fd = ADM_fopen(filename, "rb");
-        fseek(fd, 0, SEEK_END);
-        _imgSize = ftell(fd);
-        fseek(fd, 0, SEEK_SET);
         uint16_t tag = 0, count = 0, off;
-
-
+        int w,h;
         fseek(fd, 0, SEEK_SET);
         read16(fd);	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
@@ -158,9 +189,8 @@ uint32_t w = 0, h = 0;
                 off = read16(fd);
                 if (off < 2)
                 {
-                        ADM_warning("[imageLoader]Offset too short!\n");
-                    fclose(fd);
-                    return NULL;
+                    ADM_warning("[imageLoader]Offset too short!\n");
+                    return false;
                 }
                 fseek(fd, off - 2, SEEK_CUR);
             }
@@ -169,10 +199,41 @@ uint32_t w = 0, h = 0;
         if (tag != 0xffc0)
         {
             ADM_warning("[imageLoader]Cannot fint start of frame\n");
-            fclose(fd);
+            return false;
+        }
+        width=w;
+        height=h;
+        return true;
+}
+
+/**
+ * 	\fn createImageFromFile_jpeg
+ *  \brief Create image from jpeg file
+ */
+ADMImage *createImageFromFile_jpeg(const char *filename)
+{
+
+FILE *fd;
+uint32_t _imgSize;
+int  w = 0, h = 0;
+
+        fd = ADM_fopen(filename, "rb");
+        if(!fd)
+        {
+            ADM_warning("Cannot open jpeg file\n");
             return NULL;
         }
-        ADM_info("[imageLoader] %" PRIu32" x %" PRIu32".., total Size : %u, offset %u\n", w, h,_imgSize,off);
+        _imgSize = getFileSize(fd);
+
+        if(!readJpegInfo(fd,w,h))
+        {
+            ADM_warning("Cannot get info from jpeg\n");
+            fclose(fd);
+            fd=NULL;
+            return NULL;
+        }
+        
+        ADM_info("[imageLoader] %d x %d.., total Size : %u \n", w, h,_imgSize);
 
         // Load the binary coded image
         ADM_byteBuffer buffer(_imgSize);
@@ -194,7 +255,7 @@ uint32_t w = 0, h = 0;
         bin.dataLength=_imgSize; // This is more than actually, but who cares...
 
         dec->uncompress (&bin, &tmpImage);
-        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
+        ADMImage *image=convertImageColorSpace(&tmpImage,w,h);        
         delete dec;
         dec=NULL;
         return image;
@@ -212,9 +273,12 @@ ADMImage *createImageFromFile_png(const char *filename)
     uint32_t w,h;
 
        fd = ADM_fopen(filename, "rb");
-       fseek(fd, 0, SEEK_END);
-       size=ftell(fd);
-       fseek(fd, 0, SEEK_SET);
+       if(!fd)
+       {
+           ADM_warning("Cannot open png file\n");
+           return NULL;
+       }
+       size=getFileSize(fd);
        read32(fd);
        read32(fd);
        read32(fd);
@@ -249,68 +313,13 @@ ADMImage *createImageFromFile_png(const char *filename)
             return NULL;
         }
         ADMImage *image=convertImageColorSpace(&tmpImage,w,h);
-        
+        if(tmpImage._alpha)
+        {
+            ADM_info("We do have alpha channel\n");
+        }
         delete dec;
         dec=NULL;
     	return image;
-}
-/**
- * 	\fn createImageFromFile_jpeg
- *  \brief Create image from Bmp
- */
-ADMImage *createImageFromFile_Bmp(const char *filename)
-{
-
-    FILE *fd;
-    uint32_t _imgSize;
-    uint32_t w = 0, h = 0;
-    uint16_t  s16;
-    uint32_t s32;
-
-        fd = ADM_fopen(filename, "rb");
-        fseek(fd, 0, SEEK_END);
-        _imgSize = ftell(fd);
-        fseek(fd, 0, SEEK_SET);
-
-        //Retrieve width & height
-        //_______________________
-        ADM_BITMAPINFOHEADER bmph;
-
-        fread(&s16, 2, 1, fd);
-        if (s16 != 0x4D42)
-        {
-            ADM_warning("[imageLoader] incorrect bmp sig.\n");
-            fclose(fd);
-            return NULL;
-        }
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&s32, 4, 1, fd);
-        fread(&bmph, sizeof(bmph), 1, fd);
-        if (bmph.biCompression != 0)
-        {
-            ADM_warning("[imageLoader]cannot handle compressed bmp\n");
-            fclose(fd);
-            return NULL;
-        }
-
-        w = bmph.biWidth;
-        h = bmph.biHeight;
-
-
-        ADM_info("[ImageLoader] BMP %u * %u\n",w,h);
-
-    // Load the binary coded image
-        ADM_byteBuffer buffer(w*h*3);
-
-        fread(buffer.at(0),w*h*3,1,fd);
-        fclose(fd);
-
-      // Colorconversion
-
-        ADMImage *image=new ADMImageDefault(w,h);
-        ADM_ConvertRgb24ToYV12(false,w,h,buffer.at(0),YPLANE(image));
-        return image;
 }
 /**
  * 	\fn createImageFromFile_bmp2
@@ -326,6 +335,11 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     uint32_t w,h;
 
 	fd = ADM_fopen(filename, "rb");
+        if(!fd)
+        {
+            ADM_warning("Cannot open BMP picture\n");
+            return NULL;
+        }
  	fseek(fd, 10, SEEK_SET);
 
  #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
@@ -360,18 +374,9 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
     	
         ADMImageRefWrittable ref(w,h);
         
-        if(0)
-        {
-            ref._planes[0]=buffer.at(0);
-            ref._planeStride[0]=w*4;
-            ref._colorspace=ADM_COLOR_RGB32A;
-        }else
-        {
-            ref._planes[0]=buffer.at(0)+(h-1)*w*3;
-            ref._planeStride[0]=-w*3;
-            ref._colorspace=ADM_COLOR_RGB24;
-        }
-        
+        ref._planes[0]=buffer.at(0)+(h-1)*w*3;
+        ref._planeStride[0]=-w*3;
+        ref._colorspace=ADM_COLOR_RGB24;
 
     	return convertImageColorSpace(&ref,w,h);
 }
@@ -379,16 +384,16 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
  * 		\fn ADM_identidyImageFile
  * 		\brief Identidy image type, returns type and width/height
  */
+#define MAX_JPEG_TAG 20
 ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h)
 {
-    uint32_t *fcc;
     uint8_t fcc_tab[4];
     FILE *fd;
     uint32_t off,tag=0,count,size;
 
     // 1- identity the file type
     //
-    fcc = (uint32_t *) fcc_tab;
+    
     fd = ADM_fopen(filename, "rb");
     if (!fd)
     {
@@ -396,52 +401,23 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
         return ADM_PICTURE_UNKNOWN;
     }
     fread(fcc_tab, 4, 1, fd);
-    fcc = (uint32_t *) fcc_tab;
+
     // 2- JPEG ?
-#define MAX_JPEG_TAG 20
     if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8)
     {
-        // JPEG
-            fseek(fd, 0, SEEK_SET);
-            read16(fd);	// skip jpeg ffd8
-            count=0;
-            while (count < MAX_JPEG_TAG && tag != 0xFFC0)
-            {
-                tag = read16(fd);
-                if ((tag >> 8) != 0xff)
-                {
-                        ADM_warning("[imageIdentify]invalid jpeg tag found (%x)\n", tag);
-                }
-                if (tag == 0xFFC0)
-                {
-                    read16(fd);	// size
-                    read8(fd);	// precision
-                    *h = read16(fd);
-                    *w = read16(fd);
-                    ADM_info("Jpeg is %d x %d\n",(int)*w,(int)*h);
-                    if(*w&1) w++;
-                    if(*h&1) h++;
-                }
-                else
-                {
-                    off = read16(fd);
-                    if (off < 2)
-                    {
-                        ADM_warning("[imageIdentify]Offset too short!\n");
-                        fclose(fd);
-                        return ADM_PICTURE_UNKNOWN;
-                    }
-                    fseek(fd, off - 2, SEEK_CUR);
-                }
-                count++;
-            }
-            fclose(fd);
-            if(count>=MAX_JPEG_TAG) 
-            {
-                ADM_warning("Too many jpeg tags\n");
-                return ADM_PICTURE_UNKNOWN;
-            }
-            return ADM_PICTURE_JPG;
+        int width,height;
+         if(readJpegInfo(fd,width,height))
+         {
+             ADM_info("Identified as jpeg (%d x %d)\n",width,height);
+             *w=width;
+             *h=height;
+             fclose(fd);
+             return ADM_PICTURE_JPG;
+         }else
+         {
+             fclose(fd);
+             return ADM_PICTURE_UNKNOWN;
+         }     
     }
     // PNG ?
     if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')

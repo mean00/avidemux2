@@ -1442,6 +1442,7 @@ void A_Rewind(void)
 {
                admPreview::stop();
                video_body->rewind();
+               video_body->rewind(); // do it twice, for interlaced content it may fail the 1st time
                admPreview::start();
                admPreview::samePicture();
                admPreview::samePicture();

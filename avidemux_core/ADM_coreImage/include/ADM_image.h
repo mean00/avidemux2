@@ -47,7 +47,8 @@ typedef enum
         PLANAR_Y=0,
         PLANAR_U=1,
         PLANAR_V=2,
-        PLANAR_LAST=3
+        PLANAR_ALPHA=3,
+        PLANAR_LAST=3 // Alpha is not a real channel
         
 } ADM_PLANE;
 
@@ -67,15 +68,15 @@ typedef enum
 
 
 typedef bool refFunction(void *instance,void *cookie);
-typedef bool refDownloadFunction(ADMImage *image, void *instance, void *cookie);
+typedef bool refDownloadFunction(ADMImage *image, void *refCodec, void *refHwImage);
 /**
     \struct hwRefDescriptor
     \brief  Used to deal with hw accelerated stuff
 */
 typedef struct
 {
-        void            *refInstance;  ///
-        void            *refCookie;  /// Ref to a hw image
+        void            *refCodec;  ///
+        void            *refHwImage;  /// Ref to a hw image
         refFunction     *refMarkUsed;   ///
         refFunction     *refMarkUnused; ///
         refDownloadFunction     *refDownload;
@@ -95,7 +96,9 @@ class ADM_COREIMAGE6_EXPORT ADMImage
 {
 public: // half public/protected, only in  ADMImageRef case it is really public
         uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
-        uint32_t        _planeStride[3]; /// Same story
+        int             _planeStride[3]; /// Same story
+        uint8_t         *_alpha;         /// Null in most case, else alha channel 
+        int             _alphaStride; 
 public:
         uint32_t	    _width;		/// Width of image
         uint32_t	    _height;	/// Height of image
@@ -113,17 +116,13 @@ public:
         uint8_t         *quant;
         int             _qStride;
         int             _qSize;
-        int             GetHeight(ADM_PLANE plane) {if(plane==PLANAR_Y) return _height; return _height/2;}
-        int             GetWidth(ADM_PLANE plane) {if(plane==PLANAR_Y) return _width; return _width/2;}
-        bool            GetPitches(uint32_t *pitches) {pitches[0]=GetPitch(PLANAR_Y);
-                                                       pitches[1]=GetPitch(PLANAR_U);
-                                                       pitches[2]=GetPitch(PLANAR_V);return true;}
-        bool            GetWritePlanes(uint8_t **planes) {planes[0]=GetWritePtr(PLANAR_Y);
-                                                        planes[1]=GetWritePtr(PLANAR_U);
-                                                        planes[2]=GetWritePtr(PLANAR_V);return true;}
-        bool            GetReadPlanes(uint8_t **planes) {planes[0]=GetReadPtr(PLANAR_Y);
-                                                         planes[1]=GetReadPtr(PLANAR_U);
-                                                         planes[2]=GetReadPtr(PLANAR_V);return true;}
+        
+        
+        int             GetHeight(ADM_PLANE plane) ;
+        int             GetWidth(ADM_PLANE plane) ;
+        bool            GetPitches(int *pitches);
+        bool            GetWritePlanes(uint8_t **planes);
+        bool            GetReadPlanes(uint8_t **planes);
 
 virtual                 ~ADMImage();        
         
@@ -163,6 +162,7 @@ public:
         bool    blacken(void);
         bool    copyTo(ADMImage *target, uint32_t x, uint32_t y);
         bool    copyToAlpha(ADMImage *target, uint32_t x, uint32_t y,uint32_t alpha);
+        bool    copyWithAlphaChannel(ADMImage *target, uint32_t x, uint32_t y);
         bool    copyLeftSideTo(ADMImage *dest);
         /* Some utilitarian functions */
         bool    saveAsBmp(const char *filename);
@@ -184,13 +184,15 @@ class ADM_COREIMAGE6_EXPORT ADMImageDefault: public ADMImage
 {
 protected:
                     ADM_byteBuffer  data;
+                    ADM_byteBuffer  alphaChannel;
 public:
                                     ADMImageDefault(uint32_t w, uint32_t h);
-        virtual      ~ADMImageDefault();
+        virtual                     ~ADMImageDefault();
         virtual      uint32_t        GetPitch(ADM_PLANE plane);
         virtual      uint8_t        *GetWritePtr(ADM_PLANE plane);
         virtual      uint8_t        *GetReadPtr(ADM_PLANE plane);
         virtual      bool           isWrittable(void);
+                     bool           addAlphaChannel();
 };
 /**
     \class ADMImageRef
@@ -201,8 +203,8 @@ class ADM_COREIMAGE6_EXPORT ADMImageRef: public ADMImage
 public:
 
 public:
-                        ADMImageRef(uint32_t w, uint32_t h);
-        virtual      ~ADMImageRef();
+                                    ADMImageRef(uint32_t w, uint32_t h);
+        virtual                     ~ADMImageRef();
         virtual      uint32_t        GetPitch(ADM_PLANE plane);
         virtual      uint8_t        *GetWritePtr(ADM_PLANE plane);
         virtual      uint8_t        *GetReadPtr(ADM_PLANE plane);

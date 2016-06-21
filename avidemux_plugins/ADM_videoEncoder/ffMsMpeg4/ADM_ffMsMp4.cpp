@@ -193,12 +193,13 @@ again:
                                      _context->bit_rate,  _frame.quality, _frame.quality/ FF_QP2LAMBDA,q);     
     
     _frame.reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, &_frame)) <= 0)
+    int r=encodeWrapper(_frame,out);
+    if(r<0)
     {
-        printf("[ffMsMP4] Error %d encoding video\n",sz);
+        ADM_warning("[ffMsMP4] Error %d encoding video\n",sz);
         return false;
     }
-    postEncode(out,sz);
+    postEncode(out,r);
     return true;
 }
 

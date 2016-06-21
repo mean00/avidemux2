@@ -338,7 +338,7 @@ uint32_t result=0,tmpResult;
 
          __asm__ volatile(
                          "pxor %%mm7,%%mm7\n"                       
-                         "movq "Mangle(noise64)", %%mm6\n"
+                         "movq " Mangle(noise64)", %%mm6\n"
                 :::  "memory"
                  );
 
@@ -631,7 +631,7 @@ static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
 {
 static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
-    __asm__ volatile(" movq "Mangle(mask)", %%mm7\n" ::);
+    __asm__ volatile(" movq " Mangle(mask)", %%mm7\n" ::);
     __asm__ volatile(" pxor %%mm6,%%mm6\n" ::);
     
     int step=w/8;

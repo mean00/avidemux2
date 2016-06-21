@@ -132,7 +132,7 @@ void rotateFilter::setCoupledConf(CONFcouple *couples)
 const char *rotateFilter::getConfiguration(void)
 {
     static char buffer[80];
-    snprintf(buffer,80,"Rotate by %"PRIu32" degrees.",param.angle);
+    snprintf(buffer,80,"Rotate by %" PRIu32" degrees.",param.angle);
     return buffer;
 }
 /**

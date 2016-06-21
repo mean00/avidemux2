@@ -195,7 +195,7 @@ uint64_t  ADM_aviAudioAccess::getPos(void)
         }
         total+=myIndex[i].size;
     }
-    printf("[aviAudioAccess] Seek to pos %"PRIu64" failed\n",pos);
+    printf("[aviAudioAccess] Seek to pos %" PRIu64" failed\n",pos);
     return 0;
 }
 /**

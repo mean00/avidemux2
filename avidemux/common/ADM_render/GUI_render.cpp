@@ -24,22 +24,26 @@
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
-#include "GUI_simpleRender.h"
 #include "GUI_nullRender.h"
 #include "prefs.h"
+
+
+extern VideoRenderBase *spawnSimpleRender();
+
 #ifdef USE_XV
-#include "GUI_xvRender.h"
+extern VideoRenderBase *spawnXvRender();
 #endif
 
 #ifdef USE_SDL
-#include "GUI_sdlRender.h"
+extern VideoRenderBase *spawnSdlRender();
 #endif
 
 #ifdef USE_VDPAU
-#include "GUI_vdpauRender.h"
+extern VideoRenderBase *spawnVDPAURender();
 #endif
+
 #ifdef USE_LIBVA
-#include "GUI_libvaRender.h"
+extern VideoRenderBase *spawnLIBVARender();
 #endif
 
 #if defined (USE_OPENGL)
@@ -108,22 +112,17 @@ static void MUI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
    RENDER_CHECK(UI_updateDrawWindowSize);
    HookFunc->UI_updateDrawWindowSize(win,w,h);
 }
-void MUI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr)
+static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
 {
-    RENDER_CHECK(UI_rgbDraw);
-    HookFunc->UI_rgbDraw(widg, w,  h,ptr);
-  
+  RENDER_CHECK(UI_getPreferredRender);
+  return HookFunc->UI_getPreferredRender();
 }
 void *MUI_getDrawWidget(void)
 {
   RENDER_CHECK(UI_getDrawWidget);
   return HookFunc->UI_getDrawWidget();
 }
-static   ADM_RENDER_TYPE MUI_getPreferredRender(void)
-{
-  RENDER_CHECK(UI_getPreferredRender);
-  return HookFunc->UI_getPreferredRender();
-}
+
 //**************************************
 //**************************************
 //**************************************
@@ -177,7 +176,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 {
         bool create=false;
         enableDraw=false;
-        ADM_info("Render to %"PRIu32"x%"PRIu32" zoom=%d\n",w,h,zoom);
+        ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%d\n",w,h,zoom);
         if(!renderer) create=true;
         else
         {
@@ -298,8 +297,9 @@ bool spawnRenderer(void)
                 { \
                     ADM_info(name" init ok\n"); \
                 }
-#define TRY_RENDERER(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
-#define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
+//#define TRY_RENDERER_CLASS(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
+//#define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
+#define TRY_RENDERER_SPAWN(spawn,name)  TRY_RENDERER_INTERNAL(spawn,,name)
 /**
  * 
  * @param renderName
@@ -325,7 +325,7 @@ bool spawnRenderer(void)
                     renderer=NULL;
                 }else
                 {
-                    TRY_RENDERER_FUNC(RenderSpawnQtGl,"QtGl");
+                    TRY_RENDERER_SPAWN(RenderSpawnQtGl,"QtGl");
                 }
                 break;
             }
@@ -333,30 +333,30 @@ bool spawnRenderer(void)
 
 #if defined(USE_VDPAU)
        case RENDER_VDPAU:
-                TRY_RENDERER(vdpauRender,"VDPAU")
+                TRY_RENDERER_SPAWN(spawnVDPAURender,"VDPAU")
                 break;
 #endif
 #if defined(USE_LIBVA)
        case RENDER_LIBVA:
-                TRY_RENDERER(libvaRender,"LIBVA")
+                TRY_RENDERER_SPAWN(spawnLIBVARender,"LIBVA")
                 break;
 #endif
 
 #if defined(USE_XV)
        case RENDER_XV:
-                TRY_RENDERER(XvRender,"Xv")
+                TRY_RENDERER_SPAWN(spawnXvRender,"Xv")
                 break;
 #endif
 
 #if  defined(USE_SDL)
     case RENDER_SDL:
-                TRY_RENDERER(sdlRender,"SDL")
+                TRY_RENDERER_SPAWN(spawnSdlRender,"SDL")
                 break;        
 #endif
         }
         if(!renderer)
         {
-            TRY_RENDERER(simpleRender,"simpleRenderer");
+            TRY_RENDERER_SPAWN(spawnSimpleRender,"simpleRenderer");
             ADM_assert(renderer);
         }
         return true;

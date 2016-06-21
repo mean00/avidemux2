@@ -127,8 +127,8 @@ bool swScaleResizeFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }
     uint8_t *src[3];
     uint8_t *dst[3];
-    uint32_t ssrc[3];
-    uint32_t ddst[3];
+    int ssrc[3];
+    int ddst[3];
 
     original->GetReadPlanes(src);
     image->GetWritePlanes(dst);

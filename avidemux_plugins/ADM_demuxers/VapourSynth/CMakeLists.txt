@@ -39,6 +39,8 @@ IF(USE_VAPOURSYNTH)
         #----------------
         iF( WIN32)
                 TARGET_LINK_LIBRARIES(vsProxy -lwsock32 winmm -mwindows -lm -lstdc++)
+        else( WIN32)
+                TARGET_LINK_LIBRARIES(vsProxy -lstdc++) # clang
         ENDif( WIN32)
         ADM_INSTALL_BIN(vsProxy)
    ENDIF(DO_COMMON)

@@ -175,7 +175,7 @@ bool adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
 	pos=ftello(_fd);
 	if(pos+rd>_atomSize+_atomStart)
 	{
-		printf("\n Going out of atom's bound!! (%"PRId64"  / %"PRId64" )\n",pos+rd,_atomSize+_atomStart);
+		printf("\n Going out of atom's bound!! (%" PRId64"  / %" PRId64" )\n",pos+rd,_atomSize+_atomStart);
 		dumpAtom();
 		exit(0);
 	}
@@ -183,7 +183,7 @@ bool adm_atom::readPayload( uint8_t *whereto, uint32_t rd)
 	i=fread(whereto,rd,1,_fd);
 	if(i!=1)
 	{
-		printf("\n oops asked %"PRIu32" got %"PRIu32" \n",rd,i);
+		printf("\n oops asked %" PRIu32" got %" PRIu32" \n",rd,i);
 	return 0;
 	}
 	return 1;

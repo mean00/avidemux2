@@ -22,25 +22,21 @@
 #include <sched.h>
 #endif
 
-//#include "prefs.h"
-
 uint32_t CpuCaps::myCpuCaps=0;
 uint32_t CpuCaps::myCpuMask=0xffffffff;
 
-/* Cpu caps interface to other libs */
-extern "C"{ 
-	int ADM_lavcodec_mm_support(void);
-	int ADM_mpeg2dec_mm_support(void);
-	
+extern "C"
+{
+#include "libavutil/cpu.h"
 }
 
 
 
 #define cpuid(index,eax,ebx,ecx,edx)\
     __asm __volatile\
-        ("mov %%"REG_b", %%"REG_S"\n\t"\
+        ("mov %%" REG_b", %%" REG_S"\n\t"\
          "cpuid\n\t"\
-         "xchg %%"REG_b", %%"REG_S\
+         "xchg %%" REG_b", %%" REG_S\
          : "=a" (eax), "=S" (ebx),\
            "=c" (ecx), "=d" (edx)\
          : "0" (index));
@@ -52,19 +48,18 @@ extern "C"{
  */
   void 	CpuCaps::init( void)
 {
-	printf("[cpuCaps]Checking CPU capabilities\n");
-	myCpuCaps=0;
-	myCpuMask=0xffffffff;
-	// FIXME prefs->get(FEATURE_CPU_CAPS,&myCpuMask);
-
+    printf("[cpuCaps]Checking CPU capabilities\n");
+    myCpuCaps=0;
+    myCpuMask=0xffffffff;
+   
 #ifdef ADM_CPU_X86
- int eax, ebx, ecx, edx;
- int max_std_level, max_ext_level;
+    int eax, ebx, ecx, edx;
+    int max_std_level, max_ext_level;
 
 #if !defined(ADM_CPU_64BIT) // 64 bits CPU have all cpuid
- long a, c;
+    long a, c;
 
- __asm__ __volatile__ (
+    __asm__ __volatile__ (
                        /* See if CPUID instruction is supported ... */
                        /* ... Get copies of EFLAGS into eax and ecx */
                        "pushf\n\t"
@@ -129,18 +124,18 @@ extern "C"{
  }
 #define CHECK(x) if(myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected ");\
 											if(!(myCpuMask&ADM_CPUCAP_##x)) printf("  but disabled");printf("\n");}
-	CHECK(MMX);
-	CHECK(3DNOW);
+    CHECK(MMX);
+    CHECK(3DNOW);
     CHECK(3DNOWEXT);
-	CHECK(MMXEXT);
-	CHECK(SSE);
-	CHECK(SSE2);
-	CHECK(SSE3);
-	CHECK(SSSE3);
+    CHECK(MMXEXT);
+    CHECK(SSE);
+    CHECK(SSE2);
+    CHECK(SSE3);
+    CHECK(SSSE3);
 
 #endif // X86
-	printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x, cpuCaps :%x)\n",myCpuMask,myCpuCaps);
-	return ;
+    printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x, cpuCaps :%x)\n",myCpuMask,myCpuCaps);
+    return ;
 }
 
 
@@ -179,3 +174,51 @@ int ADM_cpu_num_processors(void)
 	return 1;
 #endif
 }
+/**
+ * 
+ * @param admMask
+ * @return 
+ */
+static int Cpu2Lav(uint32_t admMask)
+{
+   if(admMask==ADM_CPUCAP_ALL) 
+       return -1; // allow all
+   int out=0;
+ #define LAV_CPU_CAPS(x)    	if(admMask & ADM_CPUCAP_##x) out|=AV_CPU_FLAG_##x;
+    
+    	LAV_CPU_CAPS(MMX);
+    	LAV_CPU_CAPS(MMXEXT);
+    	LAV_CPU_CAPS(3DNOW);
+    	LAV_CPU_CAPS(3DNOWEXT);
+    	LAV_CPU_CAPS(SSE);
+    	LAV_CPU_CAPS(SSE2);
+    	LAV_CPU_CAPS(SSE3);
+    	LAV_CPU_CAPS(SSSE3);
+        return out;
+}
+
+/**
+ * 
+ * @param mask
+ * @return 
+ */
+bool     CpuCaps::setMask(uint32_t mask)
+{
+    ADM_info("[CpuCaps] Setting mask to 0x%x\n",mask);
+    myCpuMask=mask;
+    
+    int lavCpuMask=Cpu2Lav(myCpuMask);
+    av_set_cpu_flags_mask(lavCpuMask);
+    
+    return true;
+}
+/**
+ * 
+ * @param mask
+ * @return 
+ */
+uint32_t     CpuCaps::getMask( )
+{
+    return myCpuMask;
+}
+

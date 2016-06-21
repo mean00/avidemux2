@@ -103,10 +103,10 @@ unsigned char chan;
     {
         
         faacDecInit2(_instance, d,l, &srate,&chan);
-        ADM_info("[FAAD]Found :%"PRIu32" rate %"PRIu32" channels\n",(uint32_t)srate,(uint32_t)chan);
+        ADM_info("[FAAD]Found :%" PRIu32" rate %" PRIu32" channels\n",(uint32_t)srate,(uint32_t)chan);
         if(srate!=info->frequency)
         {
-            ADM_info("[FAAD]Frequency mismatch!!! %d to %"PRIu32" (SBR ?)\n",info->frequency,(uint32_t)srate);
+            ADM_info("[FAAD]Frequency mismatch!!! %d to %" PRIu32" (SBR ?)\n",info->frequency,(uint32_t)srate);
             if(srate==2*info->frequency)
             {
                 ADM_info("Sbr detected\n");
@@ -279,7 +279,7 @@ uint8_t first=0;
 			if(info.error)
 			{
 				ADM_warning("Faad: Error %d :%s\n",info.error,faacDecGetErrorMessage(info.error));
-				ADM_warning("Bytes consumed %"PRIu64", bytes dropped %"PRIu32" \n",info.bytesconsumed,tail-head);
+				ADM_warning("Bytes consumed %" PRIu64", bytes dropped %" PRIu32" \n",info.bytesconsumed,tail-head);
 
                 head=tail=0; // Purge buffer
 				return 1;
@@ -287,7 +287,7 @@ uint8_t first=0;
 			if(first)
 			{
 				printf("Channels : %d\n",info.channels);
-				printf("Frequency: %"PRIu64"\n",info.samplerate);
+				printf("Frequency: %" PRIu64"\n",info.samplerate);
 				printf("SBR      : %d\n",info.sbr);
 			}
 			consumed=info.bytesconsumed ;

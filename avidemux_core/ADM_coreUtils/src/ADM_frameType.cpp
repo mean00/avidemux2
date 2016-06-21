@@ -42,7 +42,7 @@ static int mpeg12FrameIdentifier(uint32_t len,uint8_t *data)
         type=7 & (val>>3);
         if( type<1 ||  type>3)
           {
-                  printf("[mpeg12FrameType]Met illegal pic at offset %"PRIx32"\n",(uint32_t)(start-data));
+                  printf("[mpeg12FrameType]Met illegal pic at offset %" PRIx32"\n",(uint32_t)(start-data));
                   continue;
           }
         switch(type)

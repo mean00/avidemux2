@@ -20,6 +20,9 @@
 
 #define ADM_LAV_NO_CONFIG
 #define CONFIG_FTRAPV 0
+
+#define UNCHECKED_BITSTREAM_READER 0
+
 extern "C"
 {
 #include "libavutil/common.h"

@@ -688,7 +688,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     memcpy(myData,data,len);
     
     // 1-Create parser
-    AVCodecParserContext *parser=av_parser_init(CODEC_ID_H264);
+    AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
     AVCodecContext *ctx=NULL; 
     AVCodec *codec=NULL;
     uint8_t *d=NULL;
@@ -699,7 +699,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         goto theEnd;
     }
     ADM_info("Parser created\n");
-    codec=avcodec_find_decoder(CODEC_ID_H264);
+    codec=avcodec_find_decoder(AV_CODEC_ID_H264);
     if(!codec)
     {
         ADM_error("cannot create h264 codec\n");
@@ -936,7 +936,7 @@ int index=0;
                 oldStartCode=startCode;
                 continue;
             }
-        ADM_assert(index<maxNalu);
+        if(index>=maxNalu) return 0;
         desc[index].start=head;
         desc[index].size=offset-START_CODE_LEN;
         desc[index].nalu=oldStartCode;

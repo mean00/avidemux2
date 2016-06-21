@@ -44,7 +44,7 @@ typedef struct
 
 static const dvProfileClass supportedProfiles[]=
 {
-    {720,480,29.97,dvColor422},
+    {720,480,30,dvColor422},
     {720,576,25,dvColor420},
 };
 
@@ -92,7 +92,7 @@ bool ADM_ffDvEncoder::configureContext(void)
 */
 bool ADM_ffDvEncoder::setup(void)
 {
-   if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_DVVIDEO))
+   if(false== ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_DVVIDEO))
         return false;
    return true;
 }
@@ -135,12 +135,13 @@ again:
    
     
     _frame->reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) <= 0)
+    int r=encodeWrapper(_frame,out);
+    if(r<0)
     {
-        printf("[Dv] Error %d encoding video\n",sz);
+        ADM_warning("[ffDV] Error %d encoding video\n",r);
         return false;
     }
-    postEncode(out,sz);
+    postEncode(out,r);
     return true;
 }
 

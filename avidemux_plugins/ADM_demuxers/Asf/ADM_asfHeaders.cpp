@@ -108,12 +108,12 @@ uint8_t gid[16];
         printf("\nConceal       :");
         for(int z=0;z<16;z++) printf(":%02x",s->read8());
         printf("\n");
-        printf("Reserved    : %08"PRIx64"\n",s->read64());
-        printf("Total Size  : %04"PRIx32"\n",s->read32());
-        printf("Size        : %04"PRIx32"\n",s->read32());
+        printf("Reserved    : %08" PRIx64"\n",s->read64());
+        printf("Total Size  : %04" PRIx32"\n",s->read32());
+        printf("Size        : %04" PRIx32"\n",s->read32());
         sid=s->read16();
         printf("Stream nb   : %04d\n",sid);
-        printf("Reserved    : %04"PRIx32"\n",s->read32());
+        printf("Reserved    : %04" PRIx32"\n",s->read32());
         switch(audiovideo)
         {
           case 1: // Video
@@ -164,7 +164,7 @@ bool asfHeader::decodeExtHeader(asfChunk *s)
             printf("\tstream langIndex  :%d\n",streamLangIndex);
             uint64_t avg=s->read64();
             avg/=10.;
-            printf("\t avg time/frame  : %"PRIu64" us\n",avg);
+            printf("\t avg time/frame  : %" PRIu64" us\n",avg);
             avgTimePerFrameUs=avg;
             int streamNameCount=s->read16(); // stream name count
             int payloadExtCount=s->read16(); // payload ext system count
@@ -267,16 +267,16 @@ uint8_t asfHeader::getHeaders(void)
             printf("Client        :");
             for(int z=0;z<16;z++) printf(":%02x",s->read8());
             printf("\n");
-            printf("File size     : %08"PRIu64"\n",s->read64());
-            printf("Creation time : %08"PRIu64"\n",s->read64());
-            printf("Number of pack: %08"PRIu64"\n",s->read64());
+            printf("File size     : %08" PRIu64"\n",s->read64());
+            printf("Creation time : %08" PRIu64"\n",s->read64());
+            printf("Number of pack: %08" PRIu64"\n",s->read64());
             playDuration=s->read64()/10LL;
             sendDuration=s->read64()/10LL;
             _duration=playDuration;
             printf("Play duration : %s\n",ADM_us2plain(playDuration));
             printf("Send duration : %s\n",ADM_us2plain(sendDuration));
             printf("Preroll   3   : %s\n",ADM_us2plain(s->read64()/10LL));
-            printf("Flags         : %04"PRIx32"\n",s->read32());
+            printf("Flags         : %04" PRIx32"\n",s->read32());
             mx=s->read32();
             mn=s->read32();
             if(mx!=mn)
@@ -286,9 +286,9 @@ uint8_t asfHeader::getHeaders(void)
               return 0; 
             }
             _packetSize=mx;
-            printf("Min size      : %04"PRIx32"\n",mx);
-            printf("Max size      : %04"PRIx32"\n",mn);
-            printf("Uncompres.size: %04"PRIx32"\n",s->read32());
+            printf("Min size      : %04" PRIx32"\n",mx);
+            printf("Max size      : %04" PRIx32"\n",mn);
+            printf("Uncompres.size: %04" PRIx32"\n",s->read32());
           }
           break;
       case ADM_CHUNK_STREAM_HEADER_CHUNK:

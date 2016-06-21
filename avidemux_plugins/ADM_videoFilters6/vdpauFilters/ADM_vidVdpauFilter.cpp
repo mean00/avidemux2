@@ -264,11 +264,14 @@ bool vdpauVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t
         return false;
     }
   // Blit our image to surface
+    int      ipitches[3];
     uint32_t pitches[3];
     uint8_t *planes[3];
-    next->GetPitches(pitches);
+    next->GetPitches(ipitches);
     next->GetReadPlanes(planes);
 
+    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
+    
     // Put out stuff in input...
     //printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
 
@@ -302,7 +305,7 @@ bool vdpauVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     if(next->refType==ADM_HW_VDPAU)
     {
         
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refCookie;
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refHwImage;
         tmpSurface=rndr->surface;
         printf("image is already vdpau %d\n",(int)tmpSurface);
     }else

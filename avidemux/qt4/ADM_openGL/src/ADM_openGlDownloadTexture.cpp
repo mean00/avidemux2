@@ -54,11 +54,13 @@ static inline void glYUV444_MMXInit(void)
 {
    static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
-    __asm__(" movq "Mangle(mask)", %%mm7\n" ::);
+    __asm__(" movq " Mangle(mask)", %%mm7\n" ::);
 }
-static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width)
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src2, uint8_t *dst2, const int width2)
 {
- 
+    uint8_t *src=(uint8_t *)src2;
+    uint8_t *dst=(uint8_t *)dst2;
+    int width=width2;
     int count=width/8;
                     __asm__(
                         "1:\n"
@@ -84,12 +86,14 @@ static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int widt
                         "sub            $1,%2        \n"
                         "jnz             1b         \n"
                         
-                        :: "r"(src),"r"(dst),"r"(count)
+                        : "=r"(src),"=r"(dst),"=r"(count)
+                        : "0"(src),"1"(dst),"2"(count)
                         );
     if(width&7)
     {
-        for(int i=count*8;i<width;i++)
-            dst[i]  = src[i*4+TEX_Y_OFFSET];
+        count=width/8;
+        for(int i=count*8;i<width2;i++)
+            dst2[i]  = src2[i*4+TEX_Y_OFFSET];
     }
 }
 /**
@@ -100,9 +104,10 @@ static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int widt
  * @param dstV
  * @param width
  */
-static inline void glYUV444_MMX_Chroma(const uint8_t *src, uint8_t *dstY, uint8_t *dstU, uint8_t *dstV,const int width)
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX_Chroma(const uint8_t *src2, uint8_t *dstY2, uint8_t *dstU2, uint8_t *dstV2,const int width)
 {
- 
+    const uint8_t *src=src2;
+    uint8_t *dstY=dstY2, *dstU=dstU2, *dstV=dstV2;
     int count=width/8;
                     __asm__(
                         "1:\n"
@@ -136,12 +141,14 @@ static inline void glYUV444_MMX_Chroma(const uint8_t *src, uint8_t *dstY, uint8_
                         "sub            $1,%2        \n"
                         "jnz             1b         \n"
                         
-                        :: "r"(src),"r"(dstY),"r"(dstU),"r"(dstV),"r"(count)
+                        :  "=r"(src),"=r"(dstY),"=r"(dstU),"=r"(dstV),"=r"(count)
+                        :  "0"(src),"1"(dstY),"2"(dstU),"3"(dstV),"4"(count)
                         );
     if(width&7)
     {
+        count=width/8;
         for(int i=count*8;i<width;i++)
-            dstY[i]  = src[i*4+TEX_Y_OFFSET];
+            dstY2[i]  = src2[i*4+TEX_Y_OFFSET];
     }
 }
 /**

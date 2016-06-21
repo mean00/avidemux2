@@ -12,11 +12,11 @@ char* ms2timedisplay(uint32_t ms)
 	
 	if (mm > 1)
 	{
-		snprintf(string, ADM_MAX_STRING,QT_TRANSLATE_NOOP("adm","%"PRIu32" minutes"), mm);
+		snprintf(string, ADM_MAX_STRING,QT_TRANSLATE_NOOP("adm","%" PRIu32" minutes"), mm);
 	}
 	else if (mm == 1)
 	{
-		snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%"PRIu32" minute"), mm);
+		snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%" PRIu32" minute"), mm);
 	}
 	else
 	{
@@ -24,11 +24,11 @@ char* ms2timedisplay(uint32_t ms)
 
 		if (ss == 1)
 		{
-			snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%"PRIu32" second"), ss);
+			snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%" PRIu32" second"), ss);
 		}
 		else
 		{
-			snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%"PRIu32" seconds"), ss);
+			snprintf(string,ADM_MAX_STRING, QT_TRANSLATE_NOOP("adm","%" PRIu32" seconds"), ss);
 		}
 	}
     string[ADM_MAX_STRING]=0;

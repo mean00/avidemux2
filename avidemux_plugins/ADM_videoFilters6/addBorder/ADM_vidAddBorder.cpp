@@ -30,7 +30,7 @@ const char *addBorders::getConfiguration(void)
 {
     static char conf[250];
     conf[0]=0;
-    snprintf(conf,80,"Add Border : Left:%"PRIu32" Right:%"PRIu32" Top:%"PRIu32" Bottom:%"PRIu32" => %"PRIu32"x%"PRIu32"\n",
+    snprintf(conf,80,"Add Border : Left:%" PRIu32" Right:%" PRIu32" Top:%" PRIu32" Bottom:%" PRIu32" => %" PRIu32"x%" PRIu32"\n",
                 param.left,param.right,param.top,param.bottom,
                 info.width,info.height);
     return conf;
@@ -76,7 +76,7 @@ void addBorders::setCoupledConf(CONFcouple *couples)
 }
 #define Y_BLACK 16
 #define UV_BLACK 128
-static bool blackenHz(uint32_t w,uint32_t nbLine,uint8_t *ptr[3],uint32_t strides[3])
+static bool blackenHz(int w,int nbLine,uint8_t *ptr[3],int strides[3])
 {
     // y
     uint8_t *p=ptr[0];
@@ -137,7 +137,7 @@ bool addBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 
     // Top...
     uint8_t *ptr[3];
-    uint32_t stride[3];
+    int     stride[3];
     image->GetPitches(stride);
     image->GetWritePlanes(ptr);
     blackenHz(image->_width,param.top,ptr,stride);

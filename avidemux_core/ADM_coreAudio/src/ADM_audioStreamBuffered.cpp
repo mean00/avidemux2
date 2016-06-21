@@ -48,7 +48,7 @@ bool ADM_audioStreamBuffered::refill(void)
         {
             if( labs((int64_t)newDts-(int64_t)lastDts)>ADM_MAX_SKEW)
             {
-                printf("[AudioStream] Warning skew in dts =%"PRId64", \n",(int64_t)newDts-(uint64_t)lastDts);
+                printf("[AudioStream] Warning skew in dts =%" PRId64", \n",(int64_t)newDts-(uint64_t)lastDts);
                 printf("[AudioStream] Warning skew lastDts=%s \n",ADM_us2plain(lastDts));
                 printf("[AudioStream] Warning skew newDts=%s  \n",ADM_us2plain(newDts));
                 setDts(newDts);

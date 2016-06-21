@@ -186,9 +186,9 @@ void getMainWindowHandles(intptr_t *handle, intptr_t *nativeHandle)
 
 extern int paintEngineType;
 
-const char* getNativeRendererDesc(void)
+const char* getNativeRendererDesc(int engine)
 {
-	switch (paintEngineType)
+	switch (engine)
 	{
 		case QPaintEngine::X11:
 			return QT_TRANSLATE_NOOP("uisupport","X11");

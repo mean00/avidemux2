@@ -149,9 +149,9 @@ dmxPacketInfo info;
         printf("\n");
 //        Mark(&data,&info,2);
         qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %"PRIu32" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %"PRIu32" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %"PRIu32" field pictures\n",video.fieldCount); // Size
+        qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
+        qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
+        qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
         qfclose(index);
         index=NULL;
         audioTracks=NULL;

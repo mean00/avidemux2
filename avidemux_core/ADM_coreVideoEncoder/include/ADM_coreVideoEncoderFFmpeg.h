@@ -49,7 +49,7 @@ protected:
                bool             _hasSettings;
               
 protected:
-
+                          int              encodeWrapper(AVFrame *in,ADMBitstream *out); // Returns encoded size of <0 for error
     virtual               bool             prolog(ADMImage *img); 
     virtual               bool             preEncode(void); 
     virtual		  bool		   configureContext(void);

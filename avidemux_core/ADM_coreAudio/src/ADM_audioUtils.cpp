@@ -100,7 +100,7 @@ bool   ADM_audioReorderChannels(uint32_t channels,float *data, uint32_t nb,CHANN
 void printWavHeader(WAVHeader *hdr)
 {
 #undef X_DUMP
-#define X_DUMP(x) printf(#x":\t\t:%"PRIu32"\n",hdr->x);
+#define X_DUMP(x) printf(#x":\t\t:%" PRIu32"\n",hdr->x);
 
           X_DUMP(encoding);
           X_DUMP(channels);	/* 1 = mono, 2 = stereo */

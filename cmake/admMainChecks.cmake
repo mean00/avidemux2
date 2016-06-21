@@ -63,6 +63,7 @@ IF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
                 SET(CMAKE_LD_FLAGS  "${CMAKE_LD_FLAGS}  -fsanitize=address ")
         ELSE (ASAN)
                 MESSAGE(STATUS "Address Sanitizer not activated")
+	        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")
         ENDIF (ASAN)
 ENDIF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
 
@@ -151,7 +152,7 @@ INCLUDE(admCheckLibVA)
 checkVDPAU()
 #checkXvba()
 checkLibVA()
-checkNvEnc()
+#checkNvEnc()
 ENDIF(NOT PLUGINS)
 
 ########################################

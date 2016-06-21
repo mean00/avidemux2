@@ -27,7 +27,7 @@
 #endif
 
 extern void 		AVDM_audioPref( void );
-extern const char* getNativeRendererDesc();
+extern const char* getNativeRendererDesc(int type);
 
 
 
@@ -103,9 +103,10 @@ std::string currentSdlDriver=getSdlDriverName();
     DOME(4,dring);
      
 // Cpu caps
-#define CPU_CAPS(x)    	if(CpuCaps::myCpuMask & ADM_CPUCAP_##x) caps##x=1; else caps##x=0;
+#define CPU_CAPS(x)    	if(cpuMask & ADM_CPUCAP_##x) caps##x=1; else caps##x=0;
     
-    	if(CpuCaps::myCpuMask==ADM_CPUCAP_ALL) capsAll=1; else capsAll=0;
+        uint32_t cpuMask=CpuCaps::getMask();
+    	if(cpuMask==ADM_CPUCAP_ALL) capsAll=1; else capsAll=0;
     	CPU_CAPS(MMX);
     	CPU_CAPS(MMXEXT);
     	CPU_CAPS(3DNOW);
@@ -281,7 +282,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
         
         diaMenuEntry videoMode[]={
-                             {RENDER_GTK, getNativeRendererDesc(), NULL}
+                             {RENDER_GTK, getNativeRendererDesc(0), NULL}
 #ifdef USE_XV
                              ,{RENDER_XV,   QT_TRANSLATE_NOOP("adm","XVideo (best)"),NULL}
 #endif
@@ -492,14 +493,15 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_ENABLE_OPENGL,hasOpenGl);
 #endif
     // cpu caps
+            uint32_t cpuMaskOut;
             if(capsAll)
             {
-                    CpuCaps::myCpuMask=ADM_CPUCAP_ALL;
+                    cpuMaskOut=ADM_CPUCAP_ALL;
             }else
             {
-                    CpuCaps::myCpuMask=0;
+                    cpuMaskOut=0;
     #undef CPU_CAPS
-    #define CPU_CAPS(x)    	if(caps##x) CpuCaps::myCpuMask|= ADM_CPUCAP_##x;        	    	
+    #define CPU_CAPS(x)    	if(caps##x) cpuMaskOut|= ADM_CPUCAP_##x;        	    	
             CPU_CAPS(MMX);
             CPU_CAPS(MMXEXT);
             CPU_CAPS(3DNOW);
@@ -509,7 +511,8 @@ std::string currentSdlDriver=getSdlDriverName();
             CPU_CAPS(SSE3);
             CPU_CAPS(SSSE3);
             }
-            prefs->set(FEATURES_CPU_CAPS,CpuCaps::myCpuMask);
+            prefs->set(FEATURES_CPU_CAPS,cpuMaskOut);
+            CpuCaps::setMask(cpuMaskOut);
             //
             prefs->set(FEATURES_CAP_REFRESH_ENABLED,refreshCapEnabled);
             prefs->set(FEATURES_CAP_REFRESH_VALUE,refreshCapValue);

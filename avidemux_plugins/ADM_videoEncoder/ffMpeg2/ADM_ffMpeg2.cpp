@@ -98,7 +98,7 @@ bool ADM_ffMpeg2Encoder::configureContext(void)
 bool ADM_ffMpeg2Encoder::setup(void)
 {
 
-    if(false== ADM_coreVideoEncoderFFmpeg::setup(CODEC_ID_MPEG2VIDEO))
+    if(false== ADM_coreVideoEncoderFFmpeg::setup(AV_CODEC_ID_MPEG2VIDEO))
         return false;
     printf("[ffMpeg] Setup ok\n");
     return true;
@@ -121,16 +121,24 @@ ADM_ffMpeg2Encoder::~ADM_ffMpeg2Encoder()
 bool         ADM_ffMpeg2Encoder::encode (ADMBitstream * out)
 {
 int sz,q;
+int gotData;
+int r;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
-        if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, NULL)) <= 0)
+        AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+        r=encodeWrapper(NULL,out);
+        if(r<0)
         {
-            printf("[ffMpeg2] Error %d encoding video\n",sz);
+            ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
             return false;
         }
-        printf("[ffMpeg2] Popping delayed bframes (%d)\n",sz);
+        sz=r;
+        ADM_info("[ffMpeg2] Popping delayed bframes (%d)\n",sz);
         goto link;
         return false;
     }
@@ -170,11 +178,13 @@ again:
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
     
     _frame->reordered_opaque=image->Pts;
-    if ((sz = avcodec_encode_video (_context, out->data, out->bufferSize, _frame)) < 0)
+    r=encodeWrapper(_frame,out);
+    if(r<0)
     {
-        printf("[ffMpeg2] Error %d encoding video\n",sz);
+        ADM_warning("[ffMpeg2] Error %d encoding video\n",r);
         return false;
     }
+    sz=r;
     
     if(sz==0) // no pic, probably pre filling, try again
         goto again;

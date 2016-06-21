@@ -78,7 +78,7 @@ static void swapRGB24(uint32_t w,uint32_t h, uint8_t *to)
     \brief Convert ADM colorspace type swscale/lavcodec colorspace name
 
 */
-static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
+static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
 {
   ADM_colorspace fromColor=fromColor_;
   int intColor=(int)fromColor;
@@ -86,22 +86,22 @@ static PixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
   fromColor=(ADM_colorspace)intColor;
   switch(fromColor)
   {
-    case ADM_COLOR_YUV444: return PIX_FMT_YUV444P;
-    case ADM_COLOR_YUV411: return PIX_FMT_YUV411P;
-    case ADM_COLOR_YUV422: return PIX_FMT_YUYV422;
-    case ADM_COLOR_YV12: return PIX_FMT_YUV420P;
-    case ADM_COLOR_YUV422P: return PIX_FMT_YUV422P;
-    case ADM_COLOR_RGB555: return PIX_FMT_RGB555LE;
-    case ADM_COLOR_RGB32A: return PIX_FMT_RGBA;
-    case ADM_COLOR_BGR32A: return PIX_FMT_RGBA; // Faster that way...PIX_FMT_BGR32;
-    case ADM_COLOR_RGB24: return PIX_FMT_RGB24;
-    case ADM_COLOR_BGR24: return PIX_FMT_BGR24;
+    case ADM_COLOR_YUV444: return AV_PIX_FMT_YUV444P;
+    case ADM_COLOR_YUV411: return AV_PIX_FMT_YUV411P;
+    case ADM_COLOR_YUV422: return AV_PIX_FMT_YUYV422;
+    case ADM_COLOR_YV12: return AV_PIX_FMT_YUV420P;
+    case ADM_COLOR_YUV422P: return AV_PIX_FMT_YUV422P;
+    case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
+    case ADM_COLOR_RGB32A: return AV_PIX_FMT_RGBA;
+    case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...AV_PIX_FMT_BGR32;
+    case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
+    case ADM_COLOR_BGR24: return AV_PIX_FMT_BGR24;
     case ADM_COLOR_YV12_10BITS: return AV_PIX_FMT_YUV420P10LE;
     case ADM_COLOR_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
-    case ADM_COLOR_Y8: return PIX_FMT_GRAY8;
+    case ADM_COLOR_Y8: return AV_PIX_FMT_GRAY8;
     default : ADM_assert(0); 
   }
-  return PIX_FMT_YUV420P;
+  return AV_PIX_FMT_YUV420P;
 }
 /**
       \fn getStrideAndPointers
@@ -213,11 +213,11 @@ bool ADMColorScalerFull::convert(uint8_t  *from, uint8_t *to)
     \fn convertPlanes
     \brief Same as convert but the 3 planes are given separately
 */
-bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint32_t destStride[3],     
+bool            ADMColorScalerFull::convertPlanes(int  sourceStride[3],int destStride[3],     
                                   uint8_t   *sourceData[3], uint8_t *destData[3])
 {
-    int xs[4]={sourceStride[0],sourceStride[1],sourceStride[2],0};
-    int xd[4]={destStride[0],destStride[1],destStride[2],0};
+    int xs[4]={(int)sourceStride[0],(int)sourceStride[1],(int)sourceStride[2],0};
+    int xd[4]={(int)destStride[0],(int)destStride[1],(int)destStride[2],0};
     uint8_t *src[4]={NULL,NULL,NULL,NULL};
     uint8_t *dst[4]={NULL,NULL,NULL,NULL};
      for(int i=0;i<3;i++)
@@ -229,6 +229,31 @@ bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint
      return true;
 }
 /**
+    \fn convertPlanes
+    \brief Same as convert but the 3 planes are given separately
+*/
+bool            ADMColorScalerFull::convertImage(ADMImage *sourceImage, ADMImage *destImage)
+{
+    int xs[4];
+    int xd[4];
+    uint8_t *src[4];
+    uint8_t *dst[4];
+    sourceImage->GetPitches(xs);
+    destImage->GetPitches(xd);
+    xs[3]=sourceImage->GetPitch(PLANAR_ALPHA);
+    xd[3]=destImage->GetPitch(PLANAR_ALPHA);
+    
+    destImage->GetWritePlanes(dst);
+    sourceImage->GetReadPlanes(src);
+    
+    src[3]=sourceImage->GetReadPtr(PLANAR_ALPHA);
+    dst[3]=destImage->GetWritePtr(PLANAR_ALPHA);
+    
+    sws_scale(CONTEXT,src,xs,0,srcHeight,dst,xd);
+    return true;
+}
+
+/**
     \fn  ADMColorScaler
     \brief Constructor
   @param w width
@@ -238,8 +263,8 @@ bool            ADMColorScalerFull::convertPlanes(uint32_t  sourceStride[3],uint
 */
 
 ADMColorScalerFull::ADMColorScalerFull(ADMColorScaler_algo algo,
-            uint32_t sw, uint32_t sh,
-            uint32_t dw, uint32_t dh,
+            int sw, int sh,
+            int dw, int dh,
             ADM_colorspace from,ADM_colorspace to)
 {
    context=NULL;
@@ -261,7 +286,7 @@ ADMColorScalerFull::~ADMColorScalerFull()
 /**
     \fn reset
 */
-bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t sh, uint32_t dw,uint32_t dh,ADM_colorspace from,ADM_colorspace to)
+bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, int sw, int sh, int dw,int dh,ADM_colorspace from,ADM_colorspace to)
 {
     if(context) sws_freeContext(CONTEXT);
     context=NULL;
@@ -281,10 +306,11 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     SETAL(SPLINE);
     default: ADM_assert(0);
     }
-
+#if 0 // this is gone, we need to patch av_get_cpu_flags directly now
     {
         FLAGS();
     }
+#endif
   
     srcWidth=sw;
     srcHeight=sh;
@@ -294,8 +320,8 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
 
     fromColor=from;
     toColor=to;
-    PixelFormat lavFrom=ADMColor2LAVColor(fromColor );
-    PixelFormat lavTo=ADMColor2LAVColor(toColor );
+    AVPixelFormat lavFrom=ADMColor2LAVColor(fromColor );
+    AVPixelFormat lavTo=ADMColor2LAVColor(toColor );
     
     context=(void *)sws_getContext(
                       srcWidth,srcHeight,
@@ -306,7 +332,7 @@ bool  ADMColorScalerFull::reset(ADMColorScaler_algo algo, uint32_t sw, uint32_t 
     return true;
 }
 //------------------------------
-bool            ADMColorScalerSimple::changeWidthHeight(uint32_t newWidth, uint32_t newHeight)
+bool            ADMColorScalerSimple::changeWidthHeight(int newWidth, int newHeight)
 {
     if(newWidth==srcWidth && newHeight==srcHeight) return true; // no change
     
@@ -345,8 +371,8 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
 {
     uint8_t *srcPlanes[3];
     uint8_t *dstPlanes[3];
-    uint32_t srcPitch[3];
-    uint32_t dstPitch[3];
+    int srcPitch[3];
+    int dstPitch[3];
     int      idstPitch[3];
     img->GetPitches(srcPitch);
     img->GetReadPlanes(srcPlanes);

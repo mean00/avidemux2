@@ -65,7 +65,7 @@ uint32_t v;
 uint64_t dmxToken::getAsNumber64(void)
 {
 uint64_t v;
-    sscanf(value,"%"PRId64,&v);
+    sscanf(value,"%" PRId64,&v);
     return v;
 }
 

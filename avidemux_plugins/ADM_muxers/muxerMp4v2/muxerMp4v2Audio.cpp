@@ -262,8 +262,8 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
                         // Take either block Dts or our own if no DTS is provided
                         if(currentBlock->dts!=ADM_NO_PTS)
                         {
-                            bprintf("Current audio Dts=%"PRId64"\n",currentDts);
-                            bprintf("Incoming block, dts=%"PRId64"\n",currentBlock->dts);
+                            bprintf("Current audio Dts=%" PRId64"\n",currentDts);
+                            bprintf("Incoming block, dts=%" PRId64"\n",currentBlock->dts);
                             bprintf("Delta =%d ms\n",(int)(currentDts-currentBlock->dts));
                             if( labs((long int)currentBlock->dts-(long int)currentDts)>MP4V2_MAX_JITTER)
                             {

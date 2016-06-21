@@ -146,7 +146,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   }
   AVCodec *codec;
   AVCodecID codecID;
-  codecID=makeName(CODEC_ID);
+  codecID=avMakeName;
   codec = avcodec_find_encoder(codecID);
   ADM_assert(codec);
   _context=( void *)avcodec_alloc_context3(codec);
@@ -157,7 +157,7 @@ bool AUDMEncoder_Lavcodec::initialize(void)
   _chunk = ADM_LAV_SAMPLE_PER_P*wavheader.channels; // AC3
   planarBuffer=new float[_chunk];
   planarBufferSize=_chunk;
-  ADM_info("[Lavcodec]Incoming : fq : %"PRIu32", channel : %"PRIu32" bitrate: %"PRIu32" \n",
+  ADM_info("[Lavcodec]Incoming : fq : %" PRIu32", channel : %" PRIu32" bitrate: %" PRIu32" \n",
   wavheader.frequency,wavheader.channels,_config.bitrate);
 
     if(wavheader.channels>2) 

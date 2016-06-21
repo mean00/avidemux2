@@ -72,15 +72,15 @@ bool tsHeader::processAudioIndex(char *buffer)
     uint32_t pes;
     char *head,*tail;
     int trackNb=0;
-        sscanf(buffer,"bf:%"PRIx64,&startAt);
+        sscanf(buffer,"bf:%" PRIx64,&startAt);
         head=strstr(buffer," ");
         if(!head) return false;
         head++;
         while((tail=strstr(head," ")))
         {
-            if(4!=sscanf(head,"Pes:%"PRIx32":%"PRIx64":%"PRIi32":%"PRId64" ",&pes,&startAt,&size,&dts))
+            if(4!=sscanf(head,"Pes:%" PRIx32":%" PRIx64":%" PRIi32":%" PRId64" ",&pes,&startAt,&size,&dts))
             {
-// qfprintf(index,"Pes:%x:%08"PRIx64":%"PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
+// qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
                 printf("[tsHeader::processAudioIndex] Reading index %s failed\n",buffer);
             }
             head=tail+1;
@@ -91,7 +91,7 @@ bool tsHeader::processAudioIndex(char *buffer)
                 ADM_warning("No audio DTS\n");
 
             trackNb++;
-            //printf("[%s] => %"PRIx32" Dts:%"PRId64" Size:%"PRId64"\n",buffer,pes,dts,size);
+            //printf("[%s] => %" PRIx32" Dts:%" PRId64" Size:%" PRId64"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
         }
         return true;
@@ -107,7 +107,7 @@ bool tsHeader::processVideoIndex(char *buffer)
             char *head=buffer;
             uint64_t pts,dts,startAt;
             uint32_t offset;
-            if(4!=sscanf(head,"at:%"PRIx64":%"PRIx32" Pts:%"PRId64":%"PRId64,&startAt,&offset,&pts,&dts))
+            if(4!=sscanf(head,"at:%" PRIx64":%" PRIx32" Pts:%" PRId64":%" PRId64,&startAt,&offset,&pts,&dts))
             {
                     printf("[TsDemuxerer] cannot read fields in  :%s\n",buffer);
                     return false;
@@ -137,7 +137,7 @@ bool tsHeader::processVideoIndex(char *buffer)
                 cur++;
                 next=strstr(start," ");
                 int64_t ppts,ddts;
-                ADM_assert(3==sscanf(cur,"%"PRIx32":%"PRId64":%"PRId64,&len,&ppts,&ddts));
+                ADM_assert(3==sscanf(cur,"%" PRIx32":%" PRId64":%" PRId64,&len,&ppts,&ddts));
                 
                 
                 dmxFrame *frame=new dmxFrame;
@@ -296,8 +296,8 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         std::string language=ADM_UNKNOWN_LANGUAGE;
         uint32_t fq,chan,br,codec,pid,muxing=0;
         sprintf(header,"Track%d.",i);
-#define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%"PRIu32"\n",i,x);}
-#define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%"PRIu32"\n",i,x);}
+#define readInt(x,y) {sprintf(body,"%s"#y,header);x=index->getAsUint32(body);printf("%02d:"#y"=%" PRIu32"\n",i,x);}
+#define readHex(x,y) {sprintf(body,"%s"#y,header);x=index->getAsHex(body);printf("%02x:"#y"=%" PRIu32"\n",i,x);}
 
         readInt(fq,fq);
         readInt(br,br);

@@ -116,7 +116,7 @@ bool        ADM_PP::process(class ADMImage *src, class ADMImage *dest)
 {
 int type;
 
-uint32_t ww,hh;
+int ww,hh;
 uint32_t border;
 
    // return dest->duplicate(src);
@@ -132,19 +132,21 @@ uint32_t border;
     ADM_assert(ppContext);
 
 //	#warning FIXME should be FF_I_TYPE/B/P
-	if(src->flags & AVI_KEY_FRAME) type=1;
-		else if(src->flags & AVI_B_FRAME) type=3;
-			else type=2;
+    if(src->flags & AVI_KEY_FRAME) 
+        type=1;
+    else if(src->flags & AVI_B_FRAME) 
+        type=3;
+    else type=2;
 
     ADM_assert(src->_colorspace==ADM_COLOR_YV12);
 
 	// we do postproc !
 	// keep
-	uint8_t       *oBuff[3];
+    uint8_t       *oBuff[3];
     const uint8_t *xBuff[3];
-	uint8_t       *iBuff[3];
-	uint32_t	  strideTab[3];
-	uint32_t	  strideTab2[3];
+    uint8_t       *iBuff[3];
+    int           strideTab[3];
+    int           strideTab2[3];
     int           iStrideTab2[3],iStrideTab[3];
 
         src->GetReadPlanes(iBuff);

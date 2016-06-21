@@ -15,7 +15,8 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 
-
+static bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic);
+static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -41,43 +42,24 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 while(payload[0]==0xff) {sei_size+=0xff;payload++;};
                 sei_size+=payload[0];payload++;
                 aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                if(payload+sei_size>=tail)
+                {
+                        return false;
+                }
                 switch(sei_type) // Recovery point
                 {
 
                        case 1:
-                            {
-                                if(spsInfo.hasStructInfo)
-                                {
-                                    getBits bits(sei_size,payload);
-                                    payload+=sei_size;
-                                    if(spsInfo.CpbDpbToSkip)
-                                    {
-                                            bits.get(spsInfo.CpbDpbToSkip);
-                                    }
-                                    //printf("Consumed: %d,\n",bits.getConsumedBits());
-                                    int pic=bits.get(4);
-                                    aprintf("Pic struct: %d,\n",pic);
-                                    switch(pic) 
-                                    {
-                                        case 0: *picStruct=pictureFrame; break;
-                                        case 3:
-                                        case 4: *picStruct=pictureFrame;
-                                        case 1: *picStruct=pictureTopField;break;
-                                        case 2: *picStruct=pictureBottomField;break;
-                                        default:*picStruct=pictureFrame;
-                                    }
-                                    
-                                }else
-                                        payload+=sei_size;
-                            }
+                        {
+                            decoderSei1(spsInfo,sei_size,payload,picStruct);
+                            payload+=sei_size;
                             break;
-
+                        }
                        case 6:
                         {
-                            getBits bits(sei_size,payload);
+                            decoderSei6(sei_size,payload,recoveryLength);
                             payload+=sei_size;
-                            *recoveryLength=bits.getUEG();
-                            aprintf("[SEI] Recovery :%"PRIu32"\n",*recoveryLength);
+                            aprintf("[SEI] Recovery :%" PRIu32"\n",*recoveryLength);
                             r=true;
                             break;
                         }
@@ -179,8 +161,8 @@ bool bAppend=false;
             pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
             if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
             {
-              ADM_info("[TsIndexer] Found video %"PRIu32"x%"PRIu32", fps=%"PRIu32"\n",video.w,video.h,video.fps);
-              ADM_info("[TsIndexer] SPS says %"PRIu32"x%"PRIu32"\n",spsInfo.width,spsInfo.height);
+              ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
+              ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
               seq_found=1;
               video.w=spsInfo.width;
               video.h=spsInfo.height;
@@ -319,7 +301,7 @@ resume:
                             default : thisUnit.imageType=2;break; // SP/SI
                         }
                       if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
-                      aprintf("[>>>>>>>>] Pic Type %"PRIu32" Recovery %"PRIu32"\n",thisUnit.imageType,recoveryCount);
+                      aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
                       if(thisUnit.imageType==1 && !thisUnit.recoveryCount) 
                                 thisUnit.imageType=4; //I  + Recovery=0 = IDR!
 
@@ -361,6 +343,42 @@ the_end:
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/
+
+// Workaround win64 bug
+// Put that in a separate function
+bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic)
+{
+    if(spsInfo.hasStructInfo)
+    {
+      getBits bits(size,bfer);
+      if(spsInfo.CpbDpbToSkip)
+      {
+              bits.get(spsInfo.CpbDpbToSkip);
+      }
+      //printf("Consumed: %d,\n",bits.getConsumedBits());
+      int pic4=bits.get(4);
+      aprintf("Pic struct: %d,\n",pic4);
+      switch(pic4) 
+      {
+          case 0: *pic=pictureFrame; break;
+          case 3:
+          case 4: *pic=pictureFrame;
+          case 1: *pic=pictureTopField;break;
+          case 2: *pic=pictureBottomField;break;
+          default:*pic=pictureFrame;break;
+      }
+    }
+    return true; 
+}
+//
+// 2nd one
+bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery)
+{
+     getBits bits(size,bfer);
+     *recovery=bits.getUEG();
+     return true;
+}
+
 
 //
 

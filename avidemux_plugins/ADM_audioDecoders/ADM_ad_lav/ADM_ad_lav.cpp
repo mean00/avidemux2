@@ -18,7 +18,7 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
-#include "libavutil/audioconvert.h"
+#include "libavcodec/audioconvert.h"
 }
 
 #include "ADM_ad_plugin.h"
@@ -33,19 +33,22 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 protected:
         typedef enum 
         {
-            asInt16,asFloat,asFloatPlanar
+            asFloat,asFloatPlanar,asS32Planar
         }ADM_outputFlavor;
 
                 ADM_outputFlavor        outputFlavor;
                 AVCodecContext          *_context;
+                AVFrame                 *_frame;
                 uint8_t    _buffer[ ADMWA_BUF];
                 uint32_t   _tail,_head;
                 uint32_t   _blockalign;
                 uint8_t scratchPad[SCRATCH_PAD_SIZE];
     uint32_t    channels;
-    bool        decodeToS16(float *outptr,uint32_t *nbOut);
-    bool        decodeToFloat(float *outptr,uint32_t *nbOut);
-    bool        decodeToFloatPlanar(float *outptr,uint32_t *nbOut);
+    bool        decodeToS16(float **outptr,uint32_t *nbOut);
+    bool        decodeToFloat(float **outptr,uint32_t *nbOut);
+    bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
+    bool        decodeToS32Planar(float **outptr,uint32_t *nbOut);
+    bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
     uint32_t    outputFrequency;
 public:
                     ADM_AudiocoderLavcodec(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -80,9 +83,9 @@ static  ad_supportedFormat Formats[]={
 };
 
 DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
-			0,0,1, 							       // Major, minor,patch
-			Formats, 							// Supported formats
-			"Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
+                        0,0,1, 							       // Major, minor,patch
+                        Formats, 							// Supported formats
+                        "Lavcodec decoder plugin for avidemux (c) Mean/Gruntster\n"); 	// Desc
 //********************************************************
 
 
@@ -106,62 +109,57 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _tail=_head=0;
     channels=info->channels;
     _blockalign=0;
+    _frame=av_frame_alloc();
     AVCodecID codecID = AV_CODEC_ID_NONE;
-    outputFrequency=info->frequency;
-    bool wantFloat=true;
+    outputFrequency=info->frequency;    
     switch(fourcc)
     {
       case WAV_WMAPRO:
-        codecID = CODEC_ID_WMAPRO;
+        codecID = AV_CODEC_ID_WMAPRO;
         break;
       case WAV_WMA:
-        codecID = CODEC_ID_WMAV2;
+        codecID = AV_CODEC_ID_WMAV2;
         break;
       case WAV_QDM2:
-        codecID = CODEC_ID_QDM2;
+        codecID = AV_CODEC_ID_QDM2;
         break;
       case WAV_AMV_ADPCM:
-        codecID = CODEC_ID_ADPCM_IMA_AMV;
+        codecID = AV_CODEC_ID_ADPCM_IMA_AMV;
         _blockalign=1;
         break;
       case WAV_NELLYMOSER:
-        codecID = CODEC_ID_NELLYMOSER;
+        codecID = AV_CODEC_ID_NELLYMOSER;
         _blockalign=1;
         break;
       case WAV_DTS:
-        codecID = CODEC_ID_DTS;
+        codecID = AV_CODEC_ID_DTS;
         _blockalign = 1;
         break;
       case WAV_MP3:
-        codecID = CODEC_ID_MP3;
+        codecID = AV_CODEC_ID_MP3;
         _blockalign = 1;
         break;
       case WAV_MP2:
-        codecID = CODEC_ID_MP2;
+        codecID = AV_CODEC_ID_MP2;
         _blockalign = 1;
         break;
       case WAV_AC3:
-        codecID = CODEC_ID_AC3;
+        codecID = AV_CODEC_ID_AC3;
         _blockalign = 1;
         break;
       case WAV_EAC3:
-        codecID = CODEC_ID_EAC3;
+        codecID = AV_CODEC_ID_EAC3;
         _blockalign = 1;
         break;
       case WAV_AAC:
       case 0x706D:
-        codecID = CODEC_ID_AAC;
+        codecID = AV_CODEC_ID_AAC;
         _blockalign = 1;
         break;
       default:
              ADM_assert(0);
-    }
-    AVSampleFormat fmt=AV_SAMPLE_FMT_S16;
-    if(wantFloat)
-    {
-        fmt=AV_SAMPLE_FMT_FLT;
-    }
-    
+    }   
+
     AVCodec *codec=avcodec_find_decoder(codecID);
     if(!codec) {ADM_assert(0);}
 
@@ -174,8 +172,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _context->channels = info->channels;
     _context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
-    _context->sample_fmt=fmt;
-    _context->request_sample_fmt=fmt;
+    _context->sample_fmt=AV_SAMPLE_FMT_FLT;
+    _context->request_sample_fmt=AV_SAMPLE_FMT_FLT;
     _context->extradata=(uint8_t *)d;
     _context->extradata_size=(int)l;    
 
@@ -184,39 +182,43 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
       _blockalign = _context->block_align;
     }
 
-    printf("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
+    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
     printf("\n");
 
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
-         ADM_warning("[audioCodec] Cannot use float, retrying with int16 \n");
-         _context->sample_fmt=AV_SAMPLE_FMT_S16;
+         ADM_warning("[audioCodec] Cannot use float, retrying with floatp \n");
+         _context->sample_fmt=AV_SAMPLE_FMT_FLTP;
+         _context->request_sample_fmt=AV_SAMPLE_FMT_FLTP;
          if (avcodec_open2(_context, codec, NULL) < 0)
           {
-              ADM_warning("[audioCodec] int16 failed also. Crashing.. \n");
+              ADM_warning("[audioCodec] floatp failed also. Crashing.. \n");
               ADM_assert(0);
           }
-          ADM_info("Decoder created using int16..\n");
-         
+          ADM_info("Decoder created using floatp..\n");
     }
 
-        switch(_context->sample_fmt)
-        {
+    switch(_context->sample_fmt)
+    {
         case AV_SAMPLE_FMT_FLT:
             outputFlavor=asFloat;
             ADM_info("Decoder created using float..\n");
             break;
         case AV_SAMPLE_FMT_FLTP:
-            outputFlavor=asFloatPlanar;
+            outputFlavor=asFloatPlanar;            
             ADM_info("Decoder created using float planar...\n");
             break;
+        case AV_SAMPLE_FMT_S32P:
+            outputFlavor=asS32Planar;            
+            ADM_info("Decoder created using s32 planar...\n");
+            break;            
         default:
             ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
             ADM_assert(0);
             break;
-        }
-     
+    }
+
 
 
     if(!_blockalign)
@@ -246,158 +248,125 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
  {
         avcodec_close(_context);
         av_free(_context);
+        _context=NULL;
+        av_frame_free(&_frame);
 }
 /**
     \fn decodeToS16
+ * \brief THIS IS NOT USED ANY LONGER
 */
-bool ADM_AudiocoderLavcodec::decodeToS16(float *outptr,uint32_t *nbOut)
+bool ADM_AudiocoderLavcodec::decodeToS16(float **outptr,uint32_t *nbOut)
 {
-int out=0;
-int pout=0;
-int16_t *run16;
-int nbChunk;
+    // convert s16 to float...
+    int nbSample=  _frame->nb_samples; 
+    for(int i=0;i<nbSample;i++)
+    {
+       for(int c=0;c<channels;c++)
+       {
+          int16_t *p=(int16_t *)(_frame->data[c]);
+          (*outptr)[c]=((float)*(p+i))/32767.;
+       }
+       *outptr+=channels;
+    }
+    (*nbOut)+=nbSample*channels;
+    return true;
+}
 
-        while(_tail-_head>=_blockalign)
+/**
+    \fn decodeToFloat
+*/
+
+bool ADM_AudiocoderLavcodec::decodeToFloat(float **outptr,uint32_t *nbOut)
+{
+    int nbSample=  _frame->nb_samples; 
+    // copy
+    memcpy(*outptr,_frame[0].data,sizeof(float)*nbSample*channels); // not sure...     
+    (*outptr)+=nbSample*channels;
+    (*nbOut)+=nbSample*channels;
+    return true;
+}
+/**
+ * \fn decodeToFloatPlanarStereo
+ * @param outptr
+ * @param nbOut
+ * @return 
+ */
+bool ADM_AudiocoderLavcodec::decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut)
+{
+
+    // Interleave
+    int nbSample=  _frame->nb_samples; 
+    float *left =(float *)_frame->data[0];
+    float *right=(float *)_frame->data[1];
+    float *out=*outptr;
+    for(int i=0;i<nbSample;i++)
+    {
+        out[0]=*(left++);
+        out[1]=*(right++);
+        out+=2;
+    }
+   *outptr=out;
+   (*nbOut)+=nbSample*2;
+   return true;
+}
+/**
+ * 
+ * @param outptr
+ * @param nbOut
+ * @return 
+ */
+bool ADM_AudiocoderLavcodec::decodeToS32Planar(float **outptr,uint32_t *nbOut)
+{
+     // Interleave
+    int nbSample=  _frame->nb_samples; 
+    float scale=1./(float)(1LL<<31LL);
+    float *p=*outptr;
+    for(int c=0;c<channels;c++)
+    {
+        float *o=p+c;
+        int32_t *d=(int32_t *)_frame->data[c];
+        
+        for(int i=0;i<nbSample;i++)
         {
-          nbChunk=(_tail-_head)/_blockalign;
-          pout=SCRATCH_PAD_SIZE;
-          AVPacket pkt;
-          av_init_packet(&pkt);
-          pkt.size=nbChunk*_blockalign;
-          pkt.data=_buffer+_head;
-          out=avcodec_decode_audio3(_context,(int16_t *)scratchPad,
-                                   &pout,&pkt);
-
-          if(out<0)
-          {
-            printf( "[ADM_ad_lav] *** WMA decoding error (%u)***\n",_blockalign);
-            _head+=1; // Try skipping some bytes
-            continue;
-          }
-          if(pout>=SCRATCH_PAD_SIZE)
-          {
-            printf("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
-            ADM_assert(0);
-          }
-
-//            printf("Channel layout :%llx\n",_context->channel_layout);
-
-          if(_context->codec_id == CODEC_ID_NELLYMOSER)
-          { // Hack, it returns inconsistent size
-            out=nbChunk*_blockalign;
-          }
-          _head+=out; // consumed bytes
-          // convert s16 to float...
-          pout>>=1;
-          *nbOut+=pout;
-          run16=(int16_t *)scratchPad;
-          for(int i=0;i<pout;i++)
-          {
-            *outptr++=((float)run16[i])/32767.;
-          }
+            *o=((float)d[i])*scale;
+            o+=channels;
         }
-    return true;
+    }
+   (*nbOut) +=nbSample*channels;
+   (*outptr)+=nbSample*channels;
+   return true;
 }
 
 /**
     \fn decodeToFloat
 */
 
-bool ADM_AudiocoderLavcodec::decodeToFloat(float *outptr,uint32_t *nbOut)
+bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
 {
-int out=0;
-int pout=0;
-int nbChunk;
-
-    while(_tail-_head>=_blockalign)
+    switch(channels)
     {
-      nbChunk=(_tail-_head)/_blockalign;
-      pout=SCRATCH_PAD_SIZE;
-
-      AVPacket pkt;
-      av_init_packet(&pkt);
-      pkt.size=nbChunk*_blockalign;
-      pkt.data=_buffer+_head;
-
-      out=avcodec_decode_audio3(_context,(int16_t *)outptr,
-                               &pout,&pkt);
-        //ADM_info("in %d out %d\n",out,pout);
-
-      if(out<0)
-      {
-        ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
-        _head+=1; // Try skipping some bytes
-        continue;
-      }
-      if(pout>=SCRATCH_PAD_SIZE)
-      {
-        ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
-        ADM_assert(0);
-      }
-
-      _head+=out; // consumed bytes
-      pout/=sizeof(float); // size in bytes -> nb float
-      outptr+=pout;
-      *nbOut+=pout;
+        case 1:
+            return decodeToFloat(outptr,nbOut);
+            break;
+        case 2:
+            return decodeToFloatPlanarStereo(outptr,nbOut);
+            break;
+        default:
+            break;
     }
-    return true;
-}
-
-/**
-    \fn decodeToFloat
-*/
-
-bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float *outptr,uint32_t *nbOut)
-{
-int out=0;
-int pout=0;
-int nbChunk;
-
-    while(_tail-_head>=_blockalign)
+    // Interleave
+    int nbSample=  _frame->nb_samples; 
+    for(int i=0;i<nbSample;i++)
     {
-      nbChunk=(_tail-_head)/_blockalign;
-      pout=SCRATCH_PAD_SIZE;
-
-      AVPacket pkt;
-      av_init_packet(&pkt);
-      pkt.size=nbChunk*_blockalign;
-      pkt.data=_buffer+_head;
-
-      out=avcodec_decode_audio3(_context,(int16_t *)scratchPad,
-                               &pout,&pkt);
-        //ADM_info("in %d out %d\n",out,pout);
-
-      if(out<0)
-      {
-        ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
-        _head+=1; // Try skipping some bytes
-        continue;
-      }
-      if(pout>=SCRATCH_PAD_SIZE)
-      {
-        ADM_error("[ADM_ad_lav]Produced : %u, buffer %u,in%u\n",pout,SCRATCH_PAD_SIZE,_tail-_head);
-        ADM_assert(0);
-      }
-
-      _head+=out; // consumed bytes
-      pout/=sizeof(float); // size in bytes -> nb float
-      int block=pout/channels;
-      //printf("%d blocks\n",block);
-      float *fin=(float *)scratchPad;
-      float *fout=outptr;
-      for(int c=0;c<channels;c++)
-      {
-            for(int i=0;i<block;i++)              
-          {
-              fout[channels*i]=*fin;
-              fin++;
-          }
-          fout++;
-      }
-      outptr+=pout;
-      *nbOut+=pout;
+        for(int c=0;c<channels;c++)
+        {
+           float *p=(float *)_frame->data[c];
+           (*outptr)[c]=p[i]; // we can do better here
+        }
+        (*outptr)+=channels;
     }
-    return true;
+   (*nbOut)+=nbSample*channels;
+   return true;
 }
 /**
     \fn run
@@ -418,14 +387,37 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
         ADM_assert(nbIn+_tail<ADMWA_BUF);
         memcpy(_buffer+_tail,inptr,nbIn);
         _tail+=nbIn;
-        switch(outputFlavor)
-        {
-                case asInt16:        decodeToS16(outptr,nbOut);break;
-                case asFloat:        decodeToFloat(outptr,nbOut);break;
-                case asFloatPlanar:  decodeToFloatPlanar(outptr,nbOut);break;
-                default: ADM_error("unknown output flavor\n");break;
-        }
 
+        AVPacket pkt;
+        av_init_packet(&pkt);
+        int nbChunk,out,gotData;
+        while(_tail-_head>=_blockalign)
+        {
+            nbChunk=(_tail-_head)/_blockalign;
+            pkt.size=nbChunk*_blockalign;
+            pkt.data=_buffer+_head;
+      
+            out=avcodec_decode_audio4(_context, _frame, &gotData, &pkt);
+            if(out<0)
+            {
+                ADM_warning( "[ADM_ad_lav] *** decoding error (%u)***\n",_blockalign);
+                _head+=1; // Try skipping some bytes
+                continue;
+            }
+            _head+=out; // consumed bytes
+            if(!gotData)
+                continue;
+            switch(_context->sample_fmt)
+            {
+              case AV_SAMPLE_FMT_FLT:     decodeToFloat(&outptr,nbOut);break;
+              case AV_SAMPLE_FMT_FLTP:    decodeToFloatPlanar(&outptr,nbOut);break;             
+              case AV_SAMPLE_FMT_S32P:    decodeToS32Planar(&outptr,nbOut);break;              
+              default:
+                  ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
+                  ADM_assert(0);
+                  break;
+            }
+        }
         //------------------
           if(channels>=5 )
             {

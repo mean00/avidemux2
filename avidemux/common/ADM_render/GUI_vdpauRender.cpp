@@ -20,20 +20,31 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavcodec/vdpau.h"
 }
-
+#if 0
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
 
 #include "GUI_render.h"
 
 #include "GUI_accelRender.h"
 #include "GUI_vdpauRender.h"
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
-#include "ADM_videoCodec/include/ADM_ffmpeg_vdpau_internal.h"
+#include "ADM_videoCodec/private_inc/ADM_ffmpeg_vdpau_internal.h"
 static VdpOutputSurface     surface[2]={VDP_INVALID_HANDLE,VDP_INVALID_HANDLE};
 static VdpVideoSurface      input=VDP_INVALID_HANDLE;
 static VdpVideoMixer        mixer=VDP_INVALID_HANDLE;
 static int                  currentSurface=0;
 static VdpPresentationQueue queue=VDP_INVALID_HANDLE;
 //________________Wrapper around Xv_______________
+
+
+VideoRenderBase *spawnVDPAURender()
+{
+    return new vdpauRender;
+}
+
 /**
     \fn vdpauRender
 */
@@ -149,21 +160,25 @@ bool vdpauRender::displayImage(ADMImage *pic)
     // Blit pic into our video Surface
     VdpVideoSurface myInput=input;
     int next=currentSurface^1;
+    int ipitches[3];
     uint32_t pitches[3];
     uint8_t *planes[3];
-    pic->GetPitches(pitches);
+    pic->GetPitches(ipitches);
     pic->GetReadPlanes(planes);
 
+    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
+    
     // Put out stuff in input...
     // if input is already a VDPAU surface, no need to reupload it...
     if(pic->refType==ADM_HW_VDPAU)
     {
         // cookie is a render...
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refCookie;
+        struct vdpau_render_state *rndr = (struct vdpau_render_state *)pic->refDescriptor.refHwImage;
         myInput=rndr->surface;
-        //printf("Skipping blit surface=%d\n",(int)myInput);
+        aprintf("VDPAU: This is already vdpau image, just passing along surface=%d\n",rndr->surface);
     }else
     {
+        aprintf("VDPAU: This is NOT a  vdpau image, converting\n");
         //printf("Blitting surface\n");
         if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
                 input,
@@ -216,7 +231,7 @@ bool vdpauRender::refresh(void)
         ADM_warning("[Vdpau] Refresh : Cannot display on presenation queue\n");
         return false;
     }
-    renderCompleteRedrawRequest();
+    //renderCompleteRedrawRequest();
     return true;
 }
 #endif

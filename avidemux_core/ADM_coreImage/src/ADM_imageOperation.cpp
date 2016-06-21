@@ -52,8 +52,8 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
          else // it is a hw surface
         {
             refType                    =src->refType;
-            refDescriptor.refCookie    =src->refDescriptor.refCookie;
-            refDescriptor.refInstance  =src->refDescriptor.refInstance;
+            refDescriptor.refHwImage   =src->refDescriptor.refHwImage;
+            refDescriptor.refCodec     =src->refDescriptor.refCodec;
             refDescriptor.refMarkUsed  =src->refDescriptor.refMarkUsed;
             refDescriptor.refMarkUnused=src->refDescriptor.refMarkUnused;
             refDescriptor.refDownload  =src->refDescriptor.refDownload;
@@ -154,7 +154,7 @@ bool ADMImage::copyTo(ADMImage *dest, uint32_t x,uint32_t y)
     dest->GetWritePlanes(dstPlanes);
     GetReadPlanes(srcPlanes);
 
-    uint32_t srcPitches[3],dstPitches[3];
+    int srcPitches[3],dstPitches[3];
     dest->GetPitches(dstPitches);
     GetPitches(srcPitches);
     // do y
@@ -202,7 +202,7 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
     dest->GetWritePlanes(dstPlanes);
     GetReadPlanes(srcPlanes);
 
-    uint32_t srcPitches[3],dstPitches[3];
+    int srcPitches[3],dstPitches[3];
     dest->GetPitches(dstPitches);
     GetPitches(srcPitches);
     // do y
@@ -219,5 +219,82 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
     }
     return 1;
 }
+/**
+ * \fn blitWithAlpha
+ * \brief Blie one plane using transparency from alpha Channel
+ * @param dest
+ * @param x
+ * @param y
+ * @param alpha
+ * @return 
+ */
 
+static bool blitWithAlpha(uint8_t *dst, uint8_t *src, uint8_t *alpha,int dstStride, int srcStride,int alphaStride,int w,int h, int mul)
+{
+    for(int k=0;k<h;k++)
+    {
+        for(int j=0;j<w;j++)
+        {
+            int a=alpha[mul*j];
+            uint32_t x=(255-a)*dst[j]+a*src[j];
+            dst[j]=x>>8;
+        }
+        dst+=dstStride;
+        src+=srcStride;
+        alpha+=alphaStride*mul;
+    }
+    return true;
+}
+bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y)
+{
+
+    uint32_t box_w=_width, box_h=_height;
+    // Clip if needed
+    if(y>dest->_height)
+    {
+        ADM_info("Image out of target image height : %d %d\n",y,dest->_height);
+        return true;
+    }
+    if(x>dest->_width)
+    {
+        ADM_info("Image out of target image width %d %d\n",x,dest->_width);
+        return true;
+    }
+
+    if(x+box_w>dest->_width) box_w=dest->_width-x;
+    if(y+box_h>dest->_height) box_h=dest->_height-y;
+    // Get Source plane
+    uint8_t *srcPlanes[3];
+    uint8_t *dstPlanes[3];
+    dest->GetWritePlanes(dstPlanes);
+    GetReadPlanes(srcPlanes);
+
+    int srcPitches[3],dstPitches[3];
+    dest->GetPitches(dstPitches);
+    GetPitches(srcPitches);
+
+    uint8_t *alpha=GetReadPtr(PLANAR_ALPHA);
+    int      alphaStride=GetPitch(PLANAR_ALPHA);
+    
+    // do U & V
+    for(int i=0;i<3;i++)
+    {
+        int mul=0;
+        if(i) mul++;
+        int xx=x>>mul;
+        int yy=y>>mul;
+        int ww=box_w>>mul;
+        int hh=box_h>>mul;
+        mul++;
+        blitWithAlpha(  dstPlanes[i]+xx+dstPitches[i]*yy, 
+                        srcPlanes[i],
+                        alpha,
+                
+                        dstPitches[i], 
+                        srcPitches[i], 
+                        alphaStride,
+                        ww,hh,mul);
+    }
+    return 1;
+}
 //EOF

@@ -48,11 +48,13 @@ typedef enum
 */
 class ADM_CORE6_EXPORT CpuCaps
 {
-public:
+protected:
         static uint32_t      myCpuCaps;
         static uint32_t      myCpuMask;
 public:
 	static void 	init( void);
+        static bool     setMask(uint32_t mask);
+        static uint32_t getMask();
 	static uint8_t 	hasMMX (void) {CHECK_Z(MMX)};
 	static uint8_t 	hasMMXEXT (void){CHECK_Z(MMXEXT)};
 	static uint8_t 	has3DNOW (void) {CHECK_Z(3DNOW)};

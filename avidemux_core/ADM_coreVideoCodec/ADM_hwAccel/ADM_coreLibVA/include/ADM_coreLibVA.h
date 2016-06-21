@@ -125,12 +125,10 @@ class ADM_vaSurface
 public:
     VASurfaceID         surface;
     int                 refCount;
-    decoderFFLIBVA      *parent;
     VAImage             *image;
     int                 w,h;
-    ADM_vaSurface(decoderFFLIBVA *parent,int w, int h)
+    ADM_vaSurface(int w, int h)
     {
-        this->parent=parent;
         surface=VA_INVALID;
         refCount=0;
         this->w=w;

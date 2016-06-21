@@ -379,7 +379,7 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
 
 
                   uint8_t *planes[3];
-                  uint32_t pitches[3];
+                  int      pitches[3];
 
                   image->GetPitches(pitches);
                   image->GetWritePlanes(planes);

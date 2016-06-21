@@ -1,31 +1,29 @@
-diff --git libavcodec/avcodec.h libavcodec/avcodec.h
-index 4aeb57a..076721a 100644
---- libavcodec/avcodec.h
-+++ libavcodec/avcodec.h
-@@ -768,6 +768,10 @@ typedef struct RcOverride{
- #define CODEC_FLAG2_DROP_FRAME_TIMECODE 0x00002000 ///< timecode is in drop frame format. DEPRECATED!!!!
- #define CODEC_FLAG2_IGNORE_CROP   0x00010000 ///< Discard cropping information from SPS.
+--- libavcodec/avcodec.h.org	2016-05-09 08:08:59.936664452 +0200
++++ libavcodec/avcodec.h	2016-05-09 08:10:37.922378818 +0200
+@@ -824,6 +824,10 @@
+  */
+ #define AV_CODEC_FLAG2_IGNORE_CROP    (1 << 16)
  
 +//MEANX: NEVER EVER USE CLOSED GOP ?
-+#define CODEC_FLAG2_32_PULLDOWN   0x80000000
++#define AV_CODEC_FLAG2_32_PULLDOWN    (1 << 17)
 +// /MEANX
 +
- #define CODEC_FLAG2_CHUNKS        0x00008000 ///< Input bitstream might be truncated at a packet boundaries instead of only at frame boundaries.
- #define CODEC_FLAG2_SHOW_ALL      0x00400000 ///< Show all frames before the first keyframe
- #define CODEC_FLAG2_EXPORT_MVS    0x10000000 ///< Export motion vectors through frame side data
-@@ -2302,6 +2306,7 @@ typedef struct AVCodecContext {
+ /**
+  * Show all frames before the first keyframe
+  */
+@@ -2498,6 +2502,7 @@
       * - decoding: unused
       */
      int rc_buffer_size;
-+    int rc_buffer_size_header;  /*< That one is set in the header MEANX*/
++    int rc_buffer_size_header; // MEANX : We fill the mpeg header with that value
  
      /**
       * ratecontrol override, see RcOverride
-@@ -2325,6 +2330,7 @@ typedef struct AVCodecContext {
-      * - decoding: Set by libavcodec.
+@@ -2521,6 +2526,7 @@
+      * - decoding: Set by user, may be overwritten by libavcodec.
       */
-     int rc_max_rate;
-+    int rc_max_rate_header; /*< That one is set in the header MEANX */
+     int64_t rc_max_rate;
++    int64_t rc_max_rate_header; // MEANX : We use that value to fill the mpeg header
  
      /**
       * minimum bitrate

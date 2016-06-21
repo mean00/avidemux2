@@ -129,7 +129,7 @@ bool tsHeader::updatePtsDts(void)
         for(int i=0;i<ListOfFrames.size();i++)
         {
             dmxFrame *frame=ListOfFrames[i];
-            aprintf("[psUpdate] frame:%d raw DTS: %"PRId64" PTS:%"PRId64"\n",i,frame->dts,frame->pts);
+            aprintf("[psUpdate] frame:%d raw DTS: %" PRId64" PTS:%" PRId64"\n",i,frame->dts,frame->pts);
 #if 0
             if(frame->pts==ADM_NO_PTS || frame->dts==ADM_NO_PTS)
             {
@@ -147,7 +147,7 @@ bool tsHeader::updatePtsDts(void)
                     uint64_t oldDts=lastDts;
                     frame->dts=lastDts=timeConvert(frame->dts);
                     frame->pts=lastPts=timeConvert(frame->pts);
-                    if(oldDts>lastDts) printf("[tsRead] Warning DTS going backward frame %d, old:%"PRId64" new:%"PRId64" delta=%"PRId64"\n",
+                    if(oldDts>lastDts) printf("[tsRead] Warning DTS going backward frame %d, old:%" PRId64" new:%" PRId64" delta=%" PRId64"\n",
                                                        i,oldDts/1000,lastDts/1000,(oldDts-lastDts)/1000);
 
                 }else
@@ -187,7 +187,7 @@ bool tsHeader::updatePtsDts(void)
             dts=frame->dts;
             if(pts!=ADM_NO_PTS) pts/=1000;
             if(dts!=ADM_NO_PTS) dts/=1000;
-            printf("[psVideo] Framex %d PTS:%"PRId64" ms DTS:%"PRId64" ms, delta %"PRId64" ms\n",i,pts,dts,pts-dts);
+            printf("[psVideo] Framex %d PTS:%" PRId64" ms DTS:%" PRId64" ms, delta %" PRId64" ms\n",i,pts,dts,pts-dts);
         }
 #endif
         return 1;

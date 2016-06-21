@@ -25,7 +25,7 @@ extern FFcodecSettings Mp4Settings;
 
 void resetConfigurationData()
 {
-	FFcodecSettings defaultConf = MPEG4_CONF_DEFAULT;
+	FFcodecSettings defaultConf = (FFcodecSettings)MPEG4_CONF_DEFAULT;
 
 	memcpy(&Mp4Settings, &defaultConf, sizeof(FFcodecSettings));
 }

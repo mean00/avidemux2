@@ -80,7 +80,7 @@ bool Ui_seekablePreviewWindow::setCurrentPtsCallback(void *cookie,uint64_t pts)
     {
         return ((Ui_seekablePreviewWindow *)cookie)->setTime(pts);
     }
-    printf("No cookie, New PTS :%"PRId64" us\n",pts);
+    printf("No cookie, New PTS :%" PRId64" us\n",pts);
     return true;
 }
 /**

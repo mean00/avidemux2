@@ -2,17 +2,15 @@ include(admOpenGl)
 
 IF(QT_LIBRARY_EXTENSION)
         SET(ADM_LIB ADM_render6_${QT_LIBRARY_EXTENSION})
+        SET(SIMPLE_RENDER GUI_simpleRender.cpp)
 ELSE(QT_LIBRARY_EXTENSION)
         SET(ADM_LIB ADM_render6_${UI_SUFFIX})
+        SET(SIMPLE_RENDER GUI_simpleRenderStub.cpp)
 ENDIF(QT_LIBRARY_EXTENSION)
 
 SET(${ADM_LIB}_SRCS
 GUI_render.cpp
-GUI_simpleRender.cpp
-GUI_sdlRender.cpp
-GUI_xvRender.cpp
-GUI_vdpauRender.cpp
-GUI_libvaRender.cpp
+${SIMPLE_RENDER}
 )
 
 IF (USE_OPENGL)
@@ -24,6 +22,18 @@ IF (APPLE)
 		SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_sdlRenderHelper.m)
 	ENDIF(USE_SDL)
 ENDIF (APPLE)
+IF (USE_XV)
+	SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_xvRender.cpp)
+ENDIF (USE_XV)
+IF (USE_SDL)
+	SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_sdlRender.cpp)
+ENDIF (USE_SDL)
+IF (USE_VDPAU)
+	SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_vdpauRender.cpp)
+ENDIF (USE_VDPAU)
+IF (USE_LIBVA)
+	SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_libvaRender.cpp)
+ENDIF (USE_LIBVA)
 
 add_compiler_export_flags()
 ADD_LIBRARY(${ADM_LIB} SHARED ${${ADM_LIB}_SRCS})

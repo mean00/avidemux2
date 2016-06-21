@@ -118,8 +118,8 @@ bool lavDeint::getNextFrame(uint32_t *fn,ADMImage *image)
   //
   const uint8_t *iBuff[3];
   uint8_t *oBuff[3];
-  int strideIn[3],strideOut[3];
-  uint32_t stride[3];
+  int  strideIn[3],strideOut[3];
+  int  stride[3];
 
   image->GetWritePlanes(oBuff);
   src->GetReadPlanes((uint8_t **)iBuff);

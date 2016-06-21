@@ -253,7 +253,7 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
         {
             if(audioTracks)
             {
-                qfprintf(index,"\nAudio bf:%08"PRIx64" ",nextPacket->startAt);
+                qfprintf(index,"\nAudio bf:%08" PRIx64" ",nextPacket->startAt);
                 packetTSStats *s;
                 uint32_t na;
                 pkt->getStats(&na,&s);      
@@ -261,14 +261,14 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
                 for(int i=0;i<na;i++)
                 {   
                     packetTSStats *current=s+i;
-                    qfprintf(index,"Pes:%x:%08"PRIx64":%"PRIi32":%"PRId64" ",
+                    qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%" PRId64" ",
                                 current->pid,current->startAt,current->startSize,current->startDts);
                 }                
             }
             data.beginPts=pic->pts;
             data.beginDts=pic->dts;
             // start a new line
-            qfprintf(index,"\nVideo at:%08"PRIx64":%04"PRIx32" Pts:%08"PRId64":%08"PRId64" ",
+            qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",
                         p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
         }
        
@@ -284,8 +284,8 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
 
         qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
         int32_t delta=(int32_t)(nextConsumed-beginConsuming);
-        qfprintf(index,":%06"PRIx32,delta);
-        qfprintf(index,":%"PRId64":%"PRId64,deltaPts,deltaDts);
+        qfprintf(index,":%06" PRIx32,delta);
+        qfprintf(index,":%" PRId64":%" PRId64,deltaPts,deltaDts);
     
         beginConsuming=nextConsumed;
         listOfUnits.clear();
@@ -300,7 +300,7 @@ bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uin
         myUnit.unitType=unitType2;
         myUnit.overRead=overRead;
 #if 0
-        printf("Adding new unit of type %x unitType2 PTS=%"PRId64" DTS=%"PRId64"\n",unitType2,
+        printf("Adding new unit of type %x unitType2 PTS=%" PRId64" DTS=%" PRId64"\n",unitType2,
                     unit.packetInfo.pts,
                     unit.packetInfo.dts
                     );

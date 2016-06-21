@@ -245,8 +245,8 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
      width16=(width+15)&~15;
      height16=(height+15)&~15;
      
-     internalSurface[0]=new ADM_vaSurface(NULL,width16,height16);
-     internalSurface[1]=new ADM_vaSurface(NULL,width16,height16);
+     internalSurface[0]=new ADM_vaSurface(width16,height16);
+     internalSurface[1]=new ADM_vaSurface(width16,height16);
      if(!internalSurface[0] || !internalSurface[1])
      {
          ADM_warning("Cannot allocate internal surface\n");

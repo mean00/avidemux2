@@ -133,15 +133,15 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
         case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
                                 _frame->linesize[1] = img->GetPitch(PLANAR_U);
                                 _frame->linesize[2] = img->GetPitch(PLANAR_V);
-                                _context->pix_fmt =PIX_FMT_YUV420P;break;
+                                _context->pix_fmt =AV_PIX_FMT_YUV420P;break;
         case ADM_COLOR_YUV422P: _frame->linesize[0] = w;
                                 _frame->linesize[1] = w>>1;
                                 _frame->linesize[2] = w>>1;
-                                _context->pix_fmt =PIX_FMT_YUV422P;break;
+                                _context->pix_fmt =AV_PIX_FMT_YUV422P;break;
         case ADM_COLOR_RGB32A : _frame->linesize[0] = w*4;
                                 _frame->linesize[1] = 0;//w >> 1;
                                 _frame->linesize[2] = 0;//w >> 1;
-                                _context->pix_fmt =PIX_FMT_RGB32;break;
+                                _context->pix_fmt =AV_PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
     }
@@ -206,7 +206,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 
     uint64_t p=image->Pts;
     queueOfDts.push_back(p);
-    aprintf("Incoming frame PTS=%"PRIu64", delay=%"PRIu64"\n",p,getEncoderDelay());
+    aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
     _frame->pts= timingToLav(p);    //
     if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
@@ -216,7 +216,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     map.internalTS=_frame->pts;
     mapper.push_back(map);
 
-    aprintf("Codec> incoming pts=%"PRIu64"\n",image->Pts);
+    aprintf("Codec> incoming pts=%" PRIu64"\n",image->Pts);
     //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
@@ -265,6 +265,31 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
 bool             ADM_coreVideoEncoderFFmpeg::configureContext(void)
 {
     return true;
+}
+
+/**
+ * \fn encodeWrapper
+ */
+int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
+{
+    int r,gotData;
+        AVPacket pkt;
+        pkt.data=out->data;
+        pkt.size=out->bufferSize;
+
+
+        r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+        if(r<0)
+        {
+            ADM_warning("Error %d encoding video\n",r);
+            return r;
+        }
+        if(!gotData)
+        {
+            ADM_warning("Encoder produced no data\n");
+            pkt.size=0;
+        }
+        return pkt.size;            
 }
 /**
  * 
@@ -431,7 +456,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     // update lastDts
     lastDts=out->dts;
 
-    aprintf("Codec>Out pts=%"PRIu64" us, out Dts=%"PRIu64"\n",out->pts,out->dts);
+    aprintf("Codec>Out pts=%" PRIu64" us, out Dts=%" PRIu64"\n",out->pts,out->dts);
 
     // Update quant
     if(!_context->coded_frame->quality)
@@ -580,7 +605,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupPass(void)
                 averageBitrate=(uint32_t)avg*1000; // convert from kb/s to b/s
             }
 
-        printf("[ffmpeg4] Average bitrate =%"PRIu32" kb/s\n",averageBitrate/1000);
+        printf("[ffmpeg4] Average bitrate =%" PRIu32" kb/s\n",averageBitrate/1000);
         _context->bit_rate=averageBitrate;
         switch(pass)
         {

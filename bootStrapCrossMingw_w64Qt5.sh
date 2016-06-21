@@ -35,7 +35,16 @@ Process()
         # Only install  component=dev for dev package
 	DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
 }
+# Clang ?
 
+if [ "${USE_CLANG}" = "" ]; then
+        export C_COMPILER=gcc
+        export CXX_COMPILER=g++
+else
+        export C_COMPILER=clang
+        export CXX_COMPILER=clang++
+fi
+# --
 echo "**BootStrapping avidemux **"
 rm -Rf ${MINGWDEV}
 rm -Rf ${MINGW}/Release

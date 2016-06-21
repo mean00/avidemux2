@@ -52,6 +52,7 @@ public:
     \brief Handle exactly one PES packet
             It is assumed PES packet starts & ends at TS packet boundaries
 */
+#define TS_PES_PACKET_MIN_SIZE 32
 class TS_PESpacket
 {
 public:
@@ -80,7 +81,7 @@ public:
                 }
     bool        expandPayload()
 		{
-                        payloadLimit*=2;
+                        payloadLimit=payloadLimit*2+TS_PES_PACKET_MIN_SIZE;
 			uint8_t *newPayload=(uint8_t *)ADM_alloc(payloadLimit);
 			memcpy(newPayload,payload,payloadSize);
 			ADM_dealloc(payload);
@@ -90,7 +91,7 @@ public:
 		}
     bool        addData(uint32_t len,uint8_t *data)
                 {
-                    if(len+payloadSize>payloadLimit)
+                    if((len+payloadSize+TS_PES_PACKET_MIN_SIZE)>payloadLimit)
                     {
 				expandPayload();
                     }
@@ -105,7 +106,7 @@ public:
      }
      bool pushByte(uint8_t byte)
      {
-            if(payloadSize>=payloadLimit)
+            if((payloadSize+TS_PES_PACKET_MIN_SIZE)>=payloadLimit)
             {
 			expandPayload();
             }

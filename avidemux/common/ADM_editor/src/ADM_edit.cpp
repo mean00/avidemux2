@@ -206,7 +206,7 @@ bool ADM_Composer::addFile (const char *name)
 				prefs->set(AVISYNTH_AVISYNTH_LOCALPORT, localPort);
 			}
 		}
-		uint8_t dummy[] = { portValue , portValue >> 8};
+		uint8_t dummy[] = { (uint8_t)portValue ,(uint8_t)( portValue >> 8)};
 		ret = video._aviheader->open((char *)dummy);
 	}
 	else
@@ -476,7 +476,7 @@ uint32_t ref;
   {
     if(false==_segments.getRefFromTime(time,&ref))
     {
-        ADM_warning("Cannot get ref from time %"PRId64" ms\n",time/1000);
+        ADM_warning("Cannot get ref from time %" PRId64" ms\n",time/1000);
         return false;
     }
     _segments.getRefVideo(ref)->decoder->setParam ();
@@ -525,7 +525,7 @@ uint32_t ref;
 
     if(false==_segments.getRefFromTime(xtime,&ref))
     {
-        ADM_warning("[Editor] getAudioStreamsInfo failed for time %"PRId64" ms\n",xtime);
+        ADM_warning("[Editor] getAudioStreamsInfo failed for time %" PRId64" ms\n",xtime);
         return false;
     }
 
@@ -564,7 +564,7 @@ uint32_t ref;
 
         if(false==_segments.getRefFromTime(xtime,&ref))
         {
-            ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %"PRId64" ms\n",xtime/1000);
+            ADM_warning("[Editor::getCurrentAudioStreamNumber] Cannot get ref video for time %" PRId64" ms\n",xtime/1000);
             return 0;
         }
 
@@ -720,7 +720,7 @@ bool               ADM_Composer::dumpTiming(void)
 
             v->_aviheader->getFlags(i,&flags);
             v->_aviheader->getPtsDts(i,&pts,&dts);
-            printf("%"PRIu32" flags:%04"PRIx32" ",i,flags);
+            printf("%" PRIu32" flags:%04" PRIx32" ",i,flags);
             printf("pts :%s ",ADM_us2plain(pts));
             printf("dts :%s \n",ADM_us2plain(dts));
     }

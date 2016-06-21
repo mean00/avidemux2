@@ -140,7 +140,7 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encoding
 
 void DIA_encodingQt4::setFps(uint32_t fps)
 {
-      snprintf(stringMe,79,"%"PRIu32" fps",fps);
+      snprintf(stringMe,79,"%" PRIu32" fps",fps);
       WRITE(labelFps);
 }
 
@@ -186,7 +186,7 @@ void DIA_encodingQt4::setPhasis(const char *n)
 void DIA_encodingQt4::setFrameCount(uint32_t nb)
 {
           ADM_assert(ui);
-          snprintf(stringMe,79,"%"PRIu32,nb);
+          snprintf(stringMe,79,"%" PRIu32,nb);
           WRITE(labelFrame);
 
 }
@@ -234,7 +234,7 @@ void DIA_encodingQt4::setVideoCodec(const char *n)
 void DIA_encodingQt4::setBitrate(uint32_t br,uint32_t globalbr)
 {
           ADM_assert(ui);
-          snprintf(stringMe,79,"%"PRIu32" kB/s",br);
+          snprintf(stringMe,79,"%" PRIu32" kB/s",br);
           WRITE(labelVidBitrate);
 
 }
@@ -257,7 +257,7 @@ void DIA_encodingQt4::setContainer(const char *container)
 void DIA_encodingQt4::setQuantIn(int size)
 {
           ADM_assert(ui);
-          sprintf(stringMe,"%"PRIu32,size);
+          sprintf(stringMe,"%" PRIu32,size);
           WRITE(labelQz);
 
 }
@@ -270,7 +270,7 @@ void DIA_encodingQt4::setTotalSize(uint64_t size)
 {
           ADM_assert(ui);
           uint64_t mb=size>>20;
-          sprintf(stringMe,"%"PRIu32" MB",(int)mb);
+          sprintf(stringMe,"%" PRIu32" MB",(int)mb);
           WRITE(labelTotalSize);
 
 }
@@ -284,7 +284,7 @@ void DIA_encodingQt4::setVideoSize(uint64_t size)
 {
           ADM_assert(ui);
           uint64_t mb=size>>20;
-          sprintf(stringMe,"%"PRIu32" MB",(int)mb);
+          sprintf(stringMe,"%" PRIu32" MB",(int)mb);
           WRITE(labelVideoSize);
 
 }
@@ -297,7 +297,7 @@ void DIA_encodingQt4::setAudioSize(uint64_t size)
 {
           ADM_assert(ui);
           uint64_t mb=size>>20;
-          sprintf(stringMe,"%"PRIu32" MB",(int)mb);
+          sprintf(stringMe,"%" PRIu32" MB",(int)mb);
           WRITE(labelAudioSize);
 
 }
@@ -322,7 +322,7 @@ void DIA_encodingQt4::setElapsedTimeMs(uint32_t nb)
 void DIA_encodingQt4::setAverageQz(uint32_t nb)
 {
           ADM_assert(ui);
-          snprintf(stringMe,79,"%"PRIu32,nb);
+          snprintf(stringMe,79,"%" PRIu32,nb);
           WRITE(labelQz);
 }
 /**
@@ -333,7 +333,7 @@ void DIA_encodingQt4::setAverageQz(uint32_t nb)
 void DIA_encodingQt4::setAverageBitrateKbits(uint32_t kb)
 {
           ADM_assert(ui);
-          snprintf(stringMe,79,"%"PRIu32" kbits/s",kb);
+          snprintf(stringMe,79,"%" PRIu32" kbits/s",kb);
           WRITE(labelVidBitrate);
 }
 

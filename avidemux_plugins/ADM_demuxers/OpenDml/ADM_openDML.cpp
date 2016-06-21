@@ -294,7 +294,7 @@ uint32_t rd;
 		// now read up each parts...
 		//____________________________
 		                
-#define DUMP_TRACK(i) aprintf(" at %"PRIu64" (%"PRIx64") size : %"PRIu64" (%"PRIx64")\n", \
+#define DUMP_TRACK(i) aprintf(" at %" PRIu64" (%" PRIx64") size : %" PRIu64" (%" PRIx64")\n", \
 				_Tracks[i].strh.offset,\
 				_Tracks[i].strh.offset,\
 				_Tracks[i].strh.size,\
@@ -314,7 +314,7 @@ uint32_t rd;
 			fseeko(_fd,_Tracks[i].strh.offset,SEEK_SET);
 			if(_Tracks[i].strh.size!=sizeof(_videostream))
 			{
-				printf("[AVI]Mmm(1) we have a bogey here, size mismatch : %"PRIu64"\n",_Tracks[i].strh.size);
+				printf("[AVI]Mmm(1) we have a bogey here, size mismatch : %" PRIu64"\n",_Tracks[i].strh.size);
 				printf("[AVI]expected %d\n",(int)sizeof(_videostream));
 				if(_Tracks[i].strh.size<sizeof(_videostream)-8) // RECT is not mandatory
 				{
@@ -348,7 +348,7 @@ uint32_t rd;
 		extra=_Tracks[vidTrack].strf.size-sizeof(_video_bih);
 		if(extra<0)
 		{	
-			printf("[AVI]bih is not big enough (%"PRIu64"/%d)!\n",_Tracks[vidTrack].strf.size,(int)sizeof(_video_bih));
+			printf("[AVI]bih is not big enough (%" PRIu64"/%d)!\n",_Tracks[vidTrack].strf.size,(int)sizeof(_video_bih));
 			return 0;
 		}
 		fread(&_video_bih,sizeof(_video_bih),1,_fd);
@@ -390,7 +390,7 @@ uint32_t rd;
                                         fseeko(_fd,_Tracks[run].strh.offset,SEEK_SET);
                                         if(_Tracks[run].strh.size != sizeof(_audiostream))
                                         {
-                                                printf("[AVI]Mmm(2) we have a bogey here, size mismatch : %"PRIu64"\n",_Tracks[run].strh.size);
+                                                printf("[AVI]Mmm(2) we have a bogey here, size mismatch : %" PRIu64"\n",_Tracks[run].strh.size);
                                                 printf("[AVI]expected %d\n",(int)sizeof(_audiostream));
                                                 if(_Tracks[run].strh.size<sizeof(_audiostream)-8)
                                                 {
@@ -414,7 +414,7 @@ uint32_t rd;
                                         extra=_Tracks[run].strf.size-sizeof(WAVHeader);
                                         if(extra<0)
                                         {	
-                                                printf("[AVI]WavHeader is not big enough (%"PRIu64"/%d)!\n",
+                                                printf("[AVI]WavHeader is not big enough (%" PRIu64"/%d)!\n",
                                                 _Tracks[run].strf.size,(int)sizeof(WAVHeader));
                                                 return 0;
                                         }
@@ -654,7 +654,7 @@ uint32_t count=0;
 			if(_Tracks[i].strh.size!=sizeof(tmp))
 			{
 				
-				printf("[AVI]Mmm(3) we have a bogey here, size mismatch : %"PRIu64"\n",_Tracks[i].strh.size);
+				printf("[AVI]Mmm(3) we have a bogey here, size mismatch : %" PRIu64"\n",_Tracks[i].strh.size);
 				printf("[AVI]expected %d\n",(int)sizeof(tmp));
 				if(_Tracks[i].strh.size<sizeof(tmp)-8)
 				{
@@ -831,7 +831,7 @@ void OpenDMLHeader::walk(riffParser *p)
 				aprintf("main header found \n");
 				if(len!=sizeof(_mainaviheader))
 				{
-					printf("[AVI]oops : %"PRIu32" / %d\n",len,(int)sizeof(_mainaviheader));
+					printf("[AVI]oops : %" PRIu32" / %d\n",len,(int)sizeof(_mainaviheader));
 				}
 				p->read(len,(uint8_t *)&_mainaviheader);
 
@@ -842,7 +842,7 @@ void OpenDMLHeader::walk(riffParser *p)
 				break;
 		case MKFCC('i','d','x','1'):
                                 _regularIndex.offset=p->getPos();
-                                printf("[Avi] Idx1 found at offset %"PRIx64"\n",_regularIndex.offset);
+                                printf("[Avi] Idx1 found at offset %" PRIx64"\n",_regularIndex.offset);
                                 _regularIndex.size=len;
 				return;
 				break;				
@@ -946,7 +946,7 @@ bool    OpenDMLHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
     if(frame>_videostream.dwLength)
     {
-        printf("[Odml] %"PRIu32" exceeds nb of video frames %"PRIu32"\n",frame,_videostream.dwLength);
+        printf("[Odml] %" PRIu32" exceeds nb of video frames %" PRIu32"\n",frame,_videostream.dwLength);
         return false;
     }
     *dts=_idx[frame].dts; // FIXME
@@ -960,7 +960,7 @@ bool    OpenDMLHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     if(frame>_videostream.dwLength)
     {
-        printf("[Odml] %"PRIu32" exceeds nb of video frames %"PRIu32"\n",frame,_videostream.dwLength);
+        printf("[Odml] %" PRIu32" exceeds nb of video frames %" PRIu32"\n",frame,_videostream.dwLength);
         return false;
     }
     _idx[frame].dts=dts;

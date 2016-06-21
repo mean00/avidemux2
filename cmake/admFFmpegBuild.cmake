@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "2.7.6")
+set(FFMPEG_VERSION "3.0.2")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
@@ -303,9 +303,25 @@ getFfmpegLibNames("${FFMPEG_SOURCE_DIR}")
 set(ffmpeg_gnumake_executable ${GNUMAKE_EXECUTABLE})
 convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
 configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
+registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 
-add_custom_command(                OUTPUT          "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
-				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+add_custom_target(                 libavutil_dummy
+				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh 
+                                   WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+MACRO(FF_ADD_SUBLIB lib)
+        add_custom_command(
+				   OUTPUT       "${lib}"	
+                                   DEPENDS 	libavutil_dummy
+				   COMMAND ${BASH_EXECUTABLE} -c echo "placeHolder")
+
+ENDMACRO(FF_ADD_SUBLIB lib)
+
+FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"       )
+FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"       )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"   )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"   )
+FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
+
 
 MACRO(FF_ADD_SUBLIB lib)
         add_custom_command(
@@ -322,7 +338,6 @@ FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     
 
 
 # Add and INSTALL libraries
-registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 include_directories("${FFMPEG_SOURCE_DIR}")
 include_directories("${FFMPEG_BINARY_DIR}")
 
@@ -343,7 +358,8 @@ IF(USE_XVBA)
 ENDIF(USE_XVBA)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
 	"${FFMPEG_SOURCE_DIR}/libavcodec/version.h" 
-	"${FFMPEG_SOURCE_DIR}/libavcodec/old_codec_ids.h" 
+	"${FFMPEG_SOURCE_DIR}/libavcodec/audioconvert.h"
+	#"${FFMPEG_SOURCE_DIR}/libavcodec/internal.h" 
 	DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
 	"${FFMPEG_SOURCE_DIR}/libavformat/version.h" 
@@ -354,7 +370,6 @@ INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/frame.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
-	"${FFMPEG_SOURCE_DIR}/libavutil/macros.h" "${FFMPEG_SOURCE_DIR}/libavutil/old_pix_fmts.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/channel_layout.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/error.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/dict.h" 
@@ -362,7 +377,8 @@ INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/time.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/opt.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/intfloat.h" 
-	"${FFMPEG_SOURCE_DIR}/libavutil/samplefmt.h" "${FFMPEG_SOURCE_DIR}/libavutil/audioconvert.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/macros.h" 
+	"${FFMPEG_SOURCE_DIR}/libavutil/samplefmt.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
 INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)

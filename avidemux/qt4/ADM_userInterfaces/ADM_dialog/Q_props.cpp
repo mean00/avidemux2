@@ -45,7 +45,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
     
         //------------------------------------
     
-        FILLTEXT4(labeImageSize,QT_TRANSLATE_NOOP("qprops","%"PRIu32" x %"PRIu32), avifileinfo->width,avifileinfo->height);
+        FILLTEXT4(labeImageSize,QT_TRANSLATE_NOOP("qprops","%" PRIu32" x %" PRIu32), avifileinfo->width,avifileinfo->height);
         FILLTEXT(labelFrameRate, QT_TRANSLATE_NOOP("qprops","%2.3f fps"), (float) avifileinfo->fps1000 / 1000.F);
         FILLTEXT(label4CC, "%s",      fourCC::tostring(avifileinfo->fcc));
         uint64_t duration=video_body->getVideoDuration();
@@ -100,8 +100,8 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
                 }
 
                 FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
-                FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%"PRIu32" Hz"), wavinfo->frequency);
-                FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%"PRIu32" Bps / %"PRIu32" kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
+                FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
+                FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate,wavinfo->byterate * 8 / 1000);
                 
                 sprintf(text, "%s", getStrFromAudioCodec(wavinfo->encoding));
                 FILLQT_TRANSLATE_NOOP("qprops",labelACodec);

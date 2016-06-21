@@ -342,7 +342,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
       father.readElemId(&id,&len);
       if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
       {
-        printf("[MKV] Tag 0x%"PRIx64" not found (len %"PRIu64")\n",id,len);
+        printf("[MKV] Tag 0x%" PRIx64" not found (len %" PRIu64")\n",id,len);
         father.skip(len);
         continue;
       }
@@ -371,7 +371,7 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case  MKV_TIMECODE_SCALE:
         case  MKV_TRACK_TIMECODESCALE:
                                 {
-                                    ADM_warning("[Mkv] TimeCodeScale=%"PRIu64"\n",father.readUnsignedInt(len));
+                                    ADM_warning("[Mkv] TimeCodeScale=%" PRIu64"\n",father.readUnsignedInt(len));
                                 };break; //FIXME
 
         case  MKV_FRAME_DEFAULT_DURATION: entry->defaultDuration=father.readUnsignedInt(len)/1000; break; // In us
