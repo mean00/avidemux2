@@ -294,6 +294,10 @@ Section "Plugins" SecGrpPlugins
         ${Folder} ${ROOT_FOLDER}/plugins/autoScripts
         SetOutPath $INSTDIR\plugins\videoEncoders
         ${File} ${ROOT_FOLDER}/plugins/videoEncoders/*.dll
+        SetOutPath $INSTDIR\plugins\videoEncoders\qt5
+        ${File} ${ROOT_FOLDER}/plugins/videoEncoders/qt5/*.dll
+        SetOutPath $INSTDIR\plugins\videoEncoders\cli
+        ${File} ${ROOT_FOLDER}/plugins/videoEncoders/cli/*.dll
         SetOutPath $INSTDIR\plugins\videoFilters
         ${File} ${ROOT_FOLDER}/plugins/videoFilters/*.dll
         SetOutPath $INSTDIR\plugins\videoFilters\qt5
