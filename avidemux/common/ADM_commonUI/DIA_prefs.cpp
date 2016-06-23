@@ -227,15 +227,15 @@ std::string currentSdlDriver=getSdlDriverName();
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
 
-		diaElemToggle capsToggleAll(&capsAll,QT_TRANSLATE_NOOP("adm","Enable all SIMD"));
+        diaElemToggle capsToggleAll(&capsAll,QT_TRANSLATE_NOOP("adm","Enable all SIMD"));
         diaElemToggle capsToggleMMX(&capsMMX, QT_TRANSLATE_NOOP("adm","Enable MMX"));
-		diaElemToggle capsToggleMMXEXT(&capsMMXEXT, QT_TRANSLATE_NOOP("adm","Enable MMXEXT"));
-		diaElemToggle capsToggle3DNOW(&caps3DNOW, QT_TRANSLATE_NOOP("adm","Enable 3DNOW"));
-		diaElemToggle capsToggle3DNOWEXT(&caps3DNOWEXT, QT_TRANSLATE_NOOP("adm","Enable 3DNOWEXT"));
-		diaElemToggle capsToggleSSE(&capsSSE, QT_TRANSLATE_NOOP("adm","Enable SSE"));
-		diaElemToggle capsToggleSSE2(&capsSSE2, QT_TRANSLATE_NOOP("adm","Enable SSE2"));
-		diaElemToggle capsToggleSSE3(&capsSSE3, QT_TRANSLATE_NOOP("adm","Enable SSE3"));
-		diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TRANSLATE_NOOP("adm","Enable SSSE3"));
+        diaElemToggle capsToggleMMXEXT(&capsMMXEXT, QT_TRANSLATE_NOOP("adm","Enable MMXEXT"));
+        diaElemToggle capsToggle3DNOW(&caps3DNOW, QT_TRANSLATE_NOOP("adm","Enable 3DNOW"));
+        diaElemToggle capsToggle3DNOWEXT(&caps3DNOWEXT, QT_TRANSLATE_NOOP("adm","Enable 3DNOWEXT"));
+        diaElemToggle capsToggleSSE(&capsSSE, QT_TRANSLATE_NOOP("adm","Enable SSE"));
+        diaElemToggle capsToggleSSE2(&capsSSE2, QT_TRANSLATE_NOOP("adm","Enable SSE2"));
+        diaElemToggle capsToggleSSE3(&capsSSE3, QT_TRANSLATE_NOOP("adm","Enable SSE3"));
+        diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TRANSLATE_NOOP("adm","Enable SSSE3"));
 
 		capsToggleAll.link(0, &capsToggleMMX);
 		capsToggleAll.link(0, &capsToggleMMXEXT);
@@ -502,14 +502,14 @@ std::string currentSdlDriver=getSdlDriverName();
                     cpuMaskOut=0;
     #undef CPU_CAPS
     #define CPU_CAPS(x)    	if(caps##x) cpuMaskOut|= ADM_CPUCAP_##x;        	    	
-            CPU_CAPS(MMX);
-            CPU_CAPS(MMXEXT);
-            CPU_CAPS(3DNOW);
-            CPU_CAPS(3DNOWEXT);
-            CPU_CAPS(SSE);
-            CPU_CAPS(SSE2);
-            CPU_CAPS(SSE3);
-            CPU_CAPS(SSSE3);
+                    CPU_CAPS(MMX);
+                    CPU_CAPS(MMXEXT);
+                    CPU_CAPS(3DNOW);
+                    CPU_CAPS(3DNOWEXT);
+                    CPU_CAPS(SSE);
+                    CPU_CAPS(SSE2);
+                    CPU_CAPS(SSE3);
+                    CPU_CAPS(SSSE3);
             }
             prefs->set(FEATURES_CPU_CAPS,cpuMaskOut);
             CpuCaps::setMask(cpuMaskOut);

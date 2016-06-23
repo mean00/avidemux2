@@ -36,11 +36,11 @@ typedef enum
         ADM_CPUCAP_3DNOWEXT  =1<<4,
         ADM_CPUCAP_SSE    =1<<5,
         ADM_CPUCAP_SSE2   =1<<6,
-		ADM_CPUCAP_SSE3   =1<<7,
-		ADM_CPUCAP_SSSE3  =1<<8,
+        ADM_CPUCAP_SSE3   =1<<7,
+        ADM_CPUCAP_SSSE3  =1<<8,
         ADM_CPUCAP_ALTIVEC=1<<9,
         
-        ADM_CPUCAP_ALL=0xffffffff
+        ADM_CPUCAP_ALL=0x0fffffff
 } ADM_CPUCAP;
 /**
     \class CpuCaps
