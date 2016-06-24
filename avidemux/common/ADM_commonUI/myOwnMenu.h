@@ -62,6 +62,8 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker B"),NULL,ACT_MarkB      ,NULL,"]"},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Preferences"), NULL,ACT_PREFERENCES,NULL,NULL},
+            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Save current settings as default"), NULL,ACT_SaveAsDefault,NULL,NULL},
         };
 
 std::vector<MenuEntry> myMenuEdit(_myMenuEdit, _myMenuEdit + sizeof(_myMenuEdit) / sizeof(_myMenuEdit[0]));

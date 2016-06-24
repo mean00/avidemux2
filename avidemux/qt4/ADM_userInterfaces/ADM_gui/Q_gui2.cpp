@@ -96,7 +96,7 @@ extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
 extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
-
+extern bool A_loadDefaultSettings(void);;
 
 static bool uiRunning=false;
 
@@ -391,9 +391,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
-        addScriptEnginesToFileMenu(myMenuFile);
+    addScriptEnginesToFileMenu(myMenuFile);
 	addScriptShellsToToolsMenu(myMenuTool);
-        buildMyMenu();
+    buildMyMenu();
 	buildCustomMenu();
 	addScriptReferencesToHelpMenu();
 
@@ -972,9 +972,8 @@ int UI_RunApp(void)
     QuiTaskBarProgress->setParent(QuiMainWindows);
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
 	
-          
-    ADM_info("Checking for crash... \n");
-    
+    ADM_info("Load default settings if any... \n");          
+    A_loadDefaultSettings();
     myApplication->exec();
 #ifdef USE_OPENGL
     if(openGLStarted)

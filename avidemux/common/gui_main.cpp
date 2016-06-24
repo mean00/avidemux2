@@ -148,12 +148,16 @@ void HandleAction (Action action)
   // handle out of band actions
   // independant load not loaded
 //------------------------------------------------
-        if(action==ACT_RUN_SCRIPT)
-        {
-            GUI_FileSelRead("Select script/project to run", A_RunScript);
-            
-            return;
-        }
+    if(action==ACT_RUN_SCRIPT)
+    {
+        GUI_FileSelRead("Select script/project to run", A_RunScript);            
+        return;
+    }
+    if(action==ACT_SaveAsDefault)
+    {
+        A_saveDefaultSettings();
+        return;
+    }
 	if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
 	{
 		int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
@@ -872,7 +876,15 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
 
 	return ret;
 }
-
+/**
+ * 
+ * @param name
+ * @return 
+ */
+bool A_runPythonScript(const std::string &name)
+{
+  return parseScript(getPythonScriptEngine(),name.c_str(),IScriptEngine::Normal);
+}
 bool A_parseScript(IScriptEngine *engine, const char *name)
 {
 	return parseScript(engine, name, IScriptEngine::Normal);
@@ -899,7 +911,51 @@ void A_saveScript(IScriptEngine* engine, const char* name)
     ADM_fwrite(script.c_str(), script.length(), 1, file);
     ADM_fclose(file);
 }
+/**
+ * 
+ * @param engine
+ * @param name
+ */
+#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("/defaultSettings.py")
+void A_saveDefaultSettings()
+{
+    IScriptEngine *engine=getPythonScriptEngine();
+    ADM_assert(engine);
+    
+    std::string fileName=DEFAULT_SETTINGS_FILE;
+    
+    IScriptWriter *writer = engine->createScriptWriter();
+    ADM_ScriptGenerator generator(video_body, writer);
+    std::stringstream stream(std::stringstream::in | std::stringstream::out);
 
+
+    generator.generateScript(stream,ADM_ScriptGenerator::GENERATE_SETTINGS);
+    delete writer;
+	
+    std::string script = stream.str();
+    ADM_info("Generated settings=%s\n",script.c_str());
+    
+    FILE *file = ADM_fopen(fileName.c_str(), "wt");
+    ADM_fwrite(script.c_str(), script.length(), 1, file);
+    ADM_fclose(file);
+}
+/**
+ * \fn A_loadDefaultSettings
+ * @return 
+ */
+bool A_loadDefaultSettings(void)
+{
+  
+    std::string defaultSettings=DEFAULT_SETTINGS_FILE;
+    if(ADM_fileExist(defaultSettings.c_str()))
+    {        
+        if(ADM_fileSize(defaultSettings.c_str())>5)
+        {
+                return A_runPythonScript( defaultSettings);
+        }
+    }
+    return false;
+}
 /*
 	Unpack all frames without displaying them to check for error
 

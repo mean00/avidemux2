@@ -20,9 +20,11 @@ void    A_addJob(void);
 void    A_audioTrack(void);
 void    A_setAudioLang(const char *trackIndex, const char *langueName);
 
-bool A_parseScript(IScriptEngine *engine, const char *name);
-void A_saveScript(IScriptEngine* engine, const char* name);
-
+bool    A_parseScript(IScriptEngine *engine, const char *name);
+bool    A_runPythonScript(const std::string &name);
+void    A_saveScript(IScriptEngine* engine, const char* name);
+void    A_saveDefaultSettings(); // Save default settings
+bool    A_loadDefaultSettings(void);
 //uint8_t A_autoDrive(Action action);
 bool    A_TimeShift(void);
 void    A_ResetMarkers(void);

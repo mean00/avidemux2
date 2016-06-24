@@ -112,3 +112,6 @@ ACT(OPEN_APP_FOLDER)
 //
 ACT(RUN_SCRIPT)
 ACT(SAVE_PY_SCRIPT)
+//
+ACT(SaveAsDefault)
+        

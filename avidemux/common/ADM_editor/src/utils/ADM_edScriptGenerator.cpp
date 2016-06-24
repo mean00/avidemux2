@@ -7,89 +7,98 @@
 #include "GUI_ui.h"
 #include "ADM_muxerProto.h"
 #include "ADM_coreVideoFilterFunc.h"
-
+/**
+ * 
+ * @param editor
+ * @param scriptWriter
+ */
 ADM_ScriptGenerator::ADM_ScriptGenerator(IEditor *editor, IScriptWriter* scriptWriter)
 {
 	this->_editor = editor;
 	this->_scriptWriter = scriptWriter;
 }
-
-void ADM_ScriptGenerator::generateScript(std::iostream& stream)
+/**
+ * 
+ * @param stream
+ * @param type
+ */
+void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorType &type)
 {
-        if (!this->_editor->getNbSegment())
+    if (!this->_editor->getNbSegment() && type==GENERATE_ALL)
 	{
         return;
 	}
-        init(stream);
-	
+    init(stream);	
 	this->_scriptWriter->closeVideo();
-
-	printf("Scripting video streams\n");
-
-	for (uint32_t i = 0; i < this->_editor->getVideoCount(); i++)
+    if(type==GENERATE_ALL)
     {
-        const char *nm = ADM_cleanupPath(this->_editor->getRefVideo(i)->_aviheader->getMyName());
+        printf("Scripting video streams\n");
 
-		if (i)
-		{
-			this->_scriptWriter->appendVideo(nm);
-		}
-		else
-		{
-			this->_scriptWriter->loadVideo(nm);
-		}
+        for (uint32_t i = 0; i < this->_editor->getVideoCount(); i++)
+        {
+            const char *nm = ADM_cleanupPath(this->_editor->getRefVideo(i)->_aviheader->getMyName());
 
-        ADM_dealloc(nm);
+            if (i)
+            {
+                this->_scriptWriter->appendVideo(nm);
+            }
+            else
+            {
+                this->_scriptWriter->loadVideo(nm);
+            }
+
+            ADM_dealloc(nm);
+        }
+
+        printf("Scripting segments\n");
+
+        this->_scriptWriter->clearSegments();
+
+        for (uint32_t i = 0; i < this->_editor->getNbSegment(); i++)
+        {
+            _SEGMENT *seg = this->_editor->getSegment(i);
+
+            this->_scriptWriter->addSegment(seg->_reference, seg->_refStartTimeUs, seg->_durationUs);
+        }
+
+        // Markers
+        printf("Scripting markers\n");
+        this->_scriptWriter->setMarkers(this->_editor->getMarkerAPts(), this->_editor->getMarkerBPts());
+
+        // postproc
+        printf("Scripting post-processing\n");
+
+        uint32_t pptype, ppstrength;
+        bool ppswap;
+
+        this->_editor->getPostProc(&pptype, &ppstrength, &ppswap);
+
+        if (pptype || ppstrength || ppswap)
+        {
+            this->_scriptWriter->setPostProcessing(pptype, ppstrength, ppswap);
+        }
+
+        // Video codec
     }
-
-	printf("Scripting segments\n");
-
-	this->_scriptWriter->clearSegments();
-
-    for (uint32_t i = 0; i < this->_editor->getNbSegment(); i++)
+    printf("Scripting video encoder\n");
+    this->_scriptWriter->setVideoEncoder(this->_editor->getCurrentVideoEncoder());
+    if(type==GENERATE_ALL)
     {
-        _SEGMENT *seg = this->_editor->getSegment(i);
-
-		this->_scriptWriter->addSegment(seg->_reference, seg->_refStartTimeUs, seg->_durationUs);
-    }
-
-	// Markers
-	printf("Scripting markers\n");
-	this->_scriptWriter->setMarkers(this->_editor->getMarkerAPts(), this->_editor->getMarkerBPts());
-
-	// postproc
-	printf("Scripting post-processing\n");
-
-	uint32_t pptype, ppstrength;
-	bool ppswap;
-
-	this->_editor->getPostProc(&pptype, &ppstrength, &ppswap);
-
-	if (pptype || ppstrength || ppswap)
-	{
-		this->_scriptWriter->setPostProcessing(pptype, ppstrength, ppswap);
-	}
-
-	// Video codec
-	printf("Scripting video encoder\n");
-
-	this->_scriptWriter->setVideoEncoder(this->_editor->getCurrentVideoEncoder());
-
-	// Video filters....
-	printf("Scripting video filters\n");
+        // Video filters....        
+        printf("Scripting video filters\n");
         saveVideoFilters();
   
 
-	printf("Scripting audio tracks\n");
+        printf("Scripting audio tracks\n");
 
-	this->_scriptWriter->clearAudioTracks();
-	ActiveAudioTracks* activeAudioTracks = this->_editor->getPoolOfActiveAudioTrack();
+        this->_scriptWriter->clearAudioTracks();
+        ActiveAudioTracks* activeAudioTracks = this->_editor->getPoolOfActiveAudioTrack();
         // Add external audio tracks to pool if needed
         // and set language 
         PoolOfAudioTracks *pool= this->_editor->getPoolOfAudioTrack();
         for (int i = 0; i < pool->size(); i++)
         {
-            
+
             if(pool->at(i)->getTrackType()==ADM_EDAUDIO_EXTERNAL)
             {
                  std::string name=pool->at(i)->castToExternal()->getMyName();
@@ -143,12 +152,10 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream)
                             this->_scriptWriter->setAudioGain(i, mode, gain);
             }
         }
-
+    }
 	// -------- Muxer -----------------------
 	printf("Scripting muxer\n");
-
 	this->_scriptWriter->setMuxer(this->_editor->getCurrentMuxer());
-
 	end();
 }
 /**
