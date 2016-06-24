@@ -140,6 +140,7 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
     glProgramY->setUniformValue("myTextureY", 0); 
+    glProgramY->setUniformValue("pts", (GLfloat)original->Pts); 
 
     uploadAllPlanes(original);
 
