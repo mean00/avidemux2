@@ -60,7 +60,8 @@ public:
 void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 { 
 	uint8_t r=0;
-	char buffer[MAX_SEL+1],*txt;
+	char buffer[MAX_SEL+1];
+        const char *txt="";
 	txt="";
 	switch(fileMode)
 	{
@@ -104,7 +105,7 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 	}
 	if(r)
 	{
-		edit->setText(QString::fromUtf8(buffer));
+            edit->setText(QString::fromUtf8(buffer));
 	}
 }
 
