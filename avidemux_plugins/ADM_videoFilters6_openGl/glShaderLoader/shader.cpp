@@ -79,10 +79,39 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(_context);
         ADM_assert(glProgramY);
-        if ( !glProgramY->addShaderFromSourceFile(QGLShader::Fragment, params.shaderFile))
+        
+        // Load the file info memory
+        int sourceSize=-1;
+        if(ADM_fileExist(params.shaderFile))
         {
+            sourceSize=ADM_fileSize(params.shaderFile);
+        }else
+        {
+            ADM_warning("Shader file does not exist \n");
+        }
+        if(sourceSize<5)
+        {
+            ADM_warning("File too short, needs to be at least 5 chars\n");
             ready=false;
-            erString="Compiling shader failed"+std::string(glProgramY->log().toUtf8().constData());
+        }
+        if(ready)
+        {
+            uint8_t *buffer=(uint8_t *)alloca(sourceSize+1);
+            FILE *f=fopen(params.shaderFile,"rt");
+            if(f)
+            {
+                fread(buffer,sourceSize,1,f);
+                buffer[sourceSize]=0;
+                fclose(f);
+                if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment,(char *) buffer))
+                {
+                    ready=false;
+                    erString="Compiling shader failed"+std::string(glProgramY->log().toUtf8().constData());
+                }
+            }else
+            {
+                ready=false;
+            }
         }
         if ( ready && !glProgramY->link())
         {
