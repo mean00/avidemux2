@@ -361,7 +361,7 @@ void diaElemBitrate::setMaxQz(uint32_t qz)
 }
 DIA_MKSTUBS(diaElemBitrate)
 // ****************** diaElemFile ********************
-diaElemFile ::diaElemFile(uint32_t writeMode,char **filename,const char *toggleTitle,
+diaElemFile ::diaElemFile(uint32_t writeMode,std::string &filename,const char *toggleTitle,
         const char *defaultSuffix ,const char *tip)
 {
 	ADM_assert(Factory); 
@@ -386,7 +386,7 @@ void      diaElemFile::changeFile(void)
 DIA_MKSTUBS(diaElemFile)
 
 // ****************** diaElemDirSelect ********************
-diaElemDirSelect ::diaElemDirSelect(char **filename,const char *toggleTitle,const char *tip):
+diaElemDirSelect ::diaElemDirSelect(std::string &filename,const char *toggleTitle,const char *tip):
 	diaElemDirSelectBase()
 {
 	ADM_assert(Factory); 

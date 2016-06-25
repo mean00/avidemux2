@@ -166,8 +166,8 @@ bool subAss::configure(void)
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
     char newName[2*1024]; // should be a dynamic size..
-
-    diaElemFile       file(0,(char **)PX(subtitleFile),QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    std::string       subFile=std::string(param.subtitleFile);
+    diaElemFile       file(0,subFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
@@ -177,6 +177,9 @@ bool subAss::configure(void)
 again:
    if( diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
    {
+       if(param.subtitleFile)
+                ADM_dealloc(param.subtitleFile);
+        param.subtitleFile=ADM_strdup(subFile.c_str());
        char *p=param.subtitleFile;
        int l=strlen(p);
        if(l>3 && !strcasecmp(p+l-4,".srt"))

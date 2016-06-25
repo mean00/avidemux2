@@ -213,17 +213,17 @@ const char *shaderLoader::getConfiguration(void)
 */
 bool shaderLoader::configure( void) 
 {
-    char *name=strdup(params.shaderFile);
-    diaElemFile shader(0,&name,"ShaderFile to load");
+    std::string shaderFile=std::string(params.shaderFile);
+    diaElemFile shader(0,shaderFile,"ShaderFile to load");
      
      diaElem *elems[]={&shader};
      
      if(diaFactoryRun(QT_TR_NOOP("ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                params.shaderFile=strdup(name); // memleak
+                ADM_dealloc(params.shaderFile);
+                params.shaderFile=ADM_strdup(shaderFile.c_str()); // memleak
                 return true;
      }
-     free(name); 
      return false;
 }
 /**

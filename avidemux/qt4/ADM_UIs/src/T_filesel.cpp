@@ -32,7 +32,7 @@ protected:
     
 public:
   
-  diaElemFile(uint32_t writeMode,char **filename,const char *toggleTitle,
+  diaElemFile(uint32_t writeMode,std::string &filename,const char *toggleTitle,
               const char *defaultSuffix = 0,const char *tip=NULL);
   virtual ~diaElemFile() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
@@ -40,14 +40,14 @@ public:
   
   void   changeFile(void);
   void   enable(uint32_t onoff);
-  int getRequiredLayout(void);
+  int    getRequiredLayout(void);
 };
 class diaElemDirSelect : public diaElemDirSelectBase
 {
 
 public:
   
-  diaElemDirSelect(char **filename,const char *toggleTitle,const char *tip=NULL);
+  diaElemDirSelect(std::string &filename,const char *toggleTitle,const char *tip=NULL);
   virtual ~diaElemDirSelect() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
@@ -109,11 +109,11 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 	}
 }
 
-ADM_Qfilesel::ADM_Qfilesel(const char *title,const char *entry,QGridLayout *layout,int line, ADM_fileMode mode, const char * defaultSuffix, const char* selectDesc) : 
+ADM_Qfilesel::ADM_Qfilesel(const char *title,std::string &init,QGridLayout *layout,int line, ADM_fileMode mode, const char * defaultSuffix, const char* selectDesc) : 
 	defaultSuffix (defaultSuffix), selectDesc (selectDesc)
 {          
 	fileMode=mode;
-	edit=new QLineEdit(QString::fromUtf8(entry));
+	edit=new QLineEdit(QString::fromUtf8(init.c_str()));
 	button=new QDialogButtonBox(QDialogButtonBox::Open,Qt::Horizontal);
 	text=new QLabel(QString::fromUtf8(title));
 
@@ -134,13 +134,13 @@ ADM_Qfilesel::~ADM_Qfilesel()
 #endif
 };
 
-diaElemFile::diaElemFile(uint32_t writemode,char **filename,const char *toggleTitle,
+diaElemFile::diaElemFile(uint32_t writemode, std::string &filename,const char *toggleTitle,
                          const char *defaultSuffix,const char *selectFileDesc)
   : diaElemFileBase()
     
 {
   this->defaultSuffix=defaultSuffix;
-  param=(void *)filename;
+  param=(void *)&filename;
   paramTitle=shortkey(toggleTitle);
 
   if (!selectFileDesc || *(selectFileDesc) == 0)
@@ -162,26 +162,23 @@ void diaElemFile::setMe(void *dialog, void *opaque,uint32_t line)
  QGridLayout *layout=(QGridLayout*) opaque;
  ADM_Qfilesel *fs;
   if(_write)
-      fs=new ADM_Qfilesel(paramTitle, *(const char**)param, layout, line,ADM_FILEMODE_WRITE, defaultSuffix, tip);
+      fs=new ADM_Qfilesel(paramTitle, *((std::string *)param), layout, line,ADM_FILEMODE_WRITE, defaultSuffix, tip);
   else
-      fs=new ADM_Qfilesel(paramTitle, *(const char**)param, layout, line,ADM_FILEMODE_READ, 0, tip);
+      fs=new ADM_Qfilesel(paramTitle, *((std::string *)param), layout, line,ADM_FILEMODE_READ, 0, tip);
   myWidget=(void *)fs; 
 }
 
 void diaElemFile::getMe(void)
 {
-  char **n=(char **)param;
-  if(*n) ADM_dealloc(*n);
-  
-  ADM_Qfilesel *fs=(ADM_Qfilesel *)myWidget;
-  QString s=(fs->edit)->text();
-  *n=ADM_strdup(s.toUtf8().constData());
+   std::string *n=( std::string *)param;
+   ADM_Qfilesel *fs=(ADM_Qfilesel *)myWidget;
+   QString s=(fs->edit)->text();
+   *n=std::string(s.toUtf8().constData());
 }
 
 void diaElemFile::enable(uint32_t onoff)
 {
 	ADM_Qfilesel *fs = (ADM_Qfilesel*)myWidget;
-
 	ADM_assert(fs);
 
 	fs->text->setEnabled(onoff);
@@ -193,10 +190,10 @@ void diaElemFile::changeFile(void) {}
 int diaElemFile::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 //****************************
-diaElemDirSelect::diaElemDirSelect(char **filename,const char *toggleTitle,const char *selectDirDesc) :
+diaElemDirSelect::diaElemDirSelect(std::string &filename,const char *toggleTitle,const char *selectDirDesc) :
 	diaElemDirSelectBase()
 {
-  param=(void *)filename;
+  param=(void *)&filename;
   paramTitle=shortkey(toggleTitle);
 
   if (!selectDirDesc || *(selectDirDesc) == 0)
@@ -215,18 +212,16 @@ void diaElemDirSelect::setMe(void *dialog, void *opaque,uint32_t line)
 {
  QGridLayout *layout=(QGridLayout*) opaque;
   
-  ADM_Qfilesel *fs=new ADM_Qfilesel(paramTitle, *(char **)param, layout, line, ADM_FILEMODE_DIR, 0, tip);
+  ADM_Qfilesel *fs=new ADM_Qfilesel(paramTitle, *(std::string *)param, layout, line, ADM_FILEMODE_DIR, 0, tip);
   myWidget=(void *)fs; 
 }
 
 void diaElemDirSelect::getMe(void) 
 {
- char **n=(char **)param;
-  if(*n) ADM_dealloc(*n);
-  *n=NULL;
   ADM_Qfilesel *fs=(ADM_Qfilesel *)myWidget;
   QString s=(fs->edit)->text();
-  *n=ADM_strdup(s.toUtf8().constData());
+  std::string *n=( std::string *)param;
+  *n=std::string(s.toUtf8().constData());
 }
 
 void diaElemDirSelect::enable(uint32_t onoff)
@@ -246,7 +241,7 @@ int diaElemDirSelect::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 
-diaElem  *qt4CreateFile(uint32_t writeMode,char **filename,const char *toggleTitle,
+diaElem  *qt4CreateFile(uint32_t writeMode,std::string &filename,const char *toggleTitle,
         const char *defaultSuffix ,const char *tip)
 {
 	return new  ADM_Qt4Factory::diaElemFile(writeMode,filename,toggleTitle,defaultSuffix ,tip);
@@ -257,7 +252,7 @@ void qt4DestroyFile(diaElem *e)
 	delete a;
 }
 
-diaElem  *qt4CreateDir(char **filename,const char *toggleTitle,const char *tip)
+diaElem  *qt4CreateDir(std::string &filename,const char *toggleTitle,const char *tip)
 {
 	return new  ADM_Qt4Factory::diaElemDirSelect(filename,toggleTitle,tip);
 }

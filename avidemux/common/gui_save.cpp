@@ -63,15 +63,16 @@ void HandleAction_Save(Action action)
                     GUI_Error_HIG("Job",QT_TR_NOOP("Cannot reach database. Do you have Job control running ?"));
                 }else
                 {
-                    char *oFile=NULL;
+                    std::string oFile;
                     char *oText=NULL;
-                    diaElemFile wFile(1,&oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
+                    
+                    diaElemFile wFile(1,oFile,QT_TRANSLATE_NOOP("adm","Output file"),"");
                     diaElemText wText(&oText,QT_TRANSLATE_NOOP("adm","Job name"));
                     diaElem *elems[2]={&wText,&wFile};
 
                     if(  diaFactoryRun(QT_TRANSLATE_NOOP("adm","Queue job to jobList"),2,elems))
                     {
-                        A_queueJob(oText,oFile);
+                        A_queueJob(oText,oFile.c_str());
                     }
                     ADMJob::jobShutDown();
                 }

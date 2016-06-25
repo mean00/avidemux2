@@ -32,7 +32,7 @@ namespace ADM_Qt4Factory
 		const char *defaultSuffix;
 		const char *selectDesc;
 
-		ADM_Qfilesel(const char *title, const char *entry, QGridLayout *layout, int line, ADM_fileMode mode, const char * defaultSuffix, const char* selectDesc);
+		ADM_Qfilesel(const char *title, std::string &entry, QGridLayout *layout, int line, ADM_fileMode mode, const char * defaultSuffix, const char* selectDesc);
 		~ADM_Qfilesel();
 	};
 }

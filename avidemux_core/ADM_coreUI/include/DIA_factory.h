@@ -16,9 +16,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef DIA_FACTORY_H
-#define DIA_FACTORY_H
-
+#pragma once
+#include <string>
 #include "ADM_coreUI6_export.h"
 #include "ADM_assert.h"
 
@@ -454,7 +453,7 @@ public:
 };
 #endif
 /*************************************************/
-typedef diaElem *CREATE_FILE_T(uint32_t writeMode,char **filename,const char *toggleTitle,  const char *defaultSuffix ,const char *tip);
+typedef diaElem *CREATE_FILE_T(uint32_t writeMode,std::string  &filename,const char *toggleTitle,  const char *defaultSuffix ,const char *tip);
 class diaElemFileBase : public diaElem
 {
 
@@ -475,7 +474,7 @@ protected:
     
 public:
   
-  diaElemFile(uint32_t writeMode,char **filename,const char *toggleTitle,
+  diaElemFile(uint32_t writeMode,std::string &filename,const char *toggleTitle,
               const char *defaultSuffix = 0,const char *tip=NULL);
   virtual ~diaElemFile() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
@@ -486,7 +485,7 @@ public:
   int getRequiredLayout(void);
 };
 /*************************************************/
-typedef diaElem *CREATE_DIR_T(char **filename,const char *toggleTitle,const char *tip);
+typedef diaElem *CREATE_DIR_T(std::string &filename,const char *toggleTitle,const char *tip);
 class diaElemDirSelectBase : public diaElem
 {
 
@@ -501,7 +500,7 @@ class ADM_COREUI6_EXPORT diaElemDirSelect : public diaElemDirSelectBase
 
 public:
   
-  diaElemDirSelect(char **filename,const char *toggleTitle,const char *tip=NULL);
+  diaElemDirSelect(std::string &filename,const char *toggleTitle,const char *tip=NULL);
   virtual ~diaElemDirSelect() ;
   void setMe(void *dialog, void *opaque,uint32_t line);
   void getMe(void);
@@ -651,4 +650,3 @@ public:
 ADM_COREUI6_EXPORT uint8_t diaFactoryRun(const char *title,uint32_t nb,diaElem **elems);
 ADM_COREUI6_EXPORT uint8_t diaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs);
 /*********************************************/
-#endif
