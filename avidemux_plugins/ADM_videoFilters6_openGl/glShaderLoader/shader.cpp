@@ -216,11 +216,11 @@ bool shaderLoader::configure( void)
     std::string shaderFile=std::string(params.shaderFile);
     diaElemFile shader(0,shaderFile,"ShaderFile to load");
      
-     diaElem *elems[]={&shader};
+    diaElem *elems[]={&shader};
      
      if(diaFactoryRun(QT_TR_NOOP("ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                ADM_dealloc(params.shaderFile);
+                // MEMLEAK !ADM_dealloc(params.shaderFile);
                 params.shaderFile=ADM_strdup(shaderFile.c_str()); // memleak
                 return true;
      }
