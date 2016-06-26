@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <string>
 #include "ADM_default.h"
 #include "ADM_x264.h"
 #include "ADM_coreVideoEncoderInternal.h"

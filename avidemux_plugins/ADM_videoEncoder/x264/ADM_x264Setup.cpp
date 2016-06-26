@@ -62,7 +62,7 @@ bool x264Encoder::setup(void)
   if(!x264Settings.useAdvancedConfiguration)
   {
     char tune[200] = {0};
-    strcat(tune, x264Settings.general.tuning);
+    strcat(tune, x264Settings.general.tuning.c_str());
     if(x264Settings.general.fast_decode) 
     {
       strcat(tune, ",");
@@ -73,7 +73,7 @@ bool x264Encoder::setup(void)
       strcat(tune, ",");
       strcat(tune, "zero_latency");
     }
-    x264_param_default_preset(&param, x264Settings.general.preset, tune);
+    x264_param_default_preset(&param, x264Settings.general.preset.c_str(), tune);
   }else
   {
         param.b_bluray_compat=x264Settings.general.blueray_compatibility;
@@ -319,7 +319,7 @@ bool x264Encoder::setup(void)
 
   if(!x264Settings.useAdvancedConfiguration)
   {
-    x264_param_apply_profile(&param, x264Settings.general.profile);
+    x264_param_apply_profile(&param, x264Settings.general.profile.c_str());
   }
 
   dumpx264Setup(&param);

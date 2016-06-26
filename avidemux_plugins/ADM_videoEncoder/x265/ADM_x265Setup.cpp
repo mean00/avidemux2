@@ -47,8 +47,8 @@ bool x265Encoder::setup(void)
   if(!x265Settings.useAdvancedConfiguration)
   {
     char tune[200] = {0};
-    strcat(tune, x265Settings.general.tuning);
-    x265_param_default_preset(&param, x265Settings.general.preset, tune);
+    strcat(tune, x265Settings.general.tuning.c_str());
+    x265_param_default_preset(&param, x265Settings.general.preset.c_str(), tune);
   }
   param.logLevel=x265Settings.level; 
 
@@ -247,7 +247,7 @@ bool x265Encoder::setup(void)
 
   if(!x265Settings.useAdvancedConfiguration)
   {
-    x265_param_apply_profile(&param, x265Settings.general.profile);
+    x265_param_apply_profile(&param, x265Settings.general.profile.c_str());
   }
 
   dumpx265Setup(&param);

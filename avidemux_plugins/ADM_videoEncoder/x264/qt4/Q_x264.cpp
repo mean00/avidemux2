@@ -97,29 +97,22 @@ static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "h
 */
 bool x264_ui(x264_encoder *settings)
 {
-        bool success = false;
+    bool success = false;
     x264Dialog dialog(qtLastRegisteredDialog(), settings);
 
-        qtRegisterDialog(&dialog);
+    qtRegisterDialog(&dialog);
 
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
-            if(settings->general.preset) ADM_dealloc(settings->general.preset);
-            settings->general.preset = NULL;
-            if(settings->general.tuning) ADM_dealloc(settings->general.tuning);
-            settings->general.tuning = NULL;
-            if(settings->general.profile) ADM_dealloc(settings->general.profile);
-            settings->general.profile = NULL;
             memcpy(settings,&myCopy,sizeof(myCopy));
-            if(myCopy.general.preset) settings->general.preset = ADM_strdup(myCopy.general.preset);
-            if(myCopy.general.tuning) settings->general.tuning = ADM_strdup(myCopy.general.tuning);
-            if(myCopy.general.profile) settings->general.profile = ADM_strdup(myCopy.general.profile);
+            settings->general.preset = myCopy.general.preset;
+            settings->general.tuning = myCopy.general.tuning;
+            settings->general.profile =myCopy.general.profile;
             success = true;
     }
 
-        qtUnregisterDialog(&dialog);
-
+    qtUnregisterDialog(&dialog);
     return success;
 }
 /**
@@ -143,16 +136,10 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
        x264_encoder* settings = (x264_encoder*)param;
-       if(myCopy.general.preset) ADM_dealloc(myCopy.general.preset);
-       myCopy.general.preset = NULL;
-       if(myCopy.general.tuning) ADM_dealloc(myCopy.general.tuning);
-       myCopy.general.tuning = NULL;
-       if(myCopy.general.profile) ADM_dealloc(myCopy.general.profile);
-       myCopy.general.profile = NULL;
        memcpy(&myCopy,settings,sizeof(myCopy));
-       if(settings->general.preset) myCopy.general.preset = ADM_strdup(settings->general.preset);
-       if(settings->general.tuning) myCopy.general.tuning = ADM_strdup(settings->general.tuning);
-       if(settings->general.profile) myCopy.general.profile = ADM_strdup(settings->general.profile);
+       myCopy.general.preset =  settings->general.preset;
+       myCopy.general.tuning =  settings->general.tuning;
+       myCopy.general.profile=  settings->general.profile;
 
 #define ENCODING(x)  myCopy.general.params.x       
         lastBitrate =   ENCODING(bitrate);
@@ -369,9 +356,9 @@ bool x264Dialog::upload(void)
           }
 
           // preset
-          MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
-          MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
-          MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);
+          MK_COMBOBOX_STR(presetComboBox, general.preset.c_str(), listOfPresets, NB_PRESET);
+          MK_COMBOBOX_STR(profileComboBox, general.profile.c_str(), listOfProfiles, NB_PROFILE);
+          MK_COMBOBOX_STR(tuningComboBox, general.tuning.c_str(), listOfTunings, NB_TUNE);
 
           // udate idc
           QComboBox *idc=ui.idcLevelComboBox;
@@ -476,9 +463,8 @@ bool x264Dialog::upload(void)
   { \
     QComboBox* combo=ui.x; \
     int idx=combo->currentIndex(); \
-    ADM_assert(idx<count); \
-    if(myCopy.y) ADM_dealloc(myCopy.y); \
-    myCopy.y = ADM_strdup(list[idx]); \
+    ADM_assert(idx<count); \    
+    myCopy.y = std::string(list[idx]); \
   }
 
 bool x264Dialog::download(void)

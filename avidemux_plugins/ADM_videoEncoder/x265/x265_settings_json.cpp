@@ -2,7 +2,7 @@
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include "ADM_coreJson.h"
-#include "../avidemux_plugins/ADM_videoEncoder/x265/x265_settings.h"
+#include "x265_settings.h"
 bool  x265_settings_jserialize(const char *file, const x265_settings *key){
 admJson json;
 json.addBool("useAdvancedConfiguration",key->useAdvancedConfiguration);

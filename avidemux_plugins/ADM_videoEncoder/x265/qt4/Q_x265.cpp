@@ -102,16 +102,10 @@ bool x265_ui(x265_settings *settings)
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
-            if(settings->general.preset) ADM_dealloc(settings->general.preset);
-            settings->general.preset = NULL;
-            if(settings->general.tuning) ADM_dealloc(settings->general.tuning);
-            settings->general.tuning = NULL;
-            if(settings->general.profile) ADM_dealloc(settings->general.profile);
-            settings->general.profile = NULL;
             memcpy(settings,&myCopy,sizeof(myCopy));
-            if(myCopy.general.preset) settings->general.preset = ADM_strdup(myCopy.general.preset);
-            if(myCopy.general.tuning) settings->general.tuning = ADM_strdup(myCopy.general.tuning);
-            if(myCopy.general.profile) settings->general.profile = ADM_strdup(myCopy.general.profile);
+            settings->general.preset = myCopy.general.preset;
+            settings->general.tuning = myCopy.general.tuning;
+            settings->general.profile= myCopy.general.profile;
             success = true;
     }
 
@@ -139,16 +133,10 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
        x265_settings* settings = (x265_settings*)param;
-       if(myCopy.general.preset) ADM_dealloc(myCopy.general.preset);
-       myCopy.general.preset = NULL;
-       if(myCopy.general.tuning) ADM_dealloc(myCopy.general.tuning);
-       myCopy.general.tuning = NULL;
-       if(myCopy.general.profile) ADM_dealloc(myCopy.general.profile);
-       myCopy.general.profile = NULL;
        memcpy(&myCopy,settings,sizeof(myCopy));
-       if(settings->general.preset) myCopy.general.preset = ADM_strdup(settings->general.preset);
-       if(settings->general.tuning) myCopy.general.tuning = ADM_strdup(settings->general.tuning);
-       if(settings->general.profile) myCopy.general.profile = ADM_strdup(settings->general.profile);
+       myCopy.general.preset = settings->general.preset;
+       myCopy.general.tuning = settings->general.tuning;
+       myCopy.general.profile= settings->general.profile;
 
 #define ENCODING(x)  myCopy.general.params.x       
         lastBitrate =   ENCODING(bitrate);
@@ -259,7 +247,7 @@ bool x265Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
     for(int i=0;i<count;i++) \
     { \
       const char *p=list[i]; \
-      if(myCopy.y && !strcmp(myCopy.y, p)) \
+      if(myCopy.y.size() && !strcmp(myCopy.y.c_str(), p)) \
       { \
         combobox->setCurrentIndex(i); \
       } \
@@ -455,9 +443,8 @@ bool x265Dialog::upload(void)
   { \
     QComboBox* combo=ui.x; \
     int idx=combo->currentIndex(); \
-    ADM_assert(idx<count); \
-    if(myCopy.y) ADM_dealloc(myCopy.y); \
-    myCopy.y = ADM_strdup(list[idx]); \
+    ADM_assert(idx<count); \    
+    myCopy.y = std::string(ADM_strdup(list[idx])); \
   }
 
 bool x265Dialog::download(void)
