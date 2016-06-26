@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <string>
 #ifndef AVS_WINE_BINARY_PATH
 #error "AVS_WINE_BINARY_PATH not set!!!"
 #endif
@@ -58,7 +58,7 @@ static AVSTerminate term;
  * several functions for realize link of objects
  */
 WINE_LOADER *find_object(int order,
-                         char *avs_loader, char *avs_script,
+                         const char *avs_loader, const char *avs_script,
                          time_t script_ctime, time_t script_mtime,
                          FilterInfo *input_info,
                          bool *full)
@@ -71,9 +71,9 @@ WINE_LOADER *find_object(int order,
     if (res->order == order)
     {
       // after we check other params
-      if (!strcmp((char*)res->param.avs_loader, avs_loader) &&
+      if (!strcmp((char*)res->param.avs_loader.c_str(), avs_loader) &&
           (!avs_script ||
-           !strcmp((char*)res->param.avs_script, avs_script)) &&
+           !strcmp((char*)res->param.avs_script.c_str(), avs_script)) &&
           res->input_info.width == input_info->width &&
           res->input_info.height == input_info->height &&
           res->param.script_ctime == script_ctime &&
@@ -349,7 +349,7 @@ void *parse_wine_stdout(void *arg)
   return NULL;
 }
 
-bool wine_start(char *wine_app, char *avsloader, AVS_PIPES *avs_pipes, int pipe_timeout)
+bool wine_start(const char *wine_app, const char *avsloader, AVS_PIPES *avs_pipes, int pipe_timeout)
 {
   char sname[MAX_PATH];
   struct stat st;
@@ -435,7 +435,7 @@ bool wine_start(char *wine_app, char *avsloader, AVS_PIPES *avs_pipes, int pipe_
 }
 
 bool avs_start(FilterInfo *info, FilterInfo *avisynth_info,
-               char *fname, AVS_PIPES *avs_pipes, PITCH_DATA *pd_pipe_source, PITCH_DATA *pd_avsloader)
+               const char *fname, AVS_PIPES *avs_pipes, PITCH_DATA *pd_pipe_source, PITCH_DATA *pd_avsloader)
 {
  DEBUG_PRINTF("avsfilter : avs_start()\n");
  DEBUG_PRINTF("avsfilter : %X %X %s %X\n",
@@ -576,7 +576,7 @@ const char *avsfilter::getConfiguration(void)
   static char buf[MAXPATHLEN];
 
   snprintf((char *)buf, MAXPATHLEN, "wine_app : %s\n loader : %s\n script : %s\npipe timeout %d\n",
-           param.wine_app, param.avs_loader, param.avs_script, param.pipe_timeout);
+           param.wine_app.c_str(), param.avs_loader.c_str(), param.avs_script.c_str(), param.pipe_timeout);
   return buf;
 }
 
@@ -618,12 +618,12 @@ std::string pAvsScript=std::string(param.avs_script);
   DEBUG_PRINTF("avsfilter : configure before SetParameters\n");
 
   // if script/loader names are exist, then taste config
-  if (param.avs_loader && strlen((const char*)param.avs_loader) &&
-      param.avs_script && strlen((const char*)param.avs_script) &&
-      param.wine_app && strlen((const char*)param.wine_app))
+  if (param.avs_loader.size() &&
+      param.avs_script.size() &&
+      param.wine_app.size())
   {
    struct stat st;
-   if (stat((char*)param.avs_script, &st) != 0)
+   if (stat((char*)param.avs_script.c_str(), &st) != 0)
    {
     DEBUG_PRINTF_RED("avsfilter : cannot stat script file\n");
     return 0;
@@ -638,7 +638,7 @@ std::string pAvsScript=std::string(param.avs_script);
     avsfilter_config_jserialize(prefs_name, &param);
 
    DEBUG_PRINTF("avsfilter : configure before save prefs [%s][%s]\n",
-                param.avs_script, param.avs_loader);
+                param.avs_script.c_str(), param.avs_loader.c_str());
    // if setparameters are ok and (therefore) avs_script and avs_loader exist
    // we store this parameters in filter preferences
    DEBUG_PRINTF("avsfilter : after save prefs info : frameIncrement %lu totalDuration %llu\n",
@@ -660,8 +660,8 @@ bool avsfilter::SetParameters(avsfilter_config *newparam)
 
   // find corresponding loader/script
   WINE_LOADER *loader = find_object(order,
-                                    (char*)newparam->avs_loader,
-                                    (char*)newparam->avs_script,
+                                    newparam->avs_loader.c_str(),
+                                    newparam->avs_script.c_str(),
                                     newparam->script_ctime, newparam->script_mtime,
                                     &info,
                                     &full_exact);
@@ -674,10 +674,10 @@ bool avsfilter::SetParameters(avsfilter_config *newparam)
     loader->avs_pipes[1].flags = O_WRONLY;
     loader->avs_pipes[2].flags = O_WRONLY;
     loader->RefCounter = 0;
-    loader->param.avs_script = NULL;
-    loader->param.avs_loader = NULL;
+    loader->param.avs_script = std::string("");
+    loader->param.avs_loader = std::string("");
 
-    if (!wine_start((char*)newparam->wine_app, (char*)newparam->avs_loader, loader->avs_pipes, newparam->pipe_timeout))
+    if (!wine_start(newparam->wine_app.c_str(), newparam->avs_loader.c_str(), loader->avs_pipes, newparam->pipe_timeout))
     {
       DEBUG_PRINTF_RED("avsfilter : wine_start unsuccessful start!\n");
       delete loader;
@@ -701,7 +701,7 @@ bool avsfilter::SetParameters(avsfilter_config *newparam)
     DEBUG_PRINTF("avsfilter : SetParameters !full_exact\n");
 
     // matched only order (need reload with new script/geometry/etc)
-    if (!avs_start(&info, &loader->output_info, (char*)newparam->avs_script, loader->avs_pipes, &pd_pipe_source, &pd_avsloader))
+    if (!avs_start(&info, &loader->output_info, newparam->avs_script.c_str(), loader->avs_pipes, &pd_pipe_source, &pd_avsloader))
     {
       DEBUG_PRINTF_RED("avsfilter : SetParameters fail avs_start\n");
       delete_object(loader);
@@ -711,8 +711,8 @@ bool avsfilter::SetParameters(avsfilter_config *newparam)
     DEBUG_PRINTF("avsfilter : SetParameters avs_start ok\n");
     loader->RefCounter = 0;
     memcpy(&loader->input_info, &info, sizeof(info));
-    loader->param.avs_loader = ADM_strdup ((char*)newparam->avs_loader);
-    loader->param.avs_script = ADM_strdup ((char*)newparam->avs_script);
+    loader->param.avs_loader = newparam->avs_loader;
+    loader->param.avs_script = newparam->avs_script;
     loader->param.script_ctime = newparam->script_ctime; // store timestamp
     loader->param.script_mtime = newparam->script_mtime;
   }
@@ -782,7 +782,7 @@ avsfilter::avsfilter(ADM_coreVideoFilter *in,
                info.frameIncrement, info.totalDuration);
 
   DEBUG_PRINTF("avsfilter : wine_app %s avsloader %s avsscript %s\n",
-               param.wine_app, param.avs_loader, param.avs_script);
+               param.wine_app.c_str(), param.avs_loader.c_str(), param.avs_script.c_str());
 
   if (!SetParameters(&param))
   {

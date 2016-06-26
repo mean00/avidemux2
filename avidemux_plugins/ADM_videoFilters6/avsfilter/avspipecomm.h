@@ -71,7 +71,7 @@ typedef struct
 }PITCH_DATA;
 
 bool send_cmd(int hw, AVS_CMD cmd,
-              void *data, int sz);
+              const void *data, int sz);
 
 bool send_cmd_by_two_part(int hw, AVS_CMD cmd,
                           void *data1, int sz1,
