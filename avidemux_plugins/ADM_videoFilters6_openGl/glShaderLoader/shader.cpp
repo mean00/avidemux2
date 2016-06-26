@@ -87,7 +87,8 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
             sourceSize=ADM_fileSize(params.shaderFile);
         }else
         {
-            ADM_warning("Shader file does not exist \n");
+            ADM_warning("Shader file does not exist (%s)\n",params.shaderFile);
+            ready=false;
         }
         if(sourceSize<5)
         {
@@ -107,9 +108,12 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
                 {
                     ready=false;
                     erString="Compiling shader failed"+std::string(glProgramY->log().toUtf8().constData());
+                    ADM_warning("Compilation failed (size=%d)\n",sourceSize);
                 }
             }else
             {
+                ADM_warning("Cannot open file %s\n",params.shaderFile);
+                erString=std::string("Cannot open file");
                 ready=false;
             }
         }
@@ -117,18 +121,19 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         {
             ready=false;
             erString=std::string( glProgramY->log().toUtf8().constData());
+            ADM_warning("Link failed\n");
         }
 
         if ( ready && ! glProgramY->bind())
         {
                 ready=false;
                 erString=std::string("OpenGl bind failed");
+                ADM_warning("Bind failed\n");
         }
         glList=glGenLists(1);
         genQuad();
         fboY->release();
         _parentQGL->doneCurrent();
-
 }
 /**
     \fn shaderLoader
@@ -158,6 +163,7 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     {
         ADM_info("OpenGl shader not loaded (%s)\n",erString.c_str());
         image->duplicateFull(original);
+        image->printString(2,2,"Shader not loaded");
         image->printString(2,2,erString.c_str());
         return true;
     }

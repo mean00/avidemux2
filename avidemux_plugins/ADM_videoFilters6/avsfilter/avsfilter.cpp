@@ -589,13 +589,18 @@ bool avsfilter::configure(void)
  print_objects();
 
 #define PX(x) &(param.x)
- diaElemFile wine_app(0,(char**)PX(wine_app),
+std::string pWineApp=std::string(param.wine_app);
+std::string pLoaderFile=std::string(param.avs_loader);
+std::string pAvsScript=std::string(param.avs_script);
+ 
+ 
+ diaElemFile wine_app(0,pWineApp,
                       QT_TR_NOOP("_wine app file:"), NULL,
                       QT_TR_NOOP("Select wine filename[wine/cedega/etc.]"));
- diaElemFile loaderfile(0,(char**)PX(avs_loader),
+ diaElemFile loaderfile(0,pLoaderFile,
                         QT_TR_NOOP("_loader file:"), NULL,
                         QT_TR_NOOP("Select loader filename[avsload.exe]"));
- diaElemFile avsfile(0,(char**)PX(avs_script),
+ diaElemFile avsfile(0,pAvsScript,
                      QT_TR_NOOP("_avs file:"), NULL,
                      QT_TR_NOOP("Select avs filename[*.avs]"));
  diaElemUInteger pipe_timeout(PX(pipe_timeout),QT_TR_NOOP("_pipe timeout:"),1,30);
@@ -605,7 +610,11 @@ bool avsfilter::configure(void)
  if( diaFactoryRun(QT_TR_NOOP("AvsFilter config"), 4, elems))
  {
   bool res = false;
-
+    param.wine_app=ADM_strdup(pWineApp.c_str()); // 3x memleak
+    param.avs_loader=ADM_strdup(pLoaderFile.c_str());
+    param.avs_script=ADM_strdup(pAvsScript.c_str());
+  
+  
   DEBUG_PRINTF("avsfilter : configure before SetParameters\n");
 
   // if script/loader names are exist, then taste config
