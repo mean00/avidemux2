@@ -86,7 +86,7 @@ const char *subAss::getConfiguration(void)
 
       sprintf((char *)buf," ASS/SSA Subtitles: ");
 
-      char *filename = (char*)param.subtitleFile;
+      const char *filename = param.subtitleFile.c_st();
       if(filename)
       {
           if(strrchr(filename, DIR_SEP) != NULL && *(strrchr(filename, DIR_SEP) + 1) != 0)
@@ -106,8 +106,8 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     if (!setup || !ADM_paramLoad(setup, ass_ssa_param, &param)) {
         param.font_scale = 1.;
         param.line_spacing = param.topMargin = param.bottomMargin = 0;
-        param.subtitleFile = NULL;
-        param.fontDirectory = ADM_strdup(DEFAULT_FONT_DIR);
+        param.subtitleFile = std::string("");
+        param.fontDirectory = std::string(DEFAULT_FONT_DIR);
         param.extractEmbeddedFonts = 1;
     }
     src = new ADMImageDefault(in->getInfo()->width, in->getInfo()->height);
@@ -117,7 +117,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     _ass_track = NULL;
     _ass_rend = NULL;
 
-    if (param.subtitleFile) 
+    if (param.subtitleFile.size()) 
     {
         if (!this->setup()) 
         {
@@ -133,11 +133,7 @@ subAss::~subAss()
 {
       if(src) delete src;
       src=NULL;
-
-
-        DELETE(param.subtitleFile);
-        DELETE(param.fontDirectory);
-        cleanup();
+      cleanup();
 }
 /**
     \fn getCoupledConf
@@ -166,8 +162,7 @@ bool subAss::configure(void)
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
     char newName[2*1024]; // should be a dynamic size..
-    std::string       subFile=std::string(param.subtitleFile);
-    diaElemFile       file(0,subFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    diaElemFile       file(0,PX(subtitleFile),QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
@@ -177,9 +172,6 @@ bool subAss::configure(void)
 again:
    if( diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
    {
-       if(param.subtitleFile)
-                ADM_dealloc(param.subtitleFile);
-        param.subtitleFile=ADM_strdup(subFile.c_str());
        char *p=param.subtitleFile;
        int l=strlen(p);
        if(l>3 && !strcasecmp(p+l-4,".srt"))
@@ -287,9 +279,9 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
 #endif
         ass_set_fonts(_ass_rend, NULL, "Sans",fc,NULL,true);
         //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
-       _ass_track = ass_read_file(_ass_lib, (char*)param.subtitleFile, NULL);
+       _ass_track = ass_read_file(_ass_lib, param.subtitleFile.c_str(), NULL);
         if(!_ass_track)
-          GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",(char*)param.subtitleFile);
+          GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",param.subtitleFile.c_str());
         return 1;
 }
 
