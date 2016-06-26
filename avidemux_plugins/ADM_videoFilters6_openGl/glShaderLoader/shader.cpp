@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <string>
 #include "ADM_openGl.h"
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
@@ -82,12 +83,12 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         
         // Load the file info memory
         int sourceSize=-1;
-        if(ADM_fileExist(params.shaderFile))
+        if(ADM_fileExist(params.shaderFile.c_str()))
         {
-            sourceSize=ADM_fileSize(params.shaderFile);
+            sourceSize=ADM_fileSize(params.shaderFile.c_str());
         }else
         {
-            ADM_warning("Shader file does not exist (%s)\n",params.shaderFile);
+            ADM_warning("Shader file does not exist (%s)\n",params.shaderFile.c_str());
             ready=false;
         }
         if(sourceSize<5)
@@ -98,7 +99,7 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         if(ready)
         {
             uint8_t *buffer=(uint8_t *)alloca(sourceSize+1);
-            FILE *f=fopen(params.shaderFile,"rt");
+            FILE *f=fopen(params.shaderFile.c_str(),"rt");
             if(f)
             {
                 fread(buffer,sourceSize,1,f);
@@ -112,7 +113,7 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
                 }
             }else
             {
-                ADM_warning("Cannot open file %s\n",params.shaderFile);
+                ADM_warning("Cannot open file %s\n",params.shaderFile.c_str());
                 erString=std::string("Cannot open file");
                 ready=false;
             }
@@ -175,6 +176,8 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     glProgramY->setUniformValue("myTextureU", 1); 
     glProgramY->setUniformValue("myTextureV", 2); 
     glProgramY->setUniformValue("myTextureY", 0); 
+    glProgramY->setUniformValue("myResolution", (GLfloat)info.width,(GLfloat)info.height); 
+    
     glProgramY->setUniformValue("pts", (GLfloat)original->Pts); 
 
     uploadAllPlanes(original);
@@ -210,7 +213,7 @@ void shaderLoader::setCoupledConf(CONFcouple *couples)
 const char *shaderLoader::getConfiguration(void)
 {
     static char st[200];
-    snprintf(st,199,"Shader Loader %s",params.shaderFile);
+    snprintf(st,199,"Shader Loader %s",params.shaderFile.c_str());
     return st;
 }
 
@@ -219,15 +222,11 @@ const char *shaderLoader::getConfiguration(void)
 */
 bool shaderLoader::configure( void) 
 {
-    std::string shaderFile=std::string(params.shaderFile);
-    diaElemFile shader(0,shaderFile,"ShaderFile to load");
-     
+    diaElemFile shader(0,params.shaderFile,"ShaderFile to load");    
     diaElem *elems[]={&shader};
      
      if(diaFactoryRun(QT_TR_NOOP("ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                // MEMLEAK !ADM_dealloc(params.shaderFile);
-                params.shaderFile=ADM_strdup(shaderFile.c_str()); // memleak
                 return true;
      }
      return false;

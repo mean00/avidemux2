@@ -163,11 +163,11 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         
         image=NULL;;
         alpha=param->alpha;
-        if(param->logo)
+        if(param->logoImageFile.size())
         {
-            if(tryToLoadimage(param->logo))
+            if(tryToLoadimage(param->logoImageFile.c_str()))
             {
-                imageName=std::string(param->logo);
+                imageName=param->logoImageFile;
             }
         }
         
@@ -182,7 +182,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->param.x=param->x;
         myLogo->param.y=param->y;
         myLogo->param.alpha=param->alpha;
-        myLogo->param.logo=NULL;
+        myLogo->param.logoImageFile=std::string("");
         myLogo->_cookie=this;
         
         myLogo->setPreview(false);
@@ -224,12 +224,7 @@ void Ui_logoWindow::gather(logo *param)
     DUPE(x)
     DUPE(y)
     DUPE(alpha)
-    if(param->logo)
-    {
-        free(param->logo);
-        param->logo=NULL;
-    }
-    param->logo=ADM_strdup(imageName.c_str());
+    param->logoImageFile=imageName;
     
 }
 /**

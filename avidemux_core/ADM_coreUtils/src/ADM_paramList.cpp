@@ -17,7 +17,7 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-
+#include <string>
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include <stddef.h>
@@ -353,6 +353,15 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                         delete [] var;
                     }
                     break;
+            case ADM_param_stdstring:
+                    {
+                        char   *var;                        
+                        std::string *str=(std::string *)(address+params[i].offset);
+                        couples->readAsString(name,&var);
+                        *str=std::string(var);
+                        delete [] var;
+                    }
+                break;                    
             default:
                     ADM_error("Type no handled %d\n",params[i].type);
                     break;
@@ -457,6 +466,18 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
                         char *var;
                         var=*(char  **)(address+params[i].offset);
                         bool r=c->writeAsString(name,var);
+                        if(false==r)
+                        {
+                                ADM_error("Error writing string\n");
+                                return false;
+                        }
+                }
+                break;
+            case ADM_param_stdstring:
+                {
+                        std::string *str;
+                        str=(std::string  *)(address+params[i].offset);
+                        bool r=c->writeAsString(name,str->c_str());
                         if(false==r)
                         {
                                 ADM_error("Error writing string\n");

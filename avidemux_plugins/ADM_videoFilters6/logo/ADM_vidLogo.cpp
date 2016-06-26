@@ -42,7 +42,7 @@ addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : AD
         configuration.x=0;
         configuration.y=0;
         configuration.alpha=255;
-        configuration.logo=NULL;
+        configuration.logoImageFile=std::string("");
     }
     myName="logo";
     reloadImage();
@@ -55,11 +55,11 @@ bool addLogopFilter::reloadImage(void)
         if(myImage) delete myImage;
         myImage=NULL;
 
-        if(!configuration.logo)
+        if(!configuration.logoImageFile.size())
         {
             return false;
         }
-        myImage=createImageFromFile(configuration.logo);
+        myImage=createImageFromFile(configuration.logoImageFile.c_str());
         if(!myImage) return false;
         return true;
 }
@@ -69,8 +69,6 @@ bool addLogopFilter::reloadImage(void)
 */
 addLogopFilter::~addLogopFilter()
 {
-    if(configuration.logo) ADM_dealloc(configuration.logo);
-    configuration.logo=NULL;
     if(myImage) delete myImage;
     myImage=NULL;
 }
