@@ -45,9 +45,9 @@ extern "C"
     }, \
     99, /* Pool Threads : auto */ \
     99, /* Frame Threads : auto */ \
-    NULL, /* Preset */ \
-    NULL, /* Tuning */ \
-    NULL, /* Profile */ \
+    std::string(""), /* Preset */ \
+    std::string(""), /* Tuning */ \
+    std::string(""), /* Profile */ \
     }, \
     -1, /* Level */ \
     {1,1}, /* Sar width/height */ \

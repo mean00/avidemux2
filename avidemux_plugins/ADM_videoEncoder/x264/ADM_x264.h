@@ -44,9 +44,9 @@ extern "C"
         0*ADM_ENC_CAP_SAME \
     }, \
     99, /* Threads : auto */ \
-    NULL, /* Preset */ \
-    NULL, /* Tuning */ \
-    NULL, /* Profile */ \
+    std::string(""), /* Preset */ \
+    std::string(""), /* Tuning */ \
+    std::string(""), /* Profile */ \
     false, /* Fast decode */ \
     false, /* Zero latency */ \
     true /* Fast first pass */ \

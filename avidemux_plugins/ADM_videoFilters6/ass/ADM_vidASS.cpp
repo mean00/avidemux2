@@ -86,7 +86,7 @@ const char *subAss::getConfiguration(void)
 
       sprintf((char *)buf," ASS/SSA Subtitles: ");
 
-      const char *filename = param.subtitleFile.c_st();
+      const char *filename = param.subtitleFile.c_str();
       if(filename)
       {
           if(strrchr(filename, DIR_SEP) != NULL && *(strrchr(filename, DIR_SEP) + 1) != 0)
@@ -162,7 +162,7 @@ bool subAss::configure(void)
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
     char newName[2*1024]; // should be a dynamic size..
-    diaElemFile       file(0,PX(subtitleFile),QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
+    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle file"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
@@ -170,49 +170,47 @@ bool subAss::configure(void)
 
        diaElem *elems[5]={&file,&dSpacing,&dScale,&dTop,&dBottom};
 again:
-   if( diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
-   {
-       char *p=param.subtitleFile;
-       int l=strlen(p);
-       if(l>3 && !strcasecmp(p+l-4,".srt"))
-       {
-           if(!GUI_Question("This is a srt file. Convert to SSA ?"))
-           {
-               goto again;
-           }
-           ADM_subtitle sub;
-           if(!sub.load(p))
-           {
-               GUI_Error_HIG("Error","Cannot load this srt file.");
-               goto again;
-           }
-           if(false==sub.srt2ssa())
-           {
-               GUI_Error_HIG("Error","Cannot convert to ssa.");
-               goto again;               
-           }
-           
-           strcpy(newName,p);
-           strcpy(newName+l-4,".ssa");
-           if(false==sub.saveAsSSA(newName))
-           {
-               GUI_Error_HIG("Error","Cannot save converted file.");
-               goto again;                              
-           }
-           // all ok, we can now use the ssa file
-           strcpy(p,newName);
-       }
-       
-       
+   if(!diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),5,elems))
+       return false;
+   
+    const char *p=param.subtitleFile.c_str();
+    int l=strlen(p);
+    if(l>3 && !strcasecmp(p+l-4,".srt"))
+    {
+        if(!GUI_Question("This is a srt file. Convert to SSA ?"))
+        {
+            goto again;
+        }
+        ADM_subtitle sub;
+        if(!sub.load(p))
+        {
+            GUI_Error_HIG("Error","Cannot load this srt file.");
+            goto again;
+        }
+        if(false==sub.srt2ssa())
+        {
+            GUI_Error_HIG("Error","Cannot convert to ssa.");
+            goto again;               
+        }
+
+        strcpy(newName,p);
+        strcpy(newName+l-4,".ssa");
+        if(false==sub.saveAsSSA(newName))
+        {
+            GUI_Error_HIG("Error","Cannot save converted file.");
+            goto again;                              
+        }
+        param.subtitleFile=std::string(newName);
+    }
+
+
 #undef MKME
 #define MKME(x,y) param.y=(float)x
-    MKME(scale,font_scale);
-    MKME(spacing,line_spacing);
+     MKME(scale,font_scale);
+     MKME(spacing,line_spacing);
      cleanup();
      setup();
-     return true;
-   }
-   return false;
+     return true; 
 }
 
 /**
@@ -279,7 +277,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
 #endif
         ass_set_fonts(_ass_rend, NULL, "Sans",fc,NULL,true);
         //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
-       _ass_track = ass_read_file(_ass_lib, param.subtitleFile.c_str(), NULL);
+       _ass_track = ass_read_file(_ass_lib, (char *)param.subtitleFile.c_str(), NULL);
         if(!_ass_track)
           GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",param.subtitleFile.c_str());
         return 1;
