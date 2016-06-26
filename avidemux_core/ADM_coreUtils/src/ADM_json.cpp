@@ -74,6 +74,12 @@ bool admJson::addString(const char *key,const char *value)
     json_push_back(COOKIE, json_new_a(key,value));
     return true;
 }
+bool admJson::addString(const char *key,const std::string &value)
+{
+    json_push_back(COOKIE, json_new_a(key,value.c_str()));
+    return true;
+    
+}
 /**
 
 */

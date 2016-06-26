@@ -35,6 +35,7 @@ public:
             admJson();
             ~admJson();
         bool addString(const char *key,const char *value);
+        bool addString(const char *key,const std::string &value);
         bool addUint32(const char *key,const uint32_t value);
         bool addInt32(const char *key,const int32_t value);
         bool addFloat(const char *key,const float value);
