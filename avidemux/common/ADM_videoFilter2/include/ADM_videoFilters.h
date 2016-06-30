@@ -27,4 +27,5 @@ bool                    ADM_vf_getConfigurationFromIndex(int index,CONFcouple **
 bool                    ADM_vf_configureFilterAtIndex(int index);
 bool                    ADM_vf_moveFilterDown(int index);
 bool                    ADM_vf_moveFilterUp(int index);
+bool                    ADM_vf_partialize(int index);
 #endif

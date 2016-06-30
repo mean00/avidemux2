@@ -302,6 +302,31 @@ void filtermainWindow::moveUp( )
     setSelected(itag-1);
 }
 /**
+ * 
+ */
+void filtermainWindow::makePartial()
+{
+    ADM_info("Partial\n");
+    int filterIndex=getTagForActiveSelection();
+    if(-1==filterIndex)
+        return;
+    ADM_info("Partial %d\n",filterIndex);
+    // Check we can partialize it...
+    uint32_t tag=ADM_vf_getTag(filterIndex);
+    if(!ADM_vf_canBePartialized(tag))
+    {
+        GUI_Error_HIG("Partial","This filter cannot be made partial");
+        return;
+    }
+    // Get info about that filter..
+    if(ADM_vf_partialize(filterIndex))
+    {
+        buildActiveFilterList ();
+        setSelected(filterIndex);
+    }
+}
+
+/**
         \fn     down( bool b)
         \brief  Move selected filter one place down
 */
@@ -473,17 +498,20 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     QAction *configure = new  QAction(QString("Configure"),this);
     QAction *up = new  QAction(QString("Move up"),this);
     QAction *down = new  QAction(QString("Move down"),this);
+    QAction *partial = new  QAction(QString("Make partial"),this);
     
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
     activeList->addAction(up);
     activeList->addAction(down);
     activeList->addAction(configure);
     activeList->addAction(remove);
+    activeList->addAction(partial);
     
     connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
     connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
     connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
     connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
+    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
 
  }
 /**

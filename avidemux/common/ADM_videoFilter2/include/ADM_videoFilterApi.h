@@ -29,4 +29,8 @@ const char *ADM_vf_getInternalNameFromTag(uint32_t tag);
 uint32_t    ADM_vf_getTagFromInternalName(const char *name);
 bool        ADM_vf_addFilter(uint32_t tag,CONFcouple *couples);
 VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag);
+
+bool        ADM_vf_canBePartialized(uint32_t tag);
+
+
 #endif //ADM_VIDEO_FILTER_API_H

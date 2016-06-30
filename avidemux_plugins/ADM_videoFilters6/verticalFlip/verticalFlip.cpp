@@ -39,7 +39,7 @@ protected:
 };
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   verticalFlipFilter,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   verticalFlipFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category

@@ -82,6 +82,7 @@ public slots:
     void add(bool b);
     void moveUp();
     void moveDown();
+    void makePartial();
     void remove(bool b);
     void configure(bool b);
     void activeDoubleClick( QListWidgetItem  *item);

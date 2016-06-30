@@ -102,6 +102,18 @@ bool ADM_vf_moveFilterDown(int index)
     return ADM_vf_recreateChain();
 }
 
+bool ADM_vf_partialize(int index)
+{
+    ADM_info("Partializing filter at index %d\n",index);
+    //
+    ADM_assert(index+1<ADM_VideoFilters.size());
+    uint32_t top=index;
+    
+    
+    
+    return ADM_vf_recreateChain();
+}
+
 /**
     \fn createVideoFilterChain
     \brief Create a filter chain
