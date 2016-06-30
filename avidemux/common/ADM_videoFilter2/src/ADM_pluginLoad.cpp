@@ -354,4 +354,11 @@ uint32_t    ADM_vf_getTagFromInternalName(const char *name)
     return plg->tag;
 
 }
+bool ADM_vf_canBePartialized(uint32_t tag)
+{
+  ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+  return plugin->partializable();
+        
+}
+
 //EOF
