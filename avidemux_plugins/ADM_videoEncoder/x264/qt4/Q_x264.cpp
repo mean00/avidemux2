@@ -105,10 +105,7 @@ bool x264_ui(x264_encoder *settings)
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
-            memcpy(settings,&myCopy,sizeof(myCopy));
-            settings->general.preset = myCopy.general.preset;
-            settings->general.tuning = myCopy.general.tuning;
-            settings->general.profile =myCopy.general.profile;
+            *settings=myCopy;
             success = true;
     }
 
@@ -136,10 +133,7 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
        x264_encoder* settings = (x264_encoder*)param;
-       memcpy(&myCopy,settings,sizeof(myCopy));
-       myCopy.general.preset =  settings->general.preset;
-       myCopy.general.tuning =  settings->general.tuning;
-       myCopy.general.profile=  settings->general.profile;
+       myCopy=*settings;
 
 #define ENCODING(x)  myCopy.general.params.x       
         lastBitrate =   ENCODING(bitrate);
@@ -239,18 +233,21 @@ bool x264Dialog::toogleAdvancedConfiguration(bool advancedEnabled)
 #define DISABLE(x) ui.x->setEnabled(false);
 #define MK_MENU(x,y) ui.x->setCurrentIndex(myCopy.y)
 #define MK_RADIOBUTTON(x) ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) \
-  { \
-    QComboBox *combobox=ui.x; \
-    for(int i=0;i<count;i++) \
-    { \
-      const char *p=list[i]; \
-      if(myCopy.y && !strcmp(myCopy.y, p)) \
-      { \
-        combobox->setCurrentIndex(i); \
-      } \
-    } \
-  }
+#define MK_COMBOBOX_STR(x,y,list,count) updateComboBox(ui.x,myCopy.y,count,list)
+/**
+
+*/
+static void updateComboBox(QComboBox *combo,const std::string &mine,int count,const char **list)
+{
+    for(int i=0;i<count;i++) 
+    { 
+      const char *p=list[i]; 
+      if(mine.size() && !strcmp(mine.c_str(), p)) 
+      { 
+        combo->setCurrentIndex(i); 
+      } 
+    } 
+}
 bool x264Dialog::upload(void)
 {
           toogleAdvancedConfiguration(myCopy.useAdvancedConfiguration);
@@ -459,13 +456,17 @@ bool x264Dialog::upload(void)
 #define MK_UINT(x,y)        myCopy.y=ui.x->value()
 #define MK_MENU(x,y)        myCopy.y=ui.x->currentIndex()
 #define MK_RADIOBUTTON(x,y)   myCopy.y=ui.x->setChecked(true);
-#define MK_COMBOBOX_STR(x,y,list,count) \
-  { \
-    QComboBox* combo=ui.x; \
-    int idx=combo->currentIndex(); \
-    ADM_assert(idx<count); \    
-    myCopy.y = std::string(list[idx]); \
-  }
+#define MK_COMBOBOX_STR(x,y,list,count) x_readComboBox(ui.x,myCopy.y,count,list)
+
+static void x_readComboBox(QComboBox *combo, std::string &inout,int count,const char **list)
+{
+    int idx=combo->currentIndex(); 
+    ADM_assert(idx<count);    
+    inout = std::string(list[idx]); 
+}
+
+
+
 
 bool x264Dialog::download(void)
 {

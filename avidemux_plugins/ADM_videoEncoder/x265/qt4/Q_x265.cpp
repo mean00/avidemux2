@@ -102,10 +102,7 @@ bool x265_ui(x265_settings *settings)
     if (dialog.exec() == QDialog::Accepted)
     {
             dialog.download();
-            memcpy(settings,&myCopy,sizeof(myCopy));
-            settings->general.preset = myCopy.general.preset;
-            settings->general.tuning = myCopy.general.tuning;
-            settings->general.profile= myCopy.general.profile;
+            *settings=myCopy;
             success = true;
     }
 
@@ -133,10 +130,7 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.maxCrfSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxCrfSpinBox_valueChanged(int)));
 #endif
        x265_settings* settings = (x265_settings*)param;
-       memcpy(&myCopy,settings,sizeof(myCopy));
-       myCopy.general.preset = settings->general.preset;
-       myCopy.general.tuning = settings->general.tuning;
-       myCopy.general.profile= settings->general.profile;
+       myCopy=*settings;
 
 #define ENCODING(x)  myCopy.general.params.x       
         lastBitrate =   ENCODING(bitrate);
