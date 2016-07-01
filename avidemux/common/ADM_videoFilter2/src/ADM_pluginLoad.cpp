@@ -41,17 +41,18 @@ extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-	initialised = (loadLibrary(file) && getSymbols(10,
-		&create, "create",
-		&destroy, "destroy",
-		&getApiVersion, "getApiVersion",
-		&supportedUI, "supportedUI",
-                &neededFeatures,"neededFeatures",
-		&getFilterVersion, "getFilterVersion",
-		&getDesc, "getDesc",
-		&getInternalName, "getInternalName",
-		&getDisplayName, "getDisplayName",
-        &getCategory,"getCategory"
+    initialised = (loadLibrary(file) && getSymbols(11,
+        &create, "create",
+        &destroy, "destroy",
+        &getApiVersion, "getApiVersion",
+        &supportedUI, "supportedUI",
+        &neededFeatures,"neededFeatures",
+        &getFilterVersion, "getFilterVersion",
+        &getDesc, "getDesc",
+        &getInternalName, "getInternalName",
+        &getDisplayName, "getDisplayName",
+        &getCategory,"getCategory",
+        &partializable,"partializable"
         ));
 };
 
@@ -65,8 +66,8 @@ static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list,const int ca
     for(int start=0;start<n-2;start++)
     for(int i=0;i<n-1;i++)
     {
-         ADM_vf_plugin *left=list[i];
-         ADM_vf_plugin *right=list[i+1];
+        ADM_vf_plugin *left=list[i];
+        ADM_vf_plugin *right=list[i+1];
 
         const char       *    leftName=left->getDisplayName();
         const char       *    rightName=right->getDisplayName();
@@ -98,7 +99,7 @@ static bool sortVideoFiltersByName(void)
 }
 
 /**
- * 	\fn tryLoadingVideoFilterPlugin
+ *     \fn tryLoadingVideoFilterPlugin
  *  \brief try to load the plugin given as argument..
  */
 static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask)
@@ -152,7 +153,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     info->category=plugin->getCategory();
 
     printf("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n",
-		major, minor, patch, info->internalName, info->displayName);
+        major, minor, patch, info->internalName, info->displayName);
     if(info->category>=VF_MAX)
     {
         ADM_error("This filter has an unknown caregory!\n");
@@ -206,7 +207,7 @@ bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const ch
 
         ADM_assert(filter>=0 && cat<VF_MAX && filter<ADM_videoFilterPluginsList[cat].size());
 
-    	ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][filter];
+        ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][filter];
         a->getFilterVersion(major, minor, patch);
 
         *name=a->info.displayName;
@@ -238,12 +239,12 @@ static void parseOneFolder(const char *folder,uint32_t featureMask )
     clearDirectoryContent(nbFile,files);  
 }
 /**
- * 	\fn ADM_ad_GetPluginVersion
+ *     \fn ADM_ad_GetPluginVersion
  *  \brief load all audio plugins
  */
 uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
 {
-	
+    
         uint32_t featureMask=0;
 
 #ifdef USE_LIBVA               
@@ -259,17 +260,17 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
             featureMask|=ADM_FEATURE_OPENGL;
 #endif
         
-	
-	printf("[ADM_vf_plugin] Scanning directory %s\n",path);
+    
+    printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
-        std::string myPath=std::string(path);
-        parseOneFolder(myPath.c_str(),featureMask);
-        myPath+=std::string("/")+std::string(subFolder);
-        parseOneFolder(myPath.c_str(),featureMask);
-        
-        
-        sortVideoFiltersByName();
-	return 1;
+    std::string myPath=std::string(path);
+    parseOneFolder(myPath.c_str(),featureMask);
+    myPath+=std::string("/")+std::string(subFolder);
+    parseOneFolder(myPath.c_str(),featureMask);
+    
+    
+    sortVideoFiltersByName();
+    return 1;
 }
 /**
     \fn ADM_vf_cleanup
@@ -357,6 +358,8 @@ uint32_t    ADM_vf_getTagFromInternalName(const char *name)
 bool ADM_vf_canBePartialized(uint32_t tag)
 {
   ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
+  if(!plugin->partializable)
+        return false;
   return plugin->partializable();
         
 }
