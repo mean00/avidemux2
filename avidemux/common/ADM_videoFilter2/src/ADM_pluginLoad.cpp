@@ -38,6 +38,7 @@ extern ADM_UI_TYPE UI_GetCurrentUI(void);
 #include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
 #endif        
 
+extern ADM_vf_plugin *getFakePartialPlugin();
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
@@ -92,7 +93,8 @@ static bool sortVideoFiltersByName(void)
 {
     for(int i=0;i<VF_MAX;i++)
     {
-        sortVideoCategoryByName(ADM_videoFilterPluginsList[i],i);
+        if(i!=VF_HIDDEN)
+            sortVideoCategoryByName(ADM_videoFilterPluginsList[i],i);
     }
     return true;
 
@@ -263,6 +265,8 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
     
     printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
+   
+    
     std::string myPath=std::string(path);
     parseOneFolder(myPath.c_str(),featureMask);
     myPath+=std::string("/")+std::string(subFolder);
@@ -270,6 +274,10 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
     
     
     sortVideoFiltersByName();
+#if 0
+    if(!ADM_videoFilterPluginsList[VF_HIDDEN].size())
+        ADM_videoFilterPluginsList[VF_HIDDEN].append(getFakePartialPlugin());
+#endif
     return 1;
 }
 /**

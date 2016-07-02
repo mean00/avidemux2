@@ -13,7 +13,7 @@
 
 class ADM_coreVideoFilter;
 
-#define VF_API_VERSION 7
+#define VF_API_VERSION 8
 
 /**
     \struct admVideoFilterInfo
@@ -62,6 +62,9 @@ class ADM_vf_plugin : public ADM_LibWrapper
         admVideoFilterInfo          info;
 
         ADM_vf_plugin(const char *file);
+        
+    protected:
+               ADM_vf_plugin() {} ; // fake plugin for partial                         
 };
 
 #define DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,Partializable) \
