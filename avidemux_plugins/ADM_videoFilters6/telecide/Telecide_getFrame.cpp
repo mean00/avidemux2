@@ -240,7 +240,7 @@ teleCide *_param=&configuration;
                         {
                                 // The chosen frame doesn't match the prediction.
                                 if (predicted_metric == 0) mismatch = 0.0;
-                                else mismatch = (100.0*abs(predicted_metric - lowest))/predicted_metric;
+                                else mismatch = (100.0*abs((int)predicted_metric - (int)lowest))/predicted_metric;
                                 if (mismatch < gthresh)
                                 {
                                         // It's close enough, so use the predicted one.
@@ -283,7 +283,7 @@ teleCide *_param=&configuration;
                                         {
                                                 // The chosen frame doesn't match the prediction.
                                                 if (predicted_metric == 0) mismatch = 0.0;
-                                                else mismatch = (100.0*abs(predicted_metric - lowest))/predicted_metric;
+                                                else mismatch = (100.0*abs((int)predicted_metric - (int)lowest))/predicted_metric;
                                                 if ((int) mismatch <= gthresh)
                                                 {
                                                         // It's close enough, so use the predicted one.
