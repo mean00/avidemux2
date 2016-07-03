@@ -38,7 +38,7 @@ typedef struct
 }idcToken;
 
 static const idcToken listOfIdc[]={
-        {-1,"Auto"},
+        {(unsigned int)-1,"Auto"},
         {10,"1"},
         {11,"1.1"},
         {12,"1.2"},
