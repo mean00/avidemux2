@@ -19,7 +19,7 @@ static optionDesc myOptions[]={
 { FEATURES_REUSE_2PASS_LOG,"features.reuse_2pass_log"                 ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_AUDIOBAR_USES_MASTER,"features.audiobar_uses_master"       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_THREADING_LAVC,"features.threading_lavc"                   ,ADM_param_uint32_t	,"0",	0,	32},
-{ FEATURES_CPU_CAPS,"features.cpu_caps"                               ,ADM_param_uint32_t	,"2147483647",	0,	2147483647},
+{ FEATURES_CPU_CAPS,"features.cpu_caps"                               ,ADM_param_uint32_t	,"2147483647",	0,	2147483647.0f},
 { FEATURES_MPEG_NO_LIMIT,"features.mpeg_no_limit"                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ALTERNATE_MP3_TAG,"features.alternate_mp3_tag"             ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
