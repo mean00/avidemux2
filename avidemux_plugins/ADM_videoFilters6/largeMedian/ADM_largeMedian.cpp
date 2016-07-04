@@ -28,7 +28,7 @@
 #include "DIA_factory.h"
 #include "ADM_largeMedian.h"
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   largeMedian,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   largeMedian,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category

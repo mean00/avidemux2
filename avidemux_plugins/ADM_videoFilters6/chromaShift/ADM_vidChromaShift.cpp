@@ -26,7 +26,7 @@
 
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   ADMVideoChromaShift,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   ADMVideoChromaShift,   // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_COLORS,            // Category

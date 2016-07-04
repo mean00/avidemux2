@@ -20,7 +20,7 @@
 
 
 
-DECLARE_VIDEO_FILTER(   AVDMFastVideoMedian,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   AVDMFastVideoMedian,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category

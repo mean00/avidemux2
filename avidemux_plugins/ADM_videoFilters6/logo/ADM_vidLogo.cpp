@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_vidLogo.h"
-DECLARE_VIDEO_FILTER(   addLogopFilter,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   addLogopFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category

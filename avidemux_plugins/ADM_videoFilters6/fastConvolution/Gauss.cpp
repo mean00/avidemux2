@@ -18,7 +18,7 @@
 #include "ADM_vidConvolution.hxx"
 #include "convolution_desc.cpp"
 
-DECLARE_VIDEO_FILTER(   AVDMFastVideoGauss,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   AVDMFastVideoGauss,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_NOISE,            // Category

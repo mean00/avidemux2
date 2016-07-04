@@ -54,7 +54,7 @@
 
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   vidColorYuv,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   vidColorYuv,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_COLORS,            // Category

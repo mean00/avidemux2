@@ -34,7 +34,7 @@ static void xdelogo(uint8_t *dst, uint8_t *src, int dstStride, int srcStride, in
 //******************************************
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   MPDelogo,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   MPDelogo,   // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category

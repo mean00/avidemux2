@@ -36,7 +36,7 @@ public:
 };
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   horizontalFlipFilter,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   horizontalFlipFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
