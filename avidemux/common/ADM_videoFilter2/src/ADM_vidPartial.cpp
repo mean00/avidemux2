@@ -107,7 +107,18 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     // get tag from name
     tag=ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
     // spawn 
-    sonFilter=ADM_vf_createFromTag(tag, trampoline, setup+3);
+    int nbSonParam=setup->getSize()-3;
+    ADM_assert(nbSonParam>=0);
+    
+    CONFcouple newParams(nbSonParam);
+    for(int i=0;i<nbSonParam;i++)
+    {
+      char *key,*val;
+      setup->getInternalName (i,&key,&val);
+      newParams.setInternalName (key,val);
+    }
+    
+    sonFilter=ADM_vf_createFromTag(tag, trampoline, &newParams);
     ADM_assert(sonFilter);
     // son = new filer(trampoline)
     // TODO FIXME
