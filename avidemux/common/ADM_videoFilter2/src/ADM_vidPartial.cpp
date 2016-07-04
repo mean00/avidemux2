@@ -67,7 +67,7 @@ public:
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getNextFrameForSon(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
-		virtual void         setCoupledConf(CONFcouple *couples);
+        virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void);   
         virtual bool         goToTime(uint64_t usSeek);   /// Start graphical user interface
 };
@@ -105,16 +105,18 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     // Get tag from name
     uint32_t tag;
     // get tag from name
-    tag=ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
-    // spawn 
     int nbSonParam=setup->getSize()-3;
     ADM_assert(nbSonParam>=0);
+
+    ADM_info("Creating partial filter for %s, with %d params\n",configuration.filterName.c_str(),nbSonParam);
+    tag=ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
+    // spawn 
     
     CONFcouple newParams(nbSonParam);
     for(int i=0;i<nbSonParam;i++)
     {
       char *key,*val;
-      setup->getInternalName (i,&key,&val);
+      setup->getInternalName (i+3,&key,&val);
       newParams.setInternalName (key,val);
     }
     
@@ -191,6 +193,7 @@ bool partialFilter::isInRange(uint64_t tme)
 bool         partialFilter::goToTime(uint64_t usSeek)
 {
   bool r=previousFilter->goToTime(usSeek);
+  sonFilter->goToTime(usSeek);
   byPass=!isInRange(usSeek);
   return r;
 }
@@ -201,7 +204,21 @@ bool         partialFilter::goToTime(uint64_t usSeek)
 */
 bool         partialFilter::getCoupledConf(CONFcouple **couples)
 {
-    return ADM_paramSave(couples, partial_param,&configuration);
+    ADM_paramSave(couples, partial_param,&configuration);
+    CONFcouple *newParam=NULL;
+    sonFilter->getCoupledConf(&newParam);
+    if(newParam)
+    {
+        for(int i=0;i<newParam->getSize();i++)
+        {
+          char *key,*val;
+          newParam->getInternalName (i,&key,&val);
+          (*couples)->setInternalName(key,val);
+        }
+        delete newParam;
+        newParam=NULL;
+    }
+    return true;
 }
 
 void partialFilter::setCoupledConf(CONFcouple *couples)
