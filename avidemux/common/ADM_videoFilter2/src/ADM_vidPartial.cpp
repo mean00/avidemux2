@@ -311,7 +311,10 @@ namespace admPartial
     }
     bool              getPluginVersion(uint32_t *major, uint32_t *minor, uint32_t *patch)
     {
-      
+        *major=1;
+        *minor=0;
+        *patch=0;
+        return true;
     }
     const char       *getString()
     {

@@ -290,6 +290,8 @@ bool ADM_vf_cleanup(void)
         for(int i=0;i<nb;i++)
         {
             ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][i];
+            if(a->tag==VF_PARTIAL_FILTER)
+                continue;
             if(a->nameOfLibrary)
             {
                 ADM_dealloc(a->nameOfLibrary);
