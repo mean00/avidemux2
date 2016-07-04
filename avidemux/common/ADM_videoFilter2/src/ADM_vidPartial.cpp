@@ -163,9 +163,9 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
             ADM_warning("partial : Cannot get frame\n");
             return false;
         }
-        if(!isInRange(image->Pts))
+        if(isInRange(image->Pts))
         {
-            byPass=true;
+            byPass=false;
         }
         return true;
     }
@@ -175,8 +175,8 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
          ADM_warning("partial : Cannot get frame from partial filter\n");
          return false;
     }
-    if(image->Pts<configuration.startBlack || image->Pts>configuration.endBlack)
-      byPass=false;
+    if(!isInRange(image->Pts))
+      byPass=true;
     return true;
 }
 
@@ -184,8 +184,10 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
  */
 bool partialFilter::isInRange(uint64_t tme)
 {
-   if(tme<configuration.startBlack || tme>configuration.endBlack)
+   if(tme<(1000LL*configuration.startBlack) || (tme>configuration.endBlack*1000LL))
+   {
      return false;
+   }
    return true;
 }
 /**
