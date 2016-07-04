@@ -71,7 +71,7 @@ public:
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
        virtual uint64_t     getAbsoluteStartTime(void)                 /// Return the absolute offset of the current frame. Used to display time of for filter
                 {return previousFilter->getAbsoluteStartTime();}       /// Like subtitlers who need that
-
+               ADM_coreVideoFilter *getSource() {return previousFilter;} /// FOR INTERNAL USE ONLY
 protected:
             ADM_coreVideoFilter *previousFilter;
 };
@@ -96,5 +96,7 @@ ADM_COREVIDEOFILTER6_EXPORT int GetHintingData(uint8_t *video, unsigned int *hin
 
 extern ADM_COREVIDEOFILTER6_EXPORT BVector <ADM_VideoFilterElement> ADM_VideoFilters;
 extern ADM_COREVIDEOFILTER6_EXPORT BVector <ADM_vf_plugin *> ADM_videoFilterPluginsList[VF_MAX];
+
+
 #endif
 // EOF

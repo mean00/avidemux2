@@ -321,9 +321,13 @@ void filtermainWindow::makePartial()
     // Get info about that filter..
     if(ADM_vf_partialize(filterIndex))
     {
+        ADM_info("Partializing done, rebuilding \n");
         buildActiveFilterList ();
         setSelected(filterIndex);
-    }
+    }else
+      {
+        ADM_info("CANCEL \n");
+      }
 }
 
 /**

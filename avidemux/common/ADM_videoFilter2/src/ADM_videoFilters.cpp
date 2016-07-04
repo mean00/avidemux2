@@ -11,6 +11,7 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
+
 #include "BVector.h"
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
@@ -101,13 +102,35 @@ bool ADM_vf_moveFilterDown(int index)
     ADM_VideoFilters[top+1]=scratch;
     return ADM_vf_recreateChain();
 }
-
+/**
+ * 
+ */
+extern ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source);
 bool ADM_vf_partialize(int index)
 {
     ADM_info("Partializing filter at index %d\n",index);
     //
     ADM_assert(index<ADM_VideoFilters.size());
-    uint32_t top=index;
+    
+    
+    ADM_VideoFilterElement scratch=ADM_VideoFilters[index];
+    const char *internalName=ADM_vf_getInternalNameFromTag(scratch.tag);
+    CONFcouple *conf=NULL;
+    if(!scratch.instance->getCoupledConf (&conf))
+      {
+        ADM_warning("Cannot get configuration\n");
+        return false;
+      }
+    // Create
+    ADM_coreVideoFilter *partialized=createPartialFilter(internalName,conf,scratch.instance->getSource());
+    //--
+    ADM_VideoFilterElement scratch2;
+    scratch2.instance=partialized;
+    scratch2.tag=VF_PARTIAL_FILTER;
+    scratch2.objectId=0;
+    ADM_VideoFilters[index]=scratch2;
+    delete scratch.instance;
+    scratch.instance=NULL;
     //--
     return ADM_vf_recreateChain();
 }
@@ -212,4 +235,6 @@ bool ADM_vf_getConfigurationFromIndex(int index,CONFcouple **c)
 
         return true;
 }
+
+
 // EOF

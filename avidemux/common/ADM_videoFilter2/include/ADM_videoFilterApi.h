@@ -17,6 +17,7 @@
 #include "ADM_filterCategory.h"
 class ADM_coreVideoFilter;
 class CONFcouple;
+
 uint8_t     ADM_vf_loadPlugins(const char *path);
 
 uint32_t    ADM_vf_getNbFilters(void);

@@ -17,7 +17,8 @@
  #define __CONFCOUPLE__
 
 #include "ADM_coreUtils6_export.h"
-
+/**
+ */
 class ADM_COREUTILS6_EXPORT CONFcouple
 {
         private:

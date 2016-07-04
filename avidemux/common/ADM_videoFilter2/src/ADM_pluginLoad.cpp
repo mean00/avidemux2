@@ -42,16 +42,16 @@ extern ADM_vf_plugin *getFakePartialPlugin();
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-    initialised = (loadLibrary(file) && getSymbols(11,
-        &create, "create",
-        &destroy, "destroy",
-        &getApiVersion, "getApiVersion",
-        &supportedUI, "supportedUI",
+	initialised = (loadLibrary(file) && getSymbols(11,
+		&create, "create",
+		&destroy, "destroy",
+		&getApiVersion, "getApiVersion",
+		&supportedUI, "supportedUI",
         &neededFeatures,"neededFeatures",
-        &getFilterVersion, "getFilterVersion",
-        &getDesc, "getDesc",
-        &getInternalName, "getInternalName",
-        &getDisplayName, "getDisplayName",
+		&getFilterVersion, "getFilterVersion",
+		&getDesc, "getDesc",
+		&getInternalName, "getInternalName",
+		&getDisplayName, "getDisplayName",
         &getCategory,"getCategory",
         &partializable,"partializable"
         ));
@@ -274,10 +274,8 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
     
     
     sortVideoFiltersByName();
-#if 0
     if(!ADM_videoFilterPluginsList[VF_HIDDEN].size())
         ADM_videoFilterPluginsList[VF_HIDDEN].append(getFakePartialPlugin());
-#endif
     return 1;
 }
 /**
@@ -306,7 +304,7 @@ bool ADM_vf_cleanup(void)
 }
 
 /**
-    \fn ADM_vf_getPluginFromTag
+    \fn ADM_vf_getPluginFromInternalName
     \brief
 */
 static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
@@ -351,7 +349,7 @@ VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
 const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
 {
   ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-    return plugin->getInternalName();
+  return plugin->getInternalName();
 }
 /**
     \fn ADM_vf_getTagFromInternalName
