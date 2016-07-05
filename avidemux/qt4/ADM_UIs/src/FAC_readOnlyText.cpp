@@ -65,7 +65,6 @@ diaElemReadOnlyText::~diaElemReadOnlyText()
 {
   if(paramTitle)
     ADM_dealloc(paramTitle);
-  ADM_dealloc(readOnly);
 }
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 {
