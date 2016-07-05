@@ -44,8 +44,8 @@ typedef struct
    const char *name2;
    ADM_paramType  type;
    const char *defaultValue;
-   float    min;
-   float    max;
+   double    min;
+   double    max;
 }optionDesc;
 
 #include "prefs2_pref.h"

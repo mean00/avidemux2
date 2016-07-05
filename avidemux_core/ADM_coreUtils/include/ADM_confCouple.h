@@ -13,9 +13,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- #ifndef __CONFCOUPLE__
- #define __CONFCOUPLE__
-
+#pragma once
+#include <string>
 #include "ADM_coreUtils6_export.h"
 /**
  */
@@ -38,6 +37,7 @@ static      CONFcouple *duplicate(CONFcouple *source);
                         bool writeAsUint32(const char *name,uint32_t value);
                         bool writeAsInt32(const char *name,int32_t value);
                         bool writeAsString(const char *name,const char *value);
+                        bool writeAsStdString(const char *name,const std::string &value);
                         bool writeAsFloat(const char *name,float value);
                         bool writeAsDouble(const char *name,double value);
                         bool writeAsBool(const char *name,bool value);
@@ -50,6 +50,7 @@ static      CONFcouple *duplicate(CONFcouple *source);
                         bool readAsFloat(const char *name,float *value);
                         bool readAsDouble(const char *name,double *value);
                         bool readAsBool(const char *name,bool *value);
+                        bool readAsStdString(const char *name, std::string *value);
 
                         bool exist(const char *name);
 
@@ -62,4 +63,3 @@ static      CONFcouple *duplicate(CONFcouple *source);
 
 };
 ADM_COREUTILS6_EXPORT bool stringsToConfCouple(int nb,CONFcouple **conf,  const char **argv);
-#endif

@@ -133,6 +133,23 @@ bool CONFcouple::writeAsString(const char *myname,const char *val)
 	cur++;
 	return 1;
 }
+/**
+ * 
+ * @param name
+ * @param value
+ * @return 
+ */
+bool CONFcouple::writeAsStdString(const char *myname,const std::string &val)
+{
+  ADM_assert(cur<nb);
+
+	name[cur]=strupDupeAsNew(myname);
+	value[cur]=strupDupeAsNew(val.c_str());
+	cur++;
+	return 1;
+}
+
+
 bool CONFcouple::writeAsBool(const char *myname,bool v)
 {
 	ADM_assert(cur<nb);
@@ -245,7 +262,21 @@ bool CONFcouple::readAsString(const char *myname,char **val)
 	*val=strupDupeAsNew(value[index]);
 	return 1;
 }
-
+/**
+ * 
+ * @param name
+ * @param value
+ * @return 
+ */
+ bool CONFcouple::readAsStdString(const char *myname, std::string *val)
+ {
+   int32_t index=lookupName(myname);
+//#warning TODO : unescape
+	ADM_assert(index!=-1);
+	ADM_assert(index<(int)nb);
+	*val=std::string(value[index]);
+	return 1;
+ }
 bool CONFcouple::readAsFloat(const char *myname,float *val)
 {
 	int32_t index=lookupName(myname);
