@@ -123,6 +123,11 @@ bool ADM_vf_partialize(int index)
       }
     // Create
     ADM_coreVideoFilter *partialized=createPartialFilter(internalName,conf,scratch.instance->getSource());
+    if(!partialized)
+    {
+        return false;
+    }
+
     //--
     ADM_VideoFilterElement scratch2;
     scratch2.instance=partialized;

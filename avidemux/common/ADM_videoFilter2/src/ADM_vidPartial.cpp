@@ -70,6 +70,9 @@ public:
         virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void);   
         virtual bool         goToTime(uint64_t usSeek);   /// Start graphical user interface
+        static  void         reconfigureCallback(void *cookie);
+                void         reconfigureSon();
+
 };
 
 // Add the hook to make it valid plugin
@@ -258,13 +261,32 @@ const char *partialFilter::getConfiguration(void)
   strcat(description,sonFilter->getConfiguration());
   return description;
 }
+/**
+ */
+void partialFilter::reconfigureCallback(void *cookie)
+{
+  partialFilter *p=(partialFilter *)cookie;
+  p->reconfigureSon();
+}
+/**
+ */
+void partialFilter::reconfigureSon(void)
+{
+  sonFilter->configure();
+}
 
 /**
     \fn configure
 */
 bool partialFilter::configure( void)
 {
-	   return true;
+        uint32_t mx=9*3600*1000;
+        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time (ms):"),0,mx);
+        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time (ms):"),0,mx);
+        diaElemButton    son(QT_TR_NOOP("_Configure filter"), partialFilter::reconfigureCallback,this);
+
+        diaElem *elems[3]={&start,&end,&son};
+        return diaFactoryRun(QT_TRANSLATE_NOOP("Partial","Partial Filter"),3,elems);
 }
 
 /**
@@ -334,6 +356,12 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
       tmp.setInternalName (key,val);
   }
   ADM_coreVideoFilter *p=new partialFilter(source,&tmp);
+  if(!p->configure())
+  {
+      delete p;
+      p=NULL;
+      return NULL;
+  }
   return p;  
 }
 
