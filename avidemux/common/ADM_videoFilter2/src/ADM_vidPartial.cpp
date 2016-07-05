@@ -95,10 +95,24 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     byPass=true;
     
     // Step 1 : Load configuration
-    if(!setup || !ADM_paramLoad(setup,partial_param,&configuration))
-    {
-        ADM_warning("Oops");
-    }
+    if(!setup)
+        ADM_assert(0);
+    // Only keep 3 parameters 
+    char *filterName=NULL;
+    if(!setup->readAsString ("filterName",&filterName))
+      {
+        ADM_assert(0);
+      }
+    configuration.filterName=std::string(filterName);
+    ADM_dealloc(filterName);
+    if(!setup->readAsUint32("startBlack",&(configuration.startBlack)))
+      {
+        ADM_assert(0);
+      }
+    if(!setup->readAsUint32("endBlack",&(configuration.endBlack)))
+      {
+        ADM_assert(0);
+      }
     // Ok, create trampoline & son
     trampoline=new trampolineFilter(this,NULL);
     // Create swallowed filter
@@ -206,11 +220,16 @@ bool         partialFilter::goToTime(uint64_t usSeek)
 */
 bool         partialFilter::getCoupledConf(CONFcouple **couples)
 {
-    ADM_paramSave(couples, partial_param,&configuration);
+    *couples=NULL;
     CONFcouple *newParam=NULL;
     sonFilter->getCoupledConf(&newParam);
     if(newParam)
     {
+        *couples=new CONFcouple(newParam->getSize()+3);
+        (*couples)->writeAsString("filterName",configuration.filterName.c_str());
+        (*couples)->writeAsUint32("startBlack",configuration.startBlack);
+        (*couples)->writeAsUint32("endBlack",configuration.endBlack);
+
         for(int i=0;i<newParam->getSize();i++)
         {
           char *key,*val;

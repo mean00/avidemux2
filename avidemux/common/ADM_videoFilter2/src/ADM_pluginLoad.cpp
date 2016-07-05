@@ -322,7 +322,7 @@ static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
             }
         }
     }
-    ADM_error("Cannot get video filter from name %s\n",name);
+    ADM_error("Cannot get video filter from name <%s>\n",name);
     ADM_assert(0);
     return NULL;
 }
