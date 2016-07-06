@@ -177,10 +177,14 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
         bool create=false;
         enableDraw=false;
         ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%d\n",w,h,zoom);
-        if(!renderer) create=true;
+        if(!renderer) 
+        {
+          create=true;
+        }
         else
         {
-            if(w!=phyW || h!=phyH) create=true;
+            if(w!=phyW || h!=phyH) 
+              create=true;
         }
         if(create)
         {
@@ -196,7 +200,8 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
             spawnRenderer();
         }else
         {
-            if(lastZoom!=zoom) renderer->changeZoom(zoom);
+            if(lastZoom!=zoom) 
+              renderer->changeZoom(zoom);
         }
         lastZoom=zoom;
          int mul;

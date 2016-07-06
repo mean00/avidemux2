@@ -74,7 +74,7 @@ bool simpleRender::displayImage(ADMImage *pic)
 {
     scaler->convertImage(pic,videoBuffer);
     lock.lock();
-    myImage=QImage(videoBuffer,displayWidth,displayHeight,QImage::Format_RGB32);
+    myImage=QImage(videoBuffer,displayWidth,displayHeight,QImage::Format_RGB32).copy(0,0,displayWidth,displayHeight);
     lock.unlock();
     refresh();
     return true;
