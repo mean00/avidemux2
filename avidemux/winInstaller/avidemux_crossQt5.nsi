@@ -319,6 +319,14 @@ Section "Avisynth_VapourSynth" SecGrpAvisynth
         ${File} ${ROOT_FOLDER}/vsProxy_gui_qt5.exe
 SectionEnd
 #
+Section "ShaderDemo" SecShaderDemo
+        SectionIn  1 2 RO
+        SetOutPath $INSTDIR\shaderDemo
+        SetOverwrite on
+        ${File} ${ROOT_FOLDER}/shaderDemo/1/*.shader
+SectionEnd
+#
+#
 Section "Support libs" SecGrpSupport
         SectionIn  1 2 RO
         SetOutPath $INSTDIR
