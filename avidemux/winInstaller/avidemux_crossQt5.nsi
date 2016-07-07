@@ -323,7 +323,7 @@ Section "ShaderDemo" SecShaderDemo
         SectionIn  1 2 RO
         SetOutPath $INSTDIR\shaderDemo
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/shaderDemo/1/*.shader
+        ${File} ${ROOT_FOLDER}/ADM_plugins6/shaderDemo/1/*.shader # FIXME
 SectionEnd
 #
 #
