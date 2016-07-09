@@ -378,8 +378,6 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
   const unsigned char *srcpn; 
   int src_pitch ;
   int dst_pitch ; 
-  int h ;
-  int w ;
   unsigned char *dstp;
   unsigned char *dstp_saved;
 
@@ -414,13 +412,13 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
   if (_param.mask) 
   {
     dstp=dstp_saved;
-    memset(dstp_saved+(h-1)*dst_pitch,0,w);  // Not used, if not returning mask
+    memset(dstp_saved+(hh-1)*dst_pitch,0,ww);  // Not used, if not returning mask
     for (int y=0;y<hh;dstp+=dst_pitch,y++) 
     {
       dstp[0]=0;
       dstp[1]=0;
-      dstp[w-1]=0;
-      dstp[w-2]=0;
+      dstp[ww-1]=0;
+      dstp[ww-2]=0;
     }
   }
 }
