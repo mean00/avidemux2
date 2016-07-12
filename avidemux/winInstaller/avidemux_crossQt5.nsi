@@ -280,6 +280,8 @@ SectionEnd
 Section "Plugins" SecGrpPlugins
         SectionIn 1 2 RO
         SetOverwrite on
+        SetOutPath $INSTDIR\plugins\audioDevices
+        ${File} ${ROOT_FOLDER}/plugins/audioDevices/*.dll
         SetOutPath $INSTDIR\plugins\audioDecoder
         ${File} ${ROOT_FOLDER}/plugins/audioDecoder/*.dll
         SetOutPath $INSTDIR\plugins\audioEncoders
