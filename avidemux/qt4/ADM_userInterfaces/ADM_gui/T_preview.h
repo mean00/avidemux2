@@ -30,5 +30,8 @@ public:
         {
             drawer=d;    
         }
+        // This disables internal double buffer of Qt
+        // Set it to false if the native Qt redraw system is used
+        void useExternalRedraw(bool external);
 };
 #endif	// T_preview_h

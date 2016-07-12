@@ -46,6 +46,7 @@ simpleRender::~simpleRender()
 {
     admScopedMutex autoLock(&lock);
     videoWidget->setDrawer(NULL);
+    videoWidget->useExternalRedraw(true);
     ADM_info("Destroying simple render.\n");
     if(videoBuffer) delete [] videoBuffer;
     videoBuffer=NULL;
@@ -130,6 +131,7 @@ bool simpleRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,render
     ADM_info("init, simple render. w=%d, h=%d,zoom=%d\n",(int)w,(int)h,(int)zoom);
     allocateStuff();
     videoWidget=(ADM_Qvideo *)info.widget;
+    videoWidget->useExternalRedraw(false);
     videoWidget->setDrawer(this);
     return true;
 }

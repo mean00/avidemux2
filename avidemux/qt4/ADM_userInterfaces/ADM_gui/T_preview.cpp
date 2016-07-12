@@ -86,9 +86,9 @@ bool ADM_QPreviewCleanup(void)
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)  {}
 #else
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
-{   
+{       
+    useExternalRedraw(true);
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
-    setAttribute( Qt::WA_PaintOnScreen, true );
    // Put a transparent background
     //setAutoFillBackground(true);
     QPalette p =  palette();
@@ -103,6 +103,12 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
+
+void ADM_Qvideo::useExternalRedraw(bool external)
+{
+        setAttribute( Qt::WA_PaintOnScreen, external );
+}
+
 ADM_Qvideo::~ADM_Qvideo() 
 {
     printf("[Qvideo]Destroying QVideo\n");
@@ -116,6 +122,7 @@ ADM_Qvideo::~ADM_Qvideo()
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {	    
+    printf("Paint event\n");
     if(drawer)
     {
          drawer->draw(this,ev);
@@ -131,6 +138,9 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
         painter.drawImage(0,0,allBlack);
         printf("<--------------[QVideo]/ Using default redraw\n");
         doOnce=true;
+    }else
+    {
+        renderExposeEventFromUI();
     }
 }
 
