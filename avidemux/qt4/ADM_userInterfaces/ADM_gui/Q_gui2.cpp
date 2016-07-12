@@ -31,6 +31,7 @@
 #include "avi_vars.h"
 
 #include "ADM_render/GUI_renderInternal.h"
+#include "ADM_render/GUI_render.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "ADM_muxerProto.h"
 #include "T_vumeter.h"
@@ -775,7 +776,6 @@ void MainWindow::nextIntraFrame(void)
 	else
 		sendAction(ACT_NextKFrame);
 }
-extern void renderDestroy(void);
 MainWindow::~MainWindow()
 {
     renderDestroy(); // make sure render does not have back link to us
