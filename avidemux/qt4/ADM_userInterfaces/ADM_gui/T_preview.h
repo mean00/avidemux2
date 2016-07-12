@@ -32,6 +32,9 @@ public:
         }
         // This disables internal double buffer of Qt
         // Set it to false if the native Qt redraw system is used
-        void useExternalRedraw(bool external);
+        void useExternalRedraw(bool external)
+        {
+                setAttribute( Qt::WA_PaintOnScreen, external );
+        }
 };
 #endif	// T_preview_h

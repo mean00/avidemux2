@@ -104,10 +104,6 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
 } //{setAutoFillBackground(false);}
 #endif // Haiku
 
-void ADM_Qvideo::useExternalRedraw(bool external)
-{
-        setAttribute( Qt::WA_PaintOnScreen, external );
-}
 
 ADM_Qvideo::~ADM_Qvideo() 
 {
