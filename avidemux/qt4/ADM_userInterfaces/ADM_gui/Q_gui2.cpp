@@ -775,9 +775,10 @@ void MainWindow::nextIntraFrame(void)
 	else
 		sendAction(ACT_NextKFrame);
 }
-
+extern void renderDestroy(void);
 MainWindow::~MainWindow()
 {
+    renderDestroy(); // make sure render does not have back link to us
     delete thumbSlider;
     thumbSlider=NULL;
 }
