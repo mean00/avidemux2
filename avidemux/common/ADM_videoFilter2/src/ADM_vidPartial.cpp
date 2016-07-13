@@ -51,10 +51,12 @@ class partialFilter : public  ADM_coreVideoFilter
 protected:
                 trampolineFilter *trampoline;
                 ADM_coreVideoFilter *sonFilter;
-                ADMImage    *myImage;
                 partial      configuration;
                 bool         byPass;
                 char         description[2048];
+                ADMImage     *intermediate;
+                bool         hasIntermediate;
+                uint32_t     intermediateFn;
                 
                 
                 bool        isInRange(uint64_t tme);
@@ -92,10 +94,12 @@ DECLARE_VIDEO_FILTER(   partialFilter,   // Class
 */
 partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
-    myImage=NULL;
     trampoline=NULL;
     sonFilter=NULL;
     byPass=true;
+    
+    intermediate=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
+    hasIntermediate=false;
     
     // Step 1 : Load configuration
     if(!setup)
@@ -151,8 +155,9 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
 */
 partialFilter::~partialFilter()
 {
-    if(myImage) delete myImage;
-    myImage=NULL;
+    
+    if(intermediate) delete intermediate;
+    intermediate=NULL;
     if(sonFilter) delete sonFilter;
     sonFilter=NULL;
     if(trampoline) delete trampoline;
@@ -164,7 +169,15 @@ partialFilter::~partialFilter()
  */
 bool         partialFilter::getNextFrameForSon(uint32_t *fn,ADMImage *image)
 {
-  return previousFilter->getNextFrame(fn,image);
+  if(!hasIntermediate)
+    {
+      ADM_warning("Partial filter requesting image, no image in store!!\n");
+      return false;
+    }
+     
+  *fn=intermediateFn;
+  image->duplicateFull(intermediate);
+  return true;
 }
 /**
     \fn getFrame
@@ -172,28 +185,29 @@ bool         partialFilter::getNextFrameForSon(uint32_t *fn,ADMImage *image)
 */
 bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-    if(byPass)
+    hasIntermediate=false;
+    // 1 - Get image from previous filter
+    if(false==previousFilter->getNextFrame(fn,image))
+      {
+        ADM_warning("partial : Cannot get frame\n");
+        return false;
+      }
+    // 2 -Check if we are in range or not
+    if(!isInRange(image->Pts))
     {
-        //
-        if(false==previousFilter->getNextFrame(fn,image))
-        {
-            ADM_warning("partial : Cannot get frame\n");
-            return false;
-        }
-        if(isInRange(image->Pts))
-        {
-            byPass=false;
-        }
-        return true;
+        return true; // we have the image already
     }
+    // 3- we are in range, prepare for trampolining
+    intermediate->duplicateFull(image);
+    hasIntermediate=true;
+    intermediateFn=*fn;
+    
     // Switch to the son instead
-    if(false==sonFilter->getNextFrame(fn,image))
+    if(false==sonFilter->getNextFrame(&intermediateFn,image))
     {
          ADM_warning("partial : Cannot get frame from partial filter\n");
          return false;
     }
-    if(!isInRange(image->Pts))
-      byPass=true;
     return true;
 }
 
@@ -281,9 +295,9 @@ void partialFilter::reconfigureSon(void)
 bool partialFilter::configure( void)
 {
         uint32_t mx=9*3600*1000;
-        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","_Start time (ms):"),0,mx);
-        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","_End time (ms):"),0,mx);
-        diaElemButton    son(QT_TR_NOOP("_Configure filter"), partialFilter::reconfigureCallback,this);
+        diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","Start time (ms):"),0,mx);
+        diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","End time (ms):"),0,mx);
+        diaElemButton    son(QT_TR_NOOP("Configure filter"), partialFilter::reconfigureCallback,this);
 
         diaElem *elems[3]={&start,&end,&son};
         return diaFactoryRun(QT_TRANSLATE_NOOP("Partial","Partial Filter"),3,elems);
