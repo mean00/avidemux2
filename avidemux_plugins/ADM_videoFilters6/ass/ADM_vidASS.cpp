@@ -40,6 +40,8 @@ protected:
         bool            setup(void);
         bool            cleanup(void);
         ADMImage        *src;
+        
+        bool            mergeOneImage(ASS_Image *img,ADMImage *target);
 public:
                             subAss(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~subAss();
@@ -320,6 +322,124 @@ static bool blacken(ADMImage *src, uint32_t lineStart, uint32_t howto)
             return true;
 }
 /**
+ * \fn mergeOneImage
+ * \brief merge one partial sub into the final image
+ * @param img
+ * @param target
+ * @return 
+ */
+
+static int clipWindow(int original, int offset,int targetSize)
+{
+    int r=  original;
+    int tail=offset+original;
+    if(tail > targetSize)
+    {
+        r=targetSize-offset;
+    }
+    return r;
+}
+
+bool subAss::mergeOneImage(ASS_Image *img,ADMImage *target)
+{
+    uint8_t y, u, v, opacity;
+    uint32_t  j, k, l, val;
+    int32_t orig_u, orig_v,klong,newu,newv;
+    uint8_t orig_y;
+    uint8_t *bitmap, *ydata, *udata, *vdata;
+
+    
+    
+    //  printf("Image is %d x %d \n",img->w, img->h);
+    y = rgba2y(img->color);
+    u = rgba2u(img->color);
+    v = rgba2v(img->color);
+
+    opacity = 255 - _a(img->color);
+
+    uint8_t *planes[3];
+    int      pitches[3];
+
+    target->GetPitches(pitches);
+    target->GetWritePlanes(planes);
+
+    uint32_t x=img->dst_x;
+    ydata = planes[0]+pitches[0]*( param.topMargin+img->dst_y)+x;
+
+    x>>=1;
+    udata = planes[1]+pitches[1]*((param.topMargin+img->dst_y)/2)+x;
+    vdata = planes[2]+pitches[2]*((param.topMargin+img->dst_y)/2)+x;
+   
+    
+    
+    bitmap = img->bitmap;    
+    
+    int topH,topW;
+    
+    // -- clip height --
+    topH=clipWindow(img->h, param.topMargin+img->dst_y,target->_height);    
+    if(topH<0)
+    {
+        ADM_warning("Subtitle outside of video-h\n");
+        return false;
+    }
+    //-- clip width--
+    topW=clipWindow(img->w, img->dst_y,target->_width);    
+    if(topW<0)
+    {
+        ADM_warning("Subtitle outside of video-w\n");
+        return false;
+    }
+    
+    
+    // now go
+    for(int i = 0; i < topH; ++i)
+    {
+            for(j = 0; j < topW; ++j)
+            {
+                    k = *(bitmap+j) * opacity / 255; // Alpha Channel
+                    orig_y = *(ydata+j);
+                    *(ydata+j) = (k*y + (255-k)*orig_y) / 255;
+            }
+
+            bitmap += img->stride;
+            ydata += pitches[0];
+    }
+    // Now do u & v
+    bitmap = img->bitmap;
+
+    newu=u-128;
+    newv=v-128;
+
+    for(int i = 0; i < (topH-1); i += 2)
+    {
+            for(j = 0, l = 0; j < (topW-1); j += 2, ++l)
+            {
+                    val = 0;
+                    val += *(bitmap + j);
+                    val += *(bitmap + j + 1);
+                    val += *(bitmap + img->stride + j);
+                    val += *(bitmap + img->stride + j + 1);
+                    val >>= 2;
+
+                    k = val * opacity / 255;
+                    orig_u = *(udata+l);
+                    orig_v = *(vdata+l);
+
+                    orig_u=( k*u+(255-k)*orig_u)/255;
+                    orig_v=( k*v+(255-k)*orig_v)/255;
+                    *(udata+l) = orig_u;
+                    *(vdata+l) = orig_v;
+            }
+
+            bitmap += img->stride << 1;
+            udata += pitches[1];
+            vdata += pitches[2];
+    }
+    return true;
+}
+
+/**
     \fn getNextFrame
 */
 bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
@@ -330,11 +450,8 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         return false;
     }
 
-        uint32_t  i, j, k, l, val;
-        uint8_t y, u, v, opacity;
-        int32_t orig_u, orig_v,klong,newu,newv;
-        uint8_t orig_y;
-        uint8_t *bitmap, *ydata, *udata, *vdata;
+        
+        
 
 
        /* copy source to image */
@@ -361,76 +478,10 @@ bool subAss::getNextFrame(uint32_t *fn,ADMImage *image)
         ASS_Image *img = ass_render_frame(_ass_rend, _ass_track, now,&changed);
         //printf("Time is now %d ms\n",now);
 
-        while(img) {
-                  //  printf("Image is %d x %d \n",img->w, img->h);
-                  y = rgba2y(img->color);
-                  u = rgba2u(img->color);
-                  v = rgba2v(img->color);
-
-                  opacity = 255 - _a(img->color);
-
-
-
-                  uint8_t *planes[3];
-                  int      pitches[3];
-
-                  image->GetPitches(pitches);
-                  image->GetWritePlanes(planes);
-
-                  uint32_t x=img->dst_x;
-                  ydata = planes[0]+pitches[0]*( param.topMargin+img->dst_y)+x;
-
-                  x>>=1;
-                  udata = planes[1]+pitches[1]*((param.topMargin+img->dst_y)/2)+x;
-                  vdata = planes[2]+pitches[2]*((param.topMargin+img->dst_y)/2)+x;
-
-                  // do y
-                  bitmap = img->bitmap;
-                  for(i = 0; i < img->h; ++i)
-                  {
-                          for(j = 0; j < img->w; ++j)
-                          {
-                                  k = *(bitmap+j) * opacity / 255;
-                                  orig_y = *(ydata+j);
-                                  *(ydata+j) = (k*y + (255-k)*orig_y) / 255;
-                          }
-
-                          bitmap += img->stride;
-                          ydata += pitches[0];
-                  }
-                  // Now do u & v
-                  bitmap = img->bitmap;
-
-                  newu=u-128;
-                  newv=v-128;
-
-                  for(i = 0; i < img->h; i += 2)
-                  {
-                          for(j = 0, l = 0; j < img->w; j += 2, ++l)
-                          {
-                                  val = 0;
-                                  val += *(bitmap + j);
-                                  val += *(bitmap + j + 1);
-                                  val += *(bitmap + img->stride + j);
-                                  val += *(bitmap + img->stride + j + 1);
-                                  val >>= 2;
-
-                                  k = val * opacity / 255;
-                                  orig_u = *(udata+l);
-                                  orig_v = *(vdata+l);
-
-                                  orig_u=( k*u+(255-k)*orig_u)/255;
-                                  orig_v=( k*v+(255-k)*orig_v)/255;
-                                  *(udata+l) = orig_u;
-                                  *(vdata+l) = orig_v;
-                          }
-
-                          bitmap += img->stride << 1;
-                          udata += pitches[1];
-                          vdata += pitches[2];
-                  }
-
-                  img = img->next;
+        while(img) 
+        {
+            mergeOneImage(img,image);
+            img = img->next;
         }
         return true;
 }
