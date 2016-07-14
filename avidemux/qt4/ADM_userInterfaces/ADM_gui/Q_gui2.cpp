@@ -671,10 +671,16 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
 						return true;
 					case Qt::Key_Up:
-						sendAction(ACT_NextKFrame);
+                                                if (keyEvent->modifiers() == Qt::ControlModifier) 
+                                                    sendAction(ACT_Forward1Mn);
+                                                else
+                                                    sendAction(ACT_NextKFrame);
 						return true;
 					case Qt::Key_Down:
-						sendAction(ACT_PreviousKFrame);
+                                                if (keyEvent->modifiers() == Qt::ControlModifier) 
+                                                    sendAction(ACT_Back1Mn);
+                                                else                                            
+                                                    sendAction(ACT_PreviousKFrame);
 						return true;
 					case Qt::Key_Shift:
 						shiftKeyHeld = 1;

@@ -51,10 +51,7 @@ void HandleAction_Navigate(Action action)
 static int ignore_change=0;
     switch (action)
       {
-      case ACT_Forward1Mn:
-          break;
-        case ACT_Back1Mn:
-          break;
+    
       case ACT_Scale:
         if (!ignore_change)
         {
@@ -100,6 +97,12 @@ static int ignore_change=0;
       case ACT_PreviousFrame:
         GUI_PrevFrame();
         break;
+    case ACT_Forward1Mn:
+          GUI_SeekByTime(60*1000LL*1000LL);
+          break;
+        case ACT_Back1Mn:
+          GUI_SeekByTime(-60*1000LL*1000LL);
+          break;        
       case ACT_Forward4Seconds:
         GUI_SeekByTime(4000000LL);
         break;
