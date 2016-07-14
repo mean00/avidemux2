@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>766</width>
-    <height>757</height>
+    <width>858</width>
+    <height>863</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,7 +43,16 @@
       <property name="spacing">
        <number>6</number>
       </property>
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
@@ -99,8 +108,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>766</width>
-     <height>29</height>
+     <width>858</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp">
@@ -265,7 +274,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -289,7 +307,16 @@
            <property name="spacing">
             <number>6</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -389,7 +416,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -416,7 +452,16 @@
            <property name="sizeConstraint">
             <enum>QLayout::SetDefaultConstraint</enum>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -540,7 +585,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -567,7 +621,16 @@
            <property name="sizeConstraint">
             <enum>QLayout::SetDefaultConstraint</enum>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -625,7 +688,16 @@
              <property name="sizeConstraint">
               <enum>QLayout::SetDefaultConstraint</enum>
              </property>
-             <property name="margin">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
               <number>0</number>
              </property>
              <item>
@@ -812,7 +884,7 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Navigation</string>
+    <string>&amp;Navigation</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -872,11 +944,29 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
           <widget class="QToolButton" name="toolButtonPlay">
+           <property name="toolTip">
+            <string>Play [SPACE]</string>
+           </property>
+           <property name="statusTip">
+            <string>Play</string>
+           </property>
+           <property name="whatsThis">
+            <string/>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -897,6 +987,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonStop">
+           <property name="toolTip">
+            <string>Stop [SPACE]</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -917,6 +1010,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonPreviousFrame">
+           <property name="toolTip">
+            <string>Go to previous frame [LEFT]</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -937,6 +1033,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonNextFrame">
+           <property name="toolTip">
+            <string>Go to next frame [RIGHT]</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -957,6 +1056,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonPreviousIntraFrame">
+           <property name="toolTip">
+            <string>Go to previous keyframe [DOWN]</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -977,6 +1079,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonNextIntraFrame">
+           <property name="toolTip">
+            <string>Go to next keyframe [UP]</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -997,6 +1102,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonSetMarkerA">
+           <property name="toolTip">
+            <string>Set start marker</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1017,6 +1125,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonSetMarkerB">
+           <property name="toolTip">
+            <string>Set end marker</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1037,6 +1148,12 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonPreviousBlackFrame">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="toolTip">
+            <string>Search previous black frame</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1057,6 +1174,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonNextBlackFrame">
+           <property name="toolTip">
+            <string>Search next black frame</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1077,6 +1197,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonFirstFrame">
+           <property name="toolTip">
+            <string>Go to first frame</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1097,6 +1220,58 @@
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonLastFrame">
+           <property name="toolTip">
+            <string>Go to last frame</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonBackOneMinute">
+           <property name="toolTip">
+            <string>Backward one minute [CTRL+DOWN]</string>
+           </property>
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonForwardOneMinute">
+           <property name="toolTip">
+            <string>Forward one minute [CTRL+UP]</string>
+           </property>
+           <property name="accessibleDescription">
+            <string>Forward one minute</string>
+           </property>
            <property name="text">
             <string>...</string>
            </property>
@@ -1138,7 +1313,16 @@
          <property name="spacing">
           <number>6</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -1261,14 +1445,14 @@
    <property name="minimumSize">
     <size>
      <width>192</width>
-     <height>143</height>
+     <height>163</height>
     </size>
    </property>
    <property name="features">
     <set>QDockWidget::NoDockWidgetFeatures</set>
    </property>
    <property name="windowTitle">
-    <string>Selection</string>
+    <string>Se&amp;lection</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -1354,6 +1538,9 @@
          </item>
          <item row="1" column="2">
           <widget class="QPushButton" name="pushButtonJumpToMarkerA">
+           <property name="toolTip">
+            <string>Go to marker A</string>
+           </property>
            <property name="text">
             <string>000000</string>
            </property>
@@ -1361,6 +1548,9 @@
          </item>
          <item row="2" column="2">
           <widget class="QPushButton" name="pushButtonJumpToMarkerB">
+           <property name="toolTip">
+            <string>Go to Marker B</string>
+           </property>
            <property name="text">
             <string>000000</string>
            </property>
@@ -1369,7 +1559,7 @@
          <item row="3" column="1">
           <widget class="QCheckBox" name="checkDisplayOut">
            <property name="toolTip">
-            <string>Display processed video on playback</string>
+            <string>Display output video on playback</string>
            </property>
            <property name="text">
             <string/>
@@ -1404,7 +1594,7 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Volume</string>
+    <string>Vol&amp;ume</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
@@ -1504,7 +1694,7 @@
     <set>Qt::BottomDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Audio Metre</string>
+    <string>Audio &amp;Metre</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>

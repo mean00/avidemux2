@@ -51,6 +51,10 @@ void HandleAction_Navigate(Action action)
 static int ignore_change=0;
     switch (action)
       {
+      case ACT_Forward1Mn:
+          break;
+        case ACT_Back1Mn:
+          break;
       case ACT_Scale:
         if (!ignore_change)
         {
