@@ -1251,7 +1251,7 @@
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_start.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
+             <normaloff>:/new/prefix1/pics/backward1mn.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1277,7 +1277,7 @@
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/player_end.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
+             <normaloff>:/new/prefix1/pics/forward1mn.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
            </property>
            <property name="iconSize">
             <size>
