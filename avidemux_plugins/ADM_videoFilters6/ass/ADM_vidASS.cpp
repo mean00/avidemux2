@@ -384,7 +384,7 @@ bool subAss::mergeOneImage(ASS_Image *img,ADMImage *target)
         return false;
     }
     //-- clip width--
-    topW=clipWindow(img->w, img->dst_y,target->_width);    
+    topW=clipWindow(img->w, img->dst_x,target->_width);    
     if(topW<0)
     {
         ADM_warning("Subtitle outside of video-w\n");
