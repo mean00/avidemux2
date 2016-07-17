@@ -181,7 +181,7 @@ static int mkvFindStartCode(uint8_t *& start, uint8_t *end)
 
 static bool canRederiveFrameType(uint32_t fcc)
 {
-    if(isMpeg4Compatible(fcc)) return true;
+    if(isMpeg4Compatible(fcc) || isVC1Compatible(fcc)) return true;
     if(isH264Compatible(fcc)) return true;
     if(isMpeg12Compatible(fcc)) return true;
     return false;
@@ -306,6 +306,18 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                     
                 }             
                 
+    }else if(isVC1Compatible(_videostream.fccHandler))
+    {
+        if(rpt)
+                    memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
+            parser->readBin(readBuffer+rpt,size-3);
+            uint8_t *begin=readBuffer;
+            uint8_t *end=readBuffer+size-3+rpt;
+            int frameType;
+            if(ADM_VC1getFrameType(begin, (int)(end-begin),&frameType))
+            {
+                ix.flags=frameType;
+            }
     }
   }
   Track->index.append(ix);

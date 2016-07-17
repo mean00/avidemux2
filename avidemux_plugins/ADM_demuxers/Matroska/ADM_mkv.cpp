@@ -121,7 +121,16 @@ uint8_t mkvHeader::open(const char *name)
     for(int i=0;i<1+_nbAudioTrack;i++)
         ADM_info("Track %" PRIu32" has an index size of %d entries\n",i,_tracks[i].index.size());
 
-
+  
+  if(isVC1Compatible(_videostream.fccHandler))
+  {
+      int       nb=_tracks[0].index.size();
+      mkvTrak   *vid=_tracks;
+      
+      ADM_warning("Deleting  timestamps. For VC1, they are often wrong\n");
+      for(int i=1;i<nb-1;i++)
+          vid->index[i].Pts=ADM_NO_PTS;
+  }
   // Delay frames + recompute frame duration
 // now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
     uint32_t ptsdtsdelta, mindelta;
@@ -272,6 +281,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         for(int i=0;i<nb-1;i++) 
         {
             if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
+            if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
+                continue;
             delta=(int64_t)track->index[i+1].Pts-(int64_t)track->index[i].Pts;
             if(delta<0) delta=-delta;
             if(delta<minDelta) minDelta=delta;
