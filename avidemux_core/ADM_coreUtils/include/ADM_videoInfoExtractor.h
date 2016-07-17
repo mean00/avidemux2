@@ -82,5 +82,8 @@ typedef struct
 ADM_COREUTILS6_EXPORT uint32_t ADM_searchVop(uint8_t *begin, uint8_t *end,uint32_t *nb, ADM_vopS *vop,uint32_t *timeincbits);
 ADM_COREUTILS6_EXPORT uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
 ADM_COREUTILS6_EXPORT uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out);
+
+
+ADM_COREUTILS6_EXPORT bool ADM_VC1getFrameType(uint8_t *start, int size, int *frameType);
 #endif
 //EOF
