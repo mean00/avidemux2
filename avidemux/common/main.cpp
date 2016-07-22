@@ -91,13 +91,13 @@ extern bool UI_End(void);
 extern void cleanUp (void);
 
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
-static bool performOnExit=true;
+
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
 #endif
 
-void onexit(void);
+void ADM_ExitCleanup(void);
 int startAvidemux(int argc, char *argv[]);
 bool isPortableMode(int argc, char *argv[]);
 #ifdef main
@@ -255,7 +255,6 @@ int startAvidemux(int argc, char *argv[])
     CpuCaps::init();
     CpuCaps::setMask(cpuMask);
     
-    atexit(onexit);
 
 #ifdef _WIN32
     win32_netInit();
@@ -407,18 +406,13 @@ int startAvidemux(int argc, char *argv[])
     printf("Normal exit\n");
     return 0;
 }
-void disableExitHandler()
-{
-    performOnExit=false;
-}
 /**
  * 
  */
-void onexit( void )
+void ADM_ExitCleanup( void )
 {
     printf("Cleaning up\n");
-    if(!performOnExit)
-        return;
+    admPreview::destroy();
     if(video_body) 
         video_body->cleanup ();
     delete video_body;
@@ -440,7 +434,6 @@ void onexit( void )
     destroyGUI();
     destroyPrefs();
 
-    admPreview::destroy();
     UI_End();
 
     ADM_ad_cleanup();

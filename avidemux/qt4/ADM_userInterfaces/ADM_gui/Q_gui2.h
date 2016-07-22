@@ -28,6 +28,7 @@ extern void checkCrashFile(void);
 extern int automation(void);
 extern int global_argc;
 extern char **global_argv;
+extern void ADM_ExitCleanup(void);
 
 class myQApplication : public QApplication
 {
@@ -57,6 +58,11 @@ class myQApplication : public QApplication
                         checkCrashFile();
                         if (global_argc >= 2)
                                 automation();
+                }
+                void cleanup()
+                {
+                  //ADM_ExitCleanup();
+                  emit quit();
                 }
 };
 /**

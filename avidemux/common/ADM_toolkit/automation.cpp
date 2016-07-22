@@ -53,6 +53,7 @@ static void loadCB(char *name);
 static int set_output_format(const char *str);
 static void set_reuse_2pass_log(char *p);
 static void setVar(char *in);
+extern void UI_closeGui();
 //_________________________________________________________________________
 
 
@@ -246,7 +247,7 @@ void call_scriptEngine(const char *scriptFile)
 void call_quit        (char *p) 
 { 
     UNUSED_ARG(p); 
-    exit(0);
+    UI_closeGui();
 }
 // The form is name=value
 // split it in two

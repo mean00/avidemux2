@@ -99,6 +99,8 @@ extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
 extern bool A_loadDefaultSettings(void);;
 
+extern void ADM_ExitCleanup(void);
+
 static bool uiRunning=false;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
@@ -841,7 +843,9 @@ int UI_Init(int nargc, char **nargv)
  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
 	myApplication=new myQApplication (global_argc, global_argv);
-	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
+	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT((quit)));
+        myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
+        
 
 	loadTranslator();
 
@@ -1442,9 +1446,6 @@ void UI_setAudioTrackCount( int nb )
 /**
  * \fn dtor
  */
-#ifdef SDL_ON_LINUX
-extern void disableExitHandler();
-#endif
 myQApplication::~myQApplication()
 {
     
@@ -1452,8 +1453,7 @@ myQApplication::~myQApplication()
     renderDestroy();
     ADM_warning("Cleaning preview...\n");
     admPreview::cleanUp();
-    ADM_warning("Cleaning video body...\n");
-    if(video_body) video_body->cleanup (); // Delete decoder related to X11 context before purging X11 context
+    ADM_ExitCleanup();    
     
 #if defined( USE_VDPAU)
   #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
@@ -1467,7 +1467,6 @@ myQApplication::~myQApplication()
     
 #ifdef SDL_ON_LINUX
     ADM_warning("This is SDL on linux, exiting brutally to avoid lock.\n");
-    disableExitHandler();
     ::exit(0); // 
 #endif    
     ADM_warning("Exiting app\n");
