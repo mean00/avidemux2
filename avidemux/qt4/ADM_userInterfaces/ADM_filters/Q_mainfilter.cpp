@@ -495,7 +495,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     QAction *add = new  QAction(QString("Add"),this);
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
-    connect(add,SIGNAL(activated()),this,SLOT(addSlot()));
+    connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
     
     
     QAction *remove = new  QAction(QString("Remove"),this);
