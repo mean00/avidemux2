@@ -205,7 +205,7 @@ void AVDM_cleanup(void)
     ListOfAudioDevices.clear();
 	if(device)
 	{
-// FIXME		delete device;
+        delete device;
 		device=NULL;
 	}
 }

@@ -39,6 +39,7 @@
 // Our callback to give UI formatted informations....
 static ADM_saveFunction *mysaveFunction=NULL;
 static ADM_fatalFunction *myFatalFunction=NULL;
+static sighandler_t      oldSignalHandler;
 void sig_segfault_handler(int signo);
 /**
         \fn ADM_setCrashHook
@@ -54,7 +55,12 @@ void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
 */
 void installSigHandler(void)
 {
-    signal(11, sig_segfault_handler); // show stacktrace on default
+    oldSignalHandler=signal(11, sig_segfault_handler); // show stacktrace on default
+}
+void uninstallSigHandler(void)
+{
+    ADM_info("Removing signal handler\n");
+    signal(11, SIG_DFL); 
 }
 
 /**

@@ -2,6 +2,6 @@
 #define ADM_CRASHDUMP_UNIX_H
 
 ADM_CORE6_EXPORT void installSigHandler(void);
-#define uninstallSigHandler(...) {}
+ADM_CORE6_EXPORT void uninstallSigHandler(void);
 
 #endif

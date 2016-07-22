@@ -205,31 +205,36 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->systemWindowId = 0;
 
 #if defined(_WIN32)
-	xinfo->display=(void *)videoWindow->winId();
+    xinfo->display=(void *)videoWindow->winId();
         xinfo->systemWindowId=videoWindow->winId();
 #elif defined(__APPLE__)
-	#if defined(ADM_CPU_X86_64)
-		xinfo->display = (void*)videoWindow->winId();
-                xinfo->systemWindowId=videoWindow->winId();
-	#else
-		xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
-                xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
-	#endif
-#else
+    #if defined(ADM_CPU_X86_64)
+        xinfo->display = (void*)videoWindow->winId();
+        xinfo->systemWindowId=videoWindow->winId();
+    #else
+        xinfo->display = HIViewGetWindow(HIViewRef(widget->winId()));
+        xinfo->systemWindowId= HIViewGetWindow(HIViewRef(widget->winId()));
+    #endif
+#else // linux        
         #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
                 const QX11Info &info=videoWindow->x11Info();
                 xinfo->display=info.display();
         #else
-                xinfo->display=XOpenDisplay(NULL);
+            {
+                static void *myDisplay=NULL;
+                if(!myDisplay)
+                  myDisplay=XOpenDisplay(NULL);
+                xinfo->display=myDisplay;
+            }
         #endif
         xinfo->systemWindowId=videoWindow->winId();
 #endif
-        QPoint localPoint(0,0);
-        QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        
-	xinfo->x = windowPoint.x();
-	xinfo->y = windowPoint.y();
-	xinfo->width  = displayW;
-	xinfo->height = displayH;
+    QPoint localPoint(0,0);
+    QPoint windowPoint = videoWindow->mapToGlobal(localPoint);        
+    xinfo->x = windowPoint.x();
+    xinfo->y = windowPoint.y();
+    xinfo->width  = displayW;
+    xinfo->height = displayH;
 }
 /**
  * \brief DEPRECATED

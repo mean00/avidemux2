@@ -237,8 +237,10 @@ void call_scriptEngine(const char *scriptFile)
 
 	if (!executed)
 	{
-		printf("Unable to appropriate script engine for script file\n");
+		ADM_warning("Unable to appropriate script engine for script file\n");
 	}
+    delete [] root;root=NULL;
+    delete [] ext;root=ext;
 }
 /**
  * 

@@ -89,6 +89,11 @@ void loadTranslator(void)
         if(autoSelect)
         {
             ADM_info("Using system language\n");
+            if(lang)
+            {
+                free(lang);
+                lang=NULL;
+            }
             lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
         }else
         {
@@ -109,13 +114,15 @@ void loadTranslator(void)
 #elif defined(_WIN32)
 	QString appdir = QCoreApplication::applicationDirPath() + QString(partialPath.c_str());
 #else
-	QString appdir = ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
+    char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
+	QString appdir = QString(ppath);
+    delete [] ppath;ppath=NULL;
 #endif
-        QString languageFile=QString(lang);
-
+    QString languageFile=QString(lang);
+    free(lang);
     int nbLoaded=0;
-        qtTranslator=new QTranslator();
-        avidemuxTranslator=new QTranslator();
+    qtTranslator=new QTranslator();
+    avidemuxTranslator=new QTranslator();
 	nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
 	nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
 	translatorLoaded = true;
