@@ -73,32 +73,32 @@ bool     ADM_av_getDeviceInfo(int filter, const char **name, uint32_t *major,uin
     \brief Try loading the file given as argument as an audio device plugin
 
 */
-#define Fail(x) {printf("%s:"#x"\n",file);goto er;}
+#define Fail(x) {ADM_info("%s:"#x"\n",file);goto er;}
 static bool tryLoadingFilterPlugin(const char *file)
 {
-	ADM_AudioDevices *dll=new ADM_AudioDevices(file);
+    ADM_AudioDevices *dll=new ADM_AudioDevices(file);
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->apiVersion!=ADM_AUDIO_DEVICE_API_VERSION) Fail(WrongApiVersion);
 
     ListOfAudioDevices.append(dll); // Needed for cleanup. FIXME TODO Delete it.
-    printf("[Filters] Registered filter %s as  %s\n",file,dll->descriptor);
+    ADM_info("[Filters] Registered filter %s as  %s\n",file,dll->descriptor);
     return true;
-	// Fail!
+    // Fail!
 er:
-	delete dll;
-	return false;
+    delete dll;
+    return false;
 
 }
 /**
- * 	\fn ADM_av_loadPlugins
+ *     \fn ADM_av_loadPlugins
  *  \brief load all audio device plugins
  */
 uint8_t ADM_av_loadPlugins(const char *path)
 {
 #define MAX_EXTERNAL_FILTER 100
 
-	char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
+    char *files[MAX_EXTERNAL_FILTER];
+    uint32_t nbFile;
 
 
     // PushBack our dummy one : TODO FIXME
@@ -108,22 +108,22 @@ uint8_t ADM_av_loadPlugins(const char *path)
                                 DummyDeleteAudioDevice);
     
     ListOfAudioDevices.append(dummyDevice); 
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_av_plugin] Scanning directory %s\n",path);
+    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+    ADM_info("[ADM_av_plugin] Scanning directory %s\n",path);
 
-	if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
-	{
-		printf("[ADM_av_plugin] Cannot parse plugin\n");
-		return 0;
-	}
+    if(!buildDirectoryContent(&nbFile, path, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    {
+        ADM_info("[ADM_av_plugin] Cannot parse plugin\n");
+        return 0;
+    }
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingFilterPlugin(files[i]);
+    for(int i=0;i<nbFile;i++)
+        tryLoadingFilterPlugin(files[i]);
 
-	printf("[ADM_av_plugin] Scanning done\n");
+    ADM_info("[ADM_av_plugin] Scanning done\n");
         clearDirectoryContent(nbFile,files);
 
-	return 1;
+    return 1;
 }
 /**
     \fn AVDM_audioSave
@@ -134,8 +134,8 @@ uint8_t ADM_av_loadPlugins(const char *path)
 void AVDM_audioSave( void )
 {
 const char *string;
-		string=ADM_audioById(currentDevice);
-		prefs->set(AUDIO_DEVICE_AUDIODEVICE, string);
+        string=ADM_audioById(currentDevice);
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE, string);
 }
 /**
     \fn ADM_audioByName
@@ -144,16 +144,16 @@ const char *string;
 */
 AUDIO_DEVICE ADM_audioByName(const char *name)
 {
-	if(!name) return (AUDIO_DEVICE)0;
-	for(uint32_t i=0;i<ListOfAudioDevices.size();i++)
-	{
-		if(!strcasecmp(name,ListOfAudioDevices[i]->name))
-		{
-			return i;
-		}	
-	}
-	printf("Device not found :%s\n",name);
-	return (AUDIO_DEVICE)0;
+    if(!name) return (AUDIO_DEVICE)0;
+    for(uint32_t i=0;i<ListOfAudioDevices.size();i++)
+    {
+        if(!strcasecmp(name,ListOfAudioDevices[i]->name))
+        {
+            return i;
+        }    
+    }
+    ADM_info("Device not found :%s\n",name);
+    return (AUDIO_DEVICE)0;
 
 }
 /**
@@ -162,7 +162,7 @@ AUDIO_DEVICE ADM_audioByName(const char *name)
 */
 const char *ADM_audioById(AUDIO_DEVICE id)
 {
-	ADM_assert(id<ListOfAudioDevices.size());
+    ADM_assert(id<ListOfAudioDevices.size());
     return ListOfAudioDevices[id]->name;
 }
 /**
@@ -171,7 +171,7 @@ const char *ADM_audioById(AUDIO_DEVICE id)
 */
 AUDIO_DEVICE AVDM_getCurrentDevice( void)
 {
-	return currentDevice;
+    return currentDevice;
 }
 /**
     \fn AVDM_audioInit
@@ -183,14 +183,14 @@ uint8_t init=0;
 char *name=NULL;
 AUDIO_DEVICE id=0;
 
-		if(prefs->get(AUDIO_DEVICE_AUDIODEVICE, &name))
-		{
-		id=ADM_audioByName(name);
-		ADM_dealloc(name);
-		name=NULL;	
+        if(prefs->get(AUDIO_DEVICE_AUDIODEVICE, &name))
+        {
+        id=ADM_audioByName(name);
+        ADM_dealloc(name);
+        name=NULL;    
         }
-		
-		
+        
+        
         AVDM_switch(id);
 }
 /**
@@ -199,15 +199,15 @@ AUDIO_DEVICE id=0;
 */
 void AVDM_cleanup(void)
 {
+    if(device)
+    {
+        delete device;
+        device=NULL;
+    }
     int nb=ListOfAudioDevices.size();
     for(int i=0;i<nb;i++)
             delete ListOfAudioDevices[i];
     ListOfAudioDevices.clear();
-	if(device)
-	{
-        delete device;
-		device=NULL;
-	}
 }
 /**
     \fn AVDM_switch
@@ -215,11 +215,11 @@ void AVDM_cleanup(void)
 */
 void AVDM_switch(AUDIO_DEVICE action)
 {
-	if(device)
-	{
-		delete device;
-		device=NULL;
-	}
+    if(device)
+    {
+        delete device;
+        device=NULL;
+    }
     ADM_assert(action<ListOfAudioDevices.size());
     device=ListOfAudioDevices[action]->createAudioDevice();
     currentDevice=action;
@@ -232,7 +232,7 @@ void AVDM_switch(AUDIO_DEVICE action)
 */
 void AVDM_AudioClose(void)
 {
-	device->stop();
+    device->stop();
 }
 
 /**
@@ -242,8 +242,8 @@ void AVDM_AudioClose(void)
 */
 uint32_t AVDM_AudioSetup(uint32_t fq, uint8_t channel,CHANNEL_TYPE *channelMapping)
 {
-	
-	return device->init(channel,fq,channelMapping);
+    
+    return device->init(channel,fq,channelMapping);
 }
 /**
     \fn AVDM_setVolume
@@ -253,7 +253,7 @@ uint32_t AVDM_AudioSetup(uint32_t fq, uint8_t channel,CHANNEL_TYPE *channelMappi
 
 uint8_t         AVDM_setVolume(int volume)
 {
-        printf("New volume :%d\n",volume);
+        ADM_info("New volume :%d\n",volume);
         device->setVolume(volume);
         return 1;
 
@@ -265,7 +265,7 @@ uint8_t         AVDM_setVolume(int volume)
 */
 uint8_t AVDM_AudioPlay(float *ptr, uint32_t nb)
 {
-	return device->play(nb,ptr);
+    return device->play(nb,ptr);
 }
 /**
     \fn AVDM_GetLayencyMs
@@ -274,7 +274,7 @@ uint8_t AVDM_AudioPlay(float *ptr, uint32_t nb)
 */
 uint32_t AVDM_GetLayencyMs(void)
 {
-	return device->getLatencyMs();
+    return device->getLatencyMs();
 }
 
 /**
