@@ -1,11 +1,7 @@
 /***************************************************************************
-                          main.cpp  -  description
-                             -------------------
-	Initialize the env.
-
-    begin                : Sat Feb 2 2002
-    copyright            : (C) 2002 by mean
-    email                : fixounet@free.fr
+ * \file    main.cpp
+ * \brief   Initialize the env.
+ * \author  mean/fixounet@free.fr (C) 2002/2016 by mean
  ***************************************************************************/
 
 /***************************************************************************
@@ -92,6 +88,8 @@ extern void cleanUp (void);
 
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
+typedef bool (*initFunc_t)    (void);
+std::vector<initFunc_t> listOfHwInit;    
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -175,6 +173,47 @@ static const char *getUISpecifSubfolder()
     }
     return "unknown";
 }
+
+#ifdef USE_SDL
+static bool sdlProbe(void)
+{
+    PROBE_HW_ACCEL(sdlProbe,SDL,initSdl)            
+    char *drv=NULL;
+    printf("Probing for SDL...\n");
+    std::string sdlDriver=std::string("dummy");
+    if(prefs->get(FEATURES_SDLDRIVER,&drv))
+    {
+        if(drv)
+        {
+            if(strlen(drv))
+            {
+                sdlDriver=std::string(drv);
+            }
+            ADM_dezalloc(drv);
+        }
+    }
+    printf("Calling initSDL with driver=%s\n",sdlDriver.c_str());
+    initSdl(sdlDriver);
+    return true;
+}
+/**
+ * 
+ * @param argc
+ * @param argv
+ * @return 
+ */
+static bool fakeInitSdl()
+{
+    return true;
+}
+#endif        
+
+/**
+ * 
+ * @param argc
+ * @param argv
+ * @return 
+ */
 int startAvidemux(int argc, char *argv[])
 {
     printf("*************************\n");
@@ -270,7 +309,7 @@ int startAvidemux(int argc, char *argv[])
     InitCoreToolkit();
     initFileSelector();
 
-	// Load .avidemuxrc
+    // Load .avidemuxrc
     quotaInit();
 
     ADM_lavFormatInit();
@@ -281,124 +320,89 @@ int startAvidemux(int argc, char *argv[])
 #else
     const char *startDir=ADM_RELATIVE_LIB_DIR;
 #endif
-    char *adPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDecoder");
-    char *avPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioDevices");
-    char *aePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "audioEncoders");
-    char *dmPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "demuxers");
-    char *mxPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "muxers");
-    char *vePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoEncoders");
-    char *vdPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoDecoders");
-    char *vfPlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "videoFilters");
-    char *sePlugins = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "scriptEngines");
+   
 
-    //***************Plugins *********************
-
-	if(!initGUI(initialiseScriptEngines(sePlugins, video_body,getUISpecifSubfolder())))
-	{
-		printf("\n Fatal : could not init GUI\n");
-		exit(-1);
-	}
-
-    delete [] sePlugins;
-
-#if defined( USE_VDPAU)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for VDPAU...\n");
-    if(vdpauProbe()==true) printf("VDPAU available\n");
-        else printf("VDPAU not available\n");
-  #else
-    printf("Cannot use VDPAU in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
-
-#if defined( USE_XVBA)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for XVBA...\n");
-    if(xvbaProbe()==true) printf("XVBA available\n");
-        else printf("XVBA not available\n");
-  #else
-    printf("Cannot use XVBA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif
-
-#if defined( USE_LIBVA)
-  #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-    printf("Probing for LIBVA...\n");
-    if(libvaProbe()==true) printf("LIBVA available\n");
-        else printf("LIBVA not available\n");
-  #else
-    printf("Cannot use LIBVA in cli mode %d,%d\n",ADM_UI_TYPE_BUILD,ADM_UI_CLI);
-  #endif
-#endif    
-
-#ifdef USE_SDL
-    char *drv=NULL;
-    printf("Probing for SDL...\n");
-    std::string sdlDriver=std::string("dummy");
-    if(prefs->get(FEATURES_SDLDRIVER,&drv))
     {
-        if(drv)
+        char *se = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,"scriptEngines" );
+        if(!initGUI(initialiseScriptEngines(se, video_body,getUISpecifSubfolder())))
         {
-            if(strlen(drv))
-            {
-                sdlDriver=std::string(drv);
-            }
-            ADM_dezalloc(drv);
+                printf("\n Fatal : could not init GUI\n");
+                exit(-1);
         }
+        delete [] se;
     }
-    printf("Calling initSDL with driver=%s\n",sdlDriver.c_str());
-    initSdl(sdlDriver);
+
+    
+
+
+#define PROBE_HW_ACCEL(probe,name,initFunc) {   \
+    printf("Probing for "#name"...\n"); \
+    if(probe()==true)\
+    {\
+        printf(#name" available\n"); \
+        listOfHwInit.push_back(initFunc);\
+    }\
+      else \
+        printf(#name" not available\n");}
+
+        
+#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)               
+#if defined( USE_VDPAU)
+    PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder)
+#endif    
+            
+#if defined( USE_LIBVA)
+    PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder)
+#endif    
+    
+#endif // !CLI
+    
+#ifdef USE_SDL
+    PROBE_HW_ACCEL(sdlProbe,SDL,fakeInitSdl)               
 #endif        
     //
     
-    ADM_mx_loadPlugins(mxPlugins);
-    delete [] mxPlugins;
+#define loadPlugins(subdir, func)\
+{\
+     char *p = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,subdir );\
+     func(p);\
+     delete [] p;p=NULL;\
+}            
 
-    ADM_ad_loadPlugins(adPlugins);
-    delete [] adPlugins;
+#define loadPluginsEx(subdir, func)\
+{\
+     char *p = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,subdir );\
+     func(p,getUISpecifSubfolder());\
+     delete [] p;p=NULL;\
+}            
 
-    ADM_av_loadPlugins(avPlugins);
-    delete [] avPlugins;
-
-    ADM_ae_loadPlugins(aePlugins);
-    delete [] aePlugins;
-
-    ADM_dm_loadPlugins(dmPlugins);
-    delete [] dmPlugins;
-
-    ADM_ve6_loadPlugins(vePlugins,getUISpecifSubfolder());
-    delete [] vePlugins;
-
-    ADM_vf_loadPlugins(vfPlugins,getUISpecifSubfolder());
-    delete [] vfPlugins;
-
-    ADM_vd6_loadPlugins(vdPlugins);
-    delete [] vdPlugins;
-
-
-    // load local audio decoder plugins
-    adPlugins=ADM_getHomeRelativePath("plugins6","audioDecoder");
-    ADM_ad_loadPlugins(adPlugins);
-    delete [] adPlugins;
-
-    // load local video filter plugins
-    vfPlugins=ADM_getHomeRelativePath("plugins6","videoFilter");
-    ADM_vf_loadPlugins(vfPlugins,getUISpecifSubfolder());
-    delete [] vfPlugins;
-
-
-	
-
-    ADM_lavInit();
+#define loadPluginsMyEx(subdir, func)\
+{\
+     char *p = ADM_getHomeRelativePath("plugins6",subdir); \
+     func(p,getUISpecifSubfolder());\
+     delete [] p;p=NULL;\
+}            
+            
+   ADM_lavInit();         
+            
+    loadPlugins( "audioDecoder",   ADM_ad_loadPlugins);
+    loadPlugins( "audioDevices",   ADM_av_loadPlugins);
+    loadPlugins( "audioEncoders",  ADM_ae_loadPlugins);
+    loadPlugins( "demuxers",       ADM_dm_loadPlugins);
+    loadPlugins( "muxers",         ADM_mx_loadPlugins);
+    loadPlugins( "videoDecoders",  ADM_vd6_loadPlugins);
+     
+    loadPluginsEx( "videoEncoders",  ADM_ve6_loadPlugins);
+    loadPluginsEx( "videoFilters",   ADM_vf_loadPlugins);
+           
+    
     AVDM_audioInit();
 
-#ifdef USE_VDPAU
-    initVDPAUDecoder();
-#endif
-    
-#ifdef USE_LIBVA
-    initLIBVADecoder();
-#endif    
+    int n=listOfHwInit.size();
+    for(int i=0;i<n;i++)
+    {
+        listOfHwInit[i]();
+    }
     
     UI_RunApp();
     cleanUp();
