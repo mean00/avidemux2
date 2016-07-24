@@ -72,6 +72,7 @@ extern uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder);
 extern bool ADM_ad_cleanup(void);
 extern bool ADM_ae_cleanup(void);
 extern bool ADM_vf_cleanup(void);
+extern void ADM_vd6_cleanup(void);
 extern void ADM_ve6_cleanup(void);
 
 extern bool vdpauProbe(void);
@@ -442,6 +443,7 @@ void ADM_ExitCleanup( void )
     ADM_vf_clearFilters();
     ADM_vf_cleanup();
     ADM_dm_cleanup();
+    ADM_vd6_cleanup();
     ADM_ve6_cleanup();
 
     printf("--End of cleanup--\n");
