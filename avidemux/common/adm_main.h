@@ -34,6 +34,7 @@ extern bool ADM_ad_cleanup(void);
 extern bool ADM_ae_cleanup(void);
 extern bool ADM_vf_cleanup(void);
 extern void ADM_ve6_cleanup(void);
+extern void ADM_vd6_cleanup(void);
 
 extern bool vdpauProbe(void);
 extern bool vdpauCleanup(void);
