@@ -248,7 +248,7 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
 {
     
         uint32_t featureMask=0;
-
+#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
 #ifdef USE_LIBVA               
         if(admLibVA::isOperationnal()) featureMask|=ADM_FEATURE_LIBVA;
 #endif        
@@ -261,7 +261,7 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
         if(hasOpenGl)
             featureMask|=ADM_FEATURE_OPENGL;
 #endif
-        
+#endif 
     
     printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
