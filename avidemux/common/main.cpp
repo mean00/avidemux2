@@ -339,6 +339,7 @@ void ADM_ExitCleanup( void )
     ADM_mx_cleanup();    
     ADM_vf_cleanup();
     ADM_dm_cleanup();
+    ADM_vd6_cleanup();
     ADM_ve6_cleanup();
 
     printf("--End of cleanup--\n");
