@@ -843,7 +843,7 @@ int UI_Init(int nargc, char **nargv)
  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
 	myApplication=new myQApplication (global_argc, global_argv);
-	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT((quit)));
+	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
         myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
         
 
