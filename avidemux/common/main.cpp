@@ -108,7 +108,6 @@ static const char *getUISpecifSubfolder()
 #ifdef USE_SDL
 static bool sdlProbe(void)
 {
-    PROBE_HW_ACCEL(sdlProbe,SDL,initSdl)            
     char *drv=NULL;
     printf("Probing for SDL...\n");
     std::string sdlDriver=std::string("dummy");
