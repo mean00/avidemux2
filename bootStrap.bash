@@ -5,6 +5,7 @@
 # By default we use qt5 now
 #
 packages_ext=""
+rebuild=0
 do_core=1
 do_cli=1
 do_gtk=0  # Gtk is obsolete!
@@ -41,8 +42,12 @@ Process()
         fi
 	FAKEROOT=" -DFAKEROOT=$FAKEROOT_DIR "
         echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
-        rm -Rf ./$BUILDDIR
-        mkdir $BUILDDIR || fail mkdir
+        if [ "x$rebuild" != "x1" ] ; then
+                rm -Rf ./$BUILDDIR
+        fi
+        if [ ! -e "$BUILDDIR" ] ; then
+                mkdir $BUILDDIR || fail mkdir
+        fi
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
@@ -85,6 +90,7 @@ usage()
         echo "  --deb             : Build deb packages"
         echo "  --tgz             : Build tgz packages"
         echo "  --debug           : Switch debugging on"
+        echo "  --rebuild         : Preserve existing build directories"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
         echo "  --with-cli        : Build cli"
@@ -121,6 +127,9 @@ while [ $# != 0 ] ;do
              ;;
          --debug)
                 debug=1
+                ;;
+         --rebuild)
+                rebuild=1
                 ;;
          --tgz)
                 packages_ext=tar.gz
