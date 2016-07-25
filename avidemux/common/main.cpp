@@ -332,11 +332,11 @@ void ADM_ExitCleanup( void )
     destroyPrefs();
 
     UI_End();
+    ADM_vf_clearFilters();
 
     ADM_ad_cleanup();
     ADM_ae_cleanup();
-    ADM_mx_cleanup();
-    ADM_vf_clearFilters();
+    ADM_mx_cleanup();    
     ADM_vf_cleanup();
     ADM_dm_cleanup();
     ADM_ve6_cleanup();

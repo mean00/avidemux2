@@ -91,7 +91,7 @@ void loadTranslator(void)
             ADM_info("Using system language\n");
             if(lang)
             {
-                free(lang);
+                ADM_dealloc(lang);
                 lang=NULL;
             }
             lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
@@ -118,8 +118,12 @@ void loadTranslator(void)
 	QString appdir = QString(ppath);
     delete [] ppath;ppath=NULL;
 #endif
-    QString languageFile=QString(lang);
-    free(lang);
+    QString languageFile;
+    if(lang)
+    {
+        languageFile=QString(lang);
+        ADM_dealloc(lang);
+    }
     int nbLoaded=0;
     qtTranslator=new QTranslator();
     avidemuxTranslator=new QTranslator();
