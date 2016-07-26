@@ -100,6 +100,11 @@ public:
     \brief The video is a collection of segment.
             Each segment refers to its source (the reference) and the part of the source the segment is made of.
 */
+
+#define ADM_NO_DROP                 0
+#define ADM_DROPPING                2
+#define ADM_DROP_MAYBE_AFER_SWITCH  1
+
 class _SEGMENT
 {
 public:
@@ -107,7 +112,7 @@ public:
         uint64_t _refStartTimeUs; /// Starting time in reference
         uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
         uint64_t _durationUs; ///
-        uint32_t _dropBframes;
+        uint32_t _dropBframes; /// Internal state machine to know is we should drop bframe that are orphean
         uint64_t _refStartDts;
         void clear(void) 
         {
@@ -115,7 +120,7 @@ public:
             _refStartTimeUs=0;
             _startTimeUs=0;
             _durationUs=0;
-            _dropBframes=0;
+            _dropBframes=ADM_NO_DROP;
             _refStartDts=0;
         }
         _SEGMENT() {clear();}

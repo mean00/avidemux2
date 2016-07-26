@@ -129,7 +129,7 @@ bool        ADM_Composer::GoToIntraTime_noDecoding(uint64_t time,uint32_t *tofra
         dts=time;
     
     _nextFrameDts=dts;
-    seg->_dropBframes=1;
+    seg->_dropBframes=ADM_DROP_MAYBE_AFER_SWITCH;
     return true;
 }
 /**

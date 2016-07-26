@@ -149,21 +149,21 @@ again:
     \fn getPtsDtsDelta
 */
 
-bool			ADM_Composer::getPtsDtsDelta(uint64_t *frameTime)
+bool			ADM_Composer::getPtsDtsDelta(uint64_t frameTime, uint64_t *outDelta)
 {
 uint64_t refTime,nkTime,segTime;
 int lastSeg=_segments.getNbSegments();
 uint32_t seg;
 bool r;
     // 1- Convert frameTime to segments
-    if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
+    if(false== _segments.convertLinearTimeToSeg(  frameTime, &seg, &segTime))
     {
-        ADM_warning(" Cannot find seg for time %" PRId64"\n",*frameTime);
+        ADM_warning(" Cannot find seg for time %" PRId64"\n",frameTime);
         return false;
     }   
     // 
     _SEGMENT *s=_segments.getSegment(seg);
-    int64_t delta=*frameTime-s->_startTimeUs; // Delta compared to the beginning of this seg
+    int64_t delta=(int64_t)frameTime-(int64_t)s->_startTimeUs; // Delta compared to the beginning of this seg
     
     delta+=s->_refStartTimeUs;
     if(delta<0)
@@ -178,11 +178,11 @@ bool r;
     if(false==_segments.dtsFromPts(ref,refTime,&dts))
     {
         ADM_error("Cannot get dtsFromDts for time %" PRIu64"\n",refTime);
-        *frameTime=0;
+        *outDelta=0;
         return false;
     }
     // Ok we have PTS and DTS, returns difference
-    *frameTime=refTime-dts;
+    *outDelta=refTime-dts;
     return true;
 }
 /**

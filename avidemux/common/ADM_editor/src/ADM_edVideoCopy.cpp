@@ -95,9 +95,87 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
 */
 static bool bFrameDroppable(uint32_t fcc)
 {
-    if(isH264Compatible(fcc)) return false;
+    if(isH264Compatible(fcc)) 
+      return false;
+    if(isH265Compatible(fcc)) 
+      return false;    
     return true;
 }
+/**
+ * 
+ * @param time
+ * @param delay
+ * @return 
+ */
+bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
+{
+  aviInfo    info;
+  uint32_t   segNo;
+  uint64_t   segTime;
+    *delay=0;
+    if(!_segments.convertLinearTimeToSeg(time,&segNo,&segTime))
+      {
+        ADM_warning("Cannot navigate to get nonclosedgop\n");
+        return false;
+      }
+   _SEGMENT *seg=_segments.getSegment(segNo);
+    ADM_assert(seg);
+   _VIDEOS *vid=_segments.getRefVideo(seg->_reference);   
+   uint64_t pts,dts;
+   
+    vid->_aviheader->getVideoInfo (&info);
+    //
+    if(bFrameDroppable(info.fcc))
+    {
+        return true; // no need to add extra delay
+    }
+    // Look ahead to see if we have some late bframe in the past
+    int nb=vid->_aviheader->getMainHeader ()->dwTotalFrames;
+    int found=-1;
+    if(!segTime)
+    {
+      found=0;
+       vid->_aviheader->getPtsDts(0,&pts,&dts);
+    }
+    else
+        for(int i=0;i<nb;i++)
+        {
+            vid->_aviheader->getPtsDts (i,&pts,&dts);
+            if(pts==segTime)
+              {
+                    found=i;
+                    break;
+              }
+        }
+    if(found==-1)
+      {
+        ADM_warning("Cannot find the frame\n");
+        return false;
+      }
+    for(int i=found+1;i<found+16;i++)
+    {
+            uint32_t flags;
+            vid->_aviheader->getFlags(i,&flags);
+            if(!(flags & AVI_B_FRAME))
+            {
+                ADM_info("Not a bframe, stopping (%d)\n",i-found);
+              break;
+            }
+            vid->_aviheader->getPtsDts(i,&pts,&dts);
+            if(pts<segTime)
+              {
+                ADM_info("frame %d is early \n",i);
+                uint32_t delta=segTime-pts;
+                if(delta>*delay) *delay=delta;
+              }else
+                {
+                    ADM_info("Pts delta = %d\n",(int)(pts-segTime));
+                }
+    }
+    ADM_info("Found maximum non closed gop delay = %d\n",*delay);
+    return true;
+}
+
 /**
         \fn getCompressedPicture
         \brief bypass decoder and directly get the source image
@@ -143,7 +221,7 @@ againGet:
     {
         if(img->flags & AVI_B_FRAME)
         {
-            if(seg->_dropBframes==2) 
+            if(seg->_dropBframes==ADM_DROPPING) 
             {
                 ADM_warning("%" PRIu32" Dropping bframes\n",fn);
                 goto againGet;
@@ -152,8 +230,9 @@ againGet:
         { // not a bframe
             switch(seg->_dropBframes)
             {
-                case 2: seg->_dropBframes=0;break;
-                case 1: seg->_dropBframes=2;break;
+                case ADM_NO_DROP                : break;
+                case ADM_DROPPING               : seg->_dropBframes=ADM_NO_DROP;break;
+                case ADM_DROP_MAYBE_AFER_SWITCH : seg->_dropBframes=ADM_DROPPING;break;
                 default: break;
             }
         }
@@ -174,7 +253,7 @@ againGet:
         }
         // Seeking is not accurate when cutting on non intra
         // we might have some frames that are clearly too early , even in seg0
-        if(img->demuxerPts!=ADM_NO_PTS)
+        if(img->demuxerPts!=ADM_NO_PTS && bFrameDroppable(info.fcc))
         {
             if(img->demuxerPts+seg->_startTimeUs<seg->_refStartTimeUs)
             {
@@ -232,8 +311,8 @@ againGet:
 	// border case due to rounding we can have pts slighly above dts
 	if(signedPts!=ADM_NO_PTS && _nextFrameDts!=ADM_NO_PTS)
 	{
-                signedDts=_nextFrameDts;
-                if(signedPts != ADM_NO_PTS && signedDts>signedPts)
+        signedDts=_nextFrameDts;
+        if(signedPts != ADM_NO_PTS && signedDts>signedPts)
 		{
 			// not sure it is correct. We may want to do it the other way around, i.e. bumping pts
 			ADM_warning("Compensating for rounding error with PTS=%" PRId64"ms DTS=%" PRId64"ms \n",signedPts,signedDts);
@@ -305,7 +384,7 @@ nextSeg:
     }
     // Mark it as drop b frames...
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
-    thisseg->_dropBframes=1;
+    thisseg->_dropBframes=ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
     return getCompressedPicture(videoDelay,img);
    

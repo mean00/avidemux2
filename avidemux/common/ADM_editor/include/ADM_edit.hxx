@@ -222,9 +222,9 @@ public:
 public:
                     uint64_t    getLastKeyFramePts(void);
                     uint64_t    getCurrentFramePts(void);
-					bool		setCurrentFramePts(uint64_t pts);
+                    bool		setCurrentFramePts(uint64_t pts);
                     bool        goToTimeVideo(uint64_t time);
-					void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
+                    void		getCurrentFrameFlags(uint32_t *flags, uint32_t *quantiser);
                     bool        goToIntraTimeVideo(uint64_t time);
                     bool        nextPicture(ADMImage *image,bool dontcross=false);
                     bool        samePicture(ADMImage *image);
@@ -239,6 +239,7 @@ public:
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
+                    bool        getNonClosedGopDelay(uint64_t time,uint32_t *delay);
 /************************************ /audioStream ******************************/
                     bool            getAudioStreamsInfo(uint64_t xtime,uint32_t *nbStreams, audioInfo **infos);
                     bool            changeAudioStream(uint64_t xtime,uint32_t newstream);
@@ -267,7 +268,7 @@ public:
                     bool                getPKFramePTS(uint64_t *frameTime);
                     bool                getDtsFromPts(uint64_t *time);
                                         /// Returns pts-dts for given frame
-                    bool		        getPtsDtsDelta(uint64_t *frameTime);
+                    bool		getPtsDtsDelta(uint64_t frametime, uint64_t *delta);
 /******************************* Post Processing ************************************/
                     uint8_t             setPostProc( uint32_t type, uint32_t strength,	bool swapuv);
                     uint8_t             getPostProc( uint32_t *type, uint32_t *strength,bool  *swapuv);
