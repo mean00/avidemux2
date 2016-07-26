@@ -221,7 +221,7 @@ againGet:
     {
         if(img->flags & AVI_B_FRAME)
         {
-            if(seg->_dropBframes==ADM_DROPPING) 
+            if(seg->_dropBframes==_SEGMENT::ADM_DROPPING) 
             {
                 ADM_warning("%" PRIu32" Dropping bframes\n",fn);
                 goto againGet;
@@ -230,9 +230,9 @@ againGet:
         { // not a bframe
             switch(seg->_dropBframes)
             {
-                case ADM_NO_DROP                : break;
-                case ADM_DROPPING               : seg->_dropBframes=ADM_NO_DROP;break;
-                case ADM_DROP_MAYBE_AFER_SWITCH : seg->_dropBframes=ADM_DROPPING;break;
+                case _SEGMENT::ADM_NO_DROP                : break;
+                case _SEGMENT::ADM_DROPPING               : seg->_dropBframes=_SEGMENT::ADM_NO_DROP;break;
+                case _SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH : seg->_dropBframes=_SEGMENT::ADM_DROPPING;break;
                 default: break;
             }
         }
@@ -384,7 +384,7 @@ nextSeg:
     }
     // Mark it as drop b frames...
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
-    thisseg->_dropBframes=ADM_DROP_MAYBE_AFER_SWITCH;
+    thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
     return getCompressedPicture(videoDelay,img);
    

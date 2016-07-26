@@ -101,18 +101,23 @@ public:
             Each segment refers to its source (the reference) and the part of the source the segment is made of.
 */
 
-#define ADM_NO_DROP                 0
-#define ADM_DROPPING                2
-#define ADM_DROP_MAYBE_AFER_SWITCH  1
 
 class _SEGMENT
 {
+public:
+  typedef enum
+  {
+    ADM_NO_DROP                 =0,
+    ADM_DROPPING                =2,
+    ADM_DROP_MAYBE_AFER_SWITCH  =1
+  }SegState;
+  
 public:
         uint32_t _reference; /// Reference video
         uint64_t _refStartTimeUs; /// Starting time in reference
         uint64_t _startTimeUs; /// Start time in current (=sum(_duration of previous seg))
         uint64_t _durationUs; ///
-        uint32_t _dropBframes; /// Internal state machine to know is we should drop bframe that are orphean
+        SegState _dropBframes; /// Internal state machine to know is we should drop bframe that are orphean
         uint64_t _refStartDts;
         void clear(void) 
         {

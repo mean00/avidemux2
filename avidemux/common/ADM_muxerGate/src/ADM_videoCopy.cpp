@@ -56,10 +56,11 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         {
             ADM_info("Some B frames are non droppable, increasing delat by %d us\n",bframeDelay);
             videoDelay+=bframeDelay;
-        }else
-          {
+        }
+        else
+        {
             videoDelay=0;
-          }
+        }
         
         uint64_t delta=0;
         video_body->getPtsDtsDelta(ptsStart,&delta);
