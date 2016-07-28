@@ -105,6 +105,14 @@ static bool bFrameDroppable(uint32_t fcc)
  * 
  * @param time
  * @param delay
+ * \brief for x264/x265 we dont want to drop the non closed gop bframe(s)
+ * They will be decoded after our first intra but shown before. 
+ * They are needed because they might be used as reference for later frames.
+ * 
+ * For older codec (mpeg4 ASP, Mpeg1,...) these bframes can be just dropped.
+ * 
+ * This function tries to find out the maximum delay we must add
+ * so that the overall PTS of these frames dont get negative.
  * @return 
  */
 bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
