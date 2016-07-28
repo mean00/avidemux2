@@ -225,6 +225,9 @@ againGet:
     aviInfo    info;
     vid->_aviheader->getVideoInfo (&info);
     //
+    // after a segment switch, we may have some frames from "the past"
+    // if the cut point is not a keyframe, drop them
+    
     if(bFrameDroppable(info.fcc))
     {
         if(img->flags & AVI_B_FRAME)
@@ -245,10 +248,6 @@ againGet:
             }
         }
     }
-    //aprintf("Bframe droppable=%d, lastSentFrame=%d\n",seg->_dropBframes,vid->lastSentFrame);
-    // after a segment switch, we may have some frames from "the past"
-    // if the cut point is not a keyframe, drop them
-#if 1
     if( img->demuxerDts!=ADM_NO_PTS)
     {
         bool drop=false;
@@ -275,7 +274,7 @@ againGet:
             goto againGet;
         
     }
-#endif
+
     // Need to switch seg ?
     tail=seg->_refStartTimeUs+seg->_durationUs;
     // Guess DTS
