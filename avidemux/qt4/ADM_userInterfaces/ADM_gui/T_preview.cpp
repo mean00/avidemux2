@@ -47,7 +47,6 @@ extern "C"
 #include "DIA_coreToolkit.h"
     
 void UI_QT4VideoWidget(QFrame *host);
-static QFrame *hostFrame=NULL;
 static uint8_t *lastImage=NULL;
 extern QWidget *QuiMainWindows;
 
@@ -85,7 +84,7 @@ bool ADM_QPreviewCleanup(void)
 #ifdef __HAIKU__
 ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)  {}
 #else
-ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z) 
+ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z) 
 {       
     useExternalRedraw(true);
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
@@ -100,6 +99,8 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
     
     drawer=NULL;
     doOnce=false;
+    _width=_height=0;
+    hostFrame=z;
 
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -141,12 +142,9 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 }
 
 ADM_Qvideo *videoWindow=NULL;
-//****************************************************************************************************
 void UI_QT4VideoWidget(QFrame *host)
 {
    videoWindow=new ADM_Qvideo(host);
-   hostFrame=host;
-   videoWindow->resize(hostFrame->size());
    videoWindow->show();
    
 }
@@ -168,17 +166,10 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 	displayW = w;
 	displayH = h;
 
-	hostFrame->setMinimumSize(displayW, displayH);
-	videoWindow->setMinimumSize(displayW, displayH);	
-
-	hostFrame->resize(displayW, displayH);
-	videoWindow->resize(displayW, displayH);
-
-	hostFrame->setMaximumSize(displayW, displayH);
-	videoWindow->setMaximumSize(displayW, displayH);	
-	UI_purge();
-
-	QuiMainWindows->adjustSize();
+    videoWindow->setADMSize(w,h);    
+    QuiMainWindows->resize(w+200,h+100);
+#if 0
+	
 	UI_purge();
 
 // Trolltech need to get their act together.  Resizing doesn't work well or the same on all platforms.
@@ -188,6 +179,7 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 #else
 	// resizing doesn't work unless called twice on Windows and Linux.
 	QuiMainWindows->adjustSize();
+#endif
 #endif
 
 	UI_purge();
