@@ -1352,6 +1352,9 @@
            <property name="maxLength">
             <number>12</number>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
            <property name="readOnly">
             <bool>true</bool>
            </property>
