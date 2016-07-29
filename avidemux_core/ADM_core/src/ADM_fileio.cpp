@@ -16,6 +16,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <string>
 
 #if defined(__APPLE__)
 #	include <Carbon/Carbon.h>
@@ -830,6 +831,37 @@ void ADM_PathSplit(const char *str, char **root, char **ext)
 	strcpy(*ext, full + l + 1);
 	*(full + l) = 0;
 	*root = full;
+}
+/**
+ * \fn ADM_PathSplit
+ * \brief std::string version of the above
+ * @param in
+ * @param root
+ * @param ext
+ */
+void            ADM_PathSplit(const std::string &in,std::string &root, std::string &ext)
+{
+  	char *full;
+    std::string canonized;
+
+	full = ADM_PathCanonize(in.c_str());
+    canonized=std::string(full);
+    delete [] full;full=NULL;
+    
+    size_t pos=canonized.find_last_of(".");
+    
+    
+    // no "." ?
+    if(pos==std::string::npos)
+      {
+        root=canonized;
+        ext=std::string("");
+        return;
+      }
+    
+    // else split
+    root=canonized.substr(0,pos);
+    ext=canonized.substr(pos+1);
 }
 /**
     \fn ADM_copyFile

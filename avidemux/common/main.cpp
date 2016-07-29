@@ -137,7 +137,24 @@ static bool fakeInitSdl()
     return true;
 }
 #endif        
-
+#if 0
+void run(const char *foo)
+{
+  std::string r,ext;
+  ADM_PathSplit(std::string(foo),r,ext);
+  printf("%s => %s  + <%s>\n",foo,r.c_str(),ext.c_str());
+}
+void testCase(void)
+{
+  run("/");
+  run("/foobar");
+  run("/foobar/meuh");
+  run("/foobar/meuh.ext");
+  run("/foobar/meuh.");
+  run("/foobar/meuh.ext.bar");
+  
+}
+#endif
 /**
  * 
  * @param argc
@@ -146,6 +163,7 @@ static bool fakeInitSdl()
  */
 int startAvidemux(int argc, char *argv[])
 {
+  
     printf("*************************\n");
     printf("  Avidemux v%s", ADM_VERSION);
 

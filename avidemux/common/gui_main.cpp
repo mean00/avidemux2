@@ -83,7 +83,7 @@ extern uint8_t DIA_pluginsInfo(void);
 static void ReSync (void);
 static void A_RunScript(const char *a);
 void cleanUp (void);
-void        updateLoaded (void);
+void        updateLoaded (bool resetMarker=true);
 
 extern void GUI_OpenApplicationLog();
 extern void GUI_OpenApplicationDataFolder();
@@ -716,40 +716,35 @@ int A_openVideo (const char *name)
     \brief update the UI after loading a file
 
 */
-void  updateLoaded ()
+void  updateLoaded (bool resetMarker)
 {
-  avifileinfo = new aviInfo;
-  if (!video_body->getVideoInfo (avifileinfo))
+    avifileinfo = new aviInfo;
+    if (!video_body->getVideoInfo (avifileinfo))
     {
-//      err1:
-      printf ("\n get info failed...cancelling load...\n");
-      delete avifileinfo;
-      avifileinfo = NULL;
-
-      return;
+        ADM_warning ("\n get info failed...cancelling load...\n");
+        delete avifileinfo;
+        avifileinfo = NULL;
+        return;
     }
+    // now get audio information if exists
+    WAVHeader *wavinfo=NULL;
+    ADM_audioStream *stream=NULL;
+    video_body->getDefaultAudioTrack(&stream);
+    if(stream)
+          wavinfo=stream->getInfo();
 
-
-//  getFirstVideoFilter(); // reinit first filter
-
-  // now get audio information if exists
-  WAVHeader *wavinfo=NULL;
-  ADM_audioStream *stream=NULL;
-  video_body->getDefaultAudioTrack(&stream);
-  if(stream)
-        wavinfo=stream->getInfo();
-
-  if (!wavinfo)
+    if (!wavinfo)
     {
-      printf ("\n *** NO AUDIO ***\n");
-      wavinfo = (WAVHeader *) NULL;
+        ADM_info ("\n *** NO AUDIO ***\n");
+        wavinfo = (WAVHeader *) NULL;
     }
 
   // Init renderer
     admPreview::setMainDimension(avifileinfo->width, avifileinfo->height,ZOOM_AUTO);
   // Draw first frame
     GUI_setAllFrameAndTime();
-    A_ResetMarkers();
+    if(resetMarker)
+        A_ResetMarkers();
     A_Rewind();
     UI_setAudioTrackCount( video_body->getNumberOfActiveAudioTracks() );
     ADM_info(" conf updated \n");
@@ -855,8 +850,7 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
 		return false;
 	}
 
-	ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);
-	A_Resync(); // total duration & stuff
+	ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);    	
 
 	if (ret)
 	{
@@ -864,15 +858,18 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
 	}
 
 	prefs->set_lastprojectfile(longname);
+    delete [] longname;
+    longname=NULL;
+    
+    
 	UI_updateRecentProjectMenu();
-        // update main menu shift
-        EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
-        if(ed)
-        {
-            UI_setAudioCodec(ed->encoderIndex);
-            UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
-        }
-	delete [] longname;
+    // update main menu shift
+    EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
+    if(ed)
+    {
+        UI_setAudioCodec(ed->encoderIndex);
+        UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
+    }	
 
 	return ret;
 }

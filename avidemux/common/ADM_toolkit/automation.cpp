@@ -1,6 +1,6 @@
 /***************************************************************************
     \file    automation.cpp
-    \author  (C) 2002 by mean fixounet@free.fr
+    \author  (C) 2002/2016 by mean fixounet@free.fr
     \brief   This file reads the command line and do the corresponding command
 
  ***************************************************************************/
@@ -21,10 +21,6 @@
 #include "ADM_script2/include/ADM_script.h"
 #include "prefs.h"
 #include "A_functions.h"
-
-#include "ADM_debugID.h"
-#define MODULE_NAME  MODULE_COMMANDLINE
-#include "ADM_debug.h"
 
 #include "ADM_vidMisc.h"
 #include "ADM_videoEncoderApi.h"
@@ -59,7 +55,7 @@ extern void UI_closeGui();
 
 int global_argc;
 char **global_argv;
-//extern uint8_t	ADM_saveRaw(const char *name );
+
 //_________________________________________________________________________
 
 typedef void (*one_arg_type)(char *arg);
@@ -102,9 +98,11 @@ AUTOMATON reaction_table[]=
     {"video-codec",            1, "set video codec (x264/...)",                                                (one_arg_type)call_videocodec},    
 };
 #define NB_AUTO (sizeof(reaction_table)/sizeof(AUTOMATON))
-//_________________________________________________________________________
 
-//void automation(int argc, char **argv)
+/**
+ * \fn automation
+ * @return 
+ */
 int automation(void )
 
 {
@@ -116,88 +114,92 @@ static int index;
 static three_arg_type three;
 static two_arg_type two;
 
-        argc=global_argc;
-	argv = global_argv;
+    argc=global_argc;
+    argv = global_argv;
 
-          //the port change has to be done before the video load
-          for( int runParaSearch=2 ; runParaSearch < argc ; ){
-		      if(*argv[runParaSearch] == '-' && *(argv[runParaSearch]+1) == '-')
-			  {
-			      index = searchReactionTable(argv[runParaSearch]+2);
-				  if(index != -1)
-				  {
-                      if(!strcmp(avs_port_change, argv[runParaSearch] +2 ))
-				  	  {
-                          A_set_avisynth_port(argv[runParaSearch+1]);
-                          break;
-				  	  }
-			          runParaSearch += reaction_table[index].have_arg +1;
-			      }
-				  else
-				      runParaSearch += 1;
-		      }
-			  else
-			      runParaSearch += 1;
-		  }
-
-          printf("\n *** Automated : %" PRIu32" entries*************\n",(uint32_t)NB_AUTO);
-          // we need to process
-          argc-=1;
-          cur=1;
-          myargc=argc;
-          while(myargc>0)
+      //the port change has to be done before the video load
+      for( int runParaSearch=2 ; runParaSearch < argc ; ){
+          if(*argv[runParaSearch] == '-' && *(argv[runParaSearch]+1) == '-')
           {
-                      if(( *argv[cur]!='-') || (*(argv[cur]+1)!='-'))
+              index = searchReactionTable(argv[runParaSearch]+2);
+              if(index != -1)
+              {
+                  if(!strcmp(avs_port_change, argv[runParaSearch] +2 ))
+                  {
+                      A_set_avisynth_port(argv[runParaSearch+1]);
+                      break;
+                  }
+                  runParaSearch += reaction_table[index].have_arg +1;
+              }
+              else
+                  runParaSearch += 1;
+          }
+          else
+              runParaSearch += 1;
+      }
+
+    printf("\n *** Automated : %" PRIu32" entries*************\n",(uint32_t)NB_AUTO);
+    // we need to process
+    argc-=1;
+    cur=1;
+    myargc=argc;
+    while(myargc>0)
+    {
+                if(( *argv[cur]!='-') || (*(argv[cur]+1)!='-'))
+                {
+                      if(cur==1)
                       {
-                            if(cur==1)
-                            {
-                                loadCB(argv[cur]);
-                            }
-                            else
-                                printf("\n Found garbage %s\n",argv[cur]);
-                            cur+=1;myargc-=1;
-                            continue;
-                      }
-                      // else it begins with --
-                      index= searchReactionTable(argv[cur]+2);
-                      if(index==-1) // not found
-                      {
-                                                      printf("\n Unknown command :%s\n",argv[cur] );
-                                                      cur+=1;myargc-=1;
+                          loadCB(argv[cur]);
                       }
                       else
-                      {
-                          printf("%s-->%d\n", reaction_table[index].string,reaction_table[index].have_arg);
-                          one_arg_type call=reaction_table[index].callback;
-                          switch(  reaction_table[index].have_arg)
-                          {
-                              case 3:
-                                        three=(three_arg_type)call;
-                                        three( argv[cur+1],argv[cur+2],argv[cur+3]);
-                                        break;
-                              case 2:
-                                        two=(two_arg_type)call;
-                                        two( argv[cur+1],argv[cur+2]);
-                                        break;
-                              case 1:
-                                        call(argv[cur+1]);
-                                        break;
-                              case 0:
-                                        call(NULL);
-                                        break;
-                              default:
-                                        ADM_assert(0);
-                                        break;
-                          }
-                          cur+=1+reaction_table[index].have_arg;
-                          myargc-=1+reaction_table[index].have_arg;
-                      }
-          } // end while
-          GUI_Verbose();
-          printf("\n ********** Automation ended***********\n");
-          return 0; // Do not call me anymore
+                          printf("\n Found garbage %s\n",argv[cur]);
+                      cur+=1;myargc-=1;
+                      continue;
+                }
+                // else it begins with --
+                index= searchReactionTable(argv[cur]+2);
+                if(index==-1) // not found
+                {
+                                                printf("\n Unknown command :%s\n",argv[cur] );
+                                                cur+=1;myargc-=1;
+                }
+                else
+                {
+                    printf("%s-->%d\n", reaction_table[index].string,reaction_table[index].have_arg);
+                    one_arg_type call=reaction_table[index].callback;
+                    switch(  reaction_table[index].have_arg)
+                    {
+                        case 3:
+                                  three=(three_arg_type)call;
+                                  three( argv[cur+1],argv[cur+2],argv[cur+3]);
+                                  break;
+                        case 2:
+                                  two=(two_arg_type)call;
+                                  two( argv[cur+1],argv[cur+2]);
+                                  break;
+                        case 1:
+                                  call(argv[cur+1]);
+                                  break;
+                        case 0:
+                                  call(NULL);
+                                  break;
+                        default:
+                                  ADM_assert(0);
+                                  break;
+                    }
+                    cur+=1+reaction_table[index].have_arg;
+                    myargc-=1+reaction_table[index].have_arg;
+                }
+    } // end while
+    GUI_Verbose();
+    printf("\n ********** Automation ended***********\n");
+    return 0; // Do not call me anymore
 }
-//_________________________________________________________________________
+/**
+ * \fn searchReactionTable
+ * @param string
+ * @return 
+ */
 
 int searchReactionTable(char *string)
 {
@@ -208,42 +210,38 @@ int searchReactionTable(char *string)
     }
     return -1;
 }
-
+/**
+ * \fn call_scriptEngine
+ * @param scriptFile
+ */
 void call_scriptEngine(const char *scriptFile)
 {
-	char *root, *ext;
-	bool executed = false;
-
-	std::vector<IScriptEngine*> engines = getScriptEngines();
-	ADM_PathSplit(scriptFile, &root, &ext);
-
+    std::vector<IScriptEngine*> engines = getScriptEngines();
+    
+    std::string root,ext;
+    ADM_PathSplit(std::string(scriptFile),root,ext);
+  
 	if (engines.size() == 1)
 	{
 		A_parseScript(engines[0], scriptFile);
-		executed = true;
+	    A_Rewind();
+        return;
 	}
-	else
-	{
-		for (int i = 0; i < engines.size(); i++)
-		{
-			if (engines[i]->defaultFileExtension().compare(ext) == 0)
-			{
-				A_parseScript(engines[i], scriptFile);
-				executed = true;
-				break;
-			}
-		}
-	}
+	
+    for (int i = 0; i < engines.size(); i++)
+    {
+        if (!engines[i]->defaultFileExtension().compare(ext))
+        {
+            A_parseScript(engines[i], scriptFile);
+            A_Rewind();
+            return;
+        }
+    }
 
-	if (!executed)
-	{
-		ADM_warning("Unable to appropriate script engine for script file\n");
-	}
-    delete [] root;root=NULL;
-    delete [] ext;root=ext;
+    ADM_warning("Unable to appropriate script engine for script file\n");	
 }
 /**
- * 
+ * \fn call_quit
  * @param p
  */
 void call_quit        (char *p) 
@@ -255,22 +253,22 @@ void call_quit        (char *p)
 // split it in two
 void setVar(char *in)
 {
-char *equal;
-        equal=strstr(in,"=");
-        if(!equal)
-        {
-                printf("Malformed set var  %s (name=value)\n",in);
-                return ;
-        }
-        if(in+strlen(in)==equal)
-        {
-                printf("No value after =  %s (name=value)\n",in);
-                return ;
-        }
-        *equal=0; // Remove =
+    char *equal;
+    equal=strstr(in,"=");
+    if(!equal)
+    {
+        ADM_warning("Malformed set var  %s (name=value)\n",in);
+        return ;
+    }
+    if(in+strlen(in)==equal)
+    {
+        ADM_warning("No value after =  %s (name=value)\n",in);
+        return ;
+    }
+    *equal=0; // Remove =
 
-        if(!scriptAddVar(in,equal+1))
-                printf("Warning setvar failed\n");
+    if(!scriptAddVar(in,equal+1))
+        ADM_warning("Warning setvar failed\n");
 
 }
 
@@ -281,7 +279,6 @@ char *equal;
 void call_audiocodec(char *p)
 {
      audioCodecSetByName( 0,p);    
-     
 }
 /**
  * 
@@ -304,7 +301,7 @@ void call_slave(char *p)
 {
     uint32_t i;
     sscanf(p,"%" PRIu32,&i);
-    printf("Slace on port  %" PRIu32"\n",i);
+    ADM_info("Slave on port  %" PRIu32"\n",i);
     if(!ADM_slaveConnect(i))
     {
             ADM_error("Cannot connect to master\n");
@@ -431,6 +428,9 @@ void show_info(char *p)
    }
 }
 /**
+ * 
+ * @param str
+ * @return 
  */
 int set_output_format(const char *str)
 {
