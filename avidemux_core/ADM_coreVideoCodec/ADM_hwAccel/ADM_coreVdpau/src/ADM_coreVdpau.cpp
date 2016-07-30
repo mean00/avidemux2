@@ -18,7 +18,7 @@
 #include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
 
-#if 1
+#if 0
 #define VDP_TRACK printf
 #else
 #define VDP_TRACK(...) {}
