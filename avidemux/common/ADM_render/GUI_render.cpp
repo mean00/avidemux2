@@ -176,17 +176,17 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
 {
         bool create=false;
         enableDraw=false;
-        ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%d\n",w,h,zoom);
-        if(!renderer) 
+        ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%d, old one =%d x %d, zoom=%d, render=%p\n",w,h,zoom,phyW,phyH,lastZoom,renderer);
+        // Check if something has changed...
+        
+        
+        if(renderer && w==phyW && h==phyH && zoom==lastZoom)
         {
-          create=true;
+            ADM_info("          No change, nothing to do\n");
+            return true;
         }
-        else
-        {
-            if(w!=phyW || h!=phyH) 
-              create=true;
-        }
-        if(create)
+        
+        if(!renderer || (w!=phyW || h!=phyH)) 
         {
             if(renderer) 
             {
@@ -198,12 +198,12 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
             phyH=h;
             lastZoom=zoom;
             spawnRenderer();
-        }else
+        }else // only zoom changed
         {
-            if(lastZoom!=zoom) 
               renderer->changeZoom(zoom);
         }
-        lastZoom=zoom;
+         // Resize widget to be the same as input after zoom
+         lastZoom=zoom;
          int mul;
          switch(zoom)
             {
