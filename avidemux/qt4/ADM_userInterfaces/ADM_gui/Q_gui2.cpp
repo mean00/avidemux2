@@ -688,14 +688,17 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 						shiftKeyHeld = 1;
 						break;
 
-					case Qt::Key_BracketLeft:
+					case Qt::Key_PageUp:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier)
+                                                        sendAction(ACT_MarkA);
+                                                else
                                                         sendAction(ACT_GotoMarkA);
                                                 return true;
-
-					case Qt::Key_BracketRight:
-						if (keyEvent->modifiers() == Qt::ControlModifier)
-							sendAction(ACT_GotoMarkB);
+					case Qt::Key_PageDown:
+                                                if (keyEvent->modifiers() == Qt::ControlModifier)
+                                                        sendAction(ACT_MarkB);
+                                                else
+                                                        sendAction(ACT_GotoMarkB);
 						return true;
 				}
 			}

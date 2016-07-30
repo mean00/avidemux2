@@ -216,7 +216,7 @@
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
-    <string>Codec Options</string>
+    <string>Codec O&amp;ptions</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -1103,7 +1103,7 @@
          <item>
           <widget class="QToolButton" name="toolButtonSetMarkerA">
            <property name="toolTip">
-            <string>Set start marker</string>
+            <string>Set start marker [CTRL+PAGEUP]</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1126,7 +1126,7 @@
          <item>
           <widget class="QToolButton" name="toolButtonSetMarkerB">
            <property name="toolTip">
-            <string>Set end marker</string>
+            <string>Set end marker [CTRL+PAGEDOWN]</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1198,7 +1198,7 @@
          <item>
           <widget class="QToolButton" name="toolButtonFirstFrame">
            <property name="toolTip">
-            <string>Go to first frame</string>
+            <string>Go to first frame [HOME]</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1221,7 +1221,7 @@
          <item>
           <widget class="QToolButton" name="toolButtonLastFrame">
            <property name="toolTip">
-            <string>Go to last frame</string>
+            <string>Go to last frame [END]</string>
            </property>
            <property name="text">
             <string>...</string>
@@ -1251,7 +1251,7 @@
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/backward1mn.png</normaloff>:/new/prefix1/pics/player_start.png</iconset>
+             <normaloff>:/new/prefix1/pics/backward1mn.png</normaloff>:/new/prefix1/pics/backward1mn.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1277,7 +1277,7 @@
            </property>
            <property name="icon">
             <iconset resource="avidemux.qrc">
-             <normaloff>:/new/prefix1/pics/forward1mn.png</normaloff>:/new/prefix1/pics/player_end.png</iconset>
+             <normaloff>:/new/prefix1/pics/forward1mn.png</normaloff>:/new/prefix1/pics/forward1mn.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -1542,7 +1542,7 @@
          <item row="1" column="2">
           <widget class="QPushButton" name="pushButtonJumpToMarkerA">
            <property name="toolTip">
-            <string>Go to marker A</string>
+            <string>Go to marker A [PAGE UP]</string>
            </property>
            <property name="text">
             <string>000000</string>
@@ -1552,7 +1552,7 @@
          <item row="2" column="2">
           <widget class="QPushButton" name="pushButtonJumpToMarkerB">
            <property name="toolTip">
-            <string>Go to Marker B</string>
+            <string>Go to Marker B [PAGE DOWN]</string>
            </property>
            <property name="text">
             <string>000000</string>
