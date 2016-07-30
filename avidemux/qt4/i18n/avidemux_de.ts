@@ -4464,7 +4464,7 @@ Drop timing informations ?</source>
     <name>DialogAudioTracks</name>
     <message>
         <source>Track 1</source>
-        <translation type="unfinished">Spur 2: {1?}</translation>
+        <translation type="unfinished">Tonspur 1</translation>
     </message>
     <message>
         <source>Configure</source>
@@ -4476,23 +4476,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Track 2</source>
-        <translation type="unfinished">Spur 2: {2?}</translation>
+        <translation type="unfinished">Tonspur 2</translation>
     </message>
     <message>
         <source>Track 3</source>
-        <translation type="unfinished">Spur 2: {3?}</translation>
+        <translation type="unfinished">Tonspur 3</translation>
     </message>
     <message>
         <source>Track 4</source>
-        <translation type="unfinished">Spur 2: {4?}</translation>
+        <translation type="unfinished">Tonspur 4</translation>
     </message>
     <message>
         <source>Audio Tracks Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tonspureinstellungen</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">aktivieren</translation>
     </message>
     <message>
         <source>Filters</source>
@@ -4543,7 +4543,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Nb Lines :</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zeilen:</translation>
     </message>
 </context>
 <context>
@@ -4558,7 +4558,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>TimeLeft</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Restzeit</translation>
     </message>
     <message>
         <source>00:00:00</source>
@@ -4593,15 +4593,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Progress</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fortschritt</translation>
     </message>
     <message>
         <source>Current job</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Laufender Auftrag</translation>
     </message>
     <message>
         <source>File being written </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Datei wird geschrieben</translation>
     </message>
 </context>
 <context>
@@ -5008,7 +5008,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">kopieren</translation>
+        <translation type="unfinished">Kopieren</translation>
     </message>
     <message>
         <source>Configure</source>
@@ -5664,7 +5664,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Werkzeugleisten</translation>
     </message>
     <message>
         <source>&amp;Auto</source>
@@ -5672,11 +5672,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ve&amp;rlauf</translation>
     </message>
     <message>
         <source>Codec Options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Codec-Einstellungen</translation>
     </message>
     <message>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
@@ -5700,7 +5700,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;b&gt;Ausgabeformat&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Navigation</source>
@@ -5708,15 +5708,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lautstärke</translation>
     </message>
     <message>
         <source>Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pegelanzeige</translation>
     </message>
     <message>
         <source>&amp;Codec Options</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Codec-Einstellungen</translation>
     </message>
     <message>
         <source>Ctrl+Alt+C</source>
@@ -5732,11 +5732,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Selection</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Auswahlbereich</translation>
     </message>
     <message>
         <source>&amp;Volume</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Lautstärke</translation>
     </message>
     <message>
         <source>Ctrl+Alt+V</source>
@@ -5744,7 +5744,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Pegelanzeige</translation>
     </message>
     <message>
         <source>Ctrl+Alt+M</source>
@@ -5752,15 +5752,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Display processed video on playback</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Filter bei Wiedergabe anwenden</translation>
     </message>
     <message>
         <source>Play filtered</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Filter anwenden</translation>
     </message>
     <message>
         <source>Open Video</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Videodatei öffnen</translation>
     </message>
 </context>
 <context>
@@ -7080,7 +7080,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="unfinished">Video sch_ärfen (entfernt leichte Farbverzehrungen rund um scharfe Konturen)</translation>
+        <translation type="unfinished">Video sch_ärfen (entfernt leichte Farbverzerrungen rund um scharfe Konturen)</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
@@ -7116,31 +7116,31 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Videodatei öffnen</translation>
     </message>
     <message>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Videodatei anfügen</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Videodatei speichern</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zur Warteschlange hinzufügen</translation>
     </message>
     <message>
         <source>Save as Image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Als Bild speichern</translation>
     </message>
     <message>
         <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Als BMP-Bild speichern</translation>
     </message>
     <message>
         <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Als JPEG-Bild speichern</translation>
     </message>
     <message>
         <source>Close</source>
@@ -7152,7 +7152,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Details</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
@@ -7160,31 +7160,31 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Beenden</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rückgängig</translation>
     </message>
     <message>
         <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Änderungen verwerfen</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ausschneiden</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kopieren</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Einfügen</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Löschen</translation>
     </message>
     <message>
         <source>Set Marker A</source>
@@ -7196,11 +7196,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Decoder-Optionen</translation>
     </message>
     <message>
         <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nachbearbeitung</translation>
     </message>
     <message>
         <source>Filters</source>
@@ -7208,11 +7208,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Select Track</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tonspur wählen</translation>
     </message>
     <message>
         <source>Save audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Audio speichern</translation>
     </message>
     <message>
         <source>Build Option</source>
@@ -7244,11 +7244,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Previous Frame</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vorheriges Bild</translation>
     </message>
     <message>
         <source>Next Frame</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nächstes Bild</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
@@ -7268,23 +7268,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>First Frame</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erstes Bild</translation>
     </message>
     <message>
         <source>Last Frame</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Letztes Bild</translation>
     </message>
     <message>
         <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gehe zur Markierung A</translation>
     </message>
     <message>
         <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gehe zur Markierung B</translation>
     </message>
     <message>
         <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gehe zum Zeitpunkt</translation>
     </message>
     <message>
         <source>R_esampling (Hz):</source>
@@ -7831,11 +7831,11 @@ Läuft es trotzdem?</translation>
     </message>
     <message>
         <source>Recent Files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zuletzt verwendete Dateien</translation>
     </message>
     <message>
         <source>Recent Projects</source>
-        <translation type="unfinished">kürzlich verwendete Projekte</translation>
+        <translation type="unfinished">Zuletzt verwendete Projekte</translation>
     </message>
     <message>
         <source>_Mode:</source>
