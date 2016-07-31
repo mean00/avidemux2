@@ -23,9 +23,6 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_misc.h"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_CLOCKnTIMELEFT
-#include "ADM_debug.h"
 
 #include "DIA_working.h"
 #include "ADM_vidMisc.h"

@@ -20,9 +20,6 @@
 
 #include "ADM_audioFilter.h"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_AUDIO_FILTER
-#include "ADM_debug.h"
 
 
 

@@ -33,10 +33,6 @@
 #include "DIA_coreToolkit.h"
 #include "prefs.h"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_EDITOR
-#include "ADM_debug.h"
-
 //#include "ADM_outputfmt.h"
 #include "ADM_edPtsDts.h"
 #include "ADM_vidMisc.h"

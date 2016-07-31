@@ -33,9 +33,6 @@
 
 #include "ADM_default.h"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_CLOCKnTIMELEFT
-#include "ADM_debug.h"
 
 static uint8_t inited=0;
 static struct timeval _itimev;

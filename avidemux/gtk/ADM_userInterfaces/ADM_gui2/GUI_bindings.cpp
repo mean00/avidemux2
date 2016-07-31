@@ -22,9 +22,6 @@
 #include "../ADM_render/GUI_render.h"
 #include "gui_action.hxx"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_UI
-#include "ADM_debug.h"
 
 //#include "ADM_codecs/ADM_codec.h"
 #include "../ADM_commonUI/GUI_ui.h"

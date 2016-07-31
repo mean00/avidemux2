@@ -34,9 +34,6 @@ Todo:
 #include "ADM_edit.hxx"
 #include "ADM_edAudioTrackFromVideo.h"
 
-#include "ADM_debugID.h"
-#define MODULE_NAME MODULE_AUDIO_EDITOR
-#include "ADM_debug.h"
 
 #include "ADM_vidMisc.h"
 

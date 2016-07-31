@@ -9,9 +9,6 @@
 
 
 
-#include "ADM_osSupport/ADM_debugID.h"
-#define MODULE_NAME MODULE_LAVFORMAT
-#include "ADM_osSupport/ADM_debug.h"
 
 #include "cpu_accel.h"
 #include "mjpeg_types.h"
