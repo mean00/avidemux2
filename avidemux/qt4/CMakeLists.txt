@@ -39,6 +39,7 @@ endif(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
 MESSAGE(STATUS "Found cmake subfolder.good.")
 
 include(commonCmakeApplication)
+include(../admAppSettings.cmake)
 INCLUDE(admCheckQt)
 INCLUDE(admWindRes)
 

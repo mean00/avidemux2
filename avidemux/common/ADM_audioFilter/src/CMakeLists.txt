@@ -35,6 +35,5 @@ else (MSVC)
 endif (MSVC)
 
 include_directories("${PTHREAD_INCLUDE_DIR}")
-include_directories("../../ADM_audiocodec/include")
 ADD_LIBRARY(ADM_audioFilter6 STATIC ${ADM_audioFilter_SRCS})
 # END

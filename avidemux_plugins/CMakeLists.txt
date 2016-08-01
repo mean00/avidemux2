@@ -71,7 +71,7 @@ ENDIF (FRESH_BUILD)
 ########################################
 # retrieve core config, needed to get USE_VDPAU and friends
 ########################################
-include(${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6/ADM_coreConfig.cmake)
+include(${ADM_HEADER_DIR}/ADM_coreConfig.cmake)
 
 ########################################
 # Global options

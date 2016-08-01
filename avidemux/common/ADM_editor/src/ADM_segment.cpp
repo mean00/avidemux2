@@ -23,7 +23,7 @@
 #include "ADM_pp.h"
 #include "ADM_colorspace.h"
 #include "ADM_vidMisc.h"
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 #include "ADM_codec.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_vidMisc.h"
