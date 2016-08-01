@@ -9,7 +9,7 @@ using std::string;
 using std::vector;
 class jobWindow;
 #include "ADM_default.h"
-#include "ADM_coreSocket/include/ADM_coreCommandSocket.h"
+#include "ADM_coreCommandSocket.h"
 
 typedef enum
 {

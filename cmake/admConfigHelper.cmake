@@ -77,21 +77,22 @@ ENDMACRO(FIND_HEADER_AND_LIB)
 
 
 MACRO (ADM_COMPILE _file _def _include _lib _varToSet _output)
+        #MESSAGE(STATUS " ADM_compile <${_file}>")
+	IF(AVIDEMUX_THIS_IS_CORE)
+		  SET(src ${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_compile_check/${_file})
+        ELSE()
+		  SET(src ${ADM_CMAKE_DIR}/cmake_compile_check/${_file})
+        ENDIF()
+        #MESSAGE(STATUS " Compiling <${src}>")
 	IF (NOT DEFINED ${_varToSet}_COMPILED)
-		SET(${_varToSet}_COMPILED 1 CACHE INTERNAL "")
-
-                IF(AVIDEMUX_EXTERNAL_BUILD)
-			  SET(src ${CMAKE_INSTALL_PREFIX}/include/avidemux/${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}/cmake/cmake_compile_check/${_file})
-                ELSE()
-			  SET(src ${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_compile_check/${_file})
-                ENDIF()
-
-		TRY_COMPILE(${_varToSet}
-			  ${CMAKE_BINARY_DIR}
-			  ${src}
-			  CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${_include}" "-DLINK_LIBRARIES:STRING=${_lib}"
-			  COMPILE_DEFINITIONS ${_def}
-			  OUTPUT_VARIABLE ${_output})
+	        SET(${_varToSet}_COMPILED 1 CACHE INTERNAL "")
+                TRY_COMPILE(${_varToSet}
+		  ${CMAKE_BINARY_DIR}
+		  ${src}
+		  CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${_include}" "-DLINK_LIBRARIES:STRING=${_lib}"
+		  COMPILE_DEFINITIONS ${_def}
+		  OUTPUT_VARIABLE ${_output})
+                #MESSAGE(STATUS "output=${output}")
 	ENDIF (NOT DEFINED ${_varToSet}_COMPILED)
 ENDMACRO (ADM_COMPILE)
 

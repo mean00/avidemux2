@@ -33,7 +33,7 @@ extern "C" {
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_libva_internal.h"
 #include "prefs.h"
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#include "ADM_coreLibVA.h"
 #include "../private_inc/ADM_codecLibVA.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"

@@ -7,7 +7,7 @@
 #include "va/va.h"
 
 #include <BVector.h>
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#include "ADM_coreLibVA.h"
 #include "ADM_threads.h"
 /**
  * \class decoderFFLIBVA

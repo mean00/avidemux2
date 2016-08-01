@@ -16,6 +16,7 @@ ${SIMPLE_RENDER}
 
 IF(NOT ${UI_SUFFIX} STREQUAL "cli")
         IF (USE_OPENGL)
+                INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/ADM_openGL/include/)
 	        SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_qtGlRender.cpp)
         ENDIF (USE_OPENGL)
         
@@ -31,6 +32,7 @@ IF(NOT ${UI_SUFFIX} STREQUAL "cli")
 	        SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_sdlRender.cpp)
         ENDIF (USE_SDL)
         IF (USE_VDPAU)
+                INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreVdpau)
 	        SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS} GUI_vdpauRender.cpp)
         ENDIF (USE_VDPAU)
         IF (USE_LIBVA)

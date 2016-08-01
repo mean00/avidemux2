@@ -1,27 +1,53 @@
 cmake_minimum_required(VERSION 2.6)
+SET(AVIDEMUX_API_VERSION 2.6)
 
 SET(ADM_PROJECT AdmPlugins)
+SET(PLUGINS TRUE)
+
+
+IF(NOT FAKEROOT)
+	SET(AVIDEMUX_FAKEROOT "")
+else(NOT FAKEROOT)
+	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
+endif(NOT FAKEROOT)
+
 
 MESSAGE("")
 MESSAGE("#####################################")
 MESSAGE("Plugins Configure Started")
 MESSAGE("#####################################")
 MESSAGE("")
+MESSAGE(STATUS "Checking for avidemux development files ..")
 
-SET(PLUGINS TRUE)
+
+SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
+SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
+# Common definitions...
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
+if(NOT EXISTS "${ADM_HEADER_DIR}")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_HEADER_DIR}")
+
+MESSAGE(STATUS "Found avidemux include folder. good.")
+MESSAGE(STATUS "Checking for cmake subfolder")
+
+if(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n I cannot find content of the cmake subfolder .\n")
+        MESSAGE(STATUS  "Set CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+MESSAGE(STATUS "Found cmake subfolder.good.")
+
+
 ########################################
 # Where is the top dir ?
 ########################################
-IF (NOT AVIDEMUX_SOURCE_DIR)
-	MESSAGE(FATAL_ERROR "Please add -DAVIDEMUX_SOURCE_DIR=path_to_avidemux_source")
-ELSE (NOT AVIDEMUX_TOP_SOURCE_DIR)
-	# We need TOP_SOURCE_DIR
-	SET(AVIDEMUX_TOP_SOURCE_DIR "${AVIDEMUX_SOURCE_DIR}" CACHE STRING "")
-ENDIF (NOT AVIDEMUX_SOURCE_DIR)
 
 # Common definitions...
-SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
-include(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/commonCmakeApplication.cmake)
+include(commonCmakeApplication)
 
 ########################################
 # Add include dirs

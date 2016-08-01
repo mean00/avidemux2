@@ -12,9 +12,8 @@ SET(${ADM_LIB}_T
         T_QCanvas.cpp
 )
 if(USE_OPENGL)
-        SET(${ADM_LIB}_T
-                ${${ADM_LIB}_T}
-                T_openGL.cpp)
+        INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}//ADM_openGL/include/)
+        SET(${ADM_LIB}_T ${${ADM_LIB}_T} T_openGL.cpp)
 endif(USE_OPENGL)
 
 SET(${ADM_LIB}_SRCS

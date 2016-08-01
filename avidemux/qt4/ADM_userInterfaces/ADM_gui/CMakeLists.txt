@@ -1,5 +1,5 @@
 SET(ADM_LIB ADM_gui${QT_LIBRARY_EXTENSION})
-INCLUDE_DIRECTORIES("${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_icons/")
+INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/../common/ADM_icons/")
 ADM_QT_WRAP_UI(${ADM_LIB}_header  gui2.ui )
 ADM_QT_WRAP_CPP(${ADM_LIB}_source  Q_gui2.h  ADM_qslider.h T_preview.h T_vumeter.h T_thumbSlider.h ADM_qtray.h FileAction.h)
 ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  avidemux.qrc)

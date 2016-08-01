@@ -49,7 +49,7 @@ Process()
                 mkdir $BUILDDIR || fail mkdir
         fi
         cd $BUILDDIR 
-        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package

@@ -19,7 +19,7 @@
 
 #include "VSScript.h"
 #include "VSHelper.h"
-#include "../../ADM_coreSocket/include/ADM_coreAvsProtocol.h"
+#include "ADM_coreAvsProtocol.h"
 
 /**
     \Class vsHeader

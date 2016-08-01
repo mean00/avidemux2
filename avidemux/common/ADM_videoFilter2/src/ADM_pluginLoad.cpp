@@ -31,13 +31,14 @@ static uint32_t lastTag=100;
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
 
+#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
 #ifdef USE_LIBVA               
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#include "ADM_coreLibVA.h"
 #endif        
 #ifdef USE_VDPAU               
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/ADM_coreVdpau.h"
+#include "ADM_coreVdpau.h"
 #endif        
-
+#endif
 extern ADM_vf_plugin *getFakePartialPlugin();
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()

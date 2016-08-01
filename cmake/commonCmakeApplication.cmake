@@ -1,13 +1,15 @@
 ########################################
 # Definitions and Includes
 ########################################
-if (NOT PLUGINS)
-	SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/../..)
-endif (NOT PLUGINS)
 
-SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
+
+
 include(avidemuxVersion)
-
+SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
+SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
+# Common definitions...
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+MESSAGE(STATUS "Cmake module path = ${CMAKE_MODULE_PATH}")
 IF (WIN32)
 	SET(ADM_PLUGIN_DIR "plugins")
 ELSE (WIN32)
@@ -72,7 +74,7 @@ SET(ADM_EXE_SRCS
 ########################################
 # FFmpeg
 ########################################
-include_directories("${AVIDEMUX_TOP_SOURCE_DIR}/ffmpeg")
+include_directories("${ADM_HEADER_DIR}/ffmpeg")
 
 #############################################
 # Add core libs

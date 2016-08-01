@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "ADM_coreSocket/include/ADM_coreCommandSocket.h"
+#include "ADM_coreCommandSocket.h"
 #include "ADM_slave.h"
 #include "DIA_coreToolkit.h"
 static ADM_commandSocket *mySocket=NULL;
