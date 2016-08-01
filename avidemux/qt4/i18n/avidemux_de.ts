@@ -166,10 +166,6 @@ Bitte die Markierung A zum Bildtyp I verschieben.</translation>
         <translation type="obsolete">_Alternativen &apos;Tag&apos; für MP3-Tonspuren in MPEG-4 Containern benutzen</translation>
     </message>
     <message>
-        <source>XVideo (best)</source>
-        <translation type="obsolete">XVideo (bestens)</translation>
-    </message>
-    <message>
         <source>SDL (good)</source>
         <translation type="obsolete">SDL (gut)</translation>
     </message>
@@ -5192,7 +5188,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Information...</source>
-        <translation type="unfinished">Datei-&amp;Informationen...</translation>
+        <translation type="unfinished">E&amp;igenschaften...</translation>
     </message>
     <message>
         <source>Alt+Return</source>
@@ -5336,7 +5332,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Ctrl+Alt+S</source>
-        <translation type="unfinished">Strg+T</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Filters</source>
@@ -5680,7 +5676,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;b&gt;Video-Decoder&lt;/b&gt;</translation>
     </message>
     <message>
         <source>XXXX</source>
@@ -5688,11 +5684,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;b&gt;Video-Codec&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;b&gt;Audio-Codec&lt;/b&gt;</translation>
     </message>
     <message>
         <source>   (0 track(s))</source>
@@ -7080,7 +7076,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>De_ringing</source>
-        <translation type="unfinished">Video sch_ärfen (entfernt leichte Farbverzerrungen rund um scharfe Konturen)</translation>
+        <translation type="unfinished">De_ringing (entfernt leichte Farbverzerrungen rund um scharfe Konturen)</translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
@@ -7109,6 +7105,14 @@ Drop timing informations ?</source>
     <message>
         <source>Threading</source>
         <translation type="unfinished">Mehrkernprozessoren</translation>
+    </message>
+    <message>
+        <source>_Always ask which port to use</source>
+        <translation>_Immer fragen, welcher Port benutzt werden soll</translation>
+    </message>
+    <message>
+        <source>Default port to use</source>
+        <translation>Standardport</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -7152,7 +7156,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">Details</translation>
+        <translation type="unfinished">Eigenschaften</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
@@ -7160,7 +7164,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished">Beenden</translation>
+        <translation>Beenden</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -7172,27 +7176,31 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="unfinished">Ausschneiden</translation>
+        <translation>Ausschneiden</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Kopieren</translation>
+        <translation>Kopieren</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="unfinished">Einfügen</translation>
+        <translation>Einfügen</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Löschen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation type="unfinished">Setze Markierung A</translation>
+        <translation>Setze Markierung A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation type="unfinished">Setze Markierung B</translation>
+        <translation>Setze Markierung B</translation>
+    </message>
+    <message>
+        <source>Save current settings as default</source>
+        <translation>Ausgabekonfiguration als Vorgabe setzen</translation>
     </message>
     <message>
         <source>Decoder Option</source>
@@ -7276,11 +7284,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Go To Marker A</source>
-        <translation type="unfinished">Gehe zur Markierung A</translation>
+        <translation>Springe zur Markierung A</translation>
     </message>
     <message>
         <source>Go To Marker B</source>
-        <translation type="unfinished">Gehe zur Markierung B</translation>
+        <translation>Springe zur Markierung B</translation>
     </message>
     <message>
         <source>Go To Time</source>
@@ -7504,27 +7512,35 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Enable openGl support</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenG_L benutzen</translation>
+    </message>
+    <message>
+        <source>_Limit Refresh Rate</source>
+        <translation>_Bildwiederholungsfrequenz begrenzen</translation>
+    </message>
+    <message>
+        <source>Refresh Rate Cap (ms)</source>
+        <translation>Bild _neu aufbauen nicht häufiger als nach (ms)</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished"></translation>
+        <translation>Hoch</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Niedrig</translation>
     </message>
     <message>
         <source>_Split MPEG files every (MB):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPEG-Dateien splitten nach (in MiB):</translation>
     </message>
     <message>
         <source>VDPAU (best)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VDPAU (bestens)</translation>
     </message>
     <message>
         <source>OpenGL (best)</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL (bestens)</translation>
     </message>
     <message>
         <source>PCM</source>
@@ -7532,15 +7548,15 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Horizontales Deblocking</translation>
     </message>
     <message>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Vertikales Deblocking</translation>
     </message>
     <message>
         <source>_Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Intensität</translation>
     </message>
     <message>
         <source>No audio track</source>
@@ -8203,23 +8219,23 @@ Läuft es trotzdem?</translation>
     </message>
     <message>
         <source>Decode video using VDPAU (NVIDIA)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dekodiere Video mittels _VDPAU</translation>
     </message>
     <message>
         <source>Decode video using XVBA (AMD)</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodiere Video mittels _XvBA (AMD Catalyst)</translation>
     </message>
     <message>
         <source>Decode video using LIBVA (INTEL)</source>
-        <translation type="unfinished"></translation>
+        <translation>Dekodiere Video mittels _libVA</translation>
     </message>
     <message>
         <source>If you use Hw decoding, it is better to use the matching display driver</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bei Dekodierung in Hardware verwende den entsprechenden Videoausgabe_treiber</translation>
     </message>
     <message>
         <source>LIBVA (best)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">libVA (bestens)</translation>
     </message>
     <message>
         <source>Sdl driver</source>
@@ -8227,20 +8243,21 @@ Läuft es trotzdem?</translation>
     </message>
     <message>
         <source>_Language</source>
-        <translation type="unfinished"></translation>
+        <translation>_Sprache</translation>
     </message>
     <message>
         <source>Display</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Video-Anzeige</translation>
     </message>
     <message>
         <source>HW Accel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">HW-Beschleunigung</translation>
     </message>
     <message>
         <source>You cannot remove *all* the video
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Das *ganze* Video zu löschen ist nicht möglich
+</translation>
     </message>
     <message>
         <source>Select Video File...</source>
@@ -8261,7 +8278,7 @@ Warning, the settings must be close.</source>
     </message>
     <message>
         <source>Saving</source>
-        <translation type="unfinished">Speichern</translation>
+        <translation type="unfinished">Speichere</translation>
     </message>
 </context>
 <context>
