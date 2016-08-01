@@ -445,8 +445,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
         
         /* Display */
-        diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,"_Limit Refresh Rate");
-        diaElemUInteger displayRefreshCap(&refreshCapValue,"Refresh Rate Cap (ms)",10,1000);
+        diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,QT_TRANSLATE_NOOP("adm","_Limit Refresh Rate"));
+        diaElemUInteger displayRefreshCap(&refreshCapValue,QT_TRANSLATE_NOOP("adm","Refresh Rate Cap (ms)"),10,1000);
 
             
 #ifdef USE_SDL
@@ -468,8 +468,8 @@ std::string currentSdlDriver=getSdlDriverName();
 		diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),2,(diaElem **)diaThreading);
 
 		/* Avisynth tab */
-		diaElemToggle togAskAvisynthPort(&askPortAvisynth,"_Always ask which port to use");
-		diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,"Default port to use",1024,65535);
+		diaElemToggle togAskAvisynthPort(&askPortAvisynth,QT_TRANSLATE_NOOP("adm","_Always ask which port to use"));
+		diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
 		diaElem *diaAvisynth[]={&togAskAvisynthPort, &uintDefaultPortAvisynth};
 		diaElemTabs tabAvisynth("Avisynth",2,(diaElem **)diaAvisynth);
 
