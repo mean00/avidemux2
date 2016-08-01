@@ -22,7 +22,7 @@
 
 #include <math.h>
 #define MY_CLASS psHeader
-#include "ADM_coreDemuxerMpegTemplate.cpp"
+#include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
 

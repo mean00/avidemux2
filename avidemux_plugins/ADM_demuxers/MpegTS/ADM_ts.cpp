@@ -23,7 +23,7 @@
 #include "ADM_videoInfoExtractor.h"
 
 #define MY_CLASS tsHeader
-#include "ADM_coreDemuxerMpegTemplate.cpp"
+#include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
 
 
