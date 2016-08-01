@@ -1,7 +1,7 @@
 #include "PythonScriptWriter.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "ADM_muxerInternal.h"
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 #include "ADM_edEditableAudioTrack.h"
 #include "ADM_edAudioTrackExternal.h"
 
