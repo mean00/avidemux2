@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
+SET(AVIDEMUX_VERSION 2.6)
 SET(ADM_PROJECT Avidemux_cli)
 
 MESSAGE("")
@@ -8,7 +9,31 @@ MESSAGE("Configure for avidemux Cli Started")
 MESSAGE("#########################################")
 MESSAGE("")
 
-include(../commonCmakeApplication.cmake)
+MESSAGE(STATUS "Checking for avidemux development files ..")
+
+SET(ADM_HEADER_DIR ${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_VERSION})
+SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
+# Common definitions...
+SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_VERSION}")
+if(NOT EXISTS "${ADM_HEADER_DIR}")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_HEADER_DIR}")
+
+MESSAGE(STATUS "Found avidemux include folder. good.")
+MESSAGE(STATUS "Checking for cmake subfolder")
+
+if(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+        MESSAGE(STATUS  "Make sure you installed all the files.\n I cannot find content of the cmake subfolder .\n")
+        MESSAGE(STATUS  "Set CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+        MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
+        MESSAGE(FATAL_ERROR  "Aborting")
+endif(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+MESSAGE(STATUS "Found cmake subfolder.good.")
+
+
+include(commonCmakeApplication)
 INCLUDE(admWindRes)
 
 ##########################################
