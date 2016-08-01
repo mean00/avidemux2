@@ -15,7 +15,7 @@
 
 #include "fourcc.h"
 #include "ADM_coreAudio.h"
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 extern ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t extraLength,uint8_t *extraData);
 
 ADM_Audiocodec	*getAudioCodec(uint32_t fourcc,WAVHeader *info,uint32_t extra,uint8_t *extraData)

@@ -27,7 +27,7 @@
 
 #include "fourcc.h"
 #include "ADM_coreAudio.h"
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 
 
 ADM_Audiocodec8Bits::ADM_Audiocodec8Bits( uint32_t fourcc,const WAVHeader &info) :  

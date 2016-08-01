@@ -16,7 +16,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include <math.h>
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 
 ADM_AudiocodecWav::ADM_AudiocodecWav( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {

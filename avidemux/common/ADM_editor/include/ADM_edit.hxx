@@ -38,7 +38,7 @@
  #include "ADM_colorspace.h"
 
  #include "ADM_audioStream.h"
- #include "ADM_audiocodec/ADM_audiocodec.h"
+ #include "ADM_audiocodec.h"
  #include "ADM_segment.h"
  #include <BVector.h>
  #include "ADM_edAudioTrack.h"

@@ -19,7 +19,7 @@
 #include "ADM_default.h"
 #include <math.h>
 
-#include "ADM_audiocodec/ADM_audiocodec.h"
+#include "ADM_audiocodec.h"
 
 ADM_AudiocodecWavSwapped::ADM_AudiocodecWavSwapped( uint32_t fourcc,const WAVHeader &info ) : ADM_Audiocodec(fourcc,info)
 {

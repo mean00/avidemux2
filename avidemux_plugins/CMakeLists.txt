@@ -4,6 +4,14 @@ SET(AVIDEMUX_API_VERSION 2.6)
 SET(ADM_PROJECT AdmPlugins)
 SET(PLUGINS TRUE)
 
+MESSAGE("")
+MESSAGE("#####################################")
+MESSAGE("Plugins Configure Started")
+MESSAGE("#####################################")
+MESSAGE("")
+MESSAGE(STATUS "Checking for avidemux development files ..")
+
+
 
 IF(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "")
@@ -11,13 +19,6 @@ else(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
 endif(NOT FAKEROOT)
 
-
-MESSAGE("")
-MESSAGE("#####################################")
-MESSAGE("Plugins Configure Started")
-MESSAGE("#####################################")
-MESSAGE("")
-MESSAGE(STATUS "Checking for avidemux development files ..")
 
 
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
