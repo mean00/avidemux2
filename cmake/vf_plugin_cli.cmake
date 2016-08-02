@@ -1,7 +1,9 @@
 include(admAsNeeded)
+include(plugin_cli)
 MACRO(INIT_VIDEO_FILTER_CLI  lib  _srcsGtk )
 
 IF (DO_CLI)
+        ADM_ADD_CLI_INCLUDE_DIR(ADM_UIs)
         IF (GETTEXT_FOUND)
             ADD_DEFINITIONS("-DHAVE_GETTEXT")
             INCLUDE_DIRECTORIES(${GETTEXT_INCLUDE_DIR})
@@ -10,7 +12,6 @@ IF (DO_CLI)
         ADM_ADD_SHARED_LIBRARY(${lib} ${ARGN} ${_srcsGtk})
         AS_NEEDED(${lib})
         ADM_TARGET_NO_EXCEPTION(${lib})
-        INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/cli/ADM_UIs/include/)
         TARGET_LINK_LIBRARIES( ${lib} ADM_UI_Cli6 ADM_render6_cli)
 
         IF (GETTEXT_FOUND)

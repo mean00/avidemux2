@@ -1,8 +1,10 @@
+include(plugin_qt4)
 include(admAsNeeded)
+
 MACRO(INIT_VIDEO_FILTER_QT4  lib  _srcsQt _headersQt _srcQt_ui  )
     IF (DO_QT4)
 		INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR} ${QT_INCLUDES})
-		INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/qt4/ADM_UIs/include/)
+                ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_UIs)
 		ADM_QT_WRAP_UI(qt4_ui ${_srcQt_ui}.ui)
 		ADM_QT_WRAP_CPP(qt4_cpp ${_headersQt})
 

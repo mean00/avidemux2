@@ -7,10 +7,12 @@ SET(ADM_videoCodec_SRCS
         ADM_dynVideoDecoder.cpp)
 
 IF(USE_VDPAU)
+        ADD_CORE_INCLUDE(ADM_coreVdpau)
         ADD_IF_ENABLED(USE_VDPAU ADM_ffmpeg_vdpau.cpp)
 ENDIF(USE_VDPAU)
                 
 IF(USE_LIBVA)
+        ADD_CORE_INCLUDE(ADM_coreLibVA)
         ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_libva.cpp)
 ENDIF(USE_LIBVA)
                 

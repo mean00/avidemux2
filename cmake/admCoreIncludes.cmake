@@ -46,4 +46,5 @@ ADD_CORE_INCLUDE(ADM_coreVideoCodec)
 ADD_CORE_INCLUDE(ADM_coreImageLoader)
 ADD_CORE_INCLUDE(ADM_coreJobs)
 ADD_CORE_INCLUDE(ADM_coreSocket)
+ADD_CORE_INCLUDE(ADM_coreAudioCodec)
 

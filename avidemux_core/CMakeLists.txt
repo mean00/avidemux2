@@ -124,9 +124,9 @@ include(admPackager)
 admPackager(corePackage)
 
 # install headers
-FOREACH( subfolder ${SUBFOLDERS} ADM_audioCodec)
+FOREACH( subfolder ${SUBFOLDERS} ADM_coreAudioCodec)
    ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/${subfolder}/include/" ${subfolder})     
-ENDFOREACH( subfolder ${SUBFOLDERS} ADM_audioCodec)
+ENDFOREACH( subfolder ${SUBFOLDERS} ADM_coreAudioCodec)
 
 IF(USE_VDPAU)
    ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/" ADM_coreVdpau )     

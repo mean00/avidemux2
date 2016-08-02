@@ -1,11 +1,12 @@
 #
 #  Macro to declare an video encoder plugin, qt4 flavor
 #
+include(plugin_qt4)
 include(admAsNeeded)
 MACRO(ADD_VIDEO_ENCODER_QT4 name srcQ headerQ uiQ)
         #INIT_VIDEO_ENCODER(${name})
         INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})
-		INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/qt4/ADM_UIs/include/)
+        ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_UIs)
         ADM_QT_WRAP_UI(qt4_ui ${uiQ}.ui)
         ADM_QT_WRAP_CPP(qt4_cpp ${headerQ})
         ADD_LIBRARY(${name} SHARED ${ARGN} ${srcQ} ${qt4_cpp} ${qt4_ui})

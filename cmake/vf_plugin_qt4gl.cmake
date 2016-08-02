@@ -1,7 +1,9 @@
+include(plugin_qt4)
 include(admAsNeeded)
 include(admOpenGl)    
 MACRO(INIT_VIDEO_FILTER_GLQT4  lib  _srcsQt _headersQt _srcQt_ui  )
-		INCLUDE_DIRECTORIES(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/qt4/ADM_UIs/include/)
+                ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_openGL)
+                ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_UIs)
                 IF("${_srcQt_ui}" STREQUAL "")
                         # No ui file
                 ELSE("${_srcQt_ui}" STREQUAL "")

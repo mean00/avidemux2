@@ -146,4 +146,7 @@ DISPLAY_SUMMARY_LIST()
 include(admPackager)
 admPackager(cliPackage)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/cli/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli" COMPONENT dev) 
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/ADM_UIs/include/DIA_flyDialogCli.h   DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli/ADM_UIs" COMPONENT dev) 
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/ADM_UIs/include/ADM_UI_Cli6_export.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cli/ADM_UIs" COMPONENT dev) 
 MESSAGE("")
+
