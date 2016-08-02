@@ -1,5 +1,7 @@
 IF(USE_VDPAU)
 INCLUDE(vf_plugin)
+ADD_CORE_INCLUDE(ADM_coreVdpau)
+
 IF(NOT WIN32 AND NOT APPLE)
         SET(ADM_vf_vdpauFilter_SRCS ADM_vidVdpauFilter.cpp )
         SET(ADM_vf_vdpauFilterDeint_SRCS ADM_vidVdpauFilterDeint.cpp )

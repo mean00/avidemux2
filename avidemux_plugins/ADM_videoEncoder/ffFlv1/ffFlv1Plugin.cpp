@@ -19,7 +19,7 @@
 #include "ADM_default.h"
 #include "ADM_ffFlv1.h"
 #include "ADM_coreVideoEncoderInternal.h"
-#include "../src/FFcodecSettings_desc.cpp"
+#include "FFcodecSettings_desc.cpp.h"
 extern FFcodecSettings Flv1Settings;
 extern bool         ffFlv1Configure(void);
 

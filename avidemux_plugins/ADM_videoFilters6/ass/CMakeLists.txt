@@ -1,5 +1,6 @@
 INCLUDE(admCheckFreeType)
 INCLUDE(admCheckFridibi)
+ADD_CORE_INCLUDE(ADM_coreSubtitles)
 checkFreeType()
 checkFridibi("0.19")
 

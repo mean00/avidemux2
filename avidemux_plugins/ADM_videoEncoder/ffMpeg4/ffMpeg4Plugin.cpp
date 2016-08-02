@@ -19,7 +19,7 @@
 #include "ADM_default.h"
 #include "ADM_ffMpeg4.h"
 #include "ADM_coreVideoEncoderInternal.h"
-#include "../src/FFcodecSettings_desc.cpp"
+#include "FFcodecSettings_desc.cpp.h"
 extern bool         ffMpeg4Configure(void);
 extern FFcodecSettings Mp4Settings;
 

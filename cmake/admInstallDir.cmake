@@ -113,4 +113,13 @@ MACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER folder targetName)
                 FILES_MATCHING PATTERN "*.c*"
                 )
 ENDMACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER )
-
+#
+# Macro to install include folder
+#
+MACRO(ADM_INSTALL_APP_HEADER folder )
+        INSTALL(FILE ${folder} ${ARGN} 
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_app
+                COMPONENT dev
+                )
+ENDMACRO(ADM_INSTALL_APP_HEADER folder)
+#
