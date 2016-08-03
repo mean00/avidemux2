@@ -223,7 +223,7 @@ IF(DO_COMMON)
     ADD_SUBDIRECTORY(ADM_demuxers)
     ADD_SUBDIRECTORY(ADM_muxers)
     ADD_SUBDIRECTORY(ADM_autoScrips)
-    #add_subdirectory(ADM_scriptEngines)
+    ADD_SUBDIRECTORY(ADM_scriptEngines)
 ENDIF(DO_COMMON)
 
 ADD_SUBDIRECTORY(ADM_videoEncoder)
