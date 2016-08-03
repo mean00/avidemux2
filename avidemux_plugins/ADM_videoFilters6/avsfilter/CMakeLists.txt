@@ -15,7 +15,7 @@ ADD_TARGET_CFLAGS(ADM_vf_avsfilter "-I${AVIDEMUX_SOURCE_DIR}/avidemux_plugins")
 
 IF(DO_SETTINGS)
 message(STATUS "avsfilter binary uncompressed")
-set(AVSFILTER_WINE_BINARY_ARCHIVE ${CMAKE_SOURCE_DIR}/avsload_pipe_binary.tar.bz2)
+set(AVSFILTER_WINE_BINARY_ARCHIVE ${CMAKE_SOURCE_DIR}/ADM_videoFilters6/avsfilter/avsload_pipe_binary.tar.bz2)
 set(addonesInstallDir ${CMAKE_INSTALL_PREFIX}/share/ADM6_addons/avsfilter)
 set(tempAvsFilterUnpackDir ${CMAKE_BINARY_DIR}/ADM_videoFilters6/avsfilter)
 #message(STATUS "AVSFILTER_WINE_BINARY_ARCHIVE" ${AVSFILTER_WINE_BINARY_ARCHIVE})
