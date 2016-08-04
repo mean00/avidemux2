@@ -389,14 +389,14 @@ std::string currentSdlDriver=getSdlDriverName();
      uint32_t languageIndex=0;
      languageDescriptor myLanguages[]={
                 {"auto","System language"},
-                {"da_DK", "Dansk"},
-                {"en","English"},
-                {"fr","Français"},
+                {"da_DK","Dansk"},
                 {"de","Deutsch"},
+                {"en","English"},
                 {"es","Español"},
+                {"fr","Français"},
                 {"it","Italiano"},
-                {"ru","Русский"},
                 {"pl","Polski"},
+                {"ru","Русский"},
         };
         uint32_t nbLanguages=sizeof(myLanguages)/sizeof(languageDescriptor);
         char *currentLanguage;

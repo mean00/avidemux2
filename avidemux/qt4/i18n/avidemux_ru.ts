@@ -3285,11 +3285,6 @@ Drop timing informations ?</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Avidemux</source>
-        <translation type="unfinished">
-            </translation>
-    </message>
-    <message>
         <source>&lt;b&gt;Video&lt;/b&gt;</source>
         <translation type="obsolete">&lt;b&gt;Видео&lt;/b&gt;</translation>
     </message>
@@ -3331,22 +3326,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">Время:</translation>
     </message>
     <message>
-        <source>00:00:00.000</source>
-        <translation type="unfinished">
-             {00:00:00.000?}</translation>
-    </message>
-    <message>
         <source>Frame Type:</source>
         <translation type="obsolete">Тип кадра:</translation>
     </message>
     <message>
         <source>Selection</source>
         <translation type="unfinished">Выделено</translation>
-    </message>
-    <message>
-        <source>000000</source>
-        <translation type="unfinished">
-             {000000?}</translation>
     </message>
     <message>
         <source>&amp;Help</source>
