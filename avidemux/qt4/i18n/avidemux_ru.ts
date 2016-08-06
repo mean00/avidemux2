@@ -2702,11 +2702,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Калькулятор</translation>
     </message>
     <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
-    </message>
-    <message>
         <source>Duration:</source>
         <translation type="unfinished">Длительность:</translation>
     </message>
@@ -3046,8 +3041,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>00:00:00/000</source>
-        <translation type="unfinished">
-             {00:00:00/000?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Timecode:</source>
@@ -3055,8 +3049,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>0/0</source>
-        <translation type="unfinished">
-             {0/0?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Calibrate</source>
@@ -3094,18 +3087,12 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
-    </message>
-    <message>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished">
-            </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Speed</source>
@@ -3120,8 +3107,7 @@ Drop timing informations ?</source>
     <name>DialogProgress</name>
     <message>
         <source>1/1</source>
-        <translation type="unfinished">
-             {1/1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Progress</source>
@@ -4484,8 +4470,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">Вертикальный деблокинг</translation>
     </message>
     <message>
-        <source>_Strength:</source>
-        <translation type="unfinished">Уровень:</translation>
+        <source>_Limit Refresh Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Rate Cap (ms)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Default Postprocessing</source>
@@ -4510,6 +4500,14 @@ Drop timing informations ?</source>
     <message>
         <source>Threading</source>
         <translation type="unfinished">Многопоточность</translation>
+    </message>
+    <message>
+        <source>_Always ask which port to use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default port to use</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -4738,11 +4736,6 @@ Drop timing informations ?</source>
     <message>
         <source>5 channels</source>
         <translation type="unfinished">5 каналов  </translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="unfinished">
-             {5.1?}</translation>
     </message>
     <message>
         <source>Dolby Pro Logic</source>
@@ -6300,11 +6293,6 @@ Do you want to load it  ?
         <source>0</source>
         <translation type="unfinished">
             </translation>
-    </message>
-    <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
     </message>
     <message>
         <source>Time Remaining:</source>
@@ -8400,31 +8388,6 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Изменить размер</translation>
     </message>
     <message>
-        <source>1:1</source>
-        <translation type="obsolete">
-             {1:1?}</translation>
-    </message>
-    <message>
-        <source>4:3</source>
-        <translation type="obsolete">
-             {4:3?}</translation>
-    </message>
-    <message>
-        <source>16:9</source>
-        <translation type="obsolete">
-             {16:9?}</translation>
-    </message>
-    <message>
-        <source>1%</source>
-        <translation type="obsolete">
-             {1%?}</translation>
-    </message>
-    <message>
-        <source>200%</source>
-        <translation type="obsolete">
-             {200%?}</translation>
-    </message>
-    <message>
         <source>Bicubic</source>
         <translation type="obsolete">Бикубическая</translation>
     </message>
@@ -8465,21 +8428,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>_Angle:</source>
         <translation type="unfinished">Угол:</translation>
-    </message>
-    <message>
-        <source>90°</source>
-        <translation type="unfinished">
-             {90°?}</translation>
-    </message>
-    <message>
-        <source>180°</source>
-        <translation type="unfinished">
-             {180°?}</translation>
-    </message>
-    <message>
-        <source>270°</source>
-        <translation type="unfinished">
-             {270°?}</translation>
     </message>
 </context>
 <context>
@@ -8525,11 +8473,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Preview</source>
         <translation type="unfinished">Предпросмотр</translation>
-    </message>
-    <message>
-        <source>00:00:00.000</source>
-        <translation type="unfinished">
-             {00:00:00.000?}</translation>
     </message>
     <message>
         <source>next</source>
@@ -8870,11 +8813,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Осталось времени:</translation>
     </message>
     <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
-    </message>
-    <message>
         <source>Elapsed:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8934,99 +8872,8 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Вывод</translation>
     </message>
     <message>
-        <source>1</source>
-        <translation type="obsolete">
-             {1?}</translation>
-    </message>
-    <message>
-        <source>1.1</source>
-        <translation type="obsolete">
-             {1.1?}</translation>
-    </message>
-    <message>
-        <source>1.2</source>
-        <translation type="obsolete">
-             {1.2?}</translation>
-    </message>
-    <message>
-        <source>1.3</source>
-        <translation type="obsolete">
-             {1.3?}</translation>
-    </message>
-    <message>
-        <source>2</source>
-        <translation type="obsolete">
-             {2?}</translation>
-    </message>
-    <message>
-        <source>2.1</source>
-        <translation type="obsolete">
-             {2.1?}</translation>
-    </message>
-    <message>
-        <source>2.2</source>
-        <translation type="obsolete">
-             {2.2?}</translation>
-    </message>
-    <message>
-        <source>3</source>
-        <translation type="obsolete">
-             {3?}</translation>
-    </message>
-    <message>
-        <source>3.1</source>
-        <translation type="obsolete">
-             {3.1?}</translation>
-    </message>
-    <message>
-        <source>3.2</source>
-        <translation type="obsolete">
-             {3.2?}</translation>
-    </message>
-    <message>
-        <source>4</source>
-        <translation type="obsolete">
-             {4?}</translation>
-    </message>
-    <message>
-        <source>4.1</source>
-        <translation type="obsolete">
-             {4.1?}</translation>
-    </message>
-    <message>
-        <source>4.2</source>
-        <translation type="obsolete">
-             {4.2?}</translation>
-    </message>
-    <message>
-        <source>5</source>
-        <translation type="obsolete">
-             {5?}</translation>
-    </message>
-    <message>
-        <source>5.1</source>
-        <translation type="obsolete">
-             {5.1?}</translation>
-    </message>
-    <message>
         <source>0</source>
-        <translation type="obsolete">
-            </translation>
-    </message>
-    <message>
-        <source>7</source>
-        <translation type="obsolete">
-             {7?}</translation>
-    </message>
-    <message>
-        <source>15</source>
-        <translation type="obsolete">
-             {15?}</translation>
-    </message>
-    <message>
-        <source>31</source>
-        <translation type="obsolete">
-             {31?}</translation>
+        <translation type="obsolete"></translation>
     </message>
     <message>
         <source>Normal</source>
