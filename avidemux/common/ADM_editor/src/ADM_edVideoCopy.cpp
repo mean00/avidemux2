@@ -332,11 +332,10 @@ againGet:
 // we add a bit of timeIncrement to compensate for rounding
         if(_nextFrameDts!=ADM_NO_PTS)
         {
-            if(_nextFrameDts>(signedDts+vid->timeIncrementInUs/10))
+            if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/10)))
             {
-                ADM_error("Frame %" PRIu32" DTS is going back in time :");
-                ADM_error("\t expected:%s ", ADM_us2plain(_nextFrameDts));
-                ADM_error("\t got:%s \n", ADM_us2plain(signedDts));
+                ADM_error("Frame %d DTS is going back in time : expected:%s ",(int)vid->lastSentFrame, ADM_us2plain(_nextFrameDts));
+                ADM_error("\t got:%s (%ld vs %ld)\n", ADM_us2plain(signedDts),_nextFrameDts,signedDts);
                 goto againGet;
             }
         }
