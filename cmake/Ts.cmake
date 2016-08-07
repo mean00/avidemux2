@@ -8,7 +8,7 @@ MACRO(FIND_LRELEASE)
 			$ENV{QTDIR}/bin)
 
 		IF (NOT LRELEASE_EXECUTABLE) # search again under the name lrelease-qt4
-        		FIND_PROGRAM(LRELEASE_EXECUTABLE lrelease-qt4 PATHS
+        		FIND_PROGRAM(LRELEASE_EXECUTABLE lrelease-${QT_EXTENSION} PATHS
 			$ENV{QTDIR}/bin)
 		        IF (NOT LRELEASE_EXECUTABLE) # search again under the name lrelease-qt4
 			        MESSAGE(FATAL_ERROR "${LRELEASE_EXECUTABLE} not found - ts files can't be processed")
