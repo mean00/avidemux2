@@ -307,7 +307,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         chain=createVideoFilterChain(markerA,markerB);
         if(!chain)
         {
-                GUI_Error_HIG("Video","Cannot instantiate video chain");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot instantiate video chain"));
                 return NULL;
         }
         // 2- Create Encoder
@@ -319,7 +319,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         ADM_coreVideoEncoder *encoder=createVideoEncoderFromIndex(last,videoEncoderIndex,muxer->useGlobalHeader()); // FIXME GLOBAL HEADERS
         if(!encoder)
         {
-           GUI_Error_HIG("Video","Cannot create encoder");
+           GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot create encoder"));
            return NULL;
         }
         // 3 dual Pass ?
@@ -335,7 +335,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         }
         if(encoder->setup()==false)
         {
-            GUI_Error_HIG("Video","Cannot setup codec. Bitrate too low?");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot setup codec. Bitrate too low?"));
             delete encoder;
             encoder=NULL;
             return NULL;
@@ -343,7 +343,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         video= new ADM_videoStreamProcess(encoder);
         if(!video)
         {
-                GUI_Error_HIG("Video","Cannot create encoder");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Video"),QT_TRANSLATE_NOOP("adm","Cannot create encoder"));
                 delete encoder;
                 return NULL;
         }
@@ -380,7 +380,7 @@ bool admSaver::setupAudio()
             }
             if(!access)
             {
-                    GUI_Error_HIG("Audio","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)");
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)"));
                     return false;
             }
             audioAccess[i]=access;
@@ -410,9 +410,9 @@ bool admSaver::save(void)
     {
         if(false==video_body-> checkCutsAreOnIntra())
         {
-            if(!GUI_Question("The video is in copy mode but the cut points are not on keyframes.\n"
-                            "The video will be saved but there will corruption at cut point(s).\n"
-                             "Do you want to continue anyway ?"))
+            if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The video is in copy mode but the cut points are not on keyframes.\n"
+                            "The video will be saved but there will be corruption at cut point(s).\n"
+                             "Do you want to continue anyway ?")))
             {
                 return false;
             }
@@ -421,7 +421,7 @@ bool admSaver::save(void)
 
     if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
-        GUI_Error_HIG("Muxer","Cannot instantiate muxer");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Muxer"),QT_TRANSLATE_NOOP("adm","Cannot instantiate muxer"));
         return 0;
     }
      
@@ -447,7 +447,7 @@ bool admSaver::save(void)
    
     if(!muxer->open(fileName.c_str(),video,nbAudioTracks,audioAccess))
     {
-        GUI_Error_HIG("Muxer","Cannot open ");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Muxer"),QT_TRANSLATE_NOOP("adm","Cannot open "));
     }else
     {
         ret=muxer->save();

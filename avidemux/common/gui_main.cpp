@@ -150,7 +150,7 @@ void HandleAction (Action action)
 //------------------------------------------------
     if(action==ACT_RUN_SCRIPT)
     {
-        GUI_FileSelRead("Select script/project to run", A_RunScript);            
+        GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script/project to run"), A_RunScript);            
         return;
     }
     if(action==ACT_SaveAsDefault)
@@ -168,11 +168,11 @@ void HandleAction (Action action)
 		switch (actionId)
 		{
 			case 0:
-				GUI_FileSelRead("Select script to run", RunScript);
+				GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to run"), RunScript);
 				break;
 
 			case 1:
-				GUI_FileSelRead("Select script to debug", DebugScript);
+				GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to debug"), DebugScript);
 				break;
 
 			case 2:
@@ -362,7 +362,7 @@ void HandleAction (Action action)
            IScriptEngine *engine=getPythonScriptEngine();
                 if(!engine)
                 {
-                    GUI_Error_HIG("No engine","tinyPy script is not enabled in this build");
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","No engine"),QT_TRANSLATE_NOOP("adm","tinyPy script is not enabled in this build"));
                     break;
                 }
                 char fileName[1024];
@@ -527,7 +527,7 @@ void HandleAction (Action action)
             uint64_t b=video_body->getMarkerBPts();
             if(false==video_body->remove(a,b))
             {
-                GUI_Error_HIG("Cutting","Error while cutting out.");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
             }
             else
             {
@@ -1163,7 +1163,7 @@ void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 
 	ADM_edAudioTrackExternal *ext=create_edAudioExternal(filename);
 	if (!ext) {
-		GUI_Error_HIG("Error","Cannot use that file as audio track");
+		GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot use that file as audio track"));
 		return;
 	}
 	// add to the list of the known input files
@@ -1190,7 +1190,8 @@ void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 		}
 		if (assumedIdx == -1) {
 			// This should never happen, but who knows?
-			GUI_Error_HIG("Error","Audio file not found in list, even though it should be there. Create a bug report!");
+			GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+			               QT_TRANSLATE_NOOP("adm","Audio file not found in list, even though it should be there. Create a bug report!"));
 			return;
 		}
 		printf("assumed Idx = %d\n", assumedIdx);
@@ -1213,17 +1214,20 @@ void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 void    A_setAudioLang(const char *trackIdxTxt, const char *langueName)
 {
 	if (!video_body->isFileOpen()) {
-		GUI_Error_HIG("Error","Unable to set the audio language: No video loaded yet!");
+		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+		               QT_TRANSLATE_NOOP("adm","Unable to set the audio language: No video loaded yet!"));
 		return;
 	}
 	int trackIdx = extractTrackIndex(trackIdxTxt);
 	if(trackIdx == -1) return;
 	ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
 	if (tracks->size() == 0 ) {
-		GUI_Error_HIG("Error","Setting the language for the given track index is not possible: Video has no audio file!");
+		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+		               QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Video has no audio file!"));
 		return;
 	} else if (tracks->size() <= trackIdx) {
-		GUI_Error_HIG("Error","Setting the language for the given track index is not possible: Invalid track index!");
+		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+		               QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Invalid track index!"));
 		return;
 	}
 	tracks->atEdAudio(trackIdx)->setLanguage(langueName);
@@ -1503,7 +1507,7 @@ void A_Rewind(void)
 }
 void brokenAct(void)
 {
-    GUI_Error_HIG("Oops","This function is disabled or no longer valid");
+    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Oops"),QT_TRANSLATE_NOOP("adm","This function is disabled or no longer valid"));
 }
 /**
  * \fn A_TimeShift
