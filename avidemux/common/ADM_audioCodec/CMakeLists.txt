@@ -1,2 +1,1 @@
 ADD_SUBDIRECTORY(src)
-ADM_INSTALL_INCLUDE_FOLDER(include/ ADM_audioCodec)
