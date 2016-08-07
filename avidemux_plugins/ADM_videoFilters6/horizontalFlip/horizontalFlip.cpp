@@ -135,7 +135,7 @@ void horizontalFlipFilter::setCoupledConf(CONFcouple *couples)
 const char *horizontalFlipFilter::getConfiguration(void)
 {
     
-    return "Vertical flip.";
+    return "Horizontal flip.";
 }
 // Normally not needed :virtual FilterInfo  *getInfo(void)
 //EOF
