@@ -7,8 +7,8 @@
  ***************************************************************************/
 #include <math.h>
 #include <vector>
-#include <QFileDialog>
 #include <QDialog>
+#include <QFileDialog>
 #include <QTextEdit>
 #include <QLineEdit>
 using std::vector;

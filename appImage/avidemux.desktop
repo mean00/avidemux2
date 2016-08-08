@@ -1,4 +1,4 @@
 [Desktop Entry]
 Name=avidemux
-Exec=avidemux
-Icon=avidemux
+Exec=avidemux3_qt5
+Icon=avidemux.png
