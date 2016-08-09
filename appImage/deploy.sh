@@ -17,7 +17,7 @@ cpyLib()
 }
 
 
-
+echo " ** Creating AppImage file **"
 
 export ORG=$PWD
 export APP_NAME=app
@@ -25,6 +25,8 @@ rm -f $APP_NAME
 cd install/usr/bin
 mkdir -p ../lib/qt5
 mkdir -p ../lib/qt5/plugins
+# libz
+cp -t ../lib /lib/x86_64-linux-gnu/libz.so.1
 
 # qt5
 ldd avidemux3_qt5 | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/
@@ -44,8 +46,14 @@ do
         cpyX86 $i
 done
 cpyLib libopus.so.0 
+# Audio device
+cpyX86 libpulse.so.0
 # subtitles
-
+for i in libfreetype.so.6 libfribidi.so.0 libfontconfig.so.1 
+do 
+        cpyX86 $i
+done
+cp -t ../lib /lib/x86_64-linux-gnu/libexpat.so.1
 # Xvid
 
 # x264/x265
