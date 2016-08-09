@@ -43,10 +43,15 @@ for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.s
 do
         cpyX86 $i
 done
-
 cpyLib libopus.so.0 
-#
+# subtitles
+
+# Xvid
+
+# x264/x265
+# Display lib
 cpyX86 libvdpau.so
+cpyX86 libXv.so.1
 
 # Qt path
 echo "[Paths]" > qt.conf
