@@ -70,8 +70,9 @@ do
         cpyX86 $i
 done
 cp -t ../lib /lib/x86_64-linux-gnu/libexpat.so.1
-# Xvid
-
+# x264
+cpyLib libx264.so.148
+cpyLib libx265.so.79
 # Display lib
 cpyX86 libvdpau.so
 cpyX86 libXv.so.1
