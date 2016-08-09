@@ -1,4 +1,24 @@
 #!/bin/bash
+fail()
+{
+        echo "$* FAILED"
+        exit 1
+
+}
+cpyX86()
+{
+        cp -t ../lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $i
+
+}
+cpyLib()
+{
+        cp -t ../lib  /usr/lib/$1 || fail copy_lib $i
+
+}
+
+
+
+
 export ORG=$PWD
 export APP_NAME=app
 rm -f $APP_NAME
@@ -14,9 +34,19 @@ cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms
 # Support libs
 for i in libffi.so.5 libglib-2.0.so libgobject-2.0.so libpcre.so
 do
-        cp -t ../lib/ /usr/lib/x86_64-linux-gnu/$i
+        cpyX86 $i
 done
 
+
+# audio plugins
+for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.so.2 libaften.so.0
+do
+        cpyX86 $i
+done
+
+cpyLib libopus.so.0 
+#
+cpyX86 libvdpau.so
 
 # Qt path
 echo "[Paths]" > qt.conf
