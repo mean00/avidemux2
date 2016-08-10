@@ -159,7 +159,7 @@ preferences::~preferences()
 */
 bool preferences::load()
 {
-   char *dir_adm;
+   const char *dir_adm;
    std::string path;
 
     dir_adm=ADM_getBaseDir();
@@ -189,7 +189,7 @@ bool preferences::load()
 */
 bool preferences::save()
 {
-   char *dir_adm;
+   const char *dir_adm;
    std::string path;
 
 

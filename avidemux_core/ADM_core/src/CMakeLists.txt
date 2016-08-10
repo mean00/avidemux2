@@ -6,13 +6,13 @@ SET(ADM_core_SRCS
 )
 
 IF (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp ADM_folder_win32.cpp)
 ELSEIF (APPLE)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp ADM_folder_mac.cpp)
 ELSEIF (UNIX)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_unix.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_unix.cpp ADM_folder_linux.cpp)
 ELSE (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp)
 ENDIF (MINGW)
 
 if (MSVC)

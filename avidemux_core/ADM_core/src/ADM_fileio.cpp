@@ -35,18 +35,16 @@
 
 #include "ADM_default.h"
 
-static char ADM_basedir[1024] = {0};
-static char *ADM_jobdir = NULL;
-static char *ADM_customdir = NULL;
-static char *ADM_autodir = NULL;
-static char *ADM_systemPluginSettings=NULL;
-static char *ADM_userPluginSettings=NULL;
 
 #undef fread
 #undef fwrite
 #undef fopen
 #undef fclose
-
+static void AddSeparator(char *path)
+{
+	if (path && (strlen(path) < strlen(ADM_SEPARATOR) || strncmp(path + strlen(path) - strlen(ADM_SEPARATOR), ADM_SEPARATOR, strlen(ADM_SEPARATOR)) != 0))
+		strcat(path, ADM_SEPARATOR);
+}
 size_t ADM_fread (void *ptr, size_t size, size_t n, FILE *sstream)
 {
 	return fread(ptr,size,n,sstream);
@@ -208,282 +206,6 @@ int ADM_fclose(FILE *file)
 	return fclose(file); 
 }
 
-/*
-      Get the  directory where jobs are stored
-******************************************************/
-char *ADM_getCustomDir(void)
-{
-	if (ADM_customdir)
-		return ADM_customdir;
-
-	ADM_customdir = ADM_getHomeRelativePath("custom");
-
-	if (!ADM_mkdir(ADM_customdir))
-	{
-		printf("can't create custom directory (%s).\n", ADM_customdir);
-		return NULL;
-	}
-
-	return ADM_customdir;
-}
-/**
-    \fn ADM_getAutoDir
-    \brief  Get the  directory where auto script are stored. No need to free the string.
-******************************************************/
-char *ADM_getAutoDir(void)
-{
-    if (ADM_autodir )
-        return ADM_autodir;
-#ifdef __APPLE__
-    const char *startDir="../lib";
-#else
-    const char *startDir=ADM_RELATIVE_LIB_DIR;
-#endif
-    ADM_autodir = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
-	return ADM_autodir;
-}
-/**
-    \fn ADM_getPluginSettingsDir
-    \brief Get the folder containing the plugin settings (presets etc..)
-*/
-const char *ADM_getSystemPluginSettingsDir(void)
-{
-    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
-#ifdef __APPLE__
-    const char *startDir="../lib";
-#else
-    const char *startDir=ADM_RELATIVE_LIB_DIR;
-#endif
-    ADM_systemPluginSettings=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
-    return ADM_systemPluginSettings;
-}
-/**
-
-*/
-const char *ADM_getUserPluginSettingsDir(void)
-{
-    if(ADM_userPluginSettings) return ADM_userPluginSettings;
-    ADM_userPluginSettings=ADM_getHomeRelativePath("pluginSettings");
-    return ADM_userPluginSettings;
-}
-
-/*
-      Get the  directory where jobs are stored
-******************************************************/
-char *ADM_getJobDir(void)
-{
-	if (ADM_jobdir)
-		return ADM_jobdir;
-
-	ADM_jobdir = ADM_getHomeRelativePath("jobs");
-
-
-	if (!ADM_mkdir(ADM_jobdir))
-	{
-		printf("can't create custom directory (%s).\n", ADM_jobdir);
-		return NULL;
-	}
-
-	return ADM_jobdir;
-}
-
-static void AddSeparator(char *path)
-{
-	if (path && (strlen(path) < strlen(ADM_SEPARATOR) || strncmp(path + strlen(path) - strlen(ADM_SEPARATOR), ADM_SEPARATOR, strlen(ADM_SEPARATOR)) != 0))
-		strcat(path, ADM_SEPARATOR);
-}
-
-/**
- * 	\fn ADM_getRelativePath
- */
-static char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3)
-{
-	char *result;
-	int length = strlen(base0) + 2;
-
-	if (base1)
-		length += strlen(base1) + 1;
-
-	if (base2)
-		length += strlen(base2) + 1;
-
-	if (base3)
-		length += strlen(base3) + 1;
-
-	result = (char *)new char[length];
-	strcpy(result, base0);
-	AddSeparator(result);
-
-	if (base1)
-	{
-		if (strlen(base1))
-		{
-			strcat(result, base1);
-			strcat(result, ADM_SEPARATOR);
-		}
-
-		if (base2)
-		{
-			if (strlen(base2))
-			{
-				strcat(result, base2);
-				strcat(result, ADM_SEPARATOR);
-			}
-
-			if (base3 && strlen(base3))
-			{
-				strcat(result, base3);				
-				strcat(result, ADM_SEPARATOR);
-			}
-		}
-	}
-
-	return result;
-}
-
-/**
- * 	\fn char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
- *  \brief Returns home directory +base 1 + base 2... The return value is a copy, and must be deleted []
- */
-char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *base3)
-{
-	return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
-}
-
-char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
-{
-#ifdef _WIN32
-	wchar_t wcModuleName[MAX_PATH];
-
-	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
-
-	int len = wideCharStringToUtf8(wcModuleName, -1, NULL);
-	char *moduleName = new char[len];
-
-	wideCharStringToUtf8(wcModuleName, -1, moduleName);
-
-	char *slash = strrchr(moduleName, '\\');
-		
-	if (slash)
-		*slash = '\0';
-
-	char *relativePath = ADM_getRelativePath(moduleName, base1, base2, base3);
-
-	delete [] moduleName;
-
-	return relativePath;
-
-#elif defined(__APPLE__)
-#define MAX_PATH_SIZE 1024
-
-	char buffer[MAX_PATH_SIZE];
-
-	CFURLRef url(CFBundleCopyExecutableURL(CFBundleGetMainBundle()));
-	buffer[0] = '\0';
-
-	if (url)
-	{
-		CFURLGetFileSystemRepresentation(url, true, (UInt8*)buffer, MAX_PATH_SIZE);
-		CFRelease(url);
-
-		char *slash = strrchr(buffer, '/');
-		
-		if (slash)
-			*slash = '\0';
-	}
-
-	return ADM_getRelativePath(buffer, base1, base2, base3);
-#else
-	return ADM_getRelativePath(ADM_INSTALL_DIR, base1, base2, base3);
-#endif
-}
-
-/*
-      Get the root directory for .avidemux stuff
-******************************************************/
-char *ADM_getBaseDir(void)
-{
-	return ADM_basedir;
-}
-
-void ADM_initBaseDir(bool portableMode)
-{
-	char *home = NULL;
-
-	// Get the base directory
-#ifdef _WIN32
-    if (portableMode)
-    {
-        // Portable mode...
-        home = ADM_getInstallRelativePath(NULL, NULL, NULL);
-    }
-	else
-    {
-        wchar_t wcHome[MAX_PATH];
-
-        if (SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, wcHome) == S_OK)
-        {
-            int len = wideCharStringToUtf8(wcHome, -1, NULL);
-            home = new char[len];
-
-            wideCharStringToUtf8(wcHome, -1, home);
-        }
-        else
-        {
-            printf("Oops: can't determine the Application Data folder.");
-            home=new char[10];
-            strcpy(home,"c:\\");
-        }
-    }
-#else
-	const char* homeEnv = getenv("HOME");
-
-	if (homeEnv)
-	{
-		home = new char[strlen(homeEnv) + 2];
-		strcpy(home, homeEnv);
-	}
-	else
-	{
-		printf("Oops: can't determine $HOME.");
-	}
-#endif
-
-	// Try to open the .avidemux directory
-
-	if (home)
-	{
-		strcpy(ADM_basedir, home);
-		AddSeparator(ADM_basedir);
-
-#ifdef _WIN32
-		const char *ADM_DIR_NAME;
-
-		if (portableMode)
-			ADM_DIR_NAME = "settings";
-		else
-			ADM_DIR_NAME = "avidemux";
-#elif defined __HAIKU__
-		const char *ADM_DIR_NAME = "config/settings/avidemux6";
-#else
-		const char *ADM_DIR_NAME = ".avidemux6";
-#endif
-
-		strcat(ADM_basedir, ADM_DIR_NAME);
-		strcat(ADM_basedir, ADM_SEPARATOR);
-
-		delete [] home;
-
-		if (ADM_mkdir(ADM_basedir))
-		{
-			printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
-		}
-		else
-		{
-			ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
-		}
-	}
-}
 
 #ifdef _WIN32
 #define DIR _WDIR
@@ -916,5 +638,159 @@ uint8_t ADM_renameFile(const char *source, const char *target)
     return false;
 #endif
 }
+
+/**
+ * 	\fn ADM_getRelativePath
+ */
+char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3)
+{
+	char *result;
+	int length = strlen(base0) + 2;
+
+	if (base1)
+		length += strlen(base1) + 1;
+
+	if (base2)
+		length += strlen(base2) + 1;
+
+	if (base3)
+		length += strlen(base3) + 1;
+
+	result = (char *)new char[length];
+	strcpy(result, base0);
+	AddSeparator(result);
+
+	if (base1)
+	{
+		if (strlen(base1))
+		{
+			strcat(result, base1);
+			strcat(result, ADM_SEPARATOR);
+		}
+
+		if (base2)
+		{
+			if (strlen(base2))
+			{
+				strcat(result, base2);
+				strcat(result, ADM_SEPARATOR);
+			}
+
+			if (base3 && strlen(base3))
+			{
+				strcat(result, base3);				
+				strcat(result, ADM_SEPARATOR);
+			}
+		}
+	}
+
+	return result;
+}
+
+
+/**
+ * \fn ADM_getCustomDir
+ * \brief      Get the  directory where jobs are stored
+*/
+static char *ADM_customdir = NULL;
+const char *ADM_getCustomDir(void)
+{
+	if (ADM_customdir)
+		return ADM_customdir;
+
+	ADM_customdir = ADM_getHomeRelativePath("custom");
+
+	if (!ADM_mkdir(ADM_customdir))
+	{
+		printf("can't create custom directory (%s).\n", ADM_customdir);
+		return NULL;
+	}
+
+	return ADM_customdir;
+}
+
+
+/**
+ *      \fn ADM_getJobDir
+      \brief Get the  directory where jobs are stored
+*/
+static char *ADM_jobdir = NULL;
+const char *ADM_getJobDir(void)
+{
+	if (ADM_jobdir)
+		return ADM_jobdir;
+
+	ADM_jobdir = ADM_getHomeRelativePath("jobs");
+
+
+	if (!ADM_mkdir(ADM_jobdir))
+	{
+		printf("can't create custom directory (%s).\n", ADM_jobdir);
+		return NULL;
+	}
+
+	return ADM_jobdir;
+}
+
+/**
+ * \fn  ADM_getUserPluginSettingsDir
+ * \brief returns the user plugin setting 
+*/
+static char *ADM_userPluginSettings=NULL;
+const char *ADM_getUserPluginSettingsDir(void)
+{
+    if(ADM_userPluginSettings) return ADM_userPluginSettings;
+    ADM_userPluginSettings=ADM_getHomeRelativePath("pluginSettings");
+    return ADM_userPluginSettings;
+}
+
+
+/**
+    \fn isPortableMode
+    \brief returns true if we are in portable mode
+*/
+bool isPortableMode(int argc, char *argv[])
+{
+	bool portableMode = false;
+    std::string mySelf=argv[0];
+    // if the name ends by "_portable.exe" => portable
+    int match=mySelf.find("portable");
+    if(match!=-1)
+    {
+        ADM_info("Portable mode\n");
+        return true;
+    }
+
+    for (int i = 0; i < argc; i++)
+    {
+            if (!strcmp(argv[i], "--portable"))
+            {
+                    portableMode = true;
+                    break;
+            }
+    }
+
+    return portableMode;
+}
+/**
+ */
+std::string pluginDir;
+std::string ADM_getPluginDir(const char *subfolder)
+{
+    std::string out;
+    if(!pluginDir.size())      
+    {
+            #ifdef __APPLE__
+                const char *startDir="../lib";
+            #else
+                const char *startDir=ADM_RELATIVE_LIB_DIR;
+            #endif
+        
+            char *p=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,"");
+            pluginDir = std::string(p);
+            delete [] p;p=NULL;
+    }
+    return pluginDir+std::string(ADM_SEPARATOR)+std::string(subfolder);
+}            
 
 // EOF

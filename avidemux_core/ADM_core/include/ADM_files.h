@@ -14,25 +14,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_FILES_H
-#define ADM_FILES_H
-
+#pragma once
 #include "ADM_core6_export.h"
 
 #ifdef __cplusplus
-ADM_CORE6_EXPORT void ADM_initBaseDir(bool portableMode);
+ADM_CORE6_EXPORT void ADM_initBaseDir(int argc, char *argv[]);
 #endif
 // Returns dir to ~/.avidemux, no need to free it
-ADM_CORE6_EXPORT char *ADM_getBaseDir(void);
+ADM_CORE6_EXPORT const char *ADM_getBaseDir(void);
 // Returns dir to ~/.avidemux/jobs, no need to free it
-ADM_CORE6_EXPORT char *ADM_getJobDir(void);
+ADM_CORE6_EXPORT const char *ADM_getJobDir(void);
 // Returns dir to ~/.avidemux/custom, no need to free it
-ADM_CORE6_EXPORT char *ADM_getCustomDir(void);
+ADM_CORE6_EXPORT const char *ADM_getCustomDir(void);
 // Returns dir to ~/.avidemux/autoScript, no need to free it
-ADM_CORE6_EXPORT char *ADM_getAutoDir(void);
+ADM_CORE6_EXPORT const char *ADM_getAutoDir(void);
 // Returns dir to ~/.avidemux/autoScript, no need to free it
 ADM_CORE6_EXPORT const char *ADM_getUserPluginSettingsDir(void);
 ADM_CORE6_EXPORT const char *ADM_getSystemPluginSettingsDir(void);
+
+
 //
 ADM_CORE6_EXPORT uint8_t ADM_copyFile(const char *source, const char *target);
 ADM_CORE6_EXPORT uint8_t ADM_renameFile(const char *source, const char *target);
@@ -52,5 +52,8 @@ ADM_CORE6_EXPORT uint8_t clearDirectoryContent(const uint32_t nb, char *jobName[
 #define ADM_SEPARATOR "/"
 #endif
 
-
+#ifdef __cplusplus
+    ADM_CORE6_EXPORT std::string ADM_getPluginDir(const char *subfolder);
+    ADM_CORE6_EXPORT bool        isPortableMode(int argc, char *argv[]);
 #endif
+

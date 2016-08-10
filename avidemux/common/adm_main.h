@@ -92,16 +92,14 @@ extern bool initLIBVADecoder(void);
        
 #define loadPlugins(subdir, func)\
 {\
-     char *p = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,subdir );\
-     func(p);\
-     delete [] p;p=NULL;\
+     std::string folder=ADM_getPluginDir(subdir);\
+     func(folder.c_str());\
 }            
 
 #define loadPluginsEx(subdir, func)\
 {\
-     char *p = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,subdir );\
-     func(p,getUISpecifSubfolder());\
-     delete [] p;p=NULL;\
+     std::string folder=ADM_getPluginDir(subdir);\
+     func(folder.c_str(),getUISpecifSubfolder());\
 }            
 
 #define loadPluginsMyEx(subdir, func)\

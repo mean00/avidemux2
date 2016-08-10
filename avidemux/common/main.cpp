@@ -44,7 +44,7 @@ int main(int _argc, char *_argv[]);
 
 int main(int _argc, char *_argv[])
 {
-	ADM_initBaseDir(isPortableMode(_argc, _argv));
+	ADM_initBaseDir(_argc, _argv);
 
 #if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4)
 	// redirect output before registering exception handler so error dumps are captured
@@ -384,32 +384,5 @@ bool setPrefsDefault(void)
     #endif
 #endif
     return true;
-}
-/**
-    \fn isPortableMode
-    \brief returns true if we are in portable mode
-*/
-bool isPortableMode(int argc, char *argv[])
-{
-	bool portableMode = false;
-    std::string mySelf=argv[0];
-    // if the name ends by "_portable.exe" => portable
-    int match=mySelf.find("portable");
-    if(match!=-1)
-    {
-        ADM_info("Portable mode\n");
-        return true;
-    }
-
-    for (int i = 0; i < argc; i++)
-    {
-            if (strcmp(argv[i], "--portable") == 0)
-            {
-                    portableMode = true;
-                    break;
-            }
-    }
-
-    return portableMode;
 }
 //EOF

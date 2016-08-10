@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "ADM_inttype.h"
+#include "string"
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
 

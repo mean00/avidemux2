@@ -115,14 +115,14 @@ static bool uiRunning=false;
 */
 typedef struct
 {
-	const char *name;
-	Action     action;
+    const char *name;
+    Action     action;
 }adm_qt4_translation;
 
 const adm_qt4_translation myTranslationTable[]=
 {
 #define PROCESS DECLARE_VAR
-	LIST_OF_BUTTONS
+    LIST_OF_BUTTONS
 #undef PROCESS
 };
 static Action searchTranslationTable(const char *name);
@@ -135,40 +135,40 @@ void UI_updateTimeCount(uint32_t curFrame,uint32_t fps);
 class FileDropEvent : public QEvent
 {
 public:
-	QList<QUrl> files;
+    QList<QUrl> files;
 
-	FileDropEvent(QList<QUrl> files) : QEvent(QEvent::User)
-	{
-		this->files = files;
-	}
+    FileDropEvent(QList<QUrl> files) : QEvent(QEvent::User)
+    {
+        this->files = files;
+    }
 };
 
 void MainWindow::comboChanged(int z)
 {
-	QObject *obj = sender();
+    QObject *obj = sender();
 
-	if (obj == ui.comboBoxVideo)
-	{
-		bool b=false;
-		if(ui.comboBoxVideo->currentIndex())
-		{
-			b=true;
-		}
-		ui.pushButtonVideoConf->setEnabled(b);
-		ui.pushButtonVideoFilter->setEnabled(b);
-		sendAction (ACT_VIDEO_CODEC_CHANGED) ;
-	}
-	else if (obj == ui.comboBoxAudio)
-	{
-		bool b=false;
-		if(ui.comboBoxAudio->currentIndex())
-		{
-			b=true;
-		}
-		ui.pushButtonAudioConf->setEnabled(b);
-		ui.pushButtonAudioFilter->setEnabled(b);
-		sendAction (ACT_AUDIO_CODEC_CHANGED) ;
-	}
+    if (obj == ui.comboBoxVideo)
+    {
+        bool b=false;
+        if(ui.comboBoxVideo->currentIndex())
+        {
+            b=true;
+        }
+        ui.pushButtonVideoConf->setEnabled(b);
+        ui.pushButtonVideoFilter->setEnabled(b);
+        sendAction (ACT_VIDEO_CODEC_CHANGED) ;
+    }
+    else if (obj == ui.comboBoxAudio)
+    {
+        bool b=false;
+        if(ui.comboBoxAudio->currentIndex())
+        {
+            b=true;
+        }
+        ui.pushButtonAudioConf->setEnabled(b);
+        ui.pushButtonAudioFilter->setEnabled(b);
+        sendAction (ACT_AUDIO_CODEC_CHANGED) ;
+    }
 }
 /**
  * \fn sliderValueChanged
@@ -221,7 +221,7 @@ void MainWindow::dragTimerTimeout(void)
 void MainWindow::sliderMoved(int value)
 {
     //ADM_info("Moved\n");
-	SliderIsShifted = shiftKeyHeld;
+    SliderIsShifted = shiftKeyHeld;
 }
 /**
  * \fn sliderReleased
@@ -229,7 +229,7 @@ void MainWindow::sliderMoved(int value)
 void MainWindow::sliderReleased(void)
 {
   //ADM_info("Released\n");
-	SliderIsShifted = 0;
+    SliderIsShifted = 0;
     dragTimer.stop();
     dragState=dragState_Normal;
     sendAction(ACT_Scale);
@@ -268,47 +268,47 @@ void MainWindow::thumbSlider_valueEmitted(int value)
 
 void MainWindow::volumeChange( int u )
 {
-	if (_upd_in_progres || !ui.toolButtonAudioToggle->isChecked())
-		return;
+    if (_upd_in_progres || !ui.toolButtonAudioToggle->isChecked())
+        return;
 
-	_upd_in_progres++;
+    _upd_in_progres++;
 
-	int vol = ui.horizontalSlider_2->value();
+    int vol = ui.horizontalSlider_2->value();
 
-	AVDM_setVolume(vol);
-	_upd_in_progres--;
+    AVDM_setVolume(vol);
+    _upd_in_progres--;
 }
 
 void MainWindow::audioToggled(bool checked)
 {
-	if (checked)
-		AVDM_setVolume(ui.horizontalSlider_2->value());
-	else
-		AVDM_setVolume(0);
+    if (checked)
+        AVDM_setVolume(ui.horizontalSlider_2->value());
+    else
+        AVDM_setVolume(0);
 }
 
 void MainWindow::previewModeChanged(int  flop)
 {
-	sendAction(ACT_PreviewChanged);
+    sendAction(ACT_PreviewChanged);
 }
 
 void MainWindow::timeChangeFinished(void)
 {
-	this->setFocus(Qt::OtherFocusReason);
+    this->setFocus(Qt::OtherFocusReason);
 }
 
 void MainWindow::currentFrameChanged(void)
 {
-//	sendAction(ACT_JumpToFrame);
+//    sendAction(ACT_JumpToFrame);
 
-	this->setFocus(Qt::OtherFocusReason);
+    this->setFocus(Qt::OtherFocusReason);
 }
 
 void MainWindow::currentTimeChanged(void)
 {
-	sendAction(ACT_GotoTime);
+    sendAction(ACT_GotoTime);
 
-	this->setFocus(Qt::OtherFocusReason);
+    this->setFocus(Qt::OtherFocusReason);
 }
 
 /**
@@ -316,46 +316,46 @@ void MainWindow::currentTimeChanged(void)
 */
 MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
 {
-	qtRegisterDialog(this);
-	ui.setupUi(this);
+    qtRegisterDialog(this);
+    ui.setupUi(this);
         dragState=dragState_Normal;
         refreshCapEnabled=false;
         prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
         prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
 
 #if defined(__APPLE__) && defined(USE_SDL)
-	//ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
-	//ui.actionPreferences->setMenuRole(QAction::NoRole);
-	//ui.actionQuit->setMenuRole(QAction::NoRole);
+    //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
+    //ui.actionPreferences->setMenuRole(QAction::NoRole);
+    //ui.actionQuit->setMenuRole(QAction::NoRole);
 #endif
         //
         connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
         //
         connect( ui.checkDisplayOut,SIGNAL(stateChanged(int)),this,SLOT(previewModeChanged(int)));
 
-	/*
-	Connect our button to buttonPressed
-	*/
+    /*
+    Connect our button to buttonPressed
+    */
 #define PROCESS CONNECT_TB
-	LIST_OF_BUTTONS
+    LIST_OF_BUTTONS
 #undef PROCESS
 
-	//ACT_VideoCodecChanged
-	connect( ui.comboBoxVideo,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
-	connect( ui.comboBoxAudio,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
+    //ACT_VideoCodecChanged
+    connect( ui.comboBoxVideo,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
+    connect( ui.comboBoxAudio,SIGNAL(activated(int)),this,SLOT(comboChanged(int)));
 
-	// Slider
-	slider=ui.horizontalSlider;
+    // Slider
+    slider=ui.horizontalSlider;
         ADM_QSlider *qslider=(ADM_QSlider *)slider;
-	slider->setMinimum(0);
-	slider->setMaximum(ADM_LARGE_SCALE);
+    slider->setMinimum(0);
+    slider->setMaximum(ADM_LARGE_SCALE);
 #if 1
         slider->setTickInterval(ADM_SCALE_INCREMENT);
         slider->setTickPosition(QSlider::TicksBothSides);
 #endif
-	connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
-	connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
-	connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
+    connect( slider,SIGNAL(valueChanged(int)),this,SLOT(sliderValueChanged(int)));
+    connect( slider,SIGNAL(sliderMoved(int)),this,SLOT(sliderMoved(int)));
+    connect( slider,SIGNAL(sliderReleased()),this,SLOT(sliderReleased()));
         connect( slider,SIGNAL(sliderPressed()),this,SLOT(sliderPressed()));
         connect( qslider,SIGNAL(sliderAction(int)),this,SLOT(sliderWheel(int)));
         
@@ -367,38 +367,38 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         thumbSlider = new ThumbSlider(ui.sliderPlaceHolder);
         connect(thumbSlider, SIGNAL(valueEmitted(int)), this, SLOT(thumbSlider_valueEmitted(int)));
 
-	// Volume slider
-	QSlider *volSlider=ui.horizontalSlider_2;
-	volSlider->setMinimum(0);
-	volSlider->setMaximum(100);
-	connect(volSlider,SIGNAL(valueChanged(int)),this,SLOT(volumeChange(int)));
-	connect(ui.toolButtonAudioToggle,SIGNAL(clicked(bool)),this,SLOT(audioToggled(bool)));
+    // Volume slider
+    QSlider *volSlider=ui.horizontalSlider_2;
+    volSlider->setMinimum(0);
+    volSlider->setMaximum(100);
+    connect(volSlider,SIGNAL(valueChanged(int)),this,SLOT(volumeChange(int)));
+    connect(ui.toolButtonAudioToggle,SIGNAL(clicked(bool)),this,SLOT(audioToggled(bool)));
 
-	// default state
-	bool b=0;
-	ui.pushButtonVideoConf->setEnabled(b);
-	ui.pushButtonVideoFilter->setEnabled(b);
-	ui.pushButtonAudioConf->setEnabled(b);
-	ui.pushButtonAudioFilter->setEnabled(b);
+    // default state
+    bool b=0;
+    ui.pushButtonVideoConf->setEnabled(b);
+    ui.pushButtonVideoFilter->setEnabled(b);
+    ui.pushButtonAudioConf->setEnabled(b);
+    ui.pushButtonAudioFilter->setEnabled(b);
 
-	/* Time Shift */
-	connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
-	connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
-	connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
+    /* Time Shift */
+    connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
+    connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
+    connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
 
-	QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
-	QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
-	ui.currentTime->setValidator(timeValidator);
-	ui.currentTime->setInputMask("99:99:99.999");
+    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+    QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
+    ui.currentTime->setValidator(timeValidator);
+    ui.currentTime->setInputMask("99:99:99.999");
 
-	//connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+    //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
-	addScriptShellsToToolsMenu(myMenuTool);
+    addScriptShellsToToolsMenu(myMenuTool);
     buildMyMenu();
-	buildCustomMenu();
-	addScriptReferencesToHelpMenu();
+    buildCustomMenu();
+    // Crash in some cases addScriptReferencesToHelpMenu();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Files"));
     QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Projects"));
@@ -408,35 +408,35 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
     connect(this->recentFiles, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentFiles(QAction*)));
-	connect(this->recentProjects, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentProjects(QAction*)));
+    connect(this->recentProjects, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentProjects(QAction*)));
 
-	this->installEventFilter(this);
-	slider->installEventFilter(this);
+    this->installEventFilter(this);
+    slider->installEventFilter(this);
 
-	//ui.currentTime->installEventFilter(this);
+    //ui.currentTime->installEventFilter(this);
 
-	this->setFocus(Qt::OtherFocusReason);
+    this->setFocus(Qt::OtherFocusReason);
 
-	setAcceptDrops(true);
+    setAcceptDrops(true);
         setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
 
     // Hook also the toolbar
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
     //connect(ui.toolBar_2,SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
 
-	QWidget* dummy0 = new QWidget();
-	QWidget* dummy1 = new QWidget();
-	QWidget* dummy2 = new QWidget();
-	QWidget* dummy3 = new QWidget();
-	QWidget* dummy4 = new QWidget();
+    QWidget* dummy0 = new QWidget();
+    QWidget* dummy1 = new QWidget();
+    QWidget* dummy2 = new QWidget();
+    QWidget* dummy3 = new QWidget();
+    QWidget* dummy4 = new QWidget();
 
-	ui.codecWidget->setTitleBarWidget(dummy0);
-	ui.navigationWidget->setTitleBarWidget(dummy1);
-	ui.selectionWidget->setTitleBarWidget(dummy2);
-	ui.volumeWidget->setTitleBarWidget(dummy3);
-	ui.audioMetreWidget->setTitleBarWidget(dummy4);
+    ui.codecWidget->setTitleBarWidget(dummy0);
+    ui.navigationWidget->setTitleBarWidget(dummy1);
+    ui.selectionWidget->setTitleBarWidget(dummy2);
+    ui.volumeWidget->setTitleBarWidget(dummy3);
+    ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
-	this->adjustSize();
+    this->adjustSize();
         QuiTaskBarProgress=createADMTaskBarProgress();
 }
 /**
@@ -545,10 +545,10 @@ bool MainWindow::buildMyMenu(void)
 
     connect( ui.menuTools,SIGNAL(triggered(QAction*)),this,SLOT(searchToolMenu(QAction*)));
 
-	if (myMenuTool.size() > 0)
-	{
-		buildMenu(ui.menuTools, &myMenuTool[0], myMenuTool.size());
-	}
+    if (myMenuTool.size() > 0)
+    {
+        buildMenu(ui.menuTools, &myMenuTool[0], myMenuTool.size());
+    }
 
     connect( ui.menuGo,SIGNAL(triggered(QAction*)),this,SLOT(searchGoMenu(QAction*)));
     buildMenu(ui.menuGo, &myMenuGo[0], myMenuGo.size());
@@ -579,7 +579,7 @@ void MainWindow::checkChanged(int state)
 */
 void MainWindow::timeChanged(int)
 {
-	sendAction (ACT_TimeShift) ;
+    sendAction (ACT_TimeShift) ;
 }
 /**
     \fn searchMenu
@@ -620,95 +620,95 @@ MKMENU(Help)
 */
 void MainWindow::buttonPressed(void)
 {
-	// Receveid a key press Event, look into table..
+    // Receveid a key press Event, look into table..
     QObject *obj=sender();
     if(!obj) return;
     QString me(obj->objectName());
 
-	Action action=searchTranslationTable(qPrintable(me));
+    Action action=searchTranslationTable(qPrintable(me));
 
 
-	if(action!=ACT_DUMMY)
-		sendAction (action);
+    if(action!=ACT_DUMMY)
+        sendAction (action);
 
 }
 void MainWindow::toolButtonPressed(bool i)
 {
-	buttonPressed();
+    buttonPressed();
 }
 #ifdef ENABLE_EVENT_FILTER
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
-	QKeyEvent *keyEvent;
+    QKeyEvent *keyEvent;
 
-	switch (event->type())
-	{
-		case QEvent::KeyPress:
-			keyEvent = (QKeyEvent*)event;
+    switch (event->type())
+    {
+        case QEvent::KeyPress:
+            keyEvent = (QKeyEvent*)event;
 
-//			if (watched == slider)
-			{
-				switch (keyEvent->key())
-				{
-					case Qt::Key_Left:
-						if (keyEvent->modifiers() == Qt::ShiftModifier)
-							sendAction(ACT_Back1Second);
-						else if (keyEvent->modifiers() == Qt::ControlModifier)
-							sendAction(ACT_Back2Seconds);
-						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-							sendAction(ACT_Back4Seconds);
-						else
-							sendAction(ACT_PreviousFrame);
+//            if (watched == slider)
+            {
+                switch (keyEvent->key())
+                {
+                    case Qt::Key_Left:
+                        if (keyEvent->modifiers() == Qt::ShiftModifier)
+                            sendAction(ACT_Back1Second);
+                        else if (keyEvent->modifiers() == Qt::ControlModifier)
+                            sendAction(ACT_Back2Seconds);
+                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
+                            sendAction(ACT_Back4Seconds);
+                        else
+                            sendAction(ACT_PreviousFrame);
 
-						return true;
-					case Qt::Key_Right:
-						if (keyEvent->modifiers() == Qt::ShiftModifier) 
-							sendAction(ACT_Forward1Second);
-						else if (keyEvent->modifiers() == Qt::ControlModifier) 
-							sendAction(ACT_Forward2Seconds);
-						else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
-							sendAction(ACT_Forward4Seconds);
-						else 
-							sendAction(ACT_NextFrame);
+                        return true;
+                    case Qt::Key_Right:
+                        if (keyEvent->modifiers() == Qt::ShiftModifier) 
+                            sendAction(ACT_Forward1Second);
+                        else if (keyEvent->modifiers() == Qt::ControlModifier) 
+                            sendAction(ACT_Forward2Seconds);
+                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
+                            sendAction(ACT_Forward4Seconds);
+                        else 
+                            sendAction(ACT_NextFrame);
 
-						return true;
-					case Qt::Key_Up:
+                        return true;
+                    case Qt::Key_Up:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier) 
                                                     sendAction(ACT_Forward1Mn);
                                                 else
                                                     sendAction(ACT_NextKFrame);
-						return true;
-					case Qt::Key_Down:
+                        return true;
+                    case Qt::Key_Down:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier) 
                                                     sendAction(ACT_Back1Mn);
                                                 else                                            
                                                     sendAction(ACT_PreviousKFrame);
-						return true;
-					case Qt::Key_Shift:
-						shiftKeyHeld = 1;
-						break;
+                        return true;
+                    case Qt::Key_Shift:
+                        shiftKeyHeld = 1;
+                        break;
 
-					case Qt::Key_PageUp:
+                    case Qt::Key_PageUp:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier)
                                                         sendAction(ACT_MarkA);
                                                 else
                                                         sendAction(ACT_GotoMarkA);
                                                 return true;
-					case Qt::Key_PageDown:
+                    case Qt::Key_PageDown:
                                                 if (keyEvent->modifiers() == Qt::ControlModifier)
                                                         sendAction(ACT_MarkB);
                                                 else
                                                         sendAction(ACT_GotoMarkB);
-						return true;
-				}
-			}
-			/* else */ if (keyEvent->key() == Qt::Key_Space)
-			{
-				sendAction(ACT_PlayAvi);
-				return true;
-			}
+                        return true;
+                }
+            }
+            /* else */ if (keyEvent->key() == Qt::Key_Space)
+            {
+                sendAction(ACT_PlayAvi);
+                return true;
+            }
 
-			break;
+            break;
         case QEvent::Resize:
             if (watched == ui.sliderPlaceHolder)
             {
@@ -717,75 +717,75 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             }
             break;
 
-		case QEvent::KeyRelease:
-			keyEvent = (QKeyEvent*)event;
+        case QEvent::KeyRelease:
+            keyEvent = (QKeyEvent*)event;
 
-			if (keyEvent->key() == Qt::Key_Shift)
-				shiftKeyHeld = 0;
+            if (keyEvent->key() == Qt::Key_Shift)
+                shiftKeyHeld = 0;
 
-			break;
-		case QEvent::User:
-			this->openFiles(((FileDropEvent*)event)->files);
-			break;
-	}
+            break;
+        case QEvent::User:
+            this->openFiles(((FileDropEvent*)event)->files);
+            break;
+    }
 
-	return QObject::eventFilter(watched, event);
+    return QObject::eventFilter(watched, event);
 }
 #endif
 void MainWindow::mousePressEvent(QMouseEvent* event)
 {
-	this->setFocus(Qt::OtherFocusReason);
+    this->setFocus(Qt::OtherFocusReason);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-	if (event->mimeData()->hasFormat("text/uri-list"))
-		event->acceptProposedAction();
+    if (event->mimeData()->hasFormat("text/uri-list"))
+        event->acceptProposedAction();
 }
 
 void MainWindow::dropEvent(QDropEvent *event)
 {
-	if (event->mimeData()->hasUrls())
-	{
-		QCoreApplication::postEvent(this, new FileDropEvent(event->mimeData()->urls()));
+    if (event->mimeData()->hasUrls())
+    {
+        QCoreApplication::postEvent(this, new FileDropEvent(event->mimeData()->urls()));
 
-		event->acceptProposedAction();
-	}
+        event->acceptProposedAction();
+    }
 }
 
 void MainWindow::openFiles(QList<QUrl> urlList)
 {
-	QFileInfo info;
+    QFileInfo info;
 
-	for (int fileIndex = 0; fileIndex < urlList.size(); fileIndex++)
-	{
-		QString fileName = urlList[fileIndex].toLocalFile();
-		QFileInfo info(fileName);
+    for (int fileIndex = 0; fileIndex < urlList.size(); fileIndex++)
+    {
+        QString fileName = urlList[fileIndex].toLocalFile();
+        QFileInfo info(fileName);
 
-		if (info.isFile())
-		{
-			if (avifileinfo)
-				A_appendVideo(fileName.toUtf8().constData());
-			else
-				A_openVideo(fileName.toUtf8().constData());
-		}
-	}
+        if (info.isFile())
+        {
+            if (avifileinfo)
+                A_appendVideo(fileName.toUtf8().constData());
+            else
+                A_openVideo(fileName.toUtf8().constData());
+        }
+    }
 }
 
 void MainWindow::previousIntraFrame(void)
 {
-	if (ui.spinBox_TimeValue->hasFocus())
-		ui.spinBox_TimeValue->stepDown();
-	else
-		sendAction(ACT_PreviousKFrame);
+    if (ui.spinBox_TimeValue->hasFocus())
+        ui.spinBox_TimeValue->stepDown();
+    else
+        sendAction(ACT_PreviousKFrame);
 }
 
 void MainWindow::nextIntraFrame(void)
 {
-	if (ui.spinBox_TimeValue->hasFocus())
-		ui.spinBox_TimeValue->stepUp();
-	else
-		sendAction(ACT_NextKFrame);
+    if (ui.spinBox_TimeValue->hasFocus())
+        ui.spinBox_TimeValue->stepUp();
+    else
+        sendAction(ACT_NextKFrame);
 }
 MainWindow::~MainWindow()
 {
@@ -812,7 +812,7 @@ static myQApplication *myApplication=NULL;
  * \brief reset
  * @return 
  */
-bool  	UI_reset(void)
+bool      UI_reset(void)
 {
     UI_setVideoCodec(0);
     UI_setAudioCodec(0);
@@ -828,13 +828,13 @@ bool  	UI_reset(void)
 int UI_Init(int nargc, char **nargv)
 {
         ADM_info("Starting QT4 GUI...\n");
-	initTranslator();
+    initTranslator();
 
-	global_argc=nargc;
-	global_argv=nargv;
-	ADM_renderLibInit(&UI_Hooks);
+    global_argc=nargc;
+    global_argv=nargv;
+    ADM_renderLibInit(&UI_Hooks);
         Q_INIT_RESOURCE(avidemux);
-	Q_INIT_RESOURCE(filter);
+    Q_INIT_RESOURCE(filter);
 
 #if defined(__APPLE__)
  printf("Setting qt plugin folder\n");
@@ -845,14 +845,14 @@ int UI_Init(int nargc, char **nargv)
  printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
-	myApplication=new myQApplication (global_argc, global_argv);
-	myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
+    myApplication=new myQApplication (global_argc, global_argv);
+    myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
         myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
         
 
-	loadTranslator();
+    loadTranslator();
 
-	return 1;
+    return 1;
 }
 
 uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
@@ -898,7 +898,7 @@ uint8_t initGUI(const vector<IScriptEngine*>& scriptEngines)
     
     
     
-	return 1;
+    return 1;
 }
 /**
  * \fn UI_closeGui
@@ -908,8 +908,8 @@ void UI_closeGui(void)
         if(!uiRunning) return;
         uiRunning=false;
         
-	QuiMainWindows->close();
-	qtUnregisterDialog(QuiMainWindows);
+    QuiMainWindows->close();
+    qtUnregisterDialog(QuiMainWindows);
         
 }
 
@@ -931,7 +931,7 @@ bool UI_End(void)
 }
 void UI_refreshCustomMenu(void)
 {
-	((MainWindow*)QuiMainWindows)->buildCustomMenu();
+    ((MainWindow*)QuiMainWindows)->buildCustomMenu();
 }
 
 /**
@@ -985,7 +985,7 @@ int UI_RunApp(void)
     setupMenus();
     QuiTaskBarProgress->setParent(QuiMainWindows);
     ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
-	
+    
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
     myApplication->exec();
@@ -996,9 +996,9 @@ int UI_RunApp(void)
         UI_Qt4CleanGl();
     }
 #endif
-	destroyTranslator();
+    destroyTranslator();
 
-	delete QuiMainWindows;
+    delete QuiMainWindows;
     delete myApplication;
 
     QuiMainWindows = NULL;
@@ -1012,15 +1012,15 @@ int UI_RunApp(void)
 */
 Action searchTranslationTable(const char *name)
 {
-	for(int i=0;i< SIZEOF_MY_TRANSLATION;i++)
-	{
-		if(!strcmp(name, myTranslationTable[i].name))
-		{
-			return  myTranslationTable[i].action;
-		}
-	}
-	printf("WARNING: Signal not found in translation table %s\n",name);
-	return ACT_DUMMY;
+    for(int i=0;i< SIZEOF_MY_TRANSLATION;i++)
+    {
+        if(!strcmp(name, myTranslationTable[i].name))
+        {
+            return  myTranslationTable[i].action;
+        }
+    }
+    printf("WARNING: Signal not found in translation table %s\n",name);
+    return ACT_DUMMY;
 }
 /**
     \fn     UI_updateRecentMenu( void )
@@ -1033,7 +1033,7 @@ void UI_updateRecentMenu( void )
 
 void UI_updateRecentProjectMenu()
 {
-	((MainWindow *)QuiMainWindows)->buildRecentProjectMenu();
+    ((MainWindow *)QuiMainWindows)->buildRecentProjectMenu();
 }
 
 /**
@@ -1042,88 +1042,88 @@ void UI_updateRecentProjectMenu()
 */
 void setupMenus(void)
 {
-	uint32_t nbVid;
+    uint32_t nbVid;
     uint32_t maj,mn,pa;
-	const char *name;
+    const char *name;
 
-	nbVid=ADM_ve6_getNbEncoders();
-	printf("Found %d video encoder(s)\n",nbVid);
-	for(uint32_t i=1;i<nbVid;i++)
-	{
-		ADM_ve6_getEncoderInfo(i,&name,&maj,&mn,&pa);
-		WIDGET(comboBoxVideo)->addItem(name);
-	}
+    nbVid=ADM_ve6_getNbEncoders();
+    printf("Found %d video encoder(s)\n",nbVid);
+    for(uint32_t i=1;i<nbVid;i++)
+    {
+        ADM_ve6_getEncoderInfo(i,&name,&maj,&mn,&pa);
+        WIDGET(comboBoxVideo)->addItem(name);
+    }
 
-	// And A codec
+    // And A codec
 
-	uint32_t nbAud;
+    uint32_t nbAud;
 
     nbAud=audioEncoderGetNumberOfEncoders();
-	printf("Found %d audio encoder(s)\n",nbAud);
-	for(uint32_t i=1;i<nbAud;i++)
-	{
-		name=audioEncoderGetDisplayName(i);
-		WIDGET(comboBoxAudio)->addItem(name);
-	}
+    printf("Found %d audio encoder(s)\n",nbAud);
+    for(uint32_t i=1;i<nbAud;i++)
+    {
+        name=audioEncoderGetDisplayName(i);
+        WIDGET(comboBoxAudio)->addItem(name);
+    }
 
-	/*   Fill in output format window */
-	uint32_t nbFormat=ADM_mx_getNbMuxers();
+    /*   Fill in output format window */
+    uint32_t nbFormat=ADM_mx_getNbMuxers();
 
-	printf("Found %d format(s)\n",nbFormat);
-	for(uint32_t i=0;i<nbFormat;i++)
-	{
+    printf("Found %d format(s)\n",nbFormat);
+    for(uint32_t i=0;i<nbFormat;i++)
+    {
         const char *name=ADM_mx_getDisplayName(i);
-		WIDGET(comboBoxFormat)->addItem(name);
-	}
+        WIDGET(comboBoxFormat)->addItem(name);
+    }
 
 }
 /*
     Return % of scale (between 0 and 1)
 */
-double 	UI_readScale( void )
+double     UI_readScale( void )
 {
-	double v;
-	if(!slider) v=0;
-	v= (double)(slider->value());
-	v/=ADM_SCALE_INCREMENT;
-	return v;
+    double v;
+    if(!slider) v=0;
+    v= (double)(slider->value());
+    v/=ADM_SCALE_INCREMENT;
+    return v;
 }
 void UI_setScale( double val )
 {
-	if(_upd_in_progres) return;
-	_upd_in_progres++;
-	slider->setValue( (int)(val * ADM_SCALE_INCREMENT));
-	_upd_in_progres--;
+    if(_upd_in_progres) return;
+    _upd_in_progres++;
+    slider->setValue( (int)(val * ADM_SCALE_INCREMENT));
+    _upd_in_progres--;
 }
 
 int UI_readCurFrame(void)
 {
-	return 0;
+    return 0;
 }
 
 int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
 {
-	int success = 0;
+    int success = 0;
 
-	QString timeText = WIDGET(currentTime)->text();
-	int pos;
+    QString timeText = WIDGET(currentTime)->text();
+    int pos;
 
-	if (WIDGET(currentTime)->validator()->validate(timeText, pos) == QValidator::Acceptable)
-	{
-		uint32_t frame;
+    if (WIDGET(currentTime)->validator()->validate(timeText, pos) == QValidator::Acceptable)
+    {
+        uint32_t frame;
 
-		hh = (uint16_t)timeText.left(2).toUInt();
-		mm = (uint16_t)timeText.mid(3, 2).toUInt();
-		ss = (uint16_t)timeText.mid(6, 2).toUInt();
-		ms = (uint16_t)timeText.right(3).toUInt();
+        hh = (uint16_t)timeText.left(2).toUInt();
+        mm = (uint16_t)timeText.mid(3, 2).toUInt();
+        ss = (uint16_t)timeText.mid(6, 2).toUInt();
+        ms = (uint16_t)timeText.right(3).toUInt();
 
-		time2frame(&frame, currentFps, hh, mm, ss, ms);
+        time2frame(&frame, currentFps, hh, mm, ss, ms);
 
-		if (frame <= frameCount)
-			success = 1;
-	}
+        if (frame <= frameCount)
+            success = 1;
+    }
 
-	return success;
+    return success;
 }
 
 
@@ -1136,26 +1136,26 @@ int UI_readCurTime(uint16_t &hh, uint16_t &mm, uint16_t &ss, uint16_t &ms)
 */
 void UI_setTitle(const char *name)
 {
-	char *title;
-	const char* defaultTitle = "Avidemux";
+    char *title;
+    const char* defaultTitle = "Avidemux";
 
-	if (name && (*name) )
-	{
-		title = new char[strlen(defaultTitle) + strlen(name) + 3 + 1];
+    if (name && (*name) )
+    {
+        title = new char[strlen(defaultTitle) + strlen(name) + 3 + 1];
 
-		strcpy(title, name);
-		strcat(title, " - ");
-		strcat(title, defaultTitle);
-	}
-	else
-	{
-		title = new char[strlen(defaultTitle) + 1];
+        strcpy(title, name);
+        strcat(title, " - ");
+        strcat(title, defaultTitle);
+    }
+    else
+    {
+        title = new char[strlen(defaultTitle) + 1];
 
-		strcpy(title, defaultTitle);
-	}
+        strcpy(title, defaultTitle);
+    }
 
-	QuiMainWindows->setWindowTitle(QString::fromUtf8(title));
-	delete [] title;
+    QuiMainWindows->setWindowTitle(QString::fromUtf8(title));
+    delete [] title;
 }
 
 /**
@@ -1165,28 +1165,28 @@ void UI_setTitle(const char *name)
 
 void UI_setFrameType( uint32_t frametype,uint32_t qp)
 {
-	char string[100];
-	char	c='?';
+    char string[100];
+    char    c='?';
     const char *f="???";
-	switch(frametype&AVI_FRAME_TYPE_MASK)
-	{
-	case AVI_KEY_FRAME: c='I';break;
-	case AVI_B_FRAME: c='B';break;
-	case 0: c='P';break;
-	default:c='?';break;
+    switch(frametype&AVI_FRAME_TYPE_MASK)
+    {
+    case AVI_KEY_FRAME: c='I';break;
+    case AVI_B_FRAME: c='B';break;
+    case 0: c='P';break;
+    default:c='?';break;
 
-	}
+    }
     switch(frametype&AVI_STRUCTURE_TYPE_MASK)
-	{
-	case AVI_TOP_FIELD+AVI_FIELD_STRUCTURE: f="TFF";break;
+    {
+    case AVI_TOP_FIELD+AVI_FIELD_STRUCTURE: f="TFF";break;
     case AVI_BOTTOM_FIELD+AVI_FIELD_STRUCTURE: f="BFF";break;
     case AVI_FRAME_STRUCTURE: f="FRM";break;
-	default:f="???";
+    default:f="???";
 
                     break;
-	}
-	sprintf(string,QT_TR_NOOP("%c-%s (%02d)"),c,f,qp);
-	WIDGET(label_8)->setText(string);
+    }
+    sprintf(string,QT_TR_NOOP("%c-%s (%02d)"),c,f,qp);
+    WIDGET(label_8)->setText(string);
 
 }
 /**
@@ -1221,12 +1221,12 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total)
 */
 void UI_updateTimeCount(uint32_t curFrame,uint32_t fps)
 {
-	char text[80];
-	uint32_t mm,hh,ss,ms;
+    char text[80];
+    uint32_t mm,hh,ss,ms;
 
-	frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
-	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(currentTime)->setText(text);
+    frame2time(curFrame,fps, &hh, &mm, &ss, &ms);
+    sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+    WIDGET(currentTime)->setText(text);
 }
 
 
@@ -1242,8 +1242,8 @@ void UI_setCurrentTime(uint64_t curTime)
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
-  	sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-	WIDGET(currentTime)->setText(text);
+      sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+    WIDGET(currentTime)->setText(text);
 
 }
 
@@ -1258,7 +1258,7 @@ void UI_setTotalTime(uint64_t curTime)
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
-  	sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+      sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
     WIDGET(totalTime)->setText(text);
     slider->setTotalDuration(curTime);
 }
@@ -1268,7 +1268,7 @@ void UI_setTotalTime(uint64_t curTime)
 */
 void UI_setMarkers(uint64_t a, uint64_t b)
 {
-	char text[80];
+    char text[80];
     uint64_t absoluteA=a,absoluteB=b;
     uint32_t hh,mm,ss,ms;
     uint32_t timems;
@@ -1277,26 +1277,26 @@ void UI_setMarkers(uint64_t a, uint64_t b)
 
     timems=(uint32_t)(a);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
-	WIDGET(pushButtonJumpToMarkerA)->setText(text);
+    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
+    WIDGET(pushButtonJumpToMarkerA)->setText(text);
 
-	timems=(uint32_t)(b);
+    timems=(uint32_t)(b);
     ms2time(timems,&hh,&mm,&ss,&ms);
-	snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
-	WIDGET(pushButtonJumpToMarkerB)->setText(text);
+    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%02" PRIu32,hh,mm,ss,ms);
+    WIDGET(pushButtonJumpToMarkerB)->setText(text);
 
-	slider->setMarkers(absoluteA, absoluteB);
+    slider->setMarkers(absoluteA, absoluteB);
 }
 
 /**
     \fn     UI_getCurrentVCodec(void)
     \brief  Returns the current selected video code in menu, i.e its number (0 being the first)
 */
-int 	UI_getCurrentVCodec(void)
+int     UI_getCurrentVCodec(void)
 {
-	int i=WIDGET(comboBoxVideo)->currentIndex();
-	if(i<0) i=0;
-	return i;
+    int i=WIDGET(comboBoxVideo)->currentIndex();
+    if(i<0) i=0;
+    return i;
 }
 /**
     \fn     UI_setVideoCodec( int i)
@@ -1305,22 +1305,22 @@ int 	UI_getCurrentVCodec(void)
 
 void UI_setVideoCodec( int i)
 {
-	int b=!!i;
-	WIDGET(comboBoxVideo)->setCurrentIndex(i);
+    int b=!!i;
+    WIDGET(comboBoxVideo)->setCurrentIndex(i);
 
-	WIDGET(pushButtonVideoConf)->setEnabled(b);
-	WIDGET(pushButtonVideoFilter)->setEnabled(b);
+    WIDGET(pushButtonVideoConf)->setEnabled(b);
+    WIDGET(pushButtonVideoFilter)->setEnabled(b);
 }
 /**
     \fn     UI_getCurrentACodec(void)
     \brief  Returns the current selected audio code in menu, i.e its number (0 being the first)
 */
 
-int 	UI_getCurrentACodec(void)
+int     UI_getCurrentACodec(void)
 {
-	int i=WIDGET(comboBoxAudio)->currentIndex();
-	if(i<0) i=0;
-	return i;
+    int i=WIDGET(comboBoxAudio)->currentIndex();
+    if(i<0) i=0;
+    return i;
 }
 /**
     \fn     UI_setAudioCodec( int i)
@@ -1338,19 +1338,19 @@ WIDGET(pushButtonAudioFilter)->setEnabled(b);
     \brief  Returns the current selected output format
 */
 
-int 	UI_GetCurrentFormat( void )
+int     UI_GetCurrentFormat( void )
 {
-	int i=WIDGET(comboBoxFormat)->currentIndex();
-	if(i<0) i=0;
-	return (int)i;
+    int i=WIDGET(comboBoxFormat)->currentIndex();
+    if(i<0) i=0;
+    return (int)i;
 }
 /**
     \fn     UI_SetCurrentFormat( ADM_OUT_FORMAT fmt )
     \brief  Select  output format
 */
-void 	UI_SetCurrentFormat( uint32_t fmt )
+void     UI_SetCurrentFormat( uint32_t fmt )
 {
-	WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
+    WIDGET(comboBoxFormat)->setCurrentIndex((int)fmt);
 }
 
 /**
@@ -1359,12 +1359,12 @@ void 	UI_SetCurrentFormat( uint32_t fmt )
 */
 bool UI_getTimeShift(int *onoff,int *value)
 {
-	if(WIDGET(checkBox_TimeShift)->checkState()==Qt::Checked)
-		*onoff=1;
-	else
-		*onoff=0;
-	*value=WIDGET(spinBox_TimeValue)->value();
-	return 1;
+    if(WIDGET(checkBox_TimeShift)->checkState()==Qt::Checked)
+        *onoff=1;
+    else
+        *onoff=0;
+    *value=WIDGET(spinBox_TimeValue)->value();
+    return 1;
 }
 /**
       \fn UI_setTimeShift
@@ -1373,12 +1373,12 @@ bool UI_getTimeShift(int *onoff,int *value)
 
 bool UI_setTimeShift(int onoff,int value)
 {
-	if (onoff && value)
-		WIDGET(checkBox_TimeShift)->setCheckState(Qt::Checked);
-	else
-		WIDGET(checkBox_TimeShift)->setCheckState(Qt::Unchecked);
-	WIDGET(spinBox_TimeValue)->setValue(value);
-	return 1;
+    if (onoff && value)
+        WIDGET(checkBox_TimeShift)->setCheckState(Qt::Checked);
+    else
+        WIDGET(checkBox_TimeShift)->setCheckState(Qt::Unchecked);
+    WIDGET(spinBox_TimeValue)->setValue(value);
+    return 1;
 }
 /**
     \fn UI_setVUMeter
@@ -1425,7 +1425,7 @@ bool UI_hasOpenGl(void)
 */
 void UI_iconify( void )
 {
-	QuiMainWindows->hide();
+    QuiMainWindows->hide();
 
 }
 /**
