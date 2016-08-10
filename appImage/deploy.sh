@@ -89,8 +89,13 @@ echo "Prefix=../lib/qt5" >> qt.conf
 
 cd ..
 #find . -type f -exec sed -i -e 's|/usr|../lib/|g' {} \; ; cd -
-find . -type f -exec sed -i -e 's|/usr/lib/x86_64-linux-gnu|././/lib|g' {} \; ; cd ..
+#find . -type f -exec sed -i -e 's|/usr/lib/x86_64-linux-gnu|././/lib|g' {} \; ; cd ..
 find . -type f -exec sed -i -e 's|/usr/lib|././/lib|g' {} \; ; cd ..
+#
+cd $ORG
+cp appImage/AppRun install
+cp appImage/avidemux.png install
+cp appImage/avidemux.desktop install
 
 cd $ORG
 AppImageAssistant  install $APP_NAME
