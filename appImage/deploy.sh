@@ -51,6 +51,8 @@ done
 
 cp -t ../lib /lib/x86_64-linux-gnu/libpcre.so.3 || fail pcre
 cp -t ../lib /lib/x86_64-linux-gnu/libglib-2.0.so.0 || fail glib
+cp -t ../lib /lib/x86_64-linux-gnu/libjson.so.0 || fail json
+
 # audio plugins
 for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.so.2 libaften.so.0 libogg.so.0
 do
