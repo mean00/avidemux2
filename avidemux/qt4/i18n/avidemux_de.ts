@@ -3537,7 +3537,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Cannot find a demuxer for %s</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann Demuxer für %s nicht finden</translation>
     </message>
     <message>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
@@ -3981,10 +3981,6 @@ Drop timing informations ?</source>
     <message>
         <source>Target</source>
         <translation type="unfinished">Format und Größe des Ausgabedatei</translation>
-    </message>
-    <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>AVI</source>
@@ -4557,10 +4553,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Restzeit</translation>
     </message>
     <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">00:00:00</translation>
-    </message>
-    <message>
         <source>ProcessImages</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5047,14 +5039,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Zeit:</translation>
     </message>
     <message>
-        <source>00:00:00.000</source>
-        <translation type="unfinished">00:00:00.000</translation>
-    </message>
-    <message>
-        <source>/ 00:00:00.000</source>
-        <translation type="unfinished">/ 00:00:00.000</translation>
-    </message>
-    <message>
         <source>Frame Type:</source>
         <translation type="obsolete">Bildtyp:</translation>
     </message>
@@ -5065,10 +5049,6 @@ Drop timing informations ?</source>
     <message>
         <source>Selection</source>
         <translation type="unfinished">Auswahlbereich</translation>
-    </message>
-    <message>
-        <source>000000</source>
-        <translation type="unfinished">000000</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -5125,6 +5105,22 @@ Drop timing informations ?</source>
     <message>
         <source>&amp;Open...</source>
         <translation type="unfinished">&amp;Öffnen...</translation>
+    </message>
+    <message>
+        <source>&amp;Run Project...</source>
+        <translation>&amp;Projekt laden...</translation>
+    </message>
+    <message>
+        <source>Save &amp;As Project...</source>
+        <translation>&amp;Als Projekt speichern...</translation>
+    </message>
+    <message>
+        <source>Project Script</source>
+        <translation>&amp;Gespeicherte Projekte</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -5664,7 +5660,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A&amp;uto</translation>
     </message>
     <message>
         <source>&amp;Recent</source>
@@ -7116,27 +7112,27 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished">Einstellungen</translation>
+        <translation>&amp;Einstellungen</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished">Videodatei öffnen</translation>
+        <translation>Ö&amp;ffnen...</translation>
     </message>
     <message>
         <source>Append</source>
-        <translation type="unfinished">Videodatei anfügen</translation>
+        <translation>&amp;Anfügen...</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Videodatei speichern</translation>
+        <translation type="unfinished">&amp;Speichern</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished">Zur Warteschlange hinzufügen</translation>
+        <translation type="unfinished">Zur &amp;Warteschlange hinzufügen...</translation>
     </message>
     <message>
         <source>Save as Image</source>
-        <translation type="unfinished">Als Bild speichern</translation>
+        <translation>Als B&amp;ild speichern</translation>
     </message>
     <message>
         <source>Save as BMP</source>
@@ -7148,15 +7144,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished">Schließen</translation>
-    </message>
-    <message>
-        <source>-</source>
-        <translation type="unfinished">-</translation>
+        <translation>Schlie&amp;ßen</translation>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">Eigenschaften</translation>
+        <translation type="unfinished">&amp;Eigenschaften</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
@@ -7164,63 +7156,63 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation>Beenden</translation>
+        <translation>&amp;Beenden</translation>
     </message>
     <message>
         <source>Undo</source>
-        <translation type="unfinished">Rückgängig</translation>
+        <translation>&amp;Rückgängig</translation>
     </message>
     <message>
         <source>Reset Edit</source>
-        <translation type="unfinished">Änderungen verwerfen</translation>
+        <translation>Änderungen &amp;verwerfen</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Ausschneiden</translation>
+        <translation>Aus&amp;schneiden</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopieren</translation>
+        <translation>&amp;Kopieren</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Einfügen</translation>
+        <translation>Ei&amp;nfügen</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Löschen</translation>
+        <translation>&amp;Löschen</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation>Setze Markierung A</translation>
+        <translation>Setze Markierung &amp;A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation>Setze Markierung B</translation>
+        <translation>Setze Markierung &amp;B</translation>
     </message>
     <message>
         <source>Save current settings as default</source>
-        <translation>Ausgabekonfiguration als Vorgabe setzen</translation>
+        <translation>Aus&amp;gabekonfiguration als Vorgabe setzen</translation>
     </message>
     <message>
         <source>Decoder Option</source>
-        <translation type="unfinished">Decoder-Optionen</translation>
+        <translation>&amp;Decoder-Optionen</translation>
     </message>
     <message>
         <source>PostProcessing</source>
-        <translation type="unfinished">Nachbearbeitung</translation>
+        <translation>&amp;Nachbearbeitung</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">Filter</translation>
+        <translation>&amp;Filter</translation>
     </message>
     <message>
         <source>Select Track</source>
-        <translation type="unfinished">Tonspur wählen</translation>
+        <translation>&amp;Tonspur wählen</translation>
     </message>
     <message>
         <source>Save audio</source>
-        <translation type="unfinished">Audio speichern</translation>
+        <translation>&amp;Audio speichern</translation>
     </message>
     <message>
         <source>Build Option</source>
@@ -7248,7 +7240,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Play/Stop</source>
-        <translation type="unfinished">Start/Stop</translation>
+        <translation type="unfinished">Start/Stopp</translation>
     </message>
     <message>
         <source>Previous Frame</source>
@@ -7260,19 +7252,19 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">ein i-Bild zur&amp;ück</translation>
+        <translation type="unfinished">Ein I-Frame zurück</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">ein i-Frame vor</translation>
+        <translation type="unfinished">Ein I-Frame vor</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">ein schwarzes Bild rückwärts suchen</translation>
+        <translation type="unfinished">Ein schwarzes Bild rückwärts suchen</translation>
     </message>
     <message>
         <source>Next Black Frame</source>
-        <translation type="unfinished">ein schwarzes Bild vorwärts suchen</translation>
+        <translation type="unfinished">Ein schwarzes Bild vorwärts suchen</translation>
     </message>
     <message>
         <source>First Frame</source>
@@ -7376,7 +7368,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>G_ain value:</source>
-        <translation type="unfinished">_ändern um:</translation>
+        <translation type="unfinished">_Ändern um:</translation>
     </message>
     <message>
         <source>_Mixer:</source>
@@ -7819,7 +7811,7 @@ Läuft es trotzdem?</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished">Fehler</translation>
+        <translation>Fehler</translation>
     </message>
     <message>
         <source>Could not save all images.</source>
@@ -8261,15 +8253,15 @@ Läuft es trotzdem?</translation>
     </message>
     <message>
         <source>Select Video File...</source>
-        <translation type="unfinished"></translation>
+        <translation>Videodatei wählen...</translation>
     </message>
     <message>
         <source>Select Video File to Append...</source>
-        <translation type="unfinished"></translation>
+        <translation>Videodatei zum Anfügen wählen...</translation>
     </message>
     <message>
         <source>Invalid audio index given</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ungültige Liste der Tonspuren</translation>
     </message>
     <message>
         <source>Reuse previous first pass data ?
@@ -8278,7 +8270,55 @@ Warning, the settings must be close.</source>
     </message>
     <message>
         <source>Saving</source>
-        <translation type="unfinished">Speichere</translation>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>Select script/project to run</source>
+        <translation>Skript/Projekt zum Ausführen wählen</translation>
+    </message>
+    <message>
+        <source>Select script to run</source>
+        <translation>Skript zum Ausführen wählen</translation>
+    </message>
+    <message>
+        <source>Select script to debug</source>
+        <translation>Skript zum Debuggen wählen</translation>
+    </message>
+    <message>
+        <source>No engine</source>
+        <translation>Keine Skript-Engine</translation>
+    </message>
+    <message>
+        <source>tinyPy script is not enabled in this build</source>
+        <translation>tinyPy wurde beim Kompilieren nicht aktiviert</translation>
+    </message>
+    <message>
+        <source>Cutting</source>
+        <translation>Schneiden</translation>
+    </message>
+    <message>
+        <source>Error while cutting out.</source>
+        <translation>Fehler beim Ausschneiden.</translation>
+    </message>
+    <message>
+        <source>Cannot use that file as audio track</source>
+        <translation>Kann diese Datei nicht als Tonspur verwenden</translation>
+    </message>
+    <message>
+        <source>Audio file not found in list, even though it should be there. Create a bug report!</source>
+        <translation>Audiodatei nicht in der Liste gefunden, obwohl sie dort sein sollte. Erstellen Sie einen Bugreport!</translation>
+    </message>
+    <message>
+        <source>Unable to set the audio language: No video loaded yet!</source>
+        <translation>Kann die Sprache der Tonspur nicht festlegen: Video ist noch nicht geladen!</translation>
+    </message>
+    <message>
+        <source>Setting the language for the given track index is not possible: Video has no audio file!</source>
+        <translation type="unfinished">Kann die Sprache für die gegebene Tonspur nicht festlegen: Zu diesem Video ist kein Audio geladen!</translation>
+    </message>
+    <message>
+        <source>Setting the language for the given track index is not possible: Invalid track index!</source>
+        <translation>Kann die Sprache für die gegebene Tonspur nicht festlegen: Ungültige Liste der Tonspuren!</translation>
     </message>
 </context>
 <context>
@@ -9026,14 +9066,6 @@ Soll dieses jetzt geladen werden ?
     <message>
         <source>Audio Codec:</source>
         <translation type="obsolete">Audio Codec:</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation type="unfinished">0</translation>
-    </message>
-    <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>Elapsed:</source>
@@ -11579,10 +11611,6 @@ der Halbbilder (deinterlaceing)</translation>
         <translation type="unfinished">Vorschau</translation>
     </message>
     <message>
-        <source>00:00:00.000</source>
-        <translation type="unfinished">00:00:00.000</translation>
-    </message>
-    <message>
         <source>next</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11954,10 +11982,6 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <source>Time Remaining:</source>
         <translation type="unfinished">verbleibende Zeit:</translation>
-    </message>
-    <message>
-        <source>00:00:00</source>
-        <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
         <source>Cancel</source>
