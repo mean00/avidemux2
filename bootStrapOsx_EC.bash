@@ -1,7 +1,7 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-export MYQT=/usr/local/Cellar/qt5/5.6.0/
+export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
 export PATH=$PATH:$MYQT/bin/:/usr/local/bin
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
@@ -29,6 +29,7 @@ do_cli=0
 do_gtk=0   # Note that gtk is no fully longer supported on OSX. You are on your own here
 do_qt4=1
 do_plugins=1
+do_rebuild=0
 debug=0
 fail()
 {
@@ -52,7 +53,9 @@ Process()
         fi
         
         echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
-        rm -Rf ./$BUILDDIR
+        if [ "x$do_rebuild" != x1 ] ; then
+        	rm -Rf ./$BUILDDIR
+	fi
         mkdir $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP  $EXTRA $FLAVOR $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
@@ -91,6 +94,7 @@ usage()
         echo "  --help            : Print usage"
         echo "  --tgz             : Build tgz packages"
         echo "  --debug           : Switch debugging on"
+ 	echo "  --rebuild         : Preserve existing build directories"
         echo "  --with-core       : Build core"
         echo "  --without-core    : Dont build core"
         echo "  --with-cli        : Build cli"
@@ -111,6 +115,9 @@ while [ $# != 0 ] ;do
              ;;
          --debug)
                 debug=1
+                ;;
+         --rebuild)
+                do_rebuild=1
                 ;;
          --pause)
                 pause_script=true
