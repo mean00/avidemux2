@@ -40,7 +40,7 @@ static char *ADM_systemPluginSettings=NULL;
     \fn ADM_getAutoDir
     \brief  Get the  directory where auto script are stored. No need to free the string.
 ******************************************************/
-char *ADM_getAutoDir(void)
+const char *ADM_getAutoDir(void)
 {
     if (ADM_autodir )
         return ADM_autodir;
@@ -103,7 +103,7 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 /*
       Get the root directory for .avidemux stuff
 ******************************************************/
-char *ADM_getBaseDir(void)
+const char *ADM_getBaseDir(void)
 {
 	return ADM_basedir;
 }
