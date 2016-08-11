@@ -63,7 +63,6 @@ extern const char* new_progname;
 
 void ADM_ExitCleanup(void);
 int startAvidemux(int argc, char *argv[]);
-bool isPortableMode(int argc, char *argv[]);
 
 
 #ifdef USE_VDPAU
