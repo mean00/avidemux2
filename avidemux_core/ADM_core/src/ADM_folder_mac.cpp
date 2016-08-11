@@ -19,8 +19,8 @@
 #include <string>
 
 
-#	include <Carbon/Carbon.h>
-#	include <unistd.h>
+#    include <Carbon/Carbon.h>
+#    include <unistd.h>
 
 #include "ADM_default.h"
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
@@ -38,14 +38,14 @@ static char *ADM_systemPluginSettings=NULL;
     \fn ADM_getAutoDir
     \brief  Get the  directory where auto script are stored. No need to free the string.
 ******************************************************/
-char *ADM_getAutoDir(void)
+const char *ADM_getAutoDir(void)
 {
     if (ADM_autodir )
         return ADM_autodir;
 
     const char *startDir="../lib";
     ADM_autodir = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
-	return ADM_autodir;
+    return ADM_autodir;
 }
 /**
     \fn ADM_getPluginSettingsDir
@@ -62,17 +62,17 @@ const char *ADM_getSystemPluginSettingsDir(void)
 
 static void AddSeparator(char *path)
 {
-	if (path && (strlen(path) < strlen(ADM_SEPARATOR) || strncmp(path + strlen(path) - strlen(ADM_SEPARATOR), ADM_SEPARATOR, strlen(ADM_SEPARATOR)) != 0))
-		strcat(path, ADM_SEPARATOR);
+    if (path && (strlen(path) < strlen(ADM_SEPARATOR) || strncmp(path + strlen(path) - strlen(ADM_SEPARATOR), ADM_SEPARATOR, strlen(ADM_SEPARATOR)) != 0))
+        strcat(path, ADM_SEPARATOR);
 }
 
 /**
- * 	\fn char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
+ *     \fn char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
  *  \brief Returns home directory +base 1 + base 2... The return value is a copy, and must be deleted []
  */
 char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *base3)
 {
-	return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
+    return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
 }
 
 char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
@@ -80,76 +80,65 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 
 #define MAX_PATH_SIZE 1024
 
-	char buffer[MAX_PATH_SIZE];
+    char buffer[MAX_PATH_SIZE];
 
-	CFURLRef url(CFBundleCopyExecutableURL(CFBundleGetMainBundle()));
-	buffer[0] = '\0';
+    CFURLRef url(CFBundleCopyExecutableURL(CFBundleGetMainBundle()));
+    buffer[0] = '\0';
 
-	if (url)
-	{
-		CFURLGetFileSystemRepresentation(url, true, (UInt8*)buffer, MAX_PATH_SIZE);
-		CFRelease(url);
+    if (url)
+    {
+        CFURLGetFileSystemRepresentation(url, true, (UInt8*)buffer, MAX_PATH_SIZE);
+        CFRelease(url);
 
-		char *slash = strrchr(buffer, '/');
-		
-		if (slash)
-			*slash = '\0';
-	}
+        char *slash = strrchr(buffer, '/');
+        
+        if (slash)
+            *slash = '\0';
+    }
 
-	return ADM_getRelativePath(buffer, base1, base2, base3);
+    return ADM_getRelativePath(buffer, base1, base2, base3);
 }
 
 /*
       Get the root directory for .avidemux stuff
 ******************************************************/
-char *ADM_getBaseDir(void)
+const char *ADM_getBaseDir(void)
 {
-	return ADM_basedir;
+    return ADM_basedir;
 }
 /**
  */
 void ADM_initBaseDir(int argc, char *argv[])
 {
-	char *home = NULL;
+    char *home = NULL;
 
-	// Get the base directory
+    // Get the base directory
 
-	const char* homeEnv = getenv("HOME");
+    const char* homeEnv = getenv("HOME");
 
-	if (homeEnv)
-	{
-		home = new char[strlen(homeEnv) + 2];
-		strcpy(home, homeEnv);
-	}
-	else
-	{
-		printf("Oops: can't determine $HOME.");
-	}
+    if (!homeEnv)
+    {
+        printf("Oops: can't determine $HOME.");
+        return;
+    }
+    // Try to open the .avidemux directory
 
+    strcpy(ADM_basedir, homeEnv);
+    AddSeparator(ADM_basedir);
 
-	// Try to open the .avidemux directory
+    const char *ADM_DIR_NAME = ".avidemux6";
 
-	if (home)
-	{
-		strcpy(ADM_basedir, home);
-		AddSeparator(ADM_basedir);
+    strcat(ADM_basedir, ADM_DIR_NAME);
+    strcat(ADM_basedir, ADM_SEPARATOR);
 
-		const char *ADM_DIR_NAME = ".avidemux6";
-
-		strcat(ADM_basedir, ADM_DIR_NAME);
-		strcat(ADM_basedir, ADM_SEPARATOR);
-
-		delete [] home;
-
-		if (ADM_mkdir(ADM_basedir))
-		{
-			printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
-		}
-		else
-		{
-			ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
-		}
-	}
+    if (ADM_mkdir(ADM_basedir))
+    {
+        printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
+    }
+    else
+    {
+        ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
+    }
 }
 
 // EOF
