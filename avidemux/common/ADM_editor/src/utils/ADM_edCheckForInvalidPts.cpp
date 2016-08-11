@@ -66,7 +66,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     ADM_info("-------- /Stats ----------\n");
     if(stats.nbPtsgoingBack>1)
     {
-        if(!GUI_Question(QT_TR_NOOP("Some timing information are incorrect.\nIt happens with some capture software.\n"
+        if(!GUI_Question(QT_TRANSLATE_NOOP("ADM_Composer","Some timing information are incorrect.\nIt happens with some capture software.\n"
                 "If you re encode video we should drop these informations,\n else it will cause dropped frame/jerky video.\n"
                 "If you just copy the video without reencoding,\n you should keep them.\n"
                 "Drop timing informations ?")))

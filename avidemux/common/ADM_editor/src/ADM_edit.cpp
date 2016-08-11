@@ -175,7 +175,7 @@ bool ADM_Composer::addFile (const char *name)
 	if(!video._aviheader)
 	{
 		char str[512+1];
-		snprintf(str,512,QT_TR_NOOP("Cannot find a demuxer for %s"), name);
+		snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","Cannot find a demuxer for %s"), name);
 		str[512] = '\0';
 		GUI_Error_HIG(str,NULL);
 		return false;
@@ -211,7 +211,7 @@ bool ADM_Composer::addFile (const char *name)
    // check opening was successful
    if (ret == 0) {
      char str[512+1];
-     snprintf(str,512,QT_TR_NOOP("Attempt to open %s failed!"), name);
+     snprintf(str,512,QT_TRANSLATE_NOOP("ADM_Composer","Attempt to open %s failed!"), name);
       str[512] = '\0';
       GUI_Error_HIG(str,NULL);
       video._aviheader=NULL;
@@ -237,7 +237,7 @@ bool ADM_Composer::addFile (const char *name)
                  (strlen(str)?" and ":""),
                  (strlen(str)?" are ":" is ") );
          str[512] = '\0';
-         GUI_Error_HIG(str,QT_TR_NOOP("You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:\n1.) \"resize\" / \"add border\" / \"crop\" each stream to the same resolution\n2.) concatenate them together"));
+         GUI_Error_HIG(str,QT_TRANSLATE_NOOP("ADM_Composer","You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:\n1.) \"resize\" / \"add border\" / \"crop\" each stream to the same resolution\n2.) concatenate them together"));
          delete video._aviheader;
          return false;
       }
