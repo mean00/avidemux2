@@ -3,6 +3,6 @@ HERE="$(dirname "$(readlink -f "${0}")")"
 cd "${HERE}/usr/"
 export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/qt5:${LD_LIBRARY_PATH}"
 export PATH="${HERE}/usr/bin:${PATH}"
-${HERE}/usr/bin/avidemux3_qt5 --portable $@
+${HERE}/usr/bin/avidemux3_qt5 --portable "$@"
 cd -
 
