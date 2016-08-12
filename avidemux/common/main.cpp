@@ -264,13 +264,12 @@ int startAvidemux(int argc, char *argv[])
 	
 
     {
-        char *se = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,"scriptEngines" );
-        if(!initGUI(initialiseScriptEngines(se, video_body,getUISpecifSubfolder())))
+        std::string scriptFolder=ADM_getPluginDir("scriptEngines");        
+        if(!initGUI(initialiseScriptEngines(scriptFolder.c_str(), video_body,getUISpecifSubfolder())))
         {
                 printf("\n Fatal : could not init GUI\n");
                 exit(-1);
         }
-        delete [] se;
     }
 
     
