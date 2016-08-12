@@ -17,10 +17,8 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <string>
-
-
-#    include <Carbon/Carbon.h>
-#    include <unistd.h>
+#include <Carbon/Carbon.h>
+#include <unistd.h>
 
 #include "ADM_default.h"
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
@@ -140,5 +138,14 @@ void ADM_initBaseDir(int argc, char *argv[])
         ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
     }
 }
-
+/**
+ * \fn ADM_getI8NDir
+ */
+const std::string ADM_getI8NDir(const std::string &flavor)
+{
+    std::string app= std::string(QCoreApplication::applicationDirPath().toUtf8().constData());
+    std::string partialPath=std::string("/../share/")+flavor+std::string("/i18n/");
+    std:string  i18n = app+ "/../share/avidemux6/"+QString(partialPath.c_str());
+    return i18n;
+}
 // EOF

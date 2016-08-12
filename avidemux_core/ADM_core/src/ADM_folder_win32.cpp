@@ -17,14 +17,14 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <string>
-
-
-#	include <io.h>
-#	include <direct.h>
-#	include <shlobj.h>
-#	include "ADM_win32.h"
+#include <io.h>
+#include <direct.h>
+#include <shlobj.h>
+#include "ADM_win32.h"
 
 #include "ADM_default.h"
+
+
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 static char ADM_basedir[1024] = {0};
 static char *ADM_autodir = NULL;
@@ -174,7 +174,17 @@ void ADM_initBaseDir(int argc, char *argv[])
 		}
 	}
 }
-
+/**
+ * \fn ADM_getI8NDir
+ */
+const std::string ADM_getI8NDir(const std::string &flavor)
+{
+    //
+    char *home = ADM_getInstallRelativePath(flavor.c_str(), "i18n", NULL);
+    std::string r=std::string(home);
+    delete [] home;
+    return r;
+}
 
 
 // EOF

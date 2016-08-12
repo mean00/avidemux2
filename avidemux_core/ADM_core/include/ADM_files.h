@@ -31,7 +31,9 @@ ADM_CORE6_EXPORT const char *ADM_getAutoDir(void);
 // Returns dir to ~/.avidemux/autoScript, no need to free it
 ADM_CORE6_EXPORT const char *ADM_getUserPluginSettingsDir(void);
 ADM_CORE6_EXPORT const char *ADM_getSystemPluginSettingsDir(void);
-
+#ifdef __cplusplus
+ADM_CORE6_EXPORT const std::string ADM_getI8NDir(const std::string &flavor);
+#endif
 
 //
 ADM_CORE6_EXPORT uint8_t ADM_copyFile(const char *source, const char *target);

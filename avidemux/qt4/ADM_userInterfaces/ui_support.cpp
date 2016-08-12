@@ -79,45 +79,35 @@ void initTranslator(void)
 void loadTranslator(void)
 {
 	
-        char *lang=NULL;
-        bool autoSelect=true;
-        if(prefs->get(DEFAULT_LANGUAGE,&lang))
+    char *lang=NULL;
+    bool autoSelect=true;
+    if(prefs->get(DEFAULT_LANGUAGE,&lang))
+    {
+        if(lang && strlen(lang)>0 && strcmp(lang,"auto"))
+            autoSelect=false;
+    }
+    if(autoSelect)
+    {
+        ADM_info("Using system language\n");
+        if(lang)
         {
-            if(lang && strlen(lang)>0 && strcmp(lang,"auto"))
-                autoSelect=false;
+            ADM_dealloc(lang);
+            lang=NULL;
         }
-        if(autoSelect)
-        {
-            ADM_info("Using system language\n");
-            if(lang)
-            {
-                ADM_dealloc(lang);
-                lang=NULL;
-            }
-            lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
-        }else
-        {
-            ADM_info("Language forced \n");
-        }
-        ADM_info("Initializing language %s\n",lang);
-#if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
-        std::string flavor="/qt4";
+        lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
+    }else
+    {
+        ADM_info("Language forced \n");
+    }
+    ADM_info("Initializing language %s\n",lang);
+    #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
+        const std::string flavor="qt4";
 #else        
-        std::string flavor="/qt5";
+        const std::string flavor="qt5";
 #endif
-        std::string partialPath=std::string(flavor)+std::string("/i18n/");
-                
-                
-#ifdef __APPLE__
-	QString appdir = QCoreApplication::applicationDirPath() + "/../share/avidemux6/"+QString(partialPath.c_str());
-                
-#elif defined(_WIN32)
-	QString appdir = QCoreApplication::applicationDirPath() + QString(partialPath.c_str());
-#else
-    char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
-	QString appdir = QString(ppath);
-    delete [] ppath;ppath=NULL;
-#endif
+    std::string i18nFolder=ADM_getI8NDir(flavor);        
+    ADM_info("Translation folder is <%s>\n",i18nFolder.c_str());
+    QString appdir = QString(i18nFolder.c_str());    
     QString languageFile;
     if(lang)
     {
@@ -127,36 +117,38 @@ void loadTranslator(void)
     int nbLoaded=0;
     qtTranslator=new QTranslator();
     avidemuxTranslator=new QTranslator();
-	nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
-	nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
-	translatorLoaded = true;
+    nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
+    nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
+    translatorLoaded = true;
     if(!nbLoaded) // Nothing to translate..
+    {
+        ADM_info("No translation loaded.\n");
         return;
+    }
     ADM_info("Updating translations...\n");
-	// Re-translate existing map (to take care of global strings already allocated)
-        if(!map)
-            map = new QMap<QString, char*>;
-	QMapIterator<QString, char*> mapIterator(*map);
+    // Re-translate existing map (to take care of global strings already allocated)
+    if(!map)
+        map = new QMap<QString, char*>;
+    QMapIterator<QString, char*> mapIterator(*map);
 
-	while (mapIterator.hasNext())
-	{
-		mapIterator.next();
+    while (mapIterator.hasNext())
+    {
+            mapIterator.next();
 
-		QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toLatin1().constData()).toUtf8();
-		char *buffer = mapIterator.value();
-		int copyLength = translatedMessage.length() + 1;
+            QByteArray translatedMessage = QApplication::translate("", mapIterator.key().toLatin1().constData()).toUtf8();
+            char *buffer = mapIterator.value();
+            int copyLength = translatedMessage.length() + 1;
 
-		if (copyLength > MAX_UNLOADED_MSG_LENGTH + 1)
-		{
-			copyLength = MAX_UNLOADED_MSG_LENGTH;
-			buffer[MAX_UNLOADED_MSG_LENGTH] = '\0';
-		}
+            if (copyLength > MAX_UNLOADED_MSG_LENGTH + 1)
+            {
+                    copyLength = MAX_UNLOADED_MSG_LENGTH;
+                    buffer[MAX_UNLOADED_MSG_LENGTH] = '\0';
+            }
 
-		memcpy(buffer, translatedMessage.constData(), copyLength);
-	}
+            memcpy(buffer, translatedMessage.constData(), copyLength);
+    }
 
-	ADM_info("[Locale] Test: &Edit -> %s\n\n", HIDE_STRING_FROM_QT("MainWindow", "&Edit").toUtf8().data());
-        
+    ADM_info("[Locale] Test: &Edit -> %s\n\n", HIDE_STRING_FROM_QT("MainWindow", "&Edit").toUtf8().data());        
 }
 
 void destroyTranslator(void)

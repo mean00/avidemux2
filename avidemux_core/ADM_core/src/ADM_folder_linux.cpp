@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include "ADM_default.h"
 
+static bool isPortable=false;
+extern std::string pluginDir;
 
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 
@@ -28,6 +30,7 @@ static char ADM_basedir[1024] = {0};
 
 static char *ADM_autodir = NULL;
 static char *ADM_systemPluginSettings=NULL;
+static std::string ADM_i18nDir;
 
 static void AddSeparator(char *path)
 {
@@ -71,7 +74,38 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 {
 	return ADM_getRelativePath(ADM_INSTALL_DIR, base1, base2, base3);
 }
-
+const std::string ADM_getI8NDir(const std::string &flavor)
+{
+    if(ADM_i18nDir.size())
+        return ADM_i18nDir;
+    //
+    // 181n
+    if(isPortable)
+    {
+        std::string i18n=pluginDir;
+        i18n+=std::string("/../../share/avidemux6/")+flavor+std::string("/i18n/");
+        char *simple2=canonicalize_file_name(i18n.c_str());
+        if(simple2)
+        {
+            ADM_i18nDir=std::string(simple2)+std::string("/");
+            
+            free(simple2);simple2=NULL;
+        }else
+        {
+             ADM_i18nDir=i18n;
+        }
+        ADM_info("Relative to install i18n mode : <%s>\n",ADM_i18nDir.c_str());
+        // 181n
+    }else
+    {        
+        std::string partialPath=flavor+std::string("/i18n/");
+        char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
+        ADM_i18nDir=std::string(ppath);
+        delete [] ppath;
+        ppath=NULL;
+    }
+    return ADM_i18nDir;
+}
 /*
       Get the root directory for .avidemux stuff
 ******************************************************/
@@ -84,7 +118,7 @@ const char *ADM_getBaseDir(void)
  * @param argc
  * @param argv
  */
-extern std::string pluginDir;
+
 void ADM_initBaseDir(int argc, char *argv[])
 {
 	char *home = NULL;
@@ -114,20 +148,26 @@ void ADM_initBaseDir(int argc, char *argv[])
     
     if(isPortableMode(argc,argv))
     {
-        
+        ADM_info("Portable mode\n");
+        isPortable=true;
         char *copy=ADM_PathCanonize(argv[0]);
         ADM_PathStripName(copy); // small leak
         std::string p=std::string(copy);
         delete [] copy;copy=NULL;
-        p+=std::string("/../lib/")+std::string(ADM_PLUGIN_DIR);
-
-        char *simple=canonicalize_file_name(p.c_str());
+        std::string plugins=p;
+        plugins+=std::string("/../lib/")+std::string(ADM_PLUGIN_DIR);
+        char *simple=canonicalize_file_name(plugins.c_str());
+        ADM_info("Simplifying %s\n",plugins.c_str());
         if(simple)
         {
             pluginDir=std::string(simple);
-            ADM_info("Relative to install plugin mode : <%s>\n",pluginDir.c_str());
+            
             free(simple);simple=NULL;
+        } else
+        {
+            pluginDir=plugins;
         }
+        ADM_info("Relative to install plugin mode : <%s>\n",pluginDir.c_str());
     }
     
 }
