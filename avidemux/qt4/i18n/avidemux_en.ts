@@ -504,7 +504,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">A&amp;uto</translation>
     </message>
     <message>
         <source>&amp;Custom</source>
@@ -986,23 +986,23 @@ Drop timing informations ?</source>
     <name>adm</name>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Open...</translation>
     </message>
     <message>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Append...</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Save</translation>
     </message>
     <message>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation>Qu&amp;eue</translation>
     </message>
     <message>
         <source>Save as Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Save as I&amp;mage</translation>
     </message>
     <message>
         <source>Save as BMP</source>
@@ -1014,7 +1014,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Close</translation>
     </message>
     <message>
         <source>-</source>
@@ -1022,7 +1022,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Information</translation>
     </message>
     <message>
         <source>Connect to avsproxy</source>
@@ -1030,7 +1030,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Quit</translation>
     </message>
     <message>
         <source>Undo</source>
@@ -1038,63 +1038,67 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reset Edit</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation>Cu&amp;t</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Copy</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Paste</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Delete</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Set Marker &amp;A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Set Marker &amp;B</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Pr&amp;eferences</translation>
+    </message>
+    <message>
+        <source>Save current settings as default</source>
+        <translation>Save current settings as de&amp;fault</translation>
     </message>
     <message>
         <source>Decoder Option</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Decoder Options</translation>
     </message>
     <message>
         <source>PostProcessing</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;PostProcessing</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Filters</translation>
     </message>
     <message>
         <source>Select Track</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Select Track</translation>
     </message>
     <message>
         <source>Save audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Save &amp;Audio</translation>
     </message>
     <message>
         <source>Build Option</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Build Options</translation>
     </message>
     <message>
         <source>Plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Plugins</translation>
     </message>
     <message>
         <source>&amp;Advanced</source>
@@ -1110,7 +1114,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;About</translation>
     </message>
     <message>
         <source>Play/Stop</source>
@@ -1142,23 +1146,23 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>First Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;First Frame</translation>
     </message>
     <message>
         <source>Last Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Last Frame</translation>
     </message>
     <message>
         <source>Go To Marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Go to Marker &amp;A</translation>
     </message>
     <message>
         <source>Go To Marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Go to Marker &amp;B</translation>
     </message>
     <message>
         <source>Go To Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Go to &amp;Time</translation>
     </message>
     <message>
         <source>R_esampling (Hz):</source>
