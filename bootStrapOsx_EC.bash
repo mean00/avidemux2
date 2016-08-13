@@ -56,7 +56,7 @@ Process()
         if [ "x$do_rebuild" != x1 ] ; then
         	rm -Rf ./$BUILDDIR
 	fi
-        mkdir $BUILDDIR || fail mkdir
+        mkdir -p $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         cmake $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP  $EXTRA $FLAVOR $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make -j 2 > /tmp/log$BUILDDIR || fail make
