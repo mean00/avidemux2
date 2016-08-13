@@ -152,4 +152,6 @@ const std::string ADM_getI8NDir(const std::string &flavor)
     return  r;
     
 }
+
+#include "ADM_folder_unix.cpp"
 // EOF
