@@ -508,6 +508,9 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                             a=insert->addAction(icon,qs);
                         }else
                             a=insert->addAction(qs);
+#if defined(__APPLE__)
+			a->setMenuRole(QAction::NoRole);
+#endif 
                         m->cookie=(void *)a;
                         if(m->shortCut)
                         {
