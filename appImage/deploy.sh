@@ -53,7 +53,7 @@ cp -t ../lib /lib/x86_64-linux-gnu/libpcre.so.3 || fail pcre
 cp -t ../lib /lib/x86_64-linux-gnu/libglib-2.0.so.0 || fail glib
 cp -t ../lib /lib/x86_64-linux-gnu/libjson.so.0 || fail json
 # xcb
-for i in libX11-xcb.so.1 libxcb-render-util.so.0 libxcb-glx.so.0 libxcb-render.so.0 libxcb.so.1 libxcb-image.so.0 libxcb-icccm.so.4 libxcb-sync.so.1 libxcb-xfixes.so.0 libxcb-shm.so.0 libxcb-randr.so.0 libxcb-shape.so.0 libxcb-keysyms.so.1 libxcb-xkb.so.1 libxcb-util.so.0
+for i in libX11-xcb.so.1 libxcb-render-util.so.0 libxcb-glx.so.0 libxcb-render.so.0 libxcb.so.1 libxcb-image.so.0 libxcb-icccm.so.4 libxcb-sync.so.1 libxcb-xfixes.so.0 libxcb-shm.so.0 libxcb-randr.so.0 libxcb-shape.so.0 libxcb-keysyms.so.1 libxcb-xkb.so.1 libxcb-util.so.0 libxcb-dri2.so.0
 do
    cpyX86 $i
 done
