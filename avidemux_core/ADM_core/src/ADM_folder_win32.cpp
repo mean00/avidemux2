@@ -190,6 +190,7 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 #	include <io.h>
 #	include <direct.h>
 #	include <shlobj.h>
+#	include <fcntl.h>
 #	include "ADM_win32.h"
 
 /**
