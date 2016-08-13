@@ -145,7 +145,7 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 {    
     
     std::string partialPath=flavor+std::string("/i18n/");
-    char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
+    char *ppath=ADM_getInstallRelativePath("../share","avidemux6",partialPath.c_str());
     std::string r=std::string(ppath);
     delete [] ppath;
     ppath=NULL;
