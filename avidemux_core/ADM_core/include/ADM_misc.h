@@ -30,10 +30,10 @@ ADM_CORE6_EXPORT const char      *ADM_GetFileName(const char *str);
 //  Canonize the path, returns a copy of the absolute path given as parameter
 ADM_CORE6_EXPORT char            *ADM_PathCanonize(const char *tmpname);
 // change to lower case in place the string
-void            ADM_LowerCase(char *string);
+void                            ADM_LowerCase(char *string);
 
-uint32_t        getTime( int called );
-uint32_t 	    getTimeOfTheDay(void);
+                uint32_t        getTime( int called );
+                uint32_t 	getTimeOfTheDay(void);
 
 ADM_CORE6_EXPORT uint64_t        ADM_getSecondsSinceEpoch(void);
 ADM_CORE6_EXPORT const char      *ADM_epochToString(uint64_t epoch);

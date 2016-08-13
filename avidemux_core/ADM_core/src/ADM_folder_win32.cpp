@@ -193,6 +193,38 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 #	include <fcntl.h>
 #	include "ADM_win32.h"
 
+/*
+
+** note: it modifies it's first argument
+*/
+void simplify_path(char **buf)
+{
+	unsigned int last1slash = 0;
+	unsigned int last2slash = 0;
+
+	while (!strncmp(*buf, "/../", 4))
+		memmove(*buf, *buf + 3, strlen(*buf + 3) + 1);
+
+	for (unsigned int i = 0; i < strlen(*buf) - 2; i++)
+		while (!strncmp(*buf + i, "/./", 3))
+			memmove(*buf + i, *buf + i + 2, strlen(*buf + i + 2) + 1);
+
+	for (unsigned int i = 0; i < strlen(*buf) - 3; i++)
+	{
+		if (*(*buf + i) == '/')
+		{
+			last2slash = last1slash;
+			last1slash = i;
+		}
+
+		if (!strncmp(*buf + i, "/../", 4))
+		{
+			memmove(*buf + last2slash, *buf + i + 3, strlen(*buf + i + 3) + 1);
+
+			return simplify_path(buf);
+		}
+	}
+}
 /**
     \fn ADM_fopen
     \brief utf8 aware fopen, so that we can use utf8 string even on win32
