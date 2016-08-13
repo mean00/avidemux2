@@ -31,6 +31,26 @@ static char ADM_basedir[1024] = {0};
 static char *ADM_autodir = NULL;
 static char *ADM_systemPluginSettings=NULL;
 static std::string ADM_i18nDir;
+/**
+ * 
+ * @param in
+ * @return 
+ */
+static std::string canonize(const std::string &in)
+{
+    std::string out;
+    char *simple2=canonicalize_file_name(in.c_str());
+    if(simple2)
+    {
+        out=std::string(simple2)+std::string("/");
+        free(simple2);simple2=NULL;
+    }else
+    {
+         out=in;
+    }
+    return out;
+}
+
 
 static void AddSeparator(char *path)
 {
@@ -84,16 +104,7 @@ const std::string ADM_getI8NDir(const std::string &flavor)
     {
         std::string i18n=pluginDir;
         i18n+=std::string("/../../share/avidemux6/")+flavor+std::string("/i18n/");
-        char *simple2=canonicalize_file_name(i18n.c_str());
-        if(simple2)
-        {
-            ADM_i18nDir=std::string(simple2)+std::string("/");
-            
-            free(simple2);simple2=NULL;
-        }else
-        {
-             ADM_i18nDir=i18n;
-        }
+        ADM_i18nDir=canonize(i18n);
         ADM_info("Relative to install i18n mode : <%s>\n",ADM_i18nDir.c_str());
         // 181n
     }else
@@ -156,17 +167,7 @@ void ADM_initBaseDir(int argc, char *argv[])
         delete [] copy;copy=NULL;
         std::string plugins=p;
         plugins+=std::string("/../lib/")+std::string(ADM_PLUGIN_DIR);
-        char *simple=canonicalize_file_name(plugins.c_str());
-        ADM_info("Simplifying %s\n",plugins.c_str());
-        if(simple)
-        {
-            pluginDir=std::string(simple);
-            
-            free(simple);simple=NULL;
-        } else
-        {
-            pluginDir=plugins;
-        }
+        pluginDir=canonize(plugins);
         ADM_info("Relative to install plugin mode : <%s>\n",pluginDir.c_str());
     }
     

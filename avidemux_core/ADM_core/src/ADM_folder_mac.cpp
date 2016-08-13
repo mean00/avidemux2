@@ -142,10 +142,14 @@ void ADM_initBaseDir(int argc, char *argv[])
  * \fn ADM_getI8NDir
  */
 const std::string ADM_getI8NDir(const std::string &flavor)
-{
-    std::string app= std::string(QCoreApplication::applicationDirPath().toUtf8().constData());
-    std::string partialPath=std::string("/../share/")+flavor+std::string("/i18n/");
-    std:string  i18n = app+ "/../share/avidemux6/"+QString(partialPath.c_str());
-    return i18n;
+{    
+    
+    std::string partialPath=flavor+std::string("/i18n/");
+    char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
+    std::string r=std::string(ppath);
+    delete [] ppath;
+    ppath=NULL;
+    return  r;
+    
 }
 // EOF
