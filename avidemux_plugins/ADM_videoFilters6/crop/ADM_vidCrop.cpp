@@ -169,10 +169,10 @@ const char *CropFilter::getConfiguration(void)
 {
     static char conf[80];
     conf[0]=0;
-    snprintf(conf,80,"Crop : %"PRIu32"x%"PRIu32" => %"PRIu32"x%"PRIu32,
-                previousFilter->getInfo()->width,
-                previousFilter->getInfo()->height,
-                info.width,info.height
+    snprintf(conf,80,"Crop : %dx%d => %dx%d",
+                (int)previousFilter->getInfo()->width,
+                (int)previousFilter->getInfo()->height,
+                (int)info.width,(int)info.height
                 );
     return conf;
 }

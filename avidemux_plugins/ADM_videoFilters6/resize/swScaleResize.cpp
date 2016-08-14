@@ -161,10 +161,10 @@ const char *swScaleResizeFilter::getConfiguration(void)
 {
     static char conf[80];
     conf[0]=0;
-    snprintf(conf,80,"swscale Resize : %"PRIu32"x%"PRIu32" => %"PRIu32"x%"PRIu32", algo %"PRIu32"\n",
-                previousFilter->getInfo()->width,
-                previousFilter->getInfo()->height,
-                configuration.width, configuration.height,configuration.algo);
+    snprintf(conf,80,"swscale Resize : %d x %d  => %d x %d, algo %d\n",
+                (int)previousFilter->getInfo()->width,
+                (int)previousFilter->getInfo()->height,
+                (int)configuration.width, (int)configuration.height,(int)configuration.algo);
     return conf;
 }
 /**

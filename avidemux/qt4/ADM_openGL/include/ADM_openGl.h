@@ -13,7 +13,6 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-#include "ADM_image.h"
 #define GL_GLEXT_PROTOTYPES
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
@@ -39,6 +38,7 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 #endif
 
 #include <QtOpenGL/QtOpenGL>
+#include "ADM_image.h"
 /**
     \class ADM_glExt
 */

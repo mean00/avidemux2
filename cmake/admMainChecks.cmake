@@ -95,7 +95,6 @@ ENDIF (WIN32)
 
 if (CMAKE_COMPILER_IS_GNUCC)
 	add_definitions("-Werror=attributes") 
-        ADD_DEFINITIONS("-std=gnu++98")
 endif (CMAKE_COMPILER_IS_GNUCC)
 # Clang
 IF(${CMAKE_CXX_COMPILER} MATCHES ".*[cC]lang.*")
