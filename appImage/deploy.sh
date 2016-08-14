@@ -56,7 +56,7 @@ cd install/usr/bin
 mkdir -p ../lib/qt5
 mkdir -p ../lib/qt5/plugins
 # libz
-cpyRootx86Lib libz.so.1
+#cpyRootx86Lib libz.so.1
 
 # qt5
 ldd avidemux3_qt5 | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/ || fail qt5
@@ -83,10 +83,10 @@ do
   # cpyX86 $i
 done
 # Misc
-for i in libGL.so.1 libGLU.so.1 libsasl2.so.2 libEGL.so.1
-do
-	cpyX86 $i
-done
+#for i in libGL.so.1 libGLU.so.1 libsasl2.so.2 libEGL.so.1
+#do
+	#cpyX86 $i
+#done
 cpyRootx86Lib libudev.so.0
 # audio plugins
 for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.so.2 libaften.so.0 libogg.so.0
@@ -118,7 +118,7 @@ cpyX86 libva-x11.so.1
 
 cp -t ../lib /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so || fail nvidia_drv_video
 # patch
-sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|./././././.././././././../lib|g'  ../lib/libva.so.1
+sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|././././././/./././././/./lib|g'  ../lib/libva.so.1
 
 
 # Fixup link
