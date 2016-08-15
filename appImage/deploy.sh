@@ -113,11 +113,12 @@ cpyLib libx265.so.79
 # Display lib
 cpyX86 libvdpau.so.1
 cpyX86 libXv.so.1
-cpyX86 libva.so.1
-cpyX86 libva-x11.so.1
+cpyLib libva.so.1
+cpyLib libva-x11.so.1
 
-cp -t ../lib /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so || fail nvidia_drv_video
+cp -t ../lib /usr/lib/dri/nvidia_drv_video.so || fail nvidia_drv_video
 # patch
+sed -i -e 's|/usr/lib/dri|././/././lib|g'   ../lib/libva.so.1
 sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|././././././/./././././/./lib|g'  ../lib/libva.so.1
 
 
