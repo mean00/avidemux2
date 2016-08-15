@@ -88,7 +88,7 @@ bool receive_data(int hr, PIPE_MSG_HEADER *msg,
 bool receive_data_by_size(int hr, void *data, int size);
 
 int ppread(int h, void *data, int sz);
-int ppwrite(int h, void *data, int sz);
+int ppwrite(int h, const void *data, int sz);
 
 #define PIPE_MAX_TRANSFER_SZ 65536/2
 #define MAGIC_ADV_PROTOCOL_VAL 0xADBACEED

@@ -73,7 +73,7 @@ int p(write);
 int p(read);
 
 bool send_cmd(int hw, AVS_CMD cmd,
-              void *data, int sz)
+              const void *data, int sz)
 {
   PIPE_MSG_HEADER msg = {cmd, sz};
   return ((ppwrite(hw, &msg, sizeof(msg)) == sizeof(msg)) &&
