@@ -398,13 +398,6 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
  */
 decoderFFLIBVA::~decoderFFLIBVA()
 {
-    if(_context) // duplicate ~decoderFF to make sure in transit buffers are 
-                 // released
-    {
-        avcodec_close (_context);
-        av_free(_context);
-        _context=NULL;
-    }
     imageMutex.lock();
     int m=vaPool.allSurfaceQueue.size();
     int n=vaPool.freeSurfaceQueue.size();
