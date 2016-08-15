@@ -53,14 +53,15 @@ export ORG=$PWD
 export APP_NAME=app
 rm -f $APP_NAME
 cd install/usr/bin
+cp avidemux3_qt5 avidemux3_portable
 mkdir -p ../lib/qt5
 mkdir -p ../lib/qt5/plugins
 # libz
 #cpyRootx86Lib libz.so.1
 
 # qt5
-ldd avidemux3_qt5 | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/ || fail qt5
-ldd avidemux3_qt5 | grep icu | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5 || fail icu
+ldd avidemux3_portable | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/ || fail qt5
+ldd avidemux3_portable | grep icu | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5 || fail icu
 cp ${QT_HOME}/lib/libQt5DBus.so.5 ../lib/qt5 || failQtDbus
 cp ${QT_HOME}/lib/libQt5XcbQpa.so.5  ../lib/qt5 || failQtXcb
 
@@ -76,18 +77,8 @@ done
 cp -t ../lib /lib/x86_64-linux-gnu/libpcre.so.3 || fail pcre
 cp -t ../lib /lib/x86_64-linux-gnu/libglib-2.0.so.0 || fail glib
 cp -t ../lib /lib/x86_64-linux-gnu/libjson.so.0 || fail json
-# xcb
-for i in libX11-xcb.so.1 libxcb-render-util.so.0 libxcb-glx.so.0 libxcb-render.so.0 libxcb.so.1 libxcb-image.so.0 libxcb-icccm.so.4 libxcb-sync.so.1 libxcb-xfixes.so.0 libxcb-shm.so.0 libxcb-randr.so.0 libxcb-shape.so.0 libxcb-keysyms.so.1 libxcb-xkb.so.1 libxcb-util.so.0 libxcb-dri2.so.0 libdrm.so.2
-do 
-	echo $i
-  # cpyX86 $i
-done
-# Misc
-#for i in libGL.so.1 libGLU.so.1 libsasl2.so.2 libEGL.so.1
-#do
-	#cpyX86 $i
-#done
 cpyRootx86Lib libudev.so.0
+
 # audio plugins
 for i in libfaad.so.2 libfaac.so.0 libmp3lame.so.0 libvorbis.so.0 libvorbisenc.so.2 libaften.so.0 libogg.so.0
 do
@@ -117,10 +108,12 @@ cpyLib libva.so.1
 cpyLib libva-x11.so.1
 
 cp -t ../lib /usr/lib/dri/nvidia_drv_video.so || fail nvidia_drv_video
+cp -t ../lib /usr/lib/dri/i965_drv_video.so  || fail intel_drv_video
 # patch
 sed -i -e 's|/usr/lib/dri|././/././lib|g'   ../lib/libva.so.1
 sed -i -e 's|/usr/lib/x86_64-linux-gnu/dri|././././././/./././././/./lib|g'  ../lib/libva.so.1
 
+#intel, not sure it works
 
 # Fixup link
 cd ../lib
