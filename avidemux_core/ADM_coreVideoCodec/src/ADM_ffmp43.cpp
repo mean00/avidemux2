@@ -321,7 +321,6 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
   uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
-  
   if(hwDecoder)
         return hwDecoder->uncompress(in,out);
  
@@ -478,14 +477,16 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     case AV_PIX_FMT_RGB555:
       out->_colorspace = ADM_COLOR_RGB555;
       break;
+#if 0
     case AV_PIX_FMT_VDPAU_MPEG1:
     case AV_PIX_FMT_VDPAU_MPEG2:
     case AV_PIX_FMT_VDPAU_WMV3:
     case AV_PIX_FMT_VDPAU_VC1:
     case AV_PIX_FMT_VDPAU_H264:
+    case AV_PIX_FMT_VDPAU:
         out->_colorspace=ADM_COLOR_VDPAU;
         break;        
-    case AV_PIX_FMT_VAAPI_VLD:
+    case AV_PIX_FMT_VAAPI:
         out->_colorspace=ADM_COLOR_LIBVA;
         break;
         
@@ -494,6 +495,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
         out->_colorspace=ADM_COLOR_XVBA;
         break;
 #endif        
+#endif
   case AV_PIX_FMT_YUV444P10LE:
         out->_colorspace=ADM_COLOR_YUV444_10BITS;
         break;        
