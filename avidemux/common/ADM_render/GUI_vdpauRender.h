@@ -14,9 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#ifndef T_VDPAURENDER_H
-#define T_VDPAURENDER_H
+#pragma once
 /**
     \fn class XvRender
 */
@@ -38,7 +36,7 @@ class vdpauRender: public VideoRenderBase
               virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_VDPAU;}
                         const char *getName() {return "Vdpau";}
 };
-#endif
+
 
 
 

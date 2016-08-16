@@ -14,9 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#ifndef T_LIBVARENDER_H
-#define T_LIBVARENDER_H
+#pragma once
 #include "ADM_coreLibVA.h"
 /**
     \fn class libvaRender
@@ -40,7 +38,7 @@ class libvaRender: public VideoRenderBase
               virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_LIBVA;}
                         const char *getName() {return "LibVA";}
 };
-#endif
+
 
 
 
