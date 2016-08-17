@@ -167,7 +167,7 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 	displayH = h;
 
     videoWindow->setADMSize(w,h);    
-    QuiMainWindows->resize(w+200,h+100);
+    QuiMainWindows->resize(w+218,h+100);
 #if 0
 	
 	UI_purge();
