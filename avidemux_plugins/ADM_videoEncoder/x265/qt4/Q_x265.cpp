@@ -82,7 +82,7 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "psnr", "ssim", "zerolatency", "fastdecode" };
+static const char* listOfTunings[] = { "none", "psnr", "ssim", "zerolatency", "fastdecode" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
