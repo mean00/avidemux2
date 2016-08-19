@@ -913,7 +913,7 @@ void A_saveScript(IScriptEngine* engine, const char* name)
  * @param engine
  * @param name
  */
-#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("/defaultSettings.py")
+#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
 void A_saveDefaultSettings()
 {
     IScriptEngine *engine=getPythonScriptEngine();
