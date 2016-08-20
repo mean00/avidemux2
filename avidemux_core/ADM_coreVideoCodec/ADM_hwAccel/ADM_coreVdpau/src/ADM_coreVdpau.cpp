@@ -17,6 +17,7 @@
 #ifdef USE_VDPAU
 #include "../include/ADM_coreVdpauInternal.h"
 #include "ADM_dynamicLoading.h"
+#include <map>
 
 #if 0
 #define VDP_TRACK printf
@@ -25,6 +26,9 @@
 #endif
 
 GUI_WindowInfo      admVdpau::myWindowInfo;
+
+
+typedef std::map<VdpVideoSurface ,bool >::iterator myIterator;
 
 namespace ADM_coreVdpau
 {
@@ -37,6 +41,26 @@ static VdpDeviceCreateX11    *ADM_createVdpX11;
 static VdpGetProcAddress     *vdpProcAddress;
 static bool                  coreVdpWorking=false;
 static VdpPresentationQueueTarget  queueX11;
+
+
+
+static std::map <VdpVideoSurface ,bool >listOfAllocatedSurface;
+/**
+ * \fn admVdpau_exitCleanup
+ */
+bool admVdpau_exitCleanup()
+{
+    std::map <VdpVideoSurface ,bool > cpy=listOfAllocatedSurface;
+    int n=cpy.size();
+    printf("At exit, we have still %d surface\n",n);
+    myIterator it=cpy.begin();
+    for(;it!=cpy.end();it++)
+        admVdpau::surfaceDestroy(it->first);
+    printf("After cleanup we have  %d surface\n",(int)listOfAllocatedSurface.size());
+    
+    admVdpau::cleanup();
+    return true;
+}
 
 
 /**
@@ -54,7 +78,7 @@ static void *getFunc(uint32_t id)
 */
 void        *admVdpau::getVdpDevice(void)
 {
-        return (void *)ADM_coreVdpau::vdpDevice;
+        return (void *)(intptr_t)ADM_coreVdpau::vdpDevice;
 }
 /**
 
@@ -238,7 +262,22 @@ VdpStatus  admVdpau::decoderDestroy(VdpDecoder decoder)
 
 VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurface *surface)
 {
-    CHECK(ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface));
+    
+    if(!isOperationnal()) 
+        {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}
+    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
+    if(VDP_STATUS_OK!=r) 
+    {
+        ADM_warning("ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface) call failed with error=%s\n",getErrorString(r));
+       return r;
+    }
+    myIterator already = listOfAllocatedSurface.find(*surface);
+    if(already!=listOfAllocatedSurface.end())
+    {
+        ADM_assert("Doubly used vdpau surface\n");
+    }
+    listOfAllocatedSurface[*surface]=true;
+    return VDP_STATUS_OK;
 }
 /**
     \fn
@@ -247,6 +286,13 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
 
 VdpStatus  admVdpau::surfaceDestroy(VdpVideoSurface surface)
 {
+    // De we have it ?
+     myIterator already = listOfAllocatedSurface.find(surface);
+    if(already==listOfAllocatedSurface.end())
+    {
+        ADM_assert("Trying to destroy unallocated vdpau surface\n");
+    }
+    listOfAllocatedSurface.erase(already);
     CHECK(ADM_coreVdpau::funcs.destroySurface(surface));
 }
 /**

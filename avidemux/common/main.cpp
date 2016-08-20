@@ -35,6 +35,8 @@
 #include "ADM_assert.h"
 #include "adm_main.h"
 
+void abortExitHandler(void);
+
 #ifdef main
 extern "C"
 {
@@ -157,6 +159,14 @@ void testCase(void)
 #endif
 /**
  * 
+ */
+static bool admDummyHwCleanup()
+{
+    return true;
+}
+
+/**
+ * 
  * @param argc
  * @param argv
  * @return 
@@ -277,17 +287,18 @@ int startAvidemux(int argc, char *argv[])
         
 #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)               
 #if defined( USE_VDPAU)
-    PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder)
+    extern bool admVdpau_exitCleanup();
+    PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder, admVdpau_exitCleanup)
 #endif    
             
 #if defined( USE_LIBVA)
-    PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder)
+    PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admDummyHwCleanup)
 #endif    
     
 #endif // !CLI
     
 #ifdef USE_SDL
-    PROBE_HW_ACCEL(sdlProbe,SDL,fakeInitSdl)               
+    PROBE_HW_ACCEL(sdlProbe,SDL,fakeInitSdl,admDummyHwCleanup)               
 #endif        
     //
            
@@ -312,12 +323,30 @@ int startAvidemux(int argc, char *argv[])
     {
         listOfHwInit[i]();
     }
-    
+    atexit(abortExitHandler);
     UI_RunApp();
     cleanUp();
 
     printf("Normal exit\n");
     return 0;
+}
+void abortExitHandler(void)
+{
+    static bool done=false;
+    int n=listOfHwCleanup.size();
+    if(!done && n)
+    {        
+        done=true;
+        ADM_info("Abnormal exit handler, trying to clean up \n");
+        for(int i=0;i<n;i++)
+        {
+            listOfHwCleanup[i]();
+        }
+        listOfHwCleanup.clear();
+    }else
+    {
+        ADM_info("already done, nothing to do\n");
+    }
 }
 /**
  * 
@@ -340,6 +369,13 @@ void ADM_ExitCleanup( void )
 	quitSdl();
 #endif
 
+    int n=listOfHwCleanup.size();
+    for(int i=0;i<n;i++)
+    {
+        listOfHwCleanup[i]();
+    }
+    listOfHwCleanup.clear();
+        
 
     AVDM_cleanup();
 
@@ -357,6 +393,7 @@ void ADM_ExitCleanup( void )
     ADM_dm_cleanup();
     ADM_vd6_cleanup();
     ADM_ve6_cleanup();
+    
 
     printf("--End of cleanup--\n");
     ADMImage_stat();

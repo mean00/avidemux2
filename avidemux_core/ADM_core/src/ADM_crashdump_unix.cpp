@@ -210,7 +210,7 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 
 	if(myFatalFunction)
 		myFatalFunction("Crash", wholeStuff); // FIXME
-
+        printf("*********** Exiting **************\n");
 	exit(-1); // _exit(1) ???
 #endif
 }

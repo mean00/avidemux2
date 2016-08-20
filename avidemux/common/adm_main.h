@@ -56,6 +56,7 @@ extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
 typedef bool (*initFunc_t)    (void);
 std::vector<initFunc_t> listOfHwInit;    
+std::vector<initFunc_t> listOfHwCleanup;    
 
 #if !defined(NDEBUG) && defined(FIND_LEAKS)
 extern const char* new_progname;
@@ -72,12 +73,13 @@ extern bool initVDPAUDecoder(void);
 extern bool initLIBVADecoder(void);
 #endif
 
-#define PROBE_HW_ACCEL(probe,name,initFunc) {   \
+#define PROBE_HW_ACCEL(probe,name,initFunc,cleanupFunc) {   \
     printf("Probing for "#name"...\n"); \
     if(probe()==true)\
     {\
         printf(#name" available\n"); \
         listOfHwInit.push_back(initFunc);\
+        listOfHwCleanup.push_back(cleanupFunc);\
     }\
       else \
         printf(#name" not available\n");}

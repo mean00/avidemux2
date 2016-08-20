@@ -963,6 +963,7 @@ void UI_setCurrentPreview(int ne)
 /**
         \fn FatalFunctionQt
 */
+extern void abortExitHandler();
 static void FatalFunctionQt(const char *title, const char *info)
 {
     printf("Crash Dump for %s\n",title);
@@ -975,6 +976,7 @@ static void FatalFunctionQt(const char *title, const char *info)
     msgBox.setDetailedText(info);
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.exec();
+    abortExitHandler(); // Try to cleanup
     abort();
 }
 
