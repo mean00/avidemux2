@@ -395,6 +395,7 @@ std::string currentSdlDriver=getSdlDriverName();
                 {"es","Español"},
                 {"fr","Français"},
                 {"it","Italiano"},
+                {"hu","Magyar"},
                 {"pl","Polski"},
                 {"ru","Русский"},
         };
