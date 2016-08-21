@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE TS>
-<TS version="2.0" language="da_DK">
+<TS version="2.0" language="da">
 <context>
     <name>ADM_Composer</name>
     <message>
@@ -32,7 +32,7 @@ Drop timinginformationer?</translation>
 1.) "resize" / "add border" / "crop" each stream to the same resolution
 2.) concatinate them together</source>
         <translation>Du kan endnu ikke mikse forskellige videodimensioner. Det vil ikke løse problemet at bruge det delvise videofilter senere. Det kan gøres som her:
-1.) "ændr størrelse" / "tilføj kanter" / "beskær" hver strøm til samme opløsning
+1.) "tilpas størrelse"/"tilføj kanter"/"beskær" hver strøm til samme opløsning
 2.) sæt dem sammen</translation>
     </message>
 </context>
@@ -432,7 +432,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation>&amp;Redigér</translation>
+        <translation>&amp;Rediger</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -472,7 +472,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>Codec Options</source>
-        <translation>Codec valgmuligheder</translation>
+        <translation>Codec-valgmuligheder</translation>
     </message>
     <message>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
@@ -536,7 +536,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>/ 00:00:00.000</source>
-        <translation>/ 00:00:00,000</translation>
+        <translation>/00:00:00,000</translation>
     </message>
     <message>
         <source>Frame type:</source>
@@ -628,7 +628,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>&amp;Codec Options</source>
-        <translation>&amp;Codec valgmuligheder</translation>
+        <translation>&amp;Codec-valgmuligheder</translation>
     </message>
     <message>
         <source>Ctrl+Alt+C</source>
@@ -983,11 +983,11 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>Set Marker A</source>
-        <translation>Angiv markør A</translation>
+        <translation>Sæt markør A</translation>
     </message>
     <message>
         <source>Set Marker B</source>
-        <translation>Angiv markør B</translation>
+        <translation>Sæt markør B</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -1051,11 +1051,11 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>Previous Intra Frame</source>
-        <translation>Forrige Intra-billede</translation>
+        <translation>Forrige intra-billede</translation>
     </message>
     <message>
         <source>Next Intra Frame</source>
-        <translation>Næste Intra-billede</translation>
+        <translation>Næste intra-billede</translation>
     </message>
     <message>
         <source>Previous Black Frame</source>
@@ -1107,7 +1107,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>_Frame rate change:</source>
-        <translation>_Billedhastighed ændring:</translation>
+        <translation>Ændring af _billedhastighed:</translation>
     </message>
     <message>
         <source>No change</source>
@@ -1423,7 +1423,7 @@ Drop timinginformationer?</translation>
     </message>
     <message>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation>_Brug alternativt tag for MP3 i .mp4</translation>
+        <translation>_Brug alternativt mærkat for MP3 i .mp4</translation>
     </message>
     <message>
         <source>XVideo (best)</source>
@@ -1817,7 +1817,7 @@ Kører den?</translation>
     </message>
     <message>
         <source>File %s has been successfully saved.</source>
-        <translation>Filen %s blev gemt med succes.</translation>
+        <translation>Filen %s blev gemt.</translation>
     </message>
     <message>
         <source>Failed</source>
@@ -2085,7 +2085,7 @@ Kører den?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %s job?</source>
-        <translation>Er du sikker på at du vil slette %s job?</translation>
+        <translation>Er du sikker på, at du vil slette %s job?</translation>
     </message>
     <message>
         <source>Delete *all* job</source>
@@ -2093,7 +2093,7 @@ Kører den?</translation>
     </message>
     <message>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation>Er du sikker på at du vil slette ALLE jobs?</translation>
+        <translation>Er du sikker på, at du vil slette ALLE jobs?</translation>
     </message>
     <message>
         <source>Already done</source>
@@ -2101,7 +2101,7 @@ Kører den?</translation>
     </message>
     <message>
         <source>This script has already been successfully executed.</source>
-        <translation>Dette script er allerede blevet udført med succes.</translation>
+        <translation>Dette script er allerede blevet udført.</translation>
     </message>
 </context>
 <context>
@@ -2308,7 +2308,7 @@ Kører den?</translation>
     <name>coloryuv</name>
     <message>
         <source>Avisynth color filter.</source>
-        <translation>Avisynth farvefilter.</translation>
+        <translation>Avisynth farvefilter</translation>
     </message>
     <message>
         <source>Color management filter.</source>
@@ -2461,26 +2461,26 @@ Kører den?</translation>
     </message>
     <message>
         <source>Crash file</source>
-        <translation>Nedbrud-fil</translation>
+        <translation>Nedbrudsfil</translation>
     </message>
     <message>
         <source>I have detected a crash file. 
 Do you want to load it  ?
 (It will be deleted in all cases, you should save it if you want to keep it)</source>
-        <translation>Jeg her registreret en nedbrudsfil.
+        <translation>Jeg har registreret en nedbrudsfil.
 Vil du indlæse den?
-(lige meget hvad vil den blive slettet, du skal gemme den hvis du vil beholde den)</translation>
+(den vil blive slettet lige meget hvad, du skal gemme den hvis du vil beholde den)</translation>
     </message>
 </context>
 <context>
     <name>crop</name>
     <message>
         <source>crop</source>
-        <translation>beskær</translation>
+        <translation>Beskær</translation>
     </message>
     <message>
         <source>crop filter</source>
-        <translation>beskæringsfilter</translation>
+        <translation>beskæringsfilter.</translation>
     </message>
     <message>
         <source>Warning Cropping too much width ! Width reseted !
@@ -2760,7 +2760,7 @@ p, li { white-space: pre-wrap; }
         <translation>&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=" font-weight:400; font-style:normal; text-decoration:none;"&gt;
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-size:8pt; font-weight:600;"&gt;Gennemsnitlig bithastighed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"&gt;&lt;span style=" font-size:8pt; font-weight:600;"&gt;Gennemsnitlig bith.:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name="qrichtext" content="1" /&gt;&lt;style type="text/css"&gt;
@@ -2802,7 +2802,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Pause / Abort</source>
-        <translation>Pause / afbryd</translation>
+        <translation>Pause/afbryd</translation>
     </message>
 </context>
 <context>
@@ -2926,7 +2926,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Progressive</source>
-        <translation>Progressiv</translation>
+        <translation>Fortløbende</translation>
     </message>
     <message>
         <source>Interlaced</source>
@@ -2974,7 +2974,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>_Macroblock decision:</source>
-        <translation>_Macroblok beslutning:</translation>
+        <translation>_Makroblok beslutning:</translation>
     </message>
     <message>
         <source>Aspect ratio:</source>
@@ -3141,7 +3141,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>_Macroblock decision:</source>
-        <translation>_Macroblok beslutning:</translation>
+        <translation>_Makroblok beslutning:</translation>
     </message>
     <message>
         <source>_Filesize tolerance (kb):</source>
@@ -3397,7 +3397,7 @@ p, li { white-space: pre-wrap; }
     <name>gaussian</name>
     <message>
         <source>Gaussian convolution.</source>
-        <translation>Gaussisk foldning.</translation>
+        <translation>Gaussisk foldning</translation>
     </message>
     <message>
         <source>3x3 convolution filter :gaussian.</source>
@@ -3596,7 +3596,7 @@ p, li { white-space: pre-wrap; }
     <name>kerneldeint</name>
     <message>
         <source>Kernel Deint.</source>
-        <translation>Kerne-afsammenfletter.</translation>
+        <translation>Kerne-afsammenfletter</translation>
     </message>
     <message>
         <source>Port of Donald Graft Kernel Deinterlacer.</source>
@@ -3686,7 +3686,7 @@ p, li { white-space: pre-wrap; }
     <name>largemedian</name>
     <message>
         <source>Large Median (5x5).</source>
-        <translation>Stor median (5x5).</translation>
+        <translation>Stor median (5x5)</translation>
     </message>
     <message>
         <source>Median filter on 5x5 matrix.</source>
@@ -3795,7 +3795,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Add logo.</source>
-        <translation>Tilføj logo.</translation>
+        <translation>Tilføj logo</translation>
     </message>
     <message>
         <source>Put a logo on top of video, with alpha blending.</source>
@@ -4627,7 +4627,7 @@ p, li { white-space: pre-wrap; }
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
 
 Do you wish to continue?</source>
-        <translation>Macroblok-træ optimering kræver at Variance Adaptive Quantisation er aktiveret.  Variance Adaptive Quantisation aktiveres automatisk.
+        <translation>Makroblok-træ optimering kræver at Variance Adaptive Quantisation er aktiveret.  Variance Adaptive Quantisation aktiveres automatisk.
 
 Ønsker du at fortsætte?</translation>
     </message>
@@ -4635,7 +4635,7 @@ Do you wish to continue?</source>
         <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
 
 Do you wish to continue?</source>
-        <translation>Macroblok-træ optimering kræver at Variance Adaptive Quantisation er aktiveret.  Macroblok-træ optimering deaktiveres automatisk.
+        <translation>Makroblok-træ optimering kræver at Variance Adaptive Quantisation er aktiveret.  Makroblok-træ optimering deaktiveres automatisk.
 
 Ønsker du at fortsætte?</translation>
     </message>
