@@ -26,9 +26,11 @@ static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
 bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
                 pictureStructure *picStruct)
 {
-    
-    
-    ADM_assert(nalSize+16<ADM_NAL_BUFFER_SIZE)
+    if(nalSize+16>=ADM_NAL_BUFFER_SIZE)
+    {
+        ADM_warning("SEI size too big, probably corrupted input (%d bytes)\n",nalSize);
+        return false;
+    }
     uint8_t *payload=payloadBuffer;
     bool r=false;
     nalSize=ADM_unescapeH264(nalSize,org,payload);
@@ -75,7 +77,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
 /**
     \fn runH264
     \brief Index H264 stream
-*/  
+*/
 bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
 {
 
@@ -83,7 +85,7 @@ bool    seq_found=false;
 bool    firstSps=true;
 
 TSVideo video;
-indexerData  data;    
+indexerData  data;
 dmxPacketInfo tmpInfo;
 TS_PESpacket SEI_nal(0);
 bool result=false;
@@ -113,9 +115,9 @@ bool bAppend=false;
         return false;
     }
 
-    
+
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
-    
+
     FP_TYPE append=FP_DONT_APPEND;
     if(true==ADM_probeSequencedFile(file))
     {
@@ -143,7 +145,7 @@ bool bAppend=false;
         if(startCode!=NAL_SPS) continue;
 
           // Got SPS!
-          
+
           uint32_t xA,xR;
           // Get info
           pkt->getInfo(&tmpInfo);
@@ -173,14 +175,14 @@ bool bAppend=false;
               writeAudio();
               qfprintf(index,"[Data]");
               // Rewind
-              
-              break;              
+
+              break;
           };
         }
       }
-      
+
         if(!seq_found) goto the_end;
-        
+
         decodingImage=false;
     //******************
     // 2 Index
@@ -197,7 +199,7 @@ resume:
         if(fourBytes==true) startCodeLength++;
 
 //  1:0 2:Nal ref idc 5:Nal Type
-        if(startCode&0x80) 
+        if(startCode&0x80)
         {
             printf("[Ts] Nal Marker missing:%x\n",startCode);
             continue; // Marker missing
@@ -206,16 +208,16 @@ resume:
         int ref=(startCode>>5)&3;
 
         startCode&=0x1f; // Ignore nal ref IDR
-        
+
         aprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
-        
+
           // Ignore multiple chunk of the same pic
           if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&decodingImage )
           {
             aprintf("Still capturing, ignore\n");
             continue;
           }
-                
+
           switch(startCode)
                   {
                   case NAL_AU_DELIMITER:
@@ -240,10 +242,10 @@ resume:
                             if(SEI_nal.payloadSize>=7)
                                 decodeSEI(SEI_nal.payloadSize-4,
                                     SEI_nal.payload,&(thisUnit.recoveryCount),&(thisUnit.imageStructure));
-                            else 
+                            else
                                     printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
                             startCode=pkt->readi8();
-                            
+
                             decodingImage=false;
                             pkt->getInfo(&thisUnit.packetInfo);
                             thisUnit.consumedSoFar=pkt->getConsumed();
@@ -253,7 +255,7 @@ resume:
                             goto resume;
                             }
                             break;
-                  
+
                   case NAL_SPS:
                                 decodingImage=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
@@ -273,11 +275,11 @@ resume:
 #define NON_IDR_PRE_READ 8
                       aprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
                       lastRefIdc=ref;
-                        
+
                       uint8_t bufr[NON_IDR_PRE_READ+4];
                       uint8_t header[NON_IDR_PRE_READ+4];
-                      
-                   
+
+
                         pkt->read(NON_IDR_PRE_READ,bufr);
                         // unescape...
                         ADM_unescapeH264(NON_IDR_PRE_READ,bufr,header);
@@ -287,7 +289,7 @@ resume:
 
                         first_mb_in_slice= bits.getUEG();
                         slice_type= bits.getUEG31();
-                        if(slice_type>9) 
+                        if(slice_type>9)
                         {
                             printf("[TsIndexer] Bad slice type\n");
                         }
@@ -302,12 +304,12 @@ resume:
                         }
                       if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
                       aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
-                      if(thisUnit.imageType==1 && !thisUnit.recoveryCount) 
+                      if(thisUnit.imageType==1 && !thisUnit.recoveryCount)
                                 thisUnit.imageType=4; //I  + Recovery=0 = IDR!
 
                       data.nbPics++;
 
-                      
+
 
                       decodingImage=true;
                       pkt->getInfo(&thisUnit.packetInfo);
@@ -320,7 +322,7 @@ resume:
                       thisUnit.recoveryCount=0xff;
                       pkt->invalidatePtsDts();
                     }
-                  
+
                     break;
                   default:
                       break;
@@ -335,7 +337,7 @@ the_end:
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;
-        return result; 
+        return result;
 }
 
 
@@ -358,7 +360,7 @@ bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStruc
       //printf("Consumed: %d,\n",bits.getConsumedBits());
       int pic4=bits.get(4);
       aprintf("Pic struct: %d,\n",pic4);
-      switch(pic4) 
+      switch(pic4)
       {
           case 0: *pic=pictureFrame; break;
           case 3:
@@ -368,7 +370,7 @@ bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStruc
           default:*pic=pictureFrame;break;
       }
     }
-    return true; 
+    return true;
 }
 //
 // 2nd one
