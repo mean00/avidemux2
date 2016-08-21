@@ -1263,7 +1263,7 @@ void UI_setTotalTime(uint64_t curTime)
  uint32_t shorty=(uint32_t)(curTime/1000);
 
     ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "/%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+      sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
     WIDGET(totalTime)->setText(text);
     slider->setTotalDuration(curTime);
 }
