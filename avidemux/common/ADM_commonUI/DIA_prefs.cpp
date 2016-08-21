@@ -389,7 +389,7 @@ std::string currentSdlDriver=getSdlDriverName();
      uint32_t languageIndex=0;
      languageDescriptor myLanguages[]={
                 {"auto","System language"},
-                {"da_DK","Dansk"},
+                {"da","Dansk"},
                 {"de","Deutsch"},
                 {"en","English"},
                 {"es","Español"},
