@@ -82,18 +82,18 @@ int main(int _argc, char *_argv[])
 }
 /**
  * \fn getUISpecifSubfolder
- * @return 
+ * @return
  */
 static const char *getUISpecifSubfolder()
 {
     switch(UI_GetCurrentUI())
     {
         case ADM_UI_QT4:
-#if ADM_UI_TYPE_BUILD == ADM_UI_QT4            
+#if ADM_UI_TYPE_BUILD == ADM_UI_QT4
             return QT_FLAVOR;
 #else
             return "qt4";
-#endif            
+#endif
             break;
         case ADM_UI_CLI:
             return "cli";
@@ -101,7 +101,7 @@ static const char *getUISpecifSubfolder()
         case ADM_UI_GTK:
             return "gtk";
             break;
-        default:     
+        default:
             break;
     }
     return "unknown";
@@ -129,16 +129,16 @@ static bool sdlProbe(void)
     return true;
 }
 /**
- * 
+ *
  * @param argc
  * @param argv
- * @return 
+ * @return
  */
 static bool fakeInitSdl()
 {
     return true;
 }
-#endif        
+#endif
 #if 0
 void run(const char *foo)
 {
@@ -154,11 +154,11 @@ void testCase(void)
   run("/foobar/meuh.ext");
   run("/foobar/meuh.");
   run("/foobar/meuh.ext.bar");
-  
+
 }
 #endif
 /**
- * 
+ *
  */
 static bool admDummyHwCleanup()
 {
@@ -166,20 +166,20 @@ static bool admDummyHwCleanup()
 }
 
 /**
- * 
+ *
  * @param argc
  * @param argv
- * @return 
+ * @return
  */
 int startAvidemux(int argc, char *argv[])
 {
-  
+
     printf("*************************\n");
     printf("  Avidemux v%s", ADM_VERSION);
 
 #if defined( ADM_SUBVERSION )
 #define MKSTRING(x) x
-         printf(" (%s) .", MKSTRING(ADM_SUBVERSION)); 
+         printf(" (%s) .", MKSTRING(ADM_SUBVERSION));
 #endif
 
     printf("\n*************************\n");
@@ -246,12 +246,12 @@ int startAvidemux(int argc, char *argv[])
     uint32_t cpuMask;
      if(!prefs->get(FEATURES_CPU_CAPS,&cpuMask))
     {
-       cpuMask=0xffffffff;   
+       cpuMask=0xffffffff;
     }
 
     CpuCaps::init();
     CpuCaps::setMask(cpuMask);
-    
+
 
 #ifdef _WIN32
     win32_netInit();
@@ -271,10 +271,10 @@ int startAvidemux(int argc, char *argv[])
     quotaInit();
 
     ADM_lavFormatInit();
-	
+
 
     {
-        std::string scriptFolder=ADM_getPluginDir("scriptEngines");        
+        std::string scriptFolder=ADM_getPluginDir("scriptEngines");
         if(!initGUI(initialiseScriptEngines(scriptFolder.c_str(), video_body,getUISpecifSubfolder())))
         {
                 printf("\n Fatal : could not init GUI\n");
@@ -282,40 +282,40 @@ int startAvidemux(int argc, char *argv[])
         }
     }
 
-    
 
-        
-#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)               
+
+
+#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
 #if defined( USE_VDPAU)
     extern bool admVdpau_exitCleanup();
     PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder, admVdpau_exitCleanup)
-#endif    
-            
+#endif
+
 #if defined( USE_LIBVA)
     PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admDummyHwCleanup)
-#endif    
-    
+#endif
+
 #endif // !CLI
-    
+
 #ifdef USE_SDL
-    PROBE_HW_ACCEL(sdlProbe,SDL,fakeInitSdl,admDummyHwCleanup)               
-#endif        
+    PROBE_HW_ACCEL(sdlProbe,SDL,fakeInitSdl,admDummyHwCleanup)
+#endif
     //
-           
-            
-   ADM_lavInit();         
-            
+
+
+   ADM_lavInit();
+
     loadPlugins( "audioDecoder",   ADM_ad_loadPlugins);
     loadPlugins( "audioDevices",   ADM_av_loadPlugins);
     loadPlugins( "audioEncoders",  ADM_ae_loadPlugins);
     loadPlugins( "demuxers",       ADM_dm_loadPlugins);
     loadPlugins( "muxers",         ADM_mx_loadPlugins);
     loadPlugins( "videoDecoders",  ADM_vd6_loadPlugins);
-     
+
     loadPluginsEx( "videoEncoders",  ADM_ve6_loadPlugins);
     loadPluginsEx( "videoFilters",   ADM_vf_loadPlugins);
-           
-    
+
+
     AVDM_audioInit();
 
     int n=listOfHwInit.size();
@@ -335,7 +335,7 @@ void abortExitHandler(void)
     static bool done=false;
     int n=listOfHwCleanup.size();
     if(!done && n)
-    {        
+    {
         done=true;
         ADM_info("Abnormal exit handler, trying to clean up \n");
         for(int i=0;i<n;i++)
@@ -349,13 +349,13 @@ void abortExitHandler(void)
     }
 }
 /**
- * 
+ *
  */
 void ADM_ExitCleanup( void )
 {
     printf("Cleaning up\n");
     admPreview::destroy();
-    if(video_body) 
+    if(video_body)
         video_body->cleanup ();
     delete video_body;
     video_body=NULL;
@@ -369,13 +369,8 @@ void ADM_ExitCleanup( void )
 	quitSdl();
 #endif
 
-    int n=listOfHwCleanup.size();
-    for(int i=0;i<n;i++)
-    {
-        listOfHwCleanup[i]();
-    }
-    listOfHwCleanup.clear();
-        
+
+
 
     AVDM_cleanup();
 
@@ -386,14 +381,22 @@ void ADM_ExitCleanup( void )
     UI_End();
     ADM_vf_clearFilters();
 
+		int n=listOfHwCleanup.size();
+		for(int i=0;i<n;i++)
+		{
+				listOfHwCleanup[i]();
+		}
+		listOfHwCleanup.clear();
+
+
     ADM_ad_cleanup();
     ADM_ae_cleanup();
-    ADM_mx_cleanup();    
+    ADM_mx_cleanup();
     ADM_vf_cleanup();
     ADM_dm_cleanup();
     ADM_vd6_cleanup();
     ADM_ve6_cleanup();
-    
+
 
     printf("--End of cleanup--\n");
     ADMImage_stat();
