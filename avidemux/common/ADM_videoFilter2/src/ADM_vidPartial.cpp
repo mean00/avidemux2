@@ -2,7 +2,7 @@
   \name partialFilter
   \brief only perform another filter operation on a limited time range, else bypass it
   \author Mean 2016
- 
+
  ***************************************************************************/
 /***************************************************************************
  *                                                                         *
@@ -38,7 +38,7 @@ class partialFilter : public  ADM_coreVideoFilter
        virtual             ~trampolineFilter();
 
        virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);              /// Dont mix getFrame & getNextFrame !     
+       virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);              /// Dont mix getFrame & getNextFrame !
        virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual void         setCoupledConf(CONFcouple *couples);
@@ -46,8 +46,8 @@ class partialFilter : public  ADM_coreVideoFilter
        virtual uint64_t     getAbsoluteStartTime(void)   ;              /// Return the absolute offset of the current frame. Used to display time of for filter
        virtual bool         goToTime(uint64_t usSeek) {return true;}   /// Start graphical user interface
     };
-  
-  
+
+
 protected:
                 trampolineFilter *trampoline;
                 ADM_coreVideoFilter *sonFilter;
@@ -57,10 +57,10 @@ protected:
                 ADMImage     *intermediate;
                 bool         hasIntermediate;
                 uint32_t     intermediateFn;
-                
-                
+
+
                 bool        isInRange(uint64_t tme);
-                
+
 public:
                             partialFilter(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~partialFilter();
@@ -70,7 +70,7 @@ public:
         virtual bool         getNextFrameForSon(uint32_t *fn,ADMImage *image);    /// Return the next image
         virtual bool         getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
         virtual void         setCoupledConf(CONFcouple *couples);
-        virtual bool         configure(void);   
+        virtual bool         configure(void);
         virtual bool         goToTime(uint64_t usSeek);   /// Start graphical user interface
         static  void         reconfigureCallback(void *cookie);
                 void         reconfigureSon();
@@ -97,21 +97,22 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
     trampoline=NULL;
     sonFilter=NULL;
     byPass=true;
-    
+
     intermediate=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     hasIntermediate=false;
-    
+
     // Step 1 : Load configuration
     if(!setup)
         ADM_assert(0);
-    // Only keep 3 parameters 
+    // Only keep 3 parameters
     char *filterName=NULL;
     if(!setup->readAsString ("filterName",&filterName))
       {
         ADM_assert(0);
       }
     configuration.filterName=std::string(filterName);
-    ADM_dealloc(filterName);
+    delete [] filterName;
+    filterName=NULL;
     if(!setup->readAsUint32("startBlack",&(configuration.startBlack)))
       {
         ADM_assert(0);
@@ -131,8 +132,8 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
 
     ADM_info("Creating partial filter for %s, with %d params\n",configuration.filterName.c_str(),nbSonParam);
     tag=ADM_vf_getTagFromInternalName(configuration.filterName.c_str());
-    // spawn 
-    
+    // spawn
+
     CONFcouple newParams(nbSonParam);
     for(int i=0;i<nbSonParam;i++)
     {
@@ -140,7 +141,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
       setup->getInternalName (i+3,&key,&val);
       newParams.setInternalName (key,val);
     }
-    
+
     sonFilter=ADM_vf_createFromTag(tag, trampoline, &newParams);
     ADM_assert(sonFilter);
     // son = new filer(trampoline)
@@ -155,7 +156,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
 */
 partialFilter::~partialFilter()
 {
-    
+
     if(intermediate) delete intermediate;
     intermediate=NULL;
     if(sonFilter) delete sonFilter;
@@ -174,7 +175,7 @@ bool         partialFilter::getNextFrameForSon(uint32_t *fn,ADMImage *image)
       ADM_warning("Partial filter requesting image, no image in store!!\n");
       return false;
     }
-     
+
   *fn=intermediateFn;
   image->duplicateFull(intermediate);
   return true;
@@ -201,7 +202,7 @@ bool partialFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     intermediate->duplicateFull(image);
     hasIntermediate=true;
     intermediateFn=*fn;
-    
+
     // Switch to the son instead
     if(false==sonFilter->getNextFrame(&intermediateFn,image))
     {
@@ -307,11 +308,11 @@ bool partialFilter::configure( void)
  */
  partialFilter::trampolineFilter::trampolineFilter(ADM_coreVideoFilter *previous,CONFcouple *conf) : ADM_coreVideoFilter(previous,conf)
  {
-   
+
  }
  partialFilter::trampolineFilter::~trampolineFilter()
 {
-  
+
 }
 const char   * partialFilter::trampolineFilter::getConfiguration(void)
 {
@@ -322,7 +323,7 @@ FilterInfo  * partialFilter::trampolineFilter::getInfo(void)
 {
   return previousFilter->getInfo();
 }
-bool          partialFilter::trampolineFilter::getCoupledConf(CONFcouple **couples) 
+bool          partialFilter::trampolineFilter::getCoupledConf(CONFcouple **couples)
 {
   return false; // never called
 }
@@ -350,16 +351,16 @@ bool         partialFilter::trampolineFilter::getNextFrame(uint32_t *frameNumber
  * \fn createPartialFilter
  * @param internalName
  * @param couples
- * @return 
+ * @return
  */
 ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *couples,ADM_coreVideoFilter *source)
 {
   int sonNbItems=couples->getSize();
   CONFcouple tmp(3+sonNbItems);
-  
+
   uint32_t start=1000;
   uint32_t end=5000;
-  
+
   tmp.writeAsString("filterName",internalName);
   tmp.writeAsUint32 ("startBlack",start);
   tmp.writeAsUint32 ("endBlack",end);
@@ -376,7 +377,7 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
       p=NULL;
       return NULL;
   }
-  return p;  
+  return p;
 }
 
 namespace admPartial
@@ -396,7 +397,7 @@ namespace admPartial
       return ADM_UI_ALL;
     }
     int               neededFeatures(void) {return 0;}
-    uint32_t          apiVersion() 
+    uint32_t          apiVersion()
     {
       return VF_API_VERSION;
     }
@@ -415,14 +416,14 @@ namespace admPartial
     {
       return VF_HIDDEN;
     }
-    bool              partializable(void){return false;}    
-    
+    bool              partializable(void){return false;}
+
 }; // namespace
 
 class fakePartialPlugin : public ADM_vf_plugin
 {
-public:  
-  fakePartialPlugin() 
+public:
+  fakePartialPlugin()
   {
         create=admPartial::create;
         destroy=admPartial::destroy;
@@ -438,13 +439,13 @@ public:
 
         nameOfLibrary="";
         tag=VF_PARTIAL_FILTER;
-        
+
         info.internalName="partial";
         info.displayName="partial";
         info.desc="partial";
-        info.category=VF_HIDDEN;        
+        info.category=VF_HIDDEN;
   }
-  
+
 };
 
 static fakePartialPlugin fakePlugin;
