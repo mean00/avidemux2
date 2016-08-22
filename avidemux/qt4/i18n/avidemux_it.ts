@@ -8098,6 +8098,10 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation>Threading</translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation>Preferenze</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation>Preferenze</translation>
     </message>

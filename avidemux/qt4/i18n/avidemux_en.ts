@@ -1065,10 +1065,6 @@ Drop timing informations ?</source>
         <translation>Set Marker &amp;B</translation>
     </message>
     <message>
-        <source>Preferences</source>
-        <translation>Pr&amp;eferences</translation>
-    </message>
-    <message>
         <source>Save current settings as default</source>
         <translation>Save current settings as de&amp;fault</translation>
     </message>

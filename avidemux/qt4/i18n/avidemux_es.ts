@@ -5723,6 +5723,10 @@ Drop timing informations ?</source>
         <translation type="unfinished">Hilos</translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation type="unfinished">Preferencias</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation type="unfinished">Preferencias</translation>
     </message>

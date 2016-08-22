@@ -990,6 +990,10 @@ Drop timinginformationer?</translation>
         <translation>Sæt markør B</translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation>Præferencer</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation>Præferencer</translation>
     </message>

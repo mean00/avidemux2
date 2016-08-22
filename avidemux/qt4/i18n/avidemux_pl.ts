@@ -5953,6 +5953,10 @@ chcesz kontynuować mimo to?</translation>
         <translation type="unfinished">Wątkowanie</translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation type="unfinished">Preferencje</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation type="unfinished">Preferencje</translation>
     </message>

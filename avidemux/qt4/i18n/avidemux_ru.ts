@@ -4510,6 +4510,10 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation type="unfinished">Свойства</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation type="unfinished">Свойства</translation>
     </message>

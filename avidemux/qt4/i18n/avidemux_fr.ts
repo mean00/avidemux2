@@ -1934,9 +1934,13 @@ Ignorer les informations de timing ?</translation>
         <translation type="unfinished">Mettre le marqueur B</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="488"/>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="64"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="491"/>
         <source>Preferences</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="63"/>
+        <source>Pr&amp;eferences</source>
         <translation></translation>
     </message>
     <message>

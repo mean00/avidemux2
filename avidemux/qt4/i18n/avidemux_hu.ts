@@ -1094,6 +1094,10 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
         <translation>Szálak</translation>
     </message>
     <message>
+        <source>Pr&amp;eferences</source>
+        <translation>Beállítások</translation>
+    </message>
+    <message>
         <source>Preferences</source>
         <translation>Beállítások</translation>
     </message>

@@ -7111,8 +7111,12 @@ Drop timing informations ?</source>
         <translation>Standardport</translation>
     </message>
     <message>
-        <source>Preferences</source>
+        <source>Pr&amp;eferences</source>
         <translation>&amp;Einstellungen</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Open</source>
