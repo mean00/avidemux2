@@ -54,7 +54,6 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     {
       return (decoders *) (new decoderFFDV (w,h,fcc,extraLen,extraData,bpp));
     }
- 
   if (fourCC::check (fcc, (uint8_t *) "HFYU"))
     {
       return (decoders *) (new decoderFFhuff (w,h,fcc,extraLen,extraData,bpp));

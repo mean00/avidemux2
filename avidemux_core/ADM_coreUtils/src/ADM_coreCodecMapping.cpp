@@ -23,6 +23,7 @@
 const ffVideoCodec ffCodec[]=
 {
                                 // Refcopy // extrdata // Can have  B frame
+  {"LAGS",  AV_CODEC_ID_LAGARITH,  false, false,    false},    
   {"SNOW",  AV_CODEC_ID_SNOW,      false, false,    false},
   {"cvid",  AV_CODEC_ID_CINEPAK,   false, false,    false},
   {"CRAM",  AV_CODEC_ID_MSVIDEO1,  false, false,    false},
@@ -44,7 +45,7 @@ const ffVideoCodec ffCodec[]=
   {"WVC1", AV_CODEC_ID_VC1,        true, false,    true},
   {"WMVA", AV_CODEC_ID_VC1,        true, false,    true},
   {"VP8 ", AV_CODEC_ID_VP8,        true, false,    false},
-  {"VP9 ", AV_CODEC_ID_VP9,     true, false,    false},
+  {"VP9 ", AV_CODEC_ID_VP9,        true, false,    false},
   {"tscc", AV_CODEC_ID_TSCC,       false,false,    false},
   {"CSCD", AV_CODEC_ID_CSCD,       false,false,    false},
 
