@@ -305,9 +305,17 @@ convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
 configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
 registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 
-add_custom_target(                 libavutil_dummy
-				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh 
+if(CMAKE_HOST_UNIX)
+        add_custom_target(         libavutil_dummy
+                                   COMMAND ${CMAKE_BUILD_TOOL}  -j 4 # We assume make or gnumake when host is unix
                                    WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+else(CMAKE_HOST_UNIX)
+        add_custom_target(         libavutil_dummy
+				   COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh  # Host is win32, wrap
+                                   WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
+endif(CMAKE_HOST_UNIX)
+
+
 MACRO(FF_ADD_SUBLIB lib)
         add_custom_command(
 				   OUTPUT       "${lib}"	
