@@ -165,20 +165,13 @@ IF (UNIX AND NOT APPLE)
 
            # use pkg-config to get the directories and then use these values
         # in the FIND_PATH() and FIND_LIBRARY() calls
-        INCLUDE(UsePkgConfig)
-        PKGCONFIG(libpulse-simple _PASIncDir _PASLinkDir _PASLinkFlags _PASCflags)
-        SET(PULSEAUDIOSIMPLE_DEFINITIONS ${_PASCflags})
-
-        FIND_PATH(PULSEAUDIOSIMPLE_INCLUDE_DIR pulse/simple.h
-        PATHS
-        ${_PASIncDir}
-        PATH_SUFFIXES pulse
-        )
-
-        FIND_LIBRARY(PULSEAUDIOSIMPLE_LIBRARIES NAMES pulse-simple libpulse-simple
-        PATHS
-        ${_PASLinkDir}
-        )
+        include(FindPkgConfig)
+        pkg_check_modules(PULSEAUDIOSIMPLE libpulse-simple)
+        IF (PULSEAUDIOSIMPLE_FOUND)
+          SET(PULSEAUDIOSIMPLE_DEFINITIONS ${PULSEAUDIOSIMPLE_CFLAGS})
+          FIND_PATH(PULSEAUDIOSIMPLE_INCLUDE_DIR pulse/simple.h PATHS ${PULSEAUDIOSIMPLE_INCLUDE_DIRS} PATH_SUFFIXES pulse)
+          FIND_LIBRARY(PULSEAUDIOSIMPLE_LIBRARIES NAMES pulse-simple libpulse-simple PATHS ${PULSEAUDIOSIMPLE_LIBRARY_DIRS})
+        ENDIF (PULSEAUDIOSIMPLE_FOUND)
 
         IF (PULSEAUDIOSIMPLE_INCLUDE_DIR AND PULSEAUDIOSIMPLE_LIBRARIES)
          SET(PULSEAUDIOSIMPLE_FOUND TRUE)
@@ -192,7 +185,7 @@ IF (UNIX AND NOT APPLE)
         ENDIF (NOT PULSEAUDIOSIMPLE_FIND_QUIETLY)
         SET(USE_PULSE_SIMPLE 1)
         ELSE (PULSEAUDIOSIMPLE_FOUND)
-         MESSAGE(STATUS "Could NOT find PulseAudioSimple")
+         MESSAGE(STATUS "Could NOT find PulseAudioSimple\n")
         ENDIF (PULSEAUDIOSIMPLE_FOUND)
 
         MARK_AS_ADVANCED(PULSEAUDIOSIMPLE_INCLUDE_DIR PULSEAUDIOSIMPLE_LIBRARIES)
