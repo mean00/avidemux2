@@ -1,8 +1,6 @@
 ADD_SUBDIRECTORY(muxerDummy)
-ADD_SUBDIRECTORY(muxerMp4v2)
 ADD_SUBDIRECTORY(muxerAvi)
 ADD_SUBDIRECTORY(muxerRaw)
-
 ADD_SUBDIRECTORY(muxerFlv)
 ADD_SUBDIRECTORY(muxerMp4)
 ADD_SUBDIRECTORY(muxerMkv)
@@ -10,5 +8,11 @@ ADD_SUBDIRECTORY(muxerWebm)
 ADD_SUBDIRECTORY(muxerffPS)
 ADD_SUBDIRECTORY(muxerffTS)
 #ADD_SUBDIRECTORY(muxerMplex)
+IF(WIN32 AND ("${CROSS_C_COMPILER}" STREQUAL "clang"))
+        # With clang no exception in the compiler for the moment, so no mp4v2
+ELSE(WIN32 AND ("${CROSS_C_COMPILER}" STREQUAL "clang"))
+        ADD_SUBDIRECTORY(muxerMp4v2)
+ENDIF(WIN32 AND ("${CROSS_C_COMPILER}" STREQUAL "clang"))
+
 if(FALSE)
 endif(FALSE)
