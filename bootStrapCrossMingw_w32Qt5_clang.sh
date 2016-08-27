@@ -58,12 +58,13 @@ while [ $# != 0 ] ;do
              ;;
            --rebuild)
                 rebuild=1
-   *)
+             ;;
+         *)
                 echo "unknown parameter $1"
                 usage
                 exit 1
                 ;;
-     esac
+         esac
      shift
 done
 
