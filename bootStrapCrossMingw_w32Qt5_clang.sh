@@ -10,8 +10,10 @@ export QT_HOME=/mingw/Qt/current
 #export CFLAGS="-fpermissive"
 export O_PARAL="-j 2"
 export TOOLCHAIN_LOCATION=/mingw
-export CROSS_C_COMPILER=gcc
-export CROSS_CXX_COMPILER=g++
+export CROSS_C_COMPILER=clang
+export CROSS_CXX_COMPILER=clang++
+
+rebuild=0
 
 # ** Put your config here **
 
@@ -20,6 +22,13 @@ fail()
         echo "** Failed at $1**"
         exit 1
 }
+usage()
+{
+        echo "Bootstrap avidemux 2.6:"
+        echo "***********************"
+        echo "  --rebuild         : Preserve existing build directories"
+      
+}
 
 Process()
 {
@@ -27,8 +36,10 @@ Process()
         export SCRIPT=$2
         export EXTRA=$3
         echo "Building $BUILDDIR from $SOURCEDIR (Extra=$EXTRA)"
-        rm -Rf ./$BUILDDIR
-        mkdir $BUILDDIR || fail mkdir
+        if [ "x$rebuild" != "x1" ] ; then
+                rm -Rf ./$BUILDDIR
+        fi
+        mkdir -p $BUILDDIR || fail mkdir
         cd $BUILDDIR 
         sh $TOP/foreignBuilds/$SCRIPT $EXTRA || fail cmake
         make  $PARAL VERBOSE=1 || fail make
@@ -37,7 +48,26 @@ Process()
 	DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
 }
 
-echo "**BootStrapping avidemux **"
+echo "**BootStrapping avidemux -cross Win32 clang version **"
+
+while [ $# != 0 ] ;do
+        case "$1" in
+         -h|--help)
+             usage
+             exit 1
+             ;;
+           --rebuild)
+                rebuild=1
+   *)
+                echo "unknown parameter $1"
+                usage
+                exit 1
+                ;;
+     esac
+     shift
+done
+
+
 rm -Rf ${MINGWDEV}/*
 rm -Rf ${MINGW}/Release
 mkdir -p ${MINGW}/Release
