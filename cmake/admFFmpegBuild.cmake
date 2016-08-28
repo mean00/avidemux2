@@ -148,7 +148,12 @@ endforeach (bistream)
 
 if (WIN32)
 	if (ADM_CPU_X86_32)
-		xadd(--enable-memalign-hack)
+                IF("${CROSS_C_COMPILER}" STREQUAL "clang")
+                        # With clang we use the -mstackrealign -mstack-alignment=16
+                ELSE("${CROSS_C_COMPILER}" STREQUAL "clang")
+                        # Old win32, for hack, not sure it really works with recent gcc
+		        xadd(--enable-memalign-hack)
+                ENDIF("${CROSS_C_COMPILER}" STREQUAL "clang")
 	endif (ADM_CPU_X86_32)
 
 	xadd(--enable-w32threads)

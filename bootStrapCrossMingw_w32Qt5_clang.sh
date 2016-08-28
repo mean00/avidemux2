@@ -12,8 +12,8 @@ export O_PARAL="-j 2"
 export TOOLCHAIN_LOCATION=/mingw
 export CROSS_C_COMPILER=clang
 export CROSS_CXX_COMPILER=clang++
-export CFLAGS="-mstackrealign"
-export CXXFLAGS="-mstackrealign"
+export CFLAGS="-mstackrealign -mstack-alignment=16 "
+export CXXFLAGS="${CFLAGS}"
 
 
 rebuild=0
