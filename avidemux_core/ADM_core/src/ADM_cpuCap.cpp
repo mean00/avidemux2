@@ -132,14 +132,6 @@ extern "C"
     CHECK(SSE3);
     CHECK(SSSE3);
  
-// Clang + gcc 4.9 in 32 bits mod does not like the SSE memalign hack
-// it plainly does not work
-        #if defined(_WIN32) && !defined(_WIN64) && defined(__clang__)
-                myCpuCaps &=~(ADM_CPUCAP_SSE + ADM_CPUCAP_SSE2 + ADM_CPUCAP_SSE3 + ADM_CPUCAP_SSSE3);
-        #endif // defined(_WIN32) && !defined(_WIN64) && defined(__clang__)
-
- 
-
 #endif // X86
     printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x, cpuCaps :%x)\n",myCpuMask,myCpuCaps);
     return ;
