@@ -37,9 +37,9 @@ ass_rasterizer_c.c ass_blur.c ass_font.c
 ${Asm}
 )
 
-IF(WIN32 AND ("${CROSS_C_COMPILER}" STREQUAL "clang"))
+IF(WIN32 AND NOT WIN64) # This is wrong, FIXME
         SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS} ass_rasterizer.c)
-ENDIF(WIN32 AND ("${CROSS_C_COMPILER}" STREQUAL "clang"))
+ENDIF(WIN32 AND NOT WIN64)
 #
 ADD_DEFINITIONS(" -std=gnu99 ")
 #
