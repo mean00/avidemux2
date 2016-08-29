@@ -161,13 +161,15 @@ static void splitImageSequence(std::string inname,int &nbOfDigits, int &first,st
     std::string workName=inname;   
     int num=0;
     first=0;
+    int radix=1;
     while( workName.size() )
     {
         const char c=workName[workName.size()-1];
         if((c<'0') || (c>'9'))
-                break;       
+            break;       
         num++;
-        first=first*10+(c-'0');
+        first=first+radix*+(c-'0');
+        radix*=10;
         workName.resize(workName.size()-1);
     }
     nbOfDigits=num;
@@ -203,6 +205,7 @@ uint8_t picHeader::open(const char *inname)
     if(!nbOfDigits) // no digit at all
     {
         _nbFiles=1;
+        _filePrefix=prefix+std::string(".")+extension;
     }
     else
     {
@@ -213,7 +216,7 @@ uint8_t picHeader::open(const char *inname)
         for (uint32_t i = 0; i < MAX_ACCEPTED_OPEN_FILE; i++)
         {
                 sprintf(realstring, _filePrefix.c_str(), i + _first);
-                printf(" %" PRIu32" : %s\n", i, realstring);
+                ADM_info(" %" PRIu32" : %s\n", i, realstring);
 
                 fd = ADM_fopen(realstring, "rb");
                 if (fd == NULL)
@@ -222,7 +225,7 @@ uint8_t picHeader::open(const char *inname)
                 _nbFiles++;
         }
     }
-    printf("\n found %" PRIu32" images\n", _nbFiles);
+    ADM_info("Found %" PRIu32" images\n", _nbFiles);
     //_________________________________
     // now open them and assign imgSize
     //__________________________________
