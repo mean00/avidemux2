@@ -20,11 +20,15 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libharfbuzz-0.dll
     ${File} ${ROOT_FOLDER}/libiconv-2.dll # MXE libiconv.dll
     ${File} ${ROOT_FOLDER}/libpcre16-0.dll
+    ${File} ${ROOT_FOLDER}/libpcre-1.dll
+    ${File} ${ROOT_FOLDER}/libfaad-2.dll
+    ${File} ${ROOT_FOLDER}/libbz2.dll
     ${File} ${ROOT_FOLDER}/libpng16-16.dll
     ${File} ${ROOT_FOLDER}/libsqlite3-0.dll
     ${File} ${ROOT_FOLDER}/libstdc++-6.dll
     ${File} ${ROOT_FOLDER}/libwinpthread-1.dll
     ${File} ${ROOT_FOLDER}/libz-1.dll
+    ${File} ${ROOT_FOLDER}/zlib1.dll
     ${File} ${ROOT_FOLDER}/libfreetype-6.dll
     ${File} ${ROOT_FOLDER}/libgcc_s_sjlj-1.dll
     ${File} ${ROOT_FOLDER}/SDL2.dll
