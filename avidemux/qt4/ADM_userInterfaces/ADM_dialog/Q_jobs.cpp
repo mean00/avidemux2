@@ -142,7 +142,7 @@ void jobsWindow::RunOne(bool b)
 			desc[sel].status=STATUS_RUNNING;
 			updateRows();
 			GUI_Quiet();
-			TLK_getDate(&(desc[sel].startDate));
+			desc[sel].startDate=ADM_getCurrentDate();
 
 			IScriptEngine *engine = getDefaultScriptEngine();
 
@@ -151,7 +151,7 @@ void jobsWindow::RunOne(bool b)
 			else
 				desc[sel].status=STATUS_FAILED;
 
-			TLK_getDate(&(desc[sel].endDate));
+			desc[sel].endDate=ADM_getCurrentDate();
 			updateRows();
 			GUI_Verbose();
 		}
@@ -171,7 +171,7 @@ void jobsWindow::RunAll(bool b)
 		desc[sel].status=STATUS_RUNNING;
 		updateRows();
 		GUI_Quiet();
-		TLK_getDate(&(desc[sel].startDate));
+		desc[sel].startDate=ADM_getCurrentDate();
 
 		IScriptEngine *engine = getDefaultScriptEngine();
 
@@ -180,7 +180,7 @@ void jobsWindow::RunAll(bool b)
 		else
 			desc[sel].status=STATUS_FAILED;
 
-		TLK_getDate(&(desc[sel].endDate));
+		desc[sel].endDate=ADM_getCurrentDate();
 		updateRows();
 		GUI_Verbose();
 	}

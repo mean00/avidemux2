@@ -271,24 +271,29 @@ extern char *ADM_slashToBackSlash(const char *in)
     
 }
 /*
-    
+ * \fn    ADM_getCurrentDate 
 */
-void TLK_getDate(ADM_date *date)
+ const ADM_date        &ADM_getCurrentDate()
 {
   time_t timez;
   tm *t;
   time(&timez);
   t=localtime(&timez);
+  ADM_date date;
   if(t)
   {
-    date->hours=t->tm_hour;
-    date->minutes=t->tm_min;
-    date->seconds=t->tm_sec;
+    date.hours=t->tm_hour;
+    date.minutes=t->tm_min;
+    date.seconds=t->tm_sec;
   }
-  
+  return date;
 }
 
-bool shutdown(void)
+ /**
+  * \fn ADM_shutdown
+  * @return 
+  */
+bool ADM_shutdown(void)
 {
 #ifdef _WIN32
 	return (shutdown_win32() == 0);

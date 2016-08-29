@@ -19,7 +19,7 @@ typedef struct
   uint32_t hours,minutes,seconds; 
 } ADM_date;
 
-ADM_CORE6_EXPORT void            TLK_getDate(ADM_date *date);
+ADM_CORE6_EXPORT const ADM_date        &ADM_getCurrentDate();
 // /dir/file.ext -> /dir/file and ext returned values are copies
 ADM_CORE6_EXPORT void            ADM_PathSplit(const char *str, char **root, char **ext);
 ADM_CORE6_EXPORT void            ADM_PathSplit(const std::string &in,std::string &root, std::string &ext);
@@ -80,7 +80,7 @@ ADM_CORE6_EXPORT const char      *ADM_epochToString(uint64_t epoch);
 	#include <sys/resource.h>
 #endif
 
-bool shutdown(void);
+bool ADM_shutdown(void);
 
 #ifdef ADM_BIG_ENDIAN	
 	#define R64 ADM_swap64

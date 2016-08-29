@@ -702,7 +702,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                                                         sendAction(ACT_MarkB);
                                                 else
                                                         sendAction(ACT_GotoMarkB);
-                        return true;
+                                                return true;
+                    default:
+                        break;
                 }
             }
             /* else */ if (keyEvent->key() == Qt::Key_Space)
@@ -729,6 +731,8 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             break;
         case QEvent::User:
             this->openFiles(((FileDropEvent*)event)->files);
+            break;
+        default:
             break;
     }
 
