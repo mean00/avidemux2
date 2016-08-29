@@ -59,6 +59,7 @@ namespace mp4v2 { namespace platform {
 ///////////////////////////////////////////////////////////////////////////////
 
 // some macros for constant expressions
+#ifndef INT8_C // MEANX
 #define INT8_C(x)    x
 #define INT16_C(x)   x
 #define INT32_C(x)   x ## L
@@ -68,7 +69,7 @@ namespace mp4v2 { namespace platform {
 #define UINT16_C(x)  x
 #define UINT32_C(x)  x ## UL
 #define UINT64_C(x)  x ## ULL
-
+#endif
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef min
