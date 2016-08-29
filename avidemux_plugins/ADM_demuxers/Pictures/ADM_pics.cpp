@@ -37,12 +37,12 @@ static uint32_t s32;
 #define MAX_ACCEPTED_OPEN_FILE 99999
 
 #define US_PER_PIC (40*1000)
-
+/**
+ * 
+ */
 picHeader::picHeader(void)
 {
-	_nb_file = 0;
-	_imgSize = NULL;
-	_fileMask = NULL;
+	_nbFiles = 0;
 }
 /**
     \fn getTime
@@ -92,8 +92,8 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     FILE* fd = openFrameFile(framenum);
     if(!fd)
         return false;
-    fread(img->data, _imgSize[framenum] - _offset, 1, fd);
-    img->dataLength = _imgSize[framenum] - _offset;
+    fread(img->data, _imgSize[framenum] , 1, fd);
+    img->dataLength = _imgSize[framenum];
 
     uint64_t timeP=US_PER_PIC;
     timeP*=framenum;
@@ -106,20 +106,8 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 //****************************************************************
 uint8_t picHeader::close(void)
 {
-	_nb_file = 0;
-
-	if (_fileMask)
-	{
-		ADM_dealloc(_fileMask);
-		_fileMask = NULL;
-	}
-
-	if (_imgSize)
-	{
-		delete [] _imgSize;
-		_imgSize = NULL;
-	}
-
+	_nbFiles = 0;
+        _imgSize.clear();
 	return 0;
 }
 
@@ -162,247 +150,90 @@ uint8_t picHeader::read8(FILE * fd)
     }
     return i;
 }
-//****************************************************************
+/**
+ * 
+ * @param inname
+ * @param nbOfDigits
+ * @param filePrefix
+ */
+static void splitImageSequence(std::string inname,int &nbOfDigits, int &first,std::string &filePrefix)
+{   
+    std::string workName=inname;   
+    int num=0;
+    first=0;
+    while( workName.size() )
+    {
+        const char c=workName[workName.size()-1];
+        if((c<'0') || (c>'9'))
+                break;       
+        num++;
+        first=first*10+(c-'0');
+        workName.resize(workName.size()-1);
+    }
+    nbOfDigits=num;
+    filePrefix=workName;
+}
+/**
+ * \fn open
+ * @param inname
+ * @return 
+ */
 uint8_t picHeader::open(const char *inname)
 {
     uint32_t nnum;
-    uint32_t *fcc;
-    uint8_t fcc_tab[4];
-    FILE *fd;
-    char *end;
-    uint32_t w = 0, h = 0, bpp = 0;
-
-    // 1- identity the file type
-    //
-    fcc = (uint32_t *) fcc_tab;
-    fd = ADM_fopen(inname, "rb");
-    if (!fd) {
-	printf("\n Cannot open that file!\n");
+    FILE *fd;    
+    uint32_t bpp = 0;
+    
+    // 1- identity the image type    
+    ADM_PICTURE_TYPE imageType=ADM_identifyImageFile(inname,&_w,&_h);
+    if(imageType==ADM_PICTURE_UNKNOWN)
+    {
+        ADM_warning("\n Cannot open that file!\n");
 	return 0;
     }
-    fread(fcc_tab, 4, 1, fd);
-    fclose(fd);
-    if (fourCC::check(*fcc, (uint8_t *) "RIFF")) {
-	_type = PIC_BMP;
-	printf("\n It looks like BMP (RIFF)...\n");
-    } else {
-	if (fcc_tab[0] == 'B' && fcc_tab[1] == 'M') {
-	    _type = PIC_BMP2;
-	    printf("\n It looks like BMP (BM)...\n");
-	} else if (fcc_tab[0] == 0xff && fcc_tab[1] == 0xd8) {
-	    _type = PIC_JPEG;
-	    printf("\n It looks like Jpg...\n");
-	} else {
-	    if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N'
-		&& fcc_tab[3] == 'G')
-		{
-    		printf("\n It looks like PNG...\n");
-		    _type = PIC_PNG;
-	    } else {
-		printf("\n Cannot identify file (%x %x)\n", *fcc,
-		       *fcc & 0xffff);
-		return 0;
-	    }
-	}
-    }
-
+    _type=imageType;
+    
     // Then spit the name in name and extension
-    char *name;
-    char *extension;
-    ADM_PathSplit(inname, &name, &extension);
-
-
-    nnum = 1;
-
-    end = name + strlen(name) - 1;
-    while ((*end >= '0') && (*end <= '9')) {
-	end--;
-	nnum++;
-    };
-char realname[250];
-char realstring[250];
-
-    if (nnum == 1) {
-	printf("\n only one file!");
-        _nb_file=1;
-		 _fileMask = ADM_strdup(inname);
+    int nbOfDigits;
+    std::string name,extension;
+    std::string prefix;
+    ADM_PathSplit(std::string(inname),name,extension);
+    splitImageSequence(name,nbOfDigits,_first,prefix);
+    
+    if(!nbOfDigits) // no digit at all
+    {
+        _nbFiles=1;
     }
     else
     {
-    nnum--;
-    end++;
-    _first = atoi(end);
-	printf("\n First: %" PRIu32", Digit count: %" PRIu32"\n", _first, nnum);
-    *(end) = 0;
-	printf(" Path: %s\n", name);
+        char realstring[1024];
+        sprintf(realstring, "%s%%0%" PRIu32"d.%s", prefix.c_str(), nbOfDigits, extension.c_str());
+        _filePrefix=std::string(realstring);
+        _nbFiles = 0;
+        for (uint32_t i = 0; i < MAX_ACCEPTED_OPEN_FILE; i++)
+        {
+                sprintf(realstring, _filePrefix.c_str(), i + _first);
+                printf(" %" PRIu32" : %s\n", i, realstring);
 
-	sprintf(realstring, "%s%%0%" PRIu32"d.%s", name, nnum, extension);
-	_fileMask = ADM_strdup(realstring);
-	printf(" File Mask: %s\n\n", _fileMask);
-
-    _nb_file = 0;
-
-	for (uint32_t i = 0; i < MAX_ACCEPTED_OPEN_FILE; i++)
-	{
-		sprintf(realname, realstring, i + _first);
-		printf(" %" PRIu32" : %s\n", i, realname);
-
-		fd = ADM_fopen(realname, "rb");
-
-		if (fd == NULL)
-			break;
-
-		fclose(fd);
-		_nb_file++;
-	}
-	}
-    printf("\n found %" PRIu32" images\n", _nb_file);
-
-    _imgSize = new uint32_t[_nb_file];
+                fd = ADM_fopen(realstring, "rb");
+                if (fd == NULL)
+                        break;
+                fclose(fd);
+                _nbFiles++;
+        }
+    }
+    printf("\n found %" PRIu32" images\n", _nbFiles);
     //_________________________________
     // now open them and assign imgSize
     //__________________________________
-	for (uint32_t i = 0; i < _nb_file; i++)
-	{
-		fd = openFrameFile(i);
-		ADM_assert(fd != NULL);
-
-		fseek(fd, 0, SEEK_END);
-		_imgSize[i] = ftell(fd);
-
-		fclose(fd);
-	}
-
-	fd = openFrameFile(0);
-
-	delete [] name;
-	delete [] extension;
-
-    //
-    //      Image is bmp type
-    //________________________
-    switch (_type) {
-    case PIC_BMP:
-	{
-	    ADM_BITMAPINFOHEADER bmph;
-
-		fread(&s16, 2, 1, fd);
-	    if (s16 != 0x4D42) {
-		printf("\n incorrect bmp sig.\n");
-		fclose(fd);
-		return 0;
-	    }
-		fread(&s32, 4, 1, fd);
-		fread(&s32, 4, 1, fd);
-		fread(&s32, 4, 1, fd);
-		fread(&bmph, sizeof(bmph), 1, fd);
-	    if (bmph.biCompression != 0) {
-		printf("\ncannot handle compressed bmp\n");
-		fclose(fd);
-		return 0;
-	    }
-	    _offset = bmph.biSize + 14;
-	    w = bmph.biWidth;
-	    h = bmph.biHeight;
-		bpp = bmph.biBitCount;
-	}
-	break;
-
-
-	//Retrieve width & height
-	//_______________________
-    case PIC_JPEG:
-	{
-	    uint16_t tag = 0, count = 0, off;
-
-	    _offset = 0;
-	    fseek(fd, 0, SEEK_SET);
-	    read16(fd);	// skip jpeg ffd8
-	    while (count < 15 && tag != 0xFFC0) {
-
-		tag = read16(fd);
-		if ((tag >> 8) != 0xff) {
-		    printf("invalid jpeg tag found (%x)\n", tag);
-		}
-		if (tag == 0xFFC0) {
-		    read16(fd);	// size
-		    read8(fd);	// precision
-		    h = read16(fd);
-		    w = read16(fd);
-                    if(w&1) w++;
-                    if(h&1) h++;
-		} else {
-
-		    off = read16(fd);
-		    if (off < 2) {
-			printf("Offset too short!\n");
-			fclose(fd);
-			return 0;
-		    }
-		    aprintf("Found tag : %x , jumping %d bytes\n", tag,
-			    off);
-		    fseek(fd, off - 2, SEEK_CUR);
-		}
-		count++;
-	    }
-	    if (tag != 0xffc0) {
-		printf("Cannot fint start of frame\n");
-		fclose(fd);
-		return 0;
-	    }
-	    printf("\n %" PRIu32" x %" PRIu32"..\n", w, h);
-	}
-	break;
-
-    case PIC_BMP2:
-	{
-	    ADM_BITMAPINFOHEADER bmph;
-
-	    fseek(fd, 10, SEEK_SET);
-
-#define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
-						(fcc_tab[3]<<24))
-
-	    fread(fcc_tab, 4, 1, fd);
-	    _offset = MK32();
-	    // size, width height follow as int32
-	    fread(&bmph, sizeof(bmph), 1, fd);
-#ifdef ADM_BIG_ENDIAN
-	    Endian_BitMapInfo(&bmph);
-#endif
-	    if (bmph.biCompression != 0) {
-		printf("\ncannot handle compressed bmp\n");
-		fclose(fd);
-		return 0;
-	    }
-	    w = bmph.biWidth;
-	    h = bmph.biHeight;
-		bpp = bmph.biBitCount;
-	    printf("W: %d H: %d offset: %d\n", w, h, _offset);
-	}
-
-	break;
-
-	case PIC_PNG:
-	    {
-    	     _offset = 0;
-			 fseek(fd, 0, SEEK_SET);
-			 read32(fd);
-			 read32(fd);
-			 read32(fd);
-			 read32(fd);
-			 w=read32(fd);
-			 h=read32(fd);
-    	     // It is big endian
-    	     printf("Png seems to be %d x %d \n",w,h);
-	    }
-	    break;
-    default:
-	ADM_assert(0);
+    for (uint32_t i = 0; i < _nbFiles; i++)
+    {
+            fd = openFrameFile(i);
+            ADM_assert(fd);
+            fseek(fd, 0, SEEK_END);
+            _imgSize.push_back(ftell(fd));
+            fclose(fd);
     }
-
-	fclose(fd);
-
 //_______________________________________
 //              Now build header info
 //_______________________________________
@@ -419,38 +250,31 @@ char realstring[250];
     _mainaviheader.dwMicroSecPerFrame = US_PER_PIC;;	// 25 fps hard coded
     _videostream.fccType = fourCC::get((uint8_t *) "vids");
 
-	if (bpp)
-		_video_bih.biBitCount = bpp;
-	else
-		_video_bih.biBitCount = 24;
+    if (bpp)
+            _video_bih.biBitCount = bpp;
+    else
+            _video_bih.biBitCount = 24;
 
-    _videostream.dwLength = _mainaviheader.dwTotalFrames = _nb_file;
+    _videostream.dwLength = _mainaviheader.dwTotalFrames = _nbFiles;
     _videostream.dwInitialFrames = 0;
     _videostream.dwStart = 0;
     //
     //_video_bih.biCompression= 24;
     //
-    _video_bih.biWidth = _mainaviheader.dwWidth = w;
-    _video_bih.biHeight = _mainaviheader.dwHeight = h;
+    _video_bih.biWidth = _mainaviheader.dwWidth = _w;
+    _video_bih.biHeight = _mainaviheader.dwHeight = _h;
     //_video_bih.biPlanes= 24;
     switch(_type)
     {
-        case PIC_JPEG:
-	        _video_bih.biCompression = _videostream.fccHandler =
-	                fourCC::get((uint8_t *) "MJPG");
+#define SET_FCC(x) _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) x);break;
 	        break;
-	    case PIC_BMP:
-	    case PIC_BMP2:
-	        _video_bih.biCompression = _videostream.fccHandler = fourCC::get((uint8_t *) "DIB ");
-	        break;
-	    case PIC_PNG:
-	        _video_bih.biCompression = _videostream.fccHandler =
-	                fourCC::get((uint8_t *) "PNG ");
-	        break;
-        default:
-            ADM_assert(0);
+            case ADM_PICTURE_JPG : SET_FCC("MJPG")
+	    case ADM_PICTURE_BMP : 
+	    case ADM_PICTURE_BMP2: SET_FCC("DIB ")
+	    case ADM_PICTURE_PNG : SET_FCC("PNG ")
+            default:
+                ADM_assert(0);
     }
-    printf("Offset : %" PRIu32"\n", _offset);
     return 1;
 }
 //****************************************************************
@@ -471,7 +295,7 @@ uint32_t picHeader::getFlags(uint32_t frame, uint32_t * flags)
 FILE* picHeader::openFrameFile(uint32_t frameNum)
 {
     char filename[250];
-    sprintf(filename, _fileMask, frameNum + _first);
+    sprintf(filename, _filePrefix.c_str(), frameNum + _first);
     return ADM_fopen(filename, "rb");
 }
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)

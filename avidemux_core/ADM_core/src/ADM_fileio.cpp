@@ -104,49 +104,6 @@ uint8_t    clearDirectoryContent(const uint32_t nb, char *jobName[])
         }
     return true;
 }
-//------------------------------------------------------------------
-
-
-/**
-    \fn ADM_PathSplit
-    \brief Split path into absolute path+name and extention i.e. /foo/bar/zee.avi -> /foo/bar/zee,avi.             Copy are returned
-
-*/
-void ADM_PathSplit(const char *str, char **root, char **ext)
-{
-	char *full;
-	uint32_t l;
-
-	full = ADM_PathCanonize(str);
-	// Search the last
-	l = strlen(full);
-	l--;
-	ADM_assert(l > 0);
-
-	while (*(full + l) != '.' && l)
-		l--;
-
-	if (!l || l == (strlen(full) - 1))
-	{
-		if (l == (strlen(full) - 1))
-			*(full + l) = 0;  // remove trailing
-
-		*ext = new char[2];
-		*root = full;
-		strcpy(*ext, "");
-
-		return;
-	}
-	// else we do get an extension
-	// starting at l+1
-	uint32_t suff;
-
-	suff = strlen(full) - l - 1;
-	*ext = new char[suff + 1];
-	strcpy(*ext, full + l + 1);
-	*(full + l) = 0;
-	*root = full;
-}
 /**
  * \fn ADM_PathSplit
  * \brief std::string version of the above

@@ -21,7 +21,6 @@ typedef struct
 
 ADM_CORE6_EXPORT const ADM_date        &ADM_getCurrentDate();
 // /dir/file.ext -> /dir/file and ext returned values are copies
-ADM_CORE6_EXPORT void            ADM_PathSplit(const char *str, char **root, char **ext);
 ADM_CORE6_EXPORT void            ADM_PathSplit(const std::string &in,std::string &root, std::string &ext);
 // Returns path only /foo/bar.avi -> /foo INPLACE, no copy done
 ADM_CORE6_EXPORT void	        ADM_PathStripName(char *str);
