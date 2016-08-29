@@ -18,10 +18,10 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libglib-2.0-0.dll
     ${File} ${ROOT_FOLDER}/libgobject-2.0-0.dll
     ${File} ${ROOT_FOLDER}/libharfbuzz-0.dll
-    ${File} ${ROOT_FOLDER}/libiconv.dll
+    ${File} ${ROOT_FOLDER}/libiconv-2.dll # MXE libiconv.dll
     ${File} ${ROOT_FOLDER}/libpcre16-0.dll
-    ${File} ${ROOT_FOLDER}/libpng14-14.dll
-    ${File} ${ROOT_FOLDER}/libsqlite3.dll
+    ${File} ${ROOT_FOLDER}/libpng16-16.dll
+    ${File} ${ROOT_FOLDER}/libsqlite3-0.dll
     ${File} ${ROOT_FOLDER}/libstdc++-6.dll
     ${File} ${ROOT_FOLDER}/libwinpthread-1.dll
     ${File} ${ROOT_FOLDER}/libz-1.dll
@@ -34,13 +34,13 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/Qt5Widgets.dll
     ${File} ${ROOT_FOLDER}/Qt5OpenGL.dll
     ${File} ${ROOT_FOLDER}/Qt5WinExtras.dll
-    ${File} ${ROOT_FOLDER}/libicudt51.dll 
-    ${File} ${ROOT_FOLDER}/libicuin51.dll  
-    ${File} ${ROOT_FOLDER}/libicuio51.dll  
-    ${File} ${ROOT_FOLDER}/libicule51.dll  
-    ${File} ${ROOT_FOLDER}/libiculx51.dll  
-    ${File} ${ROOT_FOLDER}/libicutu51.dll  
-    ${File} ${ROOT_FOLDER}/libicuuc51.dll
+    ${File} ${ROOT_FOLDER}/icudt56.dll 
+    ${File} ${ROOT_FOLDER}/icuin56.dll  
+    ${File} ${ROOT_FOLDER}/icuio56.dll  
+    ${File} ${ROOT_FOLDER}/icule56.dll  
+    ${File} ${ROOT_FOLDER}/iculx56.dll  
+    ${File} ${ROOT_FOLDER}/icutu56.dll  
+    ${File} ${ROOT_FOLDER}/icuuc56.dll
     ${File} ${ROOT_FOLDER}/libintl-8.dll
     SetOutPath $INSTDIR\platforms
     ${File} ${ROOT_FOLDER}/platforms/qminimal.dll  
