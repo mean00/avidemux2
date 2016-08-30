@@ -35,22 +35,22 @@ uint32_t result=0;
     if(magic==0x474e5089) 
     {
 
-      printf (" \n PNG file detected...\n");
+      ADM_info (" PNG file detected...\n");
       return 100;
     }
-    if(magic==0xe0ffd8ff) 
+    if((magic&0xffff)==0xd8ff) 
     {
 
-      printf (" \n JPG file detected...\n");
+      ADM_info ("  JPG file detected...\n");
       return 100;
     }
     if((magic & 0xffff)==0x4d42) 
     {
 
-      printf (" \n BMP file detected...\n");
+      ADM_info ("  BMP file detected...\n");
       return 100;
     }
     
-    printf (" [picHeader] Cannot open that\n");
+    ADM_info (" [picHeader] Cannot open that\n");
     return 0;
 }
