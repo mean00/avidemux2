@@ -143,7 +143,81 @@ static ADMImage *convertImageColorSpace( ADMImage *source, int w, int h)
         }
         return image;
 }
+typedef struct 
+{
+    int code;
+    const char *text;
+}jpegCodes;
+jpegCodes jCodes[]=
+{
+#define ENTRY(x,y) {x,y},
+    ENTRY(0xe0,"APP0")
+    ENTRY(0xc0,"Baseline marker")
+    ENTRY(0xc2,"Progressive Huffman")
+    ENTRY(0xc4,"Huffman table")
+    ENTRY(0xda,"Start of scan")
+    ENTRY(0xdb,"Quant table")
+    ENTRY(0xf0,"Jpeg0")
+    ENTRY(0xfe,"Comment")
+    ENTRY(0xd8,"Start of image")
+    ENTRY(0xd9,"End of image")
+     {0,NULL}
+};
+static const char *jpegToString(int code)
+{
+    jpegCodes *p=jCodes;
+    while(1)
+    {
+        if(p->text==NULL) return "???";
+        if(code==p->code) return p->text;
+        p++;
+    }
+    return "???";
+}
+/**
+ * \fn lookupTag
+ * \brief lookup for a valid non data marker
+ * @param fd
+ * @return 
+ */
+static int lookupTag(FILE *fd,int fileSize)
+{
+#define JPEG_BUFFER_SIZE (32*1024)
+    uint8_t buffer[JPEG_BUFFER_SIZE];
+    int blockOffset=ftell(fd);
+    while(1)
+    {
+        int remaining=fileSize-blockOffset;
+        if(remaining>JPEG_BUFFER_SIZE) remaining=JPEG_BUFFER_SIZE;
 
+        if(!fread(buffer,remaining,1,fd)) return -1;
+        uint8_t *p=buffer;
+        uint8_t *end=buffer+remaining;
+        while(p<end) // this is slightly wrong if the marker is at the border of a block
+        {
+            if(*p!=0xff) 
+            {
+                p++;continue;
+            }
+            switch(p[1])
+            {
+                case 0x00:
+                    p++; // escape
+                    break;
+                case 0xc0:
+                case 0xd9:
+                    return blockOffset+(intptr_t)(p-buffer);
+                    break;
+                default:
+                    ADM_info("found embedded tag %x at %d\n",p[1],ftell(fd));
+                    p++;
+                    break;
+            }
+        }
+        blockOffset+=remaining;
+    }    
+    return 0;
+}
 /**
  * 
  * @param fd
@@ -155,7 +229,10 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
 {
         uint16_t tag = 0, count = 0, off;
         int w,h;
+        fseek(fd, 0, SEEK_END);
+        int fileLength=ftell(fd);
         fseek(fd, 0, SEEK_SET);
+        
         read16(fd);	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
         {
@@ -163,36 +240,56 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
             if ((tag >> 8) != 0xff)
             {
                 ADM_warning("[imageLoader]invalid jpeg tag found (%x)\n", tag);
+                break;
             }
-            if (tag == 0xFFC0)
+            switch(tag &0xff)
             {
-                read16(fd);	// size
-                read8(fd);	// precision
-                h = read16(fd);
-                w = read16(fd);
-                if(w&1) w++;
-                if(h&1) h++;
-            }
-            else
-            {
-                off = read16(fd);
-                if (off < 2)
+                case 0xD9: // end of image
+                    ADM_info("End of image\n");
+                    break;
+                case 0xC0: // baseline
+                    read16(fd);	// size
+                    read8(fd);	// precision
+                    h = read16(fd);
+                    w = read16(fd);
+                    if(w&1) w++;
+                    if(h&1) h++;
+                    ADM_info("Dimension %d x %d\n",(int)w,(int)h);
+                    width=w;
+                    height=h;
+                    return true;
+                    break;
+                case 0xDA: // SOS
                 {
-                    ADM_warning("[imageLoader]Offset too short!\n");
-                    return false;
+                    ADM_info("Found tag 0x%x, %s, size=%d position=%d\n",tag&0xff,jpegToString(tag&0xff),(int)off,(int)ftell(fd));
+                    int headerSize=read16(fd);
+                    int nbComponents=read8(fd);
+                    for(int i=0;i<nbComponents;i++) read16(fd);
+                    read16(fd);read8(fd);
+                    // data starts here
+                    // Lookup for 0xff something
+                    int pos=lookupTag(fd,fileLength); 
+                    if(!pos)
+                    {
+                        return false;
+                    }
+                      fseek(fd, pos, SEEK_SET);
+                    break;
                 }
-                fseek(fd, off - 2, SEEK_CUR);
+                default:
+                    off = read16(fd);
+                    ADM_info("Found tag 0x%x, %s, size=%d position=%d\n",tag&0xff,jpegToString(tag&0xff),(int)off,(int)ftell(fd));
+                    if (off < 2)
+                    {
+                        ADM_warning("[imageLoader]Offset too short!\n");
+                        return false;
+                    }
+                    fseek(fd, off - 2, SEEK_CUR);
+                    break;
             }
             count++;
-        }
-        if (tag != 0xffc0)
-        {
-            ADM_warning("[imageLoader]Cannot fint start of frame\n");
-            return false;
-        }
-        width=w;
-        height=h;
-        return true;
+        }       
+        return false;
 }
 
 /**
