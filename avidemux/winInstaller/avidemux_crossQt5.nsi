@@ -310,6 +310,14 @@ Section "Plugins" SecGrpPlugins
         SetOutPath $INSTDIR\etc\fonts
         ${Folder} ${ROOT_FOLDER}/etc/fonts
 SectionEnd
+Section "PluginsSettings" SecGrpPluginsSettings
+        SectionIn 1 2 RO
+        SetOverwrite on
+        SetOutPath $INSTDIR\plugins\pluginSettings\x264\3
+        ${File} ${ROOT_FOLDER}/plugins/pluginSettings/x264/3/*.json
+        #SetOutPath $INSTDIR\plugins\pluginSettings\x264\3
+        #${File} ${ROOT_FOLDER}/plugins/pluginSettings/x264/3/*.json
+SectionEnd
 # !!
 Section "Avisynth_VapourSynth" SecGrpAvisynth
         SectionIn 2
@@ -325,7 +333,7 @@ Section "ShaderDemo" SecShaderDemo
         SectionIn  1 2 RO
         SetOutPath $INSTDIR\shaderDemo
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/ADM_plugins6/shaderDemo/1/*.shader # FIXME
+        ${File} ${ROOT_FOLDER}/plugins/shaderDemo/1/*.shader # FIXME
 SectionEnd
 #
 #

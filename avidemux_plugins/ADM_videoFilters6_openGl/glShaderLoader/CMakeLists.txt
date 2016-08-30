@@ -7,7 +7,7 @@ INIT_VIDEO_FILTER_GLQT4(ADM_vf_shaderLoaderGl "${ADM_vf_shaderLoaderGlFrag_SRCS}
 # Install demo
 FILE(GLOB shader_files ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.shader)
 INSTALL(FILES ${shader_files} 
-                DESTINATION "${AVIDEMUX_LIB_DIR}/ADM_plugins6/shaderDemo/1/"
+                DESTINATION "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/shaderDemo/1/"
                 COMPONENT   runtime
                 )
 
