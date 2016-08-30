@@ -189,8 +189,9 @@ static int lookupTag(FILE *fd,int fileSize)
     {
         int remaining=fileSize-blockOffset;
         if(remaining>JPEG_BUFFER_SIZE) remaining=JPEG_BUFFER_SIZE;
-
-        if(!fread(buffer,remaining,1,fd)) return -1;
+        if(remaining<2)
+            return 0;
+        if(!fread(buffer,remaining,1,fd)) return 0;
         uint8_t *p=buffer;
         uint8_t *end=buffer+remaining;
         while(p<end) // this is slightly wrong if the marker is at the border of a block
@@ -244,10 +245,13 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
             }
             switch(tag &0xff)
             {
+                
                 case 0xD9: // end of image
                     ADM_info("End of image\n");
                     break;
-                case 0xC0: // baseline
+                case 0xC0: // SOF0.. baseline
+                case 0xC1:
+                case 0xC2:
                     read16(fd);	// size
                     read8(fd);	// precision
                     h = read16(fd);
@@ -288,7 +292,7 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
                     break;
             }
             count++;
-        }       
+        }    
         return false;
 }
 
