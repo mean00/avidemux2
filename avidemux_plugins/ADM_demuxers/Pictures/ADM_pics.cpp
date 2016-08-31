@@ -48,83 +48,65 @@ public:
     {
         _fd=NULL;
     }
-    uint32_t    read32LE ();
-    uint16_t    read16LE ();
-    uint8_t     read8LE ();
-    void        readBmphLE(ADM_BITMAPINFOHEADER &bmp);
+    uint32_t    read32LE ()
+        {
+            uint32_t i;
+            i = 0;
+            i=(((uint32_t)(read16LE()))<<0)+(((uint32_t)read16LE())<<16);
+            return i;
+        }    
+    uint16_t    read16LE ()
+        {
+            uint16_t i;
+
+            i = 0;
+            i = (read8LE( ) ) + (read8LE( )<< 8);
+            return i;
+        }    
+    uint8_t     read8LE ()
+    {
+        uint8_t i;
+        ADM_assert(_fd);
+        i = 0;
+        if (!fread(&i, 1, 1, _fd))
+        {
+            ADM_warning(" Problem reading the file !\n");
+        }
+        return i;
+    }    
+    void        readBmphLE(ADM_BITMAPINFOHEADER &bmp)
+    {
+    #define READ_FIELD(field,size)     bmp.field=read##size##LE();
+
+        memset(&bmp,0,sizeof(bmp));
+
+        READ_FIELD(biSize,32)
+        READ_FIELD(biWidth,32)
+        READ_FIELD(biHeight,32)
+        READ_FIELD(biPlanes,16)            
+        READ_FIELD(biBitCount,16)
+        READ_FIELD(biCompression,32)            
+        READ_FIELD(biSizeImage,32)
+        READ_FIELD(biSize,32)
+    }    
+    
 protected:
     FILE *_fd;
 };
 
 /**
  * 
- * @param bmp
- */
-void LowLevel::readBmphLE(ADM_BITMAPINFOHEADER &bmp)
-{
-#define READ_FIELD(field,size)     bmp.field=read##size##LE();
-    
-    memset(&bmp,0,sizeof(bmp));
-    
-    READ_FIELD(biSize,32)
-    READ_FIELD(biWidth,32)
-    READ_FIELD(biHeight,32)
-    READ_FIELD(biPlanes,16)            
-    READ_FIELD(biBitCount,16)
-    READ_FIELD(biCompression,32)            
-    READ_FIELD(biSizeImage,32)
-    READ_FIELD(biSize,32)
-}
-/**
- * 
- * @param fd
- * @param bmp
- */
-uint32_t LowLevel::read32LE()
-{
-    uint32_t i;
-    i = 0;
-    i=(((uint32_t)(read16LE()))<<0)+(((uint32_t)read16LE())<<16);
-    return i;
-}
-/**
- * 
- * @param fd
- * @return 
- */
-uint16_t LowLevel::read16LE()
-{
-    uint16_t i;
-
-    i = 0;
-    i = (read8LE( ) ) + (read8LE( )<< 8);
-    return i;
-}
-
-uint8_t LowLevel::read8LE( )
-{
-    uint8_t i;
-    ADM_assert(_fd);
-    i = 0;
-    if (!fread(&i, 1, 1, _fd))
-    {
-	ADM_warning(" Problem reading the file !\n");
-    }
-    return i;
-}
-/**
- * 
  */
 picHeader::picHeader(void)
 {
-	_nbFiles = 0;
-        _bmpHeaderOffset=0;
+    _nbFiles = 0;
+    _bmpHeaderOffset=0;
 }
 /**
     \fn getTime
 */
 
-uint64_t                   picHeader::getTime(uint32_t frameNum)
+uint64_t  picHeader::getTime(uint32_t frameNum)
 {
     float f=    US_PER_PIC;
     f*=frameNum;
@@ -135,7 +117,7 @@ uint64_t                   picHeader::getTime(uint32_t frameNum)
     \fn getVideoDuration
 */
 
-uint64_t                   picHeader::getVideoDuration(void)
+uint64_t  picHeader::getVideoDuration(void)
 {
     float f= US_PER_PIC;
     f*=_videostream.dwLength;
@@ -146,7 +128,7 @@ uint64_t                   picHeader::getVideoDuration(void)
 /**
     \fn getFrameSize
 */
-uint8_t                 picHeader::getFrameSize(uint32_t frame,uint32_t *size)
+uint8_t  picHeader::getFrameSize(uint32_t frame,uint32_t *size)
 {
     if (frame >= (uint32_t)_videostream.dwLength)
 		return 0;
@@ -184,7 +166,10 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     img->flags = AVI_KEY_FRAME;    
     return 1;
 }
-//****************************************************************
+/**
+ * 
+ * @return 
+ */
 uint8_t picHeader::close(void)
 {
 	_nbFiles = 0;
@@ -218,8 +203,6 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
             // 2 4 Bytes file size
             // 6 4 bytes xxxx
             //10  4 bytes header size, = direct offset to data
-            
-            
             {
                 ADM_BITMAPINFOHEADER bmph;
                 fseek(fd, 10, SEEK_SET);
@@ -307,16 +290,12 @@ uint8_t picHeader::open(const char *inname)
     int bpp = 0;
     
     // 1- identity the image type    
-    ADM_PICTURE_TYPE imageType=ADM_identifyImageFile(inname,&_w,&_h);
-    if(imageType==ADM_PICTURE_UNKNOWN)
+    _type=ADM_identifyImageFile(inname,&_w,&_h);
+    if(_type==ADM_PICTURE_UNKNOWN)
     {
         ADM_warning("\n Cannot open that file!\n");
 	return 0;
     }
-    _type=imageType;
-    
-    
-    
     // Then spit the name in name and extension
     int nbOfDigits;
     std::string name,extension;
@@ -394,16 +373,12 @@ uint8_t picHeader::open(const char *inname)
     _videostream.dwLength = _mainaviheader.dwTotalFrames = _nbFiles;
     _videostream.dwInitialFrames = 0;
     _videostream.dwStart = 0;
-    //
-    //_video_bih.biCompression= 24;
-    //
     _video_bih.biWidth = _mainaviheader.dwWidth = _w;
     _video_bih.biHeight = _mainaviheader.dwHeight = _h;
-    //_video_bih.biPlanes= 24;
+    
     switch(_type)
     {
 #define SET_FCC(x,y) _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) x);ADM_info("Image type=%s\n",y);break;
-	        break;
             case ADM_PICTURE_JPG : SET_FCC("MJPG","JPG")
 	    case ADM_PICTURE_BMP : SET_FCC("DIB ","BMP")
 	    case ADM_PICTURE_BMP2: SET_FCC("DIB ","BMP2")
@@ -413,27 +388,48 @@ uint8_t picHeader::open(const char *inname)
     }
     return 1;
 }
-//****************************************************************
+/**
+ * 
+ * @param frame
+ * @param flags
+ * @return 
+ */
 uint8_t picHeader::setFlag(uint32_t frame, uint32_t flags)
 {
     UNUSED_ARG(frame);
     UNUSED_ARG(flags);
     return 0;
 }
-//****************************************************************
+/**
+ * 
+ * @param frame
+ * @param flags
+ * @return 
+ */
 uint32_t picHeader::getFlags(uint32_t frame, uint32_t * flags)
 {
     UNUSED_ARG(frame);
     *flags = AVI_KEY_FRAME;
     return 1;
 }
-
+/**
+ * 
+ * @param frameNum
+ * @return 
+ */
 FILE* picHeader::openFrameFile(uint32_t frameNum)
 {
     char filename[250];
     sprintf(filename, _filePrefix.c_str(), frameNum + _first);
     return ADM_fopen(filename, "rb");
 }
+/**
+ * 
+ * @param frame
+ * @param pts
+ * @param dts
+ * @return 
+ */
 bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
  uint64_t timeP=US_PER_PIC;
@@ -442,6 +438,13 @@ bool       picHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
     *dts=timeP;
     return true;
 }
+/**
+ * 
+ * @param frame
+ * @param pts
+ * @param dts
+ * @return 
+ */
 bool       picHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
     return false;
