@@ -95,17 +95,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
             
             for(int i=0;i<_h;i++)
             {      
-                uint8_t *buf = src;
-                uint8_t *ptr = dst;
-
-                for(j = 0; j < _w; j++) // 24 24 24 24
-                {
-                    ptr[0] = buf[0]; 
-                    ptr[1] = buf[2];
-                    ptr[2] = buf[1];
-                    ptr += 3;
-                    buf += 3;
-                }                                
+                memcpy(dst,src,_w*3);
                 src -= lineSize;
                 dst += destStride;
             }

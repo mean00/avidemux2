@@ -24,9 +24,13 @@
 #include "ADM_Video.h"
 #include "fourcc.h"
 #include "ADM_pics.h"
-//#include "ADM_toolkit/bitmap.h"
 
+#if 1
 #define aprintf(...) {}
+#else
+#define aprintf printf
+#endif
+
 static uint16_t s16;
 static uint32_t s32;
 #define MAX_ACCEPTED_OPEN_FILE 99999
@@ -154,7 +158,7 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     int current=ftello(fd);
     fseek(fd,0,SEEK_END);
     int end=ftello(fd);
-    printf("Current=%d end=%d delta=%d\n",current,end,end-current);
+    aprintf("Current=%d end=%d delta=%d\n",current,end,end-current);
     
     if(n!=1)
     {
@@ -191,7 +195,7 @@ uint8_t picHeader::close(void)
  * @param bmpHeaderOffset
  * @return 
  */
-static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int &bpp,int bmpHeaderOffset)
+static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int &bpp,int &bmpHeaderOffset)
 {
     FILE *fd=ADM_fopen(name,"rb");
     if(!fd) return false;
@@ -220,7 +224,7 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
                     break;
                 }
                 bpp = bmph.biBitCount;
-                ADM_warning("Bmp bpp=%d offset: %d (bmp header=%d,%d)\n", bpp, bmpHeaderOffset,sizeof(bmph),bmph.biSize);
+                aprintf("Bmp bpp=%d offset: %d (bmp header=%d,%d)\n", bpp, bmpHeaderOffset,sizeof(bmph),bmph.biSize);
             }
             break;
         case ADM_PICTURE_BMP:
@@ -351,6 +355,7 @@ uint8_t picHeader::open(const char *inname)
             fd = openFrameFile(i);
             ADM_assert(fd);
             fseek(fd, 0, SEEK_END);
+            aprintf("Size %d, actual = 24 %d 32=%d offset=%d\n",ftell(fd)-_bmpHeaderOffset,_w*_h*3,_w*_h*4,_bmpHeaderOffset);
             _imgSize.push_back(ftell(fd)-_bmpHeaderOffset);
             fclose(fd);
     }
