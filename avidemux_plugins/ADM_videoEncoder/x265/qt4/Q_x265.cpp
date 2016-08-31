@@ -437,7 +437,7 @@ bool x265Dialog::upload(void)
   { \
     QComboBox* combo=ui.x; \
     int idx=combo->currentIndex(); \
-    ADM_assert(idx<count); \    
+    ADM_assert(idx<count); \
     myCopy.y = std::string(ADM_strdup(list[idx])); \
   }
 
@@ -649,7 +649,8 @@ void x265Dialog::cuTreeCheckBox_toggled(bool checked)
 {
 	if (checked && !ui.aqVarianceCheckBox->isChecked())
 	{
-		if (GUI_Question(QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                QString st=QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?");
+		if (GUI_Question(st.toUtf8().constData()))
 			ui.aqVarianceCheckBox->setChecked(true);
 		else
 			ui.cuTreeCheckBox->setChecked(false);
@@ -660,7 +661,8 @@ void x265Dialog::aqVarianceCheckBox_toggled(bool checked)
 {
 	if (!checked && ui.cuTreeCheckBox->isChecked())
 	{
-		if (GUI_Question(QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                QString st=QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?");
+		if (GUI_Question(st.toUtf8().constData()))
 			ui.cuTreeCheckBox->setChecked(false);
 		else
 			ui.aqVarianceCheckBox->setChecked(true);

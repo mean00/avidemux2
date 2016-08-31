@@ -701,7 +701,8 @@ void x264Dialog::mbTreeCheckBox_toggled(bool checked)
 {
         if (checked && !ui.aqVarianceCheckBox->isChecked())
         {
-                if (GUI_Question(QT_TRANSLATE_NOOP("x264","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                QString st=QT_TRANSLATE_NOOP("x264","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?");
+                if (GUI_Question(st.toUtf8().constData()))
                         ui.aqVarianceCheckBox->setChecked(true);
                 else
                         ui.mbTreeCheckBox->setChecked(false);
@@ -712,7 +713,8 @@ void x264Dialog::aqVarianceCheckBox_toggled(bool checked)
 {
         if (!checked && ui.mbTreeCheckBox->isChecked())
         {
-                if (GUI_Question(QT_TRANSLATE_NOOP("x264","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
+                 QString st=QT_TRANSLATE_NOOP("x264","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?");
+                if (GUI_Question(st.toUtf8().constData()))
                         ui.mbTreeCheckBox->setChecked(false);
                 else
                         ui.aqVarianceCheckBox->setChecked(true);
