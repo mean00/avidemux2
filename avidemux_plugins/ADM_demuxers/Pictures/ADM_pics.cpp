@@ -34,6 +34,87 @@ static uint32_t s32;
 #define US_PER_PIC (40*1000)
 /**
  * 
+ * @param fd
+ */
+class LowLevel
+{
+    
+public:
+    LowLevel(FILE *fd)
+    {
+        _fd=fd;
+    }
+    ~LowLevel()
+    {
+        _fd=NULL;
+    }
+    uint32_t    read32LE ();
+    uint16_t    read16LE ();
+    uint8_t     read8LE ();
+    void        readBmphLE(ADM_BITMAPINFOHEADER &bmp);
+protected:
+    FILE *_fd;
+};
+
+/**
+ * 
+ * @param bmp
+ */
+void LowLevel::readBmphLE(ADM_BITMAPINFOHEADER &bmp)
+{
+#define READ_FIELD(field,size)     bmp.field=read##size##LE();
+    
+    memset(&bmp,0,sizeof(bmp));
+    
+    
+    READ_FIELD(biSize,32)
+    READ_FIELD(biWidth,32)
+    READ_FIELD(biHeight,32)
+    READ_FIELD(biPlanes,16)            
+    READ_FIELD(biBitCount,16)
+    READ_FIELD(biCompression,32)            
+    READ_FIELD(biSizeImage,32)
+    READ_FIELD(biSize,32)
+}
+/**
+ * 
+ * @param fd
+ * @param bmp
+ */
+uint32_t LowLevel::read32LE()
+{
+    uint32_t i;
+    i = 0;
+    i=(((uint32_t)(read16LE()))<<0)+((uint32_t)read16LE())<<16;
+    return i;
+}
+/**
+ * 
+ * @param fd
+ * @return 
+ */
+uint16_t LowLevel::read16LE()
+{
+    uint16_t i;
+
+    i = 0;
+    i = (read8LE( ) ) + (read8LE( )<< 8);
+    return i;
+}
+
+uint8_t LowLevel::read8LE( )
+{
+    uint8_t i;
+    ADM_assert(_fd);
+    i = 0;
+    if (!fread(&i, 1, 1, _fd))
+    {
+	ADM_warning(" Problem reading the file !\n");
+    }
+    return i;
+}
+/**
+ * 
  */
 picHeader::picHeader(void)
 {
@@ -60,8 +141,6 @@ uint64_t                   picHeader::getVideoDuration(void)
     float f= US_PER_PIC;
     f*=_videostream.dwLength;
     return (uint64_t)f;
-
-
 }
 
 
@@ -82,9 +161,6 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
 {
     if (framenum >= (uint32_t)_videostream.dwLength)
             return 0;
-
-    img->flags = AVI_KEY_FRAME;
-
     FILE* fd = openFrameFile(framenum);
     if(!fd)
         return false;
@@ -92,14 +168,14 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     if(_bmpHeaderOffset)
         fseek(fd,_bmpHeaderOffset,SEEK_SET);
     fread(img->data, _imgSize[framenum] , 1, fd);
-    img->dataLength = _imgSize[framenum];
-
+    fclose(fd);
+    
     uint64_t timeP=US_PER_PIC;
     timeP*=framenum;
+    img->dataLength = _imgSize[framenum];
     img->demuxerDts=timeP;
     img->demuxerPts=timeP;
-    fclose(fd);
-
+    img->flags = AVI_KEY_FRAME;    
     return 1;
 }
 //****************************************************************
@@ -111,44 +187,6 @@ uint8_t picHeader::close(void)
 }
 
 
-
-//****************************************************************
-/*
-	Open a bunch of images
-
-
-*/
-
-
-uint32_t picHeader::read32(FILE * fd)
-{
-    uint32_t i;
-    i = 0;
-    i = (read8(fd) << 24) + (read8(fd) << 16) + (read8(fd) << 8) +
-	(read8(fd));
-    return i;
-
-}
-
-uint16_t picHeader::read16(FILE * fd)
-{
-    uint16_t i;
-
-    i = 0;
-    i = (read8(fd) << 8) + (read8(fd));
-    return i;
-}
-
-uint8_t picHeader::read8(FILE * fd)
-{
-    uint8_t i;
-    ADM_assert(fd);
-    i = 0;
-    if (!fread(&i, 1, 1, fd)) {
-	printf("\n Problem reading the file !\n");
-    }
-    return i;
-}
 /**
  * \fn extractBmpAdditionalInfo
  * @param name
@@ -161,23 +199,26 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
 {
     FILE *fd=ADM_fopen(name,"rb");
     if(!fd) return false;
+    
     bool r=true;
     uint16_t s16;
     uint32_t s32;
+    LowLevel low(fd);
+    
     switch(type) // this is bad. All the offsets are hardcoded and could be actually different.
     {
         case ADM_PICTURE_BMP2:
+            // 0 2 bytes BM
+            // 2 4 Bytes file size
+            // 6 4 bytes xxxx
+            //10  4 bytes header size, = direct offset to data
+            
+            
             {
                 ADM_BITMAPINFOHEADER bmph;
                 fseek(fd, 10, SEEK_SET);
-                uint8_t fourBytes[4];
-                fread(fourBytes, 4, 1, fd);
-                bmpHeaderOffset = (fourBytes[0]+(fourBytes[1]<<8)+(fourBytes[2]<<16)+ (fourBytes[3]<<24))+14+4;
-                // size, width height follow as int32
-                fread(&bmph, sizeof(bmph), 1, fd);
-    #ifdef ADM_BIG_ENDIAN
-                Endian_BitMapInfo(&bmph);
-    #endif
+                bmpHeaderOffset = low.read32LE();
+                low.readBmphLE(bmph);
                 if (bmph.biCompression != 0) 
                 {
                     ADM_warning("cannot handle compressed bmp\n");
@@ -199,11 +240,11 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
 		r=false;
                 break;  
 	    }
-            fread(&s32, 4, 1, fd);
-            fread(&s32, 4, 1, fd);
-            fread(&s32, 4, 1, fd);
-            fread(&bmph, sizeof(bmph), 1, fd);
-	    if (bmph.biCompression != 0) 
+            low.read32LE( );
+            low.read32LE( );
+            low.read32LE( );
+            low.readBmphLE( bmph);
+            if (bmph.biCompression != 0) 
             {
 		ADM_warning("cannot handle compressed bmp\n");
                 r=false;
@@ -340,9 +381,9 @@ uint8_t picHeader::open(const char *inname)
     _videostream.fccType = fourCC::get((uint8_t *) "vids");
 
     if (bpp)
-            _video_bih.biBitCount = bpp;
+        _video_bih.biBitCount = bpp;
     else
-            _video_bih.biBitCount = 24;
+        _video_bih.biBitCount = 24;
 
     _videostream.dwLength = _mainaviheader.dwTotalFrames = _nbFiles;
     _videostream.dwInitialFrames = 0;

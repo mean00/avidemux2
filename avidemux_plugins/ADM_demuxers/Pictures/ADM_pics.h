@@ -35,10 +35,7 @@ protected:
     uint32_t    _w, _h;
     int         _bmpHeaderOffset;
     std::vector<uint32_t>    _imgSize;
-    ADM_PICTURE_TYPE    _type;
-    uint32_t    read32 (FILE * fd);
-    uint16_t    read16 (FILE * fd);
-    uint8_t     read8 (FILE * fd);
+    ADM_PICTURE_TYPE    _type;  
     FILE        *openFrameFile (uint32_t frameNum);
 
 public:
