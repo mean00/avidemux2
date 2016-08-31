@@ -28,6 +28,9 @@ ADM_audioStreamBuffered::ADM_audioStreamBuffered(WAVHeader *header,ADM_audioAcce
 */
 bool ADM_audioStreamBuffered::refill(void)
 {
+        int nbTry=0;
+#define MAX_TRIES 50 // ~ 1 sec
+again:
         // Shrink buffer...
         if(limit>ADM_AUDIOSTREAM_BUFFER_SIZE && start> 10*1024)
         {
@@ -48,7 +51,21 @@ bool ADM_audioStreamBuffered::refill(void)
         {
             if( labs((int64_t)newDts-(int64_t)lastDts)>ADM_MAX_SKEW)
             {
-                printf("[AudioStream] Warning skew in dts =%" PRId64", \n",(int64_t)newDts-(uint64_t)lastDts);
+                if(newDts<lastDts || newDts>(lastDts+60LL*1000000LL)) // If the jump is absurd we ignore it
+                {
+                        nbTry++;
+                        if(nbTry<MAX_TRIES)
+                        {
+                            ADM_warning("Trying to ignore the discontinuous timestamp (%d try)\n",nbTry);
+                            goto again;
+                        }
+                }
+                uint64_t delta=labs((int64_t)newDts-(int64_t)lastDts);
+                const char *sign="+";
+                if(newDts<lastDts) sign="-";
+                printf("[AudioStream] Old dts=%s\n",ADM_us2plain(lastDts));
+                printf("[AudioStream] New dts=%s\n",ADM_us2plain(newDts));
+                printf("[AudioStream] Warning skew in dts =%s %lu \n",sign,delta);
                 printf("[AudioStream] Warning skew lastDts=%s \n",ADM_us2plain(lastDts));
                 printf("[AudioStream] Warning skew newDts=%s  \n",ADM_us2plain(newDts));
                 setDts(newDts);
