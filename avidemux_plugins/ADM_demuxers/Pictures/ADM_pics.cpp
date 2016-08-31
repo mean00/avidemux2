@@ -66,7 +66,6 @@ void LowLevel::readBmphLE(ADM_BITMAPINFOHEADER &bmp)
     
     memset(&bmp,0,sizeof(bmp));
     
-    
     READ_FIELD(biSize,32)
     READ_FIELD(biWidth,32)
     READ_FIELD(biHeight,32)
@@ -85,7 +84,7 @@ uint32_t LowLevel::read32LE()
 {
     uint32_t i;
     i = 0;
-    i=(((uint32_t)(read16LE()))<<0)+((uint32_t)read16LE())<<16;
+    i=(((uint32_t)(read16LE()))<<0)+(((uint32_t)read16LE())<<16);
     return i;
 }
 /**
@@ -167,7 +166,14 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     // skip bmp header
     if(_bmpHeaderOffset)
         fseek(fd,_bmpHeaderOffset,SEEK_SET);
-    fread(img->data, _imgSize[framenum] , 1, fd);
+    int l= _imgSize[framenum];
+    int n=fread(img->data, l , 1, fd);
+    
+    if(n!=1)
+    {
+        ADM_error("Read incomplete \n");
+    }
+    
     fclose(fd);
     
     uint64_t timeP=US_PER_PIC;
