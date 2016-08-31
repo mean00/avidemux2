@@ -275,7 +275,7 @@ bool configure (CONFcouple **setup)
 
     diaElem *elems[]={&bitrate};
 
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("DcaEnc","DcaEnc Configuration"),1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("dcaenc","DcaEnc Configuration"),1,elems))
     {
       if(*setup) delete *setup;
       *setup=NULL;

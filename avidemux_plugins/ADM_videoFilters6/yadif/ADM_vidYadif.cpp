@@ -74,8 +74,8 @@ DECLARE_VIDEO_FILTER(   yadifFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "yadif",            // internal name (must be uniq!)
-                        "Yadif",            // Display name
-                        "Yadif, port of avisynth version (c) Fizick." // Description
+                        QT_TRANSLATE_NOOP("yadif","Yadif"),            // Display name
+                        QT_TRANSLATE_NOOP("yadif","Yadif, port of avisynth version (c) Fizick.") // Description
                     );
 
 //
@@ -128,22 +128,22 @@ bool yadifFilter::configure( void)
 {
     
      diaMenuEntry tMode[]={
-                             {0,      QT_TR_NOOP("Temporal & spatial check"),NULL},
-                             {1,   QT_TR_NOOP("Bob, temporal & spatial check"),NULL},
-                             {2,      QT_TR_NOOP("Skip spatial temporal check"),NULL},
-                             {3,  QT_TR_NOOP("Bob, skip spatial temporal check"),NULL}
+                             {0,      QT_TRANSLATE_NOOP("yadif","Temporal & spatial check"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("yadif","Bob, temporal & spatial check"),NULL},
+                             {2,      QT_TRANSLATE_NOOP("yadif","Skip spatial temporal check"),NULL},
+                             {3,  QT_TRANSLATE_NOOP("yadif","Bob, skip spatial temporal check"),NULL}
           };
      diaMenuEntry tOrder[]={
-                             {0,      QT_TR_NOOP("Bottom field first"),NULL},
-                             {1,   QT_TR_NOOP("Top field first"),NULL}
+                             {0,      QT_TRANSLATE_NOOP("yadif","Bottom field first"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("yadif","Top field first"),NULL}
           };
   
-     diaElemMenu mMode(&(configuration.mode),   QT_TR_NOOP("_Mode:"), 4,tMode);
-     diaElemMenu morder(&(configuration.order),   QT_TR_NOOP("_Order:"), 2,tOrder);
+     diaElemMenu mMode(&(configuration.mode),   QT_TRANSLATE_NOOP("yadif","_Mode:"), 4,tMode);
+     diaElemMenu morder(&(configuration.order),   QT_TRANSLATE_NOOP("yadif","_Order:"), 2,tOrder);
      
      diaElem *elems[]={&mMode,&morder};
      
-     if(diaFactoryRun(QT_TR_NOOP("yadif"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("yadif","yadif"),sizeof(elems)/sizeof(diaElem *),elems))
      {
         updateInfo();
         return 1;

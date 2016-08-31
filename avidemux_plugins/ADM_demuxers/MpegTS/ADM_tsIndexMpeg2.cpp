@@ -79,14 +79,14 @@ bool bAppend=false;
     FP_TYPE append=FP_DONT_APPEND;
     if(true==ADM_probeSequencedFile(file))
     {
-        if(true==GUI_Question("There are several files with sequential file names. Should they be all loaded ?"))
+        if(true==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
                bAppend=true;
     }
     if(true==bAppend)
         append=FP_APPEND;
     writeSystem(file,bAppend);
     pkt->open(file,append);
-    gui= createProcessing("Indexing",pkt->getSize());
+    gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
     data.pkt=pkt;
     fullSize=pkt->getSize();
     int startCode;

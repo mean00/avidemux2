@@ -48,14 +48,14 @@ bool ffPSConfigure(void)
 
 
         diaMenuEntry format[]={{MUXER_VCD,"VCD"},{MUXER_SVCD,"SVCD"},{MUXER_DVD,"DVD"},    
-                                {MUXER_FREE,"Free"}};
+                                {MUXER_FREE,QT_TRANSLATE_NOOP("ffpsmuxer","Free")}};
 
-        diaElemMenu  menuFormat(TX(muxingType),"Muxing Format",4,format,"");
-        diaElemToggle alternate(&tolerance,"Allow non compliant stream");
-        diaElemUInteger muxRate(TX(muxRatekBits),"Total Muxrate (kbits)",500,80000);
-        diaElemUInteger videoRate(TX(videoRatekBits),"Video Muxrate (kbits)",500,80000);
-        diaElemUInteger vbvBuffer(TX(bufferSizekBytes),"VBV size (kBytes)",10,500);
-        diaElemFrame   frameAdvanced("Advanced");
+        diaElemMenu  menuFormat(TX(muxingType),QT_TRANSLATE_NOOP("ffpsmuxer","Muxing Format"),4,format,"");
+        diaElemToggle alternate(&tolerance,QT_TRANSLATE_NOOP("ffpsmuxer","Allow non compliant stream"));
+        diaElemUInteger muxRate(TX(muxRatekBits),QT_TRANSLATE_NOOP("ffpsmuxer","Total Muxrate (kbits)"),500,80000);
+        diaElemUInteger videoRate(TX(videoRatekBits),QT_TRANSLATE_NOOP("ffpsmuxer","Video Muxrate (kbits)"),500,80000);
+        diaElemUInteger vbvBuffer(TX(bufferSizekBytes),QT_TRANSLATE_NOOP("ffpsmuxer","VBV size (kBytes)"),10,500);
+        diaElemFrame   frameAdvanced(QT_TRANSLATE_NOOP("ffpsmuxer","Advanced"));
 
         frameAdvanced.swallow(&muxRate);
         frameAdvanced.swallow(&videoRate);
@@ -68,7 +68,7 @@ bool ffPSConfigure(void)
         LINK(3,1,vbvBuffer)
         
         diaElem *tabs[]={&menuFormat,&alternate,&frameAdvanced};
-        if( diaFactoryRun(("Mpeg PS Muxer"),3,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffpsmuxer","Mpeg PS Muxer"),3,tabs))
         {
             psMuxerConfig.acceptNonCompliant=tolerance;
             // Override with pre-defined value

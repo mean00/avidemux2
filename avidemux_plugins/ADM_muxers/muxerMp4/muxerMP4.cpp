@@ -61,7 +61,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 {
     if(!isMpeg4Compatible(s->getFCC()) && !isH264Compatible(s->getFCC()) && !isH265Compatible(s->getFCC()))
     {
-            GUI_Error_HIG("Unsupported","Only MP4Video, H264, and H265 supported for video");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only MP4Video, H264, and H265 supported for video"));
             return false;
     }
     if(nbAudioTrack)
@@ -70,7 +70,7 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             uint32_t acc=a[i]->getInfo()->encoding;
             if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC && acc!=WAV_AC3)
             {
-                GUI_Error_HIG("Unsupported","Only AAC, AC3, and mpegaudio supported for audio");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4muxer","Unsupported"),QT_TRANSLATE_NOOP("mp4muxer","Only AAC, AC3, and mpegaudio supported for audio"));
                 return false;
             }
         }
@@ -149,8 +149,8 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 */
 bool muxerMP4::save(void)
 {
-    const char *title=QT_TR_NOOP("Saving mp4");
-    if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TR_NOOP("Saving PSP");
+    const char *title=QT_TRANSLATE_NOOP("mp4muxer","Saving mp4");
+    if(muxerConfig.muxerType==MP4_MUXER_PSP) title=QT_TRANSLATE_NOOP("mp4muxer","Saving PSP");
     return saveLoop(title);
 }
 

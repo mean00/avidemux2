@@ -424,7 +424,7 @@ uint32_t i,j,cur;
 	}
 	else // there is not ssts
 	{
-          //GUI_Error_HIG(QT_TR_NOOP("No stts table"), NULL);
+          //GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4demuxer","No stts table"), NULL);
           return false;
 	}
         printf("Index done\n");

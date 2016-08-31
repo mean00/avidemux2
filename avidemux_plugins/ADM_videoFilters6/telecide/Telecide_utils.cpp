@@ -182,47 +182,47 @@ bool Telecide::configure(void)
     ELEM_TYPE_FLOAT gthresh=(ELEM_TYPE_FLOAT)_param->gthresh;
 
          diaMenuEntry tStrategy[]={
-                             {GUIDE_NONE,   QT_TR_NOOP("No strategy"),NULL},
-                             {GUIDE_32,     QT_TR_NOOP("3:2 pulldown"),NULL},
-                             {GUIDE_22,     QT_TR_NOOP("PAL/SECAM"),NULL},
-                             {GUIDE_32322,  QT_TR_NOOP("NTSC converted from PAL"),NULL}
+                             {GUIDE_NONE,   QT_TRANSLATE_NOOP("telecide","No strategy"),NULL},
+                             {GUIDE_32,     QT_TRANSLATE_NOOP("telecide","3:2 pulldown"),NULL},
+                             {GUIDE_22,     QT_TRANSLATE_NOOP("telecide","PAL/SECAM"),NULL},
+                             {GUIDE_32322,  QT_TRANSLATE_NOOP("telecide","NTSC converted from PAL"),NULL}
                           };
                           
           diaMenuEntry tField[]={
-                             {1,QT_TR_NOOP("Top"),NULL},
-                             {0,QT_TR_NOOP("Bottom"),NULL}
+                             {1,QT_TRANSLATE_NOOP("telecide","Top"),NULL},
+                             {0,QT_TRANSLATE_NOOP("telecide","Bottom"),NULL}
           };
           
           diaMenuEntry tBackward[]={
-                             {NO_BACK,QT_TR_NOOP("Never"),NULL},
-                             {BACK_ON_COMBED,QT_TR_NOOP("If still combed"),NULL},
-                             {ALWAYS_BACK,QT_TR_NOOP("Always"),NULL}
+                             {NO_BACK,QT_TRANSLATE_NOOP("telecide","Never"),NULL},
+                             {BACK_ON_COMBED,QT_TRANSLATE_NOOP("telecide","If still combed"),NULL},
+                             {ALWAYS_BACK,QT_TRANSLATE_NOOP("telecide","Always"),NULL}
           };
           
           diaMenuEntry tPostproc[]={
-                             {POST_NONE,      QT_TR_NOOP("None"),NULL},
-                             {POST_METRICS,   QT_TR_NOOP("None but compute"),NULL},
-                             {POST_FULL,      QT_TR_NOOP("Postproc on best match"),NULL},
-                             {POST_FULL_MAP,  QT_TR_NOOP("Postproc and show zones (debug)"),NULL},
-                             {POST_FULL_NOMATCH,QT_TR_NOOP("Process image (not fields)"),NULL},
-                             {POST_FULL_NOMATCH_MAP,QT_TR_NOOP("Process image (not fields), debug"),NULL}
+                             {POST_NONE,      QT_TRANSLATE_NOOP("telecide","None"),NULL},
+                             {POST_METRICS,   QT_TRANSLATE_NOOP("telecide","None but compute"),NULL},
+                             {POST_FULL,      QT_TRANSLATE_NOOP("telecide","Postproc on best match"),NULL},
+                             {POST_FULL_MAP,  QT_TRANSLATE_NOOP("telecide","Postproc and show zones (debug)"),NULL},
+                             {POST_FULL_NOMATCH,QT_TRANSLATE_NOOP("telecide","Process image (not fields)"),NULL},
+                             {POST_FULL_NOMATCH_MAP,QT_TRANSLATE_NOOP("telecide","Process image (not fields), debug"),NULL}
           };
                              
           
-    diaElemMenu menuMode(PX(guide),   QT_TR_NOOP("_Strategy:"), SZT(tStrategy),tStrategy);
-    diaElemMenu menuField(PX(order),  QT_TR_NOOP("_Field order:"), SZT(tField),tField);
-    diaElemMenu menuPost(PX(post),    QT_TR_NOOP("_Postprocessing:"), SZT(tPostproc),tPostproc);
-    diaElemMenu menuBackward(PX(back),QT_TR_NOOP("_Try backward:"), SZT(tBackward),tBackward);
+    diaElemMenu menuMode(PX(guide),   QT_TRANSLATE_NOOP("telecide","_Strategy:"), SZT(tStrategy),tStrategy);
+    diaElemMenu menuField(PX(order),  QT_TRANSLATE_NOOP("telecide","_Field order:"), SZT(tField),tField);
+    diaElemMenu menuPost(PX(post),    QT_TRANSLATE_NOOP("telecide","_Postprocessing:"), SZT(tPostproc),tPostproc);
+    diaElemMenu menuBackward(PX(back),QT_TRANSLATE_NOOP("telecide","_Try backward:"), SZT(tBackward),tBackward);
     
-    diaElemFloat direct(&dthresh,QT_TR_NOOP("_Direct threshold:"),0,200. );
-    diaElemFloat backward(&bthresh,QT_TR_NOOP("_Backward threshold:"),0,200. );
-    diaElemFloat noise(&gthresh,QT_TR_NOOP("_Noise threshold:"),0,200. );
-    diaElemFloat post(&vthresh,QT_TR_NOOP("Postp_rocessing threshold:"),0,200. );
+    diaElemFloat direct(&dthresh,QT_TRANSLATE_NOOP("telecide","_Direct threshold:"),0,200. );
+    diaElemFloat backward(&bthresh,QT_TRANSLATE_NOOP("telecide","_Backward threshold:"),0,200. );
+    diaElemFloat noise(&gthresh,QT_TRANSLATE_NOOP("telecide","_Noise threshold:"),0,200. );
+    diaElemFloat post(&vthresh,QT_TRANSLATE_NOOP("telecide","Postp_rocessing threshold:"),0,200. );
     
-    diaElemToggle chroma(PX(chroma),QT_TR_NOOP("_Use chroma to decide"));
-    diaElemToggle show(PX(show),QT_TR_NOOP("Sho_w info"));
-    diaElemToggle debug(PX(debug),QT_TR_NOOP("Debu_g"));
-    diaElemToggle blend(PX(blend),QT_TR_NOOP("Bl_end"));
+    diaElemToggle chroma(PX(chroma),QT_TRANSLATE_NOOP("telecide","_Use chroma to decide"));
+    diaElemToggle show(PX(show),QT_TRANSLATE_NOOP("telecide","Sho_w info"));
+    diaElemToggle debug(PX(debug),QT_TRANSLATE_NOOP("telecide","Debu_g"));
+    diaElemToggle blend(PX(blend),QT_TRANSLATE_NOOP("telecide","Bl_end"));
     
     
     
@@ -230,7 +230,7 @@ bool Telecide::configure(void)
         &direct,&backward,&noise,&post,&blend,
         &chroma,&show,&debug    };
     
-  if(diaFactoryRun(QT_TR_NOOP("Decomb Telecide"),12,elems))
+  if(diaFactoryRun(QT_TRANSLATE_NOOP("telecide","Decomb Telecide"),12,elems))
   {
     
       _param->vthresh=(float)vthresh;

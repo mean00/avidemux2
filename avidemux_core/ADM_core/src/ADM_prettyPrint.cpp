@@ -20,14 +20,14 @@
 static std::string myMinutes(int mm)
 {
         char buffer[1024];
-        sprintf(buffer,QT_TRANSLATE_NOOP("asm","%d minutes"),mm);
+        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d minutes"),mm);
         return std::string(buffer);
 }
 
 static std::string myHour(int m)
 {
         char buffer[1024];
-        sprintf(buffer,QT_TRANSLATE_NOOP("asm","%d hours"),m);
+        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d hours"),m);
         return std::string(buffer);
 }
 /**

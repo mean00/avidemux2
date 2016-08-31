@@ -23,8 +23,8 @@
 uint8_t DIA_getChromaShift( ADM_coreVideoFilter *instream,chromashift    *param )
 {
     int w=instream->getInfo()->width/2;
-    diaElemInteger  u(&(param->u),QT_TR_NOOP("U :"),-w,w);
-    diaElemInteger  v(&(param->v),QT_TR_NOOP("V :"),-w,w);
+    diaElemInteger  u(&(param->u),QT_TRANSLATE_NOOP("chromashift","U :"),-w,w);
+    diaElemInteger  v(&(param->v),QT_TRANSLATE_NOOP("chromashift","V :"),-w,w);
     diaElem *elems[]={&u,&v};
     return diaFactoryRun("ChromaShift",sizeof(elems)/sizeof(diaElem *),elems);
 }

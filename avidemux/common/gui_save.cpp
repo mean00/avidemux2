@@ -51,7 +51,7 @@ void HandleAction_Save(Action action)
 {
     if(!video_body->getNbSegment())
     {
-        GUI_Error_HIG("No","No file loaded");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","No"),QT_TRANSLATE_NOOP("adm","No file loaded"));
         return;
     }
     switch(action)
@@ -60,7 +60,7 @@ void HandleAction_Save(Action action)
             {
                 if(false==ADMJob::jobInit())
                 {
-                    GUI_Error_HIG("Job",QT_TR_NOOP("Cannot reach database. Do you have Job control running ?"));
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Job"),QT_TRANSLATE_NOOP("adm","Cannot reach database. Do you have Job control running ?"));
                 }else
                 {
                     std::string oFile;
@@ -278,7 +278,7 @@ int A_saveAudioCopy (const char *name)
 int A_saveAudioProcessed (const char *name)
 {
 #if 0
-    GUI_Error_HIG("Audio","Function not implemented\n");
+    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Function not implemented\n"));
     return false;
 #else
 
@@ -299,14 +299,14 @@ int A_saveAudioProcessed (const char *name)
   ADM_audioStream *access=audioCreateEncodingStream(ed,false,start);
   if(!access)
     {
-        GUI_Error_HIG("Audio","Cannot create stream");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Cannot create stream"));
         return false;
     }
 //  #warning Fixme,duration can change! e.g. pal2film /film2pal
   bool r=A_saveAudioCommon (name,access,duration);
   delete access;
   if(false==r)
-        GUI_Error_HIG("Audio","Saving failed");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Audio"),QT_TRANSLATE_NOOP("adm","Saving failed"));
   return r;
 #endif
 }
@@ -431,7 +431,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
     IScriptEngine *engine=getPythonScriptEngine();
             if(!engine)
             {
-                GUI_Error_HIG("Queue","Cannot get tinyPÿ script engine");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot get tinyPÿ script engine"));
                 return;
             }
 
@@ -441,7 +441,7 @@ void A_queueJob(const char *jobName,const char *outputFile)
             job.scriptName=string(jobName)+string(".")+engine->defaultFileExtension();
             if(false==ADMJob::jobAdd(job))
             {
-                GUI_Error_HIG("Queue","Cannot add job %s",jobName);
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Queue"),QT_TRANSLATE_NOOP("adm","Cannot add job %s"),jobName);
                 return;
             }
             string completePath=string(ADM_getJobDir());

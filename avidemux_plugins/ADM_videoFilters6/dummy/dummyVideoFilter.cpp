@@ -41,8 +41,8 @@ DECLARE_VIDEO_FILTER(   dummyVideoFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_MISC,            // Category
                         "dummy",            // internal name (must be uniq!)
-                        "Dummy",            // Display name
-                        "Null filter, it does nothing at all." // Description
+                        QT_TRANSLATE_NOOP("dummy","Dummy"),            // Display name
+                        QT_TRANSLATE_NOOP("dummy","Null filter, it does nothing at all.") // Description
                     );
 
 // Now implements the interesting parts

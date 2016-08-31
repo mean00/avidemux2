@@ -20,10 +20,10 @@
 */
 uint8_t DIA_lavDecoder(bool  *swapUv, bool *showU)
 {
-         diaElemToggle    swap(swapUv,QT_TR_NOOP("_Swap U and V"));
-         diaElemToggle    show(showU,QT_TR_NOOP("Show motion _vectors"));
+         diaElemToggle    swap(swapUv,QT_TRANSLATE_NOOP("lavdecoder","_Swap U and V"));
+         diaElemToggle    show(showU,QT_TRANSLATE_NOOP("lavdecoder","Show motion _vectors"));
          diaElem *tabs[]={&swap,&show};
-        if( diaFactoryRun(QT_TR_NOOP("Decoder Options"),2,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("lavdecoder","Decoder Options"),2,tabs))
 	{
           return 1;
         }

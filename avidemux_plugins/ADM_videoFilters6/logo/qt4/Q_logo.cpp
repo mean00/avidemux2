@@ -110,7 +110,7 @@ void                   Ui_logoWindow::imageSelect()
 {
      
     char buffer[2048];
-    if(FileSel_SelectRead(QT_TR_NOOP("Select Logo Image"),buffer,2048,""))
+    if(FileSel_SelectRead(QT_TRANSLATE_NOOP("logo","Select Logo Image"),buffer,2048,""))
     {
         if(tryToLoadimage(buffer))
         {

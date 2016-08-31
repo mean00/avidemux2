@@ -402,7 +402,7 @@ uint8_t flvHeader::open(const char *name)
     printf("[FLV] Video flag\n");
   }else
     {
-    GUI_Info_HIG(ADM_LOG_INFO,"Warning","This FLV file says it has no video.\nI will assume it has and try to continue");
+    GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("flvdemuxer","Warning"),QT_TRANSLATE_NOOP("flvdemuxer","This FLV file says it has no video.\nI will assume it has and try to continue"));
     _isvideopresent=1;
     }
   if(flags & 4) // Audio

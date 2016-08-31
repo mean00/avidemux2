@@ -374,14 +374,14 @@ typedef struct
 
 ARDescriptor  allArs[]=
 {
-  {8,9,ADM_ASPECT_4_3,     QT_TR_NOOP("NTSC 4:3")},
-  {32,27,ADM_ASPECT_16_9,  QT_TR_NOOP("NTSC 16:9")},
-  {128,81,ADM_ASPECT_16_9, QT_TR_NOOP("NTSC 16:9")},
-  {16,15,ADM_ASPECT_4_3,   QT_TR_NOOP("PAL 4:3")},
-  {64,45,ADM_ASPECT_16_9,  QT_TR_NOOP("PAL 16:9")},
-  {1,1,ADM_ASPECT_1_1,     QT_TR_NOOP("1:1")},
+  {8,9,ADM_ASPECT_4_3,     QT_TRANSLATE_NOOP("adm","NTSC 4:3")},
+  {32,27,ADM_ASPECT_16_9,  QT_TRANSLATE_NOOP("adm","NTSC 16:9")},
+  {128,81,ADM_ASPECT_16_9, QT_TRANSLATE_NOOP("adm","NTSC 16:9")},
+  {16,15,ADM_ASPECT_4_3,   QT_TRANSLATE_NOOP("adm","PAL 4:3")},
+  {64,45,ADM_ASPECT_16_9,  QT_TRANSLATE_NOOP("adm","PAL 16:9")},
+  {1,1,ADM_ASPECT_1_1,     QT_TRANSLATE_NOOP("adm","1:1")},
 };
-const char *unknown=QT_TR_NOOP("Unknown");
+const char *unknown=QT_TRANSLATE_NOOP("adm","Unknown");
 
 ADM_ASPECT getAspectRatioFromAR(uint32_t width, uint32_t height, const char **string)
 {

@@ -298,10 +298,10 @@ bool partialFilter::configure( void)
         uint32_t mx=9*3600*1000;
         diaElemTimeStamp start(&(configuration.startBlack),QT_TRANSLATE_NOOP("partial","Start time (ms):"),0,mx);
         diaElemTimeStamp end(&(configuration.endBlack),QT_TRANSLATE_NOOP("partial","End time (ms):"),0,mx);
-        diaElemButton    son(QT_TR_NOOP("Configure filter"), partialFilter::reconfigureCallback,this);
+        diaElemButton    son(QT_TRANSLATE_NOOP("partial", "Configure filter"), partialFilter::reconfigureCallback,this);
 
         diaElem *elems[3]={&start,&end,&son};
-        return diaFactoryRun(QT_TRANSLATE_NOOP("Partial","Partial Filter"),3,elems);
+        return diaFactoryRun(QT_TRANSLATE_NOOP("partial","Partial Filter"),3,elems);
 }
 
 /**

@@ -221,7 +221,7 @@ void GUI_NextKeyFrame(void)
 
     if (!admPreview::nextKeyFrame())
       {
-        A_timedError("Cannot go to next keyframe");
+        A_timedError(QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return;
       }
     GUI_setCurrentFrameAndTime();
@@ -290,7 +290,7 @@ void GUI_PreviousKeyFrame(void)
 
     if (!admPreview::previousKeyFrame())
       {
-          A_timedError("Cannot go to previous keyframe");
+          A_timedError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
 	  return;
       }
     GUI_setCurrentFrameAndTime();
@@ -315,7 +315,7 @@ void GUI_PrevFrame(uint32_t frameCount)
     if (!admPreview::previousPicture())
       {
 //		We're probably at the beginning of the file ...
-//            GUI_Error_HIG(QT_TR_NOOP("Error"),	QT_TR_NOOP("Cannot go to previous frame"));
+//            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),	QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
             return;
       }
     GUI_setCurrentFrameAndTime();
@@ -466,7 +466,7 @@ bool GUI_GoToTime(uint64_t time)
     // We have to call the editor as the frames needed to decode the target frame may be hidden
     if(false==video_body->goToTimeVideo(time))
     {
-        GUI_Error_HIG("Seek", "Error seeking to %" PRIu64" ms",time/1000);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Seek"), QT_TRANSLATE_NOOP("navigate","Error seeking to %" PRIu64" ms"),time/1000);
     }
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
@@ -481,7 +481,7 @@ void A_timedError(const char *s)
 {
     if(NaggingCountDown.done()) // still running, do not nag
     {
-	  GUI_Error_HIG(QT_TR_NOOP("Error"),QT_TR_NOOP(s));
+	  GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
     }
     NaggingCountDown.reset();
 }

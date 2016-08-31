@@ -315,7 +315,7 @@ void filtermainWindow::makePartial()
     uint32_t tag=ADM_vf_getTag(filterIndex);
     if(!ADM_vf_canBePartialized(tag))
     {
-        GUI_Error_HIG("Partial","This filter cannot be made partial");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("qmainfilter","Partial"),QT_TRANSLATE_NOOP("qmainfilter","This filter cannot be made partial"));
         return;
     }
     // Get info about that filter..
@@ -492,17 +492,17 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     //____________________
     //  Context Menu
     //____________________
-    QAction *add = new  QAction(QString("Add"),this);
+    QAction *add = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Add")),this);
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
     
     
-    QAction *remove = new  QAction(QString("Remove"),this);
-    QAction *configure = new  QAction(QString("Configure"),this);
-    QAction *up = new  QAction(QString("Move up"),this);
-    QAction *down = new  QAction(QString("Move down"),this);
-    QAction *partial = new  QAction(QString("Make partial"),this);
+    QAction *remove = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
+    QAction *configure = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
+    QAction *up = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
+    QAction *down = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
+    QAction *partial = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
     
     activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
     activeList->addAction(up);
@@ -581,7 +581,7 @@ void filtermainWindow::loadFilters( bool b)
 
     char name[1024];
 
-    if(!FileSel_SelectRead(QT_TR_NOOP("Load video filters.."),name,1023,NULL))
+    if(!FileSel_SelectRead(QT_TRANSLATE_NOOP("qmainfilter","Load video filters.."),name,1023,NULL))
         return;
     call_scriptEngine(name);
     buildActiveFilterList();
@@ -596,7 +596,7 @@ void filtermainWindow::saveFilters( bool b)
     printf("save filters\n");
     char name[1024];
 
-    if(!FileSel_SelectWrite(QT_TR_NOOP("Save video filters.."),name,1023,NULL))
+    if(!FileSel_SelectWrite(QT_TRANSLATE_NOOP("qmainfilter","Save video filters.."),name,1023,NULL))
         return;
     printf("save filters, part 2\n");
     IScriptEngine *engine=getPythonScriptEngine();

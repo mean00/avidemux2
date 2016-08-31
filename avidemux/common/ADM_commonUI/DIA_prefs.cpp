@@ -388,7 +388,7 @@ std::string currentSdlDriver=getSdlDriverName();
      typedef struct  { const char *lang;const char *desc;}languageDescriptor;
      uint32_t languageIndex=0;
      languageDescriptor myLanguages[]={
-                {"auto","System language"},
+                {"auto",QT_TRANSLATE_NOOP("adm","System language")},
                 {"da","Dansk"},
                 {"de","Deutsch"},
                 {"en","English"},

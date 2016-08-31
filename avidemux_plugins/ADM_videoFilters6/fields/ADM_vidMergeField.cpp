@@ -49,8 +49,8 @@ DECLARE_VIDEO_FILTER(   AVDMVideoMergeField,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "mergefields",            // internal name (must be uniq!)
-                        "Merge Fields",            // Display name
-                        "Merge two pictures as if they were two fields." // Description
+                        QT_TRANSLATE_NOOP("mergeFields","Merge Fields"),            // Display name
+                        QT_TRANSLATE_NOOP("mergeFields","Merge two pictures as if they were two fields.") // Description
                     );
 /**
     \fn getCoupledConf

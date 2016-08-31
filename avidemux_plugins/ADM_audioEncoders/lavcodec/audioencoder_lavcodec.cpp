@@ -494,7 +494,7 @@ cnt:
   return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("lavcodec",#x)}
 
 /**
     \fn configure
@@ -521,13 +521,13 @@ bool configure (CONFcouple **setup)
                               BITRATE(384),
                               BITRATE(448)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("lavcodec","_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
 
     diaElem *elems[]={&bitrate};
 
-    if ( diaFactoryRun(QT_TR_NOOP(ADM_LAV_MENU" (lav) Configuration"),1,elems))
+    if ( diaFactoryRun(QT_TRANSLATE_NOOP("lavcodec",ADM_LAV_MENU" (lav) Configuration"),1,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;

@@ -58,8 +58,8 @@ bool  AVDM_black::configure()
 {
     
         uint32_t mx=9*3600*1000;
-        diaElemTimeStamp start(&(param.startBlack),QT_TRANSLATE_NOOP("fade","_Start time (ms):"),0,mx);
-        diaElemTimeStamp end(&(param.endBlack),QT_TRANSLATE_NOOP("fade","_End time (ms):"),0,mx);
+        diaElemTimeStamp start(&(param.startBlack),QT_TRANSLATE_NOOP("black","_Start time (ms):"),0,mx);
+        diaElemTimeStamp end(&(param.endBlack),QT_TRANSLATE_NOOP("black","_End time (ms):"),0,mx);
         diaElem *elems[2]={&start,&end};
         return diaFactoryRun(QT_TRANSLATE_NOOP("black","Replace by Black"),2+0*1,elems);
 }

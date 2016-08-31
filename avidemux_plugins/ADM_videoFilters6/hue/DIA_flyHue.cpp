@@ -58,8 +58,8 @@ float hue,sat;
                  hue, sat);
     // Copy half source to display
     in->copyLeftSideTo(out);
-    out->printString(1,1,"Original");
-    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed");
+    out->printString(1,1,QT_TRANSLATE_NOOP("hue","Original"));
+    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,QT_TRANSLATE_NOOP("hue","Processed"));
 
     return 1;
 }

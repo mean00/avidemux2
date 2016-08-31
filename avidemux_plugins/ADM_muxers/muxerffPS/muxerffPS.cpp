@@ -61,7 +61,7 @@ const char *er;
 
     if(verifyCompatibility(psMuxerConfig.acceptNonCompliant,psMuxerConfig.muxingType,s,nbAudioTrack,a,&er)==false)
     {
-        GUI_Error_HIG("[Mismatch]","%s",er);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("ffpsmuxer","[Mismatch]"),"%s",er);
         return false;
     }
 
@@ -137,7 +137,7 @@ const char *er;
 */
 bool muxerffPS::save(void) 
 {
-    const char *title=QT_TR_NOOP("Saving mpeg PS (ff)");
+    const char *title=QT_TRANSLATE_NOOP("ffpsmuxer","Saving mpeg PS (ff)");
     return saveLoop(title);
 }
 // Clock is 90 Khz for all mpeg streams
@@ -182,7 +182,7 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
 
      if(!isMpeg12Compatible(fcc))
      {
-            FAIL(" video not compatible\n");
+            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," video not compatible\n"));
      }
     if(!nonCompliantOk)
     {
@@ -191,19 +191,19 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
             case MUXER_VCD:
                     if(w!=352 || (h!=240 && h!=288))
                     {
-                            FAIL(" Bad width/height for VCD\n");
+                            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," Bad width/height for VCD\n"));
                     }
                     break;
             case MUXER_SVCD:
                     if((w!=352 && w!=480)|| (h!=576 && h!=480))
                     {
-                            FAIL(" Bad width/height for SVCD\n");
+                            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," Bad width/height for SVCD\n"));
                     }
                     break;
             case MUXER_DVD:
                     if((w!=720 && w!=704)|| (h!=576 && h!=480))
                     {
-                            FAIL(" Bad width/height for DVD\n");
+                            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," Bad width/height for DVD\n"));
                     }
                     break;
             case MUXER_FREE: break;
@@ -220,25 +220,25 @@ bool muxerffPS::verifyCompatibility(bool nonCompliantOk, uint32_t muxingType,
             case MUXER_SVCD:
                     if(head->encoding!=WAV_MP2) 
                     {
-                        FAIL(" VCD : only MP2 audio accepted\n");
+                        FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," VCD : only MP2 audio accepted\n"));
                     }
                     if(!nonCompliantOk)
                         if(head->frequency!=44100) 
                         {
-                            FAIL(" VCD : only 44.1 khz audio accepted\n");
+                            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," VCD : only 44.1 khz audio accepted\n"));
                         }
                     break;
             case MUXER_DVD:
                     if(!nonCompliantOk)
                         if(head->frequency!=48000) 
                         {
-                            FAIL(" DVD : only 48 khz audio accepted\n");
+                            FAIL(QT_TRANSLATE_NOOP("ffpsmuxer"," DVD : only 48 khz audio accepted\n"));
                         }
                     // no break
             case MUXER_FREE:
                     if(head->encoding!=WAV_MP2 && head->encoding!=WAV_AC3 && head->encoding!=WAV_DTS) 
                     {
-                        FAIL("[ffPS] DVD : only MP2/AC3/DTS audio accepted\n");
+                        FAIL(QT_TRANSLATE_NOOP("ffpsmuxer","[ffPS] DVD : only MP2/AC3/DTS audio accepted\n"));
                     }
                     break;
             default:

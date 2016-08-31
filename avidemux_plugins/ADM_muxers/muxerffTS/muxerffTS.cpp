@@ -138,7 +138,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
 */
 bool muxerffTS::save(void) 
 {
-    const char *title=QT_TR_NOOP("Saving mpeg TS (ff)");
+    const char *title=QT_TRANSLATE_NOOP("fftsmuxer","Saving mpeg TS (ff)");
     return saveLoop(title);
 }
 // Clock is 90 Khz for all mpeg streams

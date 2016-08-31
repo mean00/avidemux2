@@ -58,8 +58,8 @@ DECLARE_VIDEO_FILTER(   glSmooth,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glSmooth",            // internal name (must be uniq!)
-                        "OpenGl Smooth",            // Display name
-                        "Smooth image while preserving edge." // Description
+                        QT_TRANSLATE_NOOP("glSmooth","OpenGl Smooth"),            // Display name
+                        QT_TRANSLATE_NOOP("glSmooth","Smooth image while preserving edge.") // Description
                     );
 
 // Now implements the interesting parts

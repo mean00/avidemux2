@@ -24,8 +24,8 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   AVDMFastVideoSharpen,   // Class
                         ADM_UI_ALL,         // UI
                         VF_SHARPNESS,            // Category
                         "Sharpen",            // internal name (must be uniq!)
-                        "Sharpen convolution.",            // Display name
-                        "3x3 convolution filter :sharpen." // Description
+                        QT_TRANSLATE_NOOP("sharpen","Sharpen convolution."),            // Display name
+                        QT_TRANSLATE_NOOP("sharpen","3x3 convolution filter :sharpen.") // Description
                     );
 
 /**

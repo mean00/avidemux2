@@ -54,8 +54,8 @@ DECLARE_VIDEO_FILTER(   rotateGl,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glRotate",            // internal name (must be uniq!)
-                        "OpenGl Rotate",            // Display name
-                        "Rotate image by a small amount." // Description
+                        QT_TRANSLATE_NOOP("glRotate","OpenGl Rotate"),            // Display name
+                        QT_TRANSLATE_NOOP("glRotate","Rotate image by a small amount.") // Description
                     );
 
 // Now implements the interesting parts
@@ -175,12 +175,12 @@ bool rotateGl::configure( void)
 {
     
      
-     diaElemInteger  tAngle(&(params.angle),QT_TR_NOOP("Angle (°):"),-190,190);
+     diaElemInteger  tAngle(&(params.angle),QT_TRANSLATE_NOOP("glRotate","Angle (°):"),-190,190);
    
      
      diaElem *elems[]={&tAngle};
      
-     if(diaFactoryRun(QT_TR_NOOP("glRotate"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glRotate","glRotate"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 ADM_info("New angle : %d \n",params.angle);
                 _parentQGL->makeCurrent();

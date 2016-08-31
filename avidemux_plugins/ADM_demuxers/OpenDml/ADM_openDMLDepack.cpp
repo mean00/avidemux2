@@ -86,7 +86,7 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	setpriority(PRIO_PROCESS, 0, ADM_getNiceValue(priorityLevel));
 #endif
 	printf("[Avi] Trying to unpack the stream\n");
-	DIA_workingBase *working=createWorking(QT_TR_NOOP("Unpacking bitstream"));
+	DIA_workingBase *working=createWorking(QT_TRANSLATE_NOOP("opendmldemuxer","Unpacking bitstream"));
 	ADMCompressedImage image;
     image.data=buffer;
 	uint32_t img=0;

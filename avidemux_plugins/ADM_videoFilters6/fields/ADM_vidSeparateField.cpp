@@ -50,8 +50,8 @@ DECLARE_VIDEO_FILTER(   AVDMVideoSeparateField,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "SeparateFields",            // internal name (must be uniq!)
-                        "Separate Fields",            // Display name
-                        "Split each image into 2 fields." // Description
+                        QT_TRANSLATE_NOOP("separateFields","Separate Fields"),            // Display name
+                        QT_TRANSLATE_NOOP("separateFields","Split each image into 2 fields.") // Description
                     );
 /**
     \fn getCoupledConf

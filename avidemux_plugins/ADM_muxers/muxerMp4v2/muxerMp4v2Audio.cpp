@@ -50,7 +50,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
                 case 32000: fscod=2;break;
                 default: 
                     {
-                    GUI_Error_HIG("", "Invalid frequency for AC3. Only 32, 44.1 & 48 kHz");
+                    GUI_Error_HIG("", QT_TRANSLATE_NOOP("mp4v2muxer","Invalid frequency for AC3. Only 32, 44.1 & 48 kHz"));
                     return false;
                     }
         }
@@ -69,7 +69,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
                 }
         if(-1==bitrate) 
         {
-            GUI_Error_HIG("","Invalid bitrate for AC3");
+            GUI_Error_HIG("",QT_TRANSLATE_NOOP("mp4v2muxer","Invalid bitrate for AC3"));
             return false;
         }
         int acmod,lfe=0;
@@ -82,7 +82,7 @@ bool muxerMp4v2::addAc3(int index, WAVHeader *header)
                 case 6: acmod=7;lfe=1;break;
                 default: 
                         {
-                                  GUI_Error_HIG("","Invalid number of channels for AC3");
+                                  GUI_Error_HIG("",QT_TRANSLATE_NOOP("mp4v2muxer","Invalid number of channels for AC3"));
                                   return false;
                         }
         }
@@ -130,7 +130,7 @@ bool muxerMp4v2::initAudio(void)
                         uint32_t extraDataLen=0;
                         if(!a->getExtraData(&extraDataLen,&extraData))
                             {
-                                 GUI_Error_HIG("AAC","Cannot get AAC Extra data\n");
+                                 GUI_Error_HIG("AAC",QT_TRANSLATE_NOOP("mp4v2muxer","Cannot get AAC Extra data\n"));
                                  return false;
                             }
                         audioTrackIds[i]=MP4AddAudioTrack(handle,

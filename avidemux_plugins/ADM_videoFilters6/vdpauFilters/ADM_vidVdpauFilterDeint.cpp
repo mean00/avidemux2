@@ -128,8 +128,8 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilterDeint,   // Class
                         ADM_UI_GTK+ADM_UI_QT4+ADM_FEATURE_VDPAU,     // We need a display for VDPAU; so no cli...
                         VF_INTERLACING,            // Category
                         "vdpauDeint",            // internal name (must be uniq!)
-                        "vdpauDeint",            // Display name
-                        "VDPAU deinterlacer (+resize)." // Description
+                        QT_TRANSLATE_NOOP("vdpaudeint","vdpauDeint"),            // Display name
+                        QT_TRANSLATE_NOOP("vdpaudeint","VDPAU deinterlacer (+resize).") // Description
                     );
 
 //
@@ -314,22 +314,22 @@ bool vdpauVideoFilterDeint::configure( void)
 {
      
      diaMenuEntry tMode[]={
-                             {ADM_KEEP_TOP,      QT_TR_NOOP("Keep Top Field"),NULL},
-                             {ADM_KEEP_BOTTOM,   QT_TR_NOOP("Keep Bottom Field"),NULL},
-                             {ADM_KEEP_BOTH,      QT_TR_NOOP("Double framerate"),NULL}
+                             {ADM_KEEP_TOP,      QT_TRANSLATE_NOOP("vdpaudeint","Keep Top Field"),NULL},
+                             {ADM_KEEP_BOTTOM,   QT_TRANSLATE_NOOP("vdpaudeint","Keep Bottom Field"),NULL},
+                             {ADM_KEEP_BOTH,      QT_TRANSLATE_NOOP("vdpaudeint","Double framerate"),NULL}
                              
           };
      bool doResize=configuration.resizeToggle;
      bool doIvtc=configuration.enableIvtc;
-     diaElemToggle    tIvtc(&(doIvtc),   QT_TR_NOOP("_Ivtc:"));
-     diaElemToggle    tResize(&(doResize),   QT_TR_NOOP("_Resize:"));     
-     diaElemMenu      mMode(&(configuration.deintMode),   QT_TR_NOOP("_Deint Mode:"), 3,tMode);
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TR_NOOP("Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TR_NOOP("Height :"),16,2048);
+     diaElemToggle    tIvtc(&(doIvtc),   QT_TRANSLATE_NOOP("vdpaudeint","_Ivtc:"));
+     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaudeint","_Resize:"));
+     diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("vdpaudeint","_Deint Mode:"), 3,tMode);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaudeint","Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaudeint","Height :"),16,2048);
      
      diaElem *elems[]={&mMode,&tIvtc,&tResize,&tWidth,&tHeight};
      
-     if(diaFactoryRun(QT_TR_NOOP("vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpaudeint","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 configuration.resizeToggle=(bool)doResize;
                 configuration.enableIvtc=doIvtc;

@@ -177,7 +177,7 @@ bool muxerMp4v2::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack
                 case WAV_MP2:case WAV_MP3:case WAV_AAC:case WAV_AC3:
                             continue;
                 default:
-                    GUI_Error_HIG("Audio","Audio format not supported, only AAC/MP3/AC3");
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4v2muxer","Audio"),QT_TRANSLATE_NOOP("mp4v2muxer","Audio format not supported, only AAC/MP3/AC3"));
                     return false;
             }            
         }
@@ -223,7 +223,7 @@ bool muxerMp4v2::save(void)
    
 
     initUI("Saving MP4V2");
-    encoding->setPhasis(QT_TRANSLATE_NOOP("adm","Saving"));
+    encoding->setPhasis(QT_TRANSLATE_NOOP("mp4v2muxer","Saving"));
     encoding->setContainer("MP4 (libmp4v2)");
     uint64_t lastSentDts=0;
     
@@ -237,7 +237,7 @@ bool muxerMp4v2::save(void)
         ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
         if(in[other].pts==ADM_NO_PTS || in[other].pts==ADM_NO_PTS)
         {
-            GUI_Error_HIG("Video","Video does not have enough timing information. Are you copying from AVI?");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4v2muxer","Video"),QT_TRANSLATE_NOOP("mp4v2muxer","Video does not have enough timing information. Are you copying from AVI?"));
             goto theEnd;
         }
 
@@ -302,7 +302,7 @@ theEnd:
         string tmpTargetFileName=targetFileName+string(".tmp");
         if(!ADM_renameFile(targetFileName.c_str(),tmpTargetFileName.c_str()))
         {
-            GUI_Error_HIG("","Cannot rename file (optimize)");
+            GUI_Error_HIG("",QT_TRANSLATE_NOOP("mp4v2muxer","Cannot rename file (optimize)"));
             return false;
         }
         // Optimize

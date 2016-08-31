@@ -56,8 +56,8 @@ DECLARE_VIDEO_FILTER(   openGlVertex,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glSampleVertex",            // internal name (must be uniq!)
-                        "OpenGl Vertex Shader",            // Display name
-                        "Run a simple vertex shader." // Description
+                        QT_TRANSLATE_NOOP("glVertex","OpenGl Vertex Shader"),            // Display name
+                        QT_TRANSLATE_NOOP("glVertex","Run a simple vertex shader.") // Description
                     );
 
 // Now implements the interesting parts

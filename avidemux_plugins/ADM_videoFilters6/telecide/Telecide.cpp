@@ -42,8 +42,8 @@ DECLARE_VIDEO_FILTER(   Telecide,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "telecide",            // internal name (must be uniq!)
-                        "Decomb telecide",            // Display name
-                        "Donald Graft Telecide. Replace ivtc pattern by progressive frames. Video stays at 30 fps." // Description
+                        QT_TRANSLATE_NOOP("telecide","Decomb telecide"),            // Display name
+                        QT_TRANSLATE_NOOP("telecide","Donald Graft Telecide. Replace ivtc pattern by progressive frames. Video stays at 30 fps.") // Description
                     );
 
 /**

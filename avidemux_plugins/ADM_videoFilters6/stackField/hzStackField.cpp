@@ -49,8 +49,8 @@ DECLARE_VIDEO_FILTER(   AVDMVideoHzStackField,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "hzstackfield",            // internal name (must be uniq!)
-                        "Horizontal Stack Fields",            // Display name
-                        "Put fields side by side." // Description
+                        QT_TRANSLATE_NOOP("hzstackfield","Horizontal Stack Fields"),            // Display name
+                        QT_TRANSLATE_NOOP("hzstackfield","Put fields side by side.") // Description
                     );
 
 // Now implements the interesting parts

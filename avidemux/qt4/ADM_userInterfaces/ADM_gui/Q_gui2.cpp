@@ -400,8 +400,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildCustomMenu();
     // Crash in some cases addScriptReferencesToHelpMenu();
 
-    QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Files"));
-    QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Recent Projects"));
+    QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
+    QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Projects"));
     
     recentFiles=new QMenu(rFiles, this);
     recentProjects=new QMenu(rProjects, this);
@@ -485,7 +485,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
+        QString qs=QString::fromUtf8(m->text.c_str());
         switch(m->type)
         {
             case MENU_SEPARATOR:
@@ -976,7 +976,7 @@ static void FatalFunctionQt(const char *title, const char *info)
     
     QMessageBox msgBox;
     msgBox.setText(title);
-    msgBox.setInformativeText(QT_TR_NOOP("The application has encountered a fatal problem\nThe current editing has been saved and will be reloaded at next start"));
+    msgBox.setInformativeText(QT_TRANSLATE_NOOP("qgui2","The application has encountered a fatal problem\nThe current editing has been saved and will be reloaded at next start"));
     msgBox.setDetailedText(info);
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.exec();
@@ -1194,7 +1194,7 @@ void UI_setFrameType( uint32_t frametype,uint32_t qp)
 
                     break;
     }
-    sprintf(string,QT_TR_NOOP("%c-%s (%02d)"),c,f,qp);
+    sprintf(string,QT_TRANSLATE_NOOP("qgui2","%c-%s (%02d)"),c,f,qp);
     WIDGET(label_8)->setText(string);
 
 }

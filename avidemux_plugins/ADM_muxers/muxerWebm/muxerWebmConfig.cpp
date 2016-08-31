@@ -24,11 +24,11 @@ bool WebmConfigure(void)
         bool force=WebmMuxerConfig.forceDisplayWidth;
         uint32_t displayWidth=(uint32_t)WebmMuxerConfig.displayWidth;
 
-        diaElemToggle   alternate(&force,"Force display width");
-        diaElemUInteger dWidth(&displayWidth,"Display width",16,65535);
+        diaElemToggle   alternate(&force,QT_TRANSLATE_NOOP("webmmuxer","Force display width"));
+        diaElemUInteger dWidth(&displayWidth,QT_TRANSLATE_NOOP("webmmuxer","Display width"),16,65535);
 
         diaElem *tabs[]={&alternate,&dWidth};
-        if( diaFactoryRun(("Webm Muxer"),2,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("webmmuxer","Webm Muxer"),2,tabs))
         {
             WebmMuxerConfig.forceDisplayWidth=(bool)force;
             WebmMuxerConfig.displayWidth=displayWidth;

@@ -56,8 +56,8 @@ DECLARE_VIDEO_FILTER(   openGlDistort,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glSampleDistort",            // internal name (must be uniq!)
-                        "OpenGl wave ",            // Display name
-                        "Simple wave filter." // Description
+                        QT_TRANSLATE_NOOP("glWave","OpenGl wave "),            // Display name
+                        QT_TRANSLATE_NOOP("glWave","Simple wave filter.") // Description
                     );
 
 // Now implements the interesting parts

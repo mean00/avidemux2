@@ -22,10 +22,10 @@ extern "C" bool AviConfigure(void)
 {
         uint32_t fmt=(uint32_t)muxerConfig.odmlType;
         diaMenuEntry format[]={{AVI_MUXER_TYPE1,"Avi"},{AVI_MUXER_AUTO,"AUTO"},{AVI_MUXER_TYPE2,"OPENDML"}};
-        diaElemMenu  menuFormat(&fmt,"Muxing Format",3,format,"");
+        diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("avimuxer","Muxing Format"),3,format,"");
 
         diaElem *tabs[]={&menuFormat};
-        if( diaFactoryRun(("Avi Muxer"),1,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("avimuxer","Avi Muxer"),1,tabs))
         {
             muxerConfig.odmlType=fmt;
             return true;

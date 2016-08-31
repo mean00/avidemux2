@@ -26,7 +26,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   AVDMFastVideoMedian,   // Class
                         VF_NOISE,            // Category
                         "Median",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("median","Median convolution."),            // Display name
-                        QT_TRANSLATE_NOOP("meadian","3x3 convolution filter :median.") // Description
+                        QT_TRANSLATE_NOOP("median","3x3 convolution filter :median.") // Description
                     );
 /**
     \fn getConfiguration

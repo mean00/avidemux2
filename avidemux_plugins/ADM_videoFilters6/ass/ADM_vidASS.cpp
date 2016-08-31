@@ -123,7 +123,7 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     {
         if (!this->setup()) 
         {
-            GUI_Error_HIG("Format ?", "Are you sure this is an ass file ?");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Format ?"), QT_TRANSLATE_NOOP("ass","Are you sure this is an ass file ?"));
         }
     }
 }
@@ -179,19 +179,19 @@ again:
     int l=strlen(p);
     if(l>3 && !strcasecmp(p+l-4,".srt"))
     {
-        if(!GUI_Question("This is a srt file. Convert to SSA ?"))
+        if(!GUI_Question(QT_TRANSLATE_NOOP("ass","This is a srt file. Convert to SSA ?")))
         {
             goto again;
         }
         ADM_subtitle sub;
         if(!sub.load(p))
         {
-            GUI_Error_HIG("Error","Cannot load this srt file.");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot load this srt file."));
             goto again;
         }
         if(false==sub.srt2ssa())
         {
-            GUI_Error_HIG("Error","Cannot convert to ssa.");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot convert to ssa."));
             goto again;               
         }
 
@@ -199,7 +199,7 @@ again:
         strcpy(newName+l-4,".ssa");
         if(false==sub.saveAsSSA(newName))
         {
-            GUI_Error_HIG("Error","Cannot save converted file.");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot save converted file."));
             goto again;                              
         }
         param.subtitleFile=std::string(newName);
@@ -254,7 +254,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
             warn=true;
         if(warn)
         {
-            GUI_Info_HIG(ADM_LOG_INFO,"Fonts","Preparing the fonts can take a few minutes the first time.\nThis message will not be displayed again.");
+            GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("ass","Fonts"), QT_TRANSLATE_NOOP("ass","Preparing the fonts can take a few minutes the first time.\nThis message will not be displayed again."));
             prefs->set(DEFAULT_WARN_FOR_FONTS,false);
         }
         
@@ -281,7 +281,7 @@ bool use_margins = ( param.topMargin | param.bottomMargin ) != 0;
         //~ ass_set_aspect_ratio(_ass_rend, ((double)_info.width) / ((double)_info.height));
        _ass_track = ass_read_file(_ass_lib, (char *)param.subtitleFile.c_str(), NULL);
         if(!_ass_track)
-          GUI_Error_HIG("SSA Error","Cannot read_file for *%s*",param.subtitleFile.c_str());
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","SSA Error"),QT_TRANSLATE_NOOP("ass","Cannot read_file for *%s*"),param.subtitleFile.c_str());
         return 1;
 }
 

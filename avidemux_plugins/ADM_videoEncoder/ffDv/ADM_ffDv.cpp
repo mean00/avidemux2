@@ -76,7 +76,7 @@ bool ADM_ffDvEncoder::configureContext(void)
    const dvProfileClass *p=findProfile(this->getWidth(),this->getHeight(),fps);
    if(!p)
    {
-       GUI_Error_HIG("DV",QT_TR_NOOP("DV only supports 720*576*25fps and 720*480*29.97fps"));
+       GUI_Error_HIG("DV",QT_TRANSLATE_NOOP("dv","DV only supports 720*576*25fps and 720*480*29.97fps"));
        return false;
    }
    if(p->color==dvColor422)

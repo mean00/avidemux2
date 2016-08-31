@@ -78,8 +78,8 @@ DECLARE_VIDEO_FILTER(   ivtcDupeRemover,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "ivtcRemover",            // internal name (must be uniq!)
-                        "Remove IVTC dupe.",            // Display name
-                        "Remove the duplicate frames present after ivtc." // Description
+                        QT_TRANSLATE_NOOP("ivtcRemover","Remove IVTC dupe."),            // Display name
+                        QT_TRANSLATE_NOOP("ivtcRemover","Remove the duplicate frames present after ivtc.") // Description
                     );
 
 // Now implements the interesting parts
@@ -375,22 +375,22 @@ bool ivtcDupeRemover::configure( void)
 {
 
 #define PX(x) &(configuration.x)
-        diaElemUInteger   threshold(PX(threshold),QT_TR_NOOP("_Noise:"),0,255);
-        diaElemToggle     show(PX(show),QT_TR_NOOP("_Show:"));
+        diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("ivtcRemover","_Noise:"),0,255);
+        diaElemToggle     show(PX(show),QT_TRANSLATE_NOOP("ivtcRemover","_Show:"));
 
         
         diaMenuEntry menuMode[]={
-                {0,      QT_TRANSLATE_NOOP("adm","Full")},
-                {1,      QT_TRANSLATE_NOOP("adm","Fast")},
-                {2,      QT_TRANSLATE_NOOP("adm","VeryFast")}
+                {0,      QT_TRANSLATE_NOOP("ivtcRemover","Full")},
+                {1,      QT_TRANSLATE_NOOP("ivtcRemover","Fast")},
+                {2,      QT_TRANSLATE_NOOP("ivtcRemover","VeryFast")}
                 };
 
         
         
-        diaElemMenu      eMode(&configuration.mode,QT_TRANSLATE_NOOP("adm","_Frame rate change:"),3,menuMode);
+        diaElemMenu      eMode(&configuration.mode,QT_TRANSLATE_NOOP("ivtcRemover","_Frame rate change:"),3,menuMode);
 
         diaElem *elems[3]={&threshold,&show,&eMode};
-        diaFactoryRun(QT_TR_NOOP("DupeRemover"),3,elems);
+        diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),3,elems);
         return true;
 }
 

@@ -61,17 +61,17 @@ FILE *qfopen(const char *path, const char *mode){
 		  char msg[msg_len];
 		  	fprintf(stderr,"qfopen(): can't open \"%s\": %s\n", path,
 				       (errno==ENOSPC?"filesystem full":"quota exceeded"));
-		  	ADM_assert(snprintf(msg,msg_len,"can't open \"%s\": %s\n%s\n",
+		  	ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %s\n%s\n"),
 						        path,
-							(errno==ENOSPC?"filesystem full":"quota exceeded"),
-							"Please free up some space and press RETRY to try again.")!=-1);
-			GUI_Error_HIG("Error","msg");
+							(errno==ENOSPC?QT_TRANSLATE_NOOP("adm","filesystem full"):QT_TRANSLATE_NOOP("adm","quota exceeded")),
+							QT_TRANSLATE_NOOP("adm","Please free up some space and press RETRY to try again."))!=-1);
+			GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),msg);
 			/* same behaviour for IGNORE and RETRY */
 			continue;
 		}
 		if( !FD ){
 		  char msg[msg_len];
-			ADM_assert(snprintf(msg,msg_len,"can't open \"%s\": %u (%s)\n", path, errno, strerror(errno))!=-1);
+			ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %u (%s)\n"), path, errno, strerror(errno))!=-1);
 			fprintf(stderr,"qfopen(): %s",msg);
 			GUI_Error_HIG(msg,NULL);
 			return NULL;
@@ -146,19 +146,19 @@ ssize_t qwrite(int fd, const void *buf, size_t numbytes){
 			fprintf(stderr,"qwrite(): can't write to file \"%s\": %s\n",
 				       (qfile[fd].filename?qfile[fd].filename:"__unknown__"),
 			               (errno==ENOSPC?"filesystem full":"quota exceeded"));
-			ADM_assert(snprintf(msg,msg_len,"can't write to file \"%s\": %s\n%s\n",
-			                                (qfile[fd].filename?qfile[fd].filename:"__unknown__"),
-			                                (errno==ENOSPC?"filesystem full":"quota exceeded"),
-			                                "Please free up some space and press RETRY to try again.")!=-1);
-			rc = GUI_Alternate(msg,"Ignore","Retry");
+			ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't write to file \"%s\": %s\n%s\n"),
+			                                (qfile[fd].filename?qfile[fd].filename:QT_TRANSLATE_NOOP("adm","__unknown__")),
+			                                (errno==ENOSPC?QT_TRANSLATE_NOOP("adm","filesystem full"):QT_TRANSLATE_NOOP("adm","quota exceeded")),
+			                                QT_TRANSLATE_NOOP("adm","Please free up some space and press RETRY to try again."))!=-1);
+			rc = GUI_Alternate(msg,QT_TRANSLATE_NOOP("adm","Ignore"),QT_TRANSLATE_NOOP("adm","Retry"));
 			if( rc == 0 /* ignore */ ){
 				qfile[fd].ignore = 1;
 				return -1;
 			}
 			continue;
 		}
-		ADM_assert(snprintf(msg,msg_len,"can't write to file \"%s\": %u (%s)\n",
-					        (qfile[fd].filename?qfile[fd].filename:"__unknown__"),
+		ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't write to file \"%s\": %u (%s)\n"),
+					        (qfile[fd].filename?qfile[fd].filename:QT_TRANSLATE_NOOP("adm","__unknown__")),
 						errno, strerror(errno))!=-1);
 		fprintf(stderr,"qwrite(): %s",msg);
 		GUI_Error_HIG(msg,NULL);

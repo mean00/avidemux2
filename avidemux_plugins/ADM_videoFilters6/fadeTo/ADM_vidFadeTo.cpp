@@ -51,8 +51,8 @@ DECLARE_VIDEO_FILTER(AVDM_FadeTo,
                      ADM_UI_ALL,         // UI
                      VF_TRANSFORM,            // Category
                      "fadeTo",            // internal name (must be uniq!)
-                     QT_TRANSLATE_NOOP("fade","Fade"),            // Display name
-                     QT_TRANSLATE_NOOP("fade","Fade.") // Description
+                     QT_TRANSLATE_NOOP("fadeTo","Fade"),            // Display name
+                     QT_TRANSLATE_NOOP("fadeTo","Fade.") // Description
                  );   
 /**
  * \fn configure
@@ -71,11 +71,11 @@ while(1)
     
     uint32_t mx=9*3600*1000;
   
-    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fade","_Start time (ms):"),0,mx);
-    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fade","_End time (ms):"),0,mx);
+    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeTo","_Start time (ms):"),0,mx);
+    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeTo","_End time (ms):"),0,mx);
     diaElem *elems[2]={&start,&end};
   
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("fade to","Fade"),2+0*1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeTo","Fade"),2+0*1,elems))
     {
         
         buildLut();

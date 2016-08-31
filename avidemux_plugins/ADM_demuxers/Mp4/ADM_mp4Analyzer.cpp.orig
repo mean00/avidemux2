@@ -732,7 +732,7 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
                                             VDEO.extraData=new uint8_t[ VDEO.extraDataSize ];
                                             if(!son.readPayload(VDEO.extraData+4,VDEO.extraDataSize-4 ))
                                             {
-                                              GUI_Error_HIG(QT_TR_NOOP("Problem reading SVQ3 headers"), NULL);
+                                              GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4demuxer","Problem reading SVQ3 headers"), NULL);
                                             }
                                             VDEO.extraData[0]='S';
                                             VDEO.extraData[1]='V';

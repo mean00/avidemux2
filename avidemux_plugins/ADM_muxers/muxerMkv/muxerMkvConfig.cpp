@@ -24,11 +24,11 @@ bool mkvConfigure(void)
         bool force=mkvMuxerConfig.forceDisplayWidth;
         uint32_t displayWidth=(uint32_t)mkvMuxerConfig.displayWidth;
 
-        diaElemToggle   alternate(&force,"Force display width");
-        diaElemUInteger dWidth(&displayWidth,"Display width",16,65535);
+        diaElemToggle   alternate(&force,QT_TRANSLATE_NOOP("mkvmuxer","Force display width"));
+        diaElemUInteger dWidth(&displayWidth,QT_TRANSLATE_NOOP("mkvmuxer","Display width"),16,65535);
 
         diaElem *tabs[]={&alternate,&dWidth};
-        if( diaFactoryRun(("MKV Muxer"),2,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mkvmuxer","MKV Muxer"),2,tabs))
         {
             mkvMuxerConfig.forceDisplayWidth=(bool)force;
             mkvMuxerConfig.displayWidth=displayWidth;

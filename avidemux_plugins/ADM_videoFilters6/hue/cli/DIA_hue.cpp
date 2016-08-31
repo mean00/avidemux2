@@ -6,8 +6,8 @@
 uint8_t DIA_getHue(hue *param, ADM_coreVideoFilter *in)
 {
     
-    diaElemFloat  hue(&(param->hue),QT_TR_NOOP("Hue :"),-180,180);
-    diaElemFloat  sat(&(param->saturation),QT_TR_NOOP("Sat :"),-180,180);
+    diaElemFloat  hue(&(param->hue),QT_TRANSLATE_NOOP("hue","Hue :"),-180,180);
+    diaElemFloat  sat(&(param->saturation),QT_TRANSLATE_NOOP("hue","Sat :"),-180,180);
 
     diaElem *elems[]={&hue,&sat};
     return diaFactoryRun("Hue",sizeof(elems)/sizeof(diaElem *),elems);

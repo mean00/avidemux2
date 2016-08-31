@@ -155,7 +155,7 @@ uint8_t asfHeader::open(const char *name)
   _fd=ADM_fopen(name,"rb");
   if(!_fd)
   {
-    GUI_Error_HIG("File Error.","Cannot open file\n");
+    GUI_Error_HIG(QT_TRANSLATE_NOOP("asfdemuxer","File Error."),QT_TRANSLATE_NOOP("asfdemuxer","Cannot open file\n"));
     return 0; 
   }
   myName=ADM_strdup(name);

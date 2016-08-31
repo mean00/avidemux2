@@ -25,13 +25,13 @@ bool ffTSConfigure(void)
         uint32_t muxRate=(uint32_t)tsMuxerConfig.muxRateInMBits;
         bool     vbr=tsMuxerConfig.vbr;
 
-        diaElemToggle   v(&vbr,"VBR muxing");
-        diaElemUInteger mux(&muxRate,"Mux rate (MBits/s)",3,60);
+        diaElemToggle   v(&vbr,QT_TRANSLATE_NOOP("fftsmuxer","VBR muxing"));
+        diaElemUInteger mux(&muxRate,QT_TRANSLATE_NOOP("fftsmuxer","Mux rate (MBits/s)"),3,60);
 
         v.link(0,&mux);
 
         diaElem *tabs[]={&v,&mux};
-        if( diaFactoryRun(("TS Muxer"),2,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("fftsmuxer","TS Muxer"),2,tabs))
         {            
             tsMuxerConfig.muxRateInMBits=muxRate;
             tsMuxerConfig.vbr=vbr;

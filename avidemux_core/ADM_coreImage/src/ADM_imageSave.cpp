@@ -75,7 +75,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
         out=(uint8_t *)ADM_alloc(sz);
         if(!out)
         {
-            GUI_Error_HIG(QT_TR_NOOP("Memory error"), NULL);
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Memory error"), NULL);
 //            ADM_dealloc(out);
             return 0;
         }
@@ -101,7 +101,7 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
         fd = ADM_fopen (filename, "wb");
         if (!fd)
         {
-                GUI_Error_HIG (QT_TR_NOOP("Something bad happened"), NULL);
+                GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened"), NULL);
                 ADM_dealloc(out);
                 return 0;
         }

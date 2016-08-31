@@ -48,7 +48,7 @@ bool vdpauProbe(void)
 #ifdef USE_VDPAU
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_VDPAU)==false)
     {
-        GUI_Error_HIG("Error","Core has been compiled without VDPAU support, but the application has been compiled with it.\nInstallation mismatch");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without VDPAU support, but the application has been compiled with it.\nInstallation mismatch"));
         vdpauWorking=false;
     }
 #endif

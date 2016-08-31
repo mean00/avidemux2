@@ -209,7 +209,7 @@ bool x265Dialog::updatePresetList(void)
     {
         combo->addItem(list[i].c_str());
     }
-    combo->addItem(QString("Custom"));
+    combo->addItem(QString(QT_TRANSLATE_NOOP("x265","Custom")));
     return true;
 }
 
@@ -566,28 +566,28 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 	switch (index)
 	{
 		case 0:
-			ui.targetRateControlLabel1->setText(tr("Target Bitrate:"));
-			ui.targetRateControlLabel2->setText(tr("kbit/s"));
+			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Target Bitrate:"));
+			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","kbit/s"));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
                         enableStrictCbr = true;
 			break;
 		case 1: // Constant Quality - 1 pass
-			ui.quantiserLabel2->setText(tr("Quantiser:"));
+			ui.quantiserLabel2->setText(QT_TRANSLATE_NOOP("x265","Quantiser:"));
 			enableQp = true;
 			break;
 		case 2: // Average Quantiser - 1 pass
-			ui.quantiserLabel2->setText(tr("Quality:"));
+			ui.quantiserLabel2->setText(QT_TRANSLATE_NOOP("x265","Quality:"));
 			enableQp = true;
 			enableMaxCrf = true;
 			break;
 		case 3: // Video Size - 2 pass
-			ui.targetRateControlLabel1->setText(tr("Target Video Size:"));
-			ui.targetRateControlLabel2->setText(tr("MB"));
+			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Target Video Size:"));
+			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","MB"));
 			ui.targetRateControlSpinBox->setValue(lastVideoSize);
 			break;
 		case 4: // Average Bitrate - 2 pass
-			ui.targetRateControlLabel1->setText(tr("Average Bitrate:"));
-			ui.targetRateControlLabel2->setText(tr("kbit/s"));
+			ui.targetRateControlLabel1->setText(QT_TRANSLATE_NOOP("x265","Average Bitrate:"));
+			ui.targetRateControlLabel2->setText(QT_TRANSLATE_NOOP("x265","kbit/s"));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
 			break;
 	}
@@ -649,7 +649,7 @@ void x265Dialog::cuTreeCheckBox_toggled(bool checked)
 {
 	if (checked && !ui.aqVarianceCheckBox->isChecked())
 	{
-		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
+		if (GUI_Question(QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.\n\nDo you wish to continue?").toUtf8().constData()))
 			ui.aqVarianceCheckBox->setChecked(true);
 		else
 			ui.cuTreeCheckBox->setChecked(false);
@@ -660,7 +660,7 @@ void x265Dialog::aqVarianceCheckBox_toggled(bool checked)
 {
 	if (!checked && ui.cuTreeCheckBox->isChecked())
 	{
-		if (GUI_Question(tr("Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
+		if (GUI_Question(QT_TRANSLATE_NOOP("x265","Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.\n\nDo you wish to continue?").toUtf8().constData()))
 			ui.cuTreeCheckBox->setChecked(false);
 		else
 			ui.aqVarianceCheckBox->setChecked(true);
@@ -700,7 +700,7 @@ void x265Dialog::configurationComboBox_currentIndexChanged(int index)
     ADM_info("Loading preset %s\n",t);
     if(false==x265_settings_jdeserialize(t,x265_settings_param,&myCopy))
     {
-        GUI_Error_HIG("Error","Cannot load preset");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Error"),QT_TRANSLATE_NOOP("x265","Cannot load preset"));
         ADM_error("Cannot read from %s\n",t);
     }else       
     {
@@ -715,7 +715,7 @@ void x265Dialog::configurationComboBox_currentIndexChanged(int index)
 static char *getProfileName(void)
 {
   QDialog dialog;
-  dialog.setWindowTitle(QString::fromUtf8("Save Profile"));
+  dialog.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","Save Profile")));
   QDialogButtonBox *buttonBox = new QDialogButtonBox();  
   QVBoxLayout *vboxLayout = new QVBoxLayout();
   buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
@@ -760,7 +760,7 @@ void x265Dialog::saveAsButton_pressed(void)
 
   if(ADM_fileExist(fullpath.c_str()))
   {
-        if(false==GUI_Confirmation_HIG("Overwrite","Replace the following preset ?:",out))
+        if(false==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Overwrite"),QT_TRANSLATE_NOOP("x265","Replace the following preset ?:"),out))
         {
             ADM_dealloc(out);
             return;
@@ -769,7 +769,7 @@ void x265Dialog::saveAsButton_pressed(void)
   ADM_dealloc(out);
   if(false==x265_settings_jserialize(fullpath.c_str(),&myCopy))
   {
-        GUI_Error_HIG("Error","Cannot save preset");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Error"),QT_TRANSLATE_NOOP("x265","Cannot save preset"));
         ADM_error("Cannot write to %s\n",out);
   }
   updatePresetList();
@@ -783,13 +783,13 @@ void x265Dialog::deleteButton_pressed(void)
     int m=ui.configurationComboBox->count();
     if(n==m-1) // custom
     {
-        GUI_Error_HIG("Error","Cannot delete custom profile");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Error"),QT_TRANSLATE_NOOP("x265","Cannot delete custom profile"));
         return;
     }
   QString preset=ui.configurationComboBox->itemText(n);
-  QString msg=QString("Do you really want to delete the ")+preset+
-            QString(" profile ?.\nIf it is a system profile it will be recreated next time.");
-  if(true==GUI_Confirmation_HIG("Delete preset","Delete",msg.toUtf8().constData()))
+  QString msg=QString(QT_TRANSLATE_NOOP("x265","Do you really want to delete the "))+preset+
+            QString(QT_TRANSLATE_NOOP("x265"," profile ?.\nIf it is a system profile it will be recreated next time."));
+  if(true==GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("x265","Delete preset"),QT_TRANSLATE_NOOP("x265","Delete"),msg.toUtf8().constData()))
   {
     std::string rootPath;
     ADM_pluginGetPath("x265",pluginVersion,rootPath);

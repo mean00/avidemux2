@@ -24,11 +24,11 @@ bool mp4Configure(void)
         uint32_t fmt=(uint32_t)muxerConfig.muxerType;
         bool alt=muxerConfig.useAlternateMp3Tag;
         diaMenuEntry format[]={{MP4_MUXER_MP4,"MP4"},{MP4_MUXER_PSP,"PSP"}};
-        diaElemMenu  menuFormat(&fmt,"Muxing Format",2,format,"");
-        diaElemToggle alternate(&alt,"Use alternate MP3 tag");
+        diaElemMenu  menuFormat(&fmt,QT_TRANSLATE_NOOP("mp4muxer","Muxing Format"),2,format,"");
+        diaElemToggle alternate(&alt,QT_TRANSLATE_NOOP("mp4muxer","Use alternate MP3 tag"));
 
         diaElem *tabs[]={&menuFormat,&alternate};
-        if( diaFactoryRun(("MP4 Muxer"),2,tabs))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("mp4muxer","MP4 Muxer"),2,tabs))
         {
             muxerConfig.muxerType=(MP4_MUXER_TYPE)fmt;
             muxerConfig.useAlternateMp3Tag=alt;

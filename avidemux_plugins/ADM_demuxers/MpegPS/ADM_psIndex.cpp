@@ -197,7 +197,7 @@ bool bAppend=false;
     FP_TYPE append=FP_DONT_APPEND;
     if(true==ADM_probeSequencedFile(file))
     {
-        if(true==GUI_Question("There are several files with sequential file names. Should they be all loaded ?"))
+        if(true==GUI_Question(QT_TRANSLATE_NOOP("psdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
                bAppend=true;
     }
     if(true==bAppend)

@@ -41,8 +41,8 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   printInfoFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_MISC,            // Category
                         "printInfo",            // internal name (must be uniq!)
-                        "PrintInfo",            // Display name
-                        "Display some informations on Screen." // Description
+                        QT_TRANSLATE_NOOP("printinfo","PrintInfo"),            // Display name
+                        QT_TRANSLATE_NOOP("printinfo","Display some informations on Screen.") // Description
                     );
 
 // Now implements the interesting parts

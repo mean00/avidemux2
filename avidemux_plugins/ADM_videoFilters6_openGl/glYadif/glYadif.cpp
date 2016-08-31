@@ -74,8 +74,8 @@ DECLARE_VIDEO_FILTER(   glYadif,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glYadif",            // internal name (must be uniq!)
-                        "Yadif (openGl)",            // Display name
-                        "Yet another deinterlacer, using shaders." // Description
+                        QT_TRANSLATE_NOOP("glYadif","Yadif (openGl)"),            // Display name
+                        QT_TRANSLATE_NOOP("glYadif","Yet another deinterlacer, using shaders.") // Description
                     );
 
 // Now implements the interesting parts
@@ -257,22 +257,22 @@ bool glYadif::configure( void)
 {
     
      diaMenuEntry tMode[]={
-                             {0,      QT_TR_NOOP("Temporal & spatial check"),NULL},
-                             {1,   QT_TR_NOOP("Bob, temporal & spatial check"),NULL},
-                             {2,      QT_TR_NOOP("Skip spatial temporal check"),NULL},
-                             {3,  QT_TR_NOOP("Bob, skip spatial temporal check"),NULL}
+                             {0,      QT_TRANSLATE_NOOP("glYadif","Temporal & spatial check"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("glYadif","Bob, temporal & spatial check"),NULL},
+                             {2,      QT_TRANSLATE_NOOP("glYadif","Skip spatial temporal check"),NULL},
+                             {3,  QT_TRANSLATE_NOOP("glYadif","Bob, skip spatial temporal check"),NULL}
           };
      diaMenuEntry tOrder[]={
-                             {0,      QT_TR_NOOP("Bottom field first"),NULL},
-                             {1,   QT_TR_NOOP("Top field first"),NULL}
+                             {0,      QT_TRANSLATE_NOOP("glYadif","Bottom field first"),NULL},
+                             {1,   QT_TRANSLATE_NOOP("glYadif","Top field first"),NULL}
           };
   
-     diaElemMenu mMode(&(configuration.mode),   QT_TR_NOOP("_Mode:"), 4,tMode);
-     diaElemMenu morder(&(configuration.order),   QT_TR_NOOP("_Order:"), 2,tOrder);
+     diaElemMenu mMode(&(configuration.mode),   QT_TRANSLATE_NOOP("glYadif","_Mode:"), 4,tMode);
+     diaElemMenu morder(&(configuration.order),   QT_TRANSLATE_NOOP("glYadif","_Order:"), 2,tOrder);
      
      diaElem *elems[]={&mMode,&morder};
      
-     if(diaFactoryRun(QT_TR_NOOP("yadif"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glYadif","yadif"),sizeof(elems)/sizeof(diaElem *),elems))
      {
         updateInfo();
         return 1;

@@ -303,7 +303,7 @@ bool	AUDMEncoder_Vorbis::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
 #define PX(x) &(config->x)
-#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("vorbis",#x)}
 /**
       \fn configure
       \brief Dialog to set vorbis settings

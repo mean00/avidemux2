@@ -111,7 +111,7 @@ bool ossAudioDevice::localInit(void)
 /*
 	if( errno == EACCES )
 	{
-          GUI_Error_HIG(QT_TR_NOOP("Could not open OSS audio device"), QT_TR_NOOP("Check the permissions for /dev/dsp."));
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Could not open OSS audio device"), QT_TRANSLATE_NOOP("adm","Check the permissions for /dev/dsp."));
 	  }
 	else
 */

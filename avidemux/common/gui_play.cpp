@@ -408,7 +408,7 @@ bool  GUIPlayback::initializeAudio(void)
      audioLatency=latency; // ms -> us
       if (!state)
       {
-          GUI_Error_HIG(QT_TR_NOOP("Trouble initializing audio device"), NULL);
+          GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Trouble initializing audio device"), NULL);
           cleanupAudio();
           return false;
       }

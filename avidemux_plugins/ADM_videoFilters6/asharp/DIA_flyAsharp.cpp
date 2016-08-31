@@ -104,8 +104,8 @@ uint32_t ww,hh;
         dst[dstride]=0xff;
         dst+=dstride*2;
     }
-    out->printString(1,1,"Original");
-    out->printString(ww/24+1,1,"Processed");
+    out->printString(1,1,QT_TRANSLATE_NOOP("asharp", "Original"));
+    out->printString(ww/24+1,1,QT_TRANSLATE_NOOP("asharp", "Processed"));
     return 1;
 }
 //EOF

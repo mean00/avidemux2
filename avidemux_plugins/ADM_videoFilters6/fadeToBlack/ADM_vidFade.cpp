@@ -50,8 +50,8 @@ DECLARE_VIDEO_FILTER(AVDM_Fade,
                      ADM_UI_ALL,         // UI
                      VF_TRANSFORM,            // Category
                      "fadeToBlack",            // internal name (must be uniq!)
-                     QT_TRANSLATE_NOOP("fade","Fade to black"),            // Display name
-                     QT_TRANSLATE_NOOP("fade","Fade to black in/out.") // Description
+                     QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"),            // Display name
+                     QT_TRANSLATE_NOOP("fadeToBlack","Fade to black in/out.") // Description
                  );   
 /**
  * \fn configure
@@ -62,7 +62,7 @@ DECLARE_VIDEO_FILTER(AVDM_Fade,
 bool  AVDM_Fade::configure()
 {
   
-  diaMenuEntry menuE[2]={{0,QT_TRANSLATE_NOOP("fade","Out"),QT_TRANSLATE_NOOP("fade","Fade out")},{1,QT_TRANSLATE_NOOP("fade","In"),QT_TRANSLATE_NOOP("fade","Fade in")}};
+  diaMenuEntry menuE[2]={{0,QT_TRANSLATE_NOOP("fadeToBlack","Out"),QT_TRANSLATE_NOOP("fadeToBlack","Fade out")},{1,QT_TRANSLATE_NOOP("fadeToBlack","In"),QT_TRANSLATE_NOOP("fadeToBlack","Fade in")}};
   uint32_t start,end;
   
   
@@ -71,12 +71,12 @@ while(1)
     uint32_t eInOut=(uint32_t)param.inOut;
     
     uint32_t mx=9*3600*1000;
-    diaElemMenu     menu(&(eInOut),QT_TRANSLATE_NOOP("fade","_Fade type:"), 2,menuE);
-    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fade","_Start time (ms):"),0,mx);
-    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fade","_End time (ms):"),0,mx);
+    diaElemMenu     menu(&(eInOut),QT_TRANSLATE_NOOP("fadeToBlack","_Fade type:"), 2,menuE);
+    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeToBlack","_Start time (ms):"),0,mx);
+    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeToBlack","_End time (ms):"),0,mx);
     diaElem *elems[3]={&menu,&start,&end};
   
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("fade","Fade to black"),3+0*1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"),3+0*1,elems))
     {
         
         param.inOut=eInOut;

@@ -63,8 +63,8 @@ DECLARE_VIDEO_FILTER(   openGlSample,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glsampleFragment2",            // internal name (must be uniq!)
-                        "OpenGl Fragment Shader Sample2",            // Display name
-                        "Run a fragment shader." // Description
+                        QT_TRANSLATE_NOOP("glFragment2","OpenGl Fragment Shader Sample2"),            // Display name
+                        QT_TRANSLATE_NOOP("glFragment2","Run a fragment shader.") // Description
                     );
 
 // Now implements the interesting parts

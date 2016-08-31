@@ -176,7 +176,7 @@ bool 	AUDMEncoder_Twolame::encode(uint8_t *dest, uint32_t *len, uint32_t *sample
   return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TR_NOOP(#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("twolame",#x)}
 
 /**
     \fn configure
@@ -202,12 +202,12 @@ lame_encoder config=defaultConfig;
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TR_NOOP("_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("twolame","_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
     diaElem *elems[]={&bitrate};
 
-    if( diaFactoryRun(QT_TR_NOOP("TwoLame Configuration"),1,elems))
+    if( diaFactoryRun(QT_TRANSLATE_NOOP("twolame","TwoLame Configuration"),1,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;

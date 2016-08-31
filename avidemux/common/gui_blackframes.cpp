@@ -102,7 +102,7 @@ uint8_t  fastIsNotBlack(int darkness,ADMImage *img)
 */
 void GUI_PrevBlackFrame(void)
 {
-    GUI_Error_HIG("BlackFrame","This function is unsupported at the moment");
+    GUI_Error_HIG(QT_TRANSLATE_NOOP("blackframes", "BlackFrame"), QT_TRANSLATE_NOOP("blackframes", "This function is unsupported at the moment"));
 }
 
 /**
@@ -124,7 +124,7 @@ void GUI_NextBlackFrame(void)
     // guess ~ number of frames
     uint64_t duration=video_body->getVideoDuration();    
     uint64_t startTime=admPreview::getCurrentPts();
-    DIA_processingBase *work=createProcessing(QT_TR_NOOP("Searching black frame.."),duration-startTime);
+    DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("blackframes", "Searching black frame.."),duration-startTime);
 
     uint32_t count=0;
     while(1)

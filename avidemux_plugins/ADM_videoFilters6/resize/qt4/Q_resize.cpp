@@ -248,7 +248,7 @@ void resizeWindow::roundupToggled(bool toggled)
 void resizeWindow::okButtonClicked()
 {
 	if (ui.spinBoxWidth->value() & 1 || ui.spinBoxHeight->value() & 1)
-		GUI_Error_HIG(QT_TR_NOOP("Width and height cannot be odd"), NULL);
+		GUI_Error_HIG(QT_TRANSLATE_NOOP("resize","Width and height cannot be odd"), NULL);
 	else
 		accept();
 }

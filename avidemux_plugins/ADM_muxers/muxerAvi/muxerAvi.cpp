@@ -71,7 +71,7 @@ bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
        uint32_t fcc=s->getFCC();
        if(isH264Compatible(fcc) || isH265Compatible(fcc))
        {
-           if(!GUI_YesNo(QT_TRANSLATE_NOOP("adm","Bad Idea"),QT_TRANSLATE_NOOP("adm","Using H264/H265 in AVI is a bad idea, MKV is better for that.\n Do you want to continue anyway ?")))
+           if(!GUI_YesNo(QT_TRANSLATE_NOOP("avimuxer","Bad Idea"),QT_TRANSLATE_NOOP("avimuxer","Using H264/H265 in AVI is a bad idea, MKV is better for that.\n Do you want to continue anyway ?")))
                return false;
        }
         audioDelay=s->getVideoDelay();
@@ -81,7 +81,7 @@ bool muxerAvi::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
              nbAudioTrack,
              a))
         {
-            GUI_Error_HIG("Error","Cannot create AVI file");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("avimuxer","Error"),QT_TRANSLATE_NOOP("avimuxer","Cannot create AVI file"));
             return false;
 
         }

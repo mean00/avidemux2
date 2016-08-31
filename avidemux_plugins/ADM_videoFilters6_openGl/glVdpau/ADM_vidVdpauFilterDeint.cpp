@@ -81,8 +81,8 @@ DECLARE_VIDEO_FILTER(   vdpauVideoFilterDeint,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category Category
                         "vdpauDeintGl",            // internal name (must be uniq!)
-                        "vdpauDeintGl",            // Display name
-                        "VDPAU deinterlacer+resize, openGl version (faster)." // Description
+                        QT_TRANSLATE_NOOP("glVdpaufilter","vdpauDeintGl"),            // Display name
+                        QT_TRANSLATE_NOOP("glVdpaufilter","VDPAU deinterlacer+resize, openGl version (faster).") // Description
                     );
 
 //
@@ -260,20 +260,20 @@ bool vdpauVideoFilterDeint::configure( void)
 {
      
      diaMenuEntry tMode[]={
-                             {ADM_KEEP_TOP,      QT_TRANSLATE_NOOP("vdpaufilter","Keep Top Field"),NULL},
-                             {ADM_KEEP_BOTTOM,   QT_TRANSLATE_NOOP("vdpaufilter","Keep Bottom Field"),NULL},
-                             {ADM_KEEP_BOTH,      QT_TRANSLATE_NOOP("vdpaufilter","Double framerate"),NULL}
+                             {ADM_KEEP_TOP,      QT_TRANSLATE_NOOP("glVdpaufilter","Keep Top Field"),NULL},
+                             {ADM_KEEP_BOTTOM,   QT_TRANSLATE_NOOP("glVdpaufilter","Keep Bottom Field"),NULL},
+                             {ADM_KEEP_BOTH,      QT_TRANSLATE_NOOP("glVdpaufilter","Double framerate"),NULL}
                              
           };
      bool doResize=configuration.resizeToggle;
-     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("vdpaufilter","_Resize:"));
-     diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("vdpaufilter","_Deint Mode:"), 3,tMode);
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpaufilter","Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpaufilter","Height :"),16,2048);
+     diaElemToggle    tResize(&(doResize),   QT_TRANSLATE_NOOP("glVdpaufilter","_Resize:"));
+     diaElemMenu      mMode(&(configuration.deintMode),   QT_TRANSLATE_NOOP("glVdpaufilter","_Deint Mode:"), 3,tMode);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("glVdpaufilter","Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("glVdpaufilter","Height :"),16,2048);
      
      diaElem *elems[]={&mMode,&tResize,&tWidth,&tHeight};
      
-     if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpaufilter","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glVdpaufilter","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 configuration.resizeToggle=(bool)doResize;
                 info.width=configuration.targetWidth;

@@ -54,7 +54,7 @@ void DIA_encodingQt4::priorityChanged(int priorityLevel)
 		ui->comboBoxPriority->setCurrentIndex(2);
 		connect(ui->checkBoxShutdown, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
 
-		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
+		GUI_Error_HIG(QT_TRANSLATE_NOOP("qencoding","Privileges Required"), QT_TRANSLATE_NOOP("qencoding","Root privileges are required to perform this operation."));
 
 		return;
 	}
@@ -74,7 +74,7 @@ void DIA_encodingQt4::shutdownChanged(int state)
 		ui->checkBoxShutdown->setCheckState(Qt::Unchecked);
 		connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 
-		GUI_Error_HIG(QT_TR_NOOP("Privileges Required"), QT_TR_NOOP( "Root privileges are required to perform this operation."));
+		GUI_Error_HIG(QT_TRANSLATE_NOOP("qencoding","Privileges Required"), QT_TRANSLATE_NOOP("qencoding","Root privileges are required to perform this operation."));
 	}
 #endif
 }
@@ -358,8 +358,8 @@ bool DIA_encodingQt4::isAlive( void )
 
         if(stopRequest)
         {
-                if(GUI_Alternate((char*)QT_TR_NOOP("The encoding is paused. Do you want to resume or abort?"),
-                              (char*)QT_TR_NOOP("Resume"),(char*)QT_TR_NOOP("Abort")))
+                if(GUI_Alternate((char*)QT_TRANSLATE_NOOP("qencoding","The encoding is paused. Do you want to resume or abort?"),
+                              (char*)QT_TRANSLATE_NOOP("qencoding","Resume"),(char*)QT_TRANSLATE_NOOP("qencoding","Abort")))
                  {
                          stopRequest=false;
                  }

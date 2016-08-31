@@ -558,7 +558,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     delete [] buffer;
     if((videoDuration *4)/5 > lastVideoDts)
     {
-        GUI_Error_HIG("Too short","The video has been saved but seems to be incomplete.");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Too short"), QT_TRANSLATE_NOOP("adm","The video has been saved but seems to be incomplete."));
         result=false;
     }
     ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);

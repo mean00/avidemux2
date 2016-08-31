@@ -318,7 +318,7 @@ uint32_t rd;
 				printf("[AVI]expected %d\n",(int)sizeof(_videostream));
 				if(_Tracks[i].strh.size<sizeof(_videostream)-8) // RECT is not mandatory
 				{
-                                  GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
+                                  GUI_Error_HIG(QT_TRANSLATE_NOOP("opendmldemuxer","Malformed header"), NULL);
 					return 0;
 				}		
 				printf("[AVI]Trying to continue anyway\n");			
@@ -394,7 +394,7 @@ uint32_t rd;
                                                 printf("[AVI]expected %d\n",(int)sizeof(_audiostream));
                                                 if(_Tracks[run].strh.size<sizeof(_audiostream)-8)
                                                 {
-                                                  GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
+                                                  GUI_Error_HIG(QT_TRANSLATE_NOOP("opendmldemuxer","Malformed header"), NULL);
                                                         return 0;
                                                 }
                                                 printf("[AVI]Trying to continue anyway\n");			
@@ -658,7 +658,7 @@ uint32_t count=0;
 				printf("[AVI]expected %d\n",(int)sizeof(tmp));
 				if(_Tracks[i].strh.size<sizeof(tmp)-8)
 				{
-                                  GUI_Error_HIG(QT_TR_NOOP("Malformed header"), NULL);
+                                  GUI_Error_HIG(QT_TRANSLATE_NOOP("opendmldemuxer","Malformed header"), NULL);
 					return 0;
 				}		
 				printf("[AVI]Trying to continue anyway\n");			

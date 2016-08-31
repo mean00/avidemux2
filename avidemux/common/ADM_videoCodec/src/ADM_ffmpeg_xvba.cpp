@@ -131,7 +131,7 @@ bool xvbaProbe(void)
 #ifdef USE_XVBA
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_XVBA)==false)
     {
-        GUI_Error_HIG("Error","Core has been compiled without XVBA support, but the application has been compiled with it.\nInstallation mismatch");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without XVBA support, but the application has been compiled with it.\nInstallation mismatch"));
         xvbaWorking=false;
     }
 

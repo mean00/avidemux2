@@ -31,7 +31,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     
     AVCodecID id=c->codecId;
     AVCodec *codec=avcodec_find_decoder(id);
-    if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
+    if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec 0x%x"),fcc);ADM_assert(0);} 
     codecId=id; 
     ADM_assert(id!=AV_CODEC_ID_NONE);
     
@@ -64,7 +64,7 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
     if (avcodec_open2(_context, codec, NULL) < 0)  
                       { 
                             printf("[lavc] Decoder init: %x video decoder failed!\n",fcc); 
-                            GUI_Error_HIG("Codec","Internal error opening 0x%x",fcc); 
+                            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening 0x%x"),fcc); 
                             ADM_assert(0); 
                     } 
                     else 

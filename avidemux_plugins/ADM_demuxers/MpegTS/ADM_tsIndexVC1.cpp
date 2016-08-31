@@ -63,7 +63,7 @@ dmxPacketInfo info;
     pkt->open(file,append);
     data.pkt=pkt;
     fullSize=pkt->getSize();
-    gui= createProcessing("Indexing",pkt->getSize());
+    gui= createProcessing(QT_TRANSLATE_NOOP("tsdemuxer","Indexing"),pkt->getSize());
     int startCode;
     decodingImage=false;
 #define likely(x) x

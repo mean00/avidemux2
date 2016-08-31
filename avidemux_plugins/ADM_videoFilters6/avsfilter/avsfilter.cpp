@@ -595,19 +595,19 @@ std::string pAvsScript=std::string(param.avs_script);
  
  
  diaElemFile wine_app(0,pWineApp,
-                      QT_TR_NOOP("_wine app file:"), NULL,
-                      QT_TR_NOOP("Select wine filename[wine/cedega/etc.]"));
+                      QT_TRANSLATE_NOOP("avsfilter","_wine app file:"), NULL,
+                      QT_TRANSLATE_NOOP("avsfilter","Select wine filename[wine/cedega/etc.]"));
  diaElemFile loaderfile(0,pLoaderFile,
-                        QT_TR_NOOP("_loader file:"), NULL,
-                        QT_TR_NOOP("Select loader filename[avsload.exe]"));
+                        QT_TRANSLATE_NOOP("avsfilter","_loader file:"), NULL,
+                        QT_TRANSLATE_NOOP("avsfilter","Select loader filename[avsload.exe]"));
  diaElemFile avsfile(0,pAvsScript,
-                     QT_TR_NOOP("_avs file:"), NULL,
-                     QT_TR_NOOP("Select avs filename[*.avs]"));
- diaElemUInteger pipe_timeout(PX(pipe_timeout),QT_TR_NOOP("_pipe timeout:"),1,30);
+                     QT_TRANSLATE_NOOP("avsfilter","_avs file:"), NULL,
+                     QT_TRANSLATE_NOOP("avsfilter","Select avs filename[*.avs]"));
+ diaElemUInteger pipe_timeout(PX(pipe_timeout),QT_TRANSLATE_NOOP("avsfilter","_pipe timeout:"),1,30);
 
  diaElem *elems[4]={&wine_app, &loaderfile, &avsfile, &pipe_timeout};
 
- if( diaFactoryRun(QT_TR_NOOP("AvsFilter config"), 4, elems))
+ if( diaFactoryRun(QT_TRANSLATE_NOOP("avsfilter","AvsFilter config"), 4, elems))
  {
   bool res = false;
     param.wine_app=ADM_strdup(pWineApp.c_str()); // 3x memleak

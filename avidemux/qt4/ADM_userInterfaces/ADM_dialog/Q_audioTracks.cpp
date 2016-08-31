@@ -131,7 +131,7 @@ void audioTrackQt4::inputChanged(int signal)
         // start fileselector
         #define MAX_SOURCE_LENGTH 1024
         char fileName[MAX_SOURCE_LENGTH];
-        if(!FileSel_SelectRead("Select audio file",fileName,MAX_SOURCE_LENGTH-1,NULL))
+        if(!FileSel_SelectRead(QT_TRANSLATE_NOOP("qaudiotracks","Select audio file"),fileName,MAX_SOURCE_LENGTH-1,NULL))
         {
             ADM_info("No file selected as audioTrack\n");
             // deactivate me
@@ -145,7 +145,7 @@ void audioTrackQt4::inputChanged(int signal)
         ADM_edAudioTrackExternal *ext=create_edAudioExternal(fileName);
         if(!ext)
         {
-            GUI_Error_HIG("Error","Cannot use that file as audio track");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("qaudiotracks","Error"),QT_TRANSLATE_NOOP("qaudiotracks","Cannot use that file as audio track"));
             return ;
         }
         int poolIndex=_pool->size();
@@ -285,7 +285,7 @@ bool  audioTrackQt4::updateActive(void)
             int trackIndex=window->inputs[i]->currentIndex();
             if(map[trackIndex])
             {
-                GUI_Error_HIG("Error","Some tracks are used multiple times");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("qaudiotracks","Error"), QT_TRANSLATE_NOOP("qaudiotracks","Some tracks are used multiple times"));
                 return false;
             }
             map[trackIndex]++;
@@ -411,7 +411,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
                                 QString num;
                                 ADM_edAudioTrackFromVideo *fromVideo=edTrack->castToTrackFromVideo() ;
                                 num.setNum(fromVideo->getMyTrackIndex());
-                                str=QString("Track ")+num+QString(" from video");
+                                str=QString(QT_TRANSLATE_NOOP("qaudiotracks","Track "))+num+QString(QT_TRANSLATE_NOOP("qaudiotracks"," from video"));
                                 }
                                 break;
                 case ADM_EDAUDIO_EXTERNAL:
@@ -419,7 +419,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
                                 ADM_edAudioTrackExternal *ext=edTrack->castToExternal() ;
                                 ADM_assert(ext);
                                 std::string name=ext->getMyName();
-                                str=QString("File ")+QString(name.c_str());
+                                str=QString(QT_TRANSLATE_NOOP("qaudiotracks","File "))+QString(name.c_str());
                                 }
                                 break;
                 default:
@@ -453,7 +453,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
    
     //--
     // add the "add audio track" item
-    window->inputs[dex]->addItem(QString(".... Add audio track"));
+    window->inputs[dex]->addItem(QString(QT_TRANSLATE_NOOP("qaudiotracks",".... Add audio track")));
     // set index if possible
     if(forcedIndex==-1)
     {
@@ -486,7 +486,7 @@ void audioTrackQt4::setupMenu(int dex, int forcedIndex)
     // -- language --
     // now add codecs
     int nbAud=audioEncoderGetNumberOfEncoders();
-    window->codec[dex]->addItem(QString("copy"));
+    window->codec[dex]->addItem(QString(QT_TRANSLATE_NOOP("qaudiotracks","copy")));
 	for(uint32_t i=1;i<nbAud;i++)
 	{
 		QString name=QString(audioEncoderGetDisplayName(i));

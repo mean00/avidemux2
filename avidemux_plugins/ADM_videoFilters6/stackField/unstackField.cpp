@@ -44,8 +44,8 @@ DECLARE_VIDEO_FILTER(   unstackFieldFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "unstackField",            // internal name (must be uniq!)
-                        "Unstack Fields",            // Display name
-                        "Weave top and bottom halves." // Description
+                        QT_TRANSLATE_NOOP("unstackfield","Unstack Fields"),            // Display name
+                        QT_TRANSLATE_NOOP("unstackfield","Weave top and bottom halves.") // Description
                     );
 
 // Now implements the interesting parts

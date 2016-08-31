@@ -57,8 +57,8 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   shaderLoader,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "shaderLoader",            // internal name (must be uniq!)
-                        "Shader Loader",            // Display name
-                        "Run an external shader program." // Description
+                        QT_TRANSLATE_NOOP("glShader","Shader Loader"),            // Display name
+                        QT_TRANSLATE_NOOP("glShader","Run an external shader program.") // Description
                     );
 
 // Now implements the interesting parts
@@ -222,10 +222,10 @@ const char *shaderLoader::getConfiguration(void)
 */
 bool shaderLoader::configure( void) 
 {
-    diaElemFile shader(0,params.shaderFile,"ShaderFile to load");    
+    diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));
     diaElem *elems[]={&shader};
      
-     if(diaFactoryRun(QT_TR_NOOP("ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 return true;
      }

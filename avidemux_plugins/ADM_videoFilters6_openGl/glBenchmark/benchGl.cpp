@@ -58,8 +58,8 @@ DECLARE_VIDEO_FILTER(   openGlBenchmark,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glBenchmark",            // internal name (must be uniq!)
-                        "OpenGl ReadBack benchmark",            // Display name
-                        "Check how fast readback is." // Description
+                        QT_TRANSLATE_NOOP("glBenchmark","OpenGl ReadBack benchmark"),            // Display name
+                        QT_TRANSLATE_NOOP("glBenchmark","Check how fast readback is.") // Description
                     );
 
 // Now implements the interesting parts

@@ -50,7 +50,7 @@ find . -iname 'avidemux_*.ts' -printf "\"%p\" \\\ \n" >> avidemux.pro2
 echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
 
-cat avidemux.pro2 | sed 's/"//g' | grep -v "ADM_videoFilters\/" | grep -v qtScript | grep -v html |  grep -v build | grep -v cmake  | grep -v gtk | grep -vi yadif | grep -vi spidermon>     avidemux.pro
+cat avidemux.pro2 | sed 's/"//g' | grep -v "ADM_videoFilters\/" | grep -v qtScript | grep -v html |  grep -v build | grep -v cmake  | grep -v gtk | grep -vi spidermon>     avidemux.pro
 #
 lupdate -pro avidemux.pro 
 echo "DONE."

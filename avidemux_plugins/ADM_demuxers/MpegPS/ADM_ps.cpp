@@ -58,7 +58,7 @@ uint8_t psHeader::open(const char *name)
     version=index.getAsUint32("Version");
     if(version!=ADM_INDEX_FILE_VERSION)
     {
-        GUI_Error_HIG("Error","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen.");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("psdemuxer","Error"), QT_TRANSLATE_NOOP("psdemuxer","This file's index has been created with an older version of avidemux.\nPlease delete the idx2 file and reopen."));
         goto abt;
     }
     type=index.getAsString("Type");

@@ -29,13 +29,13 @@ namespace ADM_Qt4CoreUIToolkit
 {
 	void GUI_Alert(const char *alertstring)
 	{
-		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Alert")),
+		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Alert")),
 			QString::fromUtf8(alertstring), QMessageBox::Ok );
 	}
 
 	void GUI_Info(const char *alertstring)
 	{
-		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Info")),
+		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
 			QString::fromUtf8(alertstring), QMessageBox::Ok );
 	}
 
@@ -60,7 +60,7 @@ namespace ADM_Qt4CoreUIToolkit
 			alertString.replace("\n", "<br>");
 		}
 
-		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Info")),
+		QMessageBox::information(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
 			alertString, QMessageBox::Ok);
 	}
 
@@ -85,7 +85,7 @@ namespace ADM_Qt4CoreUIToolkit
 			alertString.replace("\n", "<br>");
 		}
 
-		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Info")),
+		QMessageBox::critical(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Info")),
 			alertString, QMessageBox::Ok);
 	}
 
@@ -109,7 +109,7 @@ namespace ADM_Qt4CoreUIToolkit
 
 		QMessageBox::StandardButton reply;
 
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Confirmation")),
+		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
 			alertString, QMessageBox::Yes | QMessageBox::No);
 
 		if (reply == QMessageBox::Yes)
@@ -139,7 +139,7 @@ namespace ADM_Qt4CoreUIToolkit
 
 		QMessageBox::StandardButton reply;
 
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Confirmation")),
+		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
 			alertString, QMessageBox::Yes | QMessageBox::No );
 
 		if (reply == QMessageBox::Yes)
@@ -158,7 +158,7 @@ namespace ADM_Qt4CoreUIToolkit
 			return 0;
 		}
 
-		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TR_NOOP("Question")),
+		reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question")),
 			QString::fromUtf8(alertstring), QMessageBox::Yes | QMessageBox::No);
 
 		if (reply==QMessageBox::Yes)
@@ -181,14 +181,14 @@ int      GUI_Alternate(const char *title,const char *choice1,const char *choice2
 
 		QMessageBox box(qtLastRegisteredDialog());
 
-		box.setWindowTitle(QString::fromUtf8(QT_TR_NOOP("Question?")));
+		box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question?")));
 		box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
 		box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
 
 		if (title)
 			box.setText(QString::fromUtf8(title));
 		else
-			box.setText(QObject::tr("Question"));
+			box.setText(QT_TRANSLATE_NOOP("qtalert","Question"));
 
 		box.setIcon(QMessageBox::Question);
 

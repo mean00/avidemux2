@@ -44,8 +44,8 @@ DECLARE_VIDEO_FILTER(   stackFieldFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_INTERLACING,            // Category
                         "stackField",            // internal name (must be uniq!)
-                        "Stack Fields",            // Display name
-                        "Put even lines on top, odd lines at bottom." // Description
+                        QT_TRANSLATE_NOOP("stackfield","Stack Fields"),            // Display name
+                        QT_TRANSLATE_NOOP("stackfield","Put even lines on top, odd lines at bottom.") // Description
                     );
 
 // Now implements the interesting parts

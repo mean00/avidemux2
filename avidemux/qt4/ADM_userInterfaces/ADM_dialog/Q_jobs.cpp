@@ -10,7 +10,7 @@
 #include "A_functions.h"
 
 static void updateStatus(void);
-static const char *StringStatus[]={QT_TRANSLATE_NOOP("adm","Ready"),QT_TRANSLATE_NOOP("adm","Succeeded"),QT_TRANSLATE_NOOP("adm","Failed"),QT_TRANSLATE_NOOP("adm","Deleted"),QT_TRANSLATE_NOOP("adm","Running")};
+static const char *StringStatus[]={QT_TRANSLATE_NOOP("qjobs","Ready"),QT_TRANSLATE_NOOP("qjobs","Succeeded"),QT_TRANSLATE_NOOP("qjobs","Failed"),QT_TRANSLATE_NOOP("qjobs","Deleted"),QT_TRANSLATE_NOOP("qjobs","Running")};
 
 ADM_Job_Descriptor::ADM_Job_Descriptor(void)
 {
@@ -34,7 +34,7 @@ jobsWindow::jobsWindow(uint32_t n,char **j)     : QDialog()
 
      // Set headers
       QStringList headers;
-     headers << QT_TRANSLATE_NOOP("adm","Job Name") << QT_TRANSLATE_NOOP("adm","Status") << QT_TRANSLATE_NOOP("adm","Start Time") << QT_TRANSLATE_NOOP("adm","End Time");
+     headers << QT_TRANSLATE_NOOP("qjobs","Job Name") << QT_TRANSLATE_NOOP("qjobs","Status") << QT_TRANSLATE_NOOP("qjobs","Start Time") << QT_TRANSLATE_NOOP("qjobs","End Time");
 
      ui.tableWidget->setVerticalHeaderLabels(headers);
      updateRows();
@@ -98,7 +98,7 @@ void jobsWindow::DeleteOne(bool b)
 
 	if (sel >= 0 && sel < _nbJobs)
 	{
-		if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("adm","Sure!"), QT_TRANSLATE_NOOP("adm","Delete job"), QT_TRANSLATE_NOOP("adm","Are you sure you want to delete %s job?"), ADM_GetFileName(_jobsName[sel])))
+		if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qjobs","Sure!"), QT_TRANSLATE_NOOP("qjobs","Delete job"), QT_TRANSLATE_NOOP("qjobs","Are you sure you want to delete %s job?"), ADM_GetFileName(_jobsName[sel])))
 		{
 			desc[sel].status = STATUS_DELETED;
 			unlink(_jobsName[sel]);
@@ -112,7 +112,7 @@ void jobsWindow::DeleteOne(bool b)
 */
 void jobsWindow::DeleteAll(bool b)
 {
-	if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("adm","Sure!"), QT_TRANSLATE_NOOP("adm","Delete *all* job"), QT_TRANSLATE_NOOP("adm","Are you sure you want to delete ALL jobs?")))
+	if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qjobs","Sure!"), QT_TRANSLATE_NOOP("qjobs","Delete *all* job"), QT_TRANSLATE_NOOP("qjobs","Are you sure you want to delete ALL jobs?")))
 	{
 		for(int sel = 0; sel < _nbJobs; sel++)
 		{
@@ -136,7 +136,7 @@ void jobsWindow::RunOne(bool b)
 	if(sel >= 0 && sel < _nbJobs)
 	{
 		if(desc[sel].status == STATUS_SUCCEED)
-			GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Already done"),QT_TRANSLATE_NOOP("adm","This script has already been successfully executed."));
+			GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("qjobs","Already done"),QT_TRANSLATE_NOOP("qjobs","This script has already been successfully executed."));
 		else
 		{
 			desc[sel].status=STATUS_RUNNING;

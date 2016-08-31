@@ -63,8 +63,8 @@ DECLARE_VIDEO_FILTER(   openGlResize,   // Class
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "glResize",            // internal name (must be uniq!)
-                        "OpenGl Resize",            // Display name
-                        "Resize using openGl." // Description
+                        QT_TRANSLATE_NOOP("glResize","OpenGl Resize"),            // Display name
+                        QT_TRANSLATE_NOOP("glResize","Resize using openGl.") // Description
                     );
 
 // Now implements the interesting parts
@@ -214,12 +214,12 @@ bool openGlResize::configure( void)
 {
     
      
-     diaElemUInteger  tWidth(&(configuration.width),QT_TR_NOOP("Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.height),QT_TR_NOOP("Height :"),16,2048);
+     diaElemUInteger  tWidth(&(configuration.width),QT_TRANSLATE_NOOP("glResize","Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.height),QT_TRANSLATE_NOOP("glResize","Height :"),16,2048);
      
      diaElem *elems[]={&tWidth,&tHeight};
      
-     if(diaFactoryRun(QT_TR_NOOP("glResize"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glResize","glResize"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 info.width=configuration.width;
                 info.height=configuration.height;

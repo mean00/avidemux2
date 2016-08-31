@@ -129,7 +129,7 @@ bool libvaProbe(void)
     UI_getWindowInfo(draw,&xinfo );
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_LIBVA)==false)
     {
-        GUI_Error_HIG("Error","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch");
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch"));
         libvaWorking=false;
     }
 

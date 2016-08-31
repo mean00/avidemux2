@@ -65,7 +65,7 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
      }else
         {
-            GUI_Error_HIG("Unsupported","Only FLV1 & VP6 supported for video");
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("flvmuxer","Unsupported"),QT_TRANSLATE_NOOP("flvmuxer","Only FLV1 & VP6 supported for video"));
             return false;
         }
 
@@ -75,13 +75,13 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             uint32_t acc=a[i]->getInfo()->encoding;
             if(acc!=WAV_MP2 && acc!=WAV_MP3 && acc!=WAV_AAC)
             {
-                GUI_Error_HIG("Unsupported","Only AAC & mpegaudio supported for audio");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("flvmuxer","Unsupported"),QT_TRANSLATE_NOOP("flvmuxer","Only AAC & mpegaudio supported for audio"));
                 return false;
             }
             uint32_t fq=a[i]->getInfo()->frequency;
             if(fq!=44100 &&fq!=22050 && fq!=11025)
             {
-                GUI_Error_HIG("Unsupported","Only 44.1, 22.050 and 11.025 kHz supported");
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("flvmuxer","Unsupported"),QT_TRANSLATE_NOOP("flvmuxer","Only 44.1, 22.050 and 11.025 kHz supported"));
                 return false;
             }
 
