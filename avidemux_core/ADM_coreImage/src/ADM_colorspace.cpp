@@ -385,13 +385,7 @@ bool ADMColorScalerFull::convertImage(ADMImage *img, uint8_t *to)
     if(toColor==ADM_COLOR_BGR32A)
     {
              swapRGB32(dstWidth,dstHeight,to);
-    }
-#if 0
-    if(toColor==ADM_COLOR_BGR24 || (toColor==ADM_COLOR_RGB24 | ADM_COLOR_BACKWARD))
-    {
-             swapRGB24(dstWidth,dstHeight,to);
-    }
-#endif
+    }   
     return true;
 }
 //EOF

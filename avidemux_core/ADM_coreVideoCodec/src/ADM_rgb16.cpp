@@ -25,17 +25,16 @@
 decoderRGB16::decoderRGB16(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp)
     : decoders (  w,   h,  fcc,   extraDataLen,   extraData,  bpp)
 {
-	isRgb = true;
-	_bpp = bpp;
+    _bpp = bpp;
     bytePerPixel=_bpp>>3;
-	decoded = new uint8_t[2*bytePerPixel * w * h];
+    decoded = new uint8_t[2*bytePerPixel * w * h];
 }
 /**
     \fn dtor
 */
 decoderRGB16::~decoderRGB16()
 {
-	delete[] decoded;
+    delete[] decoded;
     decoded=NULL;
 }
 /**
@@ -43,85 +42,72 @@ decoderRGB16::~decoderRGB16()
 */
 bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
 {
-	int lineSize = (_w *bytePerPixel + 3) & ~3; // 4 bytes aligned ?
-	ADM_colorspace colorspace;
-	int i, j;
-	uint8_t *src = in->data;
-	uint8_t *dst = decoded;
-    int      outBytePerPixel=bytePerPixel;
-	switch (_bpp)
-	{
-		case 16:
-			// FIXME - 16-bit could use a BGR555 or BGR565 colour mask
-			colorspace = ADM_COLOR_BGR555;
-			break;
-		case 24:
-		case 32:
-			if(isRgb)
-				colorspace = ADM_COLOR_RGB24;
-			else
-				colorspace = ADM_COLOR_BGR24;
-
-			break;
-		default:
-			printf("bpp %d not supported\n", _bpp);
-			return false;
-	}
+        int lineSize = (_w *bytePerPixel + 3) & ~3; // 4 bytes aligned ?
+        ADM_colorspace colorspace;
+        int i, j;
+        uint8_t *src = in->data;
+        uint8_t *dst = decoded;
+        int      outBytePerPixel=bytePerPixel;
+        switch (_bpp)
+        {
+                case 16:
+                        // FIXME - 16-bit could use a BGR555 or BGR565 colour mask
+                        colorspace = ADM_COLOR_BGR555;
+                        break;
+                case 24:
+                case 32:
+                        colorspace = ADM_COLOR_RGB24;
+                        break;
+                default:
+                        printf("bpp %d not supported\n", _bpp);
+                        return false;
+        }
     // Pack...
-	if (_bpp == 32) // 32 -> 24
-	{
-        outBytePerPixel=3;
-		for(i = 0; i < _h; i++)
-		{
-			uint8_t *buf = src;
-			uint8_t *ptr = dst;
+        // Invert scanline
+        src = in->data+lineSize*(_h-1);
+        if (_bpp == 32) // 32 -> 24
+        {
+            outBytePerPixel=3;           
+            for(i = 0; i < _h; i++)
+            {
+                    uint8_t *buf = src;
+                    uint8_t *ptr = dst;
 
-			for(j = 0; j < _w; j++)
-			{
-				ptr[0] = buf[0];
-				ptr[1] = buf[1];
-				ptr[2] = buf[2];
-				ptr += 3;
-				buf += 4;
-			}
-			src += lineSize;
-			dst += _w * 3;
-		}
-	}
-	else
-	{
-		memcpy(decoded, in->data, lineSize * _h);
+                    for(j = 0; j < _w; j++)
+                    {
+                            ptr[0] = buf[0]; // remove alpha channel + reorder
+                            ptr[1] = buf[1];
+                            ptr[2] = buf[2];
+                            ptr += 3;
+                            buf += 4;
+                    }
+                    src -= lineSize;
+                    dst += _w * 3;                    
+            }
+        }
+        else // 24/16/8 bpp
+        {           
+            for(int i=0;i<_h;i++)
+            {                
+                memcpy(dst, src, _w * bytePerPixel);
+                src -= lineSize;
+                dst += _w * bytePerPixel;
+            }
+        }
 
-		if (lineSize == _w * _bpp)
-		{
-			// no extra junk in scanlines so copy as is
-			memcpy(decoded, in->data, lineSize * _h);
-		}
-		else
-		{
-			// strip extra junk from scanlines (due to 4 byte alignment)
-			for(i = 0; i < _h; i++)
-			{
-				memcpy(dst, src, _w * bytePerPixel);
-				src += lineSize;
-				dst += _w * bytePerPixel;
-			}
-		}
-	}
+        ADM_assert(out->isRef());
+        ADMImageRef *ref=out->castToRef();
+        out->flags = AVI_KEY_FRAME;
+        out->_colorspace = colorspace;
 
-	ADM_assert(out->isRef());
-    ADMImageRef *ref=out->castToRef();
-	out->flags = AVI_KEY_FRAME;
-	out->_colorspace = (ADM_colorspace)(colorspace | ADM_COLOR_BACKWARD);
+        ref->_planes[0] = decoded;
+        ref->_planes[1] = NULL;
+        ref->_planes[2] = NULL;
 
-	ref->_planes[0] = decoded;
-	ref->_planes[1] = NULL;
-	ref->_planes[2] = NULL;
-
-	ref->_planeStride[0] = outBytePerPixel * _w;
-	ref->_planeStride[1] = 0;
-	ref->_planeStride[2] = 0;
-    out->Pts=in->demuxerPts;
-	return true;
+        ref->_planeStride[0] = outBytePerPixel * _w;
+        ref->_planeStride[1] = 0;
+        ref->_planeStride[2] = 0;
+        out->Pts=in->demuxerPts;
+        return true;
 }
 //EOF
