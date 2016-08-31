@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "nvEnc.h"
+#include "ADM_nvEnc.h"
 #include "nvenc_desc.cpp"
 #include "ADM_coreVideoEncoderInternal.h"
 extern bool            nvEncConfigure(void);

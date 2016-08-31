@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "nvEnc.h"
+#include "ADM_nvEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 #include "nvEnc_utils.h"

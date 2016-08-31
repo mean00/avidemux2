@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
-#include "ffNvEnc.h"
+#include "ADM_ffNvEnc.h"
 #include "ADM_coreVideoEncoderInternal.h"
 #include "ffnvenc_desc.cpp"
 extern bool            ffNvEncConfigure(void);
