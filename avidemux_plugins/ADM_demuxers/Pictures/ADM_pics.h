@@ -33,6 +33,7 @@ protected:
     std::string _filePrefix;    
     int         _first;
     uint32_t    _w, _h;
+    int         _bmpHeaderOffset;
     std::vector<uint32_t>    _imgSize;
     ADM_PICTURE_TYPE    _type;
     uint32_t    read32 (FILE * fd);

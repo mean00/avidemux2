@@ -1,14 +1,9 @@
 /***************************************************************************
-                          ADM_pics.cpp  -  description
-                             -------------------
+  \fn ADM_pics
+  \brief sequence of image demuxer
+ The bmp/bmp2 code is pretty bad, but it's not worth doing something better
 
-                             Open a bunch of bmps and read them as a movie
-                             Useful for people doing raytracing or doing img/img
-                             modifications
-
-
-    begin                : Tue Jun 4 2002
-    copyright            : (C) 2002 by mean
+    copyright            : (C) 2002/2016 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -43,6 +38,7 @@ static uint32_t s32;
 picHeader::picHeader(void)
 {
 	_nbFiles = 0;
+        _bmpHeaderOffset=0;
 }
 /**
     \fn getTime
@@ -92,6 +88,9 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     FILE* fd = openFrameFile(framenum);
     if(!fd)
         return false;
+    // skip bmp header
+    if(_bmpHeaderOffset)
+        fseek(fd,_bmpHeaderOffset,SEEK_SET);
     fread(img->data, _imgSize[framenum] , 1, fd);
     img->dataLength = _imgSize[framenum];
 
@@ -151,6 +150,80 @@ uint8_t picHeader::read8(FILE * fd)
     return i;
 }
 /**
+ * \fn extractBmpAdditionalInfo
+ * @param name
+ * @param type
+ * @param bpp
+ * @param bmpHeaderOffset
+ * @return 
+ */
+static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int &bpp,int bmpHeaderOffset)
+{
+    FILE *fd=ADM_fopen(name,"rb");
+    if(!fd) return false;
+    bool r=true;
+    uint16_t s16;
+    uint32_t s32;
+    switch(type) // this is bad. All the offsets are hardcoded and could be actually different.
+    {
+        case ADM_PICTURE_BMP2:
+            {
+                ADM_BITMAPINFOHEADER bmph;
+                fseek(fd, 10, SEEK_SET);
+                uint8_t fourBytes[4];
+                fread(fourBytes, 4, 1, fd);
+                bmpHeaderOffset = (fourBytes[0]+(fourBytes[1]<<8)+(fourBytes[2]<<16)+ (fourBytes[3]<<24))+14+4;
+                // size, width height follow as int32
+                fread(&bmph, sizeof(bmph), 1, fd);
+    #ifdef ADM_BIG_ENDIAN
+                Endian_BitMapInfo(&bmph);
+    #endif
+                if (bmph.biCompression != 0) 
+                {
+                    ADM_warning("cannot handle compressed bmp\n");
+                    r=false;
+                    break;
+                }
+                bpp = bmph.biBitCount;
+                ADM_warning("Bmp bpp=%d offset: %d (bmp header=%d)\n", bpp, bmpHeaderOffset,sizeof(bmph));
+            }
+            break;
+        case ADM_PICTURE_BMP:
+	{
+	    ADM_BITMAPINFOHEADER bmph;
+
+            fread(&s16, 2, 1, fd);
+	    if (s16 != 0x4D42) 
+            {
+		ADM_warning(" incorrect bmp sig.\n");
+		r=false;
+                break;  
+	    }
+            fread(&s32, 4, 1, fd);
+            fread(&s32, 4, 1, fd);
+            fread(&s32, 4, 1, fd);
+            fread(&bmph, sizeof(bmph), 1, fd);
+	    if (bmph.biCompression != 0) 
+            {
+		ADM_warning("cannot handle compressed bmp\n");
+                r=false;
+                break;
+	    }
+	    bmpHeaderOffset = bmph.biSize + 14;
+            bpp = bmph.biBitCount;
+	}
+	break;
+
+        default:
+            ADM_assert(0);
+            break;
+    }
+    
+    fclose(fd);
+    return r;
+            
+}
+/**
  * 
  * @param inname
  * @param nbOfDigits
@@ -184,7 +257,7 @@ uint8_t picHeader::open(const char *inname)
 {
     uint32_t nnum;
     FILE *fd;    
-    uint32_t bpp = 0;
+    int bpp = 0;
     
     // 1- identity the image type    
     ADM_PICTURE_TYPE imageType=ADM_identifyImageFile(inname,&_w,&_h);
@@ -194,6 +267,8 @@ uint8_t picHeader::open(const char *inname)
 	return 0;
     }
     _type=imageType;
+    
+    
     
     // Then spit the name in name and extension
     int nbOfDigits;
@@ -225,6 +300,17 @@ uint8_t picHeader::open(const char *inname)
                 _nbFiles++;
         }
     }
+    if(_type==ADM_PICTURE_BMP || _type==ADM_PICTURE_BMP2)
+    {
+         // get bpp and offset
+        if(!extractBmpAdditionalInfo(inname,_type,bpp,_bmpHeaderOffset))
+        {
+            ADM_warning("Could not get BMP/BMP2 info\n");
+            return false;
+        }
+                
+    }
+    
     ADM_info("Found %" PRIu32" images\n", _nbFiles);
     //_________________________________
     // now open them and assign imgSize
@@ -234,7 +320,7 @@ uint8_t picHeader::open(const char *inname)
             fd = openFrameFile(i);
             ADM_assert(fd);
             fseek(fd, 0, SEEK_END);
-            _imgSize.push_back(ftell(fd));
+            _imgSize.push_back(ftell(fd)-_bmpHeaderOffset);
             fclose(fd);
     }
 //_______________________________________
@@ -269,12 +355,12 @@ uint8_t picHeader::open(const char *inname)
     //_video_bih.biPlanes= 24;
     switch(_type)
     {
-#define SET_FCC(x) _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) x);break;
+#define SET_FCC(x,y) _video_bih.biCompression = _videostream.fccHandler =  fourCC::get((uint8_t *) x);ADM_info("Image type=%s\n",y);break;
 	        break;
-            case ADM_PICTURE_JPG : SET_FCC("MJPG")
-	    case ADM_PICTURE_BMP : 
-	    case ADM_PICTURE_BMP2: SET_FCC("DIB ")
-	    case ADM_PICTURE_PNG : SET_FCC("PNG ")
+            case ADM_PICTURE_JPG : SET_FCC("MJPG","JPG")
+	    case ADM_PICTURE_BMP : SET_FCC("DIB ","BMP")
+	    case ADM_PICTURE_BMP2: SET_FCC("DIB ","BMP2")
+	    case ADM_PICTURE_PNG : SET_FCC("PNG ","PNG")
             default:
                 ADM_assert(0);
     }
