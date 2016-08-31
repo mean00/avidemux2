@@ -151,6 +151,11 @@ uint8_t picHeader::getFrame(uint32_t framenum, ADMCompressedImage *img)
     int l= _imgSize[framenum];
     int n=fread(img->data, l , 1, fd);
     
+    int current=ftello(fd);
+    fseek(fd,0,SEEK_END);
+    int end=ftello(fd);
+    printf("Current=%d end=%d delta=%d\n",current,end,end-current);
+    
     if(n!=1)
     {
         ADM_error("Read incomplete \n");
@@ -202,7 +207,7 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
             // 0 2 bytes BM
             // 2 4 Bytes file size
             // 6 4 bytes xxxx
-            //10  4 bytes header size, = direct offset to data
+            //10  4 bytes header size, = direct offset to data            
             {
                 ADM_BITMAPINFOHEADER bmph;
                 fseek(fd, 10, SEEK_SET);
@@ -215,7 +220,7 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
                     break;
                 }
                 bpp = bmph.biBitCount;
-                ADM_warning("Bmp bpp=%d offset: %d (bmp header=%d)\n", bpp, bmpHeaderOffset,sizeof(bmph));
+                ADM_warning("Bmp bpp=%d offset: %d (bmp header=%d,%d)\n", bpp, bmpHeaderOffset,sizeof(bmph),bmph.biSize);
             }
             break;
         case ADM_PICTURE_BMP:

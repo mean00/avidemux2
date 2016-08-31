@@ -48,6 +48,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         uint8_t *src = in->data;
         uint8_t *dst = decoded;
         int      outBytePerPixel=bytePerPixel;
+        int      destStride;
         switch (_bpp)
         {
                 case 16:
@@ -67,16 +68,17 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         src = in->data+lineSize*(_h-1);
         if (_bpp == 32) // 32 -> 24
         {
-            outBytePerPixel=3;           
+            outBytePerPixel=3;   
+            destStride=outBytePerPixel*_w;
             for(i = 0; i < _h; i++)
             {
                     uint8_t *buf = src;
                     uint8_t *ptr = dst;
 
-                    for(j = 0; j < _w; j++)
+                    for(j = 0; j < _w; j++) // 32 32 32 32
                     {
-                            ptr[0] = buf[0]; // remove alpha channel + reorder. IT would be more efficient to do it in colorspace...
-                            ptr[1] = buf[1];
+                            ptr[0] = buf[1]; // remove alpha channel + reorder. IT would be more efficient to do it in colorspace...
+                            ptr[1] = buf[0];
                             ptr[2] = buf[2];
                             ptr += 3;
                             buf += 4;
@@ -86,12 +88,26 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
             }
         }
         else // 24/16/8 bpp
-        {           
+        {    
+            destStride=outBytePerPixel*_w;
+            destStride =(destStride+15);
+            destStride&=~15;
+            
             for(int i=0;i<_h;i++)
-            {                
-                memcpy(dst, src, _w * bytePerPixel);
+            {      
+                uint8_t *buf = src;
+                uint8_t *ptr = dst;
+
+                for(j = 0; j < _w; j++) // 24 24 24 24
+                {
+                    ptr[0] = buf[0]; 
+                    ptr[1] = buf[2];
+                    ptr[2] = buf[1];
+                    ptr += 3;
+                    buf += 3;
+                }                                
                 src -= lineSize;
-                dst += _w * bytePerPixel;
+                dst += destStride;
             }
         }
 
@@ -104,7 +120,7 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         ref->_planes[1] = NULL;
         ref->_planes[2] = NULL;
 
-        ref->_planeStride[0] = outBytePerPixel * _w;
+        ref->_planeStride[0] = destStride;
         ref->_planeStride[1] = 0;
         ref->_planeStride[2] = 0;
         out->Pts=in->demuxerPts;
