@@ -30,10 +30,7 @@ ADM_CORE6_EXPORT const std::string  ADM_getFileName(const std::string &str);
 ADM_CORE6_EXPORT char              *ADM_PathCanonize(const char *tmpname);
 // change to lower case in place the string
 ADM_CORE6_EXPORT void               ADM_lowerCase(std::string &st);
-
-ADM_CORE6_EXPORT uint32_t            getTime( int called );
-ADM_CORE6_EXPORT uint32_t            getTimeOfTheDay(void);
-
+//
 ADM_CORE6_EXPORT uint64_t           ADM_getSecondsSinceEpoch(void);
 ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 
