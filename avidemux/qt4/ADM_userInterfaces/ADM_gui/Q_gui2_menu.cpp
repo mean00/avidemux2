@@ -48,27 +48,27 @@ void MainWindow::addScriptEnginesToFileMenu(vector<MenuEntry>& fileMenu)
 
                 if (this->_scriptEngines.size() == 1)
                 {
-                    itemName = QT_TRANSLATE_NOOP("adm","Project Script");
+                    itemName = QT_TRANSLATE_NOOP("qgui2menu","Project Script");
                 }
                 else
                 {
-                    itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("adm"," Project");
+                    itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("qgui2menu"," Project");
                 }
 
                 MenuEntry dummyEntry = {MENU_SUBMENU, itemName, NULL, ACT_DUMMY, NULL, NULL};
                 it = fileMenu.insert(it, dummyEntry);
 
-                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("adm","&Run Project..."), NULL, firstMenuId, NULL, NULL};
+                MenuEntry runProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Run Project..."), NULL, firstMenuId, NULL, NULL};
                 it = fileMenu.insert(it + 1, runProjectEntry);
 
                 if ((this->_scriptEngines[engineIndex]->capabilities() & IScriptEngine::Debugger) == IScriptEngine::Debugger)
                 {
-                    MenuEntry debugEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("adm","&Debug Project..."), NULL, (Action)(firstMenuId + 1), NULL, NULL};
+                    MenuEntry debugEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","&Debug Project..."), NULL, (Action)(firstMenuId + 1), NULL, NULL};
                     it = fileMenu.insert(it + 1, debugEntry);
                     i++;
                 }
 
-                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("adm","Save &As Project..."), NULL, (Action)(firstMenuId + 2), NULL, NULL};
+                MenuEntry saveAsProjectEntry = {MENU_SUBACTION, QT_TRANSLATE_NOOP("qgui2menu","Save &As Project..."), NULL, (Action)(firstMenuId + 2), NULL, NULL};
                 it = fileMenu.insert(it + 1, saveAsProjectEntry);
                 i += 3;
             }
@@ -88,11 +88,11 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 
         if (this->_scriptEngines.size() == 1)
         {
-            itemName = QT_TRANSLATE_NOOP("adm","Scripting Shell");
+            itemName = QT_TRANSLATE_NOOP("qgui2menu","Scripting Shell");
         }
         else
         {
-            itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("adm"," Shell");
+            itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("qgui2menu"," Shell");
         }
 
         MenuEntry entry = {MENU_ACTION, itemName, NULL, (Action)(ACT_SCRIPT_ENGINE_SHELL_FIRST + engineIndex), NULL, NULL};
@@ -114,11 +114,11 @@ void MainWindow::addScriptReferencesToHelpMenu()
         {
             if (this->_scriptEngines.size() == 1)
             {
-                itemName = QT_TRANSLATE_NOOP("adm","Scripting Reference");
+                itemName = QT_TRANSLATE_NOOP("qgui2menu","Scripting Reference");
             }
             else
             {
-                itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("adm"," Reference");
+                itemName = this->_scriptEngines[engineIndex]->name() + QT_TRANSLATE_NOOP("qgui2menu"," Reference");
             }
 
             FileAction *action = new FileAction(
