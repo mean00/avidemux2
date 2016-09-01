@@ -63,8 +63,6 @@ again:
                 uint64_t delta=labs((int64_t)newDts-(int64_t)lastDts);
                 const char *sign="+";
                 if(newDts<lastDts) sign="-";
-                printf("[AudioStream] Old dts=%s\n",ADM_us2plain(lastDts));
-                printf("[AudioStream] New dts=%s\n",ADM_us2plain(newDts));
                 printf("[AudioStream] Warning skew in dts =%s %lu \n",sign,delta);
                 printf("[AudioStream] Warning skew lastDts=%s \n",ADM_us2plain(lastDts));
                 printf("[AudioStream] Warning skew newDts=%s  \n",ADM_us2plain(newDts));
