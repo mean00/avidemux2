@@ -37,9 +37,9 @@ ass_rasterizer_c.c ass_blur.c ass_font.c
 ${Asm}
 )
 
-IF(WIN32 AND NOT WIN64) # This is wrong, FIXME
+IF(WIN32 AND NOT ADM_CPU_X86_64) # This is wrong, FIXME
         SET(${ADM_LIB}_SRCS  ${${ADM_LIB}_SRCS} ass_rasterizer.c)
-ENDIF(WIN32 AND NOT WIN64)
+ENDIF(WIN32 AND NOT ADM_CPU_X86_64)
 #
 ADD_DEFINITIONS(" -std=gnu99 ")
 #
