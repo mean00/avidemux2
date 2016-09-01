@@ -36,67 +36,7 @@ static uint32_t s32;
 #define MAX_ACCEPTED_OPEN_FILE 99999
 
 #define US_PER_PIC (40*1000)
-/**
- * 
- * @param fd
- */
-class LowLevel
-{
-    
-public:
-    LowLevel(FILE *fd)
-    {
-        _fd=fd;
-    }
-    ~LowLevel()
-    {
-        _fd=NULL;
-    }
-    uint32_t    read32LE ()
-        {
-            uint32_t i;
-            i = 0;
-            i=(((uint32_t)(read16LE()))<<0)+(((uint32_t)read16LE())<<16);
-            return i;
-        }    
-    uint16_t    read16LE ()
-        {
-            uint16_t i;
 
-            i = 0;
-            i = (read8LE( ) ) + (read8LE( )<< 8);
-            return i;
-        }    
-    uint8_t     read8LE ()
-    {
-        uint8_t i;
-        ADM_assert(_fd);
-        i = 0;
-        if (!fread(&i, 1, 1, _fd))
-        {
-            ADM_warning(" Problem reading the file !\n");
-        }
-        return i;
-    }    
-    void        readBmphLE(ADM_BITMAPINFOHEADER &bmp)
-    {
-    #define READ_FIELD(field,size)     bmp.field=read##size##LE();
-
-        memset(&bmp,0,sizeof(bmp));
-
-        READ_FIELD(biSize,32)
-        READ_FIELD(biWidth,32)
-        READ_FIELD(biHeight,32)
-        READ_FIELD(biPlanes,16)            
-        READ_FIELD(biBitCount,16)
-        READ_FIELD(biCompression,32)            
-        READ_FIELD(biSizeImage,32)
-        READ_FIELD(biSize,32)
-    }    
-    
-protected:
-    FILE *_fd;
-};
 
 /**
  * 
@@ -203,7 +143,7 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
     bool r=true;
     uint16_t s16;
     uint32_t s32;
-    LowLevel low(fd);
+    BmpLowLevel low(fd);
     
     switch(type) // this is bad. All the offsets are hardcoded and could be actually different.
     {
@@ -217,9 +157,9 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
                 fseek(fd, 10, SEEK_SET);
                 bmpHeaderOffset = low.read32LE();
                 low.readBmphLE(bmph);
-                if (bmph.biCompression != 0) 
+                if (bmph.biCompression != 0 && bmph.biCompression != 3) 
                 {
-                    ADM_warning("cannot handle compressed bmp\n");
+                    ADM_warning("cannot handle compressed bmp 0x%x <%s>\n",bmph.biCompression,fourCC::tostring(bmph.biCompression));
                     r=false;
                     break;
                 }
@@ -242,7 +182,7 @@ static bool extractBmpAdditionalInfo(const char *name,ADM_PICTURE_TYPE type,int 
             low.read32LE( );
             low.read32LE( );
             low.readBmphLE( bmph);
-            if (bmph.biCompression != 0) 
+            if (bmph.biCompression != 0 && bmph.biCompression != 3 ) 
             {
 		ADM_warning("cannot handle compressed bmp\n");
                 r=false;
