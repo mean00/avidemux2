@@ -38,13 +38,13 @@ bool     ADM_ad_getFilterInfo(int filter, const char **name,
 class ADM_ad_plugin : public ADM_LibWrapper
 {
 	public:
-		ADM_ad_CreateFunction		*create;
-		ADM_ad_DeleteFunction		*destroy;
-		ADM_ad_SupportedFormat		*supportedFormat;
-		ADM_ad_GetApiVersion		*getApiVersion;
-		ADM_ad_GetDecoderVersion	*getDecoderVersion;
-		ADM_ADM_ad_GetInfo			*getInfo;
-		const char 					*name;
+                ADM_ad_CreateFunction		*create;
+                ADM_ad_DeleteFunction		*destroy;
+                ADM_ad_SupportedFormat		*supportedFormat;
+                ADM_ad_GetApiVersion		*getApiVersion;
+                ADM_ad_GetDecoderVersion	*getDecoderVersion;
+                ADM_ADM_ad_GetInfo		*getInfo;
+                std::string			name;
 
 		ADM_ad_plugin(const char *file) : ADM_LibWrapper()
 		{
@@ -76,8 +76,8 @@ static uint8_t tryLoadingAudioPlugin(const char *file)
 	// Check API version
 	if (plugin->getApiVersion() != AD_API_VERSION)
 	{
-		printf("[ADM_ad_plugin] File %s has API version too old (%d vs %d)\n",
-			ADM_GetFileName(file), plugin->getApiVersion(), AD_API_VERSION);
+		ADM_warning("[ADM_ad_plugin] File %s has API version too old (%d vs %d)\n",
+			ADM_GetFileName(std::string(file)).c_str(), plugin->getApiVersion(), AD_API_VERSION);
 		goto Err_ad;
 	}
 
@@ -85,10 +85,10 @@ static uint8_t tryLoadingAudioPlugin(const char *file)
 	uint32_t major, minor, patch;
 
 	plugin->getDecoderVersion(&major, &minor, &patch);
-	plugin->name = ADM_strdup(ADM_GetFileName(file));
+	plugin->name = ADM_GetFileName(std::string(file));
 
-	printf("[ADM_ad_plugin] Plugin loaded version %d.%d.%d, name %s, desc: %s\n",
-		major, minor, patch, plugin->name, plugin->getInfo());
+	ADM_info("[ADM_ad_plugin] Plugin loaded version %d.%d.%d, name %s, desc: %s\n",
+		major, minor, patch, plugin->name.c_str(), plugin->getInfo());
 
 	ADM_audioPlugins.push_back(plugin);
 
@@ -114,7 +114,7 @@ uint32_t ADM_ad_getNbFilters(void)
     @param major, minor,patch [out] Version number
     @return true
 */
-bool ADM_ad_getFilterInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
+bool ADM_ad_getFilterInfo(int filter, std::string &name, uint32_t *major,uint32_t *minor,uint32_t *patch)
 {
 
         ADM_assert(filter>=0 && filter<ADM_audioPlugins.size());
@@ -122,7 +122,7 @@ bool ADM_ad_getFilterInfo(int filter, const char **name, uint32_t *major,uint32_
     	ADM_ad_plugin *a=ADM_audioPlugins[filter];
         a->getDecoderVersion(major, minor, patch);
 
-        *name=a->getInfo();
+        name=a->getInfo();
         return 1;
 }
 
@@ -168,7 +168,7 @@ ADM_Audiocodec *ADM_ad_searchCodec(uint32_t fourcc,	WAVHeader *info,uint32_t ext
 		ADM_assert(a->supportedFormat);
 		
         int score=a->supportedFormat(fourcc);
-        aprintf("[ADM_ad_plugin]Format 0x%x : probing %s score %d\n",fourcc,a->name,score);
+        ADM_info("[ADM_ad_plugin]Format 0x%x : probing %s score %d\n",fourcc,a->name.c_str(),score);
         if(score>best)
         {
             index=i;
@@ -192,7 +192,6 @@ bool ADM_ad_cleanup(void)
     for(int i=0;i<ADM_audioPlugins.size();i++)
     {
         ADM_ad_plugin *a=ADM_audioPlugins[i];
-        ADM_dealloc(a->name );
         delete a;
         ADM_audioPlugins[i]=NULL;
     }
