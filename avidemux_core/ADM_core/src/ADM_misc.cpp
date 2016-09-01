@@ -24,6 +24,8 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
+#include <algorithm>
+
 
 #include "ADM_default.h"
 #include "ADM_assert.h"
@@ -228,16 +230,17 @@ uint32_t ms=(uint32_t)(ams/1000);
         \fn ADM_LowerCase
         \brief change to lower case in place the string
 */
-void  ADM_LowerCase(char *string)
+
+
+void  ADM_lowerCase(std::string &st)
 {
-  int l=strlen(string)-1;
-        for(int i=l;i>=0;i--)
-        {
-                string[i]=tolower(string[i]);
-        }
-
+    std::transform(st.begin(), st.end(), st.begin(), ::tolower);
 }
-
+/**
+ * 
+ * @param name
+ * @return 
+ */
 uint8_t         ADM_fileExist(const char *name)
 {
 FILE *file;

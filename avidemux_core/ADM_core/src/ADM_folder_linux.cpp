@@ -162,8 +162,7 @@ void ADM_initBaseDir(int argc, char *argv[])
         ADM_info("Portable mode\n");
         isPortable=true;
         char *copy=ADM_PathCanonize(argv[0]);
-        ADM_PathStripName(copy); // small leak
-        std::string p=std::string(copy);
+        std::string p=ADM_extractPath(copy);
         delete [] copy;copy=NULL;
         std::string plugins=p;
         plugins+=std::string("/../lib/")+std::string(ADM_PLUGIN_DIR);

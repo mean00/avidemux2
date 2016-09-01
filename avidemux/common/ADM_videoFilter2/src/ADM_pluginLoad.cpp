@@ -113,7 +113,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
 
     if (!plugin->isAvailable())
     {
-            printf("[ADM_vf_plugin] Unable to load %s\n", ADM_GetFileName(file));
+            printf("[ADM_vf_plugin] Unable to load %s\n", ADM_getFileName(file).c_str());
             goto Err_ad;
     }
 
@@ -121,7 +121,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     if (plugin->getApiVersion() != VF_API_VERSION)
     {
             printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
-                    ADM_GetFileName(std::string(file)).c_str(), plugin->getApiVersion(), VF_API_VERSION);
+                    ADM_getFileName(std::string(file)).c_str(), plugin->getApiVersion(), VF_API_VERSION);
             goto Err_ad;
     }
     if(!(plugin->supportedUI() & UI_GetCurrentUI()))
@@ -145,7 +145,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     uint32_t major, minor, patch;
 
     plugin->getFilterVersion(&major, &minor, &patch);
-    plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(std::string(file)).c_str());
+    plugin->nameOfLibrary = ADM_strdup(ADM_getFileName(std::string(file)).c_str());
 
     info=&(plugin->info);
 

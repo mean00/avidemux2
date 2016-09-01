@@ -529,22 +529,25 @@ std::string utf8StringToAnsi(const char *utf8String)
 		if(dupe[i]=='/') dupe[i]='\\';
 	}
 
-	char *filename = ADM_strdup(ADM_GetFileName(dupe));
-	ADM_PathStripName(dupe);
-	char *directory=dupe;
-	int filenameLength = strlen(filename);
-	int directoryLength = strlen(directory);
+	std::string fileName=ADM_getFileName(dupe);
+	std::string pathName=ADM_extractPath(dupe);
+	ADM_dealloc(dupe);
 
-	printf("Path=%s\n",directory);	
-	printf("Name=%s\n",filename);	
+
+
+	int filenameLength = fileName.size();
+	int directoryLength = pathName.size();
+
+	printf("Path=%s\n",pathName.c_str());	
+	printf("Name=%s\n",fileName.c_str());	
 
 	// Convert directory to wide char
-	int wcDirLength = utf8StringToWideChar(directory, directoryLength, NULL) + 1;
-	int wcFileLength = utf8StringToWideChar(filename, filenameLength, NULL) + 1;
+	int wcDirLength = utf8StringToWideChar(pathName.c_str(), directoryLength, NULL) + 1;
+	int wcFileLength = utf8StringToWideChar(fileName.c_str(), filenameLength, NULL) + 1;
 	wchar_t *wcDirectory = new wchar_t[wcDirLength];
 
 	memset(wcDirectory, 0, wcDirLength * sizeof(wchar_t));
-	utf8StringToWideChar(directory, directoryLength, wcDirectory);
+	utf8StringToWideChar(pathName.c_str(), directoryLength, wcDirectory);
 
 	// Get short directory
 	int shortDirLength = GetShortPathNameW(wcDirectory, NULL, 0);
@@ -555,7 +558,7 @@ std::string utf8StringToAnsi(const char *utf8String)
 	delete [] wcDirectory;
 
 	// Append filename to directory
-	utf8StringToWideChar(filename, filenameLength, wcShortDir + (shortDirLength - 1));
+	utf8StringToWideChar(fileName.c_str(), filenameLength, wcShortDir + (shortDirLength - 1));
 
 	// Convert path to ANSI
 	int dirtyAnsiPathLength = wideCharStringToAnsi(wcShortDir, -1, NULL, "?");
@@ -574,8 +577,6 @@ std::string utf8StringToAnsi(const char *utf8String)
 	delete [] wcShortDir;
         printf("clean path=%s\n",cleanPath.c_str());
         
-	ADM_dealloc(dupe);
-	ADM_dealloc(filename);
         return cleanPath;
 }
 

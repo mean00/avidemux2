@@ -19,24 +19,23 @@ typedef struct
   uint32_t hours,minutes,seconds; 
 } ADM_date;
 
-ADM_CORE6_EXPORT const ADM_date        &ADM_getCurrentDate();
+ADM_CORE6_EXPORT const ADM_date     &ADM_getCurrentDate();
 // /dir/file.ext -> /dir/file and ext returned values are copies
-ADM_CORE6_EXPORT void            ADM_PathSplit(const std::string &in,std::string &root, std::string &ext);
-// Returns path only /foo/bar.avi -> /foo INPLACE, no copy done
-ADM_CORE6_EXPORT void	        ADM_PathStripName(char *str);
-// Get the filename without path. /foo/bar.avi -> bar.avi INPLACE, NO COPY
-ADM_CORE6_EXPORT const char      *ADM_GetFileName(const char *str);
-ADM_CORE6_EXPORT const std::string ADM_GetFileName(const std::string &str);
+ADM_CORE6_EXPORT void               ADM_PathSplit(const std::string &in,std::string &root, std::string &ext);
+// Returns path only /foo/bar.avi -> /foo , INPLACE!
+ADM_CORE6_EXPORT std::string        ADM_extractPath(const std::string &str);
+// Get the filename without path. /foo/bar.avi -> bar.avi
+ADM_CORE6_EXPORT const std::string  ADM_getFileName(const std::string &str);
 //  Canonize the path, returns a copy of the absolute path given as parameter
-ADM_CORE6_EXPORT char            *ADM_PathCanonize(const char *tmpname);
+ADM_CORE6_EXPORT char              *ADM_PathCanonize(const char *tmpname);
 // change to lower case in place the string
-void                            ADM_LowerCase(char *string);
+ADM_CORE6_EXPORT void               ADM_lowerCase(std::string &st);
 
-                uint32_t        getTime( int called );
-                uint32_t 	getTimeOfTheDay(void);
+ADM_CORE6_EXPORT uint32_t            getTime( int called );
+ADM_CORE6_EXPORT uint32_t            getTimeOfTheDay(void);
 
-ADM_CORE6_EXPORT uint64_t        ADM_getSecondsSinceEpoch(void);
-ADM_CORE6_EXPORT const char      *ADM_epochToString(uint64_t epoch);
+ADM_CORE6_EXPORT uint64_t           ADM_getSecondsSinceEpoch(void);
+ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 
 #ifdef HAVE_GETTIMEOFDAY
 	#include <sys/time.h>

@@ -540,17 +540,14 @@ char *ADM_PathCanonize(const char *tmpname)
 	\brief Returns path only /foo/bar.avi -> /foo INPLACE, no copy done
 
 */
-void ADM_PathStripName(char *str)
+std::string ADM_extractPath(const std::string &str)
 {
-	int len = strlen(str);
-	if (len <= 1)
-		return;
-	len--;
-	while (*(str + len) != '\\' && len)
-	{
-		*(str + len) = 0;
-		len--;
-	}
+    std::string p;
+         p=str;
+         size_t idx=p.find_last_of ("\\");
+         if(idx!=std::string::npos)
+            p.resize(idx);
+         return p;
 }
 
 /**
@@ -558,23 +555,25 @@ void ADM_PathStripName(char *str)
     \brief Get the filename without path. /foo/bar.avi -> bar.avi INPLACE, NO COPY
 
 */
-const char *ADM_GetFileName(const char *str)
+const std::string ADM_getFileName(const std::string &str)
 {
-	const char *filename;
-
-	const char *filename2;
-
-	filename = strrchr(str, '\\');
-	filename2 = strrchr(str, '/');
-
-	if (filename2 && filename)
-		if (filename2 > filename)
-			filename = filename2;
-
-	if (filename)
-		return filename + 1;
-	else
-		return str;
+    size_t idx=str.find_last_of ("\\");
+    size_t idx2=str.find_last_of ("/");
+    
+    // no / nor \ 
+    if(idx2==std::string::npos && idx==std::string::npos)
+        return str;
+    // Both, take the further one
+    if(idx2!=std::string::npos && idx!=std::string::npos)
+        if(idx2>idx)
+            return str.substr(idx2+1);
+        else
+            return str.substr(idx+1);
+    
+    // Only one found
+    if(idx2!=std::string::npos)
+         return str.substr(idx2+1);
+    return str.substr(idx+1);
 }
 
 /**

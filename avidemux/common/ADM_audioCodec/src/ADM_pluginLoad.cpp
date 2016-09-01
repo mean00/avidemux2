@@ -69,7 +69,7 @@ static uint8_t tryLoadingAudioPlugin(const char *file)
 
 	if (!plugin->isAvailable())
 	{
-		printf("[ADM_ad_plugin] Unable to load %s\n", ADM_GetFileName(file));
+		printf("[ADM_ad_plugin] Unable to load %s\n", ADM_getFileName(std::string(file)).c_str());
 		goto Err_ad;
 	}
 
@@ -77,7 +77,7 @@ static uint8_t tryLoadingAudioPlugin(const char *file)
 	if (plugin->getApiVersion() != AD_API_VERSION)
 	{
 		ADM_warning("[ADM_ad_plugin] File %s has API version too old (%d vs %d)\n",
-			ADM_GetFileName(std::string(file)).c_str(), plugin->getApiVersion(), AD_API_VERSION);
+			ADM_getFileName(std::string(file)).c_str(), plugin->getApiVersion(), AD_API_VERSION);
 		goto Err_ad;
 	}
 
@@ -85,7 +85,7 @@ static uint8_t tryLoadingAudioPlugin(const char *file)
 	uint32_t major, minor, patch;
 
 	plugin->getDecoderVersion(&major, &minor, &patch);
-	plugin->name = ADM_GetFileName(std::string(file));
+	plugin->name = ADM_getFileName(std::string(file));
 
 	ADM_info("[ADM_ad_plugin] Plugin loaded version %d.%d.%d, name %s, desc: %s\n",
 		major, minor, patch, plugin->name.c_str(), plugin->getInfo());

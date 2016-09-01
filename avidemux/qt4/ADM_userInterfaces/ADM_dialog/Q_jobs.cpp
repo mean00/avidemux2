@@ -59,7 +59,7 @@ jobsWindow::~jobsWindow()
 static void ADM_setText(const char *txt,uint32_t col, uint32_t row,QTableWidget *w)
 {
         QString str(txt);
-        QTableWidgetItem *newItem = new QTableWidgetItem(str);//GetFileName(_jobsName[i]));
+        QTableWidgetItem *newItem = new QTableWidgetItem(str);//getFileName(_jobsName[i]));
         w->setItem(row, col, newItem);
 
 }
@@ -75,7 +75,7 @@ void jobsWindow::updateRows(void)
    for(int i=0;i<_nbJobs;i++)
    {
       j=&(desc[i]);
-      ADM_setText(ADM_GetFileName(_jobsName[i]),0,i,ui.tableWidget);
+      ADM_setText(ADM_getFileName(_jobsName[i]).c_str(),0,i,ui.tableWidget);
       ADM_setText(StringStatus[j->status],1,i,ui.tableWidget);
 
       sprintf(str,"%02u:%02u:%02u",j->startDate.hours,j->startDate.minutes,j->startDate.seconds);
@@ -98,7 +98,7 @@ void jobsWindow::DeleteOne(bool b)
 
 	if (sel >= 0 && sel < _nbJobs)
 	{
-		if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qjobs","Sure!"), QT_TRANSLATE_NOOP("qjobs","Delete job"), QT_TRANSLATE_NOOP("qjobs","Are you sure you want to delete %s job?"), ADM_GetFileName(_jobsName[sel])))
+		if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qjobs","Sure!"), QT_TRANSLATE_NOOP("qjobs","Delete job"), QT_TRANSLATE_NOOP("qjobs","Are you sure you want to delete %s job?"), ADM_getFileName(_jobsName[sel]).c_str()))
 		{
 			desc[sel].status = STATUS_DELETED;
 			unlink(_jobsName[sel]);

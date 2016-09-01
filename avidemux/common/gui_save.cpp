@@ -399,7 +399,7 @@ int A_saveImg (const char *name)
     }
     int r=image->saveAsBmp(name);
     if(!r)
-        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","BMP op failed"),QT_TRANSLATE_NOOP("adm", "Saving %s as a BMP file failed."), ADM_GetFileName(name));
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","BMP op failed"),QT_TRANSLATE_NOOP("adm", "Saving %s as a BMP file failed."), ADM_getFileName(name).c_str());
     return r;
 
 }
@@ -413,11 +413,11 @@ int A_SaveWrapper(const char *name)
 
         if(A_Save(name))
         {
-          GUI_Info_HIG (ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm", "File %s has been successfully saved."),ADM_GetFileName(name));
+          GUI_Info_HIG (ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm", "File %s has been successfully saved."),ADM_getFileName(name).c_str());
         }
         else
         {
-          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Failed"), QT_TRANSLATE_NOOP("adm","File %s was NOT saved correctly."),ADM_GetFileName(name));
+          GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Failed"), QT_TRANSLATE_NOOP("adm","File %s was NOT saved correctly."),ADM_getFileName(name).c_str());
         }
         return 1;
 }

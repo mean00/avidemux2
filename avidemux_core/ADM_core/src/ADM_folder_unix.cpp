@@ -213,46 +213,22 @@ char *ADM_PathCanonize(const char *tmpname)
 }
 
 /**
-        \fn ADM_PathStripName
-	\brief Returns path only /foo/bar.avi -> /foo INPLACE, no copy done
+        \fn ADM_extractPath
+	\brief Returns path only /foo/bar.avi -> /foo
 
 */
-void ADM_PathStripName(char *str)
+std::string ADM_extractPath(const std::string &str)
 {
-	int len = strlen(str);
-
-	if (len <= 1)
-		return;
-
-	len--;
-
-        
-	while (*(str + len) != '/' && len)
-	{
-		*(str + len) = 0;
-		len--;
-	}
+    std::string p;
+         p=str;
+         size_t idx=p.find_last_of ("/");
+         if(idx!=std::string::npos)
+            p.resize(idx);
+         return p;
 }
-
 /**
-    \fn ADM_GetFileName
-    \brief Get the filename without path. /foo/bar.avi -> bar.avi INPLACE, NO COPY
-
 */
-const char *ADM_GetFileName(const char *str)
-{
-	const char *filename;
-
-
-	filename = strrchr(str, '/');
-
-
-	if (filename)
-		return filename + 1;
-	else
-		return str;
-}
-const std::string ADM_GetFileName(const std::string &str)
+const std::string ADM_getFileName(const std::string &str)
 {
     size_t idx=str.find_last_of ("/");
     if(idx==std::string::npos) return str;

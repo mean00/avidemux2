@@ -169,7 +169,7 @@ GtkCellRenderer *renderer;
                         case COMMAND_DELETE:
                                         sel=getSelection(jobs.dialog);
                                         if(sel>=jobs.nb) break;
-                                        if(GUI_Confirmation_HIG(QT_TR_NOOP("Sure!"),QT_TR_NOOP("Delete job"),QT_TR_NOOP("Are you sure you want to delete %s job ?"),ADM_GetFileName(jobs.name[sel])))
+                                        if(GUI_Confirmation_HIG(QT_TR_NOOP("Sure!"),QT_TR_NOOP("Delete job"),QT_TR_NOOP("Are you sure you want to delete %s job ?"),ADM_getFileName(jobs.name[sel].c_str())))
                                         {
                                                 jobs.status[sel].status=STATUS_DELETED;
                                         }

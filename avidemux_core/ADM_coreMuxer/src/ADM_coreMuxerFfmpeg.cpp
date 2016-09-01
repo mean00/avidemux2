@@ -133,10 +133,6 @@ bool muxerFFmpeg::setupMuxer(const char *format,const char *filename)
     // probably a memeleak here
 
 //#warning use AV METADATA
-#if 0
-    strcpy(oc->title,ADM_GetFileName(foo));
-    strcpy(oc->author,"Avidemux");
-#endif
     printf("[FF] Muxer opened\n");
     return true;
 }
