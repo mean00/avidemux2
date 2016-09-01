@@ -21,39 +21,12 @@
 #include "ADM_codec.h"
 #include "fourcc.h"
 
-
-
-
-
 //**********************************
 static ADMImage *createImageFromFile_jpeg(const char *filename);
 static ADMImage *createImageFromFile_Bmp2(const char *filename);
 static ADMImage *createImageFromFile_png(const char *filename);
 //***********************************
-static uint8_t read8(FILE *fd)
-{
-	return fgetc(fd);
-}
-static uint32_t read16(FILE *fd)
-{
-	uint32_t a,b;
 
-	a=fgetc(fd);
-	b=fgetc(fd);
-	return (a<<8)+b;
-
-}
-static uint32_t read32(FILE *fd)
-{
-	uint32_t a,b,c,d;
-
-	a=fgetc(fd);
-	b=fgetc(fd);
-	c=fgetc(fd);
-	d=fgetc(fd);
-	return (a<<24)+(b<<16)+(c<<8)+d;
-
-}
 static int getFileSize(FILE *fd)
 {
         fseek(fd, 0, SEEK_END);
@@ -233,11 +206,11 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
         fseek(fd, 0, SEEK_END);
         int fileLength=ftell(fd);
         fseek(fd, 0, SEEK_SET);
-        
-        read16(fd);	// skip jpeg ffd8
+        BmpLowLevel reader(fd);
+        reader.read16BE();	// skip jpeg ffd8
         while (count < 15 && tag != 0xFFC0)
         {
-            tag = read16(fd);
+            tag = reader.read16BE();
             if ((tag >> 8) != 0xff)
             {
                 ADM_warning("[imageLoader]invalid jpeg tag found (%x)\n", tag);
@@ -252,10 +225,10 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
                 case 0xC0: // SOF0.. baseline
                 case 0xC1:
                 case 0xC2:
-                    read16(fd);	// size
-                    read8(fd);	// precision
-                    h = read16(fd);
-                    w = read16(fd);
+                    reader.read16BE();	// size
+                    reader.read8();	// precision
+                    h = reader.read16BE();
+                    w = reader.read16BE();
                     if(w&1) w++;
                     if(h&1) h++;
                     ADM_info("Dimension %d x %d\n",(int)w,(int)h);
@@ -266,10 +239,10 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
                 case 0xDA: // SOS
                 {
                     ADM_info("Found tag 0x%x, %s, size=%d position=%d\n",tag&0xff,jpegToString(tag&0xff),(int)off,(int)ftell(fd));
-                    int headerSize=read16(fd);
-                    int nbComponents=read8(fd);
-                    for(int i=0;i<nbComponents;i++) read16(fd);
-                    read16(fd);read8(fd);
+                    int headerSize=reader.read16BE();
+                    int nbComponents=reader.read8();
+                    for(int i=0;i<nbComponents;i++) reader.read16BE();
+                    reader.read16BE();reader.read8();
                     // data starts here
                     // Lookup for 0xff something
                     int pos=lookupTag(fd,fileLength); 
@@ -281,7 +254,7 @@ static bool readJpegInfo(FILE *fd, int &width, int &height)
                     break;
                 }
                 default:
-                    off = read16(fd);
+                    off = reader.read16BE();
                     ADM_info("Found tag 0x%x, %s, size=%d position=%d\n",tag&0xff,jpegToString(tag&0xff),(int)off,(int)ftell(fd));
                     if (off < 2)
                     {
@@ -368,13 +341,14 @@ ADMImage *createImageFromFile_png(const char *filename)
            ADM_warning("Cannot open png file\n");
            return NULL;
        }
+       BmpLowLevel reader(fd);
        size=getFileSize(fd);
-       read32(fd);
-       read32(fd);
-       read32(fd);
-       read32(fd);
-       w=read32(fd);
-       h=read32(fd);
+       reader.read32BE();
+       reader.read32BE();
+       reader.read32BE();
+       reader.read32BE();
+       w=reader.read32BE();
+       h=reader.read32BE();
        fseek(fd,0,SEEK_SET);
        ADM_byteBuffer buffer(size);
 
@@ -432,19 +406,14 @@ ADMImage *createImageFromFile_Bmp2(const char *filename)
         }
  	fseek(fd, 10, SEEK_SET);
 
- #define MK32() (fcc_tab[0]+(fcc_tab[1]<<8)+(fcc_tab[2]<<16)+ \
- 						(fcc_tab[3]<<24))
-
-        fread(fcc_tab, 4, 1, fd);
-        offset = MK32();
-        // size, width height follow as int32
-        fread(&bmph, sizeof(bmph), 1, fd);
- #ifdef ADM_BIG_ENDIAN
- 	    Endian_BitMapInfo(&bmph);
- #endif
-        if (bmph.biCompression != 0)
+        BmpLowLevel reader(fd);
+        
+ 
+        offset = reader.read32LE();
+        reader.readBmphLE(bmph);
+        if (bmph.biCompression != 0 &bmph.biCompression!=3)
         {
-            ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp\n");
+            ADM_warning("[imageLoader] BMP2:Cannot handle compressed bmp (%08x)\n",bmph.biCompression);
             fclose(fd);
             return NULL;
         }
@@ -513,12 +482,13 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
     if (fcc_tab[1] == 'P' && fcc_tab[2] == 'N' && fcc_tab[3] == 'G')
     {
         fseek(fd, 0, SEEK_SET);
-        read32(fd);
-        read32(fd);
-        read32(fd);
-        read32(fd);
-        *w=read32(fd);
-        *h=read32(fd);
+         BmpLowLevel reader(fd);
+         reader.read32BE();
+         reader.read32BE();
+         reader.read32BE();
+         reader.read32BE();
+        *w= reader.read32BE();
+        *h= reader.read32BE();
         fclose(fd);
         return ADM_PICTURE_PNG;
     }
@@ -528,15 +498,12 @@ ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t
         ADM_BITMAPINFOHEADER bmph;
 
             fseek(fd, 10, SEEK_SET);
-            fread(fcc_tab, 4, 1, fd);
-            // size, width height follow as int32
-            fread(&bmph, sizeof(bmph), 1, fd);
-     #ifdef ADM_BIG_ENDIAN
-            Endian_BitMapInfo(&bmph);
-     #endif
-            if (bmph.biCompression != 0)
+            BmpLowLevel reader(fd);
+            reader.read32LE();
+            reader.readBmphLE(bmph);
+            if (bmph.biCompression != 0 && bmph.biCompression != 3)
             {
-                ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp\n");
+                ADM_warning("[imageIdentify] BMP2:Cannot handle compressed bmp 0x%008x\n",bmph.biCompression);
                 fclose(fd);
                 return ADM_PICTURE_UNKNOWN;
             }
