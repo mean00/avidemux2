@@ -18,9 +18,9 @@ public:
         void         (*deleteAudioDevice)(audioDeviceThreaded *device);
         uint8_t      (*getVersion)(uint32_t *major,uint32_t *minor,uint32_t *patch);
         // Only initialized once
-        const char    *name;
-        const char    *descriptor;
-        uint32_t apiVersion;
+        std::string   name;
+        std::string   descriptor;
+        uint32_t      apiVersion;
 
         ADM_AudioDevices(const char *file) : ADM_LibWrapper()
 		{
@@ -28,23 +28,22 @@ public:
         uint32_t     (*getApiVersion)();
         const char  *(*getAudioDeviceName)();
 
-			initialised = (loadLibrary(file) && getSymbols(6,
+                initialised = (loadLibrary(file) && getSymbols(6,
 				&createAudioDevice, "create",
 				&deleteAudioDevice, "destroy",
-
 				&getAudioDeviceName, "getName",
 				&getApiVersion, "getApiVersion",
 				&getVersion, "getVersion",
 				&getDescriptor, "getDescriptor"));
                 if(initialised)
                 {
-                    name=getAudioDeviceName();
-                    apiVersion=getApiVersion();
-                    descriptor=getDescriptor();
-                    printf("Name :%s ApiVersion :%d\n",name,apiVersion);
+                    name      =std::string(getAudioDeviceName());
+                    apiVersion=            getApiVersion();
+                    descriptor=std::string(getDescriptor());
+                    ADM_info("Name :%s ApiVersion :%d\n",name.c_str(),apiVersion);
                 }else
                 {
-                    printf("Symbol loading failed for %s\n",file);
+                    ADM_warning("Symbol loading failed for %s\n",file);
                 }
 		}
         ADM_AudioDevices(const char *name,const char *desc, 
@@ -53,8 +52,8 @@ public:
                                 void         (*deleteAudioDevice)(audioDeviceThreaded *device)) : ADM_LibWrapper()
 		{
 
-                    this->name=name;
-                    this->descriptor=desc;
+                    this->name=std::string(name);
+                    this->descriptor=std::string(desc);
                     this->apiVersion=ADM_AUDIO_DEVICE_API_VERSION;
                     this->createAudioDevice=createAudioDevice;
                     this->deleteAudioDevice=deleteAudioDevice;

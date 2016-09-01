@@ -26,6 +26,7 @@ ADM_CORE6_EXPORT void            ADM_PathSplit(const std::string &in,std::string
 ADM_CORE6_EXPORT void	        ADM_PathStripName(char *str);
 // Get the filename without path. /foo/bar.avi -> bar.avi INPLACE, NO COPY
 ADM_CORE6_EXPORT const char      *ADM_GetFileName(const char *str);
+ADM_CORE6_EXPORT const std::string ADM_GetFileName(const std::string &str);
 //  Canonize the path, returns a copy of the absolute path given as parameter
 ADM_CORE6_EXPORT char            *ADM_PathCanonize(const char *tmpname);
 // change to lower case in place the string

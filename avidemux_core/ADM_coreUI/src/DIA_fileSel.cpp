@@ -160,7 +160,7 @@ void FileSel_ReadWrite(SELFILE_CB *cb, int rw, const char *name, const char *act
 
 					char msg[300];
 
-					snprintf(msg, 300, QT_TRANSLATE_NOOP("filesel","%s already exists.\n\nDo you want to replace it?"), ADM_GetFileName(name));
+					snprintf(msg, 300, QT_TRANSLATE_NOOP("filesel","%s already exists.\n\nDo you want to replace it?"), ADM_GetFileName(std::string(name)).c_str());
 
 					if(!GUI_Question(msg))
 						return;

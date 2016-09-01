@@ -364,10 +364,10 @@ std::string currentSdlDriver=getSdlDriverName();
         audioDeviceItems[0]=new diaMenuEntryDynamic(0,"Dummy","Dummy");
         for(int i=0;i<nbAudioDevice;i++)
         {
-            const char *name;
+            std::string name;
             uint32_t major,minor,patch;
-            ADM_av_getDeviceInfo(i, &name, &major,&minor,&patch);
-            audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name,name);
+            ADM_av_getDeviceInfo(i, name, &major,&minor,&patch);
+            audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name.c_str(),name.c_str());
         }
         diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1, 
                     audioDeviceItems,NULL);

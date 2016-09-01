@@ -252,7 +252,12 @@ const char *ADM_GetFileName(const char *str)
 	else
 		return str;
 }
-
+const std::string ADM_GetFileName(const std::string &str)
+{
+    size_t idx=str.find_last_of ("/");
+    if(idx==std::string::npos) return str;
+    return str.substr(idx+1);
+}
 
 /**
     \fn ADM_copyFile

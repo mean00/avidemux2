@@ -60,12 +60,12 @@ uint32_t ADM_av_getNbDevices(void)
     \fn     ADM_av_getDeviceInfo
     \brief  Get Infos about the filter#th plugin
 */
-bool     ADM_av_getDeviceInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
+bool     ADM_av_getDeviceInfo(int filter, std::string &name, uint32_t *major,uint32_t *minor,uint32_t *patch)
 {
     filter++;
     ADM_assert(filter<ListOfAudioDevices.size());
     ListOfAudioDevices[filter]->getVersion(major,minor,patch);
-    *name=ListOfAudioDevices[filter]->name;
+    name=ListOfAudioDevices[filter]->name;
     return true;
 }
 /**
@@ -81,7 +81,7 @@ static bool tryLoadingFilterPlugin(const char *file)
     if(dll->apiVersion!=ADM_AUDIO_DEVICE_API_VERSION) Fail(WrongApiVersion);
 
     ListOfAudioDevices.append(dll); // Needed for cleanup. FIXME TODO Delete it.
-    ADM_info("[Filters] Registered filter %s as  %s\n",file,dll->descriptor);
+    ADM_info("[Filters] Registered filter %s as  %s\n",file,dll->descriptor.c_str());
     return true;
     // Fail!
 er:
@@ -147,7 +147,7 @@ AUDIO_DEVICE ADM_audioByName(const char *name)
     if(!name) return (AUDIO_DEVICE)0;
     for(uint32_t i=0;i<ListOfAudioDevices.size();i++)
     {
-        if(!strcasecmp(name,ListOfAudioDevices[i]->name))
+        if(!strcasecmp(name,ListOfAudioDevices[i]->name.c_str()))
         {
             return i;
         }    
@@ -163,7 +163,7 @@ AUDIO_DEVICE ADM_audioByName(const char *name)
 const char *ADM_audioById(AUDIO_DEVICE id)
 {
     ADM_assert(id<ListOfAudioDevices.size());
-    return ListOfAudioDevices[id]->name;
+    return ListOfAudioDevices[id]->name.c_str();
 }
 /**
     \fn AVDM_getCurrentDevice

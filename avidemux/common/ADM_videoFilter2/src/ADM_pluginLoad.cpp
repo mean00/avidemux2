@@ -32,12 +32,12 @@ extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
 
 #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-#ifdef USE_LIBVA               
+#ifdef USE_LIBVA
 #include "ADM_coreLibVA.h"
-#endif        
-#ifdef USE_VDPAU               
+#endif
+#ifdef USE_VDPAU
 #include "ADM_coreVdpau.h"
-#endif        
+#endif
 #endif
 extern ADM_vf_plugin *getFakePartialPlugin();
 
@@ -121,7 +121,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     if (plugin->getApiVersion() != VF_API_VERSION)
     {
             printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
-                    ADM_GetFileName(file), plugin->getApiVersion(), VF_API_VERSION);
+                    ADM_GetFileName(std::string(file)).c_str(), plugin->getApiVersion(), VF_API_VERSION);
             goto Err_ad;
     }
     if(!(plugin->supportedUI() & UI_GetCurrentUI()))
@@ -145,7 +145,7 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     uint32_t major, minor, patch;
 
     plugin->getFilterVersion(&major, &minor, &patch);
-    plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(file));
+    plugin->nameOfLibrary = ADM_strdup(ADM_GetFileName(std::string(file)).c_str());
 
     info=&(plugin->info);
 
@@ -223,7 +223,7 @@ bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const ch
  */
 #define MAX_EXTERNAL_FILTER 100
 static void parseOneFolder(const char *folder,uint32_t featureMask )
-{  
+{
     char *files[MAX_EXTERNAL_FILTER];
     uint32_t nbFile;
     memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
@@ -239,7 +239,7 @@ static void parseOneFolder(const char *folder,uint32_t featureMask )
             tryLoadingVideoFilterPlugin(files[i],featureMask);
 
     printf("[ADM_vf_plugin] Scanning done, found %d video filer(s) so far\n", (int)ADM_vf_getNbFilters());
-    clearDirectoryContent(nbFile,files);  
+    clearDirectoryContent(nbFile,files);
 }
 /**
  *     \fn ADM_ad_GetPluginVersion
@@ -247,33 +247,33 @@ static void parseOneFolder(const char *folder,uint32_t featureMask )
  */
 uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
 {
-    
+
         uint32_t featureMask=0;
 #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
-#ifdef USE_LIBVA               
+#ifdef USE_LIBVA
         if(admLibVA::isOperationnal()) featureMask|=ADM_FEATURE_LIBVA;
-#endif        
-#ifdef USE_VDPAU               
+#endif
+#ifdef USE_VDPAU
         if(admVdpau::isOperationnal()) featureMask|=ADM_FEATURE_VDPAU;
-#endif        
+#endif
 #if defined(USE_OPENGL)
         bool hasOpenGl=false;
         prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
         if(hasOpenGl)
             featureMask|=ADM_FEATURE_OPENGL;
 #endif
-#endif 
-    
+#endif
+
     printf("[ADM_vf_plugin] Scanning directory %s\n",path);
 
-   
-    
+
+
     std::string myPath=std::string(path);
     parseOneFolder(myPath.c_str(),featureMask);
     myPath+=std::string("/")+std::string(subFolder);
     parseOneFolder(myPath.c_str(),featureMask);
-    
-    
+
+
     sortVideoFiltersByName();
     if(!ADM_videoFilterPluginsList[VF_HIDDEN].size())
         ADM_videoFilterPluginsList[VF_HIDDEN].append(getFakePartialPlugin());
@@ -370,7 +370,7 @@ bool ADM_vf_canBePartialized(uint32_t tag)
   if(!plugin->partializable)
         return false;
   return plugin->partializable();
-        
+
 }
 
 //EOF

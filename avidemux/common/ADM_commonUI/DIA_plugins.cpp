@@ -22,7 +22,7 @@
 uint32_t ADM_ad_getNbFilters(void);
 bool     ADM_ad_getFilterInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_av_getNbDevices(void);
-bool     ADM_av_getDeviceInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
+bool     ADM_av_getDeviceInfo(int filter, std::string &name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ve_getNbEncoders(void);
 bool     ADM_ve_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch);
 uint32_t ADM_ae_getPluginNbEncoders(void);
@@ -145,14 +145,14 @@ uint8_t DIA_pluginsInfo(void)
     
  for(int i=0;i<avNbPlugin;i++)
     {
-        const char *name;
+        std::string name;
         uint32_t major,minor,patch;
         char versionString[256];
         char infoString[256];
         char *end;
-            ADM_av_getDeviceInfo(i, &name,&major,&minor,&patch);
+            ADM_av_getDeviceInfo(i, name,&major,&minor,&patch);
             snprintf(versionString,255,"%02d.%02d.%02d",major,minor,patch);
-            strncpy(infoString,name,255);
+            strncpy(infoString,name.c_str(),255);
             if((*infoString))
             {
                 end=strlen(infoString)+infoString-1;
