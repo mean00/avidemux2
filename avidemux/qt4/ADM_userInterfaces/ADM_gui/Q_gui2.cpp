@@ -485,7 +485,7 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
     for(int i=0;i<nb;i++)
     {
         MenuEntry *m=menu+i;
-        QString qs=QString::fromUtf8(m->text.c_str());
+        QString qs=QString::fromUtf8(QT_TRANSLATE_NOOP("adm",m->text.c_str()));
         switch(m->type)
         {
             case MENU_SEPARATOR:
@@ -1451,7 +1451,7 @@ void UI_deiconify( void )
 void UI_setAudioTrackCount( int nb )
 {
     char txt[50];
-    sprintf(txt," (%d track(s))",nb);
+    sprintf(txt,QT_TRANSLATE_NOOP("qgui2"," (%d track(s))"),nb);
      WIDGET(TrackCountLabel)->setText(QString(txt));
 
 }

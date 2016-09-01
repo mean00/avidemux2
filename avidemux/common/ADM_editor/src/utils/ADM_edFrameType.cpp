@@ -69,7 +69,7 @@ bool        ADM_Composer::rederiveFrameType(vidHeader *demuxer)
         return true;
     }
     // Demuxer is wrong, rederive all frames...
-    DIA_workingBase *work=createWorking("Updating frametype");
+    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("adm","Updating frametype"));
     for(int i=0;i<info.nb_frames;i++)
     {
         work->update(i,info.nb_frames);

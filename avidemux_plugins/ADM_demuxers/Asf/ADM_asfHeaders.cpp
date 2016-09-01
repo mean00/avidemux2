@@ -468,7 +468,7 @@ uint8_t asfHeader::buildIndex(void)
   asfIndex indexEntry;
   memset(&indexEntry,0,sizeof(indexEntry));
   bool first=true;
-  DIA_workingBase *progressBar=createWorking("Indexing");
+  DIA_workingBase *progressBar=createWorking(QT_TRANSLATE_NOOP("asfdemuxer","Indexing"));
   uint32_t fileSizeMB=(uint32_t)(fSize>>10);
 
   uint64_t lastDts[ASF_MAX_AUDIO_TRACK];

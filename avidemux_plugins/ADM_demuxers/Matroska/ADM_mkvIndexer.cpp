@@ -45,7 +45,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
   const char *ss;
 
    parser->seek(0);
-   DIA_workingBase *work=createWorking("Matroska Images");
+   DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
    
    readBufferSize=200*1024;
    readBuffer=new uint8_t[readBufferSize];
@@ -470,7 +470,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
     }
    ADM_ebml_file segment(parser,vlen);
    
-   DIA_workingBase *work=createWorking("Matroska clusters");
+   DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
    while(segment.simplefind(MKV_CLUSTER,&alen,0))
    {
 

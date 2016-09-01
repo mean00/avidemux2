@@ -156,7 +156,7 @@ PsIndexer::PsIndexer(void)
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
-    ui=createWorking ("Indexing");
+    ui=createWorking (QT_TRANSLATE_NOOP("psdemuxer","Indexing"));
     headerDumped=false;
     lastValidVideoDts=ADM_NO_PTS;
     timeOffset=0;
