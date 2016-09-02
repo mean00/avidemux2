@@ -13,6 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include <string>
+typedef void ADM_updateComplete(int  version, const std::string &releaseDate,const std::string &downloadlink);
 
-
-void ADM_checkForUpdate();
+void ADM_checkForUpdate(ADM_updateComplete *cb);

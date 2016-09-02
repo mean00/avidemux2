@@ -8,6 +8,7 @@
 #include <QSlider>
 #include <QWidget>
 #include <QtCore/QTimer>
+#include <string>
 
 #include "ADM_qslider.h"
 #include "T_thumbSlider.h"
@@ -48,6 +49,7 @@ class myQApplication : public QApplication
                 {
                      
                 }
+               
         protected:
                 QTimer timer;
         public slots:
@@ -64,6 +66,7 @@ class myQApplication : public QApplication
                   //ADM_ExitCleanup();
                   emit quit();
                 }
+                
 };
 /**
  * \enum ADM_dragState
@@ -91,6 +94,8 @@ public:
 	void buildCustomMenu(void);
 	void buildRecentMenu(void);
 	void buildRecentProjectMenu(void);
+        static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
+        static MainWindow *mainWindowSingleton;
 
 protected:
     QMenu *jsMenu;
@@ -163,6 +168,7 @@ public slots:
 
 signals:
         void actionSignal(Action a);
+        void updateAvailable(int version,const std::string &date,const std::string &downloadLink);
 protected:
         ADM_dragState    dragState;        
         QTimer dragTimer;

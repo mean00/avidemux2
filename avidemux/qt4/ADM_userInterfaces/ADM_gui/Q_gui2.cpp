@@ -59,6 +59,8 @@ void UI_Qt4CleanGl(void);
 bool  openGLStarted=false;
 #endif
 
+MainWindow *MainWindow::mainWindowSingleton=NULL;
+
 extern int global_argc;
 extern char **global_argv;
 
@@ -317,6 +319,7 @@ void MainWindow::currentTimeChanged(void)
 */
 MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEngines(scriptEngines), QMainWindow()
 {
+    MainWindow::mainWindowSingleton=this;
     qtRegisterDialog(this);
     ui.setupUi(this);
         dragState=dragState_Normal;
@@ -1000,7 +1003,7 @@ int UI_RunApp(void)
     A_loadDefaultSettings();
     
     // start update checking..
-    ADM_checkForUpdate();
+    ADM_checkForUpdate(&MainWindow::updateCheckDone);
     
     myApplication->exec();
 #ifdef USE_OPENGL
@@ -1020,6 +1023,18 @@ int UI_RunApp(void)
 
     return 1;
 }
+/**
+ * \fn updateCheckDone
+ * @param version
+ * @param date
+ * @param downloadLink
+ */
+void MainWindow::updateCheckDone(int version, const std::string &date, const std::string &downloadLink)
+{
+     
+                  printf("Version available %d from %s at %s\n",version,date.c_str(),downloadLink.c_str());
+}
+
 /**
     \fn searchTranslationTable(const char *name))
     \brief return the action corresponding to a give button. The translation table is in translation_table.h
