@@ -77,6 +77,7 @@ INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 # Add job control
 ###########################################
 ADD_SUBDIRECTORY(ADM_jobs)
+ADD_SUBDIRECTORY(ADM_update)
 IF(USE_OPENGL)
     ADD_SUBDIRECTORY(ADM_openGL)
 ENDIF(USE_OPENGL)
@@ -148,6 +149,7 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
 	ADM_filters${QT_LIBRARY_EXTENSION}
 	ADM_UI${QT_LIBRARY_EXTENSION}6
 	ADM_dialogQt4
+        ${ADM_update} 
            #ADM_editor6
 	ADM_internalVideoFilter6
 	ADM_UI${QT_LIBRARY_EXTENSION}6
