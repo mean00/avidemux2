@@ -41,6 +41,7 @@
 #include "ADM_preview.h"
 #include "DIA_defaultAskAvisynthPort.hxx"
 #include "ADM_systemTrayProgress.h"
+#include "../../ADM_update/include/ADM_update.h"
 using namespace std;
 
 #define ADM_SLIDER_REFRESH_PERIOD 500
@@ -997,6 +998,10 @@ int UI_RunApp(void)
     
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
+    
+    // start update checking..
+    ADM_checkForUpdate();
+    
     myApplication->exec();
 #ifdef USE_OPENGL
     if(openGLStarted)

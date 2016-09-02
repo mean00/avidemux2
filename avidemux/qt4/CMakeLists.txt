@@ -149,7 +149,7 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
 	ADM_filters${QT_LIBRARY_EXTENSION}
 	ADM_UI${QT_LIBRARY_EXTENSION}6
 	ADM_dialogQt4
-        ${ADM_update} 
+        ADM_update${QT_LIBRARY_EXTENSION}6
            #ADM_editor6
 	ADM_internalVideoFilter6
 	ADM_UI${QT_LIBRARY_EXTENSION}6
@@ -180,7 +180,7 @@ ENDIF (USE_SDL)
 ###########################################
 # UI Specific
 ###########################################
-TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${PTHREAD_LIBRARIES})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${PTHREAD_LIBRARIES}) 
 
 ###########################################
 # OS Specific
