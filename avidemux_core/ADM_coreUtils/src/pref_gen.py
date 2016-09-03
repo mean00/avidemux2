@@ -32,8 +32,8 @@ allATypes["uint32_t"]="ADM_param_uint32_t"
 allATypes["int32_t"] ="ADM_param_int32_t "
 allATypes["float"]   ="ADM_param_float   "
 allATypes["bool"]    ="ADM_param_bool    "
-allATypes["string"]  ="ADM_param_string  "
-allATypes["filename"]="ADM_param_string  "
+allATypes["string"]  ="ADM_param_stdstring  "
+allATypes["filename"]="ADM_param_stdstring  "
 
 fullPath=""
 nested=list()
