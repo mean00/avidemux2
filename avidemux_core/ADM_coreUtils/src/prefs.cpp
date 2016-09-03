@@ -28,7 +28,7 @@
 #include "prefs2.h"
 #include "prefs2_desc.cpp"
 
-#define CONFIG "config2"
+#define CONFIG "config3"
 #define FILE_SIZE_MAX (20*1024)
 
 static char *checkDirAccess(char *home);
@@ -131,6 +131,9 @@ preferences::preferences()
                                     break;
                 case ADM_param_bool:
                                     *(bool *)(dummyPointer+offset)=atoi(opt->defaultValue);
+                                    break;
+                case ADM_param_stdstring:
+                                    *(std::string *)(dummyPointer+offset)=std::string(opt->defaultValue);
                                     break;
                 case ADM_param_string:
                                     {
