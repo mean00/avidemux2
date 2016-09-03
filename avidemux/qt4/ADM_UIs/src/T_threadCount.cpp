@@ -42,9 +42,9 @@ void ADM_QthreadCount::radioGroupChanged(QAbstractButton *s)
 
 ADM_QthreadCount::ADM_QthreadCount(QWidget *widget, const char *title, uint32_t value, QGridLayout *layout, int line) : QWidget(widget) 
 {
-	radiobutton1 = new QRadioButton(QString::fromUtf8(QT_TR_NOOP("Disabled")), widget);
-	radiobutton2 = new QRadioButton(QString::fromUtf8(QT_TR_NOOP("Auto-detect")), widget);
-	radiobutton3 = new QRadioButton(QString::fromUtf8(QT_TR_NOOP("Custom")), widget);
+	radiobutton1 = new QRadioButton(QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Disabled")), widget);
+	radiobutton2 = new QRadioButton(QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Auto-detect")), widget);
+	radiobutton3 = new QRadioButton(QString::fromUtf8(QT_TRANSLATE_NOOP("adm","Custom")), widget);
 
 	buttonGroup = new QButtonGroup;
 	buttonGroup->addButton(radiobutton1);

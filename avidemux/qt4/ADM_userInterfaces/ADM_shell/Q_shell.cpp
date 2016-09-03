@@ -40,8 +40,8 @@ qShell::qShell(QWidget *parent, IScriptEngine *engine) : QDialog(parent)
     ui.textBrowser_2->installEventFilter(this);
     connect((ui.evalute),SIGNAL(clicked(bool)),this,SLOT(evaluate(bool)));
     connect((ui.clear),SIGNAL(clicked(bool)),this,SLOT(clear(bool)));
-    print(IScriptEngine::Information, "Enter your commands then press the evaluate button or CTRL+ENTER.\n");
-    print(IScriptEngine::Information, "You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n");
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","Enter your commands then press the evaluate button or CTRL+ENTER.\n"));
+    print(IScriptEngine::Information, QT_TRANSLATE_NOOP("qshell","You can use CTRL+PageUP and CTRL+Page Down to recall previous commands\nReady.\n"));
     indexRead=indexWrite=0;
 }
 /**

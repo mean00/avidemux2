@@ -22,7 +22,7 @@ Ui_licenseWindow::Ui_licenseWindow(QWidget *parent) : QDialog(parent)
 {
 	ui.setupUi(this);
 
-	ui.licenseTextEdit->setHtml(QT_TR_NOOP("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">" \
+	ui.licenseTextEdit->setHtml(QT_TRANSLATE_NOOP("qlicense","<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">" \
 	"" \
 	"<html>" \
 	"<head>" \

@@ -79,7 +79,7 @@ ADM_qtray::ADM_qtray(const void* parent) : ADM_tray(parent)
 
 	trayIcon->setToolTip("Avidemux");
 
-	openAction = new QAction(QT_TR_NOOP("Open Avidemux"), (QObject*)parent);
+	openAction = new QAction(QT_TRANSLATE_NOOP("qtray","Open Avidemux"), (QObject*)parent);
 	QObject::connect(openAction, SIGNAL(triggered()), signalReceiver, SLOT(restore()));
 	QObject::connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), signalReceiver, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 

@@ -153,7 +153,7 @@ FF_SIMPLE_DECLARE(decoderFFH265,
 #define WRAP_Open_Template(funcz,argz,display,codecid,extra) \
 {\
 AVCodec *codec=funcz(argz);\
-if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" display));ADM_assert(0);} \
+if(!codec) {GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error finding codec" display));ADM_assert(0);} \
   codecId=codecid; \
   _context = avcodec_alloc_context3 (codec);\
   ADM_assert (_context);\
@@ -185,7 +185,7 @@ if(!codec) {GUI_Error_HIG("Codec",QT_TR_NOOP("Internal error finding codec" disp
   if (avcodec_open2(_context, codec, NULL) < 0)  \
                       { \
                                         ADM_info("[lavc] Decoder init: " display" video decoder failed!\n"); \
-                                        GUI_Error_HIG("Codec","Internal error opening " display); \
+                                        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec"),QT_TRANSLATE_NOOP("adm","Internal error opening " display)); \
                                         ADM_assert(0); \
                                 } \
                                 else \
