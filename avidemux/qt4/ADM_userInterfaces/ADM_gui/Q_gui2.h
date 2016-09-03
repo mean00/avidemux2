@@ -180,7 +180,7 @@ protected:
 	void addScriptReferencesToHelpMenu();
         bool buildMyMenu(void);
         bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
-	void buildRecentMenu(QMenu *menu, const char **files, QAction **actions);
+	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
 #ifdef   ENABLE_EVENT_FILTER      

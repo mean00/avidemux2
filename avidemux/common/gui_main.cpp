@@ -219,27 +219,27 @@ void HandleAction (Action action)
         case ACT_RECENT2:
         case ACT_RECENT3:
 			{
-                const char **name;
-                int rank;
+                            std::vector<std::string>name;
+                            int rank;
 
-                name=prefs->get_lastfiles();
-                rank=(int)action-ACT_RECENT0;
-                ADM_assert(name[rank]);
-                A_openVideo (name[rank]);
-                return;
+                            name=prefs->get_lastfiles();
+                            rank=(int)action-ACT_RECENT0;
+                            ADM_assert(name[rank].size());
+                            A_openVideo (name[rank].c_str());
+                            return;
 			}
         case ACT_RECENT_PROJECT0:
         case ACT_RECENT_PROJECT1:
         case ACT_RECENT_PROJECT2:
         case ACT_RECENT_PROJECT3:
 			{
-                const char **name = prefs->get_lastprojectfiles();
-                int rank = (int)action - ACT_RECENT_PROJECT0;
+                            std::vector<std::string>name = prefs->get_lastprojectfiles();
+                            int rank = (int)action - ACT_RECENT_PROJECT0;
 
-                ADM_assert(name[rank]);
-                call_scriptEngine(name[rank]);
+                            ADM_assert(name[rank].size());
+                            call_scriptEngine(name[rank].c_str());
 
-                return;
+                            return;
 			}
 	case ACT_VIDEO_CODEC_CONFIGURE:
     		videoEncoder6Configure();

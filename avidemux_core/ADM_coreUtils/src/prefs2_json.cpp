@@ -5,6 +5,9 @@
 #include "prefs2.h"
 bool  my_prefs_struct_jserialize(const char *file, const my_prefs_struct *key){
 admJson json;
+json.addNode("version");
+json.addUint32("apiVersion",key->version.apiVersion);
+json.endNode();
 json.addNode("features");
 json.addBool("swap_if_A_greater_than_B",key->features.swap_if_A_greater_than_B);
 json.addBool("saveprefsonexit",key->features.saveprefsonexit);

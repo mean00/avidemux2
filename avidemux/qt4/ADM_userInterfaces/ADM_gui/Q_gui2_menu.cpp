@@ -213,15 +213,15 @@ void MainWindow::buildCustomMenu(void)
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
 }
 
-void MainWindow::buildRecentMenu(QMenu *menu, const char **files, QAction **actions)
+void MainWindow::buildRecentMenu(QMenu *menu, std::vector<std::string>files, QAction **actions)
 {
 	menu->clear();
 
 	for (int i = 0; i < NB_LAST_FILES; i++)
 	{
-		if (files[i])
+		if (files[i].size())
 		{
-			actions[i] = menu->addAction(QString('0' + i) + QString(":") + QString::fromUtf8(files[i]));
+			actions[i] = menu->addAction(QString('0' + i) + QString(":") + QString::fromUtf8(files[i].c_str()));
 		}
 		else
 		{

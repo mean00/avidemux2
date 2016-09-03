@@ -14,10 +14,11 @@
  *                                                                         *
  ***************************************************************************/
 
+
+#include "ADM_cpp.h"
 #include <vector>
 #include <string>
 
-#include "ADM_cpp.h"
 #include "ADM_default.h"
 #include "stddef.h"
 #include "ADM_quota.h"
@@ -370,7 +371,7 @@ bool preferences::set(options option, const char *v)
 //--------------------------------------------------
 #define PRT_LAFI(x,y,z) fprintf(stderr,"Prefs: %s%u %s\n",x,y,(z?z:"NULL"))
 
-void preferences::setFile(const char* file, char** const file1, int maxFiles)
+void preferences::setFile(const std::string &file, std::string *file1, int maxFiles)
 {
 	std::vector<std::string> files;
 
@@ -378,14 +379,12 @@ void preferences::setFile(const char* file, char** const file1, int maxFiles)
 
 	for (int index = 0; index < maxFiles; index++)
 	{
-		const char* nextFile = *(file1 + index);
+		std::string * nextFile = file1 + index;
 		
-		if (strcmp(file, nextFile) != 0)
+                if(file.compare(*nextFile)) 
 		{
-			files.push_back(nextFile);
+			files.push_back(*nextFile);
 		}
-
-		ADM_dealloc(nextFile);
 	}
 
 	for (int index = 0; index < maxFiles; index++)
@@ -410,29 +409,37 @@ bool preferences::set_lastprojectfile(const char* file)
 
 #undef PRT_LAFI
 #define PRT_LAFI(y,z) fprintf(stderr,"Prefs: ret idx[%u] %s\n",y,(z?z:"NULL"))
-
-const char **preferences::get_lastfiles(void)
+/**
+ * 
+ * @return 
+ */
+std::vector<std::string>preferences::get_lastfiles(void)
 {
-    static const char *lastFiles[NB_LAST_FILES];
+    static std::vector<std::string>lastFiles;
+    lastFiles.clear();
     
-    lastFiles[0]=myPrefs.lastfiles.file1;
-    lastFiles[1]=myPrefs.lastfiles.file2;
-    lastFiles[2]=myPrefs.lastfiles.file3;
-    lastFiles[3]=myPrefs.lastfiles.file4;
+    lastFiles.push_back(myPrefs.lastfiles.file1);
+    lastFiles.push_back(myPrefs.lastfiles.file2);
+    lastFiles.push_back(myPrefs.lastfiles.file3);
+    lastFiles.push_back(myPrefs.lastfiles.file4);
 
-	return lastFiles;
+    return lastFiles;
 }
-
-const char **preferences::get_lastprojectfiles(void)
+/**
+ * 
+ * @return 
+ */
+std::vector< std::string>preferences::get_lastprojectfiles(void)
 {
-    static const char *lastProjectFiles[NB_LAST_FILES];
+    static  std::vector< std::string>lastProjectFiles;
+    lastProjectFiles.clear();
     
-    lastProjectFiles[0] = myPrefs.lastprojects.file1;
-    lastProjectFiles[1] = myPrefs.lastprojects.file2;
-    lastProjectFiles[2] = myPrefs.lastprojects.file3;
-    lastProjectFiles[3] = myPrefs.lastprojects.file4;
+    lastProjectFiles.push_back(myPrefs.lastprojects.file1);
+    lastProjectFiles.push_back(myPrefs.lastprojects.file2);
+    lastProjectFiles.push_back(myPrefs.lastprojects.file3);
+    lastProjectFiles.push_back(myPrefs.lastprojects.file4);
 
-	return lastProjectFiles;
+    return lastProjectFiles;
 }
 
 // EOF
