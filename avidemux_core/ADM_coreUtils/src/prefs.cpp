@@ -298,6 +298,16 @@ bool preferences::get(options option, bool *v)
 	return _get(option, v, ADM_param_bool);
 }
 /**
+ * 
+ * @param option
+ * @param v
+ * @return 
+ */
+bool preferences::get(options option, std::string &v)
+{
+    return _get(option, &v, ADM_param_stdstring);
+}
+/**
     \fn get
 */
 bool preferences::get(options option, char **v)
@@ -370,7 +380,30 @@ bool preferences::set(options option, const char *v)
     *s=ADM_strdup(v);
     return true;
 }
+/**
+ * 
+ * @param option
+ * @param v
+ * @return 
+ */
+bool preferences::set(options option, const std::string &v)
+{
+    const ADM_paramList *desc;
+    const optionDesc *tpl;
+    float m,n;
 
+    if(!lookupOption(option,&desc,&tpl,n,m))
+        return false;
+
+    ADM_assert(desc->type==ADM_param_stdstring);
+    
+    int offset=desc->offset;
+    char *dummy=(char *)&myPrefs;
+    std::string  *s=(std::string*)(dummy+offset);
+
+    *s=v;
+    return true;
+}
 //--------------------------------------------------
 #define PRT_LAFI(x,y,z) fprintf(stderr,"Prefs: %s%u %s\n",x,y,(z?z:"NULL"))
 

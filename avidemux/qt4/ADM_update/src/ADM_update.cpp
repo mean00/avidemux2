@@ -72,7 +72,10 @@ void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
         ADM_info("New version  = <%s>\n",result [1].c_str());
         ADM_info("Release date = <%s>\n",result [2].c_str());
         ADM_info("Download URL = <%s>\n",result [3].c_str());
-        _updateCallback(0,result[2],result[3]);
+        int a,b,c,version;
+        sscanf(result[1].c_str(),"%d.%d.%d",&a,&b,&c);
+        version=(a*10000)+(b*100)+c;
+        _updateCallback(version,result[2],result[3]);
     }
 
 }

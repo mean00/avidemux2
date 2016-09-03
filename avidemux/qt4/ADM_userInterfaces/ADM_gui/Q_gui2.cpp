@@ -200,6 +200,27 @@ void MainWindow::sliderValueChanged(int u)
     else
          sendAction(ACT_Scale);
 }
+
+/**
+ * 
+ * @param version
+ * @param date
+ * @param url
+ */
+void MainWindow::updateAvailableSlot(int version, std::string date, std::string url)
+{
+    QMessageBox msgBox;
+    int a,b,c;
+    a=version/10000;
+    b=(version-a*10000)/100;
+    c=version%100;
+    QString versionString=QString("%1.%2.%3").arg(a).arg(b).arg(c);
+    QString msg=QT_TR_NOOP("<b>New version available</b><br> Version %1<br>Released on %2.<br>You can download it here<br> <a href='%3'>%3</a><br><br><small> You can disable autoupdate in preferences.</small>");
+    msg=msg.arg(versionString,date.c_str(),url.c_str(),url.c_str());
+    msgBox.setText(msg);
+    msgBox.setTextFormat(Qt::RichText);
+    msgBox.exec();  
+}
 /**
  * \fn dragTimerTimeout
  */
@@ -336,6 +357,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
         connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
         //
         connect( ui.checkDisplayOut,SIGNAL(stateChanged(int)),this,SLOT(previewModeChanged(int)));
+        //
+        connect(this, SIGNAL(updateAvailable(int,std::string,std::string)),this,SLOT(updateAvailableSlot(int,std::string,std::string)));
 
     /*
     Connect our button to buttonPressed
@@ -1003,7 +1026,27 @@ int UI_RunApp(void)
     A_loadDefaultSettings();
     
     // start update checking..
-    ADM_checkForUpdate(&MainWindow::updateCheckDone);
+    bool autoUpdateEnabled=false;
+    if(prefs->get(UPDATE_ENABLED,&autoUpdateEnabled))
+    {
+        if(autoUpdateEnabled)
+        {
+            // Mark last check
+            struct timeval tp;
+            struct timezone tz;
+            gettimeofday(&tp,&tz);
+            uint32_t days=1+(tp.tv_sec-1472894364)/(60*60*24); // days since 03 sept
+            uint32_t lastCheck;
+            prefs->get(UPDATE_LASTCHECK,&lastCheck);
+            ADM_info("[autoUpdate]Current date %d , last check = %d\n",days,lastCheck);
+            if(days>lastCheck)
+            {
+                prefs->set(UPDATE_LASTCHECK,days);
+                prefs->save();
+                ADM_checkForUpdate(&MainWindow::updateCheckDone);
+            }
+        }
+    }
     
     myApplication->exec();
 #ifdef USE_OPENGL
@@ -1031,8 +1074,8 @@ int UI_RunApp(void)
  */
 void MainWindow::updateCheckDone(int version, const std::string &date, const std::string &downloadLink)
 {
-     
-                  printf("Version available %d from %s at %s\n",version,date.c_str(),downloadLink.c_str());
+    ADM_info("Version available %d from %s at %s\n",version,date.c_str(),downloadLink.c_str());
+    emit mainWindowSingleton->updateAvailable(version,date,downloadLink);
 }
 
 /**
@@ -1503,6 +1546,5 @@ myQApplication::~myQApplication()
 #endif    
     ADM_warning("Exiting app\n");
 }
-                
 //********************************************
 //EOF

@@ -409,13 +409,13 @@ void ADM_ExitCleanup( void )
 bool setPrefsDefault(void)
 {
 #ifdef __MINGW32__
-        prefs->set(AUDIO_DEVICE_AUDIODEVICE,"Win32");
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("Win32"));
     #ifdef USE_OPENGL
         prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
     #endif
 #endif
 #ifdef __linux__
-            prefs->set(AUDIO_DEVICE_AUDIODEVICE,"PulseAudioS");
+            prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("PulseAudioS"));
     #ifdef USE_VDPAU
             prefs->set(VIDEODEVICE,(uint32_t)4); // VDPAU
     #else

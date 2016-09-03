@@ -112,6 +112,7 @@ protected:
 
 
 public slots:
+        void updateAvailableSlot(int version, std::string date, std::string url);
         void dragTimerTimeout(void);
         void actionSlot(Action a)
         {
@@ -168,7 +169,7 @@ public slots:
 
 signals:
         void actionSignal(Action a);
-        void updateAvailable(int version,const std::string &date,const std::string &downloadLink);
+        void updateAvailable(int version,const std::string date,const std::string downloadLink);
 protected:
         ADM_dragState    dragState;        
         QTimer dragTimer;
