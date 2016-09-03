@@ -11,6 +11,7 @@ typedef struct
 }optionDesc;
 #endif 
 static optionDesc myOptions[]={
+{ VERSION_APIVERSION,"version.apiVersion"                             ,ADM_param_uint32_t	,"1",	0,	999},
 { FEATURES_SWAP_IF_A_GREATER_THAN_B,"features.swap_if_A_greater_than_B",ADM_param_bool    	,"1",	0,	1},
 { FEATURES_SAVEPREFSONEXIT,"features.saveprefsonexit"                 ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_IGNORESAVEDMARKERS,"features.ignoresavedmarkers"           ,ADM_param_bool    	,"0",	0,	1},
@@ -19,7 +20,7 @@ static optionDesc myOptions[]={
 { FEATURES_REUSE_2PASS_LOG,"features.reuse_2pass_log"                 ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_AUDIOBAR_USES_MASTER,"features.audiobar_uses_master"       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_THREADING_LAVC,"features.threading_lavc"                   ,ADM_param_uint32_t	,"0",	0,	32},
-{ FEATURES_CPU_CAPS,"features.cpu_caps"                               ,ADM_param_uint32_t	,"2147483647",	0,	2147483647},
+{ FEATURES_CPU_CAPS,"features.cpu_caps"                               ,ADM_param_uint32_t	,"4294967295",	0,	4294967295},
 { FEATURES_MPEG_NO_LIMIT,"features.mpeg_no_limit"                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ALTERNATE_MP3_TAG,"features.alternate_mp3_tag"             ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
@@ -29,6 +30,8 @@ static optionDesc myOptions[]={
 { FEATURES_CAP_REFRESH_ENABLED,"features.cap_refresh_enabled"         ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_CAP_REFRESH_VALUE,"features.cap_refresh_value"             ,ADM_param_uint32_t	,"100",	10,	1000},
 { FEATURES_SDLDRIVER,"features.sdlDriver"                             ,ADM_param_string  	,"",	0,	0},
+{ UPDATE_ENABLED,"update.enabled"                                     ,ADM_param_bool    	,"1",	0,	1},
+{ UPDATE_LASTCHECK,"update.lastCheck"                                 ,ADM_param_uint32_t	,"0",	0,	5000},
 { LASTFILES_LASTDIR_READ,"lastfiles.lastdir_read"                     ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_LASTDIR_WRITE,"lastfiles.lastdir_write"                   ,ADM_param_string  	,"",	0,	0},
 { LASTFILES_FILE1,"lastfiles.file1"                                   ,ADM_param_string  	,"",	0,	0},
