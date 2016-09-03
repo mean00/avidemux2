@@ -34,6 +34,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/Qt5Gui.dll  
     ${File} ${ROOT_FOLDER}/Qt5OpenGL.dll
     ${File} ${ROOT_FOLDER}/Qt5Widgets.dll
+    ${File} ${ROOT_FOLDER}/Qt5Network.dll
     ${File} ${ROOT_FOLDER}/Qt5WinExtras.dll
     ${File} ${ROOT_FOLDER}/libicudt51.dll 
     ${File} ${ROOT_FOLDER}/libicuin51.dll  
