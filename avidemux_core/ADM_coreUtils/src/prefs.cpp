@@ -135,11 +135,13 @@ preferences::preferences()
                 case ADM_param_stdstring:
                                     *(std::string *)(dummyPointer+offset)=std::string(opt->defaultValue);
                                     break;
+#if 0
                 case ADM_param_string:
                                     {
                                         char **z=(char **)(dummyPointer+offset);
                                         *z=ADM_strdup(opt->defaultValue);
                                     }
+#endif
                                     break;
                 default:
                         ADM_error("Type not authorized for prefs %s\n",name);
@@ -307,6 +309,7 @@ bool preferences::get(options option, std::string &v)
 {
     return _get(option, &v, ADM_param_stdstring);
 }
+#if 0
 /**
     \fn get
 */
@@ -314,6 +317,7 @@ bool preferences::get(options option, char **v)
 {
 	return _get(option, v, ADM_param_string);
 }
+#endif
 //---------------------------------------
 
 template<typename T>
@@ -362,6 +366,7 @@ bool preferences::set(options option, const bool v)
 /**
     \fn set
 */
+#if 0
 bool preferences::set(options option, const char *v)
 {
     const ADM_paramList *desc;
@@ -380,6 +385,7 @@ bool preferences::set(options option, const char *v)
     *s=ADM_strdup(v);
     return true;
 }
+#endif
 /**
  * 
  * @param option

@@ -180,14 +180,12 @@ AUDIO_DEVICE AVDM_getCurrentDevice( void)
 void AVDM_audioInit(void )
 {
 uint8_t init=0;
-char *name=NULL;
+std::string name;
 AUDIO_DEVICE id=0;
 
-        if(prefs->get(AUDIO_DEVICE_AUDIODEVICE, &name))
+        if(prefs->get(AUDIO_DEVICE_AUDIODEVICE, name))
         {
-        id=ADM_audioByName(name);
-        ADM_dealloc(name);
-        name=NULL;    
+            id=ADM_audioByName(name.c_str());
         }
         
         

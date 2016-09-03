@@ -63,8 +63,8 @@ const char* qt4Translate(const char *__domainname, const char *__msgid)
 
 		(*map)[msgid] = buffer;
 	}
-
-	return map->value(msgid);
+#warning DANGEROUS FIXME
+	return map->value(msgid); // dangerous
 }
 /**
  * \fn initTranslator
@@ -79,27 +79,22 @@ void initTranslator(void)
 void loadTranslator(void)
 {
 	
-    char *lang=NULL;
+    std::string lang;
     bool autoSelect=true;
-    if(prefs->get(DEFAULT_LANGUAGE,&lang))
+    if(prefs->get(DEFAULT_LANGUAGE,lang))
     {
-        if(lang && strlen(lang)>0 && strcmp(lang,"auto"))
+        if(lang.size() && lang.compare("auto"))
             autoSelect=false;
     }
     if(autoSelect)
     {
         ADM_info("Using system language\n");
-        if(lang)
-        {
-            ADM_dealloc(lang);
-            lang=NULL;
-        }
-        lang=ADM_strdup(QLocale::system().name().toUtf8().constData());
+        lang=std::string(QLocale::system().name().toUtf8().constData());
     }else
     {
         ADM_info("Language forced \n");
     }
-    ADM_info("Initializing language %s\n",lang);
+    ADM_info("Initializing language %s\n",lang.c_str());
     #if QT_VERSION < QT_VERSION_CHECK(5,0,0) 
         const std::string flavor="qt4";
 #else        
@@ -109,10 +104,9 @@ void loadTranslator(void)
     ADM_info("Translation folder is <%s>\n",i18nFolder.c_str());
     QString appdir = QString(i18nFolder.c_str());    
     QString languageFile;
-    if(lang)
+    if(lang.size())
     {
-        languageFile=QString(lang);
-        ADM_dealloc(lang);
+        languageFile=QString(lang.c_str());
     }
     int nbLoaded=0;
     qtTranslator=new QTranslator();

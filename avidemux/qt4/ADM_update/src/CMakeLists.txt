@@ -4,7 +4,10 @@ INCLUDE_DIRECTORIES(../include)
 INCLUDE_DIRECTORIES(../private_inc)
 INCLUDE_DIRECTORIES(${QT_HEADERS_DIR})
 
+math(EXPR currentVersion "${CPACK_PACKAGE_VERSION_MAJOR}*10000+${CPACK_PACKAGE_VERSION_MINOR}*100+${CPACK_PACKAGE_VERSION_P}")
+
 ADM_QT_WRAP_CPP(${ADM_update}_source  ADM_update.cpp ../private_inc/ADM_updateImpl.h )
+ADD_DEFINITIONS("-DADM_CURRENT_VERSION=${currentVersion}")
 
 
 ADD_LIBRARY( ${ADM_update} STATIC ADM_update.cpp ${${ADM_update}_source})

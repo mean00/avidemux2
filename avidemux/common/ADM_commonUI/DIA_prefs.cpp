@@ -58,7 +58,7 @@ bool     mpeg_no_limit=0;
 uint32_t msglevel=2;
 
 uint32_t mixer=0;
-
+bool     doAutoUpdate=false;
 char     *alsaDevice=NULL;
 
 bool     balternate_mp3_tag=true;
@@ -155,6 +155,8 @@ std::string currentSdlDriver=getSdlDriverName();
         // Accept mpeg for DVD when fq!=48 kHz
         if(!prefs->get(FEATURES_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
 
+        prefs->get(UPDATE_ENABLED,&doAutoUpdate);
+        
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
@@ -222,7 +224,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
-
+        diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
         
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
@@ -400,15 +402,15 @@ std::string currentSdlDriver=getSdlDriverName();
                 {"ru","Русский"},
         };
         uint32_t nbLanguages=sizeof(myLanguages)/sizeof(languageDescriptor);
-        char *currentLanguage;
+        std::string currentLanguage;
         int currentIndex=0;
-        if(!prefs->get(DEFAULT_LANGUAGE,&currentLanguage)) currentLanguage=(char *)"auto";
+        if(!prefs->get(DEFAULT_LANGUAGE,currentLanguage)) currentLanguage=std::string("auto");
   
         diaMenuEntryDynamic **languagesMenuItems=new diaMenuEntryDynamic *[nbLanguages+1];
         for(int i=0;i<nbLanguages;i++)
         {           
             languageDescriptor *lg=myLanguages+i;
-            if(!strcmp(lg->lang,currentLanguage))
+            if(!strcmp(lg->lang,currentLanguage.c_str()))
                 currentIndex=i;
             languagesMenuItems[i]=new diaMenuEntryDynamic(i,lg->desc,lg->lang);
         }
@@ -420,8 +422,8 @@ std::string currentSdlDriver=getSdlDriverName();
         
 
         /* User Interface */
-        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),3,diaUser);
+        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage,&checkForUpdate};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),4,diaUser);
         
          /* Automation */
         
@@ -554,6 +556,9 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
             // allow non std audio fq for dvd
             prefs->set(FEATURES_MPEG_NO_LIMIT, mpeg_no_limit);
+            //
+            
+            prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
             // Odml

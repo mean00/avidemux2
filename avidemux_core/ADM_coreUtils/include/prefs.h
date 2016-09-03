@@ -30,7 +30,7 @@ class ADM_COREUTILS6_EXPORT preferences {
 		bool get(options option, uint32_t *);
 		bool get(options option, int32_t  *);
 		bool get(options option, float *val);
-		bool get(options option, char **val);
+//		bool get(options option, char **val);
 		bool get(options option, bool *val);
                 bool get(options option, std::string &v);
 
@@ -38,7 +38,7 @@ class ADM_COREUTILS6_EXPORT preferences {
 		bool set(options option, const uint32_t val);
 		bool set(options option, const int32_t  val);
 		bool set(options option, const float    val);
-		bool set(options option, const char    *val);
+//		bool set(options option, const char    *val);
 		bool set(options option, const bool     val);
 		bool set(options option, const std::string &v);
 

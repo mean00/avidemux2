@@ -343,7 +343,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                             }
                        }
                         break;
-
+#if 0
            case ADM_param_string:
                     {
                         char   *var;
@@ -353,6 +353,7 @@ static bool ADM_paramLoadInternal(bool partial,CONFcouple *couples, const ADM_pa
                         delete [] var;
                     }
                     break;
+#endif
             case ADM_param_stdstring:
                     {
                         char   *var;                        
@@ -461,6 +462,7 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
                         }
               }
                 break;
+#if 0
            case ADM_param_string:
                 {
                         char *var;
@@ -473,6 +475,7 @@ bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)
                         }
                 }
                 break;
+#endif
             case ADM_param_stdstring:
                 {
                         std::string *str;
