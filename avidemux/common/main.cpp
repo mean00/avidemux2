@@ -110,18 +110,14 @@ static const char *getUISpecifSubfolder()
 #ifdef USE_SDL
 static bool sdlProbe(void)
 {
-    char *drv=NULL;
+    std::string drv;
     printf("Probing for SDL...\n");
     std::string sdlDriver=std::string("dummy");
-    if(prefs->get(FEATURES_SDLDRIVER,&drv))
+    if(prefs->get(FEATURES_SDLDRIVER,drv))
     {
-        if(drv)
+        if(drv.size())
         {
-            if(strlen(drv))
-            {
-                sdlDriver=std::string(drv);
-            }
-            ADM_dezalloc(drv);
+                sdlDriver=drv;
         }
     }
     printf("Calling initSDL with driver=%s\n",sdlDriver.c_str());
