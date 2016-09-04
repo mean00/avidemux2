@@ -55,7 +55,9 @@ void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
     }
     ADM_warning("Success downloading update %s\n",reply->url().toDisplayString().toUtf8().constData());
     QByteArray ba=reply->readAll();
-    std::string output=ba.toStdString();
+    if(!ba.size())
+   	return; 
+    std::string output=std::string(ba.data());
     output=QString(output.c_str()).simplified().toUtf8().constData();
     printf("wget output is <%s>\n",output.c_str());
     std::vector<std::string>result;
