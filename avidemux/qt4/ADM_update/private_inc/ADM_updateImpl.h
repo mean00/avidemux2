@@ -45,7 +45,7 @@
 
 #endif // mingw
 
-#define ADM_UPDATE_TARGET "update_for_"ADM_UPDATE_MACHINE".html"
+#define ADM_UPDATE_TARGET "update_for_" ADM_UPDATE_MACHINE ".html"
 
 /**
  */
