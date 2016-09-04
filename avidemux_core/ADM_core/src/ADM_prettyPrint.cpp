@@ -20,14 +20,14 @@
 static std::string myMinutes(int mm)
 {
         char buffer[1024];
-        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d minutes"),mm);
+        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d minute(s)"),mm);
         return std::string(buffer);
 }
 
 static std::string myHour(int m)
 {
         char buffer[1024];
-        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d hours"),m);
+        sprintf(buffer,QT_TRANSLATE_NOOP("adm","%d hour(s)"),m);
         return std::string(buffer);
 }
 /**
@@ -53,7 +53,7 @@ bool ADM_durationToString(uint32_t durationInMs, std::string &outputString)
         outputString=myMinutes(mm+1);
         return true;
     }
-    outputString=myHour(hh)+myMinutes(mm+1);
+    outputString=myHour(hh)+" "+myMinutes(mm+1);
     return true;
     
 }        
