@@ -14,12 +14,11 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
-#ifndef ADM_STRING_H
-#define ADM_STRING_H
-
+#pragma once
+#include <string>
+#include <vector>
 #include "ADM_coreUtils6_export.h"
 #include "ADM_image.h"
 
-ADM_COREUTILS6_EXPORT bool        ADM_splitString(const string &separator, const string &source, vector<string>& result);
-#endif
+ADM_COREUTILS6_EXPORT bool        ADM_splitString(const std::string &separator, const std::string &source, std::vector<std::string>& result);
 //EOF

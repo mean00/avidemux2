@@ -19,10 +19,10 @@
 #include <QNetworkReply>
 #include <QThread>
 
-#if 1
+#if 0
 #define ADM_UPDATE_SERVER "http://192.168.0.9/"
 #else
-#define ADM_UPDATE_SERVER "http://avidemux.org/updates/"
+#define ADM_UPDATE_SERVER "http://www.avidemux.org/update/"
 #endif
 
 // Helper defines to construct URL
@@ -38,7 +38,7 @@
     #else
         #ifdef  __linux__
             #define ADM_UPDATE_MACHINE "Linux"
-        #else   
+        #else
             #define ADM_UPDATE_MACHINE "???"
         #endif
     #endif  // apple
@@ -55,12 +55,11 @@ class ADMCheckUpdate: public QObject
 public:
                     ADMCheckUpdate(ADM_updateComplete *up);
         virtual     ~ADMCheckUpdate();
-protected:  
-        QNetworkAccessManager manager; 
+protected:
+        QNetworkAccessManager manager;
         ADM_updateComplete    *_updateCallback;
-  
+
 public slots:
         void execute();
-        void downloadFinished(QNetworkReply *reply);  
+        void downloadFinished(QNetworkReply *reply);
 };
-

@@ -16,7 +16,6 @@
 #include "ADM_updateImpl.h"
 #include "QTimer"
 #include "ADM_default.h"
-using namespace std;
 #include "ADM_string.h"
 /**
  */
@@ -47,13 +46,19 @@ void ADMCheckUpdate::execute()
 void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
 {
     ADM_info("Download finished\n");
+    QString st;
+#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
+        st=reply->url().toDisplayString().toUtf8();
+#else
+        st=reply->url().toString().toUtf8();
+#endif
     if(reply->error())
     {
-        ADM_warning("Error downloading update %s\n",reply->url().toDisplayString().toUtf8().constData());
+        ADM_warning("Error downloading update %s\n",st.toUtf8().constData());
         ADM_warning("Er=%s\n",reply->errorString().toUtf8().constData());
         return;
     }
-    ADM_warning("Success downloading update %s\n",reply->url().toDisplayString().toUtf8().constData());
+    ADM_warning("Success downloading update %s\n",st.toUtf8().constData());
     QByteArray ba=reply->readAll();
     if(!ba.size())
    	return; 
