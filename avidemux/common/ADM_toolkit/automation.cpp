@@ -28,6 +28,7 @@
 #include "ADM_slave.h"
 #include "ADM_iso639.h"
 #include "ADM_last.h"
+#include "GUI_ui.h"
 
 extern void UI_setVideoCodec( int i);
 extern void UI_setAudioCodec( int i);
@@ -223,8 +224,9 @@ void call_scriptEngine(const char *scriptFile)
   
 	if (engines.size() == 1)
 	{
-		A_parseScript(engines[0], scriptFile);
+            A_parseScript(engines[0], scriptFile);
 	    A_Rewind();
+            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
         return;
 	}
 	
@@ -234,6 +236,7 @@ void call_scriptEngine(const char *scriptFile)
         {
             A_parseScript(engines[i], scriptFile);
             A_Rewind();
+            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
             return;
         }
     }
