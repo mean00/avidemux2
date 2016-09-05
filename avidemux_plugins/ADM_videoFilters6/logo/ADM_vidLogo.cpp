@@ -19,7 +19,7 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   addLogopFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "addLogo",            // internal name (must be uniq!)
-                        QT_TRANSLATE_NOOP("logo","Add logo."),            // Display name
+                        QT_TRANSLATE_NOOP("logo","Add logo"),            // Display name
                         QT_TRANSLATE_NOOP("logo","Put a logo on top of video, with alpha blending.") // Description
                     );
 

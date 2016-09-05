@@ -2,6 +2,56 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
+    <name>qgui2</name>
+    <message>
+        <source>Recent Files</source>
+        <translation>Zuletzt verwendete &amp;Dateien</translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
+        <translation>Zuletzt verwendete &amp;Projekte</translation>
+    </message>
+</context>
+<context>
+    <name>qgui2menu</name>
+    <message>
+        <source>Project Script</source>
+        <translation>P&amp;rojekt-Skript</translation>
+    </message>
+    <message>
+        <source> Project</source>
+        <translation> Projekt</translation>
+    </message>
+    <message>
+        <source>&amp;Run Project...</source>
+        <translation>P&amp;rojekt ausführen...</translation>
+    </message>
+    <message>
+        <source>&amp;Debug Project...</source>
+        <translation>Projekt &amp;debuggen...</translation>
+    </message>
+    <message>
+        <source>Save &amp;As Project...</source>
+        <translation>&amp;Als Projekt speichern...</translation>
+    </message>
+    <message>
+        <source>Scripting Shell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Shell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scripting Reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name></name>
     <message>
         <source>MPEG-2 requant</source>
@@ -6859,34 +6909,41 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="182" />
         <source>_Left border:</source>
-        <translation type="unfinished">_Linker Rand:</translation>
+        <translation>_Linker Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="183" />
         <source>_Right border:</source>
-        <translation type="unfinished">_Rechter Rand:</translation>
+        <translation>_Rechter Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="184" />
         <source>_Top border:</source>
-        <translation type="unfinished">_Oberer Rand:</translation>
+        <translation>_Oberer Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="185" />
         <source>_Bottom border:</source>
-        <translation type="unfinished">_Unterer Rand:</translation>
+        <translation>_Unterer Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.h" line="42" />
         <source>Add Borders</source>
-        <translation type="unfinished">Ränder addieren</translation>
+        <translation>Ränder hinzufügen</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192" />
         <source>Incorrect parameters</source>
-        <translation type="unfinished">Fehlerhafte Parameter</translation>
+        <translation>Fehlerhafte Parameter</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="192" />
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">Alle Parameter müssen gleich und innerhalb des Bereichs sein.</translation>
+        <translation>Alle Parameter müssen ganzzahlig sein und im zulässigen Bereich liegen.</translation>
     </message>
 </context>
 <context>
@@ -8238,8 +8295,19 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="418" />
         <source>_Language</source>
         <translation>_Sprache</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="393" />
+        <source>System language</source>
+        <translation>Systemvorgabe</translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="227" />
+        <source>_Check for new release</source>
+        <translation>Auf _Update überprüfen</translation>
     </message>
     <message>
         <source>Display</source>
@@ -8323,6 +8391,14 @@ Warning, the settings must be close.</source>
     <message>
         <source>Setting the language for the given track index is not possible: Invalid track index!</source>
         <translation>Kann die Sprache für die gegebene Tonspur nicht festlegen: Ungültige Liste der Tonspuren!</translation>
+    </message>
+    <message>
+        <source>Less than a minute</source>
+        <translation>weniger als eine Minute</translation>
+    </message>
+    <message>
+        <source>A few seconds</source>
+        <translation>wenige Sekunden</translation>
     </message>
 </context>
 <context>
@@ -8481,63 +8557,45 @@ Warning, the settings must be close.</source>
 <context>
     <name>blacken</name>
     <message>
-        <source>_Left border:</source>
-        <translation type="unfinished">_Linker Rand:</translation>
-    </message>
-    <message>
-        <source>_Right border:</source>
-        <translation type="unfinished">_Rechter Rand:</translation>
-    </message>
-    <message>
-        <source>_Top border:</source>
-        <translation type="unfinished">_Oberer Rand:</translation>
-    </message>
-    <message>
-        <source>_Bottom border:</source>
-        <translation type="unfinished">_Unterer Rand:</translation>
-    </message>
-    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="43" />
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="165" />
         <source>Blacken Borders</source>
-        <translation type="unfinished">Rand schwärzen</translation>
+        <translation>Rand schwärzen</translation>
     </message>
     <message>
-        <source>Incorrect parameters</source>
-        <translation type="unfinished">Fehlerhafte Parameter</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="44" />
+        <source>Remove noisy edge by turning them to black.</source>
+        <translation type="unfinished">Flimmern am Bildrand mit Schwarz überdecken.</translation>
     </message>
     <message>
-        <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">Alle Parameter müssen gleich und innerhalb des Bereichs sein.</translation>
-    </message>
-</context>
-<context>
-    <name>blackenBorders</name>
-    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="159" />
         <source>_Left border:</source>
-        <translation type="obsolete">_Linker Rand:</translation>
+        <translation>_Linker Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="160" />
         <source>_Right border:</source>
-        <translation type="obsolete">_Rechter Rand:</translation>
+        <translation>_Rechter Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="161" />
         <source>_Top border:</source>
-        <translation type="obsolete">_Oberer Rand:</translation>
+        <translation>_Oberer Rand:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="162" />
         <source>_Bottom border:</source>
-        <translation type="obsolete">_Unterer Rand:</translation>
+        <translation>_Unterer Rand:</translation>
     </message>
     <message>
-        <source>Blacken Borders</source>
-        <translation type="obsolete">Rand schwärzen</translation>
-    </message>
-    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169" />
         <source>Incorrect parameters</source>
-        <translation type="obsolete">Fehlerhafte Parameter</translation>
+        <translation>Fehlerhafte Parameter</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.cpp" line="169" />
         <source>All parameters must be even and within range.</source>
-        <translation type="obsolete">Alle Parameter müssen gleich und innerhalb des Bereichs sein.</translation>
+        <translation type="unfinished">Alle Parameter müssen ganzzahlig sein und im zulässigen Bereich liegen.</translation>
     </message>
 </context>
 <context>
@@ -10616,36 +10674,19 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>logo</name>
     <message>
-        <source>_Logo (jpg file):</source>
-        <translation type="unfinished">_Logo (jpg Datei):</translation>
+        <location filename="avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="22" />
+        <source>Add logo</source>
+        <translation>Logo hinzufügen</translation>
     </message>
     <message>
-        <source>Select JPEG file</source>
-        <translation type="unfinished">JPEG Datei auswählen</translation>
-    </message>
-    <message>
-        <source>_X Position:</source>
-        <translation type="unfinished">_X Position:</translation>
-    </message>
-    <message>
-        <source>_Y Position:</source>
-        <translation type="unfinished">_Y Position:</translation>
-    </message>
-    <message>
-        <source>_Alpha:</source>
-        <translation type="unfinished">_Alpha:</translation>
-    </message>
-    <message>
-        <source>Logo</source>
-        <translation type="unfinished">Logo</translation>
-    </message>
-    <message>
-        <source>Add logo.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
+        <location filename="avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="23" />
         <source>Put a logo on top of video, with alpha blending.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Video mit einem halbtransparenten Logo überlagern.</translation>
+    </message>
+    <message>
+        <location filename="avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="113" />
+        <source>Select Logo Image</source>
+        <translation type="unfinished">Bild für das Logo auswählen</translation>
     </message>
 </context>
 <context>

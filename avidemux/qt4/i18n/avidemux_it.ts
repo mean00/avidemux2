@@ -7830,7 +7830,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <source>_Left border:</source>
         <translation>Bordo _sinistro:</translation>
@@ -11469,7 +11469,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>logo</name>
     <message>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

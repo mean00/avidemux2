@@ -4814,7 +4814,7 @@ Erori denborapen argibideak?</translation>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.cpp" line="+182"/>
         <source>_Left border:</source>
@@ -9138,7 +9138,7 @@ p, li { white-space: pre-wrap; }
     <name>logo</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/ADM_vidLogo.cpp" line="+51"/>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

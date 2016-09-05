@@ -7208,7 +7208,7 @@ Voleu continuar de totes formes?</translation>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <source>_Left border:</source>
         <translation type="unfinished">Vora _esquerra:</translation>
@@ -10966,7 +10966,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Logo</translation>
     </message>
     <message>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

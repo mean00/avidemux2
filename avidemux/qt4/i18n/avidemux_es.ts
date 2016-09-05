@@ -5457,7 +5457,7 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <source>_Left border:</source>
         <translation type="unfinished">Borde inferior:</translation>
@@ -8984,7 +8984,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Logo</translation>
     </message>
     <message>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation type="unfinished">Añadir logo.</translation>
     </message>
     <message>

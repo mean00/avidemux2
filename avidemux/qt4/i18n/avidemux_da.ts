@@ -877,7 +877,7 @@ Drop timinginformationer?</translation>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <source>_Left border:</source>
         <translation>_Venstre kant:</translation>
@@ -3798,7 +3798,7 @@ p, li { white-space: pre-wrap; }
         <translation>Logo</translation>
     </message>
     <message>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation>Tilføj logo</translation>
     </message>
     <message>

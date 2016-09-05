@@ -877,7 +877,7 @@ Eldobjuk ezeket az időszinkron adatokat ?</translation>
     </message>
 </context>
 <context>
-    <name>addBorders</name>
+    <name>addBorder</name>
     <message>
         <source>_Left border:</source>
         <translation>Balszegély:</translation>
@@ -3765,7 +3765,7 @@ p, li { white-space: pre-wrap; }
         <translation>Logó</translation>
     </message>
     <message>
-        <source>Add logo.</source>
+        <source>Add logo</source>
         <translation>Logo +.</translation>
     </message>
     <message>
