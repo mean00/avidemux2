@@ -60,9 +60,12 @@ static int ignore_change=0;
           nf = GUI_GetScale ();
           ADM_info("Scale :%" PRIu32"\n",nf);
           double tme=nf;
-          tme*=video_body->getVideoDuration();
+          double totalDuration=(double) video_body->getVideoDuration();
+          tme*=totalDuration;
           tme/=ADM_SCALE_SIZE;
           uint64_t pts=5000+(uint64_t)tme; // aim a bit higher to avoid double "search previous" events
+          if(pts>totalDuration) pts=totalDuration;
+          
           ADM_info("Scale Time:%" PRIu64" ms (total=%" PRIu64" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
           ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
            if(false==video_body->getPKFramePTS(&pts))
