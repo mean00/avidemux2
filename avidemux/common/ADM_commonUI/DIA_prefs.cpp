@@ -1,6 +1,6 @@
 /***************************************************************************
   DIA_prefs.cpp
-  (C) 2007 Mean Fixounet@free.fr 
+  (C) 2007 Mean Fixounet@free.fr
 ***************************************************************************/
 
 /***************************************************************************
@@ -91,20 +91,20 @@ std::string currentSdlDriver=getSdlDriverName();
 
         prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
         prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
-        
-        
+
+
         // Default pp
          if(!prefs->get(DEFAULT_POSTPROC_TYPE,&pp_type)) pp_type=3;
          if(!prefs->get(DEFAULT_POSTPROC_VALUE,&pp_value)) pp_value=3;
 #define DOME(x,y) y=!!(pp_type & x)
-    
+
     DOME(1,hzd);
     DOME(2,vzd);
     DOME(4,dring);
-     
+
 // Cpu caps
 #define CPU_CAPS(x)    	if(cpuMask & ADM_CPUCAP_##x) caps##x=1; else caps##x=0;
-    
+
         uint32_t cpuMask=CpuCaps::getMask();
     	if(cpuMask==ADM_CPUCAP_ALL) capsAll=1; else capsAll=0;
     	CPU_CAPS(MMX);
@@ -129,7 +129,7 @@ std::string currentSdlDriver=getSdlDriverName();
                         defaultPortAvisynth=9999;
     	}
     	ADM_info("Avisynth port: %d\n",defaultPortAvisynth);
-    
+
         // Alsa
 #ifdef ALSA_SUPPORT
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
@@ -143,20 +143,20 @@ std::string currentSdlDriver=getSdlDriverName();
         prefs->get(FEATURES_LIBVA,&blibva);
         // Alternate mp3 tag (haali)
         prefs->get(FEATURES_ALTERNATE_MP3_TAG,&balternate_mp3_tag);
-        
+
         // Video renderer
         if(prefs->get(VIDEODEVICE,&render)!=RC_OK)
-        {       
+        {
                 render=(uint32_t)RENDER_GTK;
         }
         // SysTray
-        if(!prefs->get(FEATURES_USE_SYSTRAY,&useTray)) 
+        if(!prefs->get(FEATURES_USE_SYSTRAY,&useTray))
                 useTray=0;
         // Accept mpeg for DVD when fq!=48 kHz
         if(!prefs->get(FEATURES_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
 
         prefs->get(UPDATE_ENABLED,&doAutoUpdate);
-        
+
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
@@ -171,10 +171,10 @@ std::string currentSdlDriver=getSdlDriverName();
         if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
         playbackPriority=0;
 
-        // VCD/SVCD split point		
+        // VCD/SVCD split point
         if(!prefs->get(MPEGSPLIT_AUTOSPLIT, &autosplit))
-                autosplit=690;		
-                        
+                autosplit=690;
+
         // Open DML (Gmv)
         if(!prefs->get(FEATURES_USE_ODML, &use_odml))
           use_odml=0;
@@ -191,7 +191,7 @@ std::string currentSdlDriver=getSdlDriverName();
         prefs->get(MESSAGE_LEVEL,&msglevel);
         // Downmix default
         if(prefs->get(DEFAULT_DOWNMIXING,&downmix)!=RC_OK)
-        {       
+        {
             downmix=0;
         }
         olddevice=newdevice=AVDM_getCurrentDevice();
@@ -201,10 +201,10 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
         diaElemToggle useOpenGl(&hasOpenGl,QT_TRANSLATE_NOOP("adm","Enable openGl support"));
-        
+
         bool foo=0;
         diaElemToggle hwAccelText(&foo,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"));
-        
+
 
 #ifndef USE_VDPAU
         // Crash useVdpau.enable(0);
@@ -216,16 +216,16 @@ std::string currentSdlDriver=getSdlDriverName();
         // Crash useXvba.enable(0);
 #endif
 
-        
+
 #ifndef USE_OPENGL
         // Crash         //useOpenGl.enable(0);
 #endif
-        
+
         diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
-        
+
 
         diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm","SIMD"));
 
@@ -280,9 +280,9 @@ std::string currentSdlDriver=getSdlDriverName();
 		framePriority.swallow(&menuPlaybackPriority);
 
         diaElemUInteger autoSplit(&autosplit,QT_TRANSLATE_NOOP("adm","_Split MPEG files every (MB):"),10,4096);
-        
+
         diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
-        
+
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
 #ifdef USE_XV
@@ -302,11 +302,11 @@ std::string currentSdlDriver=getSdlDriverName();
                              ,{RENDER_LIBVA,   QT_TRANSLATE_NOOP("adm","LIBVA (best)"),NULL}
 #endif
 
-                             
+
 #ifdef USE_SDL
 							 ,{RENDER_SDL,      QT_TRANSLATE_NOOP("adm","SDL (good)"),NULL}
 #endif
-        };        
+        };
         diaElemMenu menuVideoMode(&render,QT_TRANSLATE_NOOP("adm","Video _display:"), sizeof(videoMode)/sizeof(diaMenuEntry),videoMode,"");
 #ifdef USE_SDL
         const std::vector<sdlDriverInfo> &listOfSdl=getListOfSdlDrivers();
@@ -330,27 +330,27 @@ std::string currentSdlDriver=getSdlDriverName();
             sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),nbSDL,  sdlMenuEntries);
         }else
         {
-            sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),0,  NULL);   
+            sdlMenu=new diaElemMenuDynamic(&sdlMenuIndex, QT_TRANSLATE_NOOP("adm","Sdl driver"),0,  NULL);
         }
-#endif        
-        
-        
+#endif
+
+
         diaMenuEntry msgEntries[]={
                              {0,       QT_TRANSLATE_NOOP("adm","No alerts"),NULL}
                              ,{1,      QT_TRANSLATE_NOOP("adm","Display only error alerts"),NULL}
                              ,{2,      QT_TRANSLATE_NOOP("adm","Display all alerts"),NULL}
         };
         diaElemMenu menuMessage(&msglevel,QT_TRANSLATE_NOOP("adm","_Message level:"), sizeof(msgEntries)/sizeof(diaMenuEntry),msgEntries,"");
-        
-        
+
+
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
         diaMenuEntry volumeEntries[]={
                              {0,       QT_TRANSLATE_NOOP("adm","PCM"),NULL}
                              ,{1,      QT_TRANSLATE_NOOP("adm","Master"),NULL}};
         diaElemMenu menuVolume(&useMaster,QT_TRANSLATE_NOOP("adm","_Volume control:"), sizeof(volumeEntries)/sizeof(diaMenuEntry),volumeEntries,"");
 #endif
-        
-        
+
+
          diaMenuEntry mixerEntries[]={
                              {0,       QT_TRANSLATE_NOOP("adm","No downmixing"),NULL}
                              ,{1,       QT_TRANSLATE_NOOP("adm","Stereo"),NULL}
@@ -359,7 +359,7 @@ std::string currentSdlDriver=getSdlDriverName();
          };
         diaElemMenu menuMixer(&downmix,QT_TRANSLATE_NOOP("adm","_Local playback downmixing:"), sizeof(mixerEntries)/sizeof(diaMenuEntry),mixerEntries,"");
 //*********** AV_
-		
+
 //***AV
         uint32_t nbAudioDevice=ADM_av_getNbDevices();
         diaMenuEntryDynamic **audioDeviceItems=new diaMenuEntryDynamic *[nbAudioDevice+1];
@@ -371,7 +371,7 @@ std::string currentSdlDriver=getSdlDriverName();
             ADM_av_getDeviceInfo(i, name, &major,&minor,&patch);
             audioDeviceItems[i+1]=new diaMenuEntryDynamic(i+1,name.c_str(),name.c_str());
         }
-        diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1, 
+        diaElemMenuDynamic menuAudio(&newdevice,QT_TRANSLATE_NOOP("adm","_AudioDevice"), nbAudioDevice+1,
                     audioDeviceItems,NULL);
         // default Post proc
      diaElemToggle     fhzd(&hzd,QT_TRANSLATE_NOOP("adm","_Horizontal deblocking"));
@@ -379,7 +379,7 @@ std::string currentSdlDriver=getSdlDriverName();
      diaElemToggle     fdring(&dring,QT_TRANSLATE_NOOP("adm","De_ringing"));
      diaElemUInteger   postProcStrength(&pp_value,QT_TRANSLATE_NOOP("adm","_Strength:"),0,5);
      diaElemFrame      framePP(QT_TRANSLATE_NOOP("adm","Default Postprocessing"));
-     
+
      framePP.swallow(&fhzd);
      framePP.swallow(&fvzd);
      framePP.swallow(&fdring);
@@ -405,33 +405,33 @@ std::string currentSdlDriver=getSdlDriverName();
         std::string currentLanguage;
         int currentIndex=0;
         if(!prefs->get(DEFAULT_LANGUAGE,currentLanguage)) currentLanguage=std::string("auto");
-  
+
         diaMenuEntryDynamic **languagesMenuItems=new diaMenuEntryDynamic *[nbLanguages+1];
         for(int i=0;i<nbLanguages;i++)
-        {           
+        {
             languageDescriptor *lg=myLanguages+i;
             if(!strcmp(lg->lang,currentLanguage.c_str()))
                 currentIndex=i;
             languagesMenuItems[i]=new diaMenuEntryDynamic(i,lg->desc,lg->lang);
         }
         languageIndex=currentIndex;
-        diaElemMenuDynamic menuLanguage(&languageIndex,QT_TRANSLATE_NOOP("adm","_Language"), nbLanguages, 
+        diaElemMenuDynamic menuLanguage(&languageIndex,QT_TRANSLATE_NOOP("adm","_Language"), nbLanguages,
                     languagesMenuItems,NULL);
-//--        
-        
-        
+//--
+
+
 
         /* User Interface */
         diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage,&checkForUpdate};
         diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),4,diaUser);
-        
+
          /* Automation */
-        
-        
+
+
         /* Output */
         diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3};
         diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
-        
+
         /* Audio */
 
 #if 0 //defined(ALSA_SUPPORT)
@@ -447,12 +447,12 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemTabs tabAudio(QT_TRANSLATE_NOOP("adm","Audio"),2,(diaElem **)diaAudio);
 #endif
 
-        
+
         /* Display */
         diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,QT_TRANSLATE_NOOP("adm","_Limit Refresh Rate"));
         diaElemUInteger displayRefreshCap(&refreshCapValue,QT_TRANSLATE_NOOP("adm","Refresh Rate Cap (ms)"),10,1000);
 
-            
+
 #ifdef USE_SDL
         diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&useOpenGl,&togDisplayRefreshCap,&displayRefreshCap};
 #else
@@ -462,7 +462,7 @@ std::string currentSdlDriver=getSdlDriverName();
         /* HW accel */
           diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&hwAccelText};
           diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
-        
+
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
 		diaElemTabs tabCpu(QT_TRANSLATE_NOOP("adm","CPU"),1,(diaElem **)diaCpu);
@@ -479,14 +479,14 @@ std::string currentSdlDriver=getSdlDriverName();
 
         /* Global Glyph tab */
 
-                                    
+
 // SET
                 int extra=0;
 #ifdef __linux__
-              extra++;  
+              extra++;
 #endif
                 diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,
-#ifdef __linux__                
+#ifdef __linux__
                                 &tabHwDecoding,
 #endif
                                 &tabCpu,&tabThreading, &tabAvisynth};
@@ -505,7 +505,7 @@ std::string currentSdlDriver=getSdlDriverName();
             {
                     cpuMaskOut=0;
     #undef CPU_CAPS
-    #define CPU_CAPS(x)    	if(caps##x) cpuMaskOut|= ADM_CPUCAP_##x;        	    	
+    #define CPU_CAPS(x)    	if(caps##x) cpuMaskOut|= ADM_CPUCAP_##x;
                     CPU_CAPS(MMX);
                     CPU_CAPS(MMXEXT);
                     CPU_CAPS(3DNOW);
@@ -557,7 +557,7 @@ std::string currentSdlDriver=getSdlDriverName();
             // allow non std audio fq for dvd
             prefs->set(FEATURES_MPEG_NO_LIMIT, mpeg_no_limit);
             //
-            
+
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
@@ -591,21 +591,21 @@ std::string currentSdlDriver=getSdlDriverName();
             // Alternate mp3 tag (haali)
             prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
 
-            prefs->set(DEFAULT_LANGUAGE,myLanguages[languageIndex].lang);
+            prefs->set(DEFAULT_LANGUAGE,std::string(myLanguages[languageIndex].lang));
 
             // Avisynth
             prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
             prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
 
                 // Initialise SDL again as driver may have changed
-#ifdef USE_SDL                
+#ifdef USE_SDL
             std::string driverName=listOfSdl[sdlMenuIndex].driverName;
             setSdlDriverByName(driverName);
             prefs->set(FEATURES_SDLDRIVER,driverName.c_str());
-#endif    
+#endif
 	}
 #ifdef USE_SDL
-        if(sdlMenu) 
+        if(sdlMenu)
         {
             if(nbSDL&&sdlMenuEntries)
             {
@@ -619,10 +619,10 @@ std::string currentSdlDriver=getSdlDriverName();
             delete sdlMenu;
             sdlMenu=NULL;
         }
-#endif                
+#endif
         for(int i=0;i<nbAudioDevice+1;i++)
         {
-            
+
             delete audioDeviceItems[i];
         }
         delete [] audioDeviceItems;
@@ -646,4 +646,4 @@ void setpp(void)
         }
 //	video_body->setPostProc(type, strength, uv);
 }
-//EOF 
+//EOF
