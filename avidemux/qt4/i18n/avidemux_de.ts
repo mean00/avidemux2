@@ -4,12 +4,19 @@
 <context>
     <name>qgui2</name>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="430" />
         <source>Recent Files</source>
         <translation>Zuletzt verwendete &amp;Dateien</translation>
     </message>
     <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="431" />
         <source>Recent Projects</source>
         <translation>Zuletzt verwendete &amp;Projekte</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="1519" />
+        <source> (%d track(s))</source>
+        <translation> (%d Tonspur(en))</translation>
     </message>
 </context>
 <context>
@@ -5169,10 +5176,6 @@ Drop timing informations ?</source>
         <translation>&amp;Gespeicherte Projekte</translation>
     </message>
     <message>
-        <source></source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Ctrl+O</source>
         <translation type="obsolete">Strg+Ö</translation>
     </message>
@@ -5738,7 +5741,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>   (0 track(s))</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> (0 Tonspur(en))</translation>
     </message>
     <message>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
@@ -5803,6 +5806,91 @@ Drop timing informations ?</source>
     <message>
         <source>Open Video</source>
         <translation type="unfinished">Videodatei öffnen</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="962" />
+        <source>Play [SPACE]</source>
+        <translation>Wiedergabe/Pause [Leertaste]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="991" />
+        <source>Stop [SPACE]</source>
+        <translation>Stopp [Leertaste]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1014" />
+        <source>Go to previous frame [LEFT]</source>
+        <translation>Vorheriges Bild [Pfeiltaste links]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1037" />
+        <source>Go to next frame [RIGHT]</source>
+        <translation>Nächstes Bild [Pfeiltaste rechts]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1060" />
+        <source>Go to previous keyframe [DOWN]</source>
+        <translation>Zum vorherigen Keyframe [Pfeiltaste runter]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1083" />
+        <source>Go to next keyframe [UP]</source>
+        <translation>Zum nächsten Keyframe [Pfeiltaste hoch]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1106" />
+        <source>Set start marker [CTRL+PAGEUP]</source>
+        <translation>Anfangsmarkierung setzen [Strg + Bild hoch]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1129" />
+        <source>Set end marker [CTRL+PAGEDOWN]</source>
+        <translation>Endmarkierung setzen [Strg + Bild runter]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1155" />
+        <source>Search previous black frame</source>
+        <translation>Ein schwarzes Bild rückwärts suchen</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1178" />
+        <source>Search next black frame</source>
+        <translation>Ein schwarzes Bild vorwärts suchen</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1201" />
+        <source>Go to first frame [HOME]</source>
+        <translation>Zum ersten Bild [Pos 1]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1224" />
+        <source>Go to last frame [END]</source>
+        <translation>Zum letzten Bild [Ende]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1247" />
+        <source>Backward one minute [CTRL+DOWN]</source>
+        <translation>Eine Minute zurück [Strg + Pfeiltaste runter]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1270" />
+        <source>Forward one minute [CTRL+UP]</source>
+        <translation>Eine Minute vor [Strg + Pfeiltaste hoch]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1545" />
+        <source>Go to marker A [PAGE UP]</source>
+        <translation>Springe zur Markierung A [Bild hoch]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1555" />
+        <source>Go to Marker B [PAGE DOWN]</source>
+        <translation>Springe zur Markierung B [Bild runter]</translation>
+    </message>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/gui2.ui" line="1565" />
+        <source>Display output video on playback</source>
+        <translation>Bei der Wiedergabe das Ergebnis nach Anwendung der Filter zeigen</translation>
     </message>
 </context>
 <context>
@@ -8542,16 +8630,29 @@ Warning, the settings must be close.</source>
 <context>
     <name>black</name>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/black/ADM_vidBlack.cpp" line="48"/>
         <source>Black</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/black/ADM_vidBlack.cpp" line="49"/>
         <source>Replace a section by black.</source>
-        <translation type="unfinished"></translation>
+        <translation>Einen Abschnitt des Videos durch Schwarz ersetzen.</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/black/ADM_vidBlack.cpp" line="61"/>
+        <source>_Start time (ms):</source>
+        <translation>_Beginn:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/black/ADM_vidBlack.cpp" line="62"/>
+        <source>_End time (ms):</source>
+        <translation>_Ende:</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/black/ADM_vidBlack.cpp" line="64"/>
         <source>Replace by Black</source>
-        <translation type="unfinished"></translation>
+        <translation>Durch Schwarz ersetzen</translation>
     </message>
 </context>
 <context>
@@ -8601,75 +8702,69 @@ Warning, the settings must be close.</source>
 <context>
     <name>changeFps</name>
     <message>
-        <source>_Mode:</source>
-        <translation type="obsolete">_Modus:</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="76" />
+        <source>Change FPS</source>
+        <translation type="unfinished">Zeitraffer / Zeitlupe</translation>
     </message>
     <message>
-        <source>_New frame rate:</source>
-        <translation type="obsolete">_Neue Bildfrequenz:</translation>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="77" />
+        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
+        <translation type="unfinished">Beschleunige oder verlangsame das Video als würde sich die Bildfrequenz ändern. Dieser Filter beeinflusst die Abspieldauer.</translation>
     </message>
     <message>
-        <source>Resample fps</source>
-        <translation type="obsolete">Bildfrequenz (Hz) ändern</translation>
-    </message>
-    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="40" />
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
+        <translation>25 (PAL)</translation>
     </message>
     <message>
         <source>23.976 (Film)</source>
-        <translation type="unfinished"></translation>
+        <translation>23,976 (Film)</translation>
     </message>
     <message>
         <source>29.97 (NTSC)</source>
-        <translation type="unfinished"></translation>
+        <translation>29,97 (NTSC)</translation>
     </message>
     <message>
         <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
+        <translation>50 (PAL)</translation>
     </message>
     <message>
         <source>59.93  (NTSC)</source>
-        <translation type="unfinished"></translation>
+        <translation>59,93 (NTSC)</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="208" />
         <source>Source Fps:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausgangsbildfrequenz:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="209" />
         <source>Source frame rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierte Ausgangsbildfrequenz:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="213" />
         <source>Destination Fps:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ziel-Bildfrequenz:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="214" />
         <source>Destination frame rate:</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefinierte Ziel-Bildfrequenz:</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="222" />
         <source>Change fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildfrequenz ändern</translation>
     </message>
     <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/changeFps/changeFps.cpp" line="227" />
         <source>Invalid fps</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>changefps</name>
-    <message>
-        <source>Change FPS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültige Bildfrequenz</translation>
     </message>
 </context>
 <context>
@@ -10686,7 +10781,25 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="113" />
         <source>Select Logo Image</source>
-        <translation type="unfinished">Bild für das Logo auswählen</translation>
+        <translation type="unfinished">Bild als Logo auswählen</translation>
+    </message>
+</context>
+<context>
+    <name>logoDialog</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/logo.ui" line="22" />
+        <source>Image</source>
+        <translation>Bild</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/logo.ui" line="42" />
+        <source>Select</source>
+        <translation>Wählen...</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/logo.ui" line="160" />
+        <source>You can click in the image to set the logo approximatively</source>
+        <translation>In die Vorschau klicken, um die Position der linken oberen Ecke des Logos festzulegen</translation>
     </message>
 </context>
 <context>
