@@ -221,6 +221,7 @@ ADM_byteBuffer   byteBuffer;
 	  
 
       AVPacket pkt;
+      av_init_packet(&pkt);
       int gotSomething;
       pkt.size=_width*_height*4;
       pkt.data=byteBuffer.at(0);

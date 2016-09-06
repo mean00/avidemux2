@@ -128,6 +128,7 @@ again:
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
         AVPacket pkt;
+        av_init_packet(&pkt);
         pkt.data=out->data;
         pkt.size=out->bufferSize;
 

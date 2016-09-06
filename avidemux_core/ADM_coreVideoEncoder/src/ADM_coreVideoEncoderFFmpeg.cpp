@@ -274,6 +274,7 @@ int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstr
 {
     int r,gotData;
         AVPacket pkt;
+        av_init_packet(&pkt);
         pkt.data=out->data;
         pkt.size=out->bufferSize;
 
