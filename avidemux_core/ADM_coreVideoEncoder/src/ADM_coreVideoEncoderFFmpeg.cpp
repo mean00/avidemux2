@@ -59,6 +59,8 @@ _hasSettings=false;
     image=new ADMImageDefault(w,h);
     _frame=av_frame_alloc();
     _frame->pts = AV_NOPTS_VALUE;
+    _frame->width=w;
+    _frame->height=h;
     rgbByteBuffer.setSize((w+7)*(h+7)*4);
     colorSpace=NULL;
     pass=0;
@@ -133,14 +135,17 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
         case ADM_COLOR_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
                                 _frame->linesize[1] = img->GetPitch(PLANAR_U);
                                 _frame->linesize[2] = img->GetPitch(PLANAR_V);
+                                _frame->format=AV_PIX_FMT_YUV420P;
                                 _context->pix_fmt =AV_PIX_FMT_YUV420P;break;
         case ADM_COLOR_YUV422P: _frame->linesize[0] = w;
                                 _frame->linesize[1] = w>>1;
                                 _frame->linesize[2] = w>>1;
+                                _frame->format=AV_PIX_FMT_YUV422P;
                                 _context->pix_fmt =AV_PIX_FMT_YUV422P;break;
         case ADM_COLOR_RGB32A : _frame->linesize[0] = w*4;
                                 _frame->linesize[1] = 0;//w >> 1;
                                 _frame->linesize[2] = 0;//w >> 1;
+                                _frame->format=AV_PIX_FMT_RGB32;
                                 _context->pix_fmt =AV_PIX_FMT_RGB32;break;
         default: ADM_assert(0);
 
@@ -279,7 +284,7 @@ int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstr
         pkt.size=out->bufferSize;
 
 
-        r= avcodec_encode_video2 (_context,&pkt,NULL, &gotData);
+        r= avcodec_encode_video2 (_context,&pkt,in, &gotData);
         if(r<0)
         {
             ADM_warning("Error %d encoding video\n",r);
