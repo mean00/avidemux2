@@ -171,11 +171,13 @@ Ignorer les informations de timing ?</translation>
         <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
 1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
 2.) concatenate them together</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous ne pouvez pas mélanger des videos avec dimensions différentes. Utiliser le filtre &quot;Partiel&quot; ne résoudra pas le problème.La correction est :
+1) Redimensionner/ajouter des bords pour que toutes les vidéos aient les mêmes dimensions, et les sauver une par une
+2) Concaténer ces videos ensembles</translation>
     </message>
     <message>
         <source>Checking if timestamps are valid..</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérification des informations de temps</translation>
     </message>
 </context>
 <context>
@@ -255,15 +257,15 @@ Ignorer les informations de timing ?</translation>
     <name>ADM_QthreadCount</name>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Désactivé</translation>
+        <translation>Désactivé</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="unfinished">Détection auto</translation>
+        <translation>Détection auto</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">Manuel</translation>
+        <translation>Manuel</translation>
     </message>
 </context>
 <context>
@@ -285,7 +287,7 @@ Ignorer les informations de timing ?</translation>
     <name>ADM_qtray</name>
     <message>
         <source>Open Avidemux</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir Avidemux</translation>
     </message>
 </context>
 <context>
@@ -307,123 +309,123 @@ Ignorer les informations de timing ?</translation>
     <name>CalculatorDialog</name>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">Manuel</translation>
+        <translation>Manuel</translation>
     </message>
     <message>
         <source>Track 1:</source>
-        <translation type="unfinished">Piste 1:</translation>
+        <translation>Piste 1:</translation>
     </message>
     <message>
         <source>Track 2:</source>
-        <translation type="unfinished">Piste 2:</translation>
+        <translation>Piste 2:</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <source>Calculator</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Target</source>
-        <translation type="unfinished"></translation>
+        <translation>Cible</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>AVI</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>OGM</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>MPEG</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Medium:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Format:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Duration:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>1 x 80 minute CD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2 x 80 minute CD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>1 x 74 minute CD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2 x 74 minute CD</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>DVD-5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Custom Size:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>MB</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Audio Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>kbps</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Result</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Audio Size:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Video Size:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Total Size:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Bits Per Pixel:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Video Bitrate:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -526,7 +528,7 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source># Images :</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -549,7 +551,7 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">Filtres</translation>
+        <translation>Filtres</translation>
     </message>
     <message>
         <source>Audio Filters</source>
@@ -565,89 +567,89 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>Track 4</source>
-        <translation type="unfinished">Piste 4</translation>
+        <translation>Piste 4</translation>
     </message>
 </context>
 <context>
     <name>DialogOcr</name>
     <message>
         <source>Close</source>
-        <translation type="unfinished">Fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Calibrate</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Skip All</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Skip Glyph</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>00:00:00/000</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Timecode:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>0/0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Nb Lines :</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>DialogProcessing</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Annuler</translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>TimeLeft</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps restant</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>ProcessImages</source>
-        <translation type="unfinished"></translation>
+        <translation>Images Traitées</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitesse</translation>
     </message>
     <message>
         <source>0 fps</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -666,11 +668,11 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>1/1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -695,27 +697,27 @@ Ignorer les informations de timing ?</translation>
     <name>MainWindow</name>
     <message>
         <source>Avidemux</source>
-        <translation type="unfinished">Avidemux</translation>
+        <translation>Avidemux</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Aide</translation>
+        <translation>&amp;Aide</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation type="unfinished">&amp;Editer</translation>
+        <translation>&amp;Editer</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished">&amp;Vue</translation>
+        <translation>&amp;Vue</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished">Ou&amp;tils</translation>
+        <translation>Ou&amp;tils</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;Fichier</translation>
+        <translation>&amp;Fichier</translation>
     </message>
     <message>
         <source>Codec Options</source>
@@ -723,135 +725,135 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="unfinished">&lt;b&gt;Décodeur Vidéo&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Décodeur Vidéo&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Configure</source>
-        <translation type="unfinished">Configurer</translation>
+        <translation>Configurer</translation>
     </message>
     <message>
         <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
-        <translation type="unfinished">&lt;b&gt;Sortie Vidéo&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Sortie Vidéo&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Copier</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished">Filtres</translation>
+        <translation>Filtres</translation>
     </message>
     <message>
         <source>&lt;b&gt;Audio Output&lt;/b&gt;</source>
-        <translation type="unfinished">&lt;b&gt;Sortie Audio&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Sortie Audio&lt;/b&gt;</translation>
     </message>
     <message>
         <source>   (0 track(s))</source>
-        <translation type="unfinished">   (0 piste(s))</translation>
+        <translation>   (0 piste(s))</translation>
     </message>
     <message>
         <source>&amp;Shift:</source>
-        <translation type="unfinished">&amp;Décal.:</translation>
+        <translation>&amp;Décal.:</translation>
     </message>
     <message>
         <source>&lt;b&gt;Output Format&lt;/b&gt;</source>
-        <translation type="unfinished">&lt;b&gt;Format de sortie&lt;/b&gt;</translation>
+        <translation>&lt;b&gt;Format de sortie&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation type="unfinished">&amp;Ouvrir...</translation>
+        <translation>&amp;Ouvrir...</translation>
     </message>
     <message>
         <source>Save &amp;Video...</source>
-        <translation type="unfinished">Sauver la &amp;Vidéo...</translation>
+        <translation>Sauver la &amp;Vidéo...</translation>
     </message>
     <message>
         <source>Save Video</source>
-        <translation type="unfinished">Sauver</translation>
+        <translation>Sauver</translation>
     </message>
     <message>
         <source>&amp;Load/Run Project...</source>
-        <translation type="unfinished">&amp;Lancer un projet...</translation>
+        <translation>&amp;Lancer un projet...</translation>
     </message>
     <message>
         <source>Load/Run Project</source>
-        <translation type="unfinished">Lancer un projet</translation>
+        <translation>Lancer un projet</translation>
     </message>
     <message>
         <source>Save &amp;Project</source>
-        <translation type="unfinished">Sauver un &amp;Projet</translation>
+        <translation>Sauver un &amp;Projet</translation>
     </message>
     <message>
         <source>Save Project</source>
-        <translation type="unfinished">Sauver un Projet</translation>
+        <translation>Sauver un Projet</translation>
     </message>
     <message>
         <source>&amp;Calculator...</source>
-        <translation type="unfinished">&amp;Calculatette...</translation>
+        <translation>&amp;Calculette...</translation>
     </message>
     <message>
         <source>&amp;Input</source>
-        <translation type="unfinished">Orig&amp;inal</translation>
+        <translation>Orig&amp;inal</translation>
     </message>
     <message>
         <source>&amp;Output</source>
-        <translation type="unfinished">M&amp;odifié</translation>
+        <translation>M&amp;odifié</translation>
     </message>
     <message>
         <source>&amp;Codec Options</source>
-        <translation type="unfinished">Options du co&amp;dec</translation>
+        <translation>Options du co&amp;dec</translation>
     </message>
     <message>
         <source>&amp;Separate</source>
-        <translation type="unfinished">&amp;Separer</translation>
+        <translation>&amp;Séparer</translation>
     </message>
     <message>
         <source>&amp;Top</source>
-        <translation type="unfinished">Hau&amp;t</translation>
+        <translation>Hau&amp;t</translation>
     </message>
     <message>
         <source>Si&amp;de</source>
-        <translation type="unfinished">Cot&amp;e à cote</translation>
+        <translation>Cot&amp;e à cote</translation>
     </message>
     <message>
         <source>Vi&amp;deo</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Scripts Perso</translation>
     </message>
     <message>
         <source>&amp;Go</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller</translation>
     </message>
     <message>
         <source>&amp;Audio</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation>Récent</translation>
     </message>
     <message>
         <source>Codec O&amp;ptions</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>XXXX</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Navigation</source>
@@ -859,179 +861,179 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>Play [SPACE]</source>
-        <translation type="unfinished"></translation>
+        <translation>Lire [SPACE]</translation>
     </message>
     <message>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Lire</translation>
     </message>
     <message>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Stop [SPACE]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Go to previous frame [LEFT]</source>
-        <translation type="unfinished"></translation>
+        <translation>Image précédents [GAUCHE]</translation>
     </message>
     <message>
         <source>Go to next frame [RIGHT]</source>
-        <translation type="unfinished"></translation>
+        <translation>Image suivante [DROITE]</translation>
     </message>
     <message>
         <source>Go to previous keyframe [DOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation>Image clé précédente [BAS]</translation>
     </message>
     <message>
         <source>Go to next keyframe [UP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Image clé suivante [HAUT]</translation>
     </message>
     <message>
         <source>Set start marker [CTRL+PAGEUP]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mettre le marqueur A [CTRL+PAGE HAUTE]</translation>
     </message>
     <message>
         <source>Set end marker [CTRL+PAGEDOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre le marqueur B [CTRL+PAGE SUIVANTE]</translation>
     </message>
     <message>
         <source>Search previous black frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Chercher l&apos;image noire précédente</translation>
     </message>
     <message>
         <source>Search next black frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Chercher l&apos;image noire suivante</translation>
     </message>
     <message>
         <source>Go to first frame [HOME]</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au début [DEBUT]</translation>
     </message>
     <message>
         <source>Go to last frame [END]</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller à la fin [FIN]</translation>
     </message>
     <message>
         <source>Backward one minute [CTRL+DOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Reculer d&quot;une minute [CTRL+BAS]</translation>
     </message>
     <message>
         <source>Forward one minute [CTRL+UP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Avancer d&apos;une minute [CTRL+HAUT]</translation>
     </message>
     <message>
         <source>Forward one minute</source>
-        <translation type="unfinished"></translation>
+        <translation>Avancer d&apos;une minute</translation>
     </message>
     <message>
         <source>Time:</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps:</translation>
     </message>
     <message>
         <source>00:00:00.000</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>/ 00:00:00.000</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Frame type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Type:</translation>
     </message>
     <message>
         <source>?</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Se&amp;lection</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>A:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>B:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Go to marker A [PAGE UP]</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au marqueur A [PAGE HAUT]</translation>
     </message>
     <message>
         <source>000000</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Go to Marker B [PAGE DOWN]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aller au marqueur B [PAGE BAS]</translation>
     </message>
     <message>
         <source>Display output video on playback</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer la video post filtrage</translation>
     </message>
     <message>
         <source>Play filtered</source>
-        <translation type="unfinished"></translation>
+        <translation>Jouer post filtrage</translation>
     </message>
     <message>
         <source>Vol&amp;ume</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Audio &amp;Metre</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Open Video</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir une vidéo</translation>
     </message>
     <message>
         <source>&amp;Information...</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Alt+Return</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>F7</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+Alt+C</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+Alt+N</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Selection</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+Alt+S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Volume</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+Alt+V</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Audio Metre</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Ctrl+Alt+M</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
