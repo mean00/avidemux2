@@ -2917,7 +2917,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>Cannot load this srt file.</source>
@@ -2962,7 +2962,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>Cannot create AVI file</source>
@@ -6075,7 +6075,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
 </context>
 <context>
@@ -6252,7 +6252,7 @@ I will assume it has and try to continue</source>
     <name>psdemuxer</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>This file&apos;s index has been created with an older version of avidemux.
@@ -6276,11 +6276,11 @@ Please delete the idx2 file and reopen.</source>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>Cannot use that file as audio track</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Impossible d&apos;utiliser ce fichier comme piste audio</translation>
     </message>
     <message>
         <source>Some tracks are used multiple times</source>
@@ -6605,7 +6605,7 @@ Ready.
     <name>qtray</name>
     <message>
         <source>Open Avidemux</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ouvrir Avidemux</translation>
     </message>
 </context>
 <context>
@@ -7073,7 +7073,7 @@ Ready.
     <name>tsdemuxer</name>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>This file&apos;s index has been created with an older version of avidemux.
@@ -7504,7 +7504,7 @@ Voulez vous procéder ?</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>Cannot load preset</source>
@@ -8588,7 +8588,7 @@ Voulez vous procéder ?</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
     <message>
         <source>Cannot load preset</source>
