@@ -3497,6 +3497,20 @@ multiplied by this):</source>
         <translation type="obsolete">Falló el indizado</translation>
     </message>
     <message>
+        <source>Cannot find a demuxer for %s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
+1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
+2.) concatenate them together</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Checking if timestamps are valid..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Some timing information are incorrect.
 It happens with some capture software.
 If you re encode video we should drop these informations,
@@ -3506,115 +3520,46 @@ If you just copy the video without reencoding,
 Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Cannot find a demuxer for %s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>You cannot mix different video dimensions yet. Using the partial video filter later, will not work around this problem. The workaround is:
-1.) &quot;resize&quot; / &quot;add border&quot; / &quot;crop&quot; each stream to the same resolution
-2.) concatinate them together</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ADM_Qt4CoreUIToolkit</name>
     <message>
         <source>Alert</source>
-        <translation type="unfinished">Alerta</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirmation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Question</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Question?</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ADM_Qt4CoreUIToolkit::DIA_processingQt4</name>
-    <message>
-        <source>_Resume</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The processing is paused.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel it ?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Alerta</translation>
     </message>
 </context>
 <context>
     <name>ADM_Qt4Factory::ADM_Qbitrate</name>
     <message>
         <source>Two Pass - Video Size</source>
-        <translation type="unfinished">Dos pasadas - Tamaño de vídeo</translation>
+        <translation type="obsolete">Dos pasadas - Tamaño de vídeo</translation>
     </message>
     <message>
         <source>Two Pass - Average Bitrate</source>
-        <translation type="unfinished">Dos pasadas - Bitrate medio</translation>
+        <translation type="obsolete">Dos pasadas - Bitrate medio</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation type="unfinished">Bitrate</translation>
+        <translation type="obsolete">Bitrate</translation>
     </message>
     <message>
         <source>-</source>
-        <translation type="unfinished">-</translation>
-    </message>
-    <message>
-        <source>Constant Bitrate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Quantiser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Same Quantiser as Input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Constant Rate Factor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Encoding mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Target bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quantizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Target video size (MB)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Average bitrate (kb/s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">-</translation>
     </message>
 </context>
 <context>
-    <name>ADM_ffDvEncoder</name>
+    <name>ADM_QthreadCount</name>
     <message>
-        <source>DV only supports 720*576*25fps and 720*480*29.97fps</source>
+        <source>Disabled</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-detect</source>
+        <translation type="unfinished">Autodetectar</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Personalizar</translation>
     </message>
 </context>
 <context>
@@ -3938,6 +3883,10 @@ Drop timing informations ?</source>
         <translation type="unfinished">0</translation>
     </message>
     <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+    <message>
         <source>Target</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4020,10 +3969,6 @@ Drop timing informations ?</source>
     <message>
         <source>OK</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
@@ -4134,23 +4079,19 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Resume</source>
-        <translation type="unfinished">Continuar</translation>
+        <translation type="obsolete">Continuar</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation type="unfinished">Cancelar</translation>
-    </message>
-    <message>
-        <source>The encoding is paused. Do you want to resume or abort?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Cancelar</translation>
     </message>
     <message>
         <source>Privileges Required</source>
-        <translation type="unfinished">Se necesitan Privilegios</translation>
+        <translation type="obsolete">Se necesitan Privilegios</translation>
     </message>
     <message>
         <source>Root privileges are required to perform this operation.</source>
-        <translation type="unfinished">Se necesitan privilegios de Superusuario para llevar a cabo esta operación.</translation>
+        <translation type="obsolete">Se necesitan privilegios de Superusuario para llevar a cabo esta operación.</translation>
     </message>
 </context>
 <context>
@@ -4158,13 +4099,6 @@ Drop timing informations ?</source>
     <message>
         <source>Incompatible settings</source>
         <translation type="obsolete">Opciones incompatibles</translation>
-    </message>
-</context>
-<context>
-    <name>DcaEnc</name>
-    <message>
-        <source>DcaEnc Configuration</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -4252,6 +4186,10 @@ Drop timing informations ?</source>
         <translation type="obsolete">Filtros de sonido</translation>
     </message>
     <message>
+        <source>Filters</source>
+        <translation type="unfinished">Filtros</translation>
+    </message>
+    <message>
         <source>Audio Tracks Configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4274,10 +4212,6 @@ Drop timing informations ?</source>
     <message>
         <source>Track 4</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filters</source>
-        <translation type="unfinished">Filtros</translation>
     </message>
 </context>
 <context>
@@ -4307,6 +4241,10 @@ Drop timing informations ?</source>
         <translation type="unfinished">0/0</translation>
     </message>
     <message>
+        <source>Close</source>
+        <translation type="unfinished">Cerrar</translation>
+    </message>
+    <message>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4319,10 +4257,6 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation type="unfinished">Cerrar</translation>
-    </message>
-    <message>
         <source>Nb Lines :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4330,28 +4264,28 @@ Drop timing informations ?</source>
 <context>
     <name>DialogProcessing</name>
     <message>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation type="unfinished">Cancelar</translation>
-    </message>
-    <message>
-        <source>TimeLeft</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>00:00:00</source>
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <source>ProcessImages</source>
+        <source>0</source>
+        <translation type="unfinished">0</translation>
+    </message>
+    <message>
+        <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>0</source>
-        <translation type="unfinished">0</translation>
+        <source>TimeLeft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ProcessImages</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Speed</source>
@@ -4422,7 +4356,7 @@ Drop timing informations ?</source>
     <name>GUIPlayback</name>
     <message>
         <source>Trouble initializing audio device</source>
-        <translation type="unfinished">Problema al inicializar el dispositivo de sonido</translation>
+        <translation type="obsolete">Problema al inicializar el dispositivo de sonido</translation>
     </message>
 </context>
 <context>
@@ -4617,11 +4551,11 @@ Drop timing informations ?</source>
     <name>MP4Header</name>
     <message>
         <source>Problem reading SVQ3 headers</source>
-        <translation type="unfinished">Hubo un problema leyendo cabeceras SVQ3</translation>
+        <translation type="obsolete">Hubo un problema leyendo cabeceras SVQ3</translation>
     </message>
     <message>
         <source>No stts table</source>
-        <translation type="unfinished">Sin tabla stts</translation>
+        <translation type="obsolete">Sin tabla stts</translation>
     </message>
 </context>
 <context>
@@ -4755,7 +4689,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Codec Options</source>
+        <source>Codec O&amp;ptions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4791,11 +4725,75 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Navigation</source>
+        <source>&amp;Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play [SPACE]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop [SPACE]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to previous frame [LEFT]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to next frame [RIGHT]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to previous keyframe [DOWN]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to next keyframe [UP]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set start marker [CTRL+PAGEUP]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set end marker [CTRL+PAGEDOWN]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search previous black frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search next black frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to first frame [HOME]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Go to last frame [END]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backward one minute [CTRL+DOWN]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forward one minute [CTRL+UP]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Forward one minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4807,19 +4805,39 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Selection</source>
+        <source>Se&amp;lection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Volume</source>
+        <source>Go to marker A [PAGE UP]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Audio Metre</source>
+        <source>Go to Marker B [PAGE DOWN]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display output video on playback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play filtered</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Vol&amp;ume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio &amp;Metre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Open...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4879,10 +4897,6 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Navigation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Ctrl+Alt+N</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4920,18 +4934,6 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Si&amp;de</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Display processed video on playback</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Play filtered</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5187,11 +5189,11 @@ Drop timing informations ?</source>
     <name>OpenDMLHeader</name>
     <message>
         <source>Malformed header</source>
-        <translation type="unfinished">Cabecera deformada</translation>
+        <translation type="obsolete">Cabecera deformada</translation>
     </message>
     <message>
         <source>Unpacking bitstream</source>
-        <translation type="unfinished">Desempaquetando flujo de bits</translation>
+        <translation type="obsolete">Desempaquetando flujo de bits</translation>
     </message>
     <message>
         <source>Indexing</source>
@@ -5203,10 +5205,6 @@ Drop timing informations ?</source>
     <message>
         <source>Alert</source>
         <translation type="obsolete">Alerta</translation>
-    </message>
-    <message>
-        <source>Question</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5232,124 +5230,124 @@ Drop timing informations ?</source>
     <name>Telecide</name>
     <message>
         <source>No strategy</source>
-        <translation type="unfinished">Sin estrategia</translation>
+        <translation type="obsolete">Sin estrategia</translation>
     </message>
     <message>
         <source>3:2 pulldown</source>
-        <translation type="unfinished">3:2</translation>
+        <translation type="obsolete">3:2</translation>
     </message>
     <message>
         <source>PAL/SECAM</source>
-        <translation type="unfinished">PAL/SECAM</translation>
+        <translation type="obsolete">PAL/SECAM</translation>
     </message>
     <message>
         <source>NTSC converted from PAL</source>
-        <translation type="unfinished">NTSC convertido de PAL</translation>
+        <translation type="obsolete">NTSC convertido de PAL</translation>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished">Superior</translation>
+        <translation type="obsolete">Superior</translation>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished">Inferior</translation>
+        <translation type="obsolete">Inferior</translation>
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished">Nunca</translation>
+        <translation type="obsolete">Nunca</translation>
     </message>
     <message>
         <source>If still combed</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Always</source>
-        <translation type="unfinished">Reproducir</translation>
+        <translation type="obsolete">Reproducir</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">Ninguno</translation>
+        <translation type="obsolete">Ninguno</translation>
     </message>
     <message>
         <source>None but compute</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Postproc on best match</source>
-        <translation type="unfinished">Postproc on best match</translation>
+        <translation type="obsolete">Postproc on best match</translation>
     </message>
     <message>
         <source>Postproc and show zones (debug)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Process image (not fields)</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Process image (not fields), debug</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Strategy:</source>
-        <translation type="unfinished">Estrategia:</translation>
+        <translation type="obsolete">Estrategia:</translation>
     </message>
     <message>
         <source>_Field order:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Postprocessing:</source>
-        <translation type="unfinished">_Post-procesando:</translation>
+        <translation type="obsolete">_Post-procesando:</translation>
     </message>
     <message>
         <source>_Try backward:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Direct threshold:</source>
-        <translation type="unfinished">Umbral:</translation>
+        <translation type="obsolete">Umbral:</translation>
     </message>
     <message>
         <source>_Backward threshold:</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>_Noise threshold:</source>
-        <translation type="unfinished">Umbral:</translation>
+        <translation type="obsolete">Umbral:</translation>
     </message>
     <message>
         <source>Postp_rocessing threshold:</source>
-        <translation type="unfinished">_Post-procesando:</translation>
+        <translation type="obsolete">_Post-procesando:</translation>
     </message>
     <message>
         <source>_Use chroma to decide</source>
-        <translation type="unfinished">Utilizar también croma para detectar cambios de escena</translation>
+        <translation type="obsolete">Utilizar también croma para detectar cambios de escena</translation>
     </message>
     <message>
         <source>Sho_w info</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Debu_g</source>
-        <translation type="unfinished">Depuración</translation>
+        <translation type="obsolete">Depuración</translation>
     </message>
     <message>
         <source>Bl_end</source>
-        <translation type="unfinished">Banda</translation>
+        <translation type="obsolete">Banda</translation>
     </message>
     <message>
         <source>Decomb Telecide</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
 </context>
@@ -5359,18 +5357,27 @@ Drop timing informations ?</source>
         <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  version 2 as published by the Free Software Foundation&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>Ui_vobsubWindow</name>
     <message>
-        <source>Select Idx File</source>
+        <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>Webmmuxer</name>
+    <name>VapourSynthProxy</name>
     <message>
-        <source>Saving Webm</source>
+        <source>VapourSynth Proxy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select VS file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5444,15 +5451,15 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>© 2001 - 2016  Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&amp;License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>© 2001 - 2016  Mean</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5485,6 +5492,10 @@ Drop timing informations ?</source>
     <message>
         <source>All parameters must be even and within range.</source>
         <translation type="unfinished">Todos los parámetros deben ser uniformes y dentro de gama.</translation>
+    </message>
+    <message>
+        <source>Add black borders around the image.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5712,7 +5723,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <source>Video</source>
-        <translation type="obsolete">Vídeo</translation>
+        <translation type="unfinished">Vídeo</translation>
     </message>
     <message>
         <source>CPU</source>
@@ -5835,10 +5846,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Opciones de versión</translation>
     </message>
     <message>
-        <source>Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Advanced</source>
         <translation type="unfinished">&amp;Avanzado</translation>
     </message>
@@ -5853,10 +5860,6 @@ Drop timing informations ?</source>
     <message>
         <source>About</source>
         <translation type="unfinished">Acerca de...</translation>
-    </message>
-    <message>
-        <source>Play/Stop</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Previous Frame</source>
@@ -5967,16 +5970,8 @@ Drop timing informations ?</source>
         <translation type="unfinished">Dolby Pro Logic II</translation>
     </message>
     <message>
-        <source>DRC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Automatic (max -3 dB)</source>
         <translation type="unfinished">Automático (max -3dB)</translation>
-    </message>
-    <message>
-        <source>Manual (dB)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>_Gain mode:</source>
@@ -6011,10 +6006,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Fuente</translation>
     </message>
     <message>
-        <source>FreeType 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Gettext</source>
         <translation type="unfinished">Gettext</translation>
     </message>
@@ -6025,10 +6016,6 @@ Drop timing informations ?</source>
     <message>
         <source>XVideo</source>
         <translation type="unfinished">XVideo</translation>
-    </message>
-    <message>
-        <source>VDPAU</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>x86</source>
@@ -6063,62 +6050,6 @@ Drop timing informations ?</source>
         <translation type="unfinished">Guardar tarea</translation>
     </message>
     <message>
-        <source>Audio Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Encoder Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Encoder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Decoder Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Video Decoder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio Device Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio Encoder Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Audio Encoders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Demuxer Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Demuxers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Muxer Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Muxers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Plugins Info</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Enable openGl support</source>
         <translation type="unfinished">Activar soporte openGL</translation>
     </message>
@@ -6133,10 +6064,6 @@ Drop timing informations ?</source>
     <message>
         <source>OpenGL (best)</source>
         <translation type="unfinished">OpenGL (mejor)</translation>
-    </message>
-    <message>
-        <source>_AudioDevice</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No audio track</source>
@@ -6176,7 +6103,7 @@ Se necesita para crear videos FLV</translation>
     </message>
     <message>
         <source>Cannot select mpeg4 sp codec.</source>
-        <translation type="unfinished">No se puede seleccionar codec MPEG-4 SP</translation>
+        <translation type="obsolete">No se puede seleccionar codec MPEG-4 SP</translation>
     </message>
     <message>
         <source>You don&apos;t have FAAC!.
@@ -6374,10 +6301,6 @@ Is it running ?</source>
         <translation type="unfinished">Guardando audio</translation>
     </message>
     <message>
-        <source>Jpeg</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Fail to save as jpeg</source>
         <translation type="unfinished">Fallo al guardar como jpeg</translation>
     </message>
@@ -6439,7 +6362,7 @@ Is it running ?</source>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="obsolete">Personalizar</translation>
+        <translation type="unfinished">Personalizar</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -6468,10 +6391,6 @@ Is it running ?</source>
     <message>
         <source>Interlacing</source>
         <translation type="obsolete">Entrelazado</translation>
-    </message>
-    <message>
-        <source>Quantization</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rate Control</source>
@@ -6590,10 +6509,6 @@ Is it running ?</source>
         <translation type="unfinished">Precisión en Búsqueda de Movimiento</translation>
     </message>
     <message>
-        <source>Off</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Mode Decision</source>
         <translation type="unfinished">Decisión de Modo</translation>
     </message>
@@ -6616,58 +6531,6 @@ Is it running ?</source>
     <message>
         <source>Max B Frames</source>
         <translation type="unfinished">Max Imágenes B</translation>
-    </message>
-    <message>
-        <source>Quarter Pixel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GMC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>BVHQ</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>4MV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Chroma ME</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>HQ AC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>More Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Min Gop Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Max Gop Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>GOP Size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Motion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>H263</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mpeg</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Quantization Matrix</source>
@@ -6727,70 +6590,146 @@ Is it running ?</source>
     </message>
     <message>
         <source>Ready</source>
-        <translation type="unfinished">Listo</translation>
+        <translation type="obsolete">Listo</translation>
     </message>
     <message>
         <source>Succeeded</source>
-        <translation type="unfinished">Hecho</translation>
+        <translation type="obsolete">Hecho</translation>
     </message>
     <message>
         <source>Deleted</source>
-        <translation type="unfinished">Borrado</translation>
+        <translation type="obsolete">Borrado</translation>
     </message>
     <message>
         <source>Running</source>
-        <translation type="unfinished">Ejecutando</translation>
+        <translation type="obsolete">Ejecutando</translation>
     </message>
     <message>
         <source>Job Name</source>
-        <translation type="unfinished">Nombre Tarea</translation>
+        <translation type="obsolete">Nombre Tarea</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="unfinished">Estado</translation>
+        <translation type="obsolete">Estado</translation>
     </message>
     <message>
         <source>Start Time</source>
-        <translation type="unfinished">Hora de Inicio</translation>
+        <translation type="obsolete">Hora de Inicio</translation>
     </message>
     <message>
         <source>End Time</source>
-        <translation type="unfinished">Hora Final</translation>
+        <translation type="obsolete">Hora Final</translation>
     </message>
     <message>
         <source>Sure!</source>
-        <translation type="unfinished">¡Seguro!</translation>
+        <translation type="obsolete">¡Seguro!</translation>
     </message>
     <message>
         <source>Delete job</source>
-        <translation type="unfinished">Borrar tarea</translation>
+        <translation type="obsolete">Borrar tarea</translation>
     </message>
     <message>
         <source>Are you sure you want to delete %s job?</source>
-        <translation type="unfinished">¿Estás seguro de borrar %s tareas?</translation>
+        <translation type="obsolete">¿Estás seguro de borrar %s tareas?</translation>
     </message>
     <message>
         <source>Delete *all* job</source>
-        <translation type="unfinished">Borrar *todas* las tareas</translation>
+        <translation type="obsolete">Borrar *todas* las tareas</translation>
     </message>
     <message>
         <source>Are you sure you want to delete ALL jobs?</source>
-        <translation type="unfinished">¿Estás seguro de querer borrar TODAS las tareas?</translation>
+        <translation type="obsolete">¿Estás seguro de querer borrar TODAS las tareas?</translation>
     </message>
     <message>
         <source>Already done</source>
-        <translation type="unfinished">Ya está hecho</translation>
+        <translation type="obsolete">Ya está hecho</translation>
     </message>
     <message>
         <source>This script has already been successfully executed.</source>
-        <translation type="unfinished">Este script se ha ejecutado satisfactoriamente</translation>
+        <translation type="obsolete">Este script se ha ejecutado satisfactoriamente</translation>
     </message>
     <message>
         <source>Gain</source>
         <translation type="unfinished">Ganancia</translation>
     </message>
     <message>
+        <source>Saving</source>
+        <translation type="unfinished">Guardando</translation>
+    </message>
+    <message>
+        <source>DRC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manual (dB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Mixer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FreeType 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Decoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoder Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio Encoders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Demuxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6810,6 +6749,10 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>_Check for new release</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>LIBVA (best)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6818,7 +6761,23 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>_AudioDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>System language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>_Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Limit Refresh Rate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh Rate Cap (ms)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6830,8 +6789,63 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>_Always ask which port to use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default port to use</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save current settings as default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Plugins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Play/Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>You cannot remove *all* the video
 </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Updating frametype</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Core has been compiled without LIBVA support, but the application has been compiled with it.
+Installation mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Core has been compiled without VDPAU support, but the application has been compiled with it.
+Installation mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Core has been compiled without XVBA support, but the application has been compiled with it.
+Installation mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot select MPEG-4 SP codec.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script/project to run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to run</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select script to debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6839,11 +6853,100 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>No engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>tinyPy script is not enabled in this build</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Select Video File to Append...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Cutting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error while cutting out.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Invalid audio index given</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot use that file as audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Audio file not found in list, even though it should be there. Create a bug report!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unable to set the audio language: No video loaded yet!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setting the language for the given track index is not possible: Video has no audio file!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Setting the language for the given track index is not possible: Invalid track index!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Oops</source>
+        <translation type="unfinished">¡Vaya!</translation>
+    </message>
+    <message>
+        <source>This function is disabled or no longer valid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trouble initializing audio device</source>
+        <translation type="unfinished">Problema al inicializar el dispositivo de sonido</translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished">No</translation>
+    </message>
+    <message>
+        <source>No file loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Job</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot reach database. Do you have Job control running ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Function not implemented
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving failed</source>
+        <translation type="unfinished">Falló el guardado</translation>
+    </message>
+    <message>
+        <source>Jpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get tinyPÿ script engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot add job %s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6852,8 +6955,303 @@ Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saving</source>
-        <translation type="unfinished">Guardando</translation>
+        <source>Cannot instantiate video chain</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot create encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot setup codec. Bitrate too low?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The video is in copy mode but the cut points are not on keyframes.
+The video will be saved but there will be corruption at cut point(s).
+Do you want to continue anyway ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot instantiate muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-detect</source>
+        <translation type="unfinished">Autodetectar</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quarter Pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BVHQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma ME</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HQ AC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Gop Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>H263</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mpeg</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantization</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%d minute(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%d hour(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Less than a minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>A few seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DTS</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>MP2</source>
+        <translation type="unfinished">MP2</translation>
+    </message>
+    <message>
+        <source>MP3</source>
+        <translation type="unfinished">MP3</translation>
+    </message>
+    <message>
+        <source>WMAPRO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WMA</source>
+        <translation type="unfinished">WMA</translation>
+    </message>
+    <message>
+        <source>LPCM</source>
+        <translation type="unfinished">LPCM</translation>
+    </message>
+    <message>
+        <source>AC3</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>OPUS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>E-AC3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ogg Vorbis</source>
+        <translation type="unfinished">Ogg Vorbis</translation>
+    </message>
+    <message>
+        <source>MP4</source>
+        <translation type="unfinished">MP4</translation>
+    </message>
+    <message>
+        <source>AAC</source>
+        <translation type="unfinished">AAC</translation>
+    </message>
+    <message>
+        <source>QDM2</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>AMR-NB</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>MSADPCM</source>
+        <translation type="unfinished">MSADPCM</translation>
+    </message>
+    <message>
+        <source>ULAW</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>IMA ADPCM</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>8-bit PCM</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Unknown codec</source>
+        <translation type="unfinished">Codec desconocido</translation>
+    </message>
+    <message>
+        <source>Building time map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Memory error</source>
+        <translation type="unfinished">Error de memoria</translation>
+    </message>
+    <message>
+        <source>Too short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The video has been saved but seems to be incomplete.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Desconocido</translation>
+    </message>
+    <message>
+        <source>can&apos;t open &quot;%s&quot;: %s
+%s
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>filesystem full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>quota exceeded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please free up some space and press RETRY to try again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>can&apos;t open &quot;%s&quot;: %u (%s)
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>can&apos;t write to file &quot;%s&quot;: %s
+%s
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>__unknown__</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished">Ignorar</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>can&apos;t write to file &quot;%s&quot;: %u (%s)
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC 4:3</source>
+        <translation type="unfinished">NTSC 4:3</translation>
+    </message>
+    <message>
+        <source>NTSC 16:9</source>
+        <translation type="unfinished">NTSC 16:9</translation>
+    </message>
+    <message>
+        <source>PAL 4:3</source>
+        <translation type="unfinished">PAL 4:3</translation>
+    </message>
+    <message>
+        <source>PAL 16:9</source>
+        <translation type="unfinished">PAL 16:9</translation>
+    </message>
+    <message>
+        <source>1:1</source>
+        <translation type="unfinished">1:1</translation>
+    </message>
+    <message>
+        <source>Codec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal error finding codec 0x%x</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Internal error opening 0x%x</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6868,25 +7266,61 @@ Warning, the settings must be close.</source>
     </message>
 </context>
 <context>
+    <name>asfdemuxer</name>
+    <message>
+        <source>File Error.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot open file
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indexing</source>
+        <translation type="unfinished">Indexando</translation>
+    </message>
+</context>
+<context>
     <name>asharp</name>
+    <message>
+        <source>Adaptative sharpener by MarcFD.</source>
+        <translation type="unfinished">Agudizador adaptativo por MarcFD</translation>
+    </message>
     <message>
         <source>Asharp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="unfinished">Agudizador adaptativo por MarcFD</translation>
+        <source>Original</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>asharpDialog</name>
     <message>
         <source>Strength</source>
-        <translation type="obsolete">Intensidad: </translation>
+        <translation type="unfinished">Intensidad: </translation>
     </message>
     <message>
         <source>Threshold</source>
-        <translation type="obsolete">Umbral:</translation>
+        <translation type="unfinished">Umbral:</translation>
+    </message>
+    <message>
+        <source>ASharp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Adaptative</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unknown flag</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6931,6 +7365,79 @@ Warning, the settings must be close.</source>
         <source>Hardcode ass/ssa/srt subtitles using libass.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Format ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure this is an ass file ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This is a srt file. Convert to SSA ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot load this srt file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot convert to ssa.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot save converted file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fonts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preparing the fonts can take a few minutes the first time.
+This message will not be displayed again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SSA Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot read_file for *%s*</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>avimuxer</name>
+    <message>
+        <source>Bad Idea</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Using H264/H265 in AVI is a bad idea, MKV is better for that.
+ Do you want to continue anyway ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot create AVI file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxing Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Avi Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>avsfilter</name>
@@ -6959,12 +7466,67 @@ Warning, the settings must be close.</source>
         <translation type="unfinished">Seleccione archivo avs [*.avs]</translation>
     </message>
     <message>
+        <source>AvsFilter config</source>
+        <translation type="unfinished">Configuración AVSFilter</translation>
+    </message>
+    <message>
         <source>_pipe timeout:</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>bitrate</name>
     <message>
-        <source>AvsFilter config</source>
-        <translation type="unfinished">Configuración AVSFilter</translation>
+        <source>Constant Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Quantiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Same Quantiser as Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Rate Factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Two Pass - Video Size</source>
+        <translation type="unfinished">Dos pasadas - Tamaño de vídeo</translation>
+    </message>
+    <message>
+        <source>Two Pass - Average Bitrate</source>
+        <translation type="unfinished">Dos pasadas - Bitrate medio</translation>
+    </message>
+    <message>
+        <source>Encoding mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bitrate</source>
+        <translation type="unfinished">Bitrate</translation>
+    </message>
+    <message>
+        <source>Target bitrate (kb/s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target video size (MB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average bitrate (kb/s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation type="unfinished">-</translation>
     </message>
 </context>
 <context>
@@ -6976,6 +7538,14 @@ Warning, the settings must be close.</source>
     <message>
         <source>Replace a section by black.</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished">_Comienzo (ms)</translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished">_Final (ms)</translation>
     </message>
     <message>
         <source>Replace by Black</source>
@@ -7012,6 +7582,10 @@ Warning, the settings must be close.</source>
         <source>All parameters must be even and within range.</source>
         <translation type="unfinished">Todos los parámetros deben ser uniformes y dentro de gama.</translation>
     </message>
+    <message>
+        <source>Remove noisy edge by turning them to black.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>blackenBorders</name>
@@ -7045,6 +7619,21 @@ Warning, the settings must be close.</source>
     </message>
 </context>
 <context>
+    <name>blackframes</name>
+    <message>
+        <source>BlackFrame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This function is unsupported at the moment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Searching black frame..</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>changeFps</name>
     <message>
         <source>Custom</source>
@@ -7061,26 +7650,6 @@ Warning, the settings must be close.</source>
     <message>
         <source>Resample fps</source>
         <translation type="obsolete">Cambiar fps</translation>
-    </message>
-    <message>
-        <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>23.976 (Film)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>29.97 (NTSC)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>59.93  (NTSC)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Source Fps:</source>
@@ -7106,9 +7675,26 @@ Warning, the settings must be close.</source>
         <source>Invalid fps</source>
         <translation type="unfinished">Fps incorrecto</translation>
     </message>
-</context>
-<context>
-    <name>changefps</name>
+    <message>
+        <source>25  (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>23.976 (Film)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>29.97 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>50 (Pal)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>59.93  (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Change FPS</source>
         <translation type="unfinished">Cambiar FPS</translation>
@@ -7116,6 +7702,21 @@ Warning, the settings must be close.</source>
     <message>
         <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
         <translation type="unfinished">Acelerar/enlentecer video al alterar los fps; este filtro cambia la duración del video.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+</context>
+<context>
+    <name>changefps</name>
+    <message>
+        <source>Change FPS</source>
+        <translation type="obsolete">Cambiar FPS</translation>
+    </message>
+    <message>
+        <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
+        <translation type="obsolete">Acelerar/enlentecer video al alterar los fps; este filtro cambia la duración del video.</translation>
     </message>
 </context>
 <context>
@@ -7133,7 +7734,15 @@ Warning, the settings must be close.</source>
     <name>chromashiftDialog</name>
     <message>
         <source>ChromaShift</source>
-        <translation type="obsolete">CromaShift</translation>
+        <translation type="unfinished">CromaShift</translation>
+    </message>
+    <message>
+        <source>V Shift</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>U Shift</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7161,14 +7770,6 @@ Warning, the settings must be close.</source>
     <message>
         <source>None</source>
         <translation type="unfinished">Ninguno</translation>
-    </message>
-    <message>
-        <source>PC-&gt;TV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TV-&gt;PC</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Levels:</source>
@@ -7219,6 +7820,14 @@ Warning, the settings must be close.</source>
         <translation type="unfinished">Banderas</translation>
     </message>
     <message>
+        <source>PC-&gt;TV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TV-&gt;PC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Y</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7238,26 +7847,6 @@ Warning, the settings must be close.</source>
 <context>
     <name>contrast</name>
     <message>
-        <source>U :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>V :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>L :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Offset :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Coef :</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Adjust contrast, brightness and colors.</source>
         <translation type="unfinished">Ajustar contraste, brillo y colores.</translation>
     </message>
@@ -7270,15 +7859,23 @@ Warning, the settings must be close.</source>
     <name>contrastDialog</name>
     <message>
         <source>Contrast</source>
-        <translation type="obsolete">Contraste</translation>
+        <translation type="unfinished">Contraste</translation>
     </message>
     <message>
         <source>Luma</source>
-        <translation type="obsolete">Luma</translation>
+        <translation type="unfinished">Luma</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="obsolete">Brillo</translation>
+        <translation type="unfinished">Brillo</translation>
+    </message>
+    <message>
+        <source>ChromaU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ChromaV</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7344,11 +7941,31 @@ Do you want to load it  ?
     <name>cropDialog</name>
     <message>
         <source>Crop</source>
-        <translation type="obsolete">Cortar</translation>
+        <translation type="unfinished">Cortar</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="obsolete">Restablecer</translation>
+        <translation type="unfinished">Restablecer</translation>
+    </message>
+    <message>
+        <source>Right:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Left:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Crop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7357,13 +7974,13 @@ Do you want to load it  ?
         <source>_Bitrate:</source>
         <translation type="unfinished">_Bitrate:</translation>
     </message>
+    <message>
+        <source>DcaEnc Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>decimate</name>
-    <message>
-        <source>Decomb decimate</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Donald Graft decimate. Remove duplicate after telecide.</source>
         <translation type="unfinished">Reducción Donald Graft. Elimiar duplicados después de telecide.</translation>
@@ -7422,6 +8039,10 @@ Do you want to load it  ?
             </translation>
     </message>
     <message>
+        <source>Decomb decimate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Discard longer dupe (animés)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7450,14 +8071,6 @@ Do you want to load it  ?
 </context>
 <context>
     <name>dgbob</name>
-    <message>
-        <source>dgbob</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Donald Graft Bob.</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Top</source>
         <translation type="unfinished">Superior</translation>
@@ -7503,6 +8116,14 @@ Do you want to load it  ?
         <translation type="unfinished">
             </translation>
     </message>
+    <message>
+        <source>dgbob</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft Bob.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>dmxHeader</name>
@@ -7517,6 +8138,24 @@ Do you want to load it  ?
     <message>
         <source>MPEG renumbering error</source>
         <translation type="obsolete">Error renumerando MPEG</translation>
+    </message>
+</context>
+<context>
+    <name>dummy</name>
+    <message>
+        <source>Dummy</source>
+        <translation type="unfinished">Vacio</translation>
+    </message>
+    <message>
+        <source>Null filter, it does nothing at all.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>dv</name>
+    <message>
+        <source>DV only supports 720*576*25fps and 720*480*29.97fps</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7590,10 +8229,18 @@ Do you want to load it  ?
         <translation type="unfinished">Códec de Video:</translation>
     </message>
     <message>
+        <source>Main</source>
+        <translation type="unfinished">Principal</translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished">Avanzado</translation>
+    </message>
+    <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7607,28 +8254,7 @@ p, li { white-space: pre-wrap; }
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7642,14 +8268,14 @@ p, li { white-space: pre-wrap; }
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7663,16 +8289,29 @@ p, li { white-space: pre-wrap; }
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Main</source>
-        <translation type="unfinished">Principal</translation>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced</source>
-        <translation type="unfinished">Avanzado</translation>
+        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7725,22 +8364,130 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Contrast</source>
-        <translation type="obsolete">Contraste</translation>
+        <translation type="unfinished">Contraste</translation>
     </message>
     <message>
         <source>Brightness</source>
-        <translation type="obsolete">Brillo</translation>
+        <translation type="unfinished">Brillo</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Gamma&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Red</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Green</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>faac</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Bitrate:</translation>
+    </message>
+    <message>
+        <source>Faac Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>fade</name>
     <message>
         <source>Fade</source>
-        <translation type="unfinished">Desvanecer</translation>
+        <translation type="obsolete">Desvanecer</translation>
     </message>
     <message>
         <source>Fade in/out.</source>
         <translation type="obsolete">Desvanecimiento ent/sal.</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation type="obsolete">Salida</translation>
+    </message>
+    <message>
+        <source>Fade out</source>
+        <translation type="obsolete">Desvanecimiento ent/sal.</translation>
+    </message>
+    <message>
+        <source>In</source>
+        <translation type="obsolete">Entrada</translation>
+    </message>
+    <message>
+        <source>Fade in</source>
+        <translation type="obsolete">Desvanecimiento ent/sal.</translation>
+    </message>
+    <message>
+        <source>_Fade type:</source>
+        <translation type="obsolete">Tipo de _Desvanecimiento:</translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="obsolete">_Comienzo (ms)</translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="obsolete">_Final (ms)</translation>
+    </message>
+    <message>
+        <source>Fade to black</source>
+        <translation type="obsolete">Fundido a Negro</translation>
+    </message>
+</context>
+<context>
+    <name>fade to</name>
+    <message>
+        <source>Fade</source>
+        <translation type="obsolete">Desvanecer</translation>
+    </message>
+</context>
+<context>
+    <name>fadeTo</name>
+    <message>
+        <source>Fade</source>
+        <translation type="unfinished">Desvanecer</translation>
+    </message>
+    <message>
+        <source>Fade.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Start time (ms):</source>
+        <translation type="unfinished">_Comienzo (ms)</translation>
+    </message>
+    <message>
+        <source>_End time (ms):</source>
+        <translation type="unfinished">_Final (ms)</translation>
+    </message>
+</context>
+<context>
+    <name>fadeToBlack</name>
+    <message>
+        <source>Fade to black</source>
+        <translation type="unfinished">Fundido a Negro</translation>
+    </message>
+    <message>
+        <source>Fade to black in/out.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Out</source>
@@ -7752,7 +8499,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>In</source>
-        <translation type="unfinished">Entrada</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fade in</source>
@@ -7760,7 +8507,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>_Fade type:</source>
-        <translation type="unfinished">Tipo de _Desvanecimiento:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>_Start time (ms):</source>
@@ -7770,32 +8517,9 @@ p, li { white-space: pre-wrap; }
         <source>_End time (ms):</source>
         <translation type="unfinished">_Final (ms)</translation>
     </message>
-    <message>
-        <source>Fade to black</source>
-        <translation type="unfinished">Fundido a Negro</translation>
-    </message>
-    <message>
-        <source>Fade.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Fade to black in/out.</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>fade to</name>
-    <message>
-        <source>Fade</source>
-        <translation type="unfinished">Desvanecer</translation>
-    </message>
 </context>
 <context>
     <name>ffmpeg2</name>
-    <message>
-        <source>Normal (4:3)</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Wide (16:9)</source>
         <translation type="unfinished">Ancho (16:9)</translation>
@@ -7803,14 +8527,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Default</source>
         <translation type="unfinished">Por defecto</translation>
-    </message>
-    <message>
-        <source>Tmpgenc</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Animes</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>KVCD</source>
@@ -7839,10 +8555,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Three threads</source>
         <translation type="unfinished">Tres hilos</translation>
-    </message>
-    <message>
-        <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Progressive</source>
@@ -7901,10 +8613,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Ratio de aspecto:</translation>
     </message>
     <message>
-        <source>Matrices:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Filesize tolerance (kb):</source>
         <translation type="unfinished">Tolerancia _Tamaño (kb):</translation>
     </message>
@@ -7952,6 +8660,26 @@ p, li { white-space: pre-wrap; }
         <source>libavcodec MPEG-2 configuration</source>
         <translation type="unfinished">Configuración libavcodec MPEG-2</translation>
     </message>
+    <message>
+        <source>Normal (4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tmpgenc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ffmpeg4</name>
@@ -7974,10 +8702,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>EPZS</source>
         <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>H.263</source>
@@ -8012,14 +8736,6 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Tres hilos</translation>
     </message>
     <message>
-        <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Matrices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Threading</source>
         <translation type="unfinished">Procesos</translation>
     </message>
@@ -8036,20 +8752,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">_Diferencia máx. cuantizador</translation>
     </message>
     <message>
-        <source>4_MV</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>_Trellis quantization</source>
         <translation type="unfinished">Cuantización _Trellis</translation>
-    </message>
-    <message>
-        <source>_Quarter pixel</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>_GMC</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>_Number of B frames:</source>
@@ -8103,6 +8807,30 @@ p, li { white-space: pre-wrap; }
         <source>libavcodec MPEG-4 configuration</source>
         <translation type="unfinished">Configuración libavcodec MPEG-4</translation>
     </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Matrices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4_MV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Quarter pixel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_GMC</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ffmsmpeg4</name>
@@ -8125,10 +8853,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>EPZS</source>
         <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>H.263</source>
@@ -8198,9 +8922,17 @@ p, li { white-space: pre-wrap; }
         <source>libavcodec MPEG-4 configuration</source>
         <translation type="unfinished">Configuración libavcodec MPEG-4</translation>
     </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ffnvenc</name>
+    <message>
+        <source>libavcodec MPEG-4 configuration</source>
+        <translation type="unfinished">Configuración libavcodec MPEG-4</translation>
+    </message>
     <message>
         <source>Low Quality</source>
         <translation type="unfinished"></translation>
@@ -8237,9 +8969,137 @@ p, li { white-space: pre-wrap; }
         <source>Max Bitrate (kbps):</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>ffpsmuxer</name>
     <message>
-        <source>libavcodec MPEG-4 configuration</source>
-        <translation type="unfinished">Configuración libavcodec MPEG-4</translation>
+        <source>[Mismatch]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving mpeg PS (ff)</source>
+        <translation type="unfinished">Guardar mpeg PS (ff)</translation>
+    </message>
+    <message>
+        <source> video not compatible
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Bad width/height for VCD
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Bad width/height for SVCD
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Bad width/height for DVD
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> VCD : only MP2 audio accepted
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> VCD : only 44.1 khz audio accepted
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> DVD : only 48 khz audio accepted
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>[ffPS] DVD : only MP2/AC3/DTS audio accepted
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Free</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Muxing Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allow non compliant stream</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total Muxrate (kbits)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Muxrate (kbits)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBV size (kBytes)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced</source>
+        <translation type="unfinished">Avanzado</translation>
+    </message>
+    <message>
+        <source>Mpeg PS Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>fftsmuxer</name>
+    <message>
+        <source>Saving mpeg TS (ff)</source>
+        <translation type="unfinished">Guardar mpeg TS (ff)</translation>
+    </message>
+    <message>
+        <source>VBR muxing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mux rate (MBits/s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TS Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>filesel</name>
+    <message>
+        <source>File error</source>
+        <translation type="unfinished">Error de archivo</translation>
+    </message>
+    <message>
+        <source>Cannot open &quot;%s&quot;.</source>
+        <translation type="unfinished">No se puede abrir &quot;%s&quot;.</translation>
+    </message>
+    <message>
+        <source>%s already exists.
+
+Do you want to replace it?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>It is possible that you are trying to overwrite an input file!</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Cannot write the file</source>
+        <translation type="unfinished">No se puede escribir el archivo</translation>
+    </message>
+    <message>
+        <source>No write access to &quot;%s&quot;.</source>
+        <translation type="unfinished">No hay acceso de lectura a &quot;%s&quot;.</translation>
     </message>
 </context>
 <context>
@@ -8259,14 +9119,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Save set of filters</source>
         <translation type="obsolete">Guardar conjunto de filtros</translation>
-    </message>
-    <message>
-        <source>Load video filters..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Save video filters..</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8310,10 +9162,6 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>EPZS</source>
         <translation type="unfinished">EPZS</translation>
-    </message>
-    <message>
-        <source>X1</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>H.263</source>
@@ -8383,6 +9231,41 @@ p, li { white-space: pre-wrap; }
         <source>libavcodec FLV1 configuration</source>
         <translation type="unfinished">Configuración libavcodec FLV1</translation>
     </message>
+    <message>
+        <source>X1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>flvdemuxer</name>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This FLV file says it has no video.
+I will assume it has and try to continue</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>flvmuxer</name>
+    <message>
+        <source>Unsupported</source>
+        <translation type="unfinished">No soportado</translation>
+    </message>
+    <message>
+        <source>Only FLV1 &amp; VP6 supported for video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only AAC &amp; mpegaudio supported for audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only 44.1, 22.050 and 11.025 kHz supported</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>gaussian</name>
@@ -8396,38 +9279,232 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>glBenchmark</name>
+    <message>
+        <source>OpenGl ReadBack benchmark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check how fast readback is.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glFragment</name>
+    <message>
+        <source>OpenGl Fragment Shader Sample</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run a fragment shader.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glFragment2</name>
+    <message>
+        <source>OpenGl Fragment Shader Sample2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run a fragment shader.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glResize</name>
+    <message>
+        <source>OpenGl Resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resize using openGl.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glResize</source>
+        <translation type="unfinished">glResize</translation>
+    </message>
+</context>
+<context>
+    <name>glRotate</name>
+    <message>
+        <source>OpenGl Rotate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rotate image by a small amount.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Angle (°):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>glRotate</source>
+        <translation type="unfinished">Rotar GL</translation>
+    </message>
+</context>
+<context>
+    <name>glSample</name>
+    <message>
+        <source>OpenGl Fragment Shader Sample</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run a fragment shader.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glShader</name>
+    <message>
+        <source>Shader Loader</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run an external shader program.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ShaderFile to load</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ShaderLoader</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glSmooth</name>
+    <message>
+        <source>OpenGl Smooth</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Smooth image while preserving edge.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glVdpaufilter</name>
+    <message>
+        <source>vdpauDeintGl</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU deinterlacer+resize, openGl version (faster).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="unfinished">Mantener Campo Superior</translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="unfinished">Mantener Campo Inferior</translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="unfinished">Doblar framerate</translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="unfinished">_Redimensionar</translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="unfinished">_Modo Desentrelazado</translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished">vdpau</translation>
+    </message>
+</context>
+<context>
+    <name>glVertex</name>
+    <message>
+        <source>OpenGl Vertex Shader</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Run a simple vertex shader.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>glWave</name>
+    <message>
+        <source>OpenGl wave </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Simple wave filter.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>glYadif</name>
     <message>
         <source>Temporal &amp; spatial check</source>
-        <translation type="obsolete">Comprobación espacio &amp; temporal</translation>
+        <translation type="unfinished">Comprobación espacio &amp; temporal</translation>
     </message>
     <message>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="obsolete">Comprobación Bob, temporal &amp; espacial</translation>
+        <translation type="unfinished">Comprobación Bob, temporal &amp; espacial</translation>
     </message>
     <message>
         <source>Skip spatial temporal check</source>
-        <translation type="obsolete">Saltar comprobación espacial temporal</translation>
+        <translation type="unfinished">Saltar comprobación espacial temporal</translation>
     </message>
     <message>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="obsolete">Saltar comprobación espacial, temporal y Bob</translation>
+        <translation type="unfinished">Saltar comprobación espacial, temporal y Bob</translation>
     </message>
     <message>
         <source>Bottom field first</source>
-        <translation type="obsolete">Campo inf. primero</translation>
+        <translation type="unfinished">Campo inf. primero</translation>
     </message>
     <message>
         <source>Top field first</source>
-        <translation type="obsolete">Campo superior primero</translation>
+        <translation type="unfinished">Campo superior primero</translation>
     </message>
     <message>
         <source>_Mode:</source>
-        <translation type="obsolete">_Modo:</translation>
+        <translation type="unfinished">_Modo:</translation>
     </message>
     <message>
         <source>_Order:</source>
-        <translation type="obsolete">_Orden:</translation>
+        <translation type="unfinished">_Orden:</translation>
+    </message>
+    <message>
+        <source>Yadif (openGl)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yet another deinterlacer, using shaders.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished">
+            </translation>
     </message>
 </context>
 <context>
@@ -8493,16 +9570,32 @@ p, li { white-space: pre-wrap; }
         <source>Adjust hue and saturation.</source>
         <translation type="unfinished">Ajustar matiz y saturación.</translation>
     </message>
+    <message>
+        <source>Original</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Processed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>hueDialog</name>
     <message>
         <source>Hue</source>
-        <translation type="obsolete">Matiz</translation>
+        <translation type="unfinished">Matiz</translation>
+    </message>
+    <message>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>huff</name>
+    <message>
+        <source>HuffYUV Configuration</source>
+        <translation type="unfinished">Configuración HuffYUV</translation>
+    </message>
     <message>
         <source>HUFFYUV</source>
         <translation type="unfinished"></translation>
@@ -8515,9 +9608,16 @@ p, li { white-space: pre-wrap; }
         <source>Type:</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>hzstackfield</name>
     <message>
-        <source>HuffYUV Configuration</source>
-        <translation type="unfinished">Configuración HuffYUV</translation>
+        <source>Horizontal Stack Fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Put fields side by side.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8537,6 +9637,45 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Time Left :%02d:%02d:%02d</source>
         <translation type="unfinished">Tiempo restante :%02d:%02d:%02d</translation>
+    </message>
+</context>
+<context>
+    <name>ivtcRemover</name>
+    <message>
+        <source>Remove IVTC dupe.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove the duplicate frames present after ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Noise:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Show:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full</source>
+        <translation type="unfinished">Completo</translation>
+    </message>
+    <message>
+        <source>Fast</source>
+        <translation type="unfinished">Rápido</translation>
+    </message>
+    <message>
+        <source>VeryFast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Frame rate change:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DupeRemover</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8643,6 +9782,14 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>jpeg</name>
     <message>
+        <source>_Quantizer:</source>
+        <translation type="unfinished">_Cuantizador:</translation>
+    </message>
+    <message>
+        <source>Mjpeg Configuration</source>
+        <translation type="unfinished">Configuración Mjpeg</translation>
+    </message>
+    <message>
         <source>YUV422</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8651,16 +9798,8 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>_Quantizer:</source>
-        <translation type="unfinished">_Cuantizador:</translation>
-    </message>
-    <message>
         <source>_ColorSpace:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mjpeg Configuration</source>
-        <translation type="unfinished">Configuración Mjpeg</translation>
     </message>
 </context>
 <context>
@@ -8720,10 +9859,6 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>kerneldeint</name>
     <message>
-        <source>Kernel Deint.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Port of Donald Graft Kernel Deinterlacer.</source>
         <translation type="unfinished">Núcleo de Desentrelazado portado de Donald Graft.</translation>
     </message>
@@ -8777,6 +9912,10 @@ p, li { white-space: pre-wrap; }
         <source>KernelDeint</source>
         <translation type="unfinished">
             </translation>
+    </message>
+    <message>
+        <source>Kernel Deint.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8899,6 +10038,28 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>lavcodec</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Bitrate:</translation>
+    </message>
+</context>
+<context>
+    <name>lavdecoder</name>
+    <message>
+        <source>_Swap U and V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show motion _vectors</source>
+        <translation type="unfinished">Mostrar vectores de movimiento</translation>
+    </message>
+    <message>
+        <source>Decoder Options</source>
+        <translation type="unfinished">Opciones del decodificador</translation>
+    </message>
+</context>
+<context>
     <name>lavdeint</name>
     <message>
         <source>Libavdec Deinterlacers</source>
@@ -8960,28 +10121,28 @@ p, li { white-space: pre-wrap; }
     <name>logo</name>
     <message>
         <source>_Logo (jpg file):</source>
-        <translation type="unfinished">
+        <translation type="obsolete">
             </translation>
     </message>
     <message>
         <source>Select JPEG file</source>
-        <translation type="unfinished">Seleccionar archivo JPEG</translation>
+        <translation type="obsolete">Seleccionar archivo JPEG</translation>
     </message>
     <message>
         <source>_X Position:</source>
-        <translation type="unfinished">Posición _X:</translation>
+        <translation type="obsolete">Posición _X:</translation>
     </message>
     <message>
         <source>_Y Position:</source>
-        <translation type="unfinished">Posición _Y:</translation>
+        <translation type="obsolete">Posición _Y:</translation>
     </message>
     <message>
         <source>_Alpha:</source>
-        <translation type="unfinished">_Alpha:</translation>
+        <translation type="obsolete">_Alpha:</translation>
     </message>
     <message>
         <source>Logo</source>
-        <translation type="unfinished">Logo</translation>
+        <translation type="obsolete">Logo</translation>
     </message>
     <message>
         <source>Add logo</source>
@@ -8990,6 +10151,45 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Put a logo on top of video, with alpha blending.</source>
         <translation type="unfinished">Poner un logo sobre el video, con mezclado alfa.</translation>
+    </message>
+    <message>
+        <source>Select Logo Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>logoDialog</name>
+    <message>
+        <source>Logo</source>
+        <translation type="unfinished">Logo</translation>
+    </message>
+    <message>
+        <source>Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alpha will be ignored if the image has alpha channel (png in RGB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alpha</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>You can click in the image to set the logo approximatively</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9078,16 +10278,16 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">&lt;big&gt;&lt;b&gt;Filtros Disponibles&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
-        <source>OpenGl</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>&amp;Preview</source>
         <translation type="unfinished">&amp;Vista anticipada</translation>
     </message>
     <message>
         <source>&amp;Close</source>
         <translation type="unfinished">&amp;Cerrar</translation>
+    </message>
+    <message>
+        <source>OpenGl</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9106,11 +10306,18 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>mcdeint</name>
+    <name>matroskademuxer</name>
     <message>
-        <source>MCDeint</source>
+        <source>Matroska Images</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Matroska clusters</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mcdeint</name>
     <message>
         <source>Motion compensation deinterlacer. Ported from MPlayer.</source>
         <translation type="unfinished">Desentrelazado compensación movimiento. Portado desde MPlayer</translation>
@@ -9147,23 +10354,27 @@ p, li { white-space: pre-wrap; }
         <source>mcDeinterlace</source>
         <translation type="unfinished">mcDeinterlace</translation>
     </message>
+    <message>
+        <source>MCDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>meadian</name>
     <message>
         <source>3x3 convolution filter :median.</source>
-        <translation type="unfinished">3x3 filtro de convolucion: Medio.</translation>
+        <translation type="obsolete">3x3 filtro de convolucion: Medio.</translation>
     </message>
 </context>
 <context>
     <name>mean</name>
     <message>
-        <source>Mean convolution.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>3x3 convolution filter :mean.</source>
         <translation type="unfinished">3x3 filtro de convolucion: Medio.</translation>
+    </message>
+    <message>
+        <source>Mean convolution.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9172,6 +10383,21 @@ p, li { white-space: pre-wrap; }
         <source>Median convolution.</source>
         <translation type="unfinished">Circunvolución media.</translation>
     </message>
+    <message>
+        <source>3x3 convolution filter :median.</source>
+        <translation type="unfinished">3x3 filtro de convolucion: Medio.</translation>
+    </message>
+</context>
+<context>
+    <name>mergeFields</name>
+    <message>
+        <source>Merge Fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Merge two pictures as if they were two fields.</source>
+        <translation type="unfinished">Unir dos películas como si fueran dos campos.</translation>
+    </message>
 </context>
 <context>
     <name>mkvmuxer</name>
@@ -9179,13 +10405,21 @@ p, li { white-space: pre-wrap; }
         <source>Saving Mkv</source>
         <translation type="unfinished">Guardar MKV</translation>
     </message>
+    <message>
+        <source>Force display width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MKV Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>mp3d</name>
-    <message>
-        <source>Mplayer Denoise 3D HQ</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
         <translation type="unfinished">Reducir ruído, suavizar imagen, aumentar compresibilidad. Versión Alta Calidad.</translation>
@@ -9206,13 +10440,13 @@ p, li { white-space: pre-wrap; }
         <source>MPlayer denoise3d</source>
         <translation type="unfinished">MPlayer Denoise3D</translation>
     </message>
+    <message>
+        <source>Mplayer Denoise 3D HQ</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>mp3dlow</name>
-    <message>
-        <source>Mplayer Denoise 3D</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>Reduce noise, smooth image, increase compressibility.</source>
         <translation type="unfinished">Reducir ruido, suavizar imagen, incrementar compresibilidad.</translation>
@@ -9230,7 +10464,144 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Intensidad filtrado _temporal:</translation>
     </message>
     <message>
+        <source>Mplayer Denoise 3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>MPlayer denoise3d</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mp4demuxer</name>
+    <message>
+        <source>Problem reading SVQ3 headers</source>
+        <translation type="unfinished">Hubo un problema leyendo cabeceras SVQ3</translation>
+    </message>
+    <message>
+        <source>No stts table</source>
+        <translation type="unfinished">Sin tabla stts</translation>
+    </message>
+</context>
+<context>
+    <name>mp4muxer</name>
+    <message>
+        <source>Unsupported</source>
+        <translation type="unfinished">No soportado</translation>
+    </message>
+    <message>
+        <source>Only MP4Video, H264, and H265 supported for video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only AAC, AC3, and mpegaudio supported for audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving mp4</source>
+        <translation type="unfinished">Guardar MP4</translation>
+    </message>
+    <message>
+        <source>Saving PSP</source>
+        <translation type="unfinished">Guardar PSP</translation>
+    </message>
+    <message>
+        <source>Muxing Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use alternate MP3 tag</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MP4 Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mp4v2muxer</name>
+    <message>
+        <source>Audio</source>
+        <translation type="unfinished">Audio</translation>
+    </message>
+    <message>
+        <source>Audio format not supported, only AAC/MP3/AC3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving</source>
+        <translation type="unfinished">Guardando</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished">Vídeo</translation>
+    </message>
+    <message>
+        <source>Video does not have enough timing information. Are you copying from AVI?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot rename file (optimize)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid frequency for AC3. Only 32, 44.1 &amp; 48 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid bitrate for AC3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Invalid number of channels for AC3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot get AAC Extra data
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimize for streaming (SLOW)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add ipod metadata</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MP4V2 Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>mpdelogoDialog</name>
+    <message>
+        <source>Mplayer Delogo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Border Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preview. Click in the image above to coarsly set the box coordinates</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -9269,25 +10640,44 @@ p, li { white-space: pre-wrap; }
     <name>muxerMP4</name>
     <message>
         <source>Saving mp4</source>
-        <translation type="unfinished">Guardar MP4</translation>
+        <translation type="obsolete">Guardar MP4</translation>
     </message>
     <message>
         <source>Saving PSP</source>
-        <translation type="unfinished">Guardar PSP</translation>
+        <translation type="obsolete">Guardar PSP</translation>
     </message>
 </context>
 <context>
     <name>muxerffPS</name>
     <message>
         <source>Saving mpeg PS (ff)</source>
-        <translation type="unfinished">Guardar mpeg PS (ff)</translation>
+        <translation type="obsolete">Guardar mpeg PS (ff)</translation>
     </message>
 </context>
 <context>
     <name>muxerffTS</name>
     <message>
         <source>Saving mpeg TS (ff)</source>
-        <translation type="unfinished">Guardar mpeg TS (ff)</translation>
+        <translation type="obsolete">Guardar mpeg TS (ff)</translation>
+    </message>
+</context>
+<context>
+    <name>navigate</name>
+    <message>
+        <source>Cannot go to next keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot go to previous keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Seek</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
     </message>
 </context>
 <context>
@@ -9371,15 +10761,45 @@ p, li { white-space: pre-wrap; }
     <name>openGlResize</name>
     <message>
         <source>Width :</source>
-        <translation type="unfinished">Anchura</translation>
+        <translation type="obsolete">Anchura</translation>
     </message>
     <message>
         <source>Height :</source>
-        <translation type="unfinished">Altura</translation>
+        <translation type="obsolete">Altura</translation>
     </message>
     <message>
         <source>glResize</source>
-        <translation type="unfinished">glResize</translation>
+        <translation type="obsolete">glResize</translation>
+    </message>
+</context>
+<context>
+    <name>opendmldemuxer</name>
+    <message>
+        <source>Malformed header</source>
+        <translation type="unfinished">Cabecera deformada</translation>
+    </message>
+    <message>
+        <source>Unpacking bitstream</source>
+        <translation type="unfinished">Desempaquetando flujo de bits</translation>
+    </message>
+</context>
+<context>
+    <name>partial</name>
+    <message>
+        <source>Start time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>End time (ms):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configure filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partial Filter</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9387,6 +10807,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Preview</source>
         <translation type="obsolete">Previsualizar</translation>
+    </message>
+</context>
+<context>
+    <name>printinfo</name>
+    <message>
+        <source>PrintInfo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display some informations on Screen.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9500,6 +10931,291 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>psdemuxer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>This file&apos;s index has been created with an older version of avidemux.
+Please delete the idx2 file and reopen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indexing</source>
+        <translation type="unfinished">Indexando</translation>
+    </message>
+    <message>
+        <source>There are several files with sequential file names. Should they be all loaded ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qaudiotracks</name>
+    <message>
+        <source>Select audio file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot use that file as audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Some tracks are used multiple times</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Track </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> from video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>File </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>.... Add audio track</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qencoding</name>
+    <message>
+        <source>Privileges Required</source>
+        <translation type="unfinished">Se necesitan Privilegios</translation>
+    </message>
+    <message>
+        <source>Root privileges are required to perform this operation.</source>
+        <translation type="unfinished">Se necesitan privilegios de Superusuario para llevar a cabo esta operación.</translation>
+    </message>
+    <message>
+        <source>The encoding is paused. Do you want to resume or abort?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resume</source>
+        <translation type="unfinished">Continuar</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+</context>
+<context>
+    <name>qgui2</name>
+    <message>
+        <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Recent Files</source>
+        <translation type="unfinished">Archivos Recientes</translation>
+    </message>
+    <message>
+        <source>Recent Projects</source>
+        <translation type="unfinished">Proyectos Recientes</translation>
+    </message>
+    <message>
+        <source>The application has encountered a fatal problem
+The current editing has been saved and will be reloaded at next start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%c-%s (%02d)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> (%d track(s))</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qgui2menu</name>
+    <message>
+        <source>Project Script</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Run Project...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Debug Project...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save &amp;As Project...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scripting Shell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Shell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scripting Reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Reference</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qjobs</name>
+    <message>
+        <source>Ready</source>
+        <translation type="unfinished">Listo</translation>
+    </message>
+    <message>
+        <source>Succeeded</source>
+        <translation type="unfinished">Hecho</translation>
+    </message>
+    <message>
+        <source>Failed</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Deleted</source>
+        <translation type="unfinished">Borrado</translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation type="unfinished">Ejecutando</translation>
+    </message>
+    <message>
+        <source>Job Name</source>
+        <translation type="unfinished">Nombre Tarea</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation type="unfinished">Estado</translation>
+    </message>
+    <message>
+        <source>Start Time</source>
+        <translation type="unfinished">Hora de Inicio</translation>
+    </message>
+    <message>
+        <source>End Time</source>
+        <translation type="unfinished">Hora Final</translation>
+    </message>
+    <message>
+        <source>Sure!</source>
+        <translation type="unfinished">¡Seguro!</translation>
+    </message>
+    <message>
+        <source>Delete job</source>
+        <translation type="unfinished">Borrar tarea</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete %s job?</source>
+        <translation type="unfinished">¿Estás seguro de borrar %s tareas?</translation>
+    </message>
+    <message>
+        <source>Delete *all* job</source>
+        <translation type="unfinished">Borrar *todas* las tareas</translation>
+    </message>
+    <message>
+        <source>Are you sure you want to delete ALL jobs?</source>
+        <translation type="unfinished">¿Estás seguro de querer borrar TODAS las tareas?</translation>
+    </message>
+    <message>
+        <source>Already done</source>
+        <translation type="unfinished">Ya está hecho</translation>
+    </message>
+    <message>
+        <source>This script has already been successfully executed.</source>
+        <translation type="unfinished">Este script se ha ejecutado satisfactoriamente</translation>
+    </message>
+</context>
+<context>
+    <name>qlicense</name>
+    <message>
+        <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  version 2 as published by the Free Software Foundation&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qmainfilter</name>
+    <message>
+        <source>Partial</source>
+        <translation type="unfinished">Parcial</translation>
+    </message>
+    <message>
+        <source>This filter cannot be made partial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">Añadir</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Eliminar</translation>
+    </message>
+    <message>
+        <source>Configure</source>
+        <translation type="unfinished">Configurar</translation>
+    </message>
+    <message>
+        <source>Move up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Make partial</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load video filters..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save video filters..</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qprocessing</name>
+    <message>
+        <source>Unknown</source>
+        <translation type="unfinished">Desconocido</translation>
+    </message>
+    <message>
+        <source>_Resume</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The processing is paused.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel it ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>qprops</name>
     <message>
         <source>No</source>
@@ -9508,6 +11224,14 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>Yes</source>
         <translation type="unfinished">Si</translation>
+    </message>
+    <message>
+        <source>Mono</source>
+        <translation type="unfinished">Mono</translation>
+    </message>
+    <message>
+        <source>Stereo</source>
+        <translation type="unfinished">Stereo</translation>
     </message>
     <message>
         <source>%2.3f fps</source>
@@ -9521,13 +11245,56 @@ p, li { white-space: pre-wrap; }
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
+</context>
+<context>
+    <name>qshell</name>
     <message>
-        <source>Mono</source>
-        <translation type="unfinished">Mono</translation>
+        <source>Enter your commands then press the evaluate button or CTRL+ENTER.
+</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stereo</source>
-        <translation type="unfinished">Stereo</translation>
+        <source>You can use CTRL+PageUP and CTRL+Page Down to recall previous commands
+Ready.
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qtalert</name>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished">Alerta</translation>
+    </message>
+    <message>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirmation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Question</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Question?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qtray</name>
+    <message>
+        <source>Open Avidemux</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>qvobsub</name>
+    <message>
+        <source>Select Idx File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9595,6 +11362,14 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Personalizar</translation>
     </message>
     <message>
+        <source>Resample FPS</source>
+        <translation type="unfinished">Restablecer FPS</translation>
+    </message>
+    <message>
+        <source>Change and enforce FPS. Keep duration and sync.</source>
+        <translation type="unfinished">Cambiar y forzar FPS. Mantener duración y sincronismo.</translation>
+    </message>
+    <message>
         <source>25  (PAL)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9614,66 +11389,114 @@ p, li { white-space: pre-wrap; }
         <source>59.93  (NTSC)</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Resample FPS</source>
-        <translation type="unfinished">Restablecer FPS</translation>
-    </message>
-    <message>
-        <source>Change and enforce FPS. Keep duration and sync.</source>
-        <translation type="unfinished">Cambiar y forzar FPS. Mantener duración y sincronismo.</translation>
-    </message>
 </context>
 <context>
     <name>resize</name>
     <message>
-        <source>swsResize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>swScale Resizer.</source>
         <translation type="unfinished">Cambiar tamaño por software</translation>
+    </message>
+    <message>
+        <source>Width and height cannot be odd</source>
+        <translation type="unfinished">Anchura y altura no pueden tener valor impar</translation>
+    </message>
+    <message>
+        <source>swsResize</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>resizeDialog</name>
     <message>
         <source>Resize</source>
-        <translation type="obsolete">Redimensionar</translation>
+        <translation type="unfinished">Redimensionar</translation>
     </message>
     <message>
         <source>1:1</source>
-        <translation type="obsolete">1:1</translation>
+        <translation type="unfinished">1:1</translation>
     </message>
     <message>
         <source>4:3</source>
-        <translation type="obsolete">4:3</translation>
+        <translation type="unfinished">4:3</translation>
     </message>
     <message>
         <source>16:9</source>
-        <translation type="obsolete">16:9</translation>
+        <translation type="unfinished">16:9</translation>
     </message>
     <message>
         <source>1%</source>
-        <translation type="obsolete">1%</translation>
+        <translation type="unfinished">1%</translation>
     </message>
     <message>
         <source>200%</source>
-        <translation type="obsolete">200%</translation>
+        <translation type="unfinished">200%</translation>
     </message>
     <message>
         <source>Bilinear</source>
-        <translation type="obsolete">Bilineal</translation>
+        <translation type="unfinished">Bilineal</translation>
     </message>
     <message>
         <source>Bicubic</source>
-        <translation type="obsolete">Bicúbico</translation>
+        <translation type="unfinished">Bicúbico</translation>
+    </message>
+    <message>
+        <source>Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Destination:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resize Dimensions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Round to the Nearest Multiple of 16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Percent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error X / Y:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0.00 / 0.00</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Resize Method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lanzcos3</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>resizeWindow</name>
     <message>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished">Anchura y altura no pueden tener valor impar</translation>
+        <translation type="obsolete">Anchura y altura no pueden tener valor impar</translation>
     </message>
 </context>
 <context>
@@ -9766,11 +11589,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>glRotate</source>
-        <translation type="unfinished">Rotar GL</translation>
-    </message>
-    <message>
-        <source>Angle (°):</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Rotar GL</translation>
     </message>
 </context>
 <context>
@@ -9786,6 +11605,39 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>next</source>
         <translation type="unfinished">Siguiente</translation>
+    </message>
+</context>
+<context>
+    <name>separateFields</name>
+    <message>
+        <source>Separate Fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Split each image into 2 fields.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>sharpen</name>
+    <message>
+        <source>Sharpen convolution.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3x3 convolution filter :sharpen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>stackfield</name>
+    <message>
+        <source>Stack Fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Put even lines on top, odd lines at bottom.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9831,6 +11683,169 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>telecide</name>
+    <message>
+        <source>Decomb telecide</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Donald Graft Telecide. Replace ivtc pattern by progressive frames. Video stays at 30 fps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No strategy</source>
+        <translation type="unfinished">Sin estrategia</translation>
+    </message>
+    <message>
+        <source>3:2 pulldown</source>
+        <translation type="unfinished">3:2</translation>
+    </message>
+    <message>
+        <source>PAL/SECAM</source>
+        <translation type="unfinished">PAL/SECAM</translation>
+    </message>
+    <message>
+        <source>NTSC converted from PAL</source>
+        <translation type="unfinished">NTSC convertido de PAL</translation>
+    </message>
+    <message>
+        <source>Top</source>
+        <translation type="unfinished">Superior</translation>
+    </message>
+    <message>
+        <source>Bottom</source>
+        <translation type="unfinished">Inferior</translation>
+    </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished">Nunca</translation>
+    </message>
+    <message>
+        <source>If still combed</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Always</source>
+        <translation type="unfinished">Reproducir</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ninguno</translation>
+    </message>
+    <message>
+        <source>None but compute</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Postproc on best match</source>
+        <translation type="unfinished">Postproc on best match</translation>
+    </message>
+    <message>
+        <source>Postproc and show zones (debug)</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Process image (not fields)</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Process image (not fields), debug</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Strategy:</source>
+        <translation type="unfinished">Estrategia:</translation>
+    </message>
+    <message>
+        <source>_Field order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Postprocessing:</source>
+        <translation type="unfinished">_Post-procesando:</translation>
+    </message>
+    <message>
+        <source>_Try backward:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Direct threshold:</source>
+        <translation type="unfinished">Umbral:</translation>
+    </message>
+    <message>
+        <source>_Backward threshold:</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>_Noise threshold:</source>
+        <translation type="unfinished">Umbral:</translation>
+    </message>
+    <message>
+        <source>Postp_rocessing threshold:</source>
+        <translation type="unfinished">_Post-procesando:</translation>
+    </message>
+    <message>
+        <source>_Use chroma to decide</source>
+        <translation type="unfinished">Utilizar también croma para detectar cambios de escena</translation>
+    </message>
+    <message>
+        <source>Sho_w info</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+    <message>
+        <source>Debu_g</source>
+        <translation type="unfinished">Depuración</translation>
+    </message>
+    <message>
+        <source>Bl_end</source>
+        <translation type="unfinished">Banda</translation>
+    </message>
+    <message>
+        <source>Decomb Telecide</source>
+        <translation type="unfinished">
+            </translation>
+    </message>
+</context>
+<context>
+    <name>tsdemuxer</name>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>This file&apos;s index has been created with an older version of avidemux.
+Please delete the idx2 file and reopen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There are several files with sequential file names. Should they be all loaded ?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Indexing</source>
+        <translation type="unfinished">Indexando</translation>
+    </message>
+</context>
+<context>
+    <name>twolame</name>
+    <message>
+        <source>_Bitrate:</source>
+        <translation type="unfinished">_Bitrate:</translation>
+    </message>
+    <message>
+        <source>TwoLame Configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>uisupport</name>
     <message>
         <source>X11</source>
@@ -9862,7 +11877,61 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>unstackfield</name>
+    <message>
+        <source>Unstack Fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weave top and bottom halves.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vdpauVideoFilterDeint</name>
+    <message>
+        <source>Keep Top Field</source>
+        <translation type="obsolete">Mantener Campo Superior</translation>
+    </message>
+    <message>
+        <source>Keep Bottom Field</source>
+        <translation type="obsolete">Mantener Campo Inferior</translation>
+    </message>
+    <message>
+        <source>Double framerate</source>
+        <translation type="obsolete">Doblar framerate</translation>
+    </message>
+    <message>
+        <source>_Resize:</source>
+        <translation type="obsolete">_Redimensionar</translation>
+    </message>
+    <message>
+        <source>_Deint Mode:</source>
+        <translation type="obsolete">_Modo Desentrelazado</translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="obsolete">Anchura :</translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="obsolete">Altura :</translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="obsolete">vdpau</translation>
+    </message>
+</context>
+<context>
+    <name>vdpaudeint</name>
+    <message>
+        <source>vdpauDeint</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VDPAU deinterlacer (+resize).</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <source>Keep Top Field</source>
         <translation type="unfinished">Mantener Campo Superior</translation>
@@ -9876,6 +11945,10 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Doblar framerate</translation>
     </message>
     <message>
+        <source>_Ivtc:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>_Resize:</source>
         <translation type="unfinished">_Redimensionar</translation>
     </message>
@@ -9885,11 +11958,11 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Width :</source>
-        <translation type="unfinished">Anchura :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Height :</source>
-        <translation type="unfinished">Altura :</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>vdpau</source>
@@ -9900,50 +11973,50 @@ p, li { white-space: pre-wrap; }
     <name>vdpaufilter</name>
     <message>
         <source>Keep Top Field</source>
-        <translation type="unfinished">Mantener Campo Superior</translation>
+        <translation type="obsolete">Mantener Campo Superior</translation>
     </message>
     <message>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished">Mantener Campo Inferior</translation>
+        <translation type="obsolete">Mantener Campo Inferior</translation>
     </message>
     <message>
         <source>Double framerate</source>
-        <translation type="unfinished">Doblar framerate</translation>
+        <translation type="obsolete">Doblar framerate</translation>
     </message>
     <message>
         <source>_Resize:</source>
-        <translation type="unfinished">_Redimensionar</translation>
+        <translation type="obsolete">_Redimensionar</translation>
     </message>
     <message>
         <source>_Deint Mode:</source>
-        <translation type="unfinished">_Modo Desentrelazado</translation>
+        <translation type="obsolete">_Modo Desentrelazado</translation>
     </message>
     <message>
         <source>Width :</source>
-        <translation type="unfinished">Anchura :</translation>
+        <translation type="obsolete">Anchura :</translation>
     </message>
     <message>
         <source>Height :</source>
-        <translation type="unfinished">Altura :</translation>
+        <translation type="obsolete">Altura :</translation>
     </message>
     <message>
         <source>vdpau</source>
-        <translation type="unfinished">vdpau</translation>
+        <translation type="obsolete">vdpau</translation>
     </message>
 </context>
 <context>
     <name>vdpaufilter2</name>
     <message>
         <source>Width :</source>
-        <translation type="unfinished">Anchura :</translation>
+        <translation type="obsolete">Anchura :</translation>
     </message>
     <message>
         <source>Height :</source>
-        <translation type="unfinished">Altura :</translation>
+        <translation type="obsolete">Altura :</translation>
     </message>
     <message>
         <source>vdpau</source>
-        <translation type="unfinished">vdpau</translation>
+        <translation type="obsolete">vdpau</translation>
     </message>
 </context>
 <context>
@@ -9955,6 +12028,18 @@ p, li { white-space: pre-wrap; }
     <message>
         <source>vdpau: Resize image using vdpau.</source>
         <translation type="unfinished">vdpau: Redimensionar imagen utilizando vdpau.</translation>
+    </message>
+    <message>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>vdpau</source>
+        <translation type="unfinished">vdpau</translation>
     </message>
 </context>
 <context>
@@ -10127,6 +12212,35 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>webmmuxer</name>
+    <message>
+        <source>Unsupported Video.
+Only VP8/VP9 video and Vorbis/Opus audio supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unsupported Audio.
+Only VP8/VP9 video and Vorbis/Opus audio supported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Saving Webm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Force display width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Webm Muxer</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>workingDialog</name>
     <message>
         <source>Processing</source>
@@ -10150,74 +12264,179 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>x264</name>
+    <message>
+        <source>Not coded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>this mode has not been implemented
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Personalizar</translation>
+    </message>
+    <message>
+        <source>Target Bitrate:</source>
+        <translation type="unfinished">Bitrate Buscado</translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="unfinished">Cuantizador</translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished">Calidad</translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished">Tamaño de Video Buscado</translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished">Bitrate Medio</translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
+
+Do you wish to continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot load preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>my profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overwrite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace the following preset ?:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot save preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete custom profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to delete the </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> profile ?.
+If it is a system profile it will be recreated next time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Borrar</translation>
+    </message>
+</context>
+<context>
     <name>x264ConfigDialog</name>
     <message>
         <source>Rate Control</source>
-        <translation type="obsolete">Control de Frecuencia</translation>
+        <translation type="unfinished">Control de Frecuencia</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="obsolete">Deshabilitar</translation>
+        <translation type="unfinished">Deshabilitar</translation>
     </message>
     <message>
         <source>Auto-detect</source>
-        <translation type="obsolete">Autodetectar</translation>
+        <translation type="unfinished">Autodetectar</translation>
     </message>
     <message>
         <source>Motion Estimation</source>
-        <translation type="obsolete">Estimación de movimiento</translation>
+        <translation type="unfinished">Estimación de movimiento</translation>
     </message>
     <message>
         <source>Diamond Search</source>
-        <translation type="obsolete">Búsqueda de Movimiento</translation>
+        <translation type="unfinished">Búsqueda de Movimiento</translation>
     </message>
     <message>
         <source>Hexagonal Search</source>
-        <translation type="obsolete">Búsqueda Hexagonal</translation>
+        <translation type="unfinished">Búsqueda Hexagonal</translation>
     </message>
     <message>
         <source>Exhaustive Search</source>
-        <translation type="obsolete">Búsqueda Exhaustiva</translation>
+        <translation type="unfinished">Búsqueda Exhaustiva</translation>
     </message>
     <message>
         <source>Hadamard Exhaustive Search</source>
-        <translation type="obsolete">Búsqueda Exhaustiva Hadamard</translation>
+        <translation type="unfinished">Búsqueda Exhaustiva Hadamard</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="obsolete">Ninguno</translation>
+        <translation type="unfinished">Ninguno</translation>
     </message>
     <message>
         <source>Spatial</source>
-        <translation type="obsolete">Espacial</translation>
+        <translation type="unfinished">Espacial</translation>
     </message>
     <message>
         <source>Temporal</source>
-        <translation type="obsolete">Temporal</translation>
+        <translation type="unfinished">Temporal</translation>
     </message>
     <message>
         <source>Auto</source>
-        <translation type="obsolete">Auto</translation>
+        <translation type="unfinished">Auto</translation>
     </message>
     <message>
         <source>CABAC</source>
-        <translation type="obsolete">CABAC</translation>
+        <translation type="unfinished">CABAC</translation>
     </message>
     <message>
         <source>Fast</source>
-        <translation type="obsolete">Rápido</translation>
+        <translation type="unfinished">Rápido</translation>
     </message>
     <message>
         <source>Flat Matrix</source>
-        <translation type="obsolete">Matriz Plana</translation>
+        <translation type="unfinished">Matriz Plana</translation>
     </message>
     <message>
         <source>JVT Matrix</source>
-        <translation type="obsolete">Matriz JVT</translation>
+        <translation type="unfinished">Matriz JVT</translation>
     </message>
     <message>
         <source>Custom Matrix</source>
-        <translation type="obsolete">Matriz personalizada</translation>
+        <translation type="unfinished">Matriz personalizada</translation>
     </message>
     <message>
         <source>Advanced</source>
@@ -10225,158 +12444,908 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Output</source>
-        <translation type="obsolete">Salida</translation>
+        <translation type="unfinished">Salida</translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="obsolete">1</translation>
+        <translation type="unfinished">1</translation>
     </message>
     <message>
         <source>1.1</source>
-        <translation type="obsolete">1.1</translation>
+        <translation type="unfinished">1.1</translation>
     </message>
     <message>
         <source>1.2</source>
-        <translation type="obsolete">1.2</translation>
+        <translation type="unfinished">1.2</translation>
     </message>
     <message>
         <source>1.3</source>
-        <translation type="obsolete">1.3</translation>
+        <translation type="unfinished">1.3</translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="obsolete">2</translation>
+        <translation type="unfinished">2</translation>
     </message>
     <message>
         <source>2.1</source>
-        <translation type="obsolete">2.1</translation>
+        <translation type="unfinished">2.1</translation>
     </message>
     <message>
         <source>2.2</source>
-        <translation type="obsolete">2.2</translation>
+        <translation type="unfinished">2.2</translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="obsolete">3</translation>
+        <translation type="unfinished">3</translation>
     </message>
     <message>
         <source>3.1</source>
-        <translation type="obsolete">3.1</translation>
+        <translation type="unfinished">3.1</translation>
     </message>
     <message>
         <source>3.2</source>
-        <translation type="obsolete">3.2</translation>
+        <translation type="unfinished">3.2</translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="obsolete">4</translation>
+        <translation type="unfinished">4</translation>
     </message>
     <message>
         <source>4.1</source>
-        <translation type="obsolete">4.1</translation>
+        <translation type="unfinished">4.1</translation>
     </message>
     <message>
         <source>4.2</source>
-        <translation type="obsolete">4.2</translation>
+        <translation type="unfinished">4.2</translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="obsolete">5</translation>
+        <translation type="unfinished">5</translation>
     </message>
     <message>
         <source>5.1</source>
-        <translation type="obsolete">5.1</translation>
+        <translation type="unfinished">5.1</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="obsolete">0</translation>
+        <translation type="unfinished">0</translation>
     </message>
     <message>
         <source>7</source>
-        <translation type="obsolete">7</translation>
+        <translation type="unfinished">7</translation>
     </message>
     <message>
         <source>15</source>
-        <translation type="obsolete">15</translation>
+        <translation type="unfinished">15</translation>
     </message>
     <message>
         <source>31</source>
-        <translation type="obsolete">31</translation>
+        <translation type="unfinished">31</translation>
     </message>
     <message>
         <source>Normal</source>
-        <translation type="obsolete">Normal</translation>
+        <translation type="unfinished">Normal</translation>
     </message>
     <message>
         <source>Pixel Aspect Ratio</source>
-        <translation type="obsolete">Relación de aspecto de Pixel:</translation>
+        <translation type="unfinished">Relación de aspecto de Pixel:</translation>
     </message>
     <message>
         <source>As Input</source>
-        <translation type="obsolete">Como Entrada</translation>
+        <translation type="unfinished">Como Entrada</translation>
     </message>
     <message>
         <source>:</source>
-        <translation type="obsolete">:</translation>
+        <translation type="unfinished">:</translation>
     </message>
     <message>
         <source>Crop</source>
-        <translation type="obsolete">Cortar</translation>
+        <translation type="unfinished">Cortar</translation>
     </message>
     <message>
         <source>VBR</source>
-        <translation type="obsolete">VBR</translation>
+        <translation type="unfinished">VBR</translation>
     </message>
     <message>
         <source>CBR</source>
-        <translation type="obsolete">CBR</translation>
+        <translation type="unfinished">CBR</translation>
+    </message>
+    <message>
+        <source>x264 Configuraton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configuration:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Borrar</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use advanced configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile:</source>
+        <translation type="unfinished">Perfil:</translation>
+    </message>
+    <message>
+        <source>Preset:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tuning:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IDC Level:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Decode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zero Latency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast First Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threads </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished">Tamaño de Video Buscado</translation>
+    </message>
+    <message>
+        <source>Constant Bitrate (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Quantiser (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Rate Factor (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Size (Two Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate (Two Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encoding Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0 (High Quality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>51 (Low Quality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced RC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Constant Rate Factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Macroblock-tree Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frametype Lookahead:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sequence Parameter Set Identifer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation Method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uneven Multi-hexagonal Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 (Fast)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subpixel Refinement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Vector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Motion Vector Length:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum Buffer Between Threads:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Motion Vector Search Range:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prediction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References + Duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Direct Prediction Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted Prediction for P-frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted Prediction for B-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constrained Intra Prediction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Partition Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8x8 DCT Spatial Transform</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8x8, 8x16 and 16x8 P-frame Intra-predicted Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8x8, 8x16 and 16x8 B-frame Intra-predicted Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4x4, 4x8 and 8x4 P-frame Intra-predicted Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8x8 Intra-predicted Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>4x4 Intra-predicted Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame Encoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loop Filter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open GOP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blu-ray Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished">Campo Inferior Primero</translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished">Campo Superior Primero</translation>
+    </message>
+    <message>
+        <source>Maximum Reference Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frames as References:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strictly Hierarchical Pyramid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-strict (Not Blu-ray Compatible)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Optimal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frame Bias:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Consecutive B-frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptive B-frame Decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frame Threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Periodic Intra Refresh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mixed References</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Motion Estimation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trellis Quantization:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Final Macroblock Only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Skip Detection on P-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DCT Decimation on P-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Psychovisual Rate Distortion Optimisation:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Psychovisual Trellis:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise Reduction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luma Quantisation Deadzone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intra Luma Quantisation Deadzone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inter Luma Quantisation Deadzone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantisation Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Quantiser:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I and P-frame Quantiser Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Quantiser Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P and B-frame Quantiser Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma to Luma Quantiser Offset:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum Quantiser:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Curve Compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce Fluctuation Before Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce Fluctuation After Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptive Quantisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variance AQ:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto Variance AQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Buffer Verifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum VBV Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initial VBV Buffer Occupancy:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished">Tamaño buffer VBV</translation>
+    </message>
+    <message>
+        <source>Slicing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slices per Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Size per Slice:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Macroblocks per Slice:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">Añadir</translation>
+    </message>
+    <message>
+        <source>Advanced 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multithreading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <comment>multithreading</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enforce Repeatability</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slice-based Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom Threaded Lookahead Buffer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generate Access Unit Delimiters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BluRay compatibility</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generate fake interlaced</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <comment>PAR</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Predefined Aspect Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16:15 (PAL 4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>64:45 (PAL 16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8:9 (NTSC 4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>32:27 (NTSC 16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Usability Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overscan:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undefined</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Format:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Component</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SECAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MAC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colour Primaries:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT709</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT470M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT470BG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTE170M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTE240M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Film</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transfer Characteristics:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Linear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LOG100</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LOG316</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTEL170M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colour Matrix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FCC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GBR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YCgCo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HRD Parameters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma Sample Location:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full Range Samples</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>x264CustomMatrixDialog</name>
+    <message>
+        <source>x264 Custom Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intra 4x4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luma:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma U/V:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inter 4x4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intra 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inter 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
     </message>
 </context>
 <context>
     <name>x264Dialog</name>
     <message>
         <source>Target Bitrate:</source>
-        <translation type="unfinished">Bitrate Buscado</translation>
-    </message>
-    <message>
-        <source>kbit/s</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Bitrate Buscado</translation>
     </message>
     <message>
         <source>Quantiser:</source>
-        <translation type="unfinished">Cuantizador</translation>
+        <translation type="obsolete">Cuantizador</translation>
     </message>
     <message>
         <source>Quality:</source>
-        <translation type="unfinished">Calidad</translation>
+        <translation type="obsolete">Calidad</translation>
     </message>
     <message>
         <source>Target Video Size:</source>
-        <translation type="unfinished">Tamaño de Video Buscado</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Tamaño de Video Buscado</translation>
     </message>
     <message>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">Bitrate Medio</translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Variance Adaptive Quantisation will automatically be enabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Macroblock-Tree optimisation requires Variance Adaptive Quantisation to be enabled.  Macroblock-Tree optimisation will automatically be disabled.
-
-Do you wish to continue?</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Bitrate Medio</translation>
     </message>
 </context>
 <context>
-    <name>x265Dialog</name>
+    <name>x265</name>
+    <message>
+        <source>Not coded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>this mode has not been implemented
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">Personalizar</translation>
+    </message>
     <message>
         <source>Target Bitrate:</source>
         <translation type="unfinished">Bitrate Buscado</translation>
@@ -10416,6 +13385,918 @@ Do you wish to continue?</source>
 
 Do you wish to continue?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished">Error</translation>
+    </message>
+    <message>
+        <source>Cannot load preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save Profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overwrite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace the following preset ?:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot save preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete custom profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Do you really want to delete the </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> profile ?.
+If it is a system profile it will be recreated next time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Borrar</translation>
+    </message>
+</context>
+<context>
+    <name>x265ConfigDialog</name>
+    <message>
+        <source>x265 Configuraton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Configuration:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save As</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Borrar</translation>
+    </message>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Basic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use advanced configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Profile:</source>
+        <translation type="unfinished">Perfil:</translation>
+    </message>
+    <message>
+        <source>Preset:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tuning:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>IDC Level:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="unfinished">Auto</translation>
+    </message>
+    <message>
+        <source>1</source>
+        <translation type="unfinished">1</translation>
+    </message>
+    <message>
+        <source>1.1</source>
+        <translation type="unfinished">1.1</translation>
+    </message>
+    <message>
+        <source>1.2</source>
+        <translation type="unfinished">1.2</translation>
+    </message>
+    <message>
+        <source>1.3</source>
+        <translation type="unfinished">1.3</translation>
+    </message>
+    <message>
+        <source>2</source>
+        <translation type="unfinished">2</translation>
+    </message>
+    <message>
+        <source>2.1</source>
+        <translation type="unfinished">2.1</translation>
+    </message>
+    <message>
+        <source>2.2</source>
+        <translation type="unfinished">2.2</translation>
+    </message>
+    <message>
+        <source>3</source>
+        <translation type="unfinished">3</translation>
+    </message>
+    <message>
+        <source>3.1</source>
+        <translation type="unfinished">3.1</translation>
+    </message>
+    <message>
+        <source>3.2</source>
+        <translation type="unfinished">3.2</translation>
+    </message>
+    <message>
+        <source>4</source>
+        <translation type="unfinished">4</translation>
+    </message>
+    <message>
+        <source>4.1</source>
+        <translation type="unfinished">4.1</translation>
+    </message>
+    <message>
+        <source>4.2</source>
+        <translation type="unfinished">4.2</translation>
+    </message>
+    <message>
+        <source>5</source>
+        <translation type="unfinished">5</translation>
+    </message>
+    <message>
+        <source>5.1</source>
+        <translation type="unfinished">5.1</translation>
+    </message>
+    <message>
+        <source>Pool Threads </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame Threads </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rate Control</source>
+        <translation type="unfinished">Control de Frecuencia</translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="unfinished">Tamaño de Video Buscado</translation>
+    </message>
+    <message>
+        <source>Constant Bitrate (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Quantiser (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Rate Factor (Single Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Size (Two Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate (Two Pass)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Encoding Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0 (High Quality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>51 (Low Quality)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use Strict Constant Bitrate Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced RC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Constant Rate Factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Coding Unit-tree Rate Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frametype Lookahead:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sequence Parameter Set Identifer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation type="unfinished">0</translation>
+    </message>
+    <message>
+        <source>7</source>
+        <translation type="unfinished">7</translation>
+    </message>
+    <message>
+        <source>15</source>
+        <translation type="unfinished">15</translation>
+    </message>
+    <message>
+        <source>31</source>
+        <translation type="unfinished">31</translation>
+    </message>
+    <message>
+        <source>Motion</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Estimation</source>
+        <translation type="unfinished">Estimación de movimiento</translation>
+    </message>
+    <message>
+        <source>Motion Estimation Method:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Diamond Search</source>
+        <translation type="unfinished">Búsqueda de Movimiento</translation>
+    </message>
+    <message>
+        <source>Hexagonal Search</source>
+        <translation type="unfinished">Búsqueda Hexagonal</translation>
+    </message>
+    <message>
+        <source>Uneven Multi-hexagonal Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Star Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Exhaustive Search</source>
+        <translation type="unfinished">Búsqueda Exhaustiva</translation>
+    </message>
+    <message>
+        <source>1 (Fast)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Subpixel Refinement</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>7 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Motion Vector</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Motion Vector Search Range:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Prediction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted Prediction for B-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constrained Intra Prediction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted Prediction for P-frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Weighted References + Duplicates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Frame Encoding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Loop Filter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open GOP:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blu-ray Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Interlaced:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top Field First</source>
+        <translation type="unfinished">Campo Superior Primero</translation>
+    </message>
+    <message>
+        <source>Bottom Field First</source>
+        <translation type="unfinished">Campo Inferior Primero</translation>
+    </message>
+    <message>
+        <source>Maximum Reference Frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frames as References:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strictly Hierarchical Pyramid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Non-strict (Not Blu-ray Compatible)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast</source>
+        <translation type="unfinished">Rápido</translation>
+    </message>
+    <message>
+        <source>Optimal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>B-frame Bias:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Consecutive B-frames:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptive B-frame Decision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GOP Size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Minimum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I-frame Threshold:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Analysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Trellis Quantization:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Final Macroblock Only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Always On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Fast Skip Detection on P-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>DCT Decimation on P-frames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Psychovisual Rate Distortion Optimisation:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise Reduction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise Reduction Intra:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Noise Reduction Inter:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantisation Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flat Matrix</source>
+        <translation type="unfinished">Matriz Plana</translation>
+    </message>
+    <message>
+        <source>JVT Matrix</source>
+        <translation type="unfinished">Matriz JVT</translation>
+    </message>
+    <message>
+        <source>Custom Matrix</source>
+        <translation type="unfinished">Matriz personalizada</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma to Luma Quantiser Offset:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>I and P-frame Quantiser Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Quantiser Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cb</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P and B-frame Quantiser Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Bitrate Tolerance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Curve Compression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quantiser Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce Fluctuation Before Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reduce Fluctuation After Curve Compression:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Adaptive Quantisation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variance AQ:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Normal</source>
+        <translation type="unfinished">Normal</translation>
+    </message>
+    <message>
+        <source>Auto Variance AQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Buffer Verifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum VBV Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Initial VBV Buffer Occupancy:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kbit/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VBV Buffer Size:</source>
+        <translation type="unfinished">Tamaño buffer VBV</translation>
+    </message>
+    <message>
+        <source>Slicing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slices per Frame:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Size per Slice:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bytes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum Macroblocks per Slice:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished">Añadir</translation>
+    </message>
+    <message>
+        <source>Advanced 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multithreading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation type="unfinished">Deshabilitar</translation>
+    </message>
+    <message>
+        <source>Auto-detect</source>
+        <translation type="unfinished">Autodetectar</translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <comment>multithreading</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enforce Repeatability</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Slice-based Threading</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom Threaded Lookahead Buffer:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation type="unfinished">Salida</translation>
+    </message>
+    <message>
+        <source>Generate Access Unit Delimiters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pixel Aspect Ratio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom:</source>
+        <comment>PAR</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>As Input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>:</source>
+        <translation type="unfinished">:</translation>
+    </message>
+    <message>
+        <source>Predefined Aspect Ratio:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>16:15 (PAL 4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>64:45 (PAL 16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>8:9 (NTSC 4:3)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>32:27 (NTSC 16:9)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video Usability Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>These settings are only suggestions for the playback equipment.  Use at your own risk.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Overscan:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undefined</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Crop</source>
+        <translation type="unfinished">Cortar</translation>
+    </message>
+    <message>
+        <source>Video Format:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Component</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>PAL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>NTSC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SECAM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MAC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colour Primaries:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT709</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT470M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BT470BG</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTE170M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTE240M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Film</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Transfer Characteristics:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Linear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LOG100</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>LOG316</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SMPTEL170M</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colour Matrix:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FCC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>GBR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>YCgCo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>HRD Parameters:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation type="unfinished">Ninguno</translation>
+    </message>
+    <message>
+        <source>VBR</source>
+        <translation type="unfinished">VBR</translation>
+    </message>
+    <message>
+        <source>CBR</source>
+        <translation type="unfinished">CBR</translation>
+    </message>
+    <message>
+        <source>Chroma Sample Location:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full Range Samples</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>x265CustomMatrixDialog</name>
+    <message>
+        <source>x265 Custom Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intra 4x4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Luma:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Chroma U/V:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inter 4x4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intra 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inter 8x8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Load File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+</context>
+<context>
+    <name>x265Dialog</name>
+    <message>
+        <source>Target Bitrate:</source>
+        <translation type="obsolete">Bitrate Buscado</translation>
+    </message>
+    <message>
+        <source>Quantiser:</source>
+        <translation type="obsolete">Cuantizador</translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="obsolete">Calidad</translation>
+    </message>
+    <message>
+        <source>Target Video Size:</source>
+        <translation type="obsolete">Tamaño de Video Buscado</translation>
+    </message>
+    <message>
+        <source>Average Bitrate:</source>
+        <translation type="obsolete">Bitrate Medio</translation>
     </message>
 </context>
 <context>
@@ -10449,18 +14330,6 @@ Do you wish to continue?</source>
         <translation type="unfinished">Personalizar</translation>
     </message>
     <message>
-        <source>DCT</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Qpel16</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Qpel8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Square</source>
         <translation type="unfinished">Cuadrado</translation>
     </message>
@@ -10475,10 +14344,6 @@ Do you wish to continue?</source>
     <message>
         <source>Three threads</source>
         <translation type="unfinished">Tres hilos</translation>
-    </message>
-    <message>
-        <source>Auto (#cpu)</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>MotionEstimation</source>
@@ -10537,6 +14402,26 @@ Do you wish to continue?</source>
         <translation type="unfinished">Configuración Xvid4 MPEG-4 ASP</translation>
     </message>
     <message>
+        <source>Aspect Ratio:</source>
+        <translation type="unfinished">Relación de aspecto:</translation>
+    </message>
+    <message>
+        <source>DCT</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel16</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Qpel8</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto (#cpu)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1:1 (PC)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10565,16 +14450,60 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Aspect Ratio:</source>
-        <translation type="unfinished">Relación de aspecto:</translation>
-    </message>
-    <message>
         <source>Use XVID fcc (else DIVX)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Aspect Ratio</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>yadif</name>
+    <message>
+        <source>Yadif</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Yadif, port of avisynth version (c) Fizick.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, temporal &amp; spatial check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bob, skip spatial temporal check</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bottom field first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Top field first</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>_Mode:</source>
+        <translation type="unfinished">_Modo:</translation>
+    </message>
+    <message>
+        <source>_Order:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>yadif</source>
+        <translation type="unfinished">
+            </translation>
     </message>
 </context>
 <context>
