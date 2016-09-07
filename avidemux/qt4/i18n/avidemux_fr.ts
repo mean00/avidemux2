@@ -1178,7 +1178,7 @@ Ignorer les informations de timing ?</translation>
     </message>
     <message>
         <source>Add black borders around the image.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ajouter un bord noir autour de l&apos;image</translation>
     </message>
 </context>
 <context>
@@ -3117,7 +3117,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>Remove noisy edge by turning them to black.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Supprime les bords endommagés en les remplacant par du noir</translation>
     </message>
 </context>
 <context>
@@ -3143,7 +3143,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>Source Fps:</source>
-        <translation>i/s source:</translation>
+        <translation type="unfinished">Source:</translation>
     </message>
     <message>
         <source>Source frame rate:</source>
@@ -3151,7 +3151,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>Destination Fps:</source>
-        <translation>i/s destination:</translation>
+        <translation type="unfinished">Destination:</translation>
     </message>
     <message>
         <source>Destination frame rate:</source>
@@ -3171,7 +3171,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">25  (Pal/Secam)</translation>
     </message>
     <message>
         <source>23.976 (Film)</source>
@@ -3183,7 +3183,7 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">50 (Pal/Secam)</translation>
     </message>
     <message>
         <source>59.93  (NTSC)</source>
@@ -3191,15 +3191,15 @@ This message will not be displayed again.</source>
     </message>
     <message>
         <source>Change FPS</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Changer le nombre d&apos; I/S</translation>
     </message>
     <message>
         <source>Speed up/slow down the video as if altering fps. This filter changes duration.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Accélère/Ralentit la vidéo en modifiant le nombre d&apos;i/s. La durée est modifiée.</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erreur</translation>
     </message>
 </context>
 <context>
@@ -4771,7 +4771,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>VDPAU deinterlacer+resize, openGl version (faster).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VDPAU de-entrelace+resize, openGl version (faster).</translation>
     </message>
     <message>
         <source>Keep Top Field</source>
@@ -5415,15 +5415,15 @@ I will assume it has and try to continue</source>
     <name>logo</name>
     <message>
         <source>Add logo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ajouter un logo</translation>
     </message>
     <message>
         <source>Put a logo on top of video, with alpha blending.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ajouter un logo sur la vidéo, avec transparence</translation>
     </message>
     <message>
         <source>Select Logo Image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Choisir l&apos;image</translation>
     </message>
 </context>
 <context>
@@ -6657,7 +6657,7 @@ Ready.
     </message>
     <message>
         <source>Resample FPS</source>
-        <translation type="unfinished">Changer le nombre d&apos;i/s</translation>
+        <translation type="unfinished">Re-échantillonner le nombre d&apos;I/S</translation>
     </message>
     <message>
         <source>Change and enforce FPS. Keep duration and sync.</source>
@@ -6669,7 +6669,7 @@ Ready.
     </message>
     <message>
         <source>25  (PAL)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">25  (PAL/SECAM)</translation>
     </message>
     <message>
         <source>23.976 (Film)</source>
@@ -6681,7 +6681,7 @@ Ready.
     </message>
     <message>
         <source>50 (Pal)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">50 (PAL/SECAM)</translation>
     </message>
     <message>
         <source>59.93  (NTSC)</source>
@@ -6693,7 +6693,7 @@ Ready.
     </message>
     <message>
         <source>Resample fps</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Re-échantillonnage du nombre d&apos;i/s</translation>
     </message>
 </context>
 <context>
@@ -7195,7 +7195,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
     <message>
         <source>VDPAU deinterlacer (+resize).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VDPAU de-entrelacement (+redimensionnement).</translation>
     </message>
     <message>
         <source>Keep Top Field</source>
