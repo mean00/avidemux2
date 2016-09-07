@@ -215,7 +215,7 @@ void MainWindow::updateAvailableSlot(int version, std::string date, std::string 
     b=(version-a*10000)/100;
     c=version%100;
     QString versionString=QString("%1.%2.%3").arg(a).arg(b).arg(c);
-    QString msg=QT_TR_NOOP("<b>New version available</b><br> Version %1<br>Released on %2.<br>You can download it here<br> <a href='%3'>%3</a><br><br><small> You can disable autoupdate in preferences.</small>");
+    QString msg=QT_TRANSLATE_NOOP("qgui2","<b>New version available</b><br> Version %1<br>Released on %2.<br>You can download it here<br> <a href='%3'>%3</a><br><br><small> You can disable autoupdate in preferences.</small>");
     msg=msg.arg(versionString,date.c_str(),url.c_str(),url.c_str());
     msgBox.setText(msg);
     msgBox.setTextFormat(Qt::RichText);
