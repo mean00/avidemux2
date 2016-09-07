@@ -1765,24 +1765,24 @@ FORMS = \
 
 
 TRANSLATIONS = \
-./avidemux_sr@latin.ts \ 
-./avidemux_hu.ts \ 
-./avidemux_pt_BR.ts \ 
-./avidemux_fr.ts \ 
-./avidemux_da.ts \ 
-./avidemux_en.ts \ 
-./avidemux_el.ts \ 
-./avidemux_tr.ts \ 
-./avidemux_ru.ts \ 
-./avidemux_ja.ts \ 
-./avidemux_eu.ts \ 
-./avidemux_zh_TW.ts \ 
-./avidemux_pl.ts \ 
-./avidemux_sr.ts \ 
-./avidemux_de.ts \ 
-./avidemux_it.ts \ 
-./avidemux_ca.ts \ 
-./avidemux_es.ts \ 
-./avidemux_cs.ts \ 
+avidemux.ts \ 
+avidemux_hu.ts \ 
+avidemux_pt_BR.ts \ 
+avidemux_fr.ts \ 
+avidemux_da.ts \ 
+avidemux_en.ts \ 
+avidemux_el.ts \ 
+avidemux_tr.ts \ 
+avidemux_ru.ts \ 
+avidemux_ja.ts \ 
+avidemux_eu.ts \ 
+avidemux_zh_TW.ts \ 
+avidemux_pl.ts \ 
+avidemux_sr.ts \ 
+avidemux_de.ts \ 
+avidemux_it.ts \ 
+avidemux_ca.ts \ 
+avidemux_es.ts \ 
+avidemux_cs.ts \ 
 
 
