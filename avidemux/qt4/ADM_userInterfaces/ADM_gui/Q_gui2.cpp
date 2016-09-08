@@ -1119,8 +1119,9 @@ void setupMenus(void)
     const char *name;
 
     nbVid=ADM_ve6_getNbEncoders();
+    WIDGET(comboBoxVideo)->clear();
     printf("Found %d video encoder(s)\n",nbVid);
-    for(uint32_t i=1;i<nbVid;i++)
+    for(uint32_t i=0;i<nbVid;i++)
     {
         ADM_ve6_getEncoderInfo(i,&name,&maj,&mn,&pa);
         WIDGET(comboBoxVideo)->addItem(name);
@@ -1132,7 +1133,8 @@ void setupMenus(void)
 
     nbAud=audioEncoderGetNumberOfEncoders();
     printf("Found %d audio encoder(s)\n",nbAud);
-    for(uint32_t i=1;i<nbAud;i++)
+    WIDGET(comboBoxAudio)->clear();
+    for(uint32_t i=0;i<nbAud;i++)
     {
         name=audioEncoderGetDisplayName(i);
         WIDGET(comboBoxAudio)->addItem(name);
