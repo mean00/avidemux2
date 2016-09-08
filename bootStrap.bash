@@ -16,7 +16,7 @@ debug=0
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 export QT_SELECT=5 # default for ubuntu, harmless for others
-export O_PARAL="-j 2"
+export O_PARAL="-j $(nproc)"
 fail()
 {
         echo "** Failed at $1**"
