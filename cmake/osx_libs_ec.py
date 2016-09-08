@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport',"QtNetwork']
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtNetwork']
 
 #
 #
