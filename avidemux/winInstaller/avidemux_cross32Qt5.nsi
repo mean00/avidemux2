@@ -47,6 +47,10 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/icutu56.dll  
     ${File} ${ROOT_FOLDER}/icuuc56.dll
     ${File} ${ROOT_FOLDER}/libintl-8.dll
+# SSL
+    ${File} ${ROOT_FOLDER}/libeay32.dll
+    ${File} ${ROOT_FOLDER}/ssleay32.dll
+        
     SetOutPath $INSTDIR\platforms
     ${File} ${ROOT_FOLDER}/platforms/qminimal.dll  
     ${File} ${ROOT_FOLDER}/platforms/qwindows.dll
