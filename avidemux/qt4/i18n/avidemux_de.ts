@@ -10192,7 +10192,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+0"/>
         <source>Crash file</source>
-        <translation type="unfinished">Dateiabsturz</translation>
+        <translation type="unfinished">Absturzprotokoll</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10209,24 +10209,26 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>crop</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuschneiden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>crop filter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildränder wegschneiden.</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Warning Cropping too much width ! Width reseted !
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann die Breite nicht im geforderten Maße verkleinern! Die Breite wird zurückgesetzt!
+</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Warning Cropping too much height ! Height reseted !
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann die Höhe nicht im geforderten Maße verkleinern! Die Höhe wird zurückgesetzt!
+</translation>
     </message>
 </context>
 <context>
@@ -10239,12 +10241,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+20"/>
         <source>Right:</source>
-        <translation type="unfinished">rechts:</translation>
+        <translation type="unfinished">Rechts:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Top:</source>
-        <translation type="unfinished">oben:</translation>
+        <translation type="unfinished">Oben:</translation>
     </message>
     <message>
         <location line="+43"/>
@@ -10254,12 +10256,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location line="+21"/>
         <source>Bottom:</source>
-        <translation type="unfinished">unten:</translation>
+        <translation type="unfinished">Unten:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Left:</source>
-        <translation type="unfinished">links:</translation>
+        <translation type="unfinished">Links:</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -10374,7 +10376,7 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/ADM_vidMPdelogo.cpp" line="+43"/>
         <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished">Logoentfernung durch Interpolation der Umgebung</translation>
+        <translation type="unfinished">Logoentfernung durch Interpolation der Umgebung.</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -10470,12 +10472,12 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dummy/dummyVideoFilter.cpp" line="+44"/>
         <source>Dummy</source>
-        <translation type="unfinished">Attrappe</translation>
+        <translation></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Null filter, it does nothing at all.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dieser Filter verändert gar nichts.</translation>
     </message>
 </context>
 <context>
@@ -12718,7 +12720,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+1"/>
         <source>ABR</source>
-        <translation type="unfinished">durchschnitll. Bitrate</translation>
+        <translation type="unfinished">durchschnittl. Bitrate</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -12863,7 +12865,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+2"/>
         <source>Decoder Options</source>
-        <translation type="unfinished">Dekoder Optionen</translation>
+        <translation>Decoder-Optionen</translation>
     </message>
 </context>
 <context>
@@ -13296,17 +13298,17 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+134"/>
         <source>Saving Mkv</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Speichere MKV</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkvConfig.cpp" line="+27"/>
         <source>Force display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzeigebreite erzwingen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzeigebreite</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -13714,22 +13716,22 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+299"/>
         <source>Start time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Anfangszeit:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>End time (ms):</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ende:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure filter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konfigurieren</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Partial Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Teilbereich festlegen</translation>
     </message>
 </context>
 <context>
@@ -14230,42 +14232,42 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+318"/>
         <source>Partial</source>
-        <translation type="unfinished">Dieser Teil ist noch nicht fertiggestellt.</translation>
+        <translation type="unfinished">Abschnittsweise Anwendung</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>This filter cannot be made partial</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieser Filter kann nicht abschnittsweise angewendet werden</translation>
     </message>
     <message>
         <location line="+177"/>
         <source>Add</source>
-        <translation type="unfinished">Hinzufügen</translation>
+        <translation>Hinzufügen</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Remove</source>
-        <translation type="unfinished">Entfernen</translation>
+        <translation>Entfernen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure</source>
-        <translation type="unfinished">Konfigurieren</translation>
+        <translation>Konfigurieren</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Move up</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach oben verschieben</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Move down</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach unten verschieben</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Make partial</source>
-        <translation type="unfinished"></translation>
+        <translation>Abschnittsweise anwenden</translation>
     </message>
     <message>
         <location line="+79"/>
@@ -14482,7 +14484,7 @@ Ready.
     <message>
         <location line="-322"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14525,7 +14527,7 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/qt4/Q_resize.cpp" line="+251"/>
         <source>Width and height cannot be odd</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Breite und Höhe können nicht ungerade sein</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/swScaleResize.cpp" line="+80"/>
@@ -14535,7 +14537,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>swScale Resizer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildgröße in Pixeln mittels swScale verändern.</translation>
     </message>
 </context>
 <context>
@@ -14902,12 +14904,12 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/rotate/rotate.cpp" line="+52"/>
         <location line="+163"/>
         <source>Rotate</source>
-        <translation type="unfinished">Drehen im Uhrzeigersinn</translation>
+        <translation>Drehen</translation>
     </message>
     <message>
         <location line="-6"/>
         <source>90 degrees</source>
-        <translation type="unfinished">90 Grad</translation>
+        <translation>90 Grad</translation>
     </message>
     <message>
         <source>90Â°</source>
@@ -14916,7 +14918,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>180 degrees</source>
-        <translation type="unfinished">180 Grad</translation>
+        <translation>180 Grad</translation>
     </message>
     <message>
         <source>180Â°</source>
@@ -14925,7 +14927,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>270 degrees</source>
-        <translation type="unfinished">270 Grad</translation>
+        <translation>270 Grad</translation>
     </message>
     <message>
         <source>270Â°</source>
@@ -14954,12 +14956,12 @@ Ready.
     <message>
         <location line="-158"/>
         <source>Rotate the image by 90/180/270 degrees.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild im Uhrzeigersinn um 90/180/270 Grad drehen.</translation>
     </message>
     <message>
         <location line="+155"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht drehen</translation>
     </message>
 </context>
 <context>
@@ -15273,13 +15275,14 @@ Ready.
         <location line="+0"/>
         <source>This file&apos;s index has been created with an older version of avidemux.
 Please delete the idx2 file and reopen.</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Index dieser Datei wurde mit einer älteren Version von Avidemux erstellt. 
+Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+124"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+82"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Es gibt mehrere Dateien mit fortlaufender Nummerierung im Dateinamen. Sollen sie alle geladen werden?</translation>
     </message>
     <message>
         <location line="+9"/>
