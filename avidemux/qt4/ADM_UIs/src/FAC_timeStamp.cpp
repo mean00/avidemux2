@@ -118,7 +118,7 @@ void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
  
  QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-// text->setBuddy(box);
+ text->setBuddy(myTWidget->hours);
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
