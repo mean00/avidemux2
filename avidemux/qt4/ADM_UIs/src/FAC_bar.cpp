@@ -41,10 +41,10 @@ public:
 
 //********************************************************************
 diaElemBar::diaElemBar(uint32_t percent,const char *toggleTitle)
-  : diaElem(ELEM_BAR)
+  : diaElem(ELEM_BAR),QtFactoryUtils(toggleTitle)
 {
   per=percent;
-  titleFromShortKey(toggleTitle);
+  
  }
 
 diaElemBar::~diaElemBar()

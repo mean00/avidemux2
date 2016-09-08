@@ -40,11 +40,10 @@ public:
 	int getRequiredLayout(void);
 };
 
-diaElemAspectRatio::diaElemAspectRatio(uint32_t *num, uint32_t *den, const char *title, const char *tip) : diaElem(ELEM_ASPECT_RATIO)
+diaElemAspectRatio::diaElemAspectRatio(uint32_t *num, uint32_t *den, const char *title, const char *tip) : diaElem(ELEM_ASPECT_RATIO),QtFactoryUtils(title)
 {
 	param = (void *)num;
 	this->den = den;
-	titleFromShortKey(title);
 	this->tip = tip;
 }
 

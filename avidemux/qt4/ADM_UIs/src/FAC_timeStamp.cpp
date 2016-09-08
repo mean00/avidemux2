@@ -64,12 +64,11 @@ public:
  * @param toggleTitle
  */
 diaElemTimeStamp::diaElemTimeStamp(uint32_t *v,const char *toggleTitle,const uint32_t vmin, const uint32_t vmax)
-  : diaElem(ELEM_TIMESTAMP)
+  : diaElem(ELEM_TIMESTAMP),QtFactoryUtils(toggleTitle)
 {
   param=v;
   valueMin=vmin;
   valueMax=vmax;
-  titleFromShortKey(toggleTitle);
  }
 /**
  * \fn diaElemTimeStamp

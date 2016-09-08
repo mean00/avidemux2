@@ -54,10 +54,9 @@ public:
 
 //********************************************************************
 diaElemReadOnlyText::diaElemReadOnlyText(const char *readyOnly,const char *toggleTitle,const char *tip)
-  : diaElem(ELEM_TOGGLE)
+  : diaElem(ELEM_TOGGLE),QtFactoryUtils(toggleTitle)
 {
   param=(void *)ADM_strdup(readyOnly);
-  titleFromShortKey(toggleTitle);
   this->tip=tip;
  }
 
@@ -90,19 +89,17 @@ int diaElemReadOnlyText::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 //*********************************
 
 diaElemText::diaElemText(char **text,const char *toggleTitle,const char *tip)
-    : diaElem(ELEM_TEXT)
+    : diaElem(ELEM_TEXT),QtFactoryUtils(toggleTitle)
 {
   
   if(!*text) *text=ADM_strdup("");
   param=(void *)text;
-  titleFromShortKey(toggleTitle);
   this->tip=tip;
  }
 
 diaElemText::~diaElemText()
 {
-  if(paramTitle)
-    ADM_dealloc( paramTitle);
+ 
 }
 void diaElemText::setMe(void *dialog, void *opaque,uint32_t line)
 {

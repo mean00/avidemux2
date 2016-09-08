@@ -7,6 +7,8 @@
 class QtFactoryUtils
 {
 public:
+            QtFactoryUtils(const char *in);
+protected:    
     QString myQtTitle;
     bool    titleFromShortKey(const char *in);
 };

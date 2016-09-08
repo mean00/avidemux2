@@ -26,6 +26,10 @@
  * @param in
  * @return 
  */
+QtFactoryUtils::QtFactoryUtils(const char *in)
+{
+    titleFromShortKey(in);
+}
 bool    QtFactoryUtils::titleFromShortKey(const char *in)
 {
     myQtTitle = QString::fromUtf8(in);

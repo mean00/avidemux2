@@ -43,10 +43,9 @@ public:
 };
 
 diaElemFrame::diaElemFrame(const char *toggleTitle, const char *tip)
-  : diaElemFrameBase()
+  : diaElemFrameBase(),QtFactoryUtils(toggleTitle)
 {
   param=NULL;
-  titleFromShortKey(toggleTitle);
   this->tip=tip;
    nbElems=0;
   frameSize=0;
@@ -62,8 +61,6 @@ void diaElemFrame::swallow(diaElem *widget)
 }
 diaElemFrame::~diaElemFrame()
 {
-  if(paramTitle)
-    ADM_dealloc(paramTitle);
 }
 
 void diaElemFrame::setMe(void *dialog, void *opaque,uint32_t line)

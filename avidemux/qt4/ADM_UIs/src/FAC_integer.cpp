@@ -55,10 +55,9 @@ public:
 
 //********************************************************************
 diaElemInteger::diaElemInteger(int32_t *intValue,const char *toggleTitle, int32_t min, int32_t max,const char *tip)
-  : diaElem(ELEM_TOGGLE)
+  : diaElem(ELEM_TOGGLE),QtFactoryUtils(toggleTitle)
 {
   param=(void *)intValue;
-  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;
@@ -114,10 +113,9 @@ int diaElemInteger::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 //******************************************************
 diaElemUInteger::diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uint32_t min, uint32_t max,const char *tip)
-  : diaElem(ELEM_TOGGLE)
+  : diaElem(ELEM_TOGGLE),QtFactoryUtils(toggleTitle)
 {
   param=(void *)intValue;
-  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;

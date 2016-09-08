@@ -47,10 +47,9 @@ public:
 
 //********************************************************************
 diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, ELEM_TYPE_FLOAT min, ELEM_TYPE_FLOAT max,const char *tip, int decimals)
-  : diaElem(ELEM_TOGGLE)
+  : diaElem(ELEM_TOGGLE),QtFactoryUtils(toggleTitle)
 {
   param=(void *)intValue;
-  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;

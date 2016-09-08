@@ -37,10 +37,9 @@ public:
   void getMe(void) {};
 };
 diaElemNotch::diaElemNotch(uint32_t yes,const char *toggleTitle, const char *tip)
-  : diaElem(ELEM_NOTCH)
+  : diaElem(ELEM_NOTCH),QtFactoryUtils(title)
 {
   yesno=yes;
-  titleFromShortKey(toggleTitle);
   this->tip=tip;
 }
 
