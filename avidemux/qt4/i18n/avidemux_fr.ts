@@ -1042,7 +1042,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+23"/>
         <source>Go to previous frame [LEFT]</source>
-        <translation>Image précédents [GAUCHE]</translation>
+        <translation type="unfinished">Image précédente [GAUCHE]</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -1163,7 +1163,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+10"/>
         <source>Display output video on playback</source>
-        <translation>Jouer la video post filtrage</translation>
+        <translation type="unfinished">Jouer la vidéo post filtrage</translation>
     </message>
     <message>
         <location line="+10"/>
