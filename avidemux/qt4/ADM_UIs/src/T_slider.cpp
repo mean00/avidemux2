@@ -22,11 +22,11 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
-extern const char *shortkey(const char *);
+
 
 namespace ADM_qt4Factory
 {
-class diaElemUSlider : public diaElemSliderBase
+class diaElemUSlider : public diaElemSliderBase,QtFactoryUtils
 {
   protected:
 	  uint32_t min,max,incr;
@@ -39,7 +39,7 @@ public:
   int getRequiredLayout(void);
   
 };
-class diaElemSlider : public diaElemSliderBase
+class diaElemSlider : public diaElemSliderBase,QtFactoryUtils
 {
   protected:
     
@@ -96,10 +96,9 @@ void SpinSlider::setMaximum (int value)
 //----------------------------------------------------------------------
 
 diaElemUSlider::diaElemUSlider(uint32_t *value,const char *toggleTitle, uint32_t min,uint32_t max,uint32_t incr,const char *tip)
-  : diaElemSliderBase()
+  : diaElemSliderBase(),QtFactoryUtils(toggleTitle)
 {
   param=(void *)value;
-  paramTitle=shortkey(toggleTitle);
   this->min=min;
   this->max=max;
   this->incr=incr;
@@ -125,7 +124,7 @@ void diaElemUSlider::setMe(void *dialog, void *opaque,uint32_t line)
  
   myWidget = (void *)slider;
 
-  QLabel *text = new QLabel (QString::fromUtf8(paramTitle), (QWidget *)dialog);
+  QLabel *text = new QLabel (myQtTitle, (QWidget *)dialog);
   text->setBuddy (slider);
 
   QGridLayout *layout = (QGridLayout*) opaque;
@@ -155,10 +154,9 @@ void diaElemUSlider::enable(uint32_t onoff)
 int diaElemUSlider::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 diaElemSlider::diaElemSlider(int32_t *value,const char *toggleTitle, int32_t min,int32_t max,int32_t incr,const char *tip)
-  : diaElemSliderBase()
+  : diaElemSliderBase(),QtFactoryUtils(toggleTitle)
 {
   param=(void *)value;
-  paramTitle=shortkey(toggleTitle);
   this->min=min;
   this->max=max;
   this->incr=incr;
@@ -182,7 +180,7 @@ void diaElemSlider::setMe(void *dialog, void *opaque,uint32_t line)
  
   myWidget = (void *)slider;
 
-  QLabel *text = new QLabel (QString::fromUtf8(paramTitle), (QWidget *)dialog);
+  QLabel *text = new QLabel (myQtTitle, (QWidget *)dialog);
   text->setBuddy (slider);
 
   QGridLayout *layout = (QGridLayout*) opaque;

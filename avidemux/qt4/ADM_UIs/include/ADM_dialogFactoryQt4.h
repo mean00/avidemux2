@@ -1,3 +1,4 @@
+#pragma once
 #include <QString>
 
 #define FAC_QT_GRIDLAYOUT 1

@@ -25,7 +25,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_qt4Factory
 {
-class diaElemToggle : public diaElemToggleBase
+class diaElemToggle : public diaElemToggleBase,QtFactoryUtils
 {
   protected:
 public:
@@ -40,7 +40,7 @@ public:
   int getRequiredLayout(void);
 };
 
-class diaElemToggleUint : public diaElem
+class diaElemToggleUint : public diaElem,QtFactoryUtils
 {
   protected:
         uint32_t *emb;
@@ -58,7 +58,7 @@ public:
   void      updateMe();
   int getRequiredLayout(void);
 };
-class diaElemToggleInt : public diaElem
+class diaElemToggleInt : public diaElem,QtFactoryUtils
 {
   protected:
 	  		 int32_t *emb;
@@ -104,10 +104,9 @@ void ADM_QCheckBox::connectMe(void)
 }
 
 diaElemToggle::diaElemToggle(bool *toggleValue,const char *toggleTitle, const char *tip)
-  : diaElemToggleBase()
+  : diaElemToggleBase(),QtFactoryUtils(toggleTitle)
 {
   param=(void *)toggleValue;
-  paramTitle=shortkey(toggleTitle);
   this->tip=tip;
   myWidget=NULL;
   nbLink=0;
@@ -118,14 +117,10 @@ diaElemToggle::~diaElemToggle()
 //  ADM_QCheckBox *box=(ADM_QCheckBox *)myWidget;
  // if(box) delete box;
   myWidget=NULL;
-  if(paramTitle)
-  {
-    ADM_dealloc(paramTitle);
-  }
 }
 void diaElemToggle::setMe(void *dialog, void *opaque,uint32_t l)
 {
- ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE);
+ ADM_QCheckBox *box=new ADM_QCheckBox(myQtTitle,(QWidget *)dialog,this,TT_TOGGLE);
  QVBoxLayout *layout=(QVBoxLayout*) opaque;
  myWidget=(void *)box; 
  if( *(bool *)param)
@@ -205,10 +200,9 @@ int diaElemToggle::getRequiredLayout(void) { return FAC_QT_VBOXLAYOUT; }
 // An UInt and a toggle linked...
 //******************************************************
 diaElemToggleUint::diaElemToggleUint(uint32_t *toggleValue,const char *toggleTitle, uint32_t *uintval, const char *name,uint32_t min,uint32_t max,const char *tip)
-  : diaElem(ELEM_TOGGLE_UINT)
+  : diaElem(ELEM_TOGGLE_UINT),QtFactoryUtils(toggleTitle)
 {
   param=(void *)toggleValue;
-  paramTitle=shortkey(toggleTitle);
   this->tip=tip;
   embName=name;
   emb=uintval;
@@ -219,12 +213,10 @@ diaElemToggleUint::diaElemToggleUint(uint32_t *toggleValue,const char *toggleTit
 
 diaElemToggleUint::~diaElemToggleUint()
 {
-   if(paramTitle)
-        ADM_dealloc( paramTitle);
 }
 void diaElemToggleUint::setMe(void *dialog, void *opaque,uint32_t line)
 {
- ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE_UINT);
+ ADM_QCheckBox *box=new ADM_QCheckBox(myQtTitle,(QWidget *)dialog,this,TT_TOGGLE_UINT);
  QGridLayout *layout=(QGridLayout*) opaque;
  QHBoxLayout *hboxLayout = new QHBoxLayout();
  myWidget=(void *)box; 
@@ -312,10 +304,9 @@ int diaElemToggleUint::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 //******************************************************
 
 diaElemToggleInt::diaElemToggleInt(uint32_t *toggleValue,const char *toggleTitle, int32_t *uintval, const char *name,int32_t min,int32_t max,const char *tip)
-  : diaElem(ELEM_TOGGLE_INT)
+  : diaElem(ELEM_TOGGLE_INT),QtFactoryUtils(toggleTitle)
 {
-   param=(void *)toggleValue;
-  paramTitle=shortkey(toggleTitle);
+  param=(void *)toggleValue;
   this->tip=tip;
   embName=name;
   emb=uintval;
@@ -330,7 +321,7 @@ diaElemToggleInt::~diaElemToggleInt()
 }
 void diaElemToggleInt::setMe(void *dialog, void *opaque,uint32_t line)
 {
- ADM_QCheckBox *box=new ADM_QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog,this,TT_TOGGLE_INT);
+ ADM_QCheckBox *box=new ADM_QCheckBox(myQtTitle,(QWidget *)dialog,this,TT_TOGGLE_INT);
  QGridLayout *layout=(QGridLayout*) opaque;
  QHBoxLayout *hboxLayout = new QHBoxLayout();
  myWidget=(void *)box; 

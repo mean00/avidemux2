@@ -34,7 +34,7 @@ void QCheckBoxReadOnly::stateChanged(int state)
 	box->setCheckState(this->state ? Qt::Checked : Qt::Unchecked);
 }
 
-class diaElemNotch : public diaElem
+class diaElemNotch : public diaElem,QtFactoryUtils
 {
   uint32_t yesno;
 public:
@@ -47,10 +47,9 @@ public:
 };
 
 diaElemNotch::diaElemNotch(uint32_t yes,const char *toggleTitle, const char *tip)
-  : diaElem(ELEM_NOTCH)
+  : diaElem(ELEM_NOTCH),QtFactoryUtils(toggleTitle)
 {
   yesno=yes;
-  paramTitle=toggleTitle;
   this->tip=tip;
 }
 
@@ -60,7 +59,7 @@ diaElemNotch::~diaElemNotch()
 }
 void diaElemNotch::setMe(void *dialog, void *opaque,uint32_t line)
 {
-  QCheckBox *box=new QCheckBox(QString::fromUtf8(paramTitle),(QWidget *)dialog);
+  QCheckBox *box=new QCheckBox(myQtTitle,(QWidget *)dialog);
   QCheckBoxReadOnly *readOnlyReceiver = new QCheckBoxReadOnly(box, yesno);
  QGridLayout *layout=(QGridLayout*) opaque;
  myWidget=(void *)box; 

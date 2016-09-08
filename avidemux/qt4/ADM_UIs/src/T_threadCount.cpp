@@ -23,7 +23,7 @@ extern const char* shortkey(const char*);
 namespace ADM_qt4Factory
 {
 
-class diaElemThreadCount : public diaElem
+class diaElemThreadCount : public diaElem,QtFactoryUtils
 {
 
 public:
@@ -102,23 +102,22 @@ ADM_QthreadCount::~ADM_QthreadCount()
 		delete text;
 }
 
-diaElemThreadCount::diaElemThreadCount(uint32_t *value, const char *title, const char *tip) : diaElem(ELEM_THREAD_COUNT)
+diaElemThreadCount::diaElemThreadCount(uint32_t *value, const char *title, const char *tip) : diaElem(ELEM_THREAD_COUNT),QtFactoryUtils(title)
 {
-	param = (void*)value;
-	paramTitle = shortkey(title);
+	param = (void*)value;	
 	this->tip = tip;
 }
 
 diaElemThreadCount::~diaElemThreadCount()
 {
-	ADM_dealloc(paramTitle);
+	
 }
 
 void diaElemThreadCount::setMe(void *dialog, void *opaque, uint32_t line)
 {
 	QGridLayout *layout = (QGridLayout*)opaque;
 
-	ADM_QthreadCount *threadCount = new ADM_QthreadCount((QWidget*)dialog, paramTitle, *(uint32_t *)param, layout, line);
+	ADM_QthreadCount *threadCount = new ADM_QthreadCount((QWidget *)dialog,myQtTitle.toUtf8().constData(), *(uint32_t *)param, layout, line);
 
 	myWidget = (void*)threadCount;
 }

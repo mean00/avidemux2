@@ -5,10 +5,10 @@
 
 #include "ADM_inttype.h"
 #include "DIA_factory.h"
-
+#include "ADM_dialogFactoryQt4.h"
 namespace ADM_qt4Factory
 {
-	class diaElemMenuDynamic : public diaElemMenuDynamicBase
+	class diaElemMenuDynamic : public diaElemMenuDynamicBase,public QtFactoryUtils
 	{
 	public:
 		diaElemMenuDynamic(uint32_t *intValue, const char *itle, uint32_t nb, diaMenuEntryDynamic **menu, const char *tip = NULL);

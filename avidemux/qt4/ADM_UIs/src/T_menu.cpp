@@ -24,7 +24,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_qt4Factory
 {
-class diaElemMenu : public diaElemMenuBase
+class diaElemMenu : public diaElemMenuBase,QtFactoryUtils
 {
 protected:
 	diaElemMenuDynamic  *dyna;
@@ -62,11 +62,9 @@ void ADM_QComboBox::connectMe(void)
 }
 
 diaElemMenu::diaElemMenu(uint32_t *intValue,const char *itle, uint32_t nb, 
-               const diaMenuEntry *menu,const char *tip)
-  : diaElemMenuBase()
+               const diaMenuEntry *menu,const char *tip):QtFactoryUtils(itle)
 {
   param=(void *)intValue;
-  paramTitle=itle;
   this->tip=tip;
   this->menu=menu;
   this->nbMenu=nb;
@@ -129,10 +127,9 @@ int diaElemMenu::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 
 diaElemMenuDynamic::diaElemMenuDynamic(uint32_t *intValue,const char *itle, uint32_t nb, 
                 diaMenuEntryDynamic **menu,const char *tip)
-  : diaElemMenuDynamicBase()
+  :QtFactoryUtils(itle)
 {
   param=(void *)intValue;
-  paramTitle=shortkey(itle);
   this->tip=tip;
   this->menu=menu;
   this->nbMenu=nb;
@@ -140,11 +137,7 @@ diaElemMenuDynamic::diaElemMenuDynamic(uint32_t *intValue,const char *itle, uint
 }
 
 diaElemMenuDynamic::~diaElemMenuDynamic()
-{
-  if(paramTitle)
-  {
-    ADM_dealloc( paramTitle);
-  }
+{ 
 }
 void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -153,7 +146,7 @@ void diaElemMenuDynamic::setMe(void *dialog, void *opaque,uint32_t line)
   QGridLayout *layout=(QGridLayout*) opaque;
      myWidget=(void *)combo; 
 
-	 QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle));
+	 QLabel *text=new QLabel( myQtTitle);
 	 text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	 QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
