@@ -17,8 +17,7 @@ qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','Qt
 #
 allSymbols=[]
 #
-#
-#
+
 def log(s):
     #print "Log:<"+str(s)+">"
     pass
@@ -109,7 +108,7 @@ def copyFiles(folder,libFolder):
                                log(shortName+" already copied")
                else:
                    log("Copying"+shortName)
-                   shutil.copy(dep,libFolder)
+                   myCopy(dep,libFolder)
                    copied+=1
     return copied
 #
@@ -128,7 +127,7 @@ def copyQtDeps(components,libFolder):
                                print(shortName+" already copied")
                    else:
                        print("Copying:"+shortName)
-                       shutil.copy(dep,libFolder)
+                       myCopy(dep,libFolder)
                        copied+=1
     # copy plugins deps too
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
@@ -222,6 +221,12 @@ def myChmod(dst):
         log("Exec <"+cmd+">")
         subprocess.call(cmd, shell=True)
 
+#
+def myCopy(src,dst):
+    shutil.copy(src,dst)
+    myChmod(dst)
+
+#
 def changeQtFileSelfLinkPath(fl,modu):
            shortName="@executable_path/../../Frameworks/"+modu+".framework/Versions/5/"+modu
            cmd="/usr/bin/install_name_tool -id "+shortName+" "+fl
@@ -253,8 +258,7 @@ def myCopyTree(src,dst):
 def myCopyFile(src,dst):
         if(not os.path.exists(src)):
                 return
-        shutil.copy(src,dst)            
-        myChmod(dst)
+        myCopy(src,dst)            
 ##
 def copyQtFiles(targetFolder):
         myMkDir(targetFolder)
