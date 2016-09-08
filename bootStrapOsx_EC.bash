@@ -199,9 +199,12 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
 fi
 echo "** Copying Qt nib files**"
 cp -Rap $MYQT/qt_menu.nib   $PREFIX/bin/
-echo "**  Changing link path**"
-python $TOP/cmake/osx_libs_ec.py
-echo "* Copying make files **"
+echo "**  Copying libraries **"
+python $TOP/cmake/osx_libs_copyLibs.py
+echo "**  Remapping libraries **"
+python $TOP/cmake/osx_libs_remap.py
+python $TOP/cmake/osx_libs_remap.py
+echo "** Finishing **"
 cp $TOP/cmake/osx/Info.plist $PREFIX/../
 mkdir -p $PREFIX/../MacOS
 cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS/Avidemux2.6.app

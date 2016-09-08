@@ -301,18 +301,5 @@ processed=1
 # Copy file until all of them are there
 while not processed == 0:
         processed=copyFiles(libFolder,libFolder)
-#################################################################
-# Step 2 :  Change link name so that they are all executable_path
-#               relative
-#################################################################
-print "Adjusting dependencies"
-changeBinLinkPath(binFolder)
-changeLibLinkPath(libFolder)
-changeQtPluginLinkPath(qtPluginFolder)
-subFolders=["audioDecoder",    "audioEncoders",   "autoScripts",     "demuxers",        "muxers",          "scriptEngines",   "videoEncoders",   "videoFilters"]
-for s in subFolders:
-        relFolder="ADM_plugins6/"+s
-        changePluginLinkPath(libFolder+"/"+relFolder,relFolder)
-changeQtPlatformLinkPath(binFolder+'/platforms')
-        
+       
 
