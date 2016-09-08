@@ -27,7 +27,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_qt4Factory
 {
-class diaElemFrame : public diaElemFrameBase
+class diaElemFrame : public diaElemFrameBase,QtFactoryUtils
 {
   
 public:
@@ -46,7 +46,7 @@ diaElemFrame::diaElemFrame(const char *toggleTitle, const char *tip)
   : diaElemFrameBase()
 {
   param=NULL;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->tip=tip;
    nbElems=0;
   frameSize=0;
@@ -69,7 +69,7 @@ diaElemFrame::~diaElemFrame()
 void diaElemFrame::setMe(void *dialog, void *opaque,uint32_t line)
 {
 	QVBoxLayout *layout = (QVBoxLayout*)opaque;
-	QGroupBox *groupBox = new QGroupBox(QString::fromUtf8(paramTitle));
+	QGroupBox *groupBox = new QGroupBox(myQtTitle);
 	QVBoxLayout *vboxlayout = new QVBoxLayout(groupBox);
 	QLayout *layout2 = NULL;
 	int currentLayout = 0;

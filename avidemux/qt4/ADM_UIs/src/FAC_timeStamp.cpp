@@ -44,7 +44,7 @@ namespace ADM_Qt4Factory
  *      \class diaElemTimeStamp
  *      \brief Qt4 version of diaElemTimeStamp
  */
-class diaElemTimeStamp : public diaElem
+class diaElemTimeStamp : public diaElem,QtFactoryUtils
 {
   protected :
         uint32_t valueMin;
@@ -69,7 +69,7 @@ diaElemTimeStamp::diaElemTimeStamp(uint32_t *v,const char *toggleTitle,const uin
   param=v;
   valueMin=vmin;
   valueMax=vmax;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
  }
 /**
  * \fn diaElemTimeStamp
@@ -80,8 +80,6 @@ diaElemTimeStamp::~diaElemTimeStamp()
   myTimeWidget *w=(myTimeWidget *)myWidget;
   myWidget=NULL;
   if(w) delete w;
-  if(paramTitle)
-    ADM_dealloc(paramTitle);
 }
 /**
  * \fn          setMe
@@ -119,7 +117,7 @@ void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
   myTWidget->seconds->setValue(ss);
   myTWidget->mseconds->setValue(msec);
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 // text->setBuddy(box);
 

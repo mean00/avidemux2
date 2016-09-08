@@ -20,7 +20,7 @@
 
 namespace ADM_qt4Factory
 {
-class diaElemHex : public diaElem
+class diaElemHex : public diaElem,QtFactoryUtils
 {
   uint32_t dataSize;
   uint8_t  *data;

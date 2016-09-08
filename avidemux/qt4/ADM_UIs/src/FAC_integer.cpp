@@ -27,7 +27,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_qt4Factory
 {
-class diaElemInteger : public diaElem
+class diaElemInteger : public diaElem,QtFactoryUtils
 {
 
 public:
@@ -40,7 +40,7 @@ public:
   int getRequiredLayout(void);
 };
 /* Same but unsigned */
-class diaElemUInteger : public diaElem
+class diaElemUInteger : public diaElem,QtFactoryUtils
 {
 
 public:
@@ -58,7 +58,7 @@ diaElemInteger::diaElemInteger(int32_t *intValue,const char *toggleTitle, int32_
   : diaElem(ELEM_TOGGLE)
 {
   param=(void *)intValue;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;
@@ -66,8 +66,6 @@ diaElemInteger::diaElemInteger(int32_t *intValue,const char *toggleTitle, int32_
 
 diaElemInteger::~diaElemInteger()
 {
-  if(paramTitle)
-    ADM_dealloc( paramTitle);
 }
 void diaElemInteger::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -80,7 +78,7 @@ void diaElemInteger::setMe(void *dialog, void *opaque,uint32_t line)
  box->setMaximum(max);
  box->setValue(*(int32_t *)param);
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(box);
 
@@ -119,7 +117,7 @@ diaElemUInteger::diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uin
   : diaElem(ELEM_TOGGLE)
 {
   param=(void *)intValue;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;
@@ -128,8 +126,7 @@ diaElemUInteger::diaElemUInteger(uint32_t *intValue,const char *toggleTitle, uin
 
 diaElemUInteger::~diaElemUInteger()
 {
-  if(paramTitle)
-    ADM_dealloc( paramTitle);
+  
 }
 void diaElemUInteger::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -142,7 +139,7 @@ void diaElemUInteger::setMe(void *dialog, void *opaque,uint32_t line)
  box->setMaximum(max);
  box->setValue(*(uint32_t *)param);
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(box);
 

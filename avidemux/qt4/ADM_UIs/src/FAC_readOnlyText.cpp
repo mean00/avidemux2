@@ -27,7 +27,7 @@ extern const char *shortkey(const char *);
 namespace ADM_qt4Factory
 {
 
-class diaElemReadOnlyText : public diaElem
+class diaElemReadOnlyText : public diaElem,QtFactoryUtils
 {
 
 public:
@@ -39,7 +39,7 @@ public:
   int getRequiredLayout(void);
 };
 
-class diaElemText : public diaElem
+class diaElemText : public diaElem,QtFactoryUtils
 {
 
 public:
@@ -57,14 +57,13 @@ diaElemReadOnlyText::diaElemReadOnlyText(const char *readyOnly,const char *toggl
   : diaElem(ELEM_TOGGLE)
 {
   param=(void *)ADM_strdup(readyOnly);
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->tip=tip;
  }
 
 diaElemReadOnlyText::~diaElemReadOnlyText()
 {
-  if(paramTitle)
-    ADM_dealloc(paramTitle);
+ 
 }
 void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -73,7 +72,7 @@ void diaElemReadOnlyText::setMe(void *dialog, void *opaque,uint32_t line)
 
    
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
   QLabel *text2=new QLabel( QString::fromUtf8((char *)param),(QWidget *)dialog);
  text->setBuddy(text2);
  layout->addWidget(text,line,0);
@@ -96,7 +95,7 @@ diaElemText::diaElemText(char **text,const char *toggleTitle,const char *tip)
   
   if(!*text) *text=ADM_strdup("");
   param=(void *)text;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->tip=tip;
  }
 
@@ -110,7 +109,7 @@ void diaElemText::setMe(void *dialog, void *opaque,uint32_t line)
 
  QGridLayout *layout=(QGridLayout*) opaque;
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  QLineEdit *lineEdit = new QLineEdit( QString::fromUtf8(*(char **)param));
  
  text->setBuddy(lineEdit);

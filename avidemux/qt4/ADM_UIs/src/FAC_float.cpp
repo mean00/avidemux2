@@ -28,7 +28,7 @@ namespace ADM_qt4Factory
 {
 
 
-class diaElemFloat : public diaElem
+class diaElemFloat : public diaElem,QtFactoryUtils
 {
 protected:
 	int decimals;
@@ -50,7 +50,7 @@ diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, EL
   : diaElem(ELEM_TOGGLE)
 {
   param=(void *)intValue;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
   this->min=min;
   this->max=max;
   this->tip=tip;
@@ -59,8 +59,7 @@ diaElemFloat::diaElemFloat(ELEM_TYPE_FLOAT *intValue,const char *toggleTitle, EL
 
 diaElemFloat::~diaElemFloat()
 {
-  if(paramTitle)
-    ADM_dealloc(paramTitle);
+ 
 }
 void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -75,7 +74,7 @@ void diaElemFloat::setMe(void *dialog, void *opaque,uint32_t line)
  box->setSingleStep(0.1);
  box->setValue(*(ELEM_TYPE_FLOAT *)param);
  
- QLabel *text=new QLabel( QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel( myQtTitle,(QWidget *)dialog);
  text->setBuddy(box);
 
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);

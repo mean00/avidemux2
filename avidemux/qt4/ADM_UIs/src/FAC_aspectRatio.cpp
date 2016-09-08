@@ -26,7 +26,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_qt4Factory
 {
-class diaElemAspectRatio : public diaElem
+class diaElemAspectRatio : public diaElem,QtFactoryUtils
 {
 public:
 	uint32_t *den;
@@ -44,19 +44,18 @@ diaElemAspectRatio::diaElemAspectRatio(uint32_t *num, uint32_t *den, const char 
 {
 	param = (void *)num;
 	this->den = den;
-	paramTitle = shortkey(title);
+	titleFromShortKey(title);
 	this->tip = tip;
 }
 
 diaElemAspectRatio::~diaElemAspectRatio()
 {
-	if(paramTitle)
-		ADM_dealloc( paramTitle);
+	
 }
 
 void diaElemAspectRatio::setMe(void *dialog, void *opaque, uint32_t line)
 {
-	QLabel *text = new QLabel(QString::fromUtf8(paramTitle));
+	QLabel *text = new QLabel(myQtTitle);
 	QSpinBox *numBox = new QSpinBox();
 	QLabel *label = new QLabel(":");
 	QSpinBox *denBox = new QSpinBox();

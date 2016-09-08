@@ -26,7 +26,7 @@ extern const char *shortkey(const char *);
 
 namespace ADM_Qt4Factory
 {
-class diaElemBar : public diaElem
+class diaElemBar : public diaElem,QtFactoryUtils
 {
   protected :
         uint32_t per;
@@ -44,13 +44,12 @@ diaElemBar::diaElemBar(uint32_t percent,const char *toggleTitle)
   : diaElem(ELEM_BAR)
 {
   per=percent;
-  paramTitle=shortkey(toggleTitle);
+  titleFromShortKey(toggleTitle);
  }
 
 diaElemBar::~diaElemBar()
 {
-  if(paramTitle)
-    ADM_dealloc(paramTitle);
+ 
 }
 void diaElemBar::setMe(void *dialog, void *opaque,uint32_t line)
 {
@@ -62,7 +61,7 @@ void diaElemBar::setMe(void *dialog, void *opaque,uint32_t line)
   box->setValue(per);
   box->show();
  
- QLabel *text=new QLabel(QString::fromUtf8(this->paramTitle),(QWidget *)dialog);
+ QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setBuddy(box);
  layout->addWidget(text,line,0);
  layout->addWidget(box,line,1);
