@@ -353,6 +353,7 @@ Section "SDK (to write plugins)" SecGrpDev
         ${File} ${DEV_FOLDER}/include/avidemux/2.6/*
         SetOutPath $INSTDIR\include\avidemux\2.6
         ${File} ${DEV_FOLDER}/include/avidemux/2.6/*
+        !insertmacro InstallDev cmake
         !insertmacro InstallDev ADM_core
         !insertmacro InstallDev ADM_coreAudio
         !insertmacro InstallDev ADM_coreAudioDevice
