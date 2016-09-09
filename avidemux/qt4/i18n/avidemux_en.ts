@@ -549,7 +549,7 @@ Drop timing informations ?</source>
         <location line="-136"/>
         <location line="+169"/>
         <source>Filters</source>
-        <translation type="unfinished">&amp;Filters</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-112"/>
@@ -1879,7 +1879,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-1"/>
         <source>Connect to avsproxy</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Connect &amp;to avsproxy</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -7015,7 +7015,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2_menu.cpp" line="+51"/>
         <source>Project Script</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Project Script</translation>
     </message>
     <message>
         <location line="+4"/>
