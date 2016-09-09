@@ -129,7 +129,7 @@ class ADM_COREUI6_EXPORT diaElemMatrix : public diaElem
   int getRequiredLayout(void);
 };
 /************************************/
-class diaElemSliderBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemSliderBase : public diaElem
 {
   protected:
     
@@ -142,7 +142,7 @@ public:
 
 typedef diaElem *CREATE_USLIDER_T(uint32_t *value,const char *toggleTitle, uint32_t min,uint32_t max,uint32_t incr , const char *tip);
 typedef diaElem *CREATE_SLIDER_T(int32_t *value,const char *toggleTitle, int32_t min,int32_t max,int32_t incr , const char *tip);
-class diaElemUSlider : public diaElemSliderBase
+class ADM_COREUI6_EXPORT diaElemUSlider : public diaElemSliderBase
 {
   protected:
 	  uint32_t min,max,incr;
@@ -172,7 +172,7 @@ public:
 };
 /*********************************************/
 typedef diaElem *CREATE_TOGGLE(bool *toggleValue,const char *toggleTitle, const char *tip);
-class diaElemToggleBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemToggleBase : public diaElem
 {
   protected:
     dialElemLink        links[MENU_MAX_lINK];
@@ -328,7 +328,7 @@ typedef struct diaMenuEntry
   public:
 }diaMenuEntry;
 
-class diaMenuEntryDynamic : public diaMenuEntry
+class ADM_COREUI6_EXPORT diaMenuEntryDynamic : public diaMenuEntry
 {
   public:
   public:
@@ -359,7 +359,7 @@ typedef diaElem  *(CREATE_MENU_T)(uint32_t *intValue,const char *itle, uint32_t 
 typedef diaElem  *(CREATE_MENUDYNAMIC_T)(uint32_t *intValue,const char *itle, uint32_t nb, 
          diaMenuEntryDynamic **menu,const char *tip);
 
-class diaElemMenuDynamicBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemMenuDynamicBase : public diaElem
 {
 protected:	
 diaMenuEntryDynamic **menu;
@@ -390,7 +390,7 @@ public:
   int getRequiredLayout(void);
 };
 
-class diaElemMenuBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemMenuBase : public diaElem
 {
 protected:
 	const diaMenuEntry  *menu;
@@ -425,7 +425,7 @@ public:
 #ifndef ADM_MINIMAL_UI_INTERFACE
 #include "ADM_encoderConf.h"
 typedef diaElem  *(CREATE_BITRATE_T)(COMPRES_PARAMS *p,const char *toggleTitle,const char *tip);
-class diaElemBitrateBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemBitrateBase : public diaElem
 {
   protected:
     COMPRES_PARAMS    copy;
@@ -454,7 +454,7 @@ public:
 #endif
 /*************************************************/
 typedef diaElem *CREATE_FILE_T(uint32_t writeMode,std::string  &filename,const char *toggleTitle,  const char *defaultSuffix ,const char *tip);
-class diaElemFileBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemFileBase : public diaElem
 {
 
 protected:
@@ -486,7 +486,7 @@ public:
 };
 /*************************************************/
 typedef diaElem *CREATE_DIR_T(std::string &filename,const char *toggleTitle,const char *tip);
-class diaElemDirSelectBase : public diaElem
+class ADM_COREUI6_EXPORT diaElemDirSelectBase : public diaElem
 {
 
 public:
@@ -554,7 +554,7 @@ public:
 };
 /*********************************************/
 typedef diaElem *(CREATE_TAB_T )(const char *toggleTitle, uint32_t nb, diaElem **content);
-class diaElemTabs 
+class ADM_COREUI6_EXPORT diaElemTabs 
 {
   public:
     
@@ -574,7 +574,7 @@ class diaElemTabs
 };
 /**********************************************/
 #define DIA_MAX_FRAME 20
-class diaElemFrameBase :public diaElem
+class ADM_COREUI6_EXPORT diaElemFrameBase :public diaElem
 {
 protected:
   uint32_t frameSize;
@@ -632,7 +632,7 @@ public:
 };
 /**********************************************/
 typedef diaElem *(CREATE_ASPECTRATIO_T)(uint32_t *value, const char *title, const char *tip );
-class diaElemAspectRatio : public diaElem
+class ADM_COREUI6_EXPORT diaElemAspectRatio : public diaElem
 {
 public:
 	uint32_t *den;
