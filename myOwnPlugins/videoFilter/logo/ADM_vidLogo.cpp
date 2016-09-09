@@ -66,7 +66,7 @@ addLogopFilter::addLogopFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : AD
         configuration.x=0;
         configuration.y=0;
         configuration.alpha=255;
-        configuration.logo=NULL;
+        configuration.logo=std::string("");
     }
     myName="logo";
     reloadImage();
@@ -79,11 +79,11 @@ bool addLogopFilter::reloadImage(void)
         if(myImage) delete myImage;
         myImage=NULL;
 
-        if(!configuration.logo)
+        if(!configuration.logo.size())
         {
             return false;
         }
-        myImage=createImageFromFile(configuration.logo);
+        myImage=createImageFromFile(configuration.logo.c_str());
         if(!myImage) return false;
         return true;
 }
@@ -93,8 +93,6 @@ bool addLogopFilter::reloadImage(void)
 */
 addLogopFilter::~addLogopFilter()
 {
-    if(configuration.logo) ADM_dealloc(configuration.logo);
-    configuration.logo=NULL;
     if(myImage) delete myImage;
     myImage=NULL;
 }
@@ -147,7 +145,7 @@ const char *addLogopFilter::getConfiguration(void)
 bool addLogopFilter::configure( void)
 {
 #define PX(x) &(configuration.x)
-	   diaElemFile       file(0,(char **)PX(logo),QT_TR_NOOP("_Logo (jpg file):"), NULL, QT_TR_NOOP("Select JPEG file"));
+	   diaElemFile       file(0,configuration.logo,QT_TR_NOOP("_Logo (jpg file):"), NULL, QT_TR_NOOP("Select JPEG file"));
 	   diaElemUInteger   positionX(PX(x),QT_TR_NOOP("_X Position:"),0,info.width);
 	   diaElemUInteger   positionY(PX(y),QT_TR_NOOP("_Y Position:"),0,info.height);
 	   diaElemUInteger   alpha(PX(alpha),QT_TR_NOOP("_Alpha:"),0,255);
