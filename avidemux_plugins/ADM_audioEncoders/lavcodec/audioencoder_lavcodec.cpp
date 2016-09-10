@@ -75,8 +75,9 @@ AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globa
         CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
   _context=NULL;
+  _frame=NULL;
   _globalHeader=globalHeader;
-   printf("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
+   ADM_info("[Lavcodec] Creating Lavcodec audio encoder (0x%x)\n",makeName(WAV));
 #if defined(ADM_LAV_GLOBAL_HEADER) // Only AAC ?
     if(globalHeader)
         _globalHeader=true;
@@ -118,16 +119,22 @@ uint8_t AUDMEncoder_Lavcodec::extraData(uint32_t *l,uint8_t **d)
 
 AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
 {
-  printf("[Lavcodec] Deleting Lavcodec\n");
+  ADM_info("[Lavcodec] Deleting Lavcodec\n");
   if(_context)
   {
     avcodec_close(CONTEXT);
     av_free(_context);
   }
   _context=NULL;
-  if(_frame)   av_frame_free(&_frame);
+  if(_frame)   
+  {
+      av_frame_free(&_frame);
+  }
   _frame=NULL;
-  if(planarBuffer) delete [] planarBuffer;
+  if(planarBuffer) 
+  {
+      delete [] planarBuffer;
+  }
   planarBuffer=NULL;;
 };
 
@@ -318,7 +325,7 @@ float * AUDMEncoder_Lavcodec::i2p(int count)
     
     int nbBlock=count/wavheader.channels;
     if(nbBlock*wavheader.channels!=count)
-          ADM_warning("Bloc does not match : count=%d, channels=%d\n",count,wavheader.channels);
+        ADM_warning("Bloc does not match : count=%d, channels=%d\n",count,wavheader.channels);
     float *ss=&(tmpbuffer[tmphead]);
     if(wavheader.channels==1) 
                 return ss;
