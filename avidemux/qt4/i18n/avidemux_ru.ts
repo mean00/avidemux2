@@ -2707,8 +2707,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+28"/>
         <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+8"/>
@@ -3085,14 +3084,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+10"/>
         <source>00:00:00/000</source>
-        <translation type="unfinished">
-             {00:00:00/000?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+14"/>
         <source>0/0</source>
-        <translation type="unfinished">
-             {0/0?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3120,8 +3117,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+7"/>
         <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3345,7 +3341,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+27"/>
         <source>&amp;Shift:</source>
-        <translation type="unfinished">&amp;Сдвиг:</translation>
+        <translation type="unfinished">Сдв&amp;иг:</translation>
     </message>
     <message>
         <source>&lt;b&gt;Format&lt;/b&gt;</source>
@@ -3376,7 +3372,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-1214"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Помощь</translation>
+        <translation type="unfinished">Сп&amp;равка</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -3404,7 +3400,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-10"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished">&amp;Сервис</translation>
+        <translation type="unfinished">С&amp;ервис</translation>
     </message>
     <message>
         <location line="-36"/>
@@ -3428,7 +3424,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+5"/>
         <source>&amp;Go</source>
-        <translation type="unfinished">&amp;Переход</translation>
+        <translation type="unfinished">Перех&amp;од</translation>
     </message>
     <message>
         <source>A&amp;uto</source>
@@ -3813,12 +3809,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+12"/>
         <source>&amp;Auto</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ав&amp;томатика</translation>
     </message>
     <message>
         <location line="+30"/>
         <source>&amp;Recent</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Недавно</translation>
     </message>
     <message>
         <location line="+41"/>
@@ -3969,8 +3965,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+77"/>
         <source>00:00:00.000</source>
-        <translation type="unfinished">
-             {00:00:00.000?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+22"/>
@@ -4006,8 +4001,7 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <location line="+10"/>
         <source>000000</source>
-        <translation type="unfinished">
-             {000000?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-3"/>
@@ -5683,44 +5677,44 @@ Is it running ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-75"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Открыть...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Присоединить...</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Сохранить как...</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../common/gui_save.cpp" line="+14"/>
         <location line="+10"/>
         <source>Queue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;В очередь</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as Image</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сохранить как &amp;изображение</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as BMP</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сохранить битовой матрицей (BMP)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Save as JPEG</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сохранить как JPEG</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Закрыть файл</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5732,37 +5726,37 @@ Is it running ?</source>
     <message>
         <location line="-3"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сво&amp;йства</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">В&amp;ыйти из Avidemux</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Отменить шаг</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reset Edit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Сброс</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Cut</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Вырезать</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Paste</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Вставить</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Удалить</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -7912,8 +7906,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+10"/>
         <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+14"/>
@@ -11084,12 +11077,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+212"/>
         <source>Recent Files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Предыдущие файлы</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Recent Projects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Предыдущие проекты</translation>
     </message>
     <message>
         <location line="+575"/>
@@ -12016,8 +12009,7 @@ Ready.
     <message>
         <location line="+7"/>
         <source>00:00:00.000</source>
-        <translation type="unfinished">
-             {00:00:00.000?}</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12657,8 +12649,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location line="+48"/>
         <source>00:00:00</source>
-        <translation type="unfinished">
-             {00:00:00?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+87"/>
