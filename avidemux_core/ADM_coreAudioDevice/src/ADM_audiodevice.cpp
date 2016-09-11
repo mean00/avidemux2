@@ -28,8 +28,7 @@ static audioDeviceThreaded *device=NULL;
 static AUDIO_DEVICE  currentDevice=0; //0 is always dummy
 
 static AUDIO_DEVICE ADM_audioByName(const char *name);
-static const char *ADM_audioById(AUDIO_DEVICE id);
-
+static const std::string &ADM_audioById(AUDIO_DEVICE id);
 
 // --------- couple of stubs for dummy device  -------------
 static uint8_t      DummyGetVersion(uint32_t *major,uint32_t *minor,uint32_t *patch)
@@ -133,9 +132,9 @@ uint8_t ADM_av_loadPlugins(const char *path)
 
 void AVDM_audioSave( void )
 {
-const char *string;
-        string=ADM_audioById(currentDevice);
-        prefs->set(AUDIO_DEVICE_AUDIODEVICE, string);
+std::string audioAsString;
+        audioAsString=ADM_audioById(currentDevice);
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE, audioAsString);
 }
 /**
     \fn ADM_audioByName
@@ -160,10 +159,10 @@ AUDIO_DEVICE ADM_audioByName(const char *name)
     \fn ADM_audioById
     \brief Returns the name of a device from its Id
 */
-const char *ADM_audioById(AUDIO_DEVICE id)
+const std::string &ADM_audioById(AUDIO_DEVICE id)
 {
     ADM_assert(id<ListOfAudioDevices.size());
-    return ListOfAudioDevices[id]->name.c_str();
+    return ListOfAudioDevices[id]->name;
 }
 /**
     \fn AVDM_getCurrentDevice
