@@ -79,7 +79,8 @@ static int ignore_change=0;
             {
                 ADM_warning("Scale: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
             }
-            GUI_setCurrentFrameAndTime();
+            UI_setCurrentTime(pts);
+            UI_purge();
             ignore_change--;
         }
         break;
@@ -422,6 +423,7 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
     len/=video_body->getVideoDuration();  
     GUI_SetScale(len);
 }
+
 /**
     \fn A_jumpToTime
     \brief Jump to a given time

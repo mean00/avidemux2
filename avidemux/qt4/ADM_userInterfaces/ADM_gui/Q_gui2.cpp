@@ -1166,9 +1166,9 @@ void UI_setScale( double val )
 {
     if(_upd_in_progres) return;
     _upd_in_progres++;
-    slider->blockSignals(true);
+    bool old=slider->blockSignals(true);
     slider->setValue( (int)(val * ADM_SCALE_INCREMENT));
-    slider->blockSignals(false);
+    slider->blockSignals(old);
     _upd_in_progres--;
 }
 
