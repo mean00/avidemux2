@@ -207,6 +207,7 @@ const char *getStrFromAudioCodec( uint32_t codec)
               case WAV_LPCM: return QT_TRANSLATE_NOOP("adm","LPCM");
               case WAV_AC3:  return QT_TRANSLATE_NOOP("adm","AC3");
               case WAV_OPUS:  return QT_TRANSLATE_NOOP("adm","OPUS");
+              case WAV_FLAC:  return QT_TRANSLATE_NOOP("adm","FLAC");
               case WAV_EAC3:  return QT_TRANSLATE_NOOP("adm","E-AC3");
               case WAV_OGG_VORBIS: return QT_TRANSLATE_NOOP("adm","Ogg Vorbis");
               case WAV_MP4: return QT_TRANSLATE_NOOP("adm","MP4");

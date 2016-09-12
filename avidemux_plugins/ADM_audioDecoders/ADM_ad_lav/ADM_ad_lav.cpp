@@ -33,7 +33,7 @@ class ADM_AudiocoderLavcodec : public     ADM_Audiocodec
 protected:
         typedef enum 
         {
-            asFloat,asFloatPlanar,asS32Planar
+            asFloat,asFloatPlanar,asS32Planar,asS32
         }ADM_outputFlavor;
 
                 ADM_outputFlavor        outputFlavor;
@@ -48,6 +48,7 @@ protected:
     bool        decodeToFloat(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanar(float **outptr,uint32_t *nbOut);
     bool        decodeToS32Planar(float **outptr,uint32_t *nbOut);
+    bool        decodeToS32(float **outptr,uint32_t *nbOut);
     bool        decodeToFloatPlanarStereo(float **outptr,uint32_t *nbOut);
     uint32_t    outputFrequency;
 public:
@@ -75,11 +76,11 @@ static  ad_supportedFormat Formats[]={
         {WAV_DTS,AD_MEDIUM_QUAL},
         {WAV_MP3,AD_MEDIUM_QUAL},
         {WAV_MP2,AD_MEDIUM_QUAL},
+        {WAV_FLAC,AD_MEDIUM_QUAL},
         {WAV_AC3,AD_LOW_QUAL},   // liba52 preferred ???
         {WAV_AAC,AD_LOW_QUAL},   // libfaad preferred ???
         {0x706D,AD_LOW_QUAL},
-        {WAV_EAC3,AD_MEDIUM_QUAL}
-
+        {WAV_EAC3,AD_MEDIUM_QUAL},
 };
 
 DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
@@ -135,6 +136,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         codecID = AV_CODEC_ID_DTS;
         _blockalign = 1;
         break;
+      case WAV_FLAC:
+        codecID = AV_CODEC_ID_FLAC;
+        _blockalign = 1;
+        break;        
       case WAV_MP3:
         codecID = AV_CODEC_ID_MP3;
         _blockalign = 1;
@@ -213,6 +218,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
             outputFlavor=asS32Planar;            
             ADM_info("Decoder created using s32 planar...\n");
             break;            
+        case AV_SAMPLE_FMT_S32:
+            outputFlavor=asS32;
+            ADM_info("Decoder created using s32 ...\n");
+            break;                        
         default:
             ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
             ADM_assert(0);
@@ -341,6 +350,25 @@ bool ADM_AudiocoderLavcodec::decodeToS32Planar(float **outptr,uint32_t *nbOut)
     \fn decodeToFloat
 */
 
+bool ADM_AudiocoderLavcodec::decodeToS32(float **outptr,uint32_t *nbOut)
+{
+    int nbSample=  _frame->nb_samples*channels; 
+    float scale=1./(float)(1LL<<31LL);
+    float *p=*outptr;
+    int32_t *q=(int32_t *)_frame->data[0];
+    for(int c=0;c<nbSample;c++)
+    {
+            *p=(float)(*q)*scale;
+            p++;q++;
+    }
+   (*nbOut) +=nbSample;
+   (*outptr)+=nbSample;
+    return true;
+}
+/**
+    \fn decodeToFloat
+*/
+
 bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
 {
     switch(channels)
@@ -412,6 +440,8 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
               case AV_SAMPLE_FMT_FLT:     decodeToFloat(&outptr,nbOut);break;
               case AV_SAMPLE_FMT_FLTP:    decodeToFloatPlanar(&outptr,nbOut);break;             
               case AV_SAMPLE_FMT_S32P:    decodeToS32Planar(&outptr,nbOut);break;              
+              case AV_SAMPLE_FMT_S32:    decodeToS32(&outptr,nbOut);break;              
+              
               default:
                   ADM_info("Decoder created using ??? %d...\n",_context->sample_fmt);
                   ADM_assert(0);

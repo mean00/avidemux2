@@ -29,6 +29,7 @@
 #define WAV_AMV_ADPCM    9900
 #define WAV_NELLYMOSER   9901
 #define WAV_UNKNOWN     9999
+#define WAV_FLAC        0x2003 // dummy ID
 
 #endif
 //EOF
