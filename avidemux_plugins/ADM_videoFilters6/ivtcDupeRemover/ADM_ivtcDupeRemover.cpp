@@ -390,8 +390,7 @@ bool ivtcDupeRemover::configure( void)
         diaElemMenu      eMode(&configuration.mode,QT_TRANSLATE_NOOP("ivtcRemover","_Frame rate change:"),3,menuMode);
 
         diaElem *elems[3]={&threshold,&show,&eMode};
-        diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),3,elems);
-        return true;
+        return diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),3,elems);
 }
 
 
