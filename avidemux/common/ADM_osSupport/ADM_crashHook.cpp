@@ -85,7 +85,8 @@ void checkCrashFile(void)
             if(GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("crash","Load it"),QT_TRANSLATE_NOOP("crash","Crash file"),
                QT_TRANSLATE_NOOP("crash","I have detected a crash file. \nDo you want to load it  ?\n(It will be deleted in all cases, you should save it if you want to keep it)")))
             {
-               A_parseScript(engine,where);
+                A_parseScript(engine,where);
+                A_Resync();
             }
 	  }
         unlink(where);
