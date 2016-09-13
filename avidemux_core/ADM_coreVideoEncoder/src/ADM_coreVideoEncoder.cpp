@@ -107,6 +107,11 @@ bool usSecondsToFrac(uint64_t useconds, int *n,int *d)
 bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uint64_t *pts)
 {
     int n=mapper.size();
+    if(!n)
+    {
+        ADM_warning("Mapper is empty\n");
+        return false;
+    }
     for(int i=0;i<n;i++)
     {
         if(mapper[i].internalTS==val)
@@ -138,8 +143,9 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             return true;
         }
     }
-    ADM_warning("Cannot find PTS : %" PRIu64"\n",val);
-    for(int i=0;i<n;i++) ADM_warning("%d : %" PRIu64"\n",i,mapper[i].internalTS);
+    ADM_warning("Cannot find PTS : %s \n",ADM_us2plain(val));
+    for(int i=0;i<n;i++) 
+        ADM_warning("%d : %s\n",i,ADM_us2plain(mapper[i].internalTS));
     ADM_assert(0);
     return false;
 

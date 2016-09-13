@@ -458,7 +458,8 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
             mapper.erase(mapper.begin());
             queueOfDts.erase(queueOfDts.begin());
     } else
-    getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts));
+    if(!getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts)))
+        return false;
     // update lastDts
     lastDts=out->dts;
 

@@ -162,9 +162,7 @@ again:
     if(sz==0) // no pic, probably pre filling, try again
         goto again;
 link:
-    postEncode(out,sz);
-
-    return true;
+    return postEncode(out,sz);
 }
 
 /**

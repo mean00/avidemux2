@@ -137,8 +137,7 @@ again:
         ADM_warning("[ffFlv1] Error %d encoding video\n",r);
         return false;
     }
-    postEncode(out,r);
-    return true;
+    return postEncode(out,r);
 }
 
 /**

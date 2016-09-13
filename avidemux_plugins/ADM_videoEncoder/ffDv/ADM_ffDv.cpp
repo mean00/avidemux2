@@ -141,8 +141,7 @@ again:
         ADM_warning("[ffDV] Error %d encoding video\n",r);
         return false;
     }
-    postEncode(out,r);
-    return true;
+    return postEncode(out,r);
 }
 
 // EOF

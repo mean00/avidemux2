@@ -199,8 +199,7 @@ again:
         ADM_warning("[ffMsMP4] Error %d encoding video\n",sz);
         return false;
     }
-    postEncode(out,r);
-    return true;
+    return postEncode(out,r);
 }
 
 /**
