@@ -325,6 +325,10 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                 c->codec_id = AV_CODEC_ID_VORBIS;c->frame_size=6*256;
                                 ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                 break;
+                  case WAV_FLAC:
+                                c->codec_id = AV_CODEC_ID_FLAC;
+                                ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                                break;                                
                   case WAV_DTS: c->codec_id = AV_CODEC_ID_DTS;c->frame_size=1024;break;
                   case WAV_OPUS:    c->codec_id = AV_CODEC_ID_OPUS;
                                     c->frame_size=1024;
