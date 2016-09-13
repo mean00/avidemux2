@@ -108,6 +108,7 @@ static IScriptEngine *tempEngine;
 static void RunScript(const char *name)
 {
 	parseScript(tempEngine, name, IScriptEngine::DebugOnError);
+        A_Resync();
 }
 
 static void DebugScript(const char *name)
@@ -1576,6 +1577,7 @@ void A_set_avisynth_port(char *port_number_as_text){
 void A_RunScript(const char *a)
 {
     call_scriptEngine(a);            
+    A_Resync();
 }
 //
 // EOF

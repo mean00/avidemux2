@@ -190,6 +190,7 @@ void MainWindow::scriptFileActionHandler()
             printf("Executing %s with %s engine\n", filePath.toUtf8().constData(), this->_scriptEngines[engineIndex]->name().c_str());
 
             A_parseScript(this->_scriptEngines[engineIndex], filePath.toUtf8().constData());
+            A_Resync();
         }
     }
 }
