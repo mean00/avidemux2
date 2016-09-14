@@ -327,7 +327,12 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                                 break;
                   case WAV_FLAC:
                                 c->codec_id = AV_CODEC_ID_FLAC;
-                                ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                                // Do we already have the flac header ? FFmpeg will add it..
+                                // If we have it, skip it
+                                if(audioextraSize>=8 && audioextraData[0]==0x66 && audioextraData[1]==0x4c &&audioextraData[2]==0x61 && audioextraData[3]==0x43 )
+                                    ffmpuxerSetExtradata(c,audioextraSize-8,audioextraData+8);
+                                else
+                                    ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
                                 break;                                
                   case WAV_DTS: c->codec_id = AV_CODEC_ID_DTS;c->frame_size=1024;break;
                   case WAV_OPUS:    c->codec_id = AV_CODEC_ID_OPUS;
