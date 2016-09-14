@@ -28,7 +28,7 @@
         \class ADMImageResizer
         \brief Simple image resizer
 */
-class ADMImageResizer
+class ADM_COREIMAGE6_EXPORT ADMImageResizer
 {
 	private:
 		ADMColorScalerFull   *resizer;
