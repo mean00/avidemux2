@@ -7800,7 +7800,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+6"/>
         <source>&amp;Run Project...</source>
-        <translation type="unfinished"></translation>
+        <translation>Lancer un projet</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -7810,7 +7810,7 @@ The current editing has been saved and will be reloaded at next start</source>
     <message>
         <location line="+5"/>
         <source>Save &amp;As Project...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sauvegarder comme projet</translation>
     </message>
     <message>
         <location line="+20"/>
