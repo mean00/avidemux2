@@ -7227,7 +7227,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.h" line="+1"/>
         <source>Add black borders around the image.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Schwarze Ränder um das Bild herum hinzufügen.</translation>
     </message>
 </context>
 <context>
@@ -8957,12 +8957,12 @@ Do you want to continue anyway ?</source>
     <message>
         <location line="-26"/>
         <source>Cannot instantiate muxer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Muxer-Instanz nicht erstellen</translation>
     </message>
     <message>
         <location line="+26"/>
         <source>Cannot open </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Keine Daten zum Muxen oder keine Ausgabedatei</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="+45"/>
@@ -9190,12 +9190,12 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_core/ADM_core/src/ADM_prettyPrint.cpp" line="-27"/>
         <source>%d minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%d Minute(n)</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>%d hour(s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%d Stunde(n)</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="-1"/>
@@ -9305,12 +9305,12 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+132"/>
         <source>Too short</source>
-        <translation type="unfinished"></translation>
+        <translation>Video zu kurz</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>The video has been saved but seems to be incomplete.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Das gespeicherte Video scheint unvollständig zu sein.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
@@ -9323,38 +9323,43 @@ Do you want to continue anyway ?</source>
         <source>can&apos;t open &quot;%s&quot;: %s
 %s
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann &quot;%s&quot; nicht öffnen: %s
+%s
+</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+85"/>
         <source>filesystem full</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dateisystem voll</translation>
     </message>
     <message>
         <location line="-85"/>
         <location line="+85"/>
         <source>quota exceeded</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> verfügbarer Platz ausgeschöpft</translation>
     </message>
     <message>
         <location line="-84"/>
         <location line="+85"/>
         <source>Please free up some space and press RETRY to try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte Speicherplatz freimachen und &quot;Wiederholen&quot; drücken, um erneut zu versuchen.</translation>
     </message>
     <message>
         <location line="-78"/>
         <source>can&apos;t open &quot;%s&quot;: %u (%s)
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Kann &quot;%s&quot; nicht öffnen: %u (%s)
+</translation>
     </message>
     <message>
         <location line="+75"/>
         <source>can&apos;t write to file &quot;%s&quot;: %s
 %s
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Kann in die Datei &quot;%s&quot; nicht schreiben: %s
+%s
+</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9365,18 +9370,19 @@ Do you want to continue anyway ?</source>
     <message>
         <location line="-8"/>
         <source>Ignore</source>
-        <translation type="unfinished">Ignorieren</translation>
+        <translation>Ignorieren</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Retry</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiederholen</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>can&apos;t write to file &quot;%s&quot;: %u (%s)
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann in die Datei &quot;%s&quot; nicht schreiben: %u (%s)
+</translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="-7"/>
@@ -9462,12 +9468,12 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="+66"/>
         <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="unfinished">arbeitet per Unscharfmaskierung, keine Rauschverstärkung, simpel im Kontrast.</translation>
+        <translation type="unfinished">Schärfen mittels adaptiver Unscharfmaskierung, © Marc Fauconneau ("MarcFD").</translation>
     </message>
     <message>
         <location line="-1"/>
         <source>Asharp</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">asharp</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/DIA_flyAsharp.cpp" line="+107"/>
@@ -9477,7 +9483,7 @@ Do you want to continue anyway ?</source>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verarbeitet</translation>
     </message>
 </context>
 <context>
@@ -9485,22 +9491,22 @@ Do you want to continue anyway ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/qt4/asharp.ui" line="+13"/>
         <source>ASharp</source>
-        <translation type="unfinished">Schärfefilter &quot;asharp&quot;</translation>
+        <translation type="unfinished">Schärfefilter asharp</translation>
     </message>
     <message>
         <location line="+96"/>
         <source>Strength</source>
-        <translation type="unfinished">Stärke</translation>
+        <translation>Stärke</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Threshold</source>
-        <translation type="unfinished">Schwelle</translation>
+        <translation>Schwelle</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Block Adaptative</source>
-        <translation type="unfinished">adaptive Blockfilterung</translation>
+        <translation>Adaptive Blockfilterung</translation>
     </message>
     <message>
         <source>High Quality Block Filtering</source>
@@ -9987,32 +9993,32 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/colorYUV/ADM_vidColorYuv.cpp" line="+62"/>
         <source>Avisynth color filter.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Avisynth colorYUV-Farbfilter</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Color management filter.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verstärkung, Helligkeit und Kontrast für jede Komponente einstellen.</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>AutoWhite</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Automatischer Weißabgleich</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>AutoGain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Automatischer Kontrast</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Clip to Tv Range (16-235)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Auf TV-Bereich (16-235) beschneiden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Keine</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10027,82 +10033,82 @@ This message will not be displayed again.</source>
     <message>
         <location line="+2"/>
         <source>Levels:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konversion:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Y gain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Y Verstärkung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Y Brightness</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Y Helligkeit</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Y Gamma</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Y Gamma</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Y Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Y Kontrast</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>U gain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U Verstärkung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>U Brightness</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U Helligkeit</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>U Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U Kontrast</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>V gain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">V Verstärkung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>V Brightness</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">V Helligkeit</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>V Contrast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">V Kontrast</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Flags</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Optionen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Luminanz</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>U</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U-Farbkomponente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>V</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">V-Farbkomponente</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>colorYuv</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">colorYUV-Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -10376,7 +10382,7 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/ADM_vidMPdelogo.cpp" line="+43"/>
         <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished">Logoentfernung durch Interpolation der Umgebung.</translation>
+        <translation type="unfinished">Logo durch Interpolation der Umgebung entfernen.</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -10389,67 +10395,67 @@ Soll dieses jetzt geladen werden ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/dgBob/ADM_vidDGbob.cpp" line="+57"/>
         <source>Donald Graft Bob.</source>
-        <translation type="unfinished">Donald Graft Bob / Vollbildverfahren (engl. Progressive Scan)</translation>
+        <translation type="unfinished">Bob Deinterlacer © Donald Graft.</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Top</source>
-        <translation type="unfinished">Oben</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bottom</source>
-        <translation type="unfinished">Unten</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Keep nb of frames and fps</source>
-        <translation type="unfinished">nb von Bildern und Bilder/s erhalten</translation>
+        <translation>Anzahl von Bildern und Bildfrequenz erhalten</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Double nb of frames and fps</source>
-        <translation type="unfinished">Doppelte nb von Bildern und fps</translation>
+        <translation>Anzahl von Bildern und Bildfrequenz verdoppeln</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Double nb of frames (slow motion)</source>
-        <translation type="unfinished">Doppelte nb von Bildern (langsame Bewegung)</translation>
+        <translation>Anzahl von Bildern verdoppeln, gleiche Bildfrequenz (Zeitlupe)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>_Mode:</source>
-        <translation type="unfinished">_Modus:</translation>
+        <translation>_Modus:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Schwelle:</translation>
+        <translation>_Schwelle:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Extra</source>
-        <translation type="unfinished">_Extras</translation>
+        <translation type="unfinished">Analysiere _gründlicher</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Extra check, avoid using it</source>
-        <translation type="unfinished">Zusätzliche Prüfung (Benutzung vermeiden)</translation>
+        <translation type="unfinished">Führe zusätzliche Checks aus (besser nicht benutzen)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>DGBob</source>
-        <translation type="unfinished">DGBob</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-27"/>
         <source>dgbob</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">DGBob</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>_Top Field First:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Oberes Halbbild zuerst</translation>
     </message>
 </context>
 <context>
@@ -10765,7 +10771,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+60"/>
         <source>Adjust contrast, brightness, saturation and gamma.</source>
-        <translation type="unfinished">Einstellung dieser Werte per MPlayer eq2 Filter.</translation>
+        <translation type="unfinished">Kontrast, Helligkeit, Sättigung und Gamma einstellen.</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -10798,12 +10804,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/eq2.ui" line="+243"/>
         <source>Green</source>
-        <translation type="unfinished">grün</translation>
+        <translation>Grün</translation>
     </message>
     <message>
         <location line="-31"/>
         <source>Red</source>
-        <translation type="unfinished">rot</translation>
+        <translation>Rot</translation>
     </message>
     <message>
         <location line="-199"/>
@@ -10814,27 +10820,27 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="-14"/>
         <source>Saturation</source>
-        <translation type="unfinished">Sättigung</translation>
+        <translation>Sättigung</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Brightness</source>
-        <translation type="unfinished">Helligkeit</translation>
+        <translation>Helligkeit</translation>
     </message>
     <message>
         <location line="+95"/>
         <source>Blue</source>
-        <translation type="unfinished">blau</translation>
+        <translation>Blau</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Weight</source>
-        <translation type="unfinished">Gewichtung</translation>
+        <translation>Gewichtung</translation>
     </message>
     <message>
         <location line="-7"/>
         <source>Initial</source>
-        <translation type="unfinished">Anfang</translation>
+        <translation type="unfinished">Wert</translation>
     </message>
     <message>
         <location line="-146"/>
@@ -10899,12 +10905,12 @@ p, li { white-space: pre-wrap; }
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeTo/ADM_vidFadeTo.cpp" line="+54"/>
         <location line="+24"/>
         <source>Fade</source>
-        <translation type="unfinished">Ein-/Ausblenden</translation>
+        <translation type="unfinished">Ausblenden</translation>
     </message>
     <message>
         <location line="-23"/>
         <source>Fade.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zum Ende dieses Filters hin auf das Bild am Beginn überblenden.</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -10923,12 +10929,12 @@ p, li { white-space: pre-wrap; }
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fadeToBlack/ADM_vidFade.cpp" line="+53"/>
         <location line="+26"/>
         <source>Fade to black</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zu Schwarz überblenden</translation>
     </message>
     <message>
         <location line="-25"/>
         <source>Fade to black in/out.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Einblenden von Schwarz aus / Ausblenden zu Schwarz.</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -10938,32 +10944,32 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+0"/>
         <source>Fade out</source>
-        <translation type="unfinished">Ausblenden</translation>
+        <translation>Ausblenden</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>In</source>
-        <translation type="unfinished">Einblenden</translation>
+        <translation>Einblenden</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Fade in</source>
-        <translation type="unfinished">Einblenden</translation>
+        <translation>Einblenden</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>_Fade type:</source>
-        <translation type="unfinished">Ein_blendtyp:</translation>
+        <translation type="unfinished">Überb_lenden:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Start time (ms):</source>
-        <translation type="unfinished">_Beginn:</translation>
+        <translation>_Beginn:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_End time (ms):</source>
-        <translation type="unfinished">_Ende:</translation>
+        <translation>_Ende:</translation>
     </message>
 </context>
 <context>
@@ -11533,65 +11539,65 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPS.cpp" line="+64"/>
         <source>[Mismatch]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inkompatible Parameter</translation>
     </message>
     <message>
         <location line="+76"/>
         <source>Saving mpeg PS (ff)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Speichern als MPEG-PS (ff)</translation>
     </message>
     <message>
         <location line="+45"/>
         <source> video not compatible
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Inkompatibles Video</translation>
     </message>
     <message>
         <location line="+9"/>
         <source> Bad width/height for VCD
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Höhe und/oder Breite ungeeignet für VCD</translation>
     </message>
     <message>
         <location line="+6"/>
         <source> Bad width/height for SVCD
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Höhe und/oder Breite ungeeignet für SVCD</translation>
     </message>
     <message>
         <location line="+6"/>
         <source> Bad width/height for DVD
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Höhe und/oder Breite ungeeignet für DVD</translation>
     </message>
     <message>
         <location line="+17"/>
         <source> VCD : only MP2 audio accepted
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VCD: nur MP2 Audio zulässig</translation>
     </message>
     <message>
         <location line="+5"/>
         <source> VCD : only 44.1 khz audio accepted
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VCD: nur 44.1 kHz Audio zulässig</translation>
     </message>
     <message>
         <location line="+7"/>
         <source> DVD : only 48 khz audio accepted
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">DVD: nur 48 kHz Audio zulässig</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>[ffPS] DVD : only MP2/AC3/DTS audio accepted
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">[ffPS] DVD: nur MP2/AC3/DTS Audio zulässig</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerffPS/muxerffPSConfig.cpp" line="+51"/>
         <source>Free</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Benutzerdefiniert</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -11601,7 +11607,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+1"/>
         <source>Allow non compliant stream</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht standardkonforme Streams erlauben</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11626,7 +11632,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location line="+13"/>
         <source>Mpeg PS Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPEG-PS-Muxer</translation>
     </message>
 </context>
 <context>
@@ -11730,7 +11736,7 @@ Möchten Sie es ersetzen?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fluxSmooth/ADM_vidFlux.cpp" line="+38"/>
         <source>Spatio-temporal cleaner by Ross Thomas.</source>
-        <translation type="unfinished">guter Rauschfilter für die meisten Zwecke, ideal für Animationsfilme, einstellbare räumliche und zeitliche Filterung (AviSynth-Import)</translation>
+        <translation type="unfinished">Rauschunterdrückung mit räumlicher und zeitlicher Filterung (Portierung aus Avisynth) © Ross Thomas.</translation>
     </message>
     <message>
         <location line="+50"/>
@@ -11746,7 +11752,7 @@ Möchten Sie es ersetzen?</translation>
         <location line="-52"/>
         <location line="+56"/>
         <source>FluxSmooth</source>
-        <translation type="unfinished">&quot;FluxSmooth&quot; - einstellbarer Schärfefilter &amp; Weichzeichner von Ross Thomas</translation>
+        <translation type="unfinished">FluxSmooth</translation>
     </message>
 </context>
 <context>
@@ -11911,12 +11917,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Gauss.cpp" line="+26"/>
         <source>Gaussian convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gaußscher Weichzeichner</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>3x3 convolution filter :gaussian.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gaußscher Weichzeichner per 3x3 Faltungsmatrix.</translation>
     </message>
 </context>
 <context>
@@ -12207,12 +12213,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/horizontalFlip/horizontalFlip.cpp" line="+44"/>
         <source>Horizontal Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Horizontal spiegeln</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Horizontally flip the image.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild um die senkrechte Mittellinie spiegeln.</translation>
     </message>
 </context>
 <context>
@@ -12269,7 +12275,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="-1"/>
         <source>Mplayer Hue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPlayer Hue</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/DIA_flyHue.cpp" line="+61"/>
@@ -12279,7 +12285,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Verarbeitet</translation>
     </message>
 </context>
 <context>
@@ -12324,12 +12330,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/stackField/hzStackField.cpp" line="+52"/>
         <source>Horizontal Stack Fields</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Halbbilder nebeneinander</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Put fields side by side.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Halbbilder Seite an Seite darstellen (halbiert die Höhe und verdoppelt die Breite).</translation>
     </message>
 </context>
 <context>
@@ -12360,47 +12366,47 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+81"/>
         <source>Remove IVTC dupe.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">IVTC-duplizierte Bilder entfernen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove the duplicate frames present after ivtc.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nach Inverse Telecine duplizierte Bilder entfernen.</translation>
     </message>
     <message>
         <location line="+296"/>
         <source>_Noise:</source>
-        <translation type="unfinished">_Rauschen:</translation>
+        <translation type="unfinished">_Rauschschwelle:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Show:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Details ins Video einschließen</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Full</source>
-        <translation type="unfinished">Voll</translation>
+        <translation type="unfinished">Umfassend</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Schnell</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>VeryFast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sehr schnell</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>_Frame rate change:</source>
-        <translation type="unfinished">_Bildfrequenz ändern:</translation>
+        <translation type="unfinished">_Suchmethode:</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>DupeRemover</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Duplizierte Bilder entfernen</translation>
     </message>
 </context>
 <context>
@@ -12641,17 +12647,17 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/kernelDeint/ADM_vidKernelDeint.cpp" line="+65"/>
         <source>Top</source>
-        <translation type="unfinished">Oben</translation>
+        <translation>Oberes zuerst</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bottom</source>
-        <translation type="unfinished">Unten</translation>
+        <translation>Unteres zuerst</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>_Field order:</source>
-        <translation type="unfinished">_Feldreihenfolge:</translation>
+        <translation>_Halbbildreihenfolge:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -12661,53 +12667,52 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+0"/>
         <source>Smaller means more deinterlacing</source>
-        <translation type="unfinished">Kleiner bedeutet stärkes Zusammenführen 
-der Halbbilder (deinterlaceing)</translation>
+        <translation>Kleinerer Wert bedeutet stärkeres Deinterlacing</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Sharper engine:</source>
-        <translation type="unfinished">Schärfe optimieren:</translation>
+        <translation type="unfinished">Schärfe optimieren</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>T_woway</source>
-        <translation type="unfinished">Zwei-_Weg</translation>
+        <translation type="unfinished">2-_Weg-Extrapolation</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Extrapolate better (better not to use it)</source>
-        <translation type="unfinished">Besser extrapolieren (besser nicht benutzen)</translation>
+        <translation type="unfinished">Aufwendigere Extrapolation (besser nicht benutzen)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Map</source>
-        <translation type="unfinished">_Übersicht</translation>
+        <translation type="unfinished">_Bereiche markieren</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Show interlaced areas (for test!)</source>
-        <translation type="unfinished">Bereiche mit Halbbildmodus anzeigen (für Tests!)</translation>
+        <translation type="unfinished">Bereiche mit Kammbildung markieren (für Tests!)</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>KernelDeint</source>
-        <translation type="unfinished">Halbbildmodus-Filter</translation>
+        <translation type="unfinished">Kernel-Deinterlacer</translation>
     </message>
     <message>
         <location line="-28"/>
         <source>Kernel Deint.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kernel-Deinterlacer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Port of Donald Graft Kernel Deinterlacer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Portierung des Kernel-Deinterlacers © Donald Graft.</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>_Sharp</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Schärfen</translation>
     </message>
 </context>
 <context>
@@ -12792,12 +12797,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="-40"/>
         <source>Large Median (5x5).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Large Median</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Median filter on 5x5 matrix.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Median-Filter zum Glätten per 5x5 Faltungsmatrix.</translation>
     </message>
 </context>
 <context>
@@ -12893,37 +12898,37 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+1"/>
         <source>FFmpeg deint</source>
-        <translation type="unfinished">FFmpeg deint (Halbbilder)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
         <source>_Deinterlacing:</source>
-        <translation type="unfinished">_Deinterlacing:</translation>
+        <translation type="unfinished">_Methode:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Autolevel</source>
-        <translation type="unfinished">_Automatische Ebene</translation>
+        <translation type="unfinished">_Automatische Helligkeits- und Kontrastkorrektur</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>libavcodec deinterlacer</source>
-        <translation type="unfinished">libavcodec Halbbildmodus-Filter</translation>
+        <translation type="unfinished">Libavcodec-Deinterlacer</translation>
     </message>
     <message>
         <location line="-131"/>
         <source>Libavdec Deinterlacers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Libavcodec-Deinterlacer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Lavcodec deinterlacer family.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deinterlacer aus der Lavcodec-Familie.</translation>
     </message>
     <message>
         <location line="+116"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Keine</translation>
     </message>
 </context>
 <context>
@@ -13005,12 +13010,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/lumaOnly/lumaOnly.cpp" line="+44"/>
         <source>GreyScale</source>
-        <translation type="unfinished"></translation>
+        <translation>Graustufen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove color, only key grey image.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Farbinformationen entfernen, Helligkeitsinformationen belassen.</translation>
     </message>
 </context>
 <context>
@@ -13099,7 +13104,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+9"/>
         <source>Noise</source>
-        <translation type="unfinished">Rauschfilter</translation>
+        <translation type="unfinished">Rauschunterdrückung</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -13114,7 +13119,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+18"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished">diverse Filter</translation>
+        <translation type="unfinished">Diverse Filter</translation>
     </message>
     <message>
         <location line="+62"/>
@@ -13259,12 +13264,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Mean.cpp" line="+27"/>
         <source>Mean convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mean</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>3x3 convolution filter :mean.</source>
-        <translation type="unfinished"></translation>
+        <translation>Glätten durch Mittelwertbildung aus benachbarten Pixeln per 3x3 Faltungsmatrix.</translation>
     </message>
 </context>
 <context>
@@ -13272,12 +13277,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Median.cpp" line="+28"/>
         <source>Median convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Median</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>3x3 convolution filter :median.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Median-Filter zum Glätten per 3x3 Faltungsmatrix.</translation>
     </message>
 </context>
 <context>
@@ -13285,12 +13290,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fields/ADM_vidMergeField.cpp" line="+52"/>
         <source>Merge Fields</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Als Halbbilder zusammenführen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Merge two pictures as if they were two fields.</source>
-        <translation type="unfinished">Zwei Bilder verschmelzen, so als ob es zwei Felder wären.</translation>
+        <translation type="unfinished">Zwei Bilder verschmelzen, als ob es zwei Halbbilder wären.</translation>
     </message>
 </context>
 <context>
@@ -13321,33 +13326,33 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="+235"/>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Räumliche Helligkeitsstärke:</translation>
+        <translation type="unfinished">Stärke der räumlichen _Luminanz-Filterung:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Örtliche Far_bintensitäts-Stärke:</translation>
+        <translation type="unfinished">Stärke der räumlichen _Chrominanz-Filterung:</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">&quot;denoise3d&quot; - guter Rauschfilter von Daniel Moreno</translation>
+        <translation type="unfinished">MPlayer Deinoise 3D HQ</translation>
     </message>
     <message>
         <location line="-41"/>
         <source>Mplayer Denoise 3D HQ</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPlayer Denoise 3D HQ</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Weichzeichnung und Rauschunterdrückung mit räumlicher und zeitlicher Filterung, HQ-Version. © Daniel Moreno und Baptiste Coudurier.</translation>
     </message>
     <message>
         <location line="+35"/>
         <location line="+1"/>
         <source>Luma _Temporal strength:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Stärke der _zeitlichen Luminanz-Filterung:</translation>
     </message>
 </context>
 <context>
@@ -13355,32 +13360,32 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3Dlow.cpp" line="+37"/>
         <source>Reduce noise, smooth image, increase compressibility.</source>
-        <translation type="unfinished">Weichzeichnung in räumlicher und zeitlicher Hinsicht, beruhigt Standbilder, erhöht die Kompressionsfähigkeit (MPlayer-Import).</translation>
+        <translation type="unfinished">Weichzeichnung und Rauschunterdrückung mit räumlicher und zeitlicher Filterung, erhöht Kompressionsfähigkeit (Portierung aus MPlayer) © Daniel Moreno.</translation>
     </message>
     <message>
         <location line="+32"/>
         <source>_Spatial luma strength:</source>
-        <translation type="unfinished">Räumliche Helligkeitsstärke:</translation>
+        <translation type="unfinished">Stärke der räumlichen _Luminanz-Filterung:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>S_patial chroma strength:</source>
-        <translation type="unfinished">Örtliche Far_bintensitäts-Stärke:</translation>
+        <translation type="unfinished">Stärke der räumlichen _Chrominanz-Filterung:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Temporal strength:</source>
-        <translation type="unfinished">_Temporäre Stärke:</translation>
+        <translation type="unfinished">Stärke der _zeitlichen Filterung:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">&quot;denoise3d&quot; - guter Rauschfilter von Daniel Moreno</translation>
+        <translation type="unfinished">MPlayer Denoise 3D</translation>
     </message>
     <message>
         <location line="-39"/>
         <source>Mplayer Denoise 3D</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPlayer Denoise 3D</translation>
     </message>
 </context>
 <context>
@@ -13403,17 +13408,17 @@ der Halbbilder (deinterlaceing)</translation>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4/muxerMP4.cpp" line="+64"/>
         <location line="+9"/>
         <source>Unsupported</source>
-        <translation type="unfinished">Nicht unterstützt</translation>
+        <translation>Nicht unterstütztes Format</translation>
     </message>
     <message>
         <location line="-9"/>
         <source>Only MP4Video, H264, and H265 supported for video</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Für Video ist nur MPEG4, H264 und H265 zulässig</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Only AAC, AC3, and mpegaudio supported for audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Für Audio ist nur AAC, AC3, MP2 und MP3 zulässig</translation>
     </message>
     <message>
         <location line="+79"/>
@@ -13433,7 +13438,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+1"/>
         <source>Use alternate MP3 tag</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alternativen Tag für MP3 benutzen</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -13446,12 +13451,12 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4v2/muxerMp4v2.cpp" line="+180"/>
         <source>Audio</source>
-        <translation type="unfinished">Audio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Audio format not supported, only AAC/MP3/AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht unterstütztes Audio-Format, zulässig sind nur AAC, MP3 und AC3</translation>
     </message>
     <message>
         <location line="+46"/>
@@ -13461,53 +13466,53 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+14"/>
         <source>Video</source>
-        <translation type="unfinished">Video</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Video does not have enough timing information. Are you copying from AVI?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Video enthält nicht genug Zeitstempel. Wird es aus AVI kopiert?</translation>
     </message>
     <message>
         <location line="+65"/>
         <source>Cannot rename file (optimize)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Für Streaming optimieren: Kann die Datei nicht umbenennen</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4v2/muxerMp4v2Audio.cpp" line="+53"/>
         <source>Invalid frequency for AC3. Only 32, 44.1 &amp; 48 kHz</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültige Sampling-Frequenz für AC3. Zulässig sind nur 32, 44.1 und 48 kHz</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Invalid bitrate for AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültige Bitrate für AC3</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Invalid number of channels for AC3</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültige für AC3 Anzahl von Kanälen</translation>
     </message>
     <message>
         <location line="+48"/>
         <source>Cannot get AAC Extra data
 </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann AAC Extradata nicht lesen</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerMp4v2/muxerMp4v2Config.cpp" line="+31"/>
         <source>Optimize for streaming (SLOW)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Für Streaming optimieren (LANGSAM)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add ipod metadata</source>
-        <translation type="unfinished"></translation>
+        <translation>iPod-Metadaten hinzufügen</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>MP4V2 Settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MP4V2 Optionen</translation>
     </message>
 </context>
 <context>
@@ -13515,7 +13520,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt4/mpdelogo.ui" line="+14"/>
         <source>Mplayer Delogo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MPlayer delogo</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -13530,22 +13535,22 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+23"/>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Breite</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Höhe</translation>
     </message>
     <message>
         <location line="+20"/>
         <source>Border Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Rahmenbreite</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Preview. Click in the image above to coarsly set the box coordinates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vorschau. Ins Bild klicken, um die Position der Box grob festzulegen</translation>
     </message>
 </context>
 <context>
@@ -13553,7 +13558,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+78"/>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
-        <translation type="unfinished">schärft Kanten ohne Verstärkerrauschen, ideal für Trickfilme</translation>
+        <translation type="unfinished">Kanten betonen ohne Rauschen zu verstärken. © Donald Graft. </translation>
     </message>
     <message>
         <location line="+55"/>
@@ -13563,27 +13568,27 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+1"/>
         <source>_High Q</source>
-        <translation type="unfinished">_Hohe Qualität</translation>
+        <translation>_Hohe Qualität</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Threshold:</source>
-        <translation type="unfinished">_Schwelle:</translation>
+        <translation>_Schwelle:</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>MSharpen</source>
-        <translation type="unfinished">Schärfefilter &quot;MSharpen&quot; von Donald Graft</translation>
+        <translation type="unfinished">Schärfefilter MSharpen</translation>
     </message>
     <message>
         <location line="-65"/>
         <source>Msharpen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">MSharpen</translation>
     </message>
     <message>
         <location line="+60"/>
         <source>_Strength:</source>
-        <translation type="unfinished"></translation>
+        <translation>S_tärke:</translation>
     </message>
 </context>
 <context>
@@ -13774,7 +13779,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+1"/>
         <source>Display some informations on Screen.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildnummer und Zeitstempel ins Video einbetten</translation>
     </message>
 </context>
 <context>
@@ -14426,22 +14431,22 @@ Ready.
     <message>
         <location line="-106"/>
         <source>Remove  Plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Komponenten entfernen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Remove Y,U or V plane (used mainly to debug other filters).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Y-, U- oder V-Komponente entfernen (dient hauptsächlich dem Debuggen von anderen Filtern).</translation>
     </message>
     <message>
         <location line="+105"/>
         <source>Keep Y Plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Luminanz behalten</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep U Plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U-Farbkomponente behalten</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -14451,7 +14456,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>Keep V Plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">V-Farbkomponente behalten</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -14461,7 +14466,7 @@ Ready.
     <message>
         <location line="+5"/>
         <source>Remove plane</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Komponenten entfernen</translation>
     </message>
 </context>
 <context>
@@ -14514,12 +14519,12 @@ Ready.
     <message>
         <location line="+35"/>
         <source>Resample FPS</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildfrequenz ändern</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Change and enforce FPS. Keep duration and sync.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildfrequenz durch Duplizieren oder Weglassen von Frames unter Beibehaltung der Abspieldauer und der Synchronisation ändern.</translation>
     </message>
 </context>
 <context>
@@ -14532,12 +14537,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/resize/swScaleResize.cpp" line="+80"/>
         <source>swsResize</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildgröße ändern (swScale)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>swScale Resizer.</source>
-        <translation type="unfinished">Bildgröße in Pixeln mittels swScale verändern.</translation>
+        <translation>Bildgröße in Pixeln mittels swScale verändern.</translation>
     </message>
 </context>
 <context>
@@ -15004,17 +15009,17 @@ Ready.
     <message>
         <location filename="../ADM_userInterfaces/ADM_filters/seekablePreview.ui" line="+20"/>
         <source>Preview</source>
-        <translation type="unfinished">Vorschau</translation>
+        <translation>Vorschau</translation>
     </message>
     <message>
         <location line="+76"/>
         <source>next</source>
-        <translation type="unfinished"></translation>
+        <translation>Nächstes Bild</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>00:00:00.000</source>
-        <translation type="unfinished">00:00:00.000</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -15022,12 +15027,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fields/ADM_vidSeparateField.cpp" line="+53"/>
         <source>Separate Fields</source>
-        <translation type="unfinished">separate Halbbilder</translation>
+        <translation type="unfinished">In Halbbilder aufspalten</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Jedes Bild in zwei Halbbilder aufspalten.</translation>
     </message>
 </context>
 <context>
@@ -15035,12 +15040,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/fastConvolution/Sharpen.cpp" line="+27"/>
         <source>Sharpen convolution.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Schärfen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>3x3 convolution filter :sharpen.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Schärfen per 3x3 Faltungsmatrix.</translation>
     </message>
 </context>
 <context>
@@ -15059,12 +15064,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/stackField/stackField.cpp" line="+47"/>
         <source>Stack Fields</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Halbbilder übereinander</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Put even lines on top, odd lines at bottom.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Die geraden Zeilen oben, die ungeraden unten.</translation>
     </message>
 </context>
 <context>
@@ -15103,12 +15108,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/swapUV/swapUV.cpp" line="+41"/>
         <source>Swap UV</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">UV vertauschen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Swap the U and V planes.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">U- und V-Farbkomponente vertauschen.</translation>
     </message>
 </context>
 <context>
@@ -15116,12 +15121,12 @@ Ready.
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide.cpp" line="+45"/>
         <source>Decomb telecide</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Decomb Telecide</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Donald Graft Telecide. Replace ivtc pattern by progressive frames. Video stays at 30 fps.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Progressive Bilder aus Telecine-Bildfolgen wiederherstellen. Bildfrequenz bleibt bei 30 Hz. © Donald Graft.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="+185"/>
@@ -15348,12 +15353,12 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/stackField/unstackField.cpp" line="+47"/>
         <source>Unstack Fields</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Halbbilder entstapeln</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Weave top and bottom halves.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Die obere und die untere Hälfte des Bildes verflechten (Umkehrung des Filters "Halbbilder übereinander").</translation>
     </message>
 </context>
 <context>
@@ -15361,52 +15366,52 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="+131"/>
         <source>vdpauDeint</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">VDPAU-Deinterlacer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>VDPAU deinterlacer (+resize).</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Deinterlacing und Änderung der Bildgröße mittels VDPAU.</translation>
     </message>
     <message>
         <location line="+185"/>
         <source>Keep Top Field</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Erstes Halbbild verwenden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep Bottom Field</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zweites Halbbild verwenden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Double framerate</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildfrequenz verdoppeln</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>_Ivtc:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Inverse Telecine (IVTC)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Resize:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildg_röße ändern</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Deint Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Deint.-Modus:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>_Breite:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>_Höhe:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -15419,22 +15424,22 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilter.cpp" line="+69"/>
         <source>vdpau: Resize</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildgröße ändern (VDPAU)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>vdpau: Resize image using vdpau.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bildgröße in Pixeln mittels VDPAU verändern.</translation>
     </message>
     <message>
         <location line="+133"/>
         <source>Width :</source>
-        <translation type="unfinished"></translation>
+        <translation>_Breite:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished"></translation>
+        <translation>_Höhe:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -15447,12 +15452,12 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/verticalFlip/verticalFlip.cpp" line="+47"/>
         <source>Vertical Flip</source>
-        <translation type="unfinished"></translation>
+        <translation>Vertikal spiegeln</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Vertically flip the image.</source>
-        <translation type="unfinished"></translation>
+        <translation>Bild um die waagerechte Mittellinie spiegeln.</translation>
     </message>
 </context>
 <context>
@@ -18698,37 +18703,37 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="+1"/>
         <source>Yadif, port of avisynth version (c) Fizick.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Yadif (Yet Another DeInterlacing Filter), Portierung der Version aus Avisynth © Alexander Balakhnin ("Fizick").</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>Temporal &amp; spatial check</source>
-        <translation type="unfinished">Zeitliche &amp; räumliche Prüfung</translation>
+        <translation type="unfinished">Zeitliche und räumliche Prüfung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bob, temporal &amp; spatial check</source>
-        <translation type="unfinished">Bob/Vollbildverfahren, zeitliche &amp; räumliche Prüfung (Frequenzverdopplung!)</translation>
+        <translation type="unfinished">Bob, zeitliche und räumliche Prüfung (Frequenzverdopplung!)</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Skip spatial temporal check</source>
-        <translation type="unfinished">Ohne räumliche &amp; zeitliche Prüfung</translation>
+        <translation type="unfinished">Ohne räumliche und zeitliche Prüfung</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bob, skip spatial temporal check</source>
-        <translation type="unfinished">Bob/Vollbildverfahren, ohne räumliche &amp; zeitliche Prüfung (Frequenzverdopplung!)</translation>
+        <translation type="unfinished">Bob, ohne räumliche und zeitliche Prüfung (Frequenzverdopplung!)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Bottom field first</source>
-        <translation type="unfinished">Unteres Feld zuerst (BFF)</translation>
+        <translation type="unfinished">Unteres Halbbild zuerst</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Top field first</source>
-        <translation type="unfinished">Oberes Feld zuerst (TFF)</translation>
+        <translation type="unfinished">Oberes Halbbild zuerst</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -18738,12 +18743,12 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="+1"/>
         <source>_Order:</source>
-        <translation type="unfinished">Reihenf_olge:</translation>
+        <translation type="unfinished">_Reihenfolge:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>yadif</source>
-        <translation type="unfinished">yadif (Yet Another DeInterlacing Filter)</translation>
+        <translation type="unfinished">Yadif</translation>
     </message>
 </context>
 <context>
