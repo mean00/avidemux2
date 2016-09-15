@@ -1,5 +1,5 @@
---- libavcodec/mpeg12enc.org	2015-09-02 10:16:30.063910853 +0200
-+++ libavcodec/mpeg12enc.c	2015-09-02 10:16:13.036243005 +0200
+--- libavcodec/mpeg12enc.c.org	2016-03-29 04:25:18.000000000 +0200
++++ libavcodec/mpeg12enc.c	2016-09-15 07:10:15.734644778 +0200
 @@ -254,7 +254,7 @@
  
          put_sbits(&s->pb, 12, s->width  & 0xFFF);
@@ -77,7 +77,7 @@
              put_bits(&s->pb, 2, s->chroma_format);
              put_bits(&s->pb, 2, s->width  >> 12);
              put_bits(&s->pb, 2, s->height >> 12);
-@@ -425,6 +466,7 @@
+@@ -420,6 +461,7 @@
  
  void ff_mpeg1_encode_picture_header(MpegEncContext *s, int picture_number)
  {
@@ -85,7 +85,7 @@
      AVFrameSideData *side_data;
      mpeg1_encode_sequence_header(s);
  
-@@ -463,6 +505,46 @@
+@@ -458,6 +500,46 @@
  
      s->frame_pred_frame_dct = 1;
      if (s->codec_id == AV_CODEC_ID_MPEG2VIDEO) {
@@ -132,7 +132,7 @@
          put_header(s, EXT_START_CODE);
          put_bits(&s->pb, 4, 8);                 /* pic ext */
          if (s->pict_type == AV_PICTURE_TYPE_P ||
-@@ -482,10 +564,14 @@
+@@ -477,10 +559,14 @@
  
          av_assert0(s->picture_structure == PICT_FRAME);
          put_bits(&s->pb, 2, s->picture_structure);
@@ -147,7 +147,7 @@
          /* XXX: optimize the generation of this flag with entropy measures */
          s->frame_pred_frame_dct = s->progressive_sequence;
  
-@@ -494,7 +580,8 @@
+@@ -489,7 +575,8 @@
          put_bits(&s->pb, 1, s->q_scale_type);
          put_bits(&s->pb, 1, s->intra_vlc_format);
          put_bits(&s->pb, 1, s->alternate_scan);
