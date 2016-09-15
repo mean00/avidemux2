@@ -55,9 +55,9 @@ DECLARE_VIDEO_FILTER(   AsciiFilter,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
-                        "MatrixView",            // internal name (must be uniq!)
-                        "Matrix View.",            // Display name
-                        "Matrix view, adapted from mplayer." // Description
+                        "AsciiView",            // internal name (must be uniq!)
+                        "Ascii View",            // Display name
+                        "Ascii view" // Description
                     );
 
 // Now implements the interesting parts
