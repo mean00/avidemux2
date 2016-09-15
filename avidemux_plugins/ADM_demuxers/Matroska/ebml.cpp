@@ -56,7 +56,11 @@ uint64_t    ADM_ebml::readEBMCode(void)
   uint32_t mask=0x80,outmask=0x7F,more=0;
 
   aprintf("Start :%x at %llx\n",start,tell()-1);
-
+  if(!start)
+  {
+        ADM_warning("Corruped EBML code\n");
+        return 0;
+  }
   while(!(mask&start))
   {
     mask>>=1;
@@ -119,10 +123,14 @@ uint64_t    ADM_ebml::readEBMCode_Full(void)
   uint64_t start=readu8();
   uint32_t mask=0x80,more=0;
   aprintf(">>StartFull :%x at %llx\n",start,tell()-1);
+  if(!start)
+  {
+        ADM_warning("Corrupted EBML entry!\n");
+        return 0;
+  }
   while(!(mask&start))
   {
     mask>>=1;
-    ADM_assert(mask);
     more++;
   }
   for(int i=0;i<more;i++)
