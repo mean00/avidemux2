@@ -22,6 +22,7 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libpcre16-0.dll
     ${File} ${ROOT_FOLDER}/libpcre-1.dll
     ${File} ${ROOT_FOLDER}/libfaad-2.dll
+    ${File} ${ROOT_FOLDER}/libfaac-0.dll
     ${File} ${ROOT_FOLDER}/libbz2.dll
     ${File} ${ROOT_FOLDER}/libpng16-16.dll
     ${File} ${ROOT_FOLDER}/libsqlite3-0.dll
