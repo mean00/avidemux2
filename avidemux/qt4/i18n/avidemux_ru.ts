@@ -4771,12 +4771,12 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+63"/>
         <source>Pr&amp;eferences</source>
-        <translation type="unfinished">Свойства</translation>
+        <translation>&amp;Настройки</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+21"/>
         <source>Preferences</source>
-        <translation type="unfinished">Свойства</translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-18"/>
@@ -5570,7 +5570,7 @@ Is it running ?</source>
     <message>
         <location line="+21"/>
         <source>_Check for new release</source>
-        <translation type="unfinished"></translation>
+        <translation>_Проверять на обновления</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -10238,7 +10238,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="obsolete">Свойства</translation>
+        <translation type="obsolete"></translation>
     </message>
     <message>
         <source>Filters</source>
@@ -10855,7 +10855,7 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_dialog/props.ui" line="+14"/>
         <source>Properties</source>
-        <translation type="unfinished">Свойства</translation>
+        <translation>Свойства</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -11072,7 +11072,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+218"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Новая версия&lt;/b&gt;&lt;br&gt;Версия %1&lt;br&gt;Выпущена %2.&lt;br&gt;Доступна для загрузки с адреса&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Вы можете отключить автоматическую проверку на обновления в настройках.&lt;/small&gt;</translation>
     </message>
     <message>
         <location line="+212"/>
