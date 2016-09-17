@@ -108,6 +108,7 @@ bool AsciiFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     }   
     image->blacken ();
     drawGlyphs(tmpImage,image);
+    image->Pts=tmpImage->Pts;
     return true;
 }
 /**
