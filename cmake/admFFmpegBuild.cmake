@@ -182,6 +182,7 @@ if (CROSS)
 		#xadd(--sysroot /mingw/include)
 		if (CMAKE_C_FLAGS)
 			xadd(--extra-cflags ${CMAKE_C_FLAGS})
+                        xadd(--extra-ldflags ${CMAKE_C_FLAGS})
 		endif (CMAKE_C_FLAGS)
 
 		set(CROSS_OS mingw32)	
