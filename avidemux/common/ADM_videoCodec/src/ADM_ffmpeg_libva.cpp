@@ -300,10 +300,12 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         switch(avctx->codec_id)
         {
             FMT_V_CHECK(H264,H264)
+            FMT_V_CHECK(H265,H265)
             FMT_V_CHECK(MPEG1VIDEO,MPEG1)
             FMT_V_CHECK(MPEG2VIDEO,MPEG2)
             FMT_V_CHECK(WMV3,WMV3)
             FMT_V_CHECK(VC1,VC1)
+            FMT_V_CHECK(VP9,VP9)
             default: 
                 continue;
                 break;
@@ -366,9 +368,27 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     vaapi_context *va_context=new vaapi_context;
     memset(va_context,0,sizeof(*va_context)); // dangerous...
     
+    VAProfile profile; 
+    switch(avctx->codec_id)
+    {
+        default:
+        case AV_CODEC_ID_H264:
+                                profile=VAProfileH264High;
+                                break;
+
+        case AV_CODEC_ID_H265:
+                                profile=VAProfileHEVCMain; // TODO VAProfileHEVCMain10
+                                break;
+        case AV_CODEC_ID_VP9:
+                                profile=VAProfileVP9Profile3;
+                                break;
+        case AV_CODEC_ID_VC1:
+                                profile=VAProfileVC1Advanced;
+                                break;
+                                
+    } 
     
-    
-    va_context->context_id=admLibVA::createDecoder(avctx->coded_width,avctx->coded_height,ADM_DEFAULT_SURFACE,initSurfaceID); // this is most likely wrong
+    va_context->context_id=admLibVA::createDecoder(profile,avctx->coded_width,avctx->coded_height,ADM_DEFAULT_SURFACE,initSurfaceID); // this is most likely wrong
     if(va_context->context_id==VA_INVALID)
     {
         ADM_warning("Cannot create decoder\n");
@@ -379,7 +399,7 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     }
     
     
-    if(!admLibVA::fillContext(va_context))
+    if(!admLibVA::fillContext(profile,va_context))
     {
         ADM_warning("Cannot get va context initialized for libavcodec\n");
         alive=false;
@@ -535,9 +555,30 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
     if(ofmt==AV_PIX_FMT_NONE)
         return false;
     outputFormat=ofmt;
-    ADM_info("This is supported by LIBVA\n");
+    ADM_info("This is maybe supported by LIBVA\n");
+    VAProfile profile=VAProfileNone;
+    switch(avctx->codec_id)
+    {
+       case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
+       case AV_CODEC_ID_H265: profile= VAProfileHEVCMain;break;;
+       case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
+       case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
+    }
+    if(!admLibVA::supported(profile))
+    {
+        ADM_warning("Not supported by libVA\n");
+        return false;
+    }
     return true;
 }
+
+
+/**
+ * 
+ * @param avctx
+ * @param fmt
+ * @return 
+ */
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryLibVA::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;

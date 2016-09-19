@@ -60,7 +60,7 @@ public:
     static bool         setupEncodingConfig(void);
     /* Surface */   
     
-static  VAContextID createDecoder(int width, int height, int nbSurface, VASurfaceID *surfaces);
+static  VAContextID createDecoder(VAProfile profile,int width, int height, int nbSurface, VASurfaceID *surfaces);
 static  bool        destroyDecoder(VAContextID decoder);
 
 static  VASurfaceID allocateSurface( int w, int h);
@@ -73,7 +73,7 @@ static  VAImage    *allocateImage( int w, int h);
 
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
-static bool        fillContext(vaapi_context *c);
+static bool        fillContext(VAProfile profile,vaapi_context *c);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
@@ -90,6 +90,8 @@ static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,
 static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
 static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 
+//
+static bool        supported(VAProfile profile);
 
 };
 /**

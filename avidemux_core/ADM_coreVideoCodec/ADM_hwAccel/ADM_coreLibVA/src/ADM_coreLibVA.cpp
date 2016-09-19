@@ -1,7 +1,7 @@
 /***************************************************************************
-    \file             : ADM_coreXvba.cpp
-    \brief            : Wrapper around xvba functions
-    \author           : (C) 2013 by mean fixounet@free.fr, derived from xbmc_pvr
+    \file             : ADM_coreLibVA.cpp
+    \brief            : Wrapper around libVA functions
+    \author           : (C) 2013/2016 by mean fixounet@free.fr, derived from xbmc_pvr
  ***************************************************************************/
 
 /***************************************************************************
@@ -44,7 +44,10 @@ namespace ADM_coreLibVA
 {
  void                   *context;
  VADisplay              display;
- VAConfigID             config;
+ VAConfigID             configH264;
+ VAConfigID             configH265;
+ VAConfigID             configVC1;
+ VAConfigID             configVP9;
  VAImageFormat          imageFormatNV12;
  VAImageFormat          imageFormatYV12;
  bool                   directOperation;
@@ -188,7 +191,36 @@ bool admLibVA::setupEncodingConfig(void)
     ADM_info("H264 Encoding config created\n");
     return true;
 }
-
+/**
+ * \fn checkProfile
+ * @param profile
+ * @param cid
+ * @param name
+ * @return 
+ */
+static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *name)
+{
+    VAStatus xError;
+    
+    *cid=-1;
+    VAConfigAttrib attrib;
+    attrib.type = VAConfigAttribRTFormat;
+    CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, profile, VAEntrypointVLD, &attrib, 1));
+    if(xError)
+    {
+         ADM_warning("Cannot get attribute for %s \n",name);
+         return false;
+    }
+    CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, profile, VAEntrypointVLD,&attrib, 1,cid));
+    if(xError)
+    {
+        ADM_warning("Cannot create config %s\n",name);
+        *cid=-1;
+        return false;
+     }
+    ADM_info("Config created %s \n",name);
+    return true;
+}
 /**
  *      \fn setupConfig
  *      \brief verify that h264 main profile is supported
@@ -199,7 +231,7 @@ bool admLibVA::setupConfig(void)
     bool r=false;
     int nb=vaMaxNumProfiles(ADM_coreLibVA::display);
     ADM_info("Max config =  %d \n",nb);
-    VAProfile *prof=new VAProfile[nb];
+    VAProfile *prof=(VAProfile *)alloca(sizeof(VAProfile)*nb);
     int nbProfiles;
     CHECK_ERROR(vaQueryConfigProfiles (ADM_coreLibVA::display, prof,&nbProfiles));
 
@@ -214,45 +246,18 @@ bool admLibVA::setupConfig(void)
                 r=true;
                 ADM_info("H264 high profile found\n");
             }
-        }
+        }        
     }
-    // supported ?
-    if(r)
-    {
-        VAConfigAttrib attrib;
-                attrib.type = VAConfigAttribRTFormat;
-                CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, VAProfileH264High, VAEntrypointVLD, &attrib, 1))
-
-                if (!(attrib.value & VA_RT_FORMAT_YUV420) )
-                {
-                    ADM_warning("YUV420 not supported\n");
-                    r=false;
-                }else
-                {
-                    ADM_info("YUV420 supported\n");
-                    
-                    VAConfigID id;
-                    CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, VAProfileH264High, VAEntrypointVLD,&attrib, 1,&id));
-                    if(xError)
-                    {
-                        ADM_warning("Cannot create config\n");
-                     }
-                    else
-                    {
-                        ADM_info("Config created\n");
-                        ADM_coreLibVA::config=id;
-                        r=true;
-                    }
-                    
-                }
-
- 
-    }
-   
-    delete [] prof;
-    return r;
+    // if H264 is not supported, no need to go further
+    if(!r)
+        return false;
     
     
+    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");
+    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");
+    checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,"VC1");
+    checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,"VP9");
+    return true;
 }
 /**
  * \fn fourCC_tostring
@@ -320,10 +325,21 @@ bool admLibVA::setupImageFormat()
  * @param c
  * @return 
  */    
-bool admLibVA::fillContext(vaapi_context *c)
+bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
 {
     CHECK_WORKING(false);
-    c->config_id=ADM_coreLibVA::config;
+    VAConfigID cid;
+    switch(profile)
+    {
+       case VAProfileH264High: cid=ADM_coreLibVA::configH264;break;
+       case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
+       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
+       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
+       default:
+                ADM_assert(0);
+
+    }
+    c->config_id=cid;
     c->display=ADM_coreLibVA::display;
     return true;
 }
@@ -396,8 +412,23 @@ bool admLibVA::isOperationnal(void)
 {
     return coreLibVAWorking;
 }
-
-
+/**
+ * 
+ * @param profile
+ * @return 
+ */
+bool        admLibVA::supported(VAProfile profile)
+{
+#define SUPSUP(a,b) case a: if(ADM_coreLibVA::b!=-1) return true;break;
+    switch(profile)
+    {
+        SUPSUP(VAProfileH264High,configH264)
+        SUPSUP(VAProfileHEVCMain,configH265)
+        SUPSUP(VAProfileVC1Advanced,configVC1)
+        SUPSUP(VAProfileVP9Profile3,configVP9)
+    } 
+    return false;
+}
 
 /**
  * \fn createDecoder
@@ -406,12 +437,25 @@ bool admLibVA::isOperationnal(void)
  * @return 
  */
 
-VAContextID        admLibVA::createDecoder(int width, int height,int nbSurface, VASurfaceID *surfaces)
+VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int height,int nbSurface, VASurfaceID *surfaces)
 {
     int xError=1;
     CHECK_WORKING(VA_INVALID);
     VAContextID id;
-    CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, ADM_coreLibVA::config,
+    VAConfigID cid;
+
+    switch(profile)
+    {
+       case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
+       case VAProfileHEVCMain:    cid=ADM_coreLibVA::configH265;break;
+       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
+       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;       
+       default:
+                ADM_assert(0);
+
+    }
+
+    CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, cid,
                 width,    height,    
                 VA_PROGRESSIVE, // ?? NOT SURE ??
                 surfaces,
