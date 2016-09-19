@@ -60,6 +60,8 @@ decoderFFSimple::decoderFFSimple (uint32_t w, uint32_t h,uint32_t fcc, uint32_t 
         ADM_warning("Forcing bit per coded sample to %d\n",bpp);
          _context->bits_per_coded_sample = bpp;
     }
+     _context->get_format=ADM_FFgetFormat; 
+     _context->opaque=this;
     //
     if (avcodec_open2(_context, codec, NULL) < 0)  
                       { 
