@@ -152,7 +152,7 @@ INCLUDE(admCheckLibVA)
 checkVDPAU()
 #checkXvba()
 checkLibVA()
-#checkNvEnc()
+checkNvEnc()
 ENDIF(NOT PLUGINS)
 
 ########################################
