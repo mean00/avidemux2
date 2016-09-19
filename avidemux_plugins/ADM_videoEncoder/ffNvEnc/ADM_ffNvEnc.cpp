@@ -126,7 +126,7 @@ again:
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
     {
         sz=encodeWrapper(NULL,out);
-        if ((sz<= 0)
+        if (sz<= 0)
         {
             ADM_info("[ffnvenc] Error %d encoding video\n",sz);
             return false;

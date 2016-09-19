@@ -1,5 +1,5 @@
---- libavcodec/nvenc.c.org	2016-05-09 07:55:19.591504808 +0200
-+++ libavcodec/nvenc.c	2016-05-09 08:03:10.873897123 +0200
+--- libavcodec/nvenc.c.org	2016-03-29 04:25:20.000000000 +0200
++++ libavcodec/nvenc.c	2016-09-19 07:36:39.524237421 +0200
 @@ -1015,19 +1015,19 @@
  
          switch (avctx->pix_fmt) {
@@ -56,7 +56,7 @@
  
  static int nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
      const AVFrame *frame, int *got_packet)
-@@ -1298,59 +1321,31 @@
+@@ -1298,59 +1321,32 @@
              av_log(avctx, AV_LOG_ERROR, "Failed locking nvenc input buffer\n");
              return 0;
          }
@@ -137,6 +137,7 @@
 +                        av_log(avctx, AV_LOG_FATAL, "NVENC: Invalid pixel format!\n");
 +                        return AVERROR(EINVAL);
 +        } 
++       }
 +// /MEANX
  
          nv_status = p_nvenc->nvEncUnlockInputBuffer(ctx->nvencoder, inSurf->input_surface);
