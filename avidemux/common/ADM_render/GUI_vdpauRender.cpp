@@ -66,7 +66,7 @@ vdpauRender::~vdpauRender()
 */
 bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-	ADM_info("[Vdpau]Xv start\n");
+    ADM_info("[Vdpau]Init\n");
     info=*window;
     if(admVdpau::isOperationnal()==false)
     {
@@ -80,6 +80,8 @@ bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
     //
     int widthToUse=admVdpau::dimensionRoundUp(w);
     int heightToUse=admVdpau::dimensionRoundUp(h);
+    
+    ADM_info("[VDpau] Allocating surfaces %d x%d , %d x %d, %d x x%d\n",w,h,widthToUse,heightToUse,displayWidth,displayHeight);
     
     if(!reallocOutputSurface(displayWidth,displayHeight))
     {

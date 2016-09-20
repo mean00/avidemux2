@@ -152,8 +152,8 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         ADM_info("[VDPAU] No more available surface, creating a new one\n");
         render=new vdpau_render_state;
         memset(render,0,sizeof( vdpau_render_state));
-        int widthToUse = (avctx->coded_width+ 1)  & ~1;
-        int heightToUse= (avctx->coded_height+3)  & ~3;
+        int widthToUse = admVdpau::dimensionRoundUp(avctx->coded_width);
+        int heightToUse= admVdpau::dimensionRoundUp(avctx->coded_height);
         if(VDP_STATUS_OK!=admVdpau::surfaceCreate(widthToUse,heightToUse,&(render->surface)))
         {
             ADM_error("Cannot create surface \n");

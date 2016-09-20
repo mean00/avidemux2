@@ -139,7 +139,7 @@ const VdpVideoSurface listOfInvalidSurface[1]={VDP_INVALID_HANDLE};
                 NULL,                               // dest video Rec
                 0,NULL);                            // Layers
                 
-#if 0      
+#if 0
   ADM_info("Target width=%d height=%d\n", targetWidth,targetHeight);
   VdpRGBAFormat fmt;
   VdpChromaType chroma;

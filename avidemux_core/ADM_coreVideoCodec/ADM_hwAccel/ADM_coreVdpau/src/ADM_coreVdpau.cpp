@@ -244,7 +244,7 @@ VdpStatus admVdpau::decoderCreate(  VdpDevice dev,VdpDecoderProfile profile,    
             uint32_t  max_references,VdpDecoder *      decoder)
 {
     VDP_TRACK("Creating decoder\n");
-    CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,width,height,max_references,decoder));
+    CHECK(ADM_coreVdpau::funcs.decoderCreate(dev,profile,dimensionRoundUp(width),dimensionRoundUp(height),max_references,decoder));
 }
 /**
     \fn
@@ -265,7 +265,8 @@ VdpStatus  admVdpau::surfaceCreate(uint32_t width,uint32_t height,VdpVideoSurfac
     
     if(!isOperationnal()) 
         {ADM_error("vdpau is not operationnal\n");return VDP_STATUS_ERROR;}
-    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface);
+    VDP_TRACK("[VDPAU] Creating surface %d x %d\n",(int)width,(int)height);
+    VdpStatus r=ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,dimensionRoundUp(width),dimensionRoundUp(height),surface);
     if(VDP_STATUS_OK!=r) 
     {
         ADM_warning("ADM_coreVdpau::funcs.createSurface(ADM_coreVdpau::vdpDevice,VDP_CHROMA_TYPE_420,width,height,surface) call failed with error=%s\n",getErrorString(r));
