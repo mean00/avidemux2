@@ -379,9 +379,11 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
         case AV_CODEC_ID_H265:
                                 profile=VAProfileHEVCMain; // TODO VAProfileHEVCMain10
                                 break;
+#ifdef ADM_VA_HAS_VP9
         case AV_CODEC_ID_VP9:
                                 profile=VAProfileVP9Profile3;
                                 break;
+#endif
         case AV_CODEC_ID_VC1:
                                 profile=VAProfileVC1Advanced;
                                 break;
@@ -562,7 +564,9 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
        case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
        case AV_CODEC_ID_H265: profile= VAProfileHEVCMain;break;;
        case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
+#ifdef ADM_VA_HAS_VP9
        case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
+#endif
     }
     if(!admLibVA::supported(profile))
     {
