@@ -811,7 +811,7 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
     clipboard.clear();
     for(int seg=startSeg;seg<=endSeg;seg++)
     {
-        _SEGMENT s=segments[seg];
+        _SEGMENT s=segments[seg],s2=s;
         aprintf("Adding segment %d to clipboard\n",seg);
         if(s._startTimeUs<=startTime && (s._startTimeUs+s._durationUs)>startTime)
         {
@@ -822,9 +822,8 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
             s._durationUs-=offset;         // take into account the part we chopped
             aprintf("Marker A is here offset=%d\n",(int)offset);
         }
-        if(s._startTimeUs<=endTime && (s._startTimeUs+s._durationUs)>endTime)
-        {
-            
+        if(s2._startTimeUs<=endTime && (s2._startTimeUs+s2._durationUs)>=endTime)
+        {            
             // need to refine last seg            
             uint64_t offset=endTime-s._startTimeUs;
             s._durationUs=offset;
