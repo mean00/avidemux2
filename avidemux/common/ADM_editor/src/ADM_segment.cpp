@@ -820,13 +820,14 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
             uint64_t offset=startTime-s._startTimeUs;
             s._refStartTimeUs+=offset;
             s._durationUs-=offset;         // take into account the part we chopped
+            s._startTimeUs+=offset;
             aprintf("Marker A is here offset=%d\n",(int)offset);
         }
         if(s2._startTimeUs<=endTime && (s2._startTimeUs+s2._durationUs)>=endTime)
         {            
             // need to refine last seg            
-            uint64_t offset=endTime-s._startTimeUs;
-            s._durationUs=offset;
+            uint64_t offset=endTime-s2._startTimeUs;
+            s._durationUs=endTime-s._startTimeUs;
             aprintf("Marker B is here offset=%d\n",(int)offset);
         }
         // TODO refine timing for 1st/last/duration/...
