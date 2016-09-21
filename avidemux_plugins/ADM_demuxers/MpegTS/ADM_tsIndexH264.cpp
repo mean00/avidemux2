@@ -140,9 +140,15 @@ bool bAppend=false;
       {
         int startCode=pkt->findStartCode();
 
+        if(!pkt->stillOk())
+        {
+            keepRunning=false;
+            continue;
+        }
         if(startCode&0x80) continue; // Marker missing
         startCode&=0x1f;
-        if(startCode!=NAL_SPS) continue;
+        if(startCode!=NAL_SPS) 
+            continue;
 
           // Got SPS!
 
