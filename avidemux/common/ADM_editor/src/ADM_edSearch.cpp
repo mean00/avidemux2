@@ -52,7 +52,7 @@ again:
     r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
 
     // 3- if it does not belong to the same seg  ....
-    if(r==false || nkTime > (s->_refStartTimeUs+s->_durationUs))
+    if(r==false || nkTime >= (s->_refStartTimeUs+s->_durationUs))
     {
         if(seg>=lastSeg-1)
         {
