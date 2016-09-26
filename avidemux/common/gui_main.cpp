@@ -481,10 +481,32 @@ void HandleAction (Action action)
     case ACT_Paste:
             {
               uint64_t currentPts=video_body->getCurrentFramePts();
+              uint64_t d=video_body->getVideoDuration();
+              uint64_t markA,markB;
+              markA=video_body->getMarkerAPts();                
+              markB=video_body->getMarkerBPts();
+              if(markA>markB)
+              {
+                  uint64_t p=markA;
+                  markA=markB;
+                  markB=p;
+              }
               video_body->pasteFromClipBoard(currentPts);
               video_body->getVideoInfo (avifileinfo);
-              A_ResetMarkers();
-      	      ReSync ();
+              d=video_body->getVideoDuration()-d;
+              if(markA>=currentPts)
+              {
+                  markA+=d;
+                  markB+=d;
+              }
+              if(markA<currentPts && currentPts<markB)
+              {
+                  markB+=d;
+              }
+              video_body->setMarkerAPts(markA);
+              video_body->setMarkerBPts(markB);
+      	      A_Resync();
+      	      GUI_GoToTime(currentPts);
             }
             break;
       break;
