@@ -535,8 +535,8 @@ void HandleAction (Action action)
             video_body->resetSeg();
             video_body->getVideoInfo (avifileinfo);
 
+            A_Resync();
             A_ResetMarkers();
-              ReSync ();
 
             // forget last project file
             video_body->setProjectName("");
@@ -548,22 +548,40 @@ void HandleAction (Action action)
         {
             uint64_t a=video_body->getMarkerAPts();
             uint64_t b=video_body->getMarkerBPts();
+            uint64_t current=video_body->getCurrentFramePts();
+            bool r;
+            if(a>b)
+            {
+                uint64_t p=a;
+                a=b;
+                b=p;
+            }
+            if(action==ACT_Cut)
+            {
+                video_body->copyToClipBoard(a,b);
+            }
+
             if(false==video_body->remove(a,b))
             {
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
+                break;
             }
-            else
+            A_Resync(); // total duration & stuff
+        
+            if(current>=a) // else current is before A, so nothing to do
             {
-              A_ResetMarkers();
-              A_Resync(); // total duration & stuff
-              // Rewind to first frame...
-              //A_Rewind();
-              GUI_GoToTime(a);
-
-            }
+                if(current<b) // current is between A & B => A
+                {
+                        current=a;
+                }else // current is after the removed chunk, adjust
+                {
+                        current-=(b-a);
+                }
+            } 
+            A_ResetMarkers();
+            GUI_GoToTime(current);
         }
-
-      break;
+    break;
       // set decoder option (post processing ...)
     case ACT_DecoderOption:
       video_body->setDecodeParam ( admPreview::getCurrentPts());
