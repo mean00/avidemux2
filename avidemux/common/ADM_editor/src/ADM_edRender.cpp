@@ -190,7 +190,7 @@ uint32_t seg;
     uint64_t to=segTime+s->_refStartTimeUs;
     if(false==seektoTime(s->_reference,to))
     {
-            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",s,to/1000);
+            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",seg,to/1000);
             return false;
     }
     _currentSegment=seg;
@@ -580,7 +580,7 @@ bool        ADM_Composer::switchToSegment(uint32_t s,bool dontdecode)
     
     if(false==seektoTime(seg->_reference,from,dontdecode))
     {
-            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",s,from/1000);
+            ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",seg,from/1000);
             return false;
     }
     _currentSegment=s;
