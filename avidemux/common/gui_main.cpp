@@ -107,13 +107,13 @@ static IScriptEngine *tempEngine;
 
 static void RunScript(const char *name)
 {
-	parseScript(tempEngine, name, IScriptEngine::DebugOnError);
+    parseScript(tempEngine, name, IScriptEngine::DebugOnError);
         A_Resync();
 }
 
 static void DebugScript(const char *name)
 {
-	parseScript(tempEngine, name, IScriptEngine::Debug);
+    parseScript(tempEngine, name, IScriptEngine::Debug);
 }
 
 static void SaveScript(const char *name)
@@ -159,47 +159,47 @@ void HandleAction (Action action)
         A_saveDefaultSettings();
         return;
     }
-	if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
-	{
-		int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
-		int actionId = (action - ACT_SCRIPT_ENGINE_FIRST) % 3;
+    if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
+    {
+        int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
+        int actionId = (action - ACT_SCRIPT_ENGINE_FIRST) % 3;
 
-		tempEngine = getScriptEngines()[engineIndex];
+        tempEngine = getScriptEngines()[engineIndex];
 
-		switch (actionId)
-		{
-			case 0:
-				GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to run"), RunScript);
-				break;
+        switch (actionId)
+        {
+            case 0:
+                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to run"), RunScript);
+                break;
 
-			case 1:
-				GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to debug"), DebugScript);
-				break;
+            case 1:
+                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to debug"), DebugScript);
+                break;
 
-			case 2:
-				GUI_FileSelWrite(QT_TRANSLATE_NOOP("adm","Select script to save"), SaveScript);
-				UI_refreshCustomMenu();
-				break;
-		}
+            case 2:
+                GUI_FileSelWrite(QT_TRANSLATE_NOOP("adm","Select script to save"), SaveScript);
+                UI_refreshCustomMenu();
+                break;
+        }
 
-		return;
-	}
+        return;
+    }
 
-	if (action >= ACT_SCRIPT_ENGINE_SHELL_FIRST && action < ACT_SCRIPT_ENGINE_SHELL_LAST)
-	{
-		IScriptEngine *shellEngine = getScriptEngines()[action - ACT_SCRIPT_ENGINE_SHELL_FIRST];
+    if (action >= ACT_SCRIPT_ENGINE_SHELL_FIRST && action < ACT_SCRIPT_ENGINE_SHELL_LAST)
+    {
+        IScriptEngine *shellEngine = getScriptEngines()[action - ACT_SCRIPT_ENGINE_SHELL_FIRST];
 
-		if ((shellEngine->capabilities() & IScriptEngine::DebuggerShell) == IScriptEngine::DebuggerShell)
-		{
-			shellEngine->openDebuggerShell();
-		}
-		else
-		{
-			interactiveScript(shellEngine);
-		}
+        if ((shellEngine->capabilities() & IScriptEngine::DebuggerShell) == IScriptEngine::DebuggerShell)
+        {
+            shellEngine->openDebuggerShell();
+        }
+        else
+        {
+            interactiveScript(shellEngine);
+        }
 
-		return;
-	}
+        return;
+    }
 
   switch (action)
     {
@@ -219,7 +219,7 @@ void HandleAction (Action action)
         case ACT_RECENT1:
         case ACT_RECENT2:
         case ACT_RECENT3:
-			{
+            {
                             std::vector<std::string>name;
                             int rank;
 
@@ -228,12 +228,12 @@ void HandleAction (Action action)
                             ADM_assert(name[rank].size());
                             A_openVideo (name[rank].c_str());
                             return;
-			}
+            }
         case ACT_RECENT_PROJECT0:
         case ACT_RECENT_PROJECT1:
         case ACT_RECENT_PROJECT2:
         case ACT_RECENT_PROJECT3:
-			{
+            {
                             std::vector<std::string>name = prefs->get_lastprojectfiles();
                             int rank = (int)action - ACT_RECENT_PROJECT0;
 
@@ -241,9 +241,9 @@ void HandleAction (Action action)
                             call_scriptEngine(name[rank].c_str());
 
                             return;
-			}
-	case ACT_VIDEO_CODEC_CONFIGURE:
-    		videoEncoder6Configure();
+            }
+    case ACT_VIDEO_CODEC_CONFIGURE:
+            videoEncoder6Configure();
             return;
     case ACT_ContainerConfigure:
             {
@@ -252,30 +252,30 @@ void HandleAction (Action action)
             return;
             }
     case ACT_VIDEO_CODEC_CHANGED:
-		{
-    		int nw=UI_getCurrentVCodec();
-    		videoEncoder6_SetCurrentEncoder(nw);
+        {
+            int nw=UI_getCurrentVCodec();
+            videoEncoder6_SetCurrentEncoder(nw);
             return;
-		}
+        }
    case ACT_AUDIO_CODEC_CHANGED:
-	   {
+       {
             int nw=UI_getCurrentACodec();
             audioCodecSetByIndex(0,nw);
             return;
-	   }
+       }
     case ACT_PLUGIN_INFO:
             DIA_pluginsInfo();
             return;
-	case ACT_OPEN_APP_LOG:
-		GUI_OpenApplicationLog();
-		return;
-	case ACT_OPEN_APP_FOLDER:
-		GUI_OpenApplicationDataFolder();
-		return;
+    case ACT_OPEN_APP_LOG:
+        GUI_OpenApplicationLog();
+        return;
+    case ACT_OPEN_APP_FOLDER:
+        GUI_OpenApplicationDataFolder();
+        return;
 
     case ACT_ABOUT :
-    		 DIA_about( );
-		 return;
+             DIA_about( );
+         return;
     case ACT_AUDIO_CODEC_CONFIGURE:
       audioCodecConfigure(0);
       return;
@@ -287,7 +287,7 @@ void HandleAction (Action action)
       return;
     case ACT_PREFERENCES:
         if(playing) return;
-    	if(DIA_Preferences())
+        if(DIA_Preferences())
         {
             ADM_info("Saving prefs\n");
             prefs->save ();
@@ -303,7 +303,7 @@ void HandleAction (Action action)
               GUI_PlayAvi();
           }
           ADM_info("Closing ui\n");
-	  UI_closeGui();
+      UI_closeGui();
           
           return;
       break;
@@ -312,7 +312,7 @@ void HandleAction (Action action)
 
     }
 
-  if (playing)			// only allow some action
+  if (playing)            // only allow some action
     {
       switch (action)
         {
@@ -433,7 +433,7 @@ void HandleAction (Action action)
       break;
     case ACT_StopAvi:
       if (playing)
-	GUI_PlayAvi ();
+    GUI_PlayAvi ();
       break;
     case ACT_SetPostProcessing:
       A_setPostproc();
@@ -452,7 +452,7 @@ void HandleAction (Action action)
             markA=pts;
       else
             markB=pts;
-      if (markA>markB && swapit )	// auto swap
+      if (markA>markB && swapit )    // auto swap
         {
           uint64_t y;
           y = markA;
@@ -475,8 +475,8 @@ void HandleAction (Action action)
                     markA=markB;
                     markB=p;
                 }
-  		video_body->copyToClipBoard (markA,markB);
-		break;
+          video_body->copyToClipBoard (markA,markB);
+        break;
     }
     case ACT_Paste:
             {
@@ -505,8 +505,8 @@ void HandleAction (Action action)
               }
               video_body->setMarkerAPts(markA);
               video_body->setMarkerBPts(markB);
-      	      A_Resync();
-      	      GUI_GoToTime(currentPts);
+                A_Resync();
+                GUI_GoToTime(currentPts);
             }
             break;
       break;
@@ -536,12 +536,12 @@ void HandleAction (Action action)
             video_body->getVideoInfo (avifileinfo);
 
             A_ResetMarkers();
-      		ReSync ();
+              ReSync ();
 
             // forget last project file
             video_body->setProjectName("");
         }
-	break;
+    break;
 
     case ACT_Delete:
     case ACT_Cut:
@@ -829,29 +829,29 @@ void ReSync (void)
 //
 void cleanUp (void)
 {
-	bool saveprefsonexit;
+    bool saveprefsonexit;
 
-	prefs->get(FEATURES_SAVEPREFSONEXIT, &saveprefsonexit);
+    prefs->get(FEATURES_SAVEPREFSONEXIT, &saveprefsonexit);
 
-	if (saveprefsonexit)
-	{
-		prefs->save();
-	}
+    if (saveprefsonexit)
+    {
+        prefs->save();
+    }
 
-	if (avifileinfo)
-	{
-		delete avifileinfo;
-		avifileinfo=NULL;
-	}
+    if (avifileinfo)
+    {
+        delete avifileinfo;
+        avifileinfo=NULL;
+    }
         admPreview::cleanUp();
-	if (video_body)
-	{
-		delete video_body;
-		video_body=NULL;
-	}
+    if (video_body)
+    {
+        delete video_body;
+        video_body=NULL;
+    }
 
-	currentaudiostream=NULL;
-//	filterCleanUp();
+    currentaudiostream=NULL;
+//    filterCleanUp();
 
 }
 
@@ -865,36 +865,36 @@ void cleanUp (void)
  */
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
-	bool ret;
-	char *longname = ADM_PathCanonize(name);
+    bool ret;
+    char *longname = ADM_PathCanonize(name);
 
-	if (playing)
-	{
-		return false;
-	}
+    if (playing)
+    {
+        return false;
+    }
 
-	ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);    	
+    ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);        
 
-	if (ret)
-	{
-		video_body->setProjectName(longname);
-	}
+    if (ret)
+    {
+        video_body->setProjectName(longname);
+    }
 
-	prefs->set_lastprojectfile(longname);
+    prefs->set_lastprojectfile(longname);
     delete [] longname;
     longname=NULL;
     
     
-	UI_updateRecentProjectMenu();
+    UI_updateRecentProjectMenu();
     // update main menu shift
     EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
     if(ed)
     {
         UI_setAudioCodec(ed->encoderIndex);
         UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
-    }	
+    }    
 
-	return ret;
+    return ret;
 }
 /**
  * 
@@ -907,7 +907,7 @@ bool A_runPythonScript(const std::string &name)
 }
 bool A_parseScript(IScriptEngine *engine, const char *name)
 {
-	return parseScript(engine, name, IScriptEngine::Normal);
+    return parseScript(engine, name, IScriptEngine::Normal);
 }
 
 void A_saveScript(IScriptEngine* engine, const char* name)
@@ -915,15 +915,15 @@ void A_saveScript(IScriptEngine* engine, const char* name)
     IScriptWriter *writer = engine->createScriptWriter();
     ADM_ScriptGenerator generator(video_body, writer);
     std::stringstream stream(std::stringstream::in | std::stringstream::out);
-	std::string fileName = name;
+    std::string fileName = name;
 
     generator.generateScript(stream);
     delete writer;
 
-	if (fileName.rfind(".") == std::string::npos)
-	{
-		fileName += "." + engine->defaultFileExtension();
-	}
+    if (fileName.rfind(".") == std::string::npos)
+    {
+        fileName += "." + engine->defaultFileExtension();
+    }
 
     FILE *file = ADM_fopen(fileName.c_str(), "wt");
     string script = stream.str();
@@ -951,7 +951,7 @@ void A_saveDefaultSettings()
 
     generator.generateScript(stream,ADM_ScriptGenerator::GENERATE_SETTINGS);
     delete writer;
-	
+    
     std::string script = stream.str();
     ADM_info("Generated settings=%s\n",script.c_str());
     
@@ -977,7 +977,7 @@ bool A_loadDefaultSettings(void)
     return false;
 }
 /*
-	Unpack all frames without displaying them to check for error
+    Unpack all frames without displaying them to check for error
 
 */
 void A_videoCheck( void)
@@ -989,18 +989,18 @@ uint32_t error=0;
 ADMImage *aImage;
 DIA_workingBase *work;
 
-	nb = avifileinfo->nb_frames;
-	work=createWorking(QT_TRANSLATE_NOOP("adm","Checking video"));
-	aImage=new ADMImage(avifileinfo->width,avifileinfo->height);
+    nb = avifileinfo->nb_frames;
+    work=createWorking(QT_TRANSLATE_NOOP("adm","Checking video"));
+    aImage=new ADMImage(avifileinfo->width,avifileinfo->height);
   for(uint32_t i=0;i<nb;i++)
   {
-	work->update(i, nb);
-      	if(!work->isAlive()) break;
-	if(!GUI_getFrameContent (aImage,i))
-	{
-		error ++;
-		printf("Frame %u has error\n",i);
-	}
+    work->update(i, nb);
+          if(!work->isAlive()) break;
+    if(!GUI_getFrameContent (aImage,i))
+    {
+        error ++;
+        printf("Frame %u has error\n",i);
+    }
 
     };
   delete work;
@@ -1008,13 +1008,13 @@ DIA_workingBase *work;
   if(error==0)
     GUI_Info_HIG(ADM_LOG_IMPORTANT,QT_TRANSLATE_NOOP("adm","No error found"), NULL);
 else
-	{
-		char str[400];
+    {
+        char str[400];
                 sprintf(str,QT_TRANSLATE_NOOP("adm","Errors found in %u frames"),error);
-		GUI_Info_HIG(ADM_LOG_IMPORTANT,str, NULL);
+        GUI_Info_HIG(ADM_LOG_IMPORTANT,str, NULL);
 
-	}
-	GUI_GoToFrame(0);
+    }
+    GUI_GoToFrame(0);
 #endif
 }
 int A_delete(uint32_t start, uint32_t end)
@@ -1030,24 +1030,24 @@ uint32_t count;
          return 0;
       }
       if (count >= info.nb_frames - 1)
-	{
+    {
           GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","You can't remove all frames"), NULL);
-	  return 0;
-	}
+      return 0;
+    }
 
 //      video_body->dumpSeg ();
 //      if (!video_body->removeFrames (start, end))
     if(0)
-	{
+    {
           GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened"), NULL);
-	  return 0;
-	}
+      return 0;
+    }
 //      video_body->dumpSeg ();
       //resync GUI and video
       if (!video_body->updateVideoInfo (avifileinfo))
-	{
+    {
           GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
-	}
+    }
 
 
       A_ResetMarkers();
@@ -1062,18 +1062,18 @@ extern int DIA_getMPParams( uint32_t *pplevel, uint32_t *ppstrength,bool *swap);
 //
 
 //
-void	A_setPostproc( void )
+void    A_setPostproc( void )
 {
 uint32_t type,strength;
 bool swap;
-	if(!avifileinfo) return;
+    if(!avifileinfo) return;
 
-	video_body->getPostProc(&type,&strength,&swap);
+    video_body->getPostProc(&type,&strength,&swap);
 
- 	if(DIA_getMPParams( &type, &strength,&swap))
- 	{
-		video_body->setPostProc(type,strength,swap);
- 	}
+     if(DIA_getMPParams( &type, &strength,&swap))
+     {
+        video_body->setPostProc(type,strength,swap);
+     }
 
 }
 
@@ -1153,107 +1153,107 @@ roger_and_out:
  */
 static inline int extractTrackIndex(const char *trackIdxTxt)
 {
-	static const int MAX_TRACK_IDX_LENGTH = 4+1; // Max length expected = 0xFF. Test 1 char more than assumed to take the \0 into account
-	size_t trackTxtLen = strlen(trackIdxTxt);
+    static const int MAX_TRACK_IDX_LENGTH = 4+1; // Max length expected = 0xFF. Test 1 char more than assumed to take the \0 into account
+    size_t trackTxtLen = strlen(trackIdxTxt);
         if(trackTxtLen>= MAX_TRACK_IDX_LENGTH)
             trackTxtLen=MAX_TRACK_IDX_LENGTH;
-	if ( MAX_TRACK_IDX_LENGTH == trackTxtLen) 
+    if ( MAX_TRACK_IDX_LENGTH == trackTxtLen) 
         {
-		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
-		return -1;
-	}
-	char *endptr;
-	int trackIdx = static_cast<int>(strtol(trackIdxTxt, &endptr, 0));
-	
-	if (trackIdx < 1 || trackIdx > ADM_MAXIMUM_AMOUT_AUDIO_STREAMS || endptr != trackIdxTxt + trackTxtLen) {
-		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
-		return -1;
-	}
-	return trackIdx-1;
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
+        return -1;
+    }
+    char *endptr;
+    int trackIdx = static_cast<int>(strtol(trackIdxTxt, &endptr, 0));
+    
+    if (trackIdx < 1 || trackIdx > ADM_MAXIMUM_AMOUT_AUDIO_STREAMS || endptr != trackIdxTxt + trackTxtLen) {
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Invalid audio index given"), NULL);
+        return -1;
+    }
+    return trackIdx-1;
 }
 /**
         \fn A_externalAudioTrack
         \brief Select external audio track (for 2nd track)
-		@param trackIdx The track index to use, according to the active track list
-		@param filename
+        @param trackIdx The track index to use, according to the active track list
+        @param filename
 */
 void A_externalAudioTrack(const char *trackIdxTxt, const char *filename )
 {
-	int trackIdx = extractTrackIndex(trackIdxTxt);
-	if(trackIdx == -1) return;
-	printf("\texternal audio index = %d\n", trackIdx);
-	printf("\tgiven '%s'\n", filename);
+    int trackIdx = extractTrackIndex(trackIdxTxt);
+    if(trackIdx == -1) return;
+    printf("\texternal audio index = %d\n", trackIdx);
+    printf("\tgiven '%s'\n", filename);
 
-	ADM_edAudioTrackExternal *ext=create_edAudioExternal(filename);
-	if (!ext) {
-		GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot use that file as audio track"));
-		return;
-	}
-	// add to the list of the known input files
-	ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
-	PoolOfAudioTracks *pool = video_body->getPoolOfAudioTrack();
-	int assumedIdx = pool->size();
-	pool->addInternalTrack( ext);
-	pool->dump();
-	// the shortcut insert which should work the most time
-	if (pool->size() > assumedIdx && pool->at(assumedIdx) == ext) {
-		if (trackIdx < tracks->size())
-			tracks->insertTrack(trackIdx, assumedIdx, ext);
-		else
-			tracks->insertTrack(tracks->size(), assumedIdx, ext);
-		if(tracks->size() > trackIdx+1)
-			tracks->removeTrack(trackIdx+1);
-	} else {
-		assumedIdx = -1;
-		for(int i=0; i<pool->size(); i++){
-			if(pool->at(i) == ext) {
-				assumedIdx = i;
-				break;
-			}
-		}
-		if (assumedIdx == -1) {
-			// This should never happen, but who knows?
-			GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
-			               QT_TRANSLATE_NOOP("adm","Audio file not found in list, even though it should be there. Create a bug report!"));
-			return;
-		}
-		printf("assumed Idx = %d\n", assumedIdx);
-		if(trackIdx >= tracks->size()) {
-			tracks->addTrack(assumedIdx, ext);
-		} else {
-			tracks->removeTrack(trackIdx);
-			tracks->insertTrack(trackIdx, assumedIdx, ext);
-		}
-	}
-	tracks->dump();
-	printf("external file appended");
+    ADM_edAudioTrackExternal *ext=create_edAudioExternal(filename);
+    if (!ext) {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Cannot use that file as audio track"));
+        return;
+    }
+    // add to the list of the known input files
+    ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
+    PoolOfAudioTracks *pool = video_body->getPoolOfAudioTrack();
+    int assumedIdx = pool->size();
+    pool->addInternalTrack( ext);
+    pool->dump();
+    // the shortcut insert which should work the most time
+    if (pool->size() > assumedIdx && pool->at(assumedIdx) == ext) {
+        if (trackIdx < tracks->size())
+            tracks->insertTrack(trackIdx, assumedIdx, ext);
+        else
+            tracks->insertTrack(tracks->size(), assumedIdx, ext);
+        if(tracks->size() > trackIdx+1)
+            tracks->removeTrack(trackIdx+1);
+    } else {
+        assumedIdx = -1;
+        for(int i=0; i<pool->size(); i++){
+            if(pool->at(i) == ext) {
+                assumedIdx = i;
+                break;
+            }
+        }
+        if (assumedIdx == -1) {
+            // This should never happen, but who knows?
+            GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+                           QT_TRANSLATE_NOOP("adm","Audio file not found in list, even though it should be there. Create a bug report!"));
+            return;
+        }
+        printf("assumed Idx = %d\n", assumedIdx);
+        if(trackIdx >= tracks->size()) {
+            tracks->addTrack(assumedIdx, ext);
+        } else {
+            tracks->removeTrack(trackIdx);
+            tracks->insertTrack(trackIdx, assumedIdx, ext);
+        }
+    }
+    tracks->dump();
+    printf("external file appended");
 }
 
 /**
     \fn A_setAudioLang
     \brief Setting the language name for the given track index
-	@param trackIndex The track index to modify, according to the active track list
+    @param trackIndex The track index to modify, according to the active track list
 */
 void    A_setAudioLang(const char *trackIdxTxt, const char *langueName)
 {
-	if (!video_body->isFileOpen()) {
-		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
-		               QT_TRANSLATE_NOOP("adm","Unable to set the audio language: No video loaded yet!"));
-		return;
-	}
-	int trackIdx = extractTrackIndex(trackIdxTxt);
-	if(trackIdx == -1) return;
-	ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
-	if (tracks->size() == 0 ) {
-		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
-		               QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Video has no audio file!"));
-		return;
-	} else if (tracks->size() <= trackIdx) {
-		GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
-		               QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Invalid track index!"));
-		return;
-	}
-	tracks->atEdAudio(trackIdx)->setLanguage(langueName);
+    if (!video_body->isFileOpen()) {
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+                       QT_TRANSLATE_NOOP("adm","Unable to set the audio language: No video loaded yet!"));
+        return;
+    }
+    int trackIdx = extractTrackIndex(trackIdxTxt);
+    if(trackIdx == -1) return;
+    ActiveAudioTracks* tracks = video_body->getPoolOfActiveAudioTrack();
+    if (tracks->size() == 0 ) {
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+                       QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Video has no audio file!"));
+        return;
+    } else if (tracks->size() <= trackIdx) {
+        GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Error"),
+                       QT_TRANSLATE_NOOP("adm","Setting the language for the given track index is not possible: Invalid track index!"));
+        return;
+    }
+    tracks->atEdAudio(trackIdx)->setLanguage(langueName);
 
 }
 
@@ -1340,8 +1340,8 @@ uint8_t GUI_getFrameContent(ADMImage *image, uint32_t frame)
 */
 uint8_t GUI_close(void)
 {
-  if (avifileinfo)		// already opened ?
-    {				// delete everything
+  if (avifileinfo)        // already opened ?
+    {                // delete everything
       // if preview is on
       admPreview::setMainDimension(0, 0,ZOOM_1_1);
       if(getPreviewMode()!=ADM_PREVIEW_NONE)
@@ -1356,10 +1356,10 @@ uint8_t GUI_close(void)
       video_body->cleanup ();
 
 //      filterCleanUp ();
-	  UI_setTitle(NULL);
+      UI_setTitle(NULL);
 
-	A_ResetMarkers();
-	ReSync();
+    A_ResetMarkers();
+    ReSync();
 
       return 1;
     }
@@ -1379,7 +1379,7 @@ void GUI_avsProxy(void)
   res = video_body->addFile (AVS_PROXY_DUMMY_FILE);
   // forget last project file
   video_body->setProjectName("avsproxy");
-  if (res!=ADM_OK)			// an error occured
+  if (res!=ADM_OK)            // an error occured
     {
         currentaudiostream = NULL;
         avifileinfo = NULL;
@@ -1564,33 +1564,33 @@ int value;
 
 bool avisynthPortAsCommandLineArgument = false;
 bool A_getCommandLinePort(uint32_t &port) {
-	if (avisynthPortAsCommandLineArgument)
-		prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &port);
-	return avisynthPortAsCommandLineArgument;
+    if (avisynthPortAsCommandLineArgument)
+        prefs->get(AVISYNTH_AVISYNTH_LOCALPORT, &port);
+    return avisynthPortAsCommandLineArgument;
 }
 void A_set_avisynth_port(char *port_number_as_text){
-	// somehow strtol seems to die with EAGAIN
-	int input_length = strlen(port_number_as_text);
-	uint32_t portNumber =0;
-	int idx = 0;
+    // somehow strtol seems to die with EAGAIN
+    int input_length = strlen(port_number_as_text);
+    uint32_t portNumber =0;
+    int idx = 0;
 
-	for ( ; idx<input_length ; idx++ )
-		if(port_number_as_text[idx] <= '9' && port_number_as_text[idx] >= '0')
-			portNumber = portNumber*10 + port_number_as_text[idx] - '0';
-		else
-		{
-			fprintf(stderr,"Invalid character in port number\n");
-			fflush(stderr);
-			exit(-1);
-		}
-	if (portNumber < 1024 || portNumber > 65535)
-	{
-		fprintf(stderr,"Invalid port number! Valid range is [1024, 65535]\n");
-		fflush(stderr);
-		exit(-1);
-	}
-	avisynthPortAsCommandLineArgument = true;
-	prefs->set(AVISYNTH_AVISYNTH_LOCALPORT, portNumber);
+    for ( ; idx<input_length ; idx++ )
+        if(port_number_as_text[idx] <= '9' && port_number_as_text[idx] >= '0')
+            portNumber = portNumber*10 + port_number_as_text[idx] - '0';
+        else
+        {
+            fprintf(stderr,"Invalid character in port number\n");
+            fflush(stderr);
+            exit(-1);
+        }
+    if (portNumber < 1024 || portNumber > 65535)
+    {
+        fprintf(stderr,"Invalid port number! Valid range is [1024, 65535]\n");
+        fflush(stderr);
+        exit(-1);
+    }
+    avisynthPortAsCommandLineArgument = true;
+    prefs->set(AVISYNTH_AVISYNTH_LOCALPORT, portNumber);
 }
 /**
  * \fn A_RunScript
