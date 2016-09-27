@@ -565,6 +565,7 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
+            A_ResetMarkers();
             A_Resync(); // total duration & stuff
         
             if(current>=a) // else current is before A, so nothing to do
@@ -577,7 +578,6 @@ void HandleAction (Action action)
                         current-=(b-a);
                 }
             } 
-            A_ResetMarkers();
             GUI_GoToTime(current);
         }
     break;
