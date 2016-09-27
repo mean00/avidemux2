@@ -21,7 +21,7 @@
 #include "fourcc.h"
  bool WebmConfigure(void);
 
-ADM_MUXER_BEGIN( "Webm",muxerWebm,
+ADM_MUXER_BEGIN( "webm",muxerWebm,
                     1,0,0,
                     "Webm",    // Internal name
                     "Webm muxer plugin (c) Mean 2009",
