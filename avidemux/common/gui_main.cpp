@@ -549,7 +549,6 @@ void HandleAction (Action action)
             uint64_t a=video_body->getMarkerAPts();
             uint64_t b=video_body->getMarkerBPts();
             uint64_t current=video_body->getCurrentFramePts();
-            bool r;
             if(a>b)
             {
                 uint64_t p=a;
