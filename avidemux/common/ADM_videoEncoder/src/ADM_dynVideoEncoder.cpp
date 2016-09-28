@@ -76,18 +76,18 @@ bool     ADM_ve6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
 #define Fail(x) {printf("%s:"#x"\n",file);goto er;}
 static bool tryLoadingEncoderPlugin(const char *file)
 {
-	ADM_videoEncoder6 *dll=new ADM_videoEncoder6(file);
+    ADM_videoEncoder6 *dll=new ADM_videoEncoder6(file);
     if(!dll->initialised) Fail(CannotLoad);
     if(dll->desc->apiVersion!=ADM_VIDEO_ENCODER_API_VERSION) Fail(WrongApiVersion);
-	if((dll->desc->UIType & ADM_UI_TYPE_BUILD) != ADM_UI_TYPE_BUILD) Fail(WrongUI);
+    if((dll->desc->UIType & ADM_UI_TYPE_BUILD) != ADM_UI_TYPE_BUILD) Fail(WrongUI);
 
     ListOfEncoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
     printf("[VideoEncoder6] Registered filter %s as  %s\n",file,dll->desc->description);
     return true;
-	// Fail!
+    // Fail!
 er:
-	delete dll;
-	return false;
+    delete dll;
+    return false;
 
 }
 #define MAX_EXTERNAL_FILTER 100
@@ -117,25 +117,25 @@ static void sortEncoder(void)
 static void parseFolder(const char *folder) 
 {
         char *files[MAX_EXTERNAL_FILTER];
-	uint32_t nbFile;
+    uint32_t nbFile;
 
-	memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
-	printf("[ADM_ve6_plugin] Scanning directory %s\n",folder);
+    memset(files,0,sizeof(char *)*MAX_EXTERNAL_FILTER);
+    printf("[ADM_ve6_plugin] Scanning directory %s\n",folder);
 
-	if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
-	{
-		printf("[ADM_ve6_plugin] Cannot parse plugin\n");
-		return ;
-	}   
+    if(!buildDirectoryContent(&nbFile, folder, files, MAX_EXTERNAL_FILTER, SHARED_LIB_EXT))
+    {
+        printf("[ADM_ve6_plugin] Cannot parse plugin\n");
+        return ;
+    }   
 
-	for(int i=0;i<nbFile;i++)
-		tryLoadingEncoderPlugin(files[i]);
+    for(int i=0;i<nbFile;i++)
+        tryLoadingEncoderPlugin(files[i]);
         
         printf("[ADM_ve6_plugin] Scanning done\n");
         clearDirectoryContent(nbFile,files);        
 }
 /**
- * 	\fn ADM_ve6_loadPlugins
+ *     \fn ADM_ve6_loadPlugins
  *  \brief load all audio device plugins
  */
 uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder)
@@ -152,9 +152,9 @@ uint8_t ADM_ve6_loadPlugins(const char *path,const char *subFolder)
         myPath+=std::string("/")+std::string(subFolder);
         parseFolder(myPath.c_str());
         
-	sortEncoder();
+    sortEncoder();
 
-	return 1;
+    return 1;
 }
 /**
         \fn ADM_ve6_cleanup
@@ -177,21 +177,21 @@ void ADM_ve6_cleanup(void)
 */
 const char *ADM_ve6_getMenuName(uint32_t i)
 {
-	 int nb=ListOfEncoders.size();
+     int nb=ListOfEncoders.size();
 
-	ADM_assert(i < nb);
+    ADM_assert(i < nb);
 
-	return ListOfEncoders[i]->desc->menuName;
+    return ListOfEncoders[i]->desc->menuName;
 }
 /**
     \fn ADM_ve6_Changed
 */
 void ADM_ve6_Changed(int newCodecIndex)
 {
-	int nb=ListOfEncoders.size();
-	ADM_assert(newCodecIndex < nb);
+    int nb=ListOfEncoders.size();
+    ADM_assert(newCodecIndex < nb);
 
-	currentVideoCodec=newCodecIndex;
+    currentVideoCodec=newCodecIndex;
 }
 
 
@@ -201,7 +201,7 @@ void ADM_ve6_Changed(int newCodecIndex)
 ADM_coreVideoEncoder *createVideoEncoderFromIndex(ADM_coreVideoFilter *chain,int index,bool globalHeader)
 {
     int nb=ListOfEncoders.size();
-	ADM_assert(index < nb);
+    ADM_assert(index < nb);
     ADM_assert(index); // 0 is for copy, should not get it through here
     ADM_videoEncoder6 *plugin=ListOfEncoders[index];
 
