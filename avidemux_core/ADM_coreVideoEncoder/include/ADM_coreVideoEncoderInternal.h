@@ -15,7 +15,7 @@
 #ifndef VIDEOENCODERINTERNAL_H
 #define VIDEOENCODERINTERNAL_H
 
-#define ADM_VIDEO_ENCODER_API_VERSION 6
+#define ADM_VIDEO_ENCODER_API_VERSION 7
 
 #include "ADM_coreVideoEncoder6_export.h"
 #include "BVector.h"
@@ -46,6 +46,7 @@ typedef struct
     bool         (*getConfigurationData)(CONFcouple **c); // Get the encoder private conf
     bool         (*setConfigurationData)(CONFcouple *c,bool full);   // Set the encoder private conf
     void         (*resetConfigurationData)();
+    bool         (*probe)(); // Check if the encoder is usable. It could depend on external sw/hw such as specific video cards 
 
     ADM_UI_TYPE  UIType;                // Type of UI
     uint32_t     major,minor,patch;     // Version of the plugin
@@ -101,7 +102,7 @@ static void destroy (ADM_coreVideoEncoder * in) \
 }
 //******************************************************
 
-#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile) \
+#define ADM_DECLARE_VIDEO_ENCODER_MAIN_EX(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile,probe) \
 static ADM_videoEncoderDesc encoderDesc={\
     name,\
     menuName,\
@@ -115,6 +116,7 @@ static ADM_videoEncoderDesc encoderDesc={\
     getConfigurationData,\
     setConfigurationData,\
     resetConfigurationData,\
+    probe,\
     uiType,\
     maj,minV,patch,\
     NULL\
@@ -133,6 +135,14 @@ extern "C" ADM_videoEncoderDesc *getInfo (void) \
 { \
   return &encoderDesc; \
 }  \
+
+#define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile) \
+extern "C" bool probe (void) \
+{ \
+  return true; \
+}  \
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile,probe) \
+
 
 #endif
 //EOF
