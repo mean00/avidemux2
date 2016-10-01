@@ -22,6 +22,9 @@
 
 
 #include "DIA_factory.h"
+#ifdef USE_VDPAU
+#include "ADM_coreVdpau/ADM_coreVdpau.h"
+#endif
 #ifdef USE_SDL
 #include "ADM_render/GUI_sdlRender.h"
 #endif
@@ -205,9 +208,17 @@ std::string currentSdlDriver=getSdlDriverName();
         bool foo=0;
         diaElemToggle hwAccelText(&foo,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"));
 
-
-#ifndef USE_VDPAU
-        // Crash useVdpau.enable(0);
+#ifdef USE_VDPAU
+#if 0
+        if(admVdpau::isOperationnal())
+        {
+            ADM_info("We can use vdpau\n");
+        }else
+        {
+            ADM_info("We cannot use vdpau\n");
+            useVdpau.enable(0);
+        }
+#endif
 #endif
 #ifndef USE_LIBVA
         // Crash useLibVA.enable(0);
