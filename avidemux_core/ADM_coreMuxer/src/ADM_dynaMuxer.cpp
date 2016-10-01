@@ -271,10 +271,17 @@ void ADM_lavFormatInit(void)
 		}
 	}
 
-	URLProtocol *up = ffurl_protocol_next(NULL);
-
-	if (strcmp(up->name, "file") != 0)
-	{
+         const URLProtocol **prot=ffurl_get_protocols("file",NULL);
+         bool found=false;
+         if(prot)
+         {
+                if (strcmp(prot[0]->name, "file") != 0)
+                {
+                        found=true;
+                }
+         } 
+         if(!found)
+         {
 		printf("Error: file protocol isn't registered\n");
 		ADM_assert(0);
 	}
