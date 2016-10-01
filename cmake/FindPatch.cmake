@@ -20,7 +20,12 @@ endif (NOT PATCH_EXECUTABLE)
 
 macro(patch_file baseDir patchFile)
 	execute_process(COMMAND ${PATCH_EXECUTABLE} -p0 -i "${patchFile}"
-					WORKING_DIRECTORY "${baseDir}")
+					WORKING_DIRECTORY "${baseDir}"
+                                        RESULT_VARIABLE   res
+        )
+        if(res)
+                MESSAGE(FATAL_ERROR "Patch failed")
+        endif(res)
 endmacro(patch_file)
 
 macro(patch_file_p1 baseDir patchFile)
