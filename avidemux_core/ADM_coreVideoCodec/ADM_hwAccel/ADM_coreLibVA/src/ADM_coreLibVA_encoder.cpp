@@ -152,7 +152,7 @@ bool        ADM_vaEncodingContext::createExtraData()
 bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer)
 {
         int xError;
-#if 0
+
         CHECK_WORKING(false);
 
         CHECK_ERROR(vaBeginPicture(ADM_coreLibVA::display, contextId, src->surface));
@@ -171,14 +171,15 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
         VABufferID                      pic_param_buf;
         VAEncSliceParameterBuffer       slice_h264;
         VABufferID                      slice_param_buf;
-
+#if 0
         pic_h264.reference_picture = internalSurface[toggle]->surface;
         pic_h264.reconstructed_picture= internalSurface[1^toggle]->surface;
         pic_h264.coded_buf = encodingBuffer->bufferId;
+
         pic_h264.picture_width = width16;
         pic_h264.picture_height = height16;
         pic_h264.last_picture = 0; // FIXME
-        
+#endif                
         CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,VAEncPictureParameterBufferType,
                                    sizeof(pic_h264),1,&pic_h264,&pic_param_buf));
         if(xError) return false;
@@ -220,8 +221,6 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
         out->pts=ADM_NO_PTS;
         out->flags=AVI_KEY_FRAME;
         return true;   
-#endif
-        return false;
 }
 
 
@@ -237,7 +236,7 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
  {
     int xError;
     CHECK_WORKING(false);
-    if(false==ADM_coreLibVAEnc::encoders::h264)
+    if(false==ADM_coreLibVAEnc::encoders::vaH264.enabled)
     {
         ADM_warning("H264 encoding not supported\n");
         return false;
@@ -258,7 +257,7 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
          s[i]=surfaces[i]->surface;
      s[surfaceCount]=internalSurface[0]->surface;
      s[surfaceCount+1]=internalSurface[1]->surface;
-     CHECK_ERROR(vaCreateContext(ADM_coreLibVA::display,  ADM_coreLibVAEnc::encoders::h264ConfigID,
+     CHECK_ERROR(vaCreateContext(ADM_coreLibVA::display,  ADM_coreLibVAEnc::encoders::vaH264.configId,
                                 width16, height16,
                                 VA_PROGRESSIVE,
                                  s,surfaceCount+2,&contextId));

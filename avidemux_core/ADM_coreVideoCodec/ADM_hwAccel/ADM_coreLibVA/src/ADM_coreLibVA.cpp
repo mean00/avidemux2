@@ -62,10 +62,25 @@ admLibVA::LIBVA_TRANSFER_MODE    transferMode;
 }
 namespace ADM_coreLibVAEnc
 {
+ class vaEncoder
+ {
+ public:
+     bool       enabled;
+     VAConfigID configId;
+     bool       hasCBR;
+     bool       hasVBR;
+                vaEncoder()
+                {
+                    enabled=false;
+                    configId=-1;
+                    hasCBR=false;
+                    hasVBR=false;
+                }                    
+                        
+ };
  namespace encoders
  {
-        bool            h264;
-        VAConfigID      h264ConfigID;
+        vaEncoder vaH264,vaH265;
  }
 }
 static bool                  coreLibVAWorking=false;
@@ -151,11 +166,13 @@ bool admLibVA::setupEncodingConfig(void)
     VAConfigAttrib attrib[2];
     
  
-    CHECK_ERROR(vaQueryConfigEntrypoints(ADM_coreLibVA::display, VAProfileH264Baseline, entrypoints,        &num_entrypoints));
+    CHECK_ERROR(vaQueryConfigEntrypoints(ADM_coreLibVA::display, VAProfileH264Main, entrypoints,        &num_entrypoints));
     
     int found=-1;
+    ADM_info("Found %d entry points\n",num_entrypoints);
     for	(int slice_entrypoint = 0; slice_entrypoint < num_entrypoints; slice_entrypoint++) 
     {
+            ADM_info("   %d is a %d\n",slice_entrypoint,entrypoints[slice_entrypoint] );
         if (entrypoints[slice_entrypoint] == VAEntrypointEncSlice)
         {
             found=slice_entrypoint;
@@ -171,24 +188,52 @@ bool admLibVA::setupEncodingConfig(void)
      /* find out the format for the render target, and rate control mode */
     attrib[0].type = VAConfigAttribRTFormat;
     attrib[1].type = VAConfigAttribRateControl;
-    CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, VAProfileH264Baseline, VAEntrypointEncSlice,    &attrib[0], 2));
-    if (!(attrib[0].value & VA_RT_FORMAT_YUV420))
+    CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, VAProfileH264Main, VAEntrypointEncSlice,    &attrib[0], 2));
+    int check=0;
+    for(int i=0;i<2;i++)
     {
-        ADM_warning("Encoder does not support YV12\n");
-        return false;
-    }
-    ADM_info("YV12 supported..\n");
-    if (!(attrib[1].value & VA_RC_VBR))
-    {
-        ADM_warning("Encoder does not support VBR\n");
-        return false;
-    }
-    ADM_info("VBR supported..\n");
-    CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileH264Baseline, VAEntrypointEncSlice,
-                              &attrib[0], 2,&(ADM_coreLibVAEnc::encoders::h264ConfigID)));
+           unsigned int value=attrib[i].value;
+           int type=attrib[i].type;
+           switch(type)
+           {
+                case VAConfigAttribRTFormat:
+                        if(value & VA_RT_FORMAT_YUV420)
+                        {
+                                ADM_info("YUV420 supported\n");
+                                check|=1;
+                        }
+                        break;
+                case VAConfigAttribRateControl:
+                        #define MKK(x,y) if(type & x) {ADM_info(#x " is supported\n");y;}
+                        MKK(VA_RC_CBR,;);
+                        MKK(VA_RC_VBR,check|=2);
+                        MKK(VA_RC_CQP,;);
+                        MKK(VA_RC_VBR_CONSTRAINED,;);
+                        break;
+                default:
+                        ADM_warning("Unknown attribute %d\n",type);
+                        break;
 
-    
-    ADM_info("H264 Encoding config created\n");
+           }
+
+    }
+    if(check!=3) 
+    {
+        ADM_warning("Some configuration are missing, bailing\n");
+        return false;
+    }
+    CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileH264Main, VAEntrypointEncSlice,
+                              &attrib[0], 2,&(ADM_coreLibVAEnc::encoders::vaH264.configId)));
+    if(xError)
+    {
+        ADM_coreLibVAEnc::encoders::vaH264.configId=-1;
+        return false;
+        
+    }else
+    {
+        ADM_info("H264 Encoding config created\n");
+        ADM_coreLibVAEnc::encoders::vaH264.enabled=true;
+    }
     return true;
 }
 /**
@@ -361,7 +406,6 @@ bool admLibVA::init(GUI_WindowInfo *x)
     int maj=0,min=0,patch=0;
     ADM_info("[LIBVA] Initializing LibVA library ...\n");
 
-    ADM_coreLibVAEnc::encoders::h264=false;
     
     ADM_coreLibVA::context=NULL;
     ADM_coreLibVA::decoders::h264=false;
@@ -384,8 +428,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
         coreLibVAWorking=true;
     }
     
-    ADM_coreLibVAEnc::encoders::h264=setupEncodingConfig();
-    if(ADM_coreLibVAEnc::encoders::h264)
+    if(setupEncodingConfig())
     {
         ADM_info("VA: Encoding supported\n");
     }else
@@ -432,6 +475,8 @@ bool        admLibVA::supported(VAProfile profile)
 #ifdef ADM_VA_HAS_VP9
         SUPSUP(VAProfileVP9Profile3,configVP9)
 #endif
+        default:
+            break;
     } 
     return false;
 }
