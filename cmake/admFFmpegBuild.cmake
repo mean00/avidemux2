@@ -9,7 +9,7 @@ ENDMACRO (xadd)
 
 option(FF_INHERIT_BUILD_ENV "" ON)
 
-set(FFMPEG_VERSION "3.0.3")
+set(FFMPEG_VERSION "3.1.4")
 set(FFMPEG_ROOT_DIR "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux_core/ffmpeg_package")
 set(FFMPEG_PATCH_DIR  "${FFMPEG_ROOT_DIR}/patches/")
 set(FFMPEG_SOURCE_ARCHIVE "ffmpeg-${FFMPEG_VERSION}.tar.bz2")
