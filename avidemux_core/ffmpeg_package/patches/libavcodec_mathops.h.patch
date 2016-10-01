@@ -1,0 +1,14 @@
+diff --git libavcodec/mathops.h libavcodec/mathops.h
+index 46283ca..786c804 100644
+--- libavcodec/mathops.h
++++ libavcodec/mathops.h
+@@ -25,7 +25,9 @@
+ #include <stdint.h>
+ 
+ #include "libavutil/common.h"
++#ifndef ADM_LAV_NO_CONFIG
+ #include "config.h"
++#endif// ADM_LAV_NO_CONFIG
+ 
+ #define MAX_NEG_CROP 1024
+ 

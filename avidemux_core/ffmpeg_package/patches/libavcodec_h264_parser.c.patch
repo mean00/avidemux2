@@ -1,0 +1,89 @@
+--- libavcodec/h264_parser.c	2016-10-01 03:12:41.000000000 +0200
++++ libavcodec/h264_parser.c	2016-10-01 11:27:50.002427363 +0200
+@@ -60,6 +60,86 @@
+     int parse_last_mb;
+ } H264ParseContext;
+ 
++#include "ff_spsinfo.h" // MEANX
++#include <assert.h>
++ // MEANX
++int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info);
++/**
++    \fn AVCodecParserContext
++*/
++/// find a valid sps
++static SPS *findValidSPS(H264Context *ctx)
++{
++    H264ParamSets *params=&(ctx->ps);
++    SPS *sps=params->sps;
++    if(!sps) return NULL;
++
++    if(sps->mb_width!=0) return (SPS *)sps;
++    // FIXME, we should probe the other ones
++    return NULL;
++}
++int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *info)
++{
++    H264Context *ctx = parser->priv_data;
++    int f;   
++    SPS *sps;
++    
++    
++    
++    memset(info,0,sizeof(*info));
++    sps=findValidSPS(ctx);
++    
++    
++    if(!sps)
++    {
++        return 0;
++    }
++    info->width=sps->mb_width  * 16;
++    info->height=(2-sps->frame_mbs_only_flag)*sps->mb_height * 16;
++    if(sps->timing_info_present_flag)
++    {
++            float scale=sps->time_scale ;
++            float ticks=sps->num_units_in_tick;
++            info->fps1000 =  (uint32_t) ((scale/ticks) *    1000.);
++#undef printf
++            printf("Scale : %d, tick=%d, fps=%d\n",(int)scale,(int)ticks,(int)info->fps1000);
++    }else
++    {
++            printf("[H264] No timing information\n");
++            info->fps1000=25000;
++    }
++    // D.2.2 SEI Timing present if CpbDbpDelayPresentFlag=1 or pictStructPresent=1
++    // CpbDbpDelayPresentFlag =1 if nal_hdr or vcl_hrd or ???
++    f=sps->nal_hrd_parameters_present_flag | sps->vcl_hrd_parameters_present_flag;
++    info->hasStructInfo=f | sps->pic_struct_present_flag;;
++    // While decoding SEI, if CpbDpbDelaysPresentFlags is there we skip cpb_removal_delay + dpb_output_delay
++
++    info->CpbDpbToSkip=0;
++    if(f)
++    {
++        info->CpbDpbToSkip=sps->cpb_removal_delay_length+sps->dpb_output_delay_length;
++    }
++#warning fixme sar vs dar
++    info->darNum=sps->sar.num;
++    info->darDen=sps->sar.den;
++/* */
++    printf("Crop L: %d\n",(int)sps->crop_left);
++    printf("Crop R: %d\n",(int)sps->crop_right);
++    printf("Crop T: %d\n",(int)sps->crop_top);
++    printf("Crop B: %d\n",(int)sps->crop_bottom);
++    if(sps->crop_bottom)
++    {
++         int mul=1;
++         printf("Taking crop bottom into account\n");
++         if(sps->frame_mbs_only_flag)
++              mul=1;
++         info->height-=sps->crop_bottom*mul;
++
++    }
++    return 1;
++}
++// /MEANX
++
+ 
+ static int h264_find_frame_end(H264ParseContext *p, const uint8_t *buf,
+                                int buf_size, void *logctx)

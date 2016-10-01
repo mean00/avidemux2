@@ -1,0 +1,29 @@
+--- libavcodec/avcodec.h.org	2016-05-09 08:08:59.936664452 +0200
++++ libavcodec/avcodec.h	2016-05-09 08:10:37.922378818 +0200
+@@ -824,6 +824,10 @@
+  */
+ #define AV_CODEC_FLAG2_IGNORE_CROP    (1 << 16)
+ 
++//MEANX: NEVER EVER USE CLOSED GOP ?
++#define AV_CODEC_FLAG2_32_PULLDOWN    (1 << 17)
++// /MEANX
++
+ /**
+  * Show all frames before the first keyframe
+  */
+@@ -2498,6 +2502,7 @@
+      * - decoding: unused
+      */
+     int rc_buffer_size;
++    int rc_buffer_size_header; // MEANX : We fill the mpeg header with that value
+ 
+     /**
+      * ratecontrol override, see RcOverride
+@@ -2521,6 +2526,7 @@
+      * - decoding: Set by user, may be overwritten by libavcodec.
+      */
+     int64_t rc_max_rate;
++    int64_t rc_max_rate_header; // MEANX : We use that value to fill the mpeg header
+ 
+     /**
+      * minimum bitrate

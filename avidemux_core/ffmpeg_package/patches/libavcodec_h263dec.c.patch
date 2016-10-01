@@ -1,0 +1,30 @@
+diff --git libavcodec/h263dec.c libavcodec/h263dec.c
+index 15f073a..cf4a100 100644
+--- libavcodec/h263dec.c
++++ libavcodec/h263dec.c
+@@ -145,6 +145,25 @@ av_cold int ff_h263_decode_init(AVCodecContext *avctx)
+ 
+     return 0;
+ }
++/* MeanX : Ugly patch to detect vo ppacked stuff ... */
++int av_is_voppacked(AVCodecContext *avctx, int *vop_packed, int *gmc, int *qpel);
++
++int av_is_voppacked(AVCodecContext *avctx, int *vop_packed, int *gmc, int *qpel)
++{
++    MpegEncContext *s = avctx->priv_data;
++    // set sane default
++    *vop_packed=0;
++    *gmc=0;
++    *qpel=0;
++    if(avctx->codec->id!=AV_CODEC_ID_MPEG4) return 0;
++    	
++  	*vop_packed=(s->divx_packed);
++	*qpel=s->quarter_sample;
++	*gmc=0;	// FIXME
++	return 1;
++
++  }
++  /* MeanX */
+ 
+ av_cold int ff_h263_decode_end(AVCodecContext *avctx)
+ {

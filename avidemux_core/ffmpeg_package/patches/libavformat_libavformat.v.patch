@@ -1,0 +1,12 @@
+diff --git libavformat/libavformat.v libavformat/libavformat.v
+index e90aef7..f144689 100644
+--- libavformat/libavformat.v
++++ libavformat/libavformat.v
+@@ -16,5 +16,7 @@ LIBAVFORMAT_$MAJOR {
+                 ffurl_write;
+                 #those are deprecated, remove on next bump
+                 url_feof;
++		# Avidemux
++		ffurl_protocol_next;
+         local: *;
+ };

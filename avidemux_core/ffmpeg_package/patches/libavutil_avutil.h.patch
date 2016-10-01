@@ -1,0 +1,18 @@
+diff --git libavutil/avutil.h libavutil/avutil.h
+index e6ebb6c..4698ee8 100644
+--- libavutil/avutil.h
++++ libavutil/avutil.h
+@@ -159,6 +159,13 @@
+  * @}
+  */
+ 
++/* MEANX
++ * - */
++#define ASMALIGN(ZEROBITS) ".p2align " #ZEROBITS "\n\t"
++/* /MEANX
++ */
++
++
+ 
+ /**
+  * @addtogroup lavu_ver

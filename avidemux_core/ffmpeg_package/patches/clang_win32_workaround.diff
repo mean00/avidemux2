@@ -1,0 +1,12 @@
+--- configure.old	2016-08-27 15:34:03.619998443 +0200
++++ configure	2016-08-27 15:35:50.309325059 +0200
+@@ -5149,6 +5149,9 @@
+     # check whether EBX is available on x86
+     check_inline_asm ebx_available '""::"b"(0)' &&
+         check_inline_asm ebx_available '"":::"%ebx"'
++    # Meanx : CLANG+WIN32 => detection does not work
++    disable ebx_available
++    # /Meanx : CLANG!
+ 
+     # check whether xmm clobbers are supported
+     check_inline_asm xmm_clobbers '"":::"%xmm0"'
