@@ -7,6 +7,6 @@ index e90aef7..f144689 100644
                  #those are deprecated, remove on next bump
                  url_feof;
 +		# Avidemux
-+		ffurl_protocol_next;
++		ffurl_get_protocols;
          local: *;
  };

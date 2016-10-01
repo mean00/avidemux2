@@ -1,5 +1,5 @@
---- libavcodec/nvenc.c.org	2016-10-01 10:26:46.012810496 +0200
-+++ libavcodec/nvenc.c	2016-10-01 10:31:10.634676842 +0200
+--- libavcodec/nvenc.c.org	2016-10-01 11:38:55.942760431 +0200
++++ libavcodec/nvenc.c	2016-10-01 11:39:45.925583164 +0200
 @@ -76,7 +76,7 @@
  const enum AVPixelFormat ff_nvenc_pix_fmts[] = {
      AV_PIX_FMT_YUV420P,
@@ -35,7 +35,33 @@
          return AVERROR(EINVAL);
      }
  
-@@ -1209,56 +1209,31 @@
+@@ -1205,60 +1205,57 @@
+ 
+     return NULL;
+ }
++/**
++        MEANX
++*/
++static void interleave_nv12(unsigned char *dest, int dest_stride,unsigned char *u,int u_stride,unsigned char *v,int v_stride,int width, int height)
++{
++        int x,y;
++        unsigned char *d;
++        unsigned char *pu;
++        unsigned char *pv;
++        for(y=0;y<height;y++)
++        {
++                d=dest;dest+=dest_stride;
++                pu=u;u+=u_stride;
++                pv=v;v+=v_stride;
++                for(x=0;x<width;x++)
++                {
++                        *(d++)=*(pu++);
++                        *(d++)=*(pv++);
++                }
++
++        }
++} 
+ 
  static int nvenc_copy_frame(AVCodecContext *avctx, NvencSurface *inSurf,
              NV_ENC_LOCK_INPUT_BUFFER *lockBufferParams, const AVFrame *frame)
  {
@@ -90,21 +116,21 @@
 -    }
 -
 +  // MEANX
-+        uint8_t *buf = lockBufferParams.bufferDataPtr;
-+          av_image_copy_plane(buf, lockBufferParams.pitch,
++        uint8_t *buf = lockBufferParams->bufferDataPtr;
++          av_image_copy_plane(buf, lockBufferParams->pitch,
 +                 frame->data[0], frame->linesize[0],
 +                 avctx->width, avctx->height);
 +// MEANX : We accept YV12 and interleave while copying, it saves us one intermediate image buffer
-+        buf += inSurf->height * lockBufferParams.pitch;
++        buf += inSurf->height * lockBufferParams->pitch;
 +        switch(avctx->pix_fmt)
 +        {
 +                case AV_PIX_FMT_YUV420P:
 +                        // Interleave U & V to NV12
-+                        interleave_nv12(buf, lockBufferParams.pitch,frame->data[1],frame->linesize[1],frame->data[2],frame->linesize[2],avctx->width>>1, avctx->height>>1); 
++                        interleave_nv12(buf, lockBufferParams->pitch,frame->data[1],frame->linesize[1],frame->data[2],frame->linesize[2],avctx->width>>1, avctx->height>>1); 
 +                        break;
 +
 +                case AV_PIX_FMT_NV12:
-+                        av_image_copy_plane(buf, lockBufferParams.pitch,
++                        av_image_copy_plane(buf, lockBufferParams->pitch,
 +                                frame->data[1], frame->linesize[1],
 +                                avctx->width, avctx->height >> 1);
 +                        break;
@@ -117,35 +143,3 @@
      return 0;
  }
  
-@@ -1580,6 +1555,31 @@
-     return (nb_ready > 0) && (nb_ready + nb_pending >= ctx->async_depth);
- }
- 
-+/**
-+        MEANX
-+*/
-+static void interleave_nv12(unsigned char *dest, int dest_stride,unsigned char *u,int u_stride,unsigned char *v,int v_stride,int width, int height)
-+{
-+        int x,y;
-+        unsigned char *d;
-+        unsigned char *pu;
-+        unsigned char *pv;
-+        for(y=0;y<height;y++)
-+        {
-+                d=dest;dest+=dest_stride;
-+                pu=u;u+=u_stride;
-+                pv=v;v+=v_stride;
-+                for(x=0;x<width;x++)
-+                {
-+                        *(d++)=*(pu++);
-+                        *(d++)=*(pv++);
-+                }
-+
-+        }
-+} 
-+ 
-+
-+
- int ff_nvenc_encode_frame(AVCodecContext *avctx, AVPacket *pkt,
-                           const AVFrame *frame, int *got_packet)
- {
