@@ -275,7 +275,7 @@ void ADM_lavFormatInit(void)
          bool found=false;
          if(prot)
          {
-                if (strcmp(prot[0]->name, "file") != 0)
+                if (!strcmp(prot[0]->name, "file"))
                 {
                         found=true;
                 }
