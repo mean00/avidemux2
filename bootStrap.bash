@@ -15,6 +15,7 @@ do_asan=0
 debug=0
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
+COMPILER=""
 export QT_SELECT=5 # default for ubuntu, harmless for others
 export O_PARAL="-j $(nproc)"
 fail()
@@ -49,7 +50,7 @@ Process()
                 mkdir $BUILDDIR || fail mkdir
         fi
         cd $BUILDDIR 
-        cmake $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
@@ -103,6 +104,7 @@ usage()
         echo "  --without-plugins : Dont build plugins"
         echo "  --enable-qt4      : Try to use qt4 instead of qt5"
         echo "  --enable-asan     : Enable Clang/llvm address sanitizer"
+        echo "  --with-clang      : Use clang/clang++ as compiler"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -143,6 +145,9 @@ while [ $# != 0 ] ;do
          --rpm)
                 packages_ext=rpm
                 PKG="$PKG -DAVIDEMUX_PACKAGER=rpm"
+                ;;
+         --with-clang)
+                export COMPILER="-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
                 ;;
          --without-qt4)
                 do_qt4=0
