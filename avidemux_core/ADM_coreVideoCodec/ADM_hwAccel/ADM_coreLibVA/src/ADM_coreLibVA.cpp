@@ -86,7 +86,7 @@ namespace ADM_coreLibVAEnc
 static bool                  coreLibVAWorking=false;
 
 #define CLEAR(x) memset(&x,0,sizeof(x))
-#define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);}
+#define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);printf("%d =<%s>\n",xError,vaErrorStr(xError));}
 
 #include "ADM_coreLibVA_test.cpp"
 #include "ADM_bitstream.h"

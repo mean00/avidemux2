@@ -16,7 +16,9 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include "ADM_ptrQueue.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#include "ADM_coreLibVA/ADM_coreLibVA.h"
 #include "ffVaEnc.h"
 extern "C" 
 {
@@ -44,9 +46,12 @@ extern "C"
 */
 class ADM_ffVaEncEncoder : public ADM_coreVideoEncoderFFmpeg
 {
+#define VAENC_NB_SURFACES 16
 protected:
             AVBufferRef        *frameContext;
             AVBufferRef        *deviceContext;
+            ADM_ptrQueue<ADM_vaSurface >freeSurface;
+            ADM_ptrQueue<ADM_vaSurface >inUseSurface;
             
 public:
 

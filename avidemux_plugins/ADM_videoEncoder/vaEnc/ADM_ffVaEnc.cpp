@@ -20,9 +20,8 @@
 #include "ADM_ffVaEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-#include "ADM_coreLibVA/ADM_coreLibVA.h"
-//#define USE_NV12 
-#if 1
+
+#if 0
 #define aprintf(...) {}
 #else
 #define aprintf printf
@@ -54,7 +53,11 @@ ADM_ffVaEncEncoder::~ADM_ffVaEncEncoder()
     ADM_info("[vaEncoder] Destroying.\n");
     if(frameContext)
     {
-        
+        av_buffer_unref(&frameContext);
+    }
+    if(deviceContext)
+    {
+        av_buffer_unref(&deviceContext);
     }
 }
 /**
@@ -62,10 +65,10 @@ ADM_ffVaEncEncoder::~ADM_ffVaEncEncoder()
 */
 bool ADM_ffVaEncEncoder::configureContext(void)
 {
-   
+    ADM_info("ConfigureContext\n");
     _context->bit_rate   = VaEncSettings.bitrate*1000;
     _context->rc_max_rate= VaEncSettings.max_bitrate*1000;
-    _context->pix_fmt    = AV_PIX_FMT_VAAPI_VLD;        
+    _context->pix_fmt    = AV_PIX_FMT_VAAPI;        
     
     // allocate device context
     deviceContext=av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
@@ -100,6 +103,16 @@ bool ADM_ffVaEncEncoder::configureContext(void)
     c->sw_format=AV_PIX_FMT_YUV420P;
     c->width=(getWidth()+15)&~15;
     c->height=(getHeight()+15)&~15;;
+    
+    for(int i=0;i<VAENC_NB_SURFACES;i++)
+    {
+        ADM_vaSurface *surface=new ADM_vaSurface(c->width,c->height); // roundup ??
+        surface->surface= admLibVA::allocateSurface(c->width,c->height);
+        freeSurface.pushBack(surface);
+    }
+    c->initial_pool_size=VAENC_NB_SURFACES;
+    
+    
     er=av_hwframe_ctx_init(frameContext);
     if(er)
     {
@@ -109,6 +122,16 @@ bool ADM_ffVaEncEncoder::configureContext(void)
     
     _context->hw_frames_ctx=frameContext;
     
+    int w= getWidth();
+    int h= getHeight();
+    
+    w=(w+15)&~15;
+    h=(h+15)&~15;
+       
+  
+    
+    
+    ADM_info("configureContext ok\n");
     return true;             
 }
 
@@ -117,7 +140,7 @@ bool ADM_ffVaEncEncoder::configureContext(void)
 */
 bool ADM_ffVaEncEncoder::setup(void)
 {
-//nvenc
+    ADM_info("setup\n");
     if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_vaapi"))
     {
         ADM_info("[vaEncoder] Setup failed\n");
@@ -126,12 +149,7 @@ bool ADM_ffVaEncEncoder::setup(void)
 
     ADM_info("[vaEncoder] Setup ok\n");
     
-    int w= getWidth();
-    int h= getHeight();
-    
-    w=(w+15)&~15;
-    h=(h+15)&~15;
-       
+  
     return true;
 }
 
@@ -143,6 +161,7 @@ bool ADM_ffVaEncEncoder::setup(void)
 bool         ADM_ffVaEncEncoder::encode (ADMBitstream * out)
 {
 int sz,q;
+ADM_vaSurface *s;
 again:
     sz=0;
     if(false==preEncode()) // Pop - out the frames stored in the queue due to B-frames
@@ -162,26 +181,24 @@ again:
     if(!q) q=2;
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
-
+  
+    s=freeSurface.pop();
+    printf("Surface=%d\n",s->surface);
+    if(!s->fromAdmImage(image))
+    {
+        ADM_warning("Cannot upload to surface\n");
+        freeSurface.pushBack(s);
+        return false;
+    }
+    inUseSurface.pushBack(s);
     _frame->reordered_opaque=image->Pts;
+    _frame->data[0]=_frame->data[1]=_frame->data[2]=NULL;
+    _frame->data[3]=(uint8_t *)s->surface;
     _frame->width=image->GetWidth(PLANAR_Y);
     _frame->height=image->GetHeight(PLANAR_Y);
-
-// convert to nv12
-#ifdef USE_NV12
-    image->interleaveUV(nv12,nv12Stride);
-    _frame->data[0] = image->GetReadPtr(PLANAR_Y);
-    _frame->data[1] = nv12;
-    _frame->data[2] = NULL;
-
-    _frame->linesize[0]=image->GetPitch(PLANAR_Y);
-    _frame->linesize[1]=nv12Stride;
-    _frame->linesize[2]=0;
-    _frame->format=  AV_PIX_FMT_NV12;    
-#else
-    _frame->format=  AV_PIX_FMT_YUV420P;    
-#endif        
+    _frame->format=  AV_PIX_FMT_VAAPI;    
     sz=encodeWrapper(_frame,out);
+    
     if(sz<0)
     {
         ADM_warning("[vaEncoder] Error %d encoding video\n",sz);
