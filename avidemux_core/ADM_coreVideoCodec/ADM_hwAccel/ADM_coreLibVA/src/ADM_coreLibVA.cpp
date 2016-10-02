@@ -155,6 +155,15 @@ static void displayXError(const char *func,const VADisplay dis,const VAStatus er
 
 }
 /**
+ * 
+ * @return 
+ */
+VADisplay admLibVA::getVADisplay()
+{
+    return ADM_coreLibVA::display;
+}
+
+/**
  * \fn setupEncodingConfig
  * @return 
  */

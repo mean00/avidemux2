@@ -18,6 +18,12 @@
 #pragma once
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "ffVaEnc.h"
+extern "C" 
+{
+#include "libavutil/hwcontext.h"
+#include "libavutil/hwcontext_vaapi.h"
+}
+
 
 
 
@@ -39,9 +45,9 @@
 class ADM_ffVaEncEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
-
-               uint8_t      *nv12;
-               int          nv12Stride;               
+            AVBufferRef        *frameContext;
+            AVBufferRef        *deviceContext;
+            
 public:
 
                            ADM_ffVaEncEncoder(ADM_coreVideoFilter *src,bool globalHeader);
@@ -51,7 +57,7 @@ virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "H264";}
 
-virtual        bool         isDualPass(void) ;
+virtual        bool        isDualPass(void) ;
 
 };
 

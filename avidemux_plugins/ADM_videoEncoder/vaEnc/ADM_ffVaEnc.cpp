@@ -20,6 +20,7 @@
 #include "ADM_ffVaEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
+#include "ADM_coreLibVA/ADM_coreLibVA.h"
 //#define USE_NV12 
 #if 1
 #define aprintf(...) {}
@@ -41,11 +42,21 @@ ADM_ffVaEncEncoder::ADM_ffVaEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
 {
     //targetColorSpace=ADM_COLOR_YUV422P;
     ADM_info("[ffNvEncEncoder] Creating.\n");
-    nv12=NULL;
-
-
+     frameContext=NULL;
+     deviceContext=NULL;
 }
 
+/**
+    \fn ~ADM_ffVaEncEncoder
+*/
+ADM_ffVaEncEncoder::~ADM_ffVaEncEncoder()
+{
+    ADM_info("[vaEncoder] Destroying.\n");
+    if(frameContext)
+    {
+        
+    }
+}
 /**
     \fn pre-open
 */
@@ -55,6 +66,48 @@ bool ADM_ffVaEncEncoder::configureContext(void)
     _context->bit_rate   = VaEncSettings.bitrate*1000;
     _context->rc_max_rate= VaEncSettings.max_bitrate*1000;
     _context->pix_fmt    = AV_PIX_FMT_VAAPI_VLD;        
+    
+    // allocate device context
+    deviceContext=av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
+    if(!deviceContext)
+    {
+        ADM_warning("Cannot allocate device context\n");
+        return false;
+    }
+    // setup device context
+    AVHWDeviceContext *devContext=(AVHWDeviceContext *)deviceContext->data;
+    AVVAAPIDeviceContext *vaContext=(AVVAAPIDeviceContext *)devContext->hwctx;
+    
+    vaContext->display=admLibVA::getVADisplay();  // if we get here VA is operationnal
+    
+    int er=av_hwdevice_ctx_init(deviceContext);
+    if(er)
+    {
+        ADM_warning("Cannot setup vaapi hw encoder (er=%d)\n",er);
+        return false;
+    }
+    
+    // Now setup the frame context..
+    
+    frameContext=av_hwframe_ctx_alloc(deviceContext);
+    if(!frameContext)
+    {
+        ADM_warning("Cannot allocate frameContext\n");
+        return false;
+    }
+    AVHWFramesContext *c=(AVHWFramesContext *)(frameContext->data);
+    c->format=AV_PIX_FMT_VAAPI;
+    c->sw_format=AV_PIX_FMT_YUV420P;
+    c->width=(getWidth()+15)&~15;
+    c->height=(getHeight()+15)&~15;;
+    er=av_hwframe_ctx_init(frameContext);
+    if(er)
+    {
+        ADM_warning("Cannot setup vaapi hw frame (er=%d)\n",er);
+        return false;
+    }
+    
+    _context->hw_frames_ctx=frameContext;
     
     return true;             
 }
@@ -76,29 +129,13 @@ bool ADM_ffVaEncEncoder::setup(void)
     int w= getWidth();
     int h= getHeight();
     
-    w=(w+31)&~31;
+    w=(w+15)&~15;
     h=(h+15)&~15;
-    
-    nv12=new uint8_t[(w*h)/2]; 
-    nv12Stride=w;
-    
+       
     return true;
 }
 
 
-/**
-    \fn ~ADM_ffVaEncEncoder
-*/
-ADM_ffVaEncEncoder::~ADM_ffVaEncEncoder()
-{
-    ADM_info("[vaEncoder] Destroying.\n");
-    if(nv12)
-    {
-        delete [] nv12;
-        nv12=NULL;
-    }
-
-}
 
 /**
     \fn encode

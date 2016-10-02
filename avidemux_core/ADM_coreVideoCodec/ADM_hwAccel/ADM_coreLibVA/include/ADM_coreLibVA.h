@@ -52,7 +52,7 @@ public:
     static bool         init(GUI_WindowInfo *x);
     static bool         isOperationnal(void);
     static bool         cleanup(void);
-    
+    static VADisplay    getVADisplay();
     /* Setup   */
     static bool         setupConfig(void);
     static bool         setupImageFormat(void);
