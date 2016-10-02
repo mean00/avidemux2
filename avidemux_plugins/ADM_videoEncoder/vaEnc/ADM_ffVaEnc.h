@@ -2,7 +2,7 @@
                           \fn ADM_VideoEncoders
                           \brief Internal handling of video encoders
                              -------------------
-    
+
     copyright            : (C) 2002/2009 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -15,32 +15,43 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_LIBVA_ENCODER_H
-#define ADM_LIBVA_ENCODER_H
-#include "ADM_coreVideoEncoder.h"
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#pragma once
+#include "ADM_coreVideoEncoderFFmpeg.h"
+#include "ffVaEnc.h"
 
-#define VA_ENC_NB_SURFACE 1 // ???
+
+
+
+#define VAENC_CONF_DEFAULT \
+{ \
+		0, \
+                10000, \
+                20000,\
+	}
+
+
+
 /**
-        \class ADM_libvaEncoder
+        \class ADM_ffVaEncEncoder
         \brief Dummy encoder that does nothing
 
 */
-class ADM_libvaEncoder : public ADM_coreVideoEncoder
+class ADM_ffVaEncEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
-               int plane;
-               ADM_vaSurface            *vaSurface[VA_ENC_NB_SURFACE];
-               ADM_vaEncodingContext    *context;
-               ADM_vaEncodingBuffer     *encodingBuffer;
+
+               uint8_t      *nv12;
+               int          nv12Stride;               
 public:
 
-                            ADM_libvaEncoder(ADM_coreVideoFilter *src,bool globalHeader);
-                            ~ADM_libvaEncoder();
-virtual        bool         encode (ADMBitstream * out);
-virtual const  char         *getFourcc(void) {return "H264";}
-virtual        bool         setup(void);
+                           ADM_ffVaEncEncoder(ADM_coreVideoFilter *src,bool globalHeader);
+virtual                    ~ADM_ffVaEncEncoder();
+virtual        bool        configureContext(void);
+virtual        bool        setup(void);
+virtual        bool        encode (ADMBitstream * out);
+virtual const  char        *getFourcc(void) {return "H264";}
+
+virtual        bool         isDualPass(void) ;
+
 };
 
-
-#endif

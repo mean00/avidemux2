@@ -15,7 +15,7 @@ IF(DO_COMMON)
 #        ADD_SUBDIRECTORY(nvEnc)
   ENDIF(USE_NVENC)
   IF(USE_LIBVA)
-#    ADD_SUBDIRECTORY(libva)
+        ADD_SUBDIRECTORY(vaEnc)
   ENDIF(USE_LIBVA)
 ENDIF(DO_COMMON)
 # That one has several UIs...
