@@ -70,9 +70,12 @@ static int ignore_change=0;
           ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
            if(false==video_body->getPKFramePTS(&pts))
             {
-                ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
-                ignore_change--;
-                break;
+                if(false==video_body->getNKFramePTS(&pts))
+                {
+                    ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+                    ignore_change--;
+                    break;
+                }
             }
              ADM_info("Seeking to  Time:%s ms \n",ADM_us2plain(pts));
             if(true!=admPreview::seekToIntraPts(pts))
