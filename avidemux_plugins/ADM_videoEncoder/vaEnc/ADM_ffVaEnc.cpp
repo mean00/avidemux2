@@ -21,6 +21,15 @@
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 
+#define USE_VA_SURFACE 
+
+#ifdef USE_VA_SURFACE
+    #define MY_PÏXFMT AV_PIX_FMT_VAAPI
+#else
+    #define MY_PÏXFMT AV_PIX_FMT_YUV420P
+#endif
+
+
 #if 0
 #define aprintf(...) {}
 #else
@@ -68,7 +77,7 @@ bool ADM_ffVaEncEncoder::configureContext(void)
     ADM_info("ConfigureContext\n");
     _context->bit_rate   = VaEncSettings.bitrate*1000;
     _context->rc_max_rate= VaEncSettings.max_bitrate*1000;
-    _context->pix_fmt    = AV_PIX_FMT_VAAPI;        
+    _context->pix_fmt    = MY_PÏXFMT;        
     
     // allocate device context
     deviceContext=av_hwdevice_ctx_alloc(AV_HWDEVICE_TYPE_VAAPI);
@@ -99,7 +108,7 @@ bool ADM_ffVaEncEncoder::configureContext(void)
         return false;
     }
     AVHWFramesContext *c=(AVHWFramesContext *)(frameContext->data);
-    c->format=AV_PIX_FMT_VAAPI;
+    c->format=MY_PÏXFMT;
     c->sw_format=AV_PIX_FMT_YUV420P;
     c->width=(getWidth()+15)&~15;
     c->height=(getHeight()+15)&~15;;
@@ -181,7 +190,7 @@ again:
     if(!q) q=2;
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
-  
+#if defined(USE_VA_SURFACE)
     s=freeSurface.pop();
     printf("Surface=%d\n",s->surface);
     if(!s->fromAdmImage(image))
@@ -191,12 +200,14 @@ again:
         return false;
     }
     inUseSurface.pushBack(s);
-    _frame->reordered_opaque=image->Pts;
     _frame->data[0]=_frame->data[1]=_frame->data[2]=NULL;
     _frame->data[3]=(uint8_t *)s->surface;
+    
+#endif    
+    _frame->reordered_opaque=image->Pts;
     _frame->width=image->GetWidth(PLANAR_Y);
-    _frame->height=image->GetHeight(PLANAR_Y);
-    _frame->format=  AV_PIX_FMT_VAAPI;    
+    _frame->height=image->GetHeight(PLANAR_Y);        
+    _frame->format=  MY_PÏXFMT;
     sz=encodeWrapper(_frame,out);
     
     if(sz<0)
