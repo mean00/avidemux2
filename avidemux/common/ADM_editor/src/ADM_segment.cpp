@@ -574,7 +574,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     }
     if(false==convertLinearTimeToSeg( to,&endSeg,&endOffset))
     {
-        ADM_warning("Cannot get starting point (%" PRIu64" ms\n",from/1000);
+        ADM_warning("Cannot get end point (%" PRIu64" ms\n",to/1000);
         return false;
     }
 
