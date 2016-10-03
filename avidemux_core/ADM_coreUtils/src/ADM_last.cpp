@@ -32,7 +32,6 @@ static void internalSetFolder(options tag,const std::string &folder)
  */
 static void internalGetFolder(options tag,  std::string &folder)
 {
-    std::string tmp;
     if (!prefs->get(tag, folder))
     {
         ADM_warning("Cannot set last Read folder for %s\n",folder.c_str());   
