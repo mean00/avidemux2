@@ -379,6 +379,9 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
           _SEGMENT *s=_segments.getSegment(seg);
           _VIDEOS  *v=_segments.getRefVideo(s->_reference);
           uint64_t endTimeInRef=(s->_refStartTimeUs)+(s->_durationUs);
+        // we dont want the last kf of the video, but the last kf of the segment
+        // so we truncate the search to the part we are interested in taking start + duraiton of the seg to get a starting point
+        // If we can't get it, it cannot work properly anyway
           if(!getFrameNumFromPtsOrBefore(v,endTimeInRef,lastRefFrameInSegment))
           {
               ADM_warning("Cannot map the last frame in segment to reference at PTS=%s\n",ADM_us2plain(endTimeInRef));
