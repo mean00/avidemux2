@@ -776,22 +776,23 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 {
     if(data[0]==1) return extractSPSInfo_mp4Header(data,len,spsinfo);
     
-    ADM_info("Incoming SPS info\n");
+    ADM_info("Incoming SPS info");
     mixDump(data,len);
+    printf("\n");
     
-    ADM_info("\nconverted SPS info\n");
-    
+    ADM_info("Converted SPS info");
     uint32_t converted;
     uint8_t buffer[256];
     if(! ADM_SPSannexBToMP4(len,data,&converted,buffer))
     {
+        printf("\n");
         ADM_warning("Cannot convert SPS\n");
         return false;
     }
     mixDump(buffer,converted);
-    ADM_info("\n");
+    printf("\n");
+
     return    extractSPSInfo_mp4Header(buffer,converted,spsinfo) ;
-    
 }
 
 uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
