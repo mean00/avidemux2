@@ -28,7 +28,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
 {
     if(nalSize+16>=ADM_NAL_BUFFER_SIZE)
     {
-        ADM_warning("SEI size too big, probably corrupted input (%d bytes)\n",nalSize);
+        ADM_warning("SEI size too big, probably corrupted input (%u bytes)\n",nalSize);
         return false;
     }
     uint8_t *payload=payloadBuffer;
@@ -43,7 +43,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
                 sei_type+=payload[0];payload++;
                 while(payload[0]==0xff) {sei_size+=0xff;payload++;};
                 sei_size+=payload[0];payload++;
-                aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
+                aprintf("  [SEI] Type: 0x%x, size: %u\n",sei_type,sei_size);
                 if(payload+sei_size>=tail)
                 {
                         return false;
@@ -207,7 +207,7 @@ resume:
 //  1:0 2:Nal ref idc 5:Nal Type
         if(startCode&0x80)
         {
-            printf("[Ts] Nal Marker missing:%x\n",startCode);
+            printf("[Ts] Nal Marker missing: 0x%x\n",startCode);
             continue; // Marker missing
         }
         int fullStartCode=startCode;
