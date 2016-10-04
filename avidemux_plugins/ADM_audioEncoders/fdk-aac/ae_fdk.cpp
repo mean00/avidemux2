@@ -3,7 +3,7 @@
     copyright            : (C) 2002-6 by mean
     email                : fixounet@free.fr
 
-    Interface to FAAC
+    Interface to FDKAAC
 
  ***************************************************************************/
 
@@ -24,20 +24,21 @@
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 
-#include "faac.h"
-#include "audioencoder_faac.h"
+#include "fdk-aac/aacenc_lib.h"
+#include "ae_fdk.h"
 
-#include "faac_encoder_desc.cpp"
+#include "fdk_encoder_desc.cpp"
 
-#define FAAC_DEFAULT_CONF {128}
+#define FDKAAC_DEFAULT_CONF {128}
 
-static faac_encoder defaultConfig = FAAC_DEFAULT_CONF;
+static fdk_encoder defaultConfig = FDKAAC_DEFAULT_CONF;
 
 static bool configure(CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
 
+
 /********************* Declare Plugin *****************************************************/
-ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Faac);
+ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Fdkaac);
 
 static ADM_audioEncoder encoderDesc = { 
   ADM_AUDIO_ENCODER_API_VERSION,
@@ -45,8 +46,8 @@ static ADM_audioEncoder encoderDesc = {
   destroy,			// Defined by macro automatically
   configure,		//** put your own function here**
   "Faac",            
-  "AAC (Faac)",      
-  "Faac AAC encoder plugin Mean 2008",             
+  "AAC (FDK)",      
+  "FDK AAC encoder plugin Mean 2016",
   6,                    // Max channels
   1,0,0,                // Version
   WAV_AAC,
@@ -60,10 +61,11 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG( );
 
 /******************* / Declare plugin*******************************************************/
 
-AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader,
+AUDMEncoder_Fdkaac::AUDMEncoder_Fdkaac(AUDMAudioFilter * instream,bool globalHeader,
     CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
 {
   uint32_t channels;
+  _inited=false;
   channels=instream->getInfo()->channels;
   _globalHeader=globalHeader;
   switch(channels)
@@ -91,97 +93,127 @@ AUDMEncoder_Faac::AUDMEncoder_Faac(AUDMAudioFilter * instream,bool globalHeader,
   wavheader.encoding=WAV_AAC;
   _config=defaultConfig;
   if(setup) // load config if possible
-    ADM_paramLoad(setup,faac_encoder_param,&_config);
+    ADM_paramLoad(setup,fdk_encoder_param,&_config);
 };
 
 /**
-    \fn ~AUDMEncoder_Faac
+    \fn ~AUDMEncoder_Fdkaac
 */
-AUDMEncoder_Faac::~AUDMEncoder_Faac()
+AUDMEncoder_Fdkaac::~AUDMEncoder_Fdkaac()
 {
-    if(_handle)
-        faacEncClose(_handle);
-    _handle=NULL;
+    if(_inited)
+    {
+        aacEncClose(&_aacHandle);
+        _inited=false;
+    }
     if(ordered) delete [] ordered;
     ordered=NULL;
-    printf("[FAAC] Deleting faac\n");
+    printf("[FDKAAC] Deleting faac\n");
 
 };
 
+
+bool AUDMEncoder_Fdkaac::setParam(const char *name, int nameAsInt, int value)
+{
+   int error=   aacEncoder_SetParam(_aacHandle,(AACENC_PARAM)nameAsInt,value); 
+    if(error!=AACENC_OK) 
+    {
+        ADM_warning("%s failed\n",name); 
+        return false;
+    }
+    ADM_info("Parameter %s = %d\n",name,(int)value);
+    // Read it back
+    int newVal=aacEncoder_GetParam(_aacHandle,(AACENC_PARAM)nameAsInt);
+    ADM_info("Asked = %d, finally it is %d\n",value,newVal);
+    if(value!=newVal)
+      {
+        ADM_warning("Parameter setting failed\n");
+        
+      }
+    return true;
+}
 
 /**
     \fn initialize
 
 */
-bool AUDMEncoder_Faac::initialize(void)
+bool AUDMEncoder_Fdkaac::initialize(void)
 {
 unsigned long int samples_input, max_bytes_output;
-faacEncConfigurationPtr cfg;
 int ret=0;
 int channels=wavheader.channels;
 
-    printf("[FAAC] Incoming Fq :%u\n",wavheader.frequency);
-     _handle = faacEncOpen(wavheader.frequency,
-                                 channels,
-                                 &samples_input,
-                                &max_bytes_output);
-    if(!_handle)
+    printf("[FDKAAC] Incoming Fq :%u\n",wavheader.frequency);
+    AACENC_ERROR error;
+    error= aacEncOpen(&_aacHandle,0,0);
+    if(error!=AACENC_OK)
     {
-          printf("[FAAC]Cannot open faac with fq=%" PRIu32" chan=%" PRIu32" br=%" PRIu32"\n",
-          wavheader.frequency,channels,_config.bitrate);
+        ADM_warning("Cannot open fdk AAC for channels=%d\n",channels);
           return 0;
     }
-    printf(" [FAAC] : Sample input:%" PRIu32", max byte output%" PRIu32" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
-    cfg= faacEncGetCurrentConfiguration(_handle);
+    // fine tuning
+#define SET_PARAM(name,value) if(!setParam(#name,name,value)) ADM_warning("oops\n");
+
+    SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary     
+    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 Low
+    SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
+    SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))
     
-    // Set default conf, same as ffmpeg
-    cfg->aacObjectType = LOW;
-    cfg->mpegVersion = MPEG4;
-    cfg->bandWidth= (wavheader.frequency*3)/4; // Should be relevant
-    cfg->useTns = 0;
-    cfg->allowMidside = 0;
-    cfg->bitRate = (_config.bitrate*1000)/channels; // It is per channel
-    cfg->outputFormat = 0; // 0 Raw 1 ADTS
-    cfg->inputFormat = FAAC_INPUT_FLOAT;
-    cfg->useLfe=0;	
-    if (!(ret=faacEncSetConfiguration(_handle, cfg))) 
+    
+    // Read back
+#define GET_PARAM(name) ADM_info(#name" = %d\n",(int)aacEncoder_GetParam(_aacHandle,name));
+    ADM_info("Read back parameters:\n");
+    GET_PARAM(AACENC_AOT)
+    GET_PARAM(AACENC_BITRATE)
+    GET_PARAM(AACENC_BITRATEMODE)
+    GET_PARAM(AACENC_SAMPLERATE)
+    GET_PARAM(AACENC_SBR_MODE)
+    GET_PARAM(AACENC_GRANULE_LENGTH)
+    GET_PARAM(AACENC_CHANNELMODE)
+    GET_PARAM(AACENC_CHANNELORDER)
+    GET_PARAM(AACENC_SBR_RATIO)
+    GET_PARAM(AACENC_AFTERBURNER)
+    GET_PARAM(AACENC_BANDWIDTH)
+    GET_PARAM(AACENC_TRANSMUX)
+    GET_PARAM(AACENC_HEADER_PERIOD)
+    GET_PARAM(AACENC_SIGNALING_MODE)
+    GET_PARAM(AACENC_TPSUBFRAMES)
+    GET_PARAM(AACENC_PROTECTION)
+    GET_PARAM(AACENC_ANCILLARY_BITRATE)
+    GET_PARAM(AACENC_METADATA_MODE)
+        
+    // Get specific configuration
+    AACENC_InfoStruct        pInfo;
+    memset(&pInfo,0,sizeof(pInfo));
+    if(AACENC_OK != aacEncInfo(_aacHandle,&pInfo))
     {
-        printf("[FAAC] Cannot set conf for faac with fq=%" PRIu32" chan=%" PRIu32" br=%" PRIu32" (err:%d)\n",
-				wavheader.frequency,channels,_config.bitrate,ret);
-	return 0;
+        ADM_warning("Cannot get info\n");
+        return false;
     }
-     unsigned char *data=NULL;
-     unsigned long size=0;
-     if((ret=faacEncGetDecoderSpecificInfo(_handle, &data,&size)))
-     {
-        printf("FAAC: GetDecoderSpecific info failed (err:%d)\n",ret);
-        return 0;
-     }
+    int size=pInfo.confSize;
      _extraSize=size;
      _extraData=new uint8_t[size];
-     memcpy(_extraData,data,size);
+     memcpy(_extraData,pInfo.confBuf,size);
 
     // update
-     wavheader.byterate=(_config.bitrate*1000)/8;
-//    _wavheader->dwScale=1024;
-//    _wavheader->dwSampleSize=0;
+    wavheader.byterate=(_config.bitrate*1000)/8;
     wavheader.blockalign=4096;
     wavheader.bitspersample=0;
 
-    _chunk=samples_input;
+    _chunk=pInfo.frameLength*wavheader.channels;
 
     ordered=new float[_chunk];
-    printf("[Faac] Initialized :\n");
+    ADM_info("[Fdk] Initialized :\n");
+#if 0
+    ADM_info("[Fdk]Version        : %s\n",cfg->name);
+    ADM_info("[Fdk]Bitrate        : %" PRIu32"\n",(uint32_t)cfg->bitRate);
+    ADM_info("[Fdk]Mpeg2 (1)/4(0) : %u\n",cfg->mpegVersion);
+    ADM_info("[Fdk]Use lfe      ) : %u\n",cfg->useLfe);
+    ADM_info("[Fdk]Sample output  : %" PRIu32"\n",_chunk / channels);
+    ADM_info("[Fdk]Bitrate        : %lu\n",cfg->bitRate*channels);
+#endif
     
-    printf("[Faac]Version        : %s\n",cfg->name);
-    printf("[Faac]Bitrate        : %" PRIu32"\n",(uint32_t)cfg->bitRate);
-    printf("[Faac]Mpeg2 (1)/4(0) : %u\n",cfg->mpegVersion);
-    printf("[Faac]Use lfe      ) : %u\n",cfg->useLfe);
-    printf("[Faac]Sample output  : %" PRIu32"\n",_chunk / channels);
-    printf("[Faac]Bitrate        : %lu\n",cfg->bitRate*channels);
-
-    
-    return 1;
+    return true;
 }
 /**
     \fn refillBuffer
@@ -190,7 +222,7 @@ int channels=wavheader.channels;
 //  Need to multiply the float by 32767, can't use
 //  generic fill buffer
 //----------------------------------------------
-uint8_t AUDMEncoder_Faac::refillBuffer(int minimum)
+uint8_t AUDMEncoder_Fdkaac::refillBuffer(int minimum)
 {
   uint32_t filler=wavheader.frequency*wavheader.channels;
   uint32_t nb;
@@ -238,8 +270,9 @@ uint8_t AUDMEncoder_Faac::refillBuffer(int minimum)
 /**
     \fn encode
 */
-bool	AUDMEncoder_Faac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
+bool	AUDMEncoder_Fdkaac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
+  return false;
   uint32_t count=0;
  int channels=wavheader.channels;
 _again:
@@ -252,7 +285,7 @@ _again:
         }
         ADM_assert(tmptail>=tmphead);
         reorder(&(tmpbuffer[tmphead]),ordered,*samples,_incoming->getChannelMapping(),outputChannelMapping);
-        *len = faacEncEncode(_handle, (int32_t *)ordered, _chunk, dest, FA_BUFFER_SIZE);
+    //    *len = aacEncEncode(_aacHandle, (int32_t *)ordered, _chunk, dest, FA_BUFFER_SIZE);
         if(!*len) 
         {
           count++;
@@ -272,10 +305,10 @@ _again:
 bool configure (CONFcouple **setup)
 {
  int ret=0;
-    faac_encoder config=defaultConfig;
+    fdk_encoder config=defaultConfig;
     if(*setup)
     {
-        ADM_paramLoad(*setup,faac_encoder_param,&config);
+        ADM_paramLoad(*setup,fdk_encoder_param,&config);
     }
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
@@ -299,7 +332,7 @@ bool configure (CONFcouple **setup)
     {
         if(*setup) delete *setup;
         *setup=NULL;
-        ADM_paramSave(setup,faac_encoder_param,&config);
+        ADM_paramSave(setup,fdk_encoder_param,&config);
         defaultConfig=config;
         return true;
     }
@@ -308,8 +341,8 @@ bool configure (CONFcouple **setup)
 
 void getDefaultConfiguration(CONFcouple **c)
 {
-	faac_encoder config = FAAC_DEFAULT_CONF;
+	fdk_encoder config = FDKAAC_DEFAULT_CONF;
 
-	ADM_paramSave(c, faac_encoder_param, &config);
+	ADM_paramSave(c, fdk_encoder_param, &config);
 }
 // EOF
