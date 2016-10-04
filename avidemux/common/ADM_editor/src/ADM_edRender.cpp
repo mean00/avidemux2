@@ -190,8 +190,11 @@ uint32_t seg;
     uint64_t to=segTime+s->_refStartTimeUs;
     if(false==seektoTime(s->_reference,to))
     {
+        if(false==seektoTime(s->_reference,to)) // try twice because the first attempt may fail with VDPAU
+        {
             ADM_warning("Cannot seek to beginning of segment %" PRIu32" at  %" PRIu64" ms\n",seg,to/1000);
             return false;
+        }
     }
     _currentSegment=seg;
     int64_t newTime=(int64_t)v->lastDecodedPts+(int64_t)s->_startTimeUs-(int64_t)s->_refStartTimeUs;
