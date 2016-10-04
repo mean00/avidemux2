@@ -48,7 +48,7 @@ extern "C"
  */
   void 	CpuCaps::init( void)
 {
-    printf("[cpuCaps]Checking CPU capabilities\n");
+    printf("[CpuCaps] Checking CPU capabilities\n");
     myCpuCaps=0;
     myCpuMask=0xffffffff;
    
@@ -83,8 +83,8 @@ extern "C"
  if (a == c)
      return ; /* CPUID not supported */
 #endif
- cpuid(0, max_std_level, ebx, ecx, edx);
 
+ cpuid(0, max_std_level, ebx, ecx, edx);
  if(max_std_level >= 1)
  {
 	 int std_caps = 0;
@@ -100,12 +100,9 @@ extern "C"
     	 myCpuCaps |= ADM_CPUCAP_SSE3;
      if (ecx & 0x00000200 )
     	 myCpuCaps |= ADM_CPUCAP_SSSE3;
-     
-        
  }
 
  cpuid(0x80000000, max_ext_level, ebx, ecx, edx);
-
  if(max_ext_level >= 0x80000001)
  {
 	 int ext_caps = 0;
@@ -119,10 +116,11 @@ extern "C"
     	 myCpuCaps |= ADM_CPUCAP_MMX;
      if (ext_caps & (1<<22))
     	 myCpuCaps |= ADM_CPUCAP_MMXEXT;
-     
  }
-#define CHECK(x) if(myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected ");\
-											if(!(myCpuMask&ADM_CPUCAP_##x)) printf("  but disabled");printf("\n");}
+
+#define CHECK(x) if (myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected"); \
+                     if (!(myCpuMask & ADM_CPUCAP_##x)) printf(", but disabled"); \
+                     printf("\n"); }
     CHECK(MMX);
     CHECK(3DNOW);
     CHECK(3DNOWEXT);
@@ -131,9 +129,9 @@ extern "C"
     CHECK(SSE2);
     CHECK(SSE3);
     CHECK(SSSE3);
- 
 #endif // X86
-    printf("[cpuCaps]End of CPU capabilities check (cpuMask :%x, cpuCaps :%x)\n",myCpuMask,myCpuCaps);
+
+    printf("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
     return ;
 }
 
@@ -203,7 +201,7 @@ static int Cpu2Lav(uint32_t admMask)
  */
 bool     CpuCaps::setMask(uint32_t mask)
 {
-    ADM_info("[CpuCaps] Setting mask to 0x%x\n",mask);
+    ADM_info("[CpuCaps] Setting mask to 0x%08x\n",mask);
     myCpuMask=mask;
     
     int lavCpuMask=Cpu2Lav(myCpuMask);
