@@ -28,6 +28,7 @@ protected:
          fdk_encoder    _config;
          float          *ordered;
          bool           setParam(const char *name, int nameAsInt, int value);
+         bool           dumpConfiguration();
 public:
             bool        initialize(void);
     virtual             ~AUDMEncoder_Fdkaac();
