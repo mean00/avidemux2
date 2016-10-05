@@ -44,7 +44,7 @@ bool ffmpuxerSetExtradata(AVCodecContext *context, int size, const uint8_t *data
         context->extradata_size=0;
         return true;
     }
-    uint8_t *copy=(uint8_t *)av_malloc(size);;
+    uint8_t *copy=(uint8_t *)av_malloc( (1+(size>>4))<<4);;
     memcpy(copy,data,size);
     context->extradata=copy;
     context->extradata_size=size;
