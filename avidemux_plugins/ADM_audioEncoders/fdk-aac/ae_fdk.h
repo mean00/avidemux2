@@ -23,7 +23,6 @@ protected:
          HANDLE_AACENCODER  _aacHandle;
          bool           _inited;
          uint32_t       _chunk;
-         uint8_t        refillBuffer(int minimum);
          bool           _globalHeader;
          fdk_encoder    _config;
          float          *ordered;
