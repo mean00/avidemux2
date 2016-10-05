@@ -36,6 +36,7 @@ static fdk_encoder defaultConfig = FDKAAC_DEFAULT_CONF;
 static bool configure(CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
 
+#define aprintf printf
 
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Fdkaac);
@@ -111,7 +112,13 @@ AUDMEncoder_Fdkaac::~AUDMEncoder_Fdkaac()
     printf("[FDKAAC] Deleting faac\n");
 
 };
-
+/**
+ * 
+ * @param name
+ * @param nameAsInt
+ * @param value
+ * @return 
+ */
 
 bool AUDMEncoder_Fdkaac::setParam(const char *name, int nameAsInt, int value)
 {
@@ -121,7 +128,7 @@ bool AUDMEncoder_Fdkaac::setParam(const char *name, int nameAsInt, int value)
         ADM_warning("%s failed\n",name); 
         return false;
     }
-    ADM_info("Parameter %s = %d\n",name,(int)value);
+    ADM_info("Parameter %s (%d)= %d\n",name,nameAsInt,(int)value);
     // Read it back
     int newVal=aacEncoder_GetParam(_aacHandle,(AACENC_PARAM)nameAsInt);
     ADM_info("Asked = %d, finally it is %d\n",value,newVal);
@@ -132,37 +139,13 @@ bool AUDMEncoder_Fdkaac::setParam(const char *name, int nameAsInt, int value)
       }
     return true;
 }
-
 /**
-    \fn initialize
-
-*/
-bool AUDMEncoder_Fdkaac::initialize(void)
+ *  \fn dumpConfiguration
+ * @return 
+ */
+bool AUDMEncoder_Fdkaac::dumpConfiguration()
 {
-unsigned long int samples_input, max_bytes_output;
-int ret=0;
-int channels=wavheader.channels;
-
-    printf("[FDKAAC] Incoming Fq :%u\n",wavheader.frequency);
-    AACENC_ERROR error;
-    error= aacEncOpen(&_aacHandle,0,0);
-    if(error!=AACENC_OK)
-    {
-        ADM_warning("Cannot open fdk AAC for channels=%d\n",channels);
-          return 0;
-    }
-    // fine tuning
-#define SET_PARAM(name,value) if(!setParam(#name,name,value)) ADM_warning("oops\n");
-
-    SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary     
-    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 Low
-    SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
-    SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))
-    
-    
-    // Read back
-#define GET_PARAM(name) ADM_info(#name" = %d\n",(int)aacEncoder_GetParam(_aacHandle,name));
-    ADM_info("Read back parameters:\n");
+    #define GET_PARAM(name) ADM_info(#name" = %d\n",(int)aacEncoder_GetParam(_aacHandle,name));
     GET_PARAM(AACENC_AOT)
     GET_PARAM(AACENC_BITRATE)
     GET_PARAM(AACENC_BITRATEMODE)
@@ -181,6 +164,66 @@ int channels=wavheader.channels;
     GET_PARAM(AACENC_PROTECTION)
     GET_PARAM(AACENC_ANCILLARY_BITRATE)
     GET_PARAM(AACENC_METADATA_MODE)
+    return true;
+}
+/**
+    \fn initialize
+
+*/
+bool AUDMEncoder_Fdkaac::initialize(void)
+{
+unsigned long int samples_input, max_bytes_output;
+int ret=0;
+int channels=wavheader.channels;
+
+    printf("[FDKAAC] Incoming Fq :%u\n",wavheader.frequency);
+    AACENC_ERROR error;
+    error= aacEncOpen(&_aacHandle,0,wavheader.channels);
+    if(error!=AACENC_OK)
+    {
+        ADM_warning("Cannot open fdk AAC for channels=%d\n",channels);
+          return 0;
+    }
+    //
+    dumpConfiguration();
+    // fine tuning
+#define SET_PARAM(name,value) if(!setParam(#name,name,value)) ADM_warning("oops\n");
+    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 Low
+    SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary     
+    
+    SET_PARAM(AACENC_BITRATEMODE,0) // CBR
+    SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
+    SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))
+    
+    CHANNEL_MODE mode;
+    switch(wavheader.channels)
+    {
+#define MKCHAN(x,y,z,t)         case x: mode=y;break;
+        MKCHAN(1,MODE_1,        1,0)
+        MKCHAN(2,MODE_2,        0,1)
+        MKCHAN(3,MODE_1_2,      1,1) // L+R+Center
+        MKCHAN(4,MODE_1_2_1,    2,1) // L+R+Center+Rear
+        MKCHAN(5,MODE_1_2_2,    1,2) //  L+R+Center + RearLeft+RearRight
+        MKCHAN(6,MODE_1_2_2_1,  2,2) // Same +LFE
+                
+        default:
+            ADM_warning("Improper channel configuration (%d)\n",wavheader.channels);
+            return false;
+            break;
+    }
+    SET_PARAM(AACENC_CHANNELMODE,mode)            
+// make a dry run of the encoder
+    error= aacEncEncode(_aacHandle, NULL, NULL, NULL, NULL);
+    if(error!= AACENC_OK) 
+    {
+        ADM_warning("Cannot setup fdk encoder (%d)\n",error);
+        return false;
+    }
+
+    // Read back
+
+    ADM_info("Read back parameters:\n");
+    dumpConfiguration();
         
     // Get specific configuration
     AACENC_InfoStruct        pInfo;
@@ -272,9 +315,37 @@ uint8_t AUDMEncoder_Fdkaac::refillBuffer(int minimum)
 */
 bool	AUDMEncoder_Fdkaac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
-  return false;
   uint32_t count=0;
  int channels=wavheader.channels;
+ 
+ AACENC_BufDesc inDesc,outDesc;
+ int inAudioId=IN_AUDIO_DATA;
+ int inAudioSize=0,inElemSize;
+ void *inAudioPtr=NULL;
+ 
+ int outAudioId=OUT_BITSTREAM_DATA;
+ int outAudioSize=0,outElemSize;
+ void *outAudioPtr=NULL;
+ 
+    aprintf("FDK => Encode\n");
+ 
+    inDesc.bufferIdentifiers=&inAudioId;
+    inDesc.numBufs=1;
+    inDesc.bufferIdentifiers=&inAudioId;
+    inDesc.bufSizes=&inAudioSize;
+    inDesc.bufs=&inAudioPtr;
+    inDesc.bufElSizes=&inElemSize;
+    
+    outDesc.bufferIdentifiers=&outAudioId;
+    outDesc.numBufs=1;
+    outDesc.bufferIdentifiers=&outAudioId;
+    outDesc.bufSizes=&outAudioSize;
+    outDesc.bufs=&outAudioPtr;
+    outDesc.bufElSizes=&outElemSize;
+    
+    
+    
+ 
 _again:
         *samples = _chunk/channels;
         *len = 0;
@@ -284,16 +355,34 @@ _again:
           return 0; 
         }
         ADM_assert(tmptail>=tmphead);
+     
+        
+        
         reorder(&(tmpbuffer[tmphead]),ordered,*samples,_incoming->getChannelMapping(),outputChannelMapping);
-    //    *len = aacEncEncode(_aacHandle, (int32_t *)ordered, _chunk, dest, FA_BUFFER_SIZE);
-        if(!*len) 
+        
+        inAudioSize=*samples;
+        inAudioPtr=(void *)&(tmpbuffer[tmphead]);
+        inElemSize=1;
+        
+        outAudioPtr=dest;
+        outAudioSize= 768*wavheader.channels; // ?
+        outElemSize=1;
+        
+        AACENC_InArgs inArgs={0};
+        AACENC_OutArgs outArgs={0};
+        
+        
+        int error=aacEncEncode(_aacHandle,&inDesc,&outDesc,&inArgs,&outArgs);
+        if(error!=AACENC_OK)
         {
-          count++;
-          if(count<20)
-            goto _again;
-          *samples=0;
+            ADM_warning("[FDK] Encoding error %d\n",error);
+            return false;
         }
         tmphead+=_chunk;
+        *len=outArgs.numOutBytes;
+        *samples=outArgs.numInSamples;
+        aprintf("[FDK]Generated %d bytes, consumed %d samples\n",*len,*samples);
+        
         return 1;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
