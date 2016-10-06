@@ -7812,22 +7812,22 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="-16"/>
         <source>Fontconfig</source>
-        <translation type="unfinished">Schriftkonfiguration</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Gettext</source>
-        <translation type="unfinished">Gettext</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>x86</source>
-        <translation type="unfinished">Kodierer {86?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>x86-64</source>
-        <translation type="unfinished">Kodierer</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -8100,7 +8100,7 @@ Läuft es trotzdem?</translation>
     <message>
         <location line="+8"/>
         <source>Select File to Save Audio</source>
-        <translation type="unfinished">Wähle eine Datei um den Ton zu speichern</translation>
+        <translation type="unfinished">Audio-Datei zum Speichern wählen</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -8110,17 +8110,17 @@ Läuft es trotzdem?</translation>
     <message>
         <location line="+5"/>
         <source>Select BMP to Save</source>
-        <translation type="unfinished">Wähle einen BMP-Dateinamen um zu speichern</translation>
+        <translation>BMP-Datei zum Speichern wählen</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Select JPEG to Save</source>
-        <translation type="unfinished">Wähle einen JPEG-Dateinamen um zu speichern</translation>
+        <translation>JPEG-Datei zum Speichern wählen</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Select File to Save</source>
-        <translation type="unfinished">Wähle einen Dateinamen um zu speichern</translation>
+        <translation>Datei zum Speichern wählen</translation>
     </message>
     <message>
         <location line="+62"/>
@@ -8946,7 +8946,9 @@ Warning, the settings must be close.</source>
         <source>The video is in copy mode but the cut points are not on keyframes.
 The video will be saved but there will be corruption at cut point(s).
 Do you want to continue anyway ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Für Video ist der Kopiermodus ausgewählt, aber Schittpunkte befinden sich nicht auf Keyframes.
+Das Video wird gespeichert, aber es wird Bildstörungen an Schnittpunkten geben.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -9648,13 +9650,14 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerAvi/muxerAvi.cpp" line="+74"/>
         <source>Bad Idea</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tun Sie dies nicht!</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Using H264/H265 in AVI is a bad idea, MKV is better for that.
  Do you want to continue anyway ?</source>
-        <translation type="unfinished"></translation>
+        <translation>Es ist eine schlechte Idee, AVI für H264/H265 zu verwenden, MKV ist dafür besser geeignet.
+Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -9664,7 +9667,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+0"/>
         <source>Cannot create AVI file</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann AVI-Datei nicht erstellen</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerAvi/muxerAviConfig.cpp" line="+25"/>
@@ -9674,7 +9677,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+3"/>
         <source>Avi Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>AVI Muxer</translation>
     </message>
 </context>
 <context>
@@ -9687,7 +9690,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+1"/>
         <source>Select avs filename[*.avs]</source>
-        <translation type="unfinished">Wähle den avs Dateiname [*.avs]</translation>
+        <translation type="unfinished">Wähle Dateinamen [*.avs]</translation>
     </message>
     <message>
         <location line="-7"/>
@@ -13596,17 +13599,17 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location filename="../../common/gui_navigate.cpp" line="+227"/>
         <source>Cannot go to next keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann nicht zum nächsten Keyframe wechseln</translation>
     </message>
     <message>
         <location line="+69"/>
         <source>Cannot go to previous keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Kann nicht zum vorhergehenden Keyframe wechseln</translation>
     </message>
     <message>
         <location line="+176"/>
         <source>Seek</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Navigation</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -14078,7 +14081,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="-1301"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
     <message>
         <location line="+788"/>
