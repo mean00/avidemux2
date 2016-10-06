@@ -1,9 +1,8 @@
 
 /***************************************************************************
-    copyright            : (C) 2002-6 by mean
-    email                : fixounet@free.fr
-
-    Interface to FDKAAC
+ * \file ae_fdk
+ * \brief interface to franhaufer AAC library    
+ * \author mean fixounet@free.fr 2006-2016
 
  ***************************************************************************/
 
@@ -45,8 +44,8 @@ static ADM_audioEncoder encoderDesc = {
   ADM_AUDIO_ENCODER_API_VERSION,
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
-  configure,		//** put your own function here**
-  "Faac",            
+  configure,    		//** put your own function here**
+  "FDK_AAC",            
   "AAC (FDK)",      
   "FDK AAC encoder plugin Mean 2016",
   6,                    // Max channels
@@ -95,7 +94,36 @@ AUDMEncoder_Fdkaac::AUDMEncoder_Fdkaac(AUDMAudioFilter * instream,bool globalHea
         break;
   }
   wavheader.encoding=WAV_AAC;
+  wavheader.blockalign=4096;
+  wavheader.bitspersample=0;
+  
   _config=defaultConfig;
+  
+  // Pre setup the input/output parameters
+  
+ 
+    inAudioId=IN_AUDIO_DATA;
+    inAudioSize=0;
+    inAudioPtr=NULL;
+ 
+    outAudioId=OUT_BITSTREAM_DATA;
+    outAudioSize=0;
+    outAudioPtr=NULL;
+    
+    inDesc.numBufs=1;
+    inDesc.bufferIdentifiers=&inAudioId;
+    inDesc.bufSizes=&inAudioSize;
+    inDesc.bufs=&inAudioPtr;
+    inDesc.bufElSizes=&inElemSize;
+    
+    
+    outDesc.numBufs=1;
+    outDesc.bufferIdentifiers=&outAudioId;
+    outDesc.bufSizes=&outAudioSize;
+    outDesc.bufs=&outAudioPtr;
+    outDesc.bufElSizes=&outElemSize;
+  
+  
   if(setup) // load config if possible
     ADM_paramLoad(setup,fdk_encoder_param,&_config);
 };
@@ -167,7 +195,6 @@ bool AUDMEncoder_Fdkaac::dumpConfiguration()
 */
 bool AUDMEncoder_Fdkaac::initialize(void)
 {
-unsigned long int samples_input, max_bytes_output;
 int ret=0;
 int channels=wavheader.channels;
 
@@ -181,14 +208,9 @@ int channels=wavheader.channels;
     }
     //
     
-    // fine tuning
+    // Mandatory settings
 #define SET_PARAM(name,value) if(!setParam(#name,name,value)) ADM_warning("oops\n");
-    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 LC
-    SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary     
     
-    SET_PARAM(AACENC_BITRATEMODE,0) // CBR
-    SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
-    SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))
     
     CHANNEL_MODE mode;
     switch(wavheader.channels)
@@ -206,8 +228,16 @@ int channels=wavheader.channels;
             return false;
             break;
     }
+    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 LC
+    SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary         
+    SET_PARAM(AACENC_BITRATEMODE,0) // CBR
+    SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
+    SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))    
     SET_PARAM(AACENC_CHANNELMODE,mode)            
-// make a dry run of the encoder
+    
+    //
+    // make a dry run of the encoder so that we have extradata
+    //
     error= aacEncEncode(_aacHandle, NULL, NULL, NULL, NULL);
     if(error!= AACENC_OK) 
     {
@@ -228,19 +258,18 @@ int channels=wavheader.channels;
         ADM_warning("Cannot get info\n");
         return false;
     }
-    int size=pInfo.confSize;
-     _extraSize=size;
-     _extraData=new uint8_t[1+size];
-     memcpy(_extraData,pInfo.confBuf,size);
+    
+     _extraSize=pInfo.confSize;
+     _extraData=new uint8_t[1+_extraSize];
+     memcpy(_extraData,pInfo.confBuf,_extraSize);
 
     // update
     wavheader.byterate=(_config.bitrate*1000)/8;
-    wavheader.blockalign=4096;
-    wavheader.bitspersample=0;
 
+    // How many samples do we need to output one AAC packet ?
     _chunk=pInfo.frameLength*wavheader.channels;
 
-    ordered=new float[_chunk*2]; // keep a big margin in case of incomplete processing
+    ordered=new float[_chunk*2]; // keep a big margin in case of incomplete processing of the previous one
     ADM_info("[Fdk] Initialized with %d bytes of extra data, framelength=%d\n",_extraSize,pInfo.frameLength);
     return true;
 }
@@ -252,32 +281,16 @@ bool	AUDMEncoder_Fdkaac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
  uint32_t count=0;
  int channels=wavheader.channels;
- 
- AACENC_BufDesc inDesc,outDesc;
- int inAudioId=IN_AUDIO_DATA;
- int inAudioSize=0,inElemSize;
- void *inAudioPtr=NULL;
- 
- int outAudioId=OUT_BITSTREAM_DATA;
- int outAudioSize=0,outElemSize;
- void *outAudioPtr=NULL;
+  
  AACENC_InArgs inArgs={0};
  AACENC_OutArgs outArgs={0};
     aprintf("FDK => Encode\n");
  
-    
+    inAudioId=IN_AUDIO_DATA;
+    outAudioId=OUT_BITSTREAM_DATA;
+   
     inDesc.numBufs=1;
-    inDesc.bufferIdentifiers=&inAudioId;
-    inDesc.bufSizes=&inAudioSize;
-    inDesc.bufs=&inAudioPtr;
-    inDesc.bufElSizes=&inElemSize;
-    
-    
     outDesc.numBufs=1;
-    outDesc.bufferIdentifiers=&outAudioId;
-    outDesc.bufSizes=&outAudioSize;
-    outDesc.bufs=&outAudioPtr;
-    outDesc.bufElSizes=&outElemSize;
     
     AACENC_InfoStruct pInfo;
     

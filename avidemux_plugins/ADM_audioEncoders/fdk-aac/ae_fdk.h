@@ -20,6 +20,15 @@
 class AUDMEncoder_Fdkaac : public ADM_AudioEncoder
 {
 protected:
+            AACENC_BufDesc inDesc,outDesc;
+            int inAudioId;
+            int inAudioSize,inElemSize;
+            void *inAudioPtr;
+ 
+            int outAudioId;
+            int outAudioSize,outElemSize;
+            void *outAudioPtr;
+protected:
          HANDLE_AACENCODER  _aacHandle;
          bool           _inited;
          uint32_t       _chunk;
