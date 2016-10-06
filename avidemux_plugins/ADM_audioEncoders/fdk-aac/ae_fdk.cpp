@@ -35,7 +35,11 @@ static fdk_encoder defaultConfig = FDKAAC_DEFAULT_CONF;
 static bool configure(CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
 
-#define aprintf printf
+#if 0
+    #define aprintf printf
+#else
+    #define aprintf(...) {}
+#endif
 
 /********************* Declare Plugin *****************************************************/
 ADM_DECLARE_AUDIO_ENCODER_PREAMBLE(AUDMEncoder_Fdkaac);
@@ -361,7 +365,7 @@ _again:
         return 1;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x)}
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("FDK-AAC",#x)}
 
 /**
     \fn configure
@@ -386,13 +390,13 @@ bool configure (CONFcouple **setup)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("faac","_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(bitrateM),bitrateM);
   
     
 
     diaElem *elems[]={&bitrate};
     
-    if ( diaFactoryRun(QT_TRANSLATE_NOOP("faac","Faac Configuration"),1,elems))
+    if ( diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),1,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;
