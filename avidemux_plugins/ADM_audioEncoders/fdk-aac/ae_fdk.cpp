@@ -294,19 +294,18 @@ bool	AUDMEncoder_Fdkaac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
     
     AACENC_InfoStruct pInfo;
     
- 
+    *samples =0;
+    *len = 0;
+    
 _again:
         int incomingSamplesPerChannel=(tmptail-tmphead)/channels;
 
         if(incomingSamplesPerChannel>_chunk/channels)
-            incomingSamplesPerChannel=(_chunk/channels);
-
-        *samples =0;
-        *len = 0;
+            incomingSamplesPerChannel=(_chunk/channels);       
 
         aacEncInfo(_aacHandle,&pInfo);
         
-        // We dont have enough date
+        // We dont have enough data
         if((pInfo.inBufFillLevel+incomingSamplesPerChannel)<_chunk/channels)
           {
             aprintf("Refill\n");
@@ -325,7 +324,7 @@ _again:
        // Try to encode with whatever is in the buffer
         
         reorder(&(tmpbuffer[tmphead]),ordered,incomingSamplesPerChannel,_incoming->getChannelMapping(),outputChannelMapping);
-        dither16(ordered,incomingSamplesPerChannel,channels);
+        dither16(ordered,incomingSamplesPerChannel*channels,channels);
         tmphead+=incomingSamplesPerChannel*channels; 
          
         inAudioSize=2*incomingSamplesPerChannel*channels;
