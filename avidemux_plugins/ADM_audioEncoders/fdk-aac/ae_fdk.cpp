@@ -28,7 +28,9 @@
 
 #include "fdk_encoder_desc.cpp"
 
-#define FDKAAC_DEFAULT_CONF {128}
+
+
+#define FDKAAC_DEFAULT_CONF {128,true,AOT_AAC_LC,false}
 
 static fdk_encoder defaultConfig = FDKAAC_DEFAULT_CONF;
 
@@ -232,12 +234,14 @@ int channels=wavheader.channels;
             return false;
             break;
     }
-    SET_PARAM(AACENC_AOT, AOT_AAC_LC) // Mpeg4 LC
+    SET_PARAM(AACENC_AOT, _config.profile) // Mpeg4 LC
     SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary         
     SET_PARAM(AACENC_BITRATEMODE,0) // CBR
     SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
     SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))    
+    SET_PARAM(AACENC_AFTERBURNER,_config.afterburner);
     SET_PARAM(AACENC_CHANNELMODE,mode)            
+    SET_PARAM(AACENC_SBR_MODE,_config.sbr)            
     
     //
     // make a dry run of the encoder so that we have extradata
@@ -388,15 +392,28 @@ bool configure (CONFcouple **setup)
                               BITRATE(160),
                               BITRATE(192),
                               BITRATE(224),
-                              BITRATE(384)
+                              BITRATE(384),
+                              BITRATE(448),
+                              BITRATE(576),
+                              BITRATE(640)
                           };
+    
+#define PROFILE(x,y) {y,QT_TRANSLATE_NOOP("FDK-AAC",x)}    
+     diaMenuEntry profileM[]={
+         PROFILE("LC",AOT_AAC_LC),
+         PROFILE("HE-AAC",AOT_AAC_LC),
+         PROFILE("HE-AACv2",AOT_AAC_LC),
+     };
+    uint32_t prof=0;
+    diaElemMenu profile(&prof,   QT_TRANSLATE_NOOP("FDK-AAC","_Profile::"), SZT(profileM),profileM);
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(bitrateM),bitrateM);
   
-    
+    diaElemToggle sbr(&(config.sbr),QT_TRANSLATE_NOOP("FDK-AAC","SBR enabled"));
+    diaElemToggle afterburner(&(config.afterburner),QT_TRANSLATE_NOOP("FDK-AAC","After burner"));
 
-    diaElem *elems[]={&bitrate};
+    diaElem *elems[]={&profile,&bitrate,&sbr,&afterburner};
     
-    if ( diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),1,elems))
+    if ( diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),4,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;

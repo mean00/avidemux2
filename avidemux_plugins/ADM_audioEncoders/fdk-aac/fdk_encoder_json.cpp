@@ -6,6 +6,9 @@
 bool  fdk_encoder_jserialize(const char *file, const fdk_encoder *key){
 admJson json;
 json.addUint32("bitrate",key->bitrate);
+json.addBool("afterburner",key->afterburner);
+json.addUint32("profile",key->profile);
+json.addBool("sbr",key->sbr);
 return json.dumpToFile(file);
 };
 bool  fdk_encoder_jdeserialize(const char *file, const ADM_paramList *tmpl,fdk_encoder *key){
