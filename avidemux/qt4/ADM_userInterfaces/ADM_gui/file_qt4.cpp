@@ -37,7 +37,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     *name = NULL;		
     QString str ;
     QString fileName,dot=QString(".");
-    QString filterFile=QString("All files (*.*)");
+    QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     QFileDialog::Options opts;
     int extSize=1;
@@ -77,7 +77,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString(" files (*.")+QString(ext)+QString(")");
+        filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
     fileName = QFileDialog::getSaveFileName(NULL, 
                     label,  // caption
@@ -105,7 +105,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     if(newFile.exists())
     {
         QFileInfo fileInfo(newFile);
-        QString q=QString("Overwrite file ")+fileInfo.fileName()+QString("?");
+        QString q=QString(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
         if(!GUI_Question(q.toUtf8().constData()))
         {
             ADM_dezalloc(*name);
@@ -126,7 +126,7 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
         *name = NULL;		
         QString str ;
         QString fileName,dot=QString(".");
-        QString filterFile=QString("All files (*.*)");
+        QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
         bool doFilter = !!(ext && strlen(ext));
         QFileDialog::Options opts;
 
@@ -144,7 +144,7 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
 
         if(doFilter)
         {
-            filterFile=QString(ext)+QString(" files (*.")+QString(ext)+QString(")");
+            filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
         }
         fileName = QFileDialog::getOpenFileName(NULL, 
                                 label,  // caption
