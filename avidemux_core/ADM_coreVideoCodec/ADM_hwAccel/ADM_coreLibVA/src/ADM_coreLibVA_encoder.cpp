@@ -151,6 +151,7 @@ bool        ADM_vaEncodingContext::createExtraData()
  */
 bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,ADM_vaEncodingBuffer *encodingBuffer)
 {
+#if 0
         int xError;
 
         CHECK_WORKING(false);
@@ -220,6 +221,7 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
         out->dts=ADM_NO_PTS;
         out->pts=ADM_NO_PTS;
         out->flags=AVI_KEY_FRAME;
+#endif
         return true;   
 }
 
