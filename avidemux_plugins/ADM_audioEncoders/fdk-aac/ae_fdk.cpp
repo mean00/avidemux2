@@ -279,9 +279,21 @@ int channels=wavheader.channels;
 
     ordered=new float[_chunk*2]; // keep a big margin in case of incomplete processing of the previous one
     ADM_info("[Fdk] Initialized with %d bytes of extra data, framelength=%d\n",_extraSize,pInfo.frameLength);
+    _running=true;
     return true;
 }
+/**
+ * \fn AUDMEncoder_Fdkaac::availableSamplePerChannel
+ * @return 
+ */
+int AUDMEncoder_Fdkaac::availableSamplesPerChannel(void)
+{
+    int incomingSamplesPerChannel=(tmptail-tmphead)/wavheader.channels;
 
+    if(incomingSamplesPerChannel>_chunk/wavheader.channels)
+            incomingSamplesPerChannel=(_chunk/wavheader.channels);   
+    return incomingSamplesPerChannel;
+}
 /**
     \fn encode
 */
@@ -306,10 +318,9 @@ bool	AUDMEncoder_Fdkaac::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
     *len = 0;
     
 _again:
-        int incomingSamplesPerChannel=(tmptail-tmphead)/channels;
-
-        if(incomingSamplesPerChannel>_chunk/channels)
-            incomingSamplesPerChannel=(_chunk/channels);       
+        if(!_running)
+          return false;
+        int incomingSamplesPerChannel=availableSamplesPerChannel();
 
         aacEncInfo(_aacHandle,&pInfo);
         
@@ -319,15 +330,28 @@ _again:
             aprintf("Refill\n");
             if(!refillBuffer(_chunk ))
             {
-                return 0; 
+                    ADM_info("Flush\n");
+                    inDesc.numBufs=-1;
+                    inAudioSize=0;
+                    inArgs.numInSamples=0;
+                    _running=false;
+                    int error=aacEncEncode(_aacHandle,&inDesc,&outDesc,&inArgs,&outArgs);
+                    if(error!=AACENC_OK)
+                    {
+                        ADM_warning("[FDK] Flushing error %d\n",error);
+                        return false;
+                    }
+                    
+                    *len=outArgs.numOutBytes;
+                    *samples=outArgs.numInSamples/channels;
+                    ADM_info("Flushing last packet =%d bytes\n",*len);
+                    return !!(*len);
             }
             ADM_assert(tmptail>=tmphead);            
             goto _again;
           }
         
-        aprintf("State : inBufFillLevel=%d frameLength per channel=%d incomingSamplesPerChannel=%d chunk=%d\n",pInfo.inBufFillLevel,pInfo.frameLength,incomingSamplesPerChannel,_chunk/channels);
-        
-        
+        aprintf("State : inBufFillLevel=%d frameLength per channel=%d incomingSamplesPerChannel=%d chunk=%d\n",pInfo.inBufFillLevel,pInfo.frameLength,incomingSamplesPerChannel,_chunk/channels);                
         
        // Try to encode with whatever is in the buffer
         
