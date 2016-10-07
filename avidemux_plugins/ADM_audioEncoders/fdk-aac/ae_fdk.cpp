@@ -429,6 +429,7 @@ bool configure (CONFcouple **setup)
          PROFILE("HE-AACv2",AOT_AAC_LC),
      };
     uint32_t prof=0;
+#if 0
     diaElemMenu profile(&prof,   QT_TRANSLATE_NOOP("FDK-AAC","_Profile::"), SZT(profileM),profileM);
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(bitrateM),bitrateM);
   
@@ -438,6 +439,12 @@ bool configure (CONFcouple **setup)
     diaElem *elems[]={&profile,&bitrate,&sbr,&afterburner};
     
     if ( diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),4,elems))
+#else
+     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(bitrateM),bitrateM);
+     diaElemToggle afterburner(&(config.afterburner),QT_TRANSLATE_NOOP("FDK-AAC","After burner"));
+     diaElem *elems[]={&bitrate,&afterburner};
+     if ( diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),2,elems))
+#endif        
     {
         if(*setup) delete *setup;
         *setup=NULL;
