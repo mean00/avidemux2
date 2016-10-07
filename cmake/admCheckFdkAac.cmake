@@ -31,5 +31,5 @@ MACRO(checkFdkAAC)
         MESSAGE("")
     ENDIF (NOT FDK_AAC_CHECKED)
 
-    APPEND_SUMMARY_LIST("Audio Decoder" "FDK_AAC" "${FDK_AAC_FOUND}")
+    APPEND_SUMMARY_LIST("Audio Encoder" "FDK_AAC" "${FDK_AAC_FOUND}")
 ENDMACRO(checkFdkAAC)
