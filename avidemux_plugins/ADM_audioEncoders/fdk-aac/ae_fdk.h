@@ -20,6 +20,8 @@
 class AUDMEncoder_Fdkaac : public ADM_AudioEncoder
 {
 protected:
+            bool _running;
+protected:
             AACENC_BufDesc inDesc,outDesc;
             int inAudioId;
             int inAudioSize,inElemSize;
@@ -37,6 +39,7 @@ protected:
          float          *ordered;
          bool           setParam(const char *name, int nameAsInt, int value);
          bool           dumpConfiguration();
+         int            availableSamplesPerChannel(void);
 public:
             bool        initialize(void);
     virtual             ~AUDMEncoder_Fdkaac();
