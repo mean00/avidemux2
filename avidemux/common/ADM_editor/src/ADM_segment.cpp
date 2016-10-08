@@ -619,8 +619,48 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     dump();
     return true;
 }
+/**
+    \fn truncateVideo
+    \brief Remove a part of the video from the given time to the end
+*/
+bool ADM_EditorSegment::truncateVideo(uint64_t from)
+{
+    uint32_t startSeg;
+    uint64_t startOffset;
 
+    ADM_info("Truncating from %" PRIu64" ms\n",from/1000);
+    dump();
+    if(false==convertLinearTimeToSeg(from,&startSeg,&startOffset))
+    {
+        ADM_warning("Cannot get starting point for linear time %" PRIu64" ms\n",from/1000);
+        return false;
+    }
 
+    ADM_info("Start in segment %" PRIu32" at offset :%" PRIu64" ms\n",startSeg,startOffset);
+    ListOfSegments tmp=segments;
+
+    _SEGMENT *first=getSegment(startSeg);
+    // shorten the start segment
+    first->_durationUs=startOffset;
+    // remove following segments
+    int n=segments.size();
+    for(int i=startSeg+1;i<n;i++)
+    {
+        segments.erase(segments.begin()+startSeg+1);
+    }
+    updateStartTime();
+    removeEmptySegments();
+    if(isEmpty())
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","You cannot remove *all* the video\n"));
+        segments=tmp;
+        updateStartTime();
+        return false;
+    }
+    undoSegments.push_back(tmp);
+    dump();
+    return true;
+}
 /**
     \fn dump
     \brief Dump the segment content
