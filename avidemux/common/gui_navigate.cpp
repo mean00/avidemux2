@@ -137,7 +137,7 @@ static int ignore_change=0;
 
       case ACT_Forward2Seconds:
         GUI_SeekByTime(2000000LL);
-	break;
+    break;
 
       case ACT_Forward1Second:
         GUI_SeekByTime(1000000LL);
@@ -153,20 +153,20 @@ static int ignore_change=0;
 
       case ACT_Back1Second:
         GUI_SeekByTime(-1000000LL);
-	break;
+    break;
 
       case ACT_NextFrame:
         GUI_NextFrame();
-	  break;
+      break;
       case ACT_NextKFrame:
         GUI_NextKeyFrame();
-	  break;
+      break;
       case ACT_NextBlackFrame:
         GUI_NextBlackFrame();
-	  break;
+      break;
       case ACT_PrevBlackFrame:
         GUI_PrevBlackFrame();
-	  break;
+      break;
       case ACT_End:
         {
             uint64_t pts=video_body->getLastKeyFramePts();
@@ -189,30 +189,30 @@ static int ignore_change=0;
             break;
 #if 0
       case ACT_GotoTime:
-	  {
-	      uint16_t hh, mm, ss, ms;
+      {
+          uint16_t hh, mm, ss, ms;
 
-	      if (UI_readCurTime(hh, mm, ss, ms))
-		  A_jumpToTime(hh, mm, ss, ms);
-	  }
-	  break;
+          if (UI_readCurTime(hh, mm, ss, ms))
+          A_jumpToTime(hh, mm, ss, ms);
+      }
+      break;
 #endif
       case ACT_GotoTime:
-	  {
+      {
            // Get current time
             uint64_t pts=admPreview::getCurrentPts();
 
-	      uint32_t mm, hh, ss, ms;
+          uint32_t mm, hh, ss, ms;
             ms2time((uint32_t)(pts/1000),&hh,&mm,&ss,&ms);
-	      if (DIA_gotoTime(&hh, &mm, &ss,&ms))
+          if (DIA_gotoTime(&hh, &mm, &ss,&ms))
           {
-		    A_jumpToTime(hh, mm, ss, ms);
+            A_jumpToTime(hh, mm, ss, ms);
           }
-	  }
-	  break;
+      }
+      break;
       default:
-	  ADM_assert(0);
-	  break;
+      ADM_assert(0);
+      break;
       }
 }
 /**
@@ -224,9 +224,9 @@ void GUI_NextFrame(uint32_t frameCount)
     // uint8_t *ptr;
     uint32_t flags;
     if (playing)
-	return;
+    return;
     if (!avifileinfo)
-	return;
+    return;
 
     admPreview::nextPicture();
     GUI_setCurrentFrameAndTime();
@@ -243,9 +243,9 @@ void GUI_NextKeyFrame(void)
 {
 
     if (playing)
-	return;
+    return;
     if (!avifileinfo)
-	return;
+    return;
 
     if (!admPreview::nextKeyFrame())
       {
@@ -264,9 +264,9 @@ void GUI_GoToKFrameTime(uint64_t timeFrame)
 {
 
     if (playing)
-	return;
+    return;
     if (!avifileinfo)
-	return;
+    return;
 
     admPreview::seekToIntraPts(timeFrame);
     admPreview::samePicture();
@@ -311,15 +311,15 @@ void GUI_PreviousKeyFrame(void)
 
 
     if (playing)
-	return;
+    return;
     if (!avifileinfo)
-	return;
+    return;
 
 
     if (!admPreview::previousKeyFrame())
       {
           A_timedError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
-	  return;
+      return;
       }
     GUI_setCurrentFrameAndTime();
     UI_purge();
@@ -337,13 +337,13 @@ uint8_t A_rebuildKeyFrame(void)
 */
 void GUI_PrevFrame(uint32_t frameCount)
 {
-     if (playing)	    return;
-    if (!avifileinfo)	return;
+     if (playing)        return;
+    if (!avifileinfo)    return;
 
     if (!admPreview::previousPicture())
       {
-//		We're probably at the beginning of the file ...
-//            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),	QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
+//        We're probably at the beginning of the file ...
+//            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
             return;
       }
     GUI_setCurrentFrameAndTime();
@@ -354,10 +354,10 @@ void GUI_PrevFrame(uint32_t frameCount)
       \brief read an average value of jog
 */
 #define NB_JOG_READ           3
-#define JOG_READ_PERIOD_US    5*1000	// 5ms
+#define JOG_READ_PERIOD_US    5*1000    // 5ms
 #define JOG_THRESH1           40
 #define JOG_THRESH2           80
-#define JOG_THRESH1_PERIOD    100*1000	// us
+#define JOG_THRESH1_PERIOD    100*1000    // us
 #define JOG_THRESH2_PERIOD    40*1000
 #define JOG_THRESH3_PERIOD    500
 /**
@@ -369,11 +369,11 @@ uint32_t A_jogRead(void)
     int32_t sum = 0, v;
     for (int i = 0; i < NB_JOG_READ; i++)
       {
-	  v = UI_readJog();
-	  if (abs(v) < 10)
-	      v = 0;
-	  sum += v;
-	  ADM_usleep(JOG_READ_PERIOD_US);
+      v = UI_readJog();
+      if (abs(v) < 10)
+          v = 0;
+      sum += v;
+      ADM_usleep(JOG_READ_PERIOD_US);
       }
     return sum / NB_JOG_READ;
 }
@@ -389,30 +389,30 @@ void A_jog(void)
     uint32_t slip;
     static int jog = 0;
     if (jog)
-	return;
+    return;
     jog++;
     while ((r = A_jogRead()))
       {
-	  a = abs(r);
-	  printf("%d \n", r);
-	  if (a < JOG_THRESH1)
-	      slip = JOG_THRESH1_PERIOD;
-	  else if (a < JOG_THRESH2)
-	      slip = JOG_THRESH2_PERIOD;
-	  else
-	      slip = JOG_THRESH3_PERIOD;
+      a = abs(r);
+      printf("%d \n", r);
+      if (a < JOG_THRESH1)
+          slip = JOG_THRESH1_PERIOD;
+      else if (a < JOG_THRESH2)
+          slip = JOG_THRESH2_PERIOD;
+      else
+          slip = JOG_THRESH3_PERIOD;
 
-	  if (r > 0)
-	      GUI_NextKeyFrame();
-	  else
-	      GUI_PreviousKeyFrame();
-	  UI_purge();
-	  for (int i = 0; i < slip / REFRESH; i++)
-	    {
-		UI_purge();
-		ADM_usleep(REFRESH);
-		UI_purge();
-	    }
+      if (r > 0)
+          GUI_NextKeyFrame();
+      else
+          GUI_PreviousKeyFrame();
+      UI_purge();
+      for (int i = 0; i < slip / REFRESH; i++)
+        {
+        UI_purge();
+        ADM_usleep(REFRESH);
+        UI_purge();
+        }
       }
     jog--;
 }
@@ -510,7 +510,7 @@ void A_timedError(const char *s)
 {
     if(NaggingCountDown.done()) // still running, do not nag
     {
-	  GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+      GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
     }
     NaggingCountDown.reset();
 }
