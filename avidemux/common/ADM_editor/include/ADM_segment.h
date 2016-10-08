@@ -189,6 +189,7 @@ public:
             bool        isKeyFrameByTime(uint32_t refVideo,uint64_t seekTime);
 
             bool        removeChunk(uint64_t from, uint64_t to);
+            bool        truncateVideo(uint64_t from);
             bool        dtsFromPts(uint32_t refVideo,uint64_t pts,uint64_t *dts);
 
             bool        LinearToRefTime(int segNo,uint64_t linear,uint64_t *refTime);
