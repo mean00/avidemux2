@@ -91,10 +91,31 @@ static int ignore_change=0;
       case ACT_GotoMarkB:
             {
                 uint64_t pts;
-                if(action==ACT_GotoMarkA) pts=video_body->getMarkerAPts();
-                        else  pts=video_body->getMarkerBPts();
-                GUI_GoToTime(pts);
-                 
+                if(action==ACT_GotoMarkA) 
+                        pts=video_body->getMarkerAPts();
+                else  
+                        pts=video_body->getMarkerBPts();
+                if(false==video_body->goToTimeVideo(pts))
+                {
+                    if(action==ACT_GotoMarkA)
+                    {
+                        ADM_warning("Go to Marker A: Seek to time %s ms failed\n",ADM_us2plain(pts));
+                    }else // PTS returned by getMarkerBPts() may be beyond the last frame.
+                          // Go to the last frame then.
+                    {
+                        pts=video_body->getLastKeyFramePts();
+                        if(pts==ADM_NO_PTS) 
+                                break;            
+                        admPreview::deferDisplay(1);
+                        GUI_GoToTime(pts);
+                        while(admPreview::nextPicture())
+                        {
+                        }
+                        admPreview::deferDisplay(0);
+                    }
+                }
+                admPreview::samePicture();
+                GUI_setCurrentFrameAndTime();
             }
             break;
 
