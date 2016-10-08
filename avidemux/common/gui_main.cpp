@@ -819,7 +819,7 @@ int A_appendVideo (const char *name)
     }
 
   ReSync ();
-  A_ResetMarkers();
+  GUI_setCurrentFrameAndTime();
 
   return 1;
 }
