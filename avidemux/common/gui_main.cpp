@@ -71,6 +71,7 @@ extern int     GUI_handleVFilter (void);
        void    GUI_avsProxy(void);
        uint8_t GUI_close(void);
 extern bool    GUI_GoToTime(uint64_t time);
+extern bool GUI_infiniteForward(uint64_t pts);
 //***********************************
 //******** DIA Function**************
 //***********************************
@@ -566,12 +567,7 @@ void HandleAction (Action action)
             uint64_t pts=video_body->getLastKeyFramePts();
             if(pts!=ADM_NO_PTS && b>=pts) // don't waste time if B is before the last keyframe
             {
-                admPreview::deferDisplay(1);
-                GUI_GoToTime(pts);
-                while(admPreview::nextPicture())
-                {
-                }
-                admPreview::deferDisplay(0);
+                GUI_infiniteForward(pts);
                 uint64_t lastFramePts=video_body->getCurrentFramePts();
                 if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
             }

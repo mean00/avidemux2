@@ -39,6 +39,7 @@ static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again 
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_GoToTime(uint64_t time);
+bool   GUI_infiniteForward(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
 static void A_timedError(const char *s);
 uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
@@ -105,13 +106,8 @@ static int ignore_change=0;
                     {
                         pts=video_body->getLastKeyFramePts();
                         if(pts==ADM_NO_PTS) 
-                                break;            
-                        admPreview::deferDisplay(1);
-                        GUI_GoToTime(pts);
-                        while(admPreview::nextPicture())
-                        {
-                        }
-                        admPreview::deferDisplay(0);
+                                break;     
+                        GUI_infiniteForward(pts);
                     }
                 }
                 admPreview::samePicture();
@@ -170,13 +166,8 @@ static int ignore_change=0;
       case ACT_End:
         {
             uint64_t pts=video_body->getLastKeyFramePts();
-            if(pts==ADM_NO_PTS) break;            
-            admPreview::deferDisplay(1);
-            GUI_GoToTime(pts);            
-            while(admPreview::nextPicture())
-            {
-            }
-            admPreview::deferDisplay(0);
+            if(pts==ADM_NO_PTS) break;    
+            GUI_infiniteForward(pts);
             admPreview::samePicture();
             GUI_setCurrentFrameAndTime();
         }
@@ -501,6 +492,22 @@ bool GUI_GoToTime(uint64_t time)
     GUI_setCurrentFrameAndTime();
     return true;
 }   
+/**
+ * \brief go forward as much as possible from pts
+ * @param pts
+ * @return 
+ */
+bool GUI_infiniteForward(uint64_t pts)
+{
+    admPreview::deferDisplay(1);
+    GUI_GoToTime(pts);
+    while(admPreview::nextPicture())
+    {
+    }
+    admPreview::deferDisplay(0);
+    return true;
+}
+
 /**
  * \fn A_timedError
  * \brief display error unless the last error is too recent

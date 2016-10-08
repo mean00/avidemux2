@@ -52,6 +52,9 @@ static ADMImage             *resized=NULL;
 static ADMImageResizer      *resizer=NULL;
 
 
+extern bool GUI_GoToTime(uint64_t time); // hack, might be a circular dep
+
+
 /*************************************/
 ADMImage *admPreview::rdrImage=NULL; /* Unprocessed image */
 
@@ -272,5 +275,4 @@ void admPreview::getFrameFlags(uint32_t *flags, uint32_t *quantiser)
 	*flags = rdrImage->flags;
 	*quantiser = rdrImage->_Qp;
 }
-
 // EOF
