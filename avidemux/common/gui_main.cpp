@@ -560,7 +560,26 @@ void HandleAction (Action action)
                 video_body->copyToClipBoard(a,b);
             }
 
-            if(false==video_body->remove(a,b))
+            // Special case of B being at or beyond the last frame
+            bool lastFrame=false;
+            bool result=false;
+            uint64_t pts=video_body->getLastKeyFramePts();
+            if(pts!=ADM_NO_PTS && b>=pts) // don't waste time if B is before the last keyframe
+            {
+                admPreview::deferDisplay(1);
+                GUI_GoToTime(pts);
+                while(admPreview::nextPicture())
+                {
+                }
+                admPreview::deferDisplay(0);
+                uint64_t lastFramePts=video_body->getCurrentFramePts();
+                if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
+            }
+            if(lastFrame)
+                result= video_body->truncate(a);
+            else
+                result= video_body->remove(a,b);
+            if(!result)
             {
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
