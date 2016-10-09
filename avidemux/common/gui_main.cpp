@@ -160,6 +160,11 @@ void HandleAction (Action action)
         A_saveDefaultSettings();
         return;
     }
+    if(action==ACT_LoadDefault)
+    {
+        A_loadDefaultSettings();
+        return;
+    }
     if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
     {
         int engineIndex = (action - ACT_SCRIPT_ENGINE_FIRST) / 3;
