@@ -89,6 +89,7 @@ cpyLib libopus.so.0
 # Audio device
 cpyX86 libpulse-simple.so.0
 cpyX86 libpulse.so.0
+cpyX86 libfdk-aac.so.0
 cp -Rap /usr/lib/x86_64-linux-gnu/pulseaudio ../lib/ || fail pulsecommon_folder
 cp -t ../lib /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-2.0.so || fail pulsecommon
  
