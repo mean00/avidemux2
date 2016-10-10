@@ -981,7 +981,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+10"/>
         <source>&amp;Recent</source>
-        <translation>Récent</translation>
+        <translation>&amp;Récent</translation>
     </message>
     <message>
         <location line="+41"/>
