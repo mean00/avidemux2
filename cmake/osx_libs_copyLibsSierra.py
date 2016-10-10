@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtNetwork']
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtNetwork', 'QtDBus']
 
 #
 #
@@ -131,6 +131,7 @@ def copyQtDeps(components,libFolder):
                        copied+=1
     # copy plugins deps too
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
+    copyFiles(qtPluginFolder+'/platforms',libFolder)
     return copied
 ##
 def changeSymbol(target,oldName,newName):
@@ -265,7 +266,7 @@ def copyQtFiles(targetFolder):
         for q in qts:
                print q
                if(os.path.exists(targetFolder+'/'+q+'.framework')):
-                               log(q+" already copied")
+                               log(targetFolder+" "+q+" already copied")
                else:
                    log("Copying"+q+' to '+targetFolder)
                    src='/opt/local/libexec/qt5/lib/'+q+'.framework'

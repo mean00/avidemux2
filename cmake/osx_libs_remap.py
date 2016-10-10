@@ -294,7 +294,8 @@ def copyQtFiles(targetFolder):
 print "Adjusting dependencies"
 changeBinLinkPath(binFolder)
 changeLibLinkPath(libFolder)
-changeQtPluginLinkPath(qtPluginFolder)
+changeQtPluginLinkPath(qtPluginFolder+"/platforms")
+changeQtPluginLinkPath(qtPluginFolder+"/imageformats")
 subFolders=["audioDecoder",    "audioEncoders",   "autoScripts",     "demuxers",        "muxers",          "scriptEngines",   "videoEncoders",   "videoFilters"]
 for s in subFolders:
         relFolder="ADM_plugins6/"+s
