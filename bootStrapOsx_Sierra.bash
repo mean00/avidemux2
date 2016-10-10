@@ -202,7 +202,9 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
 fi
 echo "** Copying Qt nib files**"
 cp -Rap $MYQT/qt_menu.nib   $PREFIX/bin/
+mkdir -p $PREFIX/Frameworks
 echo "**  Copying libraries **"
+
 python $TOP/cmake/osx_libs_copyLibsSierra.py
 echo "**  Remapping libraries **"
 python $TOP/cmake/osx_libs_remap.py
