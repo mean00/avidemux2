@@ -204,7 +204,9 @@ echo "** Copying Qt nib files**"
 cp -Rap $MYQT/qt_menu.nib   $PREFIX/bin/
 mkdir -p $PREFIX/Frameworks
 echo "**  Copying libraries **"
-
+echo "    Overriding icu libraries "
+cp $HOME/lib_override/* $PREFIX/lib/
+echo "** Deploy **"
 python $TOP/cmake/osx_libs_copyLibsSierra.py
 echo "**  Remapping libraries **"
 python $TOP/cmake/osx_libs_remap.py
