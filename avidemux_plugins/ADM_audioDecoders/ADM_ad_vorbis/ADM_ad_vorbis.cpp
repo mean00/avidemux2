@@ -30,6 +30,7 @@
 #include "ADM_default.h"
 #include "ADM_ad_plugin.h"
 #include "ADM_ad_vorbis.h"
+#include "ADM_coreUtils.h"
 
 #define STRUCT ((oggVorbis *)_contextVoid)
 
@@ -73,7 +74,12 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	_init=0;
 
  }
-
+ static void printPacket(const char *name, ogg_packet *pack)
+ {
+     ADM_warning(" sending %s packet of size %d\n",name,pack->bytes);
+     mixDump(pack->packet,pack->bytes);
+     
+ }
  ADM_vorbis::ADM_vorbis(uint32_t fcc, WAVHeader *info, uint32_t extra, uint8_t *extraData)
  	: ADM_Audiocodec(fcc,*info)
  {
@@ -85,7 +91,7 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
  uint32_t *ptr;
 
  	_init=0;
- 	printf("Trying to initialize vorbis codec with %d bytes of header data\n",(int)extra);
+ 	ADM_info("Trying to initialize vorbis codec with %d bytes of header data\n",(int)extra);
 
 	vrbis=new oggVorbis;
  	_contextVoid=(void *)vrbis;
@@ -106,13 +112,16 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	cmt=hdr+size_hdr;
 	code=cmt+size_cmt;
 
+        
+        
  	// Feed header passed as extraData
 	packet.bytes=size_hdr;
 	packet.packet=hdr;
 	packet.b_o_s=1; // yes, it is a new stream
+        printPacket("1st packet",&packet);
 	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
 	{
-		printf("Mmm something bad happened , cannot init 1st packet\n");
+		ADM_warning("Mmm something bad happened , cannot init 1st packet\n");
 		return;
 	}
 	// update some info in header this is the only place to get them
@@ -125,31 +134,33 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 
 	if(!info->byterate)
 	{
-		printf("Mmm, no nominal bitrate...\n");
+		ADM_warning("Mmm, no nominal bitrate...\n");
 		info->byterate=16000;
 	}
 	// now unpack comment
 	packet.bytes=size_cmt;
 	packet.packet=cmt;
 	packet.b_o_s=0; // Not new
+        printPacket("2nd packet",&packet);
 	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
 	{
-		printf("Mmm something bad happened , cannot init 2st packet\n");
+		ADM_warning("Mmm something bad happened , cannot init 2st packet\n");
 		return;
 	}
 	// and codebook
 	packet.bytes=size_code;
 	packet.packet=code;
 	packet.b_o_s=0; // Not new
+        printPacket("3rd packet",&packet);
 	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
 	{
-		printf("Mmm something bad happened , cannot init 3st packet\n");
+		ADM_warning("Mmm something bad happened , cannot init 3st packet\n");
 		return;
 	}
 	vorbis_comment_clear(&comment);
 	vorbis_synthesis_init(&STRUCT->vdsp,&STRUCT->vinfo);
 	vorbis_block_init(&STRUCT->vdsp,&STRUCT->vblock);
-	printf("Vorbis init successfull\n");
+	ADM_info("Vorbis init successfull\n");
 	STRUCT->ampscale=1;
 	_init=1;
   CHANNEL_TYPE *p_ch_type = channelMapping;
