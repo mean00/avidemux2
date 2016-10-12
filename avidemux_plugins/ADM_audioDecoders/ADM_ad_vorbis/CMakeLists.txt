@@ -9,7 +9,7 @@ IF(USE_LIBVORBIS)
 
 	ADD_AUDIO_DECODER(ADM_ad_vorbis ${ADM_ad_vorbis_SRCS})
 
-        TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${LIBVORBIS_LIBRARY_DIR})
+        TARGET_LINK_LIBRARIES(ADM_ad_vorbis ${LIBVORBIS_LIBRARY_DIR} ADM_coreUtils6)
 
         include_directories(${LIBVORBIS_INCLUDE_DIR})
 
