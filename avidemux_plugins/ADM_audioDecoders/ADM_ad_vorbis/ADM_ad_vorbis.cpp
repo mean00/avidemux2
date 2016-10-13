@@ -74,12 +74,54 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	_init=0;
 
  }
+ /**
+  * 
+  * @param name
+  * @param pack
+  */
  static void printPacket(const char *name, ogg_packet *pack)
  {
      ADM_warning(" sending %s packet of size %d\n",name,pack->bytes);
      mixDump(pack->packet,pack->bytes);
+     ADM_warning("\n");
+ }
+ /**
+  * 
+  * @param name
+  * @param error
+  */
+ static void printError(const char *name, int error)
+ {
+     ADM_warning(" Error %d when processing %s\n",error,name);
+     
+#define VERR(x) case x: ADM_warning(#x"\n")     ;break;
+     
+     switch(error)
+     {
+VERR(OV_EREAD)
+VERR(OV_EFAULT     )
+VERR(OV_EIMPL      )
+VERR(OV_EINVAL     )
+VERR(OV_ENOTVORBIS )
+VERR(OV_EBADHEADER )
+VERR(OV_EVERSION   )
+VERR(OV_ENOTAUDIO  )
+VERR(OV_EBADPACKET )
+VERR(OV_EBADLINK   )
+VERR(OV_ENOSEEK    )
+
+         default: ADM_warning("Unknown error\n");
+                  break;
+     }
      
  }
+ /**
+  * 
+  * @param fcc
+  * @param info
+  * @param extra
+  * @param extraData
+  */
  ADM_vorbis::ADM_vorbis(uint32_t fcc, WAVHeader *info, uint32_t extra, uint8_t *extraData)
  	: ADM_Audiocodec(fcc,*info)
  {
@@ -89,7 +131,8 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
  uint8_t *hdr,*cmt,*code;
  uint32_t size_hdr,size_cmt, size_code;
  uint32_t *ptr;
-
+ int error;
+#define MANAGE_ERROR(st,er) {if(er<0) {printError(st,er); return ;}}
  	_init=0;
  	ADM_info("Trying to initialize vorbis codec with %d bytes of header data\n",(int)extra);
 
@@ -119,11 +162,8 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	packet.packet=hdr;
 	packet.b_o_s=1; // yes, it is a new stream
         printPacket("1st packet",&packet);
-	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
-	{
-		ADM_warning("Mmm something bad happened , cannot init 1st packet\n");
-		return;
-	}
+	error=vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet);
+        MANAGE_ERROR("1st packet",error);
 	// update some info in header this is the only place to get them
 	// especially frequency.
 /*
@@ -142,21 +182,19 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,						// Class
 	packet.packet=cmt;
 	packet.b_o_s=0; // Not new
         printPacket("2nd packet",&packet);
-	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
-	{
-		ADM_warning("Mmm something bad happened , cannot init 2st packet\n");
-		return;
-	}
+        
+        error=vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet);        
+        MANAGE_ERROR("2nd packet",error);
+
 	// and codebook
 	packet.bytes=size_code;
 	packet.packet=code;
 	packet.b_o_s=0; // Not new
         printPacket("3rd packet",&packet);
-	if(0>vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet))
-	{
-		ADM_warning("Mmm something bad happened , cannot init 3st packet\n");
-		return;
-	}
+        
+	error=vorbis_synthesis_headerin(&STRUCT->vinfo,&comment,&packet);
+        MANAGE_ERROR("3rd packet",error);
+        
 	vorbis_comment_clear(&comment);
 	vorbis_synthesis_init(&STRUCT->vdsp,&STRUCT->vinfo);
 	vorbis_block_init(&STRUCT->vdsp,&STRUCT->vblock);
