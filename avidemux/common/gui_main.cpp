@@ -682,7 +682,11 @@ int A_openVideo (const char *name)
         res = video_body->addFile(longname);
 
     //  DIA_StopBusy ();
-    UI_reset();
+    bool loadDefault;
+    if(!prefs->get(RESET_ENCODER_ON_VIDEO_LOAD, &loadDefault)) loadDefault=false;
+    // if true, discard changes in output config on video load
+    if(loadDefault)
+        A_loadDefaultSettings();
     // forget last project file
     video_body->setProjectName("");
 

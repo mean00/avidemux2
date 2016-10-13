@@ -60,5 +60,6 @@ static optionDesc myOptions[]={
 { AVISYNTH_AVISYNTH_ALWAYS_ASK,"avisynth.avisynth_always_ask"         ,ADM_param_bool    	,"0",	0,	1},
 { AVISYNTH_AVISYNTH_DEFAULTPORT,"avisynth.avisynth_defaultport"       ,ADM_param_uint32_t	,"9999",	1024,	65535},
 { AVISYNTH_AVISYNTH_LOCALPORT,"avisynth.avisynth_localport"           ,ADM_param_uint32_t	,"0",	1024,	65535},
+{ RESET_ENCODER_ON_VIDEO_LOAD,"reset_encoder_on_video_load"           ,ADM_param_bool    	,"0",	0,	1},
 };
 
