@@ -830,7 +830,7 @@ int A_appendVideo (const char *name)
     ADM_info("Start is %s, marker A is %s\n",ADM_us2plain(pts),ADM_us2plain(markerA));
     ADM_info("End is %s, marker B is %s\n",ADM_us2plain(theEnd),ADM_us2plain(markerB));
     
-    if(theEnd!=markerB && markerA!=pts)
+    if(theEnd!=markerB && (markerA!=pts && !markerA))
     {
         markerChanged=true;
     }
