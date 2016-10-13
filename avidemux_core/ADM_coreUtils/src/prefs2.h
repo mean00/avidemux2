@@ -69,4 +69,5 @@ struct  {
 	uint32_t avisynth_defaultport;
 	uint32_t avisynth_localport;
 }avisynth;
+bool reset_encoder_on_video_load;
 }my_prefs_struct;
