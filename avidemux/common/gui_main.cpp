@@ -817,31 +817,47 @@ void  updateLoaded (bool resetMarker)
 //___________________________________________
 int A_appendVideo (const char *name)
 {
-
-
-  if (playing)
-    return 0;
-//  DIA_StartBusy ();
-  if (!video_body->addFile (name))
+    bool markerChanged=false;
+    // Check if A or B was changed
+    uint64_t pts=0,dts;
+    uint32_t flags;
+    uint64_t markerA=video_body->getMarkerAPts();
+    uint64_t markerB=video_body->getMarkerBPts();
+    video_body->getVideoPtsDts(0,&flags,&pts,&dts);
+    uint64_t theEnd=video_body->getVideoDuration();
+    
+    
+    ADM_info("Start is %s, marker A is %s\n",ADM_us2plain(pts),ADM_us2plain(markerA));
+    ADM_info("End is %s, marker B is %s\n",ADM_us2plain(theEnd),ADM_us2plain(markerB));
+    
+    if(theEnd!=markerB && markerA!=pts)
     {
-//      DIA_StopBusy ();
+        markerChanged=true;
+    }
+
+    if (playing)
+        return 0;
+    if (!video_body->addFile (name))
+    {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
       return 0;
     }
-//  DIA_StopBusy ();
-
-
-//  video_body->dumpSeg ();
-  if (!video_body->updateVideoInfo (avifileinfo))
+    if (!video_body->updateVideoInfo (avifileinfo))
     {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
       return 0;
     }
 
-  ReSync ();
-  GUI_setCurrentFrameAndTime();
 
-  return 1;
+    if(!markerChanged)
+    {        
+        video_body->setMarkerBPts(video_body->getVideoDuration() );
+        ADM_info("Extending marker B to the end (%s)\n",ADM_us2plain(video_body->getMarkerBPts()));
+    }  
+    ReSync();
+    GUI_setCurrentFrameAndTime();
+    UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
+    return 1;
 }
 
 //
