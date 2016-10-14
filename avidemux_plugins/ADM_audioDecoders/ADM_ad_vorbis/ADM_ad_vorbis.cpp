@@ -151,7 +151,8 @@ VERR(OV_ENOSEEK    )
 	size_cmt=*ptr++;
 	size_code=*ptr++;
 
-	hdr=extraData+3*sizeof(uint32_t);
+	hdr=extraData;
+        hdr+=3*sizeof(uint32_t);
 	cmt=hdr+size_hdr;
 	code=cmt+size_cmt;
 
