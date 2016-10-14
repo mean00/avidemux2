@@ -706,6 +706,25 @@ uint8_t  mkvHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
                 *data=_tracks[0].extraData;
                 return 1;
 }
+/**
+ * 
+ * @param hd
+ * @return 
+ */
+static int xypheLacingRead(uint8_t **hd)
+{
+      int x=0; 
+      uint8_t *p=*hd;
+      while(*p==0xff)  
+      { 
+        x+=0xff; 
+        p++; 
+      } 
+      x+=*p;
+      p++;
+      *hd=p;
+      return x;
+}
 
 /**
     \fn mkreformatVorbisHeader
@@ -720,46 +739,48 @@ Bytes 2..n: lengths of the first '#p' packets, coded in Xiph-style lacing. The l
 Bytes n+1..: The Vorbis identification header, followed by the Vorbis comment header followed by the codec setup header.
   */
   uint8_t *oldata=trk->extraData;
-  uint32_t oldlen=trk->extraDataLen;
-  uint32_t len1,len2,len3;
+  int oldlen=trk->extraDataLen;
+  int len1,len2,len3;
   uint8_t *head;
-      if(*oldata!=2) {printf("[MKV] weird audio, expect problems\n");return 0;}
+      if(*oldata!=2) // 3 packets -1 = 2
+      {
+          ADM_warning("[MKV] weird vorbis audio, expect problems\n");
+          return 0;
+      }
       // First packet length
       head=oldata+1;
-#define READ_LEN(x) \
-      x=0; \
-      while(*head==0xff)  \
-      { \
-        x+=0xff; \
-        head++; \
-      } \
-      x+=*head++;
 
-      READ_LEN(len1);
-      READ_LEN(len2);
+      len1=xypheLacingRead(&head);
+      len2=xypheLacingRead(&head);      
       len3=oldata+oldlen-head;
       if(len3<=len1+len2)
       {
-        printf("Error in vorbis header, len3 too small %u %u / %u\n",len1,len2,len3);
+        ADM_warning("Error in vorbis header, len3 too small %d %d / %d\n",len1,len2,len3);
         return 0;
       }
       len3-=(len1+len2);
-      printf("Found packet len : %u %u %u, total size %u\n",len1,len2,len3,oldlen);
+      ADM_info("Found packets len : %d- %d- %d, total size %d\n",len1,len2,len3,oldlen);
       // Now build our own packet...
-      uint8_t *nwdata=new uint8_t[len1+len2+len3+sizeof(uint32_t)*3];
-      uint32_t nwlen=len1+len2+len3+sizeof(uint32_t)*3;
-      uint8_t *cp=nwdata+sizeof(uint32_t)*3;
+      // Allocate uint32 for alignment purpose
+      
+      uint32_t *buffer=new uint32_t[3+(4+len1+len2+len3)/4];        
+      uint32_t nwlen=len1+len2+len3+sizeof(uint32_t)*3; // in bytes
+      
+      uint8_t *cp=(uint8_t *)(buffer+3); // data part
       memcpy(cp,head,len1);
-      memcpy(cp+len1,head+len1,len2);
-      memcpy(cp+len1+len2,head+len1+len2,len3);
-
-      uint32_t *h=(uint32_t *)nwdata;
-      h[0]=len1;
-      h[1]=len2;
-      h[2]=len3;
+      cp+=len1;head+=len1;
+      
+      memcpy(cp,head,len2);
+      cp+=len2;head+=len2;
+      
+      memcpy(cp,head,len3);
+      
+      buffer[0]=len1;
+      buffer[1]=len2;
+      buffer[2]=len3;
       // Destroy old datas
       delete [] oldata;
-      trk->extraData=nwdata;
+      trk->extraData=(uint8_t *)(buffer);
       trk->extraDataLen=nwlen;
   return 1;
 }
