@@ -751,9 +751,12 @@ Bytes n+1..: The Vorbis identification header, followed by the Vorbis comment he
       head=oldata+1;
 
       len1=xypheLacingRead(&head);
-      len2=xypheLacingRead(&head);      
-      len3=oldata+oldlen-head;
-      if(len3<=len1+len2)
+      len2=xypheLacingRead(&head);   
+      
+      int consumed=head-oldata;      
+      len3=oldlen-consumed; // left in extradata
+      
+      if(len3<0)
       {
         ADM_warning("Error in vorbis header, len3 too small %d %d / %d\n",len1,len2,len3);
         return 0;
