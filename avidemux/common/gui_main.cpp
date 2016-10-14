@@ -823,20 +823,26 @@ int A_appendVideo (const char *name)
 {
     bool markerChanged=false;
     // Check if A or B was changed
-    uint64_t pts=0,dts;
+    uint64_t beginPts=0,beginDts;
     uint32_t flags;
     uint64_t markerA=video_body->getMarkerAPts();
     uint64_t markerB=video_body->getMarkerBPts();
-    video_body->getVideoPtsDts(0,&flags,&pts,&dts);
+    video_body->getVideoPtsDts(0,&flags,&beginPts,&beginDts);
     uint64_t theEnd=video_body->getVideoDuration();
     
     
-    ADM_info("Start is %s, marker A is %s\n",ADM_us2plain(pts),ADM_us2plain(markerA));
+    ADM_info("Start is %s, marker A is %s\n",ADM_us2plain(beginPts),ADM_us2plain(markerA));
     ADM_info("End is %s, marker B is %s\n",ADM_us2plain(theEnd),ADM_us2plain(markerB));
     
-    if(theEnd!=markerB && (markerA!=pts && !markerA))
+    if(theEnd!=markerB )
     {
         markerChanged=true;
+    }
+    // If markerA is zero, it means beginning of the video, no need to check further
+    if( markerA)
+    {
+        if(markerA!=beginPts) // moved ?
+                markerChanged=true;
     }
 
     if (playing)
