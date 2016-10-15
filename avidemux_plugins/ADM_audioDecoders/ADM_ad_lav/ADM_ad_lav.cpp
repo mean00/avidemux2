@@ -60,8 +60,52 @@ public:
     virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
 
 };
-
-
+/**
+ * 
+ * @param l
+ * @param src
+ * @param dst
+ * @return 
+ */
+static int xiphEncode(int l, uint8_t *src, uint8_t *dstOrg)
+{
+    int outLen=1;
+    int length[3];
+    uint8_t *dst=dstOrg;
+    ADM_info("insize=%d\n",l);
+    *dst++=0x2;
+    for(int i=0;i<3;i++)
+    {
+        length[i]=(src[3]<<24)+(src[2]<<16)+(src[1]<<8)+src[0];
+        src+=4;
+        printf("Packet %d size %d\n",i,length[i]);
+        // encode length
+        if(i!=2)
+        {
+            int encode=length[i];
+            while(encode>=255) 
+            {
+                *dst++=0xff;
+                encode-=0xff;
+            }
+            *dst++=encode;
+        }
+    }
+    // now copy blocks
+    for(int i=0;i<3;i++)
+    {
+        int block=length[i];
+        memcpy(dst,src,block);
+        src+=block;
+        dst+=block;
+    }
+    int outSize= (int)(dst-dstOrg);
+    ADM_info("OutSize=%d\n",outSize);
+    return outSize;
+    
+    
+    
+}
 
 
 // Supported formats + declare our plugin
@@ -81,6 +125,7 @@ static  ad_supportedFormat Formats[]={
         {WAV_AAC,AD_LOW_QUAL},   // libfaad preferred ???
         {0x706D,AD_LOW_QUAL},
         {WAV_EAC3,AD_MEDIUM_QUAL},
+        {WAV_OGG_VORBIS,AD_HIGH_QUAL},
 };
 
 DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
@@ -156,6 +201,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         codecID = AV_CODEC_ID_EAC3;
         _blockalign = 1;
         break;
+      case WAV_OGG_VORBIS:
+        codecID = AV_CODEC_ID_VORBIS;
+        _blockalign = 1;
+        break;
       case WAV_AAC:
       case 0x706D:
         codecID = AV_CODEC_ID_AAC;
@@ -179,8 +228,20 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     _context->bit_rate = info->byterate*8;
     _context->sample_fmt=AV_SAMPLE_FMT_FLT;
     _context->request_sample_fmt=AV_SAMPLE_FMT_FLT;
-    _context->extradata=(uint8_t *)d;
-    _context->extradata_size=(int)l;    
+    
+    if(fourcc==WAV_OGG_VORBIS)
+    {
+        // Need to translate from adm to xiph
+        int xiphLen=(int)l+(l/255)+4+5;
+        uint8_t *xiph=new uint8_t[xiphLen];
+        xiphLen=xiphEncode(l,d,xiph);
+        _context->extradata=xiph;
+        _context->extradata_size=xiphLen;
+    }else
+    {
+        _context->extradata=(uint8_t *)d;
+        _context->extradata_size=(int)l;    
+    }
 
     if (!_blockalign) 
     {
