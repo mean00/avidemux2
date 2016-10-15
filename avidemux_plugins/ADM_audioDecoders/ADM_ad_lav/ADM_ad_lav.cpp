@@ -61,7 +61,8 @@ public:
 
 };
 /**
- * 
+ * \fn xiphEncode
+ * \brief convert adm extradata to xiph extradata
  * @param l
  * @param src
  * @param dst
