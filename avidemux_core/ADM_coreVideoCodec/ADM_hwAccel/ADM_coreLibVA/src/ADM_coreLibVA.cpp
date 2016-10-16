@@ -46,6 +46,7 @@ namespace ADM_coreLibVA
  VADisplay              display;
  VAConfigID             configH264;
  VAConfigID             configH265;
+ VAConfigID             configH26510Bits;
  VAConfigID             configVC1;
  VAConfigID             configVP9;
  VAImageFormat          imageFormatNV12;
@@ -301,6 +302,9 @@ bool admLibVA::setupConfig(void)
     checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");
     checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");
     checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,"VC1");
+    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits ,"H265 10Bits");
+    
+    
 #ifdef ADM_VA_HAS_VP9
     checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,"VP9");
 #endif
@@ -380,6 +384,7 @@ bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
     {
        case VAProfileH264High: cid=ADM_coreLibVA::configH264;break;
        case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
+        case VAProfileHEVCMain10: cid=ADM_coreLibVA::configH26510Bits;break;
        case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
 #ifdef ADM_VA_HAS_VP9
        case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
@@ -471,6 +476,7 @@ bool        admLibVA::supported(VAProfile profile)
     {
         SUPSUP(VAProfileH264High,configH264)
         SUPSUP(VAProfileHEVCMain,configH265)
+        SUPSUP(VAProfileHEVCMain10,configH26510Bits)
         SUPSUP(VAProfileVC1Advanced,configVC1)
 #ifdef ADM_VA_HAS_VP9
         SUPSUP(VAProfileVP9Profile3,configVP9)
@@ -499,6 +505,7 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
     {
        case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
        case VAProfileHEVCMain:    cid=ADM_coreLibVA::configH265;break;
+       case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;       
        case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
 #ifdef ADM_VA_HAS_VP9
        case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;       
