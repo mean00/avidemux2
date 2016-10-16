@@ -166,8 +166,16 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 	displayW = w;
 	displayH = h;
 
-    videoWindow->setADMSize(w,h);    
-    QuiMainWindows->resize(w+218,h+100);
+    // Resizing a maximized window results in not refreshed areas where widgets 
+    // in the maximized state were drawn with Qt5 on Linux, try to avoid this.
+    // TODO: Resize the main window on restore event.
+    if(!QuiMainWindows->isMaximized())
+    {
+        uint16_t extra_w=240; // take into account the width of the codec widget in px + some margin
+        uint16_t extra_h=240; // take into account the height of the navigation widget in px + some margin
+        QuiMainWindows->resize(w+extra_w,h+extra_h);
+    }
+    videoWindow->setADMSize(w,h);
 #if 0
 	
 	UI_purge();
