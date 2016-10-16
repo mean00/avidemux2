@@ -489,8 +489,13 @@ bool        admLibVA::supported(VAProfile profile)
         SUPSUP(VAProfileVP9Profile3,configVP9)
 #endif
         default:
+            ADM_info("This profile is not supported by libva\n");
             break;
     } 
+    ADM_info("Unknown profile (%d)\n",(int)profile);
+#ifdef LIBVA_VP9_DEC
+    ADM_info("Compiled with vp9 support, library says %d\n",ADM_coreLibVA::configVP9);
+#endif    
     return false;
 }
 
