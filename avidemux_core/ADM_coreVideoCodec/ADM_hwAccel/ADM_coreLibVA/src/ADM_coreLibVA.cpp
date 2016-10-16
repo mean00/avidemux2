@@ -25,6 +25,7 @@
 #include "ADM_imageFlags.h"
 
 #include "fourcc.h"
+#include <map>
 
 #define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
 
@@ -34,10 +35,23 @@
 #define aprintf(...) {}
 #endif
 
+
+
+
 /**
  * 
  */
- 
+
+
+static std::map <VASurfaceID, bool>listOfAllocatedSurface;
+typedef std::map<VASurfaceID, bool> surfaceList;
+
+static std::map <VAImageID, bool>listOfAllocatedVAImage;
+typedef std::map<VAImageID, bool> vaImageList;
+
+
+
+
 GUI_WindowInfo      admLibVA::myWindowInfo;
 
 namespace ADM_coreLibVA
@@ -588,6 +602,7 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
         delete image;
         return NULL;
     }
+    listOfAllocatedVAImage[image->image_id]=true;
     return image;
 }
 /**
@@ -611,6 +626,7 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
         delete image;
         return NULL;
     }
+    listOfAllocatedVAImage[image->image_id]=true;
     return image;
 }
 /**
@@ -621,6 +637,13 @@ void        admLibVA::destroyImage(  VAImage *image)
 {
     int xError=1;
     CHECK_WORKING();
+    if(listOfAllocatedVAImage.end()==listOfAllocatedVAImage.find(image->image_id))
+    {
+        ADM_warning("Trying to destroy an unallocated VAImage\n");
+        ADM_assert(0);
+    }
+    listOfAllocatedVAImage.erase(image->image_id);
+    
     CHECK_ERROR(vaDestroyImage(ADM_coreLibVA::display, image->image_id));
     delete image;
     if(xError)
@@ -673,11 +696,18 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h)
 
         if(!xError)
         {
+            surfaceList::iterator already;
+            already=listOfAllocatedSurface.find(s);
+            if(already!=listOfAllocatedSurface.end())
+            {
+                ADM_warning("Doubly allocated va surface\n");
+                ADM_assert(0);
+            }
+            listOfAllocatedSurface[s]=true;
             return s;
-        }
+        }        
         aprintf("Error creating surface\n");
         return VA_INVALID;
-    
 }
 /**
  * \fn destroySurface
@@ -688,6 +718,15 @@ void        admLibVA::destroySurface( VASurfaceID surface)
 {
       int xError;
       CHECK_WORKING();
+      
+      surfaceList::iterator already;
+      already=listOfAllocatedSurface.find(surface);
+      if(already==listOfAllocatedSurface.end())
+      {
+          ADM_warning("Trying to destroy an unallocated surface\n");
+          ADM_assert(0);
+      }
+      listOfAllocatedSurface.erase(surface);
       CHECK_ERROR(vaDestroySurfaces(ADM_coreLibVA::display,&surface,1));
         if(!xError)
         {
@@ -1067,6 +1106,44 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
     }
     return false;
 }
+/**
+ * 
+ * @return 
+ */
+bool ADM_vaSurface_cleanupCheck(void)
+{
+    int n=listOfAllocatedSurface.size();
+    if(!n) return true;
+    
+    ADM_warning("Some allocated va surface are still in use (%d), clearing them\n");
+    return true;
+    
+}
+/**
+ * 
+ * @return 
+ */
+bool ADM_vaImage_cleanupCheck(void)
+{
+    int n=listOfAllocatedVAImage.size();
+    if(!n) return true;
+    
+    ADM_warning("Some allocated va images are still in use (%d), clearing them\n");
+    return true;
+    
+}
+/**
+ * \fn admLibVa_exitCleanup
+ */
+bool admLibVa_exitCleanup()
+{
+    ADM_info("VA cleanup begin\n");
+    ADM_vaSurface_cleanupCheck();
+    ADM_vaImage_cleanupCheck();
+    ADM_info("VA cleanup end\n");
+    return true;
+}
+
 /**
  * 
  * @param image

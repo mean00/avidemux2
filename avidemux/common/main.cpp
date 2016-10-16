@@ -288,7 +288,8 @@ int startAvidemux(int argc, char *argv[])
 #endif
 
 #if defined( USE_LIBVA)
-    PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admDummyHwCleanup)
+    extern bool admLibVa_exitCleanup();
+    PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admLibVa_exitCleanup)
 #endif
 
 #endif // !CLI
