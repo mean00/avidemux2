@@ -5,14 +5,14 @@
 #######################################
 # Check if it options 
 MACRO(vaCheck fileToCompile varToSet title)
-   ADM_COMPILE(${fileToCompile} "" "${LIBVA_INCLUDE_DIR}" "va" OUTPUT_IS_OK vaOutput)
-   MESSAGE(STATUS "Checking for ${title}, result is ${OUTPUT_IS_OK}")
-   IF(OUTPUT_IS_OK)
+   ADM_COMPILE(${fileToCompile} "" "${LIBVA_INCLUDE_DIR}" "va" OUTPUT_IS_OK_${varToSet} vaOutput)
+   MESSAGE(STATUS "Checking for ${title}, result is ${OUTPUT_IS_OK_${varToSet}}")
+   IF(OUTPUT_IS_OK_${varToSet})
            MESSAGE(STATUS "${title} is supported") 
            SET(LIBVA_CFLAGS ${LIBVA_CFLAGS} -D${varToSet})
-   ELSE(OUTPUT_IS_OK)
-           MESSAGE(STATUS "${title} is not supported (${vaOutput})") 
-   ENDIF(OUTPUT_IS_OK)
+   ELSE(OUTPUT_IS_OK_${varToSet})
+           MESSAGE(STATUS "${title} is not supported ") 
+   ENDIF(OUTPUT_IS_OK_${varToSet})
 ENDMACRO(vaCheck fileToCompile varToSet title)
 #
 MACRO(checkLibVA)
