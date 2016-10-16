@@ -4,6 +4,6 @@
 
 int main(int argc, char **argv)
 {
-        int attr=VAPRofileVP9Profile3;      
+        int attr=VAProfileVP9Profile3;      
         return 0;
 }
