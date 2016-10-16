@@ -6,9 +6,10 @@
 # Check if it options 
 MACRO(vaCheck fileToCompile varToSet title)
    ADM_COMPILE(${fileToCompile} "" "${LIBVA_INCLUDE_DIR}" "va" OUTPUT_IS_OK_${varToSet} vaOutput)
-   MESSAGE(STATUS "Checking for ${title}, result is ${OUTPUT_IS_OK_${varToSet}}")
+   MESSAGE(STATUS "Checking for ${title}, result of OUTPUT_IS_OK_${varToSet} is  ${OUTPUT_IS_OK_${varToSet}}")
    IF(OUTPUT_IS_OK_${varToSet})
            MESSAGE(STATUS "${title} is supported") 
+           #MESSAGE(STATUS "(${vaOutput})") 
            SET(LIBVA_CFLAGS ${LIBVA_CFLAGS} -D${varToSet})
    ELSE(OUTPUT_IS_OK_${varToSet})
            MESSAGE(STATUS "${title} is not supported ") 
@@ -38,7 +39,7 @@ MACRO(checkLibVA)
                                                         # Check if it supports HEVC
                                                         vaCheck(libva_hevcdec.cpp  LIBVA_HEVC_DEC "HEVC decoder")
                                                         # VP8
-                                                        vaCheck(libva_hevcdec.cpp  LIBVA_VP9_DEC "VP9 decoder")
+                                                        vaCheck(libva_vp9dec.cpp  LIBVA_VP9_DEC "VP9 decoder")
                                                         # Failsafe
                                                         vaCheck(libva_dummy.cpp  LIBVA_DUMMY_DEC "DUMMY decoder")
                                                 ELSE( LIBVA_COMPILED)
