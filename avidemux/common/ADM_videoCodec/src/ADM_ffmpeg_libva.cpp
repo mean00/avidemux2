@@ -298,13 +298,14 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         char name[300]={0};
         av_get_pix_fmt_string(name,sizeof(name),c);
         ADM_info("[LIBVA]: Evaluating PIX_FMT %d,%s\n",c,name);  
+        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
+        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
+        
         if(c!=AV_PIX_FMT_VAAPI_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
         
         
-        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
-        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
-        switch(avctx->codec_id)
+        switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
             FMT_V_CHECK(H265,H265)
