@@ -62,6 +62,7 @@ uint32_t msglevel=2;
 
 uint32_t mixer=0;
 bool     doAutoUpdate=false;
+bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
 bool     balternate_mp3_tag=true;
@@ -160,6 +161,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
         prefs->get(UPDATE_ENABLED,&doAutoUpdate);
 
+        prefs->get(RESET_ENCODER_ON_VIDEO_LOAD,&loadDefault);
+
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
@@ -235,6 +238,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
+        diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
 
@@ -433,8 +437,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* User Interface */
-        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage,&checkForUpdate};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),4,diaUser);
+        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage,&resetEncoder,&checkForUpdate};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),5,diaUser);
 
          /* Automation */
 
@@ -592,6 +596,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(MESSAGE_LEVEL,msglevel);
             // Use tray while encoding
             prefs->set(FEATURES_USE_SYSTRAY,useTray);
+            // Discard changes to output config on video load
+            prefs->set(RESET_ENCODER_ON_VIDEO_LOAD, loadDefault);
 
             // VDPAU
             prefs->set(FEATURES_VDPAU,bvdpau);

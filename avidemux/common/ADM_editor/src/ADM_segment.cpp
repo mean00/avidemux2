@@ -574,7 +574,7 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     }
     if(false==convertLinearTimeToSeg( to,&endSeg,&endOffset))
     {
-        ADM_warning("Cannot get starting point (%" PRIu64" ms\n",from/1000);
+        ADM_warning("Cannot get end point (%" PRIu64" ms\n",to/1000);
         return false;
     }
 
@@ -619,8 +619,48 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     dump();
     return true;
 }
+/**
+    \fn truncateVideo
+    \brief Remove a part of the video from the given time to the end
+*/
+bool ADM_EditorSegment::truncateVideo(uint64_t from)
+{
+    uint32_t startSeg;
+    uint64_t startOffset;
 
+    ADM_info("Truncating from %" PRIu64" ms\n",from/1000);
+    dump();
+    if(false==convertLinearTimeToSeg(from,&startSeg,&startOffset))
+    {
+        ADM_warning("Cannot get starting point for linear time %" PRIu64" ms\n",from/1000);
+        return false;
+    }
 
+    ADM_info("Start in segment %" PRIu32" at offset :%" PRIu64" ms\n",startSeg,startOffset);
+    ListOfSegments tmp=segments;
+
+    _SEGMENT *first=getSegment(startSeg);
+    // shorten the start segment
+    first->_durationUs=startOffset;
+    // remove following segments
+    int n=segments.size();
+    for(int i=startSeg+1;i<n;i++)
+    {
+        segments.erase(segments.begin()+startSeg+1);
+    }
+    updateStartTime();
+    removeEmptySegments();
+    if(isEmpty())
+    {
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","You cannot remove *all* the video\n"));
+        segments=tmp;
+        updateStartTime();
+        return false;
+    }
+    undoSegments.push_back(tmp);
+    dump();
+    return true;
+}
 /**
     \fn dump
     \brief Dump the segment content
@@ -821,14 +861,14 @@ bool        ADM_EditorSegment::copyToClipBoard(uint64_t startTime, uint64_t endT
             s._refStartTimeUs+=offset;
             s._durationUs-=offset;         // take into account the part we chopped
             s._startTimeUs+=offset;
-            aprintf("Marker A is here offset=%d\n",(int)offset);
+            aprintf("Marker A is here offset=%" PRIu64"\n",offset);
         }
         if(s2._startTimeUs<=endTime && (s2._startTimeUs+s2._durationUs)>=endTime)
         {            
             // need to refine last seg            
             uint64_t offset=endTime-s2._startTimeUs;
             s._durationUs=endTime-s._startTimeUs;
-            aprintf("Marker B is here offset=%d\n",(int)offset);
+            aprintf("Marker B is here offset=%" PRIu64"\n",offset);
         }
         // TODO refine timing for 1st/last/duration/...
         clipboard.push_back(s);        

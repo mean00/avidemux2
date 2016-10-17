@@ -23,7 +23,7 @@ set(FFMPEG_DECODERS  aac ac3 eac3 adpcm_ima_amv  amv  bmp  cinepak  cyuv  dca  d
                                          hevc  huffyuv  mjpeg
 					 mjpegb  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3  msvideo1  nellymoser  png  qdm2  rawvideo  snow
 					 svq3  theora  tscc  mp2 mp3 mp2_float mp3_float
-					 vc1  vp3  vp6  vp6a  vp6f  vp8 vp9 wmapro wmav2  wmv1  wmv2  wmv3 cscd lagarith flac)
+					 vc1  vp3  vp6  vp6a  vp6f  vp8 vp9 wmapro wmav2  wmv1  wmv2  wmv3 cscd lagarith flac vorbis)
 set(FFMPEG_ENCODERS  ac3  ac3_float dvvideo  ffv1  ffvhuff  flv  h263  huffyuv  mjpeg  mp2  mpeg1video  mpeg2video  mpeg4  snow aac dca flac)
 set(FFMPEG_MUXERS  flv  matroska  mpeg1vcd  mpeg2dvd  mpeg2svcd  mpegts  mov  mp4  psp webm)
 set(FFMPEG_PARSERS  ac3  h263  h264  hevc  mpeg4video)
@@ -394,6 +394,7 @@ INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR
 	"${FFMPEG_SOURCE_DIR}/libavutil/hwcontext.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vdpau.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vaapi.h"
+	"${FFMPEG_SOURCE_DIR}/libavutil/pixdesc.h"
 	"${FFMPEG_SOURCE_DIR}/libavutil/channel_layout.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/error.h" 
 	"${FFMPEG_SOURCE_DIR}/libavutil/dict.h" 

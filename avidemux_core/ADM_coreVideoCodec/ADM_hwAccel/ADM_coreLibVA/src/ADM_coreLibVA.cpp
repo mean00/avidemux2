@@ -25,6 +25,7 @@
 #include "ADM_imageFlags.h"
 
 #include "fourcc.h"
+#include <map>
 
 #define CHECK_WORKING(x)   if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return x;}
 
@@ -34,10 +35,23 @@
 #define aprintf(...) {}
 #endif
 
+
+
+
 /**
  * 
  */
- 
+
+
+static std::map <VASurfaceID, bool>listOfAllocatedSurface;
+typedef std::map<VASurfaceID, bool> surfaceList;
+
+static std::map <VAImageID, bool>listOfAllocatedVAImage;
+typedef std::map<VAImageID, bool> vaImageList;
+
+
+
+
 GUI_WindowInfo      admLibVA::myWindowInfo;
 
 namespace ADM_coreLibVA
@@ -46,6 +60,7 @@ namespace ADM_coreLibVA
  VADisplay              display;
  VAConfigID             configH264;
  VAConfigID             configH265;
+ VAConfigID             configH26510Bits;
  VAConfigID             configVC1;
  VAConfigID             configVP9;
  VAImageFormat          imageFormatNV12;
@@ -307,10 +322,14 @@ bool admLibVA::setupConfig(void)
         return false;
     
     
-    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");
-    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");
+    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");    
     checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,"VC1");
-#ifdef ADM_VA_HAS_VP9
+#ifdef LIBVA_HEVC_DEC    
+    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");    
+    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits ,"H265 10Bits");
+#endif    
+    
+#ifdef LIBVA_VP9_DEC
     checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,"VP9");
 #endif
     return true;
@@ -388,9 +407,13 @@ bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
     switch(profile)
     {
        case VAProfileH264High: cid=ADM_coreLibVA::configH264;break;
-       case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
        case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
-#ifdef ADM_VA_HAS_VP9
+#ifdef LIBVA_HEVC_DEC           
+       case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
+       case VAProfileHEVCMain10: cid=ADM_coreLibVA::configH26510Bits;break;
+#endif        
+      
+#ifdef LIBVA_VP9_DEC
        case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
 #endif
        default:
@@ -479,14 +502,23 @@ bool        admLibVA::supported(VAProfile profile)
     switch(profile)
     {
         SUPSUP(VAProfileH264High,configH264)
+        SUPSUP(VAProfileVC1Advanced,configVC1)                
+#ifdef LIBVA_HEVC_DEC                           
         SUPSUP(VAProfileHEVCMain,configH265)
-        SUPSUP(VAProfileVC1Advanced,configVC1)
-#ifdef ADM_VA_HAS_VP9
+        SUPSUP(VAProfileHEVCMain10,configH26510Bits)
+#endif                
+      
+#ifdef LIBVA_VP9_DEC
         SUPSUP(VAProfileVP9Profile3,configVP9)
 #endif
         default:
+            ADM_info("This profile is not supported by libva\n");
             break;
     } 
+    ADM_info("Unknown profile (%d)\n",(int)profile);
+#ifdef LIBVA_VP9_DEC
+    ADM_info("Compiled with vp9 support, library says %d\n",ADM_coreLibVA::configVP9);
+#endif    
     return false;
 }
 
@@ -507,13 +539,17 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
     switch(profile)
     {
        case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
+       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;       
+#ifdef LIBVA_HEVC_DEC                                  
        case VAProfileHEVCMain:    cid=ADM_coreLibVA::configH265;break;
-       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
-#ifdef ADM_VA_HAS_VP9
+       case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;       
+#endif       
+#ifdef LIBVA_VP9_DEC
        case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;       
 #endif
        default:
                 ADM_assert(0);
+                break;
 
     }
 
@@ -575,6 +611,7 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
         delete image;
         return NULL;
     }
+    listOfAllocatedVAImage[image->image_id]=true;
     return image;
 }
 /**
@@ -598,6 +635,7 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
         delete image;
         return NULL;
     }
+    listOfAllocatedVAImage[image->image_id]=true;
     return image;
 }
 /**
@@ -608,6 +646,13 @@ void        admLibVA::destroyImage(  VAImage *image)
 {
     int xError=1;
     CHECK_WORKING();
+    if(listOfAllocatedVAImage.end()==listOfAllocatedVAImage.find(image->image_id))
+    {
+        ADM_warning("Trying to destroy an unallocated VAImage\n");
+        ADM_assert(0);
+    }
+    listOfAllocatedVAImage.erase(image->image_id);
+    
     CHECK_ERROR(vaDestroyImage(ADM_coreLibVA::display, image->image_id));
     delete image;
     if(xError)
@@ -660,11 +705,18 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h)
 
         if(!xError)
         {
+            surfaceList::iterator already;
+            already=listOfAllocatedSurface.find(s);
+            if(already!=listOfAllocatedSurface.end())
+            {
+                ADM_warning("Doubly allocated va surface\n");
+                ADM_assert(0);
+            }
+            listOfAllocatedSurface[s]=true;
             return s;
-        }
+        }        
         aprintf("Error creating surface\n");
         return VA_INVALID;
-    
 }
 /**
  * \fn destroySurface
@@ -675,6 +727,15 @@ void        admLibVA::destroySurface( VASurfaceID surface)
 {
       int xError;
       CHECK_WORKING();
+      
+      surfaceList::iterator already;
+      already=listOfAllocatedSurface.find(surface);
+      if(already==listOfAllocatedSurface.end())
+      {
+          ADM_warning("Trying to destroy an unallocated surface\n");
+          ADM_assert(0);
+      }
+      listOfAllocatedSurface.erase(surface);
       CHECK_ERROR(vaDestroySurfaces(ADM_coreLibVA::display,&surface,1));
         if(!xError)
         {
@@ -1054,6 +1115,44 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
     }
     return false;
 }
+/**
+ * 
+ * @return 
+ */
+bool ADM_vaSurface_cleanupCheck(void)
+{
+    int n=listOfAllocatedSurface.size();
+    if(!n) return true;
+    
+    ADM_warning("Some allocated va surface are still in use (%d), clearing them\n");
+    return true;
+    
+}
+/**
+ * 
+ * @return 
+ */
+bool ADM_vaImage_cleanupCheck(void)
+{
+    int n=listOfAllocatedVAImage.size();
+    if(!n) return true;
+    
+    ADM_warning("Some allocated va images are still in use (%d), clearing them\n");
+    return true;
+    
+}
+/**
+ * \fn admLibVa_exitCleanup
+ */
+bool admLibVa_exitCleanup()
+{
+    ADM_info("VA cleanup begin\n");
+    ADM_vaSurface_cleanupCheck();
+    ADM_vaImage_cleanupCheck();
+    ADM_info("VA cleanup end\n");
+    return true;
+}
+
 /**
  * 
  * @param image

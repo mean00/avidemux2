@@ -23,6 +23,7 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
+#include "libavutil/pixdesc.h"
 #include "libavcodec/vaapi.h"
 }
 
@@ -294,10 +295,17 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
-        ADM_info("[LIBVA]: Evaluating %d\n",c);
+        char name[300]={0};
+        av_get_pix_fmt_string(name,sizeof(name),c);
+        ADM_info("[LIBVA]: Evaluating PIX_FMT %d,%s\n",c,name);  
+        av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
+        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
+        
         if(c!=AV_PIX_FMT_VAAPI_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
-        switch(avctx->codec_id)
+        
+        
+        switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
             FMT_V_CHECK(H265,H265)
@@ -307,6 +315,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
             FMT_V_CHECK(VC1,VC1)
             FMT_V_CHECK(VP9,VP9)
             default: 
+                ADM_info("No hw support for format %d\n",avctx->codec_id);
                 continue;
                 break;
         }
@@ -314,6 +323,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
     }
     if(id==AV_CODEC_ID_NONE)
     {
+        
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of LIBVA decoder
@@ -375,11 +385,12 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
         case AV_CODEC_ID_H264:
                                 profile=VAProfileH264High;
                                 break;
-
+#ifdef LIBVA_HEVC_DEC       
         case AV_CODEC_ID_H265:
                                 profile=VAProfileHEVCMain; // TODO VAProfileHEVCMain10
                                 break;
-#ifdef ADM_VA_HAS_VP9
+#endif                                
+#ifdef LIBVA_VP9_DEC
         case AV_CODEC_ID_VP9:
                                 profile=VAProfileVP9Profile3;
                                 break;
@@ -562,11 +573,15 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
     switch(avctx->codec_id)
     {
        case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
+#ifdef LIBVA_HEVC_DEC       
        case AV_CODEC_ID_H265: profile= VAProfileHEVCMain;break;;
+#endif       
        case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
-#ifdef ADM_VA_HAS_VP9
+#ifdef LIBVA_VP9_DEC
        case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
 #endif
+       default:
+           return false;
     }
     if(!admLibVA::supported(profile))
     {

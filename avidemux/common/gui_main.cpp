@@ -71,6 +71,7 @@ extern int     GUI_handleVFilter (void);
        void    GUI_avsProxy(void);
        uint8_t GUI_close(void);
 extern bool    GUI_GoToTime(uint64_t time);
+extern bool GUI_infiniteForward(uint64_t pts);
 //***********************************
 //******** DIA Function**************
 //***********************************
@@ -157,6 +158,11 @@ void HandleAction (Action action)
     if(action==ACT_SaveAsDefault)
     {
         A_saveDefaultSettings();
+        return;
+    }
+    if(action==ACT_LoadDefault)
+    {
+        A_loadDefaultSettings();
         return;
     }
     if (action >= ACT_SCRIPT_ENGINE_FIRST && action < ACT_SCRIPT_ENGINE_LAST)
@@ -560,7 +566,21 @@ void HandleAction (Action action)
                 video_body->copyToClipBoard(a,b);
             }
 
-            if(false==video_body->remove(a,b))
+            // Special case of B being at or beyond the last frame
+            bool lastFrame=false;
+            bool result=false;
+            uint64_t pts=video_body->getLastKeyFramePts();
+            if(pts!=ADM_NO_PTS && b>=pts) // don't waste time if B is before the last keyframe
+            {
+                GUI_infiniteForward(pts);
+                uint64_t lastFramePts=video_body->getCurrentFramePts();
+                if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
+            }
+            if(lastFrame)
+                result= video_body->truncate(a);
+            else
+                result= video_body->remove(a,b);
+            if(!result)
             {
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
@@ -662,7 +682,11 @@ int A_openVideo (const char *name)
         res = video_body->addFile(longname);
 
     //  DIA_StopBusy ();
-    UI_reset();
+    bool loadDefault;
+    if(!prefs->get(RESET_ENCODER_ON_VIDEO_LOAD, &loadDefault)) loadDefault=false;
+    // if true, discard changes in output config on video load
+    if(loadDefault)
+        A_loadDefaultSettings();
     // forget last project file
     video_body->setProjectName("");
 
@@ -797,31 +821,53 @@ void  updateLoaded (bool resetMarker)
 //___________________________________________
 int A_appendVideo (const char *name)
 {
-
-
-  if (playing)
-    return 0;
-//  DIA_StartBusy ();
-  if (!video_body->addFile (name))
+    bool markerChanged=false;
+    // Check if A or B was changed
+    uint64_t beginPts=0,beginDts;
+    uint32_t flags;
+    uint64_t markerA=video_body->getMarkerAPts();
+    uint64_t markerB=video_body->getMarkerBPts();
+    video_body->getVideoPtsDts(0,&flags,&beginPts,&beginDts);
+    uint64_t theEnd=video_body->getVideoDuration();
+    
+    
+    ADM_info("Start is %s, marker A is %s\n",ADM_us2plain(beginPts),ADM_us2plain(markerA));
+    ADM_info("End is %s, marker B is %s\n",ADM_us2plain(theEnd),ADM_us2plain(markerB));
+    
+    if(theEnd!=markerB )
     {
-//      DIA_StopBusy ();
+        markerChanged=true;
+    }
+    // If markerA is zero, it means beginning of the video, no need to check further
+    if( markerA)
+    {
+        if(markerA!=beginPts) // moved ?
+                markerChanged=true;
+    }
+
+    if (playing)
+        return 0;
+    if (!video_body->addFile (name))
+    {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
       return 0;
     }
-//  DIA_StopBusy ();
-
-
-//  video_body->dumpSeg ();
-  if (!video_body->updateVideoInfo (avifileinfo))
+    if (!video_body->updateVideoInfo (avifileinfo))
     {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something bad happened (II)"), NULL);
       return 0;
     }
 
-  ReSync ();
-  A_ResetMarkers();
 
-  return 1;
+    if(!markerChanged)
+    {        
+        video_body->setMarkerBPts(video_body->getVideoDuration() );
+        ADM_info("Extending marker B to the end (%s)\n",ADM_us2plain(video_body->getMarkerBPts()));
+    }  
+    ReSync();
+    GUI_setCurrentFrameAndTime();
+    UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
+    return 1;
 }
 
 //

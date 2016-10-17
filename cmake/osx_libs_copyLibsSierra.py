@@ -11,7 +11,7 @@ libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
 qtPluginFolder=rootFolder+"/../plugins"
-qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtNetwork']
+qts = ['QtCore', 'QtGui', 'QtOpenGL','QtScript','QtWidgets','QtPrintSupport','QtNetwork', 'QtDBus']
 
 #
 #
@@ -118,7 +118,7 @@ def copyFiles(folder,libFolder):
 def copyQtDeps(components,libFolder):
     copied=0
     for modul in components:
-        absPath='/usr/local/opt/qt5/lib/'+modul+'.framework/Versions/5/'+modul
+        absPath='/opt/local/libexec/qt5/lib/'+modul+'.framework/Versions/5/'+modul
         print("Copy deps for "+modul+" ("+absPath+")")
         deps=getGlobalDepsNoQt(absPath)
         for dep in deps:
@@ -131,6 +131,7 @@ def copyQtDeps(components,libFolder):
                        copied+=1
     # copy plugins deps too
     copyFiles(qtPluginFolder+'/imageformats',libFolder)
+    copyFiles(qtPluginFolder+'/platforms',libFolder)
     return copied
 ##
 def changeSymbol(target,oldName,newName):
@@ -265,10 +266,10 @@ def copyQtFiles(targetFolder):
         for q in qts:
                print q
                if(os.path.exists(targetFolder+'/'+q+'.framework')):
-                               log(q+" already copied")
+                               log(targetFolder+" "+q+" already copied")
                else:
                    log("Copying"+q+' to '+targetFolder)
-                   src='/usr/local/opt/qt5/lib/'+q+'.framework'
+                   src='/opt/local/libexec/qt5/lib/'+q+'.framework'
                    dst=targetFolder+'/'+q+'.framework'
                    myMkDir(dst)
                    src=src+'/Versions/5/'
@@ -285,21 +286,21 @@ def copyQtFiles(targetFolder):
                    changeGlobalLinkPathForOne(dst+q)
         # Also copy plugins
         myMkDir(qtPluginFolder)
-	myCopyTree('/usr/local/opt/qt5/plugins/imageformats',qtPluginFolder+'/imageformats')
-	myCopyTree('/usr/local/opt/qt5/plugins/platforms',qtPluginFolder+'/platforms')
-################################################################
-# Step 2 :  Change link name so that they are all executable_path
-#               relative
+	myCopyTree('/opt/local/libexec/qt5/plugins/imageformats',qtPluginFolder+'/imageformats')
+	myCopyTree('/opt/local/libexec/qt5/plugins/platforms',qtPluginFolder+'/platforms')
 #################################################################
-print "Adjusting dependencies"
-changeBinLinkPath(binFolder)
-changeLibLinkPath(libFolder)
-changeQtPluginLinkPath(qtPluginFolder+"/platforms")
-changeQtPluginLinkPath(qtPluginFolder+"/imageformats")
-subFolders=["audioDecoder",    "audioEncoders",   "autoScripts",     "demuxers",        "muxers",          "scriptEngines",   "videoEncoders",   "videoFilters"]
-for s in subFolders:
-        relFolder="ADM_plugins6/"+s
-        changePluginLinkPath(libFolder+"/"+relFolder,relFolder)
-changeQtPlatformLinkPath(binFolder+'/platforms')
-        
+# Step 1 : Copy system files so we have a standalone package
+#
+#################################################################
+print "Copying Qt framework"
+copyQtFiles(frameWorkFolder)
+print "Copying Qt framework dependencies"
+copyQtDeps(qts,libFolder)
+print "Copying system files"
+#copyFiles(binFolder,libFolder)
+processed=1
+# Copy file until all of them are there
+while not processed == 0:
+        processed=copyFiles(libFolder,libFolder)
+       
 

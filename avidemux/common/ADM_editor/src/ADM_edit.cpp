@@ -682,6 +682,14 @@ bool            ADM_Composer::remove(uint64_t start,uint64_t end)
     return _segments.removeChunk(start,end);
 }
 /**
+    \fn truncate
+    \brief Truncate video
+*/
+bool ADM_Composer::truncate(uint64_t start)
+{
+    return _segments.truncateVideo(start);
+}
+/**
     \fn dumpEditing
     \brief Dump segment, video & al
 */

@@ -152,6 +152,12 @@ ENDIF (FAAC)
 
 APPEND_SUMMARY_LIST("Audio Encoder" "FAAC" "${USE_FAAC}")
 MESSAGE("")
+########################################
+# FDK-AAC
+########################################
+include(admCheckFdkAac)
+checkFdkAAC()
+MESSAGE("")
 
 ########################################
 # Vorbis

@@ -372,12 +372,22 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
     int lastSeg=_segments.getNbSegments();
     int seg;
     uint64_t pts,dts;
+    int lastRefFrameInSegment;
     if(!lastSeg) return ADM_NO_PTS;
     for(seg=lastSeg-1;seg>=0;seg--)
     {
           _SEGMENT *s=_segments.getSegment(seg);
           _VIDEOS  *v=_segments.getRefVideo(s->_reference);
-          int nbFrame=v->_nb_video_frames;
+          uint64_t endTimeInRef=(s->_refStartTimeUs)+(s->_durationUs);
+        // we dont want the last kf of the video, but the last kf of the segment
+        // so we truncate the search to the part we are interested in taking start + duraiton of the seg to get a starting point
+        // If we can't get it, it cannot work properly anyway
+          if(!getFrameNumFromPtsOrBefore(v,endTimeInRef,lastRefFrameInSegment))
+          {
+              ADM_warning("Cannot map the last frame in segment to reference at PTS=%s\n",ADM_us2plain(endTimeInRef));
+              lastRefFrameInSegment=v->_nb_video_frames;
+          }
+          int nbFrame=lastRefFrameInSegment;
           if(!nbFrame) break;
 
           for(int frame=nbFrame-1;frame>=0;frame--)
@@ -388,12 +398,14 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
               if(!(flags & AVI_KEY_FRAME)) continue;
               v->_aviheader->getPtsDts(frame,&pts,&dts);
               if(pts==ADM_NO_PTS) continue;          
-              ADM_info("found last keyframe at %d, time=%s\n",frame,ADM_us2plain(pts));
+              ADM_info("found last keyframe at %d, time in reference=%s\n",frame,ADM_us2plain(pts));
               break;
           }
           if(pts!=ADM_NO_PTS)
           {
-              return pts+s->_startTimeUs-s->_refStartTimeUs;
+              pts+=s->_startTimeUs-s->_refStartTimeUs;
+              ADM_info("found last keyframe at %s\n",ADM_us2plain(pts));
+              return pts;
           }
      }
     ADM_info("Cannot find lastKeyFrame with a valid PTS\n");
