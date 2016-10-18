@@ -898,6 +898,7 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     uint32_t startSeg;
     uint64_t startSegTime;
     convertLinearTimeToSeg(  currentTime, &startSeg,&startSegTime);    
+    ListOfSegments tmp=segments;
     ListOfSegments newSegs;
     int n=segments.size();
     for(int i=0;i<n;i++)
@@ -929,6 +930,7 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     }
     segments=newSegs;
     updateStartTime();
+    undoSegments.push_back(tmp);
     return true;
 }
 
