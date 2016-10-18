@@ -140,7 +140,7 @@ VERR(OV_ENOSEEK    )
     uint8_t *packets[3];
     int     packetsLen[3];
     
-    if(!ADMXiph::extraData2packets(extraData,extra,packets,packetsLen))
+    if(!ADMXiph::admExtraData2packets(extraData,extra,packets,packetsLen))
     {
         return ;
     }
