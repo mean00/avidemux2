@@ -31,6 +31,7 @@
 #include "ADM_ad_plugin.h"
 #include "ADM_ad_vorbis.h"
 #include "ADM_coreUtils.h"
+#include "ADM_audioXiphUtils.h"
 
 
 /**
@@ -136,26 +137,22 @@ VERR(OV_ENOSEEK    )
      _init=false;
     memset(&(_context),0,sizeof(_context));
 
+    uint8_t *packets[3];
+    int     packetsLen[3];
+    
+    if(!ADMXiph::extraData2packets(extraData,extra,packets,packetsLen))
+    {
+        return ;
+    }
+    
     // init everything
     vorbis_info_init(&(_context.vinfo));
     vorbis_comment_init(&(_context.vcomment));
 
-    // split extradata as header/comment/code
-    ptr=(uint32_t *)extraData;
-    size_hdr=*ptr++;
-    size_cmt=*ptr++;
-    size_code=*ptr++;
-
-    hdr=extraData;
-    hdr+=3*sizeof(uint32_t);
-    cmt=hdr+size_hdr;
-    code=cmt+size_cmt;
-
-        
         
      // Feed header passed as extraData
-    packet.bytes=size_hdr;
-    packet.packet=hdr;
+    packet.bytes=packetsLen[0];
+    packet.packet=packets[0];
     packet.b_o_s=1; // yes, it is a new stream
     printPacket("1st packet",&packet);
     error=vorbis_synthesis_headerin(&(_context.vinfo),&comment,&packet);
@@ -174,8 +171,8 @@ VERR(OV_ENOSEEK    )
         info->byterate=16000;
     }
     // now unpack comment
-    packet.bytes=size_cmt;
-    packet.packet=cmt;
+    packet.bytes=packetsLen[1];
+    packet.packet=packets[1];
     packet.b_o_s=0; // Not new
     printPacket("2nd packet",&packet);
 
@@ -183,8 +180,8 @@ VERR(OV_ENOSEEK    )
     MANAGE_ERROR("2nd packet",error);
 
     // and codebook
-    packet.bytes=size_code;
-    packet.packet=code;
+    packet.bytes=packetsLen[2];
+    packet.packet=packets[2];
     packet.b_o_s=0; // Not new
     printPacket("3rd packet",&packet);
         
