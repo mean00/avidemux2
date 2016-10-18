@@ -276,7 +276,7 @@ extern char *ADM_slashToBackSlash(const char *in)
 /*
  * \fn    ADM_getCurrentDate 
 */
- const ADM_date        &ADM_getCurrentDate()
+ const ADM_date        ADM_getCurrentDate()
 {
   time_t timez;
   tm *t;
