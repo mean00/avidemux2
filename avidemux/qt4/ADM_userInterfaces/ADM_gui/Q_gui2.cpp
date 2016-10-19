@@ -1020,7 +1020,7 @@ int UI_RunApp(void)
     uiRunning=true;
     setupMenus();
     QuiTaskBarProgress->setParent(QuiMainWindows);
-    ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
+    ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt,&abortExitHandler);
     
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();

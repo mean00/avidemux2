@@ -39,28 +39,35 @@
 // Our callback to give UI formatted informations....
 static ADM_saveFunction *mysaveFunction=NULL;
 static ADM_fatalFunction *myFatalFunction=NULL;
-static sighandler_t      oldSignalHandler;
+static ADM_sigIntFunction *mySigIntFunction=NULL;
+static sighandler_t      oldSignalHandlerSigInt;
+static sighandler_t      oldSignalHandlerSigSev;
 void sig_segfault_handler(int signo);
+void sig_sigint_handler(int signo);
+
 /**
         \fn ADM_setCrashHook
         \brief install crash handlers (save + display)
 */
-void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
+void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal,ADM_sigIntFunction *sigint)
 {
         mysaveFunction=save;
         myFatalFunction=fatal;
+        mySigIntFunction=sigint;
 }
 /**
     \fn installSigHandler
 */
 void installSigHandler(void)
 {
-    oldSignalHandler=signal(11, sig_segfault_handler); // show stacktrace on default
+    oldSignalHandlerSigSev=signal(SIGSEGV, sig_segfault_handler); // show stacktrace on default
+    oldSignalHandlerSigInt=signal(SIGINT, sig_sigint_handler); // show stacktrace on default
 }
 void uninstallSigHandler(void)
 {
     ADM_info("Removing signal handler\n");
-    signal(11, SIG_DFL); 
+    signal(SIGINT, SIG_DFL); 
+    signal(SIGSEGV, SIG_DFL); 
 }
 
 /**
@@ -78,7 +85,16 @@ void sig_segfault_handler(int signo)
       running=0;
       ADM_backTrack("Segfault",0,"??");
 }
-
+/**
+ * 
+ * @param signo
+ */
+void sig_sigint_handler(int signo)
+{
+    ADM_info("Sigint..\n");
+    if(mySigIntFunction) mySigIntFunction();
+    exit(-1);
+}
 #if defined(__sun__)
 static const int maxSize = 2048;
 
