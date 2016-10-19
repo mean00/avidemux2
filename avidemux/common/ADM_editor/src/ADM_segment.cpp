@@ -264,7 +264,6 @@ bool ADM_EditorSegment::deleteAll (void)
 bool        ADM_EditorSegment::undo(void)
 {
     if(undoSegments.empty()) return false;
-    clipboard.clear();
     segments=undoSegments.back(); 
     undoSegments.pop_back();
     updateStartTime();
@@ -348,7 +347,6 @@ bool         ADM_EditorSegment::updateStartTime(void)
     if(!n) return true;
     
     uint64_t t=0;
-    t=segments[0]._startTimeUs;
     for(int i=0;i<n;i++)
     {
         segments[i]._startTimeUs=t;
@@ -931,6 +929,7 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     segments=newSegs;
     updateStartTime();
     undoSegments.push_back(tmp);
+    dump();
     return true;
 }
 
