@@ -357,7 +357,7 @@ void ADM_ExitCleanup( void )
     delete video_body;
     video_body=NULL;
     // wait for thread to finish executing
-    ADM_setCrashHook(NULL,NULL);
+    ADM_setCrashHook(NULL,NULL,NULL);
     destroyScriptEngines();
 //    filterCleanUp();
     ADM_lavDestroy();
