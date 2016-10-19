@@ -812,9 +812,10 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
                     break;
                 }
                 default:  
-                        goto dropIt;
-    }
-         r=true;
+                    goto dropIt;
+                    break;
+        }
+        r=true;
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
 dropIt:    
@@ -1061,7 +1062,7 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
         switch(vaImage.format.fourcc)
         {
             case VA_FOURCC_YV12: 
-            {
+                {
                 ADMImageRefWrittable ref(src->_width,src->_height);
                 for(int i=0;i<3;i++)
                 {
@@ -1069,10 +1070,14 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
                         ref._planeStride[i]=vaImage.pitches[i];
                 }
                 ref.duplicate(src);
-            }break;
-            case VA_FOURCC_NV12: copyNV12(ptr,&vaImage,src);break;
+                }
+                break;
+            case VA_FOURCC_NV12: 
+                copyNV12(ptr,&vaImage,src);
+                break;
             default:  
                 ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+                break;
         }
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
@@ -1140,6 +1145,7 @@ bool admLibVa_exitCleanup()
     ADM_info("VA cleanup begin\n");
     ADM_vaSurface_cleanupCheck();
     ADM_vaImage_cleanupCheck();
+    admLibVA::cleanup();
     ADM_info("VA cleanup end\n");
     return true;
 }
@@ -1169,6 +1175,9 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     }
     return false;
 }
+
+
+
 #include "ADM_coreLibVA_encoder.cpp"
 #endif
 
