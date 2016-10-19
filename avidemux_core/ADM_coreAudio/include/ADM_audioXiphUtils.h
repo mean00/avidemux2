@@ -20,4 +20,11 @@ ADM_COREAUDIO6_EXPORT bool  admExtraData2packets(uint8_t *extraData, int extraLe
  * @brief converts adm extra data style to xyph extra data style
  */
 ADM_COREAUDIO6_EXPORT int   admExtraData2xiph(int l, uint8_t *src, uint8_t *dstOrg);
+
+/**
+ * \fn xiphExtraData2Adm
+ * \brief converts xiph style extra data to adm style
+ */
+ADM_COREAUDIO6_EXPORT bool xiphExtraData2Adm(uint8_t *extraData, int extraLen,uint8_t **newExtra,int *newExtraLen)  ;  
+
 }
