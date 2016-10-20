@@ -203,10 +203,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
       _blockalign = _context->block_align;
     }
 
-    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
+    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data, %d channels\n", _context->extradata_size,_context->channels);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
-    printf("\n");
-
+    ADM_info("\n");
+    
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
          ADM_warning("[audioCodec] Cannot use float, retrying with floatp \n");
@@ -258,7 +258,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         _blockalign=378;
       }
     }
-    ADM_info("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
+    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n",info->blockalign,_context->channels);
     if(_context->sample_rate!=outputFrequency)
     {
         ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",

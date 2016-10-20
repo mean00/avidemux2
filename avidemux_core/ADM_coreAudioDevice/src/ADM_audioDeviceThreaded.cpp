@@ -77,6 +77,7 @@ void audioDeviceThreaded::Loop(void)
 */
 uint8_t audioDeviceThreaded::init(uint32_t channel, uint32_t fq ,CHANNEL_TYPE *channelMapping)
 {
+    ADM_info("Initializing audioDeviceThreaded with channels=%d, fq=%d\n",(int)channel,(int)fq);
     // Allocate buffer
     memcpy(incomingMapping,channelMapping,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
     _channels=channel;
