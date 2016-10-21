@@ -305,11 +305,12 @@ bool ADM_AudiocoderLavcodec::decodeToFloat(float **outptr,uint32_t *nbOut)
 {
     int nbSample=  _frame->nb_samples; 
     // copy
-    memcpy(*outptr,_frame[0].data,sizeof(float)*nbSample*channels); // not sure...     
+    memcpy(*outptr,_frame->data[0],sizeof(float)*nbSample*channels); // not sure...     
     (*outptr)+=nbSample*channels;
     (*nbOut)+=nbSample*channels;
     return true;
 }
+
 /**
  * \fn decodeToFloatPlanarStereo
  * @param outptr
