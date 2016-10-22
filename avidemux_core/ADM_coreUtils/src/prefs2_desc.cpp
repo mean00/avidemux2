@@ -12,6 +12,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.cpu_caps",offsetof(my_prefs_struct,features.cpu_caps),"uint32_t",ADM_param_uint32_t},
  {"features.mpeg_no_limit",offsetof(my_prefs_struct,features.mpeg_no_limit),"bool",ADM_param_bool},
  {"features.alternate_mp3_tag",offsetof(my_prefs_struct,features.alternate_mp3_tag),"bool",ADM_param_bool},
+ {"features.dxva2",offsetof(my_prefs_struct,features.dxva2),"bool",ADM_param_bool},
  {"features.vdpau",offsetof(my_prefs_struct,features.vdpau),"bool",ADM_param_bool},
  {"features.xvba",offsetof(my_prefs_struct,features.xvba),"bool",ADM_param_bool},
  {"features.libva",offsetof(my_prefs_struct,features.libva),"bool",ADM_param_bool},

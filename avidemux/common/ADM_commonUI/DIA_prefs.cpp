@@ -70,6 +70,7 @@ bool     balternate_mp3_tag=true;
 uint32_t pp_type=3;
 uint32_t pp_value=5;
 
+bool     bdxva2=false;
 bool     bvdpau=false;
 bool     bxvba=false;
 bool     blibva=false;
@@ -139,6 +140,9 @@ std::string currentSdlDriver=getSdlDriverName();
         if( prefs->get(DEVICE_AUDIO_ALSA_DEVICE, &alsaDevice) != RC_OK )
                 alsaDevice = ADM_strdup("plughw:0,0");
 #endif
+        // dxva2
+        
+        prefs->get(FEATURES_DXVA2,&bdxva2);                
         // vdpau
         prefs->get(FEATURES_VDPAU,&bvdpau);
         // xvba
@@ -203,6 +207,7 @@ std::string currentSdlDriver=getSdlDriverName();
         olddevice=newdevice=AVDM_getCurrentDevice();
         // Audio device
         /************************ Build diaelems ****************************************/
+        diaElemToggle useDxva2(&bdxva2,QT_TRANSLATE_NOOP("adm","Decode video using DXVA2 (windows)"));
         diaElemToggle useVdpau(&bvdpau,QT_TRANSLATE_NOOP("adm","Decode video using VDPAU (NVIDIA)"));
         diaElemToggle useXvba(&bxvba,QT_TRANSLATE_NOOP("adm","Decode video using XVBA (AMD)"));
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
@@ -475,8 +480,8 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
-          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&hwAccelText};
-          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),4,(diaElem **)diaHwDecoding);
+          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&useDxva2,&hwAccelText};
+          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
 
         /* CPU tab */
 		diaElem *diaCpu[]={&frameSimd};
@@ -601,6 +606,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
             // VDPAU
             prefs->set(FEATURES_VDPAU,bvdpau);
+            // DXVA2
+            prefs->set(FEATURES_DXVA2,bdxva2);
             // XVBA
             prefs->set(FEATURES_XVBA,bxvba);
             // LIBVA

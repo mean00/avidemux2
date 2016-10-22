@@ -23,6 +23,7 @@ static optionDesc myOptions[]={
 { FEATURES_CPU_CAPS,"features.cpu_caps"                               ,ADM_param_uint32_t	,"4294967295",	0,	4294967295},
 { FEATURES_MPEG_NO_LIMIT,"features.mpeg_no_limit"                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ALTERNATE_MP3_TAG,"features.alternate_mp3_tag"             ,ADM_param_bool    	,"1",	0,	1},
+{ FEATURES_DXVA2,"features.dxva2"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_XVBA,"features.xvba"                                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_LIBVA,"features.libva"                                     ,ADM_param_bool    	,"0",	0,	1},
