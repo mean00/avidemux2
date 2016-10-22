@@ -1,0 +1,19 @@
+OPTION(DXVA2 "" ON)
+
+MESSAGE(STATUS "Checking for Dxva2")
+MESSAGE(STATUS "****************")
+
+IF (DXVA2)
+        #FIND_HEADER_AND_LIB(DXVA2 dxva2api.h dxva2 DXVA2CreateVideoService)
+        #PRINT_LIBRARY_INFO("DXVA2" DXVA2_FOUND "${DXVA2_INCLUDE_DIR}" "${DXVA2_LIBRARY_DIR}")
+        SET(DXVA2_FOUND 1)
+        IF (DXVA2_FOUND)
+                MESSAGE(STATUS "DXVA2 Found")
+                SET(USE_DXVA2 True CACHE BOOL "")
+        ENDIF (DXVA2_FOUND)
+ELSE (DXVA2)
+        MESSAGE("${MSG_DISABLE_OPTION}")
+ENDIF (DXVA2)
+
+MESSAGE("")
+APPEND_SUMMARY_LIST("Miscellaneous" "DXVA2" "${USE_DXVA2}")
