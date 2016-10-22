@@ -17,6 +17,7 @@ struct  {
 	uint32_t cpu_caps;
 	bool mpeg_no_limit;
 	bool alternate_mp3_tag;
+	bool dxva2;
 	bool vdpau;
 	bool xvba;
 	bool libva;

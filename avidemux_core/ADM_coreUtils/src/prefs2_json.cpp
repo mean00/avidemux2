@@ -20,6 +20,7 @@ json.addUint32("threading_lavc",key->features.threading_lavc);
 json.addUint32("cpu_caps",key->features.cpu_caps);
 json.addBool("mpeg_no_limit",key->features.mpeg_no_limit);
 json.addBool("alternate_mp3_tag",key->features.alternate_mp3_tag);
+json.addBool("dxva2",key->features.dxva2);
 json.addBool("vdpau",key->features.vdpau);
 json.addBool("xvba",key->features.xvba);
 json.addBool("libva",key->features.libva);
