@@ -290,11 +290,17 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 uint32_t thisSeg=_currentSegment;
                 _SEGMENT *seg=_segments.getSegment(_currentSegment);
                 int ref=seg->_reference;
+                _VIDEOS *vid=_segments.getRefVideo(ref);
 
                 uint64_t refTime;
                 if(false==_segments.LinearToRefTime(_currentSegment,targetPts-1,&refTime))
                 {
                     ADM_warning("Cannot find ref time\n");
+                    return false;
+                }
+                if(refTime<=vid->firstFramePts)
+                {
+                    ADM_warning("Already at the first frame in ref\n");
                     return false;
                 }
                 uint64_t previousKf;
@@ -314,7 +320,7 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 {
                     if(false==nextPicture(image,true))
                     {
-                            ADM_warning("Error in decoding forward");
+                            ADM_warning("Error in decoding forward\n");
                             return false;
                     }
                     if(image->Pts>=targetPts)
@@ -330,12 +336,13 @@ bool ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 return true;
 }
 /**
-    \fn NextPicture
-    \brief decode & returns the next picture
+    \fn previousPicture
+    \brief decode & return the previous picture
 */
 bool        ADM_Composer::previousPicture(ADMImage *image)
 {
-uint64_t targetPts=_currentPts;    
+        if(!_currentPts) return false;
+        uint64_t targetPts=_currentPts;
         // Decode image...
         _SEGMENT *seg=_segments.getSegment(_currentSegment);
         // Search it in the cache...
@@ -344,6 +351,19 @@ uint64_t targetPts=_currentPts;
         uint64_t refPts;
 
         _segments.LinearToRefTime(_currentSegment,_currentPts,&refPts);
+
+        if(refPts<=vid->firstFramePts) // at the first frame of segment too
+        {
+            if(!_currentSegment)
+            {
+                ADM_info("Already at the first frame of the video\n");
+                return false;
+            }
+            // If the ref video doesn't start at zero and the start time in reference for
+            // the segment is zero, we get stuck between the first frame of the ref video
+            // and the segment boundary. Call a taxi then.
+            targetPts=seg->_startTimeUs;
+        }
         ADMImage *cached=vid->_videoCache->getBefore(refPts);
        
         if(cached)
@@ -363,10 +383,9 @@ uint64_t targetPts=_currentPts;
         // either it is in the same segment but we have decoded later in that segment
         // , or it is in the previous segment
         // Let's check...
-        if(!_currentPts) return false;
         uint64_t segTime;
         uint32_t segNo;
-            if(false==_segments.convertLinearTimeToSeg(_currentPts-1,&segNo,&segTime))
+            if(false==_segments.convertLinearTimeToSeg(targetPts-1,&segNo,&segTime))
             {
                   ADM_error("Cannot convert time in samePicture\n");         
                   return false;
