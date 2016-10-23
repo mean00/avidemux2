@@ -250,6 +250,7 @@ bool ADM_EditorSegment::deleteAll (void)
 
     }
 
+    clipboard.clear();
     videos.clear();
     segments.clear();
     undoSegments.clear();
@@ -892,6 +893,11 @@ bool        ADM_EditorSegment::dumpClipBoard()
  */
 bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
 {
+    if(!clipboard.size())
+    {
+        ADM_info("The clipboard is empty, nothing to do\n");
+        return true;
+    }
     ADM_info("Pasting from clipboard to %s\n",ADM_us2plain(currentTime));
     uint32_t startSeg;
     uint64_t startSegTime;
