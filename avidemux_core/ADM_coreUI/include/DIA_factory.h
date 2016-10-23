@@ -649,4 +649,8 @@ public:
 /*********************************************/
 ADM_COREUI6_EXPORT uint8_t diaFactoryRun(const char *title,uint32_t nb,diaElem **elems);
 ADM_COREUI6_EXPORT uint8_t diaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs);
+ADM_COREUI6_EXPORT void *  diaFactoryRunTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs);
+ADM_COREUI6_EXPORT bool    diaFactoryRunTabsFinish(void *f);
+
+
 /*********************************************/

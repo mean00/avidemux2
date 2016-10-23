@@ -510,7 +510,10 @@ std::string currentSdlDriver=getSdlDriverName();
                                 &tabHwDecoding,
 #endif
                                 &tabCpu,&tabThreading, &tabAvisynth};
-        if( diaFactoryRunTabs(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs))
+                
+       void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs);
+                
+        if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
         	//
 #ifdef USE_OPENGL

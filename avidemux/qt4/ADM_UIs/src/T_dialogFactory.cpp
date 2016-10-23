@@ -204,7 +204,7 @@ void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs
   * @param f
   * @return 
   */ 
-bool qt4DiaFactoryTabFinish(void *f)
+bool qt4DiaFactoryTabsFinish(void *f)
 {
     bool r=false;
     factoryCookie *cookie=(factoryCookie *)f;
@@ -313,7 +313,7 @@ uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
 uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
     void *cookie=qt4DiaFactoryTabsPrepare(title,nb,tabs);
-    return qt4DiaFactoryTabFinish(cookie);
+    return qt4DiaFactoryTabsFinish(cookie);
 }
 /**
  * 
@@ -381,7 +381,12 @@ static FactoryDescriptor Qt4FactoryDescriptor=
 {
         &qt4FactoryGetVersion,
         &qt4DiaFactoryRun,
-        &qt4DiaFactoryRunTabs,
+        &qt4DiaFactoryRunTabs,        
+        &qt4DiaFactoryTabsPrepare,
+        &qt4DiaFactoryTabsFinish,
+        &qt4DiaFactoryPrepare,
+        &qt4DiaFactoryFinish,
+
         // Buttons
         &qt4CreateButton,
         &qt4DestroyButton,
