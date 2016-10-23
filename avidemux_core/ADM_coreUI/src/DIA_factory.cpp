@@ -58,6 +58,16 @@ uint8_t diaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
 	ADM_assert(Factory); 
 	return Factory->FactoryRunTab(title,nb,tabs);
 }
+void * diaFactoryRunTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
+{
+	ADM_assert(Factory); 
+	return Factory->FactoryTabPrepare(title,nb,tabs);
+}
+bool  diaFactoryRunTabsFinish(void *f)
+{
+        ADM_assert(Factory); 
+	return Factory->FactoryTabFinish(f);
+}
 
 // ****************** Buttons ********************
 diaElemButton ::diaElemButton(const char *toggleTitle, ADM_FAC_CALLBACK *cb,void *cookie,const char *tip) :diaElem(ELEM_BUTTON)
