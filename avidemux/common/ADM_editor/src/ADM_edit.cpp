@@ -81,6 +81,14 @@ bool        ADM_Composer::pasteFromClipBoard(uint64_t currentTime)
     return _segments.pasteFromClipBoard(currentTime);
     
 }
+/**
+    \fn appendFromClipBoard
+    \brief Append the content of the clipboard to the end of the video
+*/
+bool ADM_Composer::appendFromClipBoard(void)
+{
+    return _segments.appendFromClipBoard();
+}
 
 /**
     \fn resetSeg

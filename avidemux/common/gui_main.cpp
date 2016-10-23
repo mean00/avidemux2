@@ -497,7 +497,22 @@ void HandleAction (Action action)
                   markA=markB;
                   markB=p;
               }
-              video_body->pasteFromClipBoard(currentPts);
+              // Special case if we are at the last frame
+              bool lastFrame=false;
+              uint64_t pts=video_body->getLastKeyFramePts();
+              if(pts!=ADM_NO_PTS && currentPts>=pts) // save time if we are not at or beyond the last keyframe
+              {
+                  GUI_infiniteForward(pts);
+                  uint64_t lastFramePts=video_body->getCurrentFramePts();
+                  if(currentPts==lastFramePts) lastFrame=true; 
+              }
+              if(lastFrame)
+              {
+                  video_body->appendFromClipBoard();
+              }else
+              {
+                  video_body->pasteFromClipBoard(currentPts);
+              }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
               if(markA>=currentPts)

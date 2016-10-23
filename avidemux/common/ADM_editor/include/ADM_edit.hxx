@@ -199,6 +199,7 @@ virtual                         ~ADM_Composer();
                     uint8_t     resetSeg( void );
                     bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
                     bool        pasteFromClipBoard(uint64_t currentTime);
+                    bool        appendFromClipBoard(void);
                     bool     	addFile (const char *name);
 					int         appendFile(const char *name);
 					void		closeFile(void);
