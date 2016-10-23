@@ -512,7 +512,22 @@ std::string currentSdlDriver=getSdlDriverName();
                                 &tabCpu,&tabThreading, &tabAvisynth};
                 
        void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs);
-                
+
+// Now we can disable stuff if needed
+#ifndef USE_DXVA2
+       useDxva2.enable(false);       
+#endif
+#ifndef USE_VDPAU       
+        useVdpau.enable(false);              
+#endif
+#ifndef USE_XVBA
+        useXvba.enable(false);              
+#endif
+#ifndef USE_LIBVA
+        useLibVA.enable(false);              
+#endif
+      
+       
         if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
         	//
