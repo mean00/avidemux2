@@ -26,98 +26,12 @@
 #include "ADM_dialogFactoryQt4.h"
 
 static void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab);
-
 /**
     \fn qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
     \brief  Run a dialog made of nb elems, each elem being described in the **elems
     @return 0 on failure, 1 on success
 */
 
-uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
-{
-  QDialog dialog(qtLastRegisteredDialog());
-  qtRegisterDialog(&dialog);
-  
-  ADM_assert(title);
-  ADM_assert(nb);
-  ADM_assert(elems);
-  
-  dialog.setWindowTitle(QString::fromUtf8(title));
-  
-  QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
-  QDialogButtonBox *buttonBox = new QDialogButtonBox();
-  QVBoxLayout *vboxLayout = new QVBoxLayout();
-  QLayout *layout = NULL;
-  int currentLayout = 0;
-
- int  v=0;
-
- for(int i=0;i<nb;i++)
- {
-         ADM_assert(elems[i]);
-
-         if (elems[i]->getRequiredLayout() != currentLayout)
-         {
-                 if (layout)
-                         vboxLayout->addLayout(layout);
-
-                 switch (elems[i]->getRequiredLayout())
-                 {
-                         case FAC_QT_GRIDLAYOUT:
-                                 layout = new QGridLayout();
-                                 break;
-                         case FAC_QT_VBOXLAYOUT:
-                                 layout = new QVBoxLayout();
-                                 break;
-                 }
-
-                 currentLayout = elems[i]->getRequiredLayout();
-                 v = 0;
-         }
-
-         elems[i]->setMe( (void *)&dialog,layout,v);
-         v+=elems[i]->getSize();
- }
-
-   for(int i=0;i<nb;i++)
-  {
-    ADM_assert(elems[i]);
-     elems[i]->finalize(); 
-  }
-
-  // Add buttons
-   buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-   QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-   QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-
-   if (layout)
-           vboxLayout->addLayout(layout);
-
-   vboxLayout->addItem(spacer);
-   vboxLayout->addWidget(buttonBox);
-
-   dialog.setLayout(vboxLayout);
-
-  if(dialog.exec()==QDialog::Accepted)
-  {
-     for(int i=0;i<nb;i++)
-     {
-        ADM_assert(elems[i]);
-        elems[i]->getMe(); 
-    
-      }
-
-         qtUnregisterDialog(&dialog);
-
-    return 1;
-  }
-
-  qtUnregisterDialog(&dialog);
-
-  return 0;
-  
-}
 
 
 /**
@@ -131,9 +45,8 @@ public:
         QDialog     *dialog;
         QVBoxLayout *vboxlayout;
         QLayout     *layout;
+        QTabWidget  *tabWidget;        
         std::vector <diaElem *>items;
-    
-    
 };
 /**
  * 
@@ -250,69 +163,75 @@ const char *shortkey(const char *in)
         return ADM_strdup(escaped.toUtf8().constData());
 }
 
+
 /**
  *         \fn qt4DiaFactoryRunTabs
  */
-uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
+void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
-    QDialog dialog(qtLastRegisteredDialog());
-
-    qtRegisterDialog(&dialog);
+  factoryCookie *cookie=new factoryCookie;
+  cookie->dialog=new QDialog(qtLastRegisteredDialog());
+  qtRegisterDialog(cookie->dialog);
   
-    ADM_assert(title);
-    ADM_assert(nb);
-    ADM_assert(tabs);
+  ADM_assert(title);
+  ADM_assert(nb);
+  ADM_assert(tabs);
   
-    dialog.setWindowTitle(QString::fromUtf8(title));
+    cookie->dialog->setWindowTitle(QString::fromUtf8(title));  
+    cookie->vboxlayout = new QVBoxLayout();
+    cookie->layout  = new QGridLayout();
+    cookie->tabWidget = new QTabWidget();
+    
 
-    QVBoxLayout *vboxLayout = new QVBoxLayout();
-    QGridLayout *layout = new QGridLayout();
-    QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
-    QTabWidget *wtabs = new QTabWidget();
-    QDialogButtonBox *buttonBox = new QDialogButtonBox();
-
-    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-     QObject::connect(buttonBox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-     QObject::connect(buttonBox, SIGNAL(rejected()), &dialog, SLOT(reject()));
-
-     for(int i=0;i<nb;i++)
-     {
+    for(int i=0;i<nb;i++)
+    {
         ADM_assert(tabs[i]);
-        insertTab(i,tabs[i],wtabs);
-      }
+        insertTab(i,tabs[i],cookie->tabWidget);
+         for(int j=0;j<tabs[i]->nbElems;j++)
+             cookie->items.push_back(tabs[i]->dias[j]);
+    }        
+    return cookie;
+}
+ /**
+  * 
+  * @param f
+  * @return 
+  */ 
+bool qt4DiaFactoryTabFinish(void *f)
+{
+    bool r=false;
+    factoryCookie *cookie=(factoryCookie *)f;
+    
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(); 
+    QObject::connect(buttonBox, SIGNAL(accepted()), cookie->dialog, SLOT(accept()));
+    QObject::connect(buttonBox, SIGNAL(rejected()), cookie->dialog, SLOT(reject()));    
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QSpacerItem *spacer = new QSpacerItem(20, 16, QSizePolicy::Minimum, QSizePolicy::Fixed);
+    cookie->vboxlayout->addLayout(cookie->layout);
+    cookie->vboxlayout->addWidget(cookie->tabWidget,0,0);
+    cookie->vboxlayout->addItem(spacer);
+    cookie->vboxlayout->addWidget(buttonBox,1,0);
 
-    vboxLayout->addLayout(layout);
-    vboxLayout->addWidget(wtabs,0,0);
-    vboxLayout->addItem(spacer);
-    vboxLayout->addWidget(buttonBox,1,0);
-
-     dialog.setLayout(vboxLayout);
+     cookie->dialog->setLayout(cookie->vboxlayout);
 
      // Expand to see all tabs but still allow the window to be resized smaller
-     wtabs->setUsesScrollButtons(false);
-     dialog.adjustSize();
-     wtabs->setUsesScrollButtons(true);
+     cookie->tabWidget->setUsesScrollButtons(false);
+     cookie->dialog->adjustSize();
+     cookie->tabWidget->setUsesScrollButtons(true);
 
-    if(dialog.exec()==QDialog::Accepted)
+    if(cookie->dialog->exec()==QDialog::Accepted)
     {
         // Read tabs
-         for(int tab=0;tab<nb;tab++)
-       {
-          ADM_assert(tabs[tab]);
-          diaElemTabs *myTab=tabs[tab];
-          for(int i=0;i<myTab->nbElems;i++)
-          {
-            myTab->dias[i]->getMe();
-          }
-        }
-        qtUnregisterDialog(&dialog);
-        return 1;
+        int n=cookie->items.size();
+        for(int i=0;i<n;i++)
+            cookie->items[i]->getMe();
+        r=true;
     }
-    qtUnregisterDialog(&dialog);
-    return 0;
+    qtUnregisterDialog(cookie->dialog);
+    delete cookie->dialog;
+    delete cookie;
+    return r;
 }
-
 void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 {
 
@@ -370,7 +289,27 @@ void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab)
 
   vboxLayout->addItem(spacerItem);
 }
+/**
+ * 
+ * @param title
+ * @param nb
+ * @param elems
+ * @return 
+ */
+uint8_t qt4DiaFactoryRun(const char *title,uint32_t nb,diaElem **elems)
+{
+    void *cookie=qt4DiaFactoryPrepare(title,nb,elems);
+    return qt4DiaFactoryFinish(cookie);
+}
 
+/**
+ *         \fn qt4DiaFactoryRunTabs
+ */
+uint8_t qt4DiaFactoryRunTabs(const char *title,uint32_t nb,diaElemTabs **tabs)
+{
+    void *cookie=qt4DiaFactoryTabsPrepare(title,nb,tabs);
+    return qt4DiaFactoryTabFinish(cookie);
+}
 /**
  * 
  */
