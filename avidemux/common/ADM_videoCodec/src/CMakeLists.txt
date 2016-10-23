@@ -17,6 +17,11 @@ IF(USE_LIBVA)
         ADD_CORE_INCLUDE(ADM_coreLibVA)
         ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_libva.cpp)
 ENDIF(USE_LIBVA)
-                
+IF(USE_DXVA2)
+        ADD_DEFINITIONS(${LIBVA_CFLAGS})
+        ADD_CORE_INCLUDE(ADM_coreDxva2)
+        ADD_IF_ENABLED(USE_LIBVA ADM_ffmpeg_dxva2.cpp)
+ENDIF(USE_DXVA2)
+                 
 ADD_LIBRARY(ADM_videocodec6 STATIC ${ADM_videoCodec_SRCS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
