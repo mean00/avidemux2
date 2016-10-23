@@ -196,6 +196,7 @@ public:
             
             bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
             bool        pasteFromClipBoard(uint64_t currentTime);
+            bool        appendFromClipBoard(void);
             bool        dumpClipBoard();
 protected:
             void        dumpSegmentsInternal(ListOfSegments &l);

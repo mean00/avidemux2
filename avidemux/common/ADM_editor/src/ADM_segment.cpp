@@ -933,4 +933,20 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     return true;
 }
 
+/**
+ * \fn appendFromClipBoard
+ * \brief append clipboard at the end of video
+ * @return 
+ */
+bool ADM_EditorSegment::appendFromClipBoard(void)
+{
+    ADM_info("Appending from clipboard\n");
+    ListOfSegments tmp=segments;
+    for(int i=0;i<clipboard.size();i++) segments.push_back(clipboard[i]);
+    updateStartTime();
+    undoSegments.push_back(tmp);
+    dump();
+    return true;
+}
+
 //EOF
