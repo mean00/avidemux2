@@ -42,6 +42,27 @@ static void insertTab(uint32_t index, diaElemTabs *tab, QTabWidget *wtab);
 class factoryCookie
 {
 public:
+        factoryCookie(const char *title)
+        {
+            dialog=new QDialog(qtLastRegisteredDialog());
+            qtRegisterDialog(dialog);
+            dialog->setWindowTitle(QString::fromUtf8(title));
+            vboxlayout = new QVBoxLayout();
+            
+            tabWidget=NULL;
+            layout=NULL;
+            
+        }
+        virtual ~factoryCookie()
+        {
+            if(dialog)
+            {
+                qtUnregisterDialog(dialog);
+                delete dialog;
+            }
+            dialog=NULL;
+        }
+public:
         QDialog     *dialog;
         QVBoxLayout *vboxlayout;
         QLayout     *layout;
@@ -57,22 +78,14 @@ public:
  */
 void * qt4DiaFactoryPrepare(const char *title,uint32_t nb,diaElem **elems)
 {
-  factoryCookie *cookie=new factoryCookie;
-  cookie->dialog=new QDialog(qtLastRegisteredDialog());
-  qtRegisterDialog(cookie->dialog);
-  
+  factoryCookie *cookie=new factoryCookie(title);
+
   ADM_assert(title);
   ADM_assert(nb);
   ADM_assert(elems);
   
-  cookie->dialog->setWindowTitle(QString::fromUtf8(title));
-  
-  cookie->vboxlayout = new QVBoxLayout();
-  cookie->layout = NULL;
-  int currentLayout = 0;
-
+    int currentLayout = 0;
     int  v=0;
-
     for(int i=0;i<nb;i++)
     {
        ADM_assert(elems[i]);
@@ -143,8 +156,6 @@ bool  qt4DiaFactoryFinish(void *finish)
       }
      r=true;
   }
-  qtUnregisterDialog(cookie->dialog);
-  delete cookie->dialog;
   delete cookie;
   return r;
 }
@@ -169,16 +180,12 @@ const char *shortkey(const char *in)
  */
 void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
-  factoryCookie *cookie=new factoryCookie;
-  cookie->dialog=new QDialog(qtLastRegisteredDialog());
-  qtRegisterDialog(cookie->dialog);
+    factoryCookie *cookie=new factoryCookie(title);
   
-  ADM_assert(title);
-  ADM_assert(nb);
-  ADM_assert(tabs);
+    ADM_assert(title);
+    ADM_assert(nb);
+    ADM_assert(tabs);
   
-    cookie->dialog->setWindowTitle(QString::fromUtf8(title));  
-    cookie->vboxlayout = new QVBoxLayout();
     cookie->layout  = new QGridLayout();
     cookie->tabWidget = new QTabWidget();
     
@@ -226,9 +233,7 @@ bool qt4DiaFactoryTabFinish(void *f)
         for(int i=0;i<n;i++)
             cookie->items[i]->getMe();
         r=true;
-    }
-    qtUnregisterDialog(cookie->dialog);
-    delete cookie->dialog;
+    }    
     delete cookie;
     return r;
 }
