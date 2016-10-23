@@ -946,6 +946,11 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
  */
 bool ADM_EditorSegment::appendFromClipBoard(void)
 {
+    if(!clipboard.size())
+    {
+        ADM_info("The clipboard is empty, nothing to do\n");
+        return true;
+    }
     ADM_info("Appending from clipboard\n");
     ListOfSegments tmp=segments;
     for(int i=0;i<clipboard.size();i++) segments.push_back(clipboard[i]);
