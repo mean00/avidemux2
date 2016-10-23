@@ -1,6 +1,6 @@
 /***************************************************************************
   DIA_prefs.cpp
-  (C) 2007 Mean Fixounet@free.fr
+  (C) 2007/2016 Mean Fixounet@free.fr
 ***************************************************************************/
 
 /***************************************************************************
@@ -216,29 +216,6 @@ std::string currentSdlDriver=getSdlDriverName();
         bool foo=0;
         diaElemToggle hwAccelText(&foo,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"));
 
-#ifdef USE_VDPAU
-#if 0
-        if(admVdpau::isOperationnal())
-        {
-            ADM_info("We can use vdpau\n");
-        }else
-        {
-            ADM_info("We cannot use vdpau\n");
-            useVdpau.enable(0);
-        }
-#endif
-#endif
-#ifndef USE_LIBVA
-        // Crash useLibVA.enable(0);
-#endif
-#ifndef USE_XVBA
-        // Crash useXvba.enable(0);
-#endif
-
-
-#ifndef USE_OPENGL
-        // Crash         //useOpenGl.enable(0);
-#endif
 
         diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
@@ -259,45 +236,45 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle capsToggleSSE3(&capsSSE3, QT_TRANSLATE_NOOP("adm","Enable SSE3"));
         diaElemToggle capsToggleSSSE3(&capsSSSE3, QT_TRANSLATE_NOOP("adm","Enable SSSE3"));
 
-		capsToggleAll.link(0, &capsToggleMMX);
-		capsToggleAll.link(0, &capsToggleMMXEXT);
-		capsToggleAll.link(0, &capsToggle3DNOW);
-		capsToggleAll.link(0, &capsToggle3DNOWEXT);
-		capsToggleAll.link(0, &capsToggleSSE);
-		capsToggleAll.link(0, &capsToggleSSE2);
-		capsToggleAll.link(0, &capsToggleSSE3);
-		capsToggleAll.link(0, &capsToggleSSSE3);
+        capsToggleAll.link(0, &capsToggleMMX);
+        capsToggleAll.link(0, &capsToggleMMXEXT);
+        capsToggleAll.link(0, &capsToggle3DNOW);
+        capsToggleAll.link(0, &capsToggle3DNOWEXT);
+        capsToggleAll.link(0, &capsToggleSSE);
+        capsToggleAll.link(0, &capsToggleSSE2);
+        capsToggleAll.link(0, &capsToggleSSE3);
+        capsToggleAll.link(0, &capsToggleSSSE3);
 
-		frameSimd.swallow(&capsToggleAll);
-		frameSimd.swallow(&capsToggleMMX);
-		frameSimd.swallow(&capsToggleMMXEXT);
-		frameSimd.swallow(&capsToggle3DNOW);
-		frameSimd.swallow(&capsToggle3DNOWEXT);
-		frameSimd.swallow(&capsToggleSSE);
-		frameSimd.swallow(&capsToggleSSE2);
-		frameSimd.swallow(&capsToggleSSE3);
-		frameSimd.swallow(&capsToggleSSSE3);
+        frameSimd.swallow(&capsToggleAll);
+        frameSimd.swallow(&capsToggleMMX);
+        frameSimd.swallow(&capsToggleMMXEXT);
+        frameSimd.swallow(&capsToggle3DNOW);
+        frameSimd.swallow(&capsToggle3DNOWEXT);
+        frameSimd.swallow(&capsToggleSSE);
+        frameSimd.swallow(&capsToggleSSE2);
+        frameSimd.swallow(&capsToggleSSE3);
+        frameSimd.swallow(&capsToggleSSSE3);
 
-		diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
+        diaElemThreadCount lavcThreadCount(&lavcThreads, QT_TRANSLATE_NOOP("adm","_lavc threads:"));
 
-		diaElemFrame frameThread(QT_TRANSLATE_NOOP("adm","Multi-threading"));
-		frameThread.swallow(&lavcThreadCount);
+        diaElemFrame frameThread(QT_TRANSLATE_NOOP("adm","Multi-threading"));
+        frameThread.swallow(&lavcThreadCount);
 
-		diaMenuEntry priorityEntries[] = {
-                             {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
-                             ,{1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL}
-                             ,{2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
-							 ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
-							 ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
-        };
-		diaElemMenu menuEncodePriority(&encodePriority,QT_TRANSLATE_NOOP("adm","_Encoding priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
-		diaElemMenu menuIndexPriority(&indexPriority,QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
-		diaElemMenu menuPlaybackPriority(&playbackPriority,QT_TRANSLATE_NOOP("adm","_Playback priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+        diaMenuEntry priorityEntries[] = {
+                     {0,       QT_TRANSLATE_NOOP("adm","High"),NULL}
+                     ,{1,      QT_TRANSLATE_NOOP("adm","Above normal"),NULL}
+                     ,{2,      QT_TRANSLATE_NOOP("adm","Normal"),NULL}
+                    ,{3,      QT_TRANSLATE_NOOP("adm","Below normal"),NULL}
+                    ,{4,      QT_TRANSLATE_NOOP("adm","Low"),NULL}
+};
+        diaElemMenu menuEncodePriority(&encodePriority,QT_TRANSLATE_NOOP("adm","_Encoding priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+        diaElemMenu menuIndexPriority(&indexPriority,QT_TRANSLATE_NOOP("adm","_Indexing/unpacking priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
+        diaElemMenu menuPlaybackPriority(&playbackPriority,QT_TRANSLATE_NOOP("adm","_Playback priority:"), sizeof(priorityEntries)/sizeof(diaMenuEntry), priorityEntries,"");
 
-		diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
-		framePriority.swallow(&menuEncodePriority);
-		framePriority.swallow(&menuIndexPriority);
-		framePriority.swallow(&menuPlaybackPriority);
+        diaElemFrame framePriority(QT_TRANSLATE_NOOP("adm","Prioritisation"));
+        framePriority.swallow(&menuEncodePriority);
+        framePriority.swallow(&menuIndexPriority);
+        framePriority.swallow(&menuPlaybackPriority);
 
         diaElemUInteger autoSplit(&autosplit,QT_TRANSLATE_NOOP("adm","_Split MPEG files every (MB):"),10,4096);
 
@@ -375,7 +352,7 @@ std::string currentSdlDriver=getSdlDriverName();
                              {0,       QT_TRANSLATE_NOOP("adm","No downmixing"),NULL}
                              ,{1,       QT_TRANSLATE_NOOP("adm","Stereo"),NULL}
                              ,{2,      QT_TRANSLATE_NOOP("adm","Pro Logic"),NULL}
-                              ,{3,      QT_TRANSLATE_NOOP("adm","Pro Logic II"),NULL}
+                             ,{3,      QT_TRANSLATE_NOOP("adm","Pro Logic II"),NULL}
          };
         diaElemMenu menuMixer(&downmix,QT_TRANSLATE_NOOP("adm","_Local playback downmixing:"), sizeof(mixerEntries)/sizeof(diaMenuEntry),mixerEntries,"");
 //*********** AV_
@@ -407,10 +384,10 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
 //  -- select language
-     typedef struct  { const char *lang;const char *desc;}languageDescriptor;
-     uint32_t languageIndex=0;
-     languageDescriptor myLanguages[]={
-                {"auto",QT_TRANSLATE_NOOP("adm","System language")},
+        typedef struct  { const char *lang;const char *desc;}languageDescriptor;
+        uint32_t languageIndex=0;
+        languageDescriptor myLanguages[]={
+                   {"auto",QT_TRANSLATE_NOOP("adm","System language")},
                 {"da","Dansk"},
                 {"de","Deutsch"},
                 {"en","English"},
@@ -480,22 +457,22 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
-          diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&useDxva2,&hwAccelText};
-          diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
+        diaElem *diaHwDecoding[]={&useVdpau,&useXvba,&useLibVA,&useDxva2,&hwAccelText};
+        diaElemTabs tabHwDecoding(QT_TRANSLATE_NOOP("adm","HW Accel"),5,(diaElem **)diaHwDecoding);
 
         /* CPU tab */
-		diaElem *diaCpu[]={&frameSimd};
-		diaElemTabs tabCpu(QT_TRANSLATE_NOOP("adm","CPU"),1,(diaElem **)diaCpu);
+        diaElem *diaCpu[]={&frameSimd};
+        diaElemTabs tabCpu(QT_TRANSLATE_NOOP("adm","CPU"),1,(diaElem **)diaCpu);
 
         /* Threading tab */
-		diaElem *diaThreading[]={&frameThread, &framePriority};
-		diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),2,(diaElem **)diaThreading);
+        diaElem *diaThreading[]={&frameThread, &framePriority};
+        diaElemTabs tabThreading(QT_TRANSLATE_NOOP("adm","Threading"),2,(diaElem **)diaThreading);
 
-		/* Avisynth tab */
-		diaElemToggle togAskAvisynthPort(&askPortAvisynth,QT_TRANSLATE_NOOP("adm","_Always ask which port to use"));
-		diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
-		diaElem *diaAvisynth[]={&togAskAvisynthPort, &uintDefaultPortAvisynth};
-		diaElemTabs tabAvisynth("Avisynth",2,(diaElem **)diaAvisynth);
+        /* Avisynth tab */
+        diaElemToggle togAskAvisynthPort(&askPortAvisynth,QT_TRANSLATE_NOOP("adm","_Always ask which port to use"));
+        diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
+        diaElem *diaAvisynth[]={&togAskAvisynthPort, &uintDefaultPortAvisynth};
+        diaElemTabs tabAvisynth("Avisynth",2,(diaElem **)diaAvisynth);
 
         /* Global Glyph tab */
 
@@ -527,6 +504,9 @@ std::string currentSdlDriver=getSdlDriverName();
         useLibVA.enable(false);              
 #endif
       
+#ifndef  USE_OPENGL
+        useOpenGl.enable(false);
+#endif
        
         if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
