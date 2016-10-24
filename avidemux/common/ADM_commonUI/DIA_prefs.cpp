@@ -477,21 +477,13 @@ std::string currentSdlDriver=getSdlDriverName();
         /* Global Glyph tab */
 
 
-// SET
-                int extra=0;
-#ifdef __linux__
-              extra++;
-#endif
                 diaElemTabs *tabs[]={&tabUser,&tabOutput,&tabAudio,&tabVideo,
-#ifdef __linux__
-                                &tabHwDecoding,
-#endif
-                                &tabCpu,&tabThreading, &tabAvisynth};
+                                &tabHwDecoding,  &tabCpu,&tabThreading, &tabAvisynth};
                 
-       void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs);
+       void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),8,tabs);
 
 // Now we can disable stuff if needed
-#if 0       //  
+  
 #ifndef USE_DXVA2
        useDxva2.enable(false);       
 #endif
@@ -509,7 +501,6 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifndef  USE_OPENGL
         useOpenGl.enable(false);
 #endif
-#endif       
         if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
         	//
