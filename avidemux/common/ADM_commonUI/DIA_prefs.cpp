@@ -494,6 +494,7 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifndef USE_DXVA2
        useDxva2.enable(false);       
 #endif
+#if 0
 #ifndef USE_VDPAU       
         useVdpau.enable(false);              
 #endif
@@ -507,7 +508,7 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifndef  USE_OPENGL
         useOpenGl.enable(false);
 #endif
-       
+#endif       
         if( diaFactoryRunTabsFinish(factoryCookiez))
 	{
         	//
