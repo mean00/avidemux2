@@ -13,6 +13,7 @@ do_qt4=1
 do_plugins=1
 do_asan=0
 debug=0
+install_prefix="/usr"
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
@@ -28,6 +29,7 @@ Process()
 {
         export BUILDDIR=$1
         export SOURCEDIR=$2
+        export INSTALL_PREFIX="-DCMAKE_INSTALL_PREFIX=$install_prefix"
         export EXTRA=$3
         export DEBUG=""
         export ASAN=""
@@ -50,7 +52,7 @@ Process()
                 mkdir $BUILDDIR || fail mkdir
         fi
         cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim $INSTALL_PREFIX $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
@@ -87,6 +89,7 @@ usage()
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
         echo "  --help            : Print usage"
+        echo "  --prefix=DIR      : Install to directory DIR (default: /usr)"
         echo "  --rpm             : Build rpm packages"
         echo "  --deb             : Build deb packages"
         echo "  --tgz             : Build tgz packages"
@@ -109,6 +112,30 @@ usage()
         config 
 
 }
+option_value()
+{
+        echo $(echo $* | cut -d '=' -f 2-)
+}
+dir_check()
+{
+        if [ "x$1" != "x" ] ; then
+            if [[ "$1" != /* ]] ; then
+                >&2 echo "Expected an absolute path for --${option_name}=$1, aborting."
+                exit 1
+            fi
+        else
+            >&2 echo "Empty path provided for --${option_name}, aborting."
+            exit 1
+        fi
+        case "$1" in
+          */)
+              echo $(expr "x$1" : 'x\(.*[^/]\)') # strip trailing slashes
+              ;;
+          *)
+              echo "$1"
+              ;;
+        esac
+}
 #
 
 export FAKEROOT_COMMAND="fakeroot"
@@ -127,6 +154,10 @@ while [ $# != 0 ] ;do
              usage
              exit 1
              ;;
+         --prefix=*)
+                option_name=prefix
+                install_prefix=$(dir_check $(option_value "$1")) || exit 1
+                ;;
          --debug)
                 debug=1
                 ;;
