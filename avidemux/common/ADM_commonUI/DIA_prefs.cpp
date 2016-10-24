@@ -491,10 +491,11 @@ std::string currentSdlDriver=getSdlDriverName();
        void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),7+extra,tabs);
 
 // Now we can disable stuff if needed
+#if 0       
 #ifndef USE_DXVA2
        useDxva2.enable(false);       
 #endif
-#if 0
+
 #ifndef USE_VDPAU       
         useVdpau.enable(false);              
 #endif
