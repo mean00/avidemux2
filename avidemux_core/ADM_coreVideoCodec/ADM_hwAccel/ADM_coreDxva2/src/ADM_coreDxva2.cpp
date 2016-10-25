@@ -37,5 +37,18 @@ bool admDxva2::cleanup(void)
     ADM_warning("This binary has no DXVA2 support\n");
     return true;
 }
+/**
+ * \fn admLibVa_exitCleanup
+ */
+bool admDxva2_exitCleanup()
+{
+    ADM_info("Dxva2 cleanup begin\n");
+    ADM_info("Dxva2 cleanup end\n");
+    return true;
+}
+
+
+
+
 #endif
 // EOF

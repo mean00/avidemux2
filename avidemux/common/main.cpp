@@ -287,6 +287,11 @@ int startAvidemux(int argc, char *argv[])
     PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder, admVdpau_exitCleanup)
 #endif
 
+#if defined( USE_DXVA2)
+    extern bool admDxva2_exitCleanup(();
+    PROBE_HW_ACCEL(dxva2Probe,DXVA2,initDXVA2Decoder,admDxva2_exitCleanup)
+#endif
+
 #if defined( USE_LIBVA)
     extern bool admLibVa_exitCleanup();
     PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admLibVa_exitCleanup)
