@@ -205,7 +205,7 @@ void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
    VASurfaceID   surface=*(VASurfaceID *)(data);
    dec->markSurfaceUnused(surface);
 #endif
-   return -1;
+   return ;
 }
 
 /**
@@ -214,9 +214,9 @@ void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
  * @param pic
  * @return 
  */
+#if 0        
 int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-#if 0        
     imageMutex.lock();
     if(vaPool.freeSurfaceQueue.empty())
     {
@@ -251,9 +251,9 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
     pic->reordered_opaque= avctx->reordered_opaque;    
     return 0;
-#endif
     return -1;
 }
+#endif
 
 /**
     \fn dxva2Cleanup
@@ -591,13 +591,13 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
  * @param fmt
  * @return 
  */
-ADM_acceleratedDecoderFF *ADM_hwAccelEntryLibVA::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
+ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
     //decoderFF *ff=(decoderFF *)avctx->opaque;
     //return new decoderFFDXVA2(avctx,ff);
-    return null
+    return NULL;
 }
-static ADM_hwAccelEntryLibVA dxva2Entry;
+static ADM_hwAccelEntryDxva2 dxva2Entry;
 /**
  * 
  * @return 
