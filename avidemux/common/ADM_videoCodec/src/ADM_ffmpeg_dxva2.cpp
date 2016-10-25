@@ -34,7 +34,7 @@ extern "C" {
 #include "ADM_render/GUI_render.h"
 #include "ADM_ffmpeg_dxva2_internal.h"
 #include "prefs.h"
-#include "ADM_coreLibVA.h"
+#include "ADM_coreDxva2.h"
 #include "../private_inc/ADM_codecDxva2.h"
 #include "ADM_threads.h"
 #include "ADM_vidMisc.h"
