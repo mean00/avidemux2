@@ -110,7 +110,7 @@ endif (USE_VDPAU)
 
 if (USE_LIBVA)
 	xadd(--enable-vaapi)
-	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vaapi)
+	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vaapi hevc_vaapi)
 endif (USE_LIBVA)
 
 
@@ -247,6 +247,7 @@ endif (FF_FLAGS)
 IF(WIN32)
         IF(USE_DXVA2)
                 xadd(--enable-dxva2)
+	        set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_dxva2 hevc_dxva2)
         ENDIF(USE_DXVA2)
 ENDIF(WIN32)
 
@@ -377,6 +378,11 @@ IF(USE_LIBVA)
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/vaapi_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
 ENDIF(USE_LIBVA)
+
+IF(USE_DXVA2)
+        INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
+        INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
+ENDIF(USE_DXVA2)
 IF(USE_XVBA)
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/xvba_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev) 
