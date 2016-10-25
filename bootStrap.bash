@@ -13,12 +13,13 @@ do_qt4=1
 do_plugins=1
 do_asan=0
 debug=0
-install_prefix="/usr"
+default_install_prefix="/usr"
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
 export QT_SELECT=5 # default for ubuntu, harmless for others
 export O_PARAL="-j $(nproc)"
+install_prefix="$default_install_prefix"
 fail()
 {
         echo "** Failed at $1**"
@@ -89,7 +90,7 @@ usage()
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
         echo "  --help            : Print usage"
-        echo "  --prefix=DIR      : Install to directory DIR (default: /usr)"
+        echo "  --prefix=DIR      : Install to directory DIR (default: $default_install_prefix)"
         echo "  --rpm             : Build rpm packages"
         echo "  --deb             : Build deb packages"
         echo "  --tgz             : Build tgz packages"
@@ -116,23 +117,29 @@ option_value()
 {
         echo $(echo $* | cut -d '=' -f 2-)
 }
+option_name()
+{
+        echo $(echo $* | cut -d '=' -f 1 | cut -b 3-)
+}
 dir_check()
 {
-        if [ "x$1" != "x" ] ; then
-            if [[ "$1" != /* ]] ; then
-                >&2 echo "Expected an absolute path for --${option_name}=$1, aborting."
+        op_name="$1"
+        dir_path="$2"
+        if [ "x$dir_path" != "x" ] ; then
+            if [[ "$dir_path" != /* ]] ; then
+                >&2 echo "Expected an absolute path for --$op_name=$dir_path, aborting."
                 exit 1
             fi
         else
-            >&2 echo "Empty path provided for --${option_name}, aborting."
+            >&2 echo "Empty path provided for --$op_name, aborting."
             exit 1
         fi
-        case "$1" in
+        case "$dir_path" in
           */)
-              echo $(expr "x$1" : 'x\(.*[^/]\)') # strip trailing slashes
+              echo $(expr "x$dir_path" : 'x\(.*[^/]\)') # strip trailing slashes
               ;;
           *)
-              echo "$1"
+              echo "$dir_path"
               ;;
         esac
 }
@@ -149,14 +156,14 @@ case "$CMAKE_VERSION" in
 esac
 # Could probably do it with getopts...
 while [ $# != 0 ] ;do
-        case "$1" in
+        config_option="$1"
+        case "$config_option" in
          -h|--help)
              usage
              exit 1
              ;;
          --prefix=*)
-                option_name=prefix
-                install_prefix=$(dir_check $(option_value "$1")) || exit 1
+                install_prefix=$(dir_check $(option_name "$config_option") $(option_value "$config_option")) || exit 1
                 ;;
          --debug)
                 debug=1
@@ -219,7 +226,7 @@ while [ $# != 0 ] ;do
                 do_core=1
              ;;
         *)
-                echo "unknown parameter $1"
+                echo "unknown parameter $config_option"
                 usage
                 exit 1
                 ;;
