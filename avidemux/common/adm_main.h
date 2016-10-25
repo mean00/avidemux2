@@ -72,6 +72,9 @@ extern bool initVDPAUDecoder(void);
 #ifdef USE_LIBVA
 extern bool initLIBVADecoder(void);
 #endif
+#ifdef USE_DXVA2
+extern bool initDXVA2Decoder(void);
+#endif
 
 #define PROBE_HW_ACCEL(probe,name,initFunc,cleanupFunc) {   \
     printf("Probing for "#name"...\n"); \

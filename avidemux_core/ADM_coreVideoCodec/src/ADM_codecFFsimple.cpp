@@ -110,6 +110,12 @@ bool admCoreCodecSupports(ADM_CORE_CODEC_FEATURE feat)
         return true;
     }
 #endif
+#ifdef USE_DXVA2
+    if(feat==ADM_CORE_CODEC_FEATURE_DXVA2)
+    {
+        return true;
+    }
+#endif
     return false;
 }
 // EOF
