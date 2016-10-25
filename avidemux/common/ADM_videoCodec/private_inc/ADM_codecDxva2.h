@@ -5,7 +5,6 @@
 
 
 #include <BVector.h>
-#include "ADM_coreDXVA2.h"
 #include "ADM_threads.h"
 /**
  * \class decoderFFDXVA2
@@ -22,8 +21,8 @@ public:
 //                    bool        markSurfaceUsed(ADM_vaSurface *s);
                     //bool        markSurfaceUnused(ADM_vaSurface *s);
 public:     // Callbacks
-                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
-                    void        releaseBuffer(ADM_vaSurface *vaSurface);
+                    //int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
+                    //void        releaseBuffer(ADM_vaSurface *vaSurface);
                     bool        initFail(void) {alive=false;return true;}
 public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
