@@ -24,6 +24,8 @@
 #cmakedefine USE_XVBA
 // use libva h264 hw decoding 
 #cmakedefine USE_LIBVA
+// use dxva2 hw decoding 
+#cmakedefine USE_DXVA2
 
 // 'gettimeofday' function is present
 #cmakedefine HAVE_GETTIMEOFDAY
