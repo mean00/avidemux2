@@ -93,9 +93,9 @@ bool admDxva2::init(GUI_WindowInfo *x)
     d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
     d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
 
-    hr = IDirect3D9_CreateDevice(ctx->d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
+    hr = IDirect3D9_CreateDevice(d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                  D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
-                                 &d3dpp, &ctx->d3d9device);
+                                 &d3dpp, &d3d9device);
     if(FAILED(hr))
     {
         ADM_warning("Cannot create d3d9 device\n");
