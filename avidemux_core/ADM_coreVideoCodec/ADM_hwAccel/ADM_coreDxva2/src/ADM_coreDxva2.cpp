@@ -18,10 +18,106 @@
 #include "../include/ADM_coreDxva2Internal.h"
 #include "ADM_dynamicLoading.h"
 #include <map>
+
+
+#ifdef _WIN32_WINNT
+#undef _WIN32_WINNT
+#endif
+#define _WIN32_WINNT 0x0600
+#define DXVA2API_USE_BITFIELDS
+#define COBJMACROS
+#include <d3d9.h>
+#include <dxva2api.h>
+
+
 static bool                  coreDxva2Working=false;
+
+static ADM_LibWrapper        d3dDynaLoader;
+static ADM_LibWrapper        dxva2DynaLoader;
+
+static pDirect3DCreate9      *createD3D = NULL;
+static pCreateDeviceManager9 *createDeviceManager = NULL;
+
+static IDirect3D9                  *d3d9;
+static IDirect3DDevice9            *d3d9device;
+static IDirect3DDeviceManager9     *d3d9devmgr;
+static IDirectXVideoDecoderService *decoder_service;
+    
+
+/**
+ */
 bool admDxva2::init(GUI_WindowInfo *x)
 {
-          return false;
+    UINT adapter = D3DADAPTER_DEFAULT;   
+    D3DDISPLAYMODE        d3ddm;
+    HRESULT hr;
+    unsigned int resetToken = 0;
+    
+    // Load d3d9 dll
+    if(false==d3dDynaLoader.load("d3d9.dll"))
+    {
+        ADM_warning("Dxva2: Cannot load d3d9.dll\n"); // memleak
+        goto failInit;
+    }
+    // Load d3d9 dll
+    if(false==dxva2DynaLoader.load("dxva2.dll"))
+    {
+        ADM_warning("Dxva2: Cannot load dxva2.dll\n");
+        goto failInit;
+    }
+    
+    createD3D=(pDirect3DCreate9 *)d3dDynaLoader.getSymbol("Direct3DCreate9");
+    if(!createD3D)
+    {
+        ADM_warning("Dxva2: Cannot get symbol  Direct3DCreate9\n");
+        goto failInit;
+    }
+    createDeviceManager=(pCreateDeviceManager9 *)dxva2DynaLoader.getSymbol("DXVA2CreateDirect3DDeviceManager9");
+    if(!createDeviceManager)
+    {
+        ADM_warning("Dxva2: Cannot get symbol  createDeviceManager\n");
+        goto failInit;
+    }     
+    d3d9 = createD3D(D3D_SDK_VERSION);
+    if(!d3d9)
+    {
+        ADM_warning("Dxva2: Cannot gcreate d3d9\n");
+        goto failInit;
+    }
+    IDirect3D9_GetAdapterDisplayMode(d3d9, adapter, &d3ddm);
+    d3dpp.Windowed         = TRUE;
+    d3dpp.BackBufferWidth  = 640;
+    d3dpp.BackBufferHeight = 480;
+    d3dpp.BackBufferCount  = 0;
+    d3dpp.BackBufferFormat = d3ddm.Format;
+    d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
+    d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
+
+    hr = IDirect3D9_CreateDevice(ctx->d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
+                                 D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
+                                 &d3dpp, &ctx->d3d9device);
+    if(FAILED(hr))
+    {
+        ADM_warning("Cannot create d3d9 device\n");
+        goto failInit;
+    }
+    hr = createDeviceManager(&resetToken, &d3d9devmgr);
+    if (FAILED(hr)) 
+    {
+        ADM_warning( "Failed to create Direct3D device manager\n");
+        goto failInit;
+    }
+    hr = IDirect3DDeviceManager9_ResetDevice(d3d9devmgr, d3d9device, resetToken);
+    if (FAILED(hr))
+    {
+        ADM_warning( "Failed to bind Direct3D device to device manager\n");
+        goto failInit;
+    }
+    ADM_info("Dxva2 init step1\n");
+    return false;
+failInit:
+    // cleanup
+    return false;
 }
   
 /**
