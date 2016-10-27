@@ -2,6 +2,9 @@
     \file             : ADM_coreDXVA2.cpp
     \brief            : Wrapper around DXVA2 functions
     \author           : (C) 2016 by mean fixounet@free.fr
+
+        This code is strongly derived from ffmpeg_dxva2 from ffmpeg
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,7 +22,7 @@
 #include "ADM_dynamicLoading.h"
 #include <map>
 
-
+#define CINTERFACE
 #ifdef _WIN32_WINNT
 #undef _WIN32_WINNT
 #endif
@@ -29,6 +32,9 @@
 #include <d3d9.h>
 #include <dxva2api.h>
 
+
+typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
+typedef HRESULT     WINAPI pCreateDeviceManager9(UINT *, IDirect3DDeviceManager9 **);
 
 static bool                  coreDxva2Working=false;
 
@@ -50,17 +56,19 @@ bool admDxva2::init(GUI_WindowInfo *x)
 {
     UINT adapter = D3DADAPTER_DEFAULT;   
     D3DDISPLAYMODE        d3ddm;
+    D3DPRESENT_PARAMETERS d3dpp = {0};
+
     HRESULT hr;
     unsigned int resetToken = 0;
     
     // Load d3d9 dll
-    if(false==d3dDynaLoader.load("d3d9.dll"))
+    if(false==d3dDynaLoader.loadLibrary("d3d9.dll"))
     {
         ADM_warning("Dxva2: Cannot load d3d9.dll\n"); // memleak
         goto failInit;
     }
     // Load d3d9 dll
-    if(false==dxva2DynaLoader.load("dxva2.dll"))
+    if(false==dxva2DynaLoader.loadLibrary("dxva2.dll"))
     {
         ADM_warning("Dxva2: Cannot load dxva2.dll\n");
         goto failInit;
