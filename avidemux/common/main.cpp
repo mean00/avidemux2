@@ -288,7 +288,7 @@ int startAvidemux(int argc, char *argv[])
 #endif
 
 #if defined( USE_DXVA2)
-    extern bool admDxva2_exitCleanup(();
+    extern bool admDxva2_exitCleanup();
     PROBE_HW_ACCEL(dxva2Probe,DXVA2,initDXVA2Decoder,admDxva2_exitCleanup)
 #endif
 
