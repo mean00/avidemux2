@@ -14,6 +14,7 @@ extern uint8_t GUI_close(void);
 static bool setPrefsDefault(void);
 extern bool  vdpauProbe(void);
 extern bool  libvaProbe(void);
+extern bool  dxva2Probe(void);
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
