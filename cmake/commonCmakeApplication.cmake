@@ -109,6 +109,9 @@ ADM_videocodec6
 ADM_coreVideoCodec6
 ADM_commonUI6
 )
+if (USE_DXVA2)
+	SET(commonLibs1 ${commonLibs1} ADM_coreDxva2)
+endif (USE_DXVA2)
 
 if (USE_VDPAU)
 	SET(commonLibs1 ${commonLibs1} ADM_coreVDPAU6)
