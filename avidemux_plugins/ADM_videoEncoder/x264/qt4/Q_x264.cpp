@@ -85,7 +85,7 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "film", "animation", "grain", "stillimage", "psnr", "ssim" };
+static const char* listOfTunings[] = { "", "film", "animation", "grain", "stillimage", "psnr", "ssim" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "baseline", "main", "high", "high10", "high422", "high444" };
@@ -171,7 +171,10 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         tunings->clear();
         for(int i=0;i<NB_TUNE;i++)
         {
-            tunings->addItem(QString(listOfTunings[i]));
+            const char* _tn=listOfTunings[i];
+            if(_tn=="")
+                _tn=QT_TRANSLATE_NOOP("x264","none");
+            tunings->addItem(QString(_tn));
         }
 
         QComboBox* profiles=ui.profileComboBox;
