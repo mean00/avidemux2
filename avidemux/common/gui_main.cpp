@@ -465,6 +465,7 @@ void HandleAction (Action action)
           markA=markB;
           markB=y;
         }
+        video_body->addToUndoQueue();
         video_body->setMarkerAPts(markA);
         video_body->setMarkerBPts(markB);
         UI_setMarkers (markA, markB);
@@ -497,6 +498,7 @@ void HandleAction (Action action)
                   markA=markB;
                   markB=p;
               }
+              video_body->addToUndoQueue();
               // Special case if we are at the last frame
               bool lastFrame=false;
               uint64_t pts=video_body->getLastKeyFramePts();
@@ -526,22 +528,30 @@ void HandleAction (Action action)
               }
               video_body->setMarkerAPts(markA);
               video_body->setMarkerBPts(markB);
-                A_Resync();
-                GUI_GoToTime(currentPts);
+              A_Resync();
+              GUI_GoToTime(currentPts);
             }
             break;
       break;
 
     case ACT_Undo:
+    case ACT_Redo:
         if (avifileinfo)
         {
             uint64_t currentPts=video_body->getCurrentFramePts();
+            bool r=false;
 
-            if(video_body->undo())
+            if(action==ACT_Undo)
+            {
+                r=video_body->undo();
+            }else
+            {
+                r=video_body->redo();
+            }
+            if(r)
             {
                 video_body->getVideoInfo(avifileinfo);
-                ReSync();
-                A_ResetMarkers();
+                A_Resync();
                 A_Rewind();
 
                 if(currentPts<=video_body->getVideoDuration()) GUI_GoToTime(currentPts);
@@ -553,6 +563,7 @@ void HandleAction (Action action)
        if(avifileinfo)
          if(GUI_Question(QT_TRANSLATE_NOOP("adm","Are you sure?")))
         {
+            video_body->clearUndoQueue();
             video_body->resetSeg();
             video_body->getVideoInfo (avifileinfo);
 
@@ -580,7 +591,7 @@ void HandleAction (Action action)
             {
                 video_body->copyToClipBoard(a,b);
             }
-
+            video_body->addToUndoQueue();
             // Special case of B being at or beyond the last frame
             bool lastFrame=false;
             bool result=false;
@@ -862,6 +873,7 @@ int A_appendVideo (const char *name)
 
     if (playing)
         return 0;
+    video_body->addToUndoQueue();
     if (!video_body->addFile (name))
     {
       GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Something failed when appending"), NULL);
@@ -1431,6 +1443,7 @@ uint8_t GUI_close(void)
       //delete wavinfo;
       admPreview::destroy();
       avifileinfo = NULL;
+      video_body->clearUndoQueue();
       video_body->cleanup ();
 
 //      filterCleanUp ();

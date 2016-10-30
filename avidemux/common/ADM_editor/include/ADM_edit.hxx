@@ -192,10 +192,6 @@ protected:
                                 ADM_Composer();
 virtual                         ~ADM_Composer();
                     void        clean( void );
-                    bool        undo(void)
-                                {
-                                    return _segments.undo();
-                                }
                     uint8_t     resetSeg( void );
                     bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
                     bool        pasteFromClipBoard(uint64_t currentTime);
@@ -218,7 +214,23 @@ public:
                     uint64_t    getMarkerBPts();
                     bool        setMarkerAPts(uint64_t pts);
                     bool        setMarkerBPts(uint64_t pts);
+/*********************************** Undo Queue ****************************/
+struct undoQueueElem
+{
+    ListOfSegments segm;
+    uint64_t markerA;
+    uint64_t markerB;
+};
+
+typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
+
+protected:
+                    ListOfUndoQueueElements undoQueue;
 public:
+                    bool        addToUndoQueue(void);
+                    bool        undo(void);
+                    bool        redo(void);
+                    bool        clearUndoQueue(void);
 /************************************ Public API ***************************/
 public:
                     uint64_t    getLastKeyFramePts(void);
