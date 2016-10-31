@@ -85,6 +85,7 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
+// Empty string "" as tuning means no tuning. This is the default.
 static const char* listOfTunings[] = { "", "film", "animation", "grain", "stillimage", "psnr", "ssim" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
