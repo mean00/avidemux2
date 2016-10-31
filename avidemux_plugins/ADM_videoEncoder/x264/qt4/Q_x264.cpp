@@ -172,6 +172,8 @@ x264Dialog::x264Dialog(QWidget *parent, void *param) : QDialog(parent)
         for(int i=0;i<NB_TUNE;i++)
         {
             const char* _tn=listOfTunings[i];
+            // we pass an empty string to the encoder in order to disable tuning,
+            // but want to show a descriptive label to the user
             if(_tn=="")
                 _tn=QT_TRANSLATE_NOOP("x264","none");
             tunings->addItem(QString(_tn));
