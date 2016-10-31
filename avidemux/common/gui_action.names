@@ -73,6 +73,7 @@ ACT(Cut)
 ACT(Paste)
 ACT(Delete)
 ACT(Undo)
+ACT(Redo)
 ACT(ResetSegments)
 
 // Misc conf

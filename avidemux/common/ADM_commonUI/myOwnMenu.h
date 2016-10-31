@@ -51,6 +51,7 @@ std::vector<MenuEntry> myMenuFile(_myMenuFile, _myMenuFile + sizeof(_myMenuFile)
 
 static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo       ,NULL,"Ctrl+Z"},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Redo"),               NULL,ACT_Redo       ,NULL,"Ctrl+Y"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Edit"),         NULL,ACT_ResetSegments,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut        ,NULL,"Ctrl+X"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy       ,NULL,"Ctrl+C"},
