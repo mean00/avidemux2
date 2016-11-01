@@ -109,7 +109,7 @@ typedef struct
      bool            enabled;
      DXVA2_VideoDesc desc;
            GUID      device_guid;
-     const GUID      guid;
+           GUID      guid;
 }Dxv2SupportMap;
 
 static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false};
