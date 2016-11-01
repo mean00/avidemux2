@@ -43,7 +43,7 @@ extern "C" {
 
 
 static bool         dxva2Working=false;
-static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags));
+static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
 
