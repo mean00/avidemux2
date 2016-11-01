@@ -43,7 +43,7 @@ extern "C" {
 
 
 static bool         dxva2Working=false;
-static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic);
+static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags));
 static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
 
@@ -91,7 +91,7 @@ bool dxva2Probe(void)
     \fn ADM_DXVA2getBuffer
     \brief trampoline to get a DXVA2 surface
 */
-int ADM_LIBDXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
+int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
     ADM_warning("DXVA2: Get buffer!!!\n");
     decoderFF *ff=(decoderFF *)avctx->opaque;
