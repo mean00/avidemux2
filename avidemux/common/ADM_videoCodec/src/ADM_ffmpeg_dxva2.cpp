@@ -207,7 +207,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     // TODO !
     //
     _context->opaque=this;
-    _context->hwaccel_context=ADM_DXVA2_BUFFER;
+    _context->hwaccel_context=dx_context;
     alive=true;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
     _context->draw_horiz_band = NULL;
