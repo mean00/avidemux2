@@ -149,7 +149,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
         
         if(c!=AV_PIX_FMT_DXVA2_VLD) continue;
-#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_VAAPI_VLD;id=avctx->codec_id;break;
+#define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_DXVA2_VLD;id=avctx->codec_id;break;
         
         
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
@@ -166,8 +166,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         break;
     }
     if(id==AV_CODEC_ID_NONE)
-    {
-        
+    {        
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of DXVA2 decoder
