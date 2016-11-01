@@ -24,6 +24,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
 #include "libavutil/pixdesc.h"
+#include "libavcodec/dxva2_internal.h"
 #include "libavcodec/dxva2.h"
 }
 
@@ -197,14 +198,15 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     ADM_info("Setting up Dxva2 context (not working)\n");
     alive=false;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-    
+    _context->thread_count    = 1;
     // create decoder
-    ADM_DXVA2_BUFFER *dx_context=new ADM_DXVA2_BUFFER;
+    AVDXVAContext *dx_context=new AVDXVAContext;
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...
     
     // Fill in structure...
     // TODO !
     //
+    _context->opaque=this;
     _context->hwaccel_context=ADM_DXVA2_BUFFER;
     alive=true;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
