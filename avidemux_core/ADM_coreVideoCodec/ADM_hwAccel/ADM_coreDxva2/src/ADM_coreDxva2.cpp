@@ -17,10 +17,6 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "../include/ADM_coreDxva2.h"
-extern "C" 
-{
- #include "libavcodec/avcodec.h"
-}
 #ifdef USE_DXVA2
 #include "../include/ADM_coreDxva2Internal.h"
 #include "ADM_dynamicLoading.h"
@@ -108,6 +104,7 @@ typedef struct
      enum AVCodecID  codec;
      bool            enabled;
      DXVA2_VideoDesc desc;
+     DXVA2_ConfigPictureDecode pictureDecode;
            GUID      device_guid;
            GUID      guid;
 }Dxv2SupportMap;
@@ -168,6 +165,55 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         ADM_info("No decoder device for codec %s found\n",codecName);
         return false;
     }
+    //--
+    unsigned int cfg_count = 0, best_score = 0;
+    DXVA2_ConfigPictureDecode *cfg_list = NULL;
+    bool   found=false;
+    hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, context->device_guid, &(context->desc), NULL, &cfg_count, &cfg_list);
+    if (FAILED(hr)) {
+        ADM_warning("Unable to retrieve decoder configurations\n");
+        return false;
+    }
+
+    for (int i = 0; i < cfg_count; i++) 
+    {
+        DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
+
+        unsigned score;
+        if (cfg->ConfigBitstreamRaw == 1)
+        {
+            ADM_info("\t has raw bistream\n");
+            score = 1;
+        }
+        else if (context->codec == AV_CODEC_ID_H264 && cfg->ConfigBitstreamRaw == 2)
+        {
+            ADM_info("\t has h264 raw bistream2\n");
+            score = 2;
+        }
+        else
+            continue;
+        if (IsEqualGUID(cfg->guidConfigBitstreamEncryption, DXVA2_NoEncrypt))
+        {
+            ADM_info("\t has no encrypt\n");
+            score += 16;
+        }
+        if (score > best_score) 
+        {
+            best_score    = score;
+            context->pictureDecode = *cfg;
+            found=true;
+            ADM_info("\t best score\n");
+        }
+    }
+    CoTaskMemFree(cfg_list);
+
+    if (! found ) 
+    {
+        ADM_warning( "No valid decoder configuration available\n");
+        return false;
+    }
+    //--
+    
     ADM_info("DXVA2 support for  %s found\n",codecName);
     context->enabled=true;
     return true;
@@ -294,6 +340,8 @@ bool admDxva2::isOperationnal(void)
     ADM_warning("This binary has no working DXVA2 support\n");
     return coreDxva2Working;
 }
+/**
+ */
 bool admDxva2::cleanup(void)
 {
     ADM_warning("This binary has no DXVA2 support\n");
@@ -332,6 +380,18 @@ bool admDxva2::cleanup(void)
     // small memleak dxva2DynaLoader;    
     return true;
 }
+/**
+ * 
+ */
+bool        admDxva2::supported(AVCodecID codec)
+{
+#define SUPSUP(a,b) if(codec==a) return (b.enabled) ;
+    SUPSUP(AV_CODEC_ID_H264,dxva2H264)
+    SUPSUP(AV_CODEC_ID_HEVC,dxva2H265)
+    return false;
+}
+
+
 /**
  * \fn admLibVa_exitCleanup
  */
