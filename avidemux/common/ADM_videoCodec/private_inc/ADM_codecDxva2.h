@@ -29,8 +29,8 @@ public:     // Callbacks
                     bool        initFail(void) {alive=false;return true;}
 public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
-                    bool        readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);    
     virtual const   char        *getName(void)        {return "DXVA2";}
+                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic)
                     
 public:
             // public API
