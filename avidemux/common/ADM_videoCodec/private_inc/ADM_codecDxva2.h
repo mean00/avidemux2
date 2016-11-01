@@ -6,6 +6,9 @@
 
 #include <BVector.h>
 #include "ADM_threads.h"
+
+#define ADM_DXVA2_BUFFER 24
+
 /**
  * \class decoderFFDXVA2
  */
