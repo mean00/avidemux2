@@ -296,9 +296,8 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
  */
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
-    //decoderFF *ff=(decoderFF *)avctx->opaque;
-    //return new decoderFFDXVA2(avctx,ff);
-    return NULL;
+    decoderFF *ff=(decoderFF *)avctx->opaque;
+    return new decoderFFDXVA2(avctx,ff);
 }
 static ADM_hwAccelEntryDxva2 dxva2Entry;
 /**
