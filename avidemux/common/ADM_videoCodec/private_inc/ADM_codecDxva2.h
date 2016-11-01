@@ -30,7 +30,7 @@ public:     // Callbacks
 public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
     virtual const   char        *getName(void)        {return "DXVA2";}
-                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic)
+                    int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     
 public:
             // public API
