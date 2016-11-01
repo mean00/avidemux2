@@ -17,6 +17,7 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "../include/ADM_coreDxva2.h"
+
 #ifdef USE_DXVA2
 #include "../include/ADM_coreDxva2Internal.h"
 #include "ADM_dynamicLoading.h"
@@ -44,13 +45,18 @@ static ADM_LibWrapper        dxva2DynaLoader;
 static pDirect3DCreate9      *createD3D = NULL;
 static pCreateDeviceManager9 *createDeviceManager = NULL;
 
-static IDirect3D9                  *d3d9;
-static IDirect3DDevice9            *d3d9device;
-static IDirect3DDeviceManager9     *d3d9devmgr;
-static IDirectXVideoDecoderService *decoder_service;
+static IDirect3D9                  *d3d9        =NULL;
+static IDirect3DDevice9            *d3d9device  =NULL;
+static IDirect3DDeviceManager9     *d3d9devmgr  =NULL;
+static IDirectXVideoDecoderService *decoder_service=NULL;
+static HANDLE                       deviceHandle=INVALID_HANDLE_VALUE;
     
+#include <initguid.h>
+DEFINE_GUID(IID_IDirectXVideoDecoderService, 0xfc51a551,0xd5e7,0x11d9,0xaf,0x55,0x00,0x05,0x4e,0x43,0xff,0x02);
 
 /**
+ * \fn init
+ * \brief initialize the low level common part of dxva2
  */
 bool admDxva2::init(GUI_WindowInfo *x)
 {
@@ -122,9 +128,24 @@ bool admDxva2::init(GUI_WindowInfo *x)
         goto failInit;
     }
     ADM_info("Dxva2 init step1\n");
-    return false;
+    hr = IDirect3DDeviceManager9_OpenDeviceHandle(d3d9devmgr, &deviceHandle);
+    if (FAILED(hr)) {
+         ADM_warning("Failed to open device handle\n");
+        goto failInit;
+    }
+
+    hr = IDirect3DDeviceManager9_GetVideoService(d3d9devmgr, deviceHandle, (REFIID )IID_IDirectXVideoDecoderService, (void **)&decoder_service);
+    if (FAILED(hr)) {
+        ADM_warning("Failed to create IDirectXVideoDecoderService\n");
+        goto failInit;
+    }
+
+    coreDxva2Working=true;
+    ADM_info("Dxva2 core successfully initialized\n");
+    return true;
 failInit:
     // cleanup
+    cleanup();
     return false;
 }
   
@@ -133,12 +154,45 @@ failInit:
 */
 bool admDxva2::isOperationnal(void)
 {
-    ADM_warning("This binary has no DXVA2 support\n");
+    ADM_warning("This binary has no working DXVA2 support\n");
     return coreDxva2Working;
 }
 bool admDxva2::cleanup(void)
 {
     ADM_warning("This binary has no DXVA2 support\n");
+
+    if (decoder_service)
+    {
+        IDirectXVideoDecoderService_Release(decoder_service);    
+        decoder_service=NULL;
+    }
+    if (d3d9devmgr && deviceHandle != INVALID_HANDLE_VALUE)
+    {
+        IDirect3DDeviceManager9_CloseDeviceHandle(d3d9devmgr, deviceHandle);
+        deviceHandle=INVALID_HANDLE_VALUE;
+    }
+
+    if (d3d9devmgr)
+    {
+        IDirect3DDeviceManager9_Release(d3d9devmgr);
+        d3d9devmgr  =NULL;
+    }
+
+    if (d3d9device)
+    {
+        IDirect3DDevice9_Release(d3d9device);    
+        d3d9device  =NULL;
+    }
+
+    if (d3d9)
+    {
+        IDirect3D9_Release(d3d9);
+        d3d9        =NULL;
+    }
+    coreDxva2Working=false;
+    
+    // small memleak  d3dDynaLoader;
+    // small memleak dxva2DynaLoader;    
     return true;
 }
 /**
@@ -147,6 +201,7 @@ bool admDxva2::cleanup(void)
 bool admDxva2_exitCleanup()
 {
     ADM_info("Dxva2 cleanup begin\n");
+    admDxva2::cleanup();
     ADM_info("Dxva2 cleanup end\n");
     return true;
 }
