@@ -15,6 +15,11 @@
 
 #pragma once
 #include "ADM_windowInfo.h"
+extern "C" 
+{
+ #include "libavcodec/avcodec.h"
+}
+
 /**
     \class admVdpau
 */
@@ -24,4 +29,5 @@ public:
         static bool init(GUI_WindowInfo *x);
         static bool isOperationnal(void);
         static bool cleanup(void);
+        static bool supported(AVCodecID codec);
 };
