@@ -331,6 +331,43 @@ failInit:
     cleanup();
     return false;
 }
+/**
+ */
+bool admDxva2::allocateD3D9Surface(int num,int width, int height,void *array)
+{
+    HRESULT hr;
+    LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)array;
+    int surface_alignment=16; // FIXME    
+     hr = IDirectXVideoDecoderService_CreateSurface(decoder_service,
+                                                   width,
+                                                   height,
+                                                   num - 1,
+                                                   (D3DFORMAT)MKTAG('N','V','1','2'), D3DPOOL_DEFAULT, 0,
+                                                   DXVA2_VideoDecoderRenderTarget,
+                                                   surfaces, NULL);
+     if(FAILED(hr))
+     {
+         ADM_warning("Cannot allocate D3D9 surfaces");
+         return false;
+     }
+     ADM_info("%d surfaces allocated \n",num);
+     return true;
+}
+/**
+ */
+bool admDxva2::destroyD3DSurface(int num, void *zsurfaces)
+{
+    LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)zsurfaces;
+    for(int i=0;i<num;i++)
+    {
+         if (surfaces[i])
+         {
+                IDirect3DSurface9_Release(surfaces[i]);
+                surfaces[i]=NULL;
+         }
+    }
+    return true;
+}
   
 /**
     \fn isOperationnal

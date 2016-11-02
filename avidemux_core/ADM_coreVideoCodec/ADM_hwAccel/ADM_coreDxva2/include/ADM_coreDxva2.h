@@ -30,4 +30,6 @@ public:
         static bool isOperationnal(void);
         static bool cleanup(void);
         static bool supported(AVCodecID codec);
+        static bool allocateD3D9Surface(int num,int width, int height,void *array);
+        static bool destroyD3DSurface(int num,void *surfaces);
 };
