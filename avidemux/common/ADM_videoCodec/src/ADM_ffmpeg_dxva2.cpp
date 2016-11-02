@@ -48,12 +48,21 @@ static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
 
 
-#if 1
+#if 0
 #define aprintf(...) {}
 #else
-#define aprintf ADM_info
+#define aprintf printf
 #endif
-
+/**
+ * \class admDx2Surface
+ */
+class admDx2Surface 
+{
+public:    
+    decoderFFDXVA2       *admClass;
+    LPDIRECT3DSURFACE9   surface;
+    IDirectXVideoDecoder *decoder;
+} ;
 /**
     \fn dxva2Usable
     \brief Return true if  dxva2 can be used...
@@ -93,9 +102,8 @@ bool dxva2Probe(void)
 */
 int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
-    ADM_warning("DXVA2: Get buffer!!!\n");
     decoderFF *ff=(decoderFF *)avctx->opaque;
-    decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
+    decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();)    
     ADM_assert(dec);
     return dec->getBuffer(avctx,pic);
 }
@@ -107,11 +115,25 @@ int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
  */
 void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
 {
-
-   decoderFFDXVA2 *dec=(decoderFFDXVA2 *)opaque;
-   ADM_assert(dec);
-   ADM_warning("DXVA2: Release buffer!!!\n");
-   return ;
+    
+   admDx2Surface *w=(admDx2Surface *)opaque;
+   aprintf("=> Release Buffer %p\n",w);   
+   decoderFFDXVA2 *instance=wr->admClass;
+   bool found=false;
+   for (i = 0; i < instance->num_surfaces; i++) 
+   {
+        if (instance->surfaces[i] == w->surface) 
+        {
+            found=true;
+            instance->surface_infos[i].used = 0;
+            break;
+        }
+    }
+    ADM_assert(found);
+    IDirect3DSurface9_Release(w->surface);
+    IDirectXVideoDecoder_Release(w->decoder);
+    delete w;
+    return ;
 }
 
 
@@ -198,19 +220,48 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     alive=false;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->thread_count    = 1;
+    //
+    memset(surfaces,0,sizeof(*surfaces)*ADM_MAX_SURFACE); // should not be here...
     // create decoder
     AVDXVAContext *dx_context=new AVDXVAContext;
-    memset(dx_context,0,sizeof(*dx_context)); // dangerous...
+    memset(dx_context,0,sizeof(*dx_context)); // dangerous...    
     
-    // Fill in structure...
-    // TODO !
+    // Allocate temp buffer
+    num_surfaces=4;
+    int align;
+    switch(avctx->codec_id)
+    {
+        case AV_CODEC_ID_H265:
+                align=128;
+                num_surfaces+=16;
+                break;
+        case AV_CODEC_ID_H264:
+                align=16;
+                num_surfaces+=16;
+                break;                
+        case AV_CODEC_ID_VP9:                
+                num_surfaces+=8;
+                break;
+        default:
+                align=16;
+                num_surfaces+=2;
+                break;
+
+    }
+#define ALIGN (x) ((x+(align-1)) &(~(align-1))
+    // Allocate surfaces..
+    if(!admDxva2::allocateD3D9Surface(num_surfaces,ALIGN(width),ALIGN(height),surfaces))
+    {
+        ADM_warning("Cannot allocate surfaces \n");
+        return false;
+    }
     //
     _context->opaque=this;
     _context->hwaccel_context=dx_context;
-    alive=true;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
     _context->draw_horiz_band = NULL;
     ADM_info("Successfully setup DXVA2 hw accel\n");             
+    alive=true;
 }
 
 /**
@@ -218,6 +269,8 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
  */
 decoderFFDXVA2::~decoderFFDXVA2()
 {
+    if(alive)
+        admDxva2::destroyD3DSurface(num_surfaces,surfaces);
 }
 /**
  * \fn uncompress
@@ -244,10 +297,57 @@ public:
 };
 /**
  */
-int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
+int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 {
-    ADM_warning("DXVA2 : Get Buffer ! FAILED\n");
-    return -1;
+    aprintf("-> Get buffer\n");
+    int i, old_unused = -1;
+    LPDIRECT3DSURFACE9 surface;
+    admDx2Surface *w = NULL;
+
+    av_assert0(frame->format == AV_PIX_FMT_DXVA2_VLD);
+
+    for (i = 0; i < ctx->num_surfaces; i++) 
+    {
+        surface_info *info = &surface_infos[i];
+        if (!info->used && (old_unused == -1 || info->age < surface_infos[old_unused].age))
+            old_unused = i;
+    }
+    if (old_unused == -1) 
+    {
+        ADM_warning("No free DXVA2 surface!\n");
+        return AVERROR(ENOMEM);
+    }
+    i = old_unused;
+
+    surface = surfaces[i];
+
+    w = av_mallocz(sizeof(*w));
+    if (!w)
+        return AVERROR(ENOMEM);
+
+    frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
+                                     ADM_LIBDXVA2releaseBuffer, w,
+                                     AV_BUFFER_FLAG_READONLY);
+    if (!frame->buf[0]) 
+    {
+        av_free(w);
+        return AVERROR(ENOMEM);
+    }
+
+    w->admClass  = ctx;
+    w->surface   = this;
+    w->decoder = decoder;
+    
+    IDirect3DSurface9_AddRef(w->surface);
+    IDirectXVideoDecoder_AddRef(w->decoder);
+
+    surface_infos[i].used = 1;
+    surface_infos[i].age  = surface_age++;
+
+    frame->data[3] = (uint8_t *)surface;
+    frame->data[1] = (uint8_t *)w;
+    aprintf("   <= Got buffer %p\n",w);
+    return 0;
 }
 
 /**

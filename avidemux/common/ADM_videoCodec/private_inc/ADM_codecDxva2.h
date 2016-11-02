@@ -8,7 +8,7 @@
 #include "ADM_threads.h"
 
 #define ADM_DXVA2_BUFFER 24
-
+#define ADM_MAX_SURFACE 24
 /**
  * \class decoderFFDXVA2
  */
@@ -17,6 +17,10 @@ class decoderFFDXVA2:public ADM_acceleratedDecoderFF
 protected:
 protected:
                     bool        alive;
+                    LPDIRECT3DSURFACE9          surfaces[ADM_MAX_SURFACE];
+                    surface_info                surface_infos[ADM_MAX_SURFACE];
+                    uint32_t                    num_surfaces;
+                    uint64_t                    surface_age;
 
 protected:
                     bool        initDXVA2Context();
