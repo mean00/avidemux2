@@ -9,12 +9,25 @@
 
 #define ADM_DXVA2_BUFFER 24
 #define ADM_MAX_SURFACE 24
-
+/**
+      \struct surface_info
+*/
 typedef struct surface_info 
 {
     int used;
     uint64_t age;
 } surface_info;
+/**
+ * \class admDx2Surface
+ */
+class decoderFFDXVA2;
+class admDx2Surface 
+{
+public:    
+    decoderFFDXVA2       *admClass;
+    LPDIRECT3DSURFACE9   surface;
+    IDirectXVideoDecoder *decoder;
+} ;
 
 /**
  * \class decoderFFDXVA2
@@ -42,7 +55,7 @@ public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
     virtual const   char        *getName(void)        {return "DXVA2";}
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
-                    bool        releaseBuffer(uint8_t *data);
+                    bool        releaseBuffer(admDx2Surface *data);
                     
 public:
             // public API
