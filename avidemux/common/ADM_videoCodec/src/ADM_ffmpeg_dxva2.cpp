@@ -54,16 +54,6 @@ static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 #define aprintf printf
 #endif
 /**
- * \class admDx2Surface
- */
-class admDx2Surface 
-{
-public:    
-    decoderFFDXVA2       *admClass;
-    LPDIRECT3DSURFACE9   surface;
-    IDirectXVideoDecoder *decoder;
-} ;
-/**
     \fn dxva2Usable
     \brief Return true if  dxva2 can be used...
 */
@@ -234,12 +224,12 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
                 break;
 
     }
-#define ALIGN (x) ((x+(align-1)) &(~(align-1)))
+#define ALIGN(x) ((x+(align-1)) &(~(align-1)))
     // Allocate surfaces..
-    if(!admDxva2::allocateD3D9Surface(num_surfaces,ALIGN(width),ALIGN(height),surfaces))
+    if(!admDxva2::allocateD3D9Surface(num_surfaces,ALIGN(avctx->coded_width),ALIGN(avctx->coded_height),surfaces))
     {
         ADM_warning("Cannot allocate surfaces \n");
-        return false;
+        return ;
     }
     //
     _context->opaque=this;
@@ -290,10 +280,8 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     LPDIRECT3DSURFACE9 surface;
     admDx2Surface *w = NULL;
 
-    av_assert0(frame->format == AV_PIX_FMT_DXVA2_VLD);
-    int i;
-    int old_unused=-1;
-    for (i = 0; i < ctx->num_surfaces; i++)
+    ADM_assert(frame->format == AV_PIX_FMT_DXVA2_VLD);
+    for (i = 0; i < num_surfaces; i++)
     {
         surface_info *info = &surface_infos[i];
         if (!info->used && (old_unused == -1 || info->age < surface_infos[old_unused].age))
@@ -308,10 +296,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 
     surface = surfaces[i];
 
-    w = av_mallocz(sizeof(*w));
-    if (!w)
-        return AVERROR(ENOMEM);
-
+    w = new admDx2Surface();
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
                                      AV_BUFFER_FLAG_READONLY);
@@ -342,7 +327,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
 {
    bool found=false;
-   for (i = 0; i < instance->num_surfaces; i++) 
+   for (int i = 0; i < num_surfaces; i++) 
    {
         if (surfaces[i] == surface->surface) 
         {
@@ -353,7 +338,7 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
     }
     ADM_assert(found);
     IDirect3DSurface9_Release(surface->surface);
-    IDirectXVideoDecoder_Release(surface->surface);
+    IDirectXVideoDecoder_Release(surface->decoder);
     delete surface;
     surface=NULL;
     return true ;
