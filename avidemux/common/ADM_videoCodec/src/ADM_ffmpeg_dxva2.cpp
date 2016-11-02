@@ -119,23 +119,9 @@ void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
    admDx2Surface *w=(admDx2Surface *)opaque;
    aprintf("=> Release Buffer %p\n",w);   
    decoderFFDXVA2 *instance=wr->admClass;
-   bool found=false;
-   for (i = 0; i < instance->num_surfaces; i++) 
-   {
-        if (instance->surfaces[i] == w->surface) 
-        {
-            found=true;
-            instance->surface_infos[i].used = 0;
-            break;
-        }
-    }
-    ADM_assert(found);
-    IDirect3DSurface9_Release(w->surface);
-    IDirectXVideoDecoder_Release(w->decoder);
-    delete w;
-    return ;
+   instance->releaseBuffer(data,data);
 }
-
+ 
 
 /**
     \fn dxva2Cleanup
@@ -348,6 +334,28 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     frame->data[1] = (uint8_t *)w;
     aprintf("   <= Got buffer %p\n",w);
     return 0;
+}
+/**
+ * \fn releaseBuffer
+ */
+bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
+{
+   bool found=false;
+   for (i = 0; i < instance->num_surfaces; i++) 
+   {
+        if (surfaces[i] == surface->surface) 
+        {
+            found=true;
+            surface_infos[i].used = 0;
+            break;
+        }
+    }
+    ADM_assert(found);
+    IDirect3DSurface9_Release(surface->surface);
+    IDirectXVideoDecoder_Release(surface->surface);
+    delete surface;
+    surface=NULL;
+    return true ;
 }
 
 /**
