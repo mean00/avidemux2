@@ -448,12 +448,21 @@ std::string currentSdlDriver=getSdlDriverName();
         /* Display */
         diaElemToggle togDisplayRefreshCap(&refreshCapEnabled,QT_TRANSLATE_NOOP("adm","_Limit Refresh Rate"));
         diaElemUInteger displayRefreshCap(&refreshCapValue,QT_TRANSLATE_NOOP("adm","Refresh Rate Cap (ms)"),10,1000);
+        diaElemFrame frameRC(QT_TRANSLATE_NOOP("adm","GUI Rendering Options")); // a hack to fix tabbing order
 
+        // Packing the following elements into frameRC rectifies otherwise wrong tabbing order:
+        // framePP got constructed before the refresh rate spinbox, but after the display refresh
+        // toggle resulting in a tabbing order 1-6-7-2-3-4-5-8, counting elements from top to bottom.
+        // With this extra frame we get 1-2-3-4-5-6-7-8 (video mode, hor. deblocking, vert. delocking,
+        // deringing, deringing strength, OpenGL toggle, refr. rate cap toggle, refr. rate spinbox).
+        frameRC.swallow(&useOpenGl);
+        frameRC.swallow(&togDisplayRefreshCap);
+        frameRC.swallow(&displayRefreshCap);
 
 #ifdef USE_SDL
-        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&useOpenGl,&togDisplayRefreshCap,&displayRefreshCap};
+        diaElem *diaVideo[]={&menuVideoMode,sdlMenu,&framePP,&frameRC};
 #else
-         diaElem *diaVideo[]={&menuVideoMode,&framePP,&useOpenGl,&togDisplayRefreshCap,&displayRefreshCap};
+        diaElem *diaVideo[]={&menuVideoMode,&framePP,&frameRC};
 #endif
         diaElemTabs tabVideo(QT_TRANSLATE_NOOP("adm","Display"),sizeof(diaVideo)/sizeof(diaElem *),(diaElem **)diaVideo);
         /* HW accel */
