@@ -21,11 +21,12 @@ typedef struct surface_info
  * \class admDx2Surface
  */
 class decoderFFDXVA2;
+
 class admDx2Surface 
 {
 public:    
-    decoderFFDXVA2       *admClass;
-    LPDIRECT3DSURFACE9   surface;
+    void                 *parent;
+    LPDIRECT3DSURFACE9    surface;
     IDirectXVideoDecoder *decoder;
 } ;
 
