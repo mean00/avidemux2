@@ -440,6 +440,28 @@ bool admDxva2_exitCleanup()
     return true;
 }
 
+admDx2Surface::admDx2Surface(void *par)
+{
+    parent=parent;
+    surface=NULL;
+    decoder=NULL;
+}
+admDx2Surface::~admDx2Surface()
+{
+    parent=parent;
+    surface=NULL;
+    decoder=NULL;
+}
+admDx2Surface::addRef()
+{
+    IDirect3DSurface9_AddRef(surface);   
+}
+admDx2Surface::removeRef()
+{
+     IDirect3DSurface9_Release(surface);
+}
+
+
 
 #endif
 // EOF

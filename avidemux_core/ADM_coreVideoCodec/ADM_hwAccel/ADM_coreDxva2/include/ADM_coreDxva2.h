@@ -19,7 +19,20 @@ extern "C"
 {
  #include "libavcodec/avcodec.h"
 }
-
+/**
+ */
+class admDx2Surface 
+{
+public:  
+                          admDx2Surface();
+                          ~admDx2Surface();
+    void                 *parent;
+    LPDIRECT3DSURFACE9    surface;
+    IDirectXVideoDecoder *decoder;
+public:    
+    bool                  addRef();
+    bool                  removeRef();
+} ;
 /**
     \class admVdpau
 */

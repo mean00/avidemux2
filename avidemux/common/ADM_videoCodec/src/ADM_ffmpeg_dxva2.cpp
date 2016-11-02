@@ -296,7 +296,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 
     surface = surfaces[i];
 
-    w = new admDx2Surface();
+    w = new admDx2Surface(this);
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
                                      AV_BUFFER_FLAG_READONLY);
@@ -306,12 +306,12 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
         return AVERROR(ENOMEM);
     }
 
-    w->admClass  = this;
     w->surface   = surface;
   // FIXME  w->decoder   = decoder;
     
-    IDirect3DSurface9_AddRef(w->surface);
-    IDirectXVideoDecoder_AddRef(w->decoder);
+    w->surface->addRef();
+#warning TODO    
+   // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
 
     surface_infos[i].used = 1;
     surface_infos[i].age  = surface_age++;
@@ -337,8 +337,9 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
         }
     }
     ADM_assert(found);
-    IDirect3DSurface9_Release(surface->surface);
-    IDirectXVideoDecoder_Release(surface->decoder);
+    surface->removeRef();
+#warning TODO    
+    //IDirectXVideoDecoder_Release(surface->decoder);
     delete surface;
     surface=NULL;
     return true ;
