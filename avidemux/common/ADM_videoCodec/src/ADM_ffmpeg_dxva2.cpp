@@ -103,7 +103,7 @@ bool dxva2Probe(void)
 int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;
-    decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();)    
+    decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
     ADM_assert(dec);
     return dec->getBuffer(avctx,pic);
 }
@@ -118,8 +118,8 @@ void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
     
    admDx2Surface *w=(admDx2Surface *)opaque;
    aprintf("=> Release Buffer %p\n",w);   
-   decoderFFDXVA2 *instance=wr->admClass;
-   instance->releaseBuffer(data,data);
+   decoderFFDXVA2 *instance=w->admClass;
+   instance->releaseBuffer(w);
 }
  
 
@@ -234,7 +234,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
                 break;
 
     }
-#define ALIGN (x) ((x+(align-1)) &(~(align-1))
+#define ALIGN (x) ((x+(align-1)) &(~(align-1)))
     // Allocate surfaces..
     if(!admDxva2::allocateD3D9Surface(num_surfaces,ALIGN(width),ALIGN(height),surfaces))
     {
@@ -291,14 +291,15 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     admDx2Surface *w = NULL;
 
     av_assert0(frame->format == AV_PIX_FMT_DXVA2_VLD);
-
-    for (i = 0; i < ctx->num_surfaces; i++) 
+    int i;
+    int old_unused=-1;
+    for (i = 0; i < ctx->num_surfaces; i++)
     {
         surface_info *info = &surface_infos[i];
         if (!info->used && (old_unused == -1 || info->age < surface_infos[old_unused].age))
             old_unused = i;
     }
-    if (old_unused == -1) 
+    if (old_unused == -1)
     {
         ADM_warning("No free DXVA2 surface!\n");
         return AVERROR(ENOMEM);
@@ -314,15 +315,15 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
                                      AV_BUFFER_FLAG_READONLY);
-    if (!frame->buf[0]) 
+    if (!frame->buf[0])
     {
         av_free(w);
         return AVERROR(ENOMEM);
     }
 
-    w->admClass  = ctx;
-    w->surface   = this;
-    w->decoder = decoder;
+    w->admClass  = this;
+    w->surface   = surface;
+  // FIXME  w->decoder   = decoder;
     
     IDirect3DSurface9_AddRef(w->surface);
     IDirectXVideoDecoder_AddRef(w->decoder);
