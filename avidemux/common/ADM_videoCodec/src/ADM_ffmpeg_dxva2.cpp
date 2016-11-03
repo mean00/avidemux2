@@ -231,11 +231,22 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
+    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,num_surfaces,surfaces);
+    if(!dx_context->decoder)
+    {
+        ADM_warning("Cannot create decoder\n");
+        return false;
+    }
+    ADM_info("DXVA2 decoder created\n");
+    
     //
-    _context->opaque=this;
-    _context->hwaccel_context=dx_context;
+    _context->opaque          = this;
+    _context->hwaccel_context = dx_context;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
     _context->draw_horiz_band = NULL;
+    
+    //
+   
     ADM_info("Successfully setup DXVA2 hw accel\n");             
     alive=true;
 }
@@ -247,6 +258,11 @@ decoderFFDXVA2::~decoderFFDXVA2()
 {
     if(alive)
         admDxva2::destroyD3DSurface(num_surfaces,surfaces);
+    if(_context->hwaccel_context)
+    {
+        admDxva2::destroyDecoder((IDirectXVideoDecoderService *)_context->hwaccel_context);
+        _context->hwaccel_context=NULL;
+    }
 }
 /**
  * \fn uncompress
