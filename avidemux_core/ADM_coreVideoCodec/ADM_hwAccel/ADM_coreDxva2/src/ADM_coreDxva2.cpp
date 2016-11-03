@@ -112,6 +112,18 @@ typedef struct
 
 static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false};
 static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false};
+/**
+ */
+static bool ADM_FAILED(HRESULT hr)
+{
+    int r=(int)hr;
+    if(r<0)
+    {
+        ADM_warning("Failed with error code=0x%x\n",r);
+        return true;
+    }
+    return false;
+}
 
 /**
  * \fn lookupCodec
@@ -139,7 +151,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
             continue;
 
         hr = IDirectXVideoDecoderService_GetDecoderRenderTargets(decoder_service,*( mode->guid), &target_count, &target_list);
-        if (FAILED(hr)) 
+        if (ADM_FAILED(hr)) 
         {
             continue;
         }
@@ -171,7 +183,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     DXVA2_ConfigPictureDecode *cfg_list = NULL;
     bool   found=false;
     hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, context->device_guid, &(context->desc), NULL, &cfg_count, &cfg_list);
-    if (FAILED(hr)) {
+    if (ADM_FAILED(hr)) {
         ADM_warning("Unable to retrieve decoder configurations\n");
         return false;
     }
@@ -219,7 +231,6 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     context->enabled=true;
     return true;
 }
-
 /**
  * \fn init
  * \brief initialize the low level common part of dxva2
@@ -276,32 +287,32 @@ bool admDxva2::init(GUI_WindowInfo *x)
     hr = IDirect3D9_CreateDevice(d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
                                  D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
                                  &d3dpp, &d3d9device);
-    if(FAILED(hr))
+    if(ADM_FAILED(hr))
     {
         ADM_warning("Cannot create d3d9 device\n");
         goto failInit;
     }
     hr = createDeviceManager(&resetToken, &d3d9devmgr);
-    if (FAILED(hr)) 
+    if (ADM_FAILED(hr)) 
     {
         ADM_warning( "Failed to create Direct3D device manager\n");
         goto failInit;
     }
     hr = IDirect3DDeviceManager9_ResetDevice(d3d9devmgr, d3d9device, resetToken);
-    if (FAILED(hr))
+    if (ADM_FAILED(hr))
     {
         ADM_warning( "Failed to bind Direct3D device to device manager\n");
         goto failInit;
     }
     ADM_info("Dxva2 init step1\n");
     hr = IDirect3DDeviceManager9_OpenDeviceHandle(d3d9devmgr, &deviceHandle);
-    if (FAILED(hr)) {
+    if (ADM_FAILED(hr)) {
          ADM_warning("Failed to open device handle\n");
         goto failInit;
     }
 
     hr = IDirect3DDeviceManager9_GetVideoService(d3d9devmgr, deviceHandle, (REFIID )IID_IDirectXVideoDecoderService, (void **)&decoder_service);
-    if (FAILED(hr)) {
+    if (ADM_FAILED(hr)) {
         ADM_warning("Failed to create IDirectXVideoDecoderService\n");
         goto failInit;
     }
@@ -317,7 +328,7 @@ bool admDxva2::init(GUI_WindowInfo *x)
         int surface_alignment;
 
         hr = IDirectXVideoDecoderService_GetDecoderDeviceGuids(decoder_service, &guid_count, &guid_list);
-        if (FAILED(hr)) {
+        if (ADM_FAILED(hr)) {
             ADM_warning("Failed to retrieve decoder device GUIDs\n");
             return true;
         }
@@ -346,7 +357,7 @@ bool admDxva2::allocateD3D9Surface(int num,int width, int height,void *array)
                                                    (D3DFORMAT)MKTAG('N','V','1','2'), D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
                                                    surfaces, NULL);
-     if(FAILED(hr))
+     if(ADM_FAILED(hr))
      {
          ADM_warning("Cannot allocate D3D9 surfaces");
          return false;
@@ -456,7 +467,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int numSurface, 
                                                          surface,
                                                          numSurface, 
                                                          &decoder);
-     if(FAILED(hr))
+     if(ADM_FAILED(hr))
      {
          ADM_warning("Cannot create decoder\n");
          return NULL;
