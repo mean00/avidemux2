@@ -16,9 +16,9 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-#include "../include/ADM_coreDxva2.h"
+
 #ifdef USE_DXVA2
-#include "../include/ADM_coreDxva2Internal.h"
+
 #include "ADM_dynamicLoading.h"
 #include <map>
 
@@ -31,7 +31,8 @@
 #define COBJMACROS
 #include <d3d9.h>
 #include <dxva2api.h>
-
+#include "../include/ADM_coreDxva2Internal.h"
+#include "../include/ADM_coreDxva2.h"
 
 typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
 typedef HRESULT     WINAPI pCreateDeviceManager9(UINT *, IDirect3DDeviceManager9 **);
@@ -439,26 +440,39 @@ bool admDxva2_exitCleanup()
     ADM_info("Dxva2 cleanup end\n");
     return true;
 }
-
+/**
+ * \fn ctor
+ */
 admDx2Surface::admDx2Surface(void *par)
 {
     parent=parent;
     surface=NULL;
     decoder=NULL;
 }
+/**
+ * \fn dtor
+ */
 admDx2Surface::~admDx2Surface()
 {
     parent=parent;
     surface=NULL;
     decoder=NULL;
 }
-admDx2Surface::addRef()
+/**
+ * \fn addRef
+ */
+bool admDx2Surface::addRef()
 {
     IDirect3DSurface9_AddRef(surface);   
+    return true;
 }
-admDx2Surface::removeRef()
+/**
+ * \fn removeRef
+ */
+bool admDx2Surface::removeRef()
 {
-     IDirect3DSurface9_Release(surface);
+     IDirect3DSurface9_Release(surface); // ???
+     return true;
 }
 
 
