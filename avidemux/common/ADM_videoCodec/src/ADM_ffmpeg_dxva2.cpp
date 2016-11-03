@@ -108,7 +108,7 @@ void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
     
    admDx2Surface *w=(admDx2Surface *)opaque;
    aprintf("=> Release Buffer %p\n",w);   
-   decoderFFDXVA2 *instance=w->admClass;
+   decoderFFDXVA2 *instance=(decoderFFDXVA2 *)w->parent;
    instance->releaseBuffer(w);
 }
  
@@ -309,7 +309,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     w->surface   = surface;
   // FIXME  w->decoder   = decoder;
     
-    w->surface->addRef();
+    w->addRef();
 #warning TODO    
    // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
 
