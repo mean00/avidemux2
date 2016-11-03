@@ -428,7 +428,49 @@ bool        admDxva2::supported(AVCodecID codec)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265)
     return false;
 }
-
+/**
+ * \fn createDecoder
+ */
+IDirectXVideoDecoderService *admDxva2::createDecoder(AVCodecID codec, int numSurface, LPDIRECT3DSURFACE9 *surface)
+{
+    Dxv2SupportMap *cmap;
+    switch(codec)
+    {
+        case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
+        case AV_CODEC_ID_H265: cmap=&dxva2H265;break;
+        default:
+            ADM_assert(0);
+            break;
+    }
+    if(!cmap->enabled)
+    {
+        ADM_warning("This decoder is not enabled\n");
+        ADM_assert(0);
+    }
+    HRESULT hr;
+    IDirectXVideoDecoderService *decoder=NULL;
+    hr = IDirectXVideoDecoderService_CreateVideoDecoder(decoder_service,
+                                                         (cmap->device_guid),
+                                                         &(cmap->desc),
+                                                         &(cmap->pictureDecode),
+                                                         surface,
+                                                         numSurface, 
+                                                         &decoder);
+     if(FAILED(hr))
+     {
+         ADM_warning("Cannot create decoder\n");
+         return NULL;
+     }
+     return decoder;     
+}
+/**
+ * \fn createDecoder
+ */
+bool admDxva2::destroyDecoder(IDirectXVideoDecoderService *decoder)
+{
+    IDirectXVideoDecoder_Release(decoder);
+    return true;
+}
 
 /**
  * \fn admLibVa_exitCleanup
