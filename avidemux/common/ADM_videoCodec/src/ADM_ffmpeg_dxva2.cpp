@@ -24,6 +24,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixfmt.h"
 #include "libavutil/pixdesc.h"
+#define CONFIG_DXVA2 1
 #include "libavcodec/dxva2_internal.h"
 #include "libavcodec/dxva2.h"
 }
@@ -231,11 +232,11 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
-    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,num_surfaces,surfaces);
-    if(!dx_context->decoder)
+    dx_context->dxva2.decoder=admDxva2::createDecoder(avctx->codec_id,num_surfaces,surfaces);
+    if(!dx_context->dxva2.decoder)
     {
         ADM_warning("Cannot create decoder\n");
-        return false;
+        return ;
     }
     ADM_info("DXVA2 decoder created\n");
     

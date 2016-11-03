@@ -431,7 +431,7 @@ bool        admDxva2::supported(AVCodecID codec)
 /**
  * \fn createDecoder
  */
-IDirectXVideoDecoderService *admDxva2::createDecoder(AVCodecID codec, int numSurface, LPDIRECT3DSURFACE9 *surface)
+IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int numSurface, LPDIRECT3DSURFACE9 *surface)
 {
     Dxv2SupportMap *cmap;
     switch(codec)
@@ -448,7 +448,7 @@ IDirectXVideoDecoderService *admDxva2::createDecoder(AVCodecID codec, int numSur
         ADM_assert(0);
     }
     HRESULT hr;
-    IDirectXVideoDecoderService *decoder=NULL;
+    IDirectXVideoDecoder *decoder=NULL;
     hr = IDirectXVideoDecoderService_CreateVideoDecoder(decoder_service,
                                                          (cmap->device_guid),
                                                          &(cmap->desc),
