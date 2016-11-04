@@ -114,6 +114,16 @@ static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false};
 static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false};
 /**
  */
+static void dumpGUID(const char *name,const GUID &guid)
+{
+    printf("%s :\n",name);
+    printf("0x%lx 0x%lx 0x%lx ",guid.Data1,guid.Data2,guid.Data3);
+    for(int i=0;i<8;i++) printf(" %02x ",guid.Data4[i]);
+    printf("\n");
+}
+
+/**
+ */
 static bool ADM_FAILED(HRESULT hr)
 {
     int r=(int)hr;
@@ -147,6 +157,11 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
             if (IsEqualGUID( *(mode->guid), guid_list[j]))
                 break;
         }
+#if 1
+    dumpGUID("Potential device_guid",*(mode->guid));
+
+#endif    
+
         if (j == guid_count)
             continue;
 
@@ -164,6 +179,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
                 break;
             }
         }
+        
         CoTaskMemFree(target_list);
         if (target_format) 
         {
@@ -319,6 +335,7 @@ bool admDxva2::init(GUI_WindowInfo *x)
 
     coreDxva2Working=true;
     ADM_info("Dxva2 core successfully initialized\n");
+    ADM_info("Decoder service=%p\n",decoder_service);
     // Look up what is supported
     {
         unsigned guid_count = 0, i, j;
@@ -460,6 +477,12 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int numSurface, 
     }
     HRESULT hr;
     IDirectXVideoDecoder *decoder=NULL;
+#if 1
+    dumpGUID("device_guid",cmap->device_guid);
+    dumpGUID("       guid",cmap->guid);
+    printf("Decoder service = %p\n",decoder_service);
+
+#endif    
     hr = IDirectXVideoDecoderService_CreateVideoDecoder(decoder_service,
                                                          (cmap->device_guid),
                                                          &(cmap->desc),
