@@ -255,7 +255,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     
     //
    
-    ADM_info("Successfully setup DXVA2 hw accel\n");             
+    ADM_info("Successfully setup DXVA2 hw accel (%d surface created)\n",num_surfaces);
     alive=true;
 }
 
