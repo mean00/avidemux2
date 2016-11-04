@@ -287,14 +287,6 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 }
 //---
 
-class ADM_hwAccelEntryDxva2 : public ADM_hwAccelEntry
-{
-public: 
-                            ADM_hwAccelEntryDxva2();
-     virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
-     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt );     
-     virtual                ~ADM_hwAccelEntryDxva2() {};
-};
 /**
  */
 int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
@@ -378,7 +370,16 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
     surface=NULL;
     return true ;
 }
-
+/**
+ */
+class ADM_hwAccelEntryDxva2 : public ADM_hwAccelEntry
+{
+public: 
+                            ADM_hwAccelEntryDxva2();
+     virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
+     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt );     
+     virtual                ~ADM_hwAccelEntryDxva2() {};
+};
 /**
  * 
  */
