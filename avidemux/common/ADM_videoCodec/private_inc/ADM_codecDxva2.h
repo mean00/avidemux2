@@ -51,6 +51,7 @@ public:
     virtual const   char        *getName(void)        {return "DXVA2";}
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     bool        releaseBuffer(admDx2Surface *data);
+                    bool        isAlive() {return alive;}
                     
 public:
             // public API

@@ -45,6 +45,6 @@ public:
         static bool supported(AVCodecID codec);
         static bool allocateD3D9Surface(int num,int width, int height,void *array);
         static bool destroyD3DSurface(int num,void *surfaces);
-        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int numSurface, LPDIRECT3DSURFACE9 *surface);
+        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int paddedWidth, int paddedHeight,int numSurface, LPDIRECT3DSURFACE9 *surface);
         static bool destroyDecoder(IDirectXVideoDecoderService *decoder);
 };

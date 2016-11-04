@@ -198,6 +198,11 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     unsigned int cfg_count = 0, best_score = 0;
     DXVA2_ConfigPictureDecode *cfg_list = NULL;
     bool   found=false;
+    // initialize desc with dummy values
+    context->desc.SampleWidth=1920;
+    context->desc.SampleHeight=1080;
+    context->desc.Format=target_format;
+        
     hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, context->device_guid, &(context->desc), NULL, &cfg_count, &cfg_list);
     if (ADM_FAILED(hr)) {
         ADM_warning("Unable to retrieve decoder configurations\n");
@@ -459,7 +464,7 @@ bool        admDxva2::supported(AVCodecID codec)
 /**
  * \fn createDecoder
  */
-IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int numSurface, LPDIRECT3DSURFACE9 *surface)
+IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int paddedWidth, int paddedHeight, int numSurface, LPDIRECT3DSURFACE9 *surface)
 {
     Dxv2SupportMap *cmap;
     switch(codec)
@@ -482,7 +487,11 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int numSurface, 
     dumpGUID("       guid",cmap->guid);
     printf("Decoder service = %p\n",decoder_service);
 
-#endif    
+#endif   
+    // update with real values
+    cmap->desc.SampleWidth=paddedWidth; // does not work with multiple video ?
+    cmap->desc.SampleHeight=paddedHeight;
+    //
     hr = IDirectXVideoDecoderService_CreateVideoDecoder(decoder_service,
                                                          (cmap->device_guid),
                                                          &(cmap->desc),
