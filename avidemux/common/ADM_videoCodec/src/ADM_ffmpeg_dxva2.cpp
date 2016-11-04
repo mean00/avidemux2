@@ -316,7 +316,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
         if(info->age<older)
         {
             old_unused=i;
-            older=surface_infos[i]->age;
+            older=surface_infos[i].age;
         }
     }
     if (old_unused == -1)
