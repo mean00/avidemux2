@@ -206,7 +206,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         surface_infos[i].used=0;
         surface_infos[i].age=0;
     }
-
+    surface_age=1;
 
     // create decoder
     AVDXVAContext *dx_context=new AVDXVAContext;
@@ -301,17 +301,23 @@ public:
  */
 int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 {
-    aprintf("-> Get buffer\n");
+    aprintf("-> Get buffer (%d)\n",num_surfaces);
     int i, old_unused = -1;
     LPDIRECT3DSURFACE9 surface;
     admDx2Surface *w = NULL;
-
+    int older=surface_age;
     ADM_assert(frame->format == AV_PIX_FMT_DXVA2_VLD);
     for (i = 0; i < num_surfaces; i++)
     {
         surface_info *info = &surface_infos[i];
-        if (!info->used && (old_unused == -1 || info->age < surface_infos[old_unused].age))
-            old_unused = i;
+        if(info->used)
+            continue;
+        
+        if(info->age<older)
+        {
+            old_unused=i;
+            older=surface_infos[i]->age;
+        }
     }
     if (old_unused == -1)
     {
@@ -340,8 +346,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
    // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
 
     surface_infos[i].used = 1;
-    surface_infos[i].age  = surface_age++;
-
+    surface_infos[i].age  = surface_age++; // not sure...
     frame->data[3] = (uint8_t *)surface;
     frame->data[1] = (uint8_t *)w;
     aprintf("   <= Got buffer %p\n",w);
