@@ -321,7 +321,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     i = old_unused;
 
     surface = surfaces[i];
-
+    aprintf("-> found surface\n");
     w = new admDx2Surface(this);
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
@@ -334,7 +334,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 
     w->surface   = surface;
   // FIXME  w->decoder   = decoder;
-    
+    aprintf("-> adding ref\n");
     w->addRef();
 #warning TODO    
    // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
