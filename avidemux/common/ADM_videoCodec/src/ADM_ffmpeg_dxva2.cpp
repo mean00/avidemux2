@@ -198,13 +198,11 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->thread_count    = 1;
     //
-    memset(surfaces,0,sizeof(*surfaces)*ADM_MAX_SURFACE); // should not be here...
-
-    //
     for(int i=0;i<ADM_MAX_SURFACE;i++)
     {
-        surface_infos[i].used=0;
-        surface_infos[i].age=0;
+        surfaces[i]=NULL;
+        surface_infos[i].used = 0;
+        surface_infos[i].age  = 0;
     }
     surface_age=1;
 
@@ -225,14 +223,14 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
                 align=16;
                 num_surfaces+=16;
                 break;                
-        case AV_CODEC_ID_VP9:                
+        case AV_CODEC_ID_VP9: 
+                align=16;
                 num_surfaces+=8;
                 break;
         default:
                 align=16;
                 num_surfaces+=2;
                 break;
-
     }
 #define ALIGN(x) ((x+(align-1)) &(~(align-1)))
     // Allocate surfaces..
@@ -311,7 +309,10 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     {
         surface_info *info = &surface_infos[i];
         if(info->used)
+        {
+            aprintf("Surface %d is busy\n",i);
             continue;
+        }
         
         if(info->age<older)
         {
@@ -358,11 +359,13 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
 {
    bool found=false;
+   aprintf("->Release Buffer\n");
    for (int i = 0; i < num_surfaces; i++) 
    {
         if (surfaces[i] == surface->surface) 
         {
             found=true;
+            aprintf("   match %d\n",i);
             surface_infos[i].used = 0;
             break;
         }
