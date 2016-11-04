@@ -32,7 +32,6 @@ extern "C" {
 #include "DIA_coreToolkit.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_render/GUI_render.h"
-#include "ADM_ffmpeg_libva_internal.h"
 #include "prefs.h"
 #include "ADM_coreLibVA.h"
 #include "../private_inc/ADM_codecLibVA.h"
