@@ -530,7 +530,7 @@ bool admDxva2_exitCleanup()
  */
 admDx2Surface::admDx2Surface(void *par)
 {
-    parent=parent;
+    parent=par;
     surface=NULL;
     decoder=NULL;
 }
@@ -539,7 +539,7 @@ admDx2Surface::admDx2Surface(void *par)
  */
 admDx2Surface::~admDx2Surface()
 {
-    parent=parent;
+    parent=NULL;
     surface=NULL;
     decoder=NULL;
 }
