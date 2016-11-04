@@ -199,6 +199,15 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     _context->thread_count    = 1;
     //
     memset(surfaces,0,sizeof(*surfaces)*ADM_MAX_SURFACE); // should not be here...
+
+    //
+    for(int i=0;i<ADM_MAX_SURFACE;i++)
+    {
+        surface_infos[i].used=0;
+        surface_infos[i].age=0;
+    }
+
+
     // create decoder
     AVDXVAContext *dx_context=new AVDXVAContext;
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...    
@@ -232,7 +241,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
-    dx_context->dxva2.decoder=admDxva2::createDecoder(avctx->codec_id,num_surfaces,surfaces);
+    dx_context->dxva2.decoder=admDxva2::createDecoder(avctx->codec_id,ALIGN(avctx->coded_width), ALIGN(avctx->coded_height),num_surfaces,surfaces);
     if(!dx_context->dxva2.decoder)
     {
         ADM_warning("Cannot create decoder\n");
@@ -409,7 +418,14 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
     decoderFF *ff=(decoderFF *)avctx->opaque;
-    return new decoderFFDXVA2(avctx,ff);
+    decoderFFDXVA2 *instance= new decoderFFDXVA2(avctx,ff);
+    if(!instance->isAlive())
+    {
+                ADM_warning("DXVA2 decoder is not alive, killing it\n");
+                delete instance;
+                instance=NULL
+    }
+    return instance;
 }
 static ADM_hwAccelEntryDxva2 dxva2Entry;
 /**
