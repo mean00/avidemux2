@@ -423,7 +423,7 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *a
     {
                 ADM_warning("DXVA2 decoder is not alive, killing it\n");
                 delete instance;
-                instance=NULL
+                instance=NULL;
     }
     return instance;
 }
