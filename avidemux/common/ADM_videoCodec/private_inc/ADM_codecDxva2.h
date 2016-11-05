@@ -30,7 +30,8 @@ class decoderFFDXVA2;
 class decoderFFDXVA2:public ADM_acceleratedDecoderFF
 {
 protected:
-                    bool        alive;
+                    bool                        alive;
+                    int                         align;;
                     LPDIRECT3DSURFACE9          surfaces[ADM_MAX_SURFACE];
                     surface_info                surface_infos[ADM_MAX_SURFACE];
                     uint32_t                    num_surfaces;
