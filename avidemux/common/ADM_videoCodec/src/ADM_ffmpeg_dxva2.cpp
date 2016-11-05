@@ -345,7 +345,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts= (uint64_t)(frame->reordered_opaque);
     out->flags=admFrameTypeFromLav(frame);
     // only copy luma for the moment
-    BitBlit(YPLANE(out),out->GetPitche(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
+    BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
     IDirect3DSurface9_UnlockRect(surface);
     aprintf("all ok\n");
     return true;
