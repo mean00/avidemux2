@@ -545,11 +545,10 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
         ADM_warning("Unable to lock DXVA2 surface\n");
         return false;
     }
-    aprintf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,out->width, out->height);
+    printf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     // only copy luma for the moment
-    bool r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->width, out->height);
+    bool r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     IDirect3DSurface9_UnlockRect(surface);
-    aprintf("all ok\n");
     return r;
 }
 
