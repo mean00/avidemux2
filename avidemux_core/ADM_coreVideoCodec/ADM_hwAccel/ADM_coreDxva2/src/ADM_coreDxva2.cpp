@@ -462,6 +462,28 @@ bool        admDxva2::supported(AVCodecID codec)
     return false;
 }
 /**
+ * \fn getDecoderConfig
+ */
+DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec)
+{
+    Dxv2SupportMap *cmap;
+    switch(codec)
+    {
+        case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
+        case AV_CODEC_ID_H265: cmap=&dxva2H265;break;
+        default:
+            ADM_assert(0);
+            break;
+    }
+    if(!cmap->enabled)
+    {
+        ADM_warning("This decoder is not enabled\n");
+        ADM_assert(0);
+    }
+    return &(cmap->pictureDecode);
+}
+
+/**
  * \fn createDecoder
  */
 IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int paddedWidth, int paddedHeight, int numSurface, LPDIRECT3DSURFACE9 *surface)

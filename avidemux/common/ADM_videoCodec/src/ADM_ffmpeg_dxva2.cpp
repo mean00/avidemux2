@@ -252,7 +252,13 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     _context->hwaccel_context = dx_context;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
     _context->draw_horiz_band = NULL;
+    
+    dx_context->surface         = surfaces;
+    dx_context->surface_count   = num_surfaces;
+    dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id);
+    
     ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
+    
     alive=true;
 }
 
@@ -360,6 +366,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 
     surface = surfaces[i];
     aprintf("-> found surface\n");
+    
     w = new admDx2Surface(this);
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
@@ -370,9 +377,9 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
         return AVERROR(ENOMEM);
     }
 
-    w->surface   = surface;
-  // FIXME  w->decoder   = decoder;
     aprintf("-> adding ref\n");
+    w->surface   = surface;
+    w->decoder   = decoder;
     w->addRef();
 #warning TODO    
    // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
@@ -380,7 +387,6 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     surface_infos[i].used = 1;
     surface_infos[i].age  = surface_age++; // not sure...
     frame->data[3] = (uint8_t *)surface;
-    frame->data[1] = (uint8_t *)w;
     aprintf("   <= Got buffer %p\n",w);
     return 0;
 }
