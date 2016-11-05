@@ -552,7 +552,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
 /**
  * \fn ADM_DXVA2_readBack
  */
-bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
+bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out,int align)
 {
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
@@ -570,7 +570,8 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
     printf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     // only copy luma for the moment
     uint8_t *data=(uint8_t*)LockedRect.pBits;
-    out->convertFromNV12(data,data+LockedRect.Pitch*out->GetHeight(PLANAR_Y), LockedRect.Pitch, LockedRect.Pitch);
+    int sourcePitch=LockedRect.Pitch;
+    out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),align), sourcePitch, sourcePitch);
     
     //r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     IDirect3DSurface9_UnlockRect(surface);

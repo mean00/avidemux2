@@ -49,7 +49,7 @@ public:
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
-        static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out);
+        static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out,int align);
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
 

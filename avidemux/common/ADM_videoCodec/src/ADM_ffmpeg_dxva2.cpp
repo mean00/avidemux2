@@ -211,7 +211,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     
     // Allocate temp buffer
     num_surfaces=4;
-    int align;
+    
     switch(avctx->codec_id)
     {
         case AV_CODEC_ID_H265:
@@ -336,7 +336,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts= (uint64_t)(frame->reordered_opaque);
     out->flags=admFrameTypeFromLav(frame);    
     
-    bool r=admDxva2::surfaceToAdmImage( (LPDIRECT3DSURFACE9)(frame->data[3]),out);
+    bool r=admDxva2::surfaceToAdmImage( (LPDIRECT3DSURFACE9)(frame->data[3]),out,align);
     aprintf("Got frame\n");
     return r;
 }
