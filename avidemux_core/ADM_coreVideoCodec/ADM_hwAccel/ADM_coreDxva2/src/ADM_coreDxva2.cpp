@@ -568,7 +568,7 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
 /**
  * \fn createDecoder
  */
-bool admDxva2::destroyDecoder(IDirectXVideoDecoderService *decoder)
+bool admDxva2::destroyDecoder(IDirectXVideoDecoder *decoder)
 {
     IDirectXVideoDecoder_Release(decoder);
     return true;
