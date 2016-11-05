@@ -249,13 +249,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     ADM_info("DXVA2 decoder created\n");
     
     //
-    _context->opaque          = this;
     _context->hwaccel_context = dx_context;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
     _context->draw_horiz_band = NULL;
-    
-    //
-   
     ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
     alive=true;
 }
