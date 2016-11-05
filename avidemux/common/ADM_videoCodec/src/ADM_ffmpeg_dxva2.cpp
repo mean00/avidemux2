@@ -231,9 +231,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
                 num_surfaces+=2;
                 break;
     }
-#define ALIGN(x) ((x+(align-1)) &(~(align-1)))
+
     // Allocate surfaces..
-    if(!admDxva2::allocateD3D9Surface(num_surfaces,ALIGN(avctx->coded_width),ALIGN(avctx->coded_height),surfaces))
+    if(!admDxva2::allocateD3D9Surface(num_surfaces,avctx->coded_width,avctx->coded_height,surfaces,align))
     {
         ADM_warning("Cannot allocate surfaces \n");
         return ;
