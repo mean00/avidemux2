@@ -327,7 +327,28 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_info("[DXVA] No picture \n");
         return false;
     }
-    ADM_warning("Todo : Read back image\n");
+    LPDIRECT3DSURFACE9 surface =  (LPDIRECT3DSURFACE9)frame->data[3];
+    D3DSURFACE_DESC    surfaceDesc;
+    D3DLOCKED_RECT     LockedRect;
+    HRESULT            hr;
+    int                ret;
+
+    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
+
+ 
+
+    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
+    if (FAILED(hr)) {
+        ADM_warning("Unable to lock DXVA2 surface\n");
+        return false;
+    }
+    aprintf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,frame->width, frame->height);
+    out->Pts= (uint64_t)(frame->reordered_opaque);
+    out->flags=admFrameTypeFromLav(decodedFrame);
+    // only copy luma for the moment
+    BitBlit(YPLANE(out),out->GetPitches(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
+    IDirect3DSurface9_UnlockRect(surface);
+    aprintf("all ok\n");
     return true;
 }
 //---
