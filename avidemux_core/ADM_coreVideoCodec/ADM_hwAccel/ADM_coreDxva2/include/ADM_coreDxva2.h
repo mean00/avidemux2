@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #pragma once
+#include "ADM_image.h"
 #include "ADM_windowInfo.h"
 extern "C" 
 {
