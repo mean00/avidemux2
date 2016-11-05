@@ -238,7 +238,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
-    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,ALIGN(avctx->coded_width), ALIGN(avctx->coded_height),num_surfaces,surfaces);
+    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,ALIGN(avctx->coded_width), ALIGN(avctx->coded_height),num_surfaces,surfaces,align);
     if(!dx_context->decoder)
     {
         ADM_warning("Cannot create decoder\n");
