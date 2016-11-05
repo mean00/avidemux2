@@ -30,7 +30,6 @@ class decoderFFDXVA2;
 class decoderFFDXVA2:public ADM_acceleratedDecoderFF
 {
 protected:
-protected:
                     bool        alive;
                     LPDIRECT3DSURFACE9          surfaces[ADM_MAX_SURFACE];
                     surface_info                surface_infos[ADM_MAX_SURFACE];
@@ -48,10 +47,12 @@ public:     // Callbacks
                     bool        initFail(void) {alive=false;return true;}
 public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
-    virtual const   char        *getName(void)        {return "DXVA2";}
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     bool        releaseBuffer(admDx2Surface *data);
                     bool        isAlive() {return alive;}
+                    int         getNumSurfaces() {return num_surfaces;}
+
+    virtual const   char        *getName(void)        {return "DXVA2";}
                     
 public:
             // public API

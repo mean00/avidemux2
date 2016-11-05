@@ -254,7 +254,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     
     //
    
-    ADM_info("Successfully setup DXVA2 hw accel (%d surface created)\n",num_surfaces);
+    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, %p)\n",num_surfaces,this);
     alive=true;
 }
 
@@ -290,7 +290,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
  */
 int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 {
-    aprintf("-> Get buffer (%d)\n",num_surfaces);
+    aprintf("-> Get buffer (%d,%p)\n",num_surfaces,this);
     int i, old_unused = -1;
     LPDIRECT3DSURFACE9 surface;
     admDx2Surface *w = NULL;
@@ -432,6 +432,9 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *a
                 ADM_warning("DXVA2 decoder is not alive, killing it\n");
                 delete instance;
                 instance=NULL;
+    }else
+    {
+        ADM_info("Spawned DXVA2 decoder with %d surfaces\n",instance->getNumSurfaces());
     }
     return instance;
 }
