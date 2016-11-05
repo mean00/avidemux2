@@ -92,6 +92,7 @@ bool dxva2Probe(void)
 */
 int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
+    aprintf("Get Buffer: FF Parent=%p\n",avctx);
     decoderFF *ff=(decoderFF *)avctx->opaque;
     decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
     ADM_assert(dec);
@@ -254,7 +255,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     
     //
    
-    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, %p)\n",num_surfaces,this);
+    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, instance=%p,parent=%p)\n",num_surfaces,this,parent);
     alive=true;
 }
 
