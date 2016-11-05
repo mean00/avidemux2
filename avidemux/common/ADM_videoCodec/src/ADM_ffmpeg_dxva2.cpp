@@ -269,8 +269,14 @@ decoderFFDXVA2::~decoderFFDXVA2()
         admDxva2::destroyD3DSurface(num_surfaces,surfaces);
     if(_context->hwaccel_context)
     {
-        admDxva2::destroyDecoder((IDirectXVideoDecoderService *)_context->hwaccel_context);
+        aprintf("Destroying context\n");
+        struct dxva_context *dx_context=(struct dxva_context *)_context->hwaccel_context;
         _context->hwaccel_context=NULL;
+        aprintf("Destroying decoder\n");
+        admDxva2::destroyDecoder(dx_context->decoder);
+        dx_context->decoder=NULL;
+        aprintf("Context cleaned up\n");
+        delete dx_context;
     }
 }
 
