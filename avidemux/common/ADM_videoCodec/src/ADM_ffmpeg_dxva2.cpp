@@ -45,8 +45,6 @@ extern "C" {
 static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-static int  ADM_DXVA2_readBack(AVCodecContext *s, AVFrame *frame);
-
 
 #if 0
 #define aprintf(...) {}
@@ -275,32 +273,7 @@ decoderFFDXVA2::~decoderFFDXVA2()
         _context->hwaccel_context=NULL;
     }
 }
-/**
- */
-int ADM_DXVA2_readBack(AVCodecContext *avctx, AVFrame *frame)
-{
-     decoderFF *ff=(decoderFF *)avctx->opaque;    
-    decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
-    aprintf("ADM_DXVA2_readBack: FF avctx=%p parent=%p instance=%p\n",avctx,ff,dec);
-    LPDIRECT3DSURFACE9 surface =  (LPDIRECT3DSURFACE9)frame->data[3];
-    D3DSURFACE_DESC    surfaceDesc;
-    D3DLOCKED_RECT     LockedRect;
-    HRESULT            hr;
 
-    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-
-    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
-    if (FAILED(hr)) {
-        ADM_warning("Unable to lock DXVA2 surface\n");
-        return false;
-    }
-    aprintf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,frame->width, frame->height);
-    // only copy luma for the moment
-    BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
-    IDirect3DSurface9_UnlockRect(surface);
-    aprintf("all ok\n");
-    return true;
-}
 
 /**
  * \fn uncompress
@@ -357,9 +330,9 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts= (uint64_t)(frame->reordered_opaque);
     out->flags=admFrameTypeFromLav(frame);    
     
-    
+    bool r=admDxva2::surfaceToAdmImage( (LPDIRECT3DSURFACE9)(frame->data[3]),out);
     aprintf("Got frame\n");
-    return true;
+    return r;
 }
     
     
