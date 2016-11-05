@@ -88,9 +88,10 @@ public:
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
             ADM_acceleratedDecoderFF    *getHwDecoder() {return hwDecoder;}
         virtual bool    dontcopy (void)
-        {
-#warning FIXME FIXME FIXME          
-          return false;
+        {    
+          if(hwDecoder)
+            return hwDecoder->dontcopy();
+          return true;
         }
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
         virtual bool getConfiguration(CONFcouple **conf);

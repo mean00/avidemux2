@@ -32,6 +32,7 @@ public:
                     }
         virtual const char      *getName()=0;
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out)=0;
+        virtual bool dontcopy() {return true;} // by default take a ref, dont copy
         
 protected:
         struct AVCodecContext  *_context;
