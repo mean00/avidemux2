@@ -545,7 +545,7 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
     HRESULT            hr;
-
+    bool r=true;
     IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
     aprintf("Surface to admImage = %p\n",surface);
     
@@ -557,7 +557,7 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
     }
     printf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     // only copy luma for the moment
-    bool r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
+    //r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     IDirect3DSurface9_UnlockRect(surface);
     return r;
 }
