@@ -50,4 +50,8 @@ public:
         static bool destroyDecoder(IDirectXVideoDecoderService *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
         static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out);
+        static bool decoderAddRef(IDirectXVideoDecoder *decoder);
+        static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
+
+        
 };

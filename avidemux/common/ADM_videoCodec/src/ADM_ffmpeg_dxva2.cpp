@@ -389,9 +389,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     struct dxva_context * hwContext=(struct dxva_context *) _context->hwaccel_context;
     w->decoder   = hwContext->decoder;
     w->addRef();
-#warning TODO    
-   // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
-
+    admDxva2::decoderAddRef(w->decoder);
     surface_infos[i].used = 1;
     surface_infos[i].age  = surface_age++; // not sure...
     frame->data[3] = (uint8_t *)surface;
@@ -417,8 +415,7 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
     }
     ADM_assert(found);
     surface->removeRef();
-#warning TODO    
-    //IDirectXVideoDecoder_Release(surface->decoder);
+    admDxva2::decoderRemoveRef(surface->decoder);
     delete surface;
     surface=NULL;
     return true ;
