@@ -558,9 +558,9 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
     printf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     // only copy luma for the moment
     uint8_t *data=(uint8_t*)LockedRect.pBits;
-    //out->convertFromNV12(data,data+LockedRect.Pitch*out->GetHeight(PLANAR_Y), LockedRect.Pitch, LockedRect.Pitch);
+    out->convertFromNV12(data,data+LockedRect.Pitch*out->GetHeight(PLANAR_Y), LockedRect.Pitch, LockedRect.Pitch);
     
-    r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
+    //r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     IDirect3DSurface9_UnlockRect(surface);
     return r;
 }

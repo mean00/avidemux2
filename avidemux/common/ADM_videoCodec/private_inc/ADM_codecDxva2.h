@@ -53,7 +53,7 @@ public:
                     int         getNumSurfaces() {return num_surfaces;}
 
     virtual const   char        *getName(void)        {return "DXVA2";}
-    virtual         bool        dontcopy() {return true;} // copy the frame for the moment
+    virtual         bool        dontcopy() {return false;} // copy the frame for the moment
                     
 public:
             // public API
