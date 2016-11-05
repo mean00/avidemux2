@@ -21,6 +21,7 @@
 
 #if 1
 #define aprintf printf
+#define DUMP_GUID
 #else
 #define aprintf(...) {}
 #endif
@@ -80,6 +81,15 @@ typedef struct dxva2_mode
   const GUID     *guid;
   enum AVCodecID codec;
 } dxva2_mode;
+/**
+ */
+static int ALIGN(int x,int alig) 
+{
+    int y= ((x+(align-1)) &(~(align-1)));
+    aprintf("Align %d,%d => %d\n",x,align,y);
+    return y;
+}
+
 /**
  */
 static const dxva2_mode dxva2_modes[] = 
@@ -149,7 +159,6 @@ static bool ADM_FAILED(HRESULT hr)
 static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list)
 {
     HRESULT hr;
-    int surface_alignment;
     D3DFORMAT target_format = (D3DFORMAT) 0;
 
     for (int i = 0; dxva2_modes[i].guid; i++) 
@@ -165,7 +174,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
             if (IsEqualGUID( *(mode->guid), guid_list[j]))
                 break;
         }
-#if 1
+#ifdef(DUMP_GUID)
     dumpGUID("Potential device_guid",*(mode->guid));
 
 #endif    
@@ -375,11 +384,13 @@ failInit:
 }
 /**
  */
-bool admDxva2::allocateD3D9Surface(int num,int width, int height,void *array)
+bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_alignment)
 {
     HRESULT hr;
     LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)array;
-    int surface_alignment=16; // FIXME    
+    int width=ALIGN(w,surface_alignment);
+    int height=ALIGN(h,surface_alignment);
+    
      hr = IDirectXVideoDecoderService_CreateSurface(decoder_service,
                                                    width,
                                                    height,
@@ -494,9 +505,11 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec)
 /**
  * \fn createDecoder
  */
-IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int paddedWidth, int paddedHeight, int numSurface, LPDIRECT3DSURFACE9 *surface)
+IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align)
 {
     Dxv2SupportMap *cmap;
+    int paddedWidth=ALIGN(with,align);
+    int paddedHeight=ALIGN(height,align);
     switch(codec)
     {
         case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
@@ -512,7 +525,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int paddedWidth,
     }
     HRESULT hr;
     IDirectXVideoDecoder *decoder=NULL;
-#if 1
+#ifdef DUMP_GUID
     dumpGUID("device_guid",cmap->device_guid);
     dumpGUID("       guid",cmap->guid);
     printf("Decoder service = %p\n",decoder_service);

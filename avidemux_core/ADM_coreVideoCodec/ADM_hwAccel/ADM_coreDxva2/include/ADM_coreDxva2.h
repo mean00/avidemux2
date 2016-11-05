@@ -44,9 +44,9 @@ public:
         static bool isOperationnal(void);
         static bool cleanup(void);
         static bool supported(AVCodecID codec);
-        static bool allocateD3D9Surface(int num,int width, int height,void *array);
+        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align);
         static bool destroyD3DSurface(int num,void *surfaces);
-        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int paddedWidth, int paddedHeight,int numSurface, LPDIRECT3DSURFACE9 *surface);
+        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
         static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out);
