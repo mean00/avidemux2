@@ -278,9 +278,51 @@ decoderFFDXVA2::~decoderFFDXVA2()
  */
 bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-      
     aprintf("==> uncompress %s\n",_context->codec->long_name);
-    return false;
+    if (!in->dataLength )	// Null frame, silently skipped
+    {
+        out->_noPicture = 1;
+        out->Pts=ADM_COMPRESSED_NO_PTS;
+        out->refType=ADM_HW_NONE;
+        ADM_info("[dxva] Nothing to decode -> no Picture\n");
+        return false;
+    }
+
+   // Put a safe value....
+    out->Pts=in->demuxerPts;
+    _context->reordered_opaque=in->demuxerPts;
+    int got_picture;
+    AVPacket pkt;
+    av_init_packet(&pkt);
+    pkt.data=in->data;
+    pkt.size=in->dataLength;
+    if(in->flags&AVI_KEY_FRAME)
+        pkt.flags=AV_PKT_FLAG_KEY;
+    else
+        pkt.flags=0;
+    
+    AVFrame *frame=_parent->getFramePointer();
+    ADM_assert(frame);
+    int ret = avcodec_decode_video2 (_context, frame, &got_picture, &pkt);
+    
+    if(ret<0)
+    {
+        char er[2048]={0};
+        av_make_error_string(er, sizeof(er)-1, ret);
+        ADM_warning("DXVA: Error %d in lavcodec (%s)\n",ret,er);
+        out->refType=ADM_HW_NONE;
+        return false;
+    }
+    if(frame->pict_type==AV_PICTURE_TYPE_NONE)
+    {
+        out->_noPicture=true;
+        out->refType=ADM_HW_NONE;
+        out->Pts= (uint64_t)(frame->reordered_opaque);
+        ADM_info("[DXVA] No picture \n");
+        return false;
+    }
+    ADM_warning("Todo : Read back image\n");
+    return true;
 }
 //---
 
