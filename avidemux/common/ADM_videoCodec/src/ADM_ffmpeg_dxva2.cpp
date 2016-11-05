@@ -92,9 +92,10 @@ bool dxva2Probe(void)
 */
 int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
-    aprintf("Get Buffer: FF Parent=%p\n",avctx);
-    decoderFF *ff=(decoderFF *)avctx->opaque;
+    
+    decoderFF *ff=(decoderFF *)avctx->opaque;    
     decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
+    aprintf("Get Buffer: FF avctx=%p parent=%p instance=%p\n",avctx,ff,dec);
     ADM_assert(dec);
     return dec->getBuffer(avctx,pic);
 }
@@ -193,7 +194,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
     
-    ADM_info("Setting up Dxva2 context (not working)\n");
+    ADM_info("Setting up Dxva2 context (instance=%p)\n",this);
     alive=false;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
     _context->thread_count    = 1;
@@ -255,7 +256,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     
     //
    
-    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, instance=%p,parent=%p)\n",num_surfaces,this,parent);
+    ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
     alive=true;
 }
 
@@ -435,7 +436,8 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *a
                 instance=NULL;
     }else
     {
-        ADM_info("Spawned DXVA2 decoder with %d surfaces\n",instance->getNumSurfaces());
+        ADM_info("Spawned DXVA2 decoder with %d surfaces, avcontext=%p, ff=%p, instance=%p\n",instance->getNumSurfaces(),
+                                avctx,ff,instance);
     }
     return instance;
 }
