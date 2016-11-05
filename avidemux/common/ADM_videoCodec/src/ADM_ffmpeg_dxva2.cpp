@@ -206,7 +206,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     surface_age=1;
 
     // create decoder
-    AVDXVAContext *dx_context=new AVDXVAContext;
+    struct dxva_context *dx_context=new struct dxva_context;
     memset(dx_context,0,sizeof(*dx_context)); // dangerous...    
     
     // Allocate temp buffer
@@ -238,8 +238,8 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
-    dx_context->dxva2.decoder=admDxva2::createDecoder(avctx->codec_id,ALIGN(avctx->coded_width), ALIGN(avctx->coded_height),num_surfaces,surfaces);
-    if(!dx_context->dxva2.decoder)
+    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,ALIGN(avctx->coded_width), ALIGN(avctx->coded_height),num_surfaces,surfaces);
+    if(!dx_context->decoder)
     {
         ADM_warning("Cannot create decoder\n");
         return ;
