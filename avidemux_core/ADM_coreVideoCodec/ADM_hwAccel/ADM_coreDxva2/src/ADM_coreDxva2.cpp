@@ -83,7 +83,7 @@ typedef struct dxva2_mode
 } dxva2_mode;
 /**
  */
-static int ALIGN(int x,int alig) 
+static int ALIGN(int x,int align) 
 {
     int y= ((x+(align-1)) &(~(align-1)));
     aprintf("Align %d,%d => %d\n",x,align,y);
@@ -174,9 +174,8 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
             if (IsEqualGUID( *(mode->guid), guid_list[j]))
                 break;
         }
-#ifdef(DUMP_GUID)
+#ifdef DUMP_GUID
     dumpGUID("Potential device_guid",*(mode->guid));
-
 #endif    
 
         if (j == guid_count)
