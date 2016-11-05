@@ -89,7 +89,8 @@ public:
             ADM_acceleratedDecoderFF    *getHwDecoder() {return hwDecoder;}
         virtual bool    dontcopy (void)
         {
-          return true;
+#warning FIXME FIXME FIXME          
+          return false;
         }
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
         virtual bool getConfiguration(CONFcouple **conf);
@@ -110,7 +111,6 @@ public:
                           {
                               if(hwDecoder)
                                   return hwDecoder->getName();
-
                               return "Lavcodec";
                           }
         // for hw accel
