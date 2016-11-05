@@ -528,6 +528,31 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int paddedWidth,
      }
      return decoder;     
 }
+
+/**
+ * \fn ADM_DXVA2_readBack
+ */
+bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
+{
+    D3DSURFACE_DESC    surfaceDesc;
+    D3DLOCKED_RECT     LockedRect;
+    HRESULT            hr;
+
+    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
+
+    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
+    if (FAILED(hr)) {
+        ADM_warning("Unable to lock DXVA2 surface\n");
+        return false;
+    }
+    aprintf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,out->width, out->height);
+    // only copy luma for the moment
+    bool r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->width, out->height);
+    IDirect3DSurface9_UnlockRect(surface);
+    aprintf("all ok\n");
+    return r;
+}
+
 /**
  * \fn createDecoder
  */

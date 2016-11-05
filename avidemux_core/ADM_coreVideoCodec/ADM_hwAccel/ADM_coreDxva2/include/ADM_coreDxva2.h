@@ -48,4 +48,5 @@ public:
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int paddedWidth, int paddedHeight,int numSurface, LPDIRECT3DSURFACE9 *surface);
         static bool destroyDecoder(IDirectXVideoDecoderService *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
+        static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out);
 };
