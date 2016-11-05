@@ -19,6 +19,14 @@
 
 #ifdef USE_DXVA2
 
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
+
+
+
 #include "ADM_dynamicLoading.h"
 #include <map>
 
@@ -539,13 +547,15 @@ bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out)
     HRESULT            hr;
 
     IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-
+    aprintf("Surface to admImage = %p\n",surface);
+    
     hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
-    if (FAILED(hr)) {
+    if (ADM_FAILED(hr)) 
+    {
         ADM_warning("Unable to lock DXVA2 surface\n");
         return false;
     }
-    printf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
+    printf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     // only copy luma for the moment
     bool r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
     IDirect3DSurface9_UnlockRect(surface);
@@ -605,7 +615,20 @@ bool admDx2Surface::removeRef()
      IDirect3DSurface9_Release(surface); // ???
      return true;
 }
-
+/**
+ */
+bool admDxva2::decoderAddRef(IDirectXVideoDecoder *decoder)
+{
+    HRESULT            hr=IDirectXVideoDecoder_AddRef(decoder);
+    return true;
+}
+/**
+ */
+bool admDxva2::decoderRemoveRef(IDirectXVideoDecoder *decoder)
+{
+    HRESULT            hr=IDirectXVideoDecoder_Release(decoder);
+    return true;
+}
 
 
 #endif
