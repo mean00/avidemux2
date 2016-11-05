@@ -70,7 +70,7 @@ extern enum AVPixelFormat ADM_FFgetFormat(struct AVCodecContext *avctx,  const e
         }else
             if(ff->setHwDecoder(accel->spawn(avctx,fmt)))
             {
-                ADM_info("Using %s as hw accel\n",accel->name);
+                ADM_info("Using %s as hw accel (ctx=%p, accel=%p)\n",accel->name,avctx,ff->getHwDecoder());
                 return outFmt;
             }
     }
