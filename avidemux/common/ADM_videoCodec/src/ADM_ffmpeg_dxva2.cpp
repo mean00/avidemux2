@@ -379,7 +379,8 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 
     aprintf("-> adding ref\n");
     w->surface   = surface;
-    w->decoder   = decoder;
+    struct dxva_context * hwContext=(struct dxva_context *) _context->hwaccel_context;
+    w->decoder   = hwContext->decoder;
     w->addRef();
 #warning TODO    
    // FIXME  IDirectXVideoDecoder_AddRef(w->decoder);
