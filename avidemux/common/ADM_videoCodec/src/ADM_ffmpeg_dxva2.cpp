@@ -331,7 +331,6 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
     HRESULT            hr;
-    int                ret;
 
     IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
 
@@ -344,9 +343,9 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     aprintf("Retrieving image pitch=%d width=% height=%d\n",LockedRect.Pitch,frame->width, frame->height);
     out->Pts= (uint64_t)(frame->reordered_opaque);
-    out->flags=admFrameTypeFromLav(decodedFrame);
+    out->flags=admFrameTypeFromLav(frame);
     // only copy luma for the moment
-    BitBlit(YPLANE(out),out->GetPitches(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
+    BitBlit(YPLANE(out),out->GetPitche(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,frame->width, frame->height);
     IDirect3DSurface9_UnlockRect(surface);
     aprintf("all ok\n");
     return true;
