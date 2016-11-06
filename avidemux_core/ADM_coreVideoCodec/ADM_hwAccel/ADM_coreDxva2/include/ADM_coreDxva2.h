@@ -25,14 +25,19 @@ extern "C"
 class admDx2Surface 
 {
 public:  
-                          admDx2Surface(void *parent);
+                          admDx2Surface(void *parent,int alignment);
                           ~admDx2Surface();
     void                 *parent;
     LPDIRECT3DSURFACE9    surface;
     IDirectXVideoDecoder *decoder;
+    
+    bool                  surfaceToAdmImage(ADMImage *out);
+    
 public:    
     bool                  addRef();
     bool                  removeRef();
+protected:
+    int                   alignment;
 } ;
 /**
     \class admVdpau
@@ -48,10 +53,7 @@ public:
         static bool destroyD3DSurface(int num,void *surfaces);
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
-        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
-        static bool surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out,int align);
+        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);        
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
-
-        
 };

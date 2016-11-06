@@ -336,13 +336,14 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     out->Pts= (uint64_t)(frame->reordered_opaque);
     out->flags=admFrameTypeFromLav(frame);    
     
-    bool r=admDxva2::surfaceToAdmImage( (LPDIRECT3DSURFACE9)(frame->data[3]),out,align);
+    // Retrieve dx2Surface..
+    admDx2Surface *w=(admDx2Surface *)frame->data[1];
+    ADM_assert(w->surface==(LPDIRECT3DSURFACE9)frame->data[1]);
+    bool r=w->surfaceToAdmImage(out);
     aprintf("Got frame\n");
     return r;
 }
-    
-    
-  
+         
 //---
 
 /**
@@ -380,7 +381,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     surface = surfaces[i];
     aprintf("-> found surface\n");
     
-    w = new admDx2Surface(this);
+    w = new admDx2Surface(this,align);
     frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
                                      ADM_LIBDXVA2releaseBuffer, w,
                                      AV_BUFFER_FLAG_READONLY);
@@ -399,6 +400,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     surface_infos[i].used = 1;
     surface_infos[i].age  = surface_age++; // not sure...
     frame->data[3] = (uint8_t *)surface;
+    frame->data[1] = (uint8_t *)w;
     aprintf("   <= Got buffer %p\n",w);
     return 0;
 }

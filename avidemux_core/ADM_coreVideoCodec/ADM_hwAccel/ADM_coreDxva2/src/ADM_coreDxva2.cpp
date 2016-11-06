@@ -40,7 +40,6 @@
 #define COBJMACROS
 #include <d3d9.h>
 #include <dxva2api.h>
-#include "../include/ADM_coreDxva2Internal.h"
 #include "../include/ADM_coreDxva2.h"
 
 typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
@@ -549,34 +548,6 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
      return decoder;     
 }
 
-/**
- * \fn ADM_DXVA2_readBack
- */
-bool  admDxva2::surfaceToAdmImage(LPDIRECT3DSURFACE9 surface, ADMImage *out,int align)
-{
-    D3DSURFACE_DESC    surfaceDesc;
-    D3DLOCKED_RECT     LockedRect;
-    HRESULT            hr;
-    bool r=true;
-    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-    aprintf("Surface to admImage = %p\n",surface);
-    
-    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
-    if (ADM_FAILED(hr)) 
-    {
-        ADM_warning("Unable to lock DXVA2 surface\n");
-        return false;
-    }
-    printf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
-    // only copy luma for the moment
-    uint8_t *data=(uint8_t*)LockedRect.pBits;
-    int sourcePitch=LockedRect.Pitch;
-    out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),align), sourcePitch, sourcePitch);
-    
-    //r=BitBlit(YPLANE(out),out->GetPitch(PLANAR_Y),(uint8_t*)LockedRect.pBits,LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
-    IDirect3DSurface9_UnlockRect(surface);
-    return r;
-}
 
 /**
  * \fn createDecoder
@@ -600,9 +571,10 @@ bool admDxva2_exitCleanup()
 /**
  * \fn ctor
  */
-admDx2Surface::admDx2Surface(void *par)
+admDx2Surface::admDx2Surface(void *par,int alig)
 {
     parent=par;
+    alignment=alig;
     surface=NULL;
     decoder=NULL;
 }
@@ -631,6 +603,34 @@ bool admDx2Surface::removeRef()
      IDirect3DSurface9_Release(surface); // ???
      return true;
 }
+
+
+/**
+ * \fn ADM_DXVA2_readBack
+ */
+bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
+{
+    D3DSURFACE_DESC    surfaceDesc;
+    D3DLOCKED_RECT     LockedRect;
+    HRESULT            hr;
+    bool r=true;
+    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
+    aprintf("Surface to admImage = %p\n",surface);    
+    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
+    if (ADM_FAILED(hr)) 
+    {
+        ADM_warning("Unable to lock DXVA2 surface\n");
+        return false;
+    }
+    aprintf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
+    
+    uint8_t *data=(uint8_t*)LockedRect.pBits;
+    int sourcePitch=LockedRect.Pitch;
+    out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),alignment), sourcePitch, sourcePitch);
+    IDirect3DSurface9_UnlockRect(surface);
+    return r;
+}
+
 /**
  */
 bool admDxva2::decoderAddRef(IDirectXVideoDecoder *decoder)
