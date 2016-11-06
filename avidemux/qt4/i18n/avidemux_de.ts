@@ -3441,7 +3441,7 @@ der Halbbilder (deinterlaceing)</translation>
         <translation type="obsolete">Es bezieht sich vielleicht auf eine alte Index-Datei.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+214"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+222"/>
         <source>Attempt to open %s failed!</source>
         <translation type="unfinished">Versuch %s zu öffnen ist misslungen!</translation>
     </message>
@@ -3665,24 +3665,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>ADM_QthreadCount</name>
-    <message>
-        <location filename="../ADM_UIs/src/T_threadCount.cpp.rej" line="+7"/>
-        <source>Disabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Auto-detect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Custom</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>ADM_ogmWrite</name>
     <message>
         <source>None</source>
@@ -3750,28 +3732,23 @@ Drop timing informations ?</source>
 <context>
     <name>ADM_qt4Factory::ADM_QthreadCount</name>
     <message>
-        <location filename="../ADM_UIs/src/T_threadCount.cpp.orig" line="+45"/>
         <source>Disabled</source>
-        <translation type="unfinished">einer</translation>
+        <translation type="obsolete">einer</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Auto-detect</source>
-        <translation type="unfinished">automatisch</translation>
+        <translation type="obsolete">automatisch</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Custom</source>
-        <translation type="unfinished">individuelle Anzahl</translation>
+        <translation type="obsolete">individuelle Anzahl</translation>
     </message>
 </context>
 <context>
     <name>ADM_qtray</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp.orig" line="+82"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp.rej" line="+7"/>
         <source>Open Avidemux</source>
-        <translation type="unfinished">Öffne Avidemux</translation>
+        <translation type="obsolete">Öffne Avidemux</translation>
     </message>
 </context>
 <context>
@@ -4716,6 +4693,37 @@ Drop timing informations ?</source>
     <message>
         <source>Histogram</source>
         <translation type="obsolete">Histogramm</translation>
+    </message>
+</context>
+<context>
+    <name>FDK-AAC</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/fdk-aac/ae_fdk.cpp" line="+433"/>
+        <source>_Profile::</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+9"/>
+        <source>_Bitrate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-7"/>
+        <source>SBR enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+7"/>
+        <source>After burner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-3"/>
+        <location line="+5"/>
+        <source>FDK-AAC Configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6618,19 +6626,6 @@ Drop timing informations ?</source>
     </message>
 </context>
 <context>
-    <name>Ui_licenseWindow</name>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp.orig" line="+25"/>
-        <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;&lt;html&gt;&lt;head&gt;  &lt;title&gt;Avidemux is free software; you can redistribute it and/or  modify it under the terms of the GNU General Public License  version 2 as published by the Free Software Foundation&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;&lt;!-- /* Style Definitions */ p.licenseStyle, li.licenseStyle, div.licenseStyle        {margin:0cm;        margin-bottom:.0001pt;        font-size:12.0pt;        font-family:&quot;Times New Roman&quot;;} /* Page Definitions */ @page Section1        {size:612.0pt 792.0pt;        margin:72.0pt 90.0pt 72.0pt 90.0pt;}div.Section1        {page:Section1;}--&gt;&lt;/style&gt;&lt;/head&gt;&lt;body lang=&quot;EN-GB&quot; style=&apos;text-justify-trim:punctuation&apos;&gt;  &lt;div class=&quot;Section1&quot;&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;Avidemux is    free software; you can redistribute it and/or modify it under    the terms of the GNU General Public License version 2 as    published by the Free Software Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;b&gt;&lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt;    &lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Version 2, June    1991&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Copyright (C) 1989, 1991    Free Software Foundation, Inc.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;59 Temple Place, Suite    330, Boston, MA  02111-1307  USA&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;span lang=&quot;FR&quot; style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Everyone is permitted to    copy and distribute verbatim copies of this license document,    but changing it is not allowed.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Preamble&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The licenses for most    software are designed to take away your freedom to share and    change it.  By contrast, the GNU General Public License is    intended to guarantee your freedom to share and change free    software--to make sure the software is free for all its users.     This General Public License applies to most of the Free    Software Foundation&apos;s software and to any other program whose    authors commit to using it.  (Some other Free Software    Foundation software is covered by the GNU Library General    Public License instead.)  You can apply it to your programs,    too.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;When we speak of free    software, we are referring to freedom, not price.  Our General    Public Licenses are designed to make sure that you have the    freedom to distribute copies of free software (and charge for    this service if you wish), that you receive source code or can    get it if you want it, that you can change the software or use    pieces of it in new free programs; and that you know you can do    these things.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;To protect your rights, we    need to make restrictions that forbid anyone to deny you these    rights or to ask you to surrender the rights. These    restrictions translate to certain responsibilities for you if    you distribute copies of the software, or if you modify    it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;For example, if you    distribute copies of such a program, whether gratis or for a    fee, you must give the recipients all the rights that you have.     You must make sure that they, too, receive or can get the    source code.  And you must show them these terms so they know    their rights.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;We protect your rights    with two steps: (1) copyright the software, and (2) offer you    this license which gives you legal permission to copy,    distribute and/or modify the software.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Also, for each author&apos;s    protection and ours, we want to make certain that everyone    understands that there is no warranty for this free software.     If the software is modified by someone else and passed on, we    want its recipients to know that what they have is not the    original, so that any problems introduced by others will not    reflect on the original authors&apos; reputations.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Finally, any free program    is threatened constantly by software patents.  We wish to avoid    the danger that redistributors of a free program will    individually obtain patent licenses, in effect making the    program proprietary.  To prevent this, we have made it clear    that any patent must be licensed for everyone&apos;s free use or not    licensed at all.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The precise terms and    conditions for copying, distribution and modification    follow.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;GNU GENERAL PUBLIC    LICENSE&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;TERMS AND CONDITIONS FOR    COPYING, DISTRIBUTION AND MODIFICATION&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;0. This License applies to    any program or other work which contains a notice placed by the    copyright holder saying it may be distributed under the terms    of this General Public License.  The &quot;Program&quot;, below, refers    to any such program or work, and a &quot;work based on the Program&quot;    means either the Program or any derivative work under copyright    law: that is to say, a work containing the Program or a portion    of it, either verbatim or with modifications and/or translated    into another language.  (Hereinafter, translation is included    without limitation in the term &quot;modification&quot;.)  Each licensee    is addressed as &quot;you&quot;.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Activities other than    copying, distribution and modification are not covered by this    License; they are outside its scope.  The act of running the    Program is not restricted, and the output from the Program is    covered only if its contents constitute a work based on the    Program (independent of having been made by running the    Program). Whether that is true depends on what the Program    does.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;1. You may copy and    distribute verbatim copies of the Program&apos;s source code as you    receive it, in any medium, provided that you conspicuously and    appropriately publish on each copy an appropriate copyright    notice and disclaimer of warranty; keep intact all the notices    that refer to this License and to the absence of any warranty;    and give any other recipients of the Program a copy of this    License along with the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;You may charge a fee for    the physical act of transferring a copy, and you may at your    option offer warranty protection in exchange for a    fee.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;2. You may modify your    copy or copies of the Program or any portion of it, thus    forming a work based on the Program, and copy and distribute    such modifications or work under the terms of Section 1 above,    provided that you also meet all of these conditions:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) You must cause the    modified files to carry prominent notices stating that you    changed the files and the date of any change.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) You must cause any work    that you distribute or publish, that in whole or in part    contains or is derived from the Program or any part thereof, to    be licensed as a whole at no charge to all third parties under    the terms of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) If the modified program    normally reads commands interactively when run, you must cause    it, when started running for such interactive use in the most    ordinary way, to print or display an announcement including an    appropriate copyright notice and a notice that there is no    warranty (or else, saying that you provide a warranty) and that    users may redistribute the program under these conditions, and    telling the user how to view a copy of this License.     (Exception: if the Program itself is interactive but does not    normally print such an announcement, your work based on the    Program is not required to print an announcement.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;These requirements apply    to the modified work as a whole.  If identifiable sections of    that work are not derived from the Program, and can be    reasonably considered independent and separate works in    themselves, then this License, and its terms, do not apply to    those sections when you distribute them as separate works.  But    when you distribute the same sections as part of a whole which    is a work based on the Program, the distribution of the whole    must be on the terms of this License, whose permissions for    other licensees extend to the entire whole, and thus to each    and every part regardless of who wrote it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Thus, it is not the intent    of this section to claim rights or contest your rights to work    written entirely by you; rather, the intent is to exercise the    right to control the distribution of derivative or collective    works based on the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;In addition, mere    aggregation of another work not based on the Program with the    Program (or with a work based on the Program) on a volume of a    storage or distribution medium does not bring the other work    under the scope of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;3. You may copy and    distribute the Program (or a work based on it, under Section 2)    in object code or executable form under the terms of Sections 1    and 2 above provided that you also do one of the    following:&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;a) Accompany it with the    complete corresponding machine-readable source code, which must    be distributed under the terms of Sections 1 and 2 above on a    medium customarily used for software interchange;    or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;b) Accompany it with a    written offer, valid for at least three years, to give any    third party, for a charge no more than your cost of physically    performing source distribution, a complete machine-readable    copy of the corresponding source code, to be distributed under    the terms of Sections 1 and 2 above on a medium customarily    used for software interchange; or,&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;c) Accompany it with the    information you received as to the offer to distribute    corresponding source code.  (This alternative is allowed only    for noncommercial distribution and only if you received the    program in object code or executable form with such an offer,    in accord with Subsection b above.)&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;The source code for a work    means the preferred form of the work for making modifications    to it.  For an executable work, complete source code means all    the source code for all modules it contains, plus any    associated interface definition files, plus the scripts used to    control compilation and installation of the executable.     However, as a special exception, the source code distributed    need not include anything that is normally distributed (in    either source or binary form) with the major components    (compiler, kernel, and so on) of the operating system on which    the executable runs, unless that component itself accompanies    the executable.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If distribution of    executable or object code is made by offering access to copy    from a designated place, then offering equivalent access to    copy the source code from the same place counts as distribution    of the source code, even though third parties are not compelled    to copy the source along with the object code.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;4. You may not copy,    modify, sublicense, or distribute the Program except as    expressly provided under this License.  Any attempt otherwise    to copy, modify, sublicense or distribute the Program is void,    and will automatically terminate your rights under this    License. However, parties who have received copies, or rights,    from you under this License will not have their licenses    terminated so long as such parties remain in full    compliance.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;5. You are not required to    accept this License, since you have not signed it.  However,    nothing else grants you permission to modify or distribute the    Program or its derivative works.  These actions are prohibited    by law if you do not accept this License.  Therefore, by    modifying or distributing the Program (or any work based on the    Program), you indicate your acceptance of this License to do    so, and all its terms and conditions for copying, distributing    or modifying the Program or works based on it.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;6. Each time you    redistribute the Program (or any work based on the Program),    the recipient automatically receives a license from the    original licensor to copy, distribute or modify the Program    subject to these terms and conditions.  You may not impose any    further restrictions on the recipients&apos; exercise of the rights    granted herein. You are not responsible for enforcing    compliance by third parties to this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;7. If, as a consequence of    a court judgment or allegation of patent infringement or for    any other reason (not limited to patent issues), conditions are    imposed on you (whether by court order, agreement or otherwise)    that contradict the conditions of this License, they do not    excuse you from the conditions of this License.  If you cannot    distribute so as to satisfy simultaneously your obligations    under this License and any other pertinent obligations, then as    a consequence you may not distribute the Program at all.  For    example, if a patent license would not permit royalty-free    redistribution of the Program by all those who receive copies    directly or indirectly through you, then the only way you could    satisfy both it and this License would be to refrain entirely    from distribution of the Program.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;If any portion of this    section is held invalid or unenforceable under any particular    circumstance, the balance of the section is intended to apply    and the section as a whole is intended to apply in other    circumstances.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;It is not the purpose of    this section to induce you to infringe any patents or other    property right claims or to contest validity of any such    claims; this section has the sole purpose of protecting the    integrity of the free software distribution system, which is    implemented by public license practices.  Many people have made    generous contributions to the wide range of software    distributed through that system in reliance on consistent    application of that system; it is up to the author/donor to    decide if he or she is willing to distribute software through    any other system and a licensee cannot impose that    choice.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;This section is intended    to make thoroughly clear what is believed to be a consequence    of the rest of this License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;8. If the distribution    and/or use of the Program is restricted in certain countries    either by patents or by copyrighted interfaces, the original    copyright holder who places the Program under this License may    add an explicit geographical distribution limitation excluding    those countries, so that distribution is permitted only in or    among countries not thus excluded.  In such case, this License    incorporates the limitation as if written in the body of this    License.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;9. The Free Software    Foundation may publish revised and/or new versions of the    General Public License from time to time.  Such new versions    will be similar in spirit to the present version, but may    differ in detail to address new problems or    concerns.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;Each version is given a    distinguishing version number.  If the Program specifies a    version number of this License which applies to it and &quot;any    later version&quot;, you have the option of following the terms and    conditions either of that version or of any later version    published by the Free Software Foundation.  If the Program does    not specify a version number of this License, you may choose    any version ever published by the Free Software    Foundation.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;10. If you wish to    incorporate parts of the Program into other free programs whose    distribution conditions are different, write to the author to    ask for permission.  For software which is copyrighted by the    Free Software Foundation, write to the Free Software    Foundation; we sometimes make exceptions for this.  Our    decision will be guided by the two goals of preserving the free    status of all derivatives of our free software and of promoting    the sharing and reuse of software generally.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;NO WARRANTY&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;11. BECAUSE THE PROGRAM IS    LICENSED FREE OF CHARGE, THERE IS NO WARRANTY FOR THE PROGRAM,    TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER    PARTIES PROVIDE THE PROGRAM &quot;AS IS&quot; WITHOUT WARRANTY OF ANY    KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A    PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND    PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM    PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY    SERVICING, REPAIR OR CORRECTION.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=    &apos;text-align:justify;text-autospace:none&apos;&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;12. IN NO EVENT UNLESS    REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING WILL ANY    COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR    REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU    FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO    USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR    DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR    THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY    OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN    ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.&lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; align=&quot;center&quot; style=    &apos;text-align:center;text-autospace:none&apos;&gt;&lt;b&gt;&lt;span style=    &apos;font-size:10.0pt;font-family:Arial&apos;&gt;END OF TERMS AND    CONDITIONS&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;    &lt;p class=&quot;licenseStyle&quot; style=&apos;text-autospace:none&apos;&gt;    &lt;span style=&apos;font-size:10.0pt; font-family:Arial&apos;&gt; &lt;/span&gt;&lt;/p&gt;  &lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_license.cpp.rej" line="+7"/>
-        <source>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Ui_pluginManagerWindow</name>
     <message>
         <source>Description</source>
@@ -7260,7 +7255,7 @@ Drop timing informations ?</source>
 <context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+224"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+220"/>
         <source>_Use systray while encoding</source>
         <translation type="unfinished">_Während des Kodierens ein Symbol im Infobereich statt in der Taskleiste anzeigen.</translation>
     </message>
@@ -7273,6 +7268,11 @@ Drop timing informations ?</source>
         <location line="+1"/>
         <source>Create _OpenDML files</source>
         <translation type="unfinished">AVI-Dateien im _OpenDML-Format erstellen (AVI 2.0), um Dateien größer als 4 GB speichern zu können</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Revert to saved default output settings on video load</source>
+        <translation>Ausgabekonfiguration beim Laden eines Videos auf die gespeicherte Vorgabe zu_rücksetzen</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -7492,7 +7492,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_builtin.cpp" line="+97"/>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+21"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+30"/>
         <source>CPU</source>
         <translation type="unfinished">Prozessor</translation>
     </message>
@@ -7512,17 +7512,17 @@ Drop timing informations ?</source>
         <translation>Standardport</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+63"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+64"/>
         <source>Pr&amp;eferences</source>
         <translation>&amp;Einstellungen</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+10"/>
         <source>Preferences</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-29"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-30"/>
         <source>Open</source>
         <translation>Ö&amp;ffnen...</translation>
     </message>
@@ -7585,6 +7585,11 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+1"/>
+        <source>Redo</source>
+        <translation type="unfinished">&amp;Wiederholen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Reset Edit</source>
         <translation>Änderungen &amp;verwerfen</translation>
     </message>
@@ -7622,6 +7627,11 @@ Drop timing informations ?</source>
         <location line="+4"/>
         <source>Save current settings as default</source>
         <translation>Aus&amp;gabekonfiguration als Vorgabe setzen</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Load saved settings</source>
+        <translation type="unfinished">Ges&amp;peicherte Ausgabekonfiguration laden</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -7837,7 +7847,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_jobs_save.cpp" line="+8"/>
         <source>_Job name:</source>
-        <translation type="unfinished">_Job Name:</translation>
+        <translation type="unfinished">_Job-Titel:</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -7865,12 +7875,12 @@ Drop timing informations ?</source>
         <translation type="unfinished">Audiogeräte</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-290"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-278"/>
         <source>Enable openGl support</source>
         <translation>OpenG_L benutzen</translation>
     </message>
     <message>
-        <location line="+249"/>
+        <location line="+235"/>
         <source>_Limit Refresh Rate</source>
         <translation>_Bildwiederholungsfrequenz begrenzen</translation>
     </message>
@@ -7886,7 +7896,12 @@ Drop timing informations ?</source>
         <translation>Hoch</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="-54"/>
+        <source>Decode video using DXVA2 (windows)</source>
+        <translation>Video mittels _DXVA2 dekodieren (nur Windows)</translation>
+    </message>
+    <message>
+        <location line="+58"/>
         <location filename="../ADM_userInterfaces/ADM_dialog/DIA_xvid4.cpp" line="-2"/>
         <source>Low</source>
         <translation>Niedrig</translation>
@@ -7935,7 +7950,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">Codec Fehler</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+329"/>
+        <location filename="../../common/gui_main.cpp" line="+336"/>
         <source>Not coded in this version</source>
         <translation type="unfinished">Nicht in dieser Version eingebaut</translation>
     </message>
@@ -7948,12 +7963,12 @@ Drop timing informations ?</source>
         <translation type="obsolete">AVI-Datei auswählen zum Anhängen...</translation>
     </message>
     <message>
-        <location line="+181"/>
+        <location line="+228"/>
         <source>Are you sure?</source>
         <translation type="unfinished">Sind Sie sicher?</translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+119"/>
         <source>Permission error</source>
         <translation type="unfinished">Rechtefehler</translation>
     </message>
@@ -7973,7 +7988,7 @@ Drop timing informations ?</source>
         <translation type="unfinished">&quot;%s&quot; existiert nicht.</translation>
     </message>
     <message>
-        <location line="+38"/>
+        <location line="+42"/>
         <source>Cannot open project using the video loader.</source>
         <translation type="unfinished">Das Projekt kann nicht mit dem Video-Ladeprogramm geöffnet werden.</translation>
     </message>
@@ -8000,13 +8015,13 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
 Gehe zu Audio-&gt;Hauptspur und wähle die aktive Tonspur aus.</translation>
     </message>
     <message>
-        <location line="+84"/>
+        <location line="+105"/>
         <source>Something failed when appending</source>
         <translation type="unfinished">Beim Anhängen ging irgendetwas schief</translation>
     </message>
     <message>
-        <location line="+9"/>
-        <location line="+249"/>
+        <location line="+5"/>
+        <location line="+255"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">Irgendetwas Schlimmes ist passiert (II)</translation>
     </message>
@@ -8051,7 +8066,7 @@ Gehe zu Audio-&gt;Hauptspur und wähle die aktive Tonspur aus.</translation>
         <translation type="unfinished">Haupt-Tonspur</translation>
     </message>
     <message>
-        <location line="+253"/>
+        <location line="+254"/>
         <source>AvsProxy</source>
         <translation type="unfinished">Avs-Proxy</translation>
     </message>
@@ -8154,11 +8169,13 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished">%d Bilder gespeichert.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+612"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+614"/>
+        <location line="+42"/>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+78"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+132"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-239"/>
+        <location filename="../../common/gui_main.cpp" line="-240"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -8199,14 +8216,12 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished">Die Datei %s wurde NICHT korrekt gespeichert.</translation>
     </message>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp.orig" line="+403"/>
         <source>Recent Files</source>
-        <translation type="unfinished">Zuletzt verwendete Dateien</translation>
+        <translation type="obsolete">Zuletzt verwendete Dateien</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Recent Projects</source>
-        <translation type="unfinished">Zuletzt verwendete Projekte</translation>
+        <translation type="obsolete">Zuletzt verwendete Projekte</translation>
     </message>
     <message>
         <source>_Mode:</source>
@@ -8407,19 +8422,19 @@ Läuft es trotzdem?</translation>
         <translation type="obsolete">Dieses Script wurde bereits erfolgreich abgearbeitet.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-180"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-166"/>
         <source>Decode video using VDPAU (NVIDIA)</source>
-        <translation type="unfinished">Dekodiere Video mittels _VDPAU</translation>
+        <translation>Video mittels _VDPAU dekodieren</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Decode video using XVBA (AMD)</source>
-        <translation>Dekodiere Video mittels _XvBA (AMD Catalyst)</translation>
+        <translation>Video mittels _XvBA (AMD Catalyst) dekodieren</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Decode video using LIBVA (INTEL)</source>
-        <translation>Dekodiere Video mittels _libVA</translation>
+        <translation>Video mittels _LibVA dekodieren (Intel)</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -8427,7 +8442,7 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished">Bei Dekodierung in Hardware verwende den entsprechenden Videoausgabe_treiber</translation>
     </message>
     <message>
-        <location line="+96"/>
+        <location line="+82"/>
         <source>LIBVA (best)</source>
         <translation type="unfinished">libVA (bestens)</translation>
     </message>
@@ -8447,9 +8462,14 @@ Läuft es trotzdem?</translation>
         <translation>Auf _Update überprüfen</translation>
     </message>
     <message>
-        <location line="+234"/>
+        <location line="+227"/>
+        <source>GUI Rendering Options</source>
+        <translation>Darstellungsoptionen der grafischen Oberfläche</translation>
+    </message>
+    <message>
+        <location line="+16"/>
         <source>Display</source>
-        <translation type="unfinished">Video-Anzeige</translation>
+        <translation>Darstellung</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -8457,14 +8477,15 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished">HW-Beschleunigung</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+0"/>
+        <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="-42"/>
+        <location line="+42"/>
         <source>You cannot remove *all* the video
 </source>
         <translation>Das *ganze* Video zu löschen ist nicht möglich
 </translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-889"/>
+        <location filename="../../common/gui_main.cpp" line="-995"/>
         <location line="+65"/>
         <source>Select Video File...</source>
         <translation>Videodatei wählen...</translation>
@@ -8475,23 +8496,23 @@ Läuft es trotzdem?</translation>
         <translation>Videodatei zum Anfügen wählen...</translation>
     </message>
     <message>
-        <location line="+731"/>
+        <location line="+837"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished">Ungültige Liste der Tonspuren</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+425"/>
+        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+434"/>
         <source>Saving</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-993"/>
+        <location filename="../../common/gui_main.cpp" line="-1104"/>
         <source>Select script/project to run</source>
         <translation>Skript/Projekt zum Ausführen wählen</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="+23"/>
         <source>Select script to run</source>
         <translation>Skript zum Ausführen wählen</translation>
     </message>
@@ -8511,7 +8532,7 @@ Läuft es trotzdem?</translation>
         <translation>tinyPy wurde beim Kompilieren nicht aktiviert</translation>
     </message>
     <message>
-        <location line="+165"/>
+        <location line="+239"/>
         <source>Cutting</source>
         <translation>Schneiden</translation>
     </message>
@@ -8521,7 +8542,7 @@ Läuft es trotzdem?</translation>
         <translation>Fehler beim Ausschneiden.</translation>
     </message>
     <message>
-        <location line="+636"/>
+        <location line="+668"/>
         <source>Cannot use that file as audio track</source>
         <translation>Kann diese Datei nicht als Tonspur verwenden</translation>
     </message>
@@ -8698,7 +8719,7 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-134"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-143"/>
         <location line="+3"/>
         <source>Sdl driver</source>
         <translation type="unfinished"></translation>
@@ -8710,14 +8731,14 @@ Läuft es trotzdem?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-74"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-76"/>
         <location line="+2"/>
         <location line="+2"/>
         <source>-</source>
         <translation type="unfinished">-</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+43"/>
         <source>Build Option</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8755,13 +8776,15 @@ Läuft es trotzdem?</translation>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+0"/>
         <source>Core has been compiled without LIBVA support, but the application has been compiled with it.
 Installation mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Avidemux-Core wurde ohne LibVA-Unterstützung kompiliert, die Avidemux-Anwendung jedoch mit.
+Nichtübereinstimmende Installation</translation>
     </message>
     <message>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+0"/>
         <source>Core has been compiled without VDPAU support, but the application has been compiled with it.
 Installation mismatch</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Avidemux-Core wurde ohne VDPAU-Unterstützung kompiliert, die Avidemux-Anwendung jedoch mit.
+Nichtübereinstimmende Installation</translation>
     </message>
     <message>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+0"/>
@@ -8818,18 +8841,18 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1051"/>
+        <location filename="../../common/gui_main.cpp" line="-1157"/>
         <source>Select script to save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+840"/>
+        <location line="+946"/>
         <location filename="../../../avidemux_core/ADM_coreImage/src/ADM_imageSave.cpp" line="+104"/>
         <source>Something bad happened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+494"/>
+        <location line="+495"/>
         <source>Oops</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8866,17 +8889,17 @@ It is needed to create PSP compatible video.</source>
     <message>
         <location line="+6"/>
         <source>Output file</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ausgabedatei</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Job name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Job-Titel</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Queue job to jobList</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Job zur Warteschlange hinzufügen</translation>
     </message>
     <message>
         <location line="+208"/>
@@ -8892,17 +8915,17 @@ It is needed to create PSP compatible video.</source>
     <message>
         <location line="+7"/>
         <source>Saving failed</source>
-        <translation type="unfinished">Das Speichern ist gescheitert</translation>
+        <translation type="unfinished">Das Speichern ist fehlgeschlagen</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Jpeg</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">JPEG</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Fail to save as jpeg</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Speichern als JPEG fehlgeschlagen</translation>
     </message>
     <message>
         <location line="+104"/>
@@ -8912,34 +8935,35 @@ It is needed to create PSP compatible video.</source>
     <message>
         <location line="+10"/>
         <source>Cannot add job %s</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann den Job %s nicht hinzufügen</translation>
     </message>
     <message>
         <location filename="../../common/gui_savenew.cpp" line="-174"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ergebnisse eines früheren ersten Durchlaufs wiederverwenden?
+Warnung: Die Encoder-Konfiguration muss ähnlich sein.</translation>
     </message>
     <message>
         <location line="+138"/>
         <source>Cannot instantiate video chain</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Filterkette nicht aufbauen</translation>
     </message>
     <message>
         <location line="+12"/>
         <location line="+24"/>
         <source>Cannot create encoder</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Encoder nicht initialisieren</translation>
     </message>
     <message>
         <location line="-8"/>
         <source>Cannot setup codec. Bitrate too low?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Encoder nicht konfigurieren. Ist die Bitrate zu niedrig?</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Cannot setup audio encoder, make sure your stream is compatible with audio encoder (number of channels, bitrate, format)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Audio-Encoder nicht konfigurieren. Stellen Sie sicher, dass der Stream kompatibel ist (Anzahl der Kanäle, Bitrate, Format)</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -8968,19 +8992,16 @@ Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/T_threadCount.cpp" line="+45"/>
-        <location filename="../ADM_UIs/src/T_threadCount.cpp.rej" line="+1"/>
         <source>Disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../ADM_UIs/src/T_threadCount.cpp.rej" line="+1"/>
         <source>Auto-detect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../ADM_UIs/src/T_threadCount.cpp.rej" line="+1"/>
         <source>Custom</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9241,6 +9262,11 @@ Trotzdem fortsetzen?</translation>
     </message>
     <message>
         <location line="+1"/>
+        <source>FLAC</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>E-AC3</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9413,24 +9439,29 @@ Trotzdem fortsetzen?</translation>
         <translation type="unfinished">1:1</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+156"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+157"/>
         <location line="+32"/>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h.rej" line="+8"/>
-        <location line="+9"/>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="+34"/>
-        <location line="+33"/>
+        <location line="+35"/>
         <source>Codec</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="-33"/>
+        <location filename="../../../avidemux_core/ADM_coreVideoCodec/src/ADM_codecFFsimple.cpp" line="-35"/>
         <source>Internal error finding codec 0x%x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+33"/>
+        <location line="+35"/>
         <source>Internal error opening 0x%x</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+0"/>
+        <source>Core has been compiled without DXVA2 support, but the application has been compiled with it.
+Installation mismatch</source>
+        <translation type="unfinished">Avidemux-Core wurde ohne DXVA2-Unterstützung kompiliert, die Avidemux-Anwendung jedoch mit.
+Nichtübereinstimmende Installation</translation>
     </message>
 </context>
 <context>
@@ -9470,7 +9501,7 @@ Trotzdem fortsetzen?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/ADM_vidAsharp.cpp" line="+66"/>
         <source>Adaptative sharpener by MarcFD.</source>
-        <translation type="unfinished">Schärfen mittels adaptiver Unscharfmaskierung, © Marc Fauconneau ("MarcFD").</translation>
+        <translation type="unfinished">Schärfen mittels adaptiver Unscharfmaskierung, © Marc Fauconneau (&quot;MarcFD&quot;).</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -10703,8 +10734,7 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Average Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-        <translation>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+        <translation type="unfinished">&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Durchschnittliche Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
@@ -11003,7 +11033,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ffmpeg2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+225"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg2/ADM_ffMpeg2.cpp" line="+223"/>
         <source>Default</source>
         <translation type="unfinished">Voreinstellung</translation>
     </message>
@@ -11206,7 +11236,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ffmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+190"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMpeg4/ADM_ffMpeg4.cpp" line="+188"/>
         <source>Full</source>
         <translation type="unfinished">Voll</translation>
     </message>
@@ -11394,7 +11424,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ffmsmpeg4</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="+226"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffMsMpeg4/ADM_ffMsMp4.cpp" line="+225"/>
         <source>Full</source>
         <translation type="unfinished">Voll</translation>
     </message>
@@ -11512,7 +11542,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ffnvenc</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEnc/ADM_ffNvEnc.cpp" line="+194"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEnc/ADM_ffNvEnc.cpp" line="+192"/>
         <source>Low Quality</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11786,7 +11816,7 @@ Möchten Sie es ersetzen?</translation>
 <context>
     <name>flv1</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+164"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffFlv1/ADM_ffFlv1.cpp" line="+163"/>
         <source>Full</source>
         <translation type="unfinished">Voll</translation>
     </message>
@@ -12878,7 +12908,7 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+524"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+531"/>
         <source>_Bitrate:</source>
         <translation type="unfinished">_Bitrate (kb/s):</translation>
     </message>
@@ -13622,7 +13652,7 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>navigate</name>
     <message>
-        <location filename="../../common/gui_navigate.cpp" line="+227"/>
+        <location filename="../../common/gui_navigate.cpp" line="+243"/>
         <source>Cannot go to next keyframe</source>
         <translation>Kann nicht zum nächsten Keyframe wechseln</translation>
     </message>
@@ -13632,12 +13662,12 @@ der Halbbilder (deinterlaceing)</translation>
         <translation>Kann nicht zum vorhergehenden Keyframe wechseln</translation>
     </message>
     <message>
-        <location line="+176"/>
+        <location line="+177"/>
         <source>Seek</source>
         <translation type="unfinished">Navigation</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+31"/>
         <source>Error</source>
         <translation type="unfinished">Fehler</translation>
     </message>
@@ -14087,6 +14117,26 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
+    <name>qfile</name>
+    <message>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+40"/>
+        <location line="+89"/>
+        <source>All files (*.*)</source>
+        <translation>Alle Dateien (*.*)</translation>
+    </message>
+    <message>
+        <location line="-49"/>
+        <location line="+67"/>
+        <source> files (*.</source>
+        <translation>-Dateien (*.</translation>
+    </message>
+    <message>
+        <location line="-39"/>
+        <source>Overwrite file </source>
+        <translation type="unfinished">Überschreiben </translation>
+    </message>
+</context>
+<context>
     <name>qgui2</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+430"/>
@@ -14099,12 +14149,12 @@ Please delete the idx2 file and reopen.</source>
         <translation>Zuletzt verwendete &amp;Projekte</translation>
     </message>
     <message>
-        <location line="+1088"/>
+        <location line="+1090"/>
         <source> (%d track(s))</source>
         <translation> (%d Tonspur(en))</translation>
     </message>
     <message>
-        <location line="-1301"/>
+        <location line="-1303"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
@@ -14115,7 +14165,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+256"/>
+        <location line="+258"/>
         <source>%c-%s (%02d)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14379,14 +14429,12 @@ The current editing has been saved and will be reloaded at next start</source>
     <name>qshell</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_shell/Q_shell.cpp" line="+43"/>
-        <location filename="../ADM_userInterfaces/ADM_shell/Q_shell.cpp.rej" line="+9"/>
         <source>Enter your commands then press the evaluate button or CTRL+ENTER.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../ADM_userInterfaces/ADM_shell/Q_shell.cpp.rej" line="+1"/>
         <source>You can use CTRL+PageUP and CTRL+Page Down to recall previous commands
 Ready.
 </source>
@@ -14429,7 +14477,6 @@ Ready.
     <name>qtray</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp" line="+82"/>
-        <location filename="../ADM_userInterfaces/ADM_gui/ADM_qtray.cpp.rej" line="+1"/>
         <source>Open Avidemux</source>
         <translation type="unfinished">Öffne Avidemux</translation>
     </message>
@@ -15386,7 +15433,7 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
     <message>
         <location line="+1"/>
         <source>Weave top and bottom halves.</source>
-        <translation type="unfinished">Die obere und die untere Hälfte des Bildes verflechten (Umkehrung des Filters "Halbbilder übereinander").</translation>
+        <translation type="unfinished">Die obere und die untere Hälfte des Bildes verflechten (Umkehrung des Filters &quot;Halbbilder übereinander&quot;).</translation>
     </message>
 </context>
 <context>
@@ -15670,33 +15717,35 @@ Bitte die idx2-Datei löschen und das Video erneut öffnen.</translation>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerWebm/muxerWebm.cpp" line="+66"/>
         <source>Unsupported Video.
 Only VP8/VP9 video and Vorbis/Opus audio supported</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht unterstütztes Video.
+Nur VP8 und VP9 sind zulässig</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Unsupported Audio.
 Only VP8/VP9 video and Vorbis/Opus audio supported</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht unterstütztes Audio.
+Nur Vorbis und Opus sind zulässig.</translation>
     </message>
     <message>
         <location line="+76"/>
         <source>Saving Webm</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">WebM speichern</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_muxers/muxerWebm/muxerWebmConfig.cpp" line="+27"/>
         <source>Force display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzeigebreite erzwingen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display width</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzeigebreite</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Webm Muxer</source>
-        <translation type="unfinished"></translation>
+        <translation>WebM Muxer</translation>
     </message>
 </context>
 <context>
@@ -15709,12 +15758,12 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location line="+64"/>
         <source>Elapsed:</source>
-        <translation type="unfinished">vergangene Zeit:</translation>
+        <translation type="unfinished">Verbrauchte Zeit:</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Time Remaining:</source>
-        <translation type="unfinished">verbleibende Zeit:</translation>
+        <translation type="unfinished">Verbleibende Zeit:</translation>
     </message>
     <message>
         <location line="+113"/>
@@ -15732,18 +15781,23 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/ADM_x264Setup.cpp" line="+182"/>
         <source>Not coded</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht verfügbar</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>this mode has not been implemented
 </source>
+        <translation type="unfinished">Dieser Modus ist nicht implementiert</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+179"/>
+        <source>none</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+206"/>
+        <location line="+33"/>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <location line="+411"/>
@@ -15779,7 +15833,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
     <message>
         <location line="+4"/>
         <source>Average Bitrate:</source>
-        <translation type="unfinished">durchschnittliche Bitrate:</translation>
+        <translation type="unfinished">Durchschnittliche Bitrate:</translation>
     </message>
     <message>
         <location line="+68"/>
@@ -15809,12 +15863,12 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="-83"/>
         <source>Cannot load preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Konfiguration nicht laden</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konfiguration speichern</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -15824,43 +15878,44 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="+34"/>
         <source>Overwrite</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Überschreiben</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Replace the following preset ?:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Folgende Konfiguration ersetzen?</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot save preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann die Konfiguration nicht speichern</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cannot delete custom profile</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann benutzerdefinierte Konfiguration nicht löschen</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Do you really want to delete the </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wollen Sie die Konfiguration </translation>
     </message>
     <message>
         <location line="+1"/>
         <source> profile ?.
 If it is a system profile it will be recreated next time.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> wirklich löschen?
+Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwendung wieder erstellt.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konfiguration löschen</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Löschen</translation>
     </message>
 </context>
 <context>
@@ -17266,16 +17321,21 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/ADM_x265Setup.cpp" line="+158"/>
         <source>Not coded</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nicht verfügbar</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>this mode has not been implemented
 </source>
+        <translation type="unfinished">Dieser Modus ist nicht implementiert</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/Q_x265.cpp" line="+185"/>
+        <source>none</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/Q_x265.cpp" line="+212"/>
+        <location line="+33"/>
         <source>Custom</source>
         <translation type="unfinished"></translation>
     </message>
@@ -17343,53 +17403,54 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="-83"/>
         <source>Cannot load preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann Konfiguration nicht laden</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Save Profile</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konfiguration speichern</translation>
     </message>
     <message>
         <location line="+45"/>
         <source>Overwrite</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Überschreiben</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Replace the following preset ?:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Folgende Konfiguration ersetzen?</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Cannot save preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann die Konfiguration nicht speichern</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Cannot delete custom profile</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kann benutzerdefinierte Konfiguration nicht löschen</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Do you really want to delete the </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wollen Sie die Konfiguration </translation>
     </message>
     <message>
         <location line="+1"/>
         <source> profile ?.
 If it is a system profile it will be recreated next time.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"> wirklich löschen?
+Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwendung wieder erstellt.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Delete preset</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konfiguration löschen</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Löschen</translation>
     </message>
 </context>
 <context>
@@ -17407,13 +17468,13 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+17"/>
         <source>Save As</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Speichern als</translation>
     </message>
     <message>
         <location line="+7"/>
         <location line="+2731"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Löschen</translation>
     </message>
     <message>
         <location line="-2689"/>
@@ -17428,12 +17489,12 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+6"/>
         <source>Use advanced configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>_Erweiterte Konfiguration verwenden</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -17555,27 +17616,27 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+13"/>
         <source>Constant Bitrate (Single Pass)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konstante Bitrate (ein Durchlauf)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Constant Quantiser (Single Pass)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Konstante Quantisierungsstufe (ein Durchlauf)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Constant Rate Factor (Single Pass)</source>
-        <translation type="unfinished">konstante Bildqualität [crf]         (1 Durchlauf)</translation>
+        <translation type="unfinished">Konstante Bildqualität [crf] (ein Durchlauf)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Video Size (Two Pass)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Videogröße (zwei Durchläufe)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Average Bitrate (Two Pass)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mittlere Bitrate (zwei Durchläufe)</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -18731,7 +18792,7 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="+1"/>
         <source>Yadif, port of avisynth version (c) Fizick.</source>
-        <translation type="unfinished">Yadif (Yet Another DeInterlacing Filter), Portierung der Version aus Avisynth © Alexander Balakhnin ("Fizick").</translation>
+        <translation type="unfinished">Yadif (Yet Another DeInterlacing Filter), Portierung der Version aus Avisynth © Alexander Balakhnin (&quot;Fizick&quot;).</translation>
     </message>
     <message>
         <location line="+53"/>
