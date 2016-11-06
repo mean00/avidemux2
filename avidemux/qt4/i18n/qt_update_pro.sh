@@ -54,5 +54,5 @@ echo "" >> avidemux.pro2
 echo "" >> avidemux.pro2
 cat avidemux.pro2 | sed 's/"//g' | grep -v "ADM_videoFilters\/" | grep -v qtScript | grep -v html |  grep -v build | grep -v cmake  | grep -v gtk | grep -v "cli\/" | grep -vi spidermon>     avidemux.pro
 #
-lupdate -locations relative -pro avidemux.pro 
+lupdate -disable-heuristic number -disable-heuristic sametext -locations relative -pro avidemux.pro
 echo "DONE."
