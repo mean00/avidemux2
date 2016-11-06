@@ -338,7 +338,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     
     // Retrieve dx2Surface..
     admDx2Surface *w=(admDx2Surface *)frame->data[1];
-    ADM_assert(w->surface==(LPDIRECT3DSURFACE9)frame->data[1]);
+    ADM_assert(w->surface==(LPDIRECT3DSURFACE9)frame->data[3]);
     bool r=w->surfaceToAdmImage(out);
     aprintf("Got frame\n");
     return r;
