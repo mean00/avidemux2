@@ -1,8 +1,8 @@
 INCLUDE(ve_plugin)
-
+#ADM_ffNvEnc.cpp
 SET(ffNvencHEVC_SRCS 
         ffNvEncPlugin.cpp
-        ADM_ffNvenc.cpp
+        ADM_ffNvEnc.cpp
 )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
