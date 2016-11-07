@@ -78,8 +78,8 @@ extern "C"
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEnc",
-                               "Nvidia H264",
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncHEVC
+                               "Nvidia HEVC",
                                "Nvidia hw encoder",
                                 ffNvEncConfigure, // No configuration
                                 ADM_UI_ALL,
