@@ -49,6 +49,9 @@ extern VideoRenderBase *spawnLIBVARender();
 #if defined (USE_OPENGL)
 extern VideoRenderBase *RenderSpawnQtGl(void);
 #endif
+#if defined (USE_DXVA2)
+extern VideoRenderBase *RenderSpawnDxva2(void);
+#endif
 #include "ADM_colorspace.h"
 #include "DIA_uiTypes.h"
 
@@ -319,6 +322,22 @@ bool spawnRenderer(void)
         MUI_getWindowInfo(draw, &xinfo);
         switch(prefRenderer)
         {
+#if defined(USE_DXVA2)
+       case RENDER_DXVA2:
+            {
+                bool hasDxva2=false;
+                prefs->get(FEATURES_ENABLE_DXVA2,&hasDxva2);
+                if(!hasDxva2)
+                {
+                    ADM_warning("Dxva2 is disabled \n");
+                    renderer=NULL;
+                }else
+                {
+                    TRY_RENDERER_SPAWN(RenderSpawnDxva2,"Dxva2");
+                }
+                break;
+            }
+#endif
 #if defined(USE_OPENGL)
        case RENDER_QTOPENGL:
             {

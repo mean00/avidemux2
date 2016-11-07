@@ -288,6 +288,9 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_VDPAU
                              ,{RENDER_VDPAU,   QT_TRANSLATE_NOOP("adm","VDPAU (best)"),NULL}
 #endif
+#ifdef USE_DXVA2
+                             ,{RENDER_DXVA2,   QT_TRANSLATE_NOOP("adm","DXVA2 (best)"),NULL}
+#endif
 #ifdef USE_XVBA
                              //,{RENDER_XVBA,   QT_TRANSLATE_NOOP("adm","XVBA (best)"),NULL}
 #endif
