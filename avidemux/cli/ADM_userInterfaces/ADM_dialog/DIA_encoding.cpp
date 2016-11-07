@@ -18,7 +18,7 @@
 #include "DIA_encoding_none.h"
 
 extern bool ADM_slaveReportProgress(uint32_t p);
-DIA_encodingCli::DIA_encodingCli( uint64_t fps1000,bool tray ) : DIA_encodingBase(fps1000,tray)
+DIA_encodingCli::DIA_encodingCli(uint64_t fps1000) : DIA_encodingBase(fps1000)
 {
 
 }
@@ -69,9 +69,9 @@ void DIA_encodingCli::setVideoCodec(const char *n)
 //**********************************
 namespace ADM_CliCoreUIToolkit
 {
-extern DIA_encodingBase *createEncoding(uint64_t duration,bool tray)
+extern DIA_encodingBase *createEncoding(uint64_t duration)
 {
-        return new DIA_encodingCli(duration,tray);
+        return new DIA_encodingCli(duration);
 }
 
 }

@@ -21,7 +21,7 @@
 /**
     \fn DIA_encodingBase
 */
-DIA_encodingBase::DIA_encodingBase( uint64_t duration,bool systray )
+DIA_encodingBase::DIA_encodingBase(uint64_t duration)
 {
         #ifndef __HAIKU__
         _originalPriority=getpriority(PRIO_PROCESS, 0);
@@ -30,7 +30,6 @@ DIA_encodingBase::DIA_encodingBase( uint64_t duration,bool systray )
 #ifdef _WIN32
         _originalPriority=getpriority(PRIO_PROCESS, 0);
 #endif
-        _useSystray=systray;
         reset();
 }
 /**

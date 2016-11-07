@@ -5,7 +5,6 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.saveprefsonexit",offsetof(my_prefs_struct,features.saveprefsonexit),"bool",ADM_param_bool},
  {"features.ignoresavedmarkers",offsetof(my_prefs_struct,features.ignoresavedmarkers),"bool",ADM_param_bool},
  {"features.use_odml",offsetof(my_prefs_struct,features.use_odml),"bool",ADM_param_bool},
- {"features.use_systray",offsetof(my_prefs_struct,features.use_systray),"bool",ADM_param_bool},
  {"features.reuse_2pass_log",offsetof(my_prefs_struct,features.reuse_2pass_log),"bool",ADM_param_bool},
  {"features.audiobar_uses_master",offsetof(my_prefs_struct,features.audiobar_uses_master),"bool",ADM_param_bool},
  {"features.threading_lavc",offsetof(my_prefs_struct,features.threading_lavc),"uint32_t",ADM_param_uint32_t},

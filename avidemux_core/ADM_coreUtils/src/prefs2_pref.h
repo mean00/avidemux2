@@ -16,7 +16,6 @@ static optionDesc myOptions[]={
 { FEATURES_SAVEPREFSONEXIT,"features.saveprefsonexit"                 ,ADM_param_bool    	,"1",	0,	1},
 { FEATURES_IGNORESAVEDMARKERS,"features.ignoresavedmarkers"           ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_USE_ODML,"features.use_odml"                               ,ADM_param_bool    	,"0",	0,	1},
-{ FEATURES_USE_SYSTRAY,"features.use_systray"                         ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_REUSE_2PASS_LOG,"features.reuse_2pass_log"                 ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_AUDIOBAR_USES_MASTER,"features.audiobar_uses_master"       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_THREADING_LAVC,"features.threading_lavc"                   ,ADM_param_uint32_t	,"0",	0,	32},
