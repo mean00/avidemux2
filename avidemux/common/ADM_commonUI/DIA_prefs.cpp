@@ -47,8 +47,6 @@ uint32_t olddevice,newdevice;
 bool     use_odml=0;
 uint32_t autosplit=0;
 uint32_t render;
-bool     useTray=0;
-
 
 bool     useSwap=0;
 
@@ -157,9 +155,6 @@ std::string currentSdlDriver=getSdlDriverName();
         {
                 render=(uint32_t)RENDER_GTK;
         }
-        // SysTray
-        if(!prefs->get(FEATURES_USE_SYSTRAY,&useTray))
-                useTray=0;
         // Accept mpeg for DVD when fq!=48 kHz
         if(!prefs->get(FEATURES_MPEG_NO_LIMIT,&mpeg_no_limit)) mpeg_no_limit=0;
 
@@ -217,7 +212,6 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle hwAccelText(&foo,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"));
 
 
-        diaElemToggle useSysTray(&useTray,QT_TRANSLATE_NOOP("adm","_Use systray while encoding"));
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
@@ -422,8 +416,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* User Interface */
-        diaElem *diaUser[]={&useSysTray,&menuMessage,&menuLanguage,&resetEncoder,&checkForUpdate};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),5,diaUser);
+        diaElem *diaUser[]={&menuMessage,&menuLanguage,&resetEncoder,&checkForUpdate};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),4,diaUser);
 
          /* Automation */
 
@@ -602,8 +596,6 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_SWAP_IF_A_GREATER_THAN_B, useSwap);
             //
             prefs->set(MESSAGE_LEVEL,msglevel);
-            // Use tray while encoding
-            prefs->set(FEATURES_USE_SYSTRAY,useTray);
             // Discard changes to output config on video load
             prefs->set(RESET_ENCODER_ON_VIDEO_LOAD, loadDefault);
 

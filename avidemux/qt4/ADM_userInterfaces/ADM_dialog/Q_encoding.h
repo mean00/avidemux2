@@ -31,7 +31,7 @@ class DIA_encodingQt4 : public QDialog,public DIA_encodingBase
 {
     Q_OBJECT
 public:
-    DIA_encodingQt4( uint64_t duration,bool useTray);
+    DIA_encodingQt4(uint64_t duration);
     ~DIA_encodingQt4( );
     
 protected:
@@ -62,7 +62,8 @@ public:
     bool isAlive( void );
     
  public slots:
-    void buttonPressed(void);
+    void useTrayButtonPressed(void);
+    void pauseButtonPressed(void);
     void priorityChanged(int priorityLevel);
     void shutdownChanged(int state);    
     void closeEvent(QCloseEvent *event) ;

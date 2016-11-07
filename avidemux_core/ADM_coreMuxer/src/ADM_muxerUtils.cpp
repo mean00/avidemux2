@@ -75,15 +75,10 @@ uint64_t rescaleLavPts(uint64_t us, AVRational *scale)
 */
 bool     ADM_muxer::initUI(const char *title)
 {
-        bool useTray = false;
-
-        if (!prefs->get(FEATURES_USE_SYSTRAY, &useTray))
-            useTray = false;
-
         videoIncrement=vStream->getFrameIncrement();  // Video increment in AVI-Tick
         videoDuration=vStream->getVideoDuration();
         ADM_info("Muxer, creating UI, video duration is %s\n",ADM_us2plain(videoDuration));
-        encoding=createEncoding(videoDuration,useTray);
+        encoding=createEncoding(videoDuration);
         // Set video stream etc...
         encoding->setPhasis(title);
         encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));

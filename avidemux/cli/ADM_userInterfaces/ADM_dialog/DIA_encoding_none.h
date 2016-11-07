@@ -29,7 +29,7 @@
 class DIA_encodingCli : public DIA_encodingBase
 {
 public:
-    DIA_encodingCli( uint64_t duration,bool tray);
+    DIA_encodingCli(uint64_t duration);
     ~DIA_encodingCli( );
     
 protected:

@@ -377,7 +377,7 @@ extern "C"
 	*/
 	int jsTestFacEncoding(void)
 	{
-		DIA_encodingBase *base=createEncoding(1000*1000LL,false);
+		DIA_encodingBase *base=createEncoding(1000*1000LL);
 		base->setContainer("the container");
 		base->setAudioCodec("the audio codec");
 		base->setVideoCodec("the video codec");
