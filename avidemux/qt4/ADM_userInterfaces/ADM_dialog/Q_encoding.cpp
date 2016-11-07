@@ -39,7 +39,15 @@ extern bool ADM_slaveReportProgress(uint32_t percent);
 
 
 
-void DIA_encodingQt4::buttonPressed(void)
+void DIA_encodingQt4::useTrayButtonPressed(void)
+{
+    hide();
+    UI_iconify();
+    if(!tray)
+        tray=DIA_createTray(this);
+}
+
+void DIA_encodingQt4::pauseButtonPressed(void)
 {
 	ADM_info("StopReq\n");
 	stopRequest=true;
@@ -81,7 +89,7 @@ void DIA_encodingQt4::shutdownChanged(int state)
 
 static char stringMe[80];
 
-DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encodingBase(duration,systray)
+DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 {
         stopRequest=false;
         UI_getTaskBarProgress()->enable();
@@ -102,7 +110,8 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encoding
 #endif
 
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
-	connect(ui->pushButton, SIGNAL(pressed()), this, SLOT(buttonPressed()));
+	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
+	connect(ui->pushButton2, SIGNAL(pressed()), this, SLOT(pauseButtonPressed()));
 	connect(ui->comboBoxPriority, SIGNAL(currentIndexChanged(int)), this, SLOT(priorityChanged(int)));
 
 	// set priority
@@ -125,13 +134,6 @@ DIA_encodingQt4::DIA_encodingQt4( uint64_t duration,bool systray) : DIA_encoding
         setModal(true);
         show();
         tray=NULL;
-        if(_useSystray)
-        {
-            hide();
-            UI_iconify();
-            tray=DIA_createTray(this);
-        }
-
 }
 /**
     \fn setFps(uint32_t fps)
@@ -383,9 +385,9 @@ bool DIA_encodingQt4::isAlive( void )
 */
 namespace ADM_Qt4CoreUIToolkit
 {
-DIA_encodingBase *createEncoding(uint64_t duration,bool tray)
+DIA_encodingBase *createEncoding(uint64_t duration)
 {
-        return new DIA_encodingQt4(duration,tray);
+        return new DIA_encodingQt4(duration);
 }
 }
 //********************************************

@@ -13,7 +13,6 @@ json.addBool("swap_if_A_greater_than_B",key->features.swap_if_A_greater_than_B);
 json.addBool("saveprefsonexit",key->features.saveprefsonexit);
 json.addBool("ignoresavedmarkers",key->features.ignoresavedmarkers);
 json.addBool("use_odml",key->features.use_odml);
-json.addBool("use_systray",key->features.use_systray);
 json.addBool("reuse_2pass_log",key->features.reuse_2pass_log);
 json.addBool("audiobar_uses_master",key->features.audiobar_uses_master);
 json.addUint32("threading_lavc",key->features.threading_lavc);

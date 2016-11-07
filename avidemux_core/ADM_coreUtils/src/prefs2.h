@@ -10,7 +10,6 @@ struct  {
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;
 	bool use_odml;
-	bool use_systray;
 	bool reuse_2pass_log;
 	bool audiobar_uses_master;
 	uint32_t threading_lavc;
