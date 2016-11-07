@@ -77,8 +77,8 @@ extern "C"
     }
 }
 
-ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
-ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncHEVC
+ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoderHEVC);
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncHEVC",
                                "Nvidia HEVC",
                                "Nvidia hw encoder",
                                 ffNvEncConfigure, // No configuration
