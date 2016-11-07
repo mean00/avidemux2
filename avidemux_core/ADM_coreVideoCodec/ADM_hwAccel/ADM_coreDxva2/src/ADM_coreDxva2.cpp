@@ -19,7 +19,7 @@
 
 #ifdef USE_DXVA2
 
-#if 1
+#if 0
 #define aprintf printf
 #define DUMP_GUID
 #else

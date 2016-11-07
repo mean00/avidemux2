@@ -46,7 +46,7 @@ static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
 
-#if 0
+#if 1
 #define aprintf(...) {}
 #else
 #define aprintf printf
