@@ -47,7 +47,7 @@ IF(USE_NVENC)
    SET(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} nvenc)
    xadd("--enable-nonfree")
    xadd("--enable-nvenc")
-   set(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} nvenc_h264)
+   set(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} nvenc_h264 nvenc_hevc)
 ENDIF(USE_NVENC)
 
 if (NOT CROSS)
