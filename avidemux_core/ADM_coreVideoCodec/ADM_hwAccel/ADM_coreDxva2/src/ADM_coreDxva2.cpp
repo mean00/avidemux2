@@ -547,7 +547,22 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
      }
      return decoder;     
 }
+/**
 
+*/
+IDirect3DDevice9 *admDxva2::getDevice()
+{
+
+        return d3d9device;
+}
+
+/**
+
+*/
+IDirect3D9       *admDxva2::getHandle()
+{
+        return d3d9;
+}
 
 /**
  * \fn createDecoder

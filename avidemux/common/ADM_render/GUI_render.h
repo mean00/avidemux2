@@ -88,7 +88,7 @@ typedef enum
 #endif
 #ifdef USE_DXVA2
         RENDER_DXVA2=6,
-#endif USE_DXVA2
+#endif //USE_DXVA2
 
         RENDER_LAST       
 

@@ -325,16 +325,7 @@ bool spawnRenderer(void)
 #if defined(USE_DXVA2)
        case RENDER_DXVA2:
             {
-                bool hasDxva2=false;
-                prefs->get(FEATURES_DXVA2,&hasDxva2);
-                if(!hasDxva2)
-                {
-                    ADM_warning("Dxva2 is disabled \n");
-                    renderer=NULL;
-                }else
-                {
-                    TRY_RENDERER_SPAWN(RenderSpawnDxva2,"Dxva2");
-                }
+                TRY_RENDERER_SPAWN(RenderSpawnDxva2,"Dxva2");
                 break;
             }
 #endif

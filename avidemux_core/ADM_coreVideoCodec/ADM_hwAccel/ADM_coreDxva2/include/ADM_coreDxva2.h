@@ -56,4 +56,6 @@ public:
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);        
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
+        static IDirect3DDevice9 *getDevice();
+        static IDirect3D9       *getHandle();
 };
