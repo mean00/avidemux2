@@ -358,16 +358,13 @@ bool admDxva2::init(GUI_WindowInfo *x)
     ADM_info("Decoder service=%p\n",decoder_service);
     // Look up what is supported
     {
-        unsigned guid_count = 0, i, j;
-        GUID device_guid = GUID_NULL;
+        unsigned int guid_count = 0;
         GUID *guid_list = NULL;
-        HRESULT hr;
-        int surface_alignment;
 
         hr = IDirectXVideoDecoderService_GetDecoderDeviceGuids(decoder_service, &guid_count, &guid_list);
         if (ADM_FAILED(hr)) {
             ADM_warning("Failed to retrieve decoder device GUIDs\n");
-            return true;
+            goto failInit;
         }
         lookupCodec("H264",&dxva2H264,guid_count,guid_list);
         lookupCodec("H265",&dxva2H265,guid_count,guid_list);
