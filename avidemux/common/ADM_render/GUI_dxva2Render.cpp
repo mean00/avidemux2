@@ -42,10 +42,14 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
               virtual   bool refresh(void) ;
                         const char *getName() {return "DXVA2";}
                         bool draw(QWidget *widget, QPaintEvent *ev);
+                        bool displayImage_argb(ADMImage *pic);
+                        bool displayImage_yv12(ADMImage *pic);
+
   protected:
                         admMutex        lock;
                         GUI_WindowInfo  info;
                         IDirect3DSurface9 *mySurface;
+                        IDirect3DSurface9 *myYV12Surface;
                         uint8_t           *videoBuffer;
                         D3DDISPLAYMODE     displayMode;
                         IDirect3DDevice9  *d3dDevice;
@@ -75,6 +79,7 @@ dxvaRender::dxvaRender()
     ADM_info("creating Dxva2 render.\n");
     useYV12=false;
     mySurface=NULL;
+    myYV12Surface=NULL;
     videoBuffer=NULL;
     d3dHandle=admD3D::getHandle();
 
@@ -89,6 +94,11 @@ dxvaRender::~dxvaRender()
     {
                 IDirect3DSurface9_Release(mySurface);
                 mySurface=NULL;
+    }
+    if(myYV12Surface)
+    {
+      IDirect3DSurface9_Release(myYV12Surface);
+      myYV12Surface=NULL;
     }
     ADM_info("dxva2 cleaned up\n");
 }
@@ -189,14 +199,17 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     //
      if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
                d3dDevice, w,h,
-               yv12, D3DPOOL_DEFAULT, &mySurface, NULL)))
+               fmt, D3DPOOL_DEFAULT, &mySurface, NULL)))
      {
                 ADM_warning("Cannot create surface\n");
                 return false;
      }
-     if(FAILED(IDirect3DDevice9_ColorFill(d3dDevice, mySurface, NULL, D3DCOLOR_ARGB(0xFF, 0xff, 0, 0))))
+     if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+               d3dDevice, w,h,
+               yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
      {
-       ADM_warning("Color fill failed\n");
+                ADM_warning("Cannot create surface\n");
+                return false;
      }
 
     // put some defaults
@@ -261,120 +274,107 @@ bool dxvaRender::draw(QWidget *widget, QPaintEvent *ev)
 /**
     \fn displayImage
 */
-bool dxvaRender::displayImage(ADMImage *pic)
+
+static bool d3dBlit(ADMImage *pic,ADM_PLANE plane,uint8_t *target,int targetPitch,int w, int h)
 {
-  IDirect3DSurface9 *bBuffer;
-  //--
-  if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
-                                            D3DBACKBUFFER_TYPE_MONO,
-                                            &bBuffer)))
-  {
-        ADM_warning("Cannot create backBuffer\n");
-        return false;
-  }
-  if (FAILED(IDirect3DSurface9_LockRect(bBuffer,&d3dLock, NULL, 0)))
-  {
-      ADM_warning("Cannot lock surface\n");
-      return false;
-  }
-  if(useYV12)
-  {
-    int width=pic->GetWidth(PLANAR_Y);
-    int height=pic->GetHeight(PLANAR_Y);
-#if 0
-    // copy
-    uint8_t *y=pic->GetReadPtr(PLANAR_Y);
-    int pitch=pic->GetPitch(PLANAR_Y);
-
-    uint8_t *dst=(uint8_t *)d3dLock.pBits;
-    int  dStride=d3dLock.Pitch;
-
-  //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
-    BitBlit(dst,dStride,
-            y,pitch,
-            width,height);
-
-    // U  & V
-    y=pic->GetReadPtr(PLANAR_U);
-    pitch=pic->GetPitch(PLANAR_U);
-    dst+=height*dStride;
-    BitBlit(dst,dStride>>1,
-            y,pitch,
-            width>>1,height>>1);
-#else
-    uint8_t *src[3];
-    uint8_t *dst[3];
-    pic->GetReadPlanes(src);
-    dst[0]=(uint8_t *)d3dLock.pBits;
-    dst[1]=dst[2]=NULL;
-    int sourcePitch[3],dstPitch[3];
-    pic->GetPitches(sourcePitch);
-    dstPitch[0]=d3dLock.Pitch;
-    dstPitch[1]=dstPitch[2]=0;
-    scaler-> convertPlanes(sourcePitch,dstPitch,
-                                  src, dst);
-#endif
-
-  }
-  if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
-  {
-      ADM_warning("Cannot unlock surface\n");
-      return false;
-  }
-  if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
-  {
-    ADM_warning("Present failed\n");
-  }
+  uint8_t *y=pic->GetReadPtr(plane);
+  int pitch=pic->GetPitch(plane);
+  BitBlit(target,targetPitch,
+          y,pitch,
+          w,h);
   return true;
-//++
-#if 0
+}
+/**
 
-    ADM_info("DXVARender :display image\n");
-
-    if (FAILED(IDirect3DSurface9_LockRect(mySurface,&d3dLock, NULL, 0)))
+*/
+bool dxvaRender::displayImage_yv12(ADMImage *pic)
+{
+    IDirect3DSurface9 *bBuffer;
+    // 1 upload to myYV12 surface
+    if (FAILED(IDirect3DSurface9_LockRect(myYV12Surface,&d3dLock, NULL, 0)))
     {
         ADM_warning("Cannot lock surface\n");
         return false;
     }
-    if(useYV12)
-    {
-      // copy
-      uint8_t *y=pic->GetReadPtr(PLANAR_Y);
-      int pitch=pic->GetPitch(PLANAR_Y);
 
-      uint8_t *dst=(uint8_t *)d3dLock.pBits;
-      int  dStride=d3dLock.Pitch;
-  //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
-      BitBlit(dst,dStride,y,pitch,pic->GetWidth(PLANAR_Y),pic->GetHeight(PLANAR_Y));
-    } // Else
-    {
+    // copy
+    uint8_t *dst=(uint8_t *)d3dLock.pBits;
+    int  dStride=d3dLock.Pitch;
 
-    }
+    int width=pic->GetWidth(PLANAR_Y);
+    int height=pic->GetHeight(PLANAR_Y);
 
-    if (FAILED(IDirect3DSurface9_UnlockRect(mySurface)))
+    d3dBlit(pic, PLANAR_Y,dst,dStride,width,height);
+
+    dst+=height*dStride;
+    d3dBlit(pic, PLANAR_U,dst,dStride>>1,width>>1,height>>1);
+
+    dst+=(height/2)*(dStride/2);
+    d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
+
+    if (FAILED(IDirect3DSurface9_UnlockRect(myYV12Surface)))
     {
         ADM_warning("Cannot unlock surface\n");
         return false;
     }
-    IDirect3DDevice9_BeginScene(d3dDevice);
-    if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
-                                            mySurface,
-                                            NULL,
-                                            backBuffer,
-                                            NULL,
-                                            D3DTEXF_LINEAR)))
+   // upload....
+    if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+                                              D3DBACKBUFFER_TYPE_MONO,
+                                              &bBuffer)))
     {
-        ADM_warning("Strech failed\n");
+          ADM_warning("Cannot create backBuffer\n");
+          return false;
     }
 
+
+    // data are in YV12 surface, blit it to mySurface
+    IDirect3DDevice9_BeginScene(d3dDevice);
+    if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+                                            myYV12Surface,
+                                            NULL,
+                                            bBuffer,
+                                            NULL,
+                                            D3DTEXF_LINEAR)))
+                                            {
+
+                                            }
     IDirect3DDevice9_EndScene(d3dDevice);
-    /*if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+    if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
     {
       ADM_warning("Present failed\n");
-    }*/
+    }
 
     return true;
+}
+/**
+*/
+bool dxvaRender::displayImage_argb(ADMImage *pic)
+{
+  #if 0
+      // RGB
+      uint8_t *src[3];
+      uint8_t *dst[3];
+      pic->GetReadPlanes(src);
+      dst[0]=(uint8_t *)d3dLock.pBits;
+      dst[1]=dst[2]=NULL;
+      int sourcePitch[3],dstPitch[3];
+      pic->GetPitches(sourcePitch);
+      dstPitch[0]=d3dLock.Pitch;
+      dstPitch[1]=dstPitch[2]=0;
+      scaler-> convertPlanes(sourcePitch,dstPitch,
+                                    src, dst);
 #endif
+      return false;
+}
+/**
+*/
+bool dxvaRender::displayImage(ADMImage *pic)
+{
+  if(useYV12)
+  {
+      return displayImage_yv12(pic);
+    }
+    return displayImage_argb(pic);
 }
 
 
