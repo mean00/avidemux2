@@ -46,7 +46,6 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
                         admMutex        lock;
                         GUI_WindowInfo  info;
                         IDirect3DSurface9 *mySurface;
-                        IDirect3DSurface9 *backBuffer;
                         uint8_t           *videoBuffer;
                         D3DDISPLAYMODE     displayMode;
                         IDirect3DDevice9  *d3dDevice;
@@ -85,22 +84,13 @@ dxvaRender::dxvaRender()
 */
 dxvaRender::~dxvaRender()
 {
-    if(backBuffer)
-    {
-                admDxva2::destroyD3DSurface(1,backBuffer);
-                backBuffer=NULL;
-    }
+    ADM_info("Deleting surface\n");
     if(mySurface)
     {
-                admDxva2::destroyD3DSurface(1,mySurface);
+                IDirect3DSurface9_Release(mySurface);
                 mySurface=NULL;
     }
-    if(d3dDevice)
-    {
-        IDirect3DDevice9_Release(d3dDevice);
-        d3dDevice=NULL;
-    }
-
+    ADM_info("dxva2 cleaned up\n");
 }
 
 /**
@@ -208,15 +198,6 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
      {
        ADM_warning("Color fill failed\n");
      }
-
-
-    if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
-                                              D3DBACKBUFFER_TYPE_MONO,
-                                              &backBuffer)))
-    {
-          ADM_warning("Cannot create backBuffer\n");
-          return false;
-    }
 
     // put some defaults
     IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
