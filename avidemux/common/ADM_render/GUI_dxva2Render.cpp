@@ -279,16 +279,42 @@ bool dxvaRender::displayImage(ADMImage *pic)
   }
   if(useYV12)
   {
+    int width=pic->GetWidth(PLANAR_Y);
+    int height=pic->GetHeight(PLANAR_Y);
+#if 0
     // copy
     uint8_t *y=pic->GetReadPtr(PLANAR_Y);
     int pitch=pic->GetPitch(PLANAR_Y);
 
     uint8_t *dst=(uint8_t *)d3dLock.pBits;
     int  dStride=d3dLock.Pitch;
+
   //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
     BitBlit(dst,dStride,
             y,pitch,
-            pic->GetWidth(PLANAR_Y),pic->GetHeight(PLANAR_Y));
+            width,height);
+
+    // U  & V
+    y=pic->GetReadPtr(PLANAR_U);
+    pitch=pic->GetPitch(PLANAR_U);
+    dst+=height*dStride;
+    BitBlit(dst,dStride>>1,
+            y,pitch,
+            width>>1,height>>1);
+#else
+    uint8_t *src[3];
+    uint8_t *dst[3];
+    pic->GetReadPlanes(src);
+    dst[0]=(uint8_t *)d3dLock.pBits;
+    dst[1]=dst[2]=NULL;
+    int sourcePitch[3],dstPitch[3];
+    pic->GetPitches(sourcePitch);
+    dstPitch[0]=d3dLock.Pitch;
+    dstPitch[1]=dstPitch[2]=0;
+    scaler-> convertPlanes(sourcePitch,dstPitch,
+                                  src, dst);
+#endif
+
   }
   if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
   {
