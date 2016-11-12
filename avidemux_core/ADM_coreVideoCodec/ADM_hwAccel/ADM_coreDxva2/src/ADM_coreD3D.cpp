@@ -141,7 +141,8 @@ failInit:
 */
 bool admD3D::isOperationnal(void)
 {
-    ADM_warning("This binary has no working DXVA2 support\n");
+    if(!coreD3DWorking)
+      ADM_warning("This binary has no working D3D support\n");
     return coreD3DWorking;
 }
 /**

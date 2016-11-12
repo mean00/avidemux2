@@ -18,25 +18,16 @@
 #include "GUI_accelRender.h"
 #include "ADM_threads.h"
 
-#define CINTERFACE
-#ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
-#endif
-#define _WIN32_WINNT 0x0600
-#define DXVA2API_USE_BITFIELDS
-#define COBJMACROS
-#include <d3d9.h>
-#include <dxva2api.h>
 #include "ADM_coreD3D.h"
+#include <dxva2api.h>
+#include <d3d9types.h>
 #include "ADM_coreDxva2.h"
-
-extern void *MUI_getDrawWidget(void);
-
+#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
 /**
     \class sdlRender
 */
-class dxvaRender: public VideoRenderBase
+class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
 {
   protected:
               bool     useYV12;
@@ -50,6 +41,7 @@ class dxvaRender: public VideoRenderBase
               virtual   bool usingUIRedraw(void) {return false;};
               virtual   bool refresh(void) ;
                         const char *getName() {return "DXVA2";}
+                        bool draw(QWidget *widget, QPaintEvent *ev);
   protected:
                         admMutex        lock;
                         GUI_WindowInfo  info;
@@ -62,6 +54,7 @@ class dxvaRender: public VideoRenderBase
                         D3DLOCKED_RECT     d3dLock;
                         RECT               panScan;
                         RECT               targetRect;
+                        ADM_Qvideo        *videoWidget;
 
 protected:
 };
@@ -119,57 +112,6 @@ bool dxvaRender::stop(void)
     return true;
 }
 /**
-    \fn displayImage
-*/
-bool dxvaRender::displayImage(ADMImage *pic)
-{
-    ADM_info("DXVARender :display image\n");
-
-    if (FAILED(IDirect3DSurface9_LockRect(mySurface,&d3dLock, NULL, 0)))
-    {
-        ADM_warning("Cannot lock surface\n");
-        return false;
-    }
-    if(useYV12)
-    {
-      // copy
-      uint8_t *y=pic->GetReadPtr(PLANAR_Y);
-      int pitch=pic->GetPitch(PLANAR_Y);
-
-      uint8_t *dst=(uint8_t *)d3dLock.pBits;
-      int  dStride=d3dLock.Pitch;
-  //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
-      BitBlit(dst,dStride,y,pitch,pic->GetWidth(PLANAR_Y),pic->GetHeight(PLANAR_Y));
-    } // Else
-    {
-
-    }
-
-    if (FAILED(IDirect3DSurface9_UnlockRect(mySurface)))
-    {
-        ADM_warning("Cannot unlock surface\n");
-        return false;
-    }
-    IDirect3DDevice9_BeginScene(d3dDevice);
-    if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
-                                            mySurface,
-                                            &panScan,
-                                            backBuffer,
-                                            &targetRect,
-                                            D3DTEXF_LINEAR)))
-    {
-        ADM_warning("Strech failed\n");
-    }
-
-    IDirect3DDevice9_EndScene(d3dDevice);
-    /*if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
-    {
-      ADM_warning("Present failed\n");
-    }*/
-
-    return true;
-}
-/**
     \fn changeZoom
 */
 bool dxvaRender::changeZoom(renderZoom newZoom)
@@ -186,8 +128,10 @@ bool dxvaRender::changeZoom(renderZoom newZoom)
 */
 bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
 {
+    ADM_info("Initializing D3D render\n");
     info=*window;
     baseInit(w,h,zoom);
+
     if(!d3dHandle)
     {
         ADM_warning("No D3DHandle\n");
@@ -201,7 +145,6 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         ADM_warning("Dxv2Render: Cannot get display mode\n");
         return 0;
     }
-
 
       // Check if we support YV12
     D3DFORMAT fmt=displayMode.Format;
@@ -226,7 +169,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
    D3DPRESENT_PARAMETERS presentationParameters;
    memset(&presentationParameters, 0, sizeof(presentationParameters));
    presentationParameters.Windowed               = TRUE;
-   presentationParameters.SwapEffect             = D3DSWAPEFFECT_COPY;
+   presentationParameters.SwapEffect             = D3DSWAPEFFECT_DISCARD;
    presentationParameters.Flags                  = D3DPRESENTFLAG_VIDEO;
    presentationParameters.hDeviceWindow          = (HWND)window->systemWindowId;
    presentationParameters.BackBufferWidth        = imageWidth;
@@ -236,6 +179,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
    presentationParameters.BackBufferFormat       = fmt;
    presentationParameters.BackBufferCount        = 1;
    presentationParameters.EnableAutoDepthStencil = FALSE;
+
 
    if(FAILED(IDirect3D9_CreateDevice(  d3dHandle,
                                        D3DADAPTER_DEFAULT,
@@ -260,6 +204,12 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
                 ADM_warning("Cannot create surface\n");
                 return false;
      }
+     if(FAILED(IDirect3DDevice9_ColorFill(d3dDevice, mySurface, NULL, D3DCOLOR_ARGB(0xFF, 0xff, 0, 0))))
+     {
+       ADM_warning("Color fill failed\n");
+     }
+
+
     if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
                                               D3DBACKBUFFER_TYPE_MONO,
                                               &backBuffer)))
@@ -299,6 +249,10 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     targetRect.top   =0;
     targetRect.bottom=displayHeight-1;
 
+    videoWidget=(ADM_Qvideo *)info.widget;
+    videoWidget->useExternalRedraw(false);
+    videoWidget->setDrawer(this);
+
     ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d,zoom=%d, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,(int)zoom,(int)displayWidth,(int)displayHeight);
     return true;
 }
@@ -314,5 +268,107 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
    }
    return true;
  }
+
+bool dxvaRender::draw(QWidget *widget, QPaintEvent *ev)
+{
+  ADM_info("D3D : Draw!\n");
+  refresh();
+  return true;
+}
+
+
+/**
+    \fn displayImage
+*/
+bool dxvaRender::displayImage(ADMImage *pic)
+{
+  IDirect3DSurface9 *bBuffer;
+  //--
+  if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+                                            D3DBACKBUFFER_TYPE_MONO,
+                                            &bBuffer)))
+  {
+        ADM_warning("Cannot create backBuffer\n");
+        return false;
+  }
+  if (FAILED(IDirect3DSurface9_LockRect(bBuffer,&d3dLock, NULL, 0)))
+  {
+      ADM_warning("Cannot lock surface\n");
+      return false;
+  }
+  if(useYV12)
+  {
+    // copy
+    uint8_t *y=pic->GetReadPtr(PLANAR_Y);
+    int pitch=pic->GetPitch(PLANAR_Y);
+
+    uint8_t *dst=(uint8_t *)d3dLock.pBits;
+    int  dStride=d3dLock.Pitch;
+  //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
+    BitBlit(dst,dStride,
+            y,pitch,
+            pic->GetWidth(PLANAR_Y),pic->GetHeight(PLANAR_Y));
+  }
+  if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
+  {
+      ADM_warning("Cannot unlock surface\n");
+      return false;
+  }
+  if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+  {
+    ADM_warning("Present failed\n");
+  }
+  return true;
+//++
+#if 0
+
+    ADM_info("DXVARender :display image\n");
+
+    if (FAILED(IDirect3DSurface9_LockRect(mySurface,&d3dLock, NULL, 0)))
+    {
+        ADM_warning("Cannot lock surface\n");
+        return false;
+    }
+    if(useYV12)
+    {
+      // copy
+      uint8_t *y=pic->GetReadPtr(PLANAR_Y);
+      int pitch=pic->GetPitch(PLANAR_Y);
+
+      uint8_t *dst=(uint8_t *)d3dLock.pBits;
+      int  dStride=d3dLock.Pitch;
+  //bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
+      BitBlit(dst,dStride,y,pitch,pic->GetWidth(PLANAR_Y),pic->GetHeight(PLANAR_Y));
+    } // Else
+    {
+
+    }
+
+    if (FAILED(IDirect3DSurface9_UnlockRect(mySurface)))
+    {
+        ADM_warning("Cannot unlock surface\n");
+        return false;
+    }
+    IDirect3DDevice9_BeginScene(d3dDevice);
+    if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+                                            mySurface,
+                                            NULL,
+                                            backBuffer,
+                                            NULL,
+                                            D3DTEXF_LINEAR)))
+    {
+        ADM_warning("Strech failed\n");
+    }
+
+    IDirect3DDevice9_EndScene(d3dDevice);
+    /*if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+    {
+      ADM_warning("Present failed\n");
+    }*/
+
+    return true;
+#endif
+}
+
 
 // EOF
