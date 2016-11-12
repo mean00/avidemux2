@@ -65,7 +65,7 @@ bool dxva2Usable(void)
 
 /**
     \fn dxva2Probe
-    \brief Try loading vaapi...
+    \brief Try loading d3d and dxva2...
 */
 bool dxva2Probe(void)
 {
@@ -73,6 +73,11 @@ bool dxva2Probe(void)
     void *draw;
     draw=UI_getDrawWidget();
     UI_getWindowInfo(draw,&xinfo );
+    if(false==admD3D::init(&xinfo))
+    {
+	ADM_warning("D3D init failed\n");
+ 	return false;
+    }
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_DXVA2)==false)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without DXVA2 support, but the application has been compiled with it.\nInstallation mismatch"));

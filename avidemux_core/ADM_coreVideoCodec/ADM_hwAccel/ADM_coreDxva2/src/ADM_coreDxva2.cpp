@@ -16,7 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
-
+#include "../include/ADM_coreD3D.h"
 #ifdef USE_DXVA2
 
 #if 0
@@ -31,15 +31,6 @@
 #include "ADM_dynamicLoading.h"
 #include <map>
 
-#define CINTERFACE
-#ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
-#endif
-#define _WIN32_WINNT 0x0600
-#define DXVA2API_USE_BITFIELDS
-#define COBJMACROS
-#include <d3d9.h>
-#include <dxva2api.h>
 #include "../include/ADM_coreDxva2.h"
 
 typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
@@ -47,18 +38,15 @@ typedef HRESULT     WINAPI pCreateDeviceManager9(UINT *, IDirect3DDeviceManager9
 
 static bool                  coreDxva2Working=false;
 
-static ADM_LibWrapper        d3dDynaLoader;
 static ADM_LibWrapper        dxva2DynaLoader;
 
-static pDirect3DCreate9      *createD3D = NULL;
 static pCreateDeviceManager9 *createDeviceManager = NULL;
 
-static IDirect3D9                  *d3d9        =NULL;
 static IDirect3DDevice9            *d3d9device  =NULL;
 static IDirect3DDeviceManager9     *d3d9devmgr  =NULL;
 static IDirectXVideoDecoderService *decoder_service=NULL;
 static HANDLE                       deviceHandle=INVALID_HANDLE_VALUE;
-    
+
 #include <initguid.h>
 DEFINE_GUID(IID_IDirectXVideoDecoderService, 0xfc51a551,0xd5e7,0x11d9,0xaf,0x55,0x00,0x05,0x4e,0x43,0xff,0x02);
 
@@ -75,14 +63,14 @@ DEFINE_GUID(DXVA2_NoEncrypt,          0x1b81beD0, 0xa0c7,0x11d3,0xb9,0x84,0x00,0
 DEFINE_GUID(GUID_NULL,                0x00000000, 0x0000,0x0000,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
 /**
  */
-typedef struct dxva2_mode 
+typedef struct dxva2_mode
 {
   const GUID     *guid;
   enum AVCodecID codec;
 } dxva2_mode;
 /**
  */
-static int ALIGN(int x,int align) 
+static int ALIGN(int x,int align)
 {
     int y= ((x+(align-1)) &(~(align-1)));
     aprintf("Align %d,%d => %d\n",x,align,y);
@@ -91,7 +79,7 @@ static int ALIGN(int x,int align)
 
 /**
  */
-static const dxva2_mode dxva2_modes[] = 
+static const dxva2_mode dxva2_modes[] =
 {
     /* MPEG-2 */
     { &DXVA2_ModeMPEG2_VLD,      AV_CODEC_ID_MPEG2VIDEO },
@@ -117,7 +105,7 @@ static const dxva2_mode dxva2_modes[] =
 
     { NULL,                      (AVCodecID)0 },
 };
-typedef struct 
+typedef struct
 {
      enum AVCodecID  codec;
      bool            enabled;
@@ -160,7 +148,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     HRESULT hr;
     D3DFORMAT target_format = (D3DFORMAT) 0;
 
-    for (int i = 0; dxva2_modes[i].guid; i++) 
+    for (int i = 0; dxva2_modes[i].guid; i++)
     {
         D3DFORMAT *target_list = NULL;
         unsigned target_count = 0;
@@ -168,41 +156,41 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         if (mode->codec != context->codec)
             continue;
         int j;
-        for (j = 0; j < guid_count; j++) 
+        for (j = 0; j < guid_count; j++)
         {
             if (IsEqualGUID( *(mode->guid), guid_list[j]))
                 break;
         }
 #ifdef DUMP_GUID
     dumpGUID("Potential device_guid",*(mode->guid));
-#endif    
+#endif
 
         if (j == guid_count)
             continue;
 
         hr = IDirectXVideoDecoderService_GetDecoderRenderTargets(decoder_service,*( mode->guid), &target_count, &target_list);
-        if (ADM_FAILED(hr)) 
+        if (ADM_FAILED(hr))
         {
             continue;
         }
-        for (j = 0; j < target_count; j++) 
+        for (j = 0; j < target_count; j++)
         {
             const D3DFORMAT format = target_list[j];
-            if (format == MKTAG('N','V','1','2')) 
+            if (format == MKTAG('N','V','1','2'))
             {
                 target_format = format;
                 break;
             }
         }
-        
+
         CoTaskMemFree(target_list);
-        if (target_format) 
+        if (target_format)
         {
             context->device_guid = *(mode->guid);
             break;
         }
     }
-    
+
 
     if (IsEqualGUID(context->device_guid, GUID_NULL))
     {
@@ -217,14 +205,14 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     context->desc.SampleWidth=1920;
     context->desc.SampleHeight=1080;
     context->desc.Format=target_format;
-        
+
     hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, context->device_guid, &(context->desc), NULL, &cfg_count, &cfg_list);
     if (ADM_FAILED(hr)) {
         ADM_warning("Unable to retrieve decoder configurations\n");
         return false;
     }
 
-    for (int i = 0; i < cfg_count; i++) 
+    for (int i = 0; i < cfg_count; i++)
     {
         DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
 
@@ -246,7 +234,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
             ADM_info("\t has no encrypt\n");
             score += 16;
         }
-        if (score > best_score) 
+        if (score > best_score)
         {
             best_score    = score;
             context->pictureDecode = *cfg;
@@ -256,13 +244,13 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
     }
     CoTaskMemFree(cfg_list);
 
-    if (! found ) 
+    if (! found )
     {
         ADM_warning( "No valid decoder configuration available\n");
         return false;
     }
     //--
-    
+
     ADM_info("DXVA2 support for  %s found\n",codecName);
     context->enabled=true;
     return true;
@@ -273,68 +261,43 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
  */
 bool admDxva2::init(GUI_WindowInfo *x)
 {
-    UINT adapter = D3DADAPTER_DEFAULT;   
+   if(!admD3D::isOperationnal())
+   {
+     ADM_warning("No D3D, skipping DXVA2\n");
+     return false;
+   }
+   if(!admD3D::getDevice())
+   {
+     ADM_warning("No D3D device, skipping DXVA2\n");
+     return false;
+   }
+    UINT adapter = D3DADAPTER_DEFAULT;
     D3DDISPLAYMODE        d3ddm;
     D3DPRESENT_PARAMETERS d3dpp = {0};
 
     HRESULT hr;
     unsigned int resetToken = 0;
-    
-    // Load d3d9 dll
-    if(false==d3dDynaLoader.loadLibrary("d3d9.dll"))
-    {
-        ADM_warning("Dxva2: Cannot load d3d9.dll\n"); // memleak
-        goto failInit;
-    }
-    // Load d3d9 dll
+
+    // Load dxva2 dll
     if(false==dxva2DynaLoader.loadLibrary("dxva2.dll"))
     {
         ADM_warning("Dxva2: Cannot load dxva2.dll\n");
         goto failInit;
     }
-    
-    createD3D=(pDirect3DCreate9 *)d3dDynaLoader.getSymbol("Direct3DCreate9");
-    if(!createD3D)
-    {
-        ADM_warning("Dxva2: Cannot get symbol  Direct3DCreate9\n");
-        goto failInit;
-    }
+
     createDeviceManager=(pCreateDeviceManager9 *)dxva2DynaLoader.getSymbol("DXVA2CreateDirect3DDeviceManager9");
     if(!createDeviceManager)
     {
         ADM_warning("Dxva2: Cannot get symbol  createDeviceManager\n");
         goto failInit;
-    }     
-    d3d9 = createD3D(D3D_SDK_VERSION);
-    if(!d3d9)
-    {
-        ADM_warning("Dxva2: Cannot gcreate d3d9\n");
-        goto failInit;
-    }
-    IDirect3D9_GetAdapterDisplayMode(d3d9, adapter, &d3ddm);
-    d3dpp.Windowed         = TRUE;
-    d3dpp.BackBufferWidth  = 640;
-    d3dpp.BackBufferHeight = 480;
-    d3dpp.BackBufferCount  = 0;
-    d3dpp.BackBufferFormat = d3ddm.Format;
-    d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
-    d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
-
-    hr = IDirect3D9_CreateDevice(d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
-                                 D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
-                                 &d3dpp, &d3d9device);
-    if(ADM_FAILED(hr))
-    {
-        ADM_warning("Cannot create d3d9 device\n");
-        goto failInit;
     }
     hr = createDeviceManager(&resetToken, &d3d9devmgr);
-    if (ADM_FAILED(hr)) 
+    if (ADM_FAILED(hr))
     {
         ADM_warning( "Failed to create Direct3D device manager\n");
         goto failInit;
     }
-    hr = IDirect3DDeviceManager9_ResetDevice(d3d9devmgr, d3d9device, resetToken);
+    hr = IDirect3DDeviceManager9_ResetDevice(d3d9devmgr, admD3D::getDevice(), resetToken);
     if (ADM_FAILED(hr))
     {
         ADM_warning( "Failed to bind Direct3D device to device manager\n");
@@ -388,7 +351,7 @@ bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_
     LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)array;
     int width=ALIGN(w,surface_alignment);
     int height=ALIGN(h,surface_alignment);
-    
+
      hr = IDirectXVideoDecoderService_CreateSurface(decoder_service,
                                                    width,
                                                    height,
@@ -419,7 +382,7 @@ bool admDxva2::destroyD3DSurface(int num, void *zsurfaces)
     }
     return true;
 }
-  
+
 /**
     \fn isOperationnal
 */
@@ -436,7 +399,7 @@ bool admDxva2::cleanup(void)
 
     if (decoder_service)
     {
-        IDirectXVideoDecoderService_Release(decoder_service);    
+        IDirectXVideoDecoderService_Release(decoder_service);
         decoder_service=NULL;
     }
     if (d3d9devmgr && deviceHandle != INVALID_HANDLE_VALUE)
@@ -453,23 +416,19 @@ bool admDxva2::cleanup(void)
 
     if (d3d9device)
     {
-        IDirect3DDevice9_Release(d3d9device);    
+        IDirect3DDevice9_Release(d3d9device);
         d3d9device  =NULL;
     }
 
-    if (d3d9)
-    {
-        IDirect3D9_Release(d3d9);
-        d3d9        =NULL;
-    }
+
     coreDxva2Working=false;
-    
+
     // small memleak  d3dDynaLoader;
-    // small memleak dxva2DynaLoader;    
+    // small memleak dxva2DynaLoader;
     return true;
 }
 /**
- * 
+ *
  */
 bool        admDxva2::supported(AVCodecID codec)
 {
@@ -528,7 +487,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
     dumpGUID("       guid",cmap->guid);
     printf("Decoder service = %p\n",decoder_service);
 
-#endif   
+#endif
     // update with real values
     cmap->desc.SampleWidth=paddedWidth; // does not work with multiple video ?
     cmap->desc.SampleHeight=paddedHeight;
@@ -538,32 +497,15 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
                                                          &(cmap->desc),
                                                          &(cmap->pictureDecode),
                                                          surface,
-                                                         numSurface, 
+                                                         numSurface,
                                                          &decoder);
      if(ADM_FAILED(hr))
      {
          ADM_warning("Cannot create decoder\n");
          return NULL;
      }
-     return decoder;     
+     return decoder;
 }
-/**
-
-*/
-IDirect3DDevice9 *admDxva2::getDevice()
-{
-
-        return d3d9device;
-}
-
-/**
-
-*/
-IDirect3D9       *admDxva2::getHandle()
-{
-        return d3d9;
-}
-
 /**
  * \fn createDecoder
  */
@@ -607,7 +549,7 @@ admDx2Surface::~admDx2Surface()
  */
 bool admDx2Surface::addRef()
 {
-    IDirect3DSurface9_AddRef(surface);   
+    IDirect3DSurface9_AddRef(surface);
     return true;
 }
 /**
@@ -630,15 +572,15 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
     HRESULT            hr;
     bool r=true;
     IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
-    aprintf("Surface to admImage = %p\n",surface);    
+    aprintf("Surface to admImage = %p\n",surface);
     hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
-    if (ADM_FAILED(hr)) 
+    if (ADM_FAILED(hr))
     {
         ADM_warning("Unable to lock DXVA2 surface\n");
         return false;
     }
     aprintf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));
-    
+
     uint8_t *data=(uint8_t*)LockedRect.pBits;
     int sourcePitch=LockedRect.Pitch;
     out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),alignment), sourcePitch, sourcePitch);

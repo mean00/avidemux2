@@ -16,24 +16,26 @@
 #pragma once
 #include "ADM_image.h"
 #include "ADM_windowInfo.h"
-extern "C" 
+#include "ADM_coreD3D.h"
+#include "dxva2api.h"
+extern "C"
 {
  #include "libavcodec/avcodec.h"
 }
 /**
  */
-class admDx2Surface 
+class admDx2Surface
 {
-public:  
+public:
                           admDx2Surface(void *parent,int alignment);
                           ~admDx2Surface();
     void                 *parent;
     LPDIRECT3DSURFACE9    surface;
     IDirectXVideoDecoder *decoder;
-    
+
     bool                  surfaceToAdmImage(ADMImage *out);
-    
-public:    
+
+public:
     bool                  addRef();
     bool                  removeRef();
 protected:
@@ -49,13 +51,11 @@ public:
         static bool isOperationnal(void);
         static bool cleanup(void);
         static bool supported(AVCodecID codec);
-        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align);
-        static bool destroyD3DSurface(int num,void *surfaces);
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
-        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);        
+        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
+        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align);
+        static bool destroyD3DSurface(int num,void *surfaces);
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
-        static IDirect3DDevice9 *getDevice();
-        static IDirect3D9       *getHandle();
 };

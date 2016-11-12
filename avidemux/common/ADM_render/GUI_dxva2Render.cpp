@@ -27,8 +27,9 @@
 #define COBJMACROS
 #include <d3d9.h>
 #include <dxva2api.h>
-
+#include "ADM_coreD3D.h"
 #include "ADM_coreDxva2.h"
+
 extern void *MUI_getDrawWidget(void);
 
 
@@ -83,7 +84,7 @@ dxvaRender::dxvaRender()
     useYV12=false;
     mySurface=NULL;
     videoBuffer=NULL;
-    d3dHandle=admDxva2::getHandle();
+    d3dHandle=admD3D::getHandle();
 
 }
 /**
