@@ -105,6 +105,7 @@ extern bool A_loadDefaultSettings(void);;
 extern void ADM_ExitCleanup(void);
 
 static bool uiRunning=false;
+static bool uiIsMaximized=false;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -1501,6 +1502,7 @@ bool UI_hasOpenGl(void)
 */
 void UI_iconify( void )
 {
+    uiIsMaximized=QuiMainWindows->isMaximized();
     QuiMainWindows->hide();
 
 }
@@ -1509,11 +1511,16 @@ void UI_iconify( void )
 */
 void UI_deiconify( void )
 {
-    QuiMainWindows->showNormal();
-
+    if(uiIsMaximized)
+    {
+        QuiMainWindows->showMaximized();
+    }else
+    {
+        QuiMainWindows->showNormal();
+    }
 }
 /**
-    \fn UI_deiconify
+    \fn UI_setAudioTrackCount
 */
 void UI_setAudioTrackCount( int nb )
 {
