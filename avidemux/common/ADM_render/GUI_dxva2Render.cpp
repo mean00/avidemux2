@@ -350,21 +350,51 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
 */
 bool dxvaRender::displayImage_argb(ADMImage *pic)
 {
-  #if 0
-      // RGB
-      uint8_t *src[3];
-      uint8_t *dst[3];
-      pic->GetReadPlanes(src);
-      dst[0]=(uint8_t *)d3dLock.pBits;
-      dst[1]=dst[2]=NULL;
-      int sourcePitch[3],dstPitch[3];
-      pic->GetPitches(sourcePitch);
-      dstPitch[0]=d3dLock.Pitch;
-      dstPitch[1]=dstPitch[2]=0;
-      scaler-> convertPlanes(sourcePitch,dstPitch,
-                                    src, dst);
-#endif
+  IDirect3DSurface9 *bBuffer;
+  // 1 upload to myYV12 surface
+  if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+                                            D3DBACKBUFFER_TYPE_MONO,
+                                            &bBuffer)))
+  {
+        ADM_warning("Cannot create backBuffer\n");
+        return false;
+  }
+
+
+  if (FAILED(IDirect3DSurface9_LockRect(bBuffer,&d3dLock, NULL, 0)))
+  {
+      ADM_warning("Cannot lock surface\n");
       return false;
+  }
+  // RGB
+  uint8_t *src[3];
+  uint8_t *dst[3];
+  pic->GetReadPlanes(src);
+  dst[0]=(uint8_t *)d3dLock.pBits;
+  dst[1]=dst[2]=NULL;
+  int sourcePitch[3],dstPitch[3];
+  pic->GetPitches(sourcePitch);
+  dstPitch[0]=d3dLock.Pitch;
+  dstPitch[1]=dstPitch[2]=0;
+  scaler-> convertPlanes(sourcePitch,dstPitch, src, dst);
+
+  if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
+  {
+      ADM_warning("Cannot unlock surface\n");
+      return false;
+  }
+
+
+  IDirect3DDevice9_BeginScene(d3dDevice);
+
+  IDirect3DDevice9_EndScene(d3dDevice);
+  if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+  {
+    ADM_warning("Present failed\n");
+  }
+
+  return true;
+
 }
 /**
 */
