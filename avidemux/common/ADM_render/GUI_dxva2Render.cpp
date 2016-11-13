@@ -180,9 +180,6 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         ADM_info("D3D YV12 is supported\n");
     }
 
-
-
-
     videoWidget=(ADM_Qvideo *)info.widget;
     videoWidget->useExternalRedraw(false);
     videoWidget->setDrawer(this);
@@ -302,13 +299,13 @@ bool dxvaRender::cleanup()
     }
     if(mySurface)
     {
-                IDirect3DSurface9_Release(mySurface);
-                mySurface=NULL;
+        IDirect3DSurface9_Release(mySurface);
+        mySurface=NULL;
     }
     if(myYV12Surface)
     {
-      IDirect3DSurface9_Release(myYV12Surface);
-      myYV12Surface=NULL;
+        IDirect3DSurface9_Release(myYV12Surface);
+        myYV12Surface=NULL;
     }
     if(d3dDevice)
     {
@@ -317,8 +314,8 @@ bool dxvaRender::cleanup()
     }
     if(videoBuffer)
     {
-      delete [] videoBuffer;
-      videoBuffer=NULL;
+        delete [] videoBuffer;
+        videoBuffer=NULL;
     }
     return true;
 }
@@ -328,13 +325,39 @@ bool dxvaRender::cleanup()
  */
  bool dxvaRender::refresh(void)
  {
-#if 0 // We dont know what is in the back buffer now ...
-   RECT rect = {0, 0, displayWidth, displayHeight};
-   if(FAILED(IDirect3DDevice9_Present(d3dDevice, &rect, 0, 0, 0)))
+   ADM_info("Refresh**\n");
+   //
+   if(useYV12)
    {
-     ADM_warning("Refresh failed\n");
+      // we still have the YV12 surface, blit it again
+      IDirect3DSurface9 *bBuffer;
+      if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+                                                D3DBACKBUFFER_TYPE_MONO,
+                                                &bBuffer)))
+      {
+            ADM_warning("D3D Cannot create backBuffer\n");
+            return false;
+      }
+      // data are in YV12 surface, blit it to mySurface
+      // zoom and color conversion happen there
+      IDirect3DDevice9_BeginScene(d3dDevice);
+      if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+                                              myYV12Surface,
+                                              NULL,
+                                              bBuffer,
+                                              NULL,
+                                              D3DTEXF_LINEAR)))
+                                              {
+
+                                              }
+      IDirect3DDevice9_EndScene(d3dDevice);
+      if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+      {
+        ADM_warning("D3D Present failed\n");
+      }
+      return true;
    }
- #endif
+   // ARGB, data is lost...
    return true;
  }
 /**
@@ -364,6 +387,72 @@ static bool d3dBlit(ADMImage *pic,ADM_PLANE plane,uint8_t *target,int targetPitc
     return true;
 }
 /**
+  \fn ADMImage_To_yv12Surface
+*/
+static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
+{
+  D3DLOCKED_RECT     lock;;
+  if (FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+  {
+      ADM_warning("D3D Cannot lock surface\n");
+      return false;
+  }
+
+  // copy
+  uint8_t *dst=(uint8_t *)lock.pBits;
+  int  dStride=lock.Pitch;
+
+  int width=pic->GetWidth(PLANAR_Y);
+  int height=pic->GetHeight(PLANAR_Y);
+
+  d3dBlit(pic, PLANAR_Y,dst,dStride,width,height);
+
+  dst+=height*dStride;
+  d3dBlit(pic, PLANAR_U,dst,dStride>>1,width>>1,height>>1);
+
+  dst+=(height/2)*(dStride/2);
+  d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
+
+  if (FAILED(IDirect3DSurface9_UnlockRect(surface)))
+  {
+      ADM_warning("D3D Cannot unlock surface\n");
+      return false;
+  }
+  return true;
+}
+/**
+  \fn ADMImage_To_argbSurface
+*/
+static bool  ADMImage_To_argbSurface(ADMImage *pic, IDirect3DSurface9 *surface,ADMColorScalerFull *scaler)
+{
+    D3DLOCKED_RECT     lock;
+
+    if (FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+    {
+        ADM_warning("D3D Cannot lock surface\n");
+        return false;
+    }
+    // RGB
+    uint8_t *src[3];
+    uint8_t *dst[3];
+    pic->GetReadPlanes(src);
+    dst[0]=(uint8_t *)lock.pBits;
+    dst[1]=dst[2]=NULL;
+    int sourcePitch[3],dstPitch[3];
+    pic->GetPitches(sourcePitch);
+    dstPitch[0]=lock.Pitch;
+    dstPitch[1]=dstPitch[2]=0;
+    scaler-> convertPlanes(sourcePitch,dstPitch, src, dst);
+
+    if (FAILED(IDirect3DSurface9_UnlockRect(surface)))
+    {
+        ADM_warning("D3D Cannot unlock surface\n");
+        return false;
+    }
+    return true;
+}
+
+/**
   \fn displayImage_yv12
   \brief copy image to myV12 surface then convert from yv12 to display format in mySurface
 
@@ -372,31 +461,9 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
 {
     IDirect3DSurface9 *bBuffer;
     // 1 upload to myYV12 surface
-    if (FAILED(IDirect3DSurface9_LockRect(myYV12Surface,&d3dLock, NULL, 0)))
+    if(!ADMImage_To_yv12Surface(pic,myYV12Surface))
     {
-        ADM_warning("D3D Cannot lock surface\n");
-        return false;
-    }
-
-    // copy
-    uint8_t *dst=(uint8_t *)d3dLock.pBits;
-    int  dStride=d3dLock.Pitch;
-
-    int width=pic->GetWidth(PLANAR_Y);
-    int height=pic->GetHeight(PLANAR_Y);
-
-    d3dBlit(pic, PLANAR_Y,dst,dStride,width,height);
-
-    dst+=height*dStride;
-    d3dBlit(pic, PLANAR_U,dst,dStride>>1,width>>1,height>>1);
-
-    dst+=(height/2)*(dStride/2);
-    d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
-
-    if (FAILED(IDirect3DSurface9_UnlockRect(myYV12Surface)))
-    {
-        ADM_warning("D3D Cannot unlock surface\n");
-        return false;
+      return false;
     }
    // upload....
     if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
@@ -409,6 +476,7 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
 
 
     // data are in YV12 surface, blit it to mySurface
+    // zoom and color conversion happen there
     IDirect3DDevice9_BeginScene(d3dDevice);
     if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
                                             myYV12Surface,
@@ -443,30 +511,10 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
         return false;
   }
 
-
-  if (FAILED(IDirect3DSurface9_LockRect(bBuffer,&d3dLock, NULL, 0)))
+  if(!ADMImage_To_argbSurface(pic,bBuffer,scaler))
   {
-      ADM_warning("D3D Cannot lock surface\n");
-      return false;
+    return false;
   }
-  // RGB
-  uint8_t *src[3];
-  uint8_t *dst[3];
-  pic->GetReadPlanes(src);
-  dst[0]=(uint8_t *)d3dLock.pBits;
-  dst[1]=dst[2]=NULL;
-  int sourcePitch[3],dstPitch[3];
-  pic->GetPitches(sourcePitch);
-  dstPitch[0]=d3dLock.Pitch;
-  dstPitch[1]=dstPitch[2]=0;
-  scaler-> convertPlanes(sourcePitch,dstPitch, src, dst);
-
-  if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
-  {
-      ADM_warning("D3D Cannot unlock surface\n");
-      return false;
-  }
-
 
   IDirect3DDevice9_BeginScene(d3dDevice);
 
