@@ -58,8 +58,10 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
                         RECT               panScan;
                         RECT               targetRect;
                         ADM_Qvideo        *videoWidget;
-
+                        HWND              windowId;
 protected:
+                        bool cleanup();
+                        bool setup();
 };
 
 
@@ -89,17 +91,8 @@ dxvaRender::dxvaRender()
 */
 dxvaRender::~dxvaRender()
 {
-    ADM_info("Deleting surface\n");
-    if(mySurface)
-    {
-                IDirect3DSurface9_Release(mySurface);
-                mySurface=NULL;
-    }
-    if(myYV12Surface)
-    {
-      IDirect3DSurface9_Release(myYV12Surface);
-      myYV12Surface=NULL;
-    }
+    ADM_info("dxva2 clean up\n");
+    cleanup();
     ADM_info("dxva2 cleaned up\n");
 }
 
@@ -116,9 +109,11 @@ bool dxvaRender::stop(void)
 */
 bool dxvaRender::changeZoom(renderZoom newZoom)
 {
-        ADM_info("changing zoom, dxva render.\n");
+        ADM_info("changing zoom, dxva/d3D render.\n");
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
+        cleanup();
+        setup();        
         return false;
 }
 
@@ -131,6 +126,8 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     ADM_info("Initializing D3D render\n");
     info=*window;
     baseInit(w,h,zoom);
+
+    windowId=(HWND)window->systemWindowId;
 
     if(!d3dHandle)
     {
@@ -166,89 +163,144 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 
 
 
-   D3DPRESENT_PARAMETERS presentationParameters;
-   memset(&presentationParameters, 0, sizeof(presentationParameters));
-   presentationParameters.Windowed               = TRUE;
-   presentationParameters.SwapEffect             = D3DSWAPEFFECT_DISCARD;
-   presentationParameters.Flags                  = D3DPRESENTFLAG_VIDEO;
-   presentationParameters.hDeviceWindow          = (HWND)window->systemWindowId;
-   presentationParameters.BackBufferWidth        = imageWidth;
-   presentationParameters.BackBufferHeight       = imageHeight;
-   presentationParameters.MultiSampleType        = D3DMULTISAMPLE_NONE;
-   presentationParameters.PresentationInterval   = D3DPRESENT_INTERVAL_ONE;
-   presentationParameters.BackBufferFormat       = fmt;
-   presentationParameters.BackBufferCount        = 1;
-   presentationParameters.EnableAutoDepthStencil = FALSE;
-
-
-   if(FAILED(IDirect3D9_CreateDevice(  d3dHandle,
-                                       D3DADAPTER_DEFAULT,
-                                       D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
-                                       D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                       &presentationParameters, &d3dDevice)))
-   {
-      ADM_warning("Failed to create D3D device\n");
-      return false;
-  }
-
-
-    //
-    D3DVIEWPORT9 viewPort = {0, 0, displayWidth, displayHeight, 0, 1};
-
-
-    //
-     if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
-               d3dDevice, w,h,
-               fmt, D3DPOOL_DEFAULT, &mySurface, NULL)))
-     {
-                ADM_warning("Cannot create surface\n");
-                return false;
-     }
-     if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
-               d3dDevice, w,h,
-               yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
-     {
-                ADM_warning("Cannot create surface\n");
-                return false;
-     }
-
-    // put some defaults
-    IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
-    IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-    IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-    IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAREF, (DWORD)0x0);
-    IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_LIGHTING, FALSE);
-    IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-    IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-    //
-
-    if(FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
-    {
-        ADM_warning("Cannot set D3D viewport\n");
-        return false;
-    }
-
-   scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
-            ADM_COLOR_YV12,
-            ADM_COLOR_RGB32A
-        );
-    videoBuffer=new uint8_t[displayWidth*displayHeight*4];
-    panScan.left  =0;
-    panScan.right =imageWidth-1;
-    panScan.top   =0;
-    panScan.bottom=imageHeight-1;
-
-    targetRect.left  =0;
-    targetRect.right =displayWidth-1;
-    targetRect.top   =0;
-    targetRect.bottom=displayHeight-1;
 
     videoWidget=(ADM_Qvideo *)info.widget;
     videoWidget->useExternalRedraw(false);
     videoWidget->setDrawer(this);
 
+
+    if(!setup())
+    {
+      ADM_warning("Dxva/D3D setup failed\n");
+      return false;
+    }
+
     ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d,zoom=%d, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,(int)zoom,(int)displayWidth,(int)displayHeight);
     return true;
+}
+
+/**
+*/
+bool dxvaRender::setup()
+{
+  D3DVIEWPORT9 viewPort = {0, 0, displayWidth, displayHeight, 0, 1};
+
+
+    ADM_info("(re)Setting up \n");
+     D3DPRESENT_PARAMETERS presentationParameters;
+     memset(&presentationParameters, 0, sizeof(presentationParameters));
+     presentationParameters.Windowed               = TRUE;
+     presentationParameters.SwapEffect             = D3DSWAPEFFECT_DISCARD;
+     presentationParameters.Flags                  = D3DPRESENTFLAG_VIDEO;
+     presentationParameters.hDeviceWindow          = windowId;
+     presentationParameters.BackBufferWidth        = displayWidth;
+     presentationParameters.BackBufferHeight       = displayHeight;
+     presentationParameters.MultiSampleType        = D3DMULTISAMPLE_NONE;
+     presentationParameters.PresentationInterval   = D3DPRESENT_INTERVAL_ONE;
+     presentationParameters.BackBufferFormat       = displayMode.Format;
+     presentationParameters.BackBufferCount        = 1;
+     presentationParameters.EnableAutoDepthStencil = FALSE;
+
+
+     if(FAILED(IDirect3D9_CreateDevice(  d3dHandle,
+                                         D3DADAPTER_DEFAULT,
+                                         D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
+                                         D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+                                         &presentationParameters, &d3dDevice)))
+     {
+        ADM_warning("Failed to create D3D device\n");
+        return false;
+    }
+
+
+      //
+
+      D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
+
+      //
+       if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+                 d3dDevice, displayWidth,displayHeight,
+                 displayMode.Format, D3DPOOL_DEFAULT, &mySurface, NULL)))
+       {
+                  ADM_warning("Cannot create surface\n");
+                  return false;
+       }
+       if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+                 d3dDevice, imageWidth,imageHeight,
+                 yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
+       {
+                  ADM_warning("Cannot create surface\n");
+                  return false;
+       }
+      // put some defaults
+      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
+      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAREF, (DWORD)0x0);
+      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_LIGHTING, FALSE);
+      IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+      IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+      //
+
+
+  if(FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
+  {
+      ADM_warning("Cannot set D3D viewport\n");
+      return false;
+  }
+
+ scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
+          ADM_COLOR_YV12,
+          ADM_COLOR_RGB32A
+      );
+  videoBuffer=new uint8_t[displayWidth*displayHeight*4];
+  panScan.left  =0;
+  panScan.right =imageWidth-1;
+  panScan.top   =0;
+  panScan.bottom=imageHeight-1;
+
+  targetRect.left  =0;
+  targetRect.right =displayWidth-1;
+  targetRect.top   =0;
+  targetRect.bottom=displayHeight-1;
+  ADM_info("Setup done\n");
+  return true;
+}
+/**
+  \fn cleanup
+
+*/
+bool dxvaRender::cleanup()
+{
+    ADM_info("D3D cleanup\n");
+    if(scaler)
+    {
+      delete scaler;
+      scaler=NULL;
+    }
+    if(mySurface)
+    {
+                IDirect3DSurface9_Release(mySurface);
+                mySurface=NULL;
+    }
+    if(myYV12Surface)
+    {
+      IDirect3DSurface9_Release(myYV12Surface);
+      myYV12Surface=NULL;
+    }
+    if(d3dDevice)
+    {
+       IDirect3DDevice9_Release(d3dDevice);
+       d3dDevice=NULL;
+    }
+    if(videoBuffer)
+    {
+      delete [] videoBuffer;
+      videoBuffer=NULL;
+    }
+    return true;
+
+
 }
  /**
  \fn refresh
@@ -400,7 +452,11 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
 */
 bool dxvaRender::displayImage(ADMImage *pic)
 {
+#if 1
   if(useYV12)
+#else
+ if(0)
+#endif
   {
       return displayImage_yv12(pic);
     }
