@@ -12,7 +12,7 @@
 /**
       \struct surface_info
 */
-typedef struct surface_info 
+typedef struct surface_info
 {
     int used;
     uint64_t age;
@@ -22,7 +22,7 @@ typedef struct surface_info
  */
 class decoderFFDXVA2;
 
-typedef struct 
+typedef struct
 {
         BVector <admDx2Surface *>freeSurfaceQueue;
         BVector <admDx2Surface *>allSurfaceQueue;
@@ -43,7 +43,7 @@ protected:
                     dxvaContext                 dxvaPool;
 protected:
                     bool        initDXVA2Context();
-public:                    
+public:
 //                    bool        markSurfaceUsed(ADM_vaSurface *s);
                     //bool        markSurfaceUnused(ADM_vaSurface *s);
 public:     // Callbacks
@@ -59,14 +59,16 @@ public:
 
     virtual const   char        *getName(void)        {return "DXVA2";}
     virtual         bool        dontcopy() {return false;} // copy the frame for the moment
-                    
+
 public:
             // public API
                                 decoderFFDXVA2 (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFDXVA2();
+public:
+                    bool      markSurfaceUsed(admDx2Surface *s);
+                    bool      markSurfaceUnused(admDx2Surface *s);
 protected:
-                                bool markSurfaceUsed(admDx2Surface *s);
-                                bool markSurfaceUnused(admDx2Surface *s);
+                    bool      readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out);
 
 
 };

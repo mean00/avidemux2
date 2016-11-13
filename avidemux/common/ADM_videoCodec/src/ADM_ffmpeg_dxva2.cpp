@@ -1,8 +1,8 @@
 /***************************************************************************
-            \file              ADM_ffmpeg_dxva2.cpp  
+            \file              ADM_ffmpeg_dxva2.cpp
             \brief Decoder using half ffmpeg/half dxva2
             \author mean (c) 2016
- 
+
  Very similar to dxva2
 
 
@@ -44,7 +44,7 @@ extern "C" {
 
 static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
-static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
+static void ADM_DXVA2releaseBuffer(void *s, uint8_t *d);
 static admMutex     imageMutex;
 #if 1
 #define aprintf(...) {}
@@ -56,7 +56,7 @@ static admMutex     imageMutex;
     \brief Return true if  dxva2 can be used...
 */
 bool dxva2Usable(void)
-{    
+{
     bool v=true;
     if(!dxva2Working) return false;
     if(!prefs->get(FEATURES_DXVA2,&v)) v=false;
@@ -101,23 +101,23 @@ bool dxva2Probe(void)
 #endif
 
 /**
- * 
+ *
  * @param instance
  * @param cookie
- * @return 
+ * @return
  */
-static  bool dxvaarkSurfaceUsed(void *instance,void *cookie)
+static  bool dxvaMarkSurfaceUsed(void *instance,void *cookie)
 {
     decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance;
-    admDx2Surface *s=(ADM_vaSurface *)cookie ;
+    admDx2Surface *s=(admDx2Surface *)cookie ;
     inst->markSurfaceUsed(s);
     return true;
 }
 /**
- * 
+ *
  * @param instance
  * @param cookie
- * @return 
+ * @return
  */
 static  bool dxvaMarkSurfaceUnused(void *instance,void *cookie)
 {
@@ -135,7 +135,7 @@ static bool dxvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance ;
     admDx2Surface *s=(admDx2Surface *) cookie;
-    bool r=s->surfaceToAdmImage(out);
+    bool r=s->surfaceToAdmImage(image);
     aprintf("Got frame\n");
     return r;
 }
@@ -146,8 +146,8 @@ static bool dxvaRefDownload(ADMImage *image, void *instance, void *cookie)
 */
 int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
 {
-    
-    decoderFF *ff=(decoderFF *)avctx->opaque;    
+
+    decoderFF *ff=(decoderFF *)avctx->opaque;
     decoderFFDXVA2 *dec=(decoderFFDXVA2 *)ff->getHwDecoder();
     aprintf("Get Buffer: FF avctx=%p parent=%p instance=%p\n",avctx,ff,dec);
     ADM_assert(dec);
@@ -159,15 +159,15 @@ int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
  * @param avctx
  * @param pic
  */
-void ADM_LIBDXVA2releaseBuffer(void *opaque, uint8_t *data)
+void ADM_DXVA2releaseBuffer(void *opaque, uint8_t *data)
 {
-    
+
    admDx2Surface *w=(admDx2Surface *)opaque;
-   aprintf("=> Release Buffer %p\n",w);   
+   aprintf("=> Release Buffer %p\n",w);
    decoderFFDXVA2 *instance=(decoderFFDXVA2 *)w->parent;
    instance->releaseBuffer(w);
 }
- 
+
 
 /**
     \fn dxva2Cleanup
@@ -198,21 +198,21 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         c=fmt[i];
         char name[300]={0};
         av_get_pix_fmt_string(name,sizeof(name),c);
-        ADM_info("[DXVA2]: Evaluating PIX_FMT %d,%s\n",c,name);  
+        ADM_info("[DXVA2]: Evaluating PIX_FMT %d,%s\n",c,name);
         av_get_codec_tag_string(name,sizeof(name),avctx->codec_id);
-        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);  
-        
+        ADM_info("\t  Evaluating codec %d,%s\n",avctx->codec_id,name);
+
         if(c!=AV_PIX_FMT_DXVA2_VLD) continue;
 #define FMT_V_CHECK(x,y)      case AV_CODEC_ID_##x:   outPix=AV_PIX_FMT_DXVA2_VLD;id=avctx->codec_id;break;
-        
-        
+
+
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
             FMT_V_CHECK(H265,H265)
 //            FMT_V_CHECK(VC1,VC1)
 //            FMT_V_CHECK(VP9,VP9)
-            default: 
+            default:
                 ADM_info("DXVA2 No hw support for format %d\n",avctx->codec_id);
                 continue;
                 break;
@@ -220,7 +220,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         break;
     }
     if(id==AV_CODEC_ID_NONE)
-    {        
+    {
         return AV_PIX_FMT_NONE;
     }
     // Finish intialization of DXVA2 decoder
@@ -236,7 +236,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
 }
 
 /**
- * 
+ *
  * @param w
  * @param h
  * @param fcc
@@ -247,7 +247,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
 decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 : ADM_acceleratedDecoderFF(avctx,parent)
 {
-    
+
     ADM_info("Setting up Dxva2 context (instance=%p)\n",this);
     alive=false;
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
@@ -263,11 +263,11 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 
     // create decoder
     struct dxva_context *dx_context=new struct dxva_context;
-    memset(dx_context,0,sizeof(*dx_context)); // dangerous...    
-    
+    memset(dx_context,0,sizeof(*dx_context)); // dangerous...
+
     // Allocate temp buffer
     num_surfaces=4;
-    
+
     switch(avctx->codec_id)
     {
         case AV_CODEC_ID_H265:
@@ -277,8 +277,8 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         case AV_CODEC_ID_H264:
                 align=16;
                 num_surfaces+=16;
-                break;                
-        case AV_CODEC_ID_VP9: 
+                break;
+        case AV_CODEC_ID_VP9:
                 align=16;
                 num_surfaces+=8;
                 break;
@@ -310,15 +310,15 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     }
     //
     _context->hwaccel_context = dx_context;
-    _context->get_buffer2     = ADM_DXVA2getBuffer;    
+    _context->get_buffer2     = ADM_DXVA2getBuffer;
     _context->draw_horiz_band = NULL;
-    
+
     dx_context->surface         = surfaces;
     dx_context->surface_count   = num_surfaces;
     dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id);
-    
+
     ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
-    
+
     alive=true;
 }
 
@@ -352,7 +352,7 @@ bool decoderFFDXVA2::markSurfaceUsed(admDx2Surface *s)
     s->refCount++;
     imageMutex.unlock();
     return true;
-    
+
 }
 /**
     \fn markSurfaceUnused
@@ -360,7 +360,7 @@ bool decoderFFDXVA2::markSurfaceUsed(admDx2Surface *s)
 */
 bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *img)
 {
-        
+
    imageMutex.lock();
    img->refCount--;
    aprintf("Surface %x, Ref count is now %d\n",img->surface,img->refCount);
@@ -371,14 +371,14 @@ bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *img)
    imageMutex.unlock();
    return true;
 }
- 
+
 
 /**
  * \fn uncompress
- * \brief 
+ * \brief
  * @param in
  * @param out
- * @return 
+ * @return
  */
 bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
@@ -398,8 +398,8 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_info("[LibVa] Nothing to decode -> no Picture\n");
         return false;
     }
-    
-    
+
+
     if (!in->dataLength )	// Null frame, silently skipped
     {
         out->_noPicture = 1;
@@ -421,11 +421,11 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         pkt.flags=AV_PKT_FLAG_KEY;
     else
         pkt.flags=0;
-    
+
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
     int ret = avcodec_decode_video2 (_context, frame, &got_picture, &pkt);
-    
+
     if(ret<0)
     {
         char er[2048]={0};
@@ -442,16 +442,16 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_info("[DXVA] No picture \n");
         return false;
     }
-   return readBackBuffer(frame,in,out);  
-   
+   return readBackBuffer(frame,in,out);
+
 }
 /**
-    \fn 
+    \fn
  */
 bool     decoderFFDXVA2::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
-    out->Pts= (uint64_t)(pts_opaque);        
+    out->Pts= (uint64_t)(pts_opaque);
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->refType=ADM_HW_DXVA;
     out->refDescriptor.refCodec=this;
@@ -463,17 +463,17 @@ bool     decoderFFDXVA2::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refDescriptor.refMarkUnused=dxvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=dxvaRefDownload;
     return true;
-}   
+}
 //---
 
 /**
  */
-int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
+int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
-        
-    aprintf("-> Get buffer (%d,%p)\n",num_surfaces,this);        
-    ADM_assert(frame->format == AV_PIX_FMT_DXVA2_VLD);
-    
+
+    aprintf("-> Get buffer (%d,%p)\n",num_surfaces,this);
+    ADM_assert(pic->format == AV_PIX_FMT_DXVA2_VLD);
+
     //--
     imageMutex.lock();
     if(dxvaPool.freeSurfaceQueue.empty())
@@ -482,7 +482,7 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
         imageMutex.unlock();
         return -1;
     }
-    
+
     admDx2Surface *s= dxvaPool.freeSurfaceQueue[0];
     dxvaPool.freeSurfaceQueue.popFront();
     imageMutex.unlock();
@@ -491,16 +491,16 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
     //
     pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
-                                     ADM_DXVA2releaseBuffer, 
+                                     ADM_DXVA2releaseBuffer,
                                      (void *)this,
                                      AV_BUFFER_FLAG_READONLY);
-    
+
     aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;    
-    return 0;    
-    
+    pic->reordered_opaque= avctx->reordered_opaque;
+    return 0;
+
 }
 /**
  * \fn releaseBuffer
@@ -509,9 +509,9 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
 {
    bool found=false;
    aprintf("->Release Buffer\n");
-   for (int i = 0; i < num_surfaces; i++) 
+   for (int i = 0; i < num_surfaces; i++)
    {
-        if (surfaces[i] == surface->surface) 
+        if (surfaces[i] == surface->surface)
         {
             found=true;
             aprintf("   match %d\n",i);
@@ -529,25 +529,25 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
  */
 class ADM_hwAccelEntryDxva2 : public ADM_hwAccelEntry
 {
-public: 
+public:
                             ADM_hwAccelEntryDxva2();
      virtual bool           canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat);
-     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt );     
+     virtual                ADM_acceleratedDecoderFF *spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt );
      virtual                ~ADM_hwAccelEntryDxva2() {};
 };
 /**
- * 
+ *
  */
 ADM_hwAccelEntryDxva2::ADM_hwAccelEntryDxva2()
 {
     name="DXVA2";
 }
 /**
- * 
+ *
  * @param avctx
  * @param fmt
  * @param outputFormat
- * @return 
+ * @return
  */
 bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt,enum AVPixelFormat &outputFormat)
 {
@@ -560,7 +560,7 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
     }
     enum AVPixelFormat ofmt=ADM_DXVA2_getFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
-        return false;        
+        return false;
 
     outputFormat=ofmt;
     ADM_info("This is maybe supported by DXVA2...\n");
@@ -574,10 +574,10 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
 
 
 /**
- * 
+ *
  * @param avctx
  * @param fmt
- * @return 
+ * @return
  */
 ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *avctx,  const enum AVPixelFormat *fmt )
 {
@@ -597,8 +597,8 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryDxva2::spawn( struct AVCodecContext *a
 }
 static ADM_hwAccelEntryDxva2 dxva2Entry;
 /**
- * 
- * @return 
+ *
+ * @return
  */
 bool initDXVA2Decoder(void)
 {
