@@ -81,7 +81,7 @@ VideoRenderBase *RenderSpawnDxva2()
 */
 dxvaRender::dxvaRender()
 {
-    ADM_info("creating Dxva2 render.\n");
+    ADM_info("creating Dxva2/D3D render.\n");
     useYV12=false;
     mySurface=NULL;
     myYV12Surface=NULL;
@@ -94,9 +94,9 @@ dxvaRender::dxvaRender()
 */
 dxvaRender::~dxvaRender()
 {
-    ADM_info("dxva2 clean up\n");
+    ADM_info("dxva2/D3D clean up\n");
     cleanup();
-    ADM_info("dxva2 cleaned up\n");
+    ADM_info("dxva2/D3D cleaned up\n");
 }
 
 /**
@@ -104,7 +104,7 @@ dxvaRender::~dxvaRender()
 */
 bool dxvaRender::stop(void)
 {
-    ADM_info("stopping dxva2 render.\n");
+    ADM_info("stopping dxva2/D3D render.\n");
     return true;
 }
 /**
@@ -126,7 +126,7 @@ bool dxvaRender::changeZoom(renderZoom newZoom)
 */
 bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
 {
-    ADM_info("Initializing D3D render\n");
+    ADM_info("Initializing dxva2/D3D render\n");
     info=*window;
     baseInit(w,h,zoom);
 
@@ -142,12 +142,12 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
                                                 D3DADAPTER_DEFAULT,
                                                 &displayMode)))
     {
-        ADM_warning("Dxv2Render: Cannot get display mode\n");
+        ADM_warning("Dxv2/D3D Render: Cannot get display mode\n");
         return 0;
     }
 
     D3DCAPS9 deviceCapabilities;
-    ADM_info("Checking device capabilities\n");
+    ADM_info("D3D Checking device capabilities\n");
     if (FAILED(IDirect3D9_GetDeviceCaps(d3dHandle,
                                         D3DADAPTER_DEFAULT,
                                         D3DDEVTYPE_HAL,
@@ -172,12 +172,12 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
                                                          fmt)))  // depth stencil format
     {
         useYV12=false;
-        ADM_info("YV12 not supported\n");
+        ADM_info("D3D YV12 not supported\n");
     }
     else
     {
         useYV12=true;
-        ADM_info("YV12 is supported\n");
+        ADM_info("D3D YV12 is supported\n");
     }
 
 
@@ -199,17 +199,19 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 }
 
 /**
+  \fn setup
+  \brief Allocate stuff for a given display with/height. It is called again each time the zoom is changed
 */
 bool dxvaRender::setup()
 {
   D3DVIEWPORT9 viewPort = {0, 0, displayWidth, displayHeight, 0, 1};
 
 
-    ADM_info("(re)Setting up \n");
+    ADM_info("D3D (re)Setting up \n");
      D3DPRESENT_PARAMETERS presentationParameters;
      memset(&presentationParameters, 0, sizeof(presentationParameters));
      presentationParameters.Windowed               = TRUE;
-     presentationParameters.SwapEffect             = D3DSWAPEFFECT_DISCARD;
+     presentationParameters.SwapEffect             = D3DSWAPEFFECT_DISCARD; // We could use copy, but discard seems faster according to ms
      presentationParameters.Flags                  = D3DPRESENTFLAG_VIDEO;
      presentationParameters.hDeviceWindow          = windowId;
      presentationParameters.BackBufferWidth        = displayWidth;
@@ -241,14 +243,14 @@ bool dxvaRender::setup()
                  d3dDevice, displayWidth,displayHeight,
                  displayMode.Format, D3DPOOL_DEFAULT, &mySurface, NULL)))
        {
-                  ADM_warning("Cannot create surface\n");
+                  ADM_warning("D3D Cannot create surface\n");
                   return false;
        }
        if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
                  d3dDevice, imageWidth,imageHeight,
                  yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
        {
-                  ADM_warning("Cannot create surface\n");
+                  ADM_warning("D3D Cannot create surface\n");
                   return false;
        }
       // put some defaults
@@ -264,7 +266,7 @@ bool dxvaRender::setup()
 
   if(FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
   {
-      ADM_warning("Cannot set D3D viewport\n");
+      ADM_warning("D3D Cannot set D3D viewport\n");
       return false;
   }
 
@@ -287,6 +289,7 @@ bool dxvaRender::setup()
 }
 /**
   \fn cleanup
+  \brief cleanup all display dependant stuff, called again before switching zoom and at exit
 
 */
 bool dxvaRender::cleanup()
@@ -318,22 +321,26 @@ bool dxvaRender::cleanup()
       videoBuffer=NULL;
     }
     return true;
-
-
 }
  /**
  \fn refresh
+ \brief does not work correctly
  */
  bool dxvaRender::refresh(void)
  {
+#if 0 // We dont know what is in the back buffer now ...
    RECT rect = {0, 0, displayWidth, displayHeight};
    if(FAILED(IDirect3DDevice9_Present(d3dDevice, &rect, 0, 0, 0)))
    {
      ADM_warning("Refresh failed\n");
    }
+ #endif
    return true;
  }
-
+/**
+  \fn draw
+  \brief callback from Qt saying we need to refresh
+*/
 bool dxvaRender::draw(QWidget *widget, QPaintEvent *ev)
 {
   ADM_info("D3D : Draw!\n");
@@ -343,19 +350,22 @@ bool dxvaRender::draw(QWidget *widget, QPaintEvent *ev)
 
 
 /**
-    \fn displayImage
+    \fn d3dBlit
+    \brief blit one plane at a time from ADMImahe to surface
 */
 
 static bool d3dBlit(ADMImage *pic,ADM_PLANE plane,uint8_t *target,int targetPitch,int w, int h)
 {
   uint8_t *y=pic->GetReadPtr(plane);
   int pitch=pic->GetPitch(plane);
-  BitBlit(target,targetPitch,
+    BitBlit(target,targetPitch,
           y,pitch,
           w,h);
-  return true;
+    return true;
 }
 /**
+  \fn displayImage_yv12
+  \brief copy image to myV12 surface then convert from yv12 to display format in mySurface
 
 */
 bool dxvaRender::displayImage_yv12(ADMImage *pic)
@@ -364,7 +374,7 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
     // 1 upload to myYV12 surface
     if (FAILED(IDirect3DSurface9_LockRect(myYV12Surface,&d3dLock, NULL, 0)))
     {
-        ADM_warning("Cannot lock surface\n");
+        ADM_warning("D3D Cannot lock surface\n");
         return false;
     }
 
@@ -385,7 +395,7 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
 
     if (FAILED(IDirect3DSurface9_UnlockRect(myYV12Surface)))
     {
-        ADM_warning("Cannot unlock surface\n");
+        ADM_warning("D3D Cannot unlock surface\n");
         return false;
     }
    // upload....
@@ -393,7 +403,7 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
                                               D3DBACKBUFFER_TYPE_MONO,
                                               &bBuffer)))
     {
-          ADM_warning("Cannot create backBuffer\n");
+          ADM_warning("D3D Cannot create backBuffer\n");
           return false;
     }
 
@@ -412,12 +422,14 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
     IDirect3DDevice9_EndScene(d3dDevice);
     if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
     {
-      ADM_warning("Present failed\n");
+      ADM_warning("D3D Present failed\n");
     }
 
     return true;
 }
 /**
+  \fn displayImage_argb
+  \brief manually do the yv12-> RGB conversion + rescale and the upload to backbuffer
 */
 bool dxvaRender::displayImage_argb(ADMImage *pic)
 {
@@ -427,14 +439,14 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
                                             D3DBACKBUFFER_TYPE_MONO,
                                             &bBuffer)))
   {
-        ADM_warning("Cannot create backBuffer\n");
+        ADM_warning("D3D Cannot create backBuffer\n");
         return false;
   }
 
 
   if (FAILED(IDirect3DSurface9_LockRect(bBuffer,&d3dLock, NULL, 0)))
   {
-      ADM_warning("Cannot lock surface\n");
+      ADM_warning("D3D Cannot lock surface\n");
       return false;
   }
   // RGB
@@ -451,7 +463,7 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
 
   if (FAILED(IDirect3DSurface9_UnlockRect(bBuffer)))
   {
-      ADM_warning("Cannot unlock surface\n");
+      ADM_warning("D3D Cannot unlock surface\n");
       return false;
   }
 
@@ -461,13 +473,15 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
   IDirect3DDevice9_EndScene(d3dDevice);
   if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
   {
-    ADM_warning("Present failed\n");
+    ADM_warning("D3D Present failed\n");
   }
 
   return true;
 
 }
 /**
+  \fn displayImage
+  \brief display an image
 */
 bool dxvaRender::displayImage(ADMImage *pic)
 {
@@ -478,9 +492,8 @@ bool dxvaRender::displayImage(ADMImage *pic)
 #endif
   {
       return displayImage_yv12(pic);
-    }
-    return displayImage_argb(pic);
+  }
+  return displayImage_argb(pic);
 }
-
 
 // EOF
