@@ -531,6 +531,7 @@ admDx2Surface::admDx2Surface(void *par,int alig)
     alignment=alig;
     surface=NULL;
     decoder=NULL;
+    refCount=0;
 }
 /**
  * \fn dtor

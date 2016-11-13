@@ -45,7 +45,7 @@ extern "C" {
 static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(struct AVCodecContext *avctx, AVFrame *pic);
-
+static admMutex     imageMutex;
 #if 1
 #define aprintf(...) {}
 #else
@@ -89,6 +89,57 @@ bool dxva2Probe(void)
     dxva2Working=true;
     return true;
 }
+//--
+
+
+
+
+#if 1
+#define aprintf(...) {}
+#else
+#define aprintf ADM_info
+#endif
+
+/**
+ * 
+ * @param instance
+ * @param cookie
+ * @return 
+ */
+static  bool dxvaarkSurfaceUsed(void *instance,void *cookie)
+{
+    decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance;
+    admDx2Surface *s=(ADM_vaSurface *)cookie ;
+    inst->markSurfaceUsed(s);
+    return true;
+}
+/**
+ * 
+ * @param instance
+ * @param cookie
+ * @return 
+ */
+static  bool dxvaMarkSurfaceUnused(void *instance,void *cookie)
+{
+    decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance ;
+    admDx2Surface *s=(admDx2Surface *)cookie ;
+    inst->markSurfaceUnused(s);
+    return true;
+}
+
+/**
+    \fn vdpauRefDownload
+    \brief Convert a VASurface image to a regular image
+*/
+static bool dxvaRefDownload(ADMImage *image, void *instance, void *cookie)
+{
+    decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance ;
+    admDx2Surface *s=(admDx2Surface *) cookie;
+    bool r=s->surfaceToAdmImage(out);
+    aprintf("Got frame\n");
+    return r;
+}
+
 /**
     \fn ADM_DXVA2getBuffer
     \brief trampoline to get a DXVA2 surface
@@ -250,7 +301,13 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         return ;
     }
     ADM_info("DXVA2 decoder created\n");
-    
+    // Populare queue with them
+    for (int i=0;i<num_surfaces;i++)
+    {
+        admDx2Surface *w=new admDx2Surface(this,align);
+        w->surface=surfaces[i];
+        dxvaPool.freeSurfaceQueue.append(w);
+    }
     //
     _context->hwaccel_context = dx_context;
     _context->get_buffer2     = ADM_DXVA2getBuffer;    
@@ -285,6 +342,36 @@ decoderFFDXVA2::~decoderFFDXVA2()
     }
 }
 
+/**
+    \fn markSurfaceUsed
+    \brief mark the surfave as used. Can be called multiple time.
+*/
+bool decoderFFDXVA2::markSurfaceUsed(admDx2Surface *s)
+{
+    imageMutex.lock();
+    s->refCount++;
+    imageMutex.unlock();
+    return true;
+    
+}
+/**
+    \fn markSurfaceUnused
+    \brief mark the surfave as unused by the caller. Can be called multiple time.
+*/
+bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *img)
+{
+        
+   imageMutex.lock();
+   img->refCount--;
+   aprintf("Surface %x, Ref count is now %d\n",img->surface,img->refCount);
+   if(!img->refCount)
+   {
+        dxvaPool.freeSurfaceQueue.append(img);
+   }
+   imageMutex.unlock();
+   return true;
+}
+ 
 
 /**
  * \fn uncompress
@@ -296,6 +383,23 @@ decoderFFDXVA2::~decoderFFDXVA2()
 bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     aprintf("==> uncompress %s\n",_context->codec->long_name);
+    if(out->refType==ADM_HW_DXVA)
+    {
+            admDx2Surface *img=(admDx2Surface *)out->refDescriptor.refHwImage;
+            markSurfaceUnused(img);
+            out->refType=ADM_HW_NONE;
+    }
+
+    if (!in->dataLength )	// Null frame, silently skipped
+    {
+        out->_noPicture = 1;
+        out->Pts=ADM_COMPRESSED_NO_PTS;
+        out->refType=ADM_HW_NONE;
+        ADM_info("[LibVa] Nothing to decode -> no Picture\n");
+        return false;
+    }
+    
+    
     if (!in->dataLength )	// Null frame, silently skipped
     {
         out->_noPicture = 1;
@@ -338,76 +442,65 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_info("[DXVA] No picture \n");
         return false;
     }
-    out->Pts= (uint64_t)(frame->reordered_opaque);
-    out->flags=admFrameTypeFromLav(frame);    
-    
-    // Retrieve dx2Surface..
-    admDx2Surface *w=(admDx2Surface *)frame->data[1];
-    ADM_assert(w->surface==(LPDIRECT3DSURFACE9)frame->data[3]);
-    bool r=w->surfaceToAdmImage(out);
-    aprintf("Got frame\n");
-    return r;
+   return readBackBuffer(frame,in,out);  
+   
 }
-         
+/**
+    \fn 
+ */
+bool     decoderFFDXVA2::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
+{
+    uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
+    out->Pts= (uint64_t)(pts_opaque);        
+    out->flags=admFrameTypeFromLav(decodedFrame);
+    out->refType=ADM_HW_DXVA;
+    out->refDescriptor.refCodec=this;
+    admDx2Surface *img=(admDx2Surface *)(decodedFrame->data[1]);
+    out->refDescriptor.refHwImage=img; // the ADM_vaImage in disguise
+    markSurfaceUsed(img); // one ref for us too, it will be free when the image is cycled
+    aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)img->surface);
+    out->refDescriptor.refMarkUsed=dxvaMarkSurfaceUsed;
+    out->refDescriptor.refMarkUnused=dxvaMarkSurfaceUnused;
+    out->refDescriptor.refDownload=dxvaRefDownload;
+    return true;
+}   
 //---
 
 /**
  */
 int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *frame)
 {
-    aprintf("-> Get buffer (%d,%p)\n",num_surfaces,this);
-    int i, old_unused = -1;
-    LPDIRECT3DSURFACE9 surface;
-    admDx2Surface *w = NULL;
-    int older=surface_age;
-    ADM_assert(frame->format == AV_PIX_FMT_DXVA2_VLD);
-    for (i = 0; i < num_surfaces; i++)
-    {
-        surface_info *info = &surface_infos[i];
-        if(info->used)
-        {
-            aprintf("Surface %d is busy\n",i);
-            continue;
-        }
         
-        if(info->age<older)
-        {
-            old_unused=i;
-            older=surface_infos[i].age;
-        }
-    }
-    if (old_unused == -1)
-    {
-        ADM_warning("No free DXVA2 surface!\n");
-        return AVERROR(ENOMEM);
-    }
-    i = old_unused;
-
-    surface = surfaces[i];
-    aprintf("-> found surface\n");
+    aprintf("-> Get buffer (%d,%p)\n",num_surfaces,this);        
+    ADM_assert(frame->format == AV_PIX_FMT_DXVA2_VLD);
     
-    w = new admDx2Surface(this,align);
-    frame->buf[0] = av_buffer_create((uint8_t*)surface, 0,
-                                     ADM_LIBDXVA2releaseBuffer, w,
-                                     AV_BUFFER_FLAG_READONLY);
-    if (!frame->buf[0])
+    //--
+    imageMutex.lock();
+    if(dxvaPool.freeSurfaceQueue.empty())
     {
-        av_free(w);
-        return AVERROR(ENOMEM);
+        ADM_warning("DXVA : No surface available!\n");
+        imageMutex.unlock();
+        return -1;
     }
-
-    aprintf("-> adding ref\n");
-    w->surface   = surface;
-    struct dxva_context * hwContext=(struct dxva_context *) _context->hwaccel_context;
-    w->decoder   = hwContext->decoder;
-    w->addRef();
-    admDxva2::decoderAddRef(w->decoder);
-    surface_infos[i].used = 1;
-    surface_infos[i].age  = surface_age++; // not sure...
-    frame->data[3] = (uint8_t *)surface;
-    frame->data[1] = (uint8_t *)w;
-    aprintf("   <= Got buffer %p\n",w);
-    return 0;
+    
+    admDx2Surface *s= dxvaPool.freeSurfaceQueue[0];
+    dxvaPool.freeSurfaceQueue.popFront();
+    imageMutex.unlock();
+    s->refCount=0;
+    markSurfaceUsed(s); // 1 ref taken by lavcodec
+    //
+    pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
+                                     sizeof(s->surface),
+                                     ADM_DXVA2releaseBuffer, 
+                                     (void *)this,
+                                     AV_BUFFER_FLAG_READONLY);
+    
+    aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
+    pic->data[0]=(uint8_t *)s;
+    pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
+    pic->reordered_opaque= avctx->reordered_opaque;    
+    return 0;    
+    
 }
 /**
  * \fn releaseBuffer
@@ -429,8 +522,7 @@ bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
     ADM_assert(found);
     surface->removeRef();
     admDxva2::decoderRemoveRef(surface->decoder);
-    delete surface;
-    surface=NULL;
+    markSurfaceUnused(surface);
     return true ;
 }
 /**

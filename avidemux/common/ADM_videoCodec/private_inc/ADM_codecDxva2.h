@@ -22,7 +22,11 @@ typedef struct surface_info
  */
 class decoderFFDXVA2;
 
-
+typedef struct 
+{
+        BVector <admDx2Surface *>freeSurfaceQueue;
+        BVector <admDx2Surface *>allSurfaceQueue;
+}dxvaContext;
 
 /**
  * \class decoderFFDXVA2
@@ -36,7 +40,7 @@ protected:
                     surface_info                surface_infos[ADM_MAX_SURFACE];
                     uint32_t                    num_surfaces;
                     uint64_t                    surface_age;
-
+                    dxvaContext                 dxvaPool;
 protected:
                     bool        initDXVA2Context();
 public:                    
@@ -60,4 +64,9 @@ public:
             // public API
                                 decoderFFDXVA2 (AVCodecContext *avctx,decoderFF *parent);
                                 ~decoderFFDXVA2();
+protected:
+                                bool markSurfaceUsed(admDx2Surface *s);
+                                bool markSurfaceUnused(admDx2Surface *s);
+
+
 };

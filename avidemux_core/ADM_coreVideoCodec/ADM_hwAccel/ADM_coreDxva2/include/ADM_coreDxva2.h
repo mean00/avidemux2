@@ -34,7 +34,7 @@ public:
     IDirectXVideoDecoder *decoder;
 
     bool                  surfaceToAdmImage(ADMImage *out);
-
+    int                   refCount;
 public:
     bool                  addRef();
     bool                  removeRef();
