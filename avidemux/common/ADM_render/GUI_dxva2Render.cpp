@@ -1,5 +1,8 @@
 /**
-    \author mean fixounet@free.fr 2010
+    \author mean fixounet@free.fr 2016
+    \brief d3d/dxva renderer
+
+    Inspired stronly by mplayer vo_direct3d
 */
 
 /***************************************************************************
@@ -113,7 +116,7 @@ bool dxvaRender::changeZoom(renderZoom newZoom)
         calcDisplayFromZoom(newZoom);
         currentZoom=newZoom;
         cleanup();
-        setup();        
+        setup();
         return false;
 }
 
@@ -142,6 +145,22 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         ADM_warning("Dxv2Render: Cannot get display mode\n");
         return 0;
     }
+
+    D3DCAPS9 deviceCapabilities;
+    ADM_info("Checking device capabilities\n");
+    if (FAILED(IDirect3D9_GetDeviceCaps(d3dHandle,
+                                        D3DADAPTER_DEFAULT,
+                                        D3DDEVTYPE_HAL,
+                                        &deviceCapabilities)))
+    {
+      ADM_warning("Cannot get device capabilities");
+      return false;
+    }
+    int texture = deviceCapabilities.TextureCaps;
+    ADM_info("Power of 2 : %d\n",  (texture & D3DPTEXTURECAPS_POW2) &&   !(texture & D3DPTEXTURECAPS_NONPOW2CONDITIONAL));
+    ADM_info("Square only: %d\n",  (texture & D3DPTEXTURECAPS_SQUAREONLY));
+
+
 
       // Check if we support YV12
     D3DFORMAT fmt=displayMode.Format;
