@@ -16,9 +16,16 @@
 
 #include <windows.h>
 
+
 #include "ADM_deviceWin32.h"
 
+#if 1
 #define aprintf(...) {}
+#define  markTime(...) {}
+#else
+#define aprintf printf
+#define  markTime markTime
+#endif
 
 
 ADM_DECLARE_AUDIODEVICE(Win32,win32AudioDevice,1,0,0,"Win32 audio device (c) mean");
@@ -26,11 +33,29 @@ ADM_DECLARE_AUDIODEVICE(Win32,win32AudioDevice,1,0,0,"Win32 audio device (c) mea
     \fn ctor
 */
 
+
+static void markTime_(const char *s)
+{
+#if 1
+  SYSTEMTIME st;
+    GetLocalTime(&st);
+    ADM_info("MXE [%d.%d] %s\n",st.wSecond,st.wMilliseconds,s);
+#endif
+}
+
 win32AudioDevice::win32AudioDevice(void)
 {
     ADM_info("[Win32] Creating audio device\n");
     _inUse=0;
 }
+/**
+  \fn dtor
+*/
+win32AudioDevice::~win32AudioDevice(void)
+{
+
+}
+
 /**
     \fn localStop
 */
@@ -44,8 +69,11 @@ bool win32AudioDevice::localStop(void)
 
     waveOutReset(myDevice);
 
-    for (uint32_t i = 0; i < NB_BUCKET; i++)
+    for (int  i = 0; i < NB_BUCKET; i++)
+    {
         waveOutUnprepareHeader(myDevice, &waveHdr[i], sizeof(WAVEHDR));
+        delete [] waveHdr[i].lpData;
+    }
 
     myError = waveOutClose(myDevice);
 
@@ -55,9 +83,6 @@ bool win32AudioDevice::localStop(void)
         handleMM(myError);
         return 0;
     }
-
-    for (uint32_t i = 0; i < NB_BUCKET; i++)
-        delete[] waveHdr[i].lpData;
 
     _inUse=0;
     myDevice = NULL;
@@ -79,8 +104,8 @@ bool win32AudioDevice::localInit(void)
 
     _inUse = 1;
 
-    bucketSize = (_channels * _frequency*2*4)/100; // 40 ms bucket * 64 => 3 sec buffer
-
+    bucketSize = (_channels * _frequency*2)/10; // 100 ms bucket * 32 => 3 sec buffer
+    ADM_info("Bucket size=%d\n",(int)bucketSize);
     WAVEFORMATEX wav;
 
     memset(&wav, 0, sizeof(WAVEFORMATEX));
@@ -147,32 +172,51 @@ int win32AudioDevice::findFreeBucket()
     return -1;
 }
 
-
+/**
+  \fn sendData
+*/
 void win32AudioDevice::sendData(void)
 {
     uint8_t success = 0;
+    mutex.lock();
     uint32_t len=wrIndex-rdIndex;
+    mutex.unlock();
     MMRESULT er;
+    markTime("Enter");
+    if(len< (2 * _channels * _frequency)/100) // less than 10 ms, skip
+    {
+      ADM_usleep(20*1000);
+      markTime("Not enough data");
+      return;
+    }
     while(len)
     {
-         if (!_inUse)
-             return;
+        markTime("loop");
+        if (!_inUse)
+        {
+           markTime("Not in use");
+            ADM_usleep(20*1000); // avoid busy looping
+            return;
+        }
         int bucket=findFreeBucket();
         if(bucket==-1)
         {
-            ADM_usleep(10); // Wait for a bucket , it failed, wait a bit
-            continue;
+            markTime("No Bucket");
+            ADM_usleep(10*1000); // Wait for a bucket , if it failed,return
+            return;
         }
         WAVEHDR *b=&(waveHdr[bucket]);
         b->dwFlags &=~WHDR_DONE; // mark as used
+        if (len > bucketSize)
+              b->dwBufferLength = bucketSize;
+        else
+              b->dwBufferLength = len;
         mutex.lock();
-            if (len > bucketSize)
-                  b->dwBufferLength = bucketSize;
-            else
-                  b->dwBufferLength = len;
-            memcpy(b->lpData, audioBuffer.at(rdIndex), b->dwBufferLength);
+        memcpy(b->lpData, audioBuffer.at(rdIndex), b->dwBufferLength);
         mutex.unlock();
+        markTime("write");
         er=waveOutWrite(myDevice, b, sizeof(WAVEHDR));
+        markTime("write done");
         if (er != MMSYSERR_NOERROR)
         {
             handleMM(er);
@@ -181,9 +225,12 @@ void win32AudioDevice::sendData(void)
             break;
         }
         // consume data
+        mutex.lock();
         rdIndex += b->dwBufferLength;
+        mutex.unlock();
         len-= b->dwBufferLength ;
     }
+    markTime("exit");
 }
 
 /**
@@ -213,7 +260,7 @@ const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
 */
 void win32AudioDevice::handleMM(MMRESULT err)
 {
-#define ERMM(x) if(err==x)  ADM_info("[Win32] "#x"\n");
+#define ERMM(x) if(err==x)  ADM_info("[Win32/Audio ] Error "#x"\n");
 
     ERMM(MMSYSERR_ALLOCATED);
     ERMM(MMSYSERR_BADDEVICEID);
