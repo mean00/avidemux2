@@ -19,7 +19,7 @@
 #include "../include/ADM_coreD3D.h"
 #ifdef USE_DXVA2
 
-#if 0
+#if 1
 #define aprintf printf
 #define DUMP_GUID
 #else

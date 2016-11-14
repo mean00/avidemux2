@@ -161,13 +161,19 @@ int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
  */
 void ADM_DXVA2releaseBuffer(void *opaque, uint8_t *data)
 {
+   decoderFFDXVA2 *instance=(decoderFFDXVA2 *)opaque;
+   LPDIRECT3DSURFACE9 surface=*(LPDIRECT3DSURFACE9 *)data;
 
-   admDx2Surface *w=(admDx2Surface *)opaque;
-   aprintf("=> Release Buffer %p\n",w);
-   decoderFFDXVA2 *instance=(decoderFFDXVA2 *)w->parent;
-   instance->releaseBuffer(w);
+  admDx2Surface        *w=instance->findBuffer(surface);
+  if(!w)
+  {
+    ADM_warning("Cannot find image in buffers\n");
+    return;
+  }
+  w->removeRef();
+  admDxva2::decoderRemoveRef(w->decoder);
+  instance->releaseBuffer(w);
 }
-
 
 /**
     \fn dxva2Cleanup
@@ -306,7 +312,9 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     {
         admDx2Surface *w=new admDx2Surface(this,align);
         w->surface=surfaces[i];
+        w->decoder = dx_context->decoder;
         dxvaPool.freeSurfaceQueue.append(w);
+        dxvaPool.allSurfaceQueue.append(w);
     }
     //
     _context->hwaccel_context = dx_context;
@@ -328,7 +336,10 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 decoderFFDXVA2::~decoderFFDXVA2()
 {
     if(alive)
+    {
         admDxva2::destroyD3DSurface(num_surfaces,surfaces);
+        // TODO : flush pool
+    }
     if(_context->hwaccel_context)
     {
         aprintf("Destroying context\n");
@@ -439,7 +450,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         out->_noPicture=true;
         out->refType=ADM_HW_NONE;
         out->Pts= (uint64_t)(frame->reordered_opaque);
-        ADM_info("[DXVA] No picture \n");
+        ADM_info("[DXVA] --No picture \n");
         return false;
     }
    return readBackBuffer(frame,in,out);
@@ -450,18 +461,19 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
  */
 bool     decoderFFDXVA2::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
+    aprintf("Reading Back Buffer\n");
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
     out->Pts= (uint64_t)(pts_opaque);
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->refType=ADM_HW_DXVA;
     out->refDescriptor.refCodec=this;
-    admDx2Surface *img=(admDx2Surface *)(decodedFrame->data[1]);
+    admDx2Surface *img=(admDx2Surface *)(decodedFrame->data[0]);
     out->refDescriptor.refHwImage=img; // the ADM_vaImage in disguise
     markSurfaceUsed(img); // one ref for us too, it will be free when the image is cycled
     aprintf("ReadBack: Got image=%x surfaceId=%x\n",(int)(uintptr_t)decodedFrame->data[0],(int)img->surface);
-    out->refDescriptor.refMarkUsed=dxvaMarkSurfaceUsed;
+    out->refDescriptor.refMarkUsed  =dxvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=dxvaMarkSurfaceUnused;
-    out->refDescriptor.refDownload=dxvaRefDownload;
+    out->refDescriptor.refDownload  =dxvaRefDownload;
     return true;
 }
 //---
@@ -503,25 +515,28 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 
 }
 /**
+  \fn releaseBuffer LPDIRECT3DSURFACE9
+*/
+admDx2Surface        *decoderFFDXVA2::findBuffer(LPDIRECT3DSURFACE9 surface)
+{
+    for(int i=0;i<num_surfaces;i++)
+    {
+        admDx2Surface *s=dxvaPool.allSurfaceQueue[i];
+        if(s->surface==surface)
+        {
+            return s;
+        }
+    }
+    ADM_warning("Cannot find surface to be released\n");
+    return NULL;
+}
+
+
+/**
  * \fn releaseBuffer
  */
 bool decoderFFDXVA2::releaseBuffer(admDx2Surface *surface)
 {
-   bool found=false;
-   aprintf("->Release Buffer\n");
-   for (int i = 0; i < num_surfaces; i++)
-   {
-        if (surfaces[i] == surface->surface)
-        {
-            found=true;
-            aprintf("   match %d\n",i);
-            surface_infos[i].used = 0;
-            break;
-        }
-    }
-    ADM_assert(found);
-    surface->removeRef();
-    admDxva2::decoderRemoveRef(surface->decoder);
     markSurfaceUnused(surface);
     return true ;
 }

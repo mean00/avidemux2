@@ -54,11 +54,12 @@ public:
     virtual         bool        uncompress (ADMCompressedImage * in, ADMImage * out);
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
                     bool        releaseBuffer(admDx2Surface *data);
+                    admDx2Surface        *findBuffer(LPDIRECT3DSURFACE9 surface);
                     bool        isAlive() {return alive;}
                     int         getNumSurfaces() {return num_surfaces;}
 
     virtual const   char        *getName(void)        {return "DXVA2";}
-    virtual         bool        dontcopy() {return false;} // copy the frame for the moment
+    virtual         bool        dontcopy() {return true;} // copy the frame for the moment
 
 public:
             // public API
