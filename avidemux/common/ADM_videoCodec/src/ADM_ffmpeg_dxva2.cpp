@@ -135,6 +135,8 @@ static bool dxvaRefDownload(ADMImage *image, void *instance, void *cookie)
     decoderFFDXVA2 *inst=(decoderFFDXVA2 *)instance ;
     admDx2Surface *s=(admDx2Surface *) cookie;
     bool r=s->surfaceToAdmImage(image);
+    inst->markSurfaceUnused(s);
+    image->refType=ADM_HW_NONE;
     aprintf("Got frame\n");
     return r;
 }

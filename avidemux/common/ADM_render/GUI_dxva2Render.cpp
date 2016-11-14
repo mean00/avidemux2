@@ -27,6 +27,9 @@
 #include "ADM_coreDxva2.h"
 #include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
+
+//#define REUSE_DEVICE 1
+
 #if 1
 #define aprintf printf
 #else
@@ -66,6 +69,8 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
                         bool draw(QWidget *widget, QPaintEvent *ev);
                         bool displayImage_argb(ADMImage *pic);
                         bool displayImage_yv12(ADMImage *pic);
+                        bool displayImage_surface(ADMImage *pic,admDx2Surface *image);
+            //  virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_DXVA;}
                         bool displayImage_surface(admDx2Surface *pic);
                virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_DXVA;}
 
@@ -242,6 +247,7 @@ bool dxvaRender::setup()
      presentationParameters.EnableAutoDepthStencil = FALSE;
 
 
+#ifndef REUSE_DEVICE
      if(ADM_FAILED(IDirect3D9_CreateDevice(  d3dHandle,
                                          D3DADAPTER_DEFAULT,
                                          D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
@@ -251,7 +257,9 @@ bool dxvaRender::setup()
         ADM_warning("Failed to create D3D device\n");
         return false;
     }
-
+#else
+      d3dDevice=admD3D::getDevice();
+#endif
 
       //
 
@@ -329,11 +337,13 @@ bool dxvaRender::cleanup()
         IDirect3DSurface9_Release(myYV12Surface);
         myYV12Surface=NULL;
     }
+#ifndef REUSE_DEVICE
     if(d3dDevice)
     {
        IDirect3DDevice9_Release(d3dDevice);
        d3dDevice=NULL;
     }
+#endif
     if(videoBuffer)
     {
         delete [] videoBuffer;
@@ -362,7 +372,6 @@ bool dxvaRender::cleanup()
       }
       // data are in YV12 surface, blit it to mySurface
       // zoom and color conversion happen there
-      IDirect3DDevice9_BeginScene(d3dDevice);
       if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
                                               myYV12Surface,
                                               &panScan,
@@ -372,6 +381,7 @@ bool dxvaRender::cleanup()
                                               {
 
                                               }
+      IDirect3DDevice9_BeginScene(d3dDevice);
       IDirect3DDevice9_EndScene(d3dDevice);
       if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
       {
@@ -553,13 +563,15 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
 /**
   \fn brief input is already a surface, in yv12 format
 */
-bool dxvaRender::displayImage_surface(admDx2Surface *pic)
+bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
 {
+  // this does not work, both surfaces are coming from different device
+
   IDirect3DSurface9 *bBuffer;
   POINT point={0,0};
   // 1 upload to myYV12 surface
   if(ADM_FAILED(IDirect3DDevice9_UpdateSurface(d3dDevice,
-          pic->surface,   // src
+          surface->surface,   // src
           &panScan,       // src rect
           myYV12Surface, // dst
           &point         // where to
@@ -610,7 +622,7 @@ bool dxvaRender::displayImage(ADMImage *pic)
   {
       aprintf("Source is already a surface (dxva2 input)\n");
       admDx2Surface *surface=(admDx2Surface *)pic->refDescriptor.refHwImage;
-      return displayImage_surface(surface);
+      return displayImage_surface(pic,surface);
   }
 
 
