@@ -1,7 +1,7 @@
 //
 // C++ Implementation: ADM_deviceWin32
 //
-// Description: 
+// Description:
 // C++ Implementation: ADM_deviceWin32
 // Use MM layer to output sound
 //
@@ -20,13 +20,13 @@
 
 #define aprintf(...) {}
 
-  
+
 ADM_DECLARE_AUDIODEVICE(Win32,win32AudioDevice,1,0,0,"Win32 audio device (c) mean");
 /**
     \fn ctor
 */
 
-win32AudioDevice::win32AudioDevice(void) 
+win32AudioDevice::win32AudioDevice(void)
 {
     ADM_info("[Win32] Creating audio device\n");
     _inUse=0;
@@ -35,14 +35,14 @@ win32AudioDevice::win32AudioDevice(void)
     \fn localStop
 */
 
-bool win32AudioDevice::localStop(void) 
+bool win32AudioDevice::localStop(void)
 {
     if (!_inUse)
         return false;
 
     ADM_info("[Win32] Closing audio\n");
 
-    waveOutReset(myDevice);        
+    waveOutReset(myDevice);
 
     for (uint32_t i = 0; i < NB_BUCKET; i++)
         waveOutUnprepareHeader(myDevice, &waveHdr[i], sizeof(WAVEHDR));
@@ -67,18 +67,18 @@ bool win32AudioDevice::localStop(void)
 /**
     \fn localInit
 */
-bool win32AudioDevice::localInit(void) 
+bool win32AudioDevice::localInit(void)
 {
     ADM_info("[Win32] Opening Audio, channels=%u freq=%u\n",_channels, _frequency);
 
-    if (_inUse) 
+    if (_inUse)
     {
         ADM_warning("[Win32] Already running?\n");
         return false;
     }
 
     _inUse = 1;
-    
+
     bucketSize = (_channels * _frequency*2*4)/100; // 40 ms bucket * 64 => 3 sec buffer
 
     WAVEFORMATEX wav;
@@ -120,7 +120,7 @@ bool win32AudioDevice::localInit(void)
 /**
     \fn setVolume
 */
-uint8_t  win32AudioDevice::setVolume(int volume) 
+uint8_t  win32AudioDevice::setVolume(int volume)
 {
     uint32_t value;
 
@@ -170,7 +170,7 @@ void win32AudioDevice::sendData(void)
                   b->dwBufferLength = bucketSize;
             else
                   b->dwBufferLength = len;
-            memcpy(b->lpData, audioBuffer.at(rdIndex), b->dwBufferLength);                    
+            memcpy(b->lpData, audioBuffer.at(rdIndex), b->dwBufferLength);
         mutex.unlock();
         er=waveOutWrite(myDevice, b, sizeof(WAVEHDR));
         if (er != MMSYSERR_NOERROR)
@@ -211,7 +211,7 @@ const CHANNEL_TYPE *win32AudioDevice::getWantedChannelMapping(uint32_t channels)
 /**
     \fn handleMM
 */
-void handleMM(MMRESULT err)
+void win32AudioDevice::handleMM(MMRESULT err)
 {
 #define ERMM(x) if(err==x)  ADM_info("[Win32] "#x"\n");
 
