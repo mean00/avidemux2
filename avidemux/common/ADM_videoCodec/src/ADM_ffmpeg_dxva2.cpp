@@ -170,8 +170,8 @@ void ADM_DXVA2releaseBuffer(void *opaque, uint8_t *data)
     ADM_warning("Cannot find image in buffers\n");
     return;
   }
-  w->removeRef();
-  admDxva2::decoderRemoveRef(w->decoder);
+
+
   instance->releaseBuffer(w);
 }
 
@@ -369,15 +369,17 @@ bool decoderFFDXVA2::markSurfaceUsed(admDx2Surface *s)
     \fn markSurfaceUnused
     \brief mark the surfave as unused by the caller. Can be called multiple time.
 */
-bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *img)
+bool decoderFFDXVA2::markSurfaceUnused(admDx2Surface *surface)
 {
 
    imageMutex.lock();
-   img->refCount--;
-   aprintf("Surface %x, Ref count is now %d\n",img->surface,img->refCount);
-   if(!img->refCount)
+   surface->refCount--;
+   aprintf("Surface %x, Ref count is now %d\n",surface->surface,surface->refCount);
+   if(!surface->refCount)
    {
-        dxvaPool.freeSurfaceQueue.append(img);
+        surface->removeRef();
+        admDxva2::decoderRemoveRef(surface->decoder);
+        dxvaPool.freeSurfaceQueue.append(surface);
    }
    imageMutex.unlock();
    return true;
