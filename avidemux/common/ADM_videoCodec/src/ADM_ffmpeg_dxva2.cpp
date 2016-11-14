@@ -41,7 +41,6 @@ extern "C" {
 #include "ADM_vidMisc.h"
 #include "prefs.h"
 
-
 static bool         dxva2Working=false;
 static int  ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags);
 static void ADM_DXVA2releaseBuffer(void *s, uint8_t *d);
@@ -161,17 +160,15 @@ int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic,int flags)
  */
 void ADM_DXVA2releaseBuffer(void *opaque, uint8_t *data)
 {
-   decoderFFDXVA2 *instance=(decoderFFDXVA2 *)opaque;
-   LPDIRECT3DSURFACE9 surface=*(LPDIRECT3DSURFACE9 *)data;
-
-  admDx2Surface        *w=instance->findBuffer(surface);
+  admDx2Surface *w=(admDx2Surface *)opaque;
+  aprintf("Release surface %p\n",w);
   if(!w)
   {
     ADM_warning("Cannot find image in buffers\n");
     return;
   }
-
-
+  decoderFFDXVA2 *instance=(decoderFFDXVA2 *)w->parent;
+  aprintf("Decoder=%p, surface internal =%p\n",w->decoder,w->surface);
   instance->releaseBuffer(w);
 }
 
@@ -301,6 +298,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         return ;
     }
     dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align);
+    aprintf("Decoder=%p\n",dx_context->decoder);
     if(!dx_context->decoder)
     {
         ADM_warning("Cannot create decoder\n");
@@ -315,6 +313,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
         w->decoder = dx_context->decoder;
         dxvaPool.freeSurfaceQueue.append(w);
         dxvaPool.allSurfaceQueue.append(w);
+        aprintf("Appending surface %p->internal %p\n",w,w->surface);
     }
     //
     _context->hwaccel_context = dx_context;
@@ -326,7 +325,6 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id);
 
     ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
-
     alive=true;
 }
 
@@ -502,17 +500,23 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     imageMutex.unlock();
     s->refCount=0;
     markSurfaceUsed(s); // 1 ref taken by lavcodec
+
     //
     pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
                                      ADM_DXVA2releaseBuffer,
-                                     (void *)this,
+                                     (void *)s,
                                      AV_BUFFER_FLAG_READONLY);
 
     aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
     pic->reordered_opaque= avctx->reordered_opaque;
+
+    s->addRef();
+    admDxva2::decoderAddRef(s->decoder);
+
+
     return 0;
 
 }
