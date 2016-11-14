@@ -130,16 +130,19 @@ uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 */
 uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 {
+  uint8_t *firstOut=out;
   uint32_t outlen = 0;
   uint8_t *tail = in + len;
+  uint8_t *border=tail-3;
   if (len < 3)
     return 0;
-  while (in < tail - 3)
+  while (in < border)
   {
         if(in[2]>3)
         {
-          *out++=*in++;
-          *out++=*in++;
+          out[0]=in[0];
+          out[1]=in[1];
+          out+=2;in+=2;
           continue;
         }
         if (!in[0] && !in[1] && in[2] == 3)
@@ -147,13 +150,12 @@ uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
           out[0] = 0;
           out[1] = 0;
           out += 2;
-          outlen += 2;
           in += 3;
-              continue;
+          continue;
         }
-      *out++ = *in++;
-      outlen++;
+        *out++ = *in++;
   }
+  outlen=(int)(out-firstOut);
   // copy last bytes
   uint32_t left = tail - in;
   memcpy (out, in, left);
