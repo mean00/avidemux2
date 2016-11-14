@@ -577,7 +577,18 @@ bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
           &point         // where to
         )))
         {
-            ADM_warning("Copying surface failed \n");
+            ADM_warning("Copying surface failed, switching to non accelerated path \n");
+            if(!pic->hwDownloadFromRef())
+            {
+              ADM_warning("Failed to download yv12 from dxva\n");
+              return false;
+            }
+            // workaround : use default non bridged path
+              if(useYV12)
+              {
+                  return displayImage_yv12(pic);
+              }
+              return displayImage_argb(pic);
             return false;
         }
  // upload....
