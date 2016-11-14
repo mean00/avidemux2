@@ -27,6 +27,25 @@
 #include "ADM_coreDxva2.h"
 #include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
+#if 1
+#define aprintf printf
+#else
+#define aprintf(...) {}
+#endif
+
+/**
+ */
+static bool ADM_FAILED(HRESULT hr)
+{
+    int r=(int)hr;
+    if(r<0)
+    {
+        ADM_warning("Failed with error code=0x%x\n",r);
+        return true;
+    }
+    return false;
+}
+
 /**
     \class sdlRender
 */
@@ -47,6 +66,9 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
                         bool draw(QWidget *widget, QPaintEvent *ev);
                         bool displayImage_argb(ADMImage *pic);
                         bool displayImage_yv12(ADMImage *pic);
+                        bool displayImage_surface(admDx2Surface *pic);
+               virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_DXVA;}
+
 
   protected:
                         admMutex        lock;
@@ -138,7 +160,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         return false;
     }
 
-    if (FAILED(IDirect3D9_GetAdapterDisplayMode(d3dHandle,
+    if (ADM_FAILED(IDirect3D9_GetAdapterDisplayMode(d3dHandle,
                                                 D3DADAPTER_DEFAULT,
                                                 &displayMode)))
     {
@@ -148,7 +170,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 
     D3DCAPS9 deviceCapabilities;
     ADM_info("D3D Checking device capabilities\n");
-    if (FAILED(IDirect3D9_GetDeviceCaps(d3dHandle,
+    if (ADM_FAILED(IDirect3D9_GetDeviceCaps(d3dHandle,
                                         D3DADAPTER_DEFAULT,
                                         D3DDEVTYPE_HAL,
                                         &deviceCapabilities)))
@@ -165,7 +187,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
       // Check if we support YV12
     D3DFORMAT fmt=displayMode.Format;
     D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
-    if (FAILED(IDirect3D9_CheckDeviceFormatConversion(   d3dHandle, // adapter
+    if (ADM_FAILED(IDirect3D9_CheckDeviceFormatConversion(   d3dHandle, // adapter
                                                          D3DADAPTER_DEFAULT, // device type
                                                          D3DDEVTYPE_HAL, // adapter format
                                                          yv12, // render target format
@@ -220,7 +242,7 @@ bool dxvaRender::setup()
      presentationParameters.EnableAutoDepthStencil = FALSE;
 
 
-     if(FAILED(IDirect3D9_CreateDevice(  d3dHandle,
+     if(ADM_FAILED(IDirect3D9_CreateDevice(  d3dHandle,
                                          D3DADAPTER_DEFAULT,
                                          D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
                                          D3DCREATE_SOFTWARE_VERTEXPROCESSING,
@@ -236,14 +258,14 @@ bool dxvaRender::setup()
       D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
 
       //
-       if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+       if( ADM_FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
                  d3dDevice, displayWidth,displayHeight,
                  displayMode.Format, D3DPOOL_DEFAULT, &mySurface, NULL)))
        {
                   ADM_warning("D3D Cannot create surface\n");
                   return false;
        }
-       if( FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+       if( ADM_FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
                  d3dDevice, imageWidth,imageHeight,
                  yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
        {
@@ -261,7 +283,7 @@ bool dxvaRender::setup()
       //
 
 
-  if(FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
+  if(ADM_FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
   {
       ADM_warning("D3D Cannot set D3D viewport\n");
       return false;
@@ -331,7 +353,7 @@ bool dxvaRender::cleanup()
    {
       // we still have the YV12 surface, blit it again
       IDirect3DSurface9 *bBuffer;
-      if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+      if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
                                                 D3DBACKBUFFER_TYPE_MONO,
                                                 &bBuffer)))
       {
@@ -341,17 +363,17 @@ bool dxvaRender::cleanup()
       // data are in YV12 surface, blit it to mySurface
       // zoom and color conversion happen there
       IDirect3DDevice9_BeginScene(d3dDevice);
-      if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+      if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
                                               myYV12Surface,
-                                              NULL,
+                                              &panScan,
                                               bBuffer,
-                                              NULL,
+                                              &targetRect,
                                               D3DTEXF_LINEAR)))
                                               {
 
                                               }
       IDirect3DDevice9_EndScene(d3dDevice);
-      if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+      if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
       {
         ADM_warning("D3D Present failed\n");
       }
@@ -392,7 +414,7 @@ static bool d3dBlit(ADMImage *pic,ADM_PLANE plane,uint8_t *target,int targetPitc
 static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
 {
   D3DLOCKED_RECT     lock;;
-  if (FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+  if (ADM_FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
   {
       ADM_warning("D3D Cannot lock surface\n");
       return false;
@@ -413,7 +435,7 @@ static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
   dst+=(height/2)*(dStride/2);
   d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
 
-  if (FAILED(IDirect3DSurface9_UnlockRect(surface)))
+  if (ADM_FAILED(IDirect3DSurface9_UnlockRect(surface)))
   {
       ADM_warning("D3D Cannot unlock surface\n");
       return false;
@@ -427,7 +449,7 @@ static bool  ADMImage_To_argbSurface(ADMImage *pic, IDirect3DSurface9 *surface,A
 {
     D3DLOCKED_RECT     lock;
 
-    if (FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+    if (ADM_FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
     {
         ADM_warning("D3D Cannot lock surface\n");
         return false;
@@ -444,7 +466,7 @@ static bool  ADMImage_To_argbSurface(ADMImage *pic, IDirect3DSurface9 *surface,A
     dstPitch[1]=dstPitch[2]=0;
     scaler-> convertPlanes(sourcePitch,dstPitch, src, dst);
 
-    if (FAILED(IDirect3DSurface9_UnlockRect(surface)))
+    if (ADM_FAILED(IDirect3DSurface9_UnlockRect(surface)))
     {
         ADM_warning("D3D Cannot unlock surface\n");
         return false;
@@ -466,7 +488,7 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
       return false;
     }
    // upload....
-    if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+    if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
                                               D3DBACKBUFFER_TYPE_MONO,
                                               &bBuffer)))
     {
@@ -477,18 +499,19 @@ bool dxvaRender::displayImage_yv12(ADMImage *pic)
 
     // data are in YV12 surface, blit it to mySurface
     // zoom and color conversion happen there
-    IDirect3DDevice9_BeginScene(d3dDevice);
-    if (FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
-                                            myYV12Surface,
-                                            NULL,
-                                            bBuffer,
-                                            NULL,
-                                            D3DTEXF_LINEAR)))
-                                            {
 
-                                            }
+    if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+                    myYV12Surface,
+                    NULL,
+                    bBuffer,
+                    NULL,
+                    D3DTEXF_LINEAR)))
+                    {
+                           ADM_warning("StretchRec yv12 failed\n");
+                    }
+    IDirect3DDevice9_BeginScene(d3dDevice);
     IDirect3DDevice9_EndScene(d3dDevice);
-    if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+    if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
     {
       ADM_warning("D3D Present failed\n");
     }
@@ -503,7 +526,7 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
 {
   IDirect3DSurface9 *bBuffer;
   // 1 upload to myYV12 surface
-  if( FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+  if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
                                             D3DBACKBUFFER_TYPE_MONO,
                                             &bBuffer)))
   {
@@ -513,26 +536,84 @@ bool dxvaRender::displayImage_argb(ADMImage *pic)
 
   if(!ADMImage_To_argbSurface(pic,bBuffer,scaler))
   {
+    ADM_warning("Image to argb surface failed\n");
     return false;
   }
 
   IDirect3DDevice9_BeginScene(d3dDevice);
 
   IDirect3DDevice9_EndScene(d3dDevice);
-  if( FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+  if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
   {
     ADM_warning("D3D Present failed\n");
   }
 
   return true;
-
 }
+/**
+  \fn brief input is already a surface, in yv12 format
+*/
+bool dxvaRender::displayImage_surface(admDx2Surface *pic)
+{
+  IDirect3DSurface9 *bBuffer;
+  POINT point={0,0};
+  // 1 upload to myYV12 surface
+  if(ADM_FAILED(IDirect3DDevice9_UpdateSurface(d3dDevice,
+          pic->surface,   // src
+          &panScan,       // src rect
+          myYV12Surface, // dst
+          &point         // where to
+        )))
+        {
+            ADM_warning("Copying surface failed \n");
+            return false;
+        }
+ // upload....
+  if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
+                                            D3DBACKBUFFER_TYPE_MONO,
+                                            &bBuffer)))
+  {
+        ADM_warning("D3D Cannot create backBuffer\n");
+        return false;
+  }
+
+
+  // data are in YV12 surface, blit it to mySurface
+  // zoom and color conversion happen there
+
+  if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
+                  myYV12Surface,
+                  NULL,
+                  bBuffer,
+                  NULL,
+                  D3DTEXF_LINEAR)))
+                  {
+                         ADM_warning("StretchRec yv12 failed\n");
+                  }
+  IDirect3DDevice9_BeginScene(d3dDevice);
+  IDirect3DDevice9_EndScene(d3dDevice);
+  if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+  {
+    ADM_warning("D3D Present failed\n");
+  }
+
+  return true;
+}
+
 /**
   \fn displayImage
   \brief display an image
 */
 bool dxvaRender::displayImage(ADMImage *pic)
 {
+  if(pic->refType==ADM_HW_DXVA)
+  {
+      aprintf("Source is already a surface (dxva2 input)\n");
+      admDx2Surface *surface=(admDx2Surface *)pic->refDescriptor.refHwImage;
+      return displayImage_surface(surface);
+  }
+
+
 #if 1
   if(useYV12)
 #else
