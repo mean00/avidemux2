@@ -37,13 +37,7 @@ ENDMACRO(INSTALL_I18N _files)
 #
 MACRO(COMPILE_AVIDEMUX_TS_FILES ts_subdir _sources)
     IF(LRELEASE_EXECUTABLE)
-
-        IF(QT5_FOUND)
-            FILE(GLOB ts_files ${ts_subdir}/qtbase_*.ts)
-        ELSE(QT5_FOUND)
-            FILE(GLOB ts_files ${ts_subdir}/qt_*.ts)
-        ENDIF(QT5_FOUND)
- 
+        FILE(GLOB ts_files ${ts_subdir}/avidemux_*.ts)
 
         FOREACH(ts_input ${ts_files})
             GET_FILENAME_COMPONENT(_in       ${ts_input} ABSOLUTE)
