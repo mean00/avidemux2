@@ -138,7 +138,7 @@ uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
     return 0;
   while (in < border)
   {
-        if(in[2]>3)
+        if(in[1]) // cannot be 00 00 nor the next one
         {
           out[0]=in[0];
           out[1]=in[1];
