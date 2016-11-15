@@ -111,7 +111,11 @@ void loadTranslator(void)
     int nbLoaded=0;
     qtTranslator=new QTranslator();
     avidemuxTranslator=new QTranslator();
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
+#else
+    nbLoaded+=loadTranslation(qtTranslator, appdir + "qtbase_" + languageFile);
+#endif
     nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
     translatorLoaded = true;
     if(!nbLoaded) // Nothing to translate..
