@@ -154,7 +154,7 @@ void pulseSimpleAudioDevice::sendData(void)
 {
 int er;
     if(!instance) return ;
-	
+    
     mutex.lock();
     uint32_t avail=wrIndex-rdIndex;
     if(!avail)
@@ -172,7 +172,7 @@ int er;
     mutex.lock();
     rdIndex+=avail;
     mutex.unlock();
-	return ;
+    return ;
 
 }
 /**
