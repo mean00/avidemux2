@@ -189,6 +189,7 @@ extern int paintEngineType;
 
 const char* getNativeRendererDesc(int engine)
 {
+#if 0
 	switch (engine)
 	{
 		case QPaintEngine::X11:
@@ -208,7 +209,7 @@ const char* getNativeRendererDesc(int engine)
 		case QPaintEngine::Raster:
 			return QT_TRANSLATE_NOOP("uisupport","Default Raster");
 	}
-
+#endif
 	return "Qt";
 }
 

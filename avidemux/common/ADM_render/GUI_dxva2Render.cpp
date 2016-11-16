@@ -124,7 +124,7 @@ dxvaRender::~dxvaRender()
 {
     if(videoWidget)
     {
-        videoWidget->useExternalRedraw(true);
+        videoWidget->useExternalRedraw(false); // reactivate Qt double buffering
         videoWidget->setDrawer(NULL);
         videoWidget=NULL;
     }
@@ -222,7 +222,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
       return false;
     }
     videoWidget=(ADM_Qvideo *)info.widget;
-    videoWidget->useExternalRedraw(false);
+    videoWidget->useExternalRedraw(true); // deactivate Qt Double buffering
     videoWidget->setDrawer(this);
 
     ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d,zoom=%d, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,(int)zoom,(int)displayWidth,(int)displayHeight);
@@ -365,39 +365,13 @@ bool dxvaRender::cleanup()
  bool dxvaRender::refresh(void)
  {
    ADM_info("Refresh**\n");
-   //
-   if(useYV12)
+   #if 0
+   if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
    {
-      // we still have the YV12 surface, blit it again
-      IDirect3DSurface9 *bBuffer;
-      if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
-                                                D3DBACKBUFFER_TYPE_MONO,
-                                                &bBuffer)))
-      {
-            ADM_warning("D3D Cannot create backBuffer\n");
-            return false;
-      }
-      // data are in YV12 surface, blit it to mySurface
-      // zoom and color conversion happen there
-      if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
-                                              myYV12Surface,
-                                              &panScan,
-                                              bBuffer,
-                                              &targetRect,
-                                              D3DTEXF_LINEAR)))
-                                              {
-
-                                              }
-      IDirect3DDevice9_BeginScene(d3dDevice);
-      IDirect3DDevice9_EndScene(d3dDevice);
-      if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
-      {
         ADM_warning("D3D Present failed\n");
-      }
-      return true;
    }
-   // ARGB, data is lost...
-   return true;
+   #endif
+  return true;
  }
 /**
   \fn draw
