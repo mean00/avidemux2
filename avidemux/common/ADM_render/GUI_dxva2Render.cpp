@@ -113,6 +113,7 @@ dxvaRender::dxvaRender()
     mySurface=NULL;
     myYV12Surface=NULL;
     videoBuffer=NULL;
+    videoWidget=NULL;
     d3dHandle=admD3D::getHandle();
 
 }
@@ -121,6 +122,12 @@ dxvaRender::dxvaRender()
 */
 dxvaRender::~dxvaRender()
 {
+    if(videoWidget)
+    {
+        videoWidget->useExternalRedraw(true);
+        videoWidget->setDrawer(NULL);
+        videoWidget=NULL;
+    }
     ADM_info("dxva2/D3D clean up\n");
     cleanup();
     ADM_info("dxva2/D3D cleaned up\n");
@@ -207,9 +214,6 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         ADM_info("D3D YV12 is supported\n");
     }
 
-    videoWidget=(ADM_Qvideo *)info.widget;
-    videoWidget->useExternalRedraw(false);
-    videoWidget->setDrawer(this);
 
 
     if(!setup())
@@ -217,6 +221,9 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
       ADM_warning("Dxva/D3D setup failed\n");
       return false;
     }
+    videoWidget=(ADM_Qvideo *)info.widget;
+    videoWidget->useExternalRedraw(false);
+    videoWidget->setDrawer(this);
 
     ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d,zoom=%d, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,(int)zoom,(int)displayWidth,(int)displayHeight);
     return true;
