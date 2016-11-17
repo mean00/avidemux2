@@ -139,9 +139,71 @@ static bool ADM_FAILED(HRESULT hr)
     }
     return false;
 }
+/**
+  \fn checkDecoder
+  \brief check if the decoder advertised is actually working
+*/
+static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context)
+{
+    HRESULT hr;
+    unsigned int cfg_count = 0, best_score = 0;
+    DXVA2_ConfigPictureDecode *cfg_list = NULL;
+    bool   found=false;
+    const D3DFORMAT target_format = (const D3DFORMAT) MKTAG('N','V','1','2');
 
+    // initialize desc with dummy values
+    context->desc.SampleWidth=1920;
+    context->desc.SampleHeight=1080;
+    context->desc.Format=target_format;
+
+    hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, *guid, &(context->desc), NULL, &cfg_count, &cfg_list);
+    if (ADM_FAILED(hr)) {
+        ADM_warning("Unable to retrieve decoder configurations\n");
+        return false;
+    }
+
+    for (int i = 0; i < cfg_count; i++)
+    {
+        DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
+
+        unsigned score;
+        if (cfg->ConfigBitstreamRaw == 1)
+        {
+            ADM_info("\t has raw bistream\n");
+            score = 1;
+        }
+        else if (context->codec == AV_CODEC_ID_H264 && cfg->ConfigBitstreamRaw == 2)
+        {
+            ADM_info("\t has h264 raw bistream2\n");
+            score = 2;
+        }
+        else
+            continue;
+        if (IsEqualGUID(cfg->guidConfigBitstreamEncryption, DXVA2_NoEncrypt))
+        {
+            ADM_info("\t has no encrypt\n");
+            score += 16;
+        }
+        if (score > best_score)
+        {
+            best_score    = score;
+            context->pictureDecode = *cfg;
+            found=true;
+            ADM_info("\t best score\n");
+        }
+    }
+    CoTaskMemFree(cfg_list);
+
+    if (! found )
+    {
+        ADM_warning( "No valid decoder configuration available\n");
+        return false;
+    }
+    return true;
+}
 /**
  * \fn lookupCodec
+ * \brief find and populate the configuration for a given codec
  */
 static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list)
 {
@@ -186,69 +248,21 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         CoTaskMemFree(target_list);
         if (target_format)
         {
-            context->device_guid = *(mode->guid);
-            break;
+            if(checkDecoderConfiguration(mode->guid,context)) // does it work ?
+            {
+              context->device_guid = *(mode->guid);
+              break;
+            }
         }
     }
 
-
+    // Did we find a working one ?
     if (IsEqualGUID(context->device_guid, GUID_NULL))
     {
         ADM_info("No decoder device for codec %s found\n",codecName);
         return false;
     }
-    //--
-    unsigned int cfg_count = 0, best_score = 0;
-    DXVA2_ConfigPictureDecode *cfg_list = NULL;
-    bool   found=false;
-    // initialize desc with dummy values
-    context->desc.SampleWidth=1920;
-    context->desc.SampleHeight=1080;
-    context->desc.Format=target_format;
 
-    hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, context->device_guid, &(context->desc), NULL, &cfg_count, &cfg_list);
-    if (ADM_FAILED(hr)) {
-        ADM_warning("Unable to retrieve decoder configurations\n");
-        return false;
-    }
-
-    for (int i = 0; i < cfg_count; i++)
-    {
-        DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
-
-        unsigned score;
-        if (cfg->ConfigBitstreamRaw == 1)
-        {
-            ADM_info("\t has raw bistream\n");
-            score = 1;
-        }
-        else if (context->codec == AV_CODEC_ID_H264 && cfg->ConfigBitstreamRaw == 2)
-        {
-            ADM_info("\t has h264 raw bistream2\n");
-            score = 2;
-        }
-        else
-            continue;
-        if (IsEqualGUID(cfg->guidConfigBitstreamEncryption, DXVA2_NoEncrypt))
-        {
-            ADM_info("\t has no encrypt\n");
-            score += 16;
-        }
-        if (score > best_score)
-        {
-            best_score    = score;
-            context->pictureDecode = *cfg;
-            found=true;
-            ADM_info("\t best score\n");
-        }
-    }
-    CoTaskMemFree(cfg_list);
-
-    if (! found )
-    {
-        ADM_warning( "No valid decoder configuration available\n");
-        return false;
-    }
     //--
 
     ADM_info("DXVA2 support for  %s found\n",codecName);
