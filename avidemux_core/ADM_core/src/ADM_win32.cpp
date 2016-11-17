@@ -529,16 +529,16 @@ std::string utf8StringToAnsi(const char *utf8String)
    dupe.reserve(original.length());
    std::string::size_type xlastPos = 0;
    std::string::size_type findPos;
-   while( std::string::npos != ( findPos = original.find( "/""", xlastPos )))
+	 std::string to=std::string("\\\\");
+   while( std::string::npos != ( findPos = original.find( "/", xlastPos )))
    {
         dupe.append( original, xlastPos, findPos - xlastPos );
-        dupe += std::string("\\");
+        dupe += to;
         xlastPos = findPos + 1;
    }
    dupe += original.substr( xlastPos );
-
-    std::string fileName=ADM_getFileName(dupe);
-    std::string pathName=ADM_extractPath(dupe);
+   std::string fileName=ADM_getFileName(dupe);
+   std::string pathName=ADM_extractPath(dupe);
 
 
 

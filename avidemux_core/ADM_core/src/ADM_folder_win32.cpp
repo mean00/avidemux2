@@ -1,5 +1,5 @@
 /***************************************************************************
-                    
+
     copyright            : (C) 2006 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -89,7 +89,7 @@ char *ADM_getInstallRelativePath(const char *base1, const char *base2, const cha
 	wideCharStringToUtf8(wcModuleName, -1, moduleName);
 
 	char *slash = strrchr(moduleName, '\\');
-		
+
 	if (slash)
 		*slash = '\0';
 
@@ -559,8 +559,10 @@ const std::string ADM_getFileName(const std::string &str)
 {
     size_t idx=str.find_last_of ("\\");
     size_t idx2=str.find_last_of ("/");
-    
-    // no / nor \ 
+
+
+    // no / nor \  
+
     if(idx2==std::string::npos && idx==std::string::npos)
         return str;
     // Both, take the further one
@@ -569,7 +571,7 @@ const std::string ADM_getFileName(const std::string &str)
             return str.substr(idx2+1);
         else
             return str.substr(idx+1);
-    
+
     // Only one found
     if(idx2!=std::string::npos)
          return str.substr(idx2+1);
@@ -586,10 +588,10 @@ uint8_t ADM_renameFile(const char *source, const char *target)
     int targetFileNameLength = utf8StringToWideChar(target, -1, NULL);
     wchar_t wcFileSource[sourceFileNameLength];
     wchar_t wcFileTarget[targetFileNameLength];
-    
+
     utf8StringToWideChar(source, -1, wcFileSource);
     utf8StringToWideChar(target, -1, wcFileTarget);
-   
+
     if(!_wrename(wcFileSource,wcFileTarget)) return true;
     ADM_error("Failed to rename %s to %s\n",source,target);
     return false;
