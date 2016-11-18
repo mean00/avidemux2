@@ -418,6 +418,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
     ui.currentTime->setValidator(timeValidator);
     ui.currentTime->setInputMask("99:99:99.999");
+    // set the size of the current time display to fit the content
+    QString text=ui.currentTime->text();
+    QFontMetrics fm=ui.currentTime->fontMetrics();
+    int currentTimeWidth=fm.boundingRect(text).width()+16;
+    int currentTimeHeight=ui.currentTime->height();
+    ui.currentTime->setFixedSize(currentTimeWidth, currentTimeHeight);
+    ui.currentTime->adjustSize();
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
