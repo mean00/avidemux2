@@ -42,7 +42,7 @@ protected:
     int                   alignment;
 } ;
 /**
-    \class admVdpau
+    \class admDxva2
 */
 class admDxva2
 {
