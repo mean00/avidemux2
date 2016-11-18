@@ -421,7 +421,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     // set the size of the current time display to fit the content
     QString text=ui.currentTime->text();
     QFontMetrics fm=ui.currentTime->fontMetrics();
-    int currentTimeWidth=fm.boundingRect(text).width()+16;
+    int currentTimeWidth=fm.boundingRect(text).width()+20;
     int currentTimeHeight=ui.currentTime->height();
     ui.currentTime->setFixedSize(currentTimeWidth, currentTimeHeight);
     ui.currentTime->adjustSize();
