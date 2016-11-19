@@ -15,6 +15,8 @@ ENDIF(USE_NVENC)
 #@@
 ADM_FF_PATCH_IF_NEEDED()
 
+xadd(--enable-pthreads)
+
 if (USE_VDPAU)
 	xadd(--enable-vdpau)
 	set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vdpau  vc1_vdpau  mpeg1_vdpau  mpeg_vdpau  wmv3_vdpau)
