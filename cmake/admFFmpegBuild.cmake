@@ -1,1 +1,10 @@
-include(admFFmpegBuild_native)
+IF(WIN32)
+        IF(CROSS)
+                MESSAGE(STATUS "Using mingw Cross compiler setup")
+                include(admFFmpegBuild_crossMingw)
+        ENDIF(CROSS)
+
+ELSE(WIN32)
+        MESSAGE(STATUS "Using native unix setup")
+        include(admFFmpegBuild_native)
+ENDIF(WIN32)

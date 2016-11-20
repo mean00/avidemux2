@@ -67,22 +67,13 @@ MACRO(ADM_FF_PATCH_IF_NEEDED)
 		file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
 		foreach(patchFile ${patchFiles})
-	      get_filename_component(short ${patchFile}  NAME)
-	      MESSAGE(STATUS "-- Mine, Applying patch <${short}> --")
+	           get_filename_component(short ${patchFile}  NAME)
+	           MESSAGE(STATUS "-- Mine, Applying patch <${short}> --")
 				patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
 		endforeach(patchFile)
 
 	  #
-		if (UNIX )
-				MESSAGE(STATUS "Patching Linux common.mak")
-				patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/common.mak.diff")
-		endif (UNIX )
-	  IF(WIN32)
-	      IF("${CROSS_C_COMPILER}" STREQUAL "clang")
-				patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/clang_win32_workaround.diff")
-	                ENDIF("${CROSS_C_COMPILER}" STREQUAL "clang")
-	  ENDIF(WIN32)
-		message("")
+	  message("")
 	endif (FFMPEG_PERFORM_PATCH)
 ENDMACRO(ADM_FF_PATCH_IF_NEEDED)
 
@@ -259,9 +250,6 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 					WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
 
-	MESSAGE(STATUS "Patching config.mak - linux (2)")
-	patch_file("${FFMPEG_BINARY_DIR}" "${FFMPEG_PATCH_DIR}/config.mak.diff")
-	message("")
 
 
 	# Build FFmpeg

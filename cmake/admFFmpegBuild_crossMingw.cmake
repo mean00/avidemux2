@@ -7,6 +7,12 @@ ADM_FF_SET_DEFAULT()
 #@@
 ADM_FF_PATCH_IF_NEEDED()
 
+IF("${CROSS_C_COMPILER}" STREQUAL "clang")
+	patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/clang_win32_workaround.diff")
+ENDIF("${CROSS_C_COMPILER}" STREQUAL "clang")
+
+
+
 #@@
 ADM_FF_ADD_OPTIONS()
 
