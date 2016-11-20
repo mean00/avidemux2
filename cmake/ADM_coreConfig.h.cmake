@@ -38,7 +38,7 @@
 #ifdef _MSC_VER
 #	define ftello _ftelli64
 #	define fseeko _fseeki64
-#	define snprintf _snprintf
+// Not needed anymore #	define snprintf _snprintf
 #	define strcasecmp(x, y) _stricmp(x, y)
 #elif defined(__MINGW32__)
 #	define rindex strrchr
