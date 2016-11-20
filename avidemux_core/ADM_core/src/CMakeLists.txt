@@ -11,8 +11,10 @@ ELSEIF (APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp ADM_folder_mac.cpp)
 ELSEIF (UNIX)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_unix.cpp ADM_folder_linux.cpp)
+ELSEIF (MSVC)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_vs.cpp ADM_folder_vs.cpp)
 ELSE (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp) # Default
 ENDIF (MINGW)
 
 if (MSVC)
