@@ -17,9 +17,6 @@ ELSE (MINGW)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp) # Default
 ENDIF (MINGW)
 
-if (MSVC)
-	set(ADM_core_SRCS ${ADM_core_SRCS} dirent.c)
-endif (MSVC)
 
 IF (NOT APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_memcpy.cpp)

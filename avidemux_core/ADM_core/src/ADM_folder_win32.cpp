@@ -75,29 +75,6 @@ char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *
 	return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
 }
 
-char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
-{
-
-	wchar_t wcModuleName[MAX_PATH];
-
-	GetModuleFileNameW(0, wcModuleName, sizeof(wcModuleName) / sizeof(wchar_t));
-
-	int len = wideCharStringToUtf8(wcModuleName, -1, NULL);
-	char *moduleName = new char[len];
-
-	wideCharStringToUtf8(wcModuleName, -1, moduleName);
-
-	char *slash = strrchr(moduleName, '\\');
-
-	if (slash)
-		*slash = '\0';
-
-	char *relativePath = ADM_getRelativePath(moduleName, base1, base2, base3);
-
-	delete [] moduleName;
-
-	return relativePath;
-}
 
 /*
       Get the root directory for .avidemux stuff

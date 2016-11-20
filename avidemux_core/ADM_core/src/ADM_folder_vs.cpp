@@ -23,6 +23,8 @@
  #include "ADM_win32.h"
  #include "ADM_default.h"
 
+char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
+
  #undef fread
  #undef fwrite
  #undef fopen
@@ -182,6 +184,7 @@
  ------------------------------------------*/
  uint8_t ADM_mkdir(const char *dirname)
  {
+#if 0
  	DIR *dir = NULL;
  	uint8_t retVal = 0;
 
@@ -225,6 +228,8 @@
  	delete [] dirname2;
 
  	return retVal;
+#endif
+	return 0;
  }
  /**
   *  \fn buildDirectoryContent
@@ -233,6 +238,7 @@
   */
  uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[], int maxElems, const char *ext)
  {
+#if 0
  	DIR *dir;
  	struct dirent *direntry;
  	int dirmax = 0, len;
@@ -301,6 +307,8 @@
  	*outnb = dirmax;
 
  	return 1;
+#endif
+	return 0;
  }
 
  /**
@@ -311,8 +319,8 @@
 
      int sourceFileNameLength = utf8StringToWideChar(source, -1, NULL);
      int targetFileNameLength = utf8StringToWideChar(target, -1, NULL);
-     wchar_t wcFileSource[sourceFileNameLength];
-     wchar_t wcFileTarget[targetFileNameLength];
+     wchar_t *wcFileSource=(wchar_t*)_alloca(sourceFileNameLength*sizeof(wchar_t));
+     wchar_t *wcFileTarget= (wchar_t*)_alloca(targetFileNameLength * sizeof(wchar_t));
 
      utf8StringToWideChar(source, -1, wcFileSource);
      utf8StringToWideChar(target, -1, wcFileTarget);
