@@ -1578,11 +1578,13 @@ ADM_RENDER_TYPE UI_getPreferredRender(void)
         {
                 return RENDER_GTK;
         }
+#if 0
         if(strcmp(displ,":0") && strcmp(displ,":0.0"))
         {
                 printf("Looks like remote display, no Xv :%s\n",displ);
                 return RENDER_GTK;
         }
+#endif
 #endif
 
         if(prefs->get(VIDEODEVICE,&renderI)!=RC_OK)
