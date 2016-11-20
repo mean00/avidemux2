@@ -15,9 +15,10 @@ ENDIF(USE_NVENC)
 #@@
 ADM_FF_PATCH_IF_NEEDED()
 
-MESSAGE(STATUS "Patching Linux common.mak")
-patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/common.mak.diff")
-
+if (FFMPEG_PERFORM_PATCH)
+    MESSAGE(STATUS "Patching Linux common.mak")
+    patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/common.mak.diff")
+endif (FFMPEG_PERFORM_PATCH)
 
 xadd(--enable-pthreads)
 
