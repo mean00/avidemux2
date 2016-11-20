@@ -48,6 +48,7 @@ ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 
 #		ifndef _TIMESPEC_DEFINED
 #		define _TIMESPEC_DEFINED
+        #ifndef _MSC_VER
 
 	extern "C"
 	{
@@ -57,6 +58,7 @@ ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 			long int tv_nsec;
 		};
 	};
+        #endif
 #		endif
 
 #	define TIMZ int
