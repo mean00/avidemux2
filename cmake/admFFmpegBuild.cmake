@@ -2,6 +2,8 @@ IF(WIN32)
         IF(CROSS)
                 MESSAGE(STATUS "Using mingw Cross compiler setup")
                 include(admFFmpegBuild_crossMingw)
+        ELSE(CROSS)                
+                include(admFFmpegBuild_vs)
         ENDIF(CROSS)
 
 ELSE(WIN32)
