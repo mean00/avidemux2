@@ -35,18 +35,6 @@ static char *ADM_systemPluginSettings=NULL;
 #undef fwrite
 #undef fopen
 #undef fclose
-/**
-    \fn ADM_getPluginSettingsDir
-    \brief Get the folder containing the plugin settings (presets etc..)
-*/
-const char *ADM_getSystemPluginSettingsDir(void)
-{
-    if(ADM_systemPluginSettings) return ADM_systemPluginSettings;
-    const char *startDir=ADM_RELATIVE_LIB_DIR;
-    ADM_systemPluginSettings=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
-    return ADM_systemPluginSettings;
-}
-
 
 static void AddSeparator(char *path)
 {
@@ -54,14 +42,6 @@ static void AddSeparator(char *path)
 		strcat(path, ADM_SEPARATOR);
 }
 
-/**
- * 	\fn char *ADM_getHomeRelativePath(const char *base1, const char *base2=NULL,const char *base3=NULL);
- *  \brief Returns home directory +base 1 + base 2... The return value is a copy, and must be deleted []
- */
-char *ADM_getHomeRelativePath(const char *base1, const char *base2, const char *base3)
-{
-	return ADM_getRelativePath(ADM_getBaseDir(), base1, base2, base3);
-}
 
 char *ADM_getInstallRelativePath(const char *base1, const char *base2, const char *base3)
 {
