@@ -55,6 +55,10 @@ MACRO(ADM_FF_SET_DEFAULT)
     include(admFFmpegUtil)
     include(admFFmpegPrepareTar)
 
+    if (NOT FFMPEG_PREPARED)
+        include(admFFmpegPrepareGit)
+    endif (NOT FFMPEG_PREPARED)
+
 ENDMACRO(ADM_FF_SET_DEFAULT)
 
 
