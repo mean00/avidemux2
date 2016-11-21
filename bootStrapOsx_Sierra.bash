@@ -213,6 +213,8 @@ python $TOP/cmake/osx_libs_remap.py
 python $TOP/cmake/osx_libs_remap.py
 echo "** Finishing **"
 cp $TOP/cmake/osx/Info.plist $PREFIX/../
+mkdir $PREFIX/fonts
+cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
 mkdir -p $PREFIX/../MacOS
 cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS/Avidemux2.6.app
 chmod +x $PREFIX/../MacOS/Avidemux2.6.app
