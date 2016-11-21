@@ -45,7 +45,7 @@ IF(WIN32)
                 LINK_DIRECTORIES(${VS_ROOT}/bin)
                 # Add prefix and suffix so that libraries xxx.dll.a can be found
                 SET(CMAKE_FIND_LIBRARY_PREFIXES lib )
-                SET(CMAKE_FIND_LIBRARY_SUFFIXES .dll.a .a )
+                SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a )
 	ENDIF(NOT CROSS)
 ENDIF(WIN32)
 
