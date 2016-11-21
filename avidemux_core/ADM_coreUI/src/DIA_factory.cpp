@@ -475,6 +475,31 @@ void      diaElemToggleUint::enable(uint32_t onoff)
 		internalPointer->enable(onoff); 
 	}
 DIA_MKSTUBS(diaElemToggleUint)
+// ****************** diaElemAspectRatio ********************
+diaElemAspectRatio ::diaElemAspectRatio(uint32_t *num,uint32_t *den,const char *toggleTitle,const char *tip):
+	diaElem(ELEM_ASPECT_RATIO)
+{
+	ADM_assert(Factory); 
+	internalPointer=Factory->CreateAspectRatio(num,den,toggleTitle,tip);
+}
+diaElemAspectRatio ::~diaElemAspectRatio()
+	{
+	
+	ADM_assert(Factory); 
+	Factory->DestroyAspectRatio(internalPointer);
+	internalPointer=NULL;
+}
+void      diaElemAspectRatio::finalize(void)
+	{ 
+		ADM_assert(internalPointer); 
+		internalPointer->finalize(); 
+	}
+void      diaElemAspectRatio::enable(uint32_t onoff)
+	{ 
+		ADM_assert(internalPointer); 
+		internalPointer->enable(onoff); 
+	}
+DIA_MKSTUBS(diaElemAspectRatio)
 // ****************** diaElemToggleInt ********************
 diaElemToggleInt ::diaElemToggleInt(uint32_t *toggleValue,const char *toggleTitle, int32_t *uintval, 
 									const char *name,int32_t min,int32_t max,const char *tip):

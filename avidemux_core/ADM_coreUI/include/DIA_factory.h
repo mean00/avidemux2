@@ -631,7 +631,7 @@ public:
   int getRequiredLayout(void);
 };
 /**********************************************/
-typedef diaElem *(CREATE_ASPECTRATIO_T)(uint32_t *value, const char *title, const char *tip );
+typedef diaElem *(CREATE_ASPECTRATIO_T)(uint32_t *num, uint32_t *den, const char *title, const char *tip );
 class ADM_COREUI6_EXPORT diaElemAspectRatio : public diaElem
 {
 public:
@@ -644,6 +644,7 @@ public:
 	void getMe(void);
 	void enable(uint32_t onoff);
 	int getRequiredLayout(void);
+        void finalize(void);
 };
 
 /*********************************************/

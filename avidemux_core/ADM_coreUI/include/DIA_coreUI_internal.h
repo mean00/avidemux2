@@ -133,6 +133,10 @@ typedef struct
 // TimeStamp
     CREATE_TIMESTAMP_T   *CreateTimeStamp;
     DELETE_DIA_ELEM_T    *DestroyTimeStamp;
+// Aspect Ratio 
+    CREATE_ASPECTRATIO_T *CreateAspectRatio;
+    DELETE_DIA_ELEM_T    *DestroyAspectRatio;
+
 }FactoryDescriptor;
 //
 ADM_COREUI6_EXPORT uint8_t DIA_factoryInit(FactoryDescriptor *d);
