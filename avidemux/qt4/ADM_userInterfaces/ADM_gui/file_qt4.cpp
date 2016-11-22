@@ -9,7 +9,7 @@
 //
 //
 
-#include <dirent.h>
+
 
 #include <QtCore/QVariant>
 #include <qfiledialog.h>

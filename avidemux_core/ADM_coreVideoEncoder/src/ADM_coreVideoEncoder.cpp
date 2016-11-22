@@ -15,7 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+#include <ADM_inttype.h>
 #include <sstream>
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoder.h"

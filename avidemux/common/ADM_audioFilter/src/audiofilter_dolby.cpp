@@ -138,7 +138,11 @@ float ADMDolbyContext::DolbyShift_convolutionAlign3(float *oldie, float *coef)
    float *src2=coef;          // that one is always aligned to a 16 bytes boundary
     int mod16=(1+NZEROS)>>2;
     int left=(1+NZEROS)&3;
-    static float __attribute__ ((__aligned__ (16))) sum16[4]={0,0,0,0};
+#ifdef _MSC_VER
+    float sum16[4]={0,0,0,0}; // VS2015
+#else
+	static float __attribute__((__aligned__(16))) sum16[4] = { 0,0,0,0 };
+#endif
     float sum = 0;
     for(int i=0;i<mod16;i++)
     {

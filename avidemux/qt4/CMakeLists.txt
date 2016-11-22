@@ -113,7 +113,7 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR='\"${QT_EXTENSION}\"'")
 ###########################################
 # Version Info
 ###########################################
-if (WIN32)
+if (WIN32 )
         WINDRESIFY(src) 
         SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif (WIN32)

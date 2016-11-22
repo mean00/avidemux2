@@ -19,8 +19,13 @@
  *                                                                         *
  ***************************************************************************/
 # pragma once
+#ifdef _MSC_VER //VS2015
+#define ALIGN16 
+#else
+#define ALIGN16  __attribute__((__aligned__(16)))
+#endif
 
-static float __attribute__ ((__aligned__ (16))) xcoeffs[] = // 501 samples
+static float ALIGN16 xcoeffs[] = // 501 samples
 { 
 //    
 +0.0000000000, +0.0003214310, +0.0000000000, +0.0003252099,
