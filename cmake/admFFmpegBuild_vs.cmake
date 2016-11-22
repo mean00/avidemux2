@@ -1,10 +1,13 @@
-# VS Style management of ffmpeg
-# We raw import binaries for somewhere else as they have been compiled with mingw
+##########################################################################################"
+# VS Style management of ffmpeg libs
+# We raw import binaries from somewhere else as they have been compiled with mingw
 #
 # Add -DIMPORT_FOLDER=foobar on cmake
-
+#
+#
+##########################################################################################"
 IF(NOT IMPORT_FOLDER)
-        SET(IMPORT_FOLDER "d:\\import\\")
+        SET(IMPORT_FOLDER "d:\\import\\") #Default value
 ENDIF(NOT IMPORT_FOLDER)
 MESSAGE(STATUS "Importing ffmpeg binaries from ${IMPORT_FOLDER}")
 
@@ -17,6 +20,7 @@ set(LIBAVUTIL_LIB ${IMPORT_FOLDER}/lib/libavutil.dll.a)
 set(LIBPOSTPROC_LIB ${IMPORT_FOLDER}/lib/libpostproc.dll.a)
 set(LIBSWSCALE_LIB ${IMPORT_FOLDER}/lib/libswscale.dll.a)
 
+# Actual lib
 
 add_library(ADM_libswscale UNKNOWN IMPORTED)
 add_library(ADM_libpostproc UNKNOWN IMPORTED)
@@ -30,6 +34,56 @@ set_property(TARGET ADM_libpostproc PROPERTY IMPORTED_LOCATION "${LIBPOSTPROC_LI
 set_property(TARGET ADM_libavutil PROPERTY IMPORTED_LOCATION "${LIBAVUTIL_LIB}")
 set_property(TARGET ADM_libavcodec PROPERTY IMPORTED_LOCATION "${LIBAVCODEC_LIB}")
 set_property(TARGET ADM_libavformat PROPERTY IMPORTED_LOCATION "${LIBAVFORMAT_LIB}")
+
+# install .dll.a 
+ADM_INSTALL_LIB_FILES("${LIBAVCODEC_LIB}")
+ADM_INSTALL_LIB_FILES("${LIBAVFORMAT_LIB}")
+ADM_INSTALL_LIB_FILES("${LIBAVUTIL_LIB}")
+ADM_INSTALL_LIB_FILES("${LIBPOSTPROC_LIB}")
+ADM_INSTALL_LIB_FILES("${LIBSWSCALE_LIB}")
+#INSTALL .dll => TODO
+
+# install header
+INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
+
+INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/avcodec.h" "${IMPORT_FOLDER}/include/libavcodec/vdpau.h"
+        "${IMPORT_FOLDER}/include/libavcodec/version.h"
+        "${IMPORT_FOLDER}/include/libavcodec/audioconvert.h"
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
+
+INSTALL(FILES "${IMPORT_FOLDER}/include/libavformat/avformat.h" "${IMPORT_FOLDER}/include/libavformat/avio.h"
+        "${IMPORT_FOLDER}/include/libavformat/version.h"
+        "${IMPORT_FOLDER}/include/libavformat/flv.h" 
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavformat" COMPONENT dev)
+
+INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h" 
+        "${IMPORT_FOLDER}/include/libavutil/avutil.h"
+        "${IMPORT_FOLDER}/include/libavutil/buffer.h"
+        "${IMPORT_FOLDER}/include/libavutil/bswap.h" 
+        "${IMPORT_FOLDER}/include/libavutil/common.h"
+        "${IMPORT_FOLDER}/include/libavutil/cpu.h" 
+        "${IMPORT_FOLDER}/include/libavutil/frame.h"
+        "${IMPORT_FOLDER}/include/libavutil/log.h" 
+        "${IMPORT_FOLDER}/include/libavutil/mathematics.h"
+        "${IMPORT_FOLDER}/include/libavutil/mem.h" 
+        "${IMPORT_FOLDER}/include/libavutil/pixfmt.h"
+        "${IMPORT_FOLDER}/include/libavutil/pixdesc.h"
+        "${IMPORT_FOLDER}/include/libavutil/channel_layout.h"
+        "${IMPORT_FOLDER}/include/libavutil/error.h"
+        "${IMPORT_FOLDER}/include/libavutil/dict.h"
+        "${IMPORT_FOLDER}/include/libavutil/version.h"
+        "${IMPORT_FOLDER}/include/libavutil/time.h"
+        "${IMPORT_FOLDER}/include/libavutil/opt.h"
+        "${IMPORT_FOLDER}/include/libavutil/intfloat.h"
+        "${IMPORT_FOLDER}/include/libavutil/macros.h"
+        "${IMPORT_FOLDER}/include/libavutil/samplefmt.h"
+        "${IMPORT_FOLDER}/include/libavutil/rational.h" 
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
+
+INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale" COMPONENT dev)
 
 
 
