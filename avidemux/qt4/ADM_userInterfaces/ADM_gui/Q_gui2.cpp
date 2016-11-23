@@ -1037,6 +1037,7 @@ int UI_RunApp(void)
     bool autoUpdateEnabled=false;
     if(prefs->get(UPDATE_ENABLED,&autoUpdateEnabled))
     {
+#ifndef _MSC_VER
         if(autoUpdateEnabled)
         {
             // Mark last check
@@ -1054,6 +1055,7 @@ int UI_RunApp(void)
                 ADM_checkForUpdate(&MainWindow::updateCheckDone);
             }
         }
+#endif
     }
     
     myApplication->exec();

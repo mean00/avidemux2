@@ -255,7 +255,7 @@ ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint
     context->extradata_size=extraLen;
     codecContext=(void *)context;
     
- #warning  Ok, should we open the codec by itself ?
+// #warning  Ok, should we open the codec by itself ?
 
     
     AVBitStreamFilterContext *bsf;

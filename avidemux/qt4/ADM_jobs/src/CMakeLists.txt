@@ -2,6 +2,11 @@
 # Config
 ##########################################
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
+
+IF(MSVC)
+ADD_DEFINITIONS(-D_WINSOCKAPI_)
+ENDIF(MSVC)
+
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
 include_directories(../include ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})

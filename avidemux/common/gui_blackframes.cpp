@@ -119,7 +119,7 @@ void GUI_NextBlackFrame(void)
     admPreview::deferDisplay(true);
     ADMImage *rdr;
     
-#warning set real fps
+//#warning set real fps
     
     // guess ~ number of frames
     uint64_t duration=video_body->getVideoDuration();    

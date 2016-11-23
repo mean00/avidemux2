@@ -63,7 +63,7 @@ const char* qt4Translate(const char *__domainname, const char *__msgid)
 
 		(*map)[msgid] = buffer;
 	}
-#warning DANGEROUS FIXME
+//#warning DANGEROUS FIXME
 	return map->value(msgid); // dangerous
 }
 /**
