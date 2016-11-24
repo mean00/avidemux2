@@ -187,7 +187,7 @@ bool preferences::load()
         return true;
     }
     ADM_warning("An error happened while loading config\n");
-    return true;
+    return false;
 }
 
 /**
