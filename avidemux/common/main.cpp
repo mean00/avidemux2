@@ -90,7 +90,8 @@ static const char *getUISpecifSubfolder()
     {
         case ADM_UI_QT4:
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4
-            return QT_FLAVOR;
+#define MKFLAVOR(x) #x
+            return MKFLAVOR(QT_FLAVOR);
 #else
             return "qt4";
 #endif
@@ -170,11 +171,11 @@ static bool admDummyHwCleanup()
 int startAvidemux(int argc, char *argv[])
 {
 
+#define MKSTRING(x) #x
     printf("*************************\n");
-    printf("  Avidemux v%s", ADM_VERSION);
+    printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
 
 #if defined( ADM_SUBVERSION )
-#define MKSTRING(x) x
          printf(" (%s) .", MKSTRING(ADM_SUBVERSION));
 #endif
 

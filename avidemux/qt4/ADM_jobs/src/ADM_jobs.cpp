@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     printf("*************************\n");
     printf("  Avidemux v" VERSION);
 #if defined(ADM_SUBVERSION)
-#define MKSTRING(x) x
+#define MKSTRING(x) #x
      printf(" (%s)", MKSTRING(ADM_SUBVERSION));
 #endif
     printf("\n*************************\n");
