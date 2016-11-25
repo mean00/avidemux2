@@ -323,7 +323,9 @@ bool ADM_videoStreamCopyToAnnexB::getPacket(ADMBitstream *out)
     out->len=pktOut.size;
     
     if(ret>0)
-         av_free(pktOut.data);
+    {
+         av_freep(&(pktOut.data));
+    }
 
     
     
