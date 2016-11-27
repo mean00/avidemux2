@@ -37,6 +37,14 @@
 
 void abortExitHandler(void);
 
+typedef struct flavors
+{
+        const char *qt4;
+        const char *qt5;
+};
+
+static flavors myFlavors={"qt4","qt5"};
+
 #ifdef main
 extern "C"
 {
@@ -90,8 +98,7 @@ static const char *getUISpecifSubfolder()
     {
         case ADM_UI_QT4:
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4
-#define MKFLAVOR(x) #x
-            return MKFLAVOR(QT_FLAVOR);
+                return myFlavors.QT_FLAVOR;
 #else
             return "qt4";
 #endif
