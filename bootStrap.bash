@@ -20,6 +20,10 @@ COMPILER=""
 export QT_SELECT=5 # default for ubuntu, harmless for others
 export O_PARAL="-j $(nproc)"
 install_prefix="$default_install_prefix"
+# -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
+if [[ $(uname -m) = i?86 ]] ; then
+        export need_ae_lav_build_quirk=1
+fi
 fail()
 {
         echo "** Failed at $1**"
@@ -34,6 +38,7 @@ Process()
         export EXTRA=$3
         export DEBUG=""
         export ASAN=""
+        export BUILD_QUIRKS=""
         BUILDER="Unix Makefiles"
         if [ "x$debug" = "x1" ] ; then 
                 DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
@@ -49,11 +54,14 @@ Process()
         if [ "x$rebuild" != "x1" ] ; then
                 rm -Rf ./$BUILDDIR
         fi
+        if [ "x$need_ae_lav_build_quirk" = "x1" ] ; then
+                BUILD_QUIRKS="-DAE_LAVCODEC_BUILD_QUIRK=true"
+        fi
         if [ ! -e "$BUILDDIR" ] ; then
                 mkdir $BUILDDIR || fail mkdir
         fi
         cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim $INSTALL_PREFIX $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim $INSTALL_PREFIX $EXTRA $BUILD_QUIRKS $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
