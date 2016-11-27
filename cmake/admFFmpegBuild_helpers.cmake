@@ -80,7 +80,35 @@ MACRO(ADM_FF_PATCH_IF_NEEDED)
       message("")
     endif (FFMPEG_PERFORM_PATCH)
 ENDMACRO(ADM_FF_PATCH_IF_NEEDED)
+#
+# There is some weird escaping happing when using mingw+msvc
+# i.e. /D is escaped into d:\mingw\bin or something similiar
+#
+MACRO(ADM_FF_SPLIT flags type)
+     SET(foo "")
+     IF(MSVC)
+                MESSAGE(STATUS "Separating args <${flags}>")
+                SET(sep_flags ${flags})
+                separate_arguments(sep_flags)
+                MESSAGE(STATUS "Separating args <${sep_flags}>")
+                FOREACH(i ${sep_flags})
+                        MESSAGE(STATUS "   ${i}")
+                        string(REGEX REPLACE "^/" "//" flags2 ${i})
+                        string(REGEX REPLACE " /" "//" flags3 ${flags2})
+                        set(foo "${foo} ${flags3}")
+                ENDFOREACH(i ${sep_flags})
+        ELSE(MSVC)
+                set(foo "${flags}")
+        ENDIF(MSVC)
+        xadd(--extra-${type} "${foo}")
+ENDMACRO(ADM_FF_SPLIT flags type)
 
+MACRO(ADM_FF_SET_LD_FLAGS flags)
+                ADM_FF_SPLIT(${flags} "ldflags")
+ENDMACRO(ADM_FF_SET_LD_FLAGS flags)
+MACRO(ADM_FF_SET_C_FLAGS flags)
+                ADM_FF_SPLIT(${flags} "cflags")
+ENDMACRO(ADM_FF_SET_C_FLAGS flags)
 
 #
 #
@@ -170,14 +198,15 @@ ENDMACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
 MACRO(ADM_FF_SET_EXTRA_FLAGS)
         # nm should be ok if we do not cross compile
     if(CMAKE_LD_FLAGS)
-            xadd(--extra-ldflags ${CMAKE_LD_FLAGS})
+                ADM_FF_SET_LD_FLAGS("${CMAKE_LD_FLAGS}")
     endif(CMAKE_LD_FLAGS)
     if (CMAKE_C_FLAGS)
-          xadd(--extra-cflags ${CMAKE_C_FLAGS})
+                ADM_FF_SET_C_FLAGS("${CMAKE_C_FLAGS}")
     endif (CMAKE_C_FLAGS)
 
     if (CMAKE_SHARED_LINKER_FLAGS)
-            xadd(--extra-ldflags ${CMAKE_SHARED_LINKER_FLAGS})
+                
+            ADM_FF_SET_LD_FLAGS(${CMAKE_SHARED_LINKER_FLAGS})
     endif (CMAKE_SHARED_LINKER_FLAGS)
 
     if (VERBOSE)
@@ -262,9 +291,11 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
     convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
     configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
     registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
-
+    if(NOT MSVC)
+       SET(PARRALLEL "-j 4") 
+    endif(NOT MSVC)
     add_custom_target(         libavutil_dummy
-                                       COMMAND ${CMAKE_BUILD_TOOL}  -j 4 # We assume make or gnumake when host is unix
+                                       COMMAND ${CMAKE_BUILD_TOOL}  ${PARRALLEL} # We assume make or gnumake when host is unix
                                        WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 ENDMACRO(ADM_FF_BUILD_UNIX_STYLE)
 #
