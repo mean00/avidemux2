@@ -292,7 +292,7 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
     configure_file("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
     registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
     if(NOT MSVC)
-       SET(PARRALLEL "-j 4") 
+       SET(PARRALLEL "-j4") 
     endif(NOT MSVC)
     add_custom_target(         libavutil_dummy
                                        COMMAND ${CMAKE_BUILD_TOOL}  ${PARRALLEL} # We assume make or gnumake when host is unix
