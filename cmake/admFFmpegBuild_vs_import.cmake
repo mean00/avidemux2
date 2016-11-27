@@ -14,11 +14,11 @@ MESSAGE(STATUS "Importing ffmpeg binaries from ${IMPORT_FOLDER}")
 SET(LIB_IMPORT_FOLDER "${IMPORT_FOLDER}\\lib")
 INCLUDE_DIRECTORIES(${IMPORT_FOLDER}/include)
 LINK_DIRECTORIES(${IMPORT_FOLDER}/lib)
-set(LIBAVCODEC_LIB ${IMPORT_FOLDER}/lib/libavcodec.dll.a)
-set(LIBAVFORMAT_LIB ${IMPORT_FOLDER}/lib/libavformat.dll.a)
-set(LIBAVUTIL_LIB ${IMPORT_FOLDER}/lib/libavutil.dll.a)
-set(LIBPOSTPROC_LIB ${IMPORT_FOLDER}/lib/libpostproc.dll.a)
-set(LIBSWSCALE_LIB ${IMPORT_FOLDER}/lib/libswscale.dll.a)
+set(LIBAVCODEC_LIB ${IMPORT_FOLDER}/lib/avcodec.lib)
+set(LIBAVFORMAT_LIB ${IMPORT_FOLDER}/lib/avformat.lib)
+set(LIBAVUTIL_LIB ${IMPORT_FOLDER}/lib/avutil.lib)
+set(LIBPOSTPROC_LIB ${IMPORT_FOLDER}/lib/postproc.lib)
+set(LIBSWSCALE_LIB ${IMPORT_FOLDER}/lib/swscale.lib)
 
 # Actual lib
 
