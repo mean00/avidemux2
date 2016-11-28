@@ -190,7 +190,7 @@ char *ADM_strdup(const char *in)
 	if(!in)
 		return NULL;
 
-	uint32_t l = strlen(in);
+	uint32_t l = (uint32_t)strlen(in);
 	char *out;
 
 	out = (char*)ADM_alloc(l + 1);

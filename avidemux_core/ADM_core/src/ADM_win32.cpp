@@ -498,10 +498,10 @@ int wideCharStringToAnsi(const wchar_t *wideCharString, int wideCharStringLength
 
 static int utf8_to_wc(const char *in, wchar_t **out)
 {
-      int dirLength= utf8StringToWideChar(in, strlen(in), NULL) + 1;
+      int dirLength= (int)utf8StringToWideChar(in, strlen(in), NULL) + 1;
       wchar_t *wcDirectory=new wchar_t[dirLength];
       memset(wcDirectory,0,dirLength*sizeof(wchar_t));
-      utf8StringToWideChar(in, strlen(in),wcDirectory);
+      utf8StringToWideChar(in, (int)strlen(in),wcDirectory);
       *out=wcDirectory;
       return dirLength;
 }
@@ -542,8 +542,8 @@ std::string utf8StringToAnsi(const char *utf8String)
 
 
 
-    int filenameLength = fileName.size();
-    int directoryLength = pathName.size();
+    int filenameLength = (int)fileName.size();
+    int directoryLength = (int)pathName.size();
 
     printf("Path=%s\n",pathName.c_str());
     printf("Name=%s\n",fileName.c_str());
