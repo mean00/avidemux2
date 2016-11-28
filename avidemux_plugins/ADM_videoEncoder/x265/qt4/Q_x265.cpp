@@ -122,6 +122,8 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
         connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
+        connect(ui.maxBFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxBFramesSpinBox_valueChanged(int)));
+        connect(ui.bFrameRefComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bFrameRefComboBox_currentIndexChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
         connect(ui.cuTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(cuTreeCheckBox_toggled(bool)));
@@ -634,10 +636,48 @@ void x265Dialog::meSlider_valueChanged(int value)
 {
 	ui.meSpinBox->setValue(value);
 }
+
 void x265Dialog::quantiserSpinBox_valueChanged(int value)
 {
 	ui.quantiserSlider->setValue(value);
 }
+
+void x265Dialog::maxBFramesSpinBox_valueChanged(int value)
+{
+    // HEVC specification allows a maximum of 8 total reference frames only if B frames are disabled.
+    // Enforce the limit to ensure compliance.
+    if(!value)
+    {
+        ui.refFramesSpinBox->setMaximum(8);
+    }else // with B frames enabled, the maximum decreases to 7
+    {
+        if(ui.bFrameRefComboBox->currentIndex()>0)
+        { // max ref frames decreases further to 6 if B pyramid is enabled as well
+            ui.refFramesSpinBox->setMaximum(6);
+        }else
+        {
+            ui.refFramesSpinBox->setMaximum(7);
+        }
+    }
+}
+
+void x265Dialog::bFrameRefComboBox_currentIndexChanged(int index)
+{
+     if(ui.maxBFramesSpinBox->value()) // if B frames are enabled
+     {
+         if(index>0) // and B pyramid is enabled too, reduce max ref frames accordingly
+         {
+             ui.refFramesSpinBox->setMaximum(6);
+         }else
+         {
+             ui.refFramesSpinBox->setMaximum(7);
+         }
+     }else
+     {
+         ui.refFramesSpinBox->setMaximum(8);
+     }
+}
+
 void x265Dialog::meSpinBox_valueChanged(int value)
 {
 	ui.meSlider->setValue(value);
