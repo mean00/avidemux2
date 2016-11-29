@@ -124,8 +124,15 @@ endif (WIN32)
 # Executable
 ###########################################
 include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} ${ADM_EXE_SRCS})
-
+IF(MSVC)
+		SET(EXEC_TYPE "WIN32")
+ENDIF(MSVC)
+ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} ${EXEC_TYPE} ${ADM_EXE_SRCS})
+IF(MSVC)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} Qt5::WinMain)
+	set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+	set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
+ENDIF(MSVC)
 ###########################################
 # Construct common libraries
 ###########################################
