@@ -131,12 +131,18 @@
 
 class JSONNode {
 public:
+	LIBJSON_OBJECT(JSONNode);
     explicit JSONNode(char mytype = JSON_NODE) json_nothrow json_hot;
     #define DECLARE_CTOR(type) explicit JSONNode(const json_string & name_t, type value_t)
     DECLARE_FOR_ALL_TYPES(DECLARE_CTOR)
 
     JSONNode(const JSONNode & orig) json_nothrow json_hot;
     ~JSONNode(void) json_nothrow json_hot;
+    
+    #if (defined(JSON_PREPARSE) && defined(JSON_READ_PRIORITY))
+        static JSONNode stringType(const json_string & str);
+        void set_name_(const json_string & newname) json_nothrow json_write_priority;
+    #endif
 
     json_index_t size(void) const json_nothrow json_read_priority;
     bool empty(void) const json_nothrow json_read_priority;
@@ -153,15 +159,18 @@ public:
 	   void preparse(void) json_nothrow json_read_priority;
     #endif
 
-    //#ifdef JSON_DEPRECATED_FUNCTIONS
-	   json_string as_string(void) const json_nothrow json_read_priority;
-	   long as_int(void) const json_nothrow json_read_priority;
-	   json_number as_float(void) const json_nothrow json_read_priority;
-	   bool as_bool(void) const json_nothrow json_read_priority;
-    //#endif
-    JSONNode as_node(void) const json_nothrow json_read_priority;
-    JSONNode as_array(void) const json_nothrow json_read_priority;
 
+    json_string as_string(void) const json_nothrow json_read_priority;
+    json_int_t as_int(void) const json_nothrow json_read_priority;
+    json_number as_float(void) const json_nothrow json_read_priority;
+    bool as_bool(void) const json_nothrow json_read_priority;
+    
+    #ifdef JSON_CASTABLE
+	   JSONNode as_node(void) const json_nothrow json_read_priority;
+	   JSONNode as_array(void) const json_nothrow json_read_priority;
+	   void cast(char newtype) json_nothrow;
+    #endif
+    
     #ifdef JSON_BINARY
 	   std::string as_binary(void) const json_nothrow json_cold;
 	   void set_binary(const unsigned char * bin, size_t bytes) json_nothrow json_cold;
@@ -206,7 +215,6 @@ public:
     void merge(JSONNode & other) json_nothrow json_cold;
     void merge(unsigned int num, ...) json_nothrow json_cold;
     JSONNode duplicate(void) const json_nothrow;
-    void cast(char newtype) json_nothrow;
 
 
     //iterator
@@ -498,24 +506,16 @@ public:
 	   static void * getThisLock(JSONNode * pthis) json_nothrow json_cold;
     #endif
 
-    #ifdef JSON_UNIT_TEST
-	   static int getNodeAllocationCount(void);
-	   static int getNodeDeallocationCount(void);
-	   static int getInternalAllocationCount(void);
-	   static int getInternalDeallocationCount(void);
-	   static int getChildrenAllocationCount(void);
-	   static int getChildrenDeallocationCount(void);
-	   static void incAllocCount(void);
-	   static void decAllocCount(void);
-	   static void incinternalAllocCount(void);
-	   static void decinternalAllocCount(void);
-	   static void incChildrenAllocCount(void);
-	   static void decChildrenAllocCount(void);
-    #endif
-
     #ifdef JSON_WRITE_PRIORITY
-	   json_string write(void) const json_nothrow json_write_priority;
-	   json_string write_formatted(void) const json_nothrow json_write_priority;
+		#ifdef JSON_LESS_MEMORY
+			#define DEFAULT_APPROX_SIZE 8
+			#define DEFAULT_APPROX_SIZE_FORMATTED 16
+		#else
+			#define DEFAULT_APPROX_SIZE 1024
+			#define DEFAULT_APPROX_SIZE_FORMATTED 2048
+		#endif
+	   json_string write(size_t approxsize = DEFAULT_APPROX_SIZE) const json_nothrow json_write_priority;
+	   json_string write_formatted(size_t approxsize = DEFAULT_APPROX_SIZE_FORMATTED) const json_nothrow json_write_priority;
     #endif
 
     #ifdef JSON_DEBUG
@@ -534,11 +534,11 @@ JSON_PRIVATE
     #ifdef JSON_READ_PRIORITY
 	   //used by JSONWorker
 	   JSONNode(const json_string & unparsed) json_nothrow : internal(internalJSONNode::newInternal(unparsed)){ //root, specialized because it can only be array or node
-		  incAllocCount();
+		  LIBJSON_CTOR;
 	   }
     #endif
     JSONNode(internalJSONNode * internal_t) json_nothrow : internal(internal_t){ //do not increment anything, this is only used in one case and it's already taken care of
-	   incAllocCount();
+	   LIBJSON_CTOR;
     }
     JSONNode(bool, JSONNode & orig) json_nothrow json_hot;
 
@@ -595,22 +595,22 @@ inline JSONNode::JSONNode(char mytype) json_nothrow : internal(internalJSONNode:
 			 (mytype == JSON_BOOL) ||
 			 (mytype == JSON_ARRAY) ||
 			 (mytype == JSON_NODE), JSON_TEXT("Not a proper JSON type"));
-    incAllocCount();
+    LIBJSON_CTOR;
 }
 
 inline JSONNode::JSONNode(const JSONNode & orig) json_nothrow : internal(orig.internal -> incRef()){
-    incAllocCount();
+    LIBJSON_COPY_CTOR;
 }
 
 //this allows a temp node to simply transfer its contents, even with ref counting off
 inline JSONNode::JSONNode(bool, JSONNode & orig) json_nothrow : internal(orig.internal){
     orig.internal = 0;
-    incAllocCount();
+    LIBJSON_CTOR;
 }
 
 inline JSONNode::~JSONNode(void) json_nothrow{
     if (internal != 0) decRef();
-    decAllocCount();
+    LIBJSON_DTOR;
 }
 
 inline json_index_t JSONNode::size(void) const json_nothrow {
@@ -671,7 +671,6 @@ inline void JSONNode::set_name(const json_string & newname) json_nothrow{
 	   return static_cast<json_int_t>(*internal);
     }
 
-#include <cstdio>
     inline json_number JSONNode::as_float(void) const json_nothrow {
 	   JSON_CHECK_INTERNAL();
 	   return static_cast<json_number>(*internal);
@@ -690,7 +689,7 @@ inline void JSONNode::set_name(const json_string & newname) json_nothrow{
     }
 
     inline std::string JSONNode::as_binary(void) const json_nothrow {
-	   JSON_ASSERT_SAFE(type() == JSON_STRING, JSON_TEXT("using as_binary for a non-string type"), return EMPTY_STD_STRING;);
+	   JSON_ASSERT_SAFE(type() == JSON_STRING, JSON_TEXT("using as_binary for a non-string type"), return json_global(EMPTY_STD_STRING););
 	   JSON_CHECK_INTERNAL();
 	   return JSONBase64::json_decode64(as_string());
     }
@@ -742,6 +741,7 @@ inline JSONNode & JSONNode::operator = (const JSONNode & orig) json_nothrow {
 
 #define NODE_SET_TYPED(type)\
     inline JSONNode & JSONNode::operator = (type val) json_nothrow {\
+		LIBJSON_ASSIGNMENT;\
 	   JSON_CHECK_INTERNAL();\
 	   makeUniqueInternal();\
 	   internal -> Set(val);\
@@ -837,14 +837,14 @@ inline void JSONNode::decRef(void) json_nothrow { //decrements internal's counte
 #ifdef JSON_ITERATORS
     inline JSONNode::json_iterator JSONNode::begin(void) json_nothrow {
 	   JSON_CHECK_INTERNAL();
-	   JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+	   JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("begin"));
 	   makeUniqueInternal();
 	   return json_iterator(internal -> begin());
     }
 
     inline JSONNode::json_iterator JSONNode::end(void) json_nothrow {
 	   JSON_CHECK_INTERNAL();
-	   JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+	   JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("end"));
 	   makeUniqueInternal();
 	   return json_iterator(internal -> end());
     }
@@ -852,39 +852,39 @@ inline void JSONNode::decRef(void) json_nothrow { //decrements internal's counte
     #ifndef JSON_LIBRARY
 	   inline JSONNode::const_iterator JSONNode::begin(void) const json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("begin"));
 		  return JSONNode::const_iterator(internal -> begin());
 	   }
 
 	   inline JSONNode::const_iterator JSONNode::end(void) const json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("end"));
 		  return JSONNode::const_iterator(internal -> end());
 	   }
 
 	   inline JSONNode::reverse_iterator JSONNode::rbegin(void) json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("rbegin"));
 		  makeUniqueInternal();
 		  return JSONNode::reverse_iterator(internal -> end() - 1);
 	   }
 
 	   inline JSONNode::reverse_iterator JSONNode::rend(void) json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("rend"));
 		  makeUniqueInternal();
 		  return JSONNode::reverse_iterator(internal -> begin() - 1);
 	   }
 
 	   inline JSONNode::reverse_const_iterator JSONNode::rbegin(void) const json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("rbegin"));
 		  return JSONNode::reverse_const_iterator(internal -> end() - 1);
 	   }
 
 	   inline JSONNode::reverse_const_iterator JSONNode::rend(void) const json_nothrow {
 		  JSON_CHECK_INTERNAL();
-		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("iterating a non-iteratable node"));
+		  JSON_ASSERT(type() == JSON_NODE || type() == JSON_ARRAY, json_global(ERROR_NON_ITERATABLE) + JSON_TEXT("rend"));
 		  return JSONNode::reverse_const_iterator(internal -> begin() - 1);
 	   }
 
@@ -923,16 +923,22 @@ inline void JSONNode::decRef(void) json_nothrow { //decrements internal's counte
 #endif
 
 #ifdef JSON_WRITE_PRIORITY
-    inline json_string JSONNode::write(void) const json_nothrow {
-	   JSON_CHECK_INTERNAL();
-	   JSON_ASSERT_SAFE(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("Writing a non-writable node"), return EMPTY_JSON_STRING;);
-	   return internal -> Write(0xFFFFFFFF, true);
+    inline json_string JSONNode::write(size_t approxsize) const json_nothrow {
+	    JSON_CHECK_INTERNAL();
+	    JSON_ASSERT_SAFE(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("Writing a non-writable node"), return json_global(EMPTY_JSON_STRING););
+		json_string result;
+		result.reserve(approxsize);
+		internal -> Write(0xFFFFFFFF, true, result);
+		return result;
     }
 
-    inline json_string JSONNode::write_formatted(void) const json_nothrow {
-	   JSON_CHECK_INTERNAL();
-	   JSON_ASSERT_SAFE(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("Writing a non-writable node"), return EMPTY_JSON_STRING;);
-	   return internal -> Write(0, true);
+    inline json_string JSONNode::write_formatted(size_t approxsize) const json_nothrow {
+	    JSON_CHECK_INTERNAL();
+	    JSON_ASSERT_SAFE(type() == JSON_NODE || type() == JSON_ARRAY, JSON_TEXT("Writing a non-writable node"), return json_global(EMPTY_JSON_STRING););
+		json_string result;
+		result.reserve(approxsize);
+		internal -> Write(0, true, result);
+		return result;
     }
 
 #endif
@@ -968,52 +974,6 @@ inline void JSONNode::decRef(void) json_nothrow { //decrements internal's counte
 	   }
     #endif
 #endif
-
-
-inline void JSONNode::deleteJSONNode(JSONNode * ptr) json_nothrow {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   ptr -> ~JSONNode();
-	   libjson_free<JSONNode>(ptr);
-    #else
-	   delete ptr;
-    #endif
-}
-
-inline JSONNode * _newJSONNode(const JSONNode & orig) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<JSONNode>(1)) JSONNode(orig);
-    #else
-	   return new JSONNode(orig);
-    #endif
-}
-
-inline JSONNode * JSONNode::newJSONNode(const JSONNode & orig    JSON_MUTEX_COPY_DECL) {
-    #ifdef JSON_MUTEX_CALLBACKS
-	   if (parentMutex != 0){
-		  JSONNode * temp = _newJSONNode(orig);
-		  temp -> set_mutex(parentMutex);
-		  return temp;
-	   }
-    #endif
-    return _newJSONNode(orig);
-}
-
-inline JSONNode * JSONNode::newJSONNode(internalJSONNode * internal_t) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<JSONNode>(1)) JSONNode(internal_t);
-    #else
-	   return new JSONNode(internal_t);
-    #endif
-}
-
-inline JSONNode * JSONNode::newJSONNode_Shallow(const JSONNode & orig) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<JSONNode>(1)) JSONNode(true, const_cast<JSONNode &>(orig));
-    #else
-	   return new JSONNode(true, const_cast<JSONNode &>(orig));
-    #endif
-}
-
 
 #ifdef JSON_LESS_MEMORY
     #ifdef __GNUC__

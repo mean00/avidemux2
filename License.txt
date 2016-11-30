@@ -1,21 +1,5 @@
 Avidemux is GPL V2.
 It contains other software included as source with the following licenses :
-Name    : Secret Rabit Code
-URL     : http://www.mega-nerd.com/SRC
-License : GPL 
-
-Name   : BVecor
-URL    : http://berenger.eu/blog/
-License: LGPL
-
-Name    : ffmpeg
-URL     : http://www.ffmpeg.org
-License : GPL >=2
-
-Name   : fglrx_info
-URL    : Splitted-Desktop Systems
-License: GPLv2
-
 Name   : liba52
 URL    : http://liba52.sf.net
 License: GPL
@@ -24,13 +8,6 @@ Name    : Mad
 URL     : http://www.underbit.com/products/mad
 License : GPL
 
-Name   :  TwoLame
-URL    :  http://twolame.sf.net
-License:  LGPL
-
-URL    : http://mp4v2.googlecode.com/svn
-License: LGPL
-Rev: 485
 Name   : Spidermonky
 URL    : https://developer.mozilla.org/en/SpiderMonkey
 License: GPLv2
@@ -39,11 +16,38 @@ Name : Tinypy
 URL: http://www.tinypy.org
 License : MIT + PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2 
 
+Name   :  TwoLame
+URL    :  http://twolame.sf.net
+License:  LGPL
+
+URL    : http://mp4v2.googlecode.com/svn
+License: LGPL
+Rev: 485
 Name    : libass
-URL     : https://code.google.com/p/libass/
+URL     : https://github.com/libass/libass.git
 License : GPL >=2
-Version : 0.10.1
+Version : commit 23de9995103c16ceceba19cae87e328be12fa8e4 / 3 August , slightly more recent than 0.12.3
+
+Name    : Secret Rabit Code
+URL     : http://www.mega-nerd.com/SRC
+License : GPL 
 
 URL    : https://github.com/saintdev/libmkv.git
 License:  GPL
 Rev: 0.6.5.1 / d2906c03cc8f91fca0074e02bb14504a0e85bce6
+Name   : fglrx_info
+URL    : Splitted-Desktop Systems
+License: GPLv2
+
+Name    : ffmpeg
+URL     : http://www.ffmpeg.org
+License : GPL >=2
+
+Name    : libjson
+URL     : https://sourceforge.net/projects/libjson/
+License : GPL 
+
+Name   : BVecor
+URL    : http://berenger.eu/blog/
+License: LGPL
+

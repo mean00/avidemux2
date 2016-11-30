@@ -4,9 +4,11 @@
 #include "JSONDebug.h"
 #include "JSONChildren.h"
 #include "JSONMemory.h"
+#include "JSONGlobals.h"
 #ifdef JSON_DEBUG
     #include <climits>  //to check int value
 #endif
+#include "JSONSharedString.h"
 
 #ifdef JSON_LESS_MEMORY
     #ifdef __GNUC__
@@ -58,13 +60,6 @@ class JSONNode;  //forward declaration
     #define initializeComment(x)
 #endif
 
-#ifndef JSON_UNIT_TEST
-    #define incAllocCount() (void)0
-    #define decAllocCount() (void)0
-    #define incinternalAllocCount() (void)0
-    #define decinternalAllocCount() (void)0
-#endif
-
 #ifdef JSON_LESS_MEMORY
     #define CHILDREN _value.Children
     #define DELETE_CHILDREN()\
@@ -85,6 +80,7 @@ class JSONNode;  //forward declaration
 
 class internalJSONNode {
 public:
+	LIBJSON_OBJECT(internalJSONNode);
     internalJSONNode(char mytype = JSON_NULL) json_nothrow json_hot;
     #ifdef JSON_READ_PRIORITY
 	   internalJSONNode(const json_string & unparsed) json_nothrow json_hot;
@@ -192,19 +188,16 @@ public:
 	   void _set_mutex(void * mutex, bool unset = true) json_nothrow json_cold;
 	   void _unset_mutex(void) json_nothrow json_cold;
     #endif
-    #ifdef JSON_UNIT_TEST
-	   static void incinternalAllocCount(void) json_nothrow;
-	   static void decinternalAllocCount(void) json_nothrow;
-    #endif
 
     #ifdef JSON_WRITE_PRIORITY
-	   json_string WriteName(bool formatted, bool arrayChild) const json_nothrow json_write_priority;
+		void DumpRawString(json_string & output) const json_nothrow json_write_priority;
+	   void WriteName(bool formatted, bool arrayChild, json_string & output) const json_nothrow json_write_priority;
 	   #ifdef JSON_ARRAY_SIZE_ON_ONE_LINE
-		  json_string WriteChildrenOneLine(unsigned int indent) const json_nothrow json_write_priority;
+		  void WriteChildrenOneLine(unsigned int indent, json_string & output) const json_nothrow json_write_priority;
 	   #endif
-	   json_string WriteChildren(unsigned int indent) const json_nothrow json_write_priority;
-	   json_string WriteComment(unsigned int indent) const json_nothrow json_write_priority;
-	   json_string Write(unsigned int indent, bool arrayChild) const json_nothrow json_write_priority;
+	   void WriteChildren(unsigned int indent, json_string & output) const json_nothrow json_write_priority;
+	   void WriteComment(unsigned int indent, json_string & output) const json_nothrow json_write_priority;
+	   void Write(unsigned int indent, bool arrayChild, json_string & output) const json_nothrow json_write_priority;
     #endif
 
 
@@ -301,10 +294,10 @@ inline internalJSONNode::internalJSONNode(char mytype) json_nothrow : _type(myty
     initializeMutex(0)
     initializeRefCount(1)
     initializeFetch(true)
-    initializeComment(EMPTY_JSON_STRING)
+    initializeComment(json_global(EMPTY_JSON_STRING))
     initializeChildren((_type == JSON_NODE || _type == JSON_ARRAY) ? jsonChildren::newChildren() : 0){
 
-    incinternalAllocCount();
+    LIBJSON_CTOR;
 
     #ifdef JSON_LESS_MEMORY
 	   //if not less memory, its in the initialization list
@@ -353,9 +346,6 @@ inline void internalJSONNode::setname(const json_string & newname) json_nothrow 
 
 #ifdef JSON_COMMENTS
     inline void internalJSONNode::setcomment(const json_string & comment) json_nothrow {
-	   #ifdef JSON_LESS_MEMORY
-		  JSON_ASSERT(comment.capacity() == comment.length(), JSON_TEXT("comment object too large"));
-	   #endif
 	   _comment = comment;
     }
 
@@ -367,7 +357,7 @@ inline void internalJSONNode::setname(const json_string & newname) json_nothrow 
 inline bool internalJSONNode::IsEqualTo(const json_string & val) const json_nothrow {
     if (type() != JSON_STRING) return false;
     Fetch();
-    return val == _string;
+    return _string == val;
 }
 
 inline bool internalJSONNode::IsEqualTo(bool val) const json_nothrow {
@@ -422,13 +412,13 @@ inline bool internalJSONNode::Fetched(void) const json_nothrow {
 }
 
 inline JSONNode ** internalJSONNode::begin(void) const json_nothrow {
-    JSON_ASSERT_SAFE(isContainer(), JSON_TEXT("calling begin on non-container type"), return 0;);
+    JSON_ASSERT_SAFE(isContainer(), json_global(ERROR_NON_CONTAINER) + JSON_TEXT("begin"), return 0;);
     Fetch();
     return CHILDREN -> begin();
 }
 
 inline JSONNode ** internalJSONNode::end(void) const json_nothrow {
-    JSON_ASSERT_SAFE(isContainer(), JSON_TEXT("calling end on non-container type"), return 0;);
+    JSON_ASSERT_SAFE(isContainer(), json_global(ERROR_NON_CONTAINER) + JSON_TEXT("end"), return 0;);
     Fetch();
     return CHILDREN -> end();
 }
@@ -445,7 +435,7 @@ inline JSONNode * internalJSONNode::at(json_index_t pos) json_nothrow {
     inline void internalJSONNode::reserve(json_index_t siz) json_nothrow
 #endif
 {
-    JSON_ASSERT_SAFE(isContainer(), JSON_TEXT("calling reserve on non-container type"), return;);
+    JSON_ASSERT_SAFE(isContainer(), json_global(ERROR_NON_CONTAINER) + JSON_TEXT("reserve"), return;);
     Fetch();
     jsonChildren::reserve2(CHILDREN, siz);
 }
@@ -464,8 +454,8 @@ inline JSONNode * internalJSONNode::at(json_index_t pos) json_nothrow {
 
     #define IMP_SMALLER_INT_CAST_OP(_type, type_max, type_min)\
 	   inline internalJSONNode::operator _type() const json_nothrow {\
-		  JSON_ASSERT(_value._number > type_min, _string + json_string(JSON_TEXT(" is outside the lower range of ")) + JSON_TEXT(#_type));\
-		  JSON_ASSERT(_value._number < type_max, _string + json_string(JSON_TEXT(" is outside the upper range of ")) + JSON_TEXT(#_type));\
+		  JSON_ASSERT(_value._number > type_min, _string + json_global(ERROR_LOWER_RANGE) + JSON_TEXT(#_type));\
+		  JSON_ASSERT(_value._number < type_max, _string + json_global(ERROR_UPPER_RANGE) + JSON_TEXT(#_type));\
 		  JSON_ASSERT(_value._number == (json_number)((_type)(_value._number)), json_string(JSON_TEXT("(")) + json_string(JSON_TEXT(#_type)) + json_string(JSON_TEXT(") will truncate ")) + _string);\
 		  return (_type)static_cast<BASE_CONVERT_TYPE>(*this);\
 	   }
@@ -503,56 +493,6 @@ inline internalJSONNode::operator json_string() const json_nothrow {
 	   }
     #endif
 #endif
-
-
-
-
-/*
-    These functions are to allow allocation to be completely controlled by the callbacks
-*/
-
-inline void internalJSONNode::deleteInternal(internalJSONNode * ptr) json_nothrow {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   ptr -> ~internalJSONNode();
-	   libjson_free<internalJSONNode>(ptr);
-    #else
-	   delete ptr;
-    #endif
-}
-
-inline internalJSONNode * internalJSONNode::newInternal(char mytype) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<internalJSONNode>(1)) internalJSONNode(mytype);
-    #else
-	   return new internalJSONNode(mytype);
-    #endif
-}
-
-#ifdef JSON_READ_PRIORITY
-inline internalJSONNode * internalJSONNode::newInternal(const json_string & unparsed) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<internalJSONNode>(1)) internalJSONNode(unparsed);
-    #else
-	   return new internalJSONNode(unparsed);
-    #endif
-}
-
-inline internalJSONNode * internalJSONNode::newInternal(const json_string & name_t, const json_string & value_t) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<internalJSONNode>(1)) internalJSONNode(name_t, value_t);
-    #else
-	   return new internalJSONNode(name_t, value_t);
-    #endif
-}
-#endif
-
-inline internalJSONNode * internalJSONNode::newInternal(const internalJSONNode & orig) {
-    #ifdef JSON_MEMORY_CALLBACKS
-	   return new(json_malloc<internalJSONNode>(1)) internalJSONNode(orig);
-    #else
-	   return new internalJSONNode(orig);
-    #endif
-}
 
 #ifdef JSON_LESS_MEMORY
     #ifdef __GNUC__

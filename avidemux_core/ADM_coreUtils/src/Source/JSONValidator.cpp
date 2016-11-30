@@ -24,6 +24,16 @@ bool JSONValidator::isValidNumber(const json_char * & ptr) json_nothrow {
 		  case JSON_TEXT('+'):
 	   #endif
 	   case JSON_TEXT('-'):
+		#ifdef JSON_STRICT
+			switch(*(ptr + 1)){
+				case '.':
+				case 'e':
+				case 'E':
+				case '\0':
+					return false;
+			}
+			break;
+		#endif
 	   case JSON_TEXT('1'):
 	   case JSON_TEXT('2'):
 	   case JSON_TEXT('3'):
@@ -199,16 +209,18 @@ bool JSONValidator::isValidNumber(const json_char * & ptr) json_nothrow {
     #define LETTERCHECK(x, y)\
 	   if (json_unlikely(*++ptr != JSON_TEXT(x))) return false
 #endif
-bool JSONValidator::isValidMember(const json_char * & ptr) json_nothrow {
+bool JSONValidator::isValidMember(const json_char * & ptr  DEPTH_PARAM) json_nothrow {
     //ptr is on the first character of the member
     //ptr will end up immediately after the last character in the member
     switch(*ptr){
 	   case JSON_TEXT('\"'):
 		  return isValidString(++ptr);
 	   case JSON_TEXT('{'):
-		  return isValidObject(++ptr);
+		  INC_DEPTH();
+		  return isValidObject(++ptr  DEPTH_ARG(depth_param));
 	   case JSON_TEXT('['):
-		  return isValidArray(++ptr);
+		  INC_DEPTH();
+		  return isValidArray(++ptr  DEPTH_ARG(depth_param));
 	   LETTERCASE('t', 'T'):
 		  LETTERCHECK('r', 'R');
 		  LETTERCHECK('u', 'U');
@@ -267,7 +279,7 @@ bool JSONValidator::isValidString(const json_char * & ptr) json_nothrow {
 				    if (json_unlikely(!isHex(*++ptr))) return false;
 				    if (json_unlikely(!isHex(*++ptr))) return false;
 				    break;
-				#ifndef JSON_OCTAL
+				#ifdef JSON_OCTAL
 				    #ifdef __GNUC__
 				    case JSON_TEXT('0') ... JSON_TEXT('7'):  //octal
 				    #else
@@ -299,13 +311,13 @@ bool JSONValidator::isValidString(const json_char * & ptr) json_nothrow {
     return false;
 }
 
-bool JSONValidator::isValidNamedObject(const json_char * &ptr) json_nothrow {
+bool JSONValidator::isValidNamedObject(const json_char * &ptr  DEPTH_PARAM) json_nothrow {
     if (json_unlikely(!isValidString(++ptr))) return false;
-    if (json_unlikely(*ptr++ != ':')) return false;
-    if (json_unlikely(!isValidMember(ptr))) return false;
+    if (json_unlikely(*ptr++ != JSON_TEXT(':'))) return false;
+    if (json_unlikely(!isValidMember(ptr  DEPTH_ARG(depth_param)))) return false;
     switch(*ptr){
 	   case JSON_TEXT(','):
-		  return isValidNamedObject(++ptr);
+		  return isValidNamedObject(++ptr  DEPTH_ARG(depth_param));
 	   case JSON_TEXT('}'):
 		  ++ptr;
 		  return true;
@@ -314,13 +326,13 @@ bool JSONValidator::isValidNamedObject(const json_char * &ptr) json_nothrow {
     }
 }
 
-bool JSONValidator::isValidObject(const json_char * & ptr) json_nothrow {
+bool JSONValidator::isValidObject(const json_char * & ptr  DEPTH_PARAM) json_nothrow {
     //ptr should currently be pointing past the {, so this must be the start of a name, or the closing }
     //ptr will end up past the last }
     do{
 	   switch(*ptr){
 		  case JSON_TEXT('\"'):
-			 return isValidNamedObject(ptr);
+			 return isValidNamedObject(ptr  DEPTH_ARG(depth_param));
 		  case JSON_TEXT('}'):
 			 ++ptr;
 			 return true;
@@ -331,7 +343,7 @@ bool JSONValidator::isValidObject(const json_char * & ptr) json_nothrow {
     return false;
 }
 
-bool JSONValidator::isValidArray(const json_char * & ptr) json_nothrow {
+bool JSONValidator::isValidArray(const json_char * & ptr  DEPTH_PARAM) json_nothrow {
     //ptr should currently be pointing past the [, so this must be the start of a member, or the closing ]
     //ptr will end up past the last ]
     do{
@@ -340,7 +352,7 @@ bool JSONValidator::isValidArray(const json_char * & ptr) json_nothrow {
 			 ++ptr;
 			 return true;
 		  default:
-			 if (json_unlikely(!isValidMember(ptr))) return false;
+			 if (json_unlikely(!isValidMember(ptr  DEPTH_ARG(depth_param)))) return false;
 			 switch(*ptr){
 				case JSON_TEXT(','):
 				    break;
@@ -360,17 +372,33 @@ bool JSONValidator::isValidRoot(const json_char * json) json_nothrow {
     const json_char * ptr = json;
     switch(*ptr){
 	   case JSON_TEXT('{'):
-		  if (json_likely(isValidObject(++ptr))){
+		  if (json_likely(isValidObject(++ptr  DEPTH_ARG(1)))){
 			 return *ptr == JSON_TEXT('\0');
 		  }
 		  return false;
 	   case JSON_TEXT('['):
-		  if (json_likely(isValidArray(++ptr))){
+		  if (json_likely(isValidArray(++ptr  DEPTH_ARG(1)))){
 			 return *ptr == JSON_TEXT('\0');
 		  }
 		  return false;
     }
     return false;
 }
+
+#ifdef JSON_STREAM
+//It has already been checked for a complete structure, so we know it's not complete
+bool JSONValidator::isValidPartialRoot(const json_char * json) json_nothrow {
+	const json_char * ptr = json;
+    switch(*ptr){
+		case JSON_TEXT('{'):
+			JSON_ASSERT_SAFE(!isValidObject(++ptr  DEPTH_ARG(1)), JSON_TEXT("Partial Object seems to be valid"), );
+			return *ptr == JSON_TEXT('\0');
+		case JSON_TEXT('['):
+			JSON_ASSERT_SAFE(!isValidArray(++ptr  DEPTH_ARG(1)), JSON_TEXT("Partial Object seems to be valid"), );
+			return *ptr == JSON_TEXT('\0');
+    }
+    return false;
+}
+#endif
 
 #endif

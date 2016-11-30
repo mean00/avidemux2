@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_GNU_C_HEADER
+#define JSON_GUN_C_HEADER
+
 #ifdef __GNUC__
 
     #define json_deprecated(method, warning) method __attribute__((deprecated))
@@ -62,3 +64,4 @@
 
 #endif
 
+#endif

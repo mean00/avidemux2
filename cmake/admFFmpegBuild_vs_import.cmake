@@ -7,7 +7,7 @@
 #
 ##########################################################################################"
 IF(NOT IMPORT_FOLDER)
-        SET(IMPORT_FOLDER "d:\\import\\") #Default value
+        SET(IMPORT_FOLDER "d://import//") #Default value
 ENDIF(NOT IMPORT_FOLDER)
 MESSAGE(STATUS "Importing ffmpeg binaries from ${IMPORT_FOLDER}")
 

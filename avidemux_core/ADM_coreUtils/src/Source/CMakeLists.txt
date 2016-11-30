@@ -2,7 +2,7 @@ SET(ADM_LIB ADM_json)
 
 SET(${ADM_LIB}_SRCS 
 internalJSONNode.cpp
-JSON_Base64.cpp
+#JSON_Base64.cpp
 JSONChildren.cpp
 JSONDebug.cpp
 JSONIterators.cpp

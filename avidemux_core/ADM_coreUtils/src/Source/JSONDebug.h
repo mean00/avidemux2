@@ -1,7 +1,8 @@
-#ifndef JSON_DEBUG_H
-#define JSON_DEBUG_H
+#ifndef LIBJSON_GUARD_DEBUG_H
+#define LIBJSON_GUARD_DEBUG_H
 
 #include "JSONDefs.h"
+#include "JSONStats.h"
 
 #ifdef JSON_DEBUG
     #ifdef JSON_SAFE
@@ -28,7 +29,7 @@
     class JSONDebug {
     public:
 	   #ifndef JSON_STDERROR
-		  static void register_callback(json_error_callback_t callback) json_nothrow json_cold;
+		  static json_error_callback_t register_callback(json_error_callback_t callback) json_nothrow json_cold;
 	   #endif
 	   static void _JSON_FAIL(const json_string & msg) json_nothrow json_cold;
 	   static void _JSON_ASSERT(bool condition, const json_string & msg) json_nothrow json_cold;
@@ -53,10 +54,6 @@
     #define JSON_ASSERT(condition, msg)
     #define JSON_FAIL(msg)
 #endif
-
-#include <string>
-static const json_string EMPTY_JSON_STRING;
-static const std::string EMPTY_STD_STRING;
 
 #endif
 

@@ -10,7 +10,6 @@
 	   #include <cwchar>  /* need wide characters */
 	   #ifndef JSON_STRING_HEADER
 		  #include <string>
-		  typedef std::wstring json_string;
 	   #endif
     #else
 	   #include <wchar.h>  /* need wide characters */
@@ -24,7 +23,6 @@
     #ifdef __cplusplus
 	   #ifndef JSON_STRING_HEADER
 		  #include <string>
-		  typedef std::string json_string;
 	   #endif
     #else
 	   #include <string.h> /* still need it for strlen and such */

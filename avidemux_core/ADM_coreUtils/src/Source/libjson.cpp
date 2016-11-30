@@ -12,15 +12,11 @@
     #include "JSONWorker.h"
     #include "JSONValidator.h"
     #include "JSONStream.h"
+	#include "JSONGlobals.h"
     #include <stdexcept>  //some methods throw exceptions
     #ifdef JSON_MEMORY_MANAGE
-	   auto_expand StringHandler;
-	   auto_expand_node NodeHandler;
-	   #define MANAGER_INSERT(x) NodeHandler.insert(x)
-	   #ifdef JSON_STREAM
-		  auto_expand_stream StreamHandler;
-		  #define MANAGER_STREAM_INSERT(x) StreamHandler.insert(x)
-	   #endif
+	   #define MANAGER_INSERT(x) json_global(NODE_HANDLER).insert(x)
+	   #define MANAGER_STREAM_INSERT(x) json_global(STREAM_HANDLER).insert(x)
     #else
 	   #define MANAGER_INSERT(x) x
 	   #define MANAGER_STREAM_INSERT(x) x
@@ -28,14 +24,27 @@
 
     static const json_char * EMPTY_CSTRING(JSON_TEXT(""));
 
+	#ifdef JSON_MEMORY_POOL
+		#include "JSONMemoryPool.h"
+		extern memory_pool<NODEPOOL> json_node_mempool;
+	#endif
+
     inline json_char * toCString(const json_string & str) json_nothrow {
 	   const size_t len = (str.length() + 1) * sizeof(json_char);
 	   #ifdef JSON_MEMORY_MANAGE
-		  return (json_char *)StringHandler.insert(memcpy(json_malloc<json_char>(len), str.c_str(), len));
+		  return (json_char *)json_global(STRING_HANDLER).insert(std::memcpy(json_malloc<json_char>(len), str.c_str(), len));
 	   #else
-		  return (json_char *)memcpy(json_malloc<json_char>(len), str.c_str(), len);
+		  return (json_char *)std::memcpy(json_malloc<json_char>(len), str.c_str(), len);
 	   #endif
     }
+	
+	inline json_char * alreadyCString(json_char * str) json_nothrow {
+		#ifdef JSON_MEMORY_MANAGE
+		   return (json_char *)json_global(STRING_HANDLER).insert(str);
+	    #else
+			return str;
+		#endif
+	}
 
     /*
 	   stuff that's in namespace libjson
@@ -43,7 +52,7 @@
     void json_free(void * str){
 	   JSON_ASSERT_SAFE(str, JSON_TEXT("freeing null ptr"), return;);
 	   #ifdef JSON_MEMORY_MANAGE
-		  StringHandler.remove(str);
+		  json_global(STRING_HANDLER).remove(str);
 	   #endif
 	   libjson_free<void>(str);
     }
@@ -51,18 +60,18 @@
     void json_delete(JSONNODE * node){
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("deleting null ptr"), return;);
 	   #ifdef JSON_MEMORY_MANAGE
-		  NodeHandler.remove(node);
+		  json_global(NODE_HANDLER).remove(node);
 	   #endif
 	   JSONNode::deleteJSONNode((JSONNode *)node);
     }
 
     #ifdef JSON_MEMORY_MANAGE
 	   void json_free_all(void){
-		  StringHandler.clear();
+		  json_global(STRING_HANDLER).clear();
 	   }
 
 	   void json_delete_all(void){
-		  NodeHandler.clear();
+		  json_global(NODE_HANDLER).clear();
 	   }
     #endif
 
@@ -72,7 +81,7 @@
 		  json_try {
 			 //use this constructor to simply copy reference instead of copying the temp
 			 return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(JSONWorker::parse(TOCONST_CSTR(json))));
-		  } json_catch (std::invalid_argument, )
+		  } json_catch (std::invalid_argument, (void)0; )
 		  #ifndef JSON_NO_EXCEPTIONS
 			 return 0;
 		  #endif
@@ -83,7 +92,7 @@
 		  json_try {
 			 //use this constructor to simply copy reference instead of copying the temp
 			 return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(JSONWorker::parse_unformatted(TOCONST_CSTR(json))));
-		  } json_catch(std::invalid_argument, )
+		  } json_catch(std::invalid_argument, (void)0; )
 		  #ifndef JSON_NO_EXCEPTIONS
 			 return 0;
 		  #endif
@@ -92,7 +101,7 @@
 
     json_char * json_strip_white_space(json_const json_char * json){
 	   JSON_ASSERT_SAFE(json, JSON_TEXT("null ptr to json_strip_white_space"), return 0;);
-	   return toCString(JSONWorker::RemoveWhiteSpaceAndComments(TOCONST_CSTR(json)));
+	   return alreadyCString(JSONWorker::RemoveWhiteSpaceAndCommentsC(TOCONST_CSTR(json), false));
     }
 
     #ifdef JSON_VALIDATE
@@ -107,11 +116,25 @@
 	   #endif
 	   json_bool_t json_is_valid(json_const json_char * json){
 		  JSON_ASSERT_SAFE(json, JSON_TEXT("null ptr to json_is_valid"), return (json_bool_t)false;);
-		  return (json_bool_t)JSONValidator::isValidRoot(JSONWorker::RemoveWhiteSpaceAndComments(json).c_str());
+		  #ifdef JSON_SECURITY_MAX_STRING_LENGTH
+			 if (json_unlikely(json_strlen(json) > JSON_SECURITY_MAX_STRING_LENGTH)){
+				JSON_FAIL(JSON_TEXT("Exceeding JSON_SECURITY_MAX_STRING_LENGTH"));
+				return false;
+			 }
+		  #endif
+		  json_auto<json_char> s;
+		  s.set(JSONWorker::RemoveWhiteSpaceAndCommentsC(json, false));
+		  return (json_bool_t)JSONValidator::isValidRoot(s.ptr);
 	   }
 
 	   json_bool_t json_is_valid_unformatted(json_const json_char * json){
 		  JSON_ASSERT_SAFE(json, JSON_TEXT("null ptr to json_is_valid_unformatted"), return (json_bool_t)true;);
+		  #ifdef JSON_SECURITY_MAX_STRING_LENGTH
+			 if (json_unlikely(json_strlen(json) > JSON_SECURITY_MAX_STRING_LENGTH)){
+				JSON_FAIL(JSON_TEXT("Exceeding JSON_SECURITY_MAX_STRING_LENGTH"));
+				return false;
+			 }
+		  #endif
 		  return (json_bool_t)JSONValidator::isValidRoot(json);
 	   }
     #endif
@@ -170,14 +193,19 @@
 	   void json_delete_stream(JSONSTREAM * stream){
 		  JSON_ASSERT_SAFE(stream, JSON_TEXT("deleting null ptr"), return;);
 		  #ifdef JSON_MEMORY_MANAGE
-			 StreamHandler.remove(stream);
+			 json_global(STREAM_HANDLER).remove(stream);
 		  #endif
 		  JSONStream::deleteJSONStream((JSONStream *)stream);
 	   }
 
-	   JSONSTREAM * json_new_stream(json_stream_callback_t callback){
-		  return MANAGER_STREAM_INSERT(JSONStream::newJSONStream(callback));
+	   JSONSTREAM * json_new_stream(json_stream_callback_t callback, json_stream_e_callback_t e_callback, void * identifier){
+		  return MANAGER_STREAM_INSERT(JSONStream::newJSONStream(callback, e_callback, identifier));
 	   }
+
+		void json_stream_reset(JSONSTREAM * stream){
+			JSON_ASSERT_SAFE(stream, JSON_TEXT("resetting null ptr"), return;);
+			((JSONStream*)stream) -> reset();
+		}
     #endif
 
 
@@ -188,7 +216,9 @@
     JSONNODE * json_new_a(json_const json_char * name, json_const json_char * value){
 	   if (!name) name = EMPTY_CSTRING;
 	   JSON_ASSERT_SAFE(value, JSON_TEXT("null value to json_new_a"), value = EMPTY_CSTRING;);
-	   #ifdef JSON_MEMORY_CALLBACKS
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(TOCONST_CSTR(name), json_string(TOCONST_CSTR(value))));
+		#elif defined(JSON_MEMORY_CALLBACKS)
 		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(TOCONST_CSTR(name), json_string(TOCONST_CSTR(value))));
 	   #else
 		  return MANAGER_INSERT(new JSONNode(TOCONST_CSTR(name), json_string(TOCONST_CSTR(value))));
@@ -197,7 +227,9 @@
 
     JSONNODE * json_new_i(json_const json_char * name, json_int_t value){
 	   if (!name) name = EMPTY_CSTRING;
-	   #ifdef JSON_MEMORY_CALLBACKS
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(TOCONST_CSTR(name), value));
+		#elif defined(JSON_MEMORY_CALLBACKS)
 		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(TOCONST_CSTR(name), value));
 	   #else
 		  return MANAGER_INSERT(new JSONNode(TOCONST_CSTR(name), value));
@@ -206,7 +238,9 @@
 
     JSONNODE * json_new_f(json_const json_char * name, json_number value){
 	   if (!name) name = EMPTY_CSTRING;
-	   #ifdef JSON_MEMORY_CALLBACKS
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(TOCONST_CSTR(name), value));
+		#elif defined(JSON_MEMORY_CALLBACKS)
 		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(TOCONST_CSTR(name), value));
 	   #else
 		  return MANAGER_INSERT(new JSONNode(TOCONST_CSTR(name), value));
@@ -215,7 +249,9 @@
 
     JSONNODE * json_new_b(json_const json_char * name, json_bool_t value){
 	   if (!name) name = EMPTY_CSTRING;
-	   #ifdef JSON_MEMORY_CALLBACKS
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(TOCONST_CSTR(name), static_cast<bool>(value)));
+		#elif defined(JSON_MEMORY_CALLBACKS)
 		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(TOCONST_CSTR(name), static_cast<bool>(value)));
 	   #else
 		  return MANAGER_INSERT(new JSONNode(TOCONST_CSTR(name), static_cast<bool>(value)));
@@ -223,21 +259,25 @@
     }
 
     JSONNODE * json_new(char type){
-	   #ifdef JSON_MEMORY_CALLBACKS
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(type));
+	    #elif defined(JSON_MEMORY_CALLBACKS)
 		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(type));
 	   #else
 		  return MANAGER_INSERT(new JSONNode(type));
 	   #endif
     }
 
-    JSONNODE * json_copy(json_const JSONNODE * orig){
-	   JSON_ASSERT_SAFE(orig, JSON_TEXT("null orig to json_copy"), return 0;);
-	   #ifdef JSON_MEMORY_CALLBACKS
-		  return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(*((JSONNode*)orig)));
-	   #else
-		  return MANAGER_INSERT(new JSONNode(*((JSONNode*)orig)));
-	   #endif
-    }
+	JSONNODE * json_copy(json_const JSONNODE * orig){
+		JSON_ASSERT_SAFE(orig, JSON_TEXT("null orig to json_copy"), return 0;);
+		#ifdef JSON_MEMORY_POOL
+			return MANAGER_INSERT(new((JSONNode*)json_node_mempool.allocate()) JSONNode(*((JSONNode*)orig)));
+		#elif defined(JSON_MEMORY_CALLBACKS)
+			return MANAGER_INSERT(new(json_malloc<JSONNode>(1)) JSONNode(*((JSONNode*)orig)));
+		#else
+			return MANAGER_INSERT(new JSONNode(*((JSONNode*)orig)));
+		#endif
+	}
 
     JSONNODE * json_duplicate(json_const JSONNODE * orig){
 	   JSON_ASSERT_SAFE(orig, JSON_TEXT("null orig to json_duplicate"), return 0;);
@@ -325,15 +365,17 @@
 	   //return (json_bool_t)static_cast<bool>(*((JSONNode*)node));
     }
 
-    JSONNODE * json_as_node(json_const JSONNODE * node){
-	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_node"), return 0;);
-	   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_node()));
-    }
+	#ifdef JSON_CASTABLE
+		JSONNODE * json_as_node(json_const JSONNODE * node){
+		   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_node"), return 0;);
+		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_node()));
+		}
 
-    JSONNODE * json_as_array(json_const JSONNODE * node){
-	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_array"), return 0;);
-	   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_array()));
-    }
+		JSONNODE * json_as_array(json_const JSONNODE * node){
+		   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_as_array"), return 0;);
+		   return MANAGER_INSERT(JSONNode::newJSONNode_Shallow(((JSONNode*)node) -> as_array()));
+		}
+	#endif
 
     #if defined(JSON_BINARY) || defined(JSON_EXPOSE_BASE64)
 	   static void * returnDecode64(const std::string & result, unsigned long * size) json_nothrow json_cold;
@@ -344,9 +386,9 @@
 			 if (json_unlikely(result.empty())) return 0;
 		  #endif
 		  #ifdef JSON_MEMORY_MANAGE
-			 return StringHandler.insert(memcpy(json_malloc<char>(len), result.data(), len));
+			 return json_global(STRING_HANDLER).insert(std::memcpy(json_malloc<char>(len), result.data(), len));
 		  #else
-			 return memcpy(json_malloc<char>(len), result.data(), len);
+			 return std::memcpy(json_malloc<char>(len), result.data(), len);
 		  #endif
 	   }
     #endif
@@ -364,9 +406,9 @@
 	   json_char * json_encode64(json_const void * binary, json_index_t bytes){
 		  const json_string result(JSONBase64::json_encode64((const unsigned char *)binary, (size_t)bytes));
 		  #ifdef JSON_MEMORY_MANAGE
-			 return StringHandler.insert(memcpy(json_malloc<json_char>(result.length()), result.c_str(), result.length()));
+			 return (json_char*)json_global(STRING_HANDLER).insert((json_char*)std::memcpy(json_malloc<json_char>(result.length() + 1), result.c_str(), (result.length() + 1) * sizeof(json_char)));
 		  #else
-			 return (json_char*)memcpy(json_malloc<json_char>(bytes), result.c_str(), bytes);
+			 return (json_char*)std::memcpy(json_malloc<json_char>(result.length() + 1), result.c_str(), (result.length() + 1) * sizeof(json_char));
 		  #endif
 	   }
 
@@ -439,10 +481,12 @@
 	   }
     #endif
 
-    void json_cast(JSONNODE * node, char type){
-	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_cast"), return;);
-	   ((JSONNode*)node) -> cast(type);
-    }
+    #ifdef JSON_CASTABLE
+	   void json_cast(JSONNODE * node, char type){
+		  JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_cast"), return;);
+		  ((JSONNode*)node) -> cast(type);
+	   }
+    #endif
 
     //children access
     void json_reserve(JSONNODE * node, json_index_t siz){
@@ -454,7 +498,7 @@
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_at"), return 0;);
 	   json_try {
 		  return &((JSONNode*)node) -> at(pos);
-	   } json_catch (std::out_of_range, )
+	   } json_catch (std::out_of_range, (void)0; )
 	   #ifndef JSON_NO_EXCEPTIONS
 		  return 0;
 	   #endif
@@ -465,7 +509,7 @@
 	   JSON_ASSERT_SAFE(name, JSON_TEXT("null node to json_get.  Did you mean to use json_at?"), return 0;);
 	   json_try {
 		  return &((JSONNode*)node) -> at(TOCONST_CSTR(name));
-	   } json_catch (std::out_of_range, )
+	   } json_catch (std::out_of_range, (void)0; )
 	   #ifndef JSON_NO_EXCEPTIONS
 		  return 0;
 	   #endif
@@ -478,7 +522,7 @@
 		  JSON_ASSERT_SAFE(name, JSON_TEXT("null name to json_at_nocase"), return 0;);
 		  json_try {
 			 return &((JSONNode*)node) -> at_nocase(TOCONST_CSTR(name));
-		  } json_catch (std::out_of_range, )
+		  } json_catch (std::out_of_range, (void)0; )
 		  #ifndef JSON_NO_EXCEPTIONS
 			 return 0;
 		  #endif
@@ -495,7 +539,7 @@
 	   JSON_ASSERT_SAFE(node, JSON_TEXT("null node to json_push_back"), return;);
 	   JSON_ASSERT_SAFE(node2, JSON_TEXT("null node2 to json_push_back"), return;);
 	   #ifdef JSON_MEMORY_MANAGE
-		  NodeHandler.remove(node2);
+		  json_global(NODE_HANDLER).remove(node2);
 	   #endif
 	   ((JSONNode*)node) -> push_back((JSONNode*)node2);
     }
@@ -532,7 +576,7 @@
 
 	   JSONNODE_ITERATOR json_insert(JSONNODE * node, JSONNODE_ITERATOR it, JSONNODE * node2){
 		  #ifdef JSON_MEMORY_MANAGE
-			 NodeHandler.remove(node2);
+			 json_global(NODE_HANDLER).remove(node2);
 		  #endif
 		  return (JSONNODE_ITERATOR)(((JSONNode*)node) -> insert((JSONNode**)it, (JSONNode*)node2));
 	   }
