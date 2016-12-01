@@ -12,7 +12,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifndef _MSC_VER
 #include <libgen.h>
+#endif
 #include "ADM_assert.h"
 #include "ADM_pyAvidemux.h"
 #include "PythonEngine.h"
@@ -336,7 +338,16 @@ tp_obj PythonEngine::basename(tp_vm *tp)
 	TinyParams pm(tp);
         const char *path = pm.asString();
 	char *copy=strdup(path);
+#ifdef _MSC_VER
+        char fname[2048]={0};
+        char fext[50]={0};
+        char b[2048]={0};
+        _splitpath(copy,NULL,NULL,fname,fext);
+        strcpy(b,fname);
+        strcat(b,fext);
+#else
         char *b=::basename(copy);
+#endif
         tp_obj r;
         if(!b)
         {
@@ -355,8 +366,16 @@ tp_obj PythonEngine::dirname(tp_vm *tp)
 	TinyParams pm(tp);
         const char *path = pm.asString();
         char *copy=strdup(path);
-        
+#ifdef _MSC_VER
+        char dir[2048]={0};
+        char drive[50]={0};
+        char b[2048]={0};
+        _splitpath(copy,drive,dir,NULL,NULL);
+        strcpy(b,drive);
+        strcat(b,dir);
+#else
         char *b=::dirname(copy);
+#endif
         tp_obj r;
         if(!b)
         {

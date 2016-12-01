@@ -136,7 +136,12 @@ bool    TinyParams::makeCouples(CONFcouple **c)
 		return true;
 	}
 
-	const char *s[nb];
+	const char **s;
+#ifdef _MSC_VER
+        s=(const char **)_alloca(sizeof(char *)*nb);
+#else
+        s=(const char **)alloca(sizeof(char *)*nb);
+#endif
 
 	for (int i = 0; i < nb; i++)
 	{

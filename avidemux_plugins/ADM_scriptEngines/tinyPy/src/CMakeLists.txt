@@ -19,13 +19,15 @@ include_directories(.)
 include_directories(../include)
 include_directories(modules/re)
 ADD_CORE_INCLUDE(ADM_coreScript)
-ADD_CORE_INCLUDE(ADM_coreSubtitles)
 # This is the problematic part
 SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common)
 include_directories(${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/ADM_editor/include)
 
-target_link_libraries(ADM_script_tinyPy ADM_coreScript ADM_coreUtils6 ADM_core6 ADM_coreUI6 ADM_coreSubtitle m)
+target_link_libraries(ADM_script_tinyPy ADM_coreScript ADM_coreUtils6 ADM_core6 ADM_coreUI6 )
+IF(NOT MSVC)
+        target_link_libraries(ADM_script_tinyPy m )
+ENDIF(NOT MSVC)
 
 if (NOT APPLE)
 	target_link_libraries(ADM_script_tinyPy -Wl,--version-script,"${CMAKE_CURRENT_SOURCE_DIR}/ADM_script_tinyPy.v")
