@@ -56,7 +56,7 @@ int main(int _argc, char *_argv[])
 {
 	ADM_initBaseDir(_argc, _argv);
 
-#if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4)
+#if defined(_WIN32) && !defined(_MSC_VER) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4) 
 	// redirect output before registering exception handler so error dumps are captured
 	redirectStdoutToFile();
 #endif
