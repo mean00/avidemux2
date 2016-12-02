@@ -2,7 +2,7 @@
                     \file     shaderLoader
                     \brief    Rotate picture
 
-   
+
                     copyright            : (C) 2011 by mean
 
  ***************************************************************************/
@@ -76,11 +76,11 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         _parentQGL->makeCurrent();
         fboY->bind();
         ready=true;
-       
+
         printf("Compiling shader \n");
         glProgramY = new QGLShaderProgram(_context);
         ADM_assert(glProgramY);
-        
+
         // Load the file info memory
         int sourceSize=-1;
         if(ADM_fileExist(params.shaderFile.c_str()))
@@ -98,7 +98,7 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         }
         if(ready)
         {
-            uint8_t *buffer=(uint8_t *)alloca(sourceSize+1);
+            uint8_t *buffer=(uint8_t *)admAlloca(sourceSize+1);
             FILE *f=fopen(params.shaderFile.c_str(),"rt");
             if(f)
             {
@@ -173,12 +173,12 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     // size is the last one...
     fboY->bind();
 
-    glProgramY->setUniformValue("myTextureU", 1); 
-    glProgramY->setUniformValue("myTextureV", 2); 
-    glProgramY->setUniformValue("myTextureY", 0); 
-    glProgramY->setUniformValue("myResolution", (GLfloat)info.width,(GLfloat)info.height); 
-    
-    glProgramY->setUniformValue("pts", (GLfloat)original->Pts); 
+    glProgramY->setUniformValue("myTextureU", 1);
+    glProgramY->setUniformValue("myTextureV", 2);
+    glProgramY->setUniformValue("myTextureY", 0);
+    glProgramY->setUniformValue("myResolution", (GLfloat)info.width,(GLfloat)info.height);
+
+    glProgramY->setUniformValue("pts", (GLfloat)original->Pts);
 
     uploadAllPlanes(original);
 
@@ -220,11 +220,11 @@ const char *shaderLoader::getConfiguration(void)
 /**
     \fn configure
 */
-bool shaderLoader::configure( void) 
+bool shaderLoader::configure( void)
 {
     diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));
     diaElem *elems[]={&shader};
-     
+
      if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
                 return true;
@@ -232,16 +232,16 @@ bool shaderLoader::configure( void)
      return false;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 bool shaderLoader::genQuad(void)
 {
   int width=info.width;
   int height=info.height;
 
-#define POINT(a,b)  glTexCoord2i(a, b);glVertex2i(a, b);  
-  
+#define POINT(a,b)  glTexCoord2i(a, b);glVertex2i(a, b);
+
   glDeleteLists(glList,1);
   glNewList(glList,GL_COMPILE);
   glBegin(GL_QUADS);

@@ -63,7 +63,11 @@ ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *strin
 
 
 //
-
+#ifdef _MSC_VER
+        #define admAlloca _alloca
+#else
+        #define admAlloca alloca
+#endif
 #undef QT_TR_NOOP
 #undef QT_TRANSLATE_NOOP
 #define QT_TR_NOOP(x) ADM_translate("adm",x)
