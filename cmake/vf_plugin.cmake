@@ -18,7 +18,10 @@ MACRO(INSTALL_VIDEO_FILTER_INTERNAL _lib _extra)
 	INSTALL(TARGETS ${_lib} 
                 DESTINATION "${VF_PLUGIN_DIR}/${_extra}"
                 COMPONENT plugins)
-	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6 m)
+        IF(NOT MSVC) 
+                SET(EXTRALIB "m")
+        ENDIF(NOT MSVC) 
+	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6 ${EXTRALIB})
 ENDMACRO(INSTALL_VIDEO_FILTER_INTERNAL)
 
 ############## INSTALL_VIDEO_FILTER ###################"
@@ -31,7 +34,9 @@ ENDMACRO(INSTALL_VIDEO_FILTER _lib)
 MACRO(ADD_VIDEO_FILTER name)
     IF(DO_COMMON)
         ADM_ADD_SHARED_LIBRARY(${name} ${ARGN})
-        TARGET_LINK_LIBRARIES(${name} m)
+        IF(NOT MSVC) 
+                TARGET_LINK_LIBRARIES(${name} m)
+        ENDIF(NOT MSVC) 
 	ADM_TARGET_NO_EXCEPTION(${name})
     ENDIF(DO_COMMON)
 ENDMACRO(ADD_VIDEO_FILTER name)

@@ -12,7 +12,10 @@ MACRO(INSTALL_VIDEO_ENCODER _lib)
                 DESTINATION "${VE_PLUGIN_DIR}"
                 COMPONENT plugins
                 )
-	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoEncoder6 ADM_coreImage6 ADM_coreUtils6 m)
+        IF(NOT MSVC) 
+                SET(EXTRALIB "m")
+        ENDIF(NOT MSVC) 
+	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreVideoEncoder6 ADM_coreImage6 ADM_coreUtils6 ${EXTRALIB})
 ENDMACRO(INSTALL_VIDEO_ENCODER)
 
 MACRO(ADD_VIDEO_ENCODER name)
