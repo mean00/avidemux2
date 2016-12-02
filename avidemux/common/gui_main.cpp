@@ -993,6 +993,12 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
  */
 bool A_runPythonScript(const std::string &name)
 {
+  if(!getPythonScriptEngine())
+  {
+   GUI_Info_HIG(ADM_LOG_IMPORTANT,"Qt",QT_TRANSLATE_NOOP("adm","The tinypy plugin is missing.\nExpect problems."));
+   return false;
+  }
+
   return parseScript(getPythonScriptEngine(),name.c_str(),IScriptEngine::Normal);
 }
 bool A_parseScript(IScriptEngine *engine, const char *name)
@@ -1030,8 +1036,12 @@ void A_saveScript(IScriptEngine* engine, const char* name)
 void A_saveDefaultSettings()
 {
     IScriptEngine *engine=getPythonScriptEngine();
-    ADM_assert(engine);
-    
+    if(!engine)
+    {
+      GUI_Info_HIG(ADM_LOG_IMPORTANT,"Qt",QT_TRANSLATE_NOOP("adm","The tinypy plugin is missing.\nExpect problems."));
+      return;
+    }
+ 
     std::string fileName=DEFAULT_SETTINGS_FILE;
     
     IScriptWriter *writer = engine->createScriptWriter();
