@@ -205,7 +205,7 @@ bool    ADM_psAccess::setScrGapList(const ListOfScr *list)
             }
             // since audio seek point are done at the END, 
             // we will increase timeOffset for the next
-#warning fixme  do something smarter
+//#warning fixme  do something smarter
             if(point->position>pivot)
             {
                 timeOffset=((*list)[index].timeOffset);

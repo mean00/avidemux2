@@ -6,6 +6,7 @@
 #ifndef DMXPACKET_H
 #define DMXPACKET_H
 
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmx_io.h"
 
 /**
@@ -26,7 +27,7 @@ typedef struct
      \class ADMMpegPacket
      \brief Base class for mpeg packet
 */
-class ADMMpegPacket
+class ADM_COREDEMUXER6_EXPORT ADMMpegPacket
 {
 protected:
     int         doNoComplainAnyMore;

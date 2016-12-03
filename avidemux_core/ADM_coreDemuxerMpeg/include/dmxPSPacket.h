@@ -6,6 +6,7 @@
 #ifndef DMXPSPACKET_H
 #define DMXPSPACKET_H
 
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmxPacket.h"
 #include "ADM_Video.h"
 
@@ -15,7 +16,7 @@
 /**
     \class psPacket
 */
-class psPacket : public ADMMpegPacket
+class ADM_COREDEMUXER6_EXPORT psPacket : public ADMMpegPacket
 {
 protected:
     uint8_t             getPacketInfo(uint8_t stream,uint8_t *substream,uint32_t *olen,uint64_t *opts,uint64_t *odts);
@@ -33,7 +34,7 @@ public:
 */
 #define ADM_PACKET_LINEAR (300*1024) // TIVO
 
-class psPacketLinear : public psPacket
+class ADM_COREDEMUXER6_EXPORT psPacketLinear : public psPacket
 {
 protected:
         uint8_t  myPid;
@@ -135,7 +136,7 @@ typedef struct
     \class psPacketLinearTracker
     \brief Same as psPacketLinear, but keep stats
 */
-class psPacketLinearTracker : public psPacketLinear
+class ADM_COREDEMUXER6_EXPORT psPacketLinearTracker : public psPacketLinear
 {
 protected:
         packetStats stats[256];

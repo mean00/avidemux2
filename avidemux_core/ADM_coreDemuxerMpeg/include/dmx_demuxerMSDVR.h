@@ -2,6 +2,7 @@
 #define DMX_DMX_MS
 
  
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmx_demuxer.h"
 
 #define MAX_MSDVR_BUFFER (65*1024) // should be safe enough
@@ -22,7 +23,7 @@
 
 */
 #include "ADM_osSupport/ADM_queue.h"
-class dmx_demuxerMSDVR: public dmx_demuxer
+class ADM_COREDEMUXER6_EXPORT dmx_demuxerMSDVR: public dmx_demuxer
 {
   protected : 
     uint32_t      _nbPackets;      

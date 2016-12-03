@@ -18,6 +18,7 @@
  #ifndef DMX_INDX
  #define DMX_INDX
  
+#include "ADM_coreDemuxerMpeg6_export.h"
 typedef enum 
 {
   ADM_STREAM_UNKNOWN=0,
@@ -41,7 +42,7 @@ typedef struct MPEG_TRACK
         ADM_STREAM_TYPE streamType;
 }MPEG_TRACK;
 
-uint8_t dmx_indexer(const char *mpeg,const char *file,uint32_t preferedAudio,uint8_t autosync,uint32_t nbTracks,MPEG_TRACK *tracks);
+ADM_COREDEMUXER6_EXPORT uint8_t dmx_indexer(const char *mpeg,const char *file,uint32_t preferedAudio,uint8_t autosync,uint32_t nbTracks,MPEG_TRACK *tracks);
         
 
 #endif

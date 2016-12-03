@@ -191,7 +191,7 @@ uint32_t Decimate::computeDiff(ADMImage *current,ADMImage *previous)
             currY += curPitch;
         }
     }
-#warning DO CHROMA SAMPLING
+//#warning DO CHROMA SAMPLING
 #if 0
     if (_param->quality == 1 || _param->quality == 3)
     {

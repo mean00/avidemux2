@@ -311,7 +311,7 @@ uint16_t a1,a2,a3,a4,ff;
          }
         // Check for overflow
         // Should not happen on audio
-#warning the value is set also in mplex as BitStreamBuffering::BUFFER_SIZE
+//#warning the value is set also in mplex as BitStreamBuffering::BUFFER_SIZE
 #define INPUT_MAX_BLOCK (64*1024-1)
         uint8_t *ptr=bitstream->data;
         uint32_t len=bitstream->len;

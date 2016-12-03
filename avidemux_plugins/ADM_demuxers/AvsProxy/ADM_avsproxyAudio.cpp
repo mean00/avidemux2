@@ -88,7 +88,7 @@ bool      ADM_avsAccess::getPacket(uint8_t *buffer, uint32_t *size, uint32_t max
     avsAudioFrame aFrame;
     aFrame.startSample=nextSample;
     
-#warning this is incorrect
+//#warning this is incorrect
     aFrame.sizeInFloatSample=maxSize/(2*wavHeader->channels);
     in.buffer=(uint8_t *)&aFrame;
     in.size=sizeof(aFrame);

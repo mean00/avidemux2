@@ -18,11 +18,12 @@
  #ifndef DMX_DMX_ES
  #define DMX_DMX_ES
  
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmx_demuxer.h"
  
 
 #define ENDCHECK if(parser->end()) _lastErr=1;
-class dmx_demuxerES: public dmx_demuxer
+class ADM_COREDEMUXER6_EXPORT dmx_demuxerES: public dmx_demuxer
  {
           protected : 
                   uint64_t stampAbs;

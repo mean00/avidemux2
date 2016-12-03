@@ -195,5 +195,5 @@ SMOOTH_PARAMS *par;
 //     	par=_param;
      	//return((uint8_t)getSmoothParams(&par->radius,&par->blend));
 	return 1;
-#warning FIXME , CODE REMOVED AMD64/GCC4
+//#warning FIXME , CODE REMOVED AMD64/GCC4
 }

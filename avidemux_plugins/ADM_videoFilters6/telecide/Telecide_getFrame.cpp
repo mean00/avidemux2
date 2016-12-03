@@ -394,7 +394,7 @@ teleCide *_param=&configuration;
         {
                 unsigned char *dstpp, *dstpn;
                 int v1, v2, z;
-                #warning blend in place is wrong!
+                //#warning blend in place is wrong!
                 final=dst;
                 // MeanX:We should copy here as we blend from source and destination
                 // for the moment we do it in place, it is wrong.

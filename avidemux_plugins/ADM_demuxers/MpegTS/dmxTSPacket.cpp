@@ -735,7 +735,7 @@ bool    tsPacketLinear::read(uint32_t len, uint8_t *out)
 */
 bool    tsPacketLinear::getInfo(dmxPacketInfo *info)
 {
-#warning FIXME
+//#warning FIXME
     if(pesPacket->offset<4)
     {
         info->startAt=this->oldStartAt;

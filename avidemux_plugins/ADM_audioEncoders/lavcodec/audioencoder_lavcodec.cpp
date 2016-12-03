@@ -23,7 +23,6 @@ extern "C" {
 #include "libavutil/channel_layout.h"
 #include "libavutil/error.h"
 }
-#include ADM_LAV_CURRENT_HEADER
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "audioencoder.h"

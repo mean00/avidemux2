@@ -135,7 +135,7 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
                                 {
                                     ADM_warning("[AviMuxer] Audio skew!\n");
                                     clk->setTimeUs(aPacket->dts);
-#warning FIXME add padding
+//#warning FIXME add padding
                                 }
                             aPacket->present=true;
                     }

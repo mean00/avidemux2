@@ -5,6 +5,7 @@
 #ifndef DMX_IDENT
 #define DMX_IDENT
 
+#include "ADM_coreDemuxerMpeg6_export.h"
 typedef enum
 {
         DMX_MPG_UNKNOWN=0,
