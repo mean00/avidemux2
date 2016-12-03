@@ -69,7 +69,7 @@ static ADM_videoDecoderDesc DECODERDesc={\
     fcc,\
     NULL\
 };\
-extern "C" ADM_videoDecoderDesc *getInfo (void) \
+extern "C" ADM_PLUGIN_EXPORT ADM_videoDecoderDesc *getInfo (void) \
 { \
   return &DECODERDesc; \
 }  

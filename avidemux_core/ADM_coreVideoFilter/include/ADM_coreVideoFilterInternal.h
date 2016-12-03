@@ -69,49 +69,49 @@ class ADM_vf_plugin : public ADM_LibWrapper
 
 #define DECLARE_VIDEO_FILTER_INTERNAL(Class,Major,Minor,Patch,UI,category,internalName,displayName,Desc,Partializable) \
     extern "C" { \
-    ADM_coreVideoFilter *create(ADM_coreVideoFilter *previous,CONFcouple *conf)\
+    ADM_PLUGIN_EXPORT ADM_coreVideoFilter *create(ADM_coreVideoFilter *previous,CONFcouple *conf)\
     { \
         return new Class(previous,conf);\
     } \
-    void *destroy(ADM_coreVideoFilter *codec) \
+    ADM_PLUGIN_EXPORT void *destroy(ADM_coreVideoFilter *codec) \
     { \
         Class *a=(Class *)codec;\
         delete a;\
         return NULL;\
     }\
-    int supportedUI(void) \
+    ADM_PLUGIN_EXPORT int supportedUI(void) \
     { \
         return UI & ADM_UI_MASK; \
     } \
-        int neededFeatures(void) \
+        ADM_PLUGIN_EXPORT int neededFeatures(void) \
     { \
         return UI & ADM_FEATURE_MASK; \
     } \
-    uint32_t getApiVersion(void)\
+    ADM_PLUGIN_EXPORT uint32_t getApiVersion(void)\
     {\
             return VF_API_VERSION;\
     }\
-    bool getFilterVersion(uint32_t *major,uint32_t *minor, uint32_t *patch)\
+    ADM_PLUGIN_EXPORT bool getFilterVersion(uint32_t *major,uint32_t *minor, uint32_t *patch)\
     {\
         *major=Major;\
         *minor=Minor;\
         *patch=Patch;\
         return true;\
     }\
-    const char *getDesc(void)\
+    ADM_PLUGIN_EXPORT const char *getDesc(void)\
     {\
         return Desc; \
     }\
-    const char *getInternalName(void)\
+    ADM_PLUGIN_EXPORT const char *getInternalName(void)\
     {\
         return internalName; \
     }\
-    const char *getDisplayName(void)\
+    ADM_PLUGIN_EXPORT const char *getDisplayName(void)\
     {\
         return displayName; \
     }\
-    bool partializable() { return Partializable;} \
-    VF_CATEGORY getCategory(void) \
+    ADM_PLUGIN_EXPORT bool partializable() { return Partializable;} \
+    ADM_PLUGIN_EXPORT VF_CATEGORY getCategory(void) \
     { \
         return category;\
     }\

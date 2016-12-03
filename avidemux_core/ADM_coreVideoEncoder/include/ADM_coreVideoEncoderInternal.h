@@ -121,23 +121,23 @@ static ADM_videoEncoderDesc encoderDesc={\
     maj,minV,patch,\
     NULL\
 };\
-bool getConfigurationData (CONFcouple **c)\
+ADM_PLUGIN_EXPORT bool getConfigurationData (CONFcouple **c)\
 {\
          if(confTemplate==NULL) {*c=NULL;return true;} \
          return ADM_paramSave(c,confTemplate,confVar); \
 }\
-bool setConfigurationData (CONFcouple *c,bool full)\
+ADM_PLUGIN_EXPORT bool setConfigurationData (CONFcouple *c,bool full)\
 {\
 	if(full) return ADM_paramLoad(c,confTemplate,confVar); \
 	return ADM_paramLoadPartial(c,confTemplate,confVar); \
 } \
-extern "C" ADM_videoEncoderDesc *getInfo (void) \
+extern "C" ADM_PLUGIN_EXPORT ADM_PLUGIN_EXPORT ADM_videoEncoderDesc *getInfo (void) \
 { \
   return &encoderDesc; \
 }  \
 
 #define ADM_DECLARE_VIDEO_ENCODER_MAIN(name,menuName,desc,configure,uiType,maj,minV,patch,confTemplate,confVar,setProfile,getProfile) \
-extern "C" bool probe (void) \
+extern "C" ADM_PLUGIN_EXPORT bool probe (void) \
 { \
   return true; \
 }  \
