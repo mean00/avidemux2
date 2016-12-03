@@ -294,7 +294,7 @@ json_string JSONWorker::RemoveWhiteSpaceAndComments(const json_string & value_t,
 #endif
 
 json_uchar JSONWorker::UTF8(const json_char * & pos, const json_char * const end) json_nothrow {
-	JSON_ASSERT_SAFE(((long)end - (long)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return JSON_TEXT('\0'););
+	JSON_ASSERT_SAFE(((long long int)end - (long long int)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return JSON_TEXT('\0'););
     #ifdef JSON_UNICODE
 	   ++pos;
 	   json_uchar temp = Hex(pos) << 8;
