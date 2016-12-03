@@ -28,9 +28,9 @@
 
 //#define OPENDML_VERBOSE
 #ifdef _MSC_VER
-        #define ADM_PACKED(c)   __pragma( pack(push, 1) ) c  __pragma( pack(pop) )
+        #define ADM_PACKED(c,n)   __pragma( pack(push, 1) ) c n  __pragma( pack(pop) )
 #else
-	#define ADM_PACKED(c) c  __attribute__ ((packed, gcc_struct))
+	#define ADM_PACKED(c,n) c  __attribute__ ((packed, gcc_struct)) n
 #endif
 ADM_PACKED(
 typedef struct  //
@@ -43,7 +43,7 @@ typedef struct  //
 	uint32_t	nbEntryInUse;
 	uint32_t	chunkId;
 	uint32_t	reserver[3];
-}OPENDML_INDEX;)
+},OPENDML_INDEX);
 
 
 ADM_PACKED(
@@ -52,8 +52,8 @@ typedef struct
 	uint64_t 	offset;
 	uint32_t	size;
 	uint32_t	duration;
-}OPENDML_ENTRY ;
-)
+},OPENDML_ENTRY 
+);
 
 
 ADM_PACKED(
@@ -66,8 +66,8 @@ typedef struct
 	uint32_t	chunkId;
 	uint64_t	base;
 	uint32_t	reserver;
-} OPENML_SECONDARY_INDEX ;
-)
+} ,OPENML_SECONDARY_INDEX 
+);
 
 
  static int readMasterIndex(OPENDML_INDEX *index,FILE *fd);
