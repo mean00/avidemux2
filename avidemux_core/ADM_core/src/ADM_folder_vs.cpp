@@ -184,131 +184,99 @@ char *ADM_getRelativePath(const char *base0, const char *base1, const char *base
  ------------------------------------------*/
  uint8_t ADM_mkdir(const char *dirname)
  {
-#if 0
- 	DIR *dir = NULL;
- 	uint8_t retVal = 0;
+
+    int dirNameLength = utf8StringToWideChar(dirname, -1, NULL);
+    wchar_t *dirname2 = new wchar_t[dirNameLength];
+    utf8StringToWideChar(dirname, -1, dirname2);
+    int er = _wmkdir(dirname2);
+    delete[] dirname2;
+    uint8_t retVal = 0;
 
 
- 	int dirNameLength = utf8StringToWideChar(dirname, -1, NULL);
- 	wchar_t *dirname2 = new wchar_t[dirNameLength];
+    if (er != -1)
+        retVal = true;
+    else
+    {
+        if (errno == EEXIST)
+            retVal = true;
+        else
+        {
+            ADM_warning("Failed to create folder %s with error %d\n", dirname, errno);
+            retVal = false;
+        }
+    }
 
- 	utf8StringToWideChar(dirname, -1, dirname2);
-
- 	while (true)
- 	{
- 		// Check it already exists ?
- 		dir = opendir(dirname2);
-
- 		if (dir)
- 		{
- 			printf("Directory %s exists.Good.\n", dirname);
- 			closedir(dir);
-
- 			retVal = 1;
- 			break;
- 		}
-
- 		if (_wmkdir(dirname2))
- 		{
- 			printf("Oops: mkdir failed on %s\n", dirname);
- 			break;
- 		}
-
- 		if ((dir = opendir(dirname2)) == NULL)
- 			break;
-
- 		closedir(dir);
-
- 		retVal = 1;
-
- 		break;
- 	}
-
-
- 	delete [] dirname2;
-
+ 	
  	return retVal;
-#endif
-	return 0;
+ }
+ 
+
+
+  // Convert string from Wide Char to ANSI code page
+ static int wideCharStringToAnsi(const wchar_t *wideCharString, int wideCharStringLength, char *ansiString, const char *filler)
+ {
+     int flags = WC_COMPOSITECHECK;
+
+     if (filler)
+         flags |= WC_NO_BEST_FIT_CHARS | WC_DEFAULTCHAR;
+
+     int ansiStringLen = WideCharToMultiByte(CP_ACP, flags, wideCharString, wideCharStringLength, NULL, 0, filler, NULL);
+
+     if (ansiString)
+         WideCharToMultiByte(CP_ACP, flags, wideCharString, wideCharStringLength, ansiString, ansiStringLen, filler, NULL);
+
+     return ansiStringLen;
  }
  /**
-  *  \fn buildDirectoryContent
-  * 	\brief Returns the content of a dir with the extension ext. The receiving array must be allocated by caller
-  * (just the array, not the names themselves)
-  */
+ *  \fn buildDirectoryContent
+ * 	\brief Returns the content of a dir with the extension ext. The receiving array must be allocated by caller
+ * (just the array, not the names themselves)
+ */
  uint8_t buildDirectoryContent(uint32_t *outnb, const char *base, char *jobName[], int maxElems, const char *ext)
  {
-#if 0
- 	DIR *dir;
- 	struct dirent *direntry;
- 	int dirmax = 0, len;
- 	int extlen = strlen(ext);
 
- 	ADM_assert(extlen);
-
-
- 	int dirNameLength = utf8StringToWideChar(base, -1, NULL);
+    std::string joker = std::string(base) + std::string("/*.") + std::string(ext);
+ 	int dirNameLength = utf8StringToWideChar(joker.c_str(), -1, NULL);
  	wchar_t *base2 = new wchar_t[dirNameLength];
+    utf8StringToWideChar(joker.c_str(), -1, base2);
+    int dirmax = 0;
+//--
+    HANDLE hFind;
+    WIN32_FIND_DATAW FindFileData;
 
- 	utf8StringToWideChar(base, -1, base2);
+    hFind = FindFirstFileW(base2,&FindFileData);
+    if(hFind == INVALID_HANDLE_VALUE)
+    {
+        ADM_warning("Cannot list content of %s\n", base);
+        delete[] base2;
+        *outnb = 0;
+        return true;
+    }
 
- 	dir = opendir(base2);
+    do 
+    {
+        WCHAR *wname = FindFileData.cFileName;
+        //int wideCharStringToAnsi(const wchar_t *wideCharString, int wideCharStringLength, char *ansiString, const char *filler)
+        int nameLength = wideCharStringToAnsi(wname, -1, NULL, "?");       
+        char *shortName = new char[nameLength];
+        nameLength = wideCharStringToAnsi(wname, -1, shortName, "?");
+        std::string item = std::string(base) + std::string("/") + std::string(shortName);
+        delete[] shortName;
 
+        int targetLength = item.length();
+        jobName[dirmax] = (char *)ADM_alloc(targetLength);
+        strcpy(jobName[dirmax], item.c_str());
+        dirmax++;
+        if (dirmax > maxElems)
+            break;
+            
+    } while (FindNextFileW(hFind, &FindFileData));
+    FindClose(hFind);
+    
+    *outnb = dirmax;
 
- 	delete [] base2;
-
- 	if (!dir)
- 	{
- 		return 0;
- 	}
-
-
- 	char *d_name = NULL;
-
- 	while ((direntry = readdir(dir)))
- 	{
- 		delete [] d_name;
-
- 		int dirLength = wideCharStringToUtf8(direntry->d_name, -1, NULL);
- 		d_name = new char[dirLength];
-
- 		wideCharStringToUtf8(direntry->d_name, -1, d_name);
-
- 		len = strlen(d_name);
-
- 		if (len < (extlen + 1))
- 			continue;
-
- 		int xbase = len - extlen;
-
- 		if (memcmp(d_name + xbase, ext, extlen))
- 		{
- 			printf("ignored: %s\n", d_name);
- 			continue;
- 		}
-
- 		jobName[dirmax] = (char *)ADM_alloc(strlen(base) + strlen(d_name) + 2);
- 		strcpy(jobName[dirmax], base);
- 		AddSeparator(jobName[dirmax]);
- 		strcat(jobName[dirmax], d_name);
- 		dirmax++;
-
- 		if (dirmax >= maxElems)
- 		{
- 			printf("[jobs]: Max # of jobs exceeded\n");
- 			break;
- 		}
- 	}
-
-
- 	delete [] d_name;
-
- 	closedir(dir);
- 	*outnb = dirmax;
-
- 	return 1;
-#endif
-	return 0;
+    delete[] base2;
+    return true;
  }
 
  /**

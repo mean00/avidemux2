@@ -113,14 +113,20 @@ void *ADM_aligned_memalign(size_t align,size_t size)
 void *ADM_aligned_alloc(size_t size)
 {
 #ifdef _MSC_VER
-	return _aligned_malloc(16, size);
+	return _aligned_malloc( size,16);
 #else
     return memalign(16,size);
 #endif
 }
 void ADM_aligned_free(void *ptr)
 {
-    return free(ptr);
+#ifdef _MSC_VER
+    _aligned_free(ptr);
+    return;
+#else
+    free(ptr);
+    return;
+#endif
 }
 void *ADM_aligned_memalign(size_t align,size_t size)
 {
