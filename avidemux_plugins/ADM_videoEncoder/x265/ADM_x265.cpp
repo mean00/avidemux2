@@ -139,12 +139,7 @@ extern std::string utf8StringToAnsi(const char *utf8String);
 bool         x265Encoder::setPassAndLogFile(int pass,const char *name)
 {
     ADM_info("Initializing pass %d, log file =%s\n",pass,name);
-#if defined(_WIN32) && !defined(X265_USE_UTF8)
-    std::string ansi=utf8StringToAnsi(name);
-    logFile=ADM_strdup(ansi.c_str());
-#else
     logFile=ADM_strdup(name);
-#endif
     ADM_info("Creating system file =<%s>\n",logFile);
     passNumber=pass;
     return true;
