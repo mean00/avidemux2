@@ -274,7 +274,7 @@ json_string JSONWorker::RemoveWhiteSpaceAndComments(const json_string & value_t,
     }
 
     void JSONWorker::UTF(const json_char * & pos, json_string & result, const json_char * const end) json_nothrow {
-		JSON_ASSERT_SAFE(((long)end - (long)pos) > 4, JSON_TEXT("UTF will go out of bounds"), return;);
+		JSON_ASSERT_SAFE(((long long int )end - (long long int )pos) > 4, JSON_TEXT("UTF will go out of bounds"), return;);
 	   json_uchar first = UTF8(pos, end);
 	   if (json_unlikely((first > 0xD800) && (first < 0xDBFF) &&
 		  (*(pos + 1) == '\\') && (*(pos + 2) == 'u'))){
@@ -337,7 +337,7 @@ json_char JSONWorker::Hex(const json_char * & pos) json_nothrow {
 
 #ifndef JSON_STRICT
     inline json_char FromOctal(const json_char * & str, const json_char * const end) json_nothrow {
-	   JSON_ASSERT_SAFE(((long)end - (long)str) > 3, JSON_TEXT("Octal will go out of bounds"), return JSON_TEXT('\0'););
+	   JSON_ASSERT_SAFE(((long long int)end - (long long int)str) > 3, JSON_TEXT("Octal will go out of bounds"), return JSON_TEXT('\0'););
 	   str += 2;
 	   return (json_char)(((((json_uchar)(*(str - 2) - 48))) << 6) | (((json_uchar)(*(str - 1) - 48)) << 3) | ((json_uchar)(*str - 48)));
     }
@@ -386,7 +386,7 @@ void JSONWorker::SpecialChar(const json_char * & pos, const json_char * const en
 		  break;
 	   #ifndef JSON_STRICT
 		  case JSON_TEXT('x'):   //hexidecimal ascii code
-			 JSON_ASSERT_SAFE(((long)end - (long)pos) > 3, JSON_TEXT("Hex will go out of bounds"), res += JSON_TEXT('\0'); return;);
+			 JSON_ASSERT_SAFE(((long long int )end - (long long int )pos) > 3, JSON_TEXT("Hex will go out of bounds"), res += JSON_TEXT('\0'); return;);
 			 res += Hex(++pos);
 			 break;
 
