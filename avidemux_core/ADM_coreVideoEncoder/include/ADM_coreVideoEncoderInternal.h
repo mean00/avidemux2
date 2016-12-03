@@ -88,8 +88,8 @@ extern ADM_COREVIDEOENCODER6_EXPORT BVector <ADM_videoEncoder6 *> ListOfEncoders
 // Macros to declare audio encoder
 /**************************************************************************/
 #define ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(Class) \
-static bool getConfigurationData (CONFcouple **c); \
-static bool setConfigurationData (CONFcouple *c,bool full=true);\
+static bool xgetConfigurationData (CONFcouple **c); \
+static bool xsetConfigurationData (CONFcouple *c,bool full=true);\
 \
 static ADM_coreVideoEncoder * create (ADM_coreVideoFilter * head,bool globalHeader) \
 { \
@@ -113,20 +113,20 @@ static ADM_videoEncoderDesc encoderDesc={\
     configure,\
     setProfile,\
     getProfile, \
-    getConfigurationData,\
-    setConfigurationData,\
+    xgetConfigurationData,\
+    xsetConfigurationData,\
     resetConfigurationData,\
     probe,\
     uiType,\
     maj,minV,patch,\
     NULL\
 };\
-ADM_PLUGIN_EXPORT bool getConfigurationData (CONFcouple **c)\
+bool xgetConfigurationData (CONFcouple **c)\
 {\
          if(confTemplate==NULL) {*c=NULL;return true;} \
          return ADM_paramSave(c,confTemplate,confVar); \
 }\
-ADM_PLUGIN_EXPORT bool setConfigurationData (CONFcouple *c,bool full)\
+bool xsetConfigurationData (CONFcouple *c,bool full)\
 {\
 	if(full) return ADM_paramLoad(c,confTemplate,confVar); \
 	return ADM_paramLoadPartial(c,confTemplate,confVar); \
