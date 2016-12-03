@@ -9,3 +9,4 @@
 #define ADM_LAV_MAX_CHANNEL 6
 #define ADM_LAV_SAMPLE_PER_P 1536
 
+#include "audioencoder_lavcodec.cpp"

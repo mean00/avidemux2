@@ -10,3 +10,4 @@
 #define ADM_LAV_SAMPLE_PER_P 1152
 
 
+#include "audioencoder_lavcodec.cpp"

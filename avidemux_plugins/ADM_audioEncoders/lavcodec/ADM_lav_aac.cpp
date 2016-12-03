@@ -10,4 +10,5 @@
 #define ADM_LAV_SAMPLE_PER_P 1024
 
 #define ADM_LAV_GLOBAL_HEADER 1
+#include "audioencoder_lavcodec.cpp"
 
