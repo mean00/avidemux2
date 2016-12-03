@@ -85,6 +85,9 @@ using namespace std;
 
 extern "C"
 {
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 	IScriptEngine* createEngine()
 	{
 		return new PythonEngine();
