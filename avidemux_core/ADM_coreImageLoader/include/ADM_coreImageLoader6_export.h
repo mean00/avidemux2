@@ -4,7 +4,7 @@
 #  define ADM_COREIMAGELOADER6_EXPORT
 #  define ADM_COREIMAGELOADER6_NO_EXPORT
 #else
-#  ifdef ADM_coreImageLoader_EXPORTS
+#  ifdef ADM_coreImageLoader6_EXPORTS
        /* We are building this library */
 #      ifdef _WIN32
 #        define ADM_COREIMAGELOADER6_EXPORT __declspec(dllexport)

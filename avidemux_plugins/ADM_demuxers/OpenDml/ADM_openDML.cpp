@@ -23,7 +23,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_odml_audio.h"
 #include "ADM_coreUtils.h"
-
+#include "ADM_codecType.h"
 #ifdef ADM_DEBUG
 	#define OPENDML_VERBOSE
     #define aprintf printf
@@ -578,7 +578,6 @@ bool OpenDMLHeader::removeEmptyFrames(void)
     \fn computePtsDts
     \brief Compute PtsDts
 */
-extern uint8_t isMpeg4Compatible (uint32_t fourcc);
 uint8_t OpenDMLHeader::computePtsDts(void)
 {
     // if it is mpeg4-sp, removed packet bitstream & reindex
