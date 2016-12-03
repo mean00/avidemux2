@@ -32,7 +32,7 @@ uint8_t   tsIndexer(const char *file);
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  uint32_t ADM_PLUGIN_EXPORT        probe(uint32_t magic, const char *fileName)
 {
 char *index=(char *)malloc(strlen(fileName)+6);
 int count=0;

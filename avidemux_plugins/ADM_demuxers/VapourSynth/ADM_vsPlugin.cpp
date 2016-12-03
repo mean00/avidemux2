@@ -29,7 +29,7 @@ ADM_DEMUXER_BEGIN( vsHeader, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *fileName)
 {
         std::string fname=std::string(fileName);
         if(fname.length()<3) return 0;

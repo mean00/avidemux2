@@ -29,7 +29,7 @@ ADM_DEMUXER_BEGIN( MP4Header, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C" ADM_PLUGIN_EXPORT uint32_t         probe(uint32_t magic, const char *fileName)
 {
 uint8_t head[8];
     FILE *f=ADM_fopen(fileName,"r");

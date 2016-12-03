@@ -27,7 +27,7 @@ ADM_DEMUXER_BEGIN( avsHeader, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  uint32_t     ADM_PLUGIN_EXPORT    probe(uint32_t magic, const char *fileName)
 {
        
     if (!strcmp(fileName,AVS_PROXY_DUMMY_FILE))
