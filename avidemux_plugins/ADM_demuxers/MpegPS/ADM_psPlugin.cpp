@@ -104,12 +104,14 @@ again:
 */
 bool detectPs(const char *file)
 {
-    uint8_t buffer[PROBE_SIZE];
+    
     uint32_t bufferSize;
     uint32_t nbPacket,nbMatch=0;
 
     FILE *f=ADM_fopen(file,"rb");
     if(!f) return false;
+
+    uint8_t *buffer = new uint8_t[PROBE_SIZE];
     bufferSize=fread(buffer,1,PROBE_SIZE,f);
     fclose(f);
     nbPacket=bufferSize/2300;
@@ -118,10 +120,12 @@ bool detectPs(const char *file)
     tail=buffer+bufferSize;
     uint8_t code;
     uint32_t offset;
+    bool r = false;
     // Is it a Seq Start ?
     if(!buffer[0] && !buffer[1] && buffer[2]==1 && buffer[3]==0xba)
     {
         printf("Starts with SEQUENCE_START, probably MpegPS\n");
+        delete[] buffer;
         return true;
     }
     while(ADM_findMpegStartCode(head,tail,&code,&offset))
@@ -130,8 +134,11 @@ bool detectPs(const char *file)
         if(code==0xE0) nbMatch++;
     }
     printf(" match :%d / %d (probeSize:%d)\n",nbMatch,nbPacket,bufferSize);
-    if(nbMatch*10>nbPacket*2)
-        return true;
-    return false;
+    if (nbMatch * 10 > nbPacket * 2)
+    {
+        r = true;
+    }
+    delete[] buffer;
+    return r;
 }
 //EOF

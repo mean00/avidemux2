@@ -104,27 +104,30 @@ again:
 */
 bool detectTs(const char *file)
 {
-    uint8_t buffer[PROBE_SIZE];
     uint32_t bufferSize;
     uint32_t nbPacket,nbMatch=0;
 
     FILE *f=ADM_fopen(file,"rb");
     if(!f) return false;
+    uint8_t *buffer=new uint8_t[PROBE_SIZE];
     bufferSize=fread(buffer,1,PROBE_SIZE,f);
     fclose(f);
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
     if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN))
     {
         ADM_info("[TS Demuxer] 188 bytes packet detected\n");
+        delete [] buffer;
         return true;
     }
     // Do a simple check by checking we have 0x47....0x47 several time in a raw
     if(true==checkMarker(buffer,bufferSize,TS_PACKET_LEN+4))
     {
         ADM_info("[TS Demuxer] 192 bytes packet detected\n");
+        delete [] buffer;
         return true;
     }
     ADM_info("[TS Demuxer] Not a TS file\n");
+    delete [] buffer;
     return false;
 }
 
