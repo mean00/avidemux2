@@ -72,7 +72,7 @@ ENDIF(USE_DXVA2)
 
 #@@
 ADM_FF_BUILD_UNIX_STYLE()
-
+ADM_FF_ADD_DUMMY_TARGET()
 MACRO(FF_ADD_SUBLIB lib)
         add_custom_command(
 				   OUTPUT       "${lib}"

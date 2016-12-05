@@ -45,6 +45,7 @@ ADM_FF_SET_EXTRA_FLAGS()
 #@@
 ADM_FF_BUILD_UNIX_STYLE()
 #
+ADM_FF_ADD_DUMMY_TARGET()
 
 IF(APPLE)
         MESSAGE(STATUS "Patching config.mak - mac")

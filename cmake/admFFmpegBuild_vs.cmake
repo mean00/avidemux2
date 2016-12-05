@@ -37,33 +37,18 @@ ENDIF(USE_DXVA2)
 
 #@@
 ADM_FF_BUILD_UNIX_STYLE()
-MACRO(FF_ADD_SUBLIB lib)
-        add_custom_command(
-				   OUTPUT       "${lib}"
-                                   DEPENDS 	libavutil_dummy
-				   COMMAND ${BASH_EXECUTABLE} -c echo "placeHolder")
-
-ENDMACRO(FF_ADD_SUBLIB lib)
-
-FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"       )
-FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"       )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"   )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"   )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
 
 
-MACRO(FF_ADD_SUBLIB lib)
-        add_custom_command(
-				   OUTPUT       "${lib}"
-                                   DEPENDS 	"${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
-				   COMMAND ${BASH_EXECUTABLE} -c echo "placeHolder")
 
-ENDMACRO(FF_ADD_SUBLIB lib)
+add_custom_command(OUTPUT
+                     "${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}"
+                     "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"
+                     "${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"
+                     "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"
+                     "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"
+                     "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}"
+                     COMMAND ${BASH_EXECUTABLE} ffmpeg_make.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}")
 
-FF_ADD_SUBLIB(     	"${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}"       )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}"   )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}"   )
-FF_ADD_SUBLIB(          "${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}"     )
 
 ADM_FF_INSTALL_LIBS_AND_HEADERS()
 
