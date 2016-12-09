@@ -17,9 +17,6 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#ifdef _MSC_VER
-#define __STDC_CONSTANT_MACROS 1
-#endif
 #include <string>
 #include "ADM_default.h"
 #include "ADM_paramList.h"

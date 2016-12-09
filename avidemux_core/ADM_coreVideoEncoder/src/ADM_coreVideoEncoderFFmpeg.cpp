@@ -15,7 +15,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define __STDC_CONSTANT_MACROS
 #include "ADM_default.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
