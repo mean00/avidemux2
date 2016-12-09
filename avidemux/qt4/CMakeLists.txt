@@ -75,9 +75,7 @@ IF (NOT QT_FOUND)
 ENDIF (NOT QT_FOUND)
 
 # Qt4 openGL
-IF(NOT MSVC)
 include(admCheckOpenGl)
-ENDIF(NOT MSVC)
 #
 #--
 MESSAGE(STATUS "Adding Qt inc paths : <${QT_INCLUDES}> and definitions <${QT_DEFINITIONS}>")

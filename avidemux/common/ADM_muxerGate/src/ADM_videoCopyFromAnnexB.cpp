@@ -13,8 +13,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
-using std::string;
 #include "ADM_default.h"
 #include "ADM_videoCopy.h"
 #include "ADM_edit.hxx"
@@ -22,6 +20,7 @@ using std::string;
 #include "ADM_h264_tag.h"
 #include "ADM_videoInfoExtractor.h"
 
+using std::string;
 extern "C" 
 {
     #include "libavcodec/avcodec.h"
