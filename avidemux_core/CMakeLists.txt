@@ -146,4 +146,12 @@ ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_SOURCE_DIR}/../cmake/cmake_compile_chec
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+
+IF(MSVC)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/stdint.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/inttypes.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/GL/glext.h  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/GL" COMPONENT dev)
+ENDIF(MSVC)
+
+
 MESSAGE("")

@@ -6,8 +6,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialog.h"
 #include "ADM_default.h"
+#include "DIA_flyDialog.h"
 #include "ADM_coreVideoFilter.h"
 #include "DIA_factory.h"
 #include "delogo.h"

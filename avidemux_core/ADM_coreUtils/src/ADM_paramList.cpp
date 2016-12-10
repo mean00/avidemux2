@@ -17,10 +17,8 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#include <string>
 #include "ADM_default.h"
 #include "ADM_paramList.h"
-#include <stddef.h>
 #include "ADM_encoderConf.h"
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
 #include "FFcodecContext_param.h"
