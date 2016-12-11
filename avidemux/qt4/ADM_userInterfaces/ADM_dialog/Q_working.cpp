@@ -105,7 +105,7 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
     lastper=percent;
 
     uint32_t hh,mm,ss,mms;
-    char string[9];
+    char string[32]; // keep margin
 
     ms2time(elapsed,&hh,&mm,&ss,&mms);
     sprintf(string,"%02d:%02d:%02d",hh,mm,ss);
