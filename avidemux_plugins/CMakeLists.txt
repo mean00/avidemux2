@@ -71,7 +71,7 @@ ENDIF (FRESH_BUILD)
 ########################################
 # retrieve core config, needed to get USE_VDPAU and friends
 ########################################
-include(${ADM_HEADER_DIR}/ADM_coreConfig.cmake)
+include(ADM_coreConfig)
 
 ########################################
 # Global options
