@@ -18,13 +18,14 @@
 #include "ADM_windowInfo.h"
 #include "ADM_coreD3D.h"
 #include "dxva2api.h"
+#include "ADM_coreDxva2_export.h"
 extern "C"
 {
  #include "libavcodec/avcodec.h"
 }
 /**
  */
-class admDx2Surface
+class ADM_COREVIDEOCODEC6_EXPORT admDx2Surface
 {
 public:
                           admDx2Surface(void *parent,int alignment);
@@ -44,7 +45,7 @@ protected:
 /**
     \class admVdpau
 */
-class admDxva2
+class ADM_COREVIDEOCODEC6_EXPORT admDxva2
 {
 public:
         static bool init(GUI_WindowInfo *x);
@@ -59,3 +60,6 @@ public:
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
 };
+
+bool ADM_COREVIDEOCODEC6_EXPORT admDxva2_exitCleanup(void);
+

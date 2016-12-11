@@ -16,9 +16,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
-#include "BVector.h"
 #include "ADM_default.h"
+#include "BVector.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"

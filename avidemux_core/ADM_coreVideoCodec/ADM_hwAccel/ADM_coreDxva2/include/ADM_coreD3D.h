@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #pragma once
+#include "ADM_coreDxva2_export.h"
 #include "ADM_image.h"
 #include "ADM_windowInfo.h"
 
@@ -28,7 +29,7 @@
 /**
     \class admVdpau
 */
-class admD3D
+class ADM_COREVIDEOCODEC6_EXPORT admD3D
 {
 public:
         static bool init(GUI_WindowInfo *x);

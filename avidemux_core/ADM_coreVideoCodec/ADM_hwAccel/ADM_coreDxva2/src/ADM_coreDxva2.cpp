@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#define CINTERFACE
 #include "ADM_default.h"
 #include "../include/ADM_coreD3D.h"
 #ifdef USE_DXVA2

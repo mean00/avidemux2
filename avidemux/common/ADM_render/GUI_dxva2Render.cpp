@@ -13,6 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#define CINTERFACE
 #include "config.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
