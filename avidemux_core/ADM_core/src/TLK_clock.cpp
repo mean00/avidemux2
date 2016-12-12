@@ -34,7 +34,7 @@
 #include "ADM_default.h"
 
 
-static uint8_t inited=0;
+static bool inited=false;
 static struct timeval _itimev;
 static uint32_t getAbsTime( void );
 
@@ -57,7 +57,7 @@ Clock::~Clock(  )
 }
 
 /**
- * 
+ * \fn getAbsTimeUs
  * @return 
  */
 static uint64_t getAbsTimeUs( void )
@@ -65,23 +65,21 @@ static uint64_t getAbsTimeUs( void )
      struct timeval timev;     
      TIMZ timez;
 
-    int64_t tt;
-
     if(!inited)
     {
 	gettimeofday(&_itimev, &timez);
-	inited=1;
+	inited=true;
     }
 
     gettimeofday(&timev, &timez);
-    int ref=_itimev.tv_usec;
-    int now= timev.tv_usec;
     
-    tt=now-ref; // can be negative        
-    tt = timev.tv_usec;    
-    tt += 1000 * 1000*(timev.tv_sec-_itimev.tv_sec);
-    return tt;
-
+    int64_t deltaSec=(int64_t)timev.tv_sec-(int64_t)_itimev.tv_sec;
+    int64_t deltaUSec=(int64_t)timev.tv_usec-(int64_t)_itimev.tv_usec;
+    int64_t absDelta;
+    
+    absDelta=deltaSec*1000000LL+deltaUSec;
+    
+    return absDelta;
 }
 /**
  * 

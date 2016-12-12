@@ -37,39 +37,46 @@ workWindow::workWindow(QWidget *parent) : QDialog(parent)
 
 namespace ADM_Qt4CoreUIToolkit
 {
-
+/**
+ * \class DIA_workingQt4
+ */
 class DIA_workingQt4 : public DIA_workingBase
 {
 
 protected:
         virtual void         postCtor( void ) ;
 public:
-                            DIA_workingQt4( const char *title=NULL );
-        virtual                ~DIA_workingQt4();
-            // If returns 1 -> Means aborted
-        virtual uint8_t      update(uint32_t percent);
-        virtual uint8_t     update(uint32_t current,uint32_t total);
+                             DIA_workingQt4( const char *title=NULL );
+        virtual              ~DIA_workingQt4();
+            
+        virtual uint8_t      update(uint32_t percent);  // If returns 1 -> Means aborted
+        virtual uint8_t      update(uint32_t current,uint32_t total); // If returns 1 -> Means aborted
         virtual uint8_t      isAlive (void );
-                void            closeDialog(void);
+                void         closeDialog(void);
         
 };
-//********************************************************
-
+/**
+ * 
+ * @param title
+ */
 DIA_workingQt4::DIA_workingQt4(const char *title) : DIA_workingBase(title)
 {
     workWindow *wind = new workWindow(qtLastRegisteredDialog());
     qtRegisterDialog(wind);
-        _priv=(void *)wind;
+    _priv=(void *)wind;
     wind->setWindowTitle(title);
     postCtor();  
 }
-
+/**
+ * 
+ */
 void DIA_workingQt4 :: postCtor( void )
 {
-  workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
-      wind->show();
-      lastper=0;
-      _nextUpdate=0;
+    workWindow *wind=(workWindow *)_priv; 
+    ADM_assert(wind);
+    wind->show();
+    lastper=0;
+    _nextUpdate=0;
 }
 /**
  * 
@@ -83,7 +90,8 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
     UI_purge();
     if(!_priv) 
         return 1;
-    workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
+    workWindow *wind=(workWindow *)_priv; 
+    ADM_assert(wind);
     if(!wind->active)
     {
         return true;
@@ -128,38 +136,52 @@ uint8_t DIA_workingQt4::update(uint32_t percent)
 
     return 0;
 }
-
+/**
+ * 
+ * @param cur
+ * @param total
+ * @return 
+ */
 uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)
 {
-        double d,n;
-        uint32_t percent;
-        UI_purge();
-        if(!_priv) return 1;
-        if(!total) return 0;
+    double d,n;
+    uint32_t percent;
+    UI_purge();
+    if(!_priv) return 1;
+    if(!total) return 0;
 
-        d=total;
-        n=cur;
-        n=n*100.;
+    d=total;
+    n=cur;
+    n=n*100.;
 
-        n=n/d;
+    n=n/d;
 
-        percent=(uint32_t )floor(n);
-        return update(percent);
-
+    percent=(uint32_t )floor(n);
+    if(percent<0) percent=0;
+    if(percent>100) percent=100;
+    return update(percent);
 }
-
+/**
+ * 
+ * @return 
+ */
 uint8_t DIA_workingQt4::isAlive (void )
 {
     if(!_priv) return 0;
-    workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
+    workWindow *wind=(workWindow *)_priv; 
+    ADM_assert(wind);
     return wind->active;
 }
-
+/**
+ * 
+ */
 DIA_workingQt4::~DIA_workingQt4()
 {
     closeDialog();
 }
-
+/**
+ * 
+ */
 void DIA_workingQt4::closeDialog(void)
 {
     workWindow *wind = (workWindow*)_priv;
