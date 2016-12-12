@@ -42,14 +42,14 @@ class DIA_workingQt4 : public DIA_workingBase
 {
 
 protected:
-        virtual void 	    postCtor( void ) ;
+        virtual void         postCtor( void ) ;
 public:
                             DIA_workingQt4( const char *title=NULL );
-        virtual		        ~DIA_workingQt4();
+        virtual                ~DIA_workingQt4();
             // If returns 1 -> Means aborted
-        virtual uint8_t  	update(uint32_t percent);
-        virtual uint8_t 	update(uint32_t current,uint32_t total);
-        virtual uint8_t  	isAlive (void );
+        virtual uint8_t      update(uint32_t percent);
+        virtual uint8_t     update(uint32_t current,uint32_t total);
+        virtual uint8_t      isAlive (void );
                 void            closeDialog(void);
         
 };
@@ -57,11 +57,11 @@ public:
 
 DIA_workingQt4::DIA_workingQt4(const char *title) : DIA_workingBase(title)
 {
-	workWindow *wind = new workWindow(qtLastRegisteredDialog());
-	qtRegisterDialog(wind);
+    workWindow *wind = new workWindow(qtLastRegisteredDialog());
+    qtRegisterDialog(wind);
         _priv=(void *)wind;
-	wind->setWindowTitle(title);
-	postCtor();  
+    wind->setWindowTitle(title);
+    postCtor();  
 }
 
 void DIA_workingQt4 :: postCtor( void )
@@ -150,9 +150,9 @@ uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)
 
 uint8_t DIA_workingQt4::isAlive (void )
 {
-	if(!_priv) return 0;
+    if(!_priv) return 0;
     workWindow *wind=(workWindow *)_priv; ADM_assert(wind);
-	return wind->active;
+    return wind->active;
 }
 
 DIA_workingQt4::~DIA_workingQt4()
@@ -162,17 +162,17 @@ DIA_workingQt4::~DIA_workingQt4()
 
 void DIA_workingQt4::closeDialog(void)
 {
-	workWindow *wind = (workWindow*)_priv;
-	ADM_assert(wind);
+    workWindow *wind = (workWindow*)_priv;
+    ADM_assert(wind);
 
-	if (wind)
-	{
-		qtUnregisterDialog(wind);
-		delete wind;
-	}
+    if (wind)
+    {
+        qtUnregisterDialog(wind);
+        delete wind;
+    }
 
-	wind = NULL;
-	_priv = NULL;
+    wind = NULL;
+    _priv = NULL;
 }
 
 /**
