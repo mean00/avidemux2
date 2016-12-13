@@ -70,7 +70,6 @@ INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6")
 OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
 OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
 OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
-OPTION(USE_EXTERNAL_LIBTWOLAME "Use system installed libtwolame library." OFF)
 
 INCLUDE(FindPkgConfig)
 
