@@ -64,7 +64,7 @@ SET(CMAKE_CXX_COMPILER i686-w64-mingw32.shared-g++)
 SET(CMAKE_RC_COMPILER i686-w64-mingw32.shared-windres)
 SET(CMAKE_ASM_YASM_COMPILER yasm)
 
-as content and run
+as content, ensure that /opt/mxe/usr/bin is in $PATH and run
 
     cmake -DCMAKE_TOOLCHAIN_FILE=build.cmake -DCMAKE_INSTALL_PREFIX=/opt/mxe/usr/i686-w64-mingw32.shared -DENABLE_CLI=OFF ../../source
     make -j $(nproc)
@@ -83,7 +83,7 @@ SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32.shared-g++)
 SET(CMAKE_RC_COMPILER x86_64-w64-mingw32.shared-windres)
 SET(CMAKE_ASM_YASM_COMPILER yasm)
 
-as content and run
+as content, again ensure that /opt/mxe/usr/bin is in $PATH  and run
 
     cmake -DCMAKE_TOOLCHAIN_FILE=build.cmake -DCMAKE_INSTALL_PREFIX=/opt/mxe/usr/x86_64-w64-mingw32.shared -DENABLE_CLI=OFF ../../source
     make -j $(nproc)
