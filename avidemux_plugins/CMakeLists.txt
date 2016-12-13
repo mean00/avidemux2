@@ -16,7 +16,7 @@ MESSAGE(STATUS "Checking for avidemux development files ..")
 IF(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "")
 else(NOT FAKEROOT)
-	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
+	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 endif(NOT FAKEROOT)
 
 
@@ -64,6 +64,34 @@ include(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/2.6")
 
+#########################################
+# Unbundle some libraries here
+#########################################
+OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
+OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
+OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
+
+INCLUDE(FindPkgConfig)
+
+# libass
+IF(USE_EXTERNAL_LIBASS)
+        PKG_CHECK_MODULES(LIBASS REQUIRED libass)
+        INCLUDE_DIRECTORIES(SYSTEM ${LIBASS_INCLUDE_DIRS})
+ENDIF()
+
+# libmad
+IF(USE_EXTERNAL_LIBMAD)
+        FIND_PATH(LIBMAD_INCLUDE_DIR mad.h)
+        FIND_LIBRARY(LIBMAD_LIBRARIES mad)
+        INCLUDE_DIRECTORIES(SYSTEM ${LIBMAD_INCLUDE_DIRS})
+ENDIF()
+
+# liba52
+IF(USE_EXTERNAL_LIBA52)
+        FIND_PATH(LIBA52_INCLUDE_DIR a52dec/a52.h)
+        FIND_LIBRARY(LIBA52_LIBRARIES a52)
+        INCLUDE_DIRECTORIES(SYSTEM ${LIBA52_INCLUDE_DIR})
+ENDIF()
 
 IF (FRESH_BUILD)
 	MESSAGE("")

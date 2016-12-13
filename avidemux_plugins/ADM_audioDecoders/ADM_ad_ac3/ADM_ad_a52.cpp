@@ -18,8 +18,13 @@
 #include "ADM_ad_plugin.h"
 
 extern "C" {
+#ifdef USE_EXTERNAL_LIBA52
+#include "a52dec/a52.h"
+#include "a52dec/mm_accel.h"
+#else
 #include "ADM_liba52/a52.h"
 #include "ADM_liba52/mm_accel.h"
+#endif
 };
 
 #define AC3_HANDLE ((a52_state_t *)ac3_handle)
