@@ -24,6 +24,10 @@ install_prefix="$default_install_prefix"
 if [[ $(uname -m) = i?86 ]] ; then
         export need_ae_lav_build_quirk=1
 fi
+external_libass=0
+external_liba52=0
+external_libmad=0
+
 fail()
 {
         echo "** Failed at $1**"
@@ -97,26 +101,29 @@ usage()
 {
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
-        echo "  --help            : Print usage"
-        echo "  --prefix=DIR      : Install to directory DIR (default: $default_install_prefix)"
-        echo "  --rpm             : Build rpm packages"
-        echo "  --deb             : Build deb packages"
-        echo "  --tgz             : Build tgz packages"
-        echo "  --debug           : Switch debugging on"
-        echo "  --rebuild         : Preserve existing build directories"
-        echo "  --with-core       : Build core"
-        echo "  --without-core    : Dont build core"
-        echo "  --with-cli        : Build cli"
-        echo "  --without-cli     : Dont build cli"
-        echo "  --with-gtk        : Build gtk"
-        echo "  --without-gtk     : Dont build gtk"
-        echo "  --with-core       : Build core"
-        echo "  --without-qt4     : Dont build qt4"
-        echo "  --with-plugins    : Build plugins"
-        echo "  --without-plugins : Dont build plugins"
-        echo "  --enable-qt4      : Try to use qt4 instead of qt5"
-        echo "  --enable-asan     : Enable Clang/llvm address sanitizer"
-        echo "  --with-clang      : Use clang/clang++ as compiler"
+        echo "  --help                : Print usage"
+        echo "  --prefix=DIR          : Install to directory DIR (default: $default_install_prefix)"
+        echo "  --rpm                 : Create rpm packages"
+        echo "  --deb                 : Create deb packages"
+        echo "  --tgz                 : Create tgz packages"
+        echo "  --debug               : Switch debugging on"
+        echo "  --rebuild             : Preserve existing build directories"
+        echo "  --with-core           : Build core"
+        echo "  --without-core        : Don't build core"
+        echo "  --with-cli            : Build cli"
+        echo "  --without-cli         : Don't build cli"
+        echo "  --with-gtk            : Build gtk"
+        echo "  --without-gtk         : Don't build gtk"
+        echo "  --with-core           : Build core"
+        echo "  --without-qt4         : Don't build qt4"
+        echo "  --with-plugins        : Build plugins"
+        echo "  --without-plugins     : Don't build plugins"
+        echo "  --enable-qt4          : Try to use qt4 instead of qt5"
+        echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
+        echo "  --with-clang          : Use clang/clang++ as compiler"
+        echo "  --with-system-libass  : Use system libass instead of the bundled one"
+        echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
+        echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -233,6 +240,15 @@ while [ $# != 0 ] ;do
          --with-core)
                 do_core=1
              ;;
+         --with-system-libass)
+                external_libass=1
+             ;;
+         --with-system-liba52)
+                external_liba52=1
+             ;;
+         --with-system-libmad)
+                external_libmad=1
+             ;;
         *)
                 echo "unknown parameter $config_option"
                 usage
@@ -248,6 +264,15 @@ export TOP=$PWD
 export POSTFIX=""
 export FAKEROOT_DIR=$PWD/install
 export PARAL="$O_PARAL"
+if [ "x$external_libass" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_liba52" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmad" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+fi
 echo "Top dir : $TOP"
 echo "Fake installation directory=$FAKEROOT_DIR"
 if [ "x$debug" = "x1" ] ; then echo   
@@ -293,27 +318,27 @@ fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
         cd $TOP
-        Process buildPluginsCommon ../avidemux_plugins -DPLUGIN_UI=COMMON
+        Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then 
         echo "** Plugins ${qt_ext} **"
         cd $TOP
-        Process buildPlugins${qt_ext} ../avidemux_plugins -DPLUGIN_UI=QT4
+        Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_gtk" = "x1" ] ; then 
         echo "** Plugins Gtk **"
         cd $TOP
-        Process buildPluginsGtk ../avidemux_plugins -DPLUGIN_UI=GTK
+        Process buildPluginsGtk ../avidemux_plugins "-DPLUGIN_UI=GTK $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
         echo "** Plugins CLI **"
         cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
+        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1"  ] ; then 
         echo "** Plugins Settings **"
         cd $TOP
-        Process buildPluginsSettings ../avidemux_plugins -DPLUGIN_UI=SETTINGS
+        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
 fi
 
 
