@@ -28,6 +28,8 @@ INITIALISE_SUMMARY_LISTS()
 include(admMainChecks)
 include(admCheckFtello)
 include(admAsNeeded)
+INCLUDE(admCheckVDPAU)
+INCLUDE(admCheckLibVA)
 
 #########################################
 # Debug Summary
@@ -65,6 +67,9 @@ MESSAGE("")
 
 IF(WIN32)# AND NOT MSVC)
    INCLUDE(admCheckDxva2)
+ELSE(WIN32)
+        checkVDPAU()
+        checkLibVA()
 ENDIF(WIN32)# AND NOT MSVC)
 
 ########################################
