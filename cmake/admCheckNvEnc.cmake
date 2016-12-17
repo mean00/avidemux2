@@ -9,7 +9,7 @@ MACRO(checkNvEnc)
                         FIND_PATH(NVENC_INCLUDE_DIR nvEncodeAPI.h
                         PATHS /usr/include /usr/include/nvenc /usr/include/x86_64-linux-gnu) # Needed for 64 bits linux
                         IF(NVENC_INCLUDE_DIR)
-				MESSAGE(STATUS " nvenc header Found ")
+				MESSAGE(STATUS " nvenc header Found in ${NVENC_INCLUDE_DIR}")
                                 SET(USE_NVENC True)
                                 SET(NVENC_FOUND 1)
                         ELSE(NVENC_INCLUDE_DIR)
@@ -19,7 +19,6 @@ MACRO(checkNvEnc)
 		        SET(NVENC_CHECKED 1)
 		ENDIF (NVENC)
 
-		MESSAGE(STATUS "NVENC header found in ${NVENC_INCLUDE_DIR}")
 		MESSAGE("")
 	APPEND_SUMMARY_LIST("Video Encoder" "NVENC" "${NVENC_FOUND}")
 	ENDIF (NOT NVENC_CHECKED)
