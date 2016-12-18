@@ -530,12 +530,12 @@ bool GUI_infiniteForward(uint64_t pts)
 bool GUI_lastFrameBeforePts(uint64_t pts)
 {
     uint64_t pts2=pts;
-    uint64_t tmp;
     // Try to find a keyframe just before pts
     if(video_body->getPKFramePTS(&pts2))
     { // Starting from there, approach the last frame before pts
         admPreview::deferDisplay(1);
         GUI_GoToTime(pts2);
+        uint64_t tmp;
         while(pts2<pts)
         {
             tmp=pts2;
