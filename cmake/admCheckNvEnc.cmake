@@ -6,10 +6,10 @@ MACRO(checkNvEnc)
 		MESSAGE(STATUS "*****************")
 
 		IF (NVENC)
-                        FIND_PATH(NVENC_INCLUDE_DIR nvEncodeAPI.h 
-		      	PATHS /usr/include/x86_64-linux-gnu) # Needed for 64 bits linux
+                        FIND_PATH(NVENC_INCLUDE_DIR nvEncodeAPI.h
+                        PATHS /usr/include /usr/include/nvenc /usr/include/x86_64-linux-gnu) # Needed for 64 bits linux
                         IF(NVENC_INCLUDE_DIR)
-				MESSAGE(STATUS " nvenc header Found ")
+				MESSAGE(STATUS " nvenc header Found in ${NVENC_INCLUDE_DIR}")
                                 SET(USE_NVENC True)
                                 SET(NVENC_FOUND 1)
                         ELSE(NVENC_INCLUDE_DIR)
