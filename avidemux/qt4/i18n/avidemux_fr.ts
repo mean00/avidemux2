@@ -2660,7 +2660,7 @@ Go to Audio-&gt;MainTrack to select the active one.</source>
         <location line="+5"/>
         <location line="+255"/>
         <source>Something bad happened (II)</source>
-        <translation">Quelque chose d'horrible est arrivé (II)</translation>
+        <translation>Quelque chose d'horrible est arrivé (II)</translation>
     </message>
     <message>
         <location line="-56"/>
