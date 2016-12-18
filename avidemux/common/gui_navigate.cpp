@@ -446,7 +446,6 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
 */
 bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
 {
-    uint64_t playpos=admPreview::getCurrentPts();
     uint64_t pts;
     pts=hh*3600+mm*60+ss;
     pts*=1000;
@@ -467,11 +466,8 @@ bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
         if(pts>=lastpts) // if at or beyond the last frame but within the total duration
             return GUI_GoToTime(lastpts); // go to the last frame
     }
-    if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video...
-    {
-        if(false==video_body->goToTimeVideo(pts)) // ...and there is no keyframe at pts==0
-            video_body->rewind(); // go to the first frame then
-    }
+    if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+        video_body->rewind(); // go to the first frame then
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     return true;
