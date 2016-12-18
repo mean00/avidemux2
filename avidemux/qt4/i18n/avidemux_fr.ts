@@ -1433,7 +1433,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+210"/>
         <source>Decode video using DXVA2 (windows)</source>
-        <translation>Utiliser DXVA2 pour décoder (fenêtre)</translation>
+        <translation>Utiliser DXVA2 pour décoder (Windows)</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -2914,7 +2914,7 @@ Is it running ?</source>
     <message>
         <location line="+0"/>
         <source>Saving %s as a BMP file failed.</source>
-        <translation>Enregistrement %s en tant que fichier BMP échoué</translation>
+        <translation>L'enregistrement %s en tant que fichier BMP échoué</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -2924,7 +2924,7 @@ Is it running ?</source>
     <message>
         <location line="+4"/>
         <source>Failed</source>
-        <translation>Échoué</translation>
+        <translation>Echec</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -7918,7 +7918,7 @@ L'édition en cours a été enregistrée et sera rechargée au prochain démarra
     <message>
         <location line="+0"/>
         <source>Failed</source>
-        <translation>Échoué</translation>
+        <translation>Echec</translation>
     </message>
     <message>
         <location line="+0"/>
