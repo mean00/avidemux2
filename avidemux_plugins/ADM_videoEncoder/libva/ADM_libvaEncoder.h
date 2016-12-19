@@ -15,10 +15,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_LIBVA_ENCODER_H
-#define ADM_LIBVA_ENCODER_H
+#pragma once
 #include "ADM_coreVideoEncoder.h"
-#include "ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/ADM_coreLibVA.h"
+#include "ADM_coreLibVA/ADM_coreLibVA.h"
 
 #define VA_ENC_NB_SURFACE 1 // ???
 /**
@@ -43,4 +42,3 @@ virtual        bool         setup(void);
 };
 
 
-#endif

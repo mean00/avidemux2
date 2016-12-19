@@ -46,8 +46,8 @@ bool         ADM_libvaEncoder::setup(void)
 
     for(int i=0;i<VA_ENC_NB_SURFACE;i++)
     {
-        vaSurface[i]=new ADM_vaSurface(NULL,width,height);
-        if(vaSurface[i]->image) 
+        vaSurface[i]=ADM_vaSurface::allocateWithSurface(width,height);
+        if(!vaSurface[i]) 
         {
             ADM_warning("Cannot allocate surface\n");
             return false;
