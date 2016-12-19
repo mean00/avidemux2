@@ -150,8 +150,11 @@ public:
             image=NULL;
         }
     }
+    bool hasValidSurface() {return !(surface==VA_INVALID);}
     bool toAdmImage(ADMImage *image);
     bool fromAdmImage(ADMImage *image);
+    
+    static ADM_vaSurface *allocateWithSurface(int w,int h);
     
 };
 /**

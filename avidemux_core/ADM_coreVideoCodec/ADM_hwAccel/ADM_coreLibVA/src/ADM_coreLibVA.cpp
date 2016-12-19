@@ -165,7 +165,7 @@ static bool checkSupportedFunctionsAndImageFormat(void)
 static void displayXError(const char *func,const VADisplay dis,const VAStatus er)
 {
     if(!er) return;
-    ADM_warning("LibVA Error : <%s:%s>\n",func,vaErrorStr((er)));
+    ADM_warning("LibVA Error : <%s:%s:%d>\n",func,vaErrorStr(er),(int)er);
 
 
 }
@@ -1111,6 +1111,26 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
     }
     return false;
 }
+/**
+ * allocateWithSurface
+ * @param w
+ * @param h
+ * @return 
+ */
+ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h)
+{
+    ADM_vaSurface *s=new ADM_vaSurface(w,h);
+    s->surface=admLibVA::allocateSurface(w,h);
+    if(!s->hasValidSurface())
+    {
+        delete s;
+        s=NULL;
+        ADM_warning("Cannot allocate va surface\n");
+        return NULL;
+    }
+    return s;
+}
+
 /**
  *
  * @return
