@@ -583,6 +583,7 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
        case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
 #endif
        default:
+           ADM_info("Unknown codec (libVA)\n");
            return false;
     }
     if(!admLibVA::supported(profile))
