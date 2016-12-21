@@ -4487,7 +4487,7 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Configure</source>
-        <translation type="unfinished">Konfigurieren</translation>
+        <translation type="unfinished">&amp;Konfigurieren</translation>
     </message>
     <message>
         <source>Audio Filters</source>
@@ -4519,7 +4519,7 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Enabled</source>
-        <translation type="unfinished">aktivieren</translation>
+        <translation type="unfinished">ak&amp;tivieren</translation>
     </message>
     <message>
         <location line="-100"/>
@@ -4527,7 +4527,7 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Filters</source>
-        <translation type="unfinished">Filter</translation>
+        <translation type="unfinished">&amp;Filter</translation>
     </message>
 </context>
 <context>
@@ -17489,7 +17489,7 @@ Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwen
     <message>
         <location line="+6"/>
         <source>Use advanced configuration</source>
-        <translation>_Erweiterte Konfiguration verwenden</translation>
+        <translation>&amp;Erweiterte Konfiguration verwenden</translation>
     </message>
     <message>
         <location line="+9"/>

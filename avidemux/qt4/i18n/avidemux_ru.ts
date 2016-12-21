@@ -2984,7 +2984,7 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Configure</source>
-        <translation type="unfinished">Настройка</translation>
+        <translation type="unfinished">&amp;Настройка</translation>
     </message>
     <message>
         <source>Audio Filters</source>
@@ -2996,7 +2996,7 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Filters</source>
-        <translation type="unfinished">Фильтры</translation>
+        <translation type="unfinished">&amp;Фильтры</translation>
     </message>
     <message>
         <location line="-164"/>
@@ -3006,7 +3006,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+11"/>
         <source>Track 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Дорожка 1</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -3014,22 +3014,22 @@ Drop timing informations ?</source>
         <location line="+41"/>
         <location line="+41"/>
         <source>Enabled</source>
-        <translation type="unfinished">Включено</translation>
+        <translation type="unfinished">&amp;Включена</translation>
     </message>
     <message>
         <location line="-89"/>
         <source>Track 2</source>
-        <translation type="unfinished">Дорожка 2</translation>
+        <translation>Дорожка 2</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Track 3</source>
-        <translation type="unfinished">Дорожка 3</translation>
+        <translation>Дорожка 3</translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Track 4</source>
-        <translation type="unfinished">Дорожка 4</translation>
+        <translation>Дорожка 4</translation>
     </message>
 </context>
 <context>
