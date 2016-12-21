@@ -286,7 +286,7 @@ int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstr
         r= avcodec_encode_video2 (_context,&pkt,in, &gotData);
         if(r<0)
         {
-            ADM_warning("Error %d encoding video (%s) \n",r,av_err2str(r));
+            ADM_warning("Error %d encoding video  \n",r);
             return r;
         }
         if(!gotData)
