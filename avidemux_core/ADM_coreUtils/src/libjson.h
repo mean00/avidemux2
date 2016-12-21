@@ -65,9 +65,10 @@
 		  #endif
 
 		  #ifdef JSON_STREAM
-			 JSONSTREAM * json_new_stream(json_stream_callback_t callback);
+			 JSONSTREAM * json_new_stream(json_stream_callback_t callback, json_stream_e_callback_t e_callback, void * identifier);
 			 void json_stream_push(JSONSTREAM * stream, json_const json_char * addendum);
 			 void json_delete_stream(JSONSTREAM * stream);
+		     void json_stream_reset(JSONSTREAM * stream);
 		  #endif
 
 
@@ -102,8 +103,10 @@
 		  json_int_t json_as_int(json_const JSONNODE * node);
 		  json_number json_as_float(json_const JSONNODE * node);
 		  json_bool_t json_as_bool(json_const JSONNODE * node);
-		  JSONNODE * json_as_node(json_const JSONNODE * node);
-		  JSONNODE * json_as_array(json_const JSONNODE * node);
+		  #ifdef JSON_CASTABLE
+			 JSONNODE * json_as_node(json_const JSONNODE * node);
+			 JSONNODE * json_as_array(json_const JSONNODE * node);
+		  #endif
 		  #ifdef JSON_BINARY
 			 void * json_as_binary(json_const JSONNODE * node, unsigned long * size);
 		  #endif
@@ -131,7 +134,9 @@
 			 json_char * json_encode64(json_const void * binary, json_index_t bytes);
 			 void * json_decode64(json_const json_char * text, unsigned long * size);
 		  #endif
-		  void json_cast(JSONNODE * node, char type);
+		  #ifdef JSON_CASTABLE
+			 void json_cast(JSONNODE * node, char type);
+		  #endif
 
 		  /* children access */
 		  void json_reserve(JSONNODE * node, json_index_t siz);
@@ -169,44 +174,109 @@
     #ifndef __cplusplus
 	   #error Turning off JSON_LIBRARY requires C++
     #endif
-    #include "Source/JSONNode.h"  //not used in this file, but libjson.h should be the only file required to use it embedded
-    #include "Source/JSONWorker.h"
-    #include "Source/JSONValidator.h"
-    #include "Source/JSONStream.h"
+    #include "_internal/Source/JSONNode.h"  //not used in this file, but libjson.h should be the only file required to use it embedded
+    #include "_internal/Source/JSONWorker.h"
+    #include "_internal/Source/JSONValidator.h"
+    #include "_internal/Source/JSONStream.h"
+    #include "_internal/Source/JSONPreparse.h"
     #ifdef JSON_EXPOSE_BASE64
-	   #include "Source/JSON_Base64.h"
+	   #include "_internal/Source/JSON_Base64.h"
     #endif
     #ifndef JSON_NO_EXCEPTIONS
 	   #include <stdexcept>  //some methods throw exceptions
     #endif
 
-    namespace libjson {
+	#include <cwchar>  /* need wide characters */
+	#include <string>
+
+    namespace libjson {	   
 	   #ifdef JSON_EXPOSE_BASE64
-		  inline static json_string encode64(const unsigned char * binary, size_t bytes) json_nothrow json_cold {
+		  inline static json_string encode64(const unsigned char * binary, size_t bytes) json_nothrow {
 			 return JSONBase64::json_encode64(binary, bytes);
 		  }
 
-		  inline static std::string decode64(const json_string & encoded) json_nothrow json_cold {
+		  inline static std::string decode64(const json_string & encoded) json_nothrow {
 			 return JSONBase64::json_decode64(encoded);
 		  }
 	   #endif
+	   
+	   //useful if you have json that you don't want to parse, just want to strip to cut down on space
+	   inline static json_string strip_white_space(const json_string & json) json_nothrow {
+		  return JSONWorker::RemoveWhiteSpaceAndComments(json, false);
+	   }
+		
+		#ifndef JSON_STRING_HEADER
+			inline static std::string to_std_string(const json_string & str){
+				#if defined(JSON_UNICODE) ||defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
+					return std::string(str.begin(), str.end());		
+				#else
+					return str;
+				#endif
+			}
+			inline static std::wstring to_std_wstring(const json_string & str){
+				#if (!defined(JSON_UNICODE)) || defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
+					return std::wstring(str.begin(), str.end());		
+				#else
+					return str;
+				#endif
+			}
+			
+			inline static json_string to_json_string(const std::string & str){
+				#if defined(JSON_UNICODE) ||defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
+					return json_string(str.begin(), str.end());		
+				#else
+					return str;
+				#endif
+			}
+			inline static json_string to_json_string(const std::wstring & str){
+				#if (!defined(JSON_UNICODE)) || defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
+					return json_string(str.begin(), str.end());		
+				#else
+					return str;
+				#endif
+			}
+		#endif
 
 	   #ifdef JSON_READ_PRIORITY
 		  //if json is invalid, it throws a std::invalid_argument exception
 		  inline static JSONNode parse(const json_string & json) json_throws(std::invalid_argument) {
-			 return JSONWorker::parse(json);
+			 #ifdef JSON_PREPARSE
+				size_t len;
+				json_auto<json_char> buffer(JSONWorker::RemoveWhiteSpace(json, len, false));
+				return JSONPreparse::isValidRoot(buffer.ptr);
+			 #else
+				return JSONWorker::parse(json);
+			 #endif
 		  }
 
 		  inline static JSONNode parse_unformatted(const json_string & json) json_throws(std::invalid_argument) {
-			 return JSONWorker::parse_unformatted(json);
+			 #ifdef JSON_PREPARSE
+				return JSONPreparse::isValidRoot(json);
+			 #else
+				return JSONWorker::parse_unformatted(json);
+			 #endif
 		  }
 
 		  #ifdef JSON_VALIDATE
 			 inline static bool is_valid(const json_string & json) json_nothrow {
-				return JSONValidator::isValidRoot(JSONWorker::RemoveWhiteSpaceAndComments(json).c_str());
+				#ifdef JSON_SECURITY_MAX_STRING_LENGTH
+				    if (json_unlikely(json.length() > JSON_SECURITY_MAX_STRING_LENGTH)){
+					   JSON_FAIL(JSON_TEXT("Exceeding JSON_SECURITY_MAX_STRING_LENGTH"));
+					   return false;
+				    }
+				#endif
+				json_auto<json_char> s;
+				s.set(JSONWorker::RemoveWhiteSpaceAndCommentsC(json, false));
+				return JSONValidator::isValidRoot(s.ptr);
 			 }
 
 			 inline static bool is_valid_unformatted(const json_string & json) json_nothrow {
+				#ifdef JSON_SECURITY_MAX_STRING_LENGTH
+				    if (json_unlikely(json.length() > JSON_SECURITY_MAX_STRING_LENGTH)){
+					   JSON_FAIL(JSON_TEXT("Exceeding JSON_SECURITY_MAX_STRING_LENGTH"));
+					   return false;
+				    }
+				#endif
 				return JSONValidator::isValidRoot(json.c_str());
 			 }
 			 #ifdef JSON_DEPRECATED_FUNCTIONS
@@ -218,11 +288,6 @@
 			 #endif
 		  #endif
 	   #endif
-
-	   //useful if you have json that you don't want to parse, just want to strip to cut down on space
-	   inline static json_string strip_white_space(const json_string & json) json_nothrow {
-		  return JSONWorker::RemoveWhiteSpaceAndComments(json);
-	   }
 
 	   //When libjson errors, a callback allows the user to know what went wrong
 	   #if defined JSON_DEBUG && !defined JSON_STDERROR

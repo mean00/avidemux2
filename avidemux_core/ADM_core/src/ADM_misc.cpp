@@ -262,7 +262,7 @@ extern char *ADM_slashToBackSlash(const char *in)
 {
     char *out,*cout;
     int n;
-    n=strlen(in);
+    n=(int)strlen(in);
     cout=out=(char *)ADM_alloc(n+1);   
     for(int i=0;i<n+1;i++)
     {
@@ -276,7 +276,7 @@ extern char *ADM_slashToBackSlash(const char *in)
 /*
  * \fn    ADM_getCurrentDate 
 */
- const ADM_date        &ADM_getCurrentDate()
+ const ADM_date        ADM_getCurrentDate()
 {
   time_t timez;
   tm *t;

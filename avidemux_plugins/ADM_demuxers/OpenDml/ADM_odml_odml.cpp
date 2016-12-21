@@ -27,13 +27,12 @@
 #define aprintf(...) {}
 
 //#define OPENDML_VERBOSE
-
-#if defined( _WIN32) || defined(ADM_CPU_X86_64)
-	#define PPACKED __attribute__ ((packed, gcc_struct))
+#ifdef _MSC_VER
+        #define ADM_PACKED(c,n)   __pragma( pack(push, 1) ) c n  __pragma( pack(pop) )
 #else
-	#define PPACKED
+	#define ADM_PACKED(c,n) c  __attribute__ ((packed, gcc_struct)) n
 #endif
-
+ADM_PACKED(
 typedef struct  //
 {
 	//uint32_t	fcc;
@@ -44,17 +43,20 @@ typedef struct  //
 	uint32_t	nbEntryInUse;
 	uint32_t	chunkId;
 	uint32_t	reserver[3];
-}PPACKED OPENDML_INDEX;
+},OPENDML_INDEX);
 
 
+ADM_PACKED(
 typedef struct
 {
 	uint64_t 	offset;
 	uint32_t	size;
 	uint32_t	duration;
-}PPACKED OPENDML_ENTRY ;
+},OPENDML_ENTRY 
+);
 
 
+ADM_PACKED(
 typedef struct
 {
 	uint16_t 	longsPerEntry;
@@ -64,7 +66,8 @@ typedef struct
 	uint32_t	chunkId;
 	uint64_t	base;
 	uint32_t	reserver;
-} PPACKED  OPENML_SECONDARY_INDEX ;
+} ,OPENML_SECONDARY_INDEX 
+);
 
 
  static int readMasterIndex(OPENDML_INDEX *index,FILE *fd);

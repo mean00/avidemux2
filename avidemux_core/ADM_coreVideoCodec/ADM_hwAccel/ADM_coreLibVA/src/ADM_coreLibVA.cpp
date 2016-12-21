@@ -39,7 +39,7 @@
 
 
 /**
- * 
+ *
  */
 
 
@@ -69,10 +69,10 @@ namespace ADM_coreLibVA
  bool                   indirectOperationYV12;
  bool                   indirectOperationNV12;
 admLibVA::LIBVA_TRANSFER_MODE    transferMode;
- 
+
  namespace decoders
  {
-        bool            h264; 
+        bool            h264;
  }
 }
 namespace ADM_coreLibVAEnc
@@ -90,8 +90,8 @@ namespace ADM_coreLibVAEnc
                     configId=-1;
                     hasCBR=false;
                     hasVBR=false;
-                }                    
-                        
+                }
+
  };
  namespace encoders
  {
@@ -109,7 +109,7 @@ static bool                  coreLibVAWorking=false;
 
 /**
  * \fn checkSupportedFunctionsAndImageFormat
- * \brief check if operation through vaDeriveImage is supported and if 
+ * \brief check if operation through vaDeriveImage is supported and if
  *           YV12 or NV12 is supported
  * @param func
  * @param dis
@@ -120,24 +120,24 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     bool r=false;
     ADMImageDefault  image1(640,400),image2(640,400);
     VASurfaceID      surface=admLibVA::allocateSurface(640,400); // freed with admSurface
-    ADM_vaSurface    admSurface(640,400);            
+    ADM_vaSurface    admSurface(640,400);
     admSurface.surface=VA_INVALID;
-    
+
     if(surface==VA_INVALID)
     {
         ADM_info("Cannot allocate a surface => not working\n");
         return false;
-    }    
+    }
     admSurface.surface=surface;
-    
-    // Check direct upload/Download works    
+
+    // Check direct upload/Download works
     ADM_info("--Trying direct operations --\n");
     ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
     ADM_info("-- Trying indirect (YV12) --\n");
     ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
     ADM_info("-- Trying indirect (NV12) --\nSKIPPED\n");
     ADM_coreLibVA::indirectOperationNV12=false; //tryIndirect(1,admSurface, image1, image2 );
-    
+
     ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
     ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
     ADM_info("Indirect YV12    : %d\n",ADM_coreLibVA::indirectOperationYV12);
@@ -164,9 +164,9 @@ static bool checkSupportedFunctionsAndImageFormat(void)
  */
 static void displayXError(const char *func,const VADisplay dis,const VAStatus er)
 {
-    if(!er) return;    
-    ADM_warning("LibVA Error : <%s:%s>\n",func,vaErrorStr((er)));
-    
+    if(!er) return;
+    ADM_warning("LibVA Error : <%s:%s:%d>\n",func,vaErrorStr(er),(int)er);
+
 
 }
 /**
@@ -180,7 +180,7 @@ VADisplay admLibVA::getVADisplay()
 
 /**
  * \fn setupEncodingConfig
- * @return 
+ * @return
  */
 bool admLibVA::setupEncodingConfig(void)
 {
@@ -188,13 +188,13 @@ bool admLibVA::setupEncodingConfig(void)
     VAEntrypoint entrypoints[5];
     int num_entrypoints;
     VAConfigAttrib attrib[2];
-    
- 
+
+
     CHECK_ERROR(vaQueryConfigEntrypoints(ADM_coreLibVA::display, VAProfileH264Main, entrypoints,        &num_entrypoints));
-    
+
     int found=-1;
     ADM_info("Found %d entry points\n",num_entrypoints);
-    for	(int slice_entrypoint = 0; slice_entrypoint < num_entrypoints; slice_entrypoint++) 
+    for	(int slice_entrypoint = 0; slice_entrypoint < num_entrypoints; slice_entrypoint++)
     {
             ADM_info("   %d is a %d\n",slice_entrypoint,entrypoints[slice_entrypoint] );
         if (entrypoints[slice_entrypoint] == VAEntrypointEncSlice)
@@ -202,7 +202,7 @@ bool admLibVA::setupEncodingConfig(void)
             found=slice_entrypoint;
             break;
         }
-            
+
     }
     if(-1 == found)
     {
@@ -241,7 +241,7 @@ bool admLibVA::setupEncodingConfig(void)
            }
 
     }
-    if(check!=3) 
+    if(check!=3)
     {
         ADM_warning("Some configuration are missing, bailing\n");
         return false;
@@ -252,7 +252,7 @@ bool admLibVA::setupEncodingConfig(void)
     {
         ADM_coreLibVAEnc::encoders::vaH264.configId=-1;
         return false;
-        
+
     }else
     {
         ADM_info("H264 Encoding config created\n");
@@ -265,12 +265,12 @@ bool admLibVA::setupEncodingConfig(void)
  * @param profile
  * @param cid
  * @param name
- * @return 
+ * @return
  */
 static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *name)
 {
     VAStatus xError;
-    
+
     *cid=-1;
     VAConfigAttrib attrib;
     attrib.type = VAConfigAttribRTFormat;
@@ -300,7 +300,7 @@ bool admLibVA::setupConfig(void)
     bool r=false;
     int nb=vaMaxNumProfiles(ADM_coreLibVA::display);
     ADM_info("Max config =  %d \n",nb);
-    VAProfile *prof=(VAProfile *)alloca(sizeof(VAProfile)*nb);
+    VAProfile *prof=(VAProfile *)admAlloca(sizeof(VAProfile)*nb);
     int nbProfiles;
     CHECK_ERROR(vaQueryConfigProfiles (ADM_coreLibVA::display, prof,&nbProfiles));
 
@@ -315,20 +315,20 @@ bool admLibVA::setupConfig(void)
                 r=true;
                 ADM_info("H264 high profile found\n");
             }
-        }        
+        }
     }
     // if H264 is not supported, no need to go further
     if(!r)
         return false;
-    
-    
-    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");    
+
+
+    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");
     checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,"VC1");
-#ifdef LIBVA_HEVC_DEC    
-    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");    
+#ifdef LIBVA_HEVC_DEC
+    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");
     checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits ,"H265 10Bits");
-#endif    
-    
+#endif
+
 #ifdef LIBVA_VP9_DEC
     checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,"VP9");
 #endif
@@ -337,7 +337,7 @@ bool admLibVA::setupConfig(void)
 /**
  * \fn fourCC_tostring
  * @param fourcc
- * @return 
+ * @return
  */
 static char *fourCC_tostring(uint32_t fourcc)
 {
@@ -373,7 +373,7 @@ bool admLibVA::setupImageFormat()
                 aprintf("----------");
                 aprintf("bpp : %d\n",list[i].bits_per_pixel);
                 uint32_t fcc=list[i].fourcc;
-                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));  
+                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));
                 switch(fcc)
                 {
                 case VA_FOURCC_NV12:
@@ -386,7 +386,7 @@ bool admLibVA::setupImageFormat()
                      break;
                 }
             }
-            
+
         }
         if(r==false)
         {
@@ -398,8 +398,8 @@ bool admLibVA::setupImageFormat()
 /**
  * \fn fillContext
  * @param c
- * @return 
- */    
+ * @return
+ */
 bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
 {
     CHECK_WORKING(false);
@@ -408,11 +408,11 @@ bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
     {
        case VAProfileH264High: cid=ADM_coreLibVA::configH264;break;
        case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
-#ifdef LIBVA_HEVC_DEC           
+#ifdef LIBVA_HEVC_DEC
        case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
        case VAProfileHEVCMain10: cid=ADM_coreLibVA::configH26510Bits;break;
-#endif        
-      
+#endif
+
 #ifdef LIBVA_VP9_DEC
        case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
 #endif
@@ -424,8 +424,8 @@ bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
     c->display=ADM_coreLibVA::display;
     return true;
 }
-    
-    
+
+
 
 /**
     \fn     init
@@ -438,12 +438,12 @@ bool admLibVA::init(GUI_WindowInfo *x)
     int maj=0,min=0,patch=0;
     ADM_info("[LIBVA] Initializing LibVA library ...\n");
 
-    
+
     ADM_coreLibVA::context=NULL;
     ADM_coreLibVA::decoders::h264=false;
     ADM_coreLibVA::directOperation=true;
     ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
-            
+
     myWindowInfo=*x;
     VAStatus xError;
     int majv,minv;
@@ -454,12 +454,12 @@ bool admLibVA::init(GUI_WindowInfo *x)
         return false;
     }
     ADM_info("VA %d.%d, Vendor = %s\n",majv,minv,vaQueryVendorString(ADM_coreLibVA::display));
-    
+
     if(setupConfig() && setupImageFormat())
     {
         coreLibVAWorking=true;
     }
-    
+
     if(setupEncodingConfig())
     {
         ADM_info("VA: Encoding supported\n");
@@ -478,8 +478,8 @@ bool admLibVA::cleanup(void)
     ADM_info("[LIBVA] De-Initializing LibVA library ...\n");
     if(true==coreLibVAWorking)
     {
-         CHECK_ERROR(vaTerminate(ADM_coreLibVA::display));   
-          
+         CHECK_ERROR(vaTerminate(ADM_coreLibVA::display));
+
     }
     coreLibVAWorking=false;
     return true;
@@ -492,9 +492,9 @@ bool admLibVA::isOperationnal(void)
     return coreLibVAWorking;
 }
 /**
- * 
+ *
  * @param profile
- * @return 
+ * @return
  */
 bool        admLibVA::supported(VAProfile profile)
 {
@@ -502,23 +502,23 @@ bool        admLibVA::supported(VAProfile profile)
     switch(profile)
     {
         SUPSUP(VAProfileH264High,configH264)
-        SUPSUP(VAProfileVC1Advanced,configVC1)                
-#ifdef LIBVA_HEVC_DEC                           
+        SUPSUP(VAProfileVC1Advanced,configVC1)
+#ifdef LIBVA_HEVC_DEC
         SUPSUP(VAProfileHEVCMain,configH265)
         SUPSUP(VAProfileHEVCMain10,configH26510Bits)
-#endif                
-      
+#endif
+
 #ifdef LIBVA_VP9_DEC
         SUPSUP(VAProfileVP9Profile3,configVP9)
 #endif
         default:
             ADM_info("This profile is not supported by libva\n");
             break;
-    } 
+    }
     ADM_info("Unknown profile (%d)\n",(int)profile);
 #ifdef LIBVA_VP9_DEC
     ADM_info("Compiled with vp9 support, library says %d\n",ADM_coreLibVA::configVP9);
-#endif    
+#endif
     return false;
 }
 
@@ -526,7 +526,7 @@ bool        admLibVA::supported(VAProfile profile)
  * \fn createDecoder
  * @param width
  * @param height
- * @return 
+ * @return
  */
 
 VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int height,int nbSurface, VASurfaceID *surfaces)
@@ -539,13 +539,13 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
     switch(profile)
     {
        case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
-       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;       
-#ifdef LIBVA_HEVC_DEC                                  
+       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
+#ifdef LIBVA_HEVC_DEC
        case VAProfileHEVCMain:    cid=ADM_coreLibVA::configH265;break;
-       case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;       
-#endif       
+       case VAProfileHEVCMain10:  cid=ADM_coreLibVA::configH26510Bits;break;
+#endif
 #ifdef LIBVA_VP9_DEC
-       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;       
+       case VAProfileVP9Profile3: cid=ADM_coreLibVA::configVP9;break;
 #endif
        default:
                 ADM_assert(0);
@@ -554,7 +554,7 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
     }
 
     CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, cid,
-                width,    height,    
+                width,    height,
                 VA_PROGRESSIVE, // ?? NOT SURE ??
                 surfaces,
                 nbSurface,
@@ -572,14 +572,14 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
  * \brief allocate the correct image type for transfer : None, YV12 or NV12
  * @param w
  * @param h
- * @return 
+ * @return
  */
  VAImage    *admLibVA::allocateImage( int w, int h)
  {
     switch(ADM_coreLibVA::transferMode)
     {
     case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");
-    case   admLibVA::ADM_LIBVA_DIRECT:        
+    case   admLibVA::ADM_LIBVA_DIRECT:
                 return NULL;break;
     case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
                 return admLibVA::allocateNV12Image(w,h);break;
@@ -591,10 +591,10 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
  }
 
 /**
- * 
+ *
  * @param w
  * @param h
- * @return 
+ * @return
  */
 VAImage   *admLibVA::allocateNV12Image( int w, int h)
 {
@@ -603,7 +603,7 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
     VAImage *image=new VAImage;
     memset(image,0,sizeof(*image));
     CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatNV12,
-                w,    h,    
+                w,    h,
                 image));
     if(xError)
     {
@@ -615,10 +615,10 @@ VAImage   *admLibVA::allocateNV12Image( int w, int h)
     return image;
 }
 /**
- * 
+ *
  * @param w
  * @param h
- * @return 
+ * @return
  */
 VAImage   *admLibVA::allocateYV12Image( int w, int h)
 {
@@ -627,7 +627,7 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
     VAImage *image=new VAImage;
     memset(image,0,sizeof(*image));
     CHECK_ERROR(vaCreateImage ( ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatYV12,
-                w,    h,    
+                w,    h,
                 image));
     if(xError)
     {
@@ -639,7 +639,7 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
     return image;
 }
 /**
- * 
+ *
  * @param surface
  */
 void        admLibVA::destroyImage(  VAImage *image)
@@ -652,7 +652,7 @@ void        admLibVA::destroyImage(  VAImage *image)
         ADM_assert(0);
     }
     listOfAllocatedVAImage.erase(image->image_id);
-    
+
     CHECK_ERROR(vaDestroyImage(ADM_coreLibVA::display, image->image_id));
     delete image;
     if(xError)
@@ -668,10 +668,10 @@ void        admLibVA::destroyImage(  VAImage *image)
  */
 bool admLibVA::destroyDecoder(VAContextID session)
 {
-       
+
        int xError;
        CHECK_WORKING(false);
-       
+
        aprintf("Destroying decoder %x\n",session);
         CHECK_ERROR(vaDestroyContext(ADM_coreLibVA::display,session));
         if(!xError)
@@ -687,16 +687,16 @@ bool admLibVA::destroyDecoder(VAContextID session)
  * \fn allocateSurface
  * @param w
  * @param h
- * @return 
+ * @return
  */
 VASurfaceID        admLibVA::allocateSurface(int w, int h)
 {
        int xError;
        CHECK_WORKING(VA_INVALID);
-       
+
        aprintf("Creating surface %d x %d\n",w,h);
        VASurfaceID s;
- 
+
         CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
                         VA_RT_FORMAT_YUV420,
                         w,h,
@@ -714,7 +714,7 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h)
             }
             listOfAllocatedSurface[s]=true;
             return s;
-        }        
+        }
         aprintf("Error creating surface\n");
         return VA_INVALID;
 }
@@ -727,7 +727,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
 {
       int xError;
       CHECK_WORKING();
-      
+
       surfaceList::iterator already;
       already=listOfAllocatedSurface.find(surface);
       if(already==listOfAllocatedSurface.end())
@@ -749,7 +749,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * \fn surfaceToImage
  * @param id
  * @param img
- * @return 
+ * @return
  */
 bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
 {
@@ -772,7 +772,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
      }
      if(status==VASurfaceReady) break;
      countDown--;
-     if(!countDown) 
+     if(!countDown)
      {
          ADM_warning("Timeout waiting for surface\n");
          return false;
@@ -793,14 +793,14 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
     {
         case VA_FOURCC_YV12:break;
         case VA_FOURCC_NV12:break;
-        default:  
+        default:
             ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
             goto dropIt;
     }
     // Map image...
-     
+
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
-    if(!xError)        
+    if(!xError)
     {
          switch(vaImage.format.fourcc)
         {
@@ -820,16 +820,17 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
                     dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
                     break;
                 }
-                default:  
-                        goto dropIt;
-    }
-         r=true;
+                default:
+                    goto dropIt;
+                    break;
+        }
+        r=true;
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
-dropIt:    
+dropIt:
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
-    
-    
+
+
     return r;
 }
 /**
@@ -838,7 +839,7 @@ dropIt:
  * @param widget
  * @param displayWidth
  * @param displayHeight
- * @return 
+ * @return
  */
 bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,int displayHeight)
 {
@@ -861,7 +862,7 @@ bool        admLibVA::putX11Surface(ADM_vaSurface *img,int widget,int displayWid
  */
 bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
 {
-    
+
     int xError;
     VASurfaceStatus status;
     CHECK_WORKING(false);
@@ -885,12 +886,12 @@ bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
  */
 bool   admLibVA::surfaceToImage(ADM_vaSurface *dst,VAImage *src )
 {
-    
+
     int xError;
     VASurfaceStatus status;
     CHECK_WORKING(false);
     CHECK_ERROR(vaGetImage(ADM_coreLibVA::display,
-                           dst->surface,                           
+                           dst->surface,
                            0,0,
                            dst->w,dst->h,
                            src->image_id
@@ -907,7 +908,7 @@ bool   admLibVA::surfaceToImage(ADM_vaSurface *dst,VAImage *src )
  * \fn uploadToImage
  * @param dest
  * @param src
- * @return 
+ * @return
  */
 bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
 {
@@ -916,7 +917,7 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
-    if(xError)        
+    if(xError)
     {
         ADM_warning("Cannot map image\n");
         return false;
@@ -937,7 +938,7 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
         case VA_FOURCC_NV12:src->convertToNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);break;
         default: ADM_assert(0);
     }
-    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
+    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));
     return true;
 }
 
@@ -945,7 +946,7 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
  * \fn uploadToImage
  * @param dest
  * @param src
- * @return 
+ * @return
  */
 bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
 {
@@ -954,7 +955,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, dest->buf, (void**)&ptr))
-    if(xError)        
+    if(xError)
     {
         ADM_warning("Cannot map image\n");
         return false;
@@ -978,7 +979,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
                         break;
         default: ADM_assert(0);
     }
-    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));    
+    CHECK_ERROR(vaUnmapBuffer (ADM_coreLibVA::display,dest->buf));
     return true;
 }
 /**
@@ -987,7 +988,7 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
  * @param dest
  * @param src
  */
-static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src) 
+static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
 {
           int w=src->_width;
 
@@ -1002,7 +1003,7 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
                 s+=srcStride;
                 d+=dstStride;
          }
-         
+
         w=w/2;
         h=h/2;
         uint8_t *srcu=src->GetReadPtr(PLANAR_U);
@@ -1016,7 +1017,7 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
                 uint8_t *ssrcu=srcu;
                 uint8_t *ssrcv=srcv;
                 uint8_t *d=dstPtr;
-                
+
                 srcu+=uStride;
                 srcv+=vStride;
                 dstPtr+=dstStride;
@@ -1033,7 +1034,7 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
  * \fn uploadToSurface
  * @param src
  * @param dest
- * @return 
+ * @return
  */
 bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
 {
@@ -1042,7 +1043,7 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
     VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
-    
+
     VAImage vaImage;
     CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display, dest->surface,&vaImage));
     if(xError)
@@ -1055,7 +1056,7 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
     {
         case VA_FOURCC_YV12:break;
         case VA_FOURCC_NV12:break;
-        default:  
+        default:
             ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
             goto dontTry;
     }
@@ -1063,14 +1064,14 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
     // Map image...
 
     CHECK_ERROR(vaMapBuffer(ADM_coreLibVA::display, vaImage.buf, (void**)&ptr))
-    if(!xError)        
+    if(!xError)
     {
          r=true;
          // NV12 or YV12
         switch(vaImage.format.fourcc)
         {
-            case VA_FOURCC_YV12: 
-            {
+            case VA_FOURCC_YV12:
+                {
                 ADMImageRefWrittable ref(src->_width,src->_height);
                 for(int i=0;i<3;i++)
                 {
@@ -1078,29 +1079,33 @@ bool   admLibVA:: admImageToSurface( ADMImage *src,ADM_vaSurface *dest)
                         ref._planeStride[i]=vaImage.pitches[i];
                 }
                 ref.duplicate(src);
-            }break;
-            case VA_FOURCC_NV12: copyNV12(ptr,&vaImage,src);break;
-            default:  
+                }
+                break;
+            case VA_FOURCC_NV12:
+                copyNV12(ptr,&vaImage,src);
+                break;
+            default:
                 ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
+                break;
         }
         CHECK_ERROR(vaUnmapBuffer(ADM_coreLibVA::display, vaImage.buf))
     }
-dontTry:    
+dontTry:
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
-    
+
     return r;
 }
 /**
- * 
+ *
  * @param image
- * @return 
+ * @return
  */
 bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
 {
     switch(ADM_coreLibVA::transferMode)
     {
     case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
-    case   admLibVA::ADM_LIBVA_DIRECT:   
+    case   admLibVA::ADM_LIBVA_DIRECT:
                 //printf("Direct\n");
                 return admLibVA::admImageToSurface (dest,this);
     case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
@@ -1116,30 +1121,50 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
     return false;
 }
 /**
- * 
+ * allocateWithSurface
+ * @param w
+ * @param h
  * @return 
+ */
+ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h)
+{
+    ADM_vaSurface *s=new ADM_vaSurface(w,h);
+    s->surface=admLibVA::allocateSurface(w,h);
+    if(!s->hasValidSurface())
+    {
+        delete s;
+        s=NULL;
+        ADM_warning("Cannot allocate va surface\n");
+        return NULL;
+    }
+    return s;
+}
+
+/**
+ *
+ * @return
  */
 bool ADM_vaSurface_cleanupCheck(void)
 {
     int n=listOfAllocatedSurface.size();
     if(!n) return true;
-    
+
     ADM_warning("Some allocated va surface are still in use (%d), clearing them\n");
     return true;
-    
+
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 bool ADM_vaImage_cleanupCheck(void)
 {
     int n=listOfAllocatedVAImage.size();
     if(!n) return true;
-    
+
     ADM_warning("Some allocated va images are still in use (%d), clearing them\n");
     return true;
-    
+
 }
 /**
  * \fn admLibVa_exitCleanup
@@ -1149,21 +1174,22 @@ bool admLibVa_exitCleanup()
     ADM_info("VA cleanup begin\n");
     ADM_vaSurface_cleanupCheck();
     ADM_vaImage_cleanupCheck();
+    admLibVA::cleanup();
     ADM_info("VA cleanup end\n");
     return true;
 }
 
 /**
- * 
+ *
  * @param image
- * @return 
+ * @return
  */
 bool ADM_vaSurface::toAdmImage(ADMImage *dest)
 {
     switch(ADM_coreLibVA::transferMode)
     {
     case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
-    case   admLibVA::ADM_LIBVA_DIRECT:   
+    case   admLibVA::ADM_LIBVA_DIRECT:
                 //printf("Direct\n");
                 return admLibVA::surfaceToAdmImage(dest,this);
     case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
@@ -1178,7 +1204,8 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     }
     return false;
 }
+
+
+
 #include "ADM_coreLibVA_encoder.cpp"
 #endif
-
-

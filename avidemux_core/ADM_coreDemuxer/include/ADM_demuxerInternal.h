@@ -68,13 +68,13 @@ public:
 
 #define ADM_DEMUXER_BEGIN( Class,prio,maj,mn,pat,name,desc) \
 extern "C" {\
-vidHeader   *create(void){ return new Class; } \
-void         destroy(vidHeader *h){ Class *z=(Class *)h;delete z;} \
-uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
-uint32_t     getApiVersion(void) {return ADM_DEMUXER_API_VERSION;} \
-const char  *getName(void) {return name;} \
-const char  *getDescriptor(void) {return desc;} \
-uint32_t     getPriority(void) {return prio;} \
+ADM_PLUGIN_EXPORT vidHeader   *create(void){ return new Class; } \
+ADM_PLUGIN_EXPORT void         destroy(vidHeader *h){ Class *z=(Class *)h;delete z;} \
+ADM_PLUGIN_EXPORT uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
+ADM_PLUGIN_EXPORT uint32_t     getApiVersion(void) {return ADM_DEMUXER_API_VERSION;} \
+ADM_PLUGIN_EXPORT const char  *getName(void) {return name;} \
+ADM_PLUGIN_EXPORT const char  *getDescriptor(void) {return desc;} \
+ADM_PLUGIN_EXPORT uint32_t     getPriority(void) {return prio;} \
 }
 
 #endif

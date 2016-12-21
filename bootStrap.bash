@@ -13,11 +13,21 @@ do_qt4=1
 do_plugins=1
 do_asan=0
 debug=0
+default_install_prefix="/usr"
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
 export QT_SELECT=5 # default for ubuntu, harmless for others
 export O_PARAL="-j $(nproc)"
+install_prefix="$default_install_prefix"
+# -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
+if [[ $(uname -m) = i?86 ]] ; then
+        export need_ae_lav_build_quirk=1
+fi
+external_libass=0
+external_liba52=0
+external_libmad=0
+
 fail()
 {
         echo "** Failed at $1**"
@@ -28,9 +38,11 @@ Process()
 {
         export BUILDDIR=$1
         export SOURCEDIR=$2
+        export INSTALL_PREFIX="-DCMAKE_INSTALL_PREFIX=$install_prefix"
         export EXTRA=$3
         export DEBUG=""
         export ASAN=""
+        export BUILD_QUIRKS=""
         BUILDER="Unix Makefiles"
         if [ "x$debug" = "x1" ] ; then 
                 DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
@@ -46,11 +58,14 @@ Process()
         if [ "x$rebuild" != "x1" ] ; then
                 rm -Rf ./$BUILDDIR
         fi
+        if [ "x$need_ae_lav_build_quirk" = "x1" ] ; then
+                BUILD_QUIRKS="-DAE_LAVCODEC_BUILD_QUIRK=true"
+        fi
         if [ ! -e "$BUILDDIR" ] ; then
                 mkdir $BUILDDIR || fail mkdir
         fi
         cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim -DCMAKE_INSTALL_PREFIX=/usr $EXTRA $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR -DCMAKE_EDIT_COMMAND=vim $INSTALL_PREFIX $EXTRA $BUILD_QUIRKS $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
 	if  [ "x$PKG" != "x" ] ; then
           $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
@@ -86,28 +101,62 @@ usage()
 {
         echo "Bootstrap avidemux 2.6:"
         echo "***********************"
-        echo "  --help            : Print usage"
-        echo "  --rpm             : Build rpm packages"
-        echo "  --deb             : Build deb packages"
-        echo "  --tgz             : Build tgz packages"
-        echo "  --debug           : Switch debugging on"
-        echo "  --rebuild         : Preserve existing build directories"
-        echo "  --with-core       : Build core"
-        echo "  --without-core    : Dont build core"
-        echo "  --with-cli        : Build cli"
-        echo "  --without-cli     : Dont build cli"
-        echo "  --with-gtk        : Build gtk"
-        echo "  --without-gtk     : Dont build gtk"
-        echo "  --with-core       : Build core"
-        echo "  --without-qt4     : Dont build qt4"
-        echo "  --with-plugins    : Build plugins"
-        echo "  --without-plugins : Dont build plugins"
-        echo "  --enable-qt4      : Try to use qt4 instead of qt5"
-        echo "  --enable-asan     : Enable Clang/llvm address sanitizer"
-        echo "  --with-clang      : Use clang/clang++ as compiler"
+        echo "  --help                : Print usage"
+        echo "  --prefix=DIR          : Install to directory DIR (default: $default_install_prefix)"
+        echo "  --rpm                 : Create rpm packages"
+        echo "  --deb                 : Create deb packages"
+        echo "  --tgz                 : Create tgz packages"
+        echo "  --debug               : Switch debugging on"
+        echo "  --rebuild             : Preserve existing build directories"
+        echo "  --with-core           : Build core"
+        echo "  --without-core        : Don't build core"
+        echo "  --with-cli            : Build cli"
+        echo "  --without-cli         : Don't build cli"
+        echo "  --with-gtk            : Build gtk"
+        echo "  --without-gtk         : Don't build gtk"
+        echo "  --with-core           : Build core"
+        echo "  --without-qt4         : Don't build qt4"
+        echo "  --with-plugins        : Build plugins"
+        echo "  --without-plugins     : Don't build plugins"
+        echo "  --enable-qt4          : Try to use qt4 instead of qt5"
+        echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
+        echo "  --with-clang          : Use clang/clang++ as compiler"
+        echo "  --with-system-libass  : Use system libass instead of the bundled one"
+        echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
+        echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
+}
+option_value()
+{
+        echo $(echo $* | cut -d '=' -f 2-)
+}
+option_name()
+{
+        echo $(echo $* | cut -d '=' -f 1 | cut -b 3-)
+}
+dir_check()
+{
+        op_name="$1"
+        dir_path="$2"
+        if [ "x$dir_path" != "x" ] ; then
+            if [[ "$dir_path" != /* ]] ; then
+                >&2 echo "Expected an absolute path for --$op_name=$dir_path, aborting."
+                exit 1
+            fi
+        else
+            >&2 echo "Empty path provided for --$op_name, aborting."
+            exit 1
+        fi
+        case "$dir_path" in
+          */)
+              echo $(expr "x$dir_path" : 'x\(.*[^/]\)') # strip trailing slashes
+              ;;
+          *)
+              echo "$dir_path"
+              ;;
+        esac
 }
 #
 
@@ -122,11 +171,15 @@ case "$CMAKE_VERSION" in
 esac
 # Could probably do it with getopts...
 while [ $# != 0 ] ;do
-        case "$1" in
+        config_option="$1"
+        case "$config_option" in
          -h|--help)
              usage
              exit 1
              ;;
+         --prefix=*)
+                install_prefix=$(dir_check $(option_name "$config_option") $(option_value "$config_option")) || exit 1
+                ;;
          --debug)
                 debug=1
                 ;;
@@ -187,8 +240,17 @@ while [ $# != 0 ] ;do
          --with-core)
                 do_core=1
              ;;
+         --with-system-libass)
+                external_libass=1
+             ;;
+         --with-system-liba52)
+                external_liba52=1
+             ;;
+         --with-system-libmad)
+                external_libmad=1
+             ;;
         *)
-                echo "unknown parameter $1"
+                echo "unknown parameter $config_option"
                 usage
                 exit 1
                 ;;
@@ -202,6 +264,15 @@ export TOP=$PWD
 export POSTFIX=""
 export FAKEROOT_DIR=$PWD/install
 export PARAL="$O_PARAL"
+if [ "x$external_libass" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_liba52" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmad" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+fi
 echo "Top dir : $TOP"
 echo "Fake installation directory=$FAKEROOT_DIR"
 if [ "x$debug" = "x1" ] ; then echo   
@@ -247,27 +318,27 @@ fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
         cd $TOP
-        Process buildPluginsCommon ../avidemux_plugins -DPLUGIN_UI=COMMON
+        Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then 
         echo "** Plugins ${qt_ext} **"
         cd $TOP
-        Process buildPlugins${qt_ext} ../avidemux_plugins -DPLUGIN_UI=QT4
+        Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_gtk" = "x1" ] ; then 
         echo "** Plugins Gtk **"
         cd $TOP
-        Process buildPluginsGtk ../avidemux_plugins -DPLUGIN_UI=GTK
+        Process buildPluginsGtk ../avidemux_plugins "-DPLUGIN_UI=GTK $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
         echo "** Plugins CLI **"
         cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
+        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1"  ] ; then 
         echo "** Plugins Settings **"
         cd $TOP
-        Process buildPluginsSettings ../avidemux_plugins -DPLUGIN_UI=SETTINGS
+        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
 fi
 
 

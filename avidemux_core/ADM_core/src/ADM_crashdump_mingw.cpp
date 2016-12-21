@@ -51,7 +51,7 @@ void uninstallSigHandler(void)
  * @param save
  * @param fatal
  */
-void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
+void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal,ADM_sigIntFunction *ignored)
 {
 	mysaveFunction = save;
 	myFatalFunction = fatal;

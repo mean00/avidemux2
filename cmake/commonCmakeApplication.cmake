@@ -45,6 +45,8 @@ IF (GETTEXT_FOUND)
 	INCLUDE_DIRECTORIES(${GETTEXT_INCLUDE_DIR})
 ENDIF (GETTEXT_FOUND)
 
+include(ADM_coreConfig)
+
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_audioFilter/include")
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_commonUI")
@@ -109,6 +111,9 @@ ADM_videocodec6
 ADM_coreVideoCodec6
 ADM_commonUI6
 )
+if (USE_DXVA2)
+	SET(commonLibs1 ${commonLibs1} ADM_coreDxva26)
+endif (USE_DXVA2)
 
 if (USE_VDPAU)
 	SET(commonLibs1 ${commonLibs1} ADM_coreVDPAU6)

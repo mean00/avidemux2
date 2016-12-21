@@ -13,8 +13,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
-using std::string;
 #include "ADM_default.h"
 #include "ADM_videoCopy.h"
 #include "ADM_edit.hxx"
@@ -22,6 +20,7 @@ using std::string;
 #include "ADM_h264_tag.h"
 #include "ADM_videoInfoExtractor.h"
 
+using std::string;
 extern "C" 
 {
     #include "libavcodec/avcodec.h"
@@ -255,7 +254,7 @@ ADM_videoStreamCopyToAnnexB::ADM_videoStreamCopyToAnnexB(uint64_t startTime,uint
     context->extradata_size=extraLen;
     codecContext=(void *)context;
     
- #warning  Ok, should we open the codec by itself ?
+// #warning  Ok, should we open the codec by itself ?
 
     
     AVBitStreamFilterContext *bsf;
@@ -323,7 +322,9 @@ bool ADM_videoStreamCopyToAnnexB::getPacket(ADMBitstream *out)
     out->len=pktOut.size;
     
     if(ret>0)
-         av_free(pktOut.data);
+    {
+         av_freep(&(pktOut.data));
+    }
 
     
     

@@ -12,6 +12,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#ifdef _MSC_VER
+#define _WINSOCKAPI_ 
+#endif
 #include "ADM_default.h"
 #include "ADM_coreCommandSocket.h"
 #include "ADM_slave.h"

@@ -2,6 +2,11 @@
 # Config
 ##########################################
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
+
+IF(MSVC)
+ADD_DEFINITIONS(-D_WINSOCKAPI_)
+ENDIF(MSVC)
+
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
 include_directories(../include ${QT_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
@@ -40,7 +45,7 @@ endif (WIN32)
 include(admCoreIncludes)
 include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_EXECUTABLE(avidemux3_jobs_${QT_EXTENSION} ${ADM_JOB_SRCS})
-ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION='\"${ADM_SUBVERSION}\"'")
+ADD_SOURCE_CFLAGS(ADM_jobs.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
 
 ###########################################
 TARGET_LINK_LIBRARIES(avidemux3_jobs_${QT_EXTENSION} ADM_coreSocket6)

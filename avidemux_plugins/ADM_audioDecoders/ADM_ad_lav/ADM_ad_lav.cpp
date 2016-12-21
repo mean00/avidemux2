@@ -23,6 +23,8 @@ extern "C" {
 
 #include "ADM_ad_plugin.h"
 #include "fourcc.h"
+#include "ADM_audioXiphUtils.h"
+
 #define SCRATCH_PAD_SIZE (100*1000*2)
 #define ADMWA_BUF (4*1024*16) // 64 kB internal
 /**
@@ -60,54 +62,6 @@ public:
     virtual uint32_t getOutputFrequency(void) {return outputFrequency;}
 
 };
-/**
- * \fn xiphEncode
- * \brief convert adm extradata to xiph extradata
- * @param l
- * @param src
- * @param dst
- * @return 
- */
-static int xiphEncode(int l, uint8_t *src, uint8_t *dstOrg)
-{
-    int outLen=1;
-    int length[3];
-    uint8_t *dst=dstOrg;
-    ADM_info("insize=%d\n",l);
-    *dst++=0x2;
-    for(int i=0;i<3;i++)
-    {
-        length[i]=(src[3]<<24)+(src[2]<<16)+(src[1]<<8)+src[0];
-        src+=4;
-        printf("Packet %d size %d\n",i,length[i]);
-        // encode length
-        if(i!=2)
-        {
-            int encode=length[i];
-            while(encode>=255) 
-            {
-                *dst++=0xff;
-                encode-=0xff;
-            }
-            *dst++=encode;
-        }
-    }
-    // now copy blocks
-    for(int i=0;i<3;i++)
-    {
-        int block=length[i];
-        memcpy(dst,src,block);
-        src+=block;
-        dst+=block;
-    }
-    int outSize= (int)(dst-dstOrg);
-    ADM_info("OutSize=%d\n",outSize);
-    return outSize;
-    
-    
-    
-}
-
 
 // Supported formats + declare our plugin
 //*******************************************************
@@ -235,7 +189,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         // Need to translate from adm to xiph
         int xiphLen=(int)l+(l/255)+4+5;
         uint8_t *xiph=new uint8_t[xiphLen];
-        xiphLen=xiphEncode(l,d,xiph);
+        xiphLen=ADMXiph::admExtraData2xiph(l,d,xiph);
         _context->extradata=xiph;
         _context->extradata_size=xiphLen;
     }else
@@ -249,10 +203,10 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
       _blockalign = _context->block_align;
     }
 
-    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data\n", _context->extradata_size);
+    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data, %d channels\n", _context->extradata_size,_context->channels);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
-    printf("\n");
-
+    ADM_info("\n");
+    
     if (avcodec_open2(_context, codec, NULL) < 0)
     {
          ADM_warning("[audioCodec] Cannot use float, retrying with floatp \n");
@@ -304,7 +258,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         _blockalign=378;
       }
     }
-    ADM_info("[ADM_ad_lav] init successful (blockalign %d)\n",info->blockalign);
+    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n",info->blockalign,_context->channels);
     if(_context->sample_rate!=outputFrequency)
     {
         ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",
@@ -351,11 +305,12 @@ bool ADM_AudiocoderLavcodec::decodeToFloat(float **outptr,uint32_t *nbOut)
 {
     int nbSample=  _frame->nb_samples; 
     // copy
-    memcpy(*outptr,_frame[0].data,sizeof(float)*nbSample*channels); // not sure...     
+    memcpy(*outptr,_frame->data[0],sizeof(float)*nbSample*channels); // not sure...     
     (*outptr)+=nbSample*channels;
     (*nbOut)+=nbSample*channels;
     return true;
 }
+
 /**
  * \fn decodeToFloatPlanarStereo
  * @param outptr

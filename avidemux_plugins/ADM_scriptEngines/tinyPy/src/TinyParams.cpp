@@ -15,6 +15,12 @@
 
 #include "TinyParams.h"
 
+#ifdef MSC_VER
+	#define admAlloca _alloca
+#else
+	#define admAlloca alloca
+#endif
+
 #define preamble(xtype) tp_obj obj = TP_OBJ();\
 						if (obj.type != xtype) \
                         { \
@@ -136,7 +142,8 @@ bool    TinyParams::makeCouples(CONFcouple **c)
 		return true;
 	}
 
-	const char *s[nb];
+	const char **s;
+  s=(const char **)admAlloca(sizeof(char *)*nb);
 
 	for (int i = 0; i < nb; i++)
 	{

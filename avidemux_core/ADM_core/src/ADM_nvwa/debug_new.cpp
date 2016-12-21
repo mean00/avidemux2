@@ -380,7 +380,7 @@ static bool print_position_from_addr(const void* addr)
         const char ignore_err[] = "";
 #endif
 
-        char* cmd = (char*)alloca(strlen(module_path)
+        char* cmd = (char*)admAlloca(strlen(module_path)
                                   + sizeof addr2line_cmd - 1
                                   + sizeof ignore_err - 1
                                   + sizeof(void*) * 2

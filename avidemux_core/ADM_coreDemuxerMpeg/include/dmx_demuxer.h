@@ -18,6 +18,7 @@
  #ifndef DMX_DMX
  #define DMX_DMX
  
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmx_io.h"
 
 #include "dmx_indexer.h"
@@ -34,7 +35,7 @@ typedef enum
     \brief low level mpeg demuxer, also used for the hack called MS-DVR
 
 */
-class dmx_demuxer
+class ADM_COREDEMUXER6_EXPORT dmx_demuxer
  {
   protected : 
               

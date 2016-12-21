@@ -105,6 +105,7 @@ extern bool A_loadDefaultSettings(void);;
 extern void ADM_ExitCleanup(void);
 
 static bool uiRunning=false;
+static bool uiIsMaximized=false;
 
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
@@ -417,6 +418,13 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
     ui.currentTime->setValidator(timeValidator);
     ui.currentTime->setInputMask("99:99:99.999");
+    // set the size of the current time display to fit the content
+    QString text=ui.currentTime->text();
+    QFontMetrics fm=ui.currentTime->fontMetrics();
+    int currentTimeWidth=fm.boundingRect(text).width()+20;
+    int currentTimeHeight=ui.currentTime->height();
+    ui.currentTime->setFixedSize(currentTimeWidth, currentTimeHeight);
+    ui.currentTime->adjustSize();
 
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
 
@@ -1020,7 +1028,7 @@ int UI_RunApp(void)
     uiRunning=true;
     setupMenus();
     QuiTaskBarProgress->setParent(QuiMainWindows);
-    ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt);
+    ADM_setCrashHook(&saveCrashProject, &FatalFunctionQt,&abortExitHandler);
     
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
@@ -1029,6 +1037,7 @@ int UI_RunApp(void)
     bool autoUpdateEnabled=false;
     if(prefs->get(UPDATE_ENABLED,&autoUpdateEnabled))
     {
+#ifndef _MSC_VER
         if(autoUpdateEnabled)
         {
             // Mark last check
@@ -1046,6 +1055,7 @@ int UI_RunApp(void)
                 ADM_checkForUpdate(&MainWindow::updateCheckDone);
             }
         }
+#endif
     }
     
     myApplication->exec();
@@ -1501,6 +1511,7 @@ bool UI_hasOpenGl(void)
 */
 void UI_iconify( void )
 {
+    uiIsMaximized=QuiMainWindows->isMaximized();
     QuiMainWindows->hide();
 
 }
@@ -1509,11 +1520,16 @@ void UI_iconify( void )
 */
 void UI_deiconify( void )
 {
-    QuiMainWindows->showNormal();
-
+    if(uiIsMaximized)
+    {
+        QuiMainWindows->showMaximized();
+    }else
+    {
+        QuiMainWindows->showNormal();
+    }
 }
 /**
-    \fn UI_deiconify
+    \fn UI_setAudioTrackCount
 */
 void UI_setAudioTrackCount( int nb )
 {

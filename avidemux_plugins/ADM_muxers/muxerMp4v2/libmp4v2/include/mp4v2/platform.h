@@ -11,7 +11,7 @@
 // if you're going to be using mp4v2 on windows with some other library that defines its own stdint.
 // TODO msft has finally re-included stdint in vs2010, so maybe at some point in the future this won't be needed.
 #ifndef MP4V2_NO_STDINT_DEFS
-    #if defined( _WIN32 ) && !defined( __MINGW32__ )
+    #if  0 // MEANX / VS2015 is ok now  defined( _WIN32 ) && !defined( __MINGW32__ )
         typedef char      int8_t;
         typedef short     int16_t;
         typedef int       int32_t;

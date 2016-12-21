@@ -1,6 +1,7 @@
 #ifndef DMX_DMX_TS
 #define DMX_DMX_TS
 
+#include "ADM_coreDemuxerMpeg6_export.h"
  
 #include "dmx_demuxer.h"
 #include "dmx_identify.h"
@@ -29,7 +30,7 @@
 
 
 */
-class dmx_demuxerTS: public dmx_demuxer
+class ADM_COREDEMUXER6_EXPORT dmx_demuxerTS: public dmx_demuxer
  {
           protected : 
                   uint64_t      stampAbs;

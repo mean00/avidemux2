@@ -112,11 +112,21 @@ void *ADM_aligned_memalign(size_t align,size_t size)
 #else
 void *ADM_aligned_alloc(size_t size)
 {
+#ifdef _MSC_VER
+	return _aligned_malloc( size,16);
+#else
     return memalign(16,size);
+#endif
 }
 void ADM_aligned_free(void *ptr)
 {
-    return free(ptr);
+#ifdef _MSC_VER
+    _aligned_free(ptr);
+    return;
+#else
+    free(ptr);
+    return;
+#endif
 }
 void *ADM_aligned_memalign(size_t align,size_t size)
 {
@@ -186,7 +196,7 @@ char *ADM_strdup(const char *in)
 	if(!in)
 		return NULL;
 
-	uint32_t l = strlen(in);
+	uint32_t l = (uint32_t)strlen(in);
 	char *out;
 
 	out = (char*)ADM_alloc(l + 1);

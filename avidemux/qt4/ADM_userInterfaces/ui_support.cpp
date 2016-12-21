@@ -63,7 +63,7 @@ const char* qt4Translate(const char *__domainname, const char *__msgid)
 
 		(*map)[msgid] = buffer;
 	}
-#warning DANGEROUS FIXME
+//#warning DANGEROUS FIXME
 	return map->value(msgid); // dangerous
 }
 /**
@@ -111,7 +111,11 @@ void loadTranslator(void)
     int nbLoaded=0;
     qtTranslator=new QTranslator();
     avidemuxTranslator=new QTranslator();
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     nbLoaded+=loadTranslation(qtTranslator, appdir + "qt_" + languageFile);
+#else
+    nbLoaded+=loadTranslation(qtTranslator, appdir + "qtbase_" + languageFile);
+#endif
     nbLoaded+=loadTranslation(avidemuxTranslator, appdir + "avidemux_" + languageFile);
     translatorLoaded = true;
     if(!nbLoaded) // Nothing to translate..
@@ -185,6 +189,7 @@ extern int paintEngineType;
 
 const char* getNativeRendererDesc(int engine)
 {
+#if 0
 	switch (engine)
 	{
 		case QPaintEngine::X11:
@@ -204,7 +209,7 @@ const char* getNativeRendererDesc(int engine)
 		case QPaintEngine::Raster:
 			return QT_TRANSLATE_NOOP("uisupport","Default Raster");
 	}
-
+#endif
 	return "Qt";
 }
 

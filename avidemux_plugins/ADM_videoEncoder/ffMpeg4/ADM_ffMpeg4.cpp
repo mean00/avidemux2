@@ -22,9 +22,9 @@
 #include "DIA_factory.h"
 
 #if 1
-#define aprintf(...) {}
+        #define aprintf(...) {}
 #else
-#define aprintf printf
+        #define aprintf printf
 #endif
 
 FFcodecSettings Mp4Settings = MPEG4_CONF_DEFAULT;

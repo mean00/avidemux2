@@ -294,9 +294,13 @@ bool GUIPlayback::run(void)
             {
                 if(stop_req)
                     break;
+                
                 if(delta>10)
                 {
-                    audioPump(true);
+                    if(playbackAudio)
+                        audioPump(true);
+                    else
+                        ADM_usleep(10*1000);
                 }else
                     audioPump(false);
 

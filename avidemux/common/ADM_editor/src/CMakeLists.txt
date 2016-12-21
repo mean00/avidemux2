@@ -15,6 +15,7 @@ utils/ADM_editIface.cpp
 utils/ADM_edScriptGenerator.cpp
 utils/ADM_edFrameType.cpp
 utils/ADM_edCache.cpp
+utils/ADM_edUndoQueue.cpp
 audio/ADM_edEditableAudioTrack.cpp
 audio/ADM_edPoolOfAudioTracks.cpp
 audio/ADM_edActiveAudioTracks.cpp

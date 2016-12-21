@@ -70,7 +70,7 @@ static void destroy (ADM_AudioEncoder * in) \
 //******************************************************
 #define ADM_DECLARE_AUDIO_ENCODER_CONFIG() \
 \
-extern "C" ADM_audioEncoder *getInfo (void) \
+extern "C" ADM_PLUGIN_EXPORT ADM_audioEncoder *getInfo (void) \
 { \
   return &encoderDesc; \
 }

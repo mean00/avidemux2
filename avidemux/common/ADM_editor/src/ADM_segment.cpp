@@ -170,8 +170,6 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
             ref->firstFramePts=pts;
         }
 
-    if(!segments.empty()) undoSegments.push_back(segments);
-
     segments.push_back(seg);
     videos.push_back(*ref);
     updateStartTime();
@@ -185,17 +183,15 @@ bool        ADM_EditorSegment::deleteSegments()
 {
     ADM_info("Clearing a new segment\n");
     segments.clear();
-    undoSegments.clear();
     return true;
 }
 /**
-    \fn deleteSegments
-    \brief Empty the segments list
+    \fn addSegment
+    \brief Add a segment to the segments list
 */
 bool        ADM_EditorSegment::addSegment(_SEGMENT *seg)
 {
     ADM_info("Adding a new segment\n");
-    undoSegments.push_back(segments);
     segments.push_back(*seg);
     updateStartTime();
     return true;
@@ -250,24 +246,9 @@ bool ADM_EditorSegment::deleteAll (void)
 
     }
 
+    clipboard.clear();
     videos.clear();
     segments.clear();
-    undoSegments.clear();
-    return true;
-}
-
-
-/**
-    \fn undo
-    \brief
-*/
-bool        ADM_EditorSegment::undo(void)
-{
-    if(undoSegments.empty()) return false;
-    clipboard.clear();
-    segments=undoSegments.back(); 
-    undoSegments.pop_back();
-    updateStartTime();
     return true;
 }
 /**
@@ -279,7 +260,6 @@ bool        ADM_EditorSegment::resetSegment(void)
     //
     aviInfo info;
     segments.clear();
-    undoSegments.clear();
     int n=videos.size();
     for(int i=0;i<n;i++)
     {
@@ -323,6 +303,29 @@ _VIDEOS     *ADM_EditorSegment::getRefVideo(int i)
     return &(videos[i]);
 }
 /**
+    \fn getSegments
+    \brief getter for the list of segments
+*/
+ListOfSegments ADM_EditorSegment::getSegments(void)
+{
+    if(segments.empty()) ADM_assert(0);
+    ListOfSegments segm=segments;
+    return segm;
+}
+/**
+    \fn setSegments
+    \brief setter for the list of segments
+*/
+bool ADM_EditorSegment::setSegments(ListOfSegments segm)
+{
+    if(segm.size())
+    {
+        segments=segm;
+        return true;
+    }
+    return false;
+}
+/**
     \fn getNbRefVideo
     \brief getNbRefVideo
 */
@@ -348,7 +351,6 @@ bool         ADM_EditorSegment::updateStartTime(void)
     if(!n) return true;
     
     uint64_t t=0;
-    t=segments[0]._startTimeUs;
     for(int i=0;i<n;i++)
     {
         segments[i]._startTimeUs=t;
@@ -615,7 +617,6 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
         return false;
 
     }
-    undoSegments.push_back(tmp);
     dump();
     return true;
 }
@@ -657,7 +658,6 @@ bool ADM_EditorSegment::truncateVideo(uint64_t from)
         updateStartTime();
         return false;
     }
-    undoSegments.push_back(tmp);
     dump();
     return true;
 }
@@ -894,10 +894,16 @@ bool        ADM_EditorSegment::dumpClipBoard()
  */
 bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
 {
+    if(!clipboard.size())
+    {
+        ADM_info("The clipboard is empty, nothing to do\n");
+        return true;
+    }
     ADM_info("Pasting from clipboard to %s\n",ADM_us2plain(currentTime));
     uint32_t startSeg;
     uint64_t startSegTime;
     convertLinearTimeToSeg(  currentTime, &startSeg,&startSegTime);    
+    ListOfSegments tmp=segments;
     ListOfSegments newSegs;
     int n=segments.size();
     for(int i=0;i<n;i++)
@@ -929,6 +935,27 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
     }
     segments=newSegs;
     updateStartTime();
+    dump();
+    return true;
+}
+
+/**
+ * \fn appendFromClipBoard
+ * \brief append clipboard at the end of video
+ * @return 
+ */
+bool ADM_EditorSegment::appendFromClipBoard(void)
+{
+    if(!clipboard.size())
+    {
+        ADM_info("The clipboard is empty, nothing to do\n");
+        return true;
+    }
+    ADM_info("Appending from clipboard\n");
+    ListOfSegments tmp=segments;
+    for(int i=0;i<clipboard.size();i++) segments.push_back(clipboard[i]);
+    updateStartTime();
+    dump();
     return true;
 }
 

@@ -114,7 +114,7 @@ return 1;
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
 */
-uint8_t DIA_getContrast(ADM_coreVideoFilter *in,contrast *param)
+bool DIA_getContrast(ADM_coreVideoFilter *in,contrast *param)
 {
         uint8_t ret=0;
         Ui_contrastWindow dialog(qtLastRegisteredDialog(), param,in);

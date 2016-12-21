@@ -14,5 +14,8 @@ MACRO(INSTALL_AUDIOENCODER _lib)
                                 DESTINATION "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/audioEncoders/"
                                 COMPONENT   plugins
                         )
-	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreAudio6 ADM_coreAudioEncoder6 ADM_coreUtils6 m)
+        IF(NOT MSVC) 
+                SET(EXTRALIB "m")
+        ENDIF(NOT MSVC) 
+	TARGET_LINK_LIBRARIES(${_lib} ADM_core6 ADM_coreUI6 ADM_coreAudio6 ADM_coreAudioEncoder6 ADM_coreUtils6 ${EXTRALIB})
 ENDMACRO(INSTALL_AUDIOENCODER)

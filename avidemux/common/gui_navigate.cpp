@@ -40,9 +40,10 @@ static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
 bool   GUI_GoToTime(uint64_t time);
 bool   GUI_infiniteForward(uint64_t pts);
+bool   GUI_lastFrameBeforePts(uint64_t pts);
 bool   GUI_SeekByTime(int64_t time);
 static void A_timedError(const char *s);
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
+bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 /**
     \fn HandleAction_Navigate
 
@@ -443,38 +444,53 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
     \fn A_jumpToTime
     \brief Jump to a given time
 */
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
+bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
 {
-uint64_t pts;
-        pts=hh*3600+mm*60+ss;
-        pts*=1000;
-        pts+=ms;
-        pts*=1000;
-        // Try to find a frame just before pts...
-//#warning Fixme, be more accurate
-        if(false==video_body->getPKFramePTS(&pts)) return false;
-
-        //
-        return GUI_GoToTime(pts);
-
+    uint64_t pts;
+    pts=hh*3600+mm*60+ss;
+    pts*=1000;
+    pts+=ms;
+    pts*=1000;
+    if(pts > video_body->getVideoDuration())
+    {
+        ADM_warning("Cannot navigate beyond the end of the video\n");
+        return false;
+    }
+    uint64_t lastpts=pts;
+    if(false==video_body->getNKFramePTS(&lastpts)) // at the end of the video, be careful
+    {
+        if(false==video_body->getPKFramePTS(&lastpts))
+            return false;
+        GUI_infiniteForward(lastpts);
+        lastpts=admPreview::getCurrentPts();
+        if(pts>=lastpts) // if at or beyond the last frame but within the total duration
+            return GUI_GoToTime(lastpts); // go to the last frame
+    }
+    if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+        video_body->rewind(); // go to the first frame then
+    admPreview::samePicture();
+    GUI_setCurrentFrameAndTime();
+    return true;
 }
 /**
     \fn GUI_SeekByTime
 */
 bool GUI_SeekByTime(int64_t time)
 {
-   uint64_t pts=admPreview::getCurrentPts(); 
+    uint64_t pts=admPreview::getCurrentPts();
 
-   if (time < 0 && pts < -time) 
-         pts = 0; 
-   else
-         pts += time;
-
-   ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));  
-   if(video_body->getPKFramePTS(&pts))
-       return GUI_GoToTime(pts);
-
-   return false;
+    if (time < 0 && pts < -time)
+    {   // we can't assume that pts=0 were legitimate, rewind to the first frame instead
+        video_body->rewind();
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+        return true;
+    }else
+    {
+        pts += time;
+    }
+    ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));
+    return GUI_lastFrameBeforePts(pts);
 }
 
 /**
@@ -506,6 +522,32 @@ bool GUI_infiniteForward(uint64_t pts)
     }
     admPreview::deferDisplay(0);
     return true;
+}
+
+/**
+    \fn GUI_lastFrameBeforePts
+ */
+bool GUI_lastFrameBeforePts(uint64_t pts)
+{
+    uint64_t pts2=pts;
+    // Try to find a keyframe just before pts
+    if(video_body->getPKFramePTS(&pts2))
+    { // Starting from there, approach the last frame before pts
+        admPreview::deferDisplay(1);
+        GUI_GoToTime(pts2);
+        uint64_t tmp;
+        while(pts2<pts)
+        {
+            tmp=pts2;
+            admPreview::nextPicture();
+            tmp=admPreview::getCurrentPts();
+            if(tmp>pts) break; // otherwise we may overshoot
+            pts2=tmp;
+        }
+        admPreview::deferDisplay(0);
+        return GUI_GoToTime(pts2);
+    }
+    return false;
 }
 
 /**

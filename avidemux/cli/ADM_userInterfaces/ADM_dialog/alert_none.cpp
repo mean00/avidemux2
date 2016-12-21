@@ -35,7 +35,7 @@ static void boxAdd(const char *str)
 namespace ADM_CliCoreUIToolkit
 {
 extern DIA_workingBase    *createWorking(const char *title);
-extern DIA_encodingBase   *createEncoding(uint64_t duration,bool tray);
+extern DIA_encodingBase   *createEncoding(uint64_t duration);
 extern DIA_audioTrackBase *createAudioTrack( PoolOfAudioTracks *pool, ActiveAudioTracks *active );
 void            GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *secondary_format)
 {

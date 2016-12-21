@@ -30,7 +30,7 @@ static ADM_fatalFunction *myFatalFunction=NULL;
         \fn ADM_setCrashHook
         \brief install crash handlers (save + display)
 */
-void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal)
+void ADM_setCrashHook(ADM_saveFunction *save, ADM_fatalFunction *fatal,ADM_sigIntFunction *ignored)
 {
         mysaveFunction=save;
         myFatalFunction=fatal;

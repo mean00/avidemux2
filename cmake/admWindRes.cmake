@@ -6,6 +6,7 @@
 include(admTimeStamp)
 #
 MACRO(WINDRESIFY src)
+   IF(NOT MSVC)
         # add icon and version info
         SET(FILEVERSION_STRING "${AVIDEMUX_VERSION}")
         SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
@@ -29,9 +30,8 @@ MACRO(WINDRESIFY src)
 	        SET( ${src} ${ADM_WIN_RES})
 	        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} COMMAND ${WINDRES} -F ${WIN_RES_TARGET} -i ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc -o ${CMAKE_CURRENT_BINARY_DIR}/${ADM_WIN_RES} -O coff --define VS_VERSION_INFO=1)
         endif (MINGW)
+	ELSE (NOT MSVC)
+		#SET(${src}  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc)
+	endif (NOT MSVC)
 
-        if (MSVC)
-	        SET(${src}  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc)
-        endif (MSVC)
-        
 ENDMACRO(WINDRESIFY src)

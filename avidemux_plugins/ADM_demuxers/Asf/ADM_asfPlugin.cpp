@@ -27,7 +27,7 @@ ADM_DEMUXER_BEGIN( asfHeader, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  ADM_PLUGIN_EXPORT uint32_t         probe(uint32_t magic, const char *fileName)
 {
         const uint8_t signature[4]={ 0x30,0x26,0xb2,0x75}; //0x75,0xb2,0x26,0x30}; 
 

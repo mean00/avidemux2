@@ -162,7 +162,7 @@ dmxPacketInfo info;
 /**
     \fn decodeVc1Seq
     \brief http://wiki.multimedia.cx/index.php?title=VC-1#Setup_Data_.2F_Sequence_Layer
-#warning we should de-escape it!
+//#warning we should de-escape it!
         Large part of this borrowed from VLC
         Advanced/High profile only
 */

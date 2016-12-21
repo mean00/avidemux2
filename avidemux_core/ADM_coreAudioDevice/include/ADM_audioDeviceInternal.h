@@ -65,12 +65,12 @@ public:
 
 #define ADM_DECLARE_AUDIODEVICE(name,Class,major,minor,patch,desc) \
 extern "C" { \
-const char *getName(void) {return #name;}\
-uint32_t getApiVersion(void) {return ADM_AUDIO_DEVICE_API_VERSION;} \
-const char *getDescriptor(void ) {return desc;} \
- audioDeviceThreaded *create(void){return new Class;} \
- void destroy(audioDeviceThreaded *z){Class *a=(Class *)z;delete a;} \
-uint8_t getVersion(uint32_t *mmajor,uint32_t *mminor,uint32_t *ppatch) \
+ADM_PLUGIN_EXPORT const char *getName(void) {return #name;}\
+ADM_PLUGIN_EXPORT uint32_t getApiVersion(void) {return ADM_AUDIO_DEVICE_API_VERSION;} \
+ADM_PLUGIN_EXPORT const char *getDescriptor(void ) {return desc;} \
+ADM_PLUGIN_EXPORT audioDeviceThreaded *create(void){return new Class;} \
+ADM_PLUGIN_EXPORT void destroy(audioDeviceThreaded *z){Class *a=(Class *)z;delete a;} \
+ADM_PLUGIN_EXPORT uint8_t getVersion(uint32_t *mmajor,uint32_t *mminor,uint32_t *ppatch) \
     {\
         *mmajor=major;\
         *mminor=minor;\

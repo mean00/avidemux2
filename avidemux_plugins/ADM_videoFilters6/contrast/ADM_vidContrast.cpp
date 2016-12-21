@@ -167,7 +167,7 @@ bool doContrast (ADMImage * in, ADMImage * out, uint8_t * table,  ADM_PLANE plan
 /**
     \fn configure
 */
-bool DIA_getContrast( ADM_coreVideoFilter *instream,contrast    *param );
+extern bool DIA_getContrast( ADM_coreVideoFilter *instream,contrast    *param );
 bool ADMVideoContrast::configure( )
 
 {

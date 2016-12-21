@@ -1,0 +1,20 @@
+OPTION(DXVA2 "" ON)
+
+MESSAGE(STATUS "Checking for Dxva2")
+MESSAGE(STATUS "****************")
+
+IF (DXVA2)
+        MESSAGE(STATUS "    compiling...")
+        ADM_COMPILE(dxva2.c "" DXVA_INCLUDE_DIR "dxva2" DXVA2_COMPILED DXVA2_OUTPUT)
+        IF (DXVA2_COMPILED)
+                MESSAGE(STATUS "DXVA2 Found (${DXVA_INCLUDE_DIR})")
+                SET(USE_DXVA2 True CACHE BOOL "")
+        ELSE(DXVA2_COMPILED)
+                MESSAGE(STATUS "Compilation failed ${DXVA2_OUTPUT}")
+        ENDIF (DXVA2_COMPILED)
+ELSE (DXVA2)
+        MESSAGE("${MSG_DISABLE_OPTION}")
+ENDIF (DXVA2)
+
+MESSAGE("")
+APPEND_SUMMARY_LIST("Miscellaneous" "DXVA2" "${USE_DXVA2}")

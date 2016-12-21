@@ -259,7 +259,7 @@ bool bAppend=false;
                           video.interlaced=0; // how to detect ?
                           video.w=val>>20;
                           video.w=((video.w+15)&~15);
-                          video.h= (((val>>8) & 0xfff)+15)& ~15;
+                          video.h=((val>>8) & 0xfff);
 
                           video.ar = (val >> 4) & 0xf;
 

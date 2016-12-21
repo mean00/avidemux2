@@ -30,7 +30,7 @@ bool    A_TimeShift(void);
 void    A_ResetMarkers(void);
 void    A_Rewind(void);
 void    A_jog(void);
-uint8_t A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
+bool    A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
 int 	A_openVideo		(const char *name);
 int     A_saveAudio	(const char *name);
 void 	A_saveAudioDecoded	(const char *name);

@@ -6,9 +6,7 @@
     
  ***************************************************************************/
 
-#ifndef ADM_INTTYPE_H
-#define ADM_INTTYPE_H
-
+#pragma once
 #include "ADM_coreConfig.h"
 
 #include <stdio.h>
@@ -22,22 +20,22 @@
 
 typedef unsigned char ADM_filename;
 
-#ifdef HAVE_STDINT_H
-#define __STDC_CONSTANT_MACROS
-#define __STDC_LIMIT_MACROS
-#include <stdint.h>
-#define GOT_TYPES
+#if defined( HAVE_STDINT_H) || defined(_MSC_VER) //  We do have stdint , heck it is embedded
+  #define __STDC_CONSTANT_MACROS
+  #define __STDC_LIMIT_MACROS
+  #include <stdint.h>
+  #define GOT_TYPES
 #endif
-#ifdef NEED_STDINT_GCC
-#include <stdint-gcc.h>
-#endif //NEED_STDINT_GCC
-#ifdef HAVE_INTTYPES_H
+  #ifdef NEED_STDINT_GCC
+    #include <stdint-gcc.h>
+    #endif //NEED_STDINT_GCC
+    #ifdef HAVE_INTTYPES_H
 	#define __STDC_FORMAT_MACROS
 	#include <inttypes.h>
 	#define GOT_TYPES
-#ifndef SCNu8
-#define SCNu8 "u"
-#endif
+    #ifndef SCNu8
+    #define SCNu8 "u"
+  #endif
 #endif
 
 #ifndef GOT_TYPES
@@ -71,4 +69,3 @@ typedef unsigned char ADM_filename;
 #define ADM_OK 	1
 #define ADM_IGN 2
 
-#endif

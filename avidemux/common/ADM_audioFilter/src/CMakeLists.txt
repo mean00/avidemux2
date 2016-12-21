@@ -29,7 +29,7 @@ ADD_DEFINITIONS(-I${CMAKE_CURRENT_SOURCE_DIR})
 
 if (MSVC)
 	remove_definitions(-W3)
-	add_definitions(-W1 -Dinline=__inline)
+	add_definitions(-W1 )
 else (MSVC)
 	add_definitions(-DHAVE_LRINT -DHAVE_LRINTF)
 endif (MSVC)

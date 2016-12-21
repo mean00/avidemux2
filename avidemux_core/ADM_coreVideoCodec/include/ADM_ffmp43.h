@@ -88,7 +88,9 @@ public:
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h) {hwDecoder=h;return true;}
             ADM_acceleratedDecoderFF    *getHwDecoder() {return hwDecoder;}
         virtual bool    dontcopy (void)
-        {
+        {    
+          if(hwDecoder)
+            return hwDecoder->dontcopy();
           return true;
         }
         virtual bool uncompress (ADMCompressedImage * in, ADMImage * out);
@@ -110,7 +112,6 @@ public:
                           {
                               if(hwDecoder)
                                   return hwDecoder->getName();
-
                               return "Lavcodec";
                           }
         // for hw accel

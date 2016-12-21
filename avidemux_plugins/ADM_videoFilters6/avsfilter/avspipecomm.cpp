@@ -56,28 +56,38 @@ bool pipe_test(int hr, int hw)
   return true;
 }
 
-#define p(X) pp##X(int h, void *data, int sz)\
-{\
-  int copy_sz = 0;\
-  while (copy_sz != sz)\
-  {\
-    int isz = X(h, (char*)data + copy_sz,\
-                    ((sz - copy_sz) < PIPE_MAX_TRANSFER_SZ ? (sz - copy_sz) : PIPE_MAX_TRANSFER_SZ));\
-    if (isz == -1 || isz == 0) return -1;\
-    copy_sz += isz;\
-  }\
-  return copy_sz;\
+int ppread(int h, void *data, int sz)
+{
+  int copy_sz = 0;
+  while (copy_sz != sz)
+  {
+    int isz = read(h, (char*)data + copy_sz,
+                    ((sz - copy_sz) < PIPE_MAX_TRANSFER_SZ ? (sz - copy_sz) : PIPE_MAX_TRANSFER_SZ));
+    if (isz == -1 || isz == 0) return -1;
+    copy_sz += isz;
+  }
+  return copy_sz;
 }
 
-int p(write);
-int p(read);
+int ppwrite(int h, void *data, int sz)
+{
+  int copy_sz = 0;
+  while (copy_sz != sz)
+  {
+    int isz = write(h, (char*)data + copy_sz,
+                    ((sz - copy_sz) < PIPE_MAX_TRANSFER_SZ ? (sz - copy_sz) : PIPE_MAX_TRANSFER_SZ));
+    if (isz == -1 || isz == 0) return -1;
+    copy_sz += isz;
+  }
+  return copy_sz;
+}
 
 bool send_cmd(int hw, AVS_CMD cmd,
               const void *data, int sz)
 {
   PIPE_MSG_HEADER msg = {cmd, sz};
   return ((ppwrite(hw, &msg, sizeof(msg)) == sizeof(msg)) &&
-          (ppwrite(hw, data, sz) == sz));
+          (ppwrite(hw, (void*)data, sz) == sz));
 }
 
 bool send_cmd_with_specified_size(int hw, AVS_CMD cmd,

@@ -202,7 +202,6 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
             lumaAndChroma=glYUV444_YUVMMX;
       }
 #endif
-#define admAlloca alloca
     const uchar **yy=(const uchar **)admAlloca(height*sizeof(uint8_t *)); // FIXME : Use alloca here
     for(int i=0;i<height;i++)
     {

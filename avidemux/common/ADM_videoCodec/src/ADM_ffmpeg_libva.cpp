@@ -32,7 +32,6 @@ extern "C" {
 #include "DIA_coreToolkit.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_render/GUI_render.h"
-#include "ADM_ffmpeg_libva_internal.h"
 #include "prefs.h"
 #include "ADM_coreLibVA.h"
 #include "../private_inc/ADM_codecLibVA.h"
@@ -89,7 +88,10 @@ static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     decoderFFLIBVA *inst=(decoderFFLIBVA *)instance ;
     ADM_vaSurface *s=(ADM_vaSurface *) cookie;
-    return        s->toAdmImage(image);
+    bool r=s->toAdmImage(image);
+    image->refType=ADM_HW_NONE;
+    libvaMarkSurfaceUnused(instance,cookie);
+    return r;
 }
 
 /**
@@ -581,6 +583,7 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
        case AV_CODEC_ID_VP9: profile= VAProfileVP9Profile3;break;
 #endif
        default:
+           ADM_info("Unknown codec (libVA)\n");
            return false;
     }
     if(!admLibVA::supported(profile))

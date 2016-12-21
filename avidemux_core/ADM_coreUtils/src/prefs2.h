@@ -10,13 +10,13 @@ struct  {
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;
 	bool use_odml;
-	bool use_systray;
 	bool reuse_2pass_log;
 	bool audiobar_uses_master;
 	uint32_t threading_lavc;
 	uint32_t cpu_caps;
 	bool mpeg_no_limit;
 	bool alternate_mp3_tag;
+	bool dxva2;
 	bool vdpau;
 	bool xvba;
 	bool libva;

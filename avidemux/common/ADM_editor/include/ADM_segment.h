@@ -17,7 +17,6 @@
 #ifndef ADM_SEGMENT_H
 #define ADM_SEGMENT_H
 #include <vector>
-#include <list>
 class ADM_audioStream;
 class ADM_Audiocodec;
 class decoders;
@@ -144,7 +143,6 @@ class ADM_EditorSegment
 protected:
         ListOfSegments segments;
         ListOfSegments clipboard;
-        std::list <ListOfSegments> undoSegments;
         ListOfVideos   videos;
         bool           updateStartTime(void);
 
@@ -162,7 +160,6 @@ public:
             bool        updateRefVideo(void);
             bool        deleteAll(void);
 
-            bool        undo(void);
             bool        resetSegment(void);
             bool        deleteSegments(void);
             bool        addSegment(_SEGMENT *seg);
@@ -175,6 +172,9 @@ public:
 
             _SEGMENT    *getSegment(int i);
             int         getNbSegments(void);
+
+            ListOfSegments getSegments(void);
+            bool        setSegments(ListOfSegments segm);
 
             uint64_t    getTotalDuration(void);
             uint32_t    getNbFrames(void);
@@ -196,6 +196,7 @@ public:
             
             bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
             bool        pasteFromClipBoard(uint64_t currentTime);
+            bool        appendFromClipBoard(void);
             bool        dumpClipBoard();
 protected:
             void        dumpSegmentsInternal(ListOfSegments &l);

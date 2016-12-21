@@ -16,6 +16,7 @@
  ***************************************************************************/
 #ifndef FPARSER_
 #define FPARSER_
+#include "ADM_coreDemuxerMpeg6_export.h"
 #define DMX_BUFFER 1024*100
 #include <BVector.h>
 
@@ -36,7 +37,7 @@ typedef enum
     \class fdIo
     \brief Describe one file
 */
-class fdIo
+class ADM_COREDEMUXER6_EXPORT fdIo
 {
 public:
         FILE        *file;
@@ -48,7 +49,7 @@ public:
     \class fileParser
     \brief helper class to read one logical file over several physical ones
 */
- class fileParser
+ class ADM_COREDEMUXER6_EXPORT fileParser
 {
         private:
          

@@ -28,6 +28,8 @@ INITIALISE_SUMMARY_LISTS()
 include(admMainChecks)
 include(admCheckFtello)
 include(admAsNeeded)
+INCLUDE(admCheckVDPAU)
+INCLUDE(admCheckLibVA)
 
 #########################################
 # Debug Summary
@@ -57,6 +59,19 @@ FIND_HEADER_AND_LIB(SQLITE sqlite3.h sqlite3 sqlite3_close ${SQLITE_REQUIRED_FLA
 PRINT_LIBRARY_INFO("SQLite" SQLITE_FOUND "${SQLITE_INCLUDE_DIR}" "${SQLITE_LIBRARY_DIR}" FATAL_ERROR)
 MESSAGE("")
 
+############################################"
+# Check for DXVA2
+# We do it here, cmake messes things up when
+# we use try_compile later on, so do it once here
+############################################"
+
+IF(WIN32)# AND NOT MSVC)
+   INCLUDE(admCheckDxva2)
+ELSE(WIN32)
+        checkVDPAU()
+        checkLibVA()
+ENDIF(WIN32)# AND NOT MSVC)
+
 ########################################
 # Generate config.h
 ########################################
@@ -70,7 +85,6 @@ MESSAGE("")
 ########################################
 set(EXCLUDE_ADM_INCLUDE TRUE)
 include(admCoreIncludes)
-
 ########################################
 # Build FFmpeg
 ########################################
@@ -134,6 +148,9 @@ ENDIF(USE_VDPAU)
 IF(USE_LIBVA)
    ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/" ADM_coreLibVA )     
 ENDIF(USE_LIBVA)
+IF(USE_DXVA2)
+   ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreDxva2/include/" ADM_coreDxva2 )     
+ENDIF(USE_DXVA2)
 
 SET(CMAKE_TOP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cmake/")
 
@@ -142,5 +159,13 @@ ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_SOURCE_DIR}/../cmake/cmake_compile_chec
 # 
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cmake/" COMPONENT dev)
+
+IF(MSVC)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/stdint.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/inttypes.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/GL/glext.h  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/GL" COMPONENT dev)
+ENDIF(MSVC)
+
+
 MESSAGE("")

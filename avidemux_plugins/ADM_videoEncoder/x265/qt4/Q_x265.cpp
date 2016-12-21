@@ -82,7 +82,8 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-static const char* listOfTunings[] = { "psnr", "ssim", "zerolatency", "fastdecode" };
+// Empty string "" as tuning means no tuning. This is the default.
+static const char* listOfTunings[] = { "", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
@@ -121,6 +122,8 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         connect(ui.quantiserSlider, SIGNAL(valueChanged(int)), this, SLOT(quantiserSlider_valueChanged(int)));
         connect(ui.meSlider, SIGNAL(valueChanged(int)), this, SLOT(meSlider_valueChanged(int)));
         connect(ui.quantiserSpinBox, SIGNAL(valueChanged(int)), this, SLOT(quantiserSpinBox_valueChanged(int)));
+        connect(ui.maxBFramesSpinBox, SIGNAL(valueChanged(int)), this, SLOT(maxBFramesSpinBox_valueChanged(int)));
+        connect(ui.bFrameRefComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(bFrameRefComboBox_currentIndexChanged(int)));
         connect(ui.meSpinBox, SIGNAL(valueChanged(int)), this, SLOT(meSpinBox_valueChanged(int)));
         connect(ui.targetRateControlSpinBox, SIGNAL(valueChanged(int)), this, SLOT(targetRateControlSpinBox_valueChanged(int)));
         connect(ui.cuTreeCheckBox, SIGNAL(toggled(bool)), this, SLOT(cuTreeCheckBox_toggled(bool)));
@@ -177,7 +180,12 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         tunings->clear();
         for(int i=0;i<NB_TUNE;i++)
         {
-            tunings->addItem(QString(listOfTunings[i]));
+            // we pass an empty string to the encoder in order to disable tuning,
+            // but want to show a descriptive label to the user
+            const char* _tn=listOfTunings[i];
+            if(_tn=="")
+                _tn=QT_TRANSLATE_NOOP("x265","none");
+            tunings->addItem(QString(_tn));
         }
 
         QComboBox* profiles=ui.profileComboBox;
@@ -628,10 +636,48 @@ void x265Dialog::meSlider_valueChanged(int value)
 {
 	ui.meSpinBox->setValue(value);
 }
+
 void x265Dialog::quantiserSpinBox_valueChanged(int value)
 {
 	ui.quantiserSlider->setValue(value);
 }
+
+void x265Dialog::maxBFramesSpinBox_valueChanged(int value)
+{
+    // HEVC specification allows a maximum of 8 total reference frames only if B frames are disabled.
+    // Enforce the limit to ensure compliance.
+    if(!value)
+    {
+        ui.refFramesSpinBox->setMaximum(8);
+    }else // with B frames enabled, the maximum decreases to 7
+    {
+        if(ui.bFrameRefComboBox->currentIndex()>0)
+        { // max ref frames decreases further to 6 if B pyramid is enabled as well
+            ui.refFramesSpinBox->setMaximum(6);
+        }else
+        {
+            ui.refFramesSpinBox->setMaximum(7);
+        }
+    }
+}
+
+void x265Dialog::bFrameRefComboBox_currentIndexChanged(int index)
+{
+     if(ui.maxBFramesSpinBox->value()) // if B frames are enabled
+     {
+         if(index>0) // and B pyramid is enabled too, reduce max ref frames accordingly
+         {
+             ui.refFramesSpinBox->setMaximum(6);
+         }else
+         {
+             ui.refFramesSpinBox->setMaximum(7);
+         }
+     }else
+     {
+         ui.refFramesSpinBox->setMaximum(8);
+     }
+}
+
 void x265Dialog::meSpinBox_valueChanged(int value)
 {
 	ui.meSlider->setValue(value);

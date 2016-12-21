@@ -1,35 +1,47 @@
 #include "JSONNode.h"
+#include "JSONGlobals.h"
 
 #ifdef JSON_MUTEX_CALLBACKS
 
-json_mutex_callback_t json_lock_callback(0);
-json_mutex_callback_t json_unlock_callback(0);
-void * global_mutex(0);
-void * manager_mutex(0);
+json_mutex_callback_t json_lock_callback = 0;
+json_mutex_callback_t json_unlock_callback = 0;
+void * global_mutex = 0;
+void * manager_mutex = 0;
 
 struct AutoLock {
+public:
+	LIBJSON_OBJECT(AutoLock);
     AutoLock(void) json_nothrow {
+		LIBJSON_CTOR;
 	   json_lock_callback(manager_mutex);
     }
     ~AutoLock(void) json_nothrow {
+		LIBJSON_DTOR;
 	   json_unlock_callback(manager_mutex);
     }
+private:
+    AutoLock(const AutoLock &);
+    AutoLock & operator = (const AutoLock &);
 };
 
-#include <map>
 #ifdef JSON_MUTEX_MANAGE
     json_mutex_callback_t json_destroy = 0;
-    std::map<void *, unsigned int> mutex_manager;
 
     //make sure that the global mutex is taken care of too
     struct auto_global {
-	   auto_global(void) json_nothrow {}
+    public:
+		LIBJSON_OBJECT(auto_global;)
+	   auto_global(void) json_nothrow { LIBJSON_CTOR; }
 	   ~auto_global(void) json_nothrow {
+		  LIBJSON_DTOR;
 		  if (global_mutex){
 			 JSON_ASSERT_SAFE(json_destroy != 0, JSON_TEXT("No json_destroy in mutex managed mode"), return;);
 			 json_destroy(global_mutex);
 		  }
 	   }
+    private:
+        auto_global(const auto_global &);
+        auto_global & operator = (const auto_global &);
     };
     auto_global cleanupGlobal;
 #endif
@@ -48,8 +60,6 @@ void JSONNode::set_mutex(void * mutex) json_nothrow {
     makeUniqueInternal();
     internal -> _set_mutex(mutex);
 }
-
-std::map<int, std::map<void *, unsigned int> > threadlocks;
 
 void * JSONNode::getThisLock(JSONNode * pthis) json_nothrow {
     if (pthis -> internal -> mylock != 0){
@@ -71,20 +81,20 @@ void JSONNode::lock(int thread) json_nothrow {
     #endif
 
     //make sure that the same thread isn't locking it more than once (possible due to complex ref counting)
-    std::map<int, std::map<void *, unsigned int> >::iterator it = threadlocks.find(thread);
-    if (it == threadlocks.end()){
-	   std::map<void *, unsigned int> newthread;
-	   newthread[thislock] = 1;
-	   threadlocks.insert(std::pair<int, std::map<void *, unsigned int> >(thread, newthread));
+    JSON_MAP(int, JSON_MAP(void *, unsigned int) )::iterator it = json_global(THREAD_LOCKS).find(thread);
+    if (it == json_global(THREAD_LOCKS).end()){
+		JSON_MAP(void *, unsigned int) newthread;
+		newthread[thislock] = 1;
+		json_global(THREAD_LOCKS).insert(std::pair<int, JSON_MAP(void *, unsigned int) >(thread, newthread));
     } else {  //this thread already has some things locked, check if the current mutex is
-	   std::map<void *, unsigned int> & newthread = it -> second;
-	   std::map<void *, unsigned int>::iterator locker(newthread.find(thislock));
-	   if (locker == newthread.end()){  //current mutex is not locked, set it to locked
-		  newthread.insert(std::pair<void *, unsigned int>(thislock, 1));
-	   } else {  //it's already locked, don't relock it
-		  ++(locker -> second);
-		  return;  //don't try to relock, it will deadlock the program
-	   }
+		JSON_MAP(void *, unsigned int) & newthread = it -> second;
+		JSON_MAP(void *, unsigned int)::iterator locker(newthread.find(thislock));
+		if (locker == newthread.end()){  //current mutex is not locked, set it to locked
+			newthread.insert(std::pair<void *, unsigned int>(thislock, 1));
+		} else {  //it's already locked, don't relock it
+			++(locker -> second);
+			return;  //don't try to relock, it will deadlock the program
+		}
     }
 
     //if I need to, lock it
@@ -93,30 +103,31 @@ void JSONNode::lock(int thread) json_nothrow {
 
 void JSONNode::unlock(int thread) json_nothrow{
     JSON_ASSERT_SAFE(json_unlock_callback != 0, JSON_TEXT("No unlocking callback"), return;);
-
+	
     AutoLock lockControl;
-
+	
     //first, figure out what needs to be locked
     void * thislock = getThisLock(this);
-    #ifdef JSON_SAFE
-	   if (thislock == 0) return;
-    #endif
-
+	#ifdef JSON_SAFE
+		if (thislock == 0) return;
+	#endif
+	
     //get it out of the map
-    std::map<int, std::map<void *, unsigned int> >::iterator it = threadlocks.find(thread);
-    JSON_ASSERT_SAFE(it != threadlocks.end(), JSON_TEXT("thread unlocking something it didn't lock"), return;);
-
+    JSON_MAP(int, JSON_MAP(void *, unsigned int) )::iterator it = json_global(THREAD_LOCKS).find(thread);
+    JSON_ASSERT_SAFE(it != json_global(THREAD_LOCKS).end(), JSON_TEXT("thread unlocking something it didn't lock"), return;);
+	
     //get the mutex out of the thread
-    std::map<void *, unsigned int> & newthread = it -> second;
-    std::map<void *, unsigned int>::iterator locker = newthread.find(thislock);
+    JSON_MAP(void *, unsigned int) & newthread = it -> second;
+    JSON_MAP(void *, unsigned int)::iterator locker = newthread.find(thislock);
     JSON_ASSERT_SAFE(locker != newthread.end(), JSON_TEXT("thread unlocking mutex it didn't lock"), return;);
-
+	
     //unlock it
     if (--(locker -> second)) return;  //other nodes is this same thread still have a lock on it
-
+	
     //if I need to, unlock it
     newthread.erase(locker);
     json_unlock_callback(thislock);
+	
 }
 
 #ifdef JSON_MUTEX_MANAGE
@@ -131,9 +142,9 @@ void internalJSONNode::_set_mutex(void * mutex, bool unset) json_nothrow {
     mylock = mutex;
     if (mutex != 0){
 	   #ifdef JSON_MUTEX_MANAGE
-		  std::map<void *, unsigned int>::iterator it = mutex_manager.find(mutex);
-		  if (it == mutex_manager.end()){
-			 mutex_manager.insert(std::pair<void *, unsigned int>(mutex, 1));
+		  JSON_MAP(void *, unsigned int)::iterator it = json_global(MUTEX_MANAGER).find(mutex);
+		  if (it == json_global(MUTEX_MANAGER).end()){
+			 json_global(MUTEX_MANAGER).insert(std::pair<void *, unsigned int>(mutex, 1));
 		  } else {
 			 ++it -> second;
 		  }
@@ -149,12 +160,12 @@ void internalJSONNode::_set_mutex(void * mutex, bool unset) json_nothrow {
 void internalJSONNode::_unset_mutex(void) json_nothrow {
     #ifdef JSON_MUTEX_MANAGE
 	   if (mylock != 0){
-		  std::map<void *, unsigned int>::iterator it = mutex_manager.find(mylock);
-		  JSON_ASSERT_SAFE(it != mutex_manager.end(), JSON_TEXT("Mutex not managed"), return;);
+		  JSON_MAP(void *, unsigned int)::iterator it = json_global(MUTEX_MANAGER).find(mylock);
+		  JSON_ASSERT_SAFE(it != json_global(MUTEX_MANAGER).end(), JSON_TEXT("Mutex not managed"), return;);
 		  --it -> second;
 		  if (it -> second == 0){
 			 JSON_ASSERT_SAFE(json_destroy, JSON_TEXT("You didn't register a destructor for mutexes"), return;);
-			 mutex_manager.erase(it);
+			 json_global(MUTEX_MANAGER).erase(it);
 		  }
 	   }
     #endif
@@ -168,8 +179,8 @@ void internalJSONNode::_unset_mutex(void) json_nothrow {
 		  #ifdef JSON_MUTEX_MANAGE
 			 if (mylock != 0){
 				mut.push_back(JSON_NEW(JSONNode(JSON_TEXT("this"), (long)mylock)));
-				std::map<void *, unsigned int>::iterator it = mutex_manager.find(mylock);
-				if (it == mutex_manager.end()){
+				JSON_MAP(void *, unsigned int)::iterator it = json_global(MUTEX_MANAGER).find(mylock);
+				if (it == json_global(MUTEX_MANAGER).end()){
 				    mut.push_back(JSON_NEW(JSONNode(JSON_TEXT("references"), JSON_TEXT("error"))));
 				} else {
 				    mut.push_back(JSON_NEW(JSONNode(JSON_TEXT("references"), it -> second)));

@@ -102,7 +102,7 @@ uint8_t flyChromaShift::download(void)
       \fn     DIA_getChromaShift
       \brief  Handle crop dialog
 */
-uint8_t DIA_getChromaShift( ADM_coreVideoFilter *in,chromashift    *param )
+bool DIA_getChromaShift( ADM_coreVideoFilter *in,chromashift    *param )
 {
         uint8_t ret=0;
 

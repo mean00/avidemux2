@@ -29,7 +29,7 @@ ADM_DEMUXER_BEGIN( mkvHeader, 50,
     \fn Probe
 */
 
-extern "C"  uint32_t         probe(uint32_t magic, const char *fileName)
+extern "C"  uint32_t    ADM_PLUGIN_EXPORT     probe(uint32_t magic, const char *fileName)
 {
     if (magic==0xA3DF451A)
     {

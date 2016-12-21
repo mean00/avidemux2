@@ -6,18 +6,17 @@ SET(ADM_core_SRCS
 )
 
 IF (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp ADM_folder_win32.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp ADM_folder_win32.cpp ADM_folder_mingw.cpp ADM_win32_mingw.cpp )
 ELSEIF (APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp ADM_folder_mac.cpp)
 ELSEIF (UNIX)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_unix.cpp ADM_folder_linux.cpp)
+ELSEIF (MSVC)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_vs.cpp ADM_folder_win32.cpp ADM_folder_vs.cpp ADM_win32_vs.cpp)
 ELSE (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp)
+	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp) # Default
 ENDIF (MINGW)
 
-if (MSVC)
-	set(ADM_core_SRCS ${ADM_core_SRCS} dirent.c)
-endif (MSVC)
 
 IF (NOT APPLE)
 	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_memcpy.cpp)

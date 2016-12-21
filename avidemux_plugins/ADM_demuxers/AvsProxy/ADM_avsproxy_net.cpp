@@ -14,7 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifdef __MINGW32__
+#ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>
 #include <io.h>

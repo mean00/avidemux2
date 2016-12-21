@@ -19,7 +19,7 @@ typedef struct
   uint32_t hours,minutes,seconds; 
 } ADM_date;
 
-ADM_CORE6_EXPORT const ADM_date     &ADM_getCurrentDate();
+ADM_CORE6_EXPORT const ADM_date     ADM_getCurrentDate();
 // /dir/file.ext -> /dir/file and ext returned values are copies
 ADM_CORE6_EXPORT void               ADM_PathSplit(const std::string &in,std::string &root, std::string &ext);
 // Returns path only /foo/bar.avi -> /foo , INPLACE!
@@ -48,6 +48,7 @@ ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 
 #		ifndef _TIMESPEC_DEFINED
 #		define _TIMESPEC_DEFINED
+        #ifndef _MSC_VER
 
 	extern "C"
 	{
@@ -57,6 +58,7 @@ ADM_CORE6_EXPORT const char        *ADM_epochToString(uint64_t epoch);
 			long int tv_nsec;
 		};
 	};
+        #endif
 #		endif
 
 #	define TIMZ int

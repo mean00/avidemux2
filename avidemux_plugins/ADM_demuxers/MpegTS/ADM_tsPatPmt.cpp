@@ -160,9 +160,18 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
             {
                 TSpacketInfo pkt;
                 t->setPos(0);
-                if(true==t->getNextPacket_NoHeader(list[i].trackPid,&pkt,false))
-                    tracks[nb++]=list[i];
-                else        
+                // Try several times, in case the audio only comes later one
+                int nbTry=3;
+                while(nbTry)
+                {
+                        if(true==t->getNextPacket_NoHeader(list[i].trackPid,&pkt,false))
+                        {
+                         tracks[nb++]=list[i];
+                         break;
+                        }
+                        nbTry--;
+                }
+                if(!nbTry)        
                     printf("[TS Demuxer] Track %i pid 0x%x does not seem to be there\n",i,list[i].trackPid);
             }
         }

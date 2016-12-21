@@ -62,7 +62,7 @@ void ADMBenchmark::end(void)
 */
 void ADMBenchmark::printResult(void)
 {
-    float f=bCumul;
+    float f=(float)bCumul;
     f/=nbRound;
     ADM_info("Average Time :%f us\n",f);
     ADM_info("Min Time     : %d us\n",bMin);
@@ -74,24 +74,24 @@ void ADMBenchmark::printResult(void)
 */
 void ADMBenchmark::getResult(float &avg, int &bmin,int &bmax)
 {
-    avg=bCumul;
+    avg=(float)bCumul;
     if(nbRound)
         avg/=nbRound;
     else    
         avg=0;
     avg=avg/1000;
-    bmin=bMin/1000;
+    bmin=(float)(bMin/1000);
     bmax=bMax/1000;
 }
 void ADMBenchmark::getResultUs(float &avg, int &bmin,int &bmax)
 {
-    avg=bCumul;
+    avg=(float)bCumul;
     if(nbRound)
         avg/=nbRound;
     else    
         avg=0;
-    bmin=bMin;
-    bmax=bMax;
+    bmin=(float)bMin;
+    bmax=(float)bMax;
 }
 
 // EOF

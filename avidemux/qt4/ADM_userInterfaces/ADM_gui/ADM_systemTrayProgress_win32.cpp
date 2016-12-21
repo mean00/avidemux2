@@ -50,6 +50,7 @@ class winTaskBarProgress : public admUITaskBarProgress
     virtual bool setProgress(int percent) 
     {
         progress->setValue(percent);
+		return true;
     } 
     virtual bool setParent(void *qwin)
     {

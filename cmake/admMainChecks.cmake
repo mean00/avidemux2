@@ -33,6 +33,24 @@ else (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
 	include(_GenerateExportHeader)
 endif (${CMAKE_VERSION} VERSION_GREATER 2.8.5)
 
+IF(WIN32)
+	IF(NOT CROSS)
+		# Add the rootfs
+                IF(NOT VS_ROOT)
+		        SET(VS_ROOT "d:/mingw")
+                ENDIF(NOT VS_ROOT)
+                MESSAGE(STATUS "VS:using ${VS_ROOT} to import libs and headers")
+                INCLUDE_DIRECTORIES(${VS_ROOT}/include)
+                LINK_DIRECTORIES(${VS_ROOT}/lib)
+                LINK_DIRECTORIES(${VS_ROOT}/bin)
+                # Add prefix and suffix so that libraries xxx.dll.a can be found
+                SET(CMAKE_FIND_LIBRARY_PREFIXES lib )
+                SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a )
+	ENDIF(NOT CROSS)
+ENDIF(WIN32)
+
+
+
 INCLUDE(admConfigHelper)
 include(admGetRevision)
 
@@ -145,13 +163,10 @@ INCLUDE(admCheckRequiredLibs)
 IF(NOT PLUGINS)
 INCLUDE(admCheckMiscLibs)
 INCLUDE(FindThreads)
-INCLUDE(admCheckVDPAU)
+
 INCLUDE(admCheckNvEnc)
 #INCLUDE(admCheckXvba)
-INCLUDE(admCheckLibVA)
-checkVDPAU()
 #checkXvba()
-checkLibVA()
 checkNvEnc()
 ENDIF(NOT PLUGINS)
 

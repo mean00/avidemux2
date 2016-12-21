@@ -16,8 +16,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_DEFAULT_H
-#define ADM_DEFAULT_H
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,10 +62,16 @@ ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *strin
 
 
 //
+#ifdef _MSC_VER
+        #define admAlloca _alloca
+        #define ADM_PLUGIN_EXPORT __declspec(dllexport)
 
+#else
+        #define admAlloca alloca
+        #define ADM_PLUGIN_EXPORT 
+#endif
 #undef QT_TR_NOOP
 #undef QT_TRANSLATE_NOOP
 #define QT_TR_NOOP(x) ADM_translate("adm",x)
 #define QT_TRANSLATE_NOOP(a,x) ADM_translate(a,x)
 
-#endif

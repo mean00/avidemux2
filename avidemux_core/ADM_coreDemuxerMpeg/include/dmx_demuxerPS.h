@@ -2,6 +2,7 @@
 #define DMX_DMX_PS
 
  
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include "dmx_demuxer.h"
 
 #define MAX_PES_BUFFER (65*1024) // should be safe enough
@@ -21,7 +22,7 @@
 
 
 */
-class dmx_demuxerPS: public dmx_demuxer
+class ADM_COREDEMUXER6_EXPORT dmx_demuxerPS: public dmx_demuxer
  {
           protected : 
                   uint64_t      stampAbs;

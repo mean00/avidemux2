@@ -6,11 +6,11 @@
 #include <QFrame>
 
 /**
- * 
+ *
  */
 class ADM_QvideoDrawer
 {
-public:  
+public:
     virtual ~ADM_QvideoDrawer() {}
     virtual bool    draw(QWidget *widget, QPaintEvent *ev)=0;
 };
@@ -24,6 +24,7 @@ class  ADM_Qvideo : public QWidget
         ADM_QvideoDrawer *drawer;
         bool             doOnce;
         QFrame           *hostFrame;
+        QPaintEngine     *oldPaintEngine;
 protected:
         int _width,_height;
 public:
@@ -32,10 +33,14 @@ public:
 	void paintEvent(QPaintEvent *ev);
         void setDrawer(ADM_QvideoDrawer *d)
         {
-            drawer=d;    
+            drawer=d;
         }
         // This disables internal double buffer of Qt
         // Set it to false if the native Qt redraw system is used
+        QPaintEngine *paintEngine() const
+        {
+          return NULL; // Disable
+        }
         void useExternalRedraw(bool external)
         {
                 setAttribute( Qt::WA_PaintOnScreen, external );
@@ -47,11 +52,11 @@ public:
              hostFrame->setFixedSize(_width,_height);
              hostFrame->adjustSize();
              hostFrame->updateGeometry();
-             setFixedSize(_width,_height);             
+             setFixedSize(_width,_height);
              this->adjustSize();
              this->updateGeometry();
         }
-        QSize sizeHint() const 
+        QSize sizeHint() const
         {
             if(!_width || !_height) return QWidget::sizeHint();
             return QSize(_width,_height);

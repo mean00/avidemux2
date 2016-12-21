@@ -3,6 +3,7 @@
 */
 //
 #pragma once
+#include "ADM_coreImageLoader6_export.h"
 #include "ADM_image.h"
 /**
  */
@@ -21,7 +22,7 @@ typedef enum
  * 
  * @param fd
  */
-class BmpLowLevel
+class ADM_COREIMAGELOADER6_EXPORT BmpLowLevel
 {
     
 public:
@@ -94,6 +95,6 @@ protected:
     FILE *_fd;
 };
 
-ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h);
+ADM_COREIMAGELOADER6_EXPORT ADM_PICTURE_TYPE ADM_identifyImageFile(const char *filename,uint32_t *w,uint32_t *h);
 
-ADMImage *createImageFromFile(const char *filename);
+ADM_COREIMAGELOADER6_EXPORT ADMImage *createImageFromFile(const char *filename);

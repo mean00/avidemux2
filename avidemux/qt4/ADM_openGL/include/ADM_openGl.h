@@ -14,12 +14,14 @@
  ***************************************************************************/
 #pragma once
 #define GL_GLEXT_PROTOTYPES
+#include "ADM_openGL_export.h"
+
 #ifdef __APPLE__
 #	include <OpenGL/gl.h>
 #   include <OpenGL/glu.h>
 #	include <OpenGL/glext.h>
-
 #	define GL_TEXTURE_RECTANGLE_NV GL_TEXTURE_RECTANGLE_EXT
+
 
 typedef void (* PFNGLACTIVETEXTUREPROC) (GLenum texture);
 typedef void (* PFNGLBINDBUFFERPROC) (GLenum target, GLuint buffer);
@@ -42,7 +44,7 @@ typedef void (* PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, cons
 /**
     \class ADM_glExt
 */
-class ADM_glExt
+class ADM_OPENGL6_EXPORT ADM_glExt
 {
 public:
  static       void setActivateTexture(void *func);
@@ -63,8 +65,8 @@ public:
 };
 
 
- bool ADM_glHasActiveTexture(void);
- bool ADM_glHasARB(void);
+ bool ADM_OPENGL6_EXPORT ADM_glHasActiveTexture(void);
+ bool ADM_OPENGL6_EXPORT ADM_glHasARB(void);
 
 
 
@@ -72,7 +74,7 @@ public:
  *  \class ADM_coreQtGl
  *  \brief base class for all QtGl video filters
  */
-class  ADM_coreQtGl
+class  ADM_OPENGL6_EXPORT ADM_coreQtGl
 {
 protected:
                             

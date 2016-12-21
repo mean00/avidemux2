@@ -1,0 +1,4 @@
+Name    : libjson
+URL     : https://sourceforge.net/projects/libjson/
+License : GPL 
+

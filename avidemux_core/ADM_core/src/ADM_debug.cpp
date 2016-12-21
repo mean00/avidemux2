@@ -27,16 +27,28 @@
 #define ADM_COLOR_RED     "\e[31m"
 #define ADM_COLOR_GREEN   "\e[32m"
 #define ADM_DEFAULT_COLOR "\e[m"
- 
+
 extern "C"
 {
 
 static void ADM_prettyPrint(const char *func,const char *color, const char *p)
 {
+  // construct time code
+  struct timeval pz;
+  TIMZ tz;
+  gettimeofday(&pz, &tz);
+  long int tvSec=pz.tv_sec;
+  long int tvUSec=pz.tv_usec;
+
+  long int mseconds = tvUSec/1000;
+  long int seconds=(tvSec)%60;
+  long int mn=((tvSec)/60)%60;
+  long int hh=((tvSec)/3600)%24;
+
 #if _WIN32
-	printf("[%s] %s", func, p);
+      printf("[%s] %02d:%02d:%02d-%03d %s", func, (int)hh,(int)mn,(int)seconds,(int)mseconds,p);
 #else
-    printf("%s [%s]  %s %s",color,func,p,ADM_DEFAULT_COLOR);
+    printf("%s [%s] %02d:%02d:%02d-%03d  %s %s",color,func,(int)hh,(int)mn,(int)seconds,(int)mseconds,p,ADM_DEFAULT_COLOR);
 #endif
 }
 
@@ -44,38 +56,38 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
  void ADM_info2(const char *func, const char *prf, ...)
   {
   static char print_buffer[1024];
-  	
-		va_list 	list;
-		va_start(list,	prf);
-		vsnprintf(print_buffer,1023,prf,list);
-		va_end(list);
-		print_buffer[1023]=0; // ensure the string is terminated
+
+        va_list     list;
+        va_start(list,    prf);
+        vsnprintf(print_buffer,1023,prf,list);
+        va_end(list);
+        print_buffer[1023]=0; // ensure the string is terminated
         ADM_prettyPrint(func,ADM_COLOR_GREEN,print_buffer);
-		
+
   }
  void ADM_warning2( const char *func, const char *prf, ...)
   {
   static char print_buffer[1024];
-  	
-		va_list 	list;
-		va_start(list,	prf);
-		vsnprintf(print_buffer,1023,prf,list);
-		va_end(list);
-		print_buffer[1023]=0; // ensure the string is terminated
+
+        va_list     list;
+        va_start(list,    prf);
+        vsnprintf(print_buffer,1023,prf,list);
+        va_end(list);
+        print_buffer[1023]=0; // ensure the string is terminated
         ADM_prettyPrint(func,ADM_COLOR_YELLOW,print_buffer);
-		
+
   }
  void ADM_error2( const char *func, const char *prf, ...)
   {
   static char print_buffer[1024];
-  	
-		va_list 	list;
-		va_start(list,	prf);
-		vsnprintf(print_buffer,1023,prf,list);
-		va_end(list);
-		print_buffer[1023]=0; // ensure the string is terminated
+
+        va_list     list;
+        va_start(list,    prf);
+        vsnprintf(print_buffer,1023,prf,list);
+        va_end(list);
+        print_buffer[1023]=0; // ensure the string is terminated
         ADM_prettyPrint(func,ADM_COLOR_RED,print_buffer);
-		
+
   }
 
 

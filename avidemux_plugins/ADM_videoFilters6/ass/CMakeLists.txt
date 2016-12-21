@@ -5,20 +5,24 @@ checkFreeType()
 checkFridibi("0.19")
 
 IF (USE_FREETYPE AND USE_FRIDIBI)
-	ADD_SUBDIRECTORY(ADM_libass)
+    INCLUDE(vf_plugin)
+    SET(ADM_vf_ssa_SRCS ADM_vidASS.cpp)
 
-	INCLUDE(vf_plugin)
-	SET(ADM_vf_ssa_SRCS ADM_vidASS.cpp)
+    ADD_VIDEO_FILTER(ADM_vf_ssa ${ADM_vf_ssa_SRCS})
 
-	ADD_VIDEO_FILTER(ADM_vf_ssa ${ADM_vf_ssa_SRCS})
+    IF(DO_COMMON)
+        IF(USE_EXTERNAL_LIBASS)
+            ADD_DEFINITIONS("-DUSE_EXTERNAL_LIBASS")
+            TARGET_LINK_LIBRARIES(ADM_vf_ssa ${LIBASS_LIBRARIES} ${FREETYPE2_LDFLAGS} ${FRIDIBI_LDFLAGS} ADM_coreSubtitle)
+        ELSE(USE_EXTERNAL_LIBASS)
+            ADD_SUBDIRECTORY(ADM_libass)
+            TARGET_LINK_LIBRARIES(ADM_vf_ssa ADM_libass ${FREETYPE2_LDFLAGS} ${FRIDIBI_LDFLAGS} ADM_coreSubtitle)
+        ENDIF(USE_EXTERNAL_LIBASS)
+        # We force the use of fontconfig
+        ADD_DEFINITIONS("-DUSE_FONTCONFIG")
+        TARGET_LINK_LIBRARIES(ADM_vf_ssa ${FONTCONFIG_LDFLAGS})
+    ENDIF(DO_COMMON)
 
-	IF(DO_COMMON)
-		TARGET_LINK_LIBRARIES(ADM_vf_ssa ADM_libass ${FREETYPE2_LDFLAGS} ${FRIDIBI_LDFLAGS} ADM_coreSubtitle)
-                # We force the use of fontconfig
-                ADD_DEFINITIONS("-DUSE_FONTCONFIG")
-                TARGET_LINK_LIBRARIES(ADM_vf_ssa ${FONTCONFIG_LDFLAGS})
-	ENDIF(DO_COMMON)
-
-	INIT_VIDEO_FILTER(ADM_vf_ssa)
-	INSTALL_VIDEO_FILTER(ADM_vf_ssa)
+    INIT_VIDEO_FILTER(ADM_vf_ssa)
+    INSTALL_VIDEO_FILTER(ADM_vf_ssa)
 ENDIF (USE_FREETYPE AND USE_FRIDIBI)

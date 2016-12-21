@@ -17,6 +17,7 @@
 
 #ifndef ADM_INDEXFILE_H
 #define ADM_INDEXFILE_H
+#include "ADM_coreDemuxerMpeg6_export.h"
 #include <BVector.h>
 #include "ADM_byteBuffer.h"
 /**
@@ -28,7 +29,7 @@
 /**
     \class dmxToken
 */
-class dmxToken
+class ADM_COREDEMUXER6_EXPORT dmxToken
 {
 protected:
     char *name;
@@ -50,7 +51,7 @@ public:
     \class indexFile
 */
 
-class indexFile
+class ADM_COREDEMUXER6_EXPORT indexFile
 {
 protected:
     ADM_byteBuffer buffer;

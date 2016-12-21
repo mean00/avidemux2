@@ -16,7 +16,12 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "ADM_ad_plugin.h"
+
+#ifdef USE_EXTERNAL_LIBMAD
+#include "mad.h"
+#else
 #include "ADM_libMad/mad.h"
+#endif
 
 #define Stream ((mad_stream *)_stream)
 #define Frame ((mad_frame *)_frame)

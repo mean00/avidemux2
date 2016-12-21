@@ -136,7 +136,7 @@ bool bAppend=false;
                               keepRunning=false;
                           continue;
                           break;
-#warning FIXME, update pic field info.... It triggers a end-of-pic message as it is
+//#warning FIXME, update pic field info.... It triggers a end-of-pic message as it is
 #if 0
                     case 0xB5: //  extension
                                 { 

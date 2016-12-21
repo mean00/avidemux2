@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <dirent.h>
+//#include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
 #include <string>
@@ -96,7 +96,7 @@ int ADM_fclose(FILE *file)
 */
 uint8_t    clearDirectoryContent(const uint32_t nb, char *jobName[])
 {
-    for(int i=0;i<nb;i++)
+    for(int i=0;i<(int)nb;i++)
         if(jobName[i])
         {
             ADM_dealloc(jobName[i]);
@@ -156,7 +156,7 @@ uint8_t ADM_copyFile(const char *source, const char *target)
     uint8_t buffer[1024];
     while(!feof(fin))
     {
-        int r=fread(buffer,1,1024,fin);
+        int r=(int)fread(buffer,1,1024,fin);
         fwrite(buffer,1,r,fout);
         if(r!=1024) break;
     }
@@ -173,16 +173,16 @@ uint8_t ADM_copyFile(const char *source, const char *target)
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3)
 {
 	char *result;
-	int length = strlen(base0) + 2;
+	int length = (int)strlen(base0) + 2;
 
 	if (base1)
-		length += strlen(base1) + 1;
+		length += (int)strlen(base1) + 1;
 
 	if (base2)
-		length += strlen(base2) + 1;
+		length += (int)strlen(base2) + 1;
 
 	if (base3)
-		length += strlen(base3) + 1;
+		length += (int)strlen(base3) + 1;
 
 	result = (char *)new char[length];
 	strcpy(result, base0);
@@ -282,7 +282,7 @@ bool isPortableMode(int argc, char *argv[])
 	bool portableMode = false;
     std::string mySelf=argv[0];
     // if the name ends by "_portable.exe" => portable
-    int match=mySelf.find("portable");
+    int match=(int)mySelf.find("portable");
     if(match!=-1)
     {
         ADM_info("Portable mode\n");

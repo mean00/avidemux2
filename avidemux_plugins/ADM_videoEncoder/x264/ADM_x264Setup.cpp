@@ -147,7 +147,7 @@ bool x264Encoder::setup(void)
                              param.rc.b_stat_write=1;
                              param.rc.b_stat_read=0;
                              param.rc.psz_stat_out=logFile;
-#warning FIXME
+//#warning FIXME
 #if 0
                              if(x264Settings.)
                                     x264_param_apply_fastfirstpass(&_param);

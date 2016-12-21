@@ -102,13 +102,15 @@ Agreement.
 #include <stdarg.h>
 #include <math.h>
 #include <time.h>
-#include <unistd.h>
 #include <string> // meanx
 #ifdef __GNUC__
+#include <unistd.h>
 #define tp_inline __inline__
 #endif
 
 #ifdef _MSC_VER
+#include <direct.h>
+#define getcwd _getcwd
 #ifdef NDEBUG
 #define tp_inline __inline
 #else
@@ -124,7 +126,7 @@ Agreement.
 struct tp_vm;
 void pyPrintf(tp_vm *vm, const char *fmt,...);
 extern void pyRaise(tp_vm *vm,const char *e);
-#define printf(x, args...) pyPrintf(tp, x, ##args)
+#define printf(x, ...) pyPrintf(tp, x, ##__VA_ARGS__)
 // MEANX : Need to use ADM_fopen for WIN32 support
 #define uint8_t unsigned char
 #define int64_t long long int
@@ -1590,7 +1592,7 @@ tp_obj tp_exists(TP) {
 }
 tp_obj tp_mtime(TP) {
     char fname[TP_CSTR_LEN]; tp_cstr(tp,TP_STR(),fname,TP_CSTR_LEN);
-    #warning fixme
+    //#warning fixme
     struct stat stbuf;
     if (!stat(fname,&stbuf)) { return tp_number(stbuf.st_mtime); }
     tp_raise(tp_None,tp_string("(tp_mtime) IOError: ?"));

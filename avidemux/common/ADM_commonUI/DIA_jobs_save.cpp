@@ -16,4 +16,5 @@ uint8_t DIA_job_select(char **jobname, char **filename)
             *filename=ADM_strdup(file.c_str());
         }else
             *filename=NULL;
+	return 1;
 }

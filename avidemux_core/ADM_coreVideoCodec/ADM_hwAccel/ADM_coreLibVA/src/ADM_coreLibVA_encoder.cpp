@@ -6,28 +6,25 @@
  */
 ADM_vaEncodingBuffer::ADM_vaEncodingBuffer(ADM_vaEncodingContext *context,int bufferSize)
 {
-        int xError;
-        CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display,context->contextId,VAEncCodedBufferType,
-                                   bufferSize, 1, NULL, &bufferId));
-        if(xError)
-        {
-            ADM_warning("Cannot create encoding buffer\n");
-            bufferId=VA_INVALID;
-        }
-
-        
+    int xError;
+    CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display,context->contextId,VAEncCodedBufferType,
+                               bufferSize, 1, NULL, &bufferId));
+    if(xError)
+    {
+        ADM_warning("Cannot create encoding buffer\n");
+        bufferId=VA_INVALID;
+    }   
 }
 /**
  * \fn dtor
  */
 ADM_vaEncodingBuffer::~ADM_vaEncodingBuffer()
 {
-        if(bufferId!=VA_INVALID)
-        {
-              vaDestroyBuffer(ADM_coreLibVA::display,bufferId);
-              bufferId=VA_INVALID;
-        }
-        
+    if(bufferId!=VA_INVALID)
+    {
+          vaDestroyBuffer(ADM_coreLibVA::display,bufferId);
+          bufferId=VA_INVALID;
+    }        
 }
 
 /**
@@ -116,31 +113,30 @@ bool        ADM_vaEncodingContext::createExtraData()
 {
         int xError;
         CHECK_WORKING(false);
-#if 0
-        
+#if 0        
         VAEncSequenceParameterBufferH264 seq_h264 = {0};
         VABufferID seq_param_buf;
             
-            seq_h264.level_idc = 30;
-            seq_h264.picture_width_in_mbs = width16/16;
-            seq_h264.picture_height_in_mbs = width16/16;
-            seq_h264.bits_per_second = 8000000; // bps
-            seq_h264.frame_rate = 30; // fps
-            seq_h264.initial_qp = 20;
-            seq_h264.min_qp = 1;
-            seq_h264.basic_unit_size = 0;
-            seq_h264.intra_period = 50;
-            
-            CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,
-                                       VAEncSequenceParameterBufferType,
-                                       sizeof(seq_h264),1,&seq_h264,&seq_param_buf));
-            if(xError) return false;
-            CHECK_ERROR (vaRenderPicture(ADM_coreLibVA::display, contextId, &seq_param_buf, 1));
-            if(xError) return false;
-            return true;
-#endif
-            return false;
+        seq_h264.level_idc = 30;
+        seq_h264.picture_width_in_mbs = width16/16;
+        seq_h264.picture_height_in_mbs = width16/16;
+        seq_h264.bits_per_second = 8000000; // bps
+        seq_h264.frame_rate = 30; // fps
+        seq_h264.initial_qp = 20;
+        seq_h264.min_qp = 1;
+        seq_h264.basic_unit_size = 0;
+        seq_h264.intra_period = 50;
 
+        CHECK_ERROR(vaCreateBuffer(ADM_coreLibVA::display, contextId,
+                                   VAEncSequenceParameterBufferType,
+                                   sizeof(seq_h264),1,&seq_h264,&seq_param_buf));
+        if(xError) return false;
+        CHECK_ERROR (vaRenderPicture(ADM_coreLibVA::display, contextId, &seq_param_buf, 1));
+        if(xError) return false;
+        return true;
+#else
+        return false;
+#endif        
 }
 /**
  * \fn encode
@@ -243,26 +239,39 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
         ADM_warning("H264 encoding not supported\n");
         return false;
     }
+    for(int i=0;i<surfaceCount;i++)
+        if(!surfaces[i]->hasValidSurface())
+        {
+            ADM_warning("Surface %d is invalid\n",i);
+            return false;
+        }
+    
+    
      width16=(width+15)&~15;
      height16=(height+15)&~15;
      
-     internalSurface[0]=new ADM_vaSurface(width16,height16);
-     internalSurface[1]=new ADM_vaSurface(width16,height16);
+     internalSurface[0]=ADM_vaSurface::allocateWithSurface(width16,height16);
+     internalSurface[1]=ADM_vaSurface::allocateWithSurface(width16,height16);
+
      if(!internalSurface[0] || !internalSurface[1])
      {
-         ADM_warning("Cannot allocate internal surface\n");
+         ADM_warning("Cannot allocate internal images\n");
          return false;
      }
+
+
      
      VASurfaceID *s=new VASurfaceID[surfaceCount+2];
      for(int i=0;i<surfaceCount;i++)
          s[i]=surfaces[i]->surface;
      s[surfaceCount]=internalSurface[0]->surface;
      s[surfaceCount+1]=internalSurface[1]->surface;
-     CHECK_ERROR(vaCreateContext(ADM_coreLibVA::display,  ADM_coreLibVAEnc::encoders::vaH264.configId,
-                                width16, height16,
-                                VA_PROGRESSIVE,
-                                 s,surfaceCount+2,&contextId));
+     CHECK_ERROR(vaCreateContext(ADM_coreLibVA::display,  
+                                 ADM_coreLibVAEnc::encoders::vaH264.configId,
+                                 width16, height16,
+                                 VA_PROGRESSIVE,
+                                 s,
+                                 surfaceCount+2,&contextId));
      delete [] s;
      if(xError)
      {
@@ -272,3 +281,5 @@ bool        ADM_vaEncodingContext::encode(ADM_vaSurface *src, ADMBitstream *out,
      aprintf("Context created ok\n");
      return true;
  }
+// EOF
+ 

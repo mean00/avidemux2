@@ -12,7 +12,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_cpp.h"
 #include "config.h"
 #include "ADM_default.h"
 #include "ADM_threads.h"
@@ -37,6 +36,14 @@
 
 void abortExitHandler(void);
 
+typedef struct flavors
+{
+        const char *qt4;
+        const char *qt5;
+};
+
+static flavors myFlavors={"qt4","qt5"};
+
 #ifdef main
 extern "C"
 {
@@ -48,7 +55,7 @@ int main(int _argc, char *_argv[])
 {
 	ADM_initBaseDir(_argc, _argv);
 
-#if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4)
+#if defined(_WIN32) && (ADM_UI_TYPE_BUILD == ADM_UI_GTK || ADM_UI_TYPE_BUILD == ADM_UI_QT4) 
 	// redirect output before registering exception handler so error dumps are captured
 	redirectStdoutToFile();
 #endif
@@ -90,7 +97,7 @@ static const char *getUISpecifSubfolder()
     {
         case ADM_UI_QT4:
 #if ADM_UI_TYPE_BUILD == ADM_UI_QT4
-            return QT_FLAVOR;
+                return myFlavors.QT_FLAVOR;
 #else
             return "qt4";
 #endif
@@ -170,11 +177,11 @@ static bool admDummyHwCleanup()
 int startAvidemux(int argc, char *argv[])
 {
 
+#define MKSTRING(x) #x
     printf("*************************\n");
-    printf("  Avidemux v%s", ADM_VERSION);
+    printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
 
 #if defined( ADM_SUBVERSION )
-#define MKSTRING(x) x
          printf(" (%s) .", MKSTRING(ADM_SUBVERSION));
 #endif
 
@@ -287,6 +294,15 @@ int startAvidemux(int argc, char *argv[])
     PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder, admVdpau_exitCleanup)
 #endif
 
+#if defined( USE_DXVA2)
+    extern bool
+#ifdef _MSC_VER
+     __declspec(dllimport)
+#endif
+	admDxva2_exitCleanup();
+    PROBE_HW_ACCEL(dxva2Probe,DXVA2,initDXVA2Decoder,admDxva2_exitCleanup)
+#endif
+
 #if defined( USE_LIBVA)
     extern bool admLibVa_exitCleanup();
     PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admLibVa_exitCleanup)
@@ -357,7 +373,7 @@ void ADM_ExitCleanup( void )
     delete video_body;
     video_body=NULL;
     // wait for thread to finish executing
-    ADM_setCrashHook(NULL,NULL);
+    ADM_setCrashHook(NULL,NULL,NULL);
     destroyScriptEngines();
 //    filterCleanUp();
     ADM_lavDestroy();

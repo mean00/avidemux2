@@ -1,7 +1,7 @@
 /***************************************************************************
                           ADM_infoextractor
                              -------------------
-           - extract additionnal info from header (mp4/h263)                  
+           - extract additionnal info from header (mp4/h263)
 **************************************************************************/
 /***************************************************************************
  *                                                                         *
@@ -13,7 +13,7 @@
  ***************************************************************************/
 
 #ifdef _MSC_VER
-#	include <malloc.h>
+#    include <malloc.h>
 #endif
 
 #include "ADM_default.h"
@@ -63,9 +63,9 @@ static bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
         return false;
     }
     // 01
-    // 4d 40 1f ff 
-    // e1 00 1b 67 
-    // 4d 40 1f f6 
+    // 4d 40 1f ff
+    // e1 00 1b 67
+    // 4d 40 1f f6
     // 02 80 2d
 
     outData[0]=1;
@@ -89,7 +89,7 @@ static bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
 }
 
 bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
-			    uint8_t * outstartcode, uint32_t * offset);
+                uint8_t * outstartcode, uint32_t * offset);
 /**
     \fn ADM_escapeH264
     \brief Add escape stuff
@@ -104,15 +104,15 @@ uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
   while (in < tail-1 )
     {
       if (!in[0] && !in[1])
-	{
-	  out[0] = 0;
-	  out[1] = 0;
+    {
+      out[0] = 0;
+      out[1] = 0;
           out[2] = 3;
-	  out += 3;
-	  outlen += 3;
-	  in += 2;
+      out += 3;
+      outlen += 3;
+      in += 2;
           continue;
-	}
+    }
       *out++ = *in++;
       outlen++;
     }
@@ -130,24 +130,32 @@ uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 */
 uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 {
+  uint8_t *firstOut=out;
   uint32_t outlen = 0;
   uint8_t *tail = in + len;
+  uint8_t *border=tail-3;
   if (len < 3)
     return 0;
-  while (in < tail - 3)
-    {
-      if (!in[0] && !in[1] && in[2] == 3)
-	{
-	  out[0] = 0;
-	  out[1] = 0;
-	  out += 2;
-	  outlen += 2;
-	  in += 3;
+  while (in < border)
+  {
+        if(in[1]) // cannot be 00 00 nor the next one
+        {
+          out[0]=in[0];
+          out[1]=in[1];
+          out+=2;in+=2;
           continue;
-	}
-      *out++ = *in++;
-      outlen++;
-    }
+        }
+        if (!in[0] && !in[1] && in[2] == 3)
+        {
+          out[0] = 0;
+          out[1] = 0;
+          out += 2;
+          in += 3;
+          continue;
+        }
+        *out++ = *in++;
+  }
+  outlen=(int)(out-firstOut);
   // copy last bytes
   uint32_t left = tail - in;
   memcpy (out, in, left);
@@ -162,24 +170,24 @@ uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 static int hrd(getBits &bits)
 {
     //ADM_warning("hdr not implemented\n");
-    int count = bits.getUEG(); 
-    
-	bits.get(4);	// bitRateScale
-    bits.get(4);	// scale
+    int count = bits.getUEG();
+
+    bits.get(4);    // bitRateScale
+    bits.get(4);    // scale
 
     for(int i = 0; i <= count; i++)
     {
-        bits.getUEG();	// bitrate
+        bits.getUEG();    // bitrate
         bits.getUEG();  // sizeMinus1
-        bits.get(1);	// cbrFlag
+        bits.get(1);    // cbrFlag
     }
 
-    bits.get(5);	// initialRemovalDelay
+    bits.get(5);    // initialRemovalDelay
 
     int removalDelay=bits.get(5);
     int outputDelay=bits.get(5);
 
-    bits.get(5);	// timeOffset
+    bits.get(5);    // timeOffset
 
     return removalDelay+outputDelay+2 ;
 }
@@ -193,40 +201,40 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
       unsigned int aspect_ratio_information = bits.get( 8);
 
       if (aspect_ratio_information == 255)
-	{
-	  spsinfo->darNum = bits.get( 16);
-	  spsinfo->darDen = bits.get( 16);
-	}
+    {
+      spsinfo->darNum = bits.get( 16);
+      spsinfo->darDen = bits.get( 16);
+    }
       else if (aspect_ratio_information <
-	       sizeof (pixel_aspect) / sizeof (*pixel_aspect))
-	{
-	  spsinfo->darNum = pixel_aspect[aspect_ratio_information].num;
-	  spsinfo->darDen = pixel_aspect[aspect_ratio_information].den;
-	}
+           sizeof (pixel_aspect) / sizeof (*pixel_aspect))
+    {
+      spsinfo->darNum = pixel_aspect[aspect_ratio_information].num;
+      spsinfo->darDen = pixel_aspect[aspect_ratio_information].den;
+    }
     }
 
-  if (bits.get(1))		// overscan
+  if (bits.get(1))        // overscan
     bits.get(1);
 
-  if (bits.get(1))		// vsp_color
+  if (bits.get(1))        // vsp_color
     {
       bits.get( 4);
 
       if (bits.get(1))
-	{
+    {
         bits.get( 8);
         bits.get( 8);
         bits.get( 8);
-	}
+    }
     }
 
-  if (bits.get(1))		// chroma
+  if (bits.get(1))        // chroma
     {
       bits.getUEG();
       bits.getUEG();
     }
 
-  if (bits.get(1))		// timing
+  if (bits.get(1))        // timing
     {
       uint32_t timeinc_unit = bits.get( 32);
       uint32_t timeinc_resolution = bits.get( 32);
@@ -236,7 +244,7 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
         spsinfo->fps1000 =  (uint32_t) (((float) timeinc_resolution / (float) timeinc_unit) *    1000);
 /* No!
       if (fixed_fps)
-	*fps1000 /= 2;
+    *fps1000 /= 2;
 */
     }
     uint32_t f=0;
@@ -252,9 +260,9 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
         spsinfo->CpbDpbToSkip+=hrd(bits);
     }
     if(f) bits.get(1); // low delay flag
-    
-    
-    spsinfo->hasStructInfo=bits.get(1) | spsinfo->CpbDpbToSkip; 
+
+
+    spsinfo->hasStructInfo=bits.get(1) | spsinfo->CpbDpbToSkip;
     // Has struct info in SEI, see D2.2
 
   return 1;
@@ -265,11 +273,11 @@ static uint8_t  extractVUIInfo (getBits &bits, ADM_SPSInfo *spsinfo)
 */
 bool decodeOneMatrix(int count,getBits &bits)
 {
-        if(!bits.get(1)) 
+        if(!bits.get(1))
         {
                 return true;
         }
-        
+
         int i, last = 8, next = 8;
         for(i=0;i<count;i++)
         {
@@ -307,7 +315,7 @@ bool          decodeScalingMatrices(getBits &bits)
 */
 uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
-   
+
   uint32_t profile, constraint, level, pic_order_cnt_type, w, h, mbh,
     frame_mbs_only;
   uint32_t frame_cropping_flag;
@@ -329,64 +337,64 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
   profile = bits.get(8);
   constraint = bits.get( 8) >> 5;
   level = bits.get( 8);
-  id = bits.getUEG();	// Seq parameter set id           
+  id = bits.getUEG();    // Seq parameter set id
   printf ("[H264]Profile : %u, Level :%u, SPSid:%u\n", profile, level, id);
-  if (profile >= 100)		// ?? Borrowed from H264.C/FFMPEG
+  if (profile >= 100)        // ?? Borrowed from H264.C/FFMPEG
     {
       printf ("[H264]Warning : High profile\n");
       chroma_format_idc = bits.getUEG();
-      if (chroma_format_idc == 3)	//chroma_format_idc
-        separate_colour_plane_flag = bits.get(1);		//residual_color_transform_flag
-      bits.getUEG();	//bit_depth_luma_minus8
-      bits.getUEG();	//bit_depth_chroma_minus8
-      bits.get(1);		// Transform bypass
-      if (bits.get(1))	// Scaling matrix
-	  {
-	    printf ("[H264] Scaling matrix present\n");
+      if (chroma_format_idc == 3)    //chroma_format_idc
+        separate_colour_plane_flag = bits.get(1);        //residual_color_transform_flag
+      bits.getUEG();    //bit_depth_luma_minus8
+      bits.getUEG();    //bit_depth_chroma_minus8
+      bits.get(1);        // Transform bypass
+      if (bits.get(1))    // Scaling matrix
+      {
+        printf ("[H264] Scaling matrix present\n");
           decodeScalingMatrices(bits);
-	  }
+      }
     }
 
-	if ( separate_colour_plane_flag == 0 )
-		chroma_array_type = chroma_format_idc;
+    if ( separate_colour_plane_flag == 0 )
+        chroma_array_type = chroma_format_idc;
 
-  dum = bits.getUEG();	// log2_max_frame_num_minus4
+  dum = bits.getUEG();    // log2_max_frame_num_minus4
   printf ("[H264]Log2maxFrame-4:%u\n", dum);
   pic_order_cnt_type = bits.getUEG();
   printf ("[H264]Pic Order Cnt Type:%u\n", pic_order_cnt_type);
-  if (!pic_order_cnt_type)	// pic_order_cnt_type
+  if (!pic_order_cnt_type)    // pic_order_cnt_type
     {
-      dum = bits.getUEG();	//log2_max_pic_order_cnt_lsb_minus4
+      dum = bits.getUEG();    //log2_max_pic_order_cnt_lsb_minus4
       printf ("[H264]Log2maxPix-4:%u\n", dum);
     }
   else
     {
       if (pic_order_cnt_type == 1)
-	{
-	  bits.get(1);	//delta_pic_order_always_zero_flag
-	  bits.getSEG();	//offset_for_non_ref_pic
-	  bits.getSEG();	// offset_for_top_to_bottom_field
-	  int i = bits.getUEG() ;	//num_ref_frames_in_pic_order_cnt_cycle
+    {
+      bits.get(1);    //delta_pic_order_always_zero_flag
+      bits.getSEG();    //offset_for_non_ref_pic
+      bits.getSEG();    // offset_for_top_to_bottom_field
+      int i = bits.getUEG() ;    //num_ref_frames_in_pic_order_cnt_cycle
 
-	  for (int j = 0; j < i; j++)
-	    {
-	      bits.getSEG();
-	    }
-	}
-      else if (pic_order_cnt_type != 2)
-	{
-	  printf ("Error in SPS\n");
-	  return 0;
-	}
+      for (int j = 0; j < i; j++)
+        {
+          bits.getSEG();
+        }
     }
-  dum = bits.getUEG();	//num_ref_frames
+      else if (pic_order_cnt_type != 2)
+    {
+      printf ("Error in SPS\n");
+      return 0;
+    }
+    }
+  dum = bits.getUEG();    //num_ref_frames
   printf ("[H264] # of ref frames : %u\n", dum);
-  bits.get(1);		// gaps_in_frame_num_value_allowed_flag
-  w = bits.getUEG() + 1;	//pic_width_in_mbs_minus1
+  bits.get(1);        // gaps_in_frame_num_value_allowed_flag
+  w = bits.getUEG() + 1;    //pic_width_in_mbs_minus1
 
   mbh = bits.getUEG() + 1;
   frame_mbs_only = bits.get(1);
-  h = (2 - frame_mbs_only) * mbh;	//pic_height_in_mbs_minus1
+  h = (2 - frame_mbs_only) * mbh;    //pic_height_in_mbs_minus1
 
   printf ("[H264] Width in mb -1  :%d\n", w);
   printf ("[H264] Height in mb -1 :%d\n", h);
@@ -399,38 +407,38 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 
   bits.get(1);
 
-	frame_cropping_flag = bits.get(1);
- 	if (frame_cropping_flag)
-	{
-		// The tests could probably be done more simply but the following is per the spec.
-		uint32_t cl, cr, ct, cb;
-		int cux = 1; // x units
-		int cuy = 2 - frame_mbs_only; // y units
-		if ( chroma_array_type > 0 ) {
-			switch( chroma_format_idc ) {
-			case 1:
-				cux = 2;
-				cuy = 2 * ( 2 - frame_mbs_only );
-				break;
-			case 2:
-				cux = 2;
-				cuy = 1 * ( 2 - frame_mbs_only );
-				break;
-			case 3:
-				cux = 1; 
-				cuy = 1 * ( 2 - frame_mbs_only );
-				break;
-			}
-		}
-		cl = bits.getUEG() * cux;
-		cr = bits.getUEG() * cux;
-		ct = bits.getUEG() * cuy;
-		cb = bits.getUEG() * cuy;
-		spsinfo->width -= cl; // reduce dims based on crop values
-		spsinfo->width -= cr;
-		spsinfo->height -= ct;
-		spsinfo->height -= cb;
-		printf ("[H264] Has cropping of l:%d  r:%d  t:%d  b:%d\n", cl, cr, ct, cb);
+    frame_cropping_flag = bits.get(1);
+     if (frame_cropping_flag)
+    {
+        // The tests could probably be done more simply but the following is per the spec.
+        uint32_t cl, cr, ct, cb;
+        int cux = 1; // x units
+        int cuy = 2 - frame_mbs_only; // y units
+        if ( chroma_array_type > 0 ) {
+            switch( chroma_format_idc ) {
+            case 1:
+                cux = 2;
+                cuy = 2 * ( 2 - frame_mbs_only );
+                break;
+            case 2:
+                cux = 2;
+                cuy = 1 * ( 2 - frame_mbs_only );
+                break;
+            case 3:
+                cux = 1;
+                cuy = 1 * ( 2 - frame_mbs_only );
+                break;
+            }
+        }
+        cl = bits.getUEG() * cux;
+        cr = bits.getUEG() * cux;
+        ct = bits.getUEG() * cuy;
+        cb = bits.getUEG() * cuy;
+        spsinfo->width -= cl; // reduce dims based on crop values
+        spsinfo->width -= cr;
+        spsinfo->height -= ct;
+        spsinfo->height -= cb;
+        printf ("[H264] Has cropping of l:%d  r:%d  t:%d  b:%d\n", cl, cr, ct, cb);
     }
 
   if (bits.get(1))
@@ -451,7 +459,7 @@ uint8_t extractSPSInfo_internal (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 */
 static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength)
 {
-    
+
     uint8_t *payloadBuffer=(uint8_t *)malloc(nalSize+16);
     int     originalNalSize=nalSize+16;
     uint8_t *payload=payloadBuffer;
@@ -462,17 +470,17 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
         ADM_warning("NAL is way too big : %d, while we expected %d at most\n",nalSize,originalNalSize);
         free(payloadBuffer);
         return false;
-    }        
-    
+    }
+
     uint8_t *tail=payload+nalSize;
     *recoveryLength=16;
     while( payload<tail)
     {
                 uint32_t sei_type=0,sei_size=0;
-                while(payload[0]==0xff) 
+                while(payload[0]==0xff)
                 {
                         sei_type+=0xff;payload++;
-                        if(payload+2>=tail) 
+                        if(payload+2>=tail)
                         {
                             ADM_warning("Cannot decode SEI\n");
                             goto abtSei;
@@ -482,16 +490,16 @@ static bool getRecoveryFromSei(uint32_t nalSize, uint8_t *org,uint32_t *recovery
                 if(payload>=tail)
                 {
                             ADM_warning("Cannot decode SEI\n");
-                            goto abtSei;                    
+                            goto abtSei;
                 }
-                while(payload[0]==0xff) 
+                while(payload[0]==0xff)
                 {
                     sei_size+=0xff;payload++;
-                    if(payload+1>=tail) 
+                    if(payload+1>=tail)
                         {
                             ADM_warning("Cannot decode SEI (2)\n");
                             goto abtSei;
-                        }                    
+                        }
                 };
                 sei_size+=payload[0];payload++;
                 aprintf("  [SEI] Type : 0x%x size:%d\n",sei_type,sei_size);
@@ -517,18 +525,18 @@ abtSei:
 }
 /**
     \fn getNalType
-    \brief Return the slice type. The stream is escaped by the function. If recovery==0 
+    \brief Return the slice type. The stream is escaped by the function. If recovery==0
             I as considered IDR else as P.
 */
 static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int recovery)
 {
     uint8_t *out=(uint8_t *)malloc(tail-head);
     int size=ADM_unescapeH264(tail-head,head,out);
-   
+
     getBits bits(size,out);
     uint32_t sliceType;
     *flags = 0;
-  
+
     bits.getUEG();               // first mb in slice
     sliceType = bits.getUEG31(); // get_ue_golomb_31??
     if (sliceType > 9)
@@ -549,7 +557,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
                 if(!recovery) *flags=AVI_KEY_FRAME;
                     else      *flags=AVI_P_FRAME;
                 break;
-        
+
     }
 
       free(out);
@@ -558,10 +566,10 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
 
 /**
       \fn extractH264FrameType
-      \brief return frametype in flags (KEY_FRAME or 0). 
+      \brief return frametype in flags (KEY_FRAME or 0).
              To be used only with  mkv/mp4 nal type (i.e. no startcode)
                     but 4 bytes NALU
-      
+
 */
 uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,  uint32_t * flags)
 {
@@ -573,7 +581,7 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
 // Check for short nalSize, i.e. size coded on 3 bytes
   {
       uint32_t length =(head[0] << 24) + (head[1] << 16) + (head[2] << 8) + (head[3]);
-      if(length>len) nalSize=3;      
+      if(length>len) nalSize=3;
   }
   uint32_t recovery=0xff;
   *flags=0;
@@ -589,9 +597,9 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
           *flags = 0;
           return 0;
         }
-      head += nalSize;		// Skip nal lenth
+      head += nalSize;        // Skip nal lenth
       stream = *(head) & 0x1F;
-      
+
 
       switch (stream)
         {
@@ -599,7 +607,7 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
                 getRecoveryFromSei(length-1, head+1,&recovery);
                 break;
             case NAL_SPS:
-            case NAL_PPS: 
+            case NAL_PPS:
             case NAL_AU_DELIMITER:
             case NAL_FILLER:
                     break;
@@ -623,9 +631,9 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
 
 /**
       \fn extractH264FrameType_startCode
-      \brief return frametype in flags (KEY_FRAME or 0). 
-      To be used only with  avi / mpeg TS nal type 
-        (i.e. with startcode 00 00 00 01)     
+      \brief return frametype in flags (KEY_FRAME or 0).
+      To be used only with  avi / mpeg TS nal type
+        (i.e. with startcode 00 00 00 01)
 */
 uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32_t len, uint32_t * flags)
 {
@@ -648,24 +656,24 @@ uint8_t extractH264FrameType_startCode(uint32_t nalSize, uint8_t * buffer,uint32
           hnt += val;
         }
       if (head >= tail)
-	break;
+    break;
       stream = *(head++) & 0x1f;
       switch (stream)
-	{
-	case NAL_IDR:
-	  *flags = AVI_KEY_FRAME;
-	  // printf("IDR\n");
-	  return 1;
-	  break;
-	case NAL_NON_IDR:
-	   getNalType (head,tail, flags,16); // No recovery here
-	  return 1;
-	  break;
+    {
+    case NAL_IDR:
+      *flags = AVI_KEY_FRAME;
+      // printf("IDR\n");
+      return 1;
+      break;
+    case NAL_NON_IDR:
+       getNalType (head,tail, flags,16); // No recovery here
+      return 1;
+      break;
     case NAL_SPS:case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
-	default:
-	  ADM_warning ("??0x%x\n", stream);
-	  continue;
-	}
+    default:
+      ADM_warning ("??0x%x\n", stream);
+      continue;
+    }
     }
   printf ("No stream\n");
   return 0;
@@ -680,19 +688,19 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
 {
     bool r=false;
     bool closeCodec=false;
-        
+
     // duplicate
     int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
     uint8_t *myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
-    
+
     // 1-Create parser
     AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_H264);
-    AVCodecContext *ctx=NULL; 
+    AVCodecContext *ctx=NULL;
     AVCodec *codec=NULL;
     uint8_t *d=NULL;
-  
+
     if(!parser)
     {
         ADM_error("cannot create h264 parser\n");
@@ -707,7 +715,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     }
     ADM_info("Codec created\n");
     ctx=avcodec_alloc_context3(codec);
-   if (avcodec_open2(ctx, codec, NULL) < 0)  
+   if (avcodec_open2(ctx, codec, NULL) < 0)
    {
         ADM_error("cannot create h264 context\n");
         goto theEnd;
@@ -762,7 +770,7 @@ theEnd:
     if(parser)
         av_parser_close(parser);
 
-	delete [] myData;
+    delete [] myData;
 
     return r;
 }
@@ -775,12 +783,12 @@ theEnd:
 uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     if(data[0]==1) return extractSPSInfo_mp4Header(data,len,spsinfo);
-    
+
     ADM_info("Incoming SPS info\n");
     mixDump(data,len);
-    
+
     ADM_info("\nconverted SPS info\n");
-    
+
     uint32_t converted;
     uint8_t buffer[256];
     if(! ADM_SPSannexBToMP4(len,data,&converted,buffer))
@@ -791,14 +799,14 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     mixDump(buffer,converted);
     ADM_info("\n");
     return    extractSPSInfo_mp4Header(buffer,converted,spsinfo) ;
-    
+
 }
 
 uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
 #define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
-#if 1        
-        
+#if 1
+
         bool l=extractSPSInfo_lavcodec(data,len,spsinfo);
         if(l)
         {
@@ -814,8 +822,8 @@ uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
             ADM_info("Failed\n.");
         }
         return l;
-        
-#else           
+
+#else
         bool i=extractSPSInfo_internal(data,len,spsinfo);
         DPY(width);
         DPY(height);
@@ -848,7 +856,7 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                                     uint32_t *spsLen,uint8_t **spsData,
                                     uint32_t *ppsLen,uint8_t **ppsData)
 {
-  
+
             if(extraLen<7) // not mov/mp4 formatted...
             {
                 ADM_error("Wrong extra data for h264\n");
@@ -860,11 +868,11 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                 ADM_info("MP4 style PPS/SPS\n");
 
                 int nbSps=extra[5]&0x1f;
-                if(nbSps!=1)    
+                if(nbSps!=1)
                 {
                     ADM_error("More or less than 1 sps\n");
                     return false;
-                    
+
                 }
                 uint8_t *c=extra+6;
                 *spsLen= (c[0]<<8)+(c[1]);
@@ -874,7 +882,7 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                 if(nbPps!=1)
                 {
                     ADM_error("More or less than 1 pps\n");
-                    return false;        
+                    return false;
                 }
                 c++;
                 *ppsLen= (c[0]<<8)+(c[1]);
@@ -895,7 +903,7 @@ bool ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
             {
                 ADM_info("Startcoded PPS/SPS\n");
                 #define NALU_COUNT 10
-                NALU_descriptor nalus[NALU_COUNT];      
+                NALU_descriptor nalus[NALU_COUNT];
                 int nbNalus=ADM_splitNalu(extra, extraLen+extra, NALU_COUNT,nalus);
                 //int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
                 if(nbNalus<2)
@@ -973,7 +981,7 @@ static void writeBE32(uint8_t *p, uint32_t size)
     p[3]=(size>>0)&0xff;
 }
 /**
-    \fn ADM_convertFromAnnexBToMP4   
+    \fn ADM_convertFromAnnexBToMP4
     \brief convert annexB startcode (00 00 00 0 xx) to NALU
 */
 int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
@@ -994,7 +1002,7 @@ int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
         switch(d->nalu&0x1f)
         {
             case NAL_FILLER: break;
-            case NAL_AU_DELIMITER: break; 
+            case NAL_AU_DELIMITER: break;
             default:
                   writeBE32(tgt,1+d->size);
                   tgt[nalHeaderSize]=d->nalu;

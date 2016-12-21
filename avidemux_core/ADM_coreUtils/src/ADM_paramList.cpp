@@ -17,10 +17,8 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#include <string>
 #include "ADM_default.h"
 #include "ADM_paramList.h"
-#include <stddef.h>
 #include "ADM_encoderConf.h"
 #include "ADM_coreVideoEncoderFFmpeg_param.h"
 #include "FFcodecContext_param.h"
@@ -255,7 +253,7 @@ bool ADM_paramValidatePartialList(CONFcouple *couples, const    ADM_paramList *p
     int p=XgetParamSize(params);
     if(n>p)
     {
-        ADM_warning("Too many parameters in partial list");
+        ADM_warning("Too many parameters in partial list\n");
         return false;
     }
     int found=0;
@@ -386,17 +384,19 @@ bool ADM_paramLoad(CONFcouple *couples, const ADM_paramList *params,void *s)
 
 }
 /**
-    \fn ADM_paramLoad
+    \fn ADM_paramLoadPartial
     \brief Load a structure from a list of confCouple, accept partial fields
 */
 
 bool ADM_paramLoadPartial(CONFcouple *couples, const ADM_paramList *params,void *s)
 {
-   if(false==ADM_paramValidatePartialList(couples,params)) return false;
+   // don't reject too long or incomplete param lists, this does more harm than good
+   // e.g. on version update, but warnings are nice
+   ADM_paramValidatePartialList(couples,params);
    return ADM_paramLoadInternal(true,couples,params,s);
 }
 /**
-    \fn ADM_paramLoad
+    \fn ADM_paramSave
     \brief Save a structure to a list of confCouple
 */
 bool ADM_paramSave(CONFcouple **couples, const ADM_paramList *params,void *s)

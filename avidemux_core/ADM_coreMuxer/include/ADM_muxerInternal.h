@@ -90,31 +90,31 @@ extern "C" {\
 		} \
 	} \
 \
-ADM_muxer   *create(void){ return new Class; } \
-void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
-uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
-uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION;} \
-const char  *getName(void) {return name;} \
-const char  *getDescriptor(void) {return desc;} \
-const char  *getDisplayName(void) { return displayName;} \
-const char  *getDefaultExtension(void) { return Ext;} \
-bool        getConfiguration(CONFcouple **conf) \
+ADM_PLUGIN_EXPORT ADM_muxer   *create(void){ return new Class; } \
+ADM_PLUGIN_EXPORT void         destroy(ADM_muxer *h){ Class *z=(Class *)h;delete z;} \
+ADM_PLUGIN_EXPORT uint8_t      getVersion(uint32_t *major,uint32_t *minor,uint32_t *patch) {*major=maj;*minor=mn;*patch=pat;return 1;} \
+ADM_PLUGIN_EXPORT uint32_t     getApiVersion(void) {return ADM_MUXER_API_VERSION;} \
+ADM_PLUGIN_EXPORT const char  *getName(void) {return name;} \
+ADM_PLUGIN_EXPORT const char  *getDescriptor(void) {return desc;} \
+ADM_PLUGIN_EXPORT const char  *getDisplayName(void) { return displayName;} \
+ADM_PLUGIN_EXPORT const char  *getDefaultExtension(void) { return Ext;} \
+ADM_PLUGIN_EXPORT bool        getConfiguration(CONFcouple **conf) \
 {\
          if(confTemplate==NULL) {*conf=NULL;return true;} \
          return ADM_paramSave(conf,confTemplate,confVar); \
 }\
-bool        setConfiguration(CONFcouple *conf)\
+ADM_PLUGIN_EXPORT bool        setConfiguration(CONFcouple *conf)\
 {\
 	snapshotDefaultConfiguration(); \
                   return ADM_paramLoad(conf,confTemplate,confVar); \
 } \
-bool        resetConfiguration() \
+ADM_PLUGIN_EXPORT bool        resetConfiguration() \
 { \
 	snapshotDefaultConfiguration(); \
 	if (defaultConfig != NULL) memcpy(confVar, defaultConfig, confSize); \
 	return true; \
 } \
- bool  configure(void) \
+ ADM_PLUGIN_EXPORT bool  configure(void) \
 { \
 	snapshotDefaultConfiguration(); \
  if(configureFunc==NULL) return true;\

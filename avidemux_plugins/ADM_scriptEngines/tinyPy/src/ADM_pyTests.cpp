@@ -19,7 +19,6 @@
 #include "fourcc.h"
 #include "DIA_fileSel.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_coreSubtitles.h"
 
 /**
     \fn pyTestCrash
@@ -42,6 +41,7 @@ int pyTestAssert(void)
 }
 int pyTestSub( char *subName)
 {
+#if 0
     ADM_info("pyTestSub : %s\n",subName);
     ADM_subtitle sub;
     if(!sub.load(subName))
@@ -63,7 +63,7 @@ int pyTestSub( char *subName)
 
     
     ADM_info("Done : %s\n",subName);
+#endif
     return 1;
 }
-
 // EOF

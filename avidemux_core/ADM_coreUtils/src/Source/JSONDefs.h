@@ -14,7 +14,7 @@
 #include "JSONDefs/Strings_Defs.h"
 
 #define __LIBJSON_MAJOR__ 7
-#define __LIBJSON_MINOR__ 1
+#define __LIBJSON_MINOR__ 6
 #define __LIBJSON_PATCH__ 1
 #define __LIBJSON_VERSION__ (__LIBJSON_MAJOR__ * 10000 + __LIBJSON_MINOR__ * 100 + __LIBJSON_PATCH__)
 
@@ -26,10 +26,19 @@
 #define JSON_NODE '\5'
 
 #ifdef __cplusplus
-    #ifdef JSON_STRING_HEADER
-	   #include JSON_STRING_HEADER
-    #endif
+	#if defined(JSON_MEMORY_CALLBACKS) || defined(JSON_MEMORY_POOL)
+		#include "JSONAllocator.h"
+	#else
+		#define json_allocator std::allocator
+	#endif
+
+	#ifdef JSON_STRING_HEADER
+		#include JSON_STRING_HEADER
+	#else
+		typedef std::basic_string<json_char, std::char_traits<json_char>, json_allocator<json_char> > json_string;
+	#endif
 #endif
+#define JSON_MAP(x, y) std::map<x, y, std::less<x>, json_allocator<std::pair<const x, y> > >
 
 #ifdef JSON_NO_EXCEPTIONS
     #define json_throw(x)
@@ -56,7 +65,7 @@
     #endif
 #else
     #ifdef __GNUC__
-	   #ifdef JSON_ISO_STRICT
+	   #ifdef __STRICT_ANSI__
 		  #warning, Using -ansi GCC option, but JSON_ISO_STRICT not on, turning it on for you
 		  #define JSON_ISO_STRICT
 	   #endif
@@ -64,23 +73,29 @@
 #endif
 
 
+#ifdef JSON_NUMBER_TYPE
+	typedef JSON_NUMBER_TYPE json_number;
+	#define JSON_FLOAT_THRESHHOLD 0.00001
+#else
+	#ifdef JSON_LESS_MEMORY
+		typedef float json_number;
+		#define JSON_FLOAT_THRESHHOLD 0.00001f
+	#else
+		typedef double json_number;
+		#define JSON_FLOAT_THRESHHOLD 0.00001
+	#endif
+#endif
+
+
 #ifdef JSON_LESS_MEMORY
     /* PACKED and BITS stored in compiler specific headers */
     #define START_MEM_SCOPE {
     #define END_MEM_SCOPE }
-    typedef float json_number;
-    #define JSON_FLOAT_THRESHHOLD 0.00001f
 #else
     #define PACKED(x)
     #define BITS(x)
     #define START_MEM_SCOPE
     #define END_MEM_SCOPE
-    //#ifdef JSON_ISO_STRICT
-	   typedef double json_number;
-    //#else
-	   //typedef long double json_number;
-    //#endif
-    #define JSON_FLOAT_THRESHHOLD 0.00001
 #endif
 
 #if defined JSON_DEBUG || defined JSON_SAFE
@@ -104,13 +119,13 @@
 #endif
 
 #ifdef JSON_INT_TYPE
-    #if (JSON_INT_TYPE == long long) && defined(JSON_ISO_STRICT)
-	   #error, JSON_INT_TYPE cant be a long long unless JSON_ISO_STRICT is off
-    #endif
     typedef JSON_INT_TYPE json_int_t;
 #else
     typedef long json_int_t;
 #endif
+
+#define JSONSTREAM_SELF (void*)-1
+typedef void (*json_stream_e_callback_t)(void * identifier);
 
 typedef void (*json_mutex_callback_t)(void *);
 typedef void (*json_free_t)(void *);
@@ -122,7 +137,7 @@ typedef void (*json_free_t)(void *);
     typedef JSONNODE** JSONNODE_ITERATOR;
     #ifdef JSON_STREAM
 	   #define JSONSTREAM void
-	   typedef void (*json_stream_callback_t)(JSONNODE *);
+	    typedef void (*json_stream_callback_t)(JSONNODE *, void * identifier);
     #endif
     typedef void * (*json_malloc_t)(unsigned long);
     typedef void * (*json_realloc_t)(void *, unsigned long);
@@ -147,8 +162,8 @@ typedef void (*json_free_t)(void *);
 #endif
 
 #ifdef JSON_UNIT_TEST
-    #define JSON_PRIVATE
-    #define JSON_PROTECTED
+    #define JSON_PRIVATE public:
+    #define JSON_PROTECTED public:
 #else
     #define JSON_PRIVATE private:
     #define JSON_PROTECTED protected:
@@ -163,5 +178,7 @@ typedef void (*json_free_t)(void *);
 	   #error, JSON_VALIDATE also requires JSON_READ_PRIORITY
     #endif
 #endif
+
+#define JSON_TEMP_COMMENT_IDENTIFIER JSON_TEXT('#')
 
 #endif

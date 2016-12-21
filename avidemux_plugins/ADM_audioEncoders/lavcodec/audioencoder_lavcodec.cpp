@@ -20,10 +20,9 @@
 
 extern "C" {
 #include "libavcodec/avcodec.h"
-    #include "libavutil/channel_layout.h"
+#include "libavutil/channel_layout.h"
 #include "libavutil/error.h"
 }
-
 #include "DIA_factory.h"
 #include "DIA_coreToolkit.h"
 #include "audioencoder.h"

@@ -1,11 +1,10 @@
 #include "JSONChildren.h"
 #include "JSONNode.h"
 
-#ifdef JSON_UNIT_TEST
-    void jsonChildren::addAllocCount(void){ JSONNode::incChildrenAllocCount();}
-    void jsonChildren::subAllocCount(void){ JSONNode::decChildrenAllocCount();}
-#endif
-
+/*
+ *	reserves a certain number of bytes, in memory saving mode it creates a special
+ *	type of child container that will not autoshrink
+ */
 void jsonChildren::reserve2(jsonChildren *& mine, json_index_t amount) json_nothrow {
     if (mine -> array != 0){
 	   if (mine -> mycapacity < amount){
@@ -85,11 +84,11 @@ void jsonChildren::doerase(JSONNode ** position, json_index_t number) json_nothr
     JSON_ASSERT(position + number <= array + mysize, JSON_TEXT("erasing out of bounds 2"));
     if (position + number >= array + mysize){
 	   mysize = (json_index_t)(position - array);
-	   #ifndef JSON_ISO_STRICT__
+	   #ifndef JSON_ISO_STRICT
 		  JSON_ASSERT((long long)position - (long long)array >= 0, JSON_TEXT("doing negative allocation"));
 	   #endif
     } else {
-	   memmove(position, position + number, (mysize - (position - array) - number) * sizeof(JSONNode *));
+	   std::memmove(position, position + number, (mysize - (position - array) - number) * sizeof(JSONNode *));
 	   mysize -= number;
     }
 }
