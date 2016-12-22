@@ -185,6 +185,11 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavutil/intfloat.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/macros.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/samplefmt.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vaapi.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_vdpau.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_dxva2.h"
+
             "${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
 
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
