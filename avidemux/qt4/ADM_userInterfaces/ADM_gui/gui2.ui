@@ -1438,16 +1438,10 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="selectionWidget">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
    <property name="minimumSize">
     <size>
-     <width>192</width>
-     <height>163</height>
+     <width>160</width>
+     <height>150</height>
     </size>
    </property>
    <property name="features">
