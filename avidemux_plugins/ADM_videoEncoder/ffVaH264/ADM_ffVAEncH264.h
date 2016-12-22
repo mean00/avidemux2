@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include "ADM_coreLibVA/ADM_coreLibVA.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "ffVAEnc_H264.h"
 
@@ -48,6 +49,10 @@ virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "H264";}
 
-virtual        bool         isDualPass(void) ;
+virtual        bool        isDualPass(void) ;
+
+protected:
+                ADM_vaSurface *surface;
+                bool       preEncode(void);
 
 };

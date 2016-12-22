@@ -1,5 +1,5 @@
 /***************************************************************************
-                          \fn ADM_ffNvEnc
+                          \fn ADM_ffVaEnc
                           \brief Front end for libavcodec Mpeg4 asp encoder
                              -------------------
 
@@ -30,17 +30,19 @@
 extern "C"
 {
     #include "libavutil/opt.h"
+#include "libavutil/hwcontext.h"
 }
 
 ffvaenc_encoder VaEncSettings;
 
 /**
-        \fn ADM_ffNvEncEncoder
+        \fn ADM_ffVaEncEncoder
 */
 ADM_ffVAEncH264Encoder::ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreVideoEncoderFFmpeg(src,NULL,globalHeader)
 {
     //targetColorSpace=ADM_COLOR_YUV422P;
     ADM_info("[ADM_ffVAEncH264Encoder] Creating.\n");
+    surface=NULL;
 }
 
 /**
@@ -62,14 +64,18 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
 default:break;
     }
 #endif
+    int err = av_hwdevice_ctx_create(&(_context->hw_frames_ctx), AV_HWDEVICE_TYPE_VAAPI,   "", NULL, 0);
+    if(err)        
+    {
+        ADM_warning("Cannot initialize VAAPI hwdevice (%d)\n",err);
+        return false;
+    }    
+    //
     _context->bit_rate=VaEncSettings.bitrate*1000;
     _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
-#ifdef USE_NV12
-    _context->pix_fmt=  AV_PIX_FMT_NV12;
-#else
-    _context->pix_fmt=AV_PIX_FMT_YUV420P;
-#endif
-
+    _context->pix_fmt =AV_PIX_FMT_VAAPI_VLD;
+    
+    _frame->format=AV_PIX_FMT_VAAPI_VLD;
     return true;
 }
 
@@ -79,6 +85,12 @@ default:break;
 bool ADM_ffVAEncH264Encoder::setup(void)
 {
 //nvenc
+    surface=ADM_vaSurface::allocateWithSurface(source->getInfo()->width, source->getInfo()->height);
+    if(!surface)
+    {
+        ADM_warning("ffVaEnc : Cannot allocate surface\n");
+        return false;
+    }
     if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_vaapi"))
     {
         ADM_info("[ffMpeg] Setup failed\n");
@@ -92,13 +104,56 @@ bool ADM_ffVAEncH264Encoder::setup(void)
 
 
 /**
-    \fn ~ADM_ffNvEncEncoder
+    \fn ~ADM_ffVaEncEncoder
 */
 ADM_ffVAEncH264Encoder::~ADM_ffVAEncH264Encoder()
 {
-    ADM_info("[ffNvEncEncoder] Destroying.\n");
+    ADM_info("[ffVaEncEncoder] Destroying.\n");
+    if(surface)
+    {
+        delete surface;
+        surface=NULL;
+    }
 }
+/**
+ */
+bool             ADM_ffVAEncH264Encoder::preEncode(void)
+{
+    uint32_t nb;
+    if(source->getNextFrame(&nb,image)==false)
+    {
+        printf("[ff] Cannot get next image\n");
+        return false;
+    }
+    prolog(image);
 
+    uint64_t p=image->Pts;
+    queueOfDts.push_back(p);
+    aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
+    p+=getEncoderDelay();
+    _frame->pts= timingToLav(p);    //
+    if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
+
+    ADM_timeMapping map; // Store real PTS <->lav value mapping
+    map.realTS=p;
+    map.internalTS=_frame->pts;
+    mapper.push_back(map);
+
+    aprintf("Codec> incoming pts=%" PRIu64"\n",image->Pts);
+    //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
+    
+    if(!surface->fromAdmImage(image))
+    {
+        ADM_warning("Cannot upload to vaSurface\n");
+        return false;
+    }
+    
+    _frame->data[0] = _frame->data[1] = _frame->data[2] = NULL;
+    _frame->data[3]=(uint8_t *)surface->surface;
+    
+  
+    return true;
+}
 /**
     \fn encode
 */
