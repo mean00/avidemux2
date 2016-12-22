@@ -50,6 +50,7 @@ ADM_ffVAEncH264Encoder::ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool glo
 */
 bool ADM_ffVAEncH264Encoder::configureContext(void)
 {
+    ADM_info("Configuring context for VAAPI encoder\n");
 #if 0
     switch(VaEncSettings.preset)
     {
@@ -73,9 +74,9 @@ default:break;
     //
     _context->bit_rate=VaEncSettings.bitrate*1000;
     _context->rc_max_rate=VaEncSettings.max_bitrate*1000;
-    _context->pix_fmt =AV_PIX_FMT_VAAPI_VLD;
+    _context->pix_fmt =AV_PIX_FMT_VAAPI;
     
-    _frame->format=AV_PIX_FMT_VAAPI_VLD;
+    _frame->format=AV_PIX_FMT_VAAPI;
     return true;
 }
 
