@@ -325,10 +325,10 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
    if(!configureContext()) {
      return false;
    }
-
+   ADM_info("Opening context\n");
    res=avcodec_open2(_context, codec, NULL);
    if(res<0)
-    {   printf("[ff] Cannot open codec\n");
+    {   ADM_info("[ff] Opening context failed\n");
         return false;
     }
 
