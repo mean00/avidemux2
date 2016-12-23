@@ -30,9 +30,11 @@ protected:
     static bool setCurrentPtsCallback(void *cookie,uint64_t pts);
 public:
 	ADM_QCanvas         *canvas;
+        uint64_t            lastPts;
         QTimer             timer;
 	flySeekablePreview *seekablePreview;
 	Ui_seekablePreviewDialog ui;
+        
 public:        
                 Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame = 0);
                 ~Ui_seekablePreviewWindow();

@@ -170,6 +170,7 @@ class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
   virtual ~ADM_flyDialog(void);
 // UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
 public:  
+  virtual bool     goToTime(uint64_t tme);
   virtual bool     isRgbInverted(void)=0;
   virtual uint8_t  display(uint8_t *rgbData)=0;
   virtual float    calcZoomFactor(void)=0;

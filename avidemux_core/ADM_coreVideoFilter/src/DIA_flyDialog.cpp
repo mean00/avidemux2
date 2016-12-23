@@ -169,6 +169,11 @@ ADM_flyDialog::~ADM_flyDialog(void)
       \fn sliderChanged
       \brief callback to handle image changes
 */
+bool    ADM_flyDialog::goToTime(uint64_t tme)
+{
+     _in->goToTime(tme);
+     return nextImage();
+}
 uint8_t    ADM_flyDialog::sliderChanged(void)
 {
   uint32_t fn= sliderGet();
@@ -183,10 +188,8 @@ uint8_t    ADM_flyDialog::sliderChanged(void)
     time=fn;
     time/=ADM_FLY_SLIDER_MAX;
     time*=_in->getInfo()->totalDuration;
-    _in->goToTime(time);
-   
-
-   return nextImage();
+    return goToTime(time);
+    
 }
 /**
     \fn toRgbColor
