@@ -17,6 +17,7 @@
 
 #include "Q_seekablePreview.h"
 #include "ADM_vidMisc.h"
+
 Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
 	ui.setupUi(this);
@@ -29,7 +30,16 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-    connect(ui.next,SIGNAL(clicked()),this,SLOT(nextImage()));
+        connect(ui.pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
+        connect(ui.pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
+        connect(ui.pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
+        connect(ui.pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+        
+        connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
+        timer.setSingleShot(true);
+        timer.setInterval(40); // assume ~ 25 fps
+        timer.stop();
+        
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -37,6 +47,47 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 	delete seekablePreview;
 	delete canvas;
 }
+/**
+ * 
+ */
+void Ui_seekablePreviewWindow::backOneMinute(void)
+{
+    
+}
+/**
+ * 
+ */
+void Ui_seekablePreviewWindow::fwdOneMinute(void)
+{
+    
+}
+/**
+ * 
+ */
+void Ui_seekablePreviewWindow::play(bool state)
+{
+    if(state)
+    {
+        ui.pushButton_back1mn->setEnabled(false);
+        ui.pushButton_fwd1mn->setEnabled(false);
+        ui.pushButton_next->setEnabled(false);
+        timer.start();
+    }else
+    {
+        timer.stop();
+        ui.pushButton_back1mn->setEnabled(true);
+        ui.pushButton_fwd1mn->setEnabled(true);
+        ui.pushButton_next->setEnabled(true);
+    }
+    
+}
+void Ui_seekablePreviewWindow::timeout()
+{
+    nextImage();
+    timer.start();
+}
+
+
 void Ui_seekablePreviewWindow::nextImage(void)
 {
     seekablePreview->nextImage();

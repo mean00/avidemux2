@@ -37,6 +37,12 @@ protected:
     void *cookie;
     CookieFunc cookieFunc;
 public:
+        flySeekablePreview(uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, void *canvas, void *slider) : 
+	  ADM_flyDialogQt4(width, height, videoStream, canvas, slider, true, RESIZE_LAST) 
+        {
+                cookie=NULL;cookieFunc=NULL;
+        };
+        virtual ~flySeekablePreview(void) {};
 	uint8_t processYuv(ADMImage *in,ADMImage *out) 
             {
                 out->duplicate(in);
@@ -45,23 +51,18 @@ public:
 	uint8_t download(void) {return 1;}
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
-    bool    setCurrentPts(uint64_t pts)
-            {
-                if(cookieFunc)              // Used as a callback to update timestamp
-                    cookieFunc(cookie,pts);
-                return true;
-            }
-	flySeekablePreview(uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, void *canvas, void *slider) : 
-	  ADM_flyDialogQt4(width, height, videoStream, canvas, slider, true, RESIZE_LAST) 
+        bool    setCurrentPts(uint64_t pts)
         {
-                cookie=NULL;cookieFunc=NULL;
-        };
-	virtual ~flySeekablePreview(void) {};
-    bool setCookieFunc(CookieFunc cookieFunc, void *cookie)
+            if(cookieFunc)              // Used as a callback to update timestamp
+                cookieFunc(cookie,pts);
+            return true;
+        }
+	
+        bool setCookieFunc(CookieFunc cookieFunc, void *cookie)
         {
-                this->cookieFunc=cookieFunc;
-                this->cookie=cookie;
-                return true;
+            this->cookieFunc=cookieFunc;
+            this->cookie=cookie;
+            return true;
         }
 };
 #endif
