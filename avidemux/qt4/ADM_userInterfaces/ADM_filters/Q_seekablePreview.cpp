@@ -106,9 +106,7 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
 	canvas = new ADM_QCanvas(ui.frame, canvasWidth, canvasHeight);
 	canvas->show();
 	seekablePreview = new flySeekablePreview(canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-    seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
-//#warning FIXME NO UPDATE
-//	seekablePreview->process();
+        seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
 	seekablePreview->sliderChanged();
 }
 
