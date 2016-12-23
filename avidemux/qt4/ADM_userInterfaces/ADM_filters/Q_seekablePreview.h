@@ -44,7 +44,7 @@ public:
 
 public slots:
 	void sliderChanged(int value);
-        void nextImage(void);
+        bool nextImage(void);
         void backOneMinute(void);
         void fwdOneMinute(void);
         void play(bool status);

@@ -92,14 +92,19 @@ void Ui_seekablePreviewWindow::play(bool state)
 }
 void Ui_seekablePreviewWindow::timeout()
 {
-    nextImage();
-    timer.start();
+    bool r=nextImage();
+    if(r)
+        timer.start();
+    else
+    {
+        ui.pushButton_play->setChecked(false);
+    }
 }
 
 
-void Ui_seekablePreviewWindow::nextImage(void)
+bool  Ui_seekablePreviewWindow::nextImage(void)
 {
-    seekablePreview->nextImage();
+    return seekablePreview->nextImage();
 }
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
