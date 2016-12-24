@@ -64,7 +64,7 @@ public:
     \class ADM_flyDialog
     \brief Base class for flyDialog
 */
-class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
+class ADM_UIQT46_EXPORT ADM_flyDialog
 {
  protected:
   
@@ -127,7 +127,7 @@ public:
 /**
  * \class ADM_flyDialogYuv
  */
-class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialogYuv: public  ADM_flyDialog
+class ADM_UIQT46_EXPORT ADM_flyDialogYuv: public  ADM_flyDialog
 {
 public:
                     ADMImage              *_yuvBufferOut;
@@ -147,7 +147,7 @@ public:
 /**
  * \class ADM_flyDialogYuv
  */
-class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
+class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 {
 public:
                     ADM_byteBuffer     _rgbByteBuffer;
@@ -168,7 +168,7 @@ public:
 /**
  * \fn ADM_flyDialogYuv
  */
-class FlyDialogEventFilter : public QObject
+class ADM_UIQT46_EXPORT FlyDialogEventFilter : public QObject
 {
 	ADM_flyDialog *flyDialog;
 	bool recomputed;
