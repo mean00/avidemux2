@@ -93,6 +93,22 @@ void ADM_flyDialog::EndConstructor(void)
         updateZoom();
         postInit (false);
   }
+
+/**
+ * 
+ * @return 
+ */
+bool ADM_flyDialog::disableZoom()
+{
+    _resizeMethod = RESIZE_NONE;
+    _zoom = 1;
+    _zoomW = _w;
+    _zoomH = _h;  
+    updateZoom();
+    sliderChanged();
+    return true;
+}
+
 /**
     \fn    recomputeSize
     \brief recompute zoom factor

@@ -56,6 +56,19 @@
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
+      <widget class="QRadioButton" name="radioButton_autoZoom">
+       <property name="toolTip">
+        <string>Automatic Zoom</string>
+       </property>
+       <property name="text">
+        <string>A&amp;utoZoom</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QSlider" name="horizontalSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

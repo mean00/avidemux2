@@ -137,6 +137,7 @@ class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
           
   public:
           void               recomputeSize(void);
+          virtual bool       disableZoom(void);
           virtual bool       nextImage(void);
           virtual bool       sameImage(void);
   public:
@@ -173,7 +174,7 @@ public:
   virtual bool     goToTime(uint64_t tme);
   virtual bool     isRgbInverted(void)=0;
   virtual uint8_t  display(uint8_t *rgbData)=0;
-  virtual float    calcZoomFactor(void)=0;
+  virtual float    calcZoomFactor(void)=0;  
   virtual uint32_t sliderGet(void)=0;             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
   virtual uint8_t  sliderSet(uint32_t value) =0;  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
   virtual void     postInit(uint8_t reInit)=0;
