@@ -61,18 +61,51 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     \brief
 */
 
-  ADM_flyDialogQt4::ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                              ADM_QCanvas *canvas, QSlider *slider, int yuv, ResizeMethod resizeMethod):
-                                ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) 
-{
-        EndConstructor();
+  ADM_flyDialog::ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                              ADM_QCanvas *canvas, QSlider *slider,  ResizeMethod resizeMethod)
+{  
+    ADM_assert(canvas);
+
+    if (slider)
+            ADM_assert(in);
+
+    _w = width;
+    _h = height;    
+    _in = in;
+    _slider = slider;
+    _canvas = canvas;
+    _cookie = NULL;
+    _resizeMethod = resizeMethod;
+    _zoomChangeCount = 0;        
+    _yuvBuffer=new ADMImageDefault(_w,_h);
+    _currentPts=0;	
+  
+    if (_resizeMethod != RESIZE_NONE) 
+    {
+        _zoom = calcZoomFactor();
+        if (_zoom == 1) 
+        {
+            _resizeMethod = RESIZE_NONE;
+        }
+    }
+    if (_resizeMethod == RESIZE_NONE) 
+    {
+        _zoom = 1;
+        _zoomW = _w;
+        _zoomH = _h;
+    } else 
+    {
+        _zoomW = uint32_t(_w * _zoom);
+        _zoomH = uint32_t(_h * _zoom);
+    }
+
 }
 /**
     \fn    postInit
     \brief
 */
 
-void ADM_flyDialogQt4::postInit(uint8_t reInit)
+void ADM_flyDialog::postInit(uint8_t reInit)
 {
 	QWidget *graphicsView = ((ADM_QCanvas*)_canvas)->parentWidget();
 	QSlider  *slider=(QSlider *)_slider;
@@ -96,7 +129,7 @@ void ADM_flyDialogQt4::postInit(uint8_t reInit)
     \brief
 */
 
-float ADM_flyDialogQt4::calcZoomFactor(void)
+float ADM_flyDialog::calcZoomFactor(void)
 {
 	return UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
 }
@@ -105,7 +138,7 @@ float ADM_flyDialogQt4::calcZoomFactor(void)
     \brief
 */
 
-uint8_t  ADM_flyDialogQt4::display(uint8_t *rgbData)
+uint8_t  ADM_flyDialog::display(uint8_t *rgbData)
 {
    ADM_QCanvas *view=(ADM_QCanvas *)_canvas;
    ADM_assert(view);
@@ -122,7 +155,7 @@ uint8_t  ADM_flyDialogQt4::display(uint8_t *rgbData)
     \brief
 */
 
-uint32_t ADM_flyDialogQt4::sliderGet(void)
+uint32_t ADM_flyDialog::sliderGet(void)
 {
   QSlider  *slide=(QSlider *)_slider;
   ADM_assert(slide);
@@ -134,7 +167,7 @@ uint32_t ADM_flyDialogQt4::sliderGet(void)
     \brief
 */
 
-uint8_t     ADM_flyDialogQt4::sliderSet(uint32_t value)
+uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
 {
   QSlider  *slide=(QSlider *)_slider;
   ADM_assert(slide);
@@ -146,7 +179,7 @@ uint8_t     ADM_flyDialogQt4::sliderSet(uint32_t value)
     \fn    isRgbInverted
     \brief
 */
-bool  ADM_flyDialogQt4::isRgbInverted(void)
+bool  ADM_flyDialog::isRgbInverted(void)
 {
   return 0; 
 }

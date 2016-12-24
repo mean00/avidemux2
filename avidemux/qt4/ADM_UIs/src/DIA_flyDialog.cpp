@@ -21,30 +21,7 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
-/**
-    \fn    ADM_flyDialog
-    \brief Constructor
-*/
-ADM_flyDialog::ADM_flyDialog(uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                void *canvas, void *slider,int yuv, ResizeMethod resizeMethod)
-{
-	ADM_assert(canvas);
 
-	if (slider)
-		ADM_assert(in);
-
-	_w = width;
-	_h = height;
-	_isYuvProcessing = yuv;
-	_in = in;
-	_slider = slider;
-	_canvas = canvas;
-	_cookie = NULL;
-	_resizeMethod = resizeMethod;
-        _zoomChangeCount = 0;        
-	_yuvBuffer=new ADMImageDefault(_w,_h);
-	_currentPts=0;	
-}
 /**
     \fn updateZoom
 */
@@ -52,48 +29,8 @@ void ADM_flyDialog::updateZoom(void)
 {   
         _rgbByteBufferDisplay.clean();
         _rgbByteBufferDisplay.setSize(_zoomW * _zoomH * 4);
-        action->resetScaler();
+        resetScaler();
 }
-
-/**
- *      \fn Endconstructor
- *      \brief We need to call some virtual functions in the constructor; 
-        it does not work, so we do the 2nd part of the constructor here
- */
-void ADM_flyDialog::EndConstructor(void)
- {
-	if(_isYuvProcessing)
-	{
-        action=new ADM_flyDialogActionYuv(this);
-	}
-	else
-	{
-		action=new ADM_flyDialogActionRgb(this);
-	}
-
-        if (_resizeMethod != RESIZE_NONE)
-        {
-                _zoom = calcZoomFactor();
-                if (_zoom == 1)
-                {
-                        _resizeMethod = RESIZE_NONE;
-                }
-        }
-        if(_resizeMethod==RESIZE_NONE)
-        {
-            _zoom=1;
-            _zoomW=_w;
-            _zoomH=_h;
-        }
-        else
-        {
-                _zoomW = uint32_t (_w * _zoom);
-                _zoomH = uint32_t (_h * _zoom);
-        }
-        updateZoom();
-        postInit (false);
-  }
-
 /**
  * 
  * @return 
@@ -168,8 +105,6 @@ uint8_t ADM_flyDialog::cleanup(void)
 #define DEL2(x)    if(x) {delete  x;x=NULL;}
 	DEL2(_yuvBuffer);
 	_rgbByteBufferDisplay.clean();
-        DEL2(action);
-
 	return 1;
 }
 /**
@@ -220,7 +155,7 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
 */
 bool ADM_flyDialog::sameImage(void)
 {
-    action->process();
+    process();
     return display(_rgbByteBufferDisplay.at(0));
 }
 /**
@@ -236,62 +171,73 @@ bool ADM_flyDialog::nextImage(void)
     }
     setCurrentPts(_yuvBuffer->Pts);
     // Process...   
-    action->process();
+    process();
     return display(_rgbByteBufferDisplay.at(0));
 }
 //************************************
 // Implement the specific part
 // i.e. yuv processing or RGB processing
 //************************************
-ADM_flyDialogActionYuv::ADM_flyDialogActionYuv(ADM_flyDialog *p) : 
-                     ADM_flyDialogAction(p)
+  ADM_flyDialogYuv::ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                ADM_QCanvas *canvas, QSlider *slider, 
+                                ResizeMethod resizeMethod) : ADM_flyDialog(width,height,in,canvas,slider,resizeMethod)
 {
-        _yuvBufferOut=new ADMImageDefault(parent->_w,parent->_h);
-        yuvToRgb=NULL;
-        
+        _yuvBufferOut=new ADMImageDefault(_w,_h);
+        yuvToRgb=NULL;  
+        updateZoom();
+        postInit(false);
 }
-void ADM_flyDialogActionYuv::resetScaler(void)
+void ADM_flyDialogYuv::resetScaler(void)
 {
     if(yuvToRgb) delete yuvToRgb;
+    yuvToRgb=NULL;
     yuvToRgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
-                            parent->_w,
-                            parent->_h,
-                            parent->_zoomW,
-                            parent->_zoomH,
-                            ADM_COLOR_YV12,parent->toRgbColor());
+                            _w,
+                            _h,
+                            _zoomW,
+                            _zoomH,
+                            ADM_COLOR_YV12,toRgbColor());
 }
-ADM_flyDialogActionYuv::~ADM_flyDialogActionYuv()
+ADM_flyDialogYuv::~ADM_flyDialogYuv()
 {
     if(_yuvBufferOut) delete _yuvBufferOut;
     _yuvBufferOut=NULL;
 }
-bool ADM_flyDialogActionYuv::process(void)
+bool ADM_flyDialogYuv::process(void)
 {
-        parent-> processYuv(parent->_yuvBuffer,_yuvBufferOut);
-        yuvToRgb->convertImage(_yuvBufferOut,parent->_rgbByteBufferDisplay.at(0));
+         processYuv(_yuvBuffer,_yuvBufferOut);
+        yuvToRgb->convertImage(_yuvBufferOut,_rgbByteBufferDisplay.at(0));
         return true;
 }
 //*****************************************
-ADM_flyDialogActionRgb::ADM_flyDialogActionRgb(ADM_flyDialog *p) :  ADM_flyDialogAction(p)
+ADM_flyDialogRgb::ADM_flyDialogRgb(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                ADM_QCanvas *canvas, QSlider *slider, 
+                                ResizeMethod resizeMethod) : ADM_flyDialog(width,height,in,canvas,slider,resizeMethod)
 {
-    uint32_t size=parent->_w*parent->_h*4;
+    uint32_t size=_w*_h*4;
     _rgbByteBuffer.setSize(size);
     _rgbByteBufferOut.setSize(size);
-     yuv2rgb =new ADMColorScalerSimple(parent->_w,parent->_h,ADM_COLOR_YV12,
-                parent->toRgbColor());
+     yuv2rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,
+                toRgbColor());
     rgb2rgb=NULL;
+    updateZoom();
+    postInit(false);
+
 }
-void ADM_flyDialogActionRgb::resetScaler(void)
+void ADM_flyDialogRgb::resetScaler(void)
 {
     if(rgb2rgb) delete rgb2rgb;
     rgb2rgb=new ADMColorScalerFull(ADM_CS_BICUBIC, 
-                            parent->_w,
-                            parent->_h,
-                            parent->_zoomW,
-                            parent->_zoomH,
+                            _w,
+                            _h,
+                            _zoomW,
+                            _zoomH,
                             ADM_COLOR_RGB32A,ADM_COLOR_RGB32A);
 }
-ADM_flyDialogActionRgb::~ADM_flyDialogActionRgb()
+/**
+ * 
+ */
+ADM_flyDialogRgb::~ADM_flyDialogRgb()
 {
     _rgbByteBuffer.clean();
     _rgbByteBufferOut.clean();
@@ -301,16 +247,16 @@ ADM_flyDialogActionRgb::~ADM_flyDialogActionRgb()
     yuv2rgb=NULL;
     
 }
-bool ADM_flyDialogActionRgb::process(void)
+bool ADM_flyDialogRgb::process(void)
 {
-    yuv2rgb->convertImage(parent->_yuvBuffer,_rgbByteBuffer.at(0));
-    if (parent->_resizeMethod != RESIZE_NONE)
+    yuv2rgb->convertImage(_yuvBuffer,_rgbByteBuffer.at(0));
+    if (_resizeMethod != RESIZE_NONE)
     {
-        parent->processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
-        rgb2rgb->convert(_rgbByteBufferOut.at(0), parent->_rgbByteBufferDisplay.at(0));
+        processRgb(_rgbByteBuffer.at(0),_rgbByteBufferOut.at(0));
+        rgb2rgb->convert(_rgbByteBufferOut.at(0), _rgbByteBufferDisplay.at(0));
     }else
     {
-        parent->processRgb(_rgbByteBuffer.at(0),parent->_rgbByteBufferDisplay.at(0));
+        processRgb(_rgbByteBuffer.at(0),_rgbByteBufferDisplay.at(0));
     }
     return true;
 }

@@ -61,123 +61,113 @@ public:
 
 
 /**
-    \class ADM_flyDialogAction
-*/
-class ADM_flyDialogAction
-{
-protected:
-            ADM_flyDialog *parent;
-            ADM_flyDialogAction(ADM_flyDialog *parent) {this->parent=parent;}
-public:
-  virtual   ~ADM_flyDialogAction() {}
-  virtual    bool process(void)=0;
-  virtual    void resetScaler(void)=0;
-};
-
-class ADM_flyDialogActionYuv: public ADM_flyDialogAction
-{
-protected:
-          ADMImage              *_yuvBufferOut;
-          ADMColorScalerFull    *yuvToRgb;
-public:
-            ADM_flyDialogActionYuv(ADM_flyDialog *parent);
-            ~ADM_flyDialogActionYuv();
-        void resetScaler(void);
-        bool process(void);
-};
-
-class ADM_flyDialogActionRgb: public ADM_flyDialogAction
-{
-protected:
-          ADM_byteBuffer     _rgbByteBuffer;
-          ADM_byteBuffer     _rgbByteBufferOut;
-          ADMColorScalerFull *yuv2rgb;
-          ADMColorScalerFull *rgb2rgb;
-public:
-            ADM_flyDialogActionRgb(ADM_flyDialog *parent);
-            ~ADM_flyDialogActionRgb();
-        bool process(void);
-        void resetScaler(void);
-};
-//***************************************
-typedef float gfloat;
-
-
-
-
-
-/**
     \class ADM_flyDialog
     \brief Base class for flyDialog
 */
 class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
 {
-    friend class ADM_flyDialogAction;
-    friend class ADM_flyDialogActionYuv;
-    friend class ADM_flyDialogActionRgb;
-  protected:
-   virtual ADM_colorspace toRgbColor(void);
-          void          updateZoom(void);
-          ADM_flyDialogAction *action;
+ protected:
+  
           uint64_t      _currentPts;
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
           uint32_t      _zoomChangeCount;
+          ResizeMethod  _resizeMethod;
+          
           ADM_coreVideoFilter *_in;
       
           ADMImage      *_yuvBuffer;
           ADM_byteBuffer _rgbByteBufferDisplay;
-
-
-          
-          uint8_t       _isYuvProcessing;
-          ResizeMethod  _resizeMethod;
-  
-          void EndConstructor(void);
+  public:
+          void          *_cookie; // whatever
+          QSlider       *_slider; // widget
+          ADM_QCanvas   *_canvas; // Drawing zone
           
   public:
+                            ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                 ADM_QCanvas *canvas, QSlider *slider, ResizeMethod resizeMethod);
+          virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
           virtual bool       nextImage(void);
           virtual bool       sameImage(void);
-  public:
-          void    *_cookie; // whatever
-          void    *_slider; // widget
-          void    *_canvas; // Drawing zone
-          
-  
-  
+protected:
+  virtual ADM_colorspace     toRgbColor(void);
+          void               updateZoom(void);
+          void               EndConstructor(void);
+          uint8_t            cleanup(void);          
   /* Filter dependant : you have to implement them*/
-  virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) {ADM_assert(0);return 1;}
-  virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) {ADM_assert(0);return 1;}
+//
+           virtual           void resetScaler(void)=0; // dont bother, implemented by yuv or rgb subclass
+           virtual           bool process(void)=0; // dont bother, implemented by yuv or rgb subclass
+public:
+  
   virtual uint8_t    download(void)=0;
   virtual uint8_t    upload(void)=0;
+  //virtual uint8_t  update(void)=0;
+
   virtual bool       setCurrentPts(uint64_t pts)=0;
-  /* /filter dependant */
-  
-  
-  virtual uint8_t  update(void) {return 1;};
-            uint8_t  cleanup(void);
-  
 
 
-          ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                             void *canvas, void *slider, int yuv, 
-                             ResizeMethod resizeMethod);
-  virtual ~ADM_flyDialog(void);
+         
 // UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
 public:  
-  virtual bool     goToTime(uint64_t tme);
-  virtual bool     isRgbInverted(void)=0;
-  virtual uint8_t  display(uint8_t *rgbData)=0;
-  virtual float    calcZoomFactor(void)=0;  
-  virtual uint32_t sliderGet(void)=0;             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
-  virtual uint8_t  sliderSet(uint32_t value) =0;  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
-  virtual void     postInit(uint8_t reInit)=0;
+  
+  virtual bool     isRgbInverted(void);
+  virtual uint8_t  display(uint8_t *rgbData);
+  virtual float    calcZoomFactor(void);  
+  virtual uint32_t sliderGet(void);             // Return the slider value between 0 and ADM_FLY_SLIDER_MAX
+  virtual uint8_t  sliderSet(uint32_t value);  // Set slider value between 0 and ADM_FLY_SLIDE_MAX
+  virtual void     postInit(uint8_t reInit);
+public:  
   virtual uint8_t  sliderChanged(void);
+  virtual bool     goToTime(uint64_t tme);
+  
+};
+/**
+ * \class ADM_flyDialogYuv
+ */
+class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialogYuv: public  ADM_flyDialog
+{
+public:
+                    ADMImage              *_yuvBufferOut;
+                    ADMColorScalerFull    *yuvToRgb;  
+public:
+          virtual    bool process(void);
+          virtual    void resetScaler(void);
+          
+                    ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                ADM_QCanvas *canvas, QSlider *slider, 
+                                ResizeMethod resizeMethod);
+                    virtual ~ADM_flyDialogYuv();
+                      virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
+ 
 };
 
+/**
+ * \class ADM_flyDialogYuv
+ */
+class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
+{
+public:
+                    ADM_byteBuffer     _rgbByteBuffer;
+                    ADM_byteBuffer     _rgbByteBufferOut;
+                    ADMColorScalerFull *yuv2rgb;
+                    ADMColorScalerFull *rgb2rgb;
+public:
+          virtual    bool process(void);
+          virtual    void resetScaler(void);
+          
+                            ADM_flyDialogRgb(uint32_t width, uint32_t height, 
+                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas, 
+                                 QSlider *slider, ResizeMethod resizeMethod);
+                    virtual            ~ADM_flyDialogRgb();
+                    virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) =0;
+};
 
+/**
+ * \fn ADM_flyDialogYuv
+ */
 class FlyDialogEventFilter : public QObject
 {
 	ADM_flyDialog *flyDialog;
@@ -190,18 +180,3 @@ protected:
 	bool eventFilter(QObject *obj, QEvent *event);
 };
 
-class ADM_UIQT46_EXPORT ADM_flyDialogQt4 : public ADM_flyDialog
-{
-public:
-  ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                              ADM_QCanvas *canvas, QSlider *slider, int yuv, ResizeMethod resizeMethod);
-
-  
-  virtual bool     isRgbInverted(void);
-  virtual uint8_t  display(uint8_t *rgbData);
-  virtual float    calcZoomFactor(void);
-  virtual uint32_t sliderGet(void);
-  virtual uint8_t  sliderSet(uint32_t value);
-  virtual void     postInit(uint8_t reInit);
-    bool           setCurrentPts(uint64_t pts) {return 1;}
-};
