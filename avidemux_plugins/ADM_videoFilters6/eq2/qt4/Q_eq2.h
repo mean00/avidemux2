@@ -14,7 +14,7 @@
 
 #ifndef Q_eq2_h
 #define Q_eq2_h
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "ui_eq2.h"
 #include "ADM_image.h"
 

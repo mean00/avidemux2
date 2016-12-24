@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "DIA_flyCrop.h"
 #include "../crop.h"
 

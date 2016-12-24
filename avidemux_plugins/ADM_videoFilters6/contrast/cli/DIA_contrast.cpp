@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_image.h"
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "../contrast.h"
 #include "DIA_factory.h"
 #include "../DIA_flyContrast.h"

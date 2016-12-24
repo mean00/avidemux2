@@ -1,7 +1,7 @@
 #ifndef Q_srt_h
 #define Q_srt_h
 
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "ui_srt.h"
 #include "ADM_image.h"
 
@@ -9,7 +9,6 @@ class ADMfont;
 
 #include "ADM_videoFilter.h"
 #include "ADM_vidSRT.h"
-#include "DIA_flyDialog.h"
 #include "DIA_flySrtPos.h"
 
 class Ui_srtWindow : public QDialog

@@ -18,7 +18,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
 #include "ADM_image.h"
 #include "DIA_flyHue.h"

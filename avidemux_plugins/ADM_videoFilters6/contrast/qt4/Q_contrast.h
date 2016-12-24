@@ -1,6 +1,5 @@
 #ifndef Q_contrast_h
 #define Q_contrast_h
-#include "DIA_flyDialog.h"
 #include "ui_contrast.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"

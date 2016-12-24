@@ -15,7 +15,7 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoFilter.h"
 #define ADM_FLY_INTERNAL
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "ADM_assert.h"
 
 extern "C" {
