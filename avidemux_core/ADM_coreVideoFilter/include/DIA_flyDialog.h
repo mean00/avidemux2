@@ -26,9 +26,7 @@ The yuv/rgb specific part is implement through ADM_flyDialogAction (yuv/rgb)
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef ADM_FLY_DIALOG_H
-#define ADM_FLY_DIALOG_H
-
+#pragma once
 #include "ADM_coreVideoFilter6_export.h"
 
 #if !defined(ADM_FLY_INTERNAL)
@@ -50,21 +48,14 @@ The yuv/rgb specific part is implement through ADM_flyDialogAction (yuv/rgb)
 #include "ADM_imageResizer.h"
 #define ADM_FLY_SLIDER_MAX 1000
 
-enum ResizeMethod {
-    RESIZE_NONE = 0,	// No automatic resize
-	RESIZE_AUTO = 1,	// Resize image when convenient (YUV: after filter, RGB: before applying filter)
-	RESIZE_LAST = 2		// Resize image after filter has been applied (slower for RGB)
+enum ResizeMethod 
+{
+    RESIZE_NONE = 0,    // No automatic resize
+    RESIZE_AUTO = 1,    // Resize image when convenient (YUV: after filter, RGB: before applying filter)
+    RESIZE_LAST = 2        // Resize image after filter has been applied (slower for RGB)
 };
 
-class diaMenuEntry;  // defined in DIA_factory.h; only need pointer here
 class ADM_flyDialog;
-struct MenuMapping
-{
-    const char * widgetName; // name of the combo box widget or equivalent
-    uint32_t paramOffset;   // offsetof(FOO_PARAM, menu_option_member)
-    uint32_t count;
-    const diaMenuEntry * menu;
-};
 /**
     \class ADM_flyDialogAction
 */
@@ -82,8 +73,8 @@ public:
 class ADM_flyDialogActionYuv: public ADM_flyDialogAction
 {
 protected:
-          ADMImage      *_yuvBufferOut;
-          ADMColorScalerFull *yuvToRgb;
+          ADMImage              *_yuvBufferOut;
+          ADMColorScalerFull    *yuvToRgb;
 public:
             ADM_flyDialogActionYuv(ADM_flyDialog *parent);
             ~ADM_flyDialogActionYuv();
@@ -106,6 +97,11 @@ public:
 };
 //***************************************
 typedef float gfloat;
+
+
+
+
+
 /**
     \class ADM_flyDialog
     \brief Base class for flyDialog
@@ -160,10 +156,6 @@ class ADM_COREVIDEOFILTER6_EXPORT ADM_flyDialog
             uint8_t  cleanup(void);
   
 
-#ifdef USE_JOG
-  static void jogDial (void * my_data, signed short offset);
-  static void jogRing (void * my_data, gfloat angle);
-#endif
 
           ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                              void *canvas, void *slider, int yuv, 
@@ -207,5 +199,4 @@ public:
  
 #endif //  ADM_FLY_INTERNAL
 
-#endif
 
