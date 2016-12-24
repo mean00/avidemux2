@@ -19,7 +19,7 @@
     \class flyHue
 */
 
-class flyHue : public FLY_DIALOG_TYPE
+class flyHue : public ADM_flyDialogQt4
 {
   
   public:
@@ -30,6 +30,6 @@ class flyHue : public FLY_DIALOG_TYPE
    uint8_t    upload(void);
    uint8_t    update(void);
    flyHue (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    void *canvas, void *slider) : FLY_DIALOG_TYPE(width, height,in,canvas, slider,1,RESIZE_AUTO) {};
+                                    ADM_QCanvas *canvas, QSlider *slider) : ADM_flyDialogQt4(width, height,in,canvas, slider,1,RESIZE_AUTO) {};
 };
 #endif

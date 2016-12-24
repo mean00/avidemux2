@@ -18,7 +18,7 @@
     \class flyLogo
 */
 
-class flyLogo : public FLY_DIALOG_TYPE
+class flyLogo : public ADM_flyDialogQt4
 {
   
   public:
@@ -29,8 +29,8 @@ class flyLogo : public FLY_DIALOG_TYPE
    uint8_t     download(void);
    uint8_t     upload(void);
                flyLogo (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    void *canvas, void *slider) : 
-                FLY_DIALOG_TYPE(width, height,in,canvas, slider,true,RESIZE_AUTO) 
+                                    ADM_QCanvas *canvas, QSlider *slider) : 
+                ADM_flyDialogQt4(width, height,in,canvas, slider,true,RESIZE_AUTO) 
                 {};
    virtual     ~flyLogo() {};
    bool         setXy(int x,int y);

@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+
+
 #include "ADM_UIQT46_export.h"
 #include "ADM_image.h"
 
@@ -23,6 +25,7 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QSlider>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -39,6 +42,24 @@ enum ResizeMethod
 };
 
 class ADM_flyDialog;
+
+
+
+class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
+{
+protected:
+	uint32_t _w,_h;
+public:
+	uint8_t *dataBuffer;
+
+	ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
+	~ADM_QCanvas();
+	void paintEvent(QPaintEvent *ev);
+	void changeSize(uint32_t w, uint32_t h);
+};
+
+
+
 /**
     \class ADM_flyDialogAction
 */
@@ -173,7 +194,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialogQt4 : public ADM_flyDialog
 {
 public:
   ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                              void *canvas, void *slider, int yuv, ResizeMethod resizeMethod);
+                              ADM_QCanvas *canvas, QSlider *slider, int yuv, ResizeMethod resizeMethod);
 
   
   virtual bool     isRgbInverted(void);
@@ -184,18 +205,3 @@ public:
   virtual void     postInit(uint8_t reInit);
     bool           setCurrentPts(uint64_t pts) {return 1;}
 };
-
-
-class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
-{
-protected:
-	uint32_t _w,_h;
-public:
-	uint8_t *dataBuffer;
-
-	ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
-	~ADM_QCanvas();
-	void paintEvent(QPaintEvent *ev);
-	void changeSize(uint32_t w, uint32_t h);
-};
-

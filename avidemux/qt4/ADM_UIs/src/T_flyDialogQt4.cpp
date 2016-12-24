@@ -62,7 +62,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
 */
 
   ADM_flyDialogQt4::ADM_flyDialogQt4(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                              void *canvas, void *slider, int yuv, ResizeMethod resizeMethod):
+                              ADM_QCanvas *canvas, QSlider *slider, int yuv, ResizeMethod resizeMethod):
                                 ADM_flyDialog(width,height,in,canvas,slider,yuv,resizeMethod) 
 {
         EndConstructor();
