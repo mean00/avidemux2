@@ -13,8 +13,8 @@
  ***************************************************************************/
 #define _USE_MATH_DEFINES // some compilers do not export M_PI etc.. if GNU_SOURCE or that is defined, let's do that
 #include <math.h>
-#include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
 #include "hue.h"

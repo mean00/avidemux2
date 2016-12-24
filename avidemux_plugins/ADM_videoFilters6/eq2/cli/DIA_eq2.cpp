@@ -16,12 +16,12 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_image.h"
-#include "DIA_flyDialogQt4.h"
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 
 
 #include "ADM_vidEq2.h"
 
-#include "DIA_flyEq2.h"
 
 /**
  * 		\fn DIA_getEQ2Param
@@ -31,6 +31,4 @@ uint8_t DIA_getEQ2Param(eq2 *param, ADM_coreVideoFilter *in)
 {
     return false;
 }
-uint8_t    flyEq2::download(void) {return 1;}
-uint8_t    flyEq2::upload(void) {return 1;}
 

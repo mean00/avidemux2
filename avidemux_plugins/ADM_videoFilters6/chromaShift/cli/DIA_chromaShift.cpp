@@ -14,19 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
+
 #include "ADM_image.h"
-#include "DIA_flyDialogQt4.h"
 #include "../chromashift.h"
 #include "DIA_factory.h"
-#include "../DIA_flyChromaShift.h"
 
 uint8_t DIA_getChromaShift( ADM_coreVideoFilter *instream,chromashift    *param )
 {
-    int w=instream->getInfo()->width/2;
-    diaElemInteger  u(&(param->u),QT_TRANSLATE_NOOP("chromashift","U :"),-w,w);
-    diaElemInteger  v(&(param->v),QT_TRANSLATE_NOOP("chromashift","V :"),-w,w);
-    diaElem *elems[]={&u,&v};
-    return diaFactoryRun("ChromaShift",sizeof(elems)/sizeof(diaElem *),elems);
+        return true;
 }
-uint8_t    flyChromaShift::download(void) {return 1;}
-uint8_t    flyChromaShift::upload(void) {return 1;}

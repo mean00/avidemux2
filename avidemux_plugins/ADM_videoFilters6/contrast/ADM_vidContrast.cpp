@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include <math.h>
-
-#include "DIA_flyDialogQt4.h"
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
