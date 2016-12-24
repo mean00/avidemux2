@@ -5,7 +5,7 @@
 */
 #include "asharp.h"
 #define uc uint8_t
-class flyASharp : public ADM_flyDialogQt4
+class flyASharp : public ADM_flyDialogYuv
 {
   
   public:
@@ -18,7 +18,7 @@ class flyASharp : public ADM_flyDialogQt4
    uint8_t    update(void);
                 flyASharp (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider) : 
-                    ADM_flyDialogQt4(width, height,in,canvas, slider,1,RESIZE_AUTO) {};
+                    ADM_flyDialogYuv(width, height,in,canvas, slider,RESIZE_AUTO) {};
 };
 
 void asharp_run_c(      uc* planeptr, int pitch,

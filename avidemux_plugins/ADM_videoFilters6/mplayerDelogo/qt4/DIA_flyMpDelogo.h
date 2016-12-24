@@ -22,7 +22,7 @@
 /**
     \class flyMpDelogo
 */
-class flyMpDelogo : public ADM_flyDialogQt4
+class flyMpDelogo : public ADM_flyDialogYuv
 {
   
   public:
@@ -34,7 +34,7 @@ class flyMpDelogo : public ADM_flyDialogQt4
    uint8_t     upload(void);
                flyMpDelogo (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider) : 
-                ADM_flyDialogQt4(width, height,in,canvas, slider,true,RESIZE_AUTO) 
+                ADM_flyDialogYuv(width, height,in,canvas, slider,RESIZE_AUTO) 
                 {};
    virtual     ~flyMpDelogo() {};
    bool         setXy(int x,int y);

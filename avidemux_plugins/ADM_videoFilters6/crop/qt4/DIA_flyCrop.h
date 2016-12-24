@@ -1,6 +1,6 @@
 #ifndef FLY_CROP_H
 #define FLY_CROP_H
-class flyCrop : public ADM_flyDialogQt4
+class flyCrop : public ADM_flyDialogRgb
 {
   
   public:
@@ -12,6 +12,6 @@ class flyCrop : public ADM_flyDialogQt4
    uint8_t    autocrop(void);
               flyCrop (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider) 
-                : ADM_flyDialogQt4(width, height,in,canvas, slider,0,RESIZE_LAST) {};
+                : ADM_flyDialogRgb(width, height,in,canvas, slider,RESIZE_LAST) {};
 };
 #endif

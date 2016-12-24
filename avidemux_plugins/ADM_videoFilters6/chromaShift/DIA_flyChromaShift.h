@@ -4,7 +4,7 @@
 /**
     \class flyChromaShift
 */  
-class flyChromaShift : public ADM_flyDialogQt4
+class flyChromaShift : public ADM_flyDialogYuv
 {
   
   public:
@@ -17,7 +17,7 @@ class flyChromaShift : public ADM_flyDialogQt4
    uint8_t    update(void);
    flyChromaShift (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider) 
-                : ADM_flyDialogQt4(width, height,in,canvas, slider,1,RESIZE_AUTO) {};
+                : ADM_flyDialogYuv(width, height,in,canvas, slider,RESIZE_AUTO) {};
 };
 #endif
 //EOF

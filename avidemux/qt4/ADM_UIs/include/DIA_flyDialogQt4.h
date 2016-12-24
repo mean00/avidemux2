@@ -106,7 +106,7 @@ public:
   virtual uint8_t    upload(void)=0;
   //virtual uint8_t  update(void)=0;
 
-  virtual bool       setCurrentPts(uint64_t pts)=0;
+  virtual bool       setCurrentPts(uint64_t pts) {return true;};
 
 
          

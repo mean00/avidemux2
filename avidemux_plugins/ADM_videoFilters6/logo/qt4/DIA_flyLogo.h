@@ -18,7 +18,7 @@
     \class flyLogo
 */
 
-class flyLogo : public ADM_flyDialogQt4
+class flyLogo : public ADM_flyDialogYuv
 {
   
   public:
@@ -30,7 +30,7 @@ class flyLogo : public ADM_flyDialogQt4
    uint8_t     upload(void);
                flyLogo (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider) : 
-                ADM_flyDialogQt4(width, height,in,canvas, slider,true,RESIZE_AUTO) 
+                ADM_flyDialogYuv(width, height,in,canvas, slider,RESIZE_AUTO) 
                 {};
    virtual     ~flyLogo() {};
    bool         setXy(int x,int y);
