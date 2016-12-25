@@ -43,6 +43,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
         myCrop->top=param->top;
         myCrop->bottom=param->bottom;
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 

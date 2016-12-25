@@ -41,8 +41,10 @@
         myCrop=new flyContrast( width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(contrast));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
+        
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
