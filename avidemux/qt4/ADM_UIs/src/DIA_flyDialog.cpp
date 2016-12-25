@@ -344,9 +344,6 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
         _zoomW = uint32_t(_w * _zoom);
         _zoomH = uint32_t(_h * _zoom);
     }
-    updateZoom();
-    postInit(false);
-
 }
 /**
     \fn    postInit
