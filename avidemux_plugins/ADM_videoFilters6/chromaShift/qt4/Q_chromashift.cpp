@@ -44,6 +44,7 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
         myCrop=new flyChromaShift( width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(chromashift));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 

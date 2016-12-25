@@ -39,6 +39,7 @@
         myCrop=new flyASharp( width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(asharp));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 

@@ -35,6 +35,7 @@
         myCrop=new flyEq2( width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(eq2));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
         myCrop->update();
