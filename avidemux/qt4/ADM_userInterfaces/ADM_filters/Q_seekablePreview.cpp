@@ -34,10 +34,20 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
         connect(ui.pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         connect(ui.pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         connect(ui.pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+        connect(ui.radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
+        
+        ui.radioButton_autoZoom->setEnabled(false);
+        
         
         connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
         timer.setSingleShot(true);
-        timer.setInterval(40); // assume ~ 25 fps
+        
+        int incrementUs=seekablePreview->getUnderlyingFilter()->getInfo()->frameIncrement;
+        
+        incrementUs=(incrementUs+501)/1000; // us => ms
+        if(incrementUs<10) incrementUs=10;
+        
+        timer.setInterval(incrementUs);
         timer.stop();
         
 }
@@ -89,11 +99,33 @@ void Ui_seekablePreviewWindow::play(bool state)
     }
     
 }
+
+/**
+ * 
+ */
+void Ui_seekablePreviewWindow::autoZoom(bool state)
+{
+
+    printf("autoZoom %d\n",(int)state);
+#if 0    
+    if(!state)
+    {
+        seekablePreview->disableZoom();
+    }else
+    {
+        seekablePreview->postInit(false);
+    }
+#endif    
+}
+
 void Ui_seekablePreviewWindow::timeout()
 {
+    
     bool r=nextImage();
     if(r)
+    {
         timer.start();
+    }
     else
     {
         ui.pushButton_play->setChecked(false);

@@ -91,6 +91,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog
           virtual bool       nextImage(void);
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();
+          ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
 protected:
   virtual ADM_colorspace     toRgbColor(void);
           void               updateZoom(void);

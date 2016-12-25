@@ -355,7 +355,7 @@ void ADM_flyDialog::postInit(uint8_t reInit)
 	QWidget *graphicsView = ((ADM_QCanvas*)_canvas)->parentWidget();
 	QSlider  *slider=(QSlider *)_slider;
 
-	if (!reInit)
+	if (reInit)
 	{
 		FlyDialogEventFilter *eventFilter = new FlyDialogEventFilter(this);
 

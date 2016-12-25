@@ -46,6 +46,7 @@ public slots:
         bool nextImage(void);
         void backOneMinute(void);
         void fwdOneMinute(void);
+        void autoZoom(bool status);
         void play(bool status);
         void timeout();
 };
