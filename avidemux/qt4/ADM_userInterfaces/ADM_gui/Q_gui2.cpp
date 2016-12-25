@@ -1529,6 +1529,34 @@ void UI_deiconify( void )
     }
 }
 /**
+ *   \fn UI_requiredWidth
+ *   \brief calculate the horizontal space occupied by the coded widget incl. some margin
+ */
+uint32_t UI_requiredWidth(void)
+{
+    uint32_t reqw=18; // 2 x 9px margin
+    if(WIDGET(codecWidget)->isVisible())
+        reqw += WIDGET(codecWidget)->frameSize().width() + 6; // with codec widget visible a small extra margin is necessary
+    if(WIDGET(toolBar)->orientation()==Qt::Vertical && WIDGET(toolBar)->isVisible() && false==WIDGET(toolBar)->isFloating())
+        reqw += WIDGET(toolBar)->frameSize().width();
+    return reqw;
+}
+/**
+ *   \fn UI_requiredHeight
+ *   \brief calculate the vertical space occupied by widgets above and below the video window
+ */
+uint32_t UI_requiredHeight(void)
+{
+    uint32_t reqh=18; // 2 x 9px margin
+    if(WIDGET(menubar)->isVisible())
+        reqh += WIDGET(menubar)->height();
+    if(WIDGET(toolBar)->isVisible() && false==WIDGET(toolBar)->isFloating() && WIDGET(toolBar)->orientation()==Qt::Horizontal)
+        reqh += WIDGET(toolBar)->frameSize().height();
+    if(WIDGET(navigationWidget)->isVisible() || WIDGET(selectionWidget)->isVisible() || WIDGET(volumeWidget)->isVisible() || WIDGET(audioMetreWidget)->isVisible())
+        reqh += WIDGET(navigationWidget)->frameSize().height();
+    return reqh;
+}
+/**
     \fn UI_setAudioTrackCount
 */
 void UI_setAudioTrackCount( int nb )
