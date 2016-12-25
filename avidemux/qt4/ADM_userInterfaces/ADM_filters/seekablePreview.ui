@@ -98,76 +98,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <widget class="QPushButton" name="pushButton_back1mn">
-       <property name="toolTip">
-        <string>Back one minute</string>
-       </property>
-       <property name="text">
-        <string>&lt;&lt;</string>
-       </property>
-       <property name="autoRepeat">
-        <bool>true</bool>
-       </property>
-       <property name="autoRepeatDelay">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_play">
-       <property name="text">
-        <string>Play</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_next">
-       <property name="statusTip">
-        <string>next image</string>
-       </property>
-       <property name="text">
-        <string>&gt;</string>
-       </property>
-       <property name="autoRepeat">
-        <bool>true</bool>
-       </property>
-       <property name="autoRepeatDelay">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_fwd1mn">
-       <property name="text">
-        <string>&gt;&gt;</string>
-       </property>
-       <property name="autoRepeat">
-        <bool>true</bool>
-       </property>
-       <property name="autoRepeatDelay">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
+    <layout class="QHBoxLayout" name="toolLayout"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

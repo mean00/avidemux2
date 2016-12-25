@@ -26,6 +26,8 @@
 #include <QWidget>
 #include <QDialog>
 #include <QSlider>
+#include <QFrame>
+#include <QTimer>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -43,7 +45,7 @@ enum ResizeMethod
 
 class ADM_flyDialog;
 
-
+class QHBoxLayout;
 
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
@@ -64,9 +66,11 @@ public:
     \class ADM_flyDialog
     \brief Base class for flyDialog
 */
-class ADM_UIQT46_EXPORT ADM_flyDialog
+class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
 {
- protected:            
+  Q_OBJECT
+ protected:     
+         QTimer             timer;
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
           uint32_t      _zoomChangeCount;
@@ -88,11 +92,11 @@ class ADM_UIQT46_EXPORT ADM_flyDialog
           virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
-          virtual bool       enableZoom(void);
-          virtual bool       nextImage(void);
+          virtual bool       enableZoom(void);          
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();
           ADM_coreVideoFilter *getUnderlyingFilter() {return _in;}
+                  bool        addControl(QHBoxLayout *layout);
 protected:
   virtual ADM_colorspace     toRgbColor(void);
           void               updateZoom(void);
@@ -125,12 +129,20 @@ public:
   virtual uint8_t  sliderChanged(void);
   virtual bool     goToTime(uint64_t tme);
   
+public slots:
+        virtual bool nextImage(void);
+        virtual void backOneMinute(void);
+        virtual void fwdOneMinute(void);
+        virtual void autoZoom(bool status);
+        virtual void play(bool status);
+        virtual void timeout();  
 };
 /**
  * \class ADM_flyDialogYuv
  */
 class ADM_UIQT46_EXPORT ADM_flyDialogYuv: public  ADM_flyDialog
 {
+  Q_OBJECT
 public:
                     ADMImage              *_yuvBufferOut;
                     ADMColorScalerFull    *yuvToRgb;  
@@ -151,6 +163,7 @@ public:
  */
 class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 {
+  Q_OBJECT
 public:
                     ADM_byteBuffer     _rgbByteBuffer;
                     ADM_byteBuffer     _rgbByteBufferOut;

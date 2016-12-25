@@ -21,6 +21,9 @@
 #include <QtCore/QCoreApplication>
 #include <QGraphicsView>
 #include <QSlider>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QApplication>
 #include "ADM_toolkitQt.h"
 extern "C" {
 #include "libavcodec/avcodec.h"
@@ -153,6 +156,61 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
     if(isRgbInverted()) return ADM_COLOR_BGR32A;
     return ADM_COLOR_RGB32A;
 }
+/**
+ * 
+ * @param frame
+ * @return 
+ */
+bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
+{
+       QPushButton *pushButton_back1mn;
+       QPushButton *pushButton_play;
+       QPushButton *pushButton_next;
+       QPushButton *pushButton_fwd1mn;
+              
+        pushButton_back1mn = new QPushButton();
+        pushButton_back1mn->setObjectName(QStringLiteral("pushButton_back1mn"));
+        pushButton_back1mn->setAutoRepeat(true);
+        pushButton_back1mn->setAutoRepeatDelay(1000);
+
+        horizontalLayout_4->addWidget(pushButton_back1mn);
+
+        pushButton_play = new QPushButton();
+        pushButton_play->setObjectName(QStringLiteral("pushButton_play"));
+        pushButton_play->setCheckable(true);
+
+        horizontalLayout_4->addWidget(pushButton_play);
+
+        pushButton_next = new QPushButton();
+        pushButton_next->setObjectName(QStringLiteral("pushButton_next"));
+        pushButton_next->setAutoRepeat(true);
+        pushButton_next->setAutoRepeatDelay(1000);
+
+        horizontalLayout_4->addWidget(pushButton_next);
+
+        pushButton_fwd1mn = new QPushButton();
+        pushButton_fwd1mn->setObjectName(QStringLiteral("pushButton_fwd1mn"));
+        pushButton_fwd1mn->setAutoRepeat(true);
+        pushButton_fwd1mn->setAutoRepeatDelay(1000);
+
+        horizontalLayout_4->addWidget(pushButton_fwd1mn);
+        
+        
+        pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
+        pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
+        pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
+        pushButton_next->setStatusTip(QApplication::translate("seekablePreviewDialog", "next image", 0));
+        pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
+        pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
+        
+        QObject::connect(pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
+        QObject::connect(pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
+        QObject::connect(pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
+        QObject::connect(pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+      
+        return true;
+}
+
 /**
     \fn sameImage
 */
@@ -343,6 +401,18 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
         _zoomW = uint32_t(_w * _zoom);
         _zoomH = uint32_t(_h * _zoom);
     }
+    
+    connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
+    timer.setSingleShot(true);
+
+    int incrementUs=getUnderlyingFilter()->getInfo()->frameIncrement;
+
+    incrementUs=(incrementUs+501)/1000; // us => ms
+    if(incrementUs<10) incrementUs=10;
+
+    timer.setInterval(incrementUs);
+    timer.stop();
+    
 }
 /**
     \fn    postInit
@@ -426,6 +496,87 @@ uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
 bool  ADM_flyDialog::isRgbInverted(void)
 {
   return 0; 
+}
+
+
+/**
+ * 
+ */
+#define JUMP_LENGTH (60LL*1000LL*1000LL)
+
+void ADM_flyDialog::backOneMinute(void)
+{
+    uint64_t pts=getCurrentPts();
+    if(pts<JUMP_LENGTH) pts=0;
+    else pts-=JUMP_LENGTH;
+    goToTime(pts);
+}
+/**
+ * 
+ */
+void ADM_flyDialog::fwdOneMinute(void)
+{
+    uint64_t pts=getCurrentPts();
+    pts+=JUMP_LENGTH;
+    goToTime(pts);
+
+}
+/**
+ * 
+ */
+void ADM_flyDialog::play(bool state)
+{
+    if(state)
+    {
+       // ui.pushButton_back1mn->setEnabled(false);
+       // ui.pushButton_fwd1mn->setEnabled(false);
+       // ui.pushButton_next->setEnabled(false);
+        timer.start();
+    }else
+    {
+        timer.stop();
+        //ui.pushButton_back1mn->setEnabled(true);
+        //ui.pushButton_fwd1mn->setEnabled(true);
+        //ui.pushButton_next->setEnabled(true);
+    }
+    
+}
+
+/**
+ * 
+ */
+void ADM_flyDialog::autoZoom(bool state)
+{
+#if 0
+    printf("autoZoom %d\n",(int)state);
+
+    if(!state)
+    {
+        seekablePreview->disableZoom();
+        canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
+        setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
+     
+        adjustSize();
+    }else
+    {
+        seekablePreview->enableZoom();
+    }
+#endif
+
+}
+
+void ADM_flyDialog::timeout()
+{
+    
+    bool r=nextImage();
+    if(r)
+    {
+        timer.start();
+    }
+    else
+    {
+      //  ui.pushButton_play->setChecked(false);
+    }
 }
 
 

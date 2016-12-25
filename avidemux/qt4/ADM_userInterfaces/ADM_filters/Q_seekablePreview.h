@@ -30,7 +30,6 @@ protected:
     static bool setCurrentPtsCallback(void *cookie,uint64_t pts);
 public:
 	ADM_QCanvas         *canvas;
-        QTimer             timer;
 	flySeekablePreview *seekablePreview;
 	Ui_seekablePreviewDialog ui;
         
@@ -44,9 +43,5 @@ public:
 public slots:
 	void sliderChanged(int value);
         bool nextImage(void);
-        void backOneMinute(void);
-        void fwdOneMinute(void);
         void autoZoom(bool status);
-        void play(bool status);
-        void timeout();
 };

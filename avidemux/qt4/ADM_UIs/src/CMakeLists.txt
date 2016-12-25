@@ -3,7 +3,9 @@ SET(ADM_LIB ADM_UI${QT_LIBRARY_EXTENSION}6)
 
 ADM_QT_WRAP_CPP(${ADM_LIB}_source
 	T_bitrate.h  T_button.h  T_dialogFactory.h  T_filesel.h  T_menu.h  T_slider.h
-	T_threadCount.h  T_toggle.h  T_notch.h)
+	T_threadCount.h  T_toggle.h  T_notch.h
+        ../include/DIA_flyDialogQt4.h
+)
 
 SET(${ADM_LIB}_T
 	T_bitrate.cpp  T_button.cpp  T_dialogFactory.cpp  T_filesel.cpp  T_menu.cpp

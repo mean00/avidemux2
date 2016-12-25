@@ -26,78 +26,19 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	canvas = NULL;
 
 	resetVideoStream(videoStream);
+        
+        seekablePreview->addControl(ui.toolLayout);
 	seekablePreview->sliderSet(defaultFrame);
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-        connect(ui.pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
-        connect(ui.pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
-        connect(ui.pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
-        connect(ui.pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
         connect(ui.radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
-        
-        //ui.radioButton_autoZoom->setEnabled(false);
-        
-        
-        connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
-        timer.setSingleShot(true);
-        
-        int incrementUs=seekablePreview->getUnderlyingFilter()->getInfo()->frameIncrement;
-        
-        incrementUs=(incrementUs+501)/1000; // us => ms
-        if(incrementUs<10) incrementUs=10;
-        
-        timer.setInterval(incrementUs);
-        timer.stop();
-        
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 {
 	delete seekablePreview;
 	delete canvas;
-}
-/**
- * 
- */
-#define JUMP_LENGTH (60LL*1000LL*1000LL)
-
-void Ui_seekablePreviewWindow::backOneMinute(void)
-{
-    uint64_t pts=seekablePreview->getCurrentPts();
-    if(pts<JUMP_LENGTH) pts=0;
-    else pts-=JUMP_LENGTH;
-    seekablePreview->goToTime(pts);
-}
-/**
- * 
- */
-void Ui_seekablePreviewWindow::fwdOneMinute(void)
-{
-    uint64_t pts=seekablePreview->getCurrentPts();
-    pts+=JUMP_LENGTH;
-    seekablePreview->goToTime(pts);
-
-}
-/**
- * 
- */
-void Ui_seekablePreviewWindow::play(bool state)
-{
-    if(state)
-    {
-        ui.pushButton_back1mn->setEnabled(false);
-        ui.pushButton_fwd1mn->setEnabled(false);
-        ui.pushButton_next->setEnabled(false);
-        timer.start();
-    }else
-    {
-        timer.stop();
-        ui.pushButton_back1mn->setEnabled(true);
-        ui.pushButton_fwd1mn->setEnabled(true);
-        ui.pushButton_next->setEnabled(true);
-    }
-    
 }
 
 /**
@@ -122,19 +63,6 @@ void Ui_seekablePreviewWindow::autoZoom(bool state)
 
 }
 
-void Ui_seekablePreviewWindow::timeout()
-{
-    
-    bool r=nextImage();
-    if(r)
-    {
-        timer.start();
-    }
-    else
-    {
-        ui.pushButton_play->setChecked(false);
-    }
-}
 
 
 bool  Ui_seekablePreviewWindow::nextImage(void)
