@@ -88,6 +88,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog
           virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
+          virtual bool       enableZoom(void);
           virtual bool       nextImage(void);
           virtual bool       sameImage(void);
                   uint64_t   getCurrentPts();

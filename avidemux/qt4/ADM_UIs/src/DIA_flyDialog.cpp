@@ -42,14 +42,15 @@ void ADM_flyDialog::updateZoom(void)
 bool ADM_flyDialog::disableZoom()
 {
     _resizeMethod = RESIZE_NONE;
-    _zoom = 1;
-    _zoomW = _w;
-    _zoomH = _h;  
-    updateZoom();
-    sliderChanged();
+    recomputeSize();
     return true;
 }
-
+bool       ADM_flyDialog::enableZoom(void)
+{
+      _resizeMethod = RESIZE_AUTO;
+    recomputeSize();
+    return true;
+}
 /**
     \fn    recomputeSize
     \brief recompute zoom factor
@@ -57,30 +58,30 @@ bool ADM_flyDialog::disableZoom()
 
 void ADM_flyDialog::recomputeSize(void)
 {
+    if(this->_resizeMethod==RESIZE_NONE)
+    {
+        _zoom = 1;
+        _zoomW = _w;
+        _zoomH = _h;
+        updateZoom();
+        postInit (true);
+        sliderChanged();
+        return;
+    }
+    
     float new_zoom = calcZoomFactor();
 
     ResizeMethod new_resizeMethod;
     uint32_t new_zoomW;
     uint32_t new_zoomH;
 
-    if (new_zoom == 1)
-    {
-        new_resizeMethod = RESIZE_NONE;
-        new_zoomW = _w;
-        new_zoomH = _h;
-    }
-    else
-    {
-        new_resizeMethod = RESIZE_AUTO;
-        new_zoomW = uint32_t (_w * new_zoom);
-        new_zoomH = uint32_t (_h * new_zoom);
-    }
-
-    if (new_resizeMethod == _resizeMethod && new_zoom == _zoom
-        && new_zoomW == _zoomW && new_zoomH == _zoomH)
+    new_zoomW = uint32_t (_w * new_zoom);
+    new_zoomH = uint32_t (_h * new_zoom);
+    
+    if ( new_zoom == _zoom && new_zoomW == _zoomW && new_zoomH == _zoomH)
         return;
 
-    if (++_zoomChangeCount > 3 || new_zoomH < 30 || new_zoomW < 30)
+    if ( new_zoomH < 30 || new_zoomW < 30)
     {
         ADM_info ("Resisting zoom size change from %dx%d (zoom %.5f) to %dx%d (zoom %.5f)\n",
                 _zoomW, _zoomH, _zoom, new_zoomW, new_zoomH, new_zoom);
@@ -89,8 +90,6 @@ void ADM_flyDialog::recomputeSize(void)
 
     ADM_info ("Fixing zoom size from %dx%d (zoom %.5f) to correct %dx%d (zoom %.5f)\n",
             _zoomW, _zoomH, _zoom, new_zoomW, new_zoomH, new_zoom);
-
-    _resizeMethod = new_resizeMethod;
     _zoom = new_zoom;
     _zoomW = new_zoomW;
     _zoomH = new_zoomH;

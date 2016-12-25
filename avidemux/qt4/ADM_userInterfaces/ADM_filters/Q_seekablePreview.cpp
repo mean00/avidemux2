@@ -36,7 +36,7 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
         connect(ui.pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
         connect(ui.radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
         
-        ui.radioButton_autoZoom->setEnabled(false);
+        //ui.radioButton_autoZoom->setEnabled(false);
         
         
         connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
@@ -107,15 +107,19 @@ void Ui_seekablePreviewWindow::autoZoom(bool state)
 {
 
     printf("autoZoom %d\n",(int)state);
-#if 0    
+
     if(!state)
     {
         seekablePreview->disableZoom();
+        canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
+        setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
+     
+        adjustSize();
     }else
     {
-        seekablePreview->postInit(false);
+        seekablePreview->enableZoom();
     }
-#endif    
+
 }
 
 void Ui_seekablePreviewWindow::timeout()
