@@ -46,6 +46,7 @@ enum ResizeMethod
 class ADM_flyDialog;
 
 class QHBoxLayout;
+class QPushButton;
 
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
@@ -81,6 +82,14 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
       
           ADMImage      *_yuvBuffer;
           ADM_byteBuffer _rgbByteBufferDisplay;
+          
+          QPushButton *pushButton_back1mn;
+          QPushButton *pushButton_play;
+          QPushButton *pushButton_next;
+          QPushButton *pushButton_fwd1mn;
+
+          
+          
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
           QSlider       *_slider; // widget

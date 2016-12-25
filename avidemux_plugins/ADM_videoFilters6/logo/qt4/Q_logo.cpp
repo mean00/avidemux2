@@ -204,6 +204,9 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         SPINNER(spinAlpha);
         connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
         myLogo->sameImage();
+        
+        myLogo->addControl(ui.toolboxLayout);
+        
         show();
           
   }

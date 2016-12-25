@@ -163,10 +163,6 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
  */
 bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
-       QPushButton *pushButton_back1mn;
-       QPushButton *pushButton_play;
-       QPushButton *pushButton_next;
-       QPushButton *pushButton_fwd1mn;
               
         pushButton_back1mn = new QPushButton();
         pushButton_back1mn->setObjectName(QStringLiteral("pushButton_back1mn"));
@@ -195,6 +191,8 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 
         horizontalLayout_4->addWidget(pushButton_fwd1mn);
         
+        QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalLayout_4->addItem(horizontalSpacer_4);
         
         pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
         pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
@@ -528,16 +526,16 @@ void ADM_flyDialog::play(bool state)
 {
     if(state)
     {
-       // ui.pushButton_back1mn->setEnabled(false);
-       // ui.pushButton_fwd1mn->setEnabled(false);
-       // ui.pushButton_next->setEnabled(false);
-        timer.start();
+       pushButton_back1mn->setEnabled(false);
+       pushButton_fwd1mn->setEnabled(false);
+       pushButton_next->setEnabled(false);
+       timer.start();
     }else
     {
         timer.stop();
-        //ui.pushButton_back1mn->setEnabled(true);
-        //ui.pushButton_fwd1mn->setEnabled(true);
-        //ui.pushButton_next->setEnabled(true);
+        pushButton_back1mn->setEnabled(true);
+        pushButton_fwd1mn->setEnabled(true);
+        pushButton_next->setEnabled(true);
     }
     
 }
@@ -575,7 +573,7 @@ void ADM_flyDialog::timeout()
     }
     else
     {
-      //  ui.pushButton_play->setChecked(false);
+       pushButton_play->setChecked(false);
     }
 }
 
