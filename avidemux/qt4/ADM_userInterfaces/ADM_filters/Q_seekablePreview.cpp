@@ -39,7 +39,6 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
         timer.setSingleShot(true);
         timer.setInterval(40); // assume ~ 25 fps
         timer.stop();
-        lastPts=0;
         
 }
 
@@ -55,7 +54,7 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 
 void Ui_seekablePreviewWindow::backOneMinute(void)
 {
-    uint64_t pts=lastPts;
+    uint64_t pts=seekablePreview->getCurrentPts();
     if(pts<JUMP_LENGTH) pts=0;
     else pts-=JUMP_LENGTH;
     seekablePreview->goToTime(pts);
@@ -65,7 +64,7 @@ void Ui_seekablePreviewWindow::backOneMinute(void)
  */
 void Ui_seekablePreviewWindow::fwdOneMinute(void)
 {
-    uint64_t pts=lastPts;
+    uint64_t pts=seekablePreview->getCurrentPts();
     pts+=JUMP_LENGTH;
     seekablePreview->goToTime(pts);
 
@@ -152,7 +151,6 @@ bool Ui_seekablePreviewWindow::setCurrentPtsCallback(void *cookie,uint64_t pts)
 */
 bool      Ui_seekablePreviewWindow::setTime(uint64_t timestamp)
 {
-    lastPts=timestamp;
     const char *s=ADM_us2plain(timestamp);
     ui.label->setText(s);
     return true;

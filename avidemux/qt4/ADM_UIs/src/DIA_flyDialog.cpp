@@ -162,6 +162,10 @@ bool ADM_flyDialog::sameImage(void)
     process();
     return display(_rgbByteBufferDisplay.at(0));
 }
+uint64_t ADM_flyDialog::getCurrentPts()
+{
+    return lastPts;
+}
 /**
     \fn nextImage
 */
@@ -173,7 +177,8 @@ bool ADM_flyDialog::nextImage(void)
       ADM_warning("[FlyDialog] Cannot get frame %u\n",frameNumber); 
       return 0;
     }
-    setCurrentPts(_yuvBuffer->Pts);
+    lastPts=_yuvBuffer->Pts;
+    setCurrentPts(lastPts);
     // Process...   
     process();
     return display(_rgbByteBufferDisplay.at(0));
@@ -320,8 +325,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _resizeMethod = resizeMethod;
     _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
-    _currentPts=0;	
-  
+    lastPts=0;
     if (_resizeMethod != RESIZE_NONE) 
     {
         _zoom = calcZoomFactor();

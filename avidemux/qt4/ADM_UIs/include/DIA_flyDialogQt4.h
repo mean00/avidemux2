@@ -66,20 +66,19 @@ public:
 */
 class ADM_UIQT46_EXPORT ADM_flyDialog
 {
- protected:
-  
-          uint64_t      _currentPts;
+ protected:            
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
           uint32_t      _zoomChangeCount;
           ResizeMethod  _resizeMethod;
+          uint64_t      lastPts;
           
           ADM_coreVideoFilter *_in;
       
           ADMImage      *_yuvBuffer;
           ADM_byteBuffer _rgbByteBufferDisplay;
   public:
-          void          *_cookie; // whatever
+          void          *_cookie; // whatever, usually the ui_xxx component
           QSlider       *_slider; // widget
           ADM_QCanvas   *_canvas; // Drawing zone
           
@@ -91,6 +90,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog
           virtual bool       disableZoom(void);
           virtual bool       nextImage(void);
           virtual bool       sameImage(void);
+                  uint64_t   getCurrentPts();
 protected:
   virtual ADM_colorspace     toRgbColor(void);
           void               updateZoom(void);
