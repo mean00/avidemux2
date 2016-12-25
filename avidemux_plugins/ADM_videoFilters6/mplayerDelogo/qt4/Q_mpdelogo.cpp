@@ -103,7 +103,7 @@ void ADM_LogoCanvas::moveEvent(QMoveEvent * event)
 
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         
-        myCrop=new flyMpDelogo( width, height,in,canvas,ui.horizontalSlider);
+        myCrop=new flyMpDelogo(this, width, height,in,canvas,ui.horizontalSlider);
         myCrop->param=*param;
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);

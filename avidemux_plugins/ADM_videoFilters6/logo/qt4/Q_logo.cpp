@@ -178,7 +178,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
 
         canvas=new ADM_LogoCanvas(ui.graphicsView,width,height);
         
-        myLogo=new flyLogo( width, height,in,canvas,ui.horizontalSlider);
+        myLogo=new flyLogo(this, width, height,in,canvas,ui.horizontalSlider);
         myLogo->param.x=param->x;
         myLogo->param.y=param->y;
         myLogo->param.alpha=param->alpha;

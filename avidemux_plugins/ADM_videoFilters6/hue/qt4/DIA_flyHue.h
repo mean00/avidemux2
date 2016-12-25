@@ -29,7 +29,7 @@ class flyHue : public ADM_flyDialogYuv
    uint8_t    download(void);
    uint8_t    upload(void);
    uint8_t    update(void);
-   flyHue (uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, QSlider *slider) : ADM_flyDialogYuv(width, height,in,canvas, slider,RESIZE_AUTO) {};
+   flyHue (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
+                                    ADM_QCanvas *canvas, QSlider *slider) : ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) {};
 };
 #endif

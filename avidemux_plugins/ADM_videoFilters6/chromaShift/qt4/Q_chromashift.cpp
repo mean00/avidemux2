@@ -41,7 +41,7 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
         
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
-        myCrop=new flyChromaShift( width, height,in,canvas,ui.horizontalSlider);
+        myCrop=new flyChromaShift( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(chromashift));
         myCrop->_cookie=&ui;
         myCrop->addControl(ui.toolboxLayout);

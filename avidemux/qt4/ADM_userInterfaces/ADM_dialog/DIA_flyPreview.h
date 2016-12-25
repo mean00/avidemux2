@@ -7,8 +7,8 @@ public:
 	uint8_t download(void) {return 1;}
 	uint8_t upload(void) {return 1;}
 	uint8_t cleanup(void) {return 1;}
-                flyPreview(uint32_t width, uint32_t height, ADM_QCanvas *canvas) : 
-                    ADM_flyDialogYuv(width, height, NULL, canvas, NULL,  RESIZE_AUTO) 
+                flyPreview(QDialog *parent,uint32_t width, uint32_t height, ADM_QCanvas *canvas) : 
+                    ADM_flyDialogYuv(parent,width, height, NULL, canvas, NULL,  RESIZE_AUTO) 
                 {
 
                 };
@@ -28,8 +28,8 @@ protected:
     void *cookie;
     CookieFunc cookieFunc;
 public:
-        flySeekablePreview(uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, ADM_QCanvas *canvas, QSlider *slider) : 
-	  ADM_flyDialogYuv(width, height, videoStream, canvas, slider,  RESIZE_AUTO) 
+        flySeekablePreview(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *videoStream, ADM_QCanvas *canvas, QSlider *slider) : 
+	  ADM_flyDialogYuv(parent,width, height, videoStream, canvas, slider,  RESIZE_AUTO) 
         {
                 cookie=NULL;cookieFunc=NULL;
         };

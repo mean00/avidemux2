@@ -164,7 +164,7 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
  */
 bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
-              
+        _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
         pushButton_back1mn = new QPushButton();
         pushButton_back1mn->setObjectName(QStringLiteral("pushButton_back1mn"));
         pushButton_back1mn->setAutoRepeat(true);
@@ -252,9 +252,9 @@ bool ADM_flyDialog::nextImage(void)
 // Implement the specific part
 // i.e. yuv processing or RGB processing
 //************************************
-  ADM_flyDialogYuv::ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+  ADM_flyDialogYuv::ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                 ADM_QCanvas *canvas, QSlider *slider, 
-                                ResizeMethod resizeMethod) : ADM_flyDialog(width,height,in,canvas,slider,resizeMethod)
+                                ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
         _yuvBufferOut=new ADMImageDefault(_w,_h);
         yuvToRgb=NULL;  
@@ -284,9 +284,9 @@ bool ADM_flyDialogYuv::process(void)
         return true;
 }
 //*****************************************
-ADM_flyDialogRgb::ADM_flyDialogRgb(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                 ADM_QCanvas *canvas, QSlider *slider, 
-                                ResizeMethod resizeMethod) : ADM_flyDialog(width,height,in,canvas,slider,resizeMethod)
+                                ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
     uint32_t size=_w*_h*4;
     _rgbByteBuffer.setSize(size);
@@ -373,14 +373,14 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     \brief
 */
 
-  ADM_flyDialog::ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+  ADM_flyDialog::ADM_flyDialog(QDialog *parent ,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                               ADM_QCanvas *canvas, QSlider *slider,  ResizeMethod resizeMethod)
 {  
     ADM_assert(canvas);
 
     if (slider)
             ADM_assert(in);
-
+    _parent=parent;
     _w = width;
     _h = height;    
     _in = in;
@@ -560,9 +560,12 @@ void ADM_flyDialog::autoZoom(bool state)
     {
         disableZoom();
         _canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
+        _parent->adjustSize();
+        
     }else
     {
         enableZoom();
+        _parent->adjustSize();
     }
 
 }

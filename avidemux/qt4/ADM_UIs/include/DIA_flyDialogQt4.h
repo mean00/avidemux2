@@ -28,6 +28,7 @@
 #include <QSlider>
 #include <QFrame>
 #include <QTimer>
+#include <QDialog>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -48,6 +49,7 @@ class ADM_flyDialog;
 class QHBoxLayout;
 class QPushButton;
 class QRadioButton;
+
 
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
@@ -89,6 +91,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           QPushButton *pushButton_next;
           QPushButton *pushButton_fwd1mn;
           QRadioButton *radioButton_autoZoom;
+          QDialog     *_parent;
 
           
           
@@ -98,7 +101,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           ADM_QCanvas   *_canvas; // Drawing zone
           
   public:
-                            ADM_flyDialog(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                            ADM_flyDialog(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                  ADM_QCanvas *canvas, QSlider *slider, ResizeMethod resizeMethod);
           virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
@@ -161,7 +164,7 @@ public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
           
-                                ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                 ADM_QCanvas *canvas, QSlider *slider, 
                                 ResizeMethod resizeMethod);
             virtual             ~ADM_flyDialogYuv();
@@ -184,7 +187,7 @@ public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
           
-                            ADM_flyDialogRgb(uint32_t width, uint32_t height, 
+                            ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
                                  ADM_coreVideoFilter *in,  ADM_QCanvas *canvas, 
                                  QSlider *slider, ResizeMethod resizeMethod);
                     virtual            ~ADM_flyDialogRgb();
