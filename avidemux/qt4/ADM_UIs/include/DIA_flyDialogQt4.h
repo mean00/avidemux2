@@ -47,6 +47,7 @@ class ADM_flyDialog;
 
 class QHBoxLayout;
 class QPushButton;
+class QRadioButton;
 
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
@@ -87,6 +88,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           QPushButton *pushButton_play;
           QPushButton *pushButton_next;
           QPushButton *pushButton_fwd1mn;
+          QRadioButton *radioButton_autoZoom;
 
           
           
@@ -159,11 +161,11 @@ public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
           
-                    ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
+                                ADM_flyDialogYuv(uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                 ADM_QCanvas *canvas, QSlider *slider, 
                                 ResizeMethod resizeMethod);
-                    virtual ~ADM_flyDialogYuv();
-                      virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
+            virtual             ~ADM_flyDialogYuv();
+            virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
  
 };
 

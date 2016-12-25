@@ -64,7 +64,7 @@ float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWid
 	// Calculate zoom ratio
 	if (imageWidth > screenWidth || imageHeight > screenHeight)
 	{
-            return 1;
+            //return 1;
         }
         float widthRatio = (float)screenWidth / (float)imageWidth;
         float heightRatio = (float)screenHeight / (float)imageHeight;

@@ -22,6 +22,7 @@
 #include <QGraphicsView>
 #include <QSlider>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QHBoxLayout>
 #include <QApplication>
 #include "ADM_toolkitQt.h"
@@ -191,6 +192,13 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 
         horizontalLayout_4->addWidget(pushButton_fwd1mn);
         
+        radioButton_autoZoom = new QRadioButton();
+        radioButton_autoZoom->setObjectName(QStringLiteral("radioButton_autoZoom"));
+        radioButton_autoZoom->setChecked(true);
+
+        horizontalLayout_4->addWidget(radioButton_autoZoom);
+
+        
         QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
         horizontalLayout_4->addItem(horizontalSpacer_4);
         
@@ -200,11 +208,13 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
         pushButton_next->setStatusTip(QApplication::translate("seekablePreviewDialog", "next image", 0));
         pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
         pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
+        radioButton_autoZoom->setText(QApplication::translate("seekablePreviewDialog", "A&utoZoom", 0));
         
         QObject::connect(pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
         QObject::connect(pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         QObject::connect(pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         QObject::connect(pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+        QObject::connect(radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
       
         return true;
 }
@@ -545,21 +555,15 @@ void ADM_flyDialog::play(bool state)
  */
 void ADM_flyDialog::autoZoom(bool state)
 {
-#if 0
-    printf("autoZoom %d\n",(int)state);
-
+    ADM_info("*** AUTO ZOOM = %d\n",(int)state);
     if(!state)
     {
-        seekablePreview->disableZoom();
-        canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-        setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-     
-        adjustSize();
+        disableZoom();
+        _canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
     }else
     {
-        seekablePreview->enableZoom();
+        enableZoom();
     }
-#endif
 
 }
 

@@ -17,7 +17,12 @@
 
 #include "Q_seekablePreview.h"
 #include "ADM_vidMisc.h"
-
+/**
+ * 
+ * @param parent
+ * @param videoStream
+ * @param defaultFrame
+ */
 Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
 	ui.setupUi(this);
@@ -32,7 +37,6 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-        connect(ui.radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -43,32 +47,16 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 
 /**
  * 
+ * @return 
  */
-void Ui_seekablePreviewWindow::autoZoom(bool state)
-{
-
-    printf("autoZoom %d\n",(int)state);
-
-    if(!state)
-    {
-        seekablePreview->disableZoom();
-        canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-        setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-     
-        adjustSize();
-    }else
-    {
-        seekablePreview->enableZoom();
-    }
-
-}
-
-
-
 bool  Ui_seekablePreviewWindow::nextImage(void)
 {
     return seekablePreview->nextImage();
 }
+/**
+ * 
+ * @param videoStream
+ */
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
 	if (seekablePreview)
@@ -86,12 +74,18 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
         seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
 	seekablePreview->sliderChanged();
 }
-
+/**
+ * 
+ * @param value
+ */
 void Ui_seekablePreviewWindow::sliderChanged(int value)
 {
 	seekablePreview->sliderChanged();
 }
-
+/**
+ * 
+ * @return 
+ */
 uint32_t Ui_seekablePreviewWindow::frameIndex()
 {
 	return seekablePreview->sliderGet();

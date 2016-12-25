@@ -43,5 +43,4 @@ public:
 public slots:
 	void sliderChanged(int value);
         bool nextImage(void);
-        void autoZoom(bool status);
 };
