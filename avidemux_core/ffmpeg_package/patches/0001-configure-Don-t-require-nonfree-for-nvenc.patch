@@ -14,16 +14,13 @@ Signed-off-by: Anton Khirnov <anton@khirnov.net>
 
 diff --git a/configure b/configure
 index 6bab581..43c563f 100755
---- a/configure
-+++ b/configure
-@@ -4076,7 +4076,6 @@ die_license_disabled nonfree cuda
- die_license_disabled nonfree libfaac
- die_license_disabled nonfree libfdk_aac
- die_license_disabled nonfree libnpp
--die_license_disabled nonfree nvenc
- die_license_disabled nonfree openssl
+--- configure.old       2016-12-25 08:47:40.205283452 +0100
++++ configure   2016-12-25 08:48:02.125200834 +0100
+@@ -4882,7 +4882,6 @@
+ die_license_disabled gpl x11grab
  
- die_license_disabled version3 libopencore_amrnb
--- 
-2.7.4
+ die_license_disabled nonfree libfaac
+-die_license_disabled nonfree nvenc
+ enabled gpl && die_license_disabled_gpl nonfree libfdk_aac
+ enabled gpl && die_license_disabled_gpl nonfree openssl
 
