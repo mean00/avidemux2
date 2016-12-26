@@ -166,34 +166,34 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
         pushButton_back1mn = new QPushButton();
-        pushButton_back1mn->setObjectName(QStringLiteral("pushButton_back1mn"));
+        pushButton_back1mn->setObjectName(QString("pushButton_back1mn"));
         pushButton_back1mn->setAutoRepeat(true);
         pushButton_back1mn->setAutoRepeatDelay(1000);
 
         horizontalLayout_4->addWidget(pushButton_back1mn);
 
         pushButton_play = new QPushButton();
-        pushButton_play->setObjectName(QStringLiteral("pushButton_play"));
+        pushButton_play->setObjectName(QString("pushButton_play"));
         pushButton_play->setCheckable(true);
 
         horizontalLayout_4->addWidget(pushButton_play);
 
         pushButton_next = new QPushButton();
-        pushButton_next->setObjectName(QStringLiteral("pushButton_next"));
+        pushButton_next->setObjectName(QString("pushButton_next"));
         pushButton_next->setAutoRepeat(true);
         pushButton_next->setAutoRepeatDelay(1000);
 
         horizontalLayout_4->addWidget(pushButton_next);
 
         pushButton_fwd1mn = new QPushButton();
-        pushButton_fwd1mn->setObjectName(QStringLiteral("pushButton_fwd1mn"));
+        pushButton_fwd1mn->setObjectName(QString("pushButton_fwd1mn"));
         pushButton_fwd1mn->setAutoRepeat(true);
         pushButton_fwd1mn->setAutoRepeatDelay(1000);
 
         horizontalLayout_4->addWidget(pushButton_fwd1mn);
         
         radioButton_autoZoom = new QRadioButton();
-        radioButton_autoZoom->setObjectName(QStringLiteral("radioButton_autoZoom"));
+        radioButton_autoZoom->setObjectName(QString("radioButton_autoZoom"));
         radioButton_autoZoom->setChecked(true);
 
         horizontalLayout_4->addWidget(radioButton_autoZoom);
