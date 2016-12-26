@@ -22,6 +22,7 @@
 #include "contrast.h"
 
 #include "DIA_flyContrast.h"
+#include "QGraphicsScene"
 
 /************* COMMON PART *********************/
 uint8_t  flyContrast::update(void)
@@ -39,23 +40,66 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
 
 
     out->copyInfo(in);
-
-    if(param.doLuma)
-        doContrast(in,out,tableluma,PLANAR_Y);
-    else
+    if(!previewActivated)
+    {
         out->copyPlane(in,out,PLANAR_Y);
-
-
-    if(param.doChromaU)
-        doContrast(in,out,tablechroma,PLANAR_U);
-    else
         out->copyPlane(in,out,PLANAR_U);
-
-    if(param.doChromaV)
-        doContrast(in,out,tablechroma,PLANAR_V);
-    else
         out->copyPlane(in,out,PLANAR_V);
+    }
+    else
+    {
+        if(param.doLuma)
+            doContrast(in,out,tableluma,PLANAR_Y);
+        else
+            out->copyPlane(in,out,PLANAR_Y);
 
+
+        if(param.doChromaU)
+            doContrast(in,out,tablechroma,PLANAR_U);
+        else
+            out->copyPlane(in,out,PLANAR_U);
+
+        if(param.doChromaV)
+            doContrast(in,out,tablechroma,PLANAR_V);
+        else
+            out->copyPlane(in,out,PLANAR_V);
+    }
+    if(!scene) return true;
+    
+    // Draw luma histogram
+    uint8_t *luma=out->GetReadPtr(PLANAR_Y);
+    int     stride=out->GetPitch(PLANAR_Y);
+    int     decimate=4;
+    double  sumsum[256];    
+    for(int i=0;i<256;i++) sumsum[i]=0;
+    
+    double  totalSum=(double)(out->_width*out->_height)/decimate; // # of sampling points
+    for(int y=0;y<in->_height;y+=decimate)
+    {
+        uint8_t *p=luma;
+        for(int x=0;x<in->_width;x++)
+        {
+            sumsum[*p]++;
+            p++;
+        }
+        luma+=stride*decimate;
+    }
+    // normalize
+    for(int i=0;i<256;i++)
+    {
+        // zoom factor =10
+        sumsum[i]=(10*sumsum[i]*(127))/totalSum;
+        if(sumsum[i]>127) sumsum[i]=127;
+    }
+    int toggle=0;
+    
+    scene->clear();
+    for(int i=0;i<256;i++)
+    {
+        QLineF qline(i,127,i,127-sumsum[i]);
+        scene->addLine(qline);
+    }
+    
     return 1;
 }
 /************* COMMON PART *********************/
