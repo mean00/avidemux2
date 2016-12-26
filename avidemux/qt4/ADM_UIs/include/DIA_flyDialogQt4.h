@@ -80,6 +80,8 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           uint32_t      _zoomChangeCount;
           ResizeMethod  _resizeMethod;
           uint64_t      lastPts;
+          double        _computedZoom;
+          
           
           ADM_coreVideoFilter *_in;
       
@@ -188,10 +190,9 @@ public:
           virtual    void resetScaler(void);
           
                             ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
-                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas, 
-                                 QSlider *slider, ResizeMethod resizeMethod);
-                    virtual            ~ADM_flyDialogRgb();
-                    virtual uint8_t    processRgb(uint8_t *in, uint8_t *out) =0;
+                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  QSlider *slider, ResizeMethod resizeMethod);
+           virtual          ~ADM_flyDialogRgb();
+           virtual uint8_t  processRgb(uint8_t *in, uint8_t *out) =0;
 };
 
 /**

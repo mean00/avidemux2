@@ -46,4 +46,5 @@ private slots:
 	void sliderUpdate(int foo);
 	void valueChanged(int foo);
         void previewActivated(int a);
+        void dvd2PC();
 };

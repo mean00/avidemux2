@@ -387,6 +387,7 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _slider = slider;
     _canvas = canvas;
     _cookie = NULL;
+    _computedZoom=0;
     _resizeMethod = resizeMethod;
     _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
@@ -453,7 +454,22 @@ void ADM_flyDialog::postInit(uint8_t reInit)
 
 float ADM_flyDialog::calcZoomFactor(void)
 {
-	return UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
+    if(_computedZoom) return _computedZoom;
+    double zoom;
+    zoom=UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
+    // Find the closest integer
+    // zoom it ?
+    if((zoom+0.3)>1)
+    {
+        _computedZoom=floor(2*(zoom+0.3))/2;
+        ADM_info("AutoZoom %f ->%f \n",(float)zoom,(float)_computedZoom);
+        return _computedZoom;
+    }
+    double invertZoom=1/zoom;
+    _computedZoom=2./floor((2*(invertZoom+0.3)));
+    ADM_info("AutoZoom 1/%f\n",(float)(1./_computedZoom));
+    return _computedZoom;
+    
 }
 /**
     \fn    display

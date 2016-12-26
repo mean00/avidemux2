@@ -67,6 +67,7 @@
           connect( ui.checkBoxV,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
           connect( ui.checkBox_Enabled,SIGNAL(stateChanged(int)),this,SLOT(previewActivated(int)));  
+          connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
   }
 /**
@@ -97,6 +98,21 @@ Ui_contrastWindow::~Ui_contrastWindow()
   if(canvas) delete canvas;
   canvas=NULL;
   scene=NULL;
+}
+
+void Ui_contrastWindow::dvd2PC()
+{
+   if(lock) return;
+  lock++;
+  myCrop->param.coef=1.16;
+  myCrop->param.offset=-16;
+  myCrop->upload();
+  myCrop->sameImage();
+  QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
+  QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
+  ui.labelContrast->setText(title);
+  ui.labelBrightness->setText(title2);
+  lock--;
 }
 /**
  * 

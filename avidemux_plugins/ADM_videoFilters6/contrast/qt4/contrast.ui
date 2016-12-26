@@ -150,6 +150,13 @@
            </property>
           </spacer>
          </item>
+         <item>
+          <widget class="QToolButton" name="toolButton__DVD2PC">
+           <property name="text">
+            <string>MPEG2-&gt;PC</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
