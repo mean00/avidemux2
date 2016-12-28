@@ -1,18 +1,21 @@
 /**
-    \brief VDPAU filters
-    \author mean (C) 2010
-    This is slow as we copy back and forth data to/from the video cards
-    Only 1 filter exposed at the moment : resize...
-
+    \brief vaapi filters
+    \author mean (C) 2016
+ *  Use vaapi transform API (i.e. resize/colorspace)
+ * (c) mean 2016
+ * 
 */
 
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
 #include "ADM_default.h"
-#ifdef USE_LIBVA
-extern "C" {
-#include "libavcodec/avcodec.h"
-#include "libavcodec/vdpau.h"
-}
-
+#include "ADM_coreLibVA.h"
 #include "ADM_coreVideoFilter.h"
 #include "ADM_videoFilterCache.h"
 #include "DIA_factory.h"
@@ -28,22 +31,20 @@ extern "C" {
 #define ADM_NB_SURFACES 3
 
 /**
-    \class vdpauVideoFilter
+    \class vaapiVideoFilter
 */
 class vaapiVideoFilter : public  ADM_coreVideoFilterCached
 {
 protected:
                     ADMColorScalerSimple *scaler;
+                    ADM_vaSurface        *sourceSurface,*destSurface;
+                    VAConfigID           configID;
+                    VAContextID          contextID;
                     bool                 passThrough;
                     bool                 setupVaapi(void);
                     bool                 cleanupVaapi(void);
-
-                    uint8_t             *tempBuffer;
-                    uint32_t             frameDesc[ADM_NB_SURFACES];
-                    uint32_t             currentIndex;
-                    vaapiFilter          configuration;
-                    bool                 uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) ;
-                    bool                 setIdentityCSC(void);
+                    vaapiFilter          configuration;                    
+                    bool                 updateInfo(bool status);
 
 public:
         
@@ -68,105 +69,116 @@ DECLARE_VIDEO_FILTER(   vaapiVideoFilter,   // Class
 )
        
 /**
-    \fn resetVdpau
+    \fn setupVaapi
 */
 bool vaapiVideoFilter::setupVaapi(void)
 {
-    scaler=NULL;
+    FilterInfo *prevInfo=previousFilter->getInfo();
+    FilterInfo *currentInfo=getInfo();
 
+    scaler=NULL;
     info.width=configuration.targetWidth;
     info.height=configuration.targetHeight;
-#if 0
-    for(int i=0;i<ADM_NB_SURFACES;i++)             frameDesc[i]=ADM_INVALID_FRAME_NUM;
-    currentIndex=0;
-    if(!admVdpau::isOperationnal())
-    {
-        ADM_warning("Vdpau not operationnal\n");
-        return false;
-    }
-    // check if we have something to do
-    if(info.width==previousFilter->getInfo()->width &&  info.height==previousFilter->getInfo()->height)
-        return false;
     
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceCreate(VDP_RGBA_FORMAT_B8G8R8A8,
-                        info.width,info.height,&outputSurface)) 
+    if(configuration.targetWidth==prevInfo->width && configuration.targetHeight==prevInfo->height)
     {
-        ADM_error("Cannot create outputSurface0\n");
+        ADM_info("Passthrough\n");
         return false;
     }
-    for(int i=0;i<ADM_NB_SURFACES;i++)
+    
+    configID=admLibVA::createFilterConfig();
+    if(configID==VA_INVALID)
     {
-        if(VDP_STATUS_OK!=admVdpau::surfaceCreate(   previousFilter->getInfo()->width,
-                                                    previousFilter->getInfo()->height,input+i)) 
-        {
-            ADM_error("Cannot create input Surface %d\n",i);
-            goto badInit;
-        }
+        ADM_warning("Cannot create context\n");
+        return false;
     }
+    // context
+    //contextID=admLibVA::createFilterContext(configID,info.width, info.height,VA_PROGRESSIVE,)
+    
+    // Allocate source and target surface
+    sourceSurface=ADM_vaSurface::allocateWithSurface(prevInfo->width,prevInfo->height);
+    destSurface=ADM_vaSurface::allocateWithSurface(currentInfo->width,currentInfo->height);
+    if(!sourceSurface || !destSurface )
     {
-    int paddedHeight=(previousFilter->getInfo()->height+15)&~15;
-    if(VDP_STATUS_OK!=admVdpau::mixerCreate(previousFilter->getInfo()->width,
-                                            paddedHeight,&mixer)) 
-    {
-        ADM_error("Cannot create mixer\n");
-        goto badInit;
+        ADM_warning("Cannot allocate surface\n");
+        cleanupVaapi();
+        return false;
     }
-    }
-    setIdentityCSC();
-    tempBuffer=new uint8_t[info.width*info.height*4];
+
+#if 0
     scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
     ADM_info("VDPAU setup ok\n");
-    return true;
-badInit:
-    cleanupVdpau();
-    passThrough=true;
 #endif
-    return false;
+    return true;    
 }
 /**
-    \fn cleanupVdpau
+    \fn cleanupVaapi
 */
 bool vaapiVideoFilter::cleanupVaapi(void)
 {
-#if 0
-    for(int i=0;i<ADM_NB_SURFACES;i++)
-        if(input[i]!=VDP_INVALID_HANDLE) admVdpau::surfaceDestroy(input[i]);
-    if(outputSurface!=VDP_INVALID_HANDLE)  admVdpau::outputSurfaceDestroy(outputSurface);
-    if(mixer!=VDP_INVALID_HANDLE) admVdpau::mixerDestroy(mixer);
-    outputSurface=VDP_INVALID_HANDLE;
-    for(int i=0;i<ADM_NB_SURFACES;i++)
-        input[i]=VDP_INVALID_HANDLE;
-    mixer=VDP_INVALID_HANDLE;
-    if(tempBuffer) delete [] tempBuffer;
-    tempBuffer=NULL;
-    if(scaler) delete scaler;
-    scaler=NULL;
-#endif    
+    if(sourceSurface)
+    {
+        delete sourceSurface;
+        sourceSurface=NULL;
+    }
+    if(destSurface)
+    {
+        delete destSurface;
+        destSurface=NULL;
+    }
+    if(configID!=VA_INVALID)
+    {
+        admLibVA::destroyFilterConfig(configID);
+        configID=VA_INVALID;
+    }
+    if(contextID!=VA_INVALID)
+    {
+        admLibVA::destroyFilterContext(contextID);
+        contextID=VA_INVALID;
+    }
+    
     return true;
 }
-
+/**
+ * \fn updateInfo
+ * @param status
+ * @return 
+ */
+bool vaapiVideoFilter::updateInfo(bool status)
+{
+    passThrough=!status;
+    if(passThrough)
+    {
+        FilterInfo *prevInfo=previousFilter->getInfo();
+        info.width=prevInfo->width;
+        info.height=prevInfo->height;
+    }else
+    {
+        info.width=configuration.targetWidth;
+        info.height=configuration.targetHeight;
+    }
+    return true;
+}
 /**
     \fn constructor
 */
 vaapiVideoFilter::vaapiVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup)
         : ADM_coreVideoFilterCached(5,in,setup)
 {
-#if 0
-    for(int i=0;i<ADM_NB_SURFACES;i++)
-        input[i]=VDP_INVALID_HANDLE;
-    mixer=VDP_INVALID_HANDLE;
-    outputSurface=VDP_INVALID_HANDLE;
-    if(!setup || !ADM_paramLoad(setup,vdpauFilter_param,&configuration))
+    configID=VA_INVALID;
+    contextID=VA_INVALID;
+    sourceSurface=NULL;
+    destSurface=NULL;
+    if(!setup || !ADM_paramLoad(setup,vaapiFilter_param,&configuration))
     {
         // Default value
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
     }
 
-    myName="vdpau";
-    tempBuffer=NULL;
-    passThrough=!setupVdpau();
-#endif
+    myName="vaapi";
+    bool status=setupVaapi();
+    updateInfo(status);
     
 }
 /**
@@ -181,24 +193,20 @@ vaapiVideoFilter::~vaapiVideoFilter()
 */
 bool vaapiVideoFilter::configure( void) 
 {
-#if 0
-     
-     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vdpresize","Width :"),16,2048);
-     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vdpresize","Height :"),16,2048);
+     diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vaapiResize","Width :"),16,2048);
+     diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vaapiResize","Height :"),16,2048);
      
      diaElem *elems[]={&tWidth,&tHeight};
      
-     if(diaFactoryRun(QT_TRANSLATE_NOOP("vdpresize","vdpau"),sizeof(elems)/sizeof(diaElem *),elems))
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("vaapiResize","vaapi"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                info.width=configuration.targetWidth;
-                info.height=configuration.targetHeight;
                 ADM_info("New dimension : %d x %d\n",info.width,info.height);
-                cleanupVdpau();
-                passThrough=!setupVdpau();
-                return 1;
+                cleanupVaapi();
+                bool status=setupVaapi();
+                updateInfo(status);
+                return true;
      }
-#endif     
-     return 0;
+     return false;
 }
 /**
     \fn getCoupledConf
@@ -230,48 +238,11 @@ const char *vaapiVideoFilter::getConfiguration(void)
         sprintf(conf2,"%d x %d -> %d x %d",
                         previousFilter->getInfo()->width, 
                         previousFilter->getInfo()->height,
-                        info.width,info.height);
+                        configuration.targetWidth,configuration.targetHeight);
         strcat(conf,conf2);
     }
     conf[79]=0;
     return conf;
-}
-/**
-    \fn uploadImage
-    \brief upload an image to a vdpau surface
-*/
-bool vaapiVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t frameNumber) 
-{
-#if 0
-    if(!next) // empty image
-    {
-        frameDesc[surfaceIndex%ADM_NB_SURFACES]=ADM_INVALID_FRAME_NUM;
-        ADM_warning("No image to upload\n");
-        return false;
-    }
-  // Blit our image to surface
-    int      ipitches[3];
-    uint32_t pitches[3];
-    uint8_t *planes[3];
-    next->GetPitches(ipitches);
-    next->GetReadPlanes(planes);
-
-    for(int i=0;i<3;i++) pitches[i]=(uint32_t)ipitches[i];
-    
-    // Put out stuff in input...
-    //printf("Uploading image to surface %d\n",surfaceIndex%ADM_NB_SURFACES);
-
-    if(VDP_STATUS_OK!=admVdpau::surfacePutBits( 
-            input[surfaceIndex%ADM_NB_SURFACES],
-            planes,pitches))
-    {
-        ADM_warning("[Vdpau] video surface : Cannot putbits\n");
-        return false;
-    }
-    frameDesc[surfaceIndex%ADM_NB_SURFACES]=frameNumber;
-    return true;
-#endif    
-    return true;
 }
 /**
     \fn getConfiguration
@@ -279,70 +250,76 @@ bool vaapiVideoFilter::uploadImage(ADMImage *next,uint32_t surfaceIndex,uint32_t
 */
 bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-#if 0
      bool r=false;
-     if(passThrough) return previousFilter->getNextFrame(fn,image);
-    // regular image, in fact we get the next image here
-    VdpVideoSurface tmpSurface=VDP_INVALID_HANDLE;
-    ADMImage *next= vidCache->getImageAs(ADM_HW_VDPAU,nextFrame);
+     if(passThrough) 
+     {
+         ADM_info("VaapiFilter : passthrough\n");
+         return previousFilter->getNextFrame(fn,image);
+     }
+    // regular image, in fact we get the next image here    
+    ADMImage *next= vidCache->getImageAs(ADM_HW_LIBVA,nextFrame);
+    ADM_vaSurface *source=NULL;
     if(!next)
     {
-        ADM_warning("vdpauResize : cannot get image\n");
+        ADM_warning("vaapiResize : cannot get image\n");
         return false;
     }
     image->Pts=next->Pts;
-    if(next->refType==ADM_HW_VDPAU)
+    if(next->refType==ADM_HW_LIBVA)
     {
-        
-        struct vdpau_render_state *rndr = (struct vdpau_render_state *)next->refDescriptor.refHwImage;
-        tmpSurface=rndr->surface;
-        printf("image is already vdpau %d\n",(int)tmpSurface);
+          source=(ADM_vaSurface *)next->refDescriptor.refHwImage;
+          printf("image is already vaapi %d\n",(int)source->surface);
     }else
     {
-        //printf("Uploading image to vdpau\n");
-        if(false==uploadImage(next,0,nextFrame)) 
+
+        printf("Uploading image to vaapi\n");
+        if(!admLibVA::admImageToSurface(next,sourceSurface))        
         {
+            ADM_warning("Cannot upload to sourceSurface");
             vidCache->unlockAll();
             return false;
         }
-        tmpSurface=input[0];
-    }
+        source=sourceSurface;
+    }    
     
-    // Call mixer...
-    if(VDP_STATUS_OK!=admVdpau::mixerRenderWithCropping( 
-                mixer,
-                tmpSurface,
-                outputSurface, 
-                info.width,info.height, // target
-                previousFilter->getInfo()->width,previousFilter->getInfo()->height))
+    //-- Perform --
+    VAProcPipelineParameterBuffer params;
+    VABufferID paramId;
+    VAStatus status;
 
-    {
-        ADM_warning("[Vdpau] Cannot mixerRender\n");
-        vidCache->unlockAll();
-        return false;
-    }
-    // Now get our image back from surface...
-    if(VDP_STATUS_OK!=admVdpau::outputSurfaceGetBitsNative(outputSurface,tempBuffer, info.width,info.height))
-    {
-        ADM_warning("[Vdpau] Cannot copy back data from output surface\n");
-        vidCache->unlockAll();
-        return false;
-    }
-    r=image->convertFromYUV444(tempBuffer);
-   
+    memset(&params,0,sizeof(params));
+    
+    params.surface=source->surface;
+    params.surface_region=NULL;
+    params.surface_color_standard=VAProcColorStandardBT601 ; // FIXME
+
+    params.output_region      =NULL;
+    params.output_background_color=0xff000000;
+    params.output_color_standard=VAProcColorStandardBT601; // FIXME
+            
+    params.pipeline_flags=0;
+    params.filter_flags=VA_FILTER_SCALING_HQ;
+    // Go
+#define CHECK(x) {status=x;if(status!=VA_STATUS_SUCCESS)    {ADM_warning( #x "Failed with error %d/%s\n",status,vaErrorStr(status));goto failed;}}
+#define CHECK2(x) {status=x;if(status!=VA_STATUS_SUCCESS)    {ADM_warning( #x "Failed with error %d/%s\n",status,vaErrorStr(status));goto failed2;}}
+    CHECK(vaBeginPicture(admLibVA::getDisplay(),  configID, destSurface->surface));
+    CHECK(vaCreateBuffer(admLibVA::getDisplay(),  configID,VAProcPipelineParameterBufferType,sizeof(params),1,&params,&paramId));
+    CHECK2(vaRenderPicture(admLibVA::getDisplay(),  configID,&paramId, 1));
+    CHECK2(vaEndPicture(admLibVA::getDisplay(),  configID));
+
+    vaDestroyBuffer(admLibVA::getDisplay(), paramId);
+ 
+    // Download result to regular ADMImage
+    r=destSurface->toAdmImage(image);
+    printf("Result is %d\n",r);
+failed2:    
+    vaDestroyBuffer(admLibVA::getDisplay(), paramId);
+failed:    
     nextFrame++;
-    currentIndex++;
     vidCache->unlockAll();
     
     return r;
-#endif    
-    return true;
+    
 }
-#else // USE_LIBVA
-static void dumy_func2(void)
-{
-    return;
-}
-#endif 
 //****************
 // EOF

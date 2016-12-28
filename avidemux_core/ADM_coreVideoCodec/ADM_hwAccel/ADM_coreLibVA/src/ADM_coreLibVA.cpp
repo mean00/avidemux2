@@ -342,6 +342,15 @@ static char *fourCC_tostring(uint32_t fourcc)
 
     return s;
 }
+
+/**
+ * 
+ * @return 
+ */
+VADisplay admLibVA::getDisplay()
+{
+        return ADM_coreLibVA::display;
+}
 /**
  * \fn setupImageFormat
  */
@@ -1199,7 +1208,7 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
  * 
  * @return 
  */
-VAConfigID  admLibVA::createFilterContext()
+VAConfigID  admLibVA::createFilterConfig()
 {
       VAStatus xError;
       VAConfigID id=VA_INVALID;
@@ -1211,11 +1220,35 @@ VAConfigID  admLibVA::createFilterContext()
           return VA_INVALID;
       return id;
 }
+
 /**
  * 
  * @return 
  */
-bool        admLibVA::destroyFilterContext(VAConfigID &id)
+VAContextID admLibVA::createFilterContext()
+{
+    return VA_INVALID;
+}
+/**
+ * 
+ * @param id
+ * @return 
+ */
+bool        admLibVA::destroyFilterContext(VAContextID &id)
+{
+     VAStatus xError;
+     if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
+    
+    CHECK_ERROR( vaDestroyContext(ADM_coreLibVA::display, id));
+    id=VA_INVALID;
+    return true;
+}
+
+/**
+ * 
+ * @return 
+ */
+bool        admLibVA::destroyFilterConfig(VAConfigID &id)
 {
     VAStatus xError;
      if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
