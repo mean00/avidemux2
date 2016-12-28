@@ -1195,7 +1195,35 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     }
     return false;
 }
-
+/**
+ * 
+ * @return 
+ */
+VAConfigID  admLibVA::createFilterContext()
+{
+      VAStatus xError;
+      VAConfigID id=VA_INVALID;
+      
+      if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return VA_INVALID;}
+      
+      CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileNone, VAEntrypointVideoProc, 0, 0, &id));
+      if(xError!=VA_STATUS_SUCCESS)
+          return VA_INVALID;
+      return id;
+}
+/**
+ * 
+ * @return 
+ */
+bool        admLibVA::destroyFilterContext(VAConfigID &id)
+{
+    VAStatus xError;
+     if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
+    
+    CHECK_ERROR( vaDestroyConfig(ADM_coreLibVA::display, id));
+    id=VA_INVALID;
+    return true;
+}
 
 
 #include "ADM_coreLibVA_encoder.cpp"

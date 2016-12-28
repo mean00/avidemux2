@@ -93,6 +93,10 @@ static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 //
 static bool        supported(VAProfile profile);
 
+//
+static VAConfigID  createFilterContext();
+static bool        destroyFilterContext(VAConfigID &id);
+
 };
 /**
  * \class admLibVAEnc
