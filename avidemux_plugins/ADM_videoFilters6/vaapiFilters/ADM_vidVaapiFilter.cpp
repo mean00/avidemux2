@@ -179,6 +179,7 @@ vaapiVideoFilter::vaapiVideoFilter(ADM_coreVideoFilter *in, CONFcouple *setup)
         // Default value
         configuration.targetWidth=info.width;
         configuration.targetHeight=info.height;
+        configuration.mpeg2ToPC=false;
     }
 
     myName="vaapi";
@@ -200,8 +201,9 @@ bool vaapiVideoFilter::configure( void)
 {
      diaElemUInteger  tWidth(&(configuration.targetWidth),QT_TRANSLATE_NOOP("vaapiResize","Width :"),16,2048);
      diaElemUInteger  tHeight(&(configuration.targetHeight),QT_TRANSLATE_NOOP("vaapiResize","Height :"),16,2048);
+     diaElemToggle    tMpeg2PC(&(configuration.mpeg2ToPC),   QT_TRANSLATE_NOOP("vaapiResize","mpeg->PC:"));
      
-     diaElem *elems[]={&tWidth,&tHeight};
+     diaElem *elems[]={&tWidth,&tHeight,&tMpeg2PC};
      
      if(diaFactoryRun(QT_TRANSLATE_NOOP("vaapiResize","vaapi"),sizeof(elems)/sizeof(diaElem *),elems))
      {
@@ -234,19 +236,19 @@ void vaapiVideoFilter::setCoupledConf(CONFcouple *couples)
 const char *vaapiVideoFilter::getConfiguration(void)
 {
 
-    static char conf[80];    
+    static char conf[200];    
     char conf2[80];
     conf2[0]=0;
     sprintf(conf,"vaapi:");
     if(1) //configuration.resizeToggle)
     {
-        sprintf(conf2,"%d x %d -> %d x %d",
+        sprintf(conf2,"%d x %d -> %d x %d, mpeg2PC %d",
                         previousFilter->getInfo()->width, 
                         previousFilter->getInfo()->height,
-                        configuration.targetWidth,configuration.targetHeight);
+                        configuration.targetWidth,configuration.targetHeight,(int)configuration.mpeg2ToPC);
         strcat(conf,conf2);
     }
-    conf[79]=0;
+    conf[199]=0;
     return conf;
 }
 /**
@@ -296,11 +298,13 @@ bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     
     params.surface=source->surface;
     params.surface_region=NULL;
-    params.surface_color_standard=VAProcColorStandardBT601 ; // FIXME
-
+    if(configuration.mpeg2ToPC)
+        params.surface_color_standard=VAProcColorStandardBT601 ; // FIXME
+    else
+        params.surface_color_standard=VAProcColorStandardBT709 ; // FIXME
     params.output_region      =NULL;
     params.output_background_color=0xff000000;
-    params.output_color_standard=VAProcColorStandardBT601; // FIXME
+    params.output_color_standard=VAProcColorStandardBT709; // FIXME
             
     params.pipeline_flags=0;
     params.filter_flags=VA_FILTER_SCALING_HQ;

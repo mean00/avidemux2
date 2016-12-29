@@ -1024,8 +1024,8 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
 
                 for(int x=0;x<w;x++)
                 {
-                    d[0]=*ssrcu++;
-                    d[1]=*ssrcv++;
+                    d[0]=*ssrcv++;
+                    d[1]=*ssrcu++;
                     d+=2;
                 }
         }
