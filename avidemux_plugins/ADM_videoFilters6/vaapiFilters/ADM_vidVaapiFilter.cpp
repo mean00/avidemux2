@@ -80,7 +80,7 @@ bool vaapiVideoFilter::setupVaapi(void)
     info.width=configuration.targetWidth;
     info.height=configuration.targetHeight;
     
-    if(configuration.targetWidth==prevInfo->width && configuration.targetHeight==prevInfo->height)
+    if(configuration.targetWidth==prevInfo->width && configuration.targetHeight==prevInfo->height && !configuration.mpeg2ToPC)
     {
         ADM_info("Passthrough\n");
         return false;
