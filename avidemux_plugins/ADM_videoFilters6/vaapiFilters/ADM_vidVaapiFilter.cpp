@@ -61,7 +61,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   vaapiVideoFilter,   // Class
                         1,0,0,              // Version
-                        ADM_UI_GTK+ADM_UI_QT4+ADM_FEATURE_VDPAU,     // We need a display for VDPAU; so no cli...
+                        ADM_UI_QT4,     // We need a display for VDPAU; so no cli...
                         VF_TRANSFORM,            // Category
                         "vaapiResize",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("vaapiResize","vaapi: Resize"),            // Display name
@@ -89,11 +89,11 @@ bool vaapiVideoFilter::setupVaapi(void)
     configID=admLibVA::createFilterConfig();
     if(configID==VA_INVALID)
     {
-        ADM_warning("Cannot create context\n");
+        ADM_warning("Cannot create config\n");
         return false;
     }
-    // context
-    //contextID=admLibVA::createFilterContext(configID,info.width, info.height,VA_PROGRESSIVE,)
+    
+    
     
     // Allocate source and target surface
     sourceSurface=ADM_vaSurface::allocateWithSurface(prevInfo->width,prevInfo->height);
@@ -104,11 +104,16 @@ bool vaapiVideoFilter::setupVaapi(void)
         cleanupVaapi();
         return false;
     }
-
-#if 0
-    scaler=new ADMColorScalerSimple( info.width,info.height, ADM_COLOR_RGB32A,ADM_COLOR_YV12);
-    ADM_info("VDPAU setup ok\n");
-#endif
+    VASurfaceID surfaces[2]={sourceSurface->surface,destSurface->surface};
+    VAStatus status= vaCreateContext(admLibVA::getDisplay(),configID,
+                          configuration.targetWidth,configuration.targetHeight, VA_PROGRESSIVE,
+                          surfaces, 2,
+                          &contextID);
+    if(status!=VA_STATUS_SUCCESS)
+    {
+        ADM_warning("Cannot create context\n");
+        return false;
+    }
     return true;    
 }
 /**
@@ -302,10 +307,10 @@ bool vaapiVideoFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     // Go
 #define CHECK(x) {status=x;if(status!=VA_STATUS_SUCCESS)    {ADM_warning( #x "Failed with error %d/%s\n",status,vaErrorStr(status));goto failed;}}
 #define CHECK2(x) {status=x;if(status!=VA_STATUS_SUCCESS)    {ADM_warning( #x "Failed with error %d/%s\n",status,vaErrorStr(status));goto failed2;}}
-    CHECK(vaBeginPicture(admLibVA::getDisplay(),  configID, destSurface->surface));
-    CHECK(vaCreateBuffer(admLibVA::getDisplay(),  configID,VAProcPipelineParameterBufferType,sizeof(params),1,&params,&paramId));
-    CHECK2(vaRenderPicture(admLibVA::getDisplay(),  configID,&paramId, 1));
-    CHECK2(vaEndPicture(admLibVA::getDisplay(),  configID));
+    CHECK(vaBeginPicture(admLibVA::getDisplay(),  contextID, destSurface->surface));
+    CHECK(vaCreateBuffer(admLibVA::getDisplay(),  contextID,VAProcPipelineParameterBufferType,sizeof(params),1,&params,&paramId));
+    CHECK2(vaRenderPicture(admLibVA::getDisplay(),  contextID,&paramId, 1));
+    CHECK2(vaEndPicture(admLibVA::getDisplay(),  contextID));
 
     vaDestroyBuffer(admLibVA::getDisplay(), paramId);
  
