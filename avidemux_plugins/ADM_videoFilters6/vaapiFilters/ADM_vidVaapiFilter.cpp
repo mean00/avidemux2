@@ -61,7 +61,7 @@ public:
 // Add the hook to make it valid plugin
 DECLARE_VIDEO_FILTER(   vaapiVideoFilter,   // Class
                         1,0,0,              // Version
-                        ADM_UI_QT4,     // We need a display for VDPAU; so no cli...
+                        ADM_UI_QT4+ADM_FEATURE_LIBVA,     // We need a display for VDPAU; so no cli...
                         VF_TRANSFORM,            // Category
                         "vaapiResize",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("vaapiResize","vaapi: Resize"),            // Display name
