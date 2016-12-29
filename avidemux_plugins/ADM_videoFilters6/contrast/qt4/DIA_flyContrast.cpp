@@ -99,6 +99,11 @@ uint8_t    flyContrast::processYuv(ADMImage* in, ADMImage *out)
         QLineF qline(i,127,i,127-sumsum[i]);
         scene->addLine(qline);
     }
+    // Draw 16 and 235 line
+        QLineF qline(16,100,16,126);
+        scene->addLine(qline);
+        QLineF qline2(235,100,235,126);
+        scene->addLine(qline2);
     
     return 1;
 }
