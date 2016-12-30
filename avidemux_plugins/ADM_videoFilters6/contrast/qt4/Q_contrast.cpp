@@ -40,7 +40,7 @@
 
         scene=new QGraphicsScene(this);
         ui.graphicsViewHistogram->setScene(scene);
-
+        ui.graphicsViewHistogram->scale(1.0,1.0);
 
         myCrop=new flyContrast( this,width, height,in,canvas,ui.horizontalSlider,scene);
         memcpy(&(myCrop->param),param,sizeof(contrast));
