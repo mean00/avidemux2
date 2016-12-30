@@ -52,23 +52,18 @@
     <div id="inner">
         <h1>What's New in Avidemux</h1>
         <ul>
-     <li> Hw Accel    : Fixed nvEnc and added simple nvEnc-HEVC (windows/linux) </li>
-     <li> Hw Accel    : Added support for HEVC/VC1 with libVA (linux) </li>
-     <li> Hw Accel    : Experimental Dxva2 video decoder + Dxva2/D3D display engine (windows) </li>
-     <li> Demux       : Mpeg TS, fix non multiple of 16 file management (euma) </li>
-     <li> Audio/win32 : Fixed CPU consumption when playing audio </li>
-     <li> Editor      : Fixed copy /paste /delete /undo (euma) </li>
-     <li> Editor      : A *lot* of seeking bugs fixed (euma) </li>
-     <li> Editor      : A *lot* of marker management bugs fixed (euma) </li>
-     <li> Audio       : Added FDK-AAC as encoder </li>
-     <li> x26*        : Added a "None" preset </li>
-     <li> x265        : Fixed 2 pass encoding on windows </li>
-     <li> i18n        : Qt4 vs Qt5 language fix (D. Amm) </li>
-     <li> i18n        : German translation updated (euma) </li>
-     <li> UI          : Added reload default settings (euma)  </li>
-     <li> UI          : Allow minimizing to tray while encoding (euma) </li>
-     <li> OSX         : Update to Sierra </li>
-
+            <li> Build : Avidemux can be built with visual c++ 2015 (losing some ASM)</li> 
+            <li> OsX   : Initialize fontconfig so that subtitling works</li>
+            <li> Core  : Update ffmpeg to 3.0.5</li>
+            <li> i18n  : Updated fr and ru translations (jean Elchinger/totalcaesar659)</li>
+            <li> Build : Improved build scripts (euma)</li>
+            <li> x265  : Enforce complicancy with most devices </li>
+            <li> vaapi : Add resizer</li>
+            <li> UI    : Redone UI, revamped contrast filter </li>
+            <li> Qt    : Dont use too much CPU on playback when there is no audio track</li>
+            <li> Qt    : Reenabled nvenc + Fixed keyframe detection </li>
+            <li> Qt    : Fixed a crash when encoding starts very slowly (x265)</li>
+            <li> Build : Allow use of system libass, liba52,libmad (euma)</li>
        </ul>
          <br />
     </div>
