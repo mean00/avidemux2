@@ -451,7 +451,7 @@ void ADM_flyDialog::postInit(uint8_t reInit)
     \fn    calcZoomFactor
     \brief
 */
-
+#define ROUNDUP 0.1
 float ADM_flyDialog::calcZoomFactor(void)
 {
     if(_computedZoom) return _computedZoom;
@@ -459,14 +459,14 @@ float ADM_flyDialog::calcZoomFactor(void)
     zoom=UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
     // Find the closest integer
     // zoom it ?
-    if((zoom+0.3)>1)
+    if((zoom+ROUNDUP)>1)
     {
-        _computedZoom=floor(2*(zoom+0.3))/2;
+        _computedZoom=floor(2*(zoom+ROUNDUP))/2;
         ADM_info("AutoZoom %f ->%f \n",(float)zoom,(float)_computedZoom);
         return _computedZoom;
     }
     double invertZoom=1/zoom;
-    _computedZoom=2./floor((2*(invertZoom+0.3)));
+    _computedZoom=2./floor((0.5+2*(invertZoom+ROUNDUP)));
     ADM_info("AutoZoom 1/%f\n",(float)(1./_computedZoom));
     return _computedZoom;
     
