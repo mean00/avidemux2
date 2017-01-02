@@ -248,6 +248,70 @@ bool ADM_flyDialog::nextImage(void)
     process();
     return display(_rgbByteBufferDisplay.at(0));
 }
+/**
+ * 
+ * @return 
+ */
+bool ADM_flyDialog::initializeSize()
+{
+    _canvas->resize(1,1);
+    QSize qsize= _canvas->parentWidget()->parentWidget()->size();
+    _usedWidth = qsize.width();
+    _usedHeight= qsize.height();
+    
+     if (_resizeMethod != RESIZE_NONE) 
+    {
+        _zoom = calcZoomFactor();
+        if (_zoom == 1) 
+        {
+            _resizeMethod = RESIZE_NONE;
+        }
+    }
+    if (_resizeMethod == RESIZE_NONE) 
+    {
+        _zoom = 1;
+        _zoomW = _w;
+        _zoomH = _h;
+    } else 
+    {
+        _zoomW = uint32_t(_w * _zoom);
+        _zoomH = uint32_t(_h * _zoom);
+    }
+    
+    
+    ADM_info("xAutoZoom : base size= %d x %d\n",_usedWidth,_usedHeight);
+    return true;
+}
+/**
+ * \brief Calculate the zoom ratio required to fit the whole image on the screen.
+ * @param imageWidth
+ * @param imageHeight
+ * @return 
+ */
+float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imageHeight)
+{
+        uint32_t screenWidth, screenHeight;
+        QWidget *topWindow=_canvas->parentWidget()->parentWidget();
+        UI_getPhysicalScreenSize(topWindow, &screenWidth, &screenHeight);
+        
+        // Usable width/height
+        int usableWidth=screenWidth-_usedWidth;
+        int usableHeight=screenHeight-_usedHeight;
+        
+        if(usableWidth<160) usableWidth=160;
+        if(usableHeight<160) usableHeight=160;
+        
+
+        float widthRatio = (float)usableWidth / (float)imageWidth;
+        float heightRatio = (float)usableHeight / (float)imageHeight;
+
+        ADM_info("autoZoom : Raw w=%f h=%f\n",widthRatio,heightRatio);
+        
+        float r= (widthRatio < heightRatio ? widthRatio : heightRatio);
+        return r;
+		
+}
+
 //************************************
 // Implement the specific part
 // i.e. yuv processing or RGB processing
@@ -258,6 +322,7 @@ bool ADM_flyDialog::nextImage(void)
 {
         _yuvBufferOut=new ADMImageDefault(_w,_h);
         yuvToRgb=NULL;  
+        initializeSize();
         updateZoom();
         postInit(false);
 }
@@ -294,6 +359,7 @@ ADM_flyDialogRgb::ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t heig
      yuv2rgb =new ADMColorScalerSimple(_w,_h,ADM_COLOR_YV12,
                 toRgbColor());
     rgb2rgb=NULL;
+    initializeSize();
     updateZoom();
     postInit(false);
 
@@ -335,7 +401,8 @@ bool ADM_flyDialogRgb::process(void)
     return true;
 }
 
-extern float UI_calcZoomToFitScreen(QWidget* window, QWidget* canvas, uint32_t imageWidth, uint32_t imageHeight);
+
+
 
 /**
     \fn    FlyDialogEventFilter
@@ -391,25 +458,9 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _resizeMethod = resizeMethod;
     _zoomChangeCount = 0;        
     _yuvBuffer=new ADMImageDefault(_w,_h);
+    _usedWidth= _usedHeight=0;
     lastPts=0;
-    if (_resizeMethod != RESIZE_NONE) 
-    {
-        _zoom = calcZoomFactor();
-        if (_zoom == 1) 
-        {
-            _resizeMethod = RESIZE_NONE;
-        }
-    }
-    if (_resizeMethod == RESIZE_NONE) 
-    {
-        _zoom = 1;
-        _zoomW = _w;
-        _zoomH = _h;
-    } else 
-    {
-        _zoomW = uint32_t(_w * _zoom);
-        _zoomH = uint32_t(_h * _zoom);
-    }
+   
     
     connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
     timer.setSingleShot(true);
@@ -451,22 +502,22 @@ void ADM_flyDialog::postInit(uint8_t reInit)
     \fn    calcZoomFactor
     \brief
 */
-#define ROUNDUP 0.1
 float ADM_flyDialog::calcZoomFactor(void)
 {
+#define APPROXIMATE 20.
     if(_computedZoom) return _computedZoom;
     double zoom;
-    zoom=UI_calcZoomToFitScreen(((ADM_QCanvas*)_canvas)->parentWidget()->parentWidget(), ((ADM_QCanvas*)_canvas)->parentWidget(), _w, _h);
+    zoom=calcZoomToBeDisplayable(_w, _h);
     // Find the closest integer
     // zoom it ?
-    if((zoom+ROUNDUP)>1)
+    if((zoom)>1)
     {
-        _computedZoom=floor(2*(zoom+ROUNDUP))/2;
+        _computedZoom=floor(APPROXIMATE*(zoom))/APPROXIMATE;
         ADM_info("AutoZoom %f ->%f \n",(float)zoom,(float)_computedZoom);
         return _computedZoom;
     }
     double invertZoom=1/zoom;
-    _computedZoom=2./floor((0.5+2*(invertZoom+ROUNDUP)));
+    _computedZoom=APPROXIMATE/floor((1+APPROXIMATE*(invertZoom)));
     ADM_info("AutoZoom 1/%f\n",(float)(1./_computedZoom));
     return _computedZoom;
     

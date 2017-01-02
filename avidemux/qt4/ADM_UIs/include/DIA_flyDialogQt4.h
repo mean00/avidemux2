@@ -81,7 +81,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           ResizeMethod  _resizeMethod;
           uint64_t      lastPts;
           double        _computedZoom;
-          
+          int           _usedWidth, _usedHeight;
           
           ADM_coreVideoFilter *_in;
       
@@ -117,7 +117,9 @@ protected:
   virtual ADM_colorspace     toRgbColor(void);
           void               updateZoom(void);
           void               EndConstructor(void);
-          uint8_t            cleanup(void);          
+          uint8_t            cleanup(void);  
+          bool               initializeSize();
+          float              calcZoomToBeDisplayable(uint32_t imageWidth, uint32_t imageHeight);
   /* Filter dependant : you have to implement them*/
 //
            virtual           void resetScaler(void)=0; // dont bother, implemented by yuv or rgb subclass
