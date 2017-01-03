@@ -124,14 +124,18 @@ ADM_flyDialog::~ADM_flyDialog(void)
 }
 
 /**
-      \fn sliderChanged
-      \brief callback to handle image changes
+    \fn goToTime
 */
 bool    ADM_flyDialog::goToTime(uint64_t tme)
 {
      _in->goToTime(tme);
-     return nextImage();
+     return nextImageInternal();
 }
+
+/**
+    \fn sliderChanged
+    \brief callback to handle image changes
+*/
 uint8_t    ADM_flyDialog::sliderChanged(void)
 {
   uint32_t fn= sliderGet();
@@ -205,9 +209,10 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
         pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
         pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
         pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
-        pushButton_next->setStatusTip(QApplication::translate("seekablePreviewDialog", "next image", 0));
+        pushButton_next->setToolTip(QApplication::translate("seekablePreviewDialog", "Next image", 0));
         pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
         pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
+        pushButton_fwd1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Forward one minute", 0));
         radioButton_autoZoom->setText(QApplication::translate("seekablePreviewDialog", "A&utoZoom", 0));
         
         QObject::connect(pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
@@ -232,9 +237,9 @@ uint64_t ADM_flyDialog::getCurrentPts()
     return lastPts;
 }
 /**
-    \fn nextImage
+    \fn nextImageInternal
 */
-bool ADM_flyDialog::nextImage(void)
+bool ADM_flyDialog::nextImageInternal(void)
 {
     uint32_t frameNumber;
     if(!_in->getNextFrame(&frameNumber,_yuvBuffer))
@@ -248,6 +253,22 @@ bool ADM_flyDialog::nextImage(void)
     process();
     return display(_rgbByteBufferDisplay.at(0));
 }
+
+/**
+    \fn nextImage
+*/
+bool ADM_flyDialog::nextImage(void)
+{
+    QSlider  *slide=(QSlider *)_slider;
+    ADM_assert(slide);
+    bool oldState=slide->blockSignals(true);
+    bool r=nextImageInternal();
+    if(r)
+        updateSlider();
+    slide->blockSignals(oldState);
+    return r;
+}
+
 /**
  * 
  * @return 
@@ -446,9 +467,10 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
                               ADM_QCanvas *canvas, QSlider *slider,  ResizeMethod resizeMethod)
 {  
     ADM_assert(canvas);
-
-    if (slider)
-            ADM_assert(in);
+    {
+        ADM_assert(in);
+        slider->setMaximum(ADM_FLY_SLIDER_MAX);
+    }
     _parent=parent;
     _w = width;
     _h = height;    
@@ -566,6 +588,24 @@ uint8_t     ADM_flyDialog::sliderSet(uint32_t value)
   slide->setValue(value);
   return 1; 
 }
+
+/**
+    \fn    updateSlider
+    \brief
+*/
+void ADM_flyDialog::updateSlider(void)
+{
+    ADM_assert(_in);
+    uint64_t dur=_in->getInfo()->totalDuration;
+    uint64_t pts=getCurrentPts();
+    double pos;
+    pos=pts;
+    pos/=dur;
+    pos*=ADM_FLY_SLIDER_MAX;
+    pos+=0.5; // round up
+    sliderSet((uint32_t)pos);
+}
+
 /**
     \fn    isRgbInverted
     \brief
@@ -587,6 +627,7 @@ void ADM_flyDialog::backOneMinute(void)
     if(pts<JUMP_LENGTH) pts=0;
     else pts-=JUMP_LENGTH;
     goToTime(pts);
+    updateSlider();
 }
 /**
  * 
@@ -596,18 +637,21 @@ void ADM_flyDialog::fwdOneMinute(void)
     uint64_t pts=getCurrentPts();
     pts+=JUMP_LENGTH;
     goToTime(pts);
-
+    updateSlider();
 }
 /**
  * 
  */
 void ADM_flyDialog::play(bool state)
 {
+    QSlider *slide=(QSlider *)_slider;
+    ADM_assert(slide);
     if(state)
     {
        pushButton_back1mn->setEnabled(false);
        pushButton_fwd1mn->setEnabled(false);
        pushButton_next->setEnabled(false);
+       slide->setEnabled(false);
        timer.start();
     }else
     {
@@ -615,6 +659,8 @@ void ADM_flyDialog::play(bool state)
         pushButton_back1mn->setEnabled(true);
         pushButton_fwd1mn->setEnabled(true);
         pushButton_next->setEnabled(true);
+        updateSlider();
+        slide->setEnabled(true);
     }
     
 }
@@ -642,7 +688,7 @@ void ADM_flyDialog::autoZoom(bool state)
 void ADM_flyDialog::timeout()
 {
     
-    bool r=nextImage();
+    bool r=nextImageInternal();
     if(r)
     {
         timer.start();
