@@ -26,6 +26,7 @@ fi
 external_libass=0
 external_liba52=0
 external_libmad=0
+external_libmp4v2=0
 
 fail()
 {
@@ -120,6 +121,7 @@ usage()
         echo "  --with-system-libass  : Use system libass instead of the bundled one"
         echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
         echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
+        echo "  --with-system-libmp4v2: Use system libmp4v2 instead of the bundled one"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -239,6 +241,9 @@ while [ $# != 0 ] ;do
          --with-system-libmad)
                 external_libmad=1
              ;;
+         --with-system-libmp4v2)
+                external_libmp4v2=1
+             ;;
         *)
                 echo "unknown parameter $config_option"
                 usage
@@ -262,6 +267,9 @@ if [ "x$external_liba52" = "x1" ]; then
 fi
 if [ "x$external_libmad" = "x1" ]; then
     export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmp4v2" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_MP4V2=true $EXTRA_CMAKE_DEFS"
 fi
 echo "Top dir : $TOP"
 echo "Fake installation directory=$FAKEROOT_DIR"
