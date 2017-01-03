@@ -145,7 +145,11 @@ public:
   virtual void     postInit(uint8_t reInit);
 public:  
   virtual uint8_t  sliderChanged(void);
+  virtual void     updateSlider(void);
   virtual bool     goToTime(uint64_t tme);
+
+private:
+  virtual bool     nextImageInternal(void);
   
 public slots:
         virtual bool nextImage(void);
