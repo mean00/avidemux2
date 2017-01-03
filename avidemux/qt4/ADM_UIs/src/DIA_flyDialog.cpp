@@ -256,8 +256,10 @@ bool ADM_flyDialog::initializeSize()
 {
     _canvas->resize(1,1);
     QSize qsize= _canvas->parentWidget()->parentWidget()->size();
-    _usedWidth = qsize.width();
-    _usedHeight= qsize.height();
+    //_usedWidth = qsize.width();
+    // Normally there is nothing interesting left and right, we can use a hardcoded value
+    _usedWidth=64;
+    _usedHeight= 32+qsize.height(); // keep a border margin
     
      if (_resizeMethod != RESIZE_NONE) 
     {
@@ -295,14 +297,14 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
         UI_getPhysicalScreenSize(topWindow, &screenWidth, &screenHeight);
         
         // Usable width/height
-        int usableWidth=screenWidth-_usedWidth;
-        int usableHeight=screenHeight-_usedHeight;
+        int usableWidth =(int)screenWidth -_usedWidth;
+        int usableHeight=(int)screenHeight-_usedHeight;
         
         if(usableWidth<160) usableWidth=160;
         if(usableHeight<160) usableHeight=160;
         
 
-        float widthRatio = (float)usableWidth / (float)imageWidth;
+        float widthRatio  = (float)usableWidth / (float)imageWidth;
         float heightRatio = (float)usableHeight / (float)imageHeight;
 
         ADM_info("autoZoom : Raw w=%f h=%f\n",widthRatio,heightRatio);
