@@ -47,23 +47,16 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 
 /**
  * 
- * @return 
- */
-bool  Ui_seekablePreviewWindow::nextImage(void)
-{
-    return seekablePreview->nextImage();
-}
-/**
- * 
  * @param videoStream
  */
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
 	if (seekablePreview)
 		delete seekablePreview;
-
+        seekablePreview=NULL;
 	if (canvas)
 		delete canvas;
+        canvas=NULL;
 
 	uint32_t canvasWidth = videoStream->getInfo()->width;
 	uint32_t canvasHeight = videoStream->getInfo()->height;
@@ -72,14 +65,6 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
 	canvas->show();
 	seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
         seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
-	seekablePreview->sliderChanged();
-}
-/**
- * 
- * @param value
- */
-void Ui_seekablePreviewWindow::sliderChanged(int value)
-{
 	seekablePreview->sliderChanged();
 }
 /**

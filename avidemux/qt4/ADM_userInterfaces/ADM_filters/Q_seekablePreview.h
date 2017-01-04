@@ -40,7 +40,4 @@ public:
 	uint32_t frameIndex();
         bool     setTime(uint64_t timestamp);
 
-public slots:
-	void sliderChanged(int value);
-        bool nextImage(void);
 };
