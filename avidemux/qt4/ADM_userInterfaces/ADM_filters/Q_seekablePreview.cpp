@@ -98,4 +98,13 @@ bool      Ui_seekablePreviewWindow::setTime(uint64_t timestamp)
     ui.label->setText(s);
     return true;
 }
+/**
+  * 
+ * @param value
+ */
+void Ui_seekablePreviewWindow::sliderChanged(int value)
+{
+	seekablePreview->sliderChanged();
+}
+
 // EOF
