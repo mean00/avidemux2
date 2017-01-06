@@ -1056,7 +1056,7 @@ Continue anyway?</source>
     </message>
     <message>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="obsolete">Позволять нестрандартную частоту звука для DVD</translation>
+        <translation type="obsolete">Позволять нестандартную частоту звука для DVD</translation>
     </message>
     <message>
         <source>Create _OpenDML files</source>
@@ -1208,7 +1208,7 @@ Continue anyway?</source>
     </message>
     <message>
         <source>Default Postprocessing</source>
-        <translation type="obsolete">Постпроцессинг по-умолчанию</translation>
+        <translation type="obsolete">Постпроцессинг по умолчанию</translation>
     </message>
     <message>
         <source>Use _Global GlyphSet</source>
@@ -4516,7 +4516,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.h" line="+1"/>
         <source>Add black borders around the image.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Добавить черные полосы вокруг изображения.</translation>
     </message>
 </context>
 <context>
@@ -4557,7 +4557,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+1"/>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished">Позволять нестрандартную частоту звука для DVD</translation>
+        <translation type="unfinished">Позволять нестандартную частоту звука для DVD</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4752,7 +4752,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+3"/>
         <source>Default Postprocessing</source>
-        <translation type="unfinished">Постпроцессинг по-умолчанию</translation>
+        <translation type="unfinished">Постпроцессинг по умолчанию</translation>
     </message>
     <message>
         <location line="+45"/>
@@ -7110,7 +7110,7 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="+1"/>
         <source>Remove noisy edge by turning them to black.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Удалить шум границ, заполнив их черным цветом.</translation>
     </message>
 </context>
 <context>
@@ -7498,12 +7498,12 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>crop</source>
-        <translation type="unfinished">обрезать</translation>
+        <translation type="unfinished">Обрезка</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>crop filter</source>
-        <translation type="unfinished">фильтр обрезки</translation>
+        <translation type="unfinished">Фильтр обрезки</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -11152,7 +11152,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+218"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
-        <translation>&lt;b&gt;Новая версия&lt;/b&gt;&lt;br&gt;Версия %1&lt;br&gt;Выпущена %2.&lt;br&gt;Доступна для загрузки с адреса&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Вы можете отключить автоматическую проверку на обновления в настройках.&lt;/small&gt;</translation>
+        <translation>&lt;b&gt;Новая версия&lt;/b&gt;&lt;br&gt;Версия %1&lt;br&gt;Выпущена %2.&lt;br&gt;Доступна для загрузки с адреса&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Вы можете отключить автоматическую проверку обновлений в настройках.&lt;/small&gt;</translation>
     </message>
     <message>
         <location line="+212"/>
@@ -11624,7 +11624,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>swScale Resizer.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Изменение размера swScale.</translation>
     </message>
 </context>
 <context>
@@ -12517,7 +12517,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+1"/>
         <source>Vertically flip the image.</source>
-        <translation type="unfinished">Вертикально отрзить изображение.</translation>
+        <translation type="unfinished">Вертикально отразить изображение.</translation>
     </message>
 </context>
 <context>
