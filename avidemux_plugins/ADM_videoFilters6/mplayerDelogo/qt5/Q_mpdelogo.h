@@ -30,7 +30,6 @@ public slots:
 private slots:
         void                sliderUpdate(int foo);
         void                valueChanged(int foo);
-        void                moved(int x,int y);
         void                preview(int x);
 
 

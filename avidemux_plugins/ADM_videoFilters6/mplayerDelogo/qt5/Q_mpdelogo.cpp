@@ -68,9 +68,7 @@
         SPINNER(spinW);
         SPINNER(spinH);
         SPINNER(spinBand);
-        
-        
-        connect(canvas, SIGNAL(movedSignal(int,int)),this, SLOT(moved(int,int)));
+
         connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
           
   }
@@ -119,29 +117,6 @@ void Ui_mpdelogoWindow::valueChanged( int f )
 /**
  * 
  * @param x
- * @param y
- */
-void Ui_mpdelogoWindow::moved(int x,int y)
-{
-      aprintf("Moved %d %d\n",x,y);
-      aprintf("Change (lock=%d)\n",lock);
-      if(lock) return;
-      lock++;
-      
-      int max_x=_in->getInfo()->width;
-      if(x>(max_x-myCrop->param.lw)) x=max_x-myCrop->param.lw;
-      
-      int max_y=_in->getInfo()->height;
-      if(y>(max_y-myCrop->param.lh)) y=max_y-myCrop->param.lh;
-      
-      myCrop->setXy(x,y);
-      myCrop->sameImage();
-      
-      lock--;
-}
-/**
- * 
- * @param x
  */
  void Ui_mpdelogoWindow::preview(int x)
  {
@@ -170,7 +145,7 @@ bool flyMpDelogo::setXy(int x,int y)
       if(param.xoff<0) param.xoff=0;
       param.yoff= y;
       if(param.yoff<0) param.yoff=0;
-      upload();
+      upload(false);
       return true;
 }
 
@@ -179,16 +154,29 @@ bool flyMpDelogo::setXy(int x,int y)
 /**
     \fn upload
 */
-uint8_t flyMpDelogo::upload(void)
-{
 
-        Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+#define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;}
+
+
+uint8_t flyMpDelogo::upload(bool redraw)
+{
+    Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+    if(!redraw)
+    {
+        APPLY_TO_ALL(blockSignals(true))
+    }
+
 
         MYSPIN(spinX)->setValue(param.xoff);
         MYSPIN(spinY)->setValue(param.yoff);
         MYSPIN(spinW)->setValue(param.lw);
         MYSPIN(spinH)->setValue(param.lh);   
         MYSPIN(spinBand)->setValue(param.band);   
+    if(!redraw)
+    {
+        APPLY_TO_ALL(blockSignals(false))
+    }
+
         
         printf("Upload\n");
         return 1;

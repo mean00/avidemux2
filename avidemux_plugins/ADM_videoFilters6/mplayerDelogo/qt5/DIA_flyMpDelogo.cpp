@@ -44,7 +44,7 @@
                 ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
  {
     rubber=new Resizable_rubber_band(this,canvas);
-    
+    rubber->resize(width,height);
  }
  /**
   * 
@@ -69,7 +69,7 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     param.lh=(double)h/_zoom;
     param.xoff=(double)x/_zoom;
     param.yoff=(double)y/_zoom;
-    upload();
+    upload(false);
     return true;
 }
 
@@ -86,40 +86,8 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
                              param.lw,  param.lh,param.band,param.show);        
     else
     {
-#if 0              
-        uint8_t *y=out->GetWritePtr(PLANAR_Y);
-        int stride=out->GetPitch(PLANAR_Y);
-        int mx=param.lw+param.xoff;
-        int my=param.lh+param.yoff;
-        if(mx>=out->GetWidth(PLANAR_Y)) mx=out->GetWidth(PLANAR_Y)-1;
-        if(my>=out->GetHeight(PLANAR_Y)) my=out->GetHeight(PLANAR_Y)-1;
-        
-        
-        // hz
-        uint8_t *p=y+stride*param.yoff;
-        uint8_t *p2=y+stride*(my);
-        
-        uint8_t toggle=0;
-        for(int x=param.xoff;x<mx;x++)
-        {
-            *(p+x)=toggle;
-            toggle=0xff^toggle;
-            *(p2+x)=toggle;
-        }
-        // vz
-         p=y+stride*(param.yoff)+param.xoff;
-         p2=y+stride*(param.yoff)+mx;
-         
-         for(int yy=param.yoff;yy<my;yy++)
-         {
-            *(p)=toggle;
-            toggle=0xff^toggle;
-            *(p2)=toggle;
-            p+=stride;   p2+=stride;
-         }
-#endif         
-         rubber->move(param.xoff,param.yoff);
-         rubber->resize(param.lw,param.lh);
+        rubber->move(_zoom*(float)param.xoff,_zoom*(float)param.yoff);
+        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
     }
     return 1;
 }
@@ -135,9 +103,15 @@ Resizable_rubber_band::Resizable_rubber_band(flyMpDelogo *fly,QWidget *parent) :
   layout->setContentsMargins(0, 0, 0, 0);
   QSizeGrip* grip1 = new QSizeGrip(this);
   QSizeGrip* grip2 = new QSizeGrip(this);
+  grip1->setVisible(true);
+  grip2->setVisible(true);
   layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);
   layout->addWidget(grip2, 0, Qt::AlignRight | Qt::AlignBottom);
   rubberband = new QRubberBand(QRubberBand::Rectangle, this);
+  QPalette pal;
+  pal.setBrush(QPalette::Highlight, QBrush(Qt::red,Qt::DiagCrossPattern));
+  rubberband->setPalette(pal);
+  rubberband->setForegroundRole(QPalette::Highlight);
   rubberband->move(0, 0);
   rubberband->show();
   show();

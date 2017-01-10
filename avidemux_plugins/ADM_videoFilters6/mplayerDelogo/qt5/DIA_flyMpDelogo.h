@@ -32,7 +32,10 @@ public:
 private:
   QRubberBand* rubberband;
   void resizeEvent(QResizeEvent *);
-
+  void blockSignals(bool sig)
+  {
+      rubberband->blockSignals(sig);
+  }
 };
 
 /**
@@ -48,7 +51,8 @@ public:
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
-   uint8_t     upload(void);
+   uint8_t     upload() {return upload(true);}
+   uint8_t     upload(bool update);
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider);
                 
