@@ -708,11 +708,18 @@ int A_openVideo (const char *name)
         res = video_body->addFile(longname);
 
     //  DIA_StopBusy ();
+    int ac=0; // audio codec = copy
     bool loadDefault;
     if(!prefs->get(RESET_ENCODER_ON_VIDEO_LOAD, &loadDefault)) loadDefault=false;
     // if true, discard changes in output config on video load
     if(loadDefault)
+    {
         A_loadDefaultSettings();
+        UI_setAudioCodec(ac); // revert to copy, we don't save default audio codec config yet
+    }else
+    {
+        ac=UI_getCurrentACodec();
+    }
     // forget last project file
     video_body->setProjectName("");
 
@@ -763,6 +770,8 @@ int A_openVideo (const char *name)
         prefs->set_lastfile(longname);
         UI_updateRecentMenu();
         updateLoaded();
+        if(video_body->getNumberOfActiveAudioTracks())
+            audioCodecSetByIndex(0,ac); // try to preserve audio codec
         if (currentaudiostream)
         {
             uint32_t nbAudio;
