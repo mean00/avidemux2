@@ -70,7 +70,9 @@
         SPINNER(spinBand);
 
         connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
-          
+        Q_INIT_RESOURCE(delogo);
+
+        ui.graphicsView_2->setForegroundBrush(QImage(":/images/grips.png")); 
   }
 /**
     \fn sliderUpdate

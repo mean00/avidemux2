@@ -11,6 +11,7 @@ IF(ADM_QT_VERSION EQUAL 4)
         SET(QT_TAG qt4)
 ELSE(ADM_QT_VERSION EQUAL 4)
         SET(QT_TAG qt5)
+        ADM_QT_ADD_RESOURCES(resource   qt5/delogo.qrc)
 ENDIF(ADM_QT_VERSION EQUAL 4)
 
 
@@ -23,7 +24,7 @@ SET(mpdelogoQT_SRCS  ${QT_TAG}/Q_mpdelogo.cpp )
 SET(mpdelogoQT_HEADERS  ${QT_TAG}/Q_mpdelogo.h)
 SET(mpdelogoQT_UI    ${QT_TAG}/mpdelogo)
 IF(DO_QT4)
-  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION} ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS} ${QT_TAG}/DIA_flyMpDelogo.cpp)
+  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION} ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS} ${QT_TAG}/DIA_flyMpDelogo.cpp ${resource})
   addDeps(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION})
 ENDIF(DO_QT4)
 # /QT4
