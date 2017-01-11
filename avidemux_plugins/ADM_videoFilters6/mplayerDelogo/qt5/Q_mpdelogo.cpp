@@ -33,6 +33,7 @@
   Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent,  delogo *param, ADM_coreVideoFilter *in) 
             : QDialog(parent)
   {
+      static bool doOnce=false;
         uint32_t width,height;
         ui.setupUi(this);
         _in=in;
@@ -70,9 +71,13 @@
         SPINNER(spinBand);
 
         connect(ui.checkBoxPreview, SIGNAL(stateChanged(int )),this, SLOT(preview(int)));
-        Q_INIT_RESOURCE(delogo);
-
-        ui.graphicsView_2->setForegroundBrush(QImage(":/images/grips.png")); 
+        
+        if(!doOnce)
+        {
+            Q_INIT_RESOURCE(delogo);
+            doOnce=true;
+        }
+        ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
   }
 /**
     \fn sliderUpdate

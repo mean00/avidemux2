@@ -7,12 +7,14 @@ MACRO(addDeps tgt)
         TARGET_LINK_LIBRARIES(${tgt} ADM_libavutil)
 ENDMACRO(addDeps tgt)
 
-IF(ADM_QT_VERSION EQUAL 4)
+IF(DO_QT4)
+    IF(ADM_QT_VERSION EQUAL 4)
         SET(QT_TAG qt4)
-ELSE(ADM_QT_VERSION EQUAL 4)
+    ELSE(ADM_QT_VERSION EQUAL 4)
         SET(QT_TAG qt5)
         ADM_QT_ADD_RESOURCES(resource   qt5/delogo.qrc)
-ENDIF(ADM_QT_VERSION EQUAL 4)
+    ENDIF(ADM_QT_VERSION EQUAL 4)
+ENDIF(DO_QT4)
 
 
 SET(mpdelogoCommon_SRCS 
