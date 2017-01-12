@@ -219,6 +219,7 @@ bool	MP4Header::processAudio( MP4Track *track,  uint32_t trackScale,
       {
         default:break;
         case WAV_PCM: // wtf ?
+        case WAV_LPCM: // wtf ?
         case WAV_ULAW: // Wtf ?
         case WAV_IMAADPCM:
         case WAV_MSADPCM:
