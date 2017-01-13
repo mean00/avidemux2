@@ -24,5 +24,5 @@ typedef struct
     uint32_t samples;
 }ADM_EAC3_INFO;
 
-ADM_AUDIOPARSER6_EXPORT bool     ADM_EAC3GetInfo(uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info);
+ADM_AUDIOPARSER6_EXPORT bool     ADM_EAC3GetInfo(const uint8_t *buf, uint32_t len, uint32_t *syncoff,ADM_EAC3_INFO *info);
 #endif //ADM_EAC3INFO_H

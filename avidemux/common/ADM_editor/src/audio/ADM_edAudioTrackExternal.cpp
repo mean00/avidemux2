@@ -141,6 +141,7 @@ ADM_edAudioTrackExternal *create_edAudioExternal(const char *name)
                 access=new ADM_audioAccessFileAACADTS(name,offset);
                 break;
         case WAV_PCM:
+        case WAV_EAC3:
         case WAV_AC3:
         case WAV_MP2:
         case WAV_MP3:
