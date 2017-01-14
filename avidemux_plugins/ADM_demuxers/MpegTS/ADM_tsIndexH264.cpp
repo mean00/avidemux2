@@ -96,9 +96,13 @@ bool bAppend=false;
 
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_H264)
+    if(videoTrac[0].trackType!=ADM_TS_H264 
+#if 0
+       && videoTrac[0].trackType!=ADM_TS_H265
+#endif
+       )
     {
-        printf("[Ts Indexer] Only H264 video supported\n");
+        printf("[Ts Indexer] Only H264/H265 video supported\n");
         return false;
     }
     video.pid=videoTrac[0].trackPid;

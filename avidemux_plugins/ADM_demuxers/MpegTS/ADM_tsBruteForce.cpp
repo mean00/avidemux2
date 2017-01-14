@@ -170,6 +170,7 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
     int threshold=3;
     int nbSuccessMpeg2=0;
     int nbSuccessH264=0;
+    int nbSuccessH265=0;
     for(int i=0;i<nbTry;i++)
     {
         TS_PESpacket pes(pid);
@@ -185,9 +186,15 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
         {
             ADM_warning("Found startcode1 =%x\n",scode);
         }else continue;
+        printf("Scode %x\n",scode);
         if(scode==9) // AU delimiter => H264
         {
             nbSuccessH264++;
+            continue;
+        }
+        if(scode==0x46)
+        {
+            nbSuccessH265++;
             continue;
         }
         if(mpeg2StartCode(scode))
@@ -202,17 +209,19 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
         ADM_warning("Probably H264\n");
         return true;
     }
+    if(nbSuccessH265>=threshold)
+    {
+        trackType=ADM_TS_H265;
+        ADM_warning("Probably H265\n");
+        return true;
+    }
+    
     if(nbSuccessMpeg2>=threshold)
     {
         trackType=ADM_TS_MPEG2;
         ADM_warning("Probably Mpeg2\n");
         return true;
     }
-#if 0
-    ADM_warning("Forcing h265\n");
-    trackType=ADM_TS_H265;
-    return true;
-#endif    
     ADM_warning("dont know what it is... (mpeg2 score=%d, h264 score=%d, threshold=%d)\n",nbSuccessMpeg2,nbSuccessH264,threshold);
     return false;
 }
