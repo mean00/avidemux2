@@ -40,14 +40,6 @@
 #endif
 
 
-
-#if 1
-#define aprintf printf
-#else
-#define aprintf(...) {}
-#endif
-
-
 /**
  * 
  * @param parent
