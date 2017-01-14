@@ -28,6 +28,7 @@ typedef enum
     ADM_TS_UNKNOWN=0,
     ADM_TS_MPEG2,
     ADM_TS_H264,
+    ADM_TS_H265,
     ADM_TS_MPEG_AUDIO=10,
     ADM_TS_AC3,
     ADM_TS_AAC_ADTS,

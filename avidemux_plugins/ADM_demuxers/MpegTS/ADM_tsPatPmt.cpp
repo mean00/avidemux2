@@ -48,6 +48,7 @@ TrackTypeDescriptor TrackTypes[]=
     {0x004,ADM_TS_MPEG_AUDIO,"Mpeg2 Audio"},
     {0x005,ADM_TS_UNKNOWN,   "Registration"},
     {0x01b,ADM_TS_H264,      "H264 Video"},
+    {0x00f,ADM_TS_H264,      "H265 Video"},
     {0x081,ADM_TS_AC3,       "AC3 Audio"},
     {0x0ea,ADM_TS_VC1,       "VC1 Video"},
     {0x006,ADM_TS_UNKNOWN,   "Private Stream"},
@@ -314,6 +315,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
                 case 0xF:      *str= "Mpeg AAC ADTS";return ADM_TS_AAC_ADTS;break;
                 case 0x11:     *str= "Mpeg AAC LATM";return ADM_TS_AAC_LATM;break;
                 case 0x1B:     *str= "H264 Video";return ADM_TS_H264;break;
+                case 0x24:     *str= "H265 Video(not sure)";return ADM_TS_H265;break;
                 case 0x81:     *str= "AC3 (Not sure)";return ADM_TS_AC3;break;
                 //case 0x82:     *str= "DTS (Not sure)";return ADM_TS_DTS;break;
                 case 0x83:     *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;

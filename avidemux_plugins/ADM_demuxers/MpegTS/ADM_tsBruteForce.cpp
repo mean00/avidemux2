@@ -208,6 +208,11 @@ static bool idContentE0(int pid,tsPacket *ts,ADM_TS_TRACK_TYPE & trackType)
         ADM_warning("Probably Mpeg2\n");
         return true;
     }
+#if 0
+    ADM_warning("Forcing h265\n");
+    trackType=ADM_TS_H265;
+    return true;
+#endif    
     ADM_warning("dont know what it is... (mpeg2 score=%d, h264 score=%d, threshold=%d)\n",nbSuccessMpeg2,nbSuccessH264,threshold);
     return false;
 }
