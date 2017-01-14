@@ -149,9 +149,7 @@ void Ui_mpdelogoWindow::valueChanged( int f )
 bool flyMpDelogo::setXy(int x,int y)
 {
       param.xoff= x;
-      if(param.xoff<0) param.xoff=0;
       param.yoff= y;
-      if(param.yoff<0) param.yoff=0;
       upload(false);
       return true;
 }
@@ -164,13 +162,20 @@ bool flyMpDelogo::setXy(int x,int y)
 
 #define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;}
 
+bool flyMpDelogo::blockChanges(bool block)
+{
+     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+     APPLY_TO_ALL(blockSignals(block));
+     //rubber->blockSignals(block);
+     return true;
+}
 
 uint8_t flyMpDelogo::upload(bool redraw)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
     if(!redraw)
     {
-        APPLY_TO_ALL(blockSignals(true))
+        blockChanges(true);
     }
 
 
@@ -179,9 +184,11 @@ uint8_t flyMpDelogo::upload(bool redraw)
         MYSPIN(spinW)->setValue(param.lw);
         MYSPIN(spinH)->setValue(param.lh);   
         MYSPIN(spinBand)->setValue(param.band);   
+       // rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
+
     if(!redraw)
     {
-        APPLY_TO_ALL(blockSignals(false))
+         blockChanges(false);
     }
 
         
@@ -200,7 +207,11 @@ uint8_t flyMpDelogo::download(void)
         param.lw= MYSPIN(spinW)->value();
         param.lh= MYSPIN(spinH)->value();
         param.band= MYSPIN(spinBand)->value();
-       
+#if 0        
+        blockChanges(true);
+        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
+         blockChanges(false);
+#endif         
         printf("Download\n");
         return true;
 }

@@ -29,13 +29,19 @@ public:
   flyMpDelogo     *flyParent;
   Resizable_rubber_band(flyMpDelogo *fly,QWidget* parent = 0);
 
-private:
+public:
   QRubberBand* rubberband;
   void resizeEvent(QResizeEvent *);
   void blockSignals(bool sig)
   {
       rubberband->blockSignals(sig);
   }
+#if 0
+  void update()
+  {
+    rubberband->update();
+  }
+#endif
 };
 
 /**
@@ -43,7 +49,8 @@ private:
 */
 class flyMpDelogo : public ADM_flyDialogYuv
 {
-  
+protected:
+    bool    blockChanges(bool block)  ;
 public:
    delogo      param;
    bool        preview;
