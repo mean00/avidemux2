@@ -2,8 +2,8 @@
         \fn DIA_flyDialogQt4.h
  copyright            : (C) 2007 by mean
  email                : fixounet@free.fr
- 
- 
+
+
  ***************************************************************************/
 
 /***************************************************************************
@@ -29,6 +29,7 @@
 #include <QFrame>
 #include <QTimer>
 #include <QDialog>
+#include <QLabel>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -54,14 +55,14 @@ class QRadioButton;
 class ADM_UIQT46_EXPORT ADM_QCanvas : public QWidget
 {
 protected:
-	uint32_t _w,_h;
+        uint32_t _w,_h;
 public:
-	uint8_t *dataBuffer;
+        uint8_t *dataBuffer;
 
-	ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
-	~ADM_QCanvas();
-	void paintEvent(QPaintEvent *ev);
-	void changeSize(uint32_t w, uint32_t h);
+        ADM_QCanvas(QWidget *z, uint32_t w, uint32_t h);
+        ~ADM_QCanvas();
+        void paintEvent(QPaintEvent *ev);
+        void changeSize(uint32_t w, uint32_t h);
 };
 
 
@@ -74,7 +75,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
 {
   Q_OBJECT
  protected:     
-         QTimer             timer;
+          QTimer        timer;
           uint32_t      _w, _h, _zoomW, _zoomH;
           float         _zoom;
           uint32_t      _zoomChangeCount;
@@ -82,26 +83,30 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           uint64_t      lastPts;
           double        _computedZoom;
           int           _usedWidth, _usedHeight;
-          
+          int           _frameIncrement; // time between image in ms
+          Clock         _clock;
+          int           _nextRdv=0;
+
           ADM_coreVideoFilter *_in;
-      
+
           ADMImage      *_yuvBuffer;
           ADM_byteBuffer _rgbByteBufferDisplay;
-          
+
           QPushButton *pushButton_back1mn;
           QPushButton *pushButton_play;
           QPushButton *pushButton_next;
           QPushButton *pushButton_fwd1mn;
           QRadioButton *radioButton_autoZoom;
+          QLabel       *labelTime;
           QDialog     *_parent;
 
-          
-          
+
+
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
           QSlider       *_slider; // widget
           ADM_QCanvas   *_canvas; // Drawing zone
-          
+
   public:
                             ADM_flyDialog(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                  ADM_QCanvas *canvas, QSlider *slider, ResizeMethod resizeMethod);
@@ -125,7 +130,7 @@ protected:
            virtual           void resetScaler(void)=0; // dont bother, implemented by yuv or rgb subclass
            virtual           bool process(void)=0; // dont bother, implemented by yuv or rgb subclass
 public:
-  
+
   virtual uint8_t    download(void)=0;
   virtual uint8_t    upload(void)=0;
   //virtual uint8_t  update(void)=0;
@@ -133,10 +138,10 @@ public:
   virtual bool       setCurrentPts(uint64_t pts) {return true;};
 
 
-         
+
 // UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
 public:  
-  
+
   virtual bool     isRgbInverted(void);
   virtual uint8_t  display(uint8_t *rgbData);
   virtual float    calcZoomFactor(void);  
@@ -150,7 +155,7 @@ public:
 
 private:
   virtual bool     nextImageInternal(void);
-  
+
 public slots:
         virtual bool nextImage(void);
         virtual void backOneMinute(void);
@@ -171,13 +176,13 @@ public:
 public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
-          
+
                                 ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
                                 ADM_QCanvas *canvas, QSlider *slider, 
                                 ResizeMethod resizeMethod);
             virtual             ~ADM_flyDialogYuv();
             virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
- 
+
 };
 
 /**
@@ -194,7 +199,7 @@ public:
 public:
           virtual    bool process(void);
           virtual    void resetScaler(void);
-          
+
                             ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
                                  ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  QSlider *slider, ResizeMethod resizeMethod);
            virtual          ~ADM_flyDialogRgb();
@@ -206,13 +211,13 @@ public:
  */
 class ADM_UIQT46_EXPORT FlyDialogEventFilter : public QObject
 {
-	ADM_flyDialog *flyDialog;
-	bool recomputed;
+        ADM_flyDialog *flyDialog;
+        bool recomputed;
 
 public:
-	FlyDialogEventFilter(ADM_flyDialog *flyDialog);
+        FlyDialogEventFilter(ADM_flyDialog *flyDialog);
 
 protected:
-	bool eventFilter(QObject *obj, QEvent *event);
+        bool eventFilter(QObject *obj, QEvent *event);
 };
 

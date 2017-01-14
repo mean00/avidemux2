@@ -26,6 +26,7 @@
 #include <QHBoxLayout>
 #include <QApplication>
 #include "ADM_toolkitQt.h"
+#include "ADM_vidMisc.h"
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
@@ -201,8 +202,11 @@ bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
         radioButton_autoZoom->setChecked(true);
 
         horizontalLayout_4->addWidget(radioButton_autoZoom);
-
-        
+        //
+        labelTime=new QLabel();
+        labelTime->setText("00:00:00.000");
+        horizontalLayout_4->addWidget(labelTime);
+        //
         QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
         horizontalLayout_4->addItem(horizontalSpacer_4);
         
@@ -266,6 +270,8 @@ bool ADM_flyDialog::nextImage(void)
     if(r)
         updateSlider();
     slide->blockSignals(oldState);
+
+    labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     return r;
 }
 
@@ -488,13 +494,16 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     
     connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
     timer.setSingleShot(true);
+    
 
     int incrementUs=getUnderlyingFilter()->getInfo()->frameIncrement;
 
     incrementUs=(incrementUs+501)/1000; // us => ms
     if(incrementUs<10) incrementUs=10;
-
-    timer.setInterval(incrementUs);
+    _frameIncrement=incrementUs;
+    timer.setInterval(_frameIncrement);
+    
+    ADM_info("Interval = %d ms\n",incrementUs);
     timer.stop();
     
 }
@@ -652,6 +661,9 @@ void ADM_flyDialog::play(bool state)
        pushButton_fwd1mn->setEnabled(false);
        pushButton_next->setEnabled(false);
        slide->setEnabled(false);
+       _clock.reset();
+       timer.setInterval(_frameIncrement);
+       _nextRdv=_frameIncrement;
        timer.start();
     }else
     {
@@ -689,8 +701,14 @@ void ADM_flyDialog::timeout()
 {
     
     bool r=nextImageInternal();
+    labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     if(r)
     {
+        int now=_clock.getElapsedMS();
+        //printf("Now = %d, next Rdv=%d, delta =%d\n",now,_nextRdv,_nextRdv-now);        
+        _nextRdv+=_frameIncrement;
+        if(_nextRdv<=now) timer.setInterval(1);
+        else timer.setInterval(_nextRdv-now);
         timer.start();
     }
     else
