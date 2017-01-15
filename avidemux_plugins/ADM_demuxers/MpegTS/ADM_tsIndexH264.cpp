@@ -73,7 +73,132 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
     //if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
     return r;
 }
+/**
+ * \fn findH264SPS
+ * @return 
+ */
+bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
+{
+    dmxPacketInfo tmpInfo;
+    bool keepRunning=true;
+    bool seq_found=false;
+    TS_PESpacket SEI_nal(0);
+    while(keepRunning)
+    {
+      int startCode=pkt->findStartCode();
 
+      if(!pkt->stillOk())
+      {
+          keepRunning=false;
+          continue;
+      }
+      if(startCode&0x80) continue; // Marker missing
+      startCode&=0x1f;
+      if(startCode!=NAL_SPS) 
+          continue;
+
+        // Got SPS!
+
+        uint32_t xA,xR;
+        // Get info
+        pkt->getInfo(&tmpInfo);
+        // Read just enough...
+        {
+          SEI_nal.empty();
+          uint32_t code=0xffff+0xffff0000;
+          while(((code&0xffffff)!=1) && pkt->stillOk())
+          {
+                  uint8_t r=pkt->readi8();
+                  code=(code<<8)+r;
+                  SEI_nal.pushByte(r);
+          }
+          if(!pkt->stillOk()) break;;
+          pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+          if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
+          {
+            ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
+            ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
+            seq_found=1;
+            video.w=spsInfo.width;
+            video.h=spsInfo.height;
+            video.fps=spsInfo.fps1000;
+            xA=spsInfo.darNum;
+            xR=spsInfo.darDen;
+            writeVideo(&video,ADM_TS_H264);
+            writeAudio();
+            qfprintf(index,"[Data]");
+            // Rewind
+
+            break;
+        };
+      }
+    }
+    return seq_found;
+}
+
+/**
+ * \fn findH264SPS
+ * @return 
+ */
+bool TsIndexer::findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video)
+{
+    dmxPacketInfo tmpInfo;
+    bool keepRunning=true;
+    bool seq_found=false;
+    TS_PESpacket SEI_nal(0);
+    while(keepRunning)
+    {
+      int startCode=pkt->findStartCode();
+
+      if(!pkt->stillOk())
+      {
+          keepRunning=false;
+          continue;
+      }      
+      if(startCode&0x80) continue; // Marker missing
+      printf("Startcode 0x%x %d\n",startCode,startCode & 0x1F);
+      startCode&=0x1f;
+      if(startCode!=NAL_SPS) 
+          continue;
+
+        // Got SPS!
+
+        uint32_t xA,xR;
+        // Get info
+        pkt->getInfo(&tmpInfo);
+        // Read just enough...
+        {
+          SEI_nal.empty();
+          uint32_t code=0xffff+0xffff0000;
+          while(((code&0xffffff)!=1) && pkt->stillOk())
+          {
+                  uint8_t r=pkt->readi8();
+                  code=(code<<8)+r;
+                  SEI_nal.pushByte(r);
+          }
+          if(!pkt->stillOk()) break;;
+          pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
+          if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
+          {
+            ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
+            ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
+            seq_found=1;
+            video.w=spsInfo.width;
+            video.h=spsInfo.height;
+            video.fps=spsInfo.fps1000;
+            xA=spsInfo.darNum;
+            xR=spsInfo.darDen;
+            writeVideo(&video,ADM_TS_H264);
+            writeAudio();
+            qfprintf(index,"[Data]");
+            // Rewind
+
+            break;
+        };
+      }
+    }
+    return seq_found;
+}
 /**
     \fn runH264
     \brief Index H264 stream
@@ -83,11 +208,10 @@ bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
 
 bool    seq_found=false;
 bool    firstSps=true;
-
+TS_PESpacket SEI_nal(0);
 TSVideo video;
 indexerData  data;
-dmxPacketInfo tmpInfo;
-TS_PESpacket SEI_nal(0);
+
 bool result=false;
 bool bAppend=false;
 
@@ -97,7 +221,7 @@ bool bAppend=false;
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
     if(videoTrac[0].trackType!=ADM_TS_H264 
-#if 0
+#if 1
        && videoTrac[0].trackType!=ADM_TS_H265
 #endif
        )
@@ -140,58 +264,18 @@ bool bAppend=false;
     //******************
     // 1 search SPS
     //******************
-      while(keepRunning)
-      {
-        int startCode=pkt->findStartCode();
-
-        if(!pkt->stillOk())
-        {
-            keepRunning=false;
-            continue;
-        }
-        if(startCode&0x80) continue; // Marker missing
-        startCode&=0x1f;
-        if(startCode!=NAL_SPS) 
-            continue;
-
-          // Got SPS!
-
-          uint32_t xA,xR;
-          // Get info
-          pkt->getInfo(&tmpInfo);
-          // Read just enough...
-          {
-            SEI_nal.empty();
-            uint32_t code=0xffff+0xffff0000;
-            while(((code&0xffffff)!=1) && pkt->stillOk())
-            {
-                    uint8_t r=pkt->readi8();
-                    code=(code<<8)+r;
-                    SEI_nal.pushByte(r);
-            }
-            if(!pkt->stillOk()) break;;
-            pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
-            if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
-            {
-              ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
-              ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
-              seq_found=1;
-              video.w=spsInfo.width;
-              video.h=spsInfo.height;
-              video.fps=spsInfo.fps1000;
-              xA=spsInfo.darNum;
-              xR=spsInfo.darDen;
-              writeVideo(&video,ADM_TS_H264);
-              writeAudio();
-              qfprintf(index,"[Data]");
-              // Rewind
-
-              break;
-          };
-        }
-      }
-
-        if(!seq_found) goto the_end;
+    switch(videoTrac[0].trackType)
+    {
+        case ADM_TS_H264 :
+            seq_found=findH264SPS(pkt,video);
+            break;
+        case ADM_TS_H265 :
+            seq_found=findH265SPS(pkt,video);
+            break;
+    default:
+            break;
+    }    
+    if(!seq_found) goto the_end;
 
         decodingImage=false;
     //******************
