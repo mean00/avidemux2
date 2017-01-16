@@ -144,44 +144,13 @@ bool blackenBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 */
 bool blackenBorders::configure(void)
 {
-        uint32_t width,height;
-#define MAKEME(x) uint32_t x=param.x;
-        while(1)
-        {
-          MAKEME(left);
-          MAKEME(right);
-          MAKEME(top);
-          MAKEME(bottom);
+    
+        bool r=DIA_getBlackenParams(	&param,previousFilter);
+        if(!r) return false;
+        
+        // sanity check, todo
+        return true;
 
-          width=previousFilter->getInfo()->width;
-          height=previousFilter->getInfo()->height;
-
-          diaElemUInteger dleft(&left,QT_TRANSLATE_NOOP("blacken","_Left border:"),       0,width/2);
-          diaElemUInteger dright(&right,QT_TRANSLATE_NOOP("blacken","_Right border:"),    0,width/2);
-          diaElemUInteger dtop(&(top),QT_TRANSLATE_NOOP("blacken","_Top border:"),          0,height/2);
-          diaElemUInteger dbottom(&(bottom),QT_TRANSLATE_NOOP("blacken","_Bottom border:"), 0,height/2);
-
-          diaElem *elems[4]={&dleft,&dright,&dtop,&dbottom};
-          if(diaFactoryRun(QT_TRANSLATE_NOOP("blacken","Blacken Borders"),4,elems))
-          {
-            if((left&1) || (right&1)|| (top&1) || (bottom&1))
-            {
-              GUI_Error_HIG(QT_TRANSLATE_NOOP("blacken","Incorrect parameters"),QT_TRANSLATE_NOOP("blacken","All parameters must be even and within range."));
-              continue;
-            }
-            else
-            {
-  #undef MAKEME
-  #define MAKEME(x) param.x=x;
-                MAKEME(left);
-                MAKEME(right);
-                MAKEME(top);
-                MAKEME(bottom);
-                return true;
-            }
-          }
-          return false;
-      }
 }
 
 
