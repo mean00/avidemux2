@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>cropDialog</class>
- <widget class="QDialog" name="cropDialog">
+ <class>blackenDialog</class>
+ <widget class="QDialog" name="blackenDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -154,13 +154,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="6">
-      <widget class="QPushButton" name="pushButtonAutoCrop">
-       <property name="text">
-        <string>Auto Crop</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <spacer>
        <property name="orientation">
@@ -209,7 +202,6 @@
   <tabstop>spinBoxRight</tabstop>
   <tabstop>spinBoxTop</tabstop>
   <tabstop>spinBoxBottom</tabstop>
-  <tabstop>pushButtonAutoCrop</tabstop>
   <tabstop>pushButtonReset</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>graphicsView</tabstop>
@@ -220,7 +212,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>cropDialog</receiver>
+   <receiver>blackenDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -236,7 +228,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>cropDialog</receiver>
+   <receiver>blackenDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

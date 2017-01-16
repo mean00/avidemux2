@@ -16,7 +16,7 @@ public:
 	ADM_QCanvas *canvas;
 	Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in);
 	~Ui_blackenWindow();
-	Ui_cropDialog ui;
+	Ui_blackenDialog ui;
 
 public slots:
 	void gather(blackenBorder *param);

@@ -41,7 +41,6 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
 
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-    connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
     SPINNER(Left);
@@ -96,7 +95,7 @@ void Ui_blackenWindow::reset( bool f )
 //************************
 uint8_t flyBlacken::upload(void)
 {
-Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
 
     w->spinBoxLeft->setValue(left);
     w->spinBoxRight->setValue(right);
@@ -107,7 +106,7 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 uint8_t flyBlacken::download(void)
 {
     int reject=0;
-    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    Ui_blackenDialog *w=(Ui_blackenDialog *)_cookie;
 #define SPIN_GET(x,y) x=w->spinBox##y->value();
         SPIN_GET(left,Left);
         SPIN_GET(right,Right);
