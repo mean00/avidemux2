@@ -85,7 +85,7 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           int           _usedWidth, _usedHeight;
           int           _frameIncrement; // time between image in ms
           Clock         _clock;
-          int           _nextRdv=0;
+          int           _nextRdv;
 
           ADM_coreVideoFilter *_in;
 

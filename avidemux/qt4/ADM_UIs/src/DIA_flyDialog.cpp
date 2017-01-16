@@ -354,6 +354,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
         initializeSize();
         updateZoom();
         postInit(false);
+        _nextRdv=0;
 }
 void ADM_flyDialogYuv::resetScaler(void)
 {
