@@ -39,7 +39,7 @@ const char *blackenBorders::getConfiguration(void)
 */
 blackenBorders::blackenBorders( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter(in,setup)
 {
-	 if(!setup || !ADM_paramLoad(setup,blackenBorder_param,&param))
+    if(!setup || !ADM_paramLoad(setup,blackenBorder_param,&param))
     {
         // Default value
         param.left=0;
@@ -146,13 +146,12 @@ bool blackenBorders::configure(void)
 {
     
         bool r=DIA_getBlackenParams(	&param,previousFilter);
-        if(!r) return false;
-        
+        if(!r) return false;        
         // sanity check, todo
         return true;
 
 }
 
-
+// EOF
 
 

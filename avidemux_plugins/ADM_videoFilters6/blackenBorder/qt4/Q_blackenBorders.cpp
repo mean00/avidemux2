@@ -21,33 +21,33 @@
 Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in) : QDialog(parent)
   {
     uint32_t width,height;
-        ui.setupUi(this);
-        lock=0;
-        // Allocate space for green-ised video
-        width=in->getInfo()->width;
-        height=in->getInfo()->height;
+    ui.setupUi(this);
+    lock=0;
+    // Allocate space for green-ised video
+    width=in->getInfo()->width;
+    height=in->getInfo()->height;
 
-        canvas=new ADM_QCanvas(ui.graphicsView,width,height);
+    canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
-        myBlacken=new flyBlacken( this,width, height,in,canvas,ui.horizontalSlider);
-        myBlacken->left=param->left;
-        myBlacken->right=param->right;
-        myBlacken->top=param->top;
-        myBlacken->bottom=param->bottom;
-        myBlacken->_cookie=&ui;
-        myBlacken->addControl(ui.toolboxLayout);
-        myBlacken->upload();
-        myBlacken->sliderChanged();
+    myBlacken=new flyBlacken( this,width, height,in,canvas,ui.horizontalSlider);
+    myBlacken->left=param->left;
+    myBlacken->right=param->right;
+    myBlacken->top=param->top;
+    myBlacken->bottom=param->bottom;
+    myBlacken->_cookie=&ui;
+    myBlacken->addControl(ui.toolboxLayout);
+    myBlacken->upload();
+    myBlacken->sliderChanged();
 
 
-        connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-        connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
-        connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+    connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+    connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
+    connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-          SPINNER(Left);
-          SPINNER(Right);
-          SPINNER(Top);
-          SPINNER(Bottom);
+    SPINNER(Left);
+    SPINNER(Right);
+    SPINNER(Top);
+    SPINNER(Bottom);
 
   }
   void Ui_blackenWindow::sliderUpdate(int foo)
@@ -57,17 +57,19 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
   void Ui_blackenWindow::gather(blackenBorder *param)
   {
 
-        myBlacken->download();
-        param->left=myBlacken->left;
-        param->right=myBlacken->right;
-        param->top=myBlacken->top;
-        param->bottom=myBlacken->bottom;
-  }
+    myBlacken->download();
+    param->left=myBlacken->left;
+    param->right=myBlacken->right;
+    param->top=myBlacken->top;
+    param->bottom=myBlacken->bottom;
+}
 Ui_blackenWindow::~Ui_blackenWindow()
 {
-  if(myBlacken) delete myBlacken;
+  if(myBlacken) 
+      delete myBlacken;
   myBlacken=NULL; 
-  if(canvas) delete canvas;
+  if(canvas) 
+      delete canvas;
   canvas=NULL;
 }
 void Ui_blackenWindow::valueChanged( int f )
@@ -81,58 +83,57 @@ void Ui_blackenWindow::valueChanged( int f )
 
 void Ui_blackenWindow::reset( bool f )
 {
-         myBlacken->left=0;
-         myBlacken->right=0;
-         myBlacken->bottom=0;
-         myBlacken->top=0;
-         lock++;
-         myBlacken->upload();
-         myBlacken->sameImage();
-         lock--;
+    myBlacken->left=0;
+    myBlacken->right=0;
+    myBlacken->bottom=0;
+    myBlacken->top=0;
+    lock++;
+    myBlacken->upload();
+    myBlacken->sameImage();
+    lock--;
 }
 
 //************************
 uint8_t flyBlacken::upload(void)
 {
-      Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 
-        w->spinBoxLeft->setValue(left);
-        w->spinBoxRight->setValue(right);
-        w->spinBoxTop->setValue(top);
-        w->spinBoxBottom->setValue(bottom);
-
-        return 1;
+    w->spinBoxLeft->setValue(left);
+    w->spinBoxRight->setValue(right);
+    w->spinBoxTop->setValue(top);
+    w->spinBoxBottom->setValue(bottom);
+    return 1;
 }
 uint8_t flyBlacken::download(void)
 {
-        int reject=0;
-Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    int reject=0;
+    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 #define SPIN_GET(x,y) x=w->spinBox##y->value();
-                        SPIN_GET(left,Left);
-                        SPIN_GET(right,Right);
-                        SPIN_GET(top,Top);
-                        SPIN_GET(bottom,Bottom);
+        SPIN_GET(left,Left);
+        SPIN_GET(right,Right);
+        SPIN_GET(top,Top);
+        SPIN_GET(bottom,Bottom);
 
-                        printf("%d %d %d %d\n",left,right,top,bottom);
+        printf("%d %d %d %d\n",left,right,top,bottom);
 
-                        left&=0xffffe;
-                        right&=0xffffe;
-                        top&=0xffffe;
-                        bottom&=0xffffe;
+        left&=0xffffe;
+        right&=0xffffe;
+        top&=0xffffe;
+        bottom&=0xffffe;
 
-                        if((top+bottom)>_h)
-                                {
-                                        top=bottom=0;
-                                        reject=1;
-                                }
-                        if((left+right)>_w)
-                                {
-                                        left=right=0;
-                                        reject=1;
-                                }
-                        if(reject)
-                                upload();
-                        return true;
+        if((top+bottom)>_h)
+                {
+                        top=bottom=0;
+                        reject=1;
+                }
+        if((left+right)>_w)
+                {
+                        left=right=0;
+                        reject=1;
+                }
+        if(reject)
+                upload();
+        return true;
 }
 
 /**
@@ -141,18 +142,18 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 */
 int DIA_getBlackenParams(	const char *name,blackenBorder *param,ADM_coreVideoFilter *in)
 {
-        uint8_t ret=0;
+    uint8_t ret=0;
 
-        Ui_blackenWindow dialog(qtLastRegisteredDialog(), param,in);
-        qtRegisterDialog(&dialog);
+    Ui_blackenWindow dialog(qtLastRegisteredDialog(), param,in);
+    qtRegisterDialog(&dialog);
 
-        if(dialog.exec()==QDialog::Accepted)
-        {
-            dialog.gather(param); 
-            ret=1;
-        }
-        qtUnregisterDialog(&dialog);
-        return ret;
+    if(dialog.exec()==QDialog::Accepted)
+    {
+        dialog.gather(param); 
+        ret=1;
+    }
+    qtUnregisterDialog(&dialog);
+    return ret;
 }
 //____________________________________
 // EOF
