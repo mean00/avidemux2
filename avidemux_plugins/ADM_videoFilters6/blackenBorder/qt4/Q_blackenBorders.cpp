@@ -139,9 +139,9 @@ uint8_t flyBlacken::download(void)
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
 */
-int DIA_getBlackenParams(	const char *name,blackenBorder *param,ADM_coreVideoFilter *in)
+bool DIA_getBlackenParams(	blackenBorder *param,ADM_coreVideoFilter *in)
 {
-    uint8_t ret=0;
+    bool ret=0;
 
     Ui_blackenWindow dialog(qtLastRegisteredDialog(), param,in);
     qtRegisterDialog(&dialog);

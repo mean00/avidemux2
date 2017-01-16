@@ -19,14 +19,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "Q_blackenBorders.h"
+#include <stdint.h>
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 
-
+#include "../blackenBorder.h"
 /**
       \fn     DIA_getCropParams
       \brief  Handle crop dialog
 */
-int DIA_getBlackenParams(	const char *name,blackenBorder *param,ADM_coreVideoFilter *in)
+bool DIA_getBlackenParams(	blackenBorder *param,ADM_coreVideoFilter *in)
 {
     return false;
 }

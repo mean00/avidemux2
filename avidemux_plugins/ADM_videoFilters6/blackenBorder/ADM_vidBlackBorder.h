@@ -32,6 +32,7 @@ public:
         virtual bool         configure(void) ;           /// Start graphical user interface
 };
 
+
 DECLARE_VIDEO_FILTER(   blackenBorders,   // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
@@ -41,4 +42,5 @@ DECLARE_VIDEO_FILTER(   blackenBorders,   // Class
                         QT_TRANSLATE_NOOP("blacken","Remove noisy edge by turning them to black.") // Description
                     );
 
+// EOF
 

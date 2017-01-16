@@ -93,10 +93,5 @@ uint8_t    flyBlacken::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 
 }
 
-/**
-     \fn autocrop
-	\brief 
-*/
-
 //EOF
 

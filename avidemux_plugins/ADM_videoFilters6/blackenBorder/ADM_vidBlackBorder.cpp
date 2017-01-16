@@ -142,6 +142,7 @@ bool blackenBorders::getNextFrame(uint32_t *fn,ADMImage *image)
 /**
     \fn configure
 */
+extern bool DIA_getBlackenParams(	blackenBorder *param,ADM_coreVideoFilter *in);
 bool blackenBorders::configure(void)
 {
     
@@ -151,7 +152,6 @@ bool blackenBorders::configure(void)
         return true;
 
 }
-
 // EOF
 
 
