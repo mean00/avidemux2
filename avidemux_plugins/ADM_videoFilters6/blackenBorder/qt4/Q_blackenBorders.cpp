@@ -21,14 +21,14 @@
 Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_coreVideoFilter *in) : QDialog(parent)
   {
     uint32_t width,height;
-    ui.setupUi(this);
+    ui.setupUi(this);    
     lock=0;
     // Allocate space for green-ised video
     width=in->getInfo()->width;
     height=in->getInfo()->height;
 
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-
+    
     myBlacken=new flyBlacken( this,width, height,in,canvas,ui.horizontalSlider);
     myBlacken->left=param->left;
     myBlacken->right=param->right;

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Crop</string>
+   <string>Blacken Borders</string>
   </property>
   <layout class="QVBoxLayout">
    <property name="spacing">

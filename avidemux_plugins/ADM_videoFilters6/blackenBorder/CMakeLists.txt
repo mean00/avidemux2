@@ -9,7 +9,7 @@ INCLUDE(vf_plugin_qt4)
 SET(ADM_vf_blackenBordersQT4_SRCS    qt4/Q_blackenBorders.cpp)
 SET(ADM_vf_blackenBordersQT4_Headers qt4/Q_blackenBorders.h)
 SET(ADM_vf_blackenBordersQT4_UI      qt4/blackenBorders)
-INIT_VIDEO_FILTER_QT4(ADM_vf_blackenBorders${QT_LIBRARY_EXTENSION} ${ADM_vf_blackenBordersQT4_SRCS} ${ADM_vf_blackenBordersQT4_Headers} ${ADM_vf_blackenBordersQT4_UI} ${CropCommon_SRCS} qt4/DIA_flyBlackenBorders.cpp)
+INIT_VIDEO_FILTER_QT4(ADM_vf_blackenBorders${QT_LIBRARY_EXTENSION} ${ADM_vf_blackenBordersQT4_SRCS} ${ADM_vf_blackenBordersQT4_Headers} ${ADM_vf_blackenBordersQT4_UI} ${ADM_vf_blackenBorders_SRCS} qt4/DIA_flyBlackenBorders.cpp)
 # /QT4
 
 
