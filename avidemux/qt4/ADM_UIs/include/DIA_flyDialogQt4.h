@@ -66,7 +66,7 @@ public:
 };
 
 
-
+class flyControl;
 /**
     \class ADM_flyDialog
     \brief Base class for flyDialog
@@ -92,12 +92,8 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
           ADMImage      *_yuvBuffer;
           ADM_byteBuffer _rgbByteBufferDisplay;
 
-          QPushButton *pushButton_back1mn;
-          QPushButton *pushButton_play;
-          QPushButton *pushButton_next;
-          QPushButton *pushButton_fwd1mn;
-          QRadioButton *radioButton_autoZoom;
-          QLabel       *labelTime;
+          flyControl  *_control;
+          
           QDialog     *_parent;
 
 

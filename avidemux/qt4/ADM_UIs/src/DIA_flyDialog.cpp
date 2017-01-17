@@ -30,6 +30,83 @@
 extern "C" {
 #include "libavcodec/avcodec.h"
 }
+/**
+ */
+class flyControl
+{
+public:
+        flyControl(QHBoxLayout *horizontalLayout_4)
+        {
+            
+            pushButton_back1mn = new QPushButton();
+            pushButton_back1mn->setObjectName(QString("pushButton_back1mn"));
+            pushButton_back1mn->setAutoRepeat(true);
+            pushButton_back1mn->setAutoRepeatDelay(1000);
+
+            horizontalLayout_4->addWidget(pushButton_back1mn);
+
+            pushButton_play = new QPushButton();
+            pushButton_play->setObjectName(QString("pushButton_play"));
+            pushButton_play->setCheckable(true);
+
+            horizontalLayout_4->addWidget(pushButton_play);
+
+            pushButton_next = new QPushButton();
+            pushButton_next->setObjectName(QString("pushButton_next"));
+            pushButton_next->setAutoRepeat(true);
+            pushButton_next->setAutoRepeatDelay(1000);
+
+            horizontalLayout_4->addWidget(pushButton_next);
+
+            pushButton_fwd1mn = new QPushButton();
+            pushButton_fwd1mn->setObjectName(QString("pushButton_fwd1mn"));
+            pushButton_fwd1mn->setAutoRepeat(true);
+            pushButton_fwd1mn->setAutoRepeatDelay(1000);
+
+            horizontalLayout_4->addWidget(pushButton_fwd1mn);
+
+            radioButton_autoZoom = new QRadioButton();
+            radioButton_autoZoom->setObjectName(QString("radioButton_autoZoom"));
+            radioButton_autoZoom->setChecked(true);
+
+            horizontalLayout_4->addWidget(radioButton_autoZoom);
+            //
+            labelTime=new QLabel();
+            labelTime->setText("00:00:00.000");
+            horizontalLayout_4->addWidget(labelTime);
+            //
+            QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+            horizontalLayout_4->addItem(horizontalSpacer_4);
+
+            pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
+            pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
+            pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
+            pushButton_next->setToolTip(QApplication::translate("seekablePreviewDialog", "Next image", 0));
+            pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
+            pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
+            pushButton_fwd1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Forward one minute", 0));
+            radioButton_autoZoom->setText(QApplication::translate("seekablePreviewDialog", "A&utoZoom", 0));    
+         }
+        void disableButtons()
+        {
+            pushButton_back1mn->setEnabled(false);
+            pushButton_fwd1mn->setEnabled(false);
+            pushButton_next->setEnabled(false);
+        }
+        void enableButtons()
+        {
+            pushButton_back1mn->setEnabled(true);
+            pushButton_fwd1mn->setEnabled(true);
+            pushButton_next->setEnabled(true);
+        }
+public:
+        QPushButton *pushButton_back1mn;
+        QPushButton *pushButton_play;
+        QPushButton *pushButton_next;
+        QPushButton *pushButton_fwd1mn;
+        QRadioButton *radioButton_autoZoom;
+        QLabel       *labelTime;
+};
 
 /**
     \fn updateZoom
@@ -113,6 +190,11 @@ uint8_t ADM_flyDialog::cleanup(void)
 #define DEL2(x)    if(x) {delete  x;x=NULL;}
 	DEL2(_yuvBuffer);
 	_rgbByteBufferDisplay.clean();
+        if(_control)
+        {
+            delete _control;
+            _control=NULL;
+        }
 	return 1;
 }
 /**
@@ -169,61 +251,14 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
  */
 bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
+       
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-        pushButton_back1mn = new QPushButton();
-        pushButton_back1mn->setObjectName(QString("pushButton_back1mn"));
-        pushButton_back1mn->setAutoRepeat(true);
-        pushButton_back1mn->setAutoRepeatDelay(1000);
-
-        horizontalLayout_4->addWidget(pushButton_back1mn);
-
-        pushButton_play = new QPushButton();
-        pushButton_play->setObjectName(QString("pushButton_play"));
-        pushButton_play->setCheckable(true);
-
-        horizontalLayout_4->addWidget(pushButton_play);
-
-        pushButton_next = new QPushButton();
-        pushButton_next->setObjectName(QString("pushButton_next"));
-        pushButton_next->setAutoRepeat(true);
-        pushButton_next->setAutoRepeatDelay(1000);
-
-        horizontalLayout_4->addWidget(pushButton_next);
-
-        pushButton_fwd1mn = new QPushButton();
-        pushButton_fwd1mn->setObjectName(QString("pushButton_fwd1mn"));
-        pushButton_fwd1mn->setAutoRepeat(true);
-        pushButton_fwd1mn->setAutoRepeatDelay(1000);
-
-        horizontalLayout_4->addWidget(pushButton_fwd1mn);
-        
-        radioButton_autoZoom = new QRadioButton();
-        radioButton_autoZoom->setObjectName(QString("radioButton_autoZoom"));
-        radioButton_autoZoom->setChecked(true);
-
-        horizontalLayout_4->addWidget(radioButton_autoZoom);
-        //
-        labelTime=new QLabel();
-        labelTime->setText("00:00:00.000");
-        horizontalLayout_4->addWidget(labelTime);
-        //
-        QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-        horizontalLayout_4->addItem(horizontalSpacer_4);
-        
-        pushButton_back1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Back one minute", 0));
-        pushButton_back1mn->setText(QApplication::translate("seekablePreviewDialog", "<<", 0));
-        pushButton_play->setText(QApplication::translate("seekablePreviewDialog", "Play", 0));
-        pushButton_next->setToolTip(QApplication::translate("seekablePreviewDialog", "Next image", 0));
-        pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
-        pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
-        pushButton_fwd1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Forward one minute", 0));
-        radioButton_autoZoom->setText(QApplication::translate("seekablePreviewDialog", "A&utoZoom", 0));
-        
-        QObject::connect(pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
-        QObject::connect(pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
-        QObject::connect(pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
-        QObject::connect(pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
-        QObject::connect(radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
+        _control=new flyControl(horizontalLayout_4);
+        QObject::connect(_control->pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
+        QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
+        QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
+        QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
+        QObject::connect(_control->radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
       
         return true;
 }
@@ -271,7 +306,7 @@ bool ADM_flyDialog::nextImage(void)
         updateSlider();
     slide->blockSignals(oldState);
 
-    labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
+    _control->labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     return r;
 }
 
@@ -349,6 +384,7 @@ float ADM_flyDialog::calcZoomToBeDisplayable( uint32_t imageWidth, uint32_t imag
                                 ADM_QCanvas *canvas, QSlider *slider, 
                                 ResizeMethod resizeMethod) : ADM_flyDialog(parent,width,height,in,canvas,slider,resizeMethod)
 {
+       _control=NULL;
         _yuvBufferOut=new ADMImageDefault(_w,_h);
         yuvToRgb=NULL;  
         initializeSize();
@@ -371,6 +407,11 @@ ADM_flyDialogYuv::~ADM_flyDialogYuv()
 {
     if(_yuvBufferOut) delete _yuvBufferOut;
     _yuvBufferOut=NULL;
+    if(_control)
+    {
+        delete _control;
+        _control=NULL;
+    }
 }
 bool ADM_flyDialogYuv::process(void)
 {
@@ -658,9 +699,7 @@ void ADM_flyDialog::play(bool state)
     ADM_assert(slide);
     if(state)
     {
-       pushButton_back1mn->setEnabled(false);
-       pushButton_fwd1mn->setEnabled(false);
-       pushButton_next->setEnabled(false);
+        _control->disableButtons();
        slide->setEnabled(false);
        _clock.reset();
        timer.setInterval(_frameIncrement);
@@ -669,9 +708,7 @@ void ADM_flyDialog::play(bool state)
     }else
     {
         timer.stop();
-        pushButton_back1mn->setEnabled(true);
-        pushButton_fwd1mn->setEnabled(true);
-        pushButton_next->setEnabled(true);
+        _control->enableButtons();
         updateSlider();
         slide->setEnabled(true);
     }
@@ -702,7 +739,7 @@ void ADM_flyDialog::timeout()
 {
     
     bool r=nextImageInternal();
-    labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
+    _control->labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     if(r)
     {
         int now=_clock.getElapsedMS();
@@ -714,7 +751,7 @@ void ADM_flyDialog::timeout()
     }
     else
     {
-       pushButton_play->setChecked(false);
+       _control->pushButton_play->setChecked(false);
     }
 }
 
