@@ -32,10 +32,12 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
+
+
 #include "ADM_vidMSharpen.h"
 #include "msharpen_desc.cpp"
 // DECLARE FILTER 
-
+extern bool DIA_msharpen(msharpen &param, ADM_coreVideoFilter *source);
 DECLARE_VIDEO_FILTER(   Msharpen,   // Class
                         1,0,0,              // Version
                         ADM_UI_ALL,         // UI
@@ -86,32 +88,6 @@ Msharpen::~Msharpen(void)
 	
     blurrImg=NULL;
     work=NULL;
-}
-/**
-    \fn configure
-*/
-bool Msharpen::configure(void)
-{
-uint8_t r=0;
-
-#define PX(x) &(_param.x)
-  
-        
-    diaElemToggle    mask(PX(mask),QT_TRANSLATE_NOOP("msharpen","_Mask"));
-    diaElemToggle    highq(PX(highq),QT_TRANSLATE_NOOP("msharpen","_High Q"));
-    
-    diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("msharpen","_Threshold:"),1,255);
-    diaElemUInteger   strength(PX(strength),QT_TRANSLATE_NOOP("msharpen","_Strength:"),1,255);
-    
-    
-  diaElem *elems[4]={&mask,&highq,&threshold,&strength};
-
-  if(diaFactoryRun(QT_TRANSLATE_NOOP("msharpen","MSharpen"),4,elems))
-  {
-         invstrength=255-_param.strength;
-         return 1;
-  }
-  return 0;
 }
 /**
     \fn getConfiguration
@@ -542,6 +518,25 @@ void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int pla
 }
 //***************************************************
 
+/**
+    \fn configure
+*/
+bool Msharpen::configure(void)
+{
+uint8_t r=0;
+
+
+    msharpen copy;
+    
+    copy=this->_param;
+    
+    if(DIA_msharpen(copy,this->previousFilter))
+    {
+        _param=copy;
+        return true;
+    }
+    return false;
+}
 
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>asharpDialog</class>
- <widget class="QDialog" name="asharpDialog">
+ <class>msharpenDialog</class>
+ <widget class="QDialog" name="msharpenDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,10 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ASharp</string>
+   <string>MSharpen</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
   </property>
   <layout class="QGridLayout">
    <property name="leftMargin">
@@ -68,13 +71,10 @@
      </property>
     </spacer>
    </item>
-   <item row="1" column="2">
-    <widget class="QDoubleSpinBox" name="doubleSpinBoxStrength"/>
-   </item>
    <item row="3" column="0" colspan="3">
-    <widget class="QCheckBox" name="checkBox">
+    <widget class="QCheckBox" name="checkBoxMask">
      <property name="text">
-      <string>Unknown flag</string>
+      <string>Mask</string>
      </property>
     </widget>
    </item>
@@ -98,13 +98,6 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Block Adaptative</string>
-     </property>
-    </widget>
-   </item>
    <item row="7" column="1" colspan="3">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
@@ -115,31 +108,52 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QDoubleSpinBox" name="doubleSpinBoxBlock"/>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Threshold</string>
+      <string>Strength</string>
      </property>
     </widget>
    </item>
    <item row="6" column="0" colspan="4">
     <widget class="QGraphicsView" name="graphicsView"/>
    </item>
-   <item row="0" column="2">
-    <widget class="QDoubleSpinBox" name="doubleSpinBoxTreshold"/>
-   </item>
    <item row="1" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Strength</string>
+      <string>Threshold</string>
      </property>
     </widget>
    </item>
    <item row="4" column="0">
     <layout class="QHBoxLayout" name="toolboxLayout"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="CheckBoxHQ">
+     <property name="text">
+      <string>HighQuality</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QSpinBox" name="spinBoxStrength">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>255</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QSpinBox" name="spinBoxThreshold">
+     <property name="minimum">
+      <number>1</number>
+     </property>
+     <property name="maximum">
+      <number>255</number>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -148,7 +162,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>asharpDialog</receiver>
+   <receiver>msharpenDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -164,7 +178,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>asharpDialog</receiver>
+   <receiver>msharpenDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

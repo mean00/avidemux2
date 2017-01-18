@@ -16,12 +16,12 @@ public:
         ADM_QCanvas *canvas;
         Ui_msharpenWindow(QWidget *parent, msharpen *param, ADM_coreVideoFilter *in);
         ~Ui_msharpenWindow();
-        Ui_asharpDialog ui;
+        Ui_msharpenDialog ui;
 
 public slots:
         void gather(msharpen *param);
 
 private slots:
         void sliderUpdate(int foo);
-        void valueChanged(double foo);
+        void valueChanged(int foo);
 };

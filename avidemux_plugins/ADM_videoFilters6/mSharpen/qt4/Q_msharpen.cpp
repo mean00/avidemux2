@@ -45,12 +45,14 @@
 
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.doubleSpinBox##x,SIGNAL(valueChanged(double)),this,SLOT(valueChanged(double))); 
-          SPINNER(Treshold);
-          SPINNER(Strength);
-          SPINNER(Block);
-          //connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int))); 
-
+#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+#define TOGGLER(x) connect( ui.x,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
+        
+        TOGGLER(CheckBoxHQ);
+        TOGGLER(checkBoxMask);
+        
+        SPINNER(Threshold);
+        SPINNER(Strength);
   }
   void Ui_msharpenWindow::sliderUpdate(int foo)
   {
@@ -69,7 +71,7 @@ Ui_msharpenWindow::~Ui_msharpenWindow()
   if(canvas) delete canvas;
   canvas=NULL;
 }
-void Ui_msharpenWindow::valueChanged( double f )
+void Ui_msharpenWindow::valueChanged( int f )
 {
   printf("Update \n");
   if(lock) return;
@@ -81,26 +83,6 @@ void Ui_msharpenWindow::valueChanged( double f )
 
 #define MYSPIN(x) w->doubleSpinBox##x
 
-/**
-      \fn     DIA_getCropParams
-      \brief  Handle crop dialog
-*/
-uint8_t DIA_getASharp(msharpen *param, ADM_coreVideoFilter *in)
-{
-        uint8_t ret=0;
-        
-        Ui_msharpenWindow dialog(qtLastRegisteredDialog(), param,in);
-		qtRegisterDialog(&dialog);
-
-        if(dialog.exec()==QDialog::Accepted)
-        {
-            dialog.gather(param); 
-            ret=1;
-        }
-
-		qtUnregisterDialog(&dialog);
-        return ret;
-}
 //____________________________________
 // EOF
 

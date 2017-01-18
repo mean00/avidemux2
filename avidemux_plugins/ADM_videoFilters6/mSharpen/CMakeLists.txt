@@ -16,7 +16,7 @@ ENDIF(DO_QT4)
 
 #------------ Cli Version ----------------
 INCLUDE(vf_plugin_cli)
-SET(msharpenCli_SRCS cli/DIA_msharpen.cpp)
+SET(msharpenCli_SRCS cli/DIA_flymsharpen.cpp)
 IF(DO_CLI)
   INIT_VIDEO_FILTER_CLI(  ADM_vf_msharpen ${msharpenCli_SRCS} ${msharpenCommon_SRCS})
 ENDIF(DO_CLI)

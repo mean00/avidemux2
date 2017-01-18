@@ -58,12 +58,13 @@ flyMSharpen::~flyMSharpen()
 {
 }
 
-/************* COMMON PART *********************/
+
 /**
     \fn process
 */
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
 {
+    out->duplicate(in);
 #if 0
     out->duplicate(in);
     if(preview)
@@ -78,69 +79,59 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
     return 1;
 }
 
-//------------------------
-
+/**
+ * \fn upload
+ * @return 
+ */
 uint8_t flyMSharpen::upload()
 {
-#if 0
-    Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
-    if(!redraw)
-    {
-        blockChanges(true);
-    }
-    printf("Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+#define MYSPIN(x) w->x
+#define MYTOGGLE(x) w->x
+    Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
+    
+    
+    MYSPIN(spinBoxThreshold)->setValue(param.threshold);
+    MYSPIN(spinBoxStrength)->setValue(param.strength);
+    MYTOGGLE(CheckBoxHQ)->setChecked(param.highq);
+    MYTOGGLE(checkBoxMask)->setChecked(param.mask);
 
-    MYSPIN(spinX)->setValue(param.xoff);
-    MYSPIN(spinY)->setValue(param.yoff);
-    MYSPIN(spinW)->setValue(param.lw);
-    MYSPIN(spinH)->setValue(param.lh);   
-    MYSPIN(spinBand)->setValue(param.band);   
-
-    if(!redraw)
-    {
-         blockChanges(false);
-    }
-
-#endif        
-        printf("Upload\n");
-        return 1;
+    printf("Upload\n");
+    return 1;
 }
 /**
         \fn download
 */
 uint8_t flyMSharpen::download(void)
 {
-#if 0
-        Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
-        param.xoff= MYSPIN(spinX)->value();
-        param.yoff= MYSPIN(spinY)->value();
-        param.lw= MYSPIN(spinW)->value();
-        param.lh= MYSPIN(spinH)->value();
-        param.band= MYSPIN(spinBand)->value();
-#if 0        
-        blockChanges(true);
-        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
-         blockChanges(false);
-#endif         
-        printf("Download\n");
-#endif        
-        return true;
+    
+#define MYSPIN(x) w->x
+#define MYTOGGLE(x) w->x
+    Ui_msharpenDialog *w=(Ui_msharpenDialog *)_cookie;
+    
+    
+    param.threshold=MYSPIN(spinBoxThreshold)->value();
+    param.strength=MYSPIN(spinBoxStrength)->value();
+    param.highq= MYTOGGLE(CheckBoxHQ)->isChecked();
+    param.mask= MYTOGGLE(checkBoxMask)->isChecked();
+    
+    printf("Download\n");
+    return true;
 }
 
 /**
       \fn     DIA_getMpDelogo
       \brief  Handle delogo dialog
 */
-bool DIA_getMSharpen(msharpen *param, ADM_coreVideoFilter *in)
+bool DIA_msharpen(msharpen &param, ADM_coreVideoFilter *in)
 {
         bool ret=false;
         
-        Ui_msharpenWindow dialog(qtLastRegisteredDialog(), param,in);
+        Ui_msharpenWindow dialog(qtLastRegisteredDialog(), &param,in);
 		qtRegisterDialog(&dialog);
 
         if(dialog.exec()==QDialog::Accepted)
         {
-            dialog.gather(param); 
+            dialog.gather(&param); 
             ret=true;
         }
 
