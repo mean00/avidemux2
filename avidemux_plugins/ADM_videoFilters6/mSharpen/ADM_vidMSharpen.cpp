@@ -32,41 +32,8 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-
-#include "ADM_default.h"
-#include "DIA_factory.h"
-#include "ADM_coreVideoFilter.h"
-#include "msharpen.h"
+#include "ADM_vidMSharpen.h"
 #include "msharpen_desc.cpp"
-/**
-    \class Msharpen
-*/
-class Msharpen : public ADM_coreVideoFilterCached
-{
-private:
-        msharpen	_param;
-        ADMImage        *blurrImg,*work;
-
-        uint32_t        invstrength;
-
-                void    detect_edges(ADMImage *src, ADMImage *dst, int plane);
-                void    blur_plane(ADMImage *src, ADMImage *blur, int plane) ;
-                void    detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane);
-                void    apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst,int plane) ;
-public:    
-
-                            Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                            ~Msharpen();
-
-       virtual const char  *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-       virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual void         setCoupledConf(CONFcouple *couples);
-       virtual bool         configure(void) ;                 /// Start graphical user interface        
-       
-};
-//********** Register chunk ************
-
 // DECLARE FILTER 
 
 DECLARE_VIDEO_FILTER(   Msharpen,   // Class

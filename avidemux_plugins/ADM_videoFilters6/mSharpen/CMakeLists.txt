@@ -1,9 +1,23 @@
-INCLUDE(vf_plugin)
+
+SET(msharpenCommon_SRCS 
+ADM_vidMSharpen.cpp
+)
+# ---------- QT4 Version ----------------
+INCLUDE(vf_plugin_qt4)
+SET(QT_TAG qt4)
+SET(msharpenQT_SRCS  ${QT_TAG}/Q_msharpen.cpp )
+SET(msharpenQT_HEADERS  ${QT_TAG}/Q_msharpen.h)
+SET(msharpenQT_UI    ${QT_TAG}/msharpen)
+IF(DO_QT4)
+  INIT_VIDEO_FILTER_QT4(ADM_vf_msharpen${QT_LIBRARY_EXTENSION} ${msharpenQT_SRCS} ${msharpenQT_HEADERS} ${msharpenQT_UI} ${msharpenCommon_SRCS} qt4/DIA_flymsharpen.cpp ${resource})
+ENDIF(DO_QT4)
+# /QT4
 
 
-SET(ADM_vf_mSharpen_SRCS ADM_vidMSharpen.cpp)
-SET(FILTERSRC ${ADM_vf_mSharpen_SRCS})
-SET(FILTERNAME ADM_vf_msharpen)
-ADD_VIDEO_FILTER( ${FILTERNAME} ${FILTERSRC}  )
-INIT_VIDEO_FILTER(${FILTERNAME})
-INSTALL_VIDEO_FILTER(${FILTERNAME})
+#------------ Cli Version ----------------
+INCLUDE(vf_plugin_cli)
+SET(msharpenCli_SRCS cli/DIA_msharpen.cpp)
+IF(DO_CLI)
+  INIT_VIDEO_FILTER_CLI(  ADM_vf_msharpen ${msharpenCli_SRCS} ${msharpenCommon_SRCS})
+ENDIF(DO_CLI)
+#
