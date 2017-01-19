@@ -47,8 +47,8 @@
                                     ADM_QCanvas *canvas, QSlider *slider) : 
                 ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
  {
-     blur=  new ADMImageDefault(width/2,height);
-     work=  new ADMImageDefault(width/2,height);;     
+     blur=  new ADMImageDefault(_w/2,_h);
+     work=  new ADMImageDefault(_w,_h);;     //<-dafuq ?
  }
  /**
   * 
@@ -67,11 +67,9 @@ flyMSharpen::~flyMSharpen()
 */
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
 {        
-    int width=in->GetWidth(PLANAR_Y);
-    int height=in->GetHeight(PLANAR_Y); // in and out have the same widht/height
     
-    ADMImageRef         refIn(width/2,height);
-    ADMImageRefWrittable refOut(width/2,height);
+    ADMImageRef          refIn(_w/2,_h);
+    ADMImageRefWrittable refOut(_w/2,_h);
     
     in->copyLeftSideTo(out);
     
