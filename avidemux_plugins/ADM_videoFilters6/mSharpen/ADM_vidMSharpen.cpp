@@ -1,16 +1,12 @@
 /***************************************************************************
-                          ADM_vidMSharpen  -  description
-                             -------------------
-    
-    email                : fixounet@free.fr
-
+    \file ADM_vidMSharpen 
+ * 
     Port of Donal Graft Msharpen which is (c) Donald Graft
     http://www.neuron2.net
     http://puschpull.org/avisynth/decomb_reference_manual.html
 
         It is a bit less efficient as we do hz & vz blur separately
-        The formula has been changed a bit from 1 1 1 to 1 2 1
-        for speed aspect & MMX  
+        The formula has been changed a bit from 1 1 1 to 1 2 1 for speed aspect & MMX  
         Mean
 
  ***************************************************************************/

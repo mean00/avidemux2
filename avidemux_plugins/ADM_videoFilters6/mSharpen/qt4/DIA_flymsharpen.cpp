@@ -1,4 +1,3 @@
-/**/
 /***************************************************************************
                           DIA_flyMSharpen
                              -------------------
@@ -49,8 +48,7 @@
                 ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
  {
      blur=  new ADMImageDefault(width/2,height);
-     work=new ADMImageDefault(width/2,height);;
-     
+     work=  new ADMImageDefault(width/2,height);;     
  }
  /**
   * 
@@ -68,18 +66,19 @@ flyMSharpen::~flyMSharpen()
     \fn process
 */
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
-{    
-    in->copyLeftSideTo(out);
-	
+{        	
     ADMImageRef         refIn(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
     ADMImageRefWrittable refOut(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
+    
+    in->copyLeftSideTo(out);
+    
     for(int i=0;i<3;i++)
     {
+        int halfWidth=in->GetWidth((ADM_PLANE)i)/2; // in and out have the same width
         refIn._planeStride[i] =in->_planeStride[i];
         refOut._planeStride[i]=out->_planeStride[i];
-        refIn._planes[i]      =in->_planes[i]+in->GetWidth((ADM_PLANE)i)/2;
-        refOut._planes[i]     =out->_planes[i]+in->GetWidth((ADM_PLANE)i)/2;
-        
+        refIn._planes[i]      =in->_planes[i]+halfWidth;
+        refOut._planes[i]     =out->_planes[i]+halfWidth;
     }
     
     for (int i=0;i<3;i++)
