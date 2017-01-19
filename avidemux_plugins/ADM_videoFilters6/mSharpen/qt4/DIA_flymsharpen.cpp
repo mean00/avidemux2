@@ -3,10 +3,8 @@
                           DIA_flyMSharpen
                              -------------------
 
-                           Ui for MPlayer DeLogo filter
-
-    begin                : 08 Apr 2005
-    copyright            : (C) 2004/5 by mean
+                           Ui for msharpen
+    copyright            : (C) 2004/2017 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -50,12 +48,19 @@
                                     ADM_QCanvas *canvas, QSlider *slider) : 
                 ADM_flyDialogYuv(parent,width, height,in,canvas, slider,RESIZE_AUTO) 
  {
+     blur=  new ADMImageDefault(width/2,height);
+     work=new ADMImageDefault(width/2,height);;
+     
  }
  /**
   * 
   */
 flyMSharpen::~flyMSharpen()
 {
+    delete blur;
+    delete work;
+    blur=NULL;
+    work=NULL;
 }
 
 
@@ -63,19 +68,33 @@ flyMSharpen::~flyMSharpen()
     \fn process
 */
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
-{
-    out->duplicate(in);
-#if 0
-    out->duplicate(in);
-    if(preview)
-        MPDelogo::doDelogo(out, param.xoff, param.yoff,
-                             param.lw,  param.lh,param.band,param.show);        
-    else
+{    
+    in->copyLeftSideTo(out);
+	
+    ADMImageRef         refIn(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
+    ADMImageRefWrittable refOut(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
+    for(int i=0;i<3;i++)
     {
-        rubber->move(_zoom*(float)param.xoff,_zoom*(float)param.yoff);
-        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
+        refIn._planeStride[i] =in->_planeStride[i];
+        refOut._planeStride[i]=out->_planeStride[i];
+        refIn._planes[i]      =in->_planes[i]+in->GetWidth((ADM_PLANE)i)/2;
+        refOut._planes[i]     =out->_planes[i]+in->GetWidth((ADM_PLANE)i)/2;
+        
     }
-#endif
+    
+    for (int i=0;i<3;i++)
+    { 
+            Msharpen::blur_plane(&refIn, blur, i,work);
+            Msharpen::detect_edges(blur, &refOut,  i,param);
+            if (param.highq == true)
+                Msharpen::detect_edges_HiQ(blur, &refOut,  i,param);
+            if (!param.mask) 
+                Msharpen::apply_filter(&refIn, blur, &refOut,  i,param,invstrength);
+    }
+    out->copyInfo(in);
+    out->printString(1,1,QT_TRANSLATE_NOOP("msharpen","Original"));
+    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,QT_TRANSLATE_NOOP("msharpen","Processed"));
+
     return 1;
 }
 
@@ -94,7 +113,7 @@ uint8_t flyMSharpen::upload()
     MYSPIN(spinBoxStrength)->setValue(param.strength);
     MYTOGGLE(CheckBoxHQ)->setChecked(param.highq);
     MYTOGGLE(checkBoxMask)->setChecked(param.mask);
-
+    invstrength=255-param.strength;	
     printf("Upload\n");
     return 1;
 }
@@ -113,7 +132,7 @@ uint8_t flyMSharpen::download(void)
     param.strength=MYSPIN(spinBoxStrength)->value();
     param.highq= MYTOGGLE(CheckBoxHQ)->isChecked();
     param.mask= MYTOGGLE(checkBoxMask)->isChecked();
-    
+    invstrength=255-param.strength;	
     printf("Download\n");
     return true;
 }

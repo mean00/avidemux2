@@ -40,7 +40,7 @@
 extern bool DIA_msharpen(msharpen &param, ADM_coreVideoFilter *source);
 DECLARE_VIDEO_FILTER(   Msharpen,   // Class
                         1,0,0,              // Version
-                        ADM_UI_ALL,         // UI
+                        ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
                         "msharpen",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("msharpen","Msharpen"),            // Display name
@@ -119,12 +119,12 @@ ADMImage *src,*blur,*dst;
     for (int i=0;i<3;i++)
     {
             
-            blur_plane(src, blur, i);
-            detect_edges(blur, dst,  i);
+            blur_plane(src, blur, i,work);
+            detect_edges(blur, dst,  i,_param);
             if (_param.highq == true)
-                detect_edges_HiQ(blur, dst,  i);
+                detect_edges_HiQ(blur, dst,  i,_param);
             if (!_param.mask) 
-                apply_filter(src, blur, dst,  i);
+                apply_filter(src, blur, dst,  i,_param,invstrength);
     }
 
     *fn=nextFrame;
@@ -140,7 +140,7 @@ ADMImage *src,*blur,*dst;
  *  are processed independently.
  *********************************/
 
-void Msharpen::blur_plane(ADMImage *src, ADMImage *blur, int plane) 
+void Msharpen::blur_plane(ADMImage *src, ADMImage *blur, int plane,ADMImage *work) 
 {
 /*
   uint64_t mask1 = 0x00001C711C711C71LL;
@@ -313,7 +313,7 @@ int wh ,ww,hh;
  * @param dst
  * @param plane
  */
-void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane) 
+void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane,const msharpen &param) 
 {
   int ww,hh;
 
@@ -344,7 +344,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
             n=srcpn[xx+1];
             c=srcpn[xx-1];
 
-            if(abs(n-p)>_param.threshold || abs(c-p)>_param.threshold) dstp[xx+1]=0xff;
+            if(abs(n-p)>param.threshold || abs(c-p)>param.threshold) dstp[xx+1]=0xff;
                             else dstp[xx+1]=0;
 
         }
@@ -352,7 +352,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
       srcpn+=src_pitch;
       dstp+=dst_pitch;
      }
-  if (_param.mask) 
+  if (param.mask) 
   {
     dstp=dstp_saved;
     memset(dstp_saved+(hh-1)*dst_pitch,0,ww);  // Not used, if not returning mask
@@ -367,7 +367,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
 }
 
 //***************************************************
-void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane) 
+void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane,const msharpen &param) 
 {
 // Vertical detail detection
   unsigned char *srcp,*srcp_saved; 
@@ -407,7 +407,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
     for (int y=0;y<h-1;dstp+=dst_pitch,srcp+=src_pitch,srcpn+=src_pitch,y++)
     {
       b2=srcpn[x];
-      if (abs(b1-b2)>=_param.threshold)
+      if (abs(b1-b2)>=param.threshold)
         dstp[x]=255;
       b1=b2;
     }
@@ -422,7 +422,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
     for (int x=0;x<w-1;x++)
     {
       b2=srcp[x+1];
-      if (abs(b1-b2)>=_param.threshold)
+      if (abs(b1-b2)>=param.threshold)
         dstp[x]=255;
       b1=b2;
     }
@@ -442,7 +442,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
   }
 }
 //***************************************************
-void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int plane) 
+void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int plane,const msharpen &param,uint32_t invstrength) 
 {
   // TODO: MMX / ISSE
   const unsigned char *srcp ;
@@ -506,7 +506,7 @@ void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int pla
         else 
             if (b4>255) 
                 b4=255;
-        dstp[x]=(_param.strength*b4+invstrength*(int)(srcp[x]))>>8;
+        dstp[x]=(param.strength*b4+invstrength*(int)(srcp[x]))>>8;
       }
       else
         dstp[x]=srcp[x];

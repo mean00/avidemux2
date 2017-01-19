@@ -23,6 +23,8 @@ protected:
 public:
    msharpen    param;
    bool        preview;
+   uint32_t    invstrength;
+   ADMImage    *blur,*work;
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);

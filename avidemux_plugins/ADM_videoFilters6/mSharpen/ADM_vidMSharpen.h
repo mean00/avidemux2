@@ -49,10 +49,6 @@ private:
 
         uint32_t        invstrength;
 
-                void    detect_edges(ADMImage *src, ADMImage *dst, int plane);
-                void    blur_plane(ADMImage *src, ADMImage *blur, int plane) ;
-                void    detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane);
-                void    apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst,int plane) ;
 public:    
 
                             Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
@@ -63,5 +59,12 @@ public:
        virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
        virtual void         setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                 /// Start graphical user interface        
+public:
+       static  void    detect_edges(ADMImage *src, ADMImage *dst, int plane,const msharpen &param);
+       static  void    blur_plane(ADMImage *src, ADMImage *blur, int plane,ADMImage *work) ;
+       static  void    detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane,const msharpen &param);
+       static  void    apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst,int plane,const msharpen &param,uint32_t invstrength) ;
+
+
        
 };
