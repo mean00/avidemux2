@@ -155,7 +155,7 @@ bool resampleFps::refill(void)
 */
 bool         resampleFps::goToTime(uint64_t usSeek)
 {
-    if(false==ADM_coreVideoFilterCached::goToTime(usSeek)) return false;
+    if(false==previousFilter->goToTime(usSeek)) return false;
     prefillDone=false;
     return true;
 }
