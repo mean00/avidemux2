@@ -66,9 +66,12 @@ flyMSharpen::~flyMSharpen()
     \fn process
 */
 uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
-{        	
-    ADMImageRef         refIn(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
-    ADMImageRefWrittable refOut(in->GetWidth(PLANAR_Y)/2,in->GetHeight(PLANAR_Y));
+{        
+    int width=in->GetWidth(PLANAR_Y);
+    int height=in->GetHeight(PLANAR_Y); // in and out have the same widht/height
+    
+    ADMImageRef         refIn(width/2,height);
+    ADMImageRefWrittable refOut(width/2,height);
     
     in->copyLeftSideTo(out);
     
@@ -77,7 +80,7 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
         int halfWidth=in->GetWidth((ADM_PLANE)i)/2; // in and out have the same width
         refIn._planeStride[i] =in->_planeStride[i];
         refOut._planeStride[i]=out->_planeStride[i];
-        refIn._planes[i]      =in->_planes[i]+halfWidth;
+        refIn._planes[i]      =in->_planes[i];//+halfWidth;
         refOut._planes[i]     =out->_planes[i]+halfWidth;
     }
     
