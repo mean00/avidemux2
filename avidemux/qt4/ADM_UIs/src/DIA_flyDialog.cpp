@@ -288,6 +288,8 @@ bool ADM_flyDialog::nextImageInternal(void)
     }
     lastPts=_yuvBuffer->Pts;
     setCurrentPts(lastPts);
+    if(_control)
+        _control->labelTime->setText(ADM_us2plain(lastPts));
     // Process...   
     process();
     return display(_rgbByteBufferDisplay.at(0));
@@ -305,8 +307,6 @@ bool ADM_flyDialog::nextImage(void)
     if(r)
         updateSlider();
     slide->blockSignals(oldState);
-
-    _control->labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     return r;
 }
 
