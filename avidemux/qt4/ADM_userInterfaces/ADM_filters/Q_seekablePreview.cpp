@@ -64,7 +64,7 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
 	canvas = new ADM_QCanvas(ui.frame, canvasWidth, canvasHeight);
 	canvas->show();
 	seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-        seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
+        setDuration(videoStream->getInfo()->totalDuration);
 	seekablePreview->sliderChanged();
 }
 /**
@@ -76,25 +76,12 @@ uint32_t Ui_seekablePreviewWindow::frameIndex()
 	return seekablePreview->sliderGet();
 }
 /**
-    \fn setCurrentPtsCallback
-    \brief callback so that the flyDialog can update its father widget
+    \fn setDuration
+    \brief Set total duration
 */
-bool Ui_seekablePreviewWindow::setCurrentPtsCallback(void *cookie,uint64_t pts)
+bool      Ui_seekablePreviewWindow::setDuration(uint64_t duration)
 {
-    if(cookie)
-    {
-        return ((Ui_seekablePreviewWindow *)cookie)->setTime(pts);
-    }
-    printf("No cookie, New PTS :%" PRId64" us\n",pts);
-    return true;
-}
-/**
-    \fn setTime
-    \brief Set timecode
-*/
-bool      Ui_seekablePreviewWindow::setTime(uint64_t timestamp)
-{
-    const char *s=ADM_us2plain(timestamp);
+    const char *s=ADM_us2plain(duration);
     ui.label->setText(s);
     return true;
 }
