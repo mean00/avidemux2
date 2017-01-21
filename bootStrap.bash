@@ -8,7 +8,6 @@ packages_ext=""
 rebuild=0
 do_core=1
 do_cli=1
-do_gtk=0  # Gtk is obsolete!
 do_qt4=1
 do_plugins=1
 do_asan=0
@@ -27,6 +26,7 @@ fi
 external_libass=0
 external_liba52=0
 external_libmad=0
+external_libmp4v2=0
 
 fail()
 {
@@ -92,7 +92,6 @@ config()
         else echo   "Release build"
         fi
         printModule $do_core Core
-        printModule $do_gtk Gtk
         printModule $do_qt4 ${qt_ext}
         printModule $do_cli Cli
         printModule $do_plugins Plugins
@@ -112,8 +111,6 @@ usage()
         echo "  --without-core        : Don't build core"
         echo "  --with-cli            : Build cli"
         echo "  --without-cli         : Don't build cli"
-        echo "  --with-gtk            : Build gtk"
-        echo "  --without-gtk         : Don't build gtk"
         echo "  --with-core           : Build core"
         echo "  --without-qt4         : Don't build qt4"
         echo "  --with-plugins        : Build plugins"
@@ -124,6 +121,7 @@ usage()
         echo "  --with-system-libass  : Use system libass instead of the bundled one"
         echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
         echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
+        echo "  --with-system-libmp4v2: Use system libmp4v2 instead of the bundled one"
 	echo "The end result will be in the install folder. You can then copy it to / or whatever"
         config 
 
@@ -208,9 +206,6 @@ while [ $# != 0 ] ;do
          --without-cli)
                 do_cli=0
              ;;
-         --without-gtk)
-                do_gtk=0
-             ;;
          --without-plugins)
                 do_plugins=0
              ;;
@@ -231,9 +226,6 @@ while [ $# != 0 ] ;do
          --with-cli)
                 do_cli=1
              ;;
-         --with-gtk)
-                do_gtk=1
-             ;;
          --with-plugins)
                 do_plugins=1
              ;;
@@ -248,6 +240,9 @@ while [ $# != 0 ] ;do
              ;;
          --with-system-libmad)
                 external_libmad=1
+             ;;
+         --with-system-libmp4v2)
+                external_libmp4v2=1
              ;;
         *)
                 echo "unknown parameter $config_option"
@@ -272,6 +267,9 @@ if [ "x$external_liba52" = "x1" ]; then
 fi
 if [ "x$external_libmad" = "x1" ]; then
     export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+fi
+if [ "x$external_libmp4v2" = "x1" ]; then
+    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_MP4V2=true $EXTRA_CMAKE_DEFS"
 fi
 echo "Top dir : $TOP"
 echo "Fake installation directory=$FAKEROOT_DIR"
@@ -308,13 +306,6 @@ if [ "x$do_cli" = "x1" ] ; then
         echo " Installing cli"
         cd $TOP/buildCli${POSTFIX}  
 fi
-if [ "x$do_gtk" = "x1" ] ; then 
-        echo "** GTK **"
-        cd $TOP
-        Process buildGtk ../avidemux/gtk 
-        echo " Installing Gtk"
-        cd $TOP/buildGtk${POSTFIX} 
-fi
 if [ "x$do_plugins" = "x1" ] ; then 
         echo "** Plugins **"
         cd $TOP
@@ -324,11 +315,6 @@ if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then
         echo "** Plugins ${qt_ext} **"
         cd $TOP
         Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
-fi
-if [ "x$do_plugins" = "x1" -a "x$do_gtk" = "x1" ] ; then 
-        echo "** Plugins Gtk **"
-        cd $TOP
-        Process buildPluginsGtk ../avidemux_plugins "-DPLUGIN_UI=GTK $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
         echo "** Plugins CLI **"

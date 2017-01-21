@@ -2,7 +2,6 @@
 #define Q_mpdelogo_h
 
 #include "ui_logo.h"
-#include "DIA_flyDialog.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyLogo.h"

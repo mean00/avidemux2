@@ -14,35 +14,33 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#ifndef __BLACKEN_BORDER__
-#define     __BLACKEN_BORDER__
-
+#pragma once
 #include "blackenBorder.h"
 class blackenBorders : public  ADM_coreVideoFilter
 {
 protected:
-        blackenBorder   param;
+        blackenBorder       param;
 public:
-                    blackenBorders(ADM_coreVideoFilter *previous,CONFcouple *conf);
-                    ~blackenBorders();
+                            blackenBorders(ADM_coreVideoFilter *previous,CONFcouple *conf);
+                            ~blackenBorders();
 
         virtual const char   *getConfiguration(void);                   /// Return  current configuration as a human readable string
         virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
 	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
         virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-        virtual void setCoupledConf(CONFcouple *couples);
+        virtual void         setCoupledConf(CONFcouple *couples);
         virtual bool         configure(void) ;           /// Start graphical user interface
 };
 
-// Add the hook to make it valid plugin
+
 DECLARE_VIDEO_FILTER(   blackenBorders,   // Class
                         1,0,0,              // Version
-                        ADM_UI_ALL,         // UI
+                        ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
                         "blackenBorder",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("blacken","Blacken Borders"),            // Display name
                         QT_TRANSLATE_NOOP("blacken","Remove noisy edge by turning them to black.") // Description
                     );
 
+// EOF
 
-#endif

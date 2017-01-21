@@ -44,6 +44,7 @@ extern "C"
 #include "T_preview.h"
 #include "../ADM_render/GUI_render.h"
 #include "../ADM_render/GUI_accelRender.h"
+#include "GUI_ui.h"
 #include "DIA_coreToolkit.h"
     
 void UI_QT4VideoWidget(QFrame *host);
@@ -171,8 +172,8 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
     // TODO: Resize the main window on restore event.
     if(!QuiMainWindows->isMaximized())
     {
-        uint16_t extra_w=240; // take into account the width of the codec widget in px + some margin
-        uint16_t extra_h=240; // take into account the height of the navigation widget in px + some margin
+        uint32_t extra_w=UI_requiredWidth();
+        uint32_t extra_h=UI_requiredHeight();
         QuiMainWindows->resize(w+extra_w,h+extra_h);
     }
     videoWindow->setADMSize(w,h);

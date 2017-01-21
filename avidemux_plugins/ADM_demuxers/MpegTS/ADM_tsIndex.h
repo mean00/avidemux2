@@ -129,6 +129,10 @@ protected:
         H264Unit        thisUnit;
         bool            decodingImage;
         int             processedThisRound;
+        
+        bool            findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        bool            findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        
 protected:
         FILE                    *index;
         tsPacketLinearTracker   *pkt;

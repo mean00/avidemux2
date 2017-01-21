@@ -351,6 +351,15 @@ static char *fourCC_tostring(uint32_t fourcc)
 
     return s;
 }
+
+/**
+ * 
+ * @return 
+ */
+VADisplay admLibVA::getDisplay()
+{
+        return ADM_coreLibVA::display;
+}
 /**
  * \fn setupImageFormat
  */
@@ -1024,8 +1033,8 @@ static void  copyNV12(uint8_t *ptr, VAImage *dest, ADMImage *src)
 
                 for(int x=0;x<w;x++)
                 {
-                    d[0]=*ssrcu++;
-                    d[1]=*ssrcv++;
+                    d[0]=*ssrcv++;
+                    d[1]=*ssrcu++;
                     d+=2;
                 }
         }
@@ -1204,7 +1213,59 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     }
     return false;
 }
+/**
+ * 
+ * @return 
+ */
+VAConfigID  admLibVA::createFilterConfig()
+{
+      VAStatus xError;
+      VAConfigID id=VA_INVALID;
+      
+      if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return VA_INVALID;}
+      
+      CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileNone, VAEntrypointVideoProc, 0, 0, &id));
+      if(xError!=VA_STATUS_SUCCESS)
+          return VA_INVALID;
+      return id;
+}
 
+/**
+ * 
+ * @return 
+ */
+VAContextID admLibVA::createFilterContext()
+{
+    return VA_INVALID;
+}
+/**
+ * 
+ * @param id
+ * @return 
+ */
+bool        admLibVA::destroyFilterContext(VAContextID &id)
+{
+     VAStatus xError;
+     if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
+    
+    CHECK_ERROR( vaDestroyContext(ADM_coreLibVA::display, id));
+    id=VA_INVALID;
+    return true;
+}
+
+/**
+ * 
+ * @return 
+ */
+bool        admLibVA::destroyFilterConfig(VAConfigID &id)
+{
+    VAStatus xError;
+     if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
+    
+    CHECK_ERROR( vaDestroyConfig(ADM_coreLibVA::display, id));
+    id=VA_INVALID;
+    return true;
+}
 
 
 #include "ADM_coreLibVA_encoder.cpp"

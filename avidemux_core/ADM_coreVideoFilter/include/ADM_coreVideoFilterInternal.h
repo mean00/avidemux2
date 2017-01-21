@@ -13,7 +13,7 @@
 
 class ADM_coreVideoFilter;
 
-#define VF_API_VERSION 8
+#define VF_API_VERSION 9
 
 /**
     \struct admVideoFilterInfo

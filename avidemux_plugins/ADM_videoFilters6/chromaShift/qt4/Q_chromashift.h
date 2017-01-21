@@ -1,4 +1,3 @@
-#include "DIA_flyDialog.h"
 #include "ui_chromashift.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"

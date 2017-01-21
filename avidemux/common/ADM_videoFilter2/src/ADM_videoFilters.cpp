@@ -78,7 +78,7 @@ bool ADM_vf_moveFilterUp(int index)
 {
     ADM_info("Moving up filter at index %d\n",index);
     //
-    ADM_assert(index);
+    if(!index) return true;
     uint32_t top=index-1;
     ADM_VideoFilterElement scratch=ADM_VideoFilters[top];
 

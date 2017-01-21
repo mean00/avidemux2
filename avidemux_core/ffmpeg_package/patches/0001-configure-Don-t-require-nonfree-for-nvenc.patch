@@ -1,0 +1,26 @@
+From 09522a303db014b48f844443f0f3aaa00af8f165 Mon Sep 17 00:00:00 2001
+From: Timo Rothenpieler <timo@rothenpieler.org>
+Date: Sat, 23 Apr 2016 18:55:51 +0200
+Subject: [PATCH] configure: Don't require nonfree for nvenc
+
+As the nvEncodeApi.h header is now MIT licensed, this can be dropped.
+The loaded CUDA and NVENC libraries are part of the nvidia driver, and
+thus count as system libraries.
+
+Signed-off-by: Anton Khirnov <anton@khirnov.net>
+---
+ configure | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/configure b/configure
+index 6bab581..43c563f 100755
+--- configure.old       2016-12-25 08:47:40.205283452 +0100
++++ configure   2016-12-25 08:48:02.125200834 +0100
+@@ -4882,7 +4882,6 @@
+ die_license_disabled gpl x11grab
+ 
+ die_license_disabled nonfree libfaac
+-die_license_disabled nonfree nvenc
+ enabled gpl && die_license_disabled_gpl nonfree libfdk_aac
+ enabled gpl && die_license_disabled_gpl nonfree openssl
+

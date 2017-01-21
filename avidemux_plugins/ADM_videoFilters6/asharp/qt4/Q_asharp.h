@@ -2,7 +2,7 @@
 #define Q_asharp_h
 
 #include "ui_asharp.h"
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyAsharp.h"

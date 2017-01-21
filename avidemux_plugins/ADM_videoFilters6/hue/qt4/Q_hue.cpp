@@ -38,9 +38,10 @@
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
-        myCrop=new flyHue( width, height,in,canvas,ui.horizontalSlider);
+        myCrop=new flyHue( this,width, height,in,canvas,ui.horizontalSlider);
         memcpy(&(myCrop->param),param,sizeof(hue));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 

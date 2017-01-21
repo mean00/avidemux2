@@ -19,26 +19,26 @@
 #include "ui_seekablePreview.h"
 
 #include "ADM_assert.h"
-//#include "ADM_videoFilter.h"
-#include "DIA_flyDialog.h"
+#include "DIA_flyDialogQt4.h"
 #include "../ADM_dialog/DIA_flyPreview.h"
+#include <QTimer>
 
 class Ui_seekablePreviewWindow : public QDialog
 {
 	Q_OBJECT
-protected:
-    static bool setCurrentPtsCallback(void *cookie,uint64_t pts);
 public:
-	ADM_QCanvas *canvas;
+	ADM_QCanvas         *canvas;
 	flySeekablePreview *seekablePreview;
 	Ui_seekablePreviewDialog ui;
-	Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame = 0);
-	~Ui_seekablePreviewWindow();
-	void resetVideoStream(ADM_coreVideoFilter *videoStream);
+        
+public:        
+                Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame = 0);
+                ~Ui_seekablePreviewWindow();
+	void    resetVideoStream(ADM_coreVideoFilter *videoStream);
 	uint32_t frameIndex();
-    bool      setTime(uint64_t timestamp);
-
+        bool     setDuration(uint64_t duration);
 public slots:
 	void sliderChanged(int value);
-    void nextImage(void);
+        
+
 };

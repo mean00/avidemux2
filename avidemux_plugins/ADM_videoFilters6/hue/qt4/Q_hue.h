@@ -1,6 +1,5 @@
 #ifndef Q_hue_h
 #define Q_hue_h
-#include "DIA_flyDialog.h"
 #include "ui_hue.h"
 #include "ADM_image.h"
 #include "hue.h"

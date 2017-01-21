@@ -37,12 +37,13 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
-        myCrop=new flyCrop( width, height,in,canvas,ui.horizontalSlider);
+        myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
         myCrop->left=param->left;
         myCrop->right=param->right;
         myCrop->top=param->top;
         myCrop->bottom=param->bottom;
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 

@@ -2,9 +2,9 @@
                           DIA_crop.cpp  -  description
                              -------------------
 
-			    GUI for cropping including autocrop
-			    +Revisted the Gtk2 way
-			     +Autocrop now in RGB space (more accurate)
+                            GUI for cropping including autocrop
+                            +Revisted the Gtk2 way
+                             +Autocrop now in RGB space (more accurate)
 
     begin                : Fri May 3 2002
     copyright            : (C) 2002/2007 by mean
@@ -37,73 +37,140 @@
         height=in->getInfo()->height;
 
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-        
-        myCrop=new flyContrast( width, height,in,canvas,ui.horizontalSlider);
+
+        scene=new QGraphicsScene(this);
+        ui.graphicsViewHistogram->setScene(scene);
+        ui.graphicsViewHistogram->scale(1.0,1.0);
+
+        myCrop=new flyContrast( this,width, height,in,canvas,ui.horizontalSlider,scene);
         memcpy(&(myCrop->param),param,sizeof(contrast));
         myCrop->_cookie=&ui;
+        myCrop->addControl(ui.toolboxLayout);
         myCrop->upload();
         myCrop->sliderChanged();
 
+        previewState=true;
+        ui.checkBox_Enabled->setChecked(true);
+
 
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+#define SPINNER(x) connect( ui.dial##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
           SPINNER(Brightness);
           SPINNER(Contrast);
+          
+        QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
+        QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
+        ui.labelContrast->setText(title);
+        ui.labelBrightness->setText(title2);
+          
           connect( ui.checkBoxU,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
           connect( ui.checkBoxV,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
+          connect( ui.checkBox_Enabled,SIGNAL(stateChanged(int)),this,SLOT(previewActivated(int)));  
+          connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
   }
+/**
+ * 
+ * @param foo
+ */  
   void Ui_contrastWindow::sliderUpdate(int foo)
   {
     myCrop->sliderChanged();
   }
+/**
+ * 
+ * @param param
+ */  
   void Ui_contrastWindow::gather(contrast *param)
   {
-    
+
         myCrop->download();
         memcpy(param,&(myCrop->param),sizeof(contrast));
   }
+  /**
+   * 
+   */
 Ui_contrastWindow::~Ui_contrastWindow()
 {
   if(myCrop) delete myCrop;
   myCrop=NULL; 
   if(canvas) delete canvas;
   canvas=NULL;
+  scene=NULL;
 }
+
+void Ui_contrastWindow::dvd2PC()
+{
+   if(lock) return;
+  lock++;
+  myCrop->param.coef=1.16;
+  myCrop->param.offset=-16;
+  myCrop->upload();
+  myCrop->sameImage();
+  QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
+  QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
+  ui.labelContrast->setText(title);
+  ui.labelBrightness->setText(title2);
+  lock--;
+}
+/**
+ * 
+ * @param a
+ */
+void Ui_contrastWindow::previewActivated(int a)
+{
+    previewState=a;
+    myCrop->setState(a);
+    myCrop->sameImage();
+}
+/**
+ * 
+ * @param f
+ */
 void Ui_contrastWindow::valueChanged( int f )
 {
   if(lock) return;
   lock++;
   myCrop->download();
   myCrop->sameImage();
+  QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
+  QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
+  ui.labelContrast->setText(title);
+  ui.labelBrightness->setText(title2);
   lock--;
 }
 
-#define MYSPIN(x) w->horizontalSlider##x
+#define MYSPIN(x) w->dial##x
 #define MYCHECK(x) w->checkBox##x
-//************************
+/**
+ * 
+ * @return 
+ */
 uint8_t flyContrast::upload(void)
 {
       Ui_contrastDialog *w=(Ui_contrastDialog *)_cookie;
 
-        MYSPIN(Contrast)->setValue((uint32_t)(param.coef*10));
+        MYSPIN(Contrast)->setValue((uint32_t)(param.coef*100));
         MYSPIN(Brightness)->setValue(param.offset);
 #define CHECKSET(a,b) MYCHECK(a)->setChecked(param.b)
-        
+
         CHECKSET(Y,doLuma);
         CHECKSET(U,doChromaU);
         CHECKSET(V,doChromaV);
-
         return 1;
 }
+/**
+ * 
+ * @return 
+ */
 uint8_t flyContrast::download(void)
 {
        Ui_contrastDialog *w=(Ui_contrastDialog *)_cookie;
-         param.coef=MYSPIN(Contrast)->value()/10.;
+         param.coef=MYSPIN(Contrast)->value()/100.;
          param.offset=MYSPIN(Brightness)->value();
 #define CHECKGET(a,b) param.b=MYCHECK(a)->isChecked()
-        
+
         CHECKGET(Y,doLuma);
         CHECKGET(U,doChromaU);
         CHECKGET(V,doChromaV);
@@ -116,19 +183,18 @@ return 1;
 */
 bool DIA_getContrast(ADM_coreVideoFilter *in,contrast *param)
 {
-        uint8_t ret=0;
-        Ui_contrastWindow dialog(qtLastRegisteredDialog(), param,in);
-		qtRegisterDialog(&dialog);
+    uint8_t ret=0;
+    Ui_contrastWindow dialog(qtLastRegisteredDialog(), param,in);
+    qtRegisterDialog(&dialog);
 
-        if(dialog.exec()==QDialog::Accepted)
-        {
-            dialog.gather(param); 
-            ret=1;
-        }
+    if(dialog.exec()==QDialog::Accepted)
+    {
+        dialog.gather(param); 
+        ret=1;
+    }
 
-		qtUnregisterDialog(&dialog);
-
-        return ret;
+    qtUnregisterDialog(&dialog);
+    return ret;
 }
 //____________________________________
 // EOF

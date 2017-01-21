@@ -1,6 +1,5 @@
 #ifndef Q_crop_h
 #define Q_crop_h
-#include "DIA_flyDialog.h"
 #include "ui_crop.h"
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"

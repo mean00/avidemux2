@@ -17,6 +17,12 @@
 
 #include "Q_seekablePreview.h"
 #include "ADM_vidMisc.h"
+/**
+ * 
+ * @param parent
+ * @param videoStream
+ * @param defaultFrame
+ */
 Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVideoFilter *videoStream, uint32_t defaultFrame) : QDialog(parent)
 {
 	ui.setupUi(this);
@@ -25,11 +31,12 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	canvas = NULL;
 
 	resetVideoStream(videoStream);
+        
+        seekablePreview->addControl(ui.toolLayout);
 	seekablePreview->sliderSet(defaultFrame);
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-    connect(ui.next,SIGNAL(clicked()),this,SLOT(nextImage()));
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -37,60 +44,54 @@ Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
 	delete seekablePreview;
 	delete canvas;
 }
-void Ui_seekablePreviewWindow::nextImage(void)
-{
-    seekablePreview->nextImage();
-}
+
+/**
+ * 
+ * @param videoStream
+ */
 void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream)
 {
 	if (seekablePreview)
 		delete seekablePreview;
-
+        seekablePreview=NULL;
 	if (canvas)
 		delete canvas;
+        canvas=NULL;
 
 	uint32_t canvasWidth = videoStream->getInfo()->width;
 	uint32_t canvasHeight = videoStream->getInfo()->height;
 
 	canvas = new ADM_QCanvas(ui.frame, canvasWidth, canvasHeight);
 	canvas->show();
-	seekablePreview = new flySeekablePreview(canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-    seekablePreview->setCookieFunc(setCurrentPtsCallback,this);
-//#warning FIXME NO UPDATE
-//	seekablePreview->process();
+	seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
+        setDuration(videoStream->getInfo()->totalDuration);
 	seekablePreview->sliderChanged();
 }
-
-void Ui_seekablePreviewWindow::sliderChanged(int value)
-{
-	seekablePreview->sliderChanged();
-}
-
+/**
+ * 
+ * @return 
+ */
 uint32_t Ui_seekablePreviewWindow::frameIndex()
 {
 	return seekablePreview->sliderGet();
 }
 /**
-    \fn setCurrentPtsCallback
-    \brief callback so that the flyDialog can update its father widget
+    \fn setDuration
+    \brief Set total duration
 */
-bool Ui_seekablePreviewWindow::setCurrentPtsCallback(void *cookie,uint64_t pts)
+bool      Ui_seekablePreviewWindow::setDuration(uint64_t duration)
 {
-    if(cookie)
-    {
-        return ((Ui_seekablePreviewWindow *)cookie)->setTime(pts);
-    }
-    printf("No cookie, New PTS :%" PRId64" us\n",pts);
-    return true;
-}
-/**
-    \fn setTime
-    \brief Set timecode
-*/
-bool      Ui_seekablePreviewWindow::setTime(uint64_t timestamp)
-{
-    const char *s=ADM_us2plain(timestamp);
+    const char *s=ADM_us2plain(duration);
     ui.label->setText(s);
     return true;
 }
+/**
+  * 
+ * @param value
+ */
+void Ui_seekablePreviewWindow::sliderChanged(int value)
+{
+	seekablePreview->sliderChanged();
+}
+
 // EOF

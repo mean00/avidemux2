@@ -125,8 +125,7 @@ bool         changeFps::goToTime(uint64_t usSeek)
     timing/=configuration.newFpsDen;
     timing*=configuration.newFpsNum;
     timing*=configuration.oldFpsDen;
-    if(false==ADM_coreVideoFilter::goToTime((uint64_t)timing)) return false;
-    return true;
+    return  previousFilter->goToTime((uint64_t)timing);
 }
 
 /**

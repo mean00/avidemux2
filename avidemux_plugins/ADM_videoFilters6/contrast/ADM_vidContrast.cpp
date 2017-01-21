@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 #include <math.h>
-
-#include "DIA_flyDialog.h"
+#include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_default.h"
 #include "ADM_coreVideoFilterInternal.h"
 #include "DIA_factory.h"
@@ -113,13 +113,12 @@ bool         ADMVideoContrast::getNextFrame(uint32_t *fn,ADMImage *image)
 */
 uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_t * tableNZ)
 {
-  float f;
+  double f;
 
   for (uint32_t i = 0; i < 256; i++)
     {
       f = i;
       f *= coef;
-//                                      f= (f-128)*coef+128;
       f += off;
       if (f < 0.)
 	f = 0.;
@@ -130,9 +129,6 @@ uint8_t buildContrastTable (float coef, int8_t off,  uint8_t * tableFlat, uint8_
       f = i;
       f -= 128;
       f *= coef;
-//                                      f= (f-128)*coef+128;
-
-//                                      f+=off;
       if (f < -127.)
 	f = -127.;
       if (f > 127.)

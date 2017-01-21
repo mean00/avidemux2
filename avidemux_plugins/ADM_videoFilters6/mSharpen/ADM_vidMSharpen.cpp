@@ -1,16 +1,12 @@
 /***************************************************************************
-                          ADM_vidMSharpen  -  description
-                             -------------------
-    
-    email                : fixounet@free.fr
-
+    \file ADM_vidMSharpen 
+ * 
     Port of Donal Graft Msharpen which is (c) Donald Graft
     http://www.neuron2.net
     http://puschpull.org/avisynth/decomb_reference_manual.html
 
         It is a bit less efficient as we do hz & vz blur separately
-        The formula has been changed a bit from 1 1 1 to 1 2 1
-        for speed aspect & MMX  
+        The formula has been changed a bit from 1 1 1 to 1 2 1 for speed aspect & MMX  
         Mean
 
  ***************************************************************************/
@@ -33,45 +29,14 @@
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-#include "ADM_default.h"
-#include "DIA_factory.h"
-#include "ADM_coreVideoFilter.h"
-#include "msharpen.h"
+
+#include "ADM_vidMSharpen.h"
 #include "msharpen_desc.cpp"
-/**
-    \class Msharpen
-*/
-class Msharpen : public ADM_coreVideoFilterCached
-{
-private:
-        msharpen	_param;
-        ADMImage        *blurrImg,*work;
-
-        uint32_t        invstrength;
-
-                void    detect_edges(ADMImage *src, ADMImage *dst, int plane);
-                void    blur_plane(ADMImage *src, ADMImage *blur, int plane) ;
-                void    detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane);
-                void    apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst,int plane) ;
-public:    
-
-                            Msharpen(ADM_coreVideoFilter *in,CONFcouple *couples)   ;
-                            ~Msharpen();
-
-       virtual const char  *getConfiguration(void);          /// Return  current configuration as a human readable string
-       virtual bool         getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-       virtual bool         getCoupledConf(CONFcouple **couples) ;   /// Return the current filter configuration
-       virtual void         setCoupledConf(CONFcouple *couples);
-       virtual bool         configure(void) ;                 /// Start graphical user interface        
-       
-};
-//********** Register chunk ************
-
 // DECLARE FILTER 
-
+extern bool DIA_msharpen(msharpen &param, ADM_coreVideoFilter *source);
 DECLARE_VIDEO_FILTER(   Msharpen,   // Class
                         1,0,0,              // Version
-                        ADM_UI_ALL,         // UI
+                        ADM_UI_TYPE_BUILD,         // UI
                         VF_SHARPNESS,            // Category
                         "msharpen",            // internal name (must be uniq!)
                         QT_TRANSLATE_NOOP("msharpen","Msharpen"),            // Display name
@@ -121,32 +86,6 @@ Msharpen::~Msharpen(void)
     work=NULL;
 }
 /**
-    \fn configure
-*/
-bool Msharpen::configure(void)
-{
-uint8_t r=0;
-
-#define PX(x) &(_param.x)
-  
-        
-    diaElemToggle    mask(PX(mask),QT_TRANSLATE_NOOP("msharpen","_Mask"));
-    diaElemToggle    highq(PX(highq),QT_TRANSLATE_NOOP("msharpen","_High Q"));
-    
-    diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("msharpen","_Threshold:"),1,255);
-    diaElemUInteger   strength(PX(strength),QT_TRANSLATE_NOOP("msharpen","_Strength:"),1,255);
-    
-    
-  diaElem *elems[4]={&mask,&highq,&threshold,&strength};
-
-  if(diaFactoryRun(QT_TRANSLATE_NOOP("msharpen","MSharpen"),4,elems))
-  {
-         invstrength=255-_param.strength;
-         return 1;
-  }
-  return 0;
-}
-/**
     \fn getConfiguration
 */
 const char *Msharpen::getConfiguration(void)
@@ -176,12 +115,12 @@ ADMImage *src,*blur,*dst;
     for (int i=0;i<3;i++)
     {
             
-            blur_plane(src, blur, i);
-            detect_edges(blur, dst,  i);
+            blur_plane(src, blur, i,work);
+            detect_edges(blur, dst,  i,_param);
             if (_param.highq == true)
-                detect_edges_HiQ(blur, dst,  i);
+                detect_edges_HiQ(blur, dst,  i,_param);
             if (!_param.mask) 
-                apply_filter(src, blur, dst,  i);
+                apply_filter(src, blur, dst,  i,_param,invstrength);
     }
 
     *fn=nextFrame;
@@ -197,7 +136,7 @@ ADMImage *src,*blur,*dst;
  *  are processed independently.
  *********************************/
 
-void Msharpen::blur_plane(ADMImage *src, ADMImage *blur, int plane) 
+void Msharpen::blur_plane(ADMImage *src, ADMImage *blur, int plane,ADMImage *work) 
 {
 /*
   uint64_t mask1 = 0x00001C711C711C71LL;
@@ -370,7 +309,7 @@ int wh ,ww,hh;
  * @param dst
  * @param plane
  */
-void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane) 
+void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane,const msharpen &param) 
 {
   int ww,hh;
 
@@ -401,7 +340,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
             n=srcpn[xx+1];
             c=srcpn[xx-1];
 
-            if(abs(n-p)>_param.threshold || abs(c-p)>_param.threshold) dstp[xx+1]=0xff;
+            if(abs(n-p)>param.threshold || abs(c-p)>param.threshold) dstp[xx+1]=0xff;
                             else dstp[xx+1]=0;
 
         }
@@ -409,7 +348,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
       srcpn+=src_pitch;
       dstp+=dst_pitch;
      }
-  if (_param.mask) 
+  if (param.mask) 
   {
     dstp=dstp_saved;
     memset(dstp_saved+(hh-1)*dst_pitch,0,ww);  // Not used, if not returning mask
@@ -424,7 +363,7 @@ void Msharpen::detect_edges(ADMImage *src, ADMImage *dst,  int plane)
 }
 
 //***************************************************
-void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane) 
+void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane,const msharpen &param) 
 {
 // Vertical detail detection
   unsigned char *srcp,*srcp_saved; 
@@ -464,7 +403,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
     for (int y=0;y<h-1;dstp+=dst_pitch,srcp+=src_pitch,srcpn+=src_pitch,y++)
     {
       b2=srcpn[x];
-      if (abs(b1-b2)>=_param.threshold)
+      if (abs(b1-b2)>=param.threshold)
         dstp[x]=255;
       b1=b2;
     }
@@ -479,7 +418,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
     for (int x=0;x<w-1;x++)
     {
       b2=srcp[x+1];
-      if (abs(b1-b2)>=_param.threshold)
+      if (abs(b1-b2)>=param.threshold)
         dstp[x]=255;
       b1=b2;
     }
@@ -499,7 +438,7 @@ void Msharpen::detect_edges_HiQ(ADMImage *src, ADMImage *dst, int plane)
   }
 }
 //***************************************************
-void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int plane) 
+void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int plane,const msharpen &param,uint32_t invstrength) 
 {
   // TODO: MMX / ISSE
   const unsigned char *srcp ;
@@ -563,7 +502,7 @@ void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int pla
         else 
             if (b4>255) 
                 b4=255;
-        dstp[x]=(_param.strength*b4+invstrength*(int)(srcp[x]))>>8;
+        dstp[x]=(param.strength*b4+invstrength*(int)(srcp[x]))>>8;
       }
       else
         dstp[x]=srcp[x];
@@ -575,6 +514,25 @@ void Msharpen::apply_filter(ADMImage *src,ADMImage *blur, ADMImage *dst, int pla
 }
 //***************************************************
 
+/**
+    \fn configure
+*/
+bool Msharpen::configure(void)
+{
+uint8_t r=0;
+
+
+    msharpen copy;
+    
+    copy=this->_param;
+    
+    if(DIA_msharpen(copy,this->previousFilter))
+    {
+        _param=copy;
+        return true;
+    }
+    return false;
+}
 
 
 

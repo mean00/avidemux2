@@ -1,3 +1,4 @@
+#
 INCLUDE(vf_plugin)
 
 MACRO(addDeps tgt)
@@ -6,26 +7,30 @@ MACRO(addDeps tgt)
         TARGET_LINK_LIBRARIES(${tgt} ADM_libavutil)
 ENDMACRO(addDeps tgt)
 
+IF(DO_QT4)
+    IF(ADM_QT_VERSION EQUAL 4)
+        SET(QT_TAG qt4)
+    ELSE(ADM_QT_VERSION EQUAL 4)
+        SET(QT_TAG qt5)
+        ADM_QT_ADD_RESOURCES(resource   qt5/delogo.qrc)
+    ENDIF(ADM_QT_VERSION EQUAL 4)
+ENDIF(DO_QT4)
+
+
 SET(mpdelogoCommon_SRCS 
 ADM_vidMPdelogo.cpp
-DIA_flyMpDelogo.cpp
 )
 # ---------- QT4 Version ----------------
 INCLUDE(vf_plugin_qt4)
-SET(mpdelogoQT_SRCS  qt4/Q_mpdelogo.cpp)
-SET(mpdelogoQT_HEADERS  qt4/Q_mpdelogo.h)
-SET(mpdelogoQT_UI    qt4/mpdelogo)
+SET(mpdelogoQT_SRCS  ${QT_TAG}/Q_mpdelogo.cpp )
+SET(mpdelogoQT_HEADERS  ${QT_TAG}/Q_mpdelogo.h)
+SET(mpdelogoQT_UI    ${QT_TAG}/mpdelogo)
 IF(DO_QT4)
-  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION} ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS})
+  INIT_VIDEO_FILTER_QT4(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION} ${mpdelogoQT_SRCS} ${mpdelogoQT_HEADERS} ${mpdelogoQT_UI} ${mpdelogoCommon_SRCS} ${QT_TAG}/DIA_flyMpDelogo.cpp ${resource})
   addDeps(ADM_vf_mpdelogo${QT_LIBRARY_EXTENSION})
 ENDIF(DO_QT4)
 # /QT4
 
-
-#------------- Gtk Version ---------------
-#INCLUDE(vf_plugin_gtk)
-#SET(mpdelogoGtk_SRCS gtk/DIA_mpdelogo.cpp)
-#INIT_VIDEO_FILTER_GTK(ADM_vf_mpdelogoGtk ${mpdelogoGtk_SRCS} ${mpdelogoCommon_SRCS})
 
 #------------ Cli Version ----------------
 INCLUDE(vf_plugin_cli)

@@ -93,6 +93,16 @@ static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
 //
 static bool        supported(VAProfile profile);
 
+//-- config for filters --
+static VAConfigID  createFilterConfig();
+static bool        destroyFilterConfig(VAConfigID &id);
+
+//-- config for filters --
+static VAContextID createFilterContext();
+static bool        destroyFilterContext(VAContextID &id);
+
+
+static VADisplay   getDisplay();
 };
 /**
  * \class admLibVAEnc

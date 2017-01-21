@@ -18,6 +18,7 @@
 #include "ADM_audiodef.h"
 #include "ADM_mp3info.h"
 #include "ADM_a52info.h"
+#include "ADM_eac3info.h"
 #include "ADM_audioCodecEnum.h"
 #include "ADM_audioIdentify.h"
 #include "fourcc.h"
@@ -176,6 +177,41 @@ static bool idWAV(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &o
 	    return false;
 }
 /**
+ * \fn idEAC3
+ */
+static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t &offset)
+{
+    uint32_t syncOffset;
+    ADM_EAC3_INFO info,info2;
+
+   if( !ADM_EAC3GetInfo(data,bufferSize, &syncOffset,&info))
+    {
+            ADM_info("Not EAC3\n");
+            return false;
+    };
+    // Need a 2nd packet...
+    const uint8_t *second=data+syncOffset;
+    int size2=bufferSize-syncOffset;
+    ADM_assert(size2>0);
+    ADM_info("Maybe EAC3... \n");
+    // Try on 2nd packet...
+    if( ADM_EAC3GetInfo(second,size2, &syncOffset,&info2))
+    {
+        if((info.frequency==info2.frequency) && (info.channels==info2.channels) && (info.byterate==info2.byterate))
+        {
+            ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels);
+            oinfo.encoding=WAV_EAC3;
+            oinfo.channels=info.channels;
+            oinfo.byterate=info.byterate; // already in bytes/sec
+            oinfo.frequency=info.frequency;
+            return true;
+        }
+    }
+    ADM_info("Cannot confirm EAC3\n");
+    return false; 
+}
+
+/**
     \fn idAC3
     \brief return true if the tracks is mp2
 */
@@ -270,6 +306,7 @@ bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &inf
     memset(&info,0,sizeof(info));
     if(idWAV(bufferSize,buffer,info,offset)) return true;
     if(idMP2(bufferSize,buffer,info,offset)) return true;
+    if(idEAC3(bufferSize,buffer,info,offset)) return true;
     if(idAAACADTS(bufferSize,buffer,info,offset)) return true;
     if(idAC3(bufferSize,buffer,info,offset)) return true;
     

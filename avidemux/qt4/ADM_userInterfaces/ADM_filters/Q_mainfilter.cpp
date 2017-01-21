@@ -157,12 +157,13 @@ void filtermainWindow::preview(bool b)
      ADM_coreVideoFilter     *filter=ADM_vf_getInstance(itag);
      ADM_assert(filter);
     if (previewDialog)
-            previewDialog->resetVideoStream(filter);
-    else
     {
-        previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
-        connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
+            delete previewDialog;
+            previewDialog=NULL;
     }
+    previewDialog = new Ui_seekablePreviewWindow(this, filter, 0);
+    previewDialog->setModal(true);
+    connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
     previewDialog->show();
 }
 /**
