@@ -15,6 +15,14 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 
+typedef enum
+{    
+    NAL_H265_VPS        = 32,
+    NAL_H265_SPS        = 33,
+    NAL_H265_PPS        = 34,
+    NAL_H265_AUD        = 35  
+};
+
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -76,32 +84,56 @@ bool TsIndexer::decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryL
 }
 
 /**
- * \fn findH264SPS
+ * \fn findGivenStartCode
+ * @param pkt
+ * @param match
  * @return 
  */
-bool TsIndexer::findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video)
+static bool findGivenStartCode(tsPacketLinearTracker *pkt,int match, const char *name)
 {
-    dmxPacketInfo tmpInfo;
-    bool keepRunning=true;
-    bool seq_found=false;
-    TS_PESpacket SEI_nal(0);
+    bool keepRunning=true;    
     while(keepRunning)
     {
       int startCode=pkt->findStartCode();
-
       if(!pkt->stillOk())
       {
-          keepRunning=false;
+          return false;
+      }     
+      startCode=((startCode>>1)&0x3f);          
+      if(startCode!=match) 
           continue;
-      }      
-      if(startCode&0x80) continue; // Marker missing
-      printf("Startcode 0x%x %d\n",startCode,startCode & 0x1F);
-      startCode&=0x1f;
-      if(startCode!=NAL_SPS) 
-          continue;
+      ADM_info("%s found \n",name);
+      return true;
+    }
+    return false;
+}
+/**
+ * \fn findH264SPS
+ * @return 
+ */
+bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
+{    
+    bool keepRunning=true;
+    // This is a bit naive...
+    if(!findGivenStartCode(pkt,NAL_H265_VPS ,"VPS"))
+    {
+        ADM_warning("Cannot find HEVC VPS\n");
+        return false;
+    }
+    if(!findGivenStartCode(pkt,NAL_H265_PPS ,"PPS"))
+    {
+        ADM_warning("Cannot find HEVC PPS\n");
+        return false;
+    }
+    if(!findGivenStartCode(pkt,NAL_H265_SPS ,"SPS"))
+    {
+        ADM_warning("Cannot find HEVC SPS\n");
+        return false;
+    }
 
+    return false;
         // Got SPS!
-
+#if 0
         uint32_t xA,xR;
         // Get info
         pkt->getInfo(&tmpInfo);
@@ -137,6 +169,7 @@ bool TsIndexer::findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video)
       }
     }
     return seq_found;
+#endif    
 }
 /**
     \fn runH264
@@ -203,7 +236,7 @@ bool bAppend=false;
     switch(videoTrac[0].trackType)
     {
         case ADM_TS_H265 :
-            seq_found=findH265SPS(pkt,video);
+            seq_found=findH265VPS(pkt,video);
             break;
         default:
             break;
