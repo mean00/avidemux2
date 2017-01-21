@@ -141,6 +141,7 @@ protected:
         ADM_SPSInfo             spsInfo;
         bool                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
+        bool                    decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
         // H264
@@ -153,6 +154,7 @@ public:
                 ~TsIndexer();
         bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runH264(const char *file,ADM_TS_TRACK *videoTrac);
+        bool    runH265(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runVC1(const char *file,ADM_TS_TRACK *videoTrac);
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);

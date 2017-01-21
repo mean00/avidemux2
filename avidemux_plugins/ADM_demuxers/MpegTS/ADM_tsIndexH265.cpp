@@ -1,5 +1,5 @@
 /***************************************************************************
-    \brief TS indexer, H264 video
+    \brief TS indexer, H265 video
     \author mean fixounet@free.fr
  ***************************************************************************/
 
@@ -15,17 +15,16 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 
-static bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic);
-static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
         @param recoveryLength # of recovery frame
         \return true if recovery found
 */
-bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
+bool TsIndexer::decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
                 pictureStructure *picStruct)
 {
+#if 0
     if(nalSize+16>=ADM_NAL_BUFFER_SIZE)
     {
         ADM_warning("SEI size too big, probably corrupted input (%u bytes)\n",nalSize);
@@ -72,12 +71,15 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
     }
     //if(payload+1<tail) ADM_warning("Bytes left in SEI %d\n",(int)(tail-payload));
     return r;
+#endif
+   return false;
 }
+
 /**
  * \fn findH264SPS
  * @return 
  */
-bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
+bool TsIndexer::findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {
     dmxPacketInfo tmpInfo;
     bool keepRunning=true;
@@ -91,8 +93,9 @@ bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
       {
           keepRunning=false;
           continue;
-      }
+      }      
       if(startCode&0x80) continue; // Marker missing
+      printf("Startcode 0x%x %d\n",startCode,startCode & 0x1F);
       startCode&=0x1f;
       if(startCode!=NAL_SPS) 
           continue;
@@ -139,7 +142,7 @@ bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     \fn runH264
     \brief Index H264 stream
 */
-bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
+bool TsIndexer::runH265(const char *file,ADM_TS_TRACK *videoTrac)
 {
 
 bool    seq_found=false;
@@ -156,10 +159,10 @@ bool bAppend=false;
 
     printf("Starting H264 indexer\n");
     if(!videoTrac) return false;
-    if(videoTrac[0].trackType!=ADM_TS_H264 
+    if(videoTrac[0].trackType!=ADM_TS_H265 
        )
     {
-        printf("[Ts Indexer] Only H264 video supported\n");
+        printf("[Ts Indexer] Only H265 video supported\n");
         return false;
     }
     video.pid=videoTrac[0].trackPid;
@@ -199,8 +202,8 @@ bool bAppend=false;
     //******************
     switch(videoTrac[0].trackType)
     {
-        case ADM_TS_H264 :
-            seq_found=findH264SPS(pkt,video);
+        case ADM_TS_H265 :
+            seq_found=findH265SPS(pkt,video);
             break;
         default:
             break;
@@ -362,47 +365,6 @@ the_end:
         delete pkt;
         pkt=NULL;
         return result;
-}
-
-
-/********************************************************************************************/
-/********************************************************************************************/
-/********************************************************************************************/
-/********************************************************************************************/
-
-// Workaround win64 bug
-// Put that in a separate function
-bool decoderSei1(const ADM_SPSInfo &spsInfo,int size, uint8_t *bfer,pictureStructure *pic)
-{
-    if(spsInfo.hasStructInfo)
-    {
-      getBits bits(size,bfer);
-      if(spsInfo.CpbDpbToSkip)
-      {
-              bits.get(spsInfo.CpbDpbToSkip);
-      }
-      //printf("Consumed: %d,\n",bits.getConsumedBits());
-      int pic4=bits.get(4);
-      aprintf("Pic struct: %d,\n",pic4);
-      switch(pic4)
-      {
-          case 0: *pic=pictureFrame; break;
-          case 3:
-          case 4: *pic=pictureFrame;
-          case 1: *pic=pictureTopField;break;
-          case 2: *pic=pictureBottomField;break;
-          default:*pic=pictureFrame;break;
-      }
-    }
-    return true;
-}
-//
-// 2nd one
-bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery)
-{
-     getBits bits(size,bfer);
-     *recovery=bits.getUEG();
-     return true;
 }
 
 

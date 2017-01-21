@@ -89,8 +89,10 @@ bool r;
             case ADM_TS_VC1: 
                             r=dx->runVC1(file,&(tracks[0]));
                             break;
-            case ADM_TS_H264: 
             case ADM_TS_H265: 
+                            r=dx->runH265(file,&(tracks[0]));
+                            break;
+            case ADM_TS_H264: 
                             r=dx->runH264(file,&(tracks[0]));
                             break;
             default:
