@@ -709,7 +709,6 @@ void ADM_flyDialog::play(bool state)
     {
         timer.stop();
         _control->enableButtons();
-        updateSlider();
         slide->setEnabled(true);
     }
     
@@ -738,7 +737,7 @@ void ADM_flyDialog::autoZoom(bool state)
 void ADM_flyDialog::timeout()
 {
     
-    bool r=nextImageInternal();
+    bool r=nextImage();
     _control->labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
     if(r)
     {
