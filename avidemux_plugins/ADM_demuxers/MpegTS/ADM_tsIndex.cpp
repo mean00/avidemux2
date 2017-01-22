@@ -164,6 +164,7 @@ bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     {
         case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;;
         case ADM_TS_H264:  qfprintf(index,"VideoCodec=H264\n");break;
+        case ADM_TS_H265:  qfprintf(index,"VideoCodec=H265\n");break;
         case ADM_TS_VC1:   qfprintf(index,"VideoCodec=VC1\n");break;
         default: printf("[TsIndexer] Unsupported video codec\n");return false;
 

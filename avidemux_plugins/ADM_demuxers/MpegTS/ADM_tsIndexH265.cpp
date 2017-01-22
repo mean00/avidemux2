@@ -15,14 +15,45 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 
-typedef enum
-{    
-    NAL_H265_VPS        = 32,
-    NAL_H265_SPS        = 33,
-    NAL_H265_PPS        = 34,
-    NAL_H265_AUD        = 35  
-};
+#define LIST_OF_NAL_TYPE\
+    NAME(NAL_H265_TRAIL_N,      0)    , \
+    NAME(NAL_H265_TRAIL_R,      1)    , \
+    NAME(NAL_H265_TSA_N      , 2),\
+    NAME(NAL_H265_TSA_R      , 3),\
+    NAME(NAL_H265_STSA_N     , 4),\
+    NAME(NAL_H265_STSA_R     , 5),\
+    NAME(NAL_H265_RADL_N     , 6),\
+    NAME(NAL_H265_RADL_R     , 7),\
+    NAME(NAL_H265_RASL_N     , 8),\
+    NAME(NAL_H265_RASL_R     , 9),\
+    NAME(NAL_H265_BLA_W_LP   , 16),\
+    NAME(NAL_H265_BLA_W_RADL , 17),\
+    NAME(NAL_H265_BLA_N_LP   , 18),\
+    NAME(NAL_H265_IDR_W_RADL , 19),\
+    NAME(NAL_H265_IDR_N_LP,     20) , \
+    NAME(NAL_H265_CRA_NUT    ,  21),\
+    NAME(NAL_H265_VPS  ,        32)    ,\
+    NAME(NAL_H265_SPS  ,        33)    ,\
+    NAME(NAL_H265_PPS  ,        34)    ,\
+    NAME(NAL_H265_AUD  ,        35)    ,\
+    NAME(NAL_H265_SEI_PREFIX,   39),\
+    NAME(NAL_H265_SEI_SUFFIX,   40),\
 
+
+#define NAME(x,y) x= y
+
+enum{
+LIST_OF_NAL_TYPE
+};
+#undef NAME
+#define NAME(x,y) {y,#x}
+
+typedef struct NAL_DESC{int value; const char *name;}NAL_DESC;
+
+NAL_DESC nalDesc[]={
+    LIST_OF_NAL_TYPE
+};
+        
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -130,8 +161,7 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
         ADM_warning("Cannot find HEVC SPS\n");
         return false;
     }
-
-    return false;
+    return true;
         // Got SPS!
 #if 0
         uint32_t xA,xR;
@@ -243,7 +273,15 @@ bool bAppend=false;
     }    
     if(!seq_found) goto the_end;
 
-        decodingImage=false;
+    video.w=1980*2;
+    video.h=1080*2;
+    video.fps=23976;
+    writeVideo(&video,ADM_TS_H265);
+    writeAudio();
+    qfprintf(index,"[Data]");
+
+    
+     decodingImage=false;
     //******************
     // 2 Index
     //******************
@@ -258,65 +296,52 @@ resume:
         int startCodeLength=4;
         if(fourBytes==true) startCodeLength++;
 
-//  1:0 2:Nal ref idc 5:Nal Type
-        if(startCode&0x80)
-        {
-            printf("[Ts] Nal Marker missing: 0x%x\n",startCode);
-            continue; // Marker missing
-        }
-        int fullStartCode=startCode;
-        int ref=(startCode>>5)&3;
-
-        startCode&=0x1f; // Ignore nal ref IDR
-
-        aprintf("[%02x] Nal :0x%x,ref=%d,lastRef=%d at : %d \n",fullStartCode,startCode,ref,lastRefIdc,pkt->getConsumed()-beginConsuming);
-
+        startCode=((startCode>>1)&0x3f);   
+        printf("Startcode =%d\n",startCode);
           // Ignore multiple chunk of the same pic
           if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&decodingImage )
           {
             aprintf("Still capturing, ignore\n");
             continue;
           }
+#define NON_IDR_PRE_READ 8 // FIXME
 
           switch(startCode)
                   {
-                  case NAL_AU_DELIMITER:
+                  case NAL_H265_AUD:
                         {
                           aprintf("AU DELIMITER\n");
                           decodingImage = false;
                         }
                           break;
-                  case NAL_SEI:
-                        {
-                        // Load the whole NAL
-                            SEI_nal.empty();
-                            uint32_t code=0xffff+0xffff0000;
-                            while(((0xffffff&code)!=1) && pkt->stillOk())
-                            {
-                                uint8_t r=pkt->readi8();
-                                code=(code<<8)+r;
-                                SEI_nal.pushByte(r);
-                            }
-                            if(!pkt->stillOk()) goto resume;
-                            aprintf("[SEI] Nal size :%d\n",SEI_nal.payloadSize);
-                            if(SEI_nal.payloadSize>=7)
-                                decodeSEI(SEI_nal.payloadSize-4,
-                                    SEI_nal.payload,&(thisUnit.recoveryCount),&(thisUnit.imageStructure));
-                            else
-                                    printf("[SEI] Too short size+4=%d\n",*(SEI_nal.payload));
-                            startCode=pkt->readi8();
-
-                            decodingImage=false;
-                            pkt->getInfo(&thisUnit.packetInfo);
-                            thisUnit.consumedSoFar=pkt->getConsumed();
-                            if(!addUnit(data,unitTypeSei,thisUnit,startCodeLength+SEI_nal.payloadSize+1))
-                                keepRunning=false;
-                            fourBytes=true;
-                            goto resume;
-                            }
-                            break;
-
-                  case NAL_SPS:
+                case NAL_H265_TRAIL_R:
+                case NAL_H265_TRAIL_N:
+                case NAL_H265_TSA_N:
+                case NAL_H265_TSA_R:
+                case NAL_H265_STSA_N:
+                case NAL_H265_STSA_R:
+                case NAL_H265_BLA_W_LP:
+                case NAL_H265_BLA_W_RADL:
+                case NAL_H265_BLA_N_LP:
+                case NAL_H265_IDR_W_RADL:
+                case NAL_H265_IDR_N_LP:
+                case NAL_H265_CRA_NUT:
+                case NAL_H265_RADL_N:
+                case NAL_H265_RADL_R:
+                case NAL_H265_RASL_N:
+                case NAL_H265_RASL_R:
+                        data.nbPics++;
+                        decodingImage=true;
+                        pkt->getInfo(&thisUnit.packetInfo);
+                        thisUnit.consumedSoFar=pkt->getConsumed();
+                        if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
+                            keepRunning=false;
+                            // reset to default
+                        thisUnit.imageStructure=pictureFrame;
+                        thisUnit.recoveryCount=0xff;
+                        pkt->invalidatePtsDts();
+                    break;
+                  case NAL_H265_SPS:
                                 decodingImage=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
                                 if(firstSps)
@@ -329,9 +354,7 @@ resume:
                                     keepRunning=false;
                           break;
 
-                  case NAL_IDR:
-                  case NAL_NON_IDR:
-                    {
+#if 0                        
 #define NON_IDR_PRE_READ 8
                       aprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
                       lastRefIdc=ref;
@@ -381,9 +404,7 @@ resume:
                       thisUnit.imageStructure=pictureFrame;
                       thisUnit.recoveryCount=0xff;
                       pkt->invalidatePtsDts();
-                    }
-
-                    break;
+#endif                      
                   default:
                       break;
           }
