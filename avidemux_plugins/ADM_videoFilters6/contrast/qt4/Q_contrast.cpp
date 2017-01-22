@@ -57,12 +57,19 @@
 #define SPINNER(x) connect( ui.dial##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
           SPINNER(Brightness);
           SPINNER(Contrast);
-          
-        QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
-        QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
-        ui.labelContrast->setText(title);
-        ui.labelBrightness->setText(title2);
-          
+
+        setDialTitles();
+        // Allocate enough width for dial titles to avoid shifting elements of the dialog
+        // on transition e.g. 100% <-> 99% with large font sizes
+        QString text=QString(QT_TRANSLATE_NOOP("contrast","Contrast"))+QString(": 100 %");
+        QString text2=QString(QT_TRANSLATE_NOOP("contrast","Brightness"))+QString(": -100");
+        QFontMetrics fm=ui.labelContrast->fontMetrics();
+        QFontMetrics fm2=ui.labelBrightness->fontMetrics();
+        int labelContrastWidth=fm.boundingRect(text).width()+8; // 8px security margin
+        int labelBrightnessWidth=fm2.boundingRect(text2).width()+8; // 8px security margin
+        ui.labelContrast->setMinimumWidth(labelContrastWidth);
+        ui.labelBrightness->setMinimumWidth(labelBrightnessWidth);
+
           connect( ui.checkBoxU,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));
           connect( ui.checkBoxV,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int))); 
           connect( ui.checkBoxY,SIGNAL(stateChanged(int)),this,SLOT(valueChanged(int)));  
@@ -108,10 +115,7 @@ void Ui_contrastWindow::dvd2PC()
   myCrop->param.offset=-16;
   myCrop->upload();
   myCrop->sameImage();
-  QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
-  QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
-  ui.labelContrast->setText(title);
-  ui.labelBrightness->setText(title2);
+  setDialTitles();
   lock--;
 }
 /**
@@ -134,11 +138,19 @@ void Ui_contrastWindow::valueChanged( int f )
   lock++;
   myCrop->download();
   myCrop->sameImage();
-  QString title=QString("Contrast: %1 %").arg((int)(100*myCrop->param.coef));
-  QString title2=QString("Brightness: %2").arg(myCrop->param.offset);
-  ui.labelContrast->setText(title);
-  ui.labelBrightness->setText(title2);
+  setDialTitles();
   lock--;
+}
+
+/**
+ *    \fn setDialTitles
+ */
+void Ui_contrastWindow::setDialTitles(void)
+{
+    QString title=QString(QT_TRANSLATE_NOOP("contrast","Contrast"))+QString(": %1 %").arg((int)(100*myCrop->param.coef));
+    QString title2=QString(QT_TRANSLATE_NOOP("contrast","Brightness"))+QString(": %2").arg(myCrop->param.offset);
+    ui.labelContrast->setText(title);
+    ui.labelBrightness->setText(title2);
 }
 
 #define MYSPIN(x) w->dial##x
