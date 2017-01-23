@@ -132,6 +132,7 @@ protected:
         
         bool            findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video);
         bool            findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        bool            decodeH265SPS(tsPacketLinearTracker *pkt);
         
 protected:
         FILE                    *index;
