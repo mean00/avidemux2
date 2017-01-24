@@ -7658,8 +7658,8 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+1"/>
-        <source>Прикрепить логотип с помощью интерполяции окружения.</source>
-        <translation type="unfinished"></translation>
+        <source>Blend a logo by interpolating its surrounding box.</source>
+        <translation type="unfinished">Прикрепить логотип с помощью интерполяции окружения.</translation>
     </message>
 </context>
 <context>
@@ -7777,7 +7777,7 @@ Do you want to load it  ?
     <message>
         <location line="+216"/>
         <source>Video Codec:</source>
-        <translation type="unfinished">Видео кодек:</translation>
+        <translation type="unfinished">Кодек видео:</translation>
     </message>
     <message>
         <location line="-229"/>
@@ -7846,6 +7846,11 @@ Do you want to load it  ?
         <location line="+5"/>
         <source>Low</source>
         <translation type="unfinished">Низкий</translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Minimize to Tray</source>
+        <translation type="unfinished">Свернуть в трей</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -10179,8 +10184,8 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+45"/>
-        <source>Щелкните на изображение для установки логотипа</source>
-        <translation type="unfinished"></translation>
+        <source>You can click in the image to set the logo approximatively</source>
+        <translation type="unfinished">Щелкните на изображение для установки логотипа</translation>
     </message>
 </context>
 <context>
