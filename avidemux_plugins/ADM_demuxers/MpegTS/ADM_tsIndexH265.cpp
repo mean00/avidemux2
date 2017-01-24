@@ -130,10 +130,11 @@ static bool findGivenStartCode(tsPacketLinearTracker *pkt,int match, const char 
       {
           return false;
       }     
-      startCode=((startCode>>1)&0x3f);          
+      startCode=((startCode>>1)&0x3f);  
+      printf("Match %d\n",startCode);
       if(startCode!=match) 
           continue;
-      ADM_info("%s found at 0x%llx\n",name,pkt->getPos());
+      ADM_info("%s found at 0x%x\n",name,(int)pkt->getPos());
       return true;
     }
     return false;
@@ -205,22 +206,24 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
         ADM_warning("Cannot find HEVC VPS\n");
         return false;
     }   
-    uint64_t startExtraData=pkt->getPos()-4;
-    if(!findGivenStartCode(pkt,NAL_H265_PPS ,"PPS"))
-    {
-        ADM_warning("Cannot find HEVC PPS\n");
-        return false;
-    }
+    uint64_t startExtraData=pkt->getPos()-5;
     if(!findGivenStartCode(pkt,NAL_H265_SPS ,"SPS"))
     {
         ADM_warning("Cannot find HEVC SPS\n");
         return false;
     }
-    uint64_t endExtraData=startExtraData+900; // should be enough
+
+    if(!findGivenStartCode(pkt,NAL_H265_PPS ,"PPS"))
+    {
+        ADM_warning("Cannot find HEVC PPS\n");
+        return false;
+    }
+    pkt->findStartCode();
+    uint64_t endExtraData=pkt->getPos()-4; // should be enough
     
     pkt->setPos(startExtraData);
     
-    int extraLen=(int)(endExtraData-startExtraData);
+    int extraLen=188+(int)(endExtraData-startExtraData);
     
     uint8_t *extra=(uint8_t *)admAlloca(extraLen);
     pkt->read(extraLen,extra);
