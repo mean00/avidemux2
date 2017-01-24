@@ -204,7 +204,8 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     {
         ADM_warning("Cannot find HEVC VPS\n");
         return false;
-    }    
+    }   
+    uint64_t startExtraData=pkt->getPos()-4;
     if(!findGivenStartCode(pkt,NAL_H265_PPS ,"PPS"))
     {
         ADM_warning("Cannot find HEVC PPS\n");
@@ -215,46 +216,29 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
         ADM_warning("Cannot find HEVC SPS\n");
         return false;
     }
-    return decodeH265SPS(pkt);
+    uint64_t endExtraData=startExtraData+900; // should be enough
     
-        // Got SPS!
-#if 0
-        uint32_t xA,xR;
-        // Get info
-        pkt->getInfo(&tmpInfo);
-        // Read just enough...
-        {
-          SEI_nal.empty();
-          uint32_t code=0xffff+0xffff0000;
-          while(((code&0xffffff)!=1) && pkt->stillOk())
-          {
-                  uint8_t r=pkt->readi8();
-                  code=(code<<8)+r;
-                  SEI_nal.pushByte(r);
-          }
-          if(!pkt->stillOk()) break;;
-          pkt->seek(tmpInfo.startAt,tmpInfo.offset-5);
-          if (extractSPSInfo(SEI_nal.payload, SEI_nal.payloadSize-4,&spsInfo))
-          {
-            ADM_info("[TsIndexer] Found video %" PRIu32"x%" PRIu32", fps=%" PRIu32"\n",video.w,video.h,video.fps);
-            ADM_info("[TsIndexer] SPS says %" PRIu32"x%" PRIu32"\n",spsInfo.width,spsInfo.height);
-            seq_found=1;
-            video.w=spsInfo.width;
-            video.h=spsInfo.height;
-            video.fps=spsInfo.fps1000;
-            xA=spsInfo.darNum;
-            xR=spsInfo.darDen;
-            writeVideo(&video,ADM_TS_H264);
-            writeAudio();
-            qfprintf(index,"[Data]");
-            // Rewind
-
-            break;
-        };
-      }
+    pkt->setPos(startExtraData);
+    
+    int extraLen=(int)(endExtraData-startExtraData);
+    
+    uint8_t *extra=(uint8_t *)admAlloca(extraLen);
+    pkt->read(extraLen,extra);
+    pkt->setPos(endExtraData);
+    
+    ADM_info("VPS/SPS/PPS lengths = %d bytes \n",extraLen);
+    ADM_SPSInfo info;
+    if(!extractSPSInfoH265(extra,extraLen,&info))
+    {
+        ADM_warning("Cannot extract SPS/VPS/PPS\n");
+        return false;
     }
-    return seq_found;
-#endif    
+    video.w=info.width;
+    video.h=info.height;
+    ADM_info("Found video %d x %d\n",info.width,info.height);
+    return true;
+    
+  
 }
 /**
     \fn runH264
