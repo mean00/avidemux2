@@ -6709,6 +6709,19 @@ Installation mismatch</source>
     </message>
 </context>
 <context>
+    <name>asciiView</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asciiView/ADM_vidAscii.cpp" line="+59"/>
+        <source>Ascii View</source>
+        <translation type="unfinished">ASCII-вид</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Ascii view</source>
+        <translation type="unfinished">ASCII-вид</translation>
+    </message>
+</context>
+<context>
     <name>asfdemuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Asf/ADM_asf.cpp" line="+158"/>
@@ -11605,13 +11618,13 @@ Ready.
     </message>
     <message>
         <location line="+35"/>
-        <source>Ресэмплировать кадры/с</source>
-        <translation type="unfinished"></translation>
+        <source>Resample FPS</source>
+        <translation type="unfinished">Изменить кадры/с</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Изменить кадры/с и установить их принудительно. Сохраняет продолжительность и синхронизацию.</source>
-        <translation type="unfinished"></translation>
+        <source>Change and enforce FPS. Keep duration and sync.</source>
+        <translation type="unfinished">Изменить кадры/с и установить их принудительно. Сохраняет продолжительность и синхронизацию.</translation>
     </message>
 </context>
 <context>
