@@ -56,8 +56,8 @@ DECLARE_VIDEO_FILTER(   AsciiFilter,   // Class
                         ADM_UI_ALL,         // UI
                         VF_TRANSFORM,            // Category
                         "AsciiView",            // internal name (must be uniq!)
-                        "Ascii View",            // Display name
-                        "Ascii view" // Description
+                        QT_TRANSLATE_NOOP("asciiView","Ascii View"),            // Display name
+                        QT_TRANSLATE_NOOP("asciiView","Ascii view") // Description
                     );
 
 // Now implements the interesting parts
