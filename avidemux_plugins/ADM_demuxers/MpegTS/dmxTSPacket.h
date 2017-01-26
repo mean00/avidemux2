@@ -167,6 +167,14 @@ public:
         uint32_t getConsumed(void);
         bool     stillOk(void) {return !eof;};
         bool     invalidatePtsDts(void);
+ virtual bool    setPos(uint64_t pos)
+ {
+   pesPacket->payloadSize=0;
+   pesPacket->offset=0;
+   return tsPacket::setPos(pos);
+   
+ }
+ 
 #ifndef TS_PACKET_INLINE
         uint8_t  readi8();
         uint16_t readi16();

@@ -130,14 +130,41 @@ static bool findGivenStartCode(tsPacketLinearTracker *pkt,int match, const char 
       {
           return false;
       }     
+      printf("Match %x %d\n",startCode,((startCode>>1)&0x3f));
       startCode=((startCode>>1)&0x3f);  
-      printf("Match %d\n",startCode);
-      if(startCode!=match) 
+      
+      if(startCode!=match && match) 
           continue;
-      ADM_info("%s found at 0x%x\n",name,(int)pkt->getPos());
+        dmxPacketInfo packetInfo;
+        pkt->getInfo( &packetInfo);
+      
+      ADM_info("%s found at 0x%x+0x%x\n",name,(int)packetInfo.startAt,packetInfo.offset);
       return true;
     }
     return false;
+}
+
+/**
+ * \fn findGivenStartCode
+ * @param pkt
+ * @param match: Startcode to find, zero means any startcode
+ * @return 
+ */
+static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int match, const char *name)
+{
+    
+    while(start+4<end)
+    {
+        if(!start[0]&&!start[1] && start[2]==0x01)
+        {
+            uint8_t code=(start[3]>>1)&0x3f;
+            printf(" Matcho = %d\n",code);
+            if(code==match || !match) return start;
+        }
+        start++;
+    }
+    ADM_warning("Cannot find %s\n",name);
+    return NULL;
 }
 /**
  * 
@@ -200,38 +227,46 @@ bool TsIndexer::decodeH265SPS(tsPacketLinearTracker *pkt)
 bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {    
     bool keepRunning=true;
+    dmxPacketInfo packetInfo;
+    uint8_t headerBuffer[512]={0,0,0,1,(NAL_H265_VPS<<1)}; // we are forcing some bits to be zero...
     // This is a bit naive...
     if(!findGivenStartCode(pkt,NAL_H265_VPS ,"VPS"))
     {
         ADM_warning("Cannot find HEVC VPS\n");
         return false;
     }   
-    uint64_t startExtraData=pkt->getPos()-5;
-    if(!findGivenStartCode(pkt,NAL_H265_SPS ,"SPS"))
+    pkt->getInfo( &packetInfo);
+    uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though    
+    pkt->read(512,headerBuffer+5);
+    uint8_t *pointer=headerBuffer+5;
+    uint8_t *end=headerBuffer+512;
+    
+    pointer=findGivenStartCodeInBuffer(pointer,end,NAL_H265_SPS,"SPS");
+    if(!pointer)
     {
         ADM_warning("Cannot find HEVC SPS\n");
         return false;
     }
-
-    if(!findGivenStartCode(pkt,NAL_H265_PPS ,"PPS"))
+    ADM_info("SPS found at %d\n",(int)(pointer-headerBuffer));
+    pointer=findGivenStartCodeInBuffer(pointer,end,NAL_H265_PPS,"PPS");
+    if(!pointer)
     {
         ADM_warning("Cannot find HEVC PPS\n");
         return false;
     }
-    pkt->findStartCode();
-    uint64_t endExtraData=pkt->getPos()-4; // should be enough
-    
-    pkt->setPos(startExtraData);
-    
-    int extraLen=188+(int)(endExtraData-startExtraData);
-    
-    uint8_t *extra=(uint8_t *)admAlloca(extraLen);
-    pkt->read(extraLen,extra);
-    pkt->setPos(endExtraData);
+    ADM_info("PPS found at %d\n",(int)(pointer-headerBuffer));
+    pointer=findGivenStartCodeInBuffer(pointer+3,end,0,"Any");
+    if(!pointer)
+    {
+        ADM_warning("Cannot find HEVC next marker\n");
+        return false;
+    }
+    ADM_info("Any found at %d\n",(int)(pointer-headerBuffer));
+    int extraLen=(int)(pointer-headerBuffer); // should be enough (tm)    
     
     ADM_info("VPS/SPS/PPS lengths = %d bytes \n",extraLen);
     ADM_SPSInfo info;
-    if(!extractSPSInfoH265(extra,extraLen,&info))
+    if(!extractSPSInfoH265(headerBuffer,extraLen,&info))
     {
         ADM_warning("Cannot extract SPS/VPS/PPS\n");
         return false;
