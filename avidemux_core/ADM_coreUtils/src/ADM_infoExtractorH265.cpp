@@ -34,8 +34,28 @@ extern "C"
 #include "libavcodec/ff_spsinfo.h"
 
 }
+extern bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
+                                    uint32_t *outLen, uint8_t *outData);
 
 
+/**
+ */
+class H265Parser
+{
+public : 
+    H265Parser  (int len,uint8_t *data);
+    ~H265Parser();
+    bool parseAnnexB(ADM_SPSInfo *spsinfo);
+    bool parseMpeg4(ADM_SPSInfo *spsinfo);    
+    bool init();
+
+protected:
+    int myLen;
+    uint8_t *myData;
+    AVCodecParserContext *parser;
+    AVCodecContext *ctx;
+    AVCodec *codec;
+};
 
 /**
       \fn extractH265FrameType
@@ -109,99 +129,113 @@ uint8_t extractH265FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
   return 0;
 }
 
-
-/**
-        \fn extractSPSInfo_mp4Header
-        \brief Only works for mp4 style headers i.e. begins by 0x01
-*/
-bool extractSPSInfoH265_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+H265Parser::H265Parser  (int len,uint8_t *data)
 {
-    bool r=false;
-    bool closeCodec=false;
-
-    // duplicate
-    int myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
-    uint8_t *myData=new uint8_t[myLen];
+    myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
+    myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
+    parser=NULL;
+    ctx=NULL;
+    codec=NULL;
+}
+H265Parser::~H265Parser()
+{
+    if(myData)
+    {
+        delete [] myData;
+        myData=NULL;
+    }
+    //-
+    if(ctx)
+    {
+        avcodec_close(ctx);
+        av_free(ctx);
+        ctx=NULL;
+    }    
+    if(parser)
+    {
+        av_parser_close(parser);
+        parser=NULL;
+    }
+    
+}
 
-    // 1-Create parser
-    AVCodecParserContext *parser=av_parser_init(AV_CODEC_ID_HEVC);
-    AVCodecContext *ctx=NULL;
-    AVCodec *codec=NULL;
-    uint8_t *d=NULL;
-
+bool H265Parser::init()
+{
+     parser=av_parser_init(AV_CODEC_ID_HEVC);
     if(!parser)
     {
-        ADM_error("cannot create h264 parser\n");
-        goto theEnd;
+        ADM_error("cannot create h265 parser\n");
+        return false;;
     }
     ADM_info("Parser created\n");
     codec=avcodec_find_decoder(AV_CODEC_ID_HEVC);
     if(!codec)
     {
-        ADM_error("cannot create h264 codec\n");
-        goto theEnd;
+        ADM_error("cannot create h265 codec\n");
+        return false;;
     }
     ADM_info("Codec created\n");
     ctx=avcodec_alloc_context3(codec);
    if (avcodec_open2(ctx, codec, NULL) < 0)
    {
-        ADM_error("cannot create h264 context\n");
-        goto theEnd;
+        ADM_error("cannot create h265 context\n");
+        return false;;
     }
-
-    ADM_info("Context created\n");
-    //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
-    ctx->extradata=myData;
-    ctx->extradata_size=len;
-     {
-         uint8_t *outptr=NULL;
-         int outsize=0;
-
-         int used=av_parser_parse2(parser, ctx, &outptr, &outsize, d, 0, 0, 0,0);
-         printf("Used bytes %d/%d (+5)\n",used,len);
-         if(!used)
-         {
-             ADM_warning("Failed to extract SPS info\n");
-           //  goto theEnd;
-         }
-    }
-    ADM_info("Width  : %d\n",ctx->width);
-    ADM_info("Height : %d\n",ctx->height);
-    {
-        spsinfo->width=ctx->width;
-        spsinfo->height=ctx->height;
-        spsinfo->fps1000=(ctx->framerate.num * 1000)/ctx->framerate.den;
-        r=true;
-     }
-    // cleanup
-theEnd:
-    if(ctx)
-    {
-        avcodec_close(ctx);
-
-        av_free(ctx);
-    }
-    if(parser)
-        av_parser_close(parser);
-
-    delete [] myData;
-
-    return r;
+    return true;
 }
 /**
-        \fn extractSPSInfo2
-        \brief Same as extractSPSInfo, but using libavcodec
-*/
-static bool extractSPSInfoH265_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+ * 
+ * @return 
+ */
+bool H265Parser::parseMpeg4(ADM_SPSInfo *spsinfo)
 {
-    ADM_info("Incoming SPS info\n");
-    mixDump(data,len);
+    uint8_t *outptr=NULL;
+    int outsize=0;
 
-    return    extractSPSInfoH265_mp4Header(data,len,spsinfo) ;
-
+    ctx->extradata=myData;
+    ctx->extradata_size=myLen;
+    int used=av_parser_parse2(parser, ctx, &outptr, &outsize, NULL, 0, 0, 0,0);
+    printf("Used bytes %d, total = %d, outsize=%d (+5)\n",used,myLen,outsize);
+    if(!used)
+    {
+        ADM_warning("Failed to extract SPS info\n");
+        return false;
+    }
+    return  true;
 }
+/**
+ * 
+ * @return 
+ */
+bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
+{
+    
+    uint8_t *start=myData;
+    int   toConsume=myLen;
+    while(toConsume>5)
+     {
+         ADM_info("Left in buffer %d\n",toConsume);
+         uint8_t *outptr=NULL;
+         int outsize=0;
+         int used=av_parser_parse2(parser, ctx, &outptr, &outsize,
+                     start, toConsume,
+                     0,0,0); // pos, dts,...    
+         printf("Used bytes %d, total = %d, outsize=%d (+5)\n",used,toConsume,outsize);
+         if(used>0)
+         {
+             toConsume-=used;
+             start+=used;
+             continue;
+         }
+         break;
+    }
+    if(toConsume==myLen)
+        return false;
+    return true;
+}
+
 /**
  * 
  * @param data
@@ -211,34 +245,31 @@ static bool extractSPSInfoH265_lavcodec (uint8_t * data, uint32_t len, ADM_SPSIn
  */
 bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
+    
 #define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
-#if 1
-
-        bool l=extractSPSInfoH265_lavcodec(data,len,spsinfo);
-        if(l)
-        {
-            DPY(width);
-            DPY(height);
-            DPY(fps1000);
-            DPY(hasStructInfo);
-            DPY(CpbDpbToSkip);
-            DPY(darNum);
-            DPY(darDen);
-        }else
-        {
-            ADM_info("Failed\n.");
-        }
-        return l;
-
-#else
-        bool i=extractSPSInfo_internal(data,len,spsinfo);
-        DPY(width);
-        DPY(height);
-        DPY(fps1000);
-        DPY(hasStructInfo);
-        DPY(CpbDpbToSkip);
-        DPY(darNum);
-        DPY(darDen);
-        return i;
-#endif
+    bool annexB=false;
+    bool l=false;
+    switch(data[0])
+    {
+    case 1: ADM_info("Mp4 \n");
+            break;
+    case 0: ADM_info("Annex B \n");
+            break;
+    default:
+            ADM_warning("Format not recognized\n");
+            return false;
+            break;            
+    }        
+      
+    H265Parser parser(len,data);
+    if(!parser.init())
+    {
+        return false;
+    }
+    bool r;
+    if(annexB)
+        r=parser.parseMpeg4(spsinfo);
+    else
+        r=parser.parseAnnexB(spsinfo);
+    return r;
 }
