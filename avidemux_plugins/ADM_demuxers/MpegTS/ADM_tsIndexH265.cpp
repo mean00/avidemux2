@@ -355,7 +355,7 @@ bool bAppend=false;
     video.fps=23976;
     writeVideo(&video,ADM_TS_H265);
     writeAudio();
-    qfprintf(index,"[Data]");
+    qfprintf(index,"[Data]\n");
 
     
      decodingImage=false;

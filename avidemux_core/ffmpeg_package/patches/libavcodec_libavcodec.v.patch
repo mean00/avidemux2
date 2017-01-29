@@ -1,16 +1,14 @@
-diff --git libavcodec/libavcodec.v libavcodec/libavcodec.v
-index c923cd3..84223d8 100644
---- libavcodec/libavcodec.v
-+++ libavcodec/libavcodec.v
-@@ -3,5 +3,10 @@ LIBAVCODEC_$MAJOR {
+--- libavcodec/libavcodec.v.org	2017-01-29 14:47:49.534479433 +0100
++++ libavcodec/libavcodec.v	2017-01-29 14:48:10.534452006 +0100
+@@ -3,5 +3,11 @@
                  #deprecated, remove after next bump
                  audio_resample;
                  audio_resample_close;
-+                # Avidemux
-+                ff_h264_info;
-+                ff_golomb_vlc_len;
-+                ff_ue_golomb_vlc_code;
-+                ff_se_golomb_vlc_code;
-+                ff_hevc_parser_get_sps; 
++  # Avidemux
++        ff_h264_info;
++        ff_golomb_vlc_len;
++        ff_ue_golomb_vlc_code;
++        ff_se_golomb_vlc_code;
++        ff_hevc_parser_get_sps; 
          local:  *;
  };

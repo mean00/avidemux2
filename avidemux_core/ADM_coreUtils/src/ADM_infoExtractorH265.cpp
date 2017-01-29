@@ -30,8 +30,11 @@
 extern "C"
 {
 #include "libavcodec/parser.h"
+#include "libavcodec/hevc.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
+extern  HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
+   
 
 }
 extern bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
@@ -50,7 +53,7 @@ public :
     bool init();
 
 protected:
-    int myLen;
+    int myLen,originalLength;
     uint8_t *myData;
     AVCodecParserContext *parser;
     AVCodecContext *ctx;
@@ -131,6 +134,7 @@ uint8_t extractH265FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
 
 H265Parser::H265Parser  (int len,uint8_t *data)
 {
+    originalLength=len;
     myLen=len+FF_INPUT_BUFFER_PADDING_SIZE;
     myData=new uint8_t[myLen];
     memset(myData,0x2,myLen);
@@ -183,6 +187,7 @@ bool H265Parser::init()
         ADM_error("cannot create h265 context\n");
         return false;;
     }
+    parser->flags|=PARSER_FLAG_COMPLETE_FRAMES;
     return true;
 }
 /**
@@ -214,6 +219,21 @@ bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
     
     uint8_t *start=myData;
     int   toConsume=myLen;
+#if 1    
+    uint8_t *p= myData+originalLength;
+    *p++=0x00;
+    *p++=0x00;
+    *p++=0x00;
+    *p++=0x01;
+    *p++=21<<1;  // fake NAL_H265_CRA_NUT
+    *p++=0X01;  
+    *p++=0xac;  
+    *p++=0xe1;      
+    *p++=0X22;      
+    *p++=0X22;  
+#endif
+    ctx->flags |= PARSER_FLAG_COMPLETE_FRAMES;
+    mixDump(myData,myLen);
     while(toConsume>5)
      {
          ADM_info("Left in buffer %d\n",toConsume);
@@ -231,9 +251,18 @@ bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
          }
          break;
     }
-    if(toConsume==myLen)
-        return false;
-    return true;
+    // Ok, let's see if we get a valid sps
+   HEVCSPS *sps = ff_hevc_parser_get_sps(parser);
+   if(sps)
+   {
+        printf("Coded width=%d x %d\n",sps->output_width,sps->output_height);
+        spsinfo->width=sps->output_width;
+        spsinfo->height=sps->output_height;
+        spsinfo->darDen=1000;
+        spsinfo->darNum=25000; // TODO
+        return true;
+   }
+    return false;
 }
 
 /**
@@ -246,14 +275,14 @@ bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
 bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     
-#define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
     bool annexB=false;
-    bool l=false;
     switch(data[0])
     {
     case 1: ADM_info("Mp4 \n");
             break;
-    case 0: ADM_info("Annex B \n");
+    case 0: 
+            annexB=true;
+            ADM_info("Annex B \n");
             break;
     default:
             ADM_warning("Format not recognized\n");
@@ -264,10 +293,11 @@ bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
     H265Parser parser(len,data);
     if(!parser.init())
     {
+        ADM_info("Cannot initialize parser\n");
         return false;
     }
     bool r;
-    if(annexB)
+    if(!annexB)
         r=parser.parseMpeg4(spsinfo);
     else
         r=parser.parseAnnexB(spsinfo);
