@@ -1,0 +1,61 @@
+--- libavcodec/hevc_parser.c.orig	2017-01-29 14:44:16.858763609 +0100
++++ libavcodec/hevc_parser.c	2017-01-29 14:44:23.514754511 +0100
+@@ -25,6 +25,7 @@
+ #include "golomb.h"
+ #include "hevc.h"
+ #include "parser.h"
++HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
+ 
+ #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
+ 
+@@ -46,7 +47,7 @@
+ } HEVCParserContext;
+ 
+ #if !ADVANCED_PARSER
+-static int hevc_parse_slice_header(AVCodecParserContext *s, HEVCNAL *nal,
++int hevc_parse_slice_header(AVCodecParserContext *s, HEVCNAL *nal,
+                                    AVCodecContext *avctx)
+ {
+     HEVCParserContext *ctx = s->priv_data;
+@@ -81,7 +82,6 @@
+ 
+     return 0;
+ }
+-
+ static int parse_nal_units(AVCodecParserContext *s, const uint8_t *buf,
+                            int buf_size, AVCodecContext *avctx)
+ {
+@@ -128,7 +128,6 @@
+     return 0;
+ }
+ #endif
+-
+ /**
+  * Find the end of the current frame in the bitstream.
+  * @return the position of the first byte of the next frame, or END_NOT_FOUND
+@@ -174,6 +173,25 @@
+ 
+ #if ADVANCED_PARSER
+ /**
++ \fn ff_hevc_parser_get_sps
++\brief meanx : extract sps from context
++*/
++HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s)
++{
++      int i;
++      HEVCParserContext *ctx = s->priv_data;
++      if(!ctx) return NULL;
++      HEVCContext       *h   = &ctx->h;
++      if(!h) return NULL;
++      HEVCParamSets     *ps = &h->ps;
++      if(!ps) return NULL;
++
++     HEVCSPS *sps = ps->sps;
++     return sps;
++}
++// /MEANX
++
++/**
+  * Parse NAL units of found picture and decode some basic information.
+  *
+  * @param s parser context.
