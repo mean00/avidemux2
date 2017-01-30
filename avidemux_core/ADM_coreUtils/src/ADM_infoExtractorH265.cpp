@@ -29,6 +29,14 @@
 
 extern "C"
 {
+#include "libavcodec/parser.h"
+#include "libavcodec/hevc.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/ff_spsinfo.h"
+}
+
+extern "C"
+{
 extern  HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
 extern  HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *parser);
 extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
@@ -259,16 +267,12 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
         spsinfo->width=sps->output_width;
         spsinfo->height=sps->output_height;
         spsinfo->fps1000=23976;
-        spsinfo->sps=*sps;
         if(vps)
         {
-            spsinfo->vps=*vps;
             printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
             printf("VPS num unit in tick =%d\n",(int)vps->vps_num_units_in_tick);
             spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
         }
-        if(pps)
-            spsinfo->pps=*pps;
         return true;
    }
     return false;

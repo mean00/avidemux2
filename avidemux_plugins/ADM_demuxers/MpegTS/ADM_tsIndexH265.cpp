@@ -213,7 +213,7 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     int extraLen=(int)(pointer-headerBuffer); // should be enough (tm)    
     
     ADM_info("VPS/SPS/PPS lengths = %d bytes \n",extraLen);
-    ADM_SPSInfo info;
+    ADM_SPSinfoH265 info;
     if(!extractSPSInfoH265(headerBuffer,extraLen,&info))
     {
         ADM_warning("Cannot extract SPS/VPS/PPS\n");

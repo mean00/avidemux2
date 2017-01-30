@@ -17,14 +17,6 @@
 
 #include "ADM_coreUtils6_export.h"
 
-extern "C"
-{
-#include "libavcodec/parser.h"
-#include "libavcodec/hevc.h"
-#include "libavcodec/avcodec.h"
-#include "libavcodec/ff_spsinfo.h"
-}
-
 
 ADM_COREUTILS6_EXPORT uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
 ADM_COREUTILS6_EXPORT uint8_t extractH263Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h);
@@ -53,17 +45,11 @@ class ADM_COREUTILS6_EXPORT ADM_SPSinfoH265
 public:
     ADM_SPSinfoH265()
     {
-      memset(&sps,0,sizeof(sps));
-      memset(&pps,0,sizeof(pps));
-      memset(&vps,0,sizeof(vps));
       width=height=fps1000=0;
     }
     uint32_t width;
     uint32_t height;
     uint32_t fps1000;
-    HEVCSPS sps;
-    HEVCPPS pps;
-    HEVCVPS vps;
 };
 
 
