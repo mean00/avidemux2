@@ -29,10 +29,6 @@
 
 extern "C"
 {
-#include "libavcodec/parser.h"
-#include "libavcodec/hevc.h"
-#include "libavcodec/avcodec.h"
-#include "libavcodec/ff_spsinfo.h"
 extern  HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *parser);
 extern  HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *parser);
 extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
@@ -50,8 +46,8 @@ class H265Parser
 public : 
     H265Parser  (int len,uint8_t *data);
     ~H265Parser();
-    bool parseAnnexB(ADM_SPSInfo *spsinfo);
-    bool parseMpeg4(ADM_SPSInfo *spsinfo);    
+    bool parseAnnexB(ADM_SPSinfoH265 *spsinfo);
+    bool parseMpeg4(ADM_SPSinfoH265 *spsinfo);    
     bool init();
 
 protected:
@@ -196,7 +192,7 @@ bool H265Parser::init()
  * 
  * @return 
  */
-bool H265Parser::parseMpeg4(ADM_SPSInfo *spsinfo)
+bool H265Parser::parseMpeg4(ADM_SPSinfoH265 *spsinfo)
 {
     uint8_t *outptr=NULL;
     int outsize=0;
@@ -216,7 +212,7 @@ bool H265Parser::parseMpeg4(ADM_SPSInfo *spsinfo)
  * 
  * @return 
  */
-bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
+bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
 {
     
     uint8_t *start=myData;
@@ -256,20 +252,23 @@ bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
     // Ok, let's see if we get a valid sps
    HEVCSPS *sps = ff_hevc_parser_get_sps(parser);
    HEVCVPS *vps = ff_hevc_parser_get_vps(parser);
+   HEVCPPS *pps = ff_hevc_parser_get_pps(parser);
    if(sps)
    {
         printf("Coded width=%d x %d\n",sps->output_width,sps->output_height);
         spsinfo->width=sps->output_width;
         spsinfo->height=sps->output_height;
-        spsinfo->darDen=1;
-        spsinfo->darNum=1; // default
         spsinfo->fps1000=23976;
+        spsinfo->sps=*sps;
         if(vps)
         {
+            spsinfo->vps=*vps;
             printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
             printf("VPS num unit in tick =%d\n",(int)vps->vps_num_units_in_tick);
             spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
         }
+        if(pps)
+            spsinfo->pps=*pps;
         return true;
    }
     return false;
@@ -282,7 +281,7 @@ bool H265Parser::parseAnnexB(ADM_SPSInfo *spsinfo)
  * @param spsinfo
  * @return 
  */
-bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
 {
     
     bool annexB=false;

@@ -17,6 +17,15 @@
 
 #include "ADM_coreUtils6_export.h"
 
+extern "C"
+{
+#include "libavcodec/parser.h"
+#include "libavcodec/hevc.h"
+#include "libavcodec/avcodec.h"
+#include "libavcodec/ff_spsinfo.h"
+}
+
+
 ADM_COREUTILS6_EXPORT uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
 ADM_COREUTILS6_EXPORT uint8_t extractH263Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h);
 ADM_COREUTILS6_EXPORT uint8_t extractH263FLVInfo (uint8_t * buffer, uint32_t len, uint32_t * w, uint32_t * h);
@@ -36,6 +45,29 @@ typedef struct
     uint32_t CpbDpbToSkip;
 }ADM_SPSInfo;
 
+/**
+    \struct ADM_SPSinfoH265
+*/
+class ADM_COREUTILS6_EXPORT ADM_SPSinfoH265
+{
+public:
+    ADM_SPSinfoH265()
+    {
+      memset(&sps,0,sizeof(sps));
+      memset(&pps,0,sizeof(pps));
+      memset(&vps,0,sizeof(vps));
+      width=height=fps1000=0;
+    }
+    uint32_t width;
+    uint32_t height;
+    uint32_t fps1000;
+    HEVCSPS sps;
+    HEVCPPS pps;
+    HEVCVPS vps;
+};
+
+
+
 ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming, uint32_t *outLen, uint8_t *outData);
 
 ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
@@ -43,14 +75,14 @@ ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t l
 
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT uint8_t extractH265FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
-uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
+ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                                     uint32_t *spsLen,uint8_t **spsData,
                                     uint32_t *ppsLen,uint8_t **ppsData); // return a copy of pps/sps extracted
 
 
-ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info); 
-ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len,ADM_SPSInfo *info); 
+ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265_mp4Header(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
+ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
 
 
 

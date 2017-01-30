@@ -152,8 +152,7 @@ extractMpeg4Info (uint8_t * data, uint32_t dataSize, uint32_t * w,
     Warning this function expects data to start AFTER startcode, contrarily to other functions here!
 */
 
-uint8_t
-extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
+ADM_COREUTILS6_EXPORT uint8_t extractVopInfo (uint8_t * data, uint32_t len, uint32_t timeincbits,
 		uint32_t * vopType, uint32_t * modulo, uint32_t * time_inc,
 		uint32_t * vopcoded)
 {
