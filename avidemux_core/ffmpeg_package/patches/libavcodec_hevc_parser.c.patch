@@ -1,14 +1,18 @@
---- libavcodec/hevc_parser.c.orig	2017-01-29 14:44:16.858763609 +0100
-+++ libavcodec/hevc_parser.c	2017-01-29 14:44:23.514754511 +0100
-@@ -25,6 +25,7 @@
+--- libavcodec/hevc_parser.c.org	2017-01-30 07:50:12.779173809 +0100
++++ libavcodec/hevc_parser.c	2017-01-30 07:43:40.491714104 +0100
+@@ -25,6 +25,11 @@
  #include "golomb.h"
  #include "hevc.h"
  #include "parser.h"
++/* MEANX */
 +HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
++HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
++HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
++/* /MEANX */
  
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
-@@ -46,7 +47,7 @@
+@@ -46,7 +51,7 @@
  } HEVCParserContext;
  
  #if !ADVANCED_PARSER
@@ -17,7 +21,7 @@
                                     AVCodecContext *avctx)
  {
      HEVCParserContext *ctx = s->priv_data;
-@@ -81,7 +82,6 @@
+@@ -81,7 +86,6 @@
  
      return 0;
  }
@@ -25,7 +29,7 @@
  static int parse_nal_units(AVCodecParserContext *s, const uint8_t *buf,
                             int buf_size, AVCodecContext *avctx)
  {
-@@ -128,7 +128,6 @@
+@@ -128,7 +132,6 @@
      return 0;
  }
  #endif
@@ -33,7 +37,7 @@
  /**
   * Find the end of the current frame in the bitstream.
   * @return the position of the first byte of the next frame, or END_NOT_FOUND
-@@ -174,6 +173,25 @@
+@@ -174,6 +177,59 @@
  
  #if ADVANCED_PARSER
  /**
@@ -52,6 +56,40 @@
 +
 +     HEVCSPS *sps = ps->sps;
 +     return sps;
++}
++/**
++ \fn ff_hevc_parser_get_sps
++\brief meanx : extract sps from context
++*/
++HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s)
++{
++      int i;
++      HEVCParserContext *ctx = s->priv_data;
++      if(!ctx) return NULL;
++      HEVCContext       *h   = &ctx->h;
++      if(!h) return NULL;
++      HEVCParamSets     *ps = &h->ps;
++      if(!ps) return NULL;
++
++     HEVCPPS *pps = ps->pps;
++     return pps;
++}
++/**
++ \fn ff_hevc_parser_get_sps
++\brief meanx : extract sps from context
++*/
++HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s)
++{
++      int i;
++      HEVCParserContext *ctx = s->priv_data;
++      if(!ctx) return NULL;
++      HEVCContext       *h   = &ctx->h;
++      if(!h) return NULL;
++      HEVCParamSets     *ps = &h->ps;
++      if(!ps) return NULL;
++
++     HEVCVPS *vps = ps->vps;
++     return vps;
 +}
 +// /MEANX
 +

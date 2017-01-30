@@ -36,6 +36,7 @@
     NAME(NAL_H265_SPS  ,        33)    ,\
     NAME(NAL_H265_PPS  ,        34)    ,\
     NAME(NAL_H265_AUD  ,        35)    ,\
+    NAME(NAL_H265_FD_NUT  ,        38)    ,\
     NAME(NAL_H265_SEI_PREFIX,   39),\
     NAME(NAL_H265_SEI_SUFFIX,   40),\
 
@@ -166,60 +167,7 @@ static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int mat
     ADM_warning("Cannot find %s\n",name);
     return NULL;
 }
-/**
- * 
- * @param pkt
- * @return 
- */
-#define SPS_HEADER_LENGTH 21
-bool TsIndexer::decodeH265SPS(tsPacketLinearTracker *pkt)
-{
-    uint8_t buffer[SPS_HEADER_LENGTH];
-    pkt->read(SPS_HEADER_LENGTH,buffer);
-    
-    getBits bits(SPS_HEADER_LENGTH,buffer);
-    
-    bits.skip(4); //videp parameter ID
-    bits.skip(3); // max layer minus 1
-    bits.skip(1); // nesting flag
-    
-    // Profile / Tier / level
-    bits.get(2); // profile space
-    bits.get(1); // tier flag
-    int profile=bits.get(5); // profile flag
-    for(int j=0;j<32;j++)
-        bits.get(1);
-    bits.get(1); // progressive
-    bits.get(1); // interlaced
-    bits.get(1); // non packed
-    bits.get(1); // frame only
-    bits.get(16);
-    bits.get(16);
-    bits.get(11); // reserved 43 bits
-    bits.get(1); // reserved 1 bits
-    int idec=bits.get(8); // general level idc
-    bits.get(1); // sub layer
-    bits.get(1); // sub layer
-    bits.get(2); // reserved
-    
-    printf("Profile=%d\n",profile);
-    bits.get(8); // General level idc
-    bits.get(16);
-    bits.get(16);
-    bits.get(11); // reserved 43 bits
-    bits.get(1); // reserved 1 bits
-    // sub layer level idc 8
-    //
-    bits.getUEG(); // SPS Seq ID
-    int chroma=bits.getUEG(); // Chroma
-    
-    int width=bits.getUEG(); 
-    int height=bits.getUEG(); 
-    
-    printf("SPS : Dimension = Chroma =%d, %d x %d\n",chroma,width,height);
-    return true;
-    
-}
+
 /**
  * \fn findH264SPS
  * @return 
