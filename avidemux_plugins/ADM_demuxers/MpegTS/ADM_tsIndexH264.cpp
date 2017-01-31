@@ -23,7 +23,7 @@ static bool decoderSei6(int size, uint8_t *bfer,uint32_t *recovery);
         @param recoveryLength # of recovery frame
         \return true if recovery found
 */
-bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
+bool TsIndexerH264::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
                 pictureStructure *picStruct)
 {
     if(nalSize+16>=ADM_NAL_BUFFER_SIZE)
@@ -77,7 +77,7 @@ bool TsIndexer::decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLengt
  * \fn findH264SPS
  * @return 
  */
-bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
+bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {
     dmxPacketInfo tmpInfo;
     bool keepRunning=true;
@@ -139,7 +139,7 @@ bool TsIndexer::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     \fn runH264
     \brief Index H264 stream
 */
-bool TsIndexer::runH264(const char *file,ADM_TS_TRACK *videoTrac)
+bool TsIndexerH264::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 
 bool    seq_found=false;

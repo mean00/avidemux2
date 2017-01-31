@@ -80,26 +80,35 @@ bool r;
     delete p;
     printf("[TsIndexer] Audio probed, %d found, doing video\n",(int)audioTrack.size());
     //
-    TsIndexer *dx=new TsIndexer(&audioTrack);
+    TsIndexerBase *dx=NULL;
     switch(tracks[0].trackType)
     {
             case ADM_TS_MPEG2: 
-                            r=dx->runMpeg2(file,&(tracks[0]));
+                            dx=new TsIndexerMpeg2(&audioTrack);
                             break;
             case ADM_TS_VC1: 
-                            r=dx->runVC1(file,&(tracks[0]));
+                            dx=new TsIndexerVC1(&audioTrack);
                             break;
             case ADM_TS_H265: 
-                            r=dx->runH265(file,&(tracks[0]));
+                            dx=new TsIndexerH265(&audioTrack);
                             break;
             case ADM_TS_H264: 
-                            r=dx->runH264(file,&(tracks[0]));
+                            dx=new TsIndexerH264(&audioTrack);
                             break;
             default:
                         r=0;
                         break;
     }
-    delete dx;
+    if(!dx)
+    {
+        ADM_warning("Unsupported video codec \n");
+        r=false;
+    }else
+    {
+        r=dx->run( file,&(tracks[0]));
+        delete dx;
+        dx=NULL;
+    }
     delete [] tracks;
     return r;
 }
@@ -107,9 +116,9 @@ bool r;
 /**
     \fn TsIndexer
 */
-TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
+TsIndexerBase::TsIndexerBase(listOfTsAudioTracks *trk)
 {
-    memset(&spsInfo,0,sizeof(spsInfo));
+
     index=NULL;
     pkt=NULL;
     audioTracks=NULL;
@@ -122,7 +131,7 @@ TsIndexer::TsIndexer(listOfTsAudioTracks *trk)
 /**
     \fn ~TsIndexer
 */
-TsIndexer::~TsIndexer()
+TsIndexerBase::~TsIndexerBase()
 {
     if(index) qfclose(index);
     if(pkt) delete pkt;
@@ -133,7 +142,7 @@ TsIndexer::~TsIndexer()
     \fn updateUI
  *  \brief return false if abort is needed
 */
-bool  TsIndexer::updateUI(void)
+bool  TsIndexerBase::updateUI(void)
 {
     int p=++processedThisRound;
         processedThisRound=0;
@@ -144,7 +153,7 @@ bool  TsIndexer::updateUI(void)
     \fn writeVideo
     \brief Write Video section of index file
 */
-bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
+bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
 {
     qfprintf(index,"[Video]\n");
     qfprintf(index,"Width=%d\n",video->w);
@@ -175,7 +184,7 @@ bool TsIndexer::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
     \fn writeSystem
     \brief Write system part of index file
 */
-bool TsIndexer::writeSystem(const char *filename,bool append)
+bool TsIndexerBase::writeSystem(const char *filename,bool append)
 {
     qfprintf(index,"PSD1\n");
     qfprintf(index,"[System]\n");
@@ -189,7 +198,7 @@ bool TsIndexer::writeSystem(const char *filename,bool append)
     \fn     writeAudio
     \brief  Write audio headers
 */
-bool TsIndexer::writeAudio(void)
+bool TsIndexerBase::writeAudio(void)
 {
     if(!audioTracks) return false;
     qfprintf(index,"[Audio]\n");
@@ -222,7 +231,7 @@ bool TsIndexer::writeAudio(void)
 /**
     \fn dumpUnits
 */
-bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket)
+bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket)
 {
         // if it contain a SPS or a intra/idr, we start a new line
         bool mustFlush=false;
@@ -298,7 +307,7 @@ bool TsIndexer::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacke
 /**
     \fn addUnit
 */
-bool TsIndexer::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uint32_t overRead)
+bool TsIndexerBase::addUnit(indexerData &data,int unitType2,const H264Unit &unit,uint32_t overRead)
 {
         H264Unit myUnit=unit;
         myUnit.unitType=unitType2;

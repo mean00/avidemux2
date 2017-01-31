@@ -61,7 +61,7 @@ NAL_DESC nalDesc[]={
         @param recoveryLength # of recovery frame
         \return true if recovery found
 */
-bool TsIndexer::decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
+bool TsIndexerH265::decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,
                 pictureStructure *picStruct)
 {
 #if 0
@@ -172,7 +172,7 @@ static uint8_t * findGivenStartCodeInBuffer(uint8_t *start, uint8_t *end,int mat
  * \fn findH264SPS
  * @return 
  */
-bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
+bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 {    
     bool keepRunning=true;
     dmxPacketInfo packetInfo;
@@ -229,7 +229,7 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 /**
  * \fn decodePictureType
  */
-int  TsIndexer::decodePictureTypeH265(int nalType,getBits &bits)
+int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
 {
     int slice=2;
     bool firstPic=bits.get(1);
@@ -264,7 +264,7 @@ int  TsIndexer::decodePictureTypeH265(int nalType,getBits &bits)
     \fn runH264
     \brief Index H264 stream
 */
-bool TsIndexer::runH265(const char *file,ADM_TS_TRACK *videoTrac)
+bool TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 
 bool    seq_found=false;
