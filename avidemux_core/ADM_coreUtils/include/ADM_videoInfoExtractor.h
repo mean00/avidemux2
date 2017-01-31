@@ -46,10 +46,12 @@ public:
     ADM_SPSinfoH265()
     {
       width=height=fps1000=0;
+      num_extra_slice_header_bits=0;  //copied from pps
     }
-    uint32_t width;
-    uint32_t height;
-    uint32_t fps1000;
+    int     width;
+    int     height;
+    int     fps1000;
+    int     num_extra_slice_header_bits;
 };
 
 

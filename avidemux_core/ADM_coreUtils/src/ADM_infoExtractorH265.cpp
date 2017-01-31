@@ -261,6 +261,7 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
    HEVCSPS *sps = ff_hevc_parser_get_sps(parser);
    HEVCVPS *vps = ff_hevc_parser_get_vps(parser);
    HEVCPPS *pps = ff_hevc_parser_get_pps(parser);
+   spsinfo-> num_extra_slice_header_bits=0;
    if(sps)
    {
         printf("Coded width=%d x %d\n",sps->output_width,sps->output_height);
@@ -272,6 +273,10 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
             printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
             printf("VPS num unit in tick =%d\n",(int)vps->vps_num_units_in_tick);
             spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
+        }
+        if(pps)
+        {
+            spsinfo-> num_extra_slice_header_bits=pps-> num_extra_slice_header_bits;
         }
         return true;
    }
