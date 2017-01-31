@@ -95,18 +95,18 @@ unsigned char chan;
     ADM_info("[FAAD] using %u bytes of extradata\n",l);
     if(l)
     {
-        for(int i=0;i<l;i++) ADM_info("%02x ",d[i]);
-        ADM_info("\n");
+        for(int i=0;i<l;i++) printf("%02x ",d[i]);
+        printf("\n");
     }
     // if we have some extra data, it means we can init it from it
     if(l)
     {
         
         faacDecInit2(_instance, d,l, &srate,&chan);
-        ADM_info("[FAAD]Found :%" PRIu32" rate %" PRIu32" channels\n",(uint32_t)srate,(uint32_t)chan);
+        ADM_info("[FAAD] Found :%" PRIu32" rate %" PRIu32" channels\n",(uint32_t)srate,(uint32_t)chan);
         if(srate!=info->frequency)
         {
-            ADM_info("[FAAD]Frequency mismatch!!! %d to %" PRIu32" (SBR ?)\n",info->frequency,(uint32_t)srate);
+            ADM_info("[FAAD] Frequency mismatch!!! %d to %" PRIu32" (SBR ?)\n",info->frequency,(uint32_t)srate);
             if(srate==2*info->frequency)
             {
                 ADM_info("Sbr detected\n");
@@ -117,7 +117,7 @@ unsigned char chan;
         }
         if(chan!=info->channels) // Ask for stereo !
         {
-            ADM_info("[FAAD]channel mismatch!!! %d to %d \n",info->channels,chan);
+            ADM_info("[FAAD] Channel mismatch!!! %d to %d \n",info->channels,chan);
             if(info->channels==1 && chan==2) 
             {
                     ADM_warning("Workaround Faad mono stream handling... \n");
@@ -171,7 +171,7 @@ ADM_faad::ADM_faad( uint32_t fourcc ,WAVHeader *info,uint32_t l,uint8_t *d) :   
                 break;
         }
 
-		ADM_info("[FAAD]Faad decoder created\n");
+		ADM_info("[FAAD] Faad decoder created\n");
 }
 /**
     \fn dtor
