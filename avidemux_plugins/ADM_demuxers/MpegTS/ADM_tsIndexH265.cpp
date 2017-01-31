@@ -213,7 +213,7 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     int extraLen=(int)(pointer-headerBuffer); // should be enough (tm)    
     
     ADM_info("VPS/SPS/PPS lengths = %d bytes \n",extraLen);
-    ADM_SPSinfoH265 info;
+    
     if(!extractSPSInfoH265(headerBuffer,extraLen,&info))
     {
         ADM_warning("Cannot extract SPS/VPS/PPS\n");
@@ -225,6 +225,40 @@ bool TsIndexer::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     return true;
     
   
+}
+/**
+ * \fn decodePictureType
+ */
+int  TsIndexer::decodePictureTypeH265(int nalType,getBits &bits)
+{
+    int slice=2;
+    bool firstPic=bits.get(1);
+    bool idr=false;
+    if(nalType  >= 16 && nalType <= 23)
+    {
+        idr=true;
+        bits.get(1); 
+    }
+    bits.getUEG(); // PPS
+    if(!firstPic)
+    {
+        printf("*oops\n");
+    }
+    bits.skip(info.num_extra_slice_header_bits);
+    int sliceType=bits.getUEG();
+    switch(sliceType)
+    {
+        case 0: slice=3;break; // B
+        case 1: slice=2;break; // P
+        case 2: slice=2;        // I
+                if(idr)
+                        slice=4;
+                break; // I        
+    default:
+                ADM_warning("Unknown slice type\n");
+                break;
+    }
+    return slice;
 }
 /**
     \fn runH264
@@ -355,16 +389,28 @@ resume:
                 case NAL_H265_RADL_R:
                 case NAL_H265_RASL_N:
                 case NAL_H265_RASL_R:
+                {
+                    uint8_t buffer[32],header[32];
+                    int preRead=8;
                         data.nbPics++;
                         decodingImage=true;
                         pkt->getInfo(&thisUnit.packetInfo);
-                        thisUnit.consumedSoFar=pkt->getConsumed();
+                        
+                        pkt->read(preRead,buffer);
+                        // unescape...
+                        ADM_unescapeH264(preRead,buffer,header);
+                        //
+                        getBits bits(preRead,header);
+                        
+                        thisUnit.imageType=decodePictureTypeH265(startCode,bits);
+                        
                         if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
                             keepRunning=false;
                             // reset to default
                         thisUnit.imageStructure=pictureFrame;
                         thisUnit.recoveryCount=0xff;
                         pkt->invalidatePtsDts();
+                }
                     break;
                   case NAL_H265_SPS:
                                 decodingImage=false;
@@ -375,61 +421,10 @@ resume:
                                     firstSps=false;
                                 }
                                 thisUnit.consumedSoFar=pkt->getConsumed();
+                                
                                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
                                     keepRunning=false;
-                          break;
-
-#if 0                        
-#define NON_IDR_PRE_READ 8
-                      aprintf("Pic start last ref:%d cur ref:%d nb=%d\n",lastRefIdc,ref,data.nbPics);
-                      lastRefIdc=ref;
-
-                      uint8_t bufr[NON_IDR_PRE_READ+4];
-                      uint8_t header[NON_IDR_PRE_READ+4];
-
-
-                        pkt->read(NON_IDR_PRE_READ,bufr);
-                        // unescape...
-                        ADM_unescapeH264(NON_IDR_PRE_READ,bufr,header);
-                        //
-                        getBits bits(NON_IDR_PRE_READ,header);
-                        int first_mb_in_slice,slice_type;
-
-                        first_mb_in_slice= bits.getUEG();
-                        slice_type= bits.getUEG31();
-                        if(slice_type>9)
-                        {
-                            printf("[TsIndexer] Bad slice type\n");
-                        }
-                        if(slice_type>4) slice_type-=5;
-                        switch(slice_type)
-                        {
-
-                            case 0 : thisUnit.imageType=2;break; // P
-                            case 1 : thisUnit.imageType=3;break; // B
-                            case 2 : thisUnit.imageType=1;break; // I
-                            default : thisUnit.imageType=2;break; // SP/SI
-                        }
-                      if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
-                      aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
-                      if(thisUnit.imageType==1 && !thisUnit.recoveryCount)
-                                thisUnit.imageType=4; //I  + Recovery=0 = IDR!
-
-                      data.nbPics++;
-
-
-
-                      decodingImage=true;
-                      pkt->getInfo(&thisUnit.packetInfo);
-                      thisUnit.consumedSoFar=pkt->getConsumed();
-
-                      if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
-                          keepRunning=false;
-                        // reset to default
-                      thisUnit.imageStructure=pictureFrame;
-                      thisUnit.recoveryCount=0xff;
-                      pkt->invalidatePtsDts();
-#endif                      
+                          break;                
                   default:
                       break;
           }
