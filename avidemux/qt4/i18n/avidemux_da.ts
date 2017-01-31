@@ -3447,6 +3447,39 @@ Denne meddelelse vil ikke blive vist igen.</translation>
     </message>
 </context>
 <context>
+    <name>blackenDialog</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
+        <source>Blacken Borders</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+38"/>
+        <source>Right:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Top:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+43"/>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>Bottom:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Left:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>blackframes</name>
     <message>
         <location filename="../../common/gui_blackframes.cpp" line="+105"/>
@@ -4961,46 +4994,55 @@ p, li { white-space: pre-wrap; }
     <name>ffnvenc</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEnc/ADM_ffNvEnc.cpp" line="+192"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+192"/>
         <source>Low Quality</source>
         <translation>Lav kvalitet</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>High Quality</source>
         <translation>Høj kvalitet</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>BluRay</source>
         <translation>BluRay</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Low Latency</source>
         <translation>Lav latency</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Low Latency (LQ)</source>
         <translation>Lav latency (LQ)</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Low Latency (HQ)</source>
         <translation>Lav latency (HQ)</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
         <source>Preset:</source>
         <translation>Forudindstilling:</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Bitrate (kbps):</source>
         <translation>Bithastighed (kbps):</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
         <source>Max Bitrate (kbps):</source>
         <translation>Maks. bithastighed (kbps):</translation>
     </message>
@@ -5008,6 +5050,11 @@ p, li { white-space: pre-wrap; }
         <location line="+4"/>
         <source>libavcodec MPEG-4 configuration</source>
         <translation>libavcodec MPEG-4-konfiguration</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+4"/>
+        <source>nvEnc HEVC  configuration</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5719,6 +5766,16 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <location line="+1"/>
         <source>Adjust hue and saturation.</source>
         <translation>Justér farvetone og mætning.</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/qt4/DIA_flyHue.cpp" line="+61"/>
+        <source>Original</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Processed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6667,31 +6724,37 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     <name>mpdelogoDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt4/mpdelogo.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="+14"/>
         <source>Mplayer Delogo</source>
         <translation>Mplayer Delogo</translation>
     </message>
     <message>
         <location line="+8"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="+32"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
         <location line="+20"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="+37"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
         <location line="+23"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="-17"/>
         <source>Width</source>
         <translation>Bredde</translation>
     </message>
     <message>
         <location line="+20"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="+7"/>
         <source>Height</source>
         <translation>Højde</translation>
     </message>
     <message>
         <location line="+20"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="-14"/>
         <source>Border Width</source>
         <translation>Kantbredde</translation>
     </message>
@@ -6699,6 +6762,16 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <location line="+50"/>
         <source>Preview. Click in the image above to coarsly set the box coordinates</source>
         <translation>Forhåndsvis. Klik i billedet ovenfor, for groft at sætte boksens koordinater</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDelogo/qt5/mpdelogo.ui" line="+59"/>
+        <source>You can resize the red rectangle using the grips </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+58"/>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6712,6 +6785,44 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <location line="-1"/>
         <source>Msharpen</source>
         <translation>Msharpen</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/DIA_flymsharpen.cpp" line="+95"/>
+        <source>Original</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Processed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>msharpenDialog</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/msharpen.ui" line="+14"/>
+        <source>MSharpen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+63"/>
+        <source>Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+37"/>
+        <source>Strength</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>HighQuality</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7961,6 +8072,46 @@ Klar.
         <source>00:00:00.000</source>
         <translation>00:00:00,000</translation>
     </message>
+    <message>
+        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+81"/>
+        <source>Back one minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&lt;&lt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Next image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>&gt;&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Forward one minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>A&amp;utoZoom</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>separateFields</name>
@@ -8183,12 +8334,14 @@ Slet venligst idx2-filen og genåbn.</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+185"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+310"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+82"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Der er flere med filer fortløbende filnavne. Skal de indlæses allesammen?</translation>
     </message>
     <message>
         <location line="+9"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+9"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+7"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexVC1.cpp" line="+66"/>
         <source>Indexing</source>
@@ -8257,6 +8410,39 @@ Slet venligst idx2-filen og genåbn.</translation>
         <location line="+1"/>
         <source>Weave top and bottom halves.</source>
         <translation>Flet øverste og nederste halvdele.</translation>
+    </message>
+</context>
+<context>
+    <name>vaapiResize</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/vaapiFilters/ADM_vidVaapiFilter.cpp" line="+67"/>
+        <source>vaapi: Resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>vaapi: Resize image using vaapi.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+134"/>
+        <source>Width :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Height :</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>mpeg-&gt;PC:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>vaapi</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
