@@ -216,6 +216,18 @@ bool H265Parser::parseMpeg4(ADM_SPSinfoH265 *spsinfo)
     }
     return  true;
 }
+
+static int bitsNeeded(int v)
+{
+    int b=1;
+    while(v)
+    {
+        v>>=1;
+        b++;
+    }
+    return b;
+}
+
 /**
  * 
  * @return 
@@ -268,6 +280,9 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
         spsinfo->width=sps->output_width;
         spsinfo->height=sps->output_height;
         spsinfo->fps1000=23976;
+        spsinfo->dependent_slice_segments_enabled_flag=0;
+        spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
+        printf("VPS = %d  x %d ** %d\n",sps->ctb_width,sps->ctb_height, sps->ctb_size);
         if(vps)
         {
             printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
@@ -277,6 +292,8 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
         if(pps)
         {
             spsinfo-> num_extra_slice_header_bits=pps-> num_extra_slice_header_bits;
+            spsinfo->dependent_slice_segments_enabled_flag=pps->dependent_slice_segments_enabled_flag;
+            
         }
         return true;
    }

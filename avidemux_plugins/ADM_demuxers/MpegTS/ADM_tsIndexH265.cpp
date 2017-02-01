@@ -231,33 +231,59 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
  */
 int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
 {
+    //
+    bits.skip(10);  // Leftover layer ID + temporal plus 1
+    
     int slice=2;
-    bool firstPic=bits.get(1);
+    bool firstSliceInPic=bits.get(1);
+    
+    if(!firstSliceInPic) return -1;
+    
     bool idr=false;
-    if(nalType  >= 16 && nalType <= 23)
+    bool segmentFlag=false;
+    if(nalType  >= NAL_H265_BLA_W_LP && nalType <= 23) // 7.3.6 IRAP_VCL23
     {
         idr=true;
         bits.get(1); 
     }
     bits.getUEG(); // PPS
-    if(!firstPic)
+    if(!firstSliceInPic)
     {
-        printf("*oops\n");
+        if(info.dependent_slice_segments_enabled_flag)
+        {
+            segmentFlag=bits.get(1);
+            int address=bits.get(info.address_coding_length); //  log2 ( width*height/64*64)
+            printf("Adr=%d / %d\n",address,64*34);
+        }
+        // Slice segment address
+        //bits.skip();
     }
-    bits.skip(info.num_extra_slice_header_bits);
+    if(segmentFlag)
+    {
+        printf("Nope\n");
+        return -1; 
+    }
+    
+    if(info.num_extra_slice_header_bits)
+        bits.skip(info.num_extra_slice_header_bits); // not sure..
     int sliceType=bits.getUEG();
     switch(sliceType)
     {
         case 0: slice=3;break; // B
-        case 1: slice=2;break; // P
+        case 1: slice=2;
+                if(idr)
+                    slice=4;
+                break; // P
         case 2: slice=2;        // I
                 if(idr)
                         slice=4;
                 break; // I        
     default:
-                ADM_warning("Unknown slice type\n");
+                slice=-1;
+                ADM_warning("Unknown slice type %d : %d\n",sliceType,(int)idr);
                 break;
     }
+    printf("SliceType==> %d : idr=%d First=%d\n",slice,(int)idr,(int)firstSliceInPic);
     return slice;
 }
 /**
@@ -392,24 +418,29 @@ resume:
                 {
                     uint8_t buffer[32],header[32];
                     int preRead=8;
-                        data.nbPics++;
-                        decodingImage=true;
-                        pkt->getInfo(&thisUnit.packetInfo);
+                    dmxPacketInfo packetInfo;
+                        pkt->getInfo(&packetInfo);
                         
                         pkt->read(preRead,buffer);
                         // unescape...
                         ADM_unescapeH264(preRead,buffer,header);
                         //
                         getBits bits(preRead,header);
-                        
-                        thisUnit.imageType=decodePictureTypeH265(startCode,bits);
-                        
-                        if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
-                            keepRunning=false;
+                        // Try to see if we have a valid beginning of image
+                        int picType=decodePictureTypeH265(startCode,bits);
+                        if(picType!=-1)
+                        {
+                            data.nbPics++;
+                            decodingImage=true;
+                            thisUnit.packetInfo=packetInfo;
+                            thisUnit.imageType=picType;
+                            if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
+                                keepRunning=false;
                             // reset to default
-                        thisUnit.imageStructure=pictureFrame;
-                        thisUnit.recoveryCount=0xff;
-                        pkt->invalidatePtsDts();
+                            thisUnit.imageStructure=pictureFrame;
+                            thisUnit.recoveryCount=0xff;
+                            pkt->invalidatePtsDts();
+                        }
                 }
                     break;
                   case NAL_H265_SPS:
