@@ -6768,12 +6768,12 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/DIA_flyAsharp.cpp" line="+107"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -7745,7 +7745,7 @@ Do you want to load it  ?
     <message>
         <location line="+1"/>
         <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished">Прикрепить логотип с помощью интерполяции окружения.</translation>
+        <translation type="unfinished">Стереть логотип с помощью интерполяции окружения.</translation>
     </message>
 </context>
 <context>
@@ -9572,12 +9572,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/qt4/DIA_flyHue.cpp" line="+61"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10845,12 +10845,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/DIA_flymsharpen.cpp" line="+95"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
