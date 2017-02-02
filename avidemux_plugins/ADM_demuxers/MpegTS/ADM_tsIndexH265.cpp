@@ -188,6 +188,8 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     pkt->read(512,headerBuffer+5);
     uint8_t *pointer=headerBuffer+5;
     uint8_t *end=headerBuffer+512;
+    // Rewind
+    pkt->setPos(packetInfo.startAt);
     
     pointer=findGivenStartCodeInBuffer(pointer,end,NAL_H265_SPS,"SPS");
     if(!pointer)
@@ -221,6 +223,11 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     }
     video.w=info.width;
     video.h=info.height;
+    video.fps=info.fps1000;
+    writeVideo(&video,ADM_TS_H265);
+    writeAudio();
+    qfprintf(index,"[Data]");
+    
     ADM_info("Found video %d x %d\n",info.width,info.height);
     return true;
     
@@ -252,7 +259,7 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
         if(info.dependent_slice_segments_enabled_flag)
         {
             segmentFlag=bits.get(1);
-            int address=bits.get(info.address_coding_length); //  log2 ( width*height/64*64)
+            int address=bits.get(info.address_coding_length-1); //  log2 ( width*height/64*64)
             printf("Adr=%d / %d\n",address,64*34);
         }
         // Slice segment address
@@ -269,16 +276,15 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
     int sliceType=bits.getUEG();
     switch(sliceType)
     {
-        case 0: slice=3;break; // B
-        case 1: slice=2;
-                if(idr)
+        case 0: slice=3;  // B
+                break;
+        case 1: slice=2; // P
+                break; 
+        case 2: slice=1;     // I        
+                if(( nalType==NAL_H265_IDR_W_RADL ) || (nalType==NAL_H265_IDR_N_LP )) // IDR ?
                     slice=4;
-                break; // P
-        case 2: slice=2;        // I
-                if(idr)
-                        slice=4;
-                break; // I        
-    default:
+                break; 
+        default:
                 slice=-1;
                 ADM_warning("Unknown slice type %d : %d\n",sliceType,(int)idr);
                 break;
@@ -358,19 +364,14 @@ bool bAppend=false;
     }    
     if(!seq_found) goto the_end;
 
-    video.w=1980*2;
-    video.h=1080*2;
-    video.fps=23976;
-    writeVideo(&video,ADM_TS_H265);
-    writeAudio();
-    qfprintf(index,"[Data]\n");
+    
 
     
      decodingImage=false;
     //******************
     // 2 Index
     //******************
-        bool fourBytes;
+      bool fourBytes;
       while(keepRunning)
       {
           fourBytes=false;
@@ -383,12 +384,6 @@ resume:
 
         startCode=((startCode>>1)&0x3f);   
         printf("Startcode =%d\n",startCode);
-          // Ignore multiple chunk of the same pic
-          if((startCode==NAL_NON_IDR || startCode==NAL_IDR)&&decodingImage )
-          {
-            aprintf("Still capturing, ignore\n");
-            continue;
-          }
 #define NON_IDR_PRE_READ 8 // FIXME
 
           switch(startCode)
@@ -416,6 +411,8 @@ resume:
                 case NAL_H265_RASL_N:
                 case NAL_H265_RASL_R:
                 {
+                    if(decodingImage)
+                        continue;
                     uint8_t buffer[32],header[32];
                     int preRead=8;
                     dmxPacketInfo packetInfo;
@@ -443,7 +440,7 @@ resume:
                         }
                 }
                     break;
-                  case NAL_H265_SPS:
+                  case NAL_H265_VPS:
                                 decodingImage=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
                                 if(firstSps)
