@@ -4501,7 +4501,7 @@ Drop timing informations ?</source>
         <location line="+3"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.h" line="+42"/>
         <source>Add Borders</source>
-        <translation type="unfinished">Добавление границ</translation>
+        <translation type="unfinished">Добавление полей</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -4511,7 +4511,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+0"/>
         <source>All parameters must be even and within range.</source>
-        <translation type="unfinished">Все параметры должны быть четными и укладываться в границы</translation>
+        <translation type="unfinished">Все параметры должны быть четными и укладываться в пределы</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/addBorder/ADM_vidAddBorder.h" line="+1"/>
@@ -6768,12 +6768,12 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/DIA_flyAsharp.cpp" line="+107"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -6809,7 +6809,7 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/ass/ADM_vidASS.cpp" line="+171"/>
         <source>_Subtitle file (ASS/SSA):</source>
-        <translation type="unfinished">Файл субтитров (ASS/SSA):</translation>
+        <translation type="unfinished">_Файл субтитров (ASS/SSA):</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -6819,28 +6819,27 @@ Installation mismatch</source>
     <message>
         <location line="+1"/>
         <source>_Line spacing:</source>
-        <translation type="unfinished">Междустрочный интервал:</translation>
+        <translation type="unfinished">М_еждустрочный интервал:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Font scale:</source>
-        <translation type="unfinished">Масштаб шрифта:</translation>
+        <translation type="unfinished">Масштаб _шрифта:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Top margin:</source>
-        <translation type="unfinished">Верхняя граница:</translation>
+        <translation type="unfinished">Чёрная полоса с_верху:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Botto_m margin</source>
-        <translation type="unfinished">Нижняя граница:</translation>
+        <translation type="unfinished">Чёрная полоса с_низу:</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>ASS</source>
-        <translation type="unfinished">
-            </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-112"/>
@@ -7115,7 +7114,7 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/ADM_vidBlackBorder.h" line="+41"/>
         <source>Blacken Borders</source>
-        <translation type="unfinished">Заполнение границ</translation>
+        <translation type="unfinished">Зачернение краёв</translation>
     </message>
     <message>
         <source>Incorrect parameters</source>
@@ -7128,7 +7127,7 @@ This message will not be displayed again.</source>
     <message>
         <location line="+1"/>
         <source>Remove noisy edge by turning them to black.</source>
-        <translation type="unfinished">Удалить шум границ, заполнив их черным цветом.</translation>
+        <translation type="unfinished">Удалить шум краёв, заполнив их черным цветом.</translation>
     </message>
 </context>
 <context>
@@ -7167,7 +7166,7 @@ This message will not be displayed again.</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/blackenBorder/qt4/blackenBorders.ui" line="+14"/>
         <source>Blacken Borders</source>
-        <translation type="unfinished">Затемнение границ</translation>
+        <translation type="unfinished">Зачернение краёв</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -7746,7 +7745,7 @@ Do you want to load it  ?
     <message>
         <location line="+1"/>
         <source>Blend a logo by interpolating its surrounding box.</source>
-        <translation type="unfinished">Прикрепить логотип с помощью интерполяции окружения.</translation>
+        <translation type="unfinished">Стереть логотип с помощью интерполяции окружения.</translation>
     </message>
 </context>
 <context>
@@ -9573,12 +9572,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/qt4/DIA_flyHue.cpp" line="+61"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10846,12 +10845,12 @@ I will assume it has and try to continue</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/DIA_flymsharpen.cpp" line="+95"/>
         <source>Original</source>
-        <translation type="unfinished">Оригинальный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Processed</source>
-        <translation type="unfinished">Обработанный</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -11721,7 +11720,7 @@ Ready.
     <message>
         <location line="+1"/>
         <source>_New frame rate:</source>
-        <translation type="unfinished">Новая частота кадров:</translation>
+        <translation type="unfinished">Новая _частота кадров:</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -11832,7 +11831,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="-423"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-423"/>
         <source>Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Соотношение сторон</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -11847,7 +11846,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+12"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+12"/>
         <source>Lock Aspect Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Фиксировать соотношение сторон</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -11888,8 +11887,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+8"/>
         <location line="+42"/>
         <source>1:1</source>
-        <translation type="unfinished">
-             {1:1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-37"/>
@@ -11915,8 +11913,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-37"/>
         <location line="+42"/>
         <source>4:3</source>
-        <translation type="unfinished">
-             {4:3?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-37"/>
@@ -11942,8 +11939,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-37"/>
         <location line="+42"/>
         <source>16:9</source>
-        <translation type="unfinished">
-             {16:9?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-18"/>
@@ -12033,8 +12029,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+55"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+55"/>
         <source>1%</source>
-        <translation type="unfinished">
-             {1%?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+20"/>
@@ -12064,8 +12059,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+20"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+20"/>
         <source>200%</source>
-        <translation type="unfinished">
-             {200%?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+50"/>
@@ -12191,20 +12185,17 @@ Ready.
     <message>
         <location line="+156"/>
         <source>90°</source>
-        <translation type="unfinished">
-             {90°?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>180°</source>
-        <translation type="unfinished">
-             {180°?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>270°</source>
-        <translation type="unfinished">
-             {270°?}</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -12465,62 +12456,62 @@ Ready.
     <message>
         <location line="+4"/>
         <source>_Strategy:</source>
-        <translation type="unfinished">Стратегия:</translation>
+        <translation type="unfinished">_Стратегия:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Field order:</source>
-        <translation type="unfinished">Порядок полей:</translation>
+        <translation type="unfinished">Пор_ядок полей:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Postprocessing:</source>
-        <translation type="unfinished">Постобработка:</translation>
+        <translation type="unfinished">П_остобработка:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Try backward:</source>
-        <translation type="unfinished">В обратном направлении:</translation>
+        <translation type="unfinished">В обр_атном направлении:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Direct threshold:</source>
-        <translation type="unfinished">Порог прямого направления:</translation>
+        <translation type="unfinished">_Порог прямого направления:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Backward threshold:</source>
-        <translation type="unfinished">Порог для обратного направления:</translation>
+        <translation type="unfinished">По_рог для обратного направления:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Noise threshold:</source>
-        <translation type="unfinished">Порог шума:</translation>
+        <translation type="unfinished">Порог _шума:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Postp_rocessing threshold:</source>
-        <translation type="unfinished">Порог постобработки:</translation>
+        <translation type="unfinished">Порог пос_тобработки:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Use chroma to decide</source>
-        <translation type="unfinished">Использовать цвет (chroma) для определения</translation>
+        <translation type="unfinished">Использовать _цвет (chroma) для определения</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sho_w info</source>
-        <translation type="unfinished">Показать информацию</translation>
+        <translation type="unfinished">Показать _информацию</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Debu_g</source>
-        <translation type="unfinished">Отладка</translation>
+        <translation type="unfinished">От_ладка</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bl_end</source>
-        <translation type="unfinished">_Смешивание</translation>
+        <translation type="unfinished">См_ешивание</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -12637,12 +12628,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+134"/>
         <source>Width :</source>
-        <translation type="unfinished">Ширина :</translation>
+        <translation>Ширина:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished">Высота :</translation>
+        <translation>Высота:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -12700,12 +12691,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+1"/>
         <source>Width :</source>
-        <translation type="unfinished">Ширина :</translation>
+        <translation>Ширина:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished">Высота :</translation>
+        <translation>Высота:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -12728,12 +12719,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+133"/>
         <source>Width :</source>
-        <translation type="unfinished">Ширина :</translation>
+        <translation>Ширина:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Height :</source>
-        <translation type="unfinished">Высота :</translation>
+        <translation>Высота:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -12845,7 +12836,7 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+37"/>
         <source>Delay :</source>
-        <translation type="unfinished">Отложить :</translation>
+        <translation type="unfinished">Задержка:</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -12855,12 +12846,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+7"/>
         <source>Language :</source>
-        <translation type="unfinished">Язык :</translation>
+        <translation>Язык:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Idx File :</source>
-        <translation type="unfinished">Файл IDX :</translation>
+        <translation type="unfinished">Файл IDX:</translation>
     </message>
 </context>
 <context>
@@ -12878,12 +12869,12 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+14"/>
         <source>_Bitrate:</source>
-        <translation type="unfinished">Битрейт:</translation>
+        <translation>&amp;Битрейт:</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Quality:</source>
-        <translation type="unfinished">Качество:</translation>
+        <translation>&amp;Качество:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -13256,93 +13247,78 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+38"/>
         <location line="+669"/>
         <source>1</source>
-        <translation type="unfinished">
-             {1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-664"/>
         <source>1.1</source>
-        <translation type="unfinished">
-             {1.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.2</source>
-        <translation type="unfinished">
-             {1.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.3</source>
-        <translation type="unfinished">
-             {1.3?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2</source>
-        <translation type="unfinished">
-             {2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.1</source>
-        <translation type="unfinished">
-             {2.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.2</source>
-        <translation type="unfinished">
-             {2.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+639"/>
         <source>3</source>
-        <translation type="unfinished">
-             {3?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-634"/>
         <source>3.1</source>
-        <translation type="unfinished">
-             {3.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>3.2</source>
-        <translation type="unfinished">
-             {3.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4</source>
-        <translation type="unfinished">
-             {4?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.1</source>
-        <translation type="unfinished">
-             {4.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.2</source>
-        <translation type="unfinished">
-             {4.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5</source>
-        <translation type="unfinished">
-             {5?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5.1</source>
-        <translation type="unfinished">
-             {5.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+25"/>
@@ -13468,20 +13444,17 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+15"/>
         <source>7</source>
-        <translation type="unfinished">
-             {7?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>15</source>
-        <translation type="unfinished">
-             {15?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>31</source>
-        <translation type="unfinished">
-             {31?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+42"/>
@@ -14545,93 +14518,78 @@ If it is a system profile it will be recreated next time.</source>
         <location line="+5"/>
         <location line="+668"/>
         <source>1</source>
-        <translation type="unfinished">
-             {1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-663"/>
         <source>1.1</source>
-        <translation type="unfinished">
-             {1.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.2</source>
-        <translation type="unfinished">
-             {1.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>1.3</source>
-        <translation type="unfinished">
-             {1.3?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2</source>
-        <translation type="unfinished">
-             {2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.1</source>
-        <translation type="unfinished">
-             {2.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>2.2</source>
-        <translation type="unfinished">
-             {2.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <location line="+638"/>
         <source>3</source>
-        <translation type="unfinished">
-             {3?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="-633"/>
         <source>3.1</source>
-        <translation type="unfinished">
-             {3.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>3.2</source>
-        <translation type="unfinished">
-             {3.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4</source>
-        <translation type="unfinished">
-             {4?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.1</source>
-        <translation type="unfinished">
-             {4.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>4.2</source>
-        <translation type="unfinished">
-             {4.2?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5</source>
-        <translation type="unfinished">
-             {5?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>5.1</source>
-        <translation type="unfinished">
-             {5.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+27"/>
@@ -14757,20 +14715,17 @@ If it is a system profile it will be recreated next time.</source>
     <message>
         <location line="+15"/>
         <source>7</source>
-        <translation type="unfinished">
-             {7?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>15</source>
-        <translation type="unfinished">
-             {15?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
         <source>31</source>
-        <translation type="unfinished">
-             {31?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+42"/>
