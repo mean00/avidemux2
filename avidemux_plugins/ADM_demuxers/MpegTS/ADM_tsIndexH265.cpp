@@ -32,6 +32,7 @@
     NAME(NAL_H265_IDR_W_RADL , 19),\
     NAME(NAL_H265_IDR_N_LP,     20) , \
     NAME(NAL_H265_CRA_NUT    ,  21),\
+    NAME(NAL_H265_IRAP_VCL23 ,  23),\
     NAME(NAL_H265_VPS  ,        32)    ,\
     NAME(NAL_H265_SPS  ,        33)    ,\
     NAME(NAL_H265_PPS  ,        34)    ,\
@@ -178,12 +179,16 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     dmxPacketInfo packetInfo;
     uint8_t headerBuffer[512]={0,0,0,1,(NAL_H265_VPS<<1)}; // we are forcing some bits to be zero...
     // This is a bit naive...
+        
     if(!findGivenStartCode(pkt,NAL_H265_VPS ,"VPS"))
     {
         ADM_warning("Cannot find HEVC VPS\n");
         return false;
     }   
+    
     pkt->getInfo( &packetInfo);
+    thisUnit.consumedSoFar=0; // reset
+    
     uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though    
     pkt->read(512,headerBuffer+5);
     uint8_t *pointer=headerBuffer+5;
@@ -239,19 +244,20 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
 int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
 {
     //
-    bits.skip(10);  // Leftover layer ID + temporal plus 1
+    //  1-6-1 Forbidden + nal unit + 1:nuh_layer_id <= Already consumed
+    //  5: nuh_layer_id +3 nugh temporal id <= Still there
+    bits.skip(8);  // Leftover layer ID + temporal plus 1
     
     int slice=2;
     bool firstSliceInPic=bits.get(1);
     
     if(!firstSliceInPic) return -1;
     
-    bool idr=false;
+    bool no_output_of_prior_pics_flag=false;
     bool segmentFlag=false;
-    if(nalType  >= NAL_H265_BLA_W_LP && nalType <= 23) // 7.3.6 IRAP_VCL23
+    if(nalType  >= NAL_H265_BLA_W_LP && nalType <= NAL_H265_IRAP_VCL23) // 7.3.6 IRAP_VCL23
     {
-        idr=true;
-        bits.get(1); 
+        no_output_of_prior_pics_flag=bits.get(1); ;
     }
     bits.getUEG(); // PPS
     if(!firstSliceInPic)
@@ -259,11 +265,9 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
         if(info.dependent_slice_segments_enabled_flag)
         {
             segmentFlag=bits.get(1);
-            int address=bits.get(info.address_coding_length-1); //  log2 ( width*height/64*64)
-            printf("Adr=%d / %d\n",address,64*34);
         }
-        // Slice segment address
-        //bits.skip();
+        int address=bits.get(info.address_coding_length); //  log2 ( width*height/64*64)
+        printf("Adr=%d / %d\n",address,64*34);
     }
     if(segmentFlag)
     {
@@ -286,10 +290,10 @@ int  TsIndexerH265::decodePictureTypeH265(int nalType,getBits &bits)
                 break; 
         default:
                 slice=-1;
-                ADM_warning("Unknown slice type %d : %d\n",sliceType,(int)idr);
+                ADM_warning("Unknown slice type %d \n",sliceType);
                 break;
     }
-    printf("SliceType==> %d : idr=%d First=%d\n",slice,(int)idr,(int)firstSliceInPic);
+    printf("SliceType==> %d xxx\n",slice);
     return slice;
 }
 /**
@@ -384,7 +388,7 @@ resume:
 
         startCode=((startCode>>1)&0x3f);   
         printf("Startcode =%d\n",startCode);
-#define NON_IDR_PRE_READ 8 // FIXME
+#define NON_IDR_PRE_READ 32 
 
           switch(startCode)
                   {
@@ -413,8 +417,8 @@ resume:
                 {
                     if(decodingImage)
                         continue;
-                    uint8_t buffer[32],header[32];
-                    int preRead=8;
+                    uint8_t buffer[NON_IDR_PRE_READ],header[NON_IDR_PRE_READ];
+                    int preRead=NON_IDR_PRE_READ;
                     dmxPacketInfo packetInfo;
                         pkt->getInfo(&packetInfo);
                         
@@ -429,8 +433,10 @@ resume:
                         {
                             data.nbPics++;
                             decodingImage=true;
+                            thisUnit.consumedSoFar=pkt->getConsumed();
                             thisUnit.packetInfo=packetInfo;
                             thisUnit.imageType=picType;
+                            thisUnit.unitType=unitTypePic;
                             if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
                                 keepRunning=false;
                             // reset to default
@@ -440,19 +446,14 @@ resume:
                         }
                 }
                     break;
+#if 0                    
                   case NAL_H265_VPS:
                                 decodingImage=false;
                                 pkt->getInfo(&thisUnit.packetInfo);
-                                if(firstSps)
-                                {
-                                    pkt->setConsumed(startCodeLength); // reset consume counter
-                                    firstSps=false;
-                                }
-                                thisUnit.consumedSoFar=pkt->getConsumed();
-                                
                                 if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
                                     keepRunning=false;
                           break;                
+#endif                          
                   default:
                       break;
           }

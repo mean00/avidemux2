@@ -297,6 +297,9 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
 
         qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct&3]);
         int32_t delta=(int32_t)(nextConsumed-beginConsuming);
+        
+    //    printf("%d -- %d = %d\n",nextConsumed, beginConsuming,delta);
+        
         qfprintf(index,":%06" PRIx32,delta);
         qfprintf(index,":%" PRId64":%" PRId64,deltaPts,deltaDts);
     
