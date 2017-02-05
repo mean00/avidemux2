@@ -104,8 +104,8 @@ uint32_t ww,hh;
         dst[dstride]=0xff;
         dst+=dstride*2;
     }
-    out->printString(1,1,QT_TRANSLATE_NOOP("asharp", "Original"));
-    out->printString(ww/24+1,1,QT_TRANSLATE_NOOP("asharp", "Processed"));
+    out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
+    out->printString(ww/24+1,1,"Processed"); // as above, don't try to translate
     return 1;
 }
 //EOF
