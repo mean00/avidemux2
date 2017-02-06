@@ -25,7 +25,7 @@ extern "C"
 {
     #include "libavcodec/avcodec.h"
 }
-
+#include "ADM_h265_tag.h"
 extern ADM_Composer *video_body; // Fixme!
 
 //#warning fixme : double definition
@@ -191,7 +191,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     // search sps
     uint8_t *spsStart,*ppsStart,*vpsStart;
     uint32_t spsLen=0, ppsLen=0,vpsLen;
-    int indexSps,indexPps;
+    int indexSps,indexPps,indexVps;
     
     indexVps=ADM_findNalu(NAL_H265_VPS,nbNalu,desc);
     if(-1==indexVps)
@@ -231,7 +231,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     // Build extraData
     myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
     myExtra=new uint8_t[myExtraLen];
-    uint8_t *ptr=myExtra;
+    ptr=myExtra;
     uint8_t *sps=desc[indexSps].start;
     *ptr++=1;           // AVC version
     *ptr++=sps[0];        // Profile
