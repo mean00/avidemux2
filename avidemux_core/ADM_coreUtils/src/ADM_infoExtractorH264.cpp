@@ -959,6 +959,7 @@ int index=0;
     index++;
     return index;
 }
+
 /**
     \fn ADM_findNalu
     \brief lookup for a specific NALU in the given buffer
@@ -972,7 +973,6 @@ int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
     }
     return -1;
 }
-
 static void writeBE32(uint8_t *p, uint32_t size)
 {
     p[0]=size>>24;

@@ -160,8 +160,29 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
 }
 
 /**
+ * 
+ * @param ptr
+ * @param naluType
+ * @param size
+ * @param data
+ * @return 
+ */
+static uint8_t *writeNalu(uint8_t *ptr, int naluType, int size, uint8_t *data)
+{
+    *ptr++=naluType;  //  VPS, SPS, PPS, SEI.  0x20 0x21 0x22
+    *ptr++=0x00; // 1 NALU
+    *ptr++=0x01;
+    *ptr++=(size+1)>>8;
+    *ptr++=(size+1)&0xff;
+    memcpy(ptr,data,size);
+    return ptr+size;
+}
+
+/**
  * \fn extractExtraDataH265
  * We need to pack VPS/PPS/SPS MP4 style
+ * 
+ * order should be  VPS, SPS, PPS, SEI. 
  */
 bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
 {
@@ -186,7 +207,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
     //mixDump(img.data,img.dataLength);
-    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
+    int nbNalu=ADM_splitNaluH265(myBitstream->data,myBitstream->data+myBitstream->len,
                             MAX_NALU_PER_CHUNK,desc);
     // search sps
     uint8_t *spsStart,*ppsStart,*vpsStart;
@@ -200,59 +221,78 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
         return false;
     }
     
-    indexSps=ADM_findNalu(NAL_SPS,nbNalu,desc);
+    indexSps=ADM_findNalu(NAL_H265_SPS,nbNalu,desc);
     if(-1==indexSps)
     {
         ADM_error("Cannot find SPS");
         return false;
     }
-    indexPps=ADM_findNalu(NAL_PPS,nbNalu,desc);
+    indexPps=ADM_findNalu(NAL_H265_PPS,nbNalu,desc);
     if(-1==indexPps)
     {
         ADM_error("Cannot find SPS");
         return false;
     }
-    int count=desc[indexPps].size;
-    uint8_t *ptr=desc[indexPps].start+count-1;
+    int count=desc[indexVps].size;
+    uint8_t *ptr=desc[indexVps].start+count-1;
     while(count > 4)
     {
         if(*ptr) break;
         ptr--;
         count--;
     }
-    ADM_info("PPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
-    desc[indexPps].size=count;
+    ADM_info("VPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
+    desc[indexVps].size=count;
     
-
+    vpsLen=desc[indexVps].size;
     spsLen=desc[indexSps].size;
     ppsLen=desc[indexPps].size;
 
-    ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
+    ADM_info("Copy from annexB: Found vps=%d sps=%d, pps=%d.\n",(int)vpsLen,(int)spsLen,(int)ppsLen);
     // Build extraData
-    myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
+    myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen+2+1+1+vpsLen;
     myExtra=new uint8_t[myExtraLen];
     ptr=myExtra;
     uint8_t *sps=desc[indexSps].start;
-    *ptr++=1;           // AVC version
-    *ptr++=sps[0];        // Profile
-    *ptr++=sps[1];        // Profile
-    *ptr++=sps[2];        // Level
-    *ptr++=0xff;        // Nal size minus 1
-
-    *ptr++=0xe1;        // SPS
-    *ptr++=(1+spsLen)>>8;
-    *ptr++=(1+spsLen)&0xff;
-    *ptr++=desc[indexSps].nalu;
-    memcpy(ptr,desc[indexSps].start,spsLen);
-    ptr+=spsLen;
-
-    *ptr++=0x1;         // PPS
-    *ptr++=(1+ppsLen)>>8;
-    *ptr++=(1+ppsLen)&0xff;
-    *ptr++=desc[indexPps].nalu;
-    memcpy(ptr,desc[indexPps].start,ppsLen);
-    ptr+=ppsLen;
-
+    
+    //8.3.3.1
+//6    
+    *ptr++=1;           // HEVC version
+    *ptr++=2;           // 2: general_profile_space,  1: general_tier_flag,  5: general_profile_idc;
+    *ptr++=0x20;          //general_profile_compatibility_flags
+    *ptr++=00;
+    *ptr++=00;
+    *ptr++=00;
+ //6   
+    *ptr++=0xb0;          //general_constraint_indicator_flags
+    *ptr++=00;
+    *ptr++=00;
+    *ptr++=00;
+    *ptr++=00;
+    *ptr++=00;
+    
+//4    
+    *ptr++=0x99;  // general_level_idc
+    *ptr++=0xf0;  // reserver + min_spatial_segmentation_idc
+    *ptr++=0x00; //  min_spatial_segmentation_idc, continued;   
+    *ptr++=0xfc; //  parallelismType +111111
+    
+    *ptr++=0xfd; //  chromaFormat +111111
+    *ptr++=0xfa; //   bitDepthLumaMinus8;+111111
+    *ptr++=0xfa; //   bitDepthChromaMinus8;+111111
+    *ptr++=0; // Avg framerate
+    *ptr++=0; // Avg framerate
+ 
+    *ptr++=0x47; //2: constantFrameRate 3numTemporalLayers 1: temporalIdNested 2: lengthSizeMinusOne;
+     
+    *ptr++=0x3; // num elem // SEI MISSING!!!!!# FIXME
+    
+    
+    ptr=writeNalu(ptr,desc[indexVps].nalu, desc[indexVps].size, desc[indexVps].start);
+    ptr=writeNalu(ptr,desc[indexSps].nalu, desc[indexSps].size, desc[indexSps].start);
+    ptr=writeNalu(ptr,desc[indexPps].nalu, desc[indexPps].size, desc[indexPps].start);
+    
+    
     ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
     mixDump(myExtra, myExtraLen);
     return true;

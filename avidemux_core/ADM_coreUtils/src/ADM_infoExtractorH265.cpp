@@ -48,6 +48,8 @@ extern  HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *parser);
 
 extern bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
                                     uint32_t *outLen, uint8_t *outData);
+extern bool ADM_findMpegStartCode (uint8_t * start, uint8_t * end,
+                uint8_t * outstartcode, uint32_t * offset);
 
 
 /**
@@ -269,4 +271,41 @@ bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
     else
         r=parser.parseAnnexB(spsinfo);
     return r;
+}
+
+
+/**
+    \fn ADM_splitNalu
+    \brief split a nalu annexb size into a list of nalu descriptor
+*/
+int ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc)
+{
+bool first=true;
+uint8_t *head=start;
+uint32_t offset;
+uint8_t startCode,oldStartCode=0xff;
+int index=0;
+      while(true==SearchStartCode(head,end,&startCode,&offset))
+      {
+            if(true==first)
+            {
+                head+=offset;
+                first=false;
+                oldStartCode=(startCode>>1)&0x3f;
+                continue;
+            }
+        if(index>=maxNalu) return 0;
+        desc[index].start=head;
+        desc[index].size=offset-START_CODE_LEN;
+        desc[index].nalu=oldStartCode;
+        index++;
+        head+=offset;
+        oldStartCode=(startCode>>1)&0x3f;
+      }
+    // leftover
+    desc[index].start=head;
+    desc[index].size=(uint32_t)(end-head);
+    desc[index].nalu=oldStartCode;
+    index++;
+    return index;
 }
