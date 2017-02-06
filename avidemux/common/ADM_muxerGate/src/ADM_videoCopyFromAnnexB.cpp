@@ -172,8 +172,8 @@ static uint8_t *writeNaluH265(uint8_t *ptr, NALU_descriptor *d)
     *ptr++=(d->nalu>>1)&0x3f;  //  VPS, SPS, PPS, SEI.  0x20 0x21 0x22
     *ptr++=0x00; // 1 NALU
     *ptr++=0x01;
-    *ptr++=(d->size)>>8;
-    *ptr++=(d->size)&0xff;
+    *ptr++=(d->size+1)>>8;
+    *ptr++=(d->size+1)&0xff;
     *ptr++=d->nalu;
     memcpy(ptr,d->start,d->size);
     return ptr+d->size;
@@ -230,15 +230,17 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     
     
     //8.3.3.1
-//6    
-    *ptr++=1;           // HEVC version
-    *ptr++=2;           // 2: general_profile_space,  1: general_tier_flag,  5: general_profile_idc;
-    *ptr++=0x20;          //general_profile_compatibility_flags
-    *ptr++=00;
-    *ptr++=00;
-    *ptr++=00;
+//2    
+    *ptr++=0x01;           // HEVC version
+    uint8_t *s=spsNalu->start+2;
+    *ptr++=*s++;       // 2: general_profile_space,  1: general_tier_flag,  5: general_profile_idc;
+//4    
+    *ptr++=*s++;       //general_profile_compatibility_flags
+    *ptr++=*s++;       
+    *ptr++=*s++;       
+    *ptr++=*s++;       
  //6   
-    *ptr++=0xb0;          //general_constraint_indicator_flags
+    *ptr++=0xb0;       //general_constraint_indicator_flags
     *ptr++=00;
     *ptr++=00;
     *ptr++=00;
@@ -257,7 +259,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     *ptr++=0; // Avg framerate
     *ptr++=0; // Avg framerate
  
-    *ptr++=0x0f; //2: constantFrameRate 3numTemporalLayers 1: temporalIdNested 2: lengthSizeMinusOne;
+    *ptr++=0x47; //2: constantFrameRate 3numTemporalLayers 1: temporalIdNested 2: lengthSizeMinusOne;
      
     *ptr++=NUMBER_OF_NALU_IN_EXTRADATA; // num elem // SEI MISSING!!!!!# FIXME
     
