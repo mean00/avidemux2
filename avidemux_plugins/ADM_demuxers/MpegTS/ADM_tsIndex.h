@@ -185,7 +185,7 @@ public:
                 ~TsIndexerH264()
                 {
                   
-                }
+                } 
         bool    run(const char *file,ADM_TS_TRACK *videoTrac);
         bool    updatePicStructure(TSVideo &video,const uint32_t t)
                         {
@@ -221,9 +221,9 @@ public:
                         }
         bool            run(const char *file,ADM_TS_TRACK *videoTrac);
                         TsIndexerVC1(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
-                               {
+                        {
 
-                               }
+                        }
 };
 //--
 /**
@@ -241,9 +241,9 @@ public:
                 }
         bool    run(const char *file,ADM_TS_TRACK *videoTrac);
                 TsIndexerMpeg2(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
-                       {
+                {
 
-                       }
+                }
        
 };
 //--
@@ -269,9 +269,9 @@ public:
                 }
         bool    run(const char *file,ADM_TS_TRACK *videoTrac);
                 TsIndexerH265(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
-                       {
+                {
 
-                       }
+                }
         
 };
 //---

@@ -47,13 +47,14 @@ public:
     {
       width=height=fps1000=0;
       num_extra_slice_header_bits=0;  //copied from pps
+      address_coding_length=0;
     }
     int     width;
     int     height;
     int     fps1000;
     int     num_extra_slice_header_bits;
     bool    dependent_slice_segments_enabled_flag;
-    int     address_coding_length=0;
+    int     address_coding_length;
 };
 
 
