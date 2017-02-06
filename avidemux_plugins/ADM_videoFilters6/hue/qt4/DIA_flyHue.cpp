@@ -58,8 +58,8 @@ float hue,sat;
                  hue, sat);
     // Copy half source to display
     in->copyLeftSideTo(out);
-    out->printString(1,1,QT_TRANSLATE_NOOP("hue","Original"));
-    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,QT_TRANSLATE_NOOP("hue","Processed"));
+    out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
+    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;
 }
