@@ -187,7 +187,7 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     }   
     
     pkt->getInfo( &packetInfo);
-    thisUnit.consumedSoFar=0; // reset
+    thisUnit.consumedSoFar=0; // Head
     
     uint64_t startExtraData=packetInfo.startAt-193; // /!\ It may be in the previous packet, very unlikely though    
     pkt->read(512,headerBuffer+5);
@@ -446,14 +446,18 @@ resume:
                         }
                 }
                     break;
-#if 0                    
                   case NAL_H265_VPS:
-                                decodingImage=false;
-                                pkt->getInfo(&thisUnit.packetInfo);
-                                if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
-                                    keepRunning=false;
-                          break;                
-#endif                          
+                        decodingImage=false;
+                        pkt->getInfo(&thisUnit.packetInfo);
+                        if(firstSps)
+                        {
+                            pkt->setConsumed(startCodeLength); // reset consume counter
+                            firstSps=false;
+                        }
+                        thisUnit.consumedSoFar=pkt->getConsumed();
+                        if(!addUnit(data,unitTypeSps,thisUnit,startCodeLength))
+                            keepRunning=false;
+                        break;      
                   default:
                       break;
           }
