@@ -89,6 +89,7 @@ ADM_COREUTILS6_EXPORT int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t m
 ADM_COREUTILS6_EXPORT int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize, uint8_t *outData,uint32_t outMaxSize);
 ADM_COREUTILS6_EXPORT int     ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
+ADM_COREUTILS6_EXPORT NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
 #define SHORT_START_CODE
 
 #ifdef SHORT_START_CODE

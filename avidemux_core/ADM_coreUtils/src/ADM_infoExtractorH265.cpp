@@ -273,6 +273,19 @@ bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
     return r;
 }
 
+/**
+    \fn ADM_findNalu
+    \brief lookup for a specific NALU in the given buffer
+*/
+NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
+{
+    for(int i=0;i<maxNalu;i++)
+    {
+            if(((desc[i].nalu>>1)&0x3f) == (nalu&0x3f))
+                return desc+i;
+    }
+    return NULL;
+}
 
 /**
     \fn ADM_splitNalu
@@ -291,16 +304,16 @@ int index=0;
             {
                 head+=offset;
                 first=false;
-                oldStartCode=(startCode>>1)&0x3f;
+                oldStartCode=startCode;
                 continue;
             }
         if(index>=maxNalu) return 0;
         desc[index].start=head;
-        desc[index].size=offset-START_CODE_LEN;
+        desc[index].size=offset-5; // FOR h265 assume long start code
         desc[index].nalu=oldStartCode;
         index++;
         head+=offset;
-        oldStartCode=(startCode>>1)&0x3f;
+        oldStartCode=startCode;
       }
     // leftover
     desc[index].start=head;

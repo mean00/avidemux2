@@ -167,15 +167,16 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
  * @param data
  * @return 
  */
-static uint8_t *writeNalu(uint8_t *ptr, int naluType, int size, uint8_t *data)
+static uint8_t *writeNaluH265(uint8_t *ptr, NALU_descriptor *d)
 {
-    *ptr++=naluType;  //  VPS, SPS, PPS, SEI.  0x20 0x21 0x22
+    *ptr++=(d->nalu>>1)&0x3f;  //  VPS, SPS, PPS, SEI.  0x20 0x21 0x22
     *ptr++=0x00; // 1 NALU
     *ptr++=0x01;
-    *ptr++=(size+1)>>8;
-    *ptr++=(size+1)&0xff;
-    memcpy(ptr,data,size);
-    return ptr+size;
+    *ptr++=(d->size)>>8;
+    *ptr++=(d->size)&0xff;
+    *ptr++=d->nalu;
+    memcpy(ptr,d->start,d->size);
+    return ptr+d->size;
 }
 
 /**
@@ -192,10 +193,7 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     myExtra=NULL;
     myExtraLen=0;
     // Read First frame, it contains PPS & SPS
-    // Built avc-like atom from it.
-
-    // We need the absolute 1st frame to gety SPS PPS
-    // Hopefully it will be ok
+  
     ADMCompressedImage img;
     img.data=buffer;
     img.dataLength=0;
@@ -204,56 +202,32 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
         ADM_warning("Cannot read first image\n");
         return false;
     }
+    mixDump(img.data, 48);
     myBitstream->len=img.dataLength;
     NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-    //mixDump(img.data,img.dataLength);
-    int nbNalu=ADM_splitNaluH265(myBitstream->data,myBitstream->data+myBitstream->len,
-                            MAX_NALU_PER_CHUNK,desc);
-    // search sps
-    uint8_t *spsStart,*ppsStart,*vpsStart;
-    uint32_t spsLen=0, ppsLen=0,vpsLen;
-    int indexSps,indexPps,indexVps;
+   
+    int nbNalu=ADM_splitNaluH265(myBitstream->data,myBitstream->data+myBitstream->len,   MAX_NALU_PER_CHUNK,desc);
     
-    indexVps=ADM_findNalu(NAL_H265_VPS,nbNalu,desc);
-    if(-1==indexVps)
-    {
-        ADM_error("Cannot find VPS");
-        return false;
+    // The list of NALU we are interested in...
+    NALU_descriptor *vpsNalu,*ppsNalu,*spsNalu;
+    
+#define LoadNalu(x,y)     x=ADM_findNaluH265(NAL_H265_##y,nbNalu,desc); \
+    if(!x) \
+    { \
+        ADM_error("Cannot find "#y); \
+        return false; \
     }
     
-    indexSps=ADM_findNalu(NAL_H265_SPS,nbNalu,desc);
-    if(-1==indexSps)
-    {
-        ADM_error("Cannot find SPS");
-        return false;
-    }
-    indexPps=ADM_findNalu(NAL_H265_PPS,nbNalu,desc);
-    if(-1==indexPps)
-    {
-        ADM_error("Cannot find SPS");
-        return false;
-    }
-    int count=desc[indexVps].size;
-    uint8_t *ptr=desc[indexVps].start+count-1;
-    while(count > 4)
-    {
-        if(*ptr) break;
-        ptr--;
-        count--;
-    }
-    ADM_info("VPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
-    desc[indexVps].size=count;
+#define NUMBER_OF_NALU_IN_EXTRADATA 3 // SEI ?    
+    LoadNalu(vpsNalu,VPS);
+    LoadNalu(ppsNalu,PPS);
+    LoadNalu(spsNalu,SPS);
     
-    vpsLen=desc[indexVps].size;
-    spsLen=desc[indexSps].size;
-    ppsLen=desc[indexPps].size;
-
-    ADM_info("Copy from annexB: Found vps=%d sps=%d, pps=%d.\n",(int)vpsLen,(int)spsLen,(int)ppsLen);
     // Build extraData
-    myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen+2+1+1+vpsLen;
+    myExtraLen=vpsNalu->size+ppsNalu->size+spsNalu->size+(7)*NUMBER_OF_NALU_IN_EXTRADATA+32;
     myExtra=new uint8_t[myExtraLen];
-    ptr=myExtra;
-    uint8_t *sps=desc[indexSps].start;
+    uint8_t *ptr=myExtra;
+    
     
     //8.3.3.1
 //6    
@@ -283,16 +257,16 @@ bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
     *ptr++=0; // Avg framerate
     *ptr++=0; // Avg framerate
  
-    *ptr++=0x47; //2: constantFrameRate 3numTemporalLayers 1: temporalIdNested 2: lengthSizeMinusOne;
+    *ptr++=0x0f; //2: constantFrameRate 3numTemporalLayers 1: temporalIdNested 2: lengthSizeMinusOne;
      
-    *ptr++=0x3; // num elem // SEI MISSING!!!!!# FIXME
+    *ptr++=NUMBER_OF_NALU_IN_EXTRADATA; // num elem // SEI MISSING!!!!!# FIXME
     
     
-    ptr=writeNalu(ptr,desc[indexVps].nalu, desc[indexVps].size, desc[indexVps].start);
-    ptr=writeNalu(ptr,desc[indexSps].nalu, desc[indexSps].size, desc[indexSps].start);
-    ptr=writeNalu(ptr,desc[indexPps].nalu, desc[indexPps].size, desc[indexPps].start);
+    ptr=writeNaluH265(ptr,vpsNalu); 
+    ptr=writeNaluH265(ptr,spsNalu);
+    ptr=writeNaluH265(ptr,ppsNalu);
     
-    
+    myExtraLen=(int)(ptr-myExtra);
     ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
     mixDump(myExtra, myExtraLen);
     return true;
@@ -317,7 +291,7 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     else
     if(isH265Compatible(info.fcc))
     {
-        if(!extractExtraDataH264())
+        if(!extractExtraDataH265())
             ADM_warning("H265: Extract MP4 header from annexB failed\n");        
         else
             _init=true;
