@@ -67,15 +67,11 @@ static bool isNalValid(int nal)
     if(nal<=12) ADM_info("Nal : %s",nalType[nal]);
     return true;
 }
-
-
 /**
-    \fn ctor
-*/
-ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,uint64_t endTime):
-      ADM_videoStreamCopy(startTime,endTime)  
+ * \fn extractExtraDataH264
+ */
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH264()
 {
-    ADM_info("AnnexB to iso filter\n");
     myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
     myBitstream->data=buffer;
 
@@ -89,78 +85,208 @@ ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,
     ADMCompressedImage img;
     img.data=buffer;
     img.dataLength=0;
-
-    if(true==video_body->getDirectImageForDebug(0,&img))
+    if(false==video_body->getDirectImageForDebug(0,&img))
     {
-        myBitstream->len=img.dataLength;
-        NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-        //mixDump(img.data,img.dataLength);
-        int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
-                                MAX_NALU_PER_CHUNK,desc);
-        // search sps
-        uint8_t *spsStart,*ppsStart;
-        uint32_t spsLen=0, ppsLen=0;
-        int indexSps,indexPps;
+        ADM_warning("Cannot read first image\n");
+        return false;
+    }
+    myBitstream->len=img.dataLength;
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK];
+    //mixDump(img.data,img.dataLength);
+    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
+                            MAX_NALU_PER_CHUNK,desc);
+    // search sps
+    uint8_t *spsStart,*ppsStart;
+    uint32_t spsLen=0, ppsLen=0;
+    int indexSps,indexPps;
 
-        indexSps=ADM_findNalu(NAL_SPS,nbNalu,desc);
-        if(-1==indexSps)
+    indexSps=ADM_findNalu(NAL_SPS,nbNalu,desc);
+    if(-1==indexSps)
+    {
+        ADM_error("Cannot find SPS");
+        return false;
+    }
+    indexPps=ADM_findNalu(NAL_PPS,nbNalu,desc);
+    if(-1==indexPps)
+    {
+        ADM_error("Cannot find SPS");
+        return false;
+    }else
+    {
+        int count=desc[indexPps].size;
+        uint8_t *ptr=desc[indexPps].start+count-1;
+        while(count > 4)
         {
-            ADM_error("Cannot find SPS");
+            if(*ptr) break;
+            ptr--;
+            count--;
         }
-        indexPps=ADM_findNalu(NAL_PPS,nbNalu,desc);
-        if(-1==indexPps)
-        {
-            ADM_error("Cannot find SPS");
-        }else
-        {
-            int count=desc[indexPps].size;
-            uint8_t *ptr=desc[indexPps].start+count-1;
-            while(count > 4)
-            {
-                if(*ptr) break;
-                ptr--;
-                count--;
-            }
-            ADM_info("PPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
-            desc[indexPps].size=count;
-        }
-       
-        if(indexSps!=-1 && indexPps!=-1)
-        {
-            spsLen=desc[indexSps].size;
-            ppsLen=desc[indexPps].size;
-            
-            ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
-            // Build extraData
-            myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
-            myExtra=new uint8_t[myExtraLen];
-            uint8_t *ptr=myExtra;
-            uint8_t *sps=desc[indexSps].start;
-            *ptr++=1;           // AVC version
-            *ptr++=sps[0];        // Profile
-            *ptr++=sps[1];        // Profile
-            *ptr++=sps[2];        // Level
-            *ptr++=0xff;        // Nal size minus 1
+        ADM_info("PPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
+        desc[indexPps].size=count;
+    }
 
-            *ptr++=0xe1;        // SPS
-            *ptr++=(1+spsLen)>>8;
-            *ptr++=(1+spsLen)&0xff;
-            *ptr++=desc[indexSps].nalu;
-            memcpy(ptr,desc[indexSps].start,spsLen);
-            ptr+=spsLen;
+    spsLen=desc[indexSps].size;
+    ppsLen=desc[indexPps].size;
 
-            *ptr++=0x1;         // PPS
-            *ptr++=(1+ppsLen)>>8;
-            *ptr++=(1+ppsLen)&0xff;
-            *ptr++=desc[indexPps].nalu;
-            memcpy(ptr,desc[indexPps].start,ppsLen);
-            ptr+=ppsLen;
+    ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
+    // Build extraData
+    myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
+    myExtra=new uint8_t[myExtraLen];
+    uint8_t *ptr=myExtra;
+    uint8_t *sps=desc[indexSps].start;
+    *ptr++=1;           // AVC version
+    *ptr++=sps[0];        // Profile
+    *ptr++=sps[1];        // Profile
+    *ptr++=sps[2];        // Level
+    *ptr++=0xff;        // Nal size minus 1
 
-            ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
-            mixDump(myExtra, myExtraLen);
-        }
+    *ptr++=0xe1;        // SPS
+    *ptr++=(1+spsLen)>>8;
+    *ptr++=(1+spsLen)&0xff;
+    *ptr++=desc[indexSps].nalu;
+    memcpy(ptr,desc[indexSps].start,spsLen);
+    ptr+=spsLen;
 
-    }else ADM_warning("Cannot read first frame to get PPS and SPS");
+    *ptr++=0x1;         // PPS
+    *ptr++=(1+ppsLen)>>8;
+    *ptr++=(1+ppsLen)&0xff;
+    *ptr++=desc[indexPps].nalu;
+    memcpy(ptr,desc[indexPps].start,ppsLen);
+    ptr+=ppsLen;
+
+    ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
+    mixDump(myExtra, myExtraLen);
+    return true;
+}
+
+/**
+ * \fn extractExtraDataH265
+ * We need to pack VPS/PPS/SPS MP4 style
+ */
+bool ADM_videoStreamCopyFromAnnexB::extractExtraDataH265()
+{
+    myBitstream=new ADMBitstream(ADM_COPY_FROM_ANNEX_B_SIZE);
+    myBitstream->data=buffer;
+
+    myExtra=NULL;
+    myExtraLen=0;
+    // Read First frame, it contains PPS & SPS
+    // Built avc-like atom from it.
+
+    // We need the absolute 1st frame to gety SPS PPS
+    // Hopefully it will be ok
+    ADMCompressedImage img;
+    img.data=buffer;
+    img.dataLength=0;
+    if(false==video_body->getDirectImageForDebug(0,&img))
+    {
+        ADM_warning("Cannot read first image\n");
+        return false;
+    }
+    myBitstream->len=img.dataLength;
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK];
+    //mixDump(img.data,img.dataLength);
+    int nbNalu=ADM_splitNalu(myBitstream->data,myBitstream->data+myBitstream->len,
+                            MAX_NALU_PER_CHUNK,desc);
+    // search sps
+    uint8_t *spsStart,*ppsStart,*vpsStart;
+    uint32_t spsLen=0, ppsLen=0,vpsLen;
+    int indexSps,indexPps;
+    
+    indexVps=ADM_findNalu(NAL_H265_VPS,nbNalu,desc);
+    if(-1==indexVps)
+    {
+        ADM_error("Cannot find VPS");
+        return false;
+    }
+    
+    indexSps=ADM_findNalu(NAL_SPS,nbNalu,desc);
+    if(-1==indexSps)
+    {
+        ADM_error("Cannot find SPS");
+        return false;
+    }
+    indexPps=ADM_findNalu(NAL_PPS,nbNalu,desc);
+    if(-1==indexPps)
+    {
+        ADM_error("Cannot find SPS");
+        return false;
+    }
+    int count=desc[indexPps].size;
+    uint8_t *ptr=desc[indexPps].start+count-1;
+    while(count > 4)
+    {
+        if(*ptr) break;
+        ptr--;
+        count--;
+    }
+    ADM_info("PPS removed zero filler %d -> %d\n",(int)desc[indexPps].size,(int)count);
+    desc[indexPps].size=count;
+    
+
+    spsLen=desc[indexSps].size;
+    ppsLen=desc[indexPps].size;
+
+    ADM_info("Copy from annexB: Found sps=%d, pps=%d.\n",(int)spsLen,(int)ppsLen);
+    // Build extraData
+    myExtraLen=5+1+2+1+spsLen+1+2+1+ppsLen;
+    myExtra=new uint8_t[myExtraLen];
+    uint8_t *ptr=myExtra;
+    uint8_t *sps=desc[indexSps].start;
+    *ptr++=1;           // AVC version
+    *ptr++=sps[0];        // Profile
+    *ptr++=sps[1];        // Profile
+    *ptr++=sps[2];        // Level
+    *ptr++=0xff;        // Nal size minus 1
+
+    *ptr++=0xe1;        // SPS
+    *ptr++=(1+spsLen)>>8;
+    *ptr++=(1+spsLen)&0xff;
+    *ptr++=desc[indexSps].nalu;
+    memcpy(ptr,desc[indexSps].start,spsLen);
+    ptr+=spsLen;
+
+    *ptr++=0x1;         // PPS
+    *ptr++=(1+ppsLen)>>8;
+    *ptr++=(1+ppsLen)&0xff;
+    *ptr++=desc[indexPps].nalu;
+    memcpy(ptr,desc[indexPps].start,ppsLen);
+    ptr+=ppsLen;
+
+    ADM_info("generated %d bytes of extradata.\n",(int)myExtraLen);
+    mixDump(myExtra, myExtraLen);
+    return true;
+}
+/**
+    \fn ctor
+*/
+ADM_videoStreamCopyFromAnnexB::ADM_videoStreamCopyFromAnnexB(uint64_t startTime,uint64_t endTime):
+      ADM_videoStreamCopy(startTime,endTime)  
+{
+    ADM_info("AnnexB to iso filter\n");
+    _init=false;
+    aviInfo info;
+    video_body->getVideoInfo(&info);
+    if(isH264Compatible(info.fcc) )
+    {
+        if(!extractExtraDataH264())
+            ADM_warning("H264: Extract MP4 header from annexB failed\n");
+        else
+            _init=true;
+    }    
+    else
+    if(isH265Compatible(info.fcc))
+    {
+        if(!extractExtraDataH264())
+            ADM_warning("H265: Extract MP4 header from annexB failed\n");        
+        else
+            _init=true;
+    }
+    else
+    {
+        ADM_warning("Dont know how to process that\n");
+    }
+    
     rewind();
 
 }

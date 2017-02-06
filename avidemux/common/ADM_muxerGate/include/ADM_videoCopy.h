@@ -44,6 +44,7 @@ protected:
         ADMBitstream    *myBitstream;
         uint8_t         *myExtra;
         uint32_t        myExtraLen;
+        bool            _init;
         bool            compactNalus(ADMBitstream *out);
         int             convertFromAnnexB(uint8_t *inData,uint32_t inSize,
                                                       uint8_t *outData,uint32_t outMaxSize);
@@ -53,6 +54,10 @@ public:
         virtual         ~ADM_videoStreamCopyFromAnnexB();
         virtual bool    getPacket(ADMBitstream *out);
         virtual bool    getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
+        bool            initOk() {return _init;}
+protected:
+        bool            extractExtraDataH264();
+        bool            extractExtraDataH265();
 };
 /**
         \fn ADM_videoStreamCopyToAnnexB
@@ -74,5 +79,8 @@ public:
         virtual         ~ADM_videoStreamCopyToAnnexB();
         virtual bool    getPacket(ADMBitstream *out);
         virtual bool    getExtraData(uint32_t *extraLen, uint8_t **extraData) ;
+protected:
+        bool extractExtraDataH264();
+        bool extractExtraDataH265();
 };
 #endif
