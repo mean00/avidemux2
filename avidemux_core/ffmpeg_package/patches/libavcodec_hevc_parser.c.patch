@@ -1,43 +1,20 @@
---- libavcodec/hevc_parser.c.org	2017-01-30 07:50:12.779173809 +0100
-+++ libavcodec/hevc_parser.c	2017-01-30 07:43:40.491714104 +0100
-@@ -25,6 +25,11 @@
- #include "golomb.h"
- #include "hevc.h"
+--- libavcodec/hevc_parser.c.old	2017-02-08 07:28:24.025576908 +0100
++++ libavcodec/hevc_parser.c	2017-02-08 07:35:03.939231159 +0100
+@@ -27,6 +27,13 @@
+ #include "h2645_parse.h"
  #include "parser.h"
+ 
 +/* MEANX */
 +HEVCSPS *ff_hevc_parser_get_sps(AVCodecParserContext *s);
 +HEVCPPS *ff_hevc_parser_get_pps(AVCodecParserContext *s);
 +HEVCVPS *ff_hevc_parser_get_vps(AVCodecParserContext *s);
 +/* /MEANX */
- 
++
++
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
-@@ -46,7 +51,7 @@
- } HEVCParserContext;
- 
- #if !ADVANCED_PARSER
--static int hevc_parse_slice_header(AVCodecParserContext *s, HEVCNAL *nal,
-+int hevc_parse_slice_header(AVCodecParserContext *s, HEVCNAL *nal,
-                                    AVCodecContext *avctx)
- {
-     HEVCParserContext *ctx = s->priv_data;
-@@ -81,7 +86,6 @@
- 
-     return 0;
- }
--
- static int parse_nal_units(AVCodecParserContext *s, const uint8_t *buf,
-                            int buf_size, AVCodecContext *avctx)
- {
-@@ -128,7 +132,6 @@
-     return 0;
- }
- #endif
--
- /**
-  * Find the end of the current frame in the bitstream.
-  * @return the position of the first byte of the next frame, or END_NOT_FOUND
-@@ -174,6 +177,59 @@
+ #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
+@@ -176,6 +183,62 @@
  
  #if ADVANCED_PARSER
  /**
@@ -92,6 +69,9 @@
 +     return vps;
 +}
 +// /MEANX
++
++/**
++
 +
 +/**
   * Parse NAL units of found picture and decode some basic information.
