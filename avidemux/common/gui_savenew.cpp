@@ -263,7 +263,7 @@ ADM_videoStream *admSaver::setupVideo(void)
         video_body->getExtraHeaderData(&extraLen,&extra);
 //#warning do something better
         ADM_videoStreamCopy *copy=NULL;        
-        if(isH264Compatible(info.fcc))
+        if(isH264Compatible(info.fcc) || isH265Compatible(info.fcc))
         {
             bool isAnnexB=!extraLen; // this is not very good
             if(muxer->preferH264AnnexB())

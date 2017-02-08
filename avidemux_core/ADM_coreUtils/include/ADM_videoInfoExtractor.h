@@ -17,6 +17,7 @@
 
 #include "ADM_coreUtils6_export.h"
 
+
 ADM_COREUTILS6_EXPORT uint8_t extractMpeg4Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h,uint32_t *time_inc);
 ADM_COREUTILS6_EXPORT uint8_t extractH263Info(uint8_t *data,uint32_t dataSize,uint32_t *w,uint32_t *h);
 ADM_COREUTILS6_EXPORT uint8_t extractH263FLVInfo (uint8_t * buffer, uint32_t len, uint32_t * w, uint32_t * h);
@@ -36,15 +37,47 @@ typedef struct
     uint32_t CpbDpbToSkip;
 }ADM_SPSInfo;
 
-ADM_COREUTILS6_EXPORT uint8_t extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
-ADM_COREUTILS6_EXPORT bool extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+/**
+    \struct ADM_SPSinfoH265
+*/
+class ADM_COREUTILS6_EXPORT ADM_SPSinfoH265
+{
+public:
+    ADM_SPSinfoH265()
+    {
+      width=height=fps1000=0;
+      num_extra_slice_header_bits=0;  //copied from pps
+      address_coding_length=0;
+    }
+    int     width;
+    int     height;
+    int     fps1000;
+    int     num_extra_slice_header_bits;
+    bool    dependent_slice_segments_enabled_flag;
+    int     address_coding_length;
+};
+
+
+
+ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming, uint32_t *outLen, uint8_t *outData);
+
+ADM_COREUTILS6_EXPORT bool    extractSPSInfo(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
+ADM_COREUTILS6_EXPORT bool    extractSPSInfo_mp4Header(uint8_t *data, uint32_t len,ADM_SPSInfo *info);
 
 ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT uint8_t extractH265FrameType(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
-uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
+ADM_COREUTILS6_EXPORT uint8_t extractH264FrameType_startCode(uint32_t nalSize,uint8_t *buffer,uint32_t len,uint32_t *flags);
 ADM_COREUTILS6_EXPORT bool    ADM_getH264SpsPpsFromExtraData(uint32_t extraLen,uint8_t *extra,
                                     uint32_t *spsLen,uint8_t **spsData,
                                     uint32_t *ppsLen,uint8_t **ppsData); // return a copy of pps/sps extracted
+
+
+ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265_mp4Header(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
+ADM_COREUTILS6_EXPORT bool    extractSPSInfoH265(uint8_t *data, uint32_t len,ADM_SPSinfoH265 *info); 
+
+
+
+
 
 typedef struct
 {
@@ -55,7 +88,8 @@ typedef struct
 ADM_COREUTILS6_EXPORT int ADM_splitNalu(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
 ADM_COREUTILS6_EXPORT int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize, uint8_t *outData,uint32_t outMaxSize);
-
+ADM_COREUTILS6_EXPORT int     ADM_splitNaluH265(uint8_t *start, uint8_t *end, uint32_t maxNalu,NALU_descriptor *desc);
+ADM_COREUTILS6_EXPORT NALU_descriptor *ADM_findNaluH265(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc);
 #define SHORT_START_CODE
 
 #ifdef SHORT_START_CODE

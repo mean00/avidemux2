@@ -37,7 +37,7 @@ static const uint32_t FPS[16]={
 /**
     \fn runMpeg2
 */  
-bool TsIndexer::runMpeg2(const char *file,ADM_TS_TRACK *videoTrac)
+bool TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];

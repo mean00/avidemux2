@@ -197,6 +197,7 @@ bool tsHeader::processVideoIndex(char *buffer)
         \brief Read the [video] section of the index file
 
 */
+
 bool    tsHeader::readVideo(indexFile *index)
 {
     printf("[TsDemuxerer] Reading Video\n");
@@ -210,9 +211,9 @@ bool    tsHeader::readVideo(indexFile *index)
     if(type)
     {
         printf("[TsIndex] codec :<%s>\n",type);
-        if(!strcmp(type,"H264"))
+        if(!strcmp(type,"H264") || !strcmp(type,"H265"))
         {
-             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)"H264");
+             _videostream.fccHandler=_video_bih.biCompression=fourCC::get((uint8_t *)type);
         }else
         if(!strcmp(type,"VC1"))
         {

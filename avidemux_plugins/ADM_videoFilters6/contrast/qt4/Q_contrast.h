@@ -27,6 +27,9 @@ class Ui_contrastWindow : public QDialog
 {
 	Q_OBJECT
 
+private:
+        void setDialTitles(void);
+
 protected : 
 	int lock;
         QGraphicsScene *scene;

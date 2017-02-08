@@ -384,6 +384,10 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     switch(avctx->codec_id)
     {
         default:
+        case AV_CODEC_ID_MPEG2VIDEO:
+                                profile=VAProfileMPEG2Main;
+                                break;
+            
         case AV_CODEC_ID_H264:
                                 profile=VAProfileH264High;
                                 break;
@@ -574,6 +578,7 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
     VAProfile profile=VAProfileNone;
     switch(avctx->codec_id)
     {
+       case AV_CODEC_ID_MPEG2VIDEO: profile= VAProfileMPEG2Main;break;
        case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
 #ifdef LIBVA_HEVC_DEC       
        case AV_CODEC_ID_H265: profile= VAProfileHEVCMain;break;;

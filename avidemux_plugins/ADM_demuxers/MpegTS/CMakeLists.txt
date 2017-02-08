@@ -4,6 +4,7 @@ SET(ADM_ts_SRCS
 	ADM_tsPlugin.cpp
 	ADM_tsIndex.cpp
 	ADM_tsIndexH264.cpp
+	ADM_tsIndexH265.cpp
         ADM_tsIndexVC1.cpp
         ADM_tsIndexMpeg2.cpp
 	ADM_tsReadIndex.cpp

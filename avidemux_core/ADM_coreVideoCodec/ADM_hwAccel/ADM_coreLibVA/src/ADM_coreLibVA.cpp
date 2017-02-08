@@ -59,6 +59,7 @@ namespace ADM_coreLibVA
  void                   *context;
  VADisplay              display;
  VAConfigID             configH264;
+ VAConfigID             configMpeg2;
  VAConfigID             configH265;
  VAConfigID             configH26510Bits;
  VAConfigID             configVC1;
@@ -321,16 +322,16 @@ bool admLibVA::setupConfig(void)
     if(!r)
         return false;
 
-
-    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,"H264 Hight");
-    checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,"VC1");
+    checkProfile(VAProfileMPEG2Main,    &ADM_coreLibVA::configMpeg2,    "Mpeg 2 Main");
+    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,     "H264 Hight");
+    checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,     "VC1");
 #ifdef LIBVA_HEVC_DEC
-    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,"HEVC Main");
-    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits ,"H265 10Bits");
+    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,     "HEVC Main");
+    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits,"H265 10Bits");
 #endif
 
 #ifdef LIBVA_VP9_DEC
-    checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,"VP9");
+    checkProfile(VAProfileVP9Profile3,  &ADM_coreLibVA::configVP9 ,     "VP9");
 #endif
     return true;
 }
@@ -415,11 +416,12 @@ bool admLibVA::fillContext(VAProfile profile ,vaapi_context *c)
     VAConfigID cid;
     switch(profile)
     {
-       case VAProfileH264High: cid=ADM_coreLibVA::configH264;break;
-       case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
+       case VAProfileMPEG2Main:     cid=ADM_coreLibVA::configMpeg2;break;
+       case VAProfileH264High:      cid=ADM_coreLibVA::configH264;break;
+       case VAProfileVC1Advanced:   cid=ADM_coreLibVA::configVC1;break;
 #ifdef LIBVA_HEVC_DEC
-       case VAProfileHEVCMain: cid=ADM_coreLibVA::configH265;break;
-       case VAProfileHEVCMain10: cid=ADM_coreLibVA::configH26510Bits;break;
+       case VAProfileHEVCMain:      cid=ADM_coreLibVA::configH265;break;
+       case VAProfileHEVCMain10:    cid=ADM_coreLibVA::configH26510Bits;break;
 #endif
 
 #ifdef LIBVA_VP9_DEC
@@ -510,6 +512,7 @@ bool        admLibVA::supported(VAProfile profile)
 #define SUPSUP(a,b) case a: if(ADM_coreLibVA::b!=-1) return true;break;
     switch(profile)
     {
+        SUPSUP(VAProfileMPEG2Main,configMpeg2)
         SUPSUP(VAProfileH264High,configH264)
         SUPSUP(VAProfileVC1Advanced,configVC1)
 #ifdef LIBVA_HEVC_DEC
@@ -547,6 +550,7 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
 
     switch(profile)
     {
+       case VAProfileMPEG2Main:   cid=ADM_coreLibVA::configMpeg2;break;
        case VAProfileH264High:    cid=ADM_coreLibVA::configH264;break;
        case VAProfileVC1Advanced: cid=ADM_coreLibVA::configVC1;break;
 #ifdef LIBVA_HEVC_DEC

@@ -119,6 +119,167 @@ enum
 /**
     \class TsIndexer
 */
+class TsIndexerBase
+{
+protected:
+        uint32_t        beginConsuming;
+        uint64_t        fullSize;
+        vector <H264Unit> listOfUnits;
+        H264Unit        thisUnit;
+        bool            decodingImage;
+        int             processedThisRound;
+        
+protected:
+        FILE                    *index;
+        tsPacketLinearTracker   *pkt;
+        listOfTsAudioTracks     *audioTracks;
+        DIA_processingBase      *gui;        
+        bool                    updateUI(void);
+        // H264
+        bool                    addUnit(indexerData &data,int unitType,const H264Unit &unit,uint32_t overRead);
+        bool                    dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxPacketInfo *nextPacket);
+public:
+                TsIndexerBase(listOfTsAudioTracks *tr);
+        virtual ~TsIndexerBase();
+virtual bool    run(const char *file,ADM_TS_TRACK *videoTrac)=0;                
+        bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
+        bool    writeAudio(void);
+        bool    writeSystem(const char *filename,bool append);
+        bool    updatePicStructure(TSVideo &video,const uint32_t t)
+                        {
+                                            switch(t)
+                                            {
+                                                case 3: video.frameCount++;
+                                                        thisUnit.imageStructure=pictureFrame;
+                                                        break;
+                                                case 1:  thisUnit.imageStructure=pictureTopField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                case 2:  thisUnit.imageStructure=pictureBottomField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                            return true;
+                        }
+};
+
+/**
+    \class TsIndexerH264
+*/
+class TsIndexerH264 : public TsIndexerBase
+{
+protected:
+        bool            findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        
+protected:
+        ADM_SPSInfo             spsInfo;
+        bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
+        #define                 ADM_NAL_BUFFER_SIZE (2*1024) // only used to decode SEI, should plenty enough
+        uint8_t                 payloadBuffer[ADM_NAL_BUFFER_SIZE];
+public:
+                TsIndexerH264(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
+                {
+                      memset(&spsInfo,0,sizeof(spsInfo));
+                }
+                ~TsIndexerH264()
+                {
+                  
+                } 
+        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+        bool    updatePicStructure(TSVideo &video,const uint32_t t)
+                        {
+                                            switch(t)
+                                            {
+                                                case 3: video.frameCount++;
+                                                        thisUnit.imageStructure=pictureFrame;
+                                                        break;
+                                                case 1:  thisUnit.imageStructure=pictureTopField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                case 2:  thisUnit.imageStructure=pictureBottomField;
+                                                         video.fieldCount++;
+                                                         break;
+                                                default: ADM_warning("frame type 0 met, this is illegal\n");
+                                            }
+                                            return true;
+                        }
+};
+
+class TsIndexerVC1: public TsIndexerBase
+{
+protected:
+        VC1Context      vc1Context;
+        
+protected:
+        bool            decodeVC1Seq(tsGetBits &bits,TSVideo &video);
+        bool            decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
+public:
+                        ~TsIndexerVC1()
+                        {
+                          
+                        }
+        bool            run(const char *file,ADM_TS_TRACK *videoTrac);
+                        TsIndexerVC1(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
+                        {
+
+                        }
+};
+//--
+/**
+*
+    \class TsIndexerH264
+*/
+class TsIndexerMpeg2 : public TsIndexerBase
+{
+protected:
+
+public:
+                ~TsIndexerMpeg2()
+                {
+                  
+                }
+        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+                TsIndexerMpeg2(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
+                {
+
+                }
+       
+};
+//--
+/**
+*
+    \class TsIndexerH264
+*/
+class TsIndexerH265 : public TsIndexerBase
+{
+protected:
+        ADM_SPSinfoH265 info;
+        
+        bool            findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        bool            decodeH265SPS(tsPacketLinearTracker *pkt);
+        int             decodePictureTypeH265(int nalType,getBits &bits) ;     
+        bool            decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,   pictureStructure *picStruct);
+        
+protected:
+public:
+                ~TsIndexerH265()
+                {
+                  
+                }
+        bool    run(const char *file,ADM_TS_TRACK *videoTrac);
+                TsIndexerH265(listOfTsAudioTracks *tr) : TsIndexerBase(tr)
+                {
+
+                }
+        
+};
+//---
+#if 0
+/**
+*
+    \class TsIndexerH264
+*/
 class TsIndexer
 {
 protected:
@@ -129,9 +290,12 @@ protected:
         H264Unit        thisUnit;
         bool            decodingImage;
         int             processedThisRound;
+        ADM_SPSinfoH265 info;
         
         bool            findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video);
-        bool            findH265SPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        bool            findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video);
+        bool            decodeH265SPS(tsPacketLinearTracker *pkt);
+        int             decodePictureTypeH265(int nalType,getBits &bits) ;       
         
 protected:
         FILE                    *index;
@@ -141,6 +305,7 @@ protected:
         ADM_SPSInfo             spsInfo;
         bool                    updateUI(void);
         bool                    decodeSEI(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
+        bool                    decodeSEIH265(uint32_t nalSize, uint8_t *org,uint32_t *recoveryLength,pictureStructure *nextpicstruct);
         bool                    decodeVC1Seq(tsGetBits &bits,TSVideo &video);
         bool                    decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure);
         // H264
@@ -153,6 +318,7 @@ public:
                 ~TsIndexer();
         bool    runMpeg2(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runH264(const char *file,ADM_TS_TRACK *videoTrac);
+        bool    runH265(const char *file,ADM_TS_TRACK *videoTrac);
         bool    runVC1(const char *file,ADM_TS_TRACK *videoTrac);
         bool    writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType);
         bool    writeAudio(void);
@@ -175,6 +341,7 @@ public:
                                             return true;
                         }
 };
+#endif
 /********************************************************************************************/
 /********************************************************************************************/
 /********************************************************************************************/

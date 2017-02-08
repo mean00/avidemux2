@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 --- libavcodec/libavcodec.v.old	2016-12-21 13:24:59.794963121 +0100
 +++ libavcodec/libavcodec.v	2016-12-21 13:25:37.801388035 +0100
 @@ -4,6 +4,11 @@
@@ -5,10 +6,18 @@
          audio_resample;
          audio_resample_close;
 +	# Avidemux
+=======
+--- libavcodec/libavcodec.v.org	2017-01-30 07:50:27.523153755 +0100
++++ libavcodec/libavcodec.v	2017-01-30 07:43:55.783688107 +0100
+@@ -3,5 +3,11 @@
+                 #deprecated, remove after next bump
+                 audio_resample;
+                 audio_resample_close;
++  # Avidemux
 +        ff_h264_info;
 +        ff_golomb_vlc_len;
 +        ff_ue_golomb_vlc_code;
 +        ff_se_golomb_vlc_code;
-     local:
-         *;
++        ff_hevc_parser_get_*; 
+         local:  *;
  };

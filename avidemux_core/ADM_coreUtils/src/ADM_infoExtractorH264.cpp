@@ -54,7 +54,7 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
     \fn ADM_getH264SpsPpsFromExtraData
     \brief Returns a copy of PPS/SPS extracted from extrdata
 */
-static bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
+bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
                                     uint32_t *outLen, uint8_t *outData)
 {
     if(dataLen>200)
@@ -802,7 +802,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
 
 }
 
-uint8_t extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
+bool  extractSPSInfo (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
 #define DPY(x) ADM_info(#x":%d\n",(int)spsinfo->x);
 #if 1
@@ -959,6 +959,7 @@ int index=0;
     index++;
     return index;
 }
+
 /**
     \fn ADM_findNalu
     \brief lookup for a specific NALU in the given buffer
@@ -972,7 +973,6 @@ int ADM_findNalu(uint32_t nalu,uint32_t maxNalu,NALU_descriptor *desc)
     }
     return -1;
 }
-
 static void writeBE32(uint8_t *p, uint32_t size)
 {
     p[0]=size>>24;

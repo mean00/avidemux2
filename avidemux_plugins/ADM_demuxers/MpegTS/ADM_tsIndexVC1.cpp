@@ -23,7 +23,7 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
     \fn runVC1
     \brief Index VC1 stream
 */  
-bool TsIndexer::runVC1(const char *file,ADM_TS_TRACK *videoTrac)
+bool TsIndexerVC1::run(const char *file,ADM_TS_TRACK *videoTrac)
 {
 uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];
@@ -166,7 +166,7 @@ dmxPacketInfo info;
         Large part of this borrowed from VLC
         Advanced/High profile only
 */
-bool TsIndexer::decodeVC1Seq(tsGetBits &bits,TSVideo &video)
+bool TsIndexerVC1::decodeVC1Seq(tsGetBits &bits,TSVideo &video)
 {
 
 int v;
@@ -323,7 +323,7 @@ int consumed;
     Borrowed a lot from VLC also
 
 */
-bool TsIndexer::decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure)
+bool TsIndexerVC1::decodeVC1Pic(tsGetBits &bits,uint32_t &frameType,uint32_t &frameStructure)
 {
     frameStructure=3;
     bool field=false;

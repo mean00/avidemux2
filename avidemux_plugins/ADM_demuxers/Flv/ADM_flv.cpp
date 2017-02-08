@@ -365,7 +365,8 @@ bool flvHeader::extraHeader(flvTrak *trk,uint32_t *remain,bool have_cts,int32_t 
 
 uint8_t flvHeader::open(const char *name)
 {
-  uint32_t prevLen, type, size, dts,pos=0;
+  uint32_t prevLen, type, size, dts;
+  uint64_t pos=0;
   bool firstVideo=true;
   _isvideopresent=0;
   _isaudiopresent=0;
@@ -380,11 +381,11 @@ uint8_t flvHeader::open(const char *name)
     return 0;
   }
   // Get size
-  uint32_t fileSize=0;
+  uint64_t fileSize=0;
   fseeko(_fd,0,SEEK_END);
   fileSize=ftello(_fd);
   fseeko(_fd,0,SEEK_SET);
-  printf("[FLV] file size :%u bytes\n",fileSize);
+  printf("[FLV] file size :%" PRIu64 " bytes\n",fileSize);
   // It must begin by F L V 01
   uint8_t four[4];
 
@@ -417,7 +418,7 @@ uint8_t flvHeader::open(const char *name)
   fseeko(_fd,skip,SEEK_SET);
   printf("[FLV] Skipping %u header bytes\n",skip);
   pos=ftello(_fd);;
-  printf("pos:%u/%u\n",pos,fileSize);
+  printf("pos:%" PRIu64 "/%" PRIu64 "\n",pos,fileSize);
   // Create our video index
   videoTrack=new flvTrak(50);
   if(_isaudiopresent)
@@ -435,7 +436,8 @@ uint8_t flvHeader::open(const char *name)
     type=read8();
     size=read24();
     dts=read24();
-    read32(); // ???
+    dts|=((uint32_t)read8())<<24;
+    read24(); // StreamID, always 0
     aprintf("--------\n");
     aprintf("prevLen=%d\n",(int)prevLen);
     aprintf("type  =%d\n",(int)type);
@@ -443,7 +445,7 @@ uint8_t flvHeader::open(const char *name)
     aprintf("dts   =%d\n",(int)dts);
     if(!size) continue;
     uint32_t remaining=size;
-    //printf("[FLV] At %08x found type %x size %u pts%u\n",pos,type,size,dts);
+    //printf("[FLV] At %08" PRIu64 " found type %x size %u pts%u\n",pos,type,size,dts);
     switch(type)
     {
       case FLV_TAG_TYPE_AUDIO:
@@ -512,7 +514,7 @@ uint8_t flvHeader::open(const char *name)
                 insertVideo(ftello(_fd),remaining,frameType,dts,pts);
           }
            break;
-      default: printf("[FLV]At 0x%x, unhandled type %u\n",pos,type);
+      default: printf("[FLV]At 0x%" PRIx64 ", unhandled type %u\n",pos,type);
     }
     Skip(remaining);
   } // while
@@ -720,7 +722,7 @@ uint8_t   flvHeader::setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uin
       \fn insertVideo
       \brief add a frame to the index, grow the index if needed
 */
-uint8_t flvHeader::insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts)
+uint8_t flvHeader::insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts)
 {
     videoTrack->grow();
     flvIndex *x=&(videoTrack->_index[videoTrack->_nbIndex]);
@@ -745,7 +747,7 @@ uint8_t flvHeader::insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uin
       \fn insertVideo
       \brief add a frame to the index, grow the index if needed
 */
-uint8_t flvHeader::insertAudio(uint32_t pos,uint32_t size,uint32_t pts)
+uint8_t flvHeader::insertAudio(uint64_t pos,uint32_t size,uint32_t pts)
 {
     audioTrack->grow();
     flvIndex *x=&(audioTrack->_index[audioTrack->_nbIndex]);

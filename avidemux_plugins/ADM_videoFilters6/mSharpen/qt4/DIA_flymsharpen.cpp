@@ -92,8 +92,8 @@ uint8_t    flyMSharpen::processYuv(ADMImage* in, ADMImage *out)
                 Msharpen::apply_filter(&refIn, blur, &refOut,  i,param,invstrength);
     }
     out->copyInfo(in);
-    out->printString(1,1,QT_TRANSLATE_NOOP("msharpen","Original"));
-    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,QT_TRANSLATE_NOOP("msharpen","Processed"));
+    out->printString(1,1,"Original"); // printString can't handle non-ascii input, do not translate this!
+    out->printString(in->GetWidth(PLANAR_Y)/24+1,1,"Processed"); // as above, don't try to translate
 
     return 1;
 }

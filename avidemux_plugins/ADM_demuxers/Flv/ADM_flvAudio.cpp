@@ -79,8 +79,8 @@ uint64_t  ADM_flvAccess::getDurationInUs(void)
 bool      ADM_flvAccess::goToTime(uint64_t timeUs)
 {
 
-uint32_t target=(timeUs);;
-uint32_t mstime=target;
+uint64_t target=timeUs;
+uint64_t mstime=target;
 uint32_t _nbClusters=_track->_nbIndex;
 
       // First identify the cluster...

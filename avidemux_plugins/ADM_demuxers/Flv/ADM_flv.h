@@ -111,8 +111,8 @@ class flvHeader         :public vidHeader
     uint32_t    read24(void);
     uint32_t    read32(void);
     uint8_t     Skip(uint32_t len);
-    uint8_t     insertVideo(uint32_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts);
-    uint8_t     insertAudio(uint32_t pos,uint32_t size,uint32_t pts);
+    uint8_t     insertVideo(uint64_t pos,uint32_t size,uint32_t frameType,uint32_t dts,uint32_t pts);
+    uint8_t     insertAudio(uint64_t pos,uint32_t size,uint32_t pts);
     uint8_t     setAudioHeader(uint32_t format,uint32_t fq,uint32_t bps,uint32_t channels);
     uint8_t     setVideoHeader(uint8_t codec,uint32_t *remaining);
     bool        extraHeader(flvTrak *trk,uint32_t *remain,bool haveCts,int32_t *cts);
