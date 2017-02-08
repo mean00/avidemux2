@@ -130,7 +130,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
     for(int i=0;i<list.size();i++)
     {
         ADM_TS_TRACK_TYPE type=list[i].trackType;
-        if(type==ADM_TS_MPEG2 || type==ADM_TS_H264 || type==ADM_TS_VC1)
+        if(type==ADM_TS_MPEG2 || type==ADM_TS_H264 || type==ADM_TS_VC1 || type==ADM_TS_H265)
         {
             videoIndex=i;
             break;
