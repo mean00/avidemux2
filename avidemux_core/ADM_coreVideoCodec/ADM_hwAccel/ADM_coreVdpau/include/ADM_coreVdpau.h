@@ -104,6 +104,9 @@ public:
                                 uint32_t attrCount,
                                 const  VdpVideoMixerAttribute *xkeys,
                                 void * const* values);
+    static bool      queryDecoderCapabilities(      VdpDecoderProfile profile, // return true if supported
+                                                    int *        max_width,
+                                                    int *        max_height);
     static int dimensionRoundUp(int x)
     {
                 return (x+15) & ~15;
