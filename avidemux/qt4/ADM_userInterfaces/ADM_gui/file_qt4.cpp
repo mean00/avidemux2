@@ -49,14 +49,15 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     //printf("Do filer=%d\n",(int)doFilter);
     std::string lastFolder;
     admCoreUtils::getLastWriteFolder(lastFolder);
+    if(!lastFolder.size())
+        admCoreUtils::getLastReadFolder(lastFolder);
     if (lastFolder.size())
     {
         QString outputPath = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
 
-        char *tmpinputname = NULL;
         QString inputBaseName = QString("");
         std::string lastRead;
-        admCoreUtils::getLastReadFolder(lastRead);
+        admCoreUtils::getLastReadFile(lastRead);
         if (lastRead.size())
         {
             inputBaseName = QFileInfo(QString::fromUtf8(lastRead.c_str())).completeBaseName();

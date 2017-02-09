@@ -20,6 +20,8 @@ namespace admCoreUtils
 ADM_COREUTILS6_EXPORT void  setLastReadFolder(const std::string &folder);
 ADM_COREUTILS6_EXPORT void  getLastReadFolder( std::string &folder);
 
+ADM_COREUTILS6_EXPORT void  getLastReadFile( std::string &file);
+
 ADM_COREUTILS6_EXPORT void  setLastWriteFolder(const std::string &folder);
 ADM_COREUTILS6_EXPORT void  getLastWriteFolder( std::string &folder);
 

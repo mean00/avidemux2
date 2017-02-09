@@ -72,4 +72,13 @@ void admCoreUtils::getLastWriteFolder( std::string &folder)
     
 }
 
+/**
+ * \fn getLastReadFile
+ * \brief get the file name and path of the currently loaded video
+ */
+ void admCoreUtils::getLastReadFile( std::string &file)
+ {
+     internalGetFolder(LASTFILES_FILE1,file);
+ }
+
 // EOF
