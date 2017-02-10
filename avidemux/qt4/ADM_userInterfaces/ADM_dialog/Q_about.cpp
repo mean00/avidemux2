@@ -35,7 +35,7 @@ Ui_aboutWindow::Ui_aboutWindow(QWidget* parent) : QDialog(parent)
         int l=strlen(ADM_SUBVERSION);
         if(l>1)
         {
-                sprintf(subversion,"%s <br><small>(%s)</small>", ADM_VERSION, ADM_SUBVERSION);// 
+                sprintf(subversion,"%s <br><small>(%s-fflibs %s)</small>", ADM_VERSION, ADM_SUBVERSION,ADM_FFMPEG_VERSION);
         }else
         {
                 sprintf(subversion,"%s - Release",ADM_VERSION);

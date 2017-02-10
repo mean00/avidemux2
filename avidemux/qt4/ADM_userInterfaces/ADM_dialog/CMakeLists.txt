@@ -1,3 +1,4 @@
+include(admFFmpegVersion)
 SET(ADM_LIB ADM_dialogQt4)
 
 SET(
@@ -20,7 +21,7 @@ SET(headers
 ADM_QT_WRAP_UI(${ADM_LIB}_headers ${uiFiles})
 ADM_QT_WRAP_CPP(${ADM_LIB}_source ${headers})
 ADM_QT_ADD_RESOURCES(${ADM_LIB}_resource  about.qrc)
-
+ADD_DEFINITIONS(-DADM_FFMPEG_VERSION=\"${FFMPEG_VERSION}\")
 SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
 	${${ADM_LIB}_headers}  ${${ADM_LIB}_source}  ${${ADM_LIB}_resource}
         Q_about.cpp
