@@ -38,10 +38,10 @@ typedef struct
     VdpOutputSurfaceQueryPutBitsYCbCrCapabilities *putBitsCapsOutputSurface;
     VdpOutputSurfaceGetBitsNative                 *getBitsNativeOutputSurface;
 
-    VdpDecoderCreate        *decoderCreate;
-    VdpDecoderDestroy       *decoderDestroy;
-    VdpDecoderRender        *decoderRender;
-
+    VdpDecoderCreate                  *decoderCreate;
+    VdpDecoderDestroy                 *decoderDestroy;
+    VdpDecoderRender                  *decoderRender;
+    VdpDecoderQueryCapabilities       *queryDecoderCapabilities;
 
     VdpPresentationQueueTargetDestroy *presentationQueueDestroy;
     VdpPresentationQueueCreate        *presentationQueueCreate;
@@ -61,6 +61,8 @@ typedef struct
     VdpVideoSurfaceGetParameters      *mixerGetSurfaceParameters;
     
     VdpPresentationQueueTargetCreateX11 *presentationQueueDisplayX11Create;
+    
+    
 }VdpFunctions;
 
 namespace ADM_coreVdpau

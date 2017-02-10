@@ -142,7 +142,7 @@ bool admVdpau::init(GUI_WindowInfo *x)
     GetMe(putBitsYV12OutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_PUT_BITS_Y_CB_CR);
     GetMe(putBitsCapsOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_QUERY_PUT_BITS_Y_CB_CR_CAPABILITIES);
     GetMe(getBitsNativeOutputSurface,VDP_FUNC_ID_OUTPUT_SURFACE_GET_BITS_NATIVE);
-    
+    GetMe(queryDecoderCapabilities,VDP_FUNC_ID_DECODER_QUERY_CAPABILITIES);
     
 
     GetMe(presentationQueueDestroy,VDP_FUNC_ID_PRESENTATION_QUEUE_DESTROY);

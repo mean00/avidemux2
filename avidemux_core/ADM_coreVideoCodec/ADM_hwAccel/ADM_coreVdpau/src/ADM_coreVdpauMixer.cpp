@@ -259,6 +259,30 @@ VdpStatus admVdpau::mixerSetAttributesValue(VdpVideoMixer mixer,
     return e;
 }
 
+bool admVdpau::queryDecoderCapabilities(
+                                                    VdpDecoderProfile profile,
+                                                    int *        maxWidth,
+                                                    int *        maxHeight)
+  {
+    VdpBool is_supported=false;
+    uint32_t max_level,max_macroblocks,max_width,max_height;
+    VdpStatus e=ADM_coreVdpau::funcs.queryDecoderCapabilities(ADM_coreVdpau::vdpDevice,
+                                                              profile,
+                                                              &is_supported,
+                                                              &max_level,
+                                                              &max_macroblocks,
+                                                              &max_width,
+                                                              &max_height);
+    if(VDP_STATUS_OK!=e)
+    {   
+        ADM_warning("queryDecoderCapabilities  failed :%s\n",getErrorString(e));   
+        return false;
+    }
+    *maxWidth=max_width;
+    *maxHeight=max_height;
+    return is_supported;
+  }
+
 /**
     \fn mixerRenderWithPastAndFuture
 */
