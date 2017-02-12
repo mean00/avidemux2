@@ -34,7 +34,7 @@
 
 
 #if 0
-#define aprintf printf
+#define aprintf ADM_info
 #else
 #define aprintf(...) {}
 #endif
@@ -164,8 +164,11 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
   Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent,  delogo *param, ADM_coreVideoFilter *in) 
             : QDialog(parent)
   {
-      static bool doOnce=false;
-        uint32_t width,height;
+    static bool doOnce=false;
+    uint32_t width,height;
+        
+        aprintf("Ctor @ %d: %d, %d x %d\n",param->xoff, param->yoff, param->lw,param->lh);
+        
         ui.setupUi(this);
         _in=in;
         
@@ -190,7 +193,7 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
         SPINENTRY(spinY)->setSingleStep(5);
         SPINENTRY(spinW)->setSingleStep(5);
         SPINENTRY(spinH)->setSingleStep(5);
-        
+        aprintf("Uploading\n");
         myCrop->upload();
         myCrop->sliderChanged();
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -309,7 +312,7 @@ uint8_t flyMpDelogo::upload(bool redraw)
     {
         blockChanges(true);
     }
-    printf("Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+    printf(">>>Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
 
     MYSPIN(spinX)->setValue(param.xoff);
     MYSPIN(spinY)->setValue(param.yoff);
@@ -343,6 +346,7 @@ uint8_t flyMpDelogo::download(void)
         rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
          blockChanges(false);
 #endif         
+        printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;
 }
