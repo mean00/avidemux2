@@ -89,7 +89,10 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     
     aprintf("%d x %d => %d x %d, %f\n",param.lw,param.lh,newParam.lw,newParam.lh,_zoom);
     
-    param=newParam;
+    param.lw=newParam.lw;
+    param.lh=newParam.lh;
+    param.xoff=newParam.xoff;
+    param.yoff=newParam.yoff;
     
     upload(false);
     //
