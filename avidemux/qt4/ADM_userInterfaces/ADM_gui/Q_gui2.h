@@ -191,5 +191,6 @@ protected:
 	void dragEnterEvent(QDragEnterEvent *event);
 	void dropEvent(QDropEvent *event);
 	void openFiles(QList<QUrl>);
+        void changeEvent(QEvent* event);
 };
 #endif	// Q_gui2_h

@@ -1458,6 +1458,7 @@ uint8_t GUI_close(void)
         admPreview::stop();
         setPreviewMode(ADM_PREVIEW_NONE);
       }
+      needsResizing=false;
       delete avifileinfo;
       //delete wavinfo;
       admPreview::destroy();
