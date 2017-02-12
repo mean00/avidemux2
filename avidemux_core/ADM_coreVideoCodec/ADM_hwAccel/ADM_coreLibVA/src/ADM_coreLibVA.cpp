@@ -345,8 +345,8 @@ static char *fourCC_tostring(uint32_t fourcc)
 }
 
 /**
- * 
- * @return 
+ *
+ * @return
  */
 VADisplay admLibVA::getDisplay()
 {
@@ -765,8 +765,9 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
     //--------------------------
     // Wait for surface to be ready...
     //--------------------------
-    int countDown=20;
-    while(1)
+    int countDown=50;
+    bool end=false;
+    while(!end)
     {
      CHECK_ERROR(vaQuerySurfaceStatus ( ADM_coreLibVA::display, src->surface,&status));
      if(xError)
@@ -774,14 +775,34 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
          ADM_warning("QuerySurfacStatus failed\n");
          return false;
      }
-     if(status==VASurfaceReady) break;
-     countDown--;
-     if(!countDown)
+     ADM_info("surface status = %d\n",status);
+     switch(status)
      {
-         ADM_warning("Timeout waiting for surface\n");
-         return false;
-     }
-     ADM_usleep(1000);
+        case VASurfaceReady:
+                end=true;
+                continue;
+                break;
+        case VASurfaceSkipped:
+                end=true;
+                continue;
+                break;
+      default:
+          countDown--;
+          if(!countDown)
+          {
+              ADM_warning("Timeout waiting for surface\n");
+              end=true;
+              continue;
+          }
+          ADM_usleep(1000);
+          break;
+    }
+   }
+    if(status!=VASurfaceReady)
+    {
+      ADM_warning("Error getting surface within timeout = %d\n",(int)status);
+      dest->_noPicture=true;
+      return true;
     }
     //--------------------------
     // Derive Image
@@ -1128,7 +1149,7 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
  * allocateWithSurface
  * @param w
  * @param h
- * @return 
+ * @return
  */
 ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h)
 {
@@ -1209,16 +1230,16 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     return false;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 VAConfigID  admLibVA::createFilterConfig()
 {
       VAStatus xError;
       VAConfigID id=VA_INVALID;
-      
+
       if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return VA_INVALID;}
-      
+
       CHECK_ERROR(vaCreateConfig(ADM_coreLibVA::display, VAProfileNone, VAEntrypointVideoProc, 0, 0, &id));
       if(xError!=VA_STATUS_SUCCESS)
           return VA_INVALID;
@@ -1226,37 +1247,37 @@ VAConfigID  admLibVA::createFilterConfig()
 }
 
 /**
- * 
- * @return 
+ *
+ * @return
  */
 VAContextID admLibVA::createFilterContext()
 {
     return VA_INVALID;
 }
 /**
- * 
+ *
  * @param id
- * @return 
+ * @return
  */
 bool        admLibVA::destroyFilterContext(VAContextID &id)
 {
      VAStatus xError;
      if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
-    
+
     CHECK_ERROR( vaDestroyContext(ADM_coreLibVA::display, id));
     id=VA_INVALID;
     return true;
 }
 
 /**
- * 
- * @return 
+ *
+ * @return
  */
 bool        admLibVA::destroyFilterConfig(VAConfigID &id)
 {
     VAStatus xError;
      if(!coreLibVAWorking) {ADM_warning("Libva not operationnal\n");return false;}
-    
+
     CHECK_ERROR( vaDestroyConfig(ADM_coreLibVA::display, id));
     id=VA_INVALID;
     return true;
