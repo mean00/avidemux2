@@ -787,7 +787,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     ADM_info("Incoming SPS info\n");
     mixDump(data,len);
 
-    ADM_info("\nconverted SPS info\n");
+    ADM_info("converted SPS info\n");
 
     uint32_t converted;
     uint8_t buffer[256];
@@ -797,7 +797,6 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
         return false;
     }
     mixDump(buffer,converted);
-    ADM_info("\n");
     return    extractSPSInfo_mp4Header(buffer,converted,spsinfo) ;
 
 }

@@ -220,7 +220,6 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                 memcpy(_tracks[0].extraData,entry.extraData +sizeof(ADM_BITMAPINFOHEADER),l);
                 ADM_info("VFW Header+%d bytes of extradata\n",l);   
                 mixDump(_tracks[0].extraData,l);
-                printf("\n");
           }
           delete [] entry.extraData;
           entry.extraData=NULL;
@@ -258,7 +257,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
             ADM_info("Found ACM compatibility header (%d / %d)\n",l,wavSize);
             if(l>=wavSize) // we need at least a wavheader
             {
-                mixDump(entry.extraData,l); printf("\n");
+                mixDump(entry.extraData,l);
                 memcpy(&(t->wavHeader),entry.extraData,wavSize);
                 ADM_info("Encoding : %d\n",t->wavHeader.encoding);
                 int x=l-wavSize;

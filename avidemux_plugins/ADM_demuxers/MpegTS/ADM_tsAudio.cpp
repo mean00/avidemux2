@@ -53,7 +53,6 @@ FP_TYPE fp=FP_DONT_APPEND;
             memcpy(extraData,myExtra,extraDataLen);
             ADM_info("Creating ts audio access with %d bytes of extradata.",myLen);
             mixDump(extraData,extraDataLen);
-            ADM_info("\n");
         }
 }
 

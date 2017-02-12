@@ -880,7 +880,7 @@ nextAtom:
                                             mixDump(VDEO.extraData+offset,len);
 
                                             offset=8+len;
-                                            printf("\navcC numOfPictureParSets  :%x\n", MKD8(offset++));
+                                            printf("avcC numOfPictureParSets  :%x\n", MKD8(offset++));
                                             len=MKD16(offset);
                                             offset++;
                                             printf("avcC Pic len              :%x\n",len);

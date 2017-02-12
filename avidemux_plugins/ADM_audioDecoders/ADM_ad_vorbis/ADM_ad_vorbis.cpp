@@ -81,7 +81,6 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,                        // Class
  {
      ADM_warning(" sending %s packet of size %d\n",name,pack->bytes);
      mixDump(pack->packet,pack->bytes);
-     ADM_warning("\n");
  }
  /**
   * 

@@ -726,7 +726,6 @@ void OpenDMLHeader::Dump( void )
 	if(_videoExtraLen)
 	{
 		mixDump( _videoExtraData, _videoExtraLen);
-        printf("\n");
 	}
 
 	printf("[Avi]  fccType     :");
@@ -799,7 +798,6 @@ void OpenDMLHeader::Dump( void )
 	{
 		mixDump( _audioTracks[i].extraData, _audioTracks[i].extraDataLen);
 	}
-	printf("\n");
 
       }
 }
