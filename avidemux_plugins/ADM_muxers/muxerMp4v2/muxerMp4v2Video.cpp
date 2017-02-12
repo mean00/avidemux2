@@ -127,7 +127,7 @@ bool muxerMp4v2::initMpeg4(void)
             esdsLen-=4;
         }
 
-        ADM_info("Esds:\n"); mixDump(esdsData,esdsLen);ADM_info("\n");            
+        ADM_info("Esds:\n"); mixDump(esdsData,esdsLen);
         if(false==MP4SetTrackESConfiguration(handle,videoTrackId,esdsData,esdsLen))
         {
             ADM_error("SetTracEsConfiguration failed\n");
@@ -164,7 +164,6 @@ bool muxerMp4v2::initH264(void)
             }
             if(extraLen)
                 mixDump(extra,extraLen);
-            ADM_info("\n");
             if(false==ADM_getH264SpsPpsFromExtraData(extraLen,extra,&spsLen,&spsData,&ppsLen,&ppsData))
             {
                 ADM_error("Wrong extra data for h264\n");
@@ -193,7 +192,6 @@ bool muxerMp4v2::initH264(void)
             mixDump(spsData,spsLen);
             ADM_info("PPS (%d) :",ppsLen);
             mixDump(ppsData,ppsLen);
-            ADM_info("\n");
 
             MP4AddH264SequenceParameterSet(handle,videoTrackId, spsData,spsLen );
             MP4AddH264PictureParameterSet( handle,videoTrackId, ppsData,ppsLen);

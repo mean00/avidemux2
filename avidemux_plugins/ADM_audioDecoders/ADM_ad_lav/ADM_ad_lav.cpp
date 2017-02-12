@@ -205,7 +205,6 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 
     ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data, %d channels\n", _context->extradata_size,_context->channels);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
-    ADM_info("\n");
     
     if (avcodec_open2(_context, codec, NULL) < 0)
     {

@@ -263,7 +263,6 @@ bool ADM_Composer::addFile (const char *name)
     {
         printf("[Editor]The video codec has some extradata (%d bytes)\n",l);
         mixDump(d,l);
-        printf("\n");
     }
 
   // 1st if it is our first video we update postproc
