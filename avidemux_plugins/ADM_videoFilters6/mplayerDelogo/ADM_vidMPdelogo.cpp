@@ -49,13 +49,13 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   MPDelogo,   // Class
 MPDelogo::MPDelogo(ADM_coreVideoFilter *in,CONFcouple *couples) : ADM_coreVideoFilter(in,couples)
 {
         if(!couples || !ADM_paramLoad(couples,delogo_param,&param))
-		{
-                param.xoff=0;
-                param.yoff=0;
-                param.lw = info.width>>1;
-                param.lh = info.height>>1;
-                param.band=4;
-                param.show=0;
+        {
+            param.xoff=0;
+            param.yoff=0;
+            param.lw = info.width>>1;
+            param.lh = info.height>>1;
+            param.band=4;
+            param.show=0;
         }
 }
 /**
@@ -89,7 +89,7 @@ void MPDelogo::setCoupledConf(CONFcouple *couples)
 const char   *MPDelogo::getConfiguration(void)   
 {
     static char s[256];
-    snprintf(s,255,"x=%d y=%d w=%d h=%d",(int)param.xoff, (int)param.yoff,(int)param.lw,(int)param.lh);
+    snprintf(s,255,"x=%d y=%d w=%d h=%d bd=%d",(int)param.xoff, (int)param.yoff,(int)param.lw,(int)param.lh,(int)param.band);
     return s;        
 }
 /**
