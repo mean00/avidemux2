@@ -60,6 +60,9 @@ void *UI_getDrawWidget(void);
 void UI_rgbDraw(void *widg,uint32_t w, uint32_t h,uint8_t *ptr);
 void UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h);
 void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo);
+void UI_resize(uint32_t width, uint32_t height);
+bool UI_getNeedsResizingFlag(void);
+static bool needsResizing=false;
 
 /* The list of render engine we support. Warning the list is UI dependant, i.e. for example on macOsX, the GTK version can do Xv, but the QT4 one cannot */
 typedef enum 
