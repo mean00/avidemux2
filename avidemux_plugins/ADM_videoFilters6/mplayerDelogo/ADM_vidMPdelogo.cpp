@@ -110,6 +110,7 @@ uint8_t r=0;
 bool         MPDelogo::doDelogo(ADMImage *img,  int x,  int y, 
                              int w,  int h,int band, int show)
 {
+     int realBand;
      for(int i=0;i<3;i++)
         {
             ADM_PLANE p=(ADM_PLANE)i;
@@ -117,16 +118,20 @@ bool         MPDelogo::doDelogo(ADMImage *img,  int x,  int y,
             int width=img->GetWidth(p);
             int height=img->GetHeight(p);
             int stride=img->GetPitch(p);
+            realBand=band;
             if(i==1)
             {
-                    x>>=1;y>>=1;w>>=1;h>>=1;
+                    x>>=1;y>>=1;w>>=1;h>>=1;realBand>>=1;
             }
             if(x+w>=width) w=width-x-1;
             if(y+h>=height) h=height-y-1;
-
+            if(realBand*2>w) realBand=w/2; // avoid overlap
+            if(realBand*2>h) realBand=w/h;
+            //printf("Plane = %d, w=%d h = %d, x=%d y=%d, band=%d\n",i,w,h,x,y,realBand) ;
             xdelogo(img->GetWritePtr(p), img->GetReadPtr(p),
-                stride,stride,width,height,
-                x,y,w,h, band, show, true);
+                stride,stride,
+                width,height,
+                x,y,w,h, realBand, show, true);
 
         }
     return true;
