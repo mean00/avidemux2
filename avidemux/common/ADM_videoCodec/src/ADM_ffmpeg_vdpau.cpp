@@ -304,6 +304,9 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
             case AV_CODEC_ID_MPEG2VIDEO:
                   name="mpegvideo";
                   break;
+            case AV_CODEC_ID_WMV3:
+                  name="wm3_vdpau";
+                  break;
             default:
                 ADM_assert(0);
                 break;
