@@ -42,3 +42,4 @@ SET(SRCS
         )
 
 ADD_EXECUTABLE(dumpIndex ${SRCS})
+TARGET_LINK_LIBRARIES(dumpIndex ADM_core6)
