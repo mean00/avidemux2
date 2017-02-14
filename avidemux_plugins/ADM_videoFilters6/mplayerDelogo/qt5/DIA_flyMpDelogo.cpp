@@ -39,6 +39,8 @@
 #define aprintf(...) {}
 #endif
 
+// a dirty hack to control the feedback loop between the rubber band and the spinners
+int ignore=0;
 
 /**
  * 
@@ -154,7 +156,8 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
   h=size().height();
   aprintf("Resize event : %d x %d , %d x %d\n",x,y,w,h);
   rubberband->resize(size());
-  flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
+  if(!ignore)
+    flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
 }
 
 /**
@@ -301,7 +304,7 @@ bool flyMpDelogo::blockChanges(bool block)
 {
      Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
      APPLY_TO_ALL(blockSignals(block));
-     //rubber->blockSignals(block);
+     rubber->blockSignals(block);
      return true;
 }
 
@@ -341,14 +344,26 @@ uint8_t flyMpDelogo::download(void)
         param.lw= MYSPIN(spinW)->value();
         param.lh= MYSPIN(spinH)->value();
         param.band= MYSPIN(spinBand)->value();
-#if 0        
+        ignore++;
         blockChanges(true);
         rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
-         blockChanges(false);
-#endif         
+        blockChanges(false);
+        ignore--;
         printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;
+}
+
+/**
+    \fn autoZoom
+*/
+void flyMpDelogo::autoZoom(bool state)
+{
+    ignore++;
+    blockChanges(true);
+    ADM_flyDialog::autoZoom(state);
+    blockChanges(false);
+    ignore--;
 }
 
 /**
