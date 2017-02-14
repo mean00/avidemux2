@@ -39,8 +39,6 @@
 #define aprintf(...) {}
 #endif
 
-// a dirty hack to control the feedback loop between the rubber band and the spinners
-int ignore=0;
 
 /**
  * 
@@ -124,6 +122,7 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
 */
 Resizable_rubber_band::Resizable_rubber_band(flyMpDelogo *fly,QWidget *parent) : QWidget(parent) 
 {
+  nestedIgnore=0;
   flyParent=fly;
   //tell QSizeGrip to resize this widget instead of top-level window
   setWindowFlags(Qt::SubWindow);
@@ -156,7 +155,7 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
   h=size().height();
   aprintf("Resize event : %d x %d , %d x %d\n",x,y,w,h);
   rubberband->resize(size());
-  if(!ignore)
+  if(!nestedIgnore)
     flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
 }
 
@@ -344,11 +343,11 @@ uint8_t flyMpDelogo::download(void)
         param.lw= MYSPIN(spinW)->value();
         param.lh= MYSPIN(spinH)->value();
         param.band= MYSPIN(spinBand)->value();
-        ignore++;
+        rubber->nestedIgnore++;
         blockChanges(true);
         rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
         blockChanges(false);
-        ignore--;
+        rubber->nestedIgnore--;
         printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;
@@ -359,11 +358,11 @@ uint8_t flyMpDelogo::download(void)
 */
 void flyMpDelogo::autoZoom(bool state)
 {
-    ignore++;
+    rubber->nestedIgnore++;
     blockChanges(true);
     ADM_flyDialog::autoZoom(state);
     blockChanges(false);
-    ignore--;
+    rubber->nestedIgnore--;
 }
 
 /**
