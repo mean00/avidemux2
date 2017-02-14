@@ -74,6 +74,7 @@ public:
                       rubber->show();
                     return true;
                 }
-    bool    bandResized(int x,int y,int w, int h)   ;
+    bool    bandResized(int x,int y,int w, int h);
+    void    autoZoom(bool state);
 };
 // EOF
