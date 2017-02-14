@@ -107,6 +107,8 @@ extern void ADM_ExitCleanup(void);
 static bool uiRunning=false;
 static bool uiIsMaximized=false;
 
+bool needsResizing=false;
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -809,7 +811,7 @@ void MainWindow::changeEvent(QEvent *event)
             uint32_t w=ui.frame_video->width();
             uint32_t h=ui.frame_video->height();
             UI_resize(w,h);
-            needsResizing=false;
+            UI_setNeedsResizingFlag(false);
         }
     }
     QWidget::changeEvent(event);
@@ -1573,6 +1575,23 @@ void UI_resize(uint32_t w,uint32_t h)
     QuiMainWindows->resize(reqw,reqh);
     ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
 }
+
+/**
+    \fn UI_getNeedsResizingFlag
+*/
+bool UI_getNeedsResizingFlag(void)
+{
+    return needsResizing;
+}
+
+/**
+    \fn UI_setNeedsResizingFlag
+*/
+void UI_setNeedsResizingFlag(bool resize)
+{
+    needsResizing=resize;
+}
+
 /**
     \fn UI_setAudioTrackCount
 */
