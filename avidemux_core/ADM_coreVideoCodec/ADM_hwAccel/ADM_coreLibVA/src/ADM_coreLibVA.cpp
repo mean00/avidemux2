@@ -775,7 +775,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
          ADM_warning("QuerySurfacStatus failed\n");
          return false;
      }
-     ADM_info("surface status = %d\n",status);
+     aprintf("surface status = %d\n",status);
      switch(status)
      {
         case VASurfaceReady:
