@@ -173,10 +173,10 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
     if(!QuiMainWindows->isMaximized())
     {
         UI_resize(w,h);
-        needsResizing=false;
+        UI_setNeedsResizingFlag(false);
     }else
     {
-        needsResizing=true;
+        UI_setNeedsResizingFlag(true);
     }
     videoWindow->setADMSize(w,h);
 #if 0
@@ -196,11 +196,6 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
 	UI_purge();
 
 	printf("[RDR] Resizing to %u x %u\n", displayW, displayH);
-}
-
-bool UI_getNeedsResizingFlag(void)
-{
-    return needsResizing;
 }
 
 /**
