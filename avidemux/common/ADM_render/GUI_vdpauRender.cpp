@@ -66,6 +66,11 @@ vdpauRender::~vdpauRender()
 */
 bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
 {
+    if(!w || !h)
+    {
+        ADM_info("[VDPAU] Not trying to initialize with zero size dimensions\n");
+        return false;
+    }
     ADM_info("[Vdpau]Init\n");
     info=*window;
     if(admVdpau::isOperationnal()==false)
