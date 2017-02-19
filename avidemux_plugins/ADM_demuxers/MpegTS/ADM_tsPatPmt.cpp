@@ -20,6 +20,7 @@
 #include "ADM_ts.h"
 #include "ADM_demuxerInternal.h"
 #include "ADM_tsPatPmt.h"
+#include "fourcc.h"
 
 typedef vector <ADM_TS_TRACK> listOfTsTracks;
 
@@ -256,6 +257,13 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                printf("\n");
                switch(tag)
                {
+               case 0x05: // registration descriptor
+                   if(fourCC::check(head+2,(uint8_t *)"HEVC"))
+                   {
+                       printf("[PMT} HEVC tag found\n");
+                       type=0x24;
+                   }
+                   break;
                case 0xa:  // dvb language
                {
                    if(tag_len<2) break; // too short
