@@ -15,7 +15,22 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 #include "ADM_h265_tag.h"
-    
+/**
+ * 
+ * @param sc
+ * @return 
+ */    
+static const char *startCodeToString(int sc)
+{
+    int n= sizeof(nalDesc)/sizeof(NAL_DESC);
+    for(int i=0;i<n;i++)
+    {
+        if(nalDesc[i].value==sc)
+            return nalDesc[i].name;
+    }
+    return "????";
+}
+
 /**
         \fn decodeSEI
         \brief decode SEI to get short ref I
@@ -347,7 +362,7 @@ resume:
         if(fourBytes==true) startCodeLength++;
 
         startCode=((startCode>>1)&0x3f);   
-        printf("Startcode =%d\n",startCode);
+        printf("Startcode =%d:%s\n",startCode,startCodeToString(startCode));
 #define NON_IDR_PRE_READ 32 
 
           switch(startCode)
