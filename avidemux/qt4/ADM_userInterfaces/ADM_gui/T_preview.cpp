@@ -179,6 +179,8 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
         UI_setNeedsResizingFlag(true);
     }
     videoWindow->setADMSize(w,h);
+    if(!w || !h)
+        QuiMainWindows->update(); // clean up the space previously occupied by the video window on closing
 #if 0
 	
 	UI_purge();
