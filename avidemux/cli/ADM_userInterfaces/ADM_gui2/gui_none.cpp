@@ -171,4 +171,6 @@ bool UI_setDisplayName(char const*)
 {
         return true;
 }
+void UI_setNeedsResizingFlag(bool resize)
+{}
 // EOF
