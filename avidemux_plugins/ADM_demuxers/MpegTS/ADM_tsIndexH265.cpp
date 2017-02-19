@@ -15,6 +15,7 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_tsIndex.h"
 #include "ADM_h265_tag.h"
+#include "ADM_vidMisc.h"
 /**
  * 
  * @param sc
@@ -362,7 +363,12 @@ resume:
         if(fourBytes==true) startCodeLength++;
 
         startCode=((startCode>>1)&0x3f);   
-        printf("Startcode =%d:%s\n",startCode,startCodeToString(startCode));
+        
+        {
+          dmxPacketInfo packetInfo;
+          pkt->getInfo(&packetInfo);
+          printf("Startcode =%d:%s, decoding image=%d,%s\n",startCode,startCodeToString(startCode),decodingImage,ADM_us2plain(packetInfo.dts));
+        }
 #define NON_IDR_PRE_READ 32 
 
           switch(startCode)
@@ -390,15 +396,18 @@ resume:
                 case NAL_H265_RASL_N:
                 case NAL_H265_RASL_R:
                 {
+#if 0
                     if(decodingImage)
                         continue;
+#endif                    
                     uint8_t buffer[NON_IDR_PRE_READ],header[NON_IDR_PRE_READ];
                     int preRead=NON_IDR_PRE_READ;
                     dmxPacketInfo packetInfo;
-                        pkt->getInfo(&packetInfo);
+                        pkt->getInfo(&packetInfo,startCodeLength);
+                        thisUnit.consumedSoFar=pkt->getConsumed();
                         
+                        // Read the beginning of the picture to get its type...
                         pkt->read(preRead,buffer);
-                        // unescape...
                         ADM_unescapeH264(preRead,buffer,header);
                         //
                         getBits bits(preRead,header);
@@ -408,11 +417,10 @@ resume:
                         {
                             data.nbPics++;
                             decodingImage=true;
-                            thisUnit.consumedSoFar=pkt->getConsumed();
                             thisUnit.packetInfo=packetInfo;
                             thisUnit.imageType=picType;
                             thisUnit.unitType=unitTypePic;
-                            if(!addUnit(data,unitTypePic,thisUnit,startCodeLength+NON_IDR_PRE_READ))
+                            if(!addUnit(data,unitTypePic,thisUnit,startCodeLength))
                                 keepRunning=false;
                             // reset to default
                             thisUnit.imageStructure=pictureFrame;
@@ -423,7 +431,7 @@ resume:
                     break;
                   case NAL_H265_VPS:
                         decodingImage=false;
-                        pkt->getInfo(&thisUnit.packetInfo);
+                        pkt->getInfo(&thisUnit.packetInfo,startCodeLength);
                         if(firstSps)
                         {
                             pkt->setConsumed(startCodeLength); // reset consume counter
