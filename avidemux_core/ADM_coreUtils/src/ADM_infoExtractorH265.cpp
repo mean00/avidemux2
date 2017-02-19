@@ -221,7 +221,13 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
         {
             printf("VPS timescale =%d\n",(int)vps->vps_time_scale);
             printf("VPS num unit in tick =%d\n",(int)vps->vps_num_units_in_tick);
-            spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
+            if(vps->vps_time_scale && vps->vps_num_units_in_tick)
+                spsinfo->fps1000=(1000*vps->vps_time_scale)/vps->vps_num_units_in_tick;
+            else
+            {
+                ADM_warning("No framerate information, hardcoding to 50 fps\n");
+                spsinfo->fps1000=50*1000;
+            }
         }
         if(pps)
         {
