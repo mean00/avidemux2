@@ -10,4 +10,6 @@
 /* METHOD */ int editor->dumpRefVideos:dumpRefVideo   (void) 
 /* METHOD */ int pyHexDumpFrame:hexDumpFrame    (int) 
 /* METHOD */ int editor->getFrameSize:getFrameSize  (int) 
+#
+/* METHOD */ int pyNextFrame:nextFrame  (void) 
 
