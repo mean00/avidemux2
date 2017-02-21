@@ -682,8 +682,8 @@ uint32_t count=0;
                                 }
                                 else
                                 {
-                                        printf("Track %u/%u :\n",i,_nbTrack);
-                                        fourCC::print(tmp.fccType);
+                                        printf("Track %u/%u : ",i,_nbTrack);
+                                        fourCC::print(tmp.fccType);printf(", ");
                                         fourCC::print(tmp.fccHandler);
                                         printf("\n");
                                 }
@@ -722,7 +722,7 @@ void OpenDMLHeader::Dump( void )
 				
 	printf(  "[Avi] video stream attached:\n" );
 	printf(  "[Avi] ______________________\n" );	
-	printf(  "[Avi] Extra Data  : %u",_videoExtraLen);
+	printf(  "[Avi] Extra Data  : %u\n",_videoExtraLen);
 	if(_videoExtraLen)
 	{
 		mixDump( _videoExtraData, _videoExtraLen);
