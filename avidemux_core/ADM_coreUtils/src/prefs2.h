@@ -24,6 +24,7 @@ struct  {
 	bool cap_refresh_enabled;
 	uint32_t cap_refresh_value;
 	std::string sdlDriver;
+	bool use_last_read_dir_as_target;
 }features;
 struct  {
 	bool enabled;
