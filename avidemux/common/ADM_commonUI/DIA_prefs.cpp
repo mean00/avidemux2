@@ -64,6 +64,7 @@ bool     loadDefault=false;
 char     *alsaDevice=NULL;
 
 bool     balternate_mp3_tag=true;
+bool     lastReadDirAsTarget=false;
 
 uint32_t pp_type=3;
 uint32_t pp_value=5;
@@ -161,6 +162,9 @@ std::string currentSdlDriver=getSdlDriverName();
         prefs->get(UPDATE_ENABLED,&doAutoUpdate);
 
         prefs->get(RESET_ENCODER_ON_VIDEO_LOAD,&loadDefault);
+
+        // Make users happy who prefer the output dir to be the same as the input dir
+        prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadDirAsTarget);
 
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
@@ -273,6 +277,8 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemUInteger autoSplit(&autosplit,QT_TRANSLATE_NOOP("adm","_Split MPEG files every (MB):"),10,4096);
 
         diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
+
+        diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
 
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
@@ -423,8 +429,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3,&useLastReadAsTarget};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),5,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -609,6 +615,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_LIBVA,blibva);
             // Alternate mp3 tag (haali)
             prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
+            // Make users happy who prefer the output dir to be the same as the input dir
+            prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
 
             prefs->set(DEFAULT_LANGUAGE,std::string(myLanguages[languageIndex].lang));
 
