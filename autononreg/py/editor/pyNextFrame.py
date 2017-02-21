@@ -1,17 +1,17 @@
 adm=Avidemux()
 editor=Editor()
+gui=Gui()
 if(0==adm.loadVideo("/work/samples/avi/3mn.avi")):
    throw("cannot load file")
 lastOk=0
 print("================= SCANNING=====================")
 for i in range(0,10):
         f=editor.nextFrame()
-        if (f == 0 or i== 7):
-                errorString="Error at picture="+str(i)+" at time ="+str(lastOk)
-                print errorString
-                #+str(i)+", last ok was "+str(lastOk)
-                #throw(errorString)
-        #lastOk=editor.getDts()
+        if (f == 0 or i== 17):
+                errorString="Error at picture="+str(i)+", last frame ok was at time ="+str(lastOk/1000000)+ "s"
+                gui.displayError("Oops",str(errorString))
+                return
+        lastOk=editor.getDts(i)
 print("================= /SCANNING=====================")
-print("Done  "+str(lastOk))
+gui.displayInfo("Done","All ok")
 
