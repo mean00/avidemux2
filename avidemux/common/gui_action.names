@@ -68,6 +68,7 @@ ACT(VIDEO_CODEC_CHANGED)
 // Editor
 ACT(MarkA)
 ACT(MarkB)
+ACT(ResetMarkers)
 ACT(Copy)
 ACT(Cut)
 ACT(Paste)
