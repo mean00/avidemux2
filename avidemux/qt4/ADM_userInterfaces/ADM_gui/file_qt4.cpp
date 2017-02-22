@@ -47,9 +47,12 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
         extSize+=strlen(ext);
     }
     //printf("Do filer=%d\n",(int)doFilter);
+    bool lastReadAsTarget=false;
+    prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadAsTarget);
     std::string lastFolder;
-    admCoreUtils::getLastWriteFolder(lastFolder);
-    if(!lastFolder.size())
+    if(!lastReadAsTarget)
+        admCoreUtils::getLastWriteFolder(lastFolder);
+    if(!lastFolder.size() || lastReadAsTarget)
         admCoreUtils::getLastReadFolder(lastFolder);
     if (lastFolder.size())
     {
@@ -73,7 +76,15 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 
         /* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
         if (!QDir(outputPath).exists())
+        {
                 str.clear();
+        }else
+        {
+            if(str==QString::fromUtf8(lastRead.c_str()))
+            { // try to avoid name collision when saving in the same directory as the currently loaded video
+                str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
+            }
+        }
     }
 
     if(doFilter)

@@ -356,6 +356,7 @@ bool ADM_Composer::addFile (const char *name)
 
   printf ("[Editor] Decoder FCC: ");
   fourCC::print (info.fcc);
+  printf("\n");
   // ugly hack
   if (info.fps1000 > 2000 * 1000)
     {

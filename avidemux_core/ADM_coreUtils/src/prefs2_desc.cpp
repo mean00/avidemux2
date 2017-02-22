@@ -19,6 +19,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.cap_refresh_enabled",offsetof(my_prefs_struct,features.cap_refresh_enabled),"bool",ADM_param_bool},
  {"features.cap_refresh_value",offsetof(my_prefs_struct,features.cap_refresh_value),"uint32_t",ADM_param_uint32_t},
  {"features.sdlDriver",offsetof(my_prefs_struct,features.sdlDriver),"std::string",ADM_param_stdstring},
+ {"features.use_last_read_dir_as_target",offsetof(my_prefs_struct,features.use_last_read_dir_as_target),"bool",ADM_param_bool},
  {"update.enabled",offsetof(my_prefs_struct,update.enabled),"bool",ADM_param_bool},
  {"update.lastCheck",offsetof(my_prefs_struct,update.lastCheck),"uint32_t",ADM_param_uint32_t},
  {"lastfiles.lastdir_read",offsetof(my_prefs_struct,lastfiles.lastdir_read),"std::string",ADM_param_stdstring},
