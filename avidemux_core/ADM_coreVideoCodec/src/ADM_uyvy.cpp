@@ -58,8 +58,8 @@ bool   decoderUYVY::uncompress (ADMCompressedImage * in, ADMImage * out)
   ptr = in->data;
   ptr2=ptr+2*_w;
   ptrY = YPLANE(out);
-  ptrU = VPLANE(out);
-  ptrV = UPLANE(out);
+  ptrU = UPLANE(out);
+  ptrV = VPLANE(out);
   int sy=out->GetPitch(PLANAR_Y);
   int su=out->GetPitch(PLANAR_U);
   int sv=out->GetPitch(PLANAR_V);
