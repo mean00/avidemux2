@@ -4,7 +4,7 @@ SET(ADM_PROJECT Avidemux_qt4)
 
 MESSAGE("")
 MESSAGE("#########################################")
-MESSAGE("Configure for avidemux Qt4 Started")
+MESSAGE("Configure for Avidemux Qt Started")
 MESSAGE("#########################################")
 MESSAGE("")
 

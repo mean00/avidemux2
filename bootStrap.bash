@@ -8,7 +8,7 @@ packages_ext=""
 rebuild=0
 do_core=1
 do_cli=1
-do_qt4=1
+do_qt=1
 do_plugins=1
 do_asan=0
 debug=0
@@ -92,7 +92,7 @@ config()
         else echo   "Release build"
         fi
         printModule $do_core Core
-        printModule $do_qt4 ${qt_ext}
+        printModule $do_qt ${qt_ext}
         printModule $do_cli Cli
         printModule $do_plugins Plugins
 }
@@ -107,15 +107,15 @@ usage()
         echo "  --tgz                 : Create tgz packages"
         echo "  --debug               : Switch debugging on"
         echo "  --rebuild             : Preserve existing build directories"
-        echo "  --with-core           : Build core"
+        echo "  --with-core           : Build core (default)"
         echo "  --without-core        : Don't build core"
-        echo "  --with-cli            : Build cli"
+        echo "  --with-cli            : Build cli (default)"
         echo "  --without-cli         : Don't build cli"
-        echo "  --with-core           : Build core"
-        echo "  --without-qt4         : Don't build qt4"
-        echo "  --with-plugins        : Build plugins"
+        echo "  --with-qt             : Build Qt dependent components (default)"
+        echo "  --without-qt          : Don't build Qt dependent components"
+        echo "  --with-plugins        : Build plugins (default)"
         echo "  --without-plugins     : Don't build plugins"
-        echo "  --enable-qt4          : Try to use qt4 instead of qt5"
+        echo "  --enable-qt4          : Try to use Qt4 instead of Qt5"
         echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
         echo "  --with-clang          : Use clang/clang++ as compiler"
         echo "  --with-system-libass  : Use system libass instead of the bundled one"
@@ -200,8 +200,8 @@ while [ $# != 0 ] ;do
          --with-clang)
                 export COMPILER="-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
                 ;;
-         --without-qt4)
-                do_qt4=0
+         --without-qt)
+                do_qt=0
              ;;
          --without-cli)
                 do_cli=0
@@ -220,8 +220,8 @@ while [ $# != 0 ] ;do
          --enable-asan)
                 do_asan=1
              ;;
-         --with-qt4)
-                do_qt4=1
+         --with-qt)
+                do_qt=1
              ;;
          --with-cli)
                 do_cli=1
@@ -292,7 +292,7 @@ if [ "x$do_core" = "x1" ] ; then
         echo " Installing core"
         cd $TOP/buildCore${POSTFIX} 
 fi
-if [ "x$do_qt4" = "x1" ] ; then 
+if [ "x$do_qt" = "x1" ] ; then
         echo "** $qt_ext **"
         cd $TOP
         Process build${qt_ext} ../avidemux/qt4
@@ -311,7 +311,7 @@ if [ "x$do_plugins" = "x1" ] ; then
         cd $TOP
         Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
-if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then 
+if [ "x$do_plugins" = "x1" -a "x$do_qt" = "x1" ] ; then
         echo "** Plugins ${qt_ext} **"
         cd $TOP
         Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
