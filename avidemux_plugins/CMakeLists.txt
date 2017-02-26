@@ -211,23 +211,23 @@ if(DO_QT4)
     checkQt()
     IF (NOT QT_FOUND)
         SET(DO_QT4 0)
-        MESSAGE("ERROR QT4 UI requested, but qt4 libraries not found... disabling it")
+        MESSAGE("ERROR QT4 type UI requested, but Qt libraries not found... disabling it")
 		MESSAGE("")
     ELSE (NOT QT_FOUND)
-        MESSAGE(STATUS "QT4 libraries found, good")
+        MESSAGE(STATUS "Qt libraries found, good")
         CHECK_ADM_CONFIG_H(${QT_EXTENSION} ADM_INC)
 		MESSAGE("")
 
         INCLUDE(admCheckOpenGl)
         IF(NOT ADM_INC)
-            MESSAGE("ERROR QT4 UI requested, but cannot find header file for avidemux/qt4...disabling it")
+            MESSAGE("ERROR QT4 type UI requested, but cannot find header files from avidemux/qt4... disabling it")
 			MESSAGE("")
             SET(DO_QT4 0)
         ENDIF(NOT ADM_INC)
     ENDIF (NOT QT_FOUND)
 endif(DO_QT4)
 
-APPEND_SUMMARY_LIST("User Interface" "Qt 4" "${DO_QT4}")
+APPEND_SUMMARY_LIST("User Interface" "Qt" "${DO_QT4}")
 
 #*****
 # CLI
@@ -239,7 +239,7 @@ if(DO_CLI)
         CHECK_ADM_CONFIG_H(cli ADM_INC)
 
         IF(NOT ADM_INC)
-            MESSAGE("ERROR CLI UI requested, but cannot find header file for avidemux/cli...disabling it")
+            MESSAGE("ERROR CLI type UI requested, but cannot find header files from avidemux/cli... disabling it")
             SET(DO_CLI 0)
         ENDIF(NOT ADM_INC)
 
