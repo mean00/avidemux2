@@ -105,7 +105,9 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
                 
 	}else
         {
-            ui->comboBoxPriority->setEnabled(false);
+            ui->comboBoxPriority->setVisible(false);
+            ui->checkBoxShutdown->setVisible(false);
+            ui->labelPrio->setVisible(false);
         }
 #endif
 
@@ -176,9 +178,20 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 
 void DIA_encodingQt4::setPhasis(const char *n)
 {
-          ADM_assert(ui);
-          WRITEM(labelPhasis,n);
-
+    ADM_assert(ui);
+    if(!strcmp(n,"Pass 1"))
+    {
+        ui->tabWidget->setTabEnabled(1, false); // disable the "Advanced" tab
+        ui->checkBoxShutdown->setVisible(false); // hide the shutdown checkbox
+        WRITEM(labelPhasis,QT_TRANSLATE_NOOP("qencoding","Pass 1"));
+    }else
+    {
+        ui->tabWidget->setTabEnabled(1, true);
+#ifdef _WIN32
+        ui->checkBoxShutdown->setVisible(true);
+#endif
+        WRITEM(labelPhasis,n);
+    }
 }
 /**
     \fn    setFrameCount

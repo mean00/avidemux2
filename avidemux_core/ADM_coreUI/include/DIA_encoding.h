@@ -51,6 +51,7 @@ protected:
                 uint32_t  _originalPriority;
                 encodingSample samples[ADM_ENCODING_SAMPLE];
                 uint32_t  sampleIndex;
+                uint32_t  percent;
         
 public:
                              DIA_encodingBase(uint64_t duration);
@@ -65,14 +66,13 @@ protected:
                 virtual void setTotalSize(uint64_t size)=0;
                 virtual void setFrameCount(uint32_t nb)=0;
                 virtual void setElapsedTimeMs(uint32_t nb)=0;
-                virtual void setRemainingTimeMS(uint32_t nb)=0;
                 virtual void setAverageQz(uint32_t nb)=0;
                 virtual void setAverageBitrateKbits(uint32_t kb)=0;
             
 
 public:
                 virtual void setPercent(uint32_t percent)=0;
-public:
+                virtual void setRemainingTimeMS(uint32_t nb)=0;
                 virtual void setPhasis(const char *n)=0;
                 virtual void setVideoCodec(const char *n)=0;
                 virtual void setAudioCodec(const char *n)=0;

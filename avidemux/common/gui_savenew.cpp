@@ -73,6 +73,7 @@ protected:
         bool                  setupAudio();
         ADM_audioStream      *audioAccess[ADM_MAX_AUDIO_STREAM]; // audio tracks to feed to the muxer
         int                   nbAudioTracks;
+        Clock                ticktock;
         
 public:
                               admSaver(const char *out);
@@ -189,8 +190,10 @@ bool abort=false;
         uint8_t *buffer=new uint8_t[BUFFER_SIZE];
         bitstream.data=buffer;
         bitstream.bufferSize=BUFFER_SIZE;
-        DIA_workingBase  *encoding=createWorking("Pass1");
+        DIA_encodingBase *encoding=createEncoding(videoDuration);
+        encoding->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
         int nbFrames=0;
+        uint32_t percent=0;
         while(pass1->encode(&bitstream))
         {
             if(bitstream.pts!=ADM_NO_PTS)
@@ -198,11 +201,24 @@ bool abort=false;
                 float f=100;
                 f/=videoDuration;
                 f*=bitstream.pts;
-                uint32_t percent=(uint32_t)f;
-                if(encoding->update(percent))
+                uint32_t p=(uint32_t)f;
+                if(percent<p)
+                    percent=p; // avoid progress bar going backwards
+                if(!encoding->isAlive())
                 {
                     abort=true;
                     break;
+                }
+                encoding->setPercent(percent);
+                uint32_t elapsed=ticktock.getElapsedMS();
+                if(percent>=1)
+                {
+                    double totalTime=(100*elapsed)/percent;
+                    double remaining=totalTime-elapsed;
+                    if(remaining<0)
+                        remaining=0;
+                    uint32_t remainingMs=(uint32_t)remaining;
+                    encoding->setRemainingTimeMS(remainingMs);
                 }
             }
             nbFrames++;

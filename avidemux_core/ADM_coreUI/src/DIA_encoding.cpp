@@ -61,6 +61,7 @@ void DIA_encodingBase::reset(void)
         _fps_average=0;
         _remainingTimeUs=0;
         sampleIndex=0;
+        percent=0;
         memset(samples,0,sizeof(samples));
         clock.reset();
         UI_purge();
@@ -138,10 +139,12 @@ void DIA_encodingBase::refresh(void)
                     _fps_average=_fps_average*0.5+0.5*thisAverage;
                     //printf("************** Fps:%d\n",(int)_fps_average);
                     setFps(_fps_average);
-                    float percent=(float)_currentDts/(float)_totalDurationUs;
-                    if(percent>1.0) percent=1.0;
-                    percent*=100;
-                    setPercent((uint32_t)percent);
+                    float p=(float)_currentDts/(float)_totalDurationUs;
+                    if(p>1.0) p=1.0;
+                    p*=100;
+                    if(percent<(uint32_t)p)
+                        percent=(uint32_t)p; // avoid progress bar going backwards
+                    setPercent(percent);
                     setFrameCount(_currentFrameCount);
                     setElapsedTimeMs(time);
                 }
