@@ -40,7 +40,7 @@ decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc,uint32_t 
 decoders *ADM_getDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_t extraLen, 
             uint8_t * extraData,uint32_t bpp)
 {
-    ADM_info("\nSearching decoder in plugins\n");
+    ADM_info("Searching decoder in plugins\n");
     decoders *fromPlugin=tryCreatingVideoDecoder(w,h,fcc,extraLen,extraData,bpp);
     if(fromPlugin) 
         return fromPlugin;

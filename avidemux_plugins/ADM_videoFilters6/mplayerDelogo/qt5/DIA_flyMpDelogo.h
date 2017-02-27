@@ -28,6 +28,7 @@ class Resizable_rubber_band : public QWidget
 public:
   flyMpDelogo     *flyParent;
   Resizable_rubber_band(flyMpDelogo *fly,QWidget* parent = 0);
+  int               nestedIgnore;
 
 public:
   QRubberBand* rubberband;
@@ -36,6 +37,7 @@ public:
   {
       rubberband->blockSignals(sig);
   }
+  
 #if 0
   void update()
   {
@@ -74,6 +76,7 @@ public:
                       rubber->show();
                     return true;
                 }
-    bool    bandResized(int x,int y,int w, int h)   ;
+    bool    bandResized(int x,int y,int w, int h);
+    void    autoZoom(bool state);
 };
 // EOF

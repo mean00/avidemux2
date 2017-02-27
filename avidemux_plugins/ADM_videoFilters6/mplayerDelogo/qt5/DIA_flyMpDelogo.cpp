@@ -34,7 +34,7 @@
 
 
 #if 0
-#define aprintf printf
+#define aprintf ADM_info
 #else
 #define aprintf(...) {}
 #endif
@@ -89,7 +89,10 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     
     aprintf("%d x %d => %d x %d, %f\n",param.lw,param.lh,newParam.lw,newParam.lh,_zoom);
     
-    param=newParam;
+    param.lw=newParam.lw;
+    param.lh=newParam.lh;
+    param.xoff=newParam.xoff;
+    param.yoff=newParam.yoff;
     
     upload(false);
     //
@@ -119,6 +122,7 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
 */
 Resizable_rubber_band::Resizable_rubber_band(flyMpDelogo *fly,QWidget *parent) : QWidget(parent) 
 {
+  nestedIgnore=0;
   flyParent=fly;
   //tell QSizeGrip to resize this widget instead of top-level window
   setWindowFlags(Qt::SubWindow);
@@ -151,7 +155,8 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
   h=size().height();
   aprintf("Resize event : %d x %d , %d x %d\n",x,y,w,h);
   rubberband->resize(size());
-  flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
+  if(!nestedIgnore)
+    flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
 }
 
 /**
@@ -161,8 +166,11 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
   Ui_mpdelogoWindow::Ui_mpdelogoWindow(QWidget *parent,  delogo *param, ADM_coreVideoFilter *in) 
             : QDialog(parent)
   {
-      static bool doOnce=false;
-        uint32_t width,height;
+    static bool doOnce=false;
+    uint32_t width,height;
+        
+        aprintf("Ctor @ %d: %d, %d x %d\n",param->xoff, param->yoff, param->lw,param->lh);
+        
         ui.setupUi(this);
         _in=in;
         
@@ -187,7 +195,7 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
         SPINENTRY(spinY)->setSingleStep(5);
         SPINENTRY(spinW)->setSingleStep(5);
         SPINENTRY(spinH)->setSingleStep(5);
-        
+        aprintf("Uploading\n");
         myCrop->upload();
         myCrop->sliderChanged();
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -295,7 +303,7 @@ bool flyMpDelogo::blockChanges(bool block)
 {
      Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
      APPLY_TO_ALL(blockSignals(block));
-     //rubber->blockSignals(block);
+     rubber->blockSignals(block);
      return true;
 }
 
@@ -306,7 +314,7 @@ uint8_t flyMpDelogo::upload(bool redraw)
     {
         blockChanges(true);
     }
-    printf("Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
+    printf(">>>Upload event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
 
     MYSPIN(spinX)->setValue(param.xoff);
     MYSPIN(spinY)->setValue(param.yoff);
@@ -335,13 +343,26 @@ uint8_t flyMpDelogo::download(void)
         param.lw= MYSPIN(spinW)->value();
         param.lh= MYSPIN(spinH)->value();
         param.band= MYSPIN(spinBand)->value();
-#if 0        
+        rubber->nestedIgnore++;
         blockChanges(true);
         rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
-         blockChanges(false);
-#endif         
+        blockChanges(false);
+        rubber->nestedIgnore--;
+        printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;
+}
+
+/**
+    \fn autoZoom
+*/
+void flyMpDelogo::autoZoom(bool state)
+{
+    rubber->nestedIgnore++;
+    blockChanges(true);
+    ADM_flyDialog::autoZoom(state);
+    blockChanges(false);
+    rubber->nestedIgnore--;
 }
 
 /**

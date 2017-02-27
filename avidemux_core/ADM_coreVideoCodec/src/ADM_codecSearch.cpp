@@ -136,8 +136,9 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     }
 
   // default : null decoder
-  printf ("\n using invalid codec for \n");
+  printf ("\n using invalid codec for ");
   fourCC::print (fcc);
+  printf ("\n");
 
   return (decoders *) (new decoderEmpty(w,h,fcc,extraLen,extraData,bpp));
 }

@@ -371,6 +371,13 @@ bool dxvaRender::cleanup()
    {
         ADM_warning("D3D Present failed\n");
    }
+#else
+    IDirect3DDevice9_BeginScene(d3dDevice);
+    IDirect3DDevice9_EndScene(d3dDevice);   
+    if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+    {
+        ADM_warning("D3D Present failed\n");
+    }
    #endif
   return true;
  }

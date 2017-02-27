@@ -81,6 +81,7 @@ void mixDump(uint8_t * ptr, uint32_t len)
 	{
 		 printf("\n %04" PRIx32" : %s %s", (len >> 4) << 4, str, str2);
 	}
+    printf("\n");
 }
 /*
 	A bunch of Endianness swapper to ease handling

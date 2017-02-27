@@ -166,7 +166,7 @@ public:
                 ~tsPacketLinear();
         uint32_t getConsumed(void);
         bool     stillOk(void) {return !eof;};
-        bool     invalidatePtsDts(void);
+        bool     invalidatePtsDts(int startCodeLength=4);
  virtual bool    setPos(uint64_t pos)
  {
    pesPacket->payloadSize=0;
@@ -222,7 +222,7 @@ uint16_t readi16(void)
         bool    read(uint32_t len, uint8_t *buffer);
         bool    forward(uint32_t v);
         
-        bool    getInfo(dmxPacketInfo *info);
+        bool    getInfo(dmxPacketInfo *info,int startCodeLength=4);
         bool    seek(uint64_t packetStart, uint32_t offset);
         bool    changePid(uint32_t pid) ;
         bool    setConsumed(uint32_t v);

@@ -71,5 +71,7 @@ int pyTestAssert(void);
 int pyTestSub( char *subName);
 /* OS */
 char *pyGetEnv(IEditor *editor,const char *);
+/* Navigate */
+bool pyNextFrame(IEditor *editor);
 #endif
 // EOF

@@ -733,10 +733,10 @@ bool    tsPacketLinear::read(uint32_t len, uint8_t *out)
             It is expected that the caller will do -4 to the index to get the start of the 
             startCode
 */
-bool    tsPacketLinear::getInfo(dmxPacketInfo *info)
+bool    tsPacketLinear::getInfo(dmxPacketInfo *info,int startCodeLength)
 {
 //#warning FIXME
-    if(pesPacket->offset<4)
+    if(pesPacket->offset<startCodeLength)
     {
         info->startAt=this->oldStartAt;
         info->offset=oldBufferLen;
@@ -758,9 +758,9 @@ bool    tsPacketLinear::getInfo(dmxPacketInfo *info)
     \brief in some cases (HDRunner/HDCPro), a pes contains multiple video frames. This call consumes pts
             and dts so that the multiple frames do not have the same pts/dts.
 */
-bool     tsPacketLinear::invalidatePtsDts(void)
+bool     tsPacketLinear::invalidatePtsDts(int startCodeLength)
 {
-    if(pesPacket->offset<4)
+    if(pesPacket->offset<startCodeLength)
     {
         oldBufferPts=ADM_NO_PTS;
         oldBufferDts=ADM_NO_PTS;

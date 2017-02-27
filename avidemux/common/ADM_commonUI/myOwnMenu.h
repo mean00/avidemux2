@@ -60,6 +60,7 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,       NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker A"),       NULL,ACT_MarkA      ,NULL,"Ctrl+PgUp"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker B"),       NULL,ACT_MarkB      ,NULL,"Ctrl+PgDown"},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Reset Markers"),      NULL,ACT_ResetMarkers,NULL,"Ctrl+Home"},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,       NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Pr&eferences"),       NULL,ACT_PREFERENCES,NULL,NULL},
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,NULL},

@@ -19,6 +19,7 @@
 #include "fourcc.h"
 #include "DIA_fileSel.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_image.h"
 
 /**
     \fn pyGetFps1000
@@ -74,6 +75,25 @@ bool pyHexDumpFrame(IEditor *editor, int framenumber)
 
 	return true;
 }
+
+/**
+ * 
+ * @param editor
+ * @param framenumber
+ * @return 
+ */
+bool pyNextFrame(IEditor *editor)
+{
+    aviInfo info;
+    if(!editor->getVideoInfo(&info))
+        return false;
+    
+    ADMImageDefault img(info.width,info.height);
+    if(!editor->nextPicture(&img,false))
+       return false;
+    return true;
+}
+
 /**
     \fn pyPrintTiming
 */

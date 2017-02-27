@@ -107,6 +107,8 @@ extern void ADM_ExitCleanup(void);
 static bool uiRunning=false;
 static bool uiIsMaximized=false;
 
+bool needsResizing=false;
+
 #define WIDGET(x)  (((MainWindow *)QuiMainWindows)->ui.x)
 
 #define CONNECT(object,zzz) connect( (ui.object),SIGNAL(triggered()),this,SLOT(buttonPressed()));
@@ -793,6 +795,26 @@ void MainWindow::dropEvent(QDropEvent *event)
 
         event->acceptProposedAction();
     }
+}
+
+// If a video was loaded or zoom changed while the main window was maximized,
+// unmaximizing the window restores it to dimensions not necessarily matching
+// the actual dimensions of the video frame. Catch the window state change event
+// and resize the window when appropriate.
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        QWindowStateChangeEvent* ev = static_cast<QWindowStateChangeEvent*>(event);
+        if (true==UI_getNeedsResizingFlag() && ev->oldState() == Qt::WindowMaximized && false==QuiMainWindows->isMinimized())
+        {
+            uint32_t w=ui.frame_video->width();
+            uint32_t h=ui.frame_video->height();
+            UI_resize(w,h);
+            UI_setNeedsResizingFlag(false);
+        }
+    }
+    QWidget::changeEvent(event);
 }
 
 void MainWindow::openFiles(QList<QUrl> urlList)
@@ -1529,24 +1551,17 @@ void UI_deiconify( void )
     }
 }
 /**
- *   \fn UI_requiredWidth
- *   \brief calculate the horizontal space occupied by the coded widget incl. some margin
+ *    \fn UI_resize
+ *    \brief resize the main window for the given dimensions of the video widget
  */
-uint32_t UI_requiredWidth(void)
+void UI_resize(uint32_t w,uint32_t h)
 {
     uint32_t reqw=18; // 2 x 9px margin
     if(WIDGET(codecWidget)->isVisible())
         reqw += WIDGET(codecWidget)->frameSize().width() + 6; // with codec widget visible a small extra margin is necessary
     if(WIDGET(toolBar)->orientation()==Qt::Vertical && WIDGET(toolBar)->isVisible() && false==WIDGET(toolBar)->isFloating())
         reqw += WIDGET(toolBar)->frameSize().width();
-    return reqw;
-}
-/**
- *   \fn UI_requiredHeight
- *   \brief calculate the vertical space occupied by widgets above and below the video window
- */
-uint32_t UI_requiredHeight(void)
-{
+
     uint32_t reqh=18; // 2 x 9px margin
     if(WIDGET(menubar)->isVisible())
         reqh += WIDGET(menubar)->height();
@@ -1554,8 +1569,29 @@ uint32_t UI_requiredHeight(void)
         reqh += WIDGET(toolBar)->frameSize().height();
     if(WIDGET(navigationWidget)->isVisible() || WIDGET(selectionWidget)->isVisible() || WIDGET(volumeWidget)->isVisible() || WIDGET(audioMetreWidget)->isVisible())
         reqh += WIDGET(navigationWidget)->frameSize().height();
-    return reqh;
+
+    reqw += w;
+    reqh += h;
+    QuiMainWindows->resize(reqw,reqh);
+    ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
 }
+
+/**
+    \fn UI_getNeedsResizingFlag
+*/
+bool UI_getNeedsResizingFlag(void)
+{
+    return needsResizing;
+}
+
+/**
+    \fn UI_setNeedsResizingFlag
+*/
+void UI_setNeedsResizingFlag(bool resize)
+{
+    needsResizing=resize;
+}
+
 /**
     \fn UI_setAudioTrackCount
 */

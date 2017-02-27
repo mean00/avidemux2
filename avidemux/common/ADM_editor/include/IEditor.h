@@ -1,5 +1,18 @@
-#ifndef IEditor_h
-#define IEditor_h
+/***************************************************************************
+     \file  IEditor.h
+     \brief Editor Interface class
+   
+ ***************************************************************************/
+
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ***************************************************************************/
+#pragma once
 
 #include "ADM_Video.h"
 #include "ADM_image.h"
@@ -107,4 +120,3 @@ public:
     virtual const char *getVar(const char *key)=0;
     virtual bool  printEnv(void)=0;
 };
-#endif

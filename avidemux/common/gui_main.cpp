@@ -471,6 +471,16 @@ void HandleAction (Action action)
         UI_setMarkers (markA, markB);
       break;
     }
+    case ACT_ResetMarkers:
+    {
+        if(!video_body->getMarkerAPts() && video_body->getMarkerBPts()==video_body->getVideoDuration())
+            break; // do nothing if the markers were not moved
+        video_body->addToUndoQueue();
+        A_ResetMarkers();
+        A_Resync();
+        GUI_setCurrentFrameAndTime();
+        break;
+    }
     case ACT_Copy:
     {
                 uint64_t markA,markB;
@@ -1458,6 +1468,7 @@ uint8_t GUI_close(void)
         admPreview::stop();
         setPreviewMode(ADM_PREVIEW_NONE);
       }
+      UI_setNeedsResizingFlag(false);
       delete avifileinfo;
       //delete wavinfo;
       admPreview::destroy();
