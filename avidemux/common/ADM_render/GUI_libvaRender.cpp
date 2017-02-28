@@ -42,6 +42,11 @@ libvaRender::libvaRender( void )
     mySurface[0]=mySurface[1]=NULL;;
     toggle=0;
     lastSurface=NULL;       
+#if 0    
+    currentFmt=VA_RT_FORMAT_YUV420_10BPP;
+#else    
+    currentFmt=VA_RT_FORMAT_YUV420;
+#endif            
 }
 /**
     \đn dtor
@@ -50,6 +55,31 @@ libvaRender::~libvaRender()
 {
     cleanup();
 }
+
+/**
+ * \fn realloc
+ * @param newFormat
+ * @return 
+ */
+bool libvaRender::realloc(int newFormat)
+{
+    cleanup();
+    currentFmt=newFormat;
+    for(int i=0;i<2;i++)
+    {
+        VASurfaceID surface=admLibVA::allocateSurface(imageWidth,imageHeight,currentFmt);
+        if(surface==VA_INVALID)
+        {
+             ADM_warning("[libva] cannot allocate surface\n");
+            return false;
+        }
+
+        mySurface[i]=new ADM_vaSurface(imageWidth,imageHeight);
+        mySurface[i]->surface=surface;
+    }    
+    return true;
+}
+
 
 /**
     \fn init
@@ -65,7 +95,7 @@ bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZo
     }
     for(int i=0;i<2;i++)
     {
-        VASurfaceID surface=admLibVA::allocateSurface(w,h);
+        VASurfaceID surface=admLibVA::allocateSurface(w,h,currentFmt);
         if(surface==VA_INVALID)
         {
              ADM_warning("[libva] cannot allocate surface\n");

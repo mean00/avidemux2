@@ -24,7 +24,9 @@ class libvaRender: public VideoRenderBase
       protected:
                             GUI_WindowInfo info;
                             ADM_vaSurface  *mySurface[2];
+                            int            currentFmt;
                         bool cleanup(void);
+                        bool realloc(int newFormat);
                         int  toggle;
       public:
                              libvaRender( void ) ;
@@ -37,6 +39,7 @@ class libvaRender: public VideoRenderBase
               virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourself
               virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_LIBVA;}
                         const char *getName() {return "LibVA";}
+                       
 };
 
 
