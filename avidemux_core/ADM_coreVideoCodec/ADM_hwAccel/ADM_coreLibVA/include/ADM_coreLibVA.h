@@ -63,7 +63,7 @@ public:
 static  VAContextID createDecoder(VAProfile profile,int width, int height, int nbSurface, VASurfaceID *surfaces);
 static  bool        destroyDecoder(VAContextID decoder);
 
-static  VASurfaceID allocateSurface( int w, int h);
+static  VASurfaceID allocateSurface( int w, int h, int fmt=VA_RT_FORMAT_YUV420);
 static  void        destroySurface(  VASurfaceID surface);
 
 static  VAImage    *allocateNV12Image( int w, int h);
@@ -164,7 +164,7 @@ public:
     bool toAdmImage(ADMImage *image);
     bool fromAdmImage(ADMImage *image);
     
-    static ADM_vaSurface *allocateWithSurface(int w,int h);
+    static ADM_vaSurface *allocateWithSurface(int w,int h,int fmt=VA_RT_FORMAT_YUV420);
     
 };
 /**

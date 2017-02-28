@@ -110,7 +110,10 @@ static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
 {
     int widthToUse = (ctx->coded_width+ 1)  & ~1;
     int heightToUse= (ctx->coded_height+3)  & ~3;
-    VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse);
+    int fmt=VA_RT_FORMAT_YUV420;
+    if(ctx->pix_fmt==AV_PIX_FMT_YUV420P10LE)
+        fmt=VA_RT_FORMAT_YUV420_10BPP;
+    VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse,fmt);
     if(surface==VA_INVALID)
     {
             ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
@@ -581,7 +584,21 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
        case AV_CODEC_ID_MPEG2VIDEO: profile= VAProfileMPEG2Main;break;
        case AV_CODEC_ID_H264: profile= VAProfileH264High;break;
 #ifdef LIBVA_HEVC_DEC       
-       case AV_CODEC_ID_H265: profile= VAProfileHEVCMain;break;;
+       case AV_CODEC_ID_H265: 
+           switch(avctx->pix_fmt)
+           {
+            case AV_PIX_FMT_YUV420P:
+                profile= VAProfileHEVCMain;
+                break;;
+            case AV_PIX_FMT_YUV420P10LE:
+                ADM_info("10 bits H265\n");
+                profile= VAProfileHEVCMain10;
+                break;
+           default:
+               ADM_warning("FF/LibVa: unknown colorspace %d\n",(int)avctx->pix_fmt);
+               return false;
+               break;
+           }
 #endif       
        case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
 #ifdef LIBVA_VP9_DEC

@@ -102,7 +102,7 @@ namespace ADM_coreLibVAEnc
 static bool                  coreLibVAWorking=false;
 
 #define CLEAR(x) memset(&x,0,sizeof(x))
-#define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);printf("%d =<%s>\n",xError,vaErrorStr(xError));}
+#define CHECK_ERROR(x) {xError=x;displayXError(#x,ADM_coreLibVA::display,xError);if(xError) printf("%d =<%s>\n",xError,vaErrorStr(xError));}
 
 #include "ADM_coreLibVA_test.cpp"
 #include "ADM_bitstream.h"
@@ -702,16 +702,16 @@ bool admLibVA::destroyDecoder(VAContextID session)
  * @param h
  * @return
  */
-VASurfaceID        admLibVA::allocateSurface(int w, int h)
+VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
 {
        int xError;
        CHECK_WORKING(VA_INVALID);
 
-       aprintf("Creating surface %d x %d\n",w,h);
+       aprintf("Creating surface %d x %d (fmt=%d)\n",w,h,fmt);
        VASurfaceID s;
 
         CHECK_ERROR(vaCreateSurfaces(ADM_coreLibVA::display,
-                        VA_RT_FORMAT_YUV420,
+                        fmt,
                         w,h,
                         &s,1,
                         NULL,0));
@@ -1160,10 +1160,10 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
  * @param h
  * @return
  */
-ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h)
+ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h,int fmt)
 {
     ADM_vaSurface *s=new ADM_vaSurface(w,h);
-    s->surface=admLibVA::allocateSurface(w,h);
+    s->surface=admLibVA::allocateSurface(w,h,fmt);
     if(!s->hasValidSurface())
     {
         delete s;
