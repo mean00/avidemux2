@@ -855,20 +855,18 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
                     dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
                     break;
                 }
-                case VA_FOURCC_P010:
+                case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
                 {
                     ADM_assert(color);
-                    ADMImageRef src(dest->_width,dest->_height);
-                    src._planes[0]= ptr+vaImage.offsets[0];
-                    src._planes[1]= ptr+vaImage.offsets[1];
-                    src._planes[2]= src._planes[1]+vaImage.pitches[1]/2; // ???
-                    
-                     src._planeStride[0]=vaImage.pitches[0];
-                     src._planeStride[1]=vaImage.pitches[1];
-                     src._planeStride[2]=vaImage.pitches[1];
-                    
-                    
-                    r=color->convertImage(&src,dest);
+                    ADMImageRef ref(dest->_width,dest->_height);
+                    for(int i=0;i<2;i++)
+                    {
+                            ref._planes[i]= ptr+vaImage.offsets[i];
+                            ref._planeStride[i]=vaImage.pitches[i];
+                    }
+                    ref._planes[2]=NULL;
+                    ref._planeStride[2]=0;
+                    color->convertImage(&ref,dest);                    
                     break;
                 }
                 default:
@@ -1229,7 +1227,7 @@ bool ADM_vaImage_cleanupCheck(void)
     this->w=w;
     this->h=h;
     image=admLibVA::allocateImage(w,h);
-    color10bits=new ADMColorScalerSimple(w,h,ADM_COLOR_YV12_10BITS,ADM_COLOR_YV12);
+    color10bits=new ADMColorScalerSimple(w,h,ADM_COLOR_NV12_10BITS,ADM_COLOR_YV12);
 }
 /**
  * 
