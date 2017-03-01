@@ -764,7 +764,7 @@ void        admLibVA::destroySurface( VASurfaceID surface)
  * @param img
  * @return
  */
-bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
+bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMColorScalerSimple *color)
 {
     int xError;
     bool r=false;
@@ -827,6 +827,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
     {
         case VA_FOURCC_YV12:break;
         case VA_FOURCC_NV12:break;
+        case VA_FOURCC_P010:break;
         default:
             ADM_warning("Unknown format %s\n",fourCC_tostring(vaImage.format.fourcc));
             goto dropIt;
@@ -852,6 +853,22 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
                 case VA_FOURCC_NV12:
                 {
                     dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
+                    break;
+                }
+                case VA_FOURCC_P010:
+                {
+                    ADM_assert(color);
+                    ADMImageRef src(dest->_width,dest->_height);
+                    src._planes[0]= ptr+vaImage.offsets[0];
+                    src._planes[1]= ptr+vaImage.offsets[1];
+                    src._planes[2]= src._planes[1]+vaImage.pitches[1]/2; // ???
+                    
+                     src._planeStride[0]=vaImage.pitches[0];
+                     src._planeStride[1]=vaImage.pitches[1];
+                     src._planeStride[2]=vaImage.pitches[1];
+                    
+                    
+                    r=color->convertImage(&src,dest);
                     break;
                 }
                 default:
@@ -1201,6 +1218,42 @@ bool ADM_vaImage_cleanupCheck(void)
 
 }
 /**
+ * 
+ * @param w
+ * @param h
+ */
+ ADM_vaSurface::ADM_vaSurface(int w, int h)
+{
+    surface=VA_INVALID;
+    refCount=0;
+    this->w=w;
+    this->h=h;
+    image=admLibVA::allocateImage(w,h);
+    color10bits=new ADMColorScalerSimple(w,h,ADM_COLOR_YV12_10BITS,ADM_COLOR_YV12);
+}
+/**
+ * 
+ */ 
+ADM_vaSurface:: ~ADM_vaSurface()
+ {
+     if(surface!=VA_INVALID)
+     {
+        admLibVA::destroySurface(surface);
+        surface=VA_INVALID;
+     }
+     if(image)
+     {
+         admLibVA::destroyImage(image);
+         image=NULL;
+     }
+     if(color10bits)
+     {
+         delete color10bits;
+         color10bits=NULL;
+     }
+ }
+
+/**
  * \fn admLibVa_exitCleanup
  */
 bool admLibVa_exitCleanup()
@@ -1225,7 +1278,7 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
     case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");return false;break;
     case   admLibVA::ADM_LIBVA_DIRECT:
                 //printf("Direct\n");
-                return admLibVA::surfaceToAdmImage(dest,this);
+                return admLibVA::surfaceToAdmImage(dest,this,color10bits);
     case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
     case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
                 //printf("InDirect\n");

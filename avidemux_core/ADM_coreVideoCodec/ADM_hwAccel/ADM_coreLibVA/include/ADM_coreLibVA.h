@@ -88,7 +88,7 @@ static bool        putX11Surface(ADM_vaSurface *img,int widget,int displayWidth,
 // Direct access
 
 static bool        admImageToSurface( ADMImage *src,ADM_vaSurface *dest);
-static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src);
+static bool        surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMColorScalerSimple *color=NULL);
 
 //
 static bool        supported(VAProfile profile);
@@ -139,27 +139,10 @@ public:
     int                 refCount;
     VAImage             *image;
     int                 w,h;
-    ADM_vaSurface(int w, int h)
-    {
-        surface=VA_INVALID;
-        refCount=0;
-        this->w=w;
-        this->h=h;
-        image=admLibVA::allocateImage(w,h);
-    }
-    ~ADM_vaSurface()
-    {
-        if(surface!=VA_INVALID)
-        {
-           admLibVA::destroySurface(surface);
-           surface=VA_INVALID;
-        }
-        if(image)
-        {
-            admLibVA::destroyImage(image);
-            image=NULL;
-        }
-    }
+    ADMColorScalerSimple *color10bits;
+    ADM_vaSurface(int w, int h);    
+    ~ADM_vaSurface();
+
     bool hasValidSurface() {return !(surface==VA_INVALID);}
     bool toAdmImage(ADMImage *image);
     bool fromAdmImage(ADMImage *image);
