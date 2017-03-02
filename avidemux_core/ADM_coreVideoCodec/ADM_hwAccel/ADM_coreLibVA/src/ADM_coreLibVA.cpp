@@ -851,10 +851,14 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
                     break;
                 }
                 case VA_FOURCC_NV12:
+#ifdef VA_10BITS_IS_ACTUALL_8BITS                    
+                case VA_FOURCC_P010:
+#endif                    
                 {
                     dest->convertFromNV12(ptr+vaImage.offsets[0],ptr+vaImage.offsets[1], vaImage.pitches[0], vaImage.pitches[1]);
                     break;
                 }
+#ifndef VA_10BITS_IS_ACTUALL_8BITS                
                 case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
                 {
                     ADM_assert(color);
@@ -869,6 +873,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
                     color->convertImage(&ref,dest);                    
                     break;
                 }
+#endif                
                 default:
                     goto dropIt;
                     break;
@@ -878,8 +883,6 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src,ADMCol
     }
 dropIt:
     CHECK_ERROR(vaDestroyImage (ADM_coreLibVA::display,vaImage.image_id));
-
-
     return r;
 }
 /**
@@ -992,12 +995,12 @@ bool   admLibVA::uploadToImage( ADMImage *src,VAImage *dest)
 }
 
 /**
- * \fn uploadToImage
+ * \fn downloadFromImage
  * @param dest
  * @param src
  * @return
  */
-bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
+bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest,ADMColorScalerSimple *color)
 {
     int xError;
     VASurfaceStatus status;
@@ -1023,6 +1026,20 @@ bool   admLibVA::downloadFromImage( ADMImage *src,VAImage *dest)
                         src->duplicate(&ref);
                 }
                 break;
+        case VA_FOURCC_P010: // It is actually NV12 style All Y, then U/V interleaved
+                {
+                    ADM_assert(color);
+                    ADMImageRef ref(src->_width,src->_height);
+                    for(int i=0;i<2;i++)
+                    {
+                            ref._planes[i]= ptr+dest->offsets[i];
+                            ref._planeStride[i]=dest->pitches[i];
+                    }
+                    ref._planes[2]=NULL;
+                    ref._planeStride[2]=0;
+                    color->convertImage(&ref,src);                    
+                    break;
+                }                
         case VA_FOURCC_NV12:
                         src->convertFromNV12(  ptr+dest->offsets[0], ptr+dest->offsets[1],dest->pitches[0],dest->pitches[1]);
                         break;
@@ -1282,7 +1299,7 @@ bool ADM_vaSurface::toAdmImage(ADMImage *dest)
                 //printf("InDirect\n");
                 ADM_assert(this->image);
                 if(admLibVA::surfaceToImage(this,this->image))
-                        return  admLibVA::downloadFromImage(dest,this->image);
+                        return  admLibVA::downloadFromImage(dest,this->image,color10bits);
                 return false;
                 break;
     default:ADM_assert(0);

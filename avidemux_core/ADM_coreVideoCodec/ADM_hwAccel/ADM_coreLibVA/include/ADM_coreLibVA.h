@@ -32,6 +32,8 @@ extern "C" {
 class ADM_vaSurface;
 
 
+#define VA_10BITS_IS_ACTUALL_8BITS 1 // ???
+
 /**
     \class admLibVA
 */
@@ -77,7 +79,7 @@ static bool        fillContext(VAProfile profile,vaapi_context *c);
 
 // Indirect access through image
 static bool        uploadToImage(ADMImage *src,VAImage *dest );
-static bool        downloadFromImage(ADMImage *src,VAImage *dest );
+static bool        downloadFromImage(ADMImage *src,VAImage *dest ,ADMColorScalerSimple *color=NULL);
 static bool        imageToSurface(VAImage *src,ADM_vaSurface *dest);
 static bool        surfaceToImage(ADM_vaSurface *dst,VAImage *src );
 

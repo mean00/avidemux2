@@ -43,7 +43,7 @@ libvaRender::libvaRender( void )
     toggle=0;
     lastSurface=NULL;       
 #if 0    
-    currentFmt=VA_RT_FORMAT_YUV420_10BPP;
+    currentFmt=VA_FOURCC_P010;
 #else    
     currentFmt=VA_RT_FORMAT_YUV420;
 #endif            
