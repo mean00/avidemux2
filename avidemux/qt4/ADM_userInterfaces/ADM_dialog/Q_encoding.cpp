@@ -183,9 +183,11 @@ void DIA_encodingQt4::setPhasis(const char *n)
     {
         ui->tabWidget->setTabEnabled(1, false); // disable the "Advanced" tab
         ui->checkBoxShutdown->setVisible(false); // hide the shutdown checkbox
+        this->setWindowTitle(QT_TRANSLATE_NOOP("qencoding","First Pass"));
         WRITEM(labelPhasis,QT_TRANSLATE_NOOP("qencoding","Pass 1"));
     }else
     {
+        this->setWindowTitle(QT_TRANSLATE_NOOP("qencoding","Encoding..."));
         ui->tabWidget->setTabEnabled(1, true);
 #ifdef _WIN32
         ui->checkBoxShutdown->setVisible(true);
