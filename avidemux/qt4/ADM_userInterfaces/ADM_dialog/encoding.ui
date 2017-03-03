@@ -119,7 +119,7 @@ p, li { white-space: pre-wrap; }
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="labelPrio">
            <property name="text">
             <string>Priority:</string>
            </property>
