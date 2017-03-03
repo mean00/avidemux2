@@ -140,68 +140,80 @@ static bool ADM_FAILED(HRESULT hr)
     }
     return false;
 }
+
 /**
   \fn checkDecoder
   \brief check if the decoder advertised is actually working
 */
-static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context)
+static bool checkDecoderConfigurations(const GUID *guid, const D3DFORMAT target_format, Dxv2SupportMap *context)
 {
     HRESULT hr;
-    unsigned int cfg_count = 0, best_score = 0;
+    unsigned int cfg_count = 0;
     DXVA2_ConfigPictureDecode *cfg_list = NULL;
-    bool   found=false;
-    const D3DFORMAT target_format = (const D3DFORMAT) MKTAG('N','V','1','2');
 
-    // initialize desc with dummy values
-    context->desc.SampleWidth=1920;
-    context->desc.SampleHeight=1080;
-    context->desc.Format=target_format;
+    // Initialize desc with dummy values.
+    context->desc.SampleWidth = 1920;
+    context->desc.SampleHeight = 1080;
+    context->desc.Format = target_format;
 
     hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, *guid, &(context->desc), NULL, &cfg_count, &cfg_list);
     if (ADM_FAILED(hr)) {
-        ADM_warning("Unable to retrieve decoder configurations\n");
+        ADM_warning("Failed to retrieve decoder configurations. Skipping this mode.\n");
         return false;
     }
 
-    for (int i = 0; i < cfg_count; i++)
-    {
-        DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
+    unsigned int best_score = 0;
 
-        unsigned score;
+    for (unsigned int i = 0; i < cfg_count; i++)
+    {
+        ADM_info("Scoring configuration %u\n", i);
+
+        DXVA2_ConfigPictureDecode *cfg = &cfg_list[i];
+        unsigned int score = 0;
+
         if (cfg->ConfigBitstreamRaw == 1)
         {
-            ADM_info("\t has raw bistream\n");
-            score = 1;
+            ADM_info("\thas raw bistream\n");
+            score += 1;
         }
         else if (context->codec == AV_CODEC_ID_H264 && cfg->ConfigBitstreamRaw == 2)
         {
-            ADM_info("\t has h264 raw bistream2\n");
-            score = 2;
+            ADM_info("\thas h264 raw bistream2\n");
+            score += 2;
         }
         else
+        {
+            ADM_info("\thas no supported raw bistream. Skipping this configuration.\n");
             continue;
+        }
+
         if (IsEqualGUID(cfg->guidConfigBitstreamEncryption, DXVA2_NoEncrypt))
         {
-            ADM_info("\t has no encrypt\n");
+            ADM_info("\thas no encrypt\n");
             score += 16;
         }
+
+        ADM_info("\t(score: %u)\n", score);
         if (score > best_score)
         {
-            best_score    = score;
+            ADM_info("\t(new best score)\n");
+            best_score = score;
+
             context->pictureDecode = *cfg;
-            found=true;
-            ADM_info("\t best score\n");
         }
     }
+
     CoTaskMemFree(cfg_list);
 
-    if (! found )
+    if (best_score == 0)
     {
-        ADM_warning( "No valid decoder configuration available\n");
+        ADM_warning("No valid decoder configuration available. Skipping this mode.\n");
         return false;
     }
+
     return true;
 }
+
 /**
  * \fn lookupCodec
  * \brief find and populate the configuration for a given codec
@@ -209,6 +221,7 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
 static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list)
 {
     HRESULT hr;
+    const D3DFORMAT target_format_nv12 = (const D3DFORMAT) MKTAG('N','V','1','2');
     D3DFORMAT target_format = (D3DFORMAT) 0;
 
     for (int i = 0; dxva2_modes[i].guid; i++)
@@ -239,7 +252,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         for (j = 0; j < target_count; j++)
         {
             const D3DFORMAT format = target_list[j];
-            if (format == MKTAG('N','V','1','2'))
+            if (format == target_format_nv12)
             {
                 target_format = format;
                 break;
@@ -249,10 +262,11 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         CoTaskMemFree(target_list);
         if (target_format)
         {
-            if(checkDecoderConfiguration(mode->guid,context)) // does it work ?
+            // Does it work?
+            if (checkDecoderConfigurations(mode->guid, target_format, context))
             {
-              context->device_guid = *(mode->guid);
-              break;
+                context->device_guid = *(mode->guid);
+                break;
             }
         }
     }
@@ -263,8 +277,6 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         ADM_info("No decoder device for codec %s found\n",codecName);
         return false;
     }
-
-    //--
 
     ADM_info("DXVA2 support for  %s found\n",codecName);
     context->enabled=true;
@@ -589,7 +601,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
     hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
     if (ADM_FAILED(hr))
     {
-        ADM_warning("Unable to lock DXVA2 surface\n");
+        ADM_warning("Failed to lock DXVA2 surface\n");
         return false;
     }
     aprintf("Retrieving image pitch=%d width=%d height=%d\n",LockedRect.Pitch,out->GetWidth(PLANAR_Y), out->GetHeight(PLANAR_Y));

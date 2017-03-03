@@ -43,7 +43,7 @@ protected:
     int                   alignment;
 } ;
 /**
-    \class admVdpau
+    \class admDxva2
 */
 class ADM_COREVIDEOCODEC6_EXPORT admDxva2
 {
