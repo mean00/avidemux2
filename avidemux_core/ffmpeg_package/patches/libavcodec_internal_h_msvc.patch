@@ -1,0 +1,14 @@
+--- libavcodec/internal.h.org	2017-03-03 09:31:45.574335500 +0100
++++ libavcodec/internal.h	2017-03-03 09:34:34.515429100 +0100
+@@ -237,7 +237,10 @@
+ {
+     if(samples == AV_NOPTS_VALUE)
+         return AV_NOPTS_VALUE;
+-    return av_rescale_q(samples, (AVRational){ 1, avctx->sample_rate },
++    AVRational rat;
++    rat.num=1;
++    rat.den=avctx->sample_rate;
++    return av_rescale_q(samples, rat,
+                         avctx->time_base);
+ }
+ 
