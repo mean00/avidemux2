@@ -200,7 +200,7 @@ void ADM_backTrack(const char *info,int lineno,const char *file)
 
 	count = backtrace(stack, MAX_BACKTRACK);
 	functions = backtrace_symbols(stack, count);
-	sprintf(wholeStuff,"%s\n at line %d, file %s",info,lineno,file);
+	sprintf(wholeStuff,"%s\n at line %d, file %s\n",info,lineno,file);
         int status;
         size_t size=2047;
     // it looks like that xxxx (functionName+0x***) XXXX
