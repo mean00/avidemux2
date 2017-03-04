@@ -33,7 +33,7 @@ public:
     void                 *parent;
     LPDIRECT3DSURFACE9    surface;
     IDirectXVideoDecoder *decoder;
-
+    ADMColorScalerSimple *color10Bits; // To be optimized, it's the same for all images from the same source
     bool                  surfaceToAdmImage(ADMImage *out);
     int                   refCount;
 public:
@@ -51,15 +51,14 @@ public:
         static bool init(GUI_WindowInfo *x);
         static bool isOperationnal(void);
         static bool cleanup(void);
-        static bool supported(AVCodecID codec);
-        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align);
+        static bool supported(AVCodecID codec,int bits);
+        static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
-        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec);
-        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align);
+        static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec,int bits);
+        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align,int bits=8);
         static bool destroyD3DSurface(int num,void *surfaces);
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
 };
 
 bool ADM_COREVIDEOCODEC6_EXPORT admDxva2_exitCleanup(void);
-

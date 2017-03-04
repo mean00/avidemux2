@@ -61,6 +61,7 @@ DEFINE_GUID(DXVA2_ModeVC1_D2010,      0x1b81beA4, 0xa0c7,0x11d3,0xb9,0x84,0x00,0
 DEFINE_GUID(DXVA2_ModeHEVC_VLD_Main,  0x5b11d51b, 0x2f4c,0x4452,0xbc,0xc3,0x09,0xf2,0xa1,0x16,0x0c,0xc0);
 DEFINE_GUID(DXVA2_ModeVP9_VLD_Profile0, 0x463707f8, 0xa1d0,0x4585,0x87,0x6d,0x83,0xaa,0x6d,0x60,0xb8,0x9e);
 DEFINE_GUID(DXVA2_NoEncrypt,          0x1b81beD0, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
+DEFINE_GUID(DXVA2_ModeHEVC_VLD_Main10,0x107af0e0, 0xef1a,0x4d19,0xab,0xa8,0x67,0xa1,0x63,0x07,0x3d,0x13);
 DEFINE_GUID(GUID_NULL,                0x00000000, 0x0000,0x0000,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
 /**
  */
@@ -68,6 +69,7 @@ typedef struct dxva2_mode
 {
   const GUID     *guid;
   enum AVCodecID codec;
+  int            bitsPerChannel;
 } dxva2_mode;
 /**
  */
@@ -83,28 +85,29 @@ static int ALIGN(int x,int align)
 static const dxva2_mode dxva2_modes[] =
 {
     /* MPEG-2 */
-    { &DXVA2_ModeMPEG2_VLD,      AV_CODEC_ID_MPEG2VIDEO },
-    { &DXVA2_ModeMPEG2and1_VLD,  AV_CODEC_ID_MPEG2VIDEO },
+    { &DXVA2_ModeMPEG2_VLD,      AV_CODEC_ID_MPEG2VIDEO ,8},
+    { &DXVA2_ModeMPEG2and1_VLD,  AV_CODEC_ID_MPEG2VIDEO ,8},
 
     /* H.264 */
-    { &DXVA2_ModeH264_F,         AV_CODEC_ID_H264 },
-    { &DXVA2_ModeH264_E,         AV_CODEC_ID_H264 },
+    { &DXVA2_ModeH264_F,         AV_CODEC_ID_H264 ,8},
+    { &DXVA2_ModeH264_E,         AV_CODEC_ID_H264 ,8},
     /* Intel specific H.264 mode */
-    { &DXVADDI_Intel_ModeH264_E, AV_CODEC_ID_H264 },
+    { &DXVADDI_Intel_ModeH264_E, AV_CODEC_ID_H264 ,8},
 
     /* VC-1 / WMV3 */
-    { &DXVA2_ModeVC1_D2010,      AV_CODEC_ID_VC1  },
-    { &DXVA2_ModeVC1_D2010,      AV_CODEC_ID_WMV3 },
-    { &DXVA2_ModeVC1_D,          AV_CODEC_ID_VC1  },
-    { &DXVA2_ModeVC1_D,          AV_CODEC_ID_WMV3 },
+    { &DXVA2_ModeVC1_D2010,      AV_CODEC_ID_VC1  ,8},
+    { &DXVA2_ModeVC1_D2010,      AV_CODEC_ID_WMV3 ,8},
+    { &DXVA2_ModeVC1_D,          AV_CODEC_ID_VC1  ,8},
+    { &DXVA2_ModeVC1_D,          AV_CODEC_ID_WMV3 ,8},
 
     /* HEVC/H.265 */
-    { &DXVA2_ModeHEVC_VLD_Main,  AV_CODEC_ID_HEVC },
+    { &DXVA2_ModeHEVC_VLD_Main,   AV_CODEC_ID_HEVC ,8},
+    { &DXVA2_ModeHEVC_VLD_Main10, AV_CODEC_ID_HEVC ,10},
 
     /* VP8/9 */
-    { &DXVA2_ModeVP9_VLD_Profile0, AV_CODEC_ID_VP9 },
+    { &DXVA2_ModeVP9_VLD_Profile0,AV_CODEC_ID_VP9 ,8},
 
-    { NULL,                      (AVCodecID)0 },
+    { NULL,                      (AVCodecID)0 ,0},
 };
 typedef struct
 {
@@ -118,6 +121,23 @@ typedef struct
 
 static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false};
 static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false};
+static Dxv2SupportMap dxva2H265_10Bits={AV_CODEC_ID_HEVC,false};
+
+/**
+  \fn dxvaBitsToFormat
+  \brief returns D3D format depending on bits per component
+*/
+static D3DFORMAT dxvaBitsToFormat(int bits)
+{
+  switch(bits)
+  {
+    case 8: return (D3DFORMAT)MKTAG('N','V','1','2');break;
+    case 10:return (D3DFORMAT)MKTAG('P','0','1','0');break;
+    default:
+        ADM_assert(0); break;
+  }
+  return (D3DFORMAT)MKTAG('N','V','1','2');
+}
 /**
  */
 static void dumpGUID(const char *name,const GUID &guid)
@@ -206,7 +226,7 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
  * \fn lookupCodec
  * \brief find and populate the configuration for a given codec
  */
-static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list)
+static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned int guid_count,GUID *guid_list, int bitsPerComponent)
 {
     HRESULT hr;
     D3DFORMAT target_format = (D3DFORMAT) 0;
@@ -236,10 +256,12 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         {
             continue;
         }
+        D3DFORMAT tgt;
+        tgt=dxvaBitsToFormat(bitsPerComponent);
         for (j = 0; j < target_count; j++)
         {
             const D3DFORMAT format = target_list[j];
-            if (format == MKTAG('N','V','1','2'))
+            if (format ==tgt)
             {
                 target_format = format;
                 break;
@@ -344,8 +366,9 @@ bool admDxva2::init(GUI_WindowInfo *x)
             ADM_warning("Failed to retrieve decoder device GUIDs\n");
             goto failInit;
         }
-        lookupCodec("H264",&dxva2H264,guid_count,guid_list);
-        lookupCodec("H265",&dxva2H265,guid_count,guid_list);
+        lookupCodec("H264",&dxva2H264,guid_count,guid_list,8);
+        lookupCodec("H265",&dxva2H265,guid_count,guid_list,8);
+        lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10);
         CoTaskMemFree(guid_list);
     }
     ADM_info("Scanning supported format done\n");
@@ -357,18 +380,20 @@ failInit:
 }
 /**
  */
-bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_alignment)
+bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_alignment,int bits)
 {
     HRESULT hr;
     LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)array;
     int width=ALIGN(w,surface_alignment);
     int height=ALIGN(h,surface_alignment);
+    D3DFORMAT fmt;
+    fmt=dxvaBitsToFormat(bits);
 
      hr = IDirectXVideoDecoderService_CreateSurface(decoder_service,
                                                    width,
                                                    height,
                                                    num - 1,
-                                                   (D3DFORMAT)MKTAG('N','V','1','2'), D3DPOOL_DEFAULT, 0,
+                                                   fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
                                                    surfaces, NULL);
      if(ADM_FAILED(hr))
@@ -442,23 +467,29 @@ bool admDxva2::cleanup(void)
 /**
  *
  */
-bool        admDxva2::supported(AVCodecID codec)
+bool        admDxva2::supported(AVCodecID codec,int bits)
 {
-#define SUPSUP(a,b) if(codec==a) return (b.enabled) ;
-    SUPSUP(AV_CODEC_ID_H264,dxva2H264)
-    SUPSUP(AV_CODEC_ID_HEVC,dxva2H265)
+#define SUPSUP(a,b,c) if(codec==a && bits==c) return (b.enabled) ;
+    SUPSUP(AV_CODEC_ID_H264,dxva2H264,8)
+    SUPSUP(AV_CODEC_ID_HEVC,dxva2H265,8)
+    SUPSUP(AV_CODEC_ID_HEVC,dxva2H265_10Bits,10)
     return false;
 }
 /**
  * \fn getDecoderConfig
  */
-DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec)
+DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
 {
     Dxv2SupportMap *cmap;
     switch(codec)
     {
         case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
-        case AV_CODEC_ID_H265: cmap=&dxva2H265;break;
+        case AV_CODEC_ID_H265:
+              if(10==bits)
+                cmap=&dxva2H265_10Bits;
+              else
+                cmap=&dxva2H265;
+              break;
         default:
             ADM_assert(0);
             break;
@@ -474,15 +505,29 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec)
 /**
  * \fn createDecoder
  */
-IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align)
+IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int height, int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits)
 {
     Dxv2SupportMap *cmap;
     int paddedWidth=ALIGN(with,align);
     int paddedHeight=ALIGN(height,align);
     switch(codec)
     {
-        case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
-        case AV_CODEC_ID_H265: cmap=&dxva2H265;break;
+        case AV_CODEC_ID_H264:
+                ADM_info("Creating decoder DXVA2/H264/8 Bits\n");
+                cmap=&dxva2H264;
+                break;
+        case AV_CODEC_ID_H265:
+                if(bits==10)
+                {
+                    ADM_info("Creating decoder DXVA2/H264/10 Bits\n");
+                    cmap=&dxva2H265_10Bits;
+                }
+                else
+                {
+                    ADM_info("Creating decoder DXVA2/H264/8 Bits\n");
+                    cmap=&dxva2H265;
+                }
+                break;
         default:
             ADM_assert(0);
             break;
@@ -547,6 +592,7 @@ admDx2Surface::admDx2Surface(void *par,int alig)
     surface=NULL;
     decoder=NULL;
     refCount=0;
+    color10Bits=NULL;
 }
 /**
  * \fn dtor
@@ -556,6 +602,11 @@ admDx2Surface::~admDx2Surface()
     parent=NULL;
     surface=NULL;
     decoder=NULL;
+    if(color10Bits)
+    {
+        delete color10Bits;
+        color10Bits=NULL;
+    }
 }
 /**
  * \fn addRef
@@ -583,8 +634,13 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
     D3DSURFACE_DESC    surfaceDesc;
     D3DLOCKED_RECT     LockedRect;
     HRESULT            hr;
+    int bits=8;
     bool r=true;
     IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
+    if(surfaceDesc.Format==(D3DFORMAT)MKTAG('P','0','1','0'))
+    {
+      bits=10;
+    }
     aprintf("Surface to admImage = %p\n",surface);
     hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
     if (ADM_FAILED(hr))
@@ -596,7 +652,36 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
 
     uint8_t *data=(uint8_t*)LockedRect.pBits;
     int sourcePitch=LockedRect.Pitch;
-    out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),alignment), sourcePitch, sourcePitch);
+    switch(bits)
+    {
+      case 8:   out->convertFromNV12(data,data+sourcePitch*ALIGN(out->GetHeight(PLANAR_Y),alignment), sourcePitch, sourcePitch);
+                break;
+      case 10:
+              {
+              if(!color10Bits)
+                    color10Bits=new ADMColorScalerSimple(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y),ADM_COLOR_NV12_10BITS,ADM_COLOR_YV12);
+              ADMImageRef ref(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y));
+              ADMImageRefWrittable target(out->GetWidth(PLANAR_Y),out->GetHeight(PLANAR_Y));
+              ref._planes[0]=data;
+              ref._planeStride[0]=sourcePitch;
+              ref._planes[1]=data+((surfaceDesc.Height)*sourcePitch);
+              ref._planeStride[1]=sourcePitch;
+              ref._planes[2]=NULL;
+              ref._planeStride[2]=0;
+              // U &  V are inverted...
+              for(int i=0;i<3;i++)
+              {
+                  int j=i;
+                  if(j) j=j^3;
+                  target._planes[j]=out->GetWritePtr((ADM_PLANE)i);
+                  target._planeStride[j]=out->_planeStride[i];
+              }
+              color10Bits->convertImage(&ref,&target);
+              }
+              break;
+
+      default: ADM_warning("Unsupported bit depth");break;
+    }
     IDirect3DSurface9_UnlockRect(surface);
     return r;
 }

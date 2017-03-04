@@ -99,6 +99,17 @@ bool dxva2Probe(void)
 #endif
 
 /**
+  \fn dxvaBitDepthFromContext
+*/
+static int dxvaBitDepthFromContext(AVCodecContext *avctx)
+{
+
+  if(avctx->sw_pix_fmt==AV_PIX_FMT_YUV420P10) // not sure
+      return 10;
+  return 8;
+}
+
+/**
  *
  * @param instance
  * @param cookie
@@ -293,12 +304,13 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     }
 
     // Allocate surfaces..
-    if(!admDxva2::allocateD3D9Surface(num_surfaces,avctx->coded_width,avctx->coded_height,surfaces,align))
+    int bits=dxvaBitDepthFromContext(avctx);
+    if(!admDxva2::allocateD3D9Surface(num_surfaces,avctx->coded_width,avctx->coded_height,surfaces,align,bits))
     {
         ADM_warning("Cannot allocate surfaces \n");
         return ;
     }
-    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align);
+    dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align,bits);
     aprintf("Decoder=%p\n",dx_context->decoder);
     if(!dx_context->decoder)
     {
@@ -323,7 +335,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 
     dx_context->surface         = surfaces;
     dx_context->surface_count   = num_surfaces;
-    dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id);
+    dx_context->cfg             = admDxva2::getDecoderConfig(avctx->codec_id,bits);
 
     ADM_info("Ctor Successfully setup DXVA2 hw accel (%d surface created, ffdxva=%p,parent=%p,context=%p)\n",num_surfaces,this,parent,avctx);
     alive=true;
@@ -586,7 +598,8 @@ bool           ADM_hwAccelEntryDxva2::canSupportThis(struct AVCodecContext *avct
 
     outputFormat=ofmt;
     ADM_info("This is maybe supported by DXVA2...\n");
-    if(!admDxva2::supported(avctx->codec_id))
+    int bits=dxvaBitDepthFromContext(avctx);
+    if(!admDxva2::supported(avctx->codec_id,bits)) // not sure either
     {
         ADM_warning("Not supported by DXVA2\n");
         return false;
