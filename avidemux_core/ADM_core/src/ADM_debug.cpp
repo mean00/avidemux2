@@ -48,7 +48,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
 #if _WIN32
       printf("[%s] %02d:%02d:%02d-%03d %s", func, (int)hh,(int)mn,(int)seconds,(int)mseconds,p);
 #else
-    printf("%s [%s] %02d:%02d:%02d-%03d  %s %s",color,func,(int)hh,(int)mn,(int)seconds,(int)mseconds,p,ADM_DEFAULT_COLOR);
+    printf("%s [%s] %02d:%02d:%02d-%03d  %s%s",color,func,(int)hh,(int)mn,(int)seconds,(int)mseconds,p,ADM_DEFAULT_COLOR);
 #endif
 }
 
