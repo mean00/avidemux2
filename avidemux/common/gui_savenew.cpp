@@ -26,9 +26,6 @@
 #include "ADM_coreAudio.h"
 #include "ADM_encoderConf.h"
 
-#include "ADM_encoderConf.h"
-
-
 #include "DIA_fileSel.h"
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_muxer.h"
@@ -183,15 +180,24 @@ bool abort=false;
         {
             printf("[Save] setup failed for pass1 encoder\n");
             delete pass1;
+            pass1=NULL;
             return NULL;
         }
-        ADMBitstream bitstream;
 
+        if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Muxer"),QT_TRANSLATE_NOOP("adm","Cannot instantiate muxer"));
+            delete pass1;
+            pass1=NULL;
+            return NULL;
+        }
+        muxer->createUI(videoDuration);
+        muxer->encoding->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
+
+        ADMBitstream bitstream;
         uint8_t *buffer=new uint8_t[BUFFER_SIZE];
         bitstream.data=buffer;
         bitstream.bufferSize=BUFFER_SIZE;
-        DIA_encodingBase *encoding=createEncoding(videoDuration);
-        encoding->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
         int nbFrames=0;
         uint32_t percent=0;
         while(pass1->encode(&bitstream))
@@ -204,12 +210,12 @@ bool abort=false;
                 uint32_t p=(uint32_t)f;
                 if(percent<p)
                     percent=p; // avoid progress bar going backwards
-                if(!encoding->isAlive())
+                if(!muxer->encoding->isAlive())
                 {
                     abort=true;
                     break;
                 }
-                encoding->setPercent(percent);
+                muxer->encoding->setPercent(percent);
                 uint32_t elapsed=ticktock.getElapsedMS();
                 if(percent>=1)
                 {
@@ -218,15 +224,13 @@ bool abort=false;
                     if(remaining<0)
                         remaining=0;
                     uint32_t remainingMs=(uint32_t)remaining;
-                    encoding->setRemainingTimeMS(remainingMs);
+                    muxer->encoding->setRemainingTimeMS(remainingMs);
                 }
             }
             nbFrames++;
         }
-        delete encoding;
         delete [] buffer;
         delete pass1;
-        encoding=NULL;
         buffer=NULL;
         pass1=NULL;
 
@@ -435,7 +439,7 @@ bool admSaver::save(void)
         }
     }
 
-    if(!(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
+    if(!muxer && !(muxer=ADM_MuxerSpawnFromIndex(muxerIndex)))
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Muxer"),QT_TRANSLATE_NOOP("adm","Cannot instantiate muxer"));
         return 0;

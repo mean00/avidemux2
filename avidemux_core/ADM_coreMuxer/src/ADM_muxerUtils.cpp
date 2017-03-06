@@ -18,7 +18,6 @@
 #include "ADM_muxerUtils.h"
 #include "fourcc.h"
 #include "ADM_vidMisc.h"
-#include "prefs.h"
 
 /**
     \fn rescaleFps
@@ -75,8 +74,11 @@ bool     ADM_muxer::initUI(const char *title)
 {
         videoIncrement=vStream->getFrameIncrement();  // Video increment in AVI-Tick
         videoDuration=vStream->getVideoDuration();
-        ADM_info("Muxer, creating UI, video duration is %s\n",ADM_us2plain(videoDuration));
-        encoding=createEncoding(videoDuration);
+        if(!encoding)
+        {
+            ADM_info("Muxer, creating UI, video duration is %s\n",ADM_us2plain(videoDuration));
+            createUI(videoDuration);
+        }
         // Set video stream etc...
         encoding->setPhasis(title);
         encoding->setVideoCodec(fourCC::tostring(vStream->getFCC()));
@@ -85,6 +87,17 @@ bool     ADM_muxer::initUI(const char *title)
                 else    encoding->setAudioCodec(getStrFromAudioCodec(aStreams[0]->getInfo()->encoding));
         return true;
 }
+
+/**
+    \fn createUI
+    \brief create an encoding dialog / progress indicator
+*/
+bool ADM_muxer::createUI(uint64_t duration)
+{
+    encoding=createEncoding(duration);
+    return true;
+}
+
 /**
         \fn updateUI
         \brief Update the progress bar
