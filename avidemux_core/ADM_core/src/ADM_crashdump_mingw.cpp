@@ -376,6 +376,6 @@ LONG WINAPI TopLevelExceptionHandler(struct _EXCEPTION_POINTERS *exceptionInfo)
 void ADM_backTrack(const char *info, int lineno, const char *file)
 {	
     char title[2048]={0};
-        snprintf(title,2000,"%s at line %d, file %s",info,lineno,file);
+        snprintf(title,2000,"%s at line %d, file %s\n",info,lineno,file);
 	HandleException(title,NULL, NULL);
 }
