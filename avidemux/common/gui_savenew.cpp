@@ -192,7 +192,7 @@ bool abort=false;
             return NULL;
         }
         muxer->createUI(videoDuration);
-        muxer->encoding->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
+        muxer->getEncoding()->setPhasis("Pass 1"); // don't make it translatable here, this is done in the encoding dialog
 
         ADMBitstream bitstream;
         uint8_t *buffer=new uint8_t[BUFFER_SIZE];
@@ -210,12 +210,12 @@ bool abort=false;
                 uint32_t p=(uint32_t)f;
                 if(percent<p)
                     percent=p; // avoid progress bar going backwards
-                if(!muxer->encoding->isAlive())
+                if(!muxer->getEncoding()->isAlive())
                 {
                     abort=true;
                     break;
                 }
-                muxer->encoding->setPercent(percent);
+                muxer->getEncoding()->setPercent(percent);
                 uint32_t elapsed=ticktock.getElapsedMS();
                 if(percent>=1)
                 {
@@ -224,7 +224,7 @@ bool abort=false;
                     if(remaining<0)
                         remaining=0;
                     uint32_t remainingMs=(uint32_t)remaining;
-                    muxer->encoding->setRemainingTimeMS(remainingMs);
+                    muxer->getEncoding()->setRemainingTimeMS(remainingMs);
                 }
             }
             nbFrames++;
