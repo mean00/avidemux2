@@ -57,8 +57,8 @@ protected:
 
                 uint64_t videoIncrement; // Used/set by initUI
                 uint64_t videoDuration;
-                DIA_encodingBase  *encoding;
-                
+                DIA_encodingBase *encoding;
+
 public:
                           ADM_muxer() {vStream=NULL;aStreams=NULL;nbAStreams=0;encoding=NULL;};
         virtual           ~ADM_muxer() {closeUI();};
@@ -67,8 +67,9 @@ public:
 
         virtual  bool     save(void)=0;
         virtual  bool     close(void)=0; 
-        
+        virtual  DIA_encodingBase *getEncoding(void) { return encoding; };
         virtual  bool     initUI(const char *title);
+        virtual  bool     createUI(uint64_t duration);
         virtual  bool     updateUI(void);
         virtual  bool     closeUI(void);
         virtual  bool     useGlobalHeader(void) {return false;}
