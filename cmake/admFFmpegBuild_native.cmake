@@ -21,6 +21,7 @@ if (FFMPEG_PERFORM_PATCH)
 endif (FFMPEG_PERFORM_PATCH)
 
 xadd(--enable-pthreads)
+# help for debugging xadd(--disable-optimizations)
 
 if (USE_VDPAU)
     xadd(--enable-vdpau)
