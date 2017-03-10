@@ -28,6 +28,14 @@ typedef struct
     const char *icon;
     const char *shortCut;
 }MenuEntry;
+/**
+    \struct kbdAccel
+*/
+typedef struct
+{
+    Action     event;
+    const char *shortCut;
+}kbdAccel;
 
 #ifdef MENU_DECLARE
 static const MenuEntry _myMenuFile[] = {
@@ -129,5 +137,17 @@ static const MenuEntry _myMenuView[] = {
         };
 
 std::vector<MenuEntry> myMenuView(_myMenuView, _myMenuView + sizeof(_myMenuView) / sizeof(_myMenuView[0]));
+
+static const kbdAccel _extraKbdAccels[] = {
+            {ACT_MarkA,        "I"},
+            {ACT_MarkB,        "O"},
+            {ACT_ResetMarkers, "R"},
+            {ACT_GotoMarkA,    "A"},
+            {ACT_GotoMarkB,    "B"},
+            {ACT_Begin,        "H"},
+            {ACT_End,          "E"}
+        };
+
+std::vector<kbdAccel> extraKbdAccels(_extraKbdAccels, _extraKbdAccels + sizeof(_extraKbdAccels) / sizeof(_extraKbdAccels[0]));
 
 #endif

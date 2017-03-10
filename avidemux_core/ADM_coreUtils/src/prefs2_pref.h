@@ -31,6 +31,7 @@ static optionDesc myOptions[]={
 { FEATURES_CAP_REFRESH_VALUE,"features.cap_refresh_value"             ,ADM_param_uint32_t	,"100",	10,	1000},
 { FEATURES_SDLDRIVER,"features.sdlDriver"                             ,ADM_param_stdstring  	,"",	0,	0},
 { FEATURES_USE_LAST_READ_DIR_AS_TARGET,"features.use_last_read_dir_as_target",ADM_param_bool    	,"0",	0,	1},
+{ FEATURES_ENABLE_EXTRA_SHORTCUTS,"features.enable_extra_shortcuts"   ,ADM_param_bool    	,"0",	0,	1},
 { UPDATE_ENABLED,"update.enabled"                                     ,ADM_param_bool    	,"1",	0,	1},
 { UPDATE_LASTCHECK,"update.lastCheck"                                 ,ADM_param_uint32_t	,"0",	0,	5000},
 { LASTFILES_LASTDIR_READ,"lastfiles.lastdir_read"                     ,ADM_param_stdstring  	,"",	0,	0},

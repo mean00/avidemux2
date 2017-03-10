@@ -553,6 +553,21 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                         {
                             QKeySequence s(m->shortCut);
                             a->setShortcut(s);
+                            bool extraShortcuts=false;
+                            prefs->get(FEATURES_ENABLE_EXTRA_SHORTCUTS,&extraShortcuts);
+                            if(extraShortcuts)
+                            {
+                                for(int j=0;j<extraKbdAccels.size();j++)
+                                {
+                                    if(extraKbdAccels[j].event==m->event)
+                                    {
+                                        QKeySequence extra(extraKbdAccels[j].shortCut);
+                                        a->setShortcut(extra);
+                                        extraKbdAccels.erase(extraKbdAccels.begin()+j);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                         break;
                 }

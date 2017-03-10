@@ -28,6 +28,7 @@ json.addBool("cap_refresh_enabled",key->features.cap_refresh_enabled);
 json.addUint32("cap_refresh_value",key->features.cap_refresh_value);
 json.addString("sdlDriver",key->features.sdlDriver);
 json.addBool("use_last_read_dir_as_target",key->features.use_last_read_dir_as_target);
+json.addBool("enable_extra_shortcuts",key->features.enable_extra_shortcuts);
 json.endNode();
 json.addNode("update");
 json.addBool("enabled",key->update.enabled);
