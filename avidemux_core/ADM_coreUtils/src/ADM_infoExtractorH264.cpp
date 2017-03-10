@@ -57,6 +57,7 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
                                     uint32_t *outLen, uint8_t *outData)
 {
+    int p;
     if(dataLen>200)
     {
         ADM_warning("SPS TOO LONG\n");
@@ -79,11 +80,12 @@ bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
     outData[8]=0x67; // Len LSB, should fit in 1 byte...
 #if 1
     memcpy(outData+9,incoming,dataLen);
-    int p=dataLen+9;
+    p=dataLen;
 #else
-    int p=ADM_unescapeH264(dataLen,incoming,outData+9) ;
+    p=ADM_unescapeH264(dataLen,incoming,outData+9) ;
 #endif
-    outData[7]=p; // Len LSB, should fit in 1 byte...
+    outData[7]=(p+1); // Len LSB, should fit in 1 byte...
+    outData[6]=(p+1)>>8; // MSB : And no, does not always fit
     *outLen= p+9;
     return true;
 }
