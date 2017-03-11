@@ -117,6 +117,7 @@ public slots:
         void actionSlot(Action a)
         {
             HandleAction(a);
+            setMenuItemsEnabledState();
         }
         void sendAction(Action a)
         {
@@ -127,6 +128,7 @@ public slots:
         void checkChanged(int);
 	void buttonPressed(void);
 	void toolButtonPressed(bool z);
+	void setMenuItemsEnabledState(void);
 
 	void comboChanged(int z);
 	void sliderValueChanged(int u);

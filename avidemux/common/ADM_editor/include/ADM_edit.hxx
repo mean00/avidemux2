@@ -196,6 +196,7 @@ virtual                         ~ADM_Composer();
                     bool        copyToClipBoard(uint64_t startTime, uint64_t endTime);
                     bool        pasteFromClipBoard(uint64_t currentTime);
                     bool        appendFromClipBoard(void);
+                    bool        clipboardEmpty(void);
                     bool     	addFile (const char *name);
 					int         appendFile(const char *name);
 					void		closeFile(void);
@@ -226,11 +227,15 @@ typedef std::vector <undoQueueElem> ListOfUndoQueueElements;
 
 protected:
                     ListOfUndoQueueElements undoQueue;
+                    static const uint8_t maxUndoSteps=50;
+                    uint32_t    _cnt; // track the nb of performed undo steps for redo
 public:
                     bool        addToUndoQueue(void);
                     bool        undo(void);
                     bool        redo(void);
                     bool        clearUndoQueue(void);
+                    bool        canUndo(void);
+                    bool        canRedo(void);
 /************************************ Public API ***************************/
 public:
                     uint64_t    getLastKeyFramePts(void);

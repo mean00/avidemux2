@@ -894,7 +894,7 @@ bool        ADM_EditorSegment::dumpClipBoard()
  */
 bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
 {
-    if(!clipboard.size())
+    if(clipboardEmpty())
     {
         ADM_info("The clipboard is empty, nothing to do\n");
         return true;
@@ -946,7 +946,7 @@ bool        ADM_EditorSegment::pasteFromClipBoard(uint64_t currentTime)
  */
 bool ADM_EditorSegment::appendFromClipBoard(void)
 {
-    if(!clipboard.size())
+    if(clipboardEmpty())
     {
         ADM_info("The clipboard is empty, nothing to do\n");
         return true;
@@ -957,6 +957,16 @@ bool ADM_EditorSegment::appendFromClipBoard(void)
     updateStartTime();
     dump();
     return true;
+}
+
+/**
+ * \fn clipboardEmpty
+ */
+bool ADM_EditorSegment::clipboardEmpty(void)
+{
+    if(!clipboard.size())
+        return true;
+    return false;
 }
 
 //EOF
