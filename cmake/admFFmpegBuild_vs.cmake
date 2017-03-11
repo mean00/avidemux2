@@ -28,6 +28,7 @@ xadd(--toolchain=msvc)
 
 #  Cross compiler override (win32 & win64)
 xadd(--extra-cflags  -I${VS_ROOT}/include)
+xadd(--extra-ldflags  user32.lib)
 
 message(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
@@ -62,6 +63,7 @@ ADM_FF_INSTALL_LIBS_AND_HEADERS()
 
 IF(USE_DXVA2)
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
+        INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/d3d11va.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
 ENDIF(USE_DXVA2)
 
