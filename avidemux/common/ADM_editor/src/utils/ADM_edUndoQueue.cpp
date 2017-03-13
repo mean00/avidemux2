@@ -17,9 +17,6 @@
 #include "ADM_segment.h"
 #include "ADM_edit.hxx"
 
-static const uint8_t maxUndoSteps=50;
-uint32_t _cnt; // track the nb of performed undo steps for redo
-
 /**
     \fn addToUndoQueue
     \brief stores the segment layout and markers in the undo queue
@@ -66,7 +63,7 @@ bool ADM_Composer::addToUndoQueue(void)
 
 bool ADM_Composer::undo(void)
 {
-    if(undoQueue.empty() || undoQueue.size()<_cnt+1)
+    if(!canUndo())
     {
         ADM_info("The undo queue is empty, nothing to do\n");
         return false;
@@ -94,7 +91,7 @@ bool ADM_Composer::undo(void)
 
 bool ADM_Composer::redo(void)
 {
-    if(_cnt<2 || undoQueue.size()<_cnt) // _cnt=2 once the first undo operation has been performed
+    if(!canRedo())
     {
         ADM_info("The redo queue is empty, cannot perform redo\n");
         return false;
@@ -115,6 +112,28 @@ bool ADM_Composer::redo(void)
 bool ADM_Composer::clearUndoQueue(void)
 {
     undoQueue.clear();
+    return true;
+}
+
+/**
+    \fn canUndo
+*/
+
+bool ADM_Composer::canUndo(void)
+{
+    if(undoQueue.empty() || undoQueue.size()<_cnt+1)
+        return false;
+    return true;
+}
+
+/**
+    \fn canRedo
+*/
+
+bool ADM_Composer::canRedo(void)
+{
+    if(_cnt<2 || undoQueue.size()<_cnt) // _cnt=2 once the first undo operation has been performed
+        return false;
     return true;
 }
 //EOF

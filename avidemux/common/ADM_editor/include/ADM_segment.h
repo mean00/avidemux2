@@ -198,6 +198,7 @@ public:
             bool        pasteFromClipBoard(uint64_t currentTime);
             bool        appendFromClipBoard(void);
             bool        dumpClipBoard();
+            bool        clipboardEmpty(void);
 protected:
             void        dumpSegmentsInternal(ListOfSegments &l);
 };
