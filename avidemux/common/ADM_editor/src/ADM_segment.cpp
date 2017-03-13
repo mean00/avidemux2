@@ -964,9 +964,7 @@ bool ADM_EditorSegment::appendFromClipBoard(void)
  */
 bool ADM_EditorSegment::clipboardEmpty(void)
 {
-    if(!clipboard.size())
-        return true;
-    return false;
+    return clipboard.empty();
 }
 
 //EOF

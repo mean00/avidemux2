@@ -17,6 +17,7 @@
 #include "myOwnMenu.h"
 #include "IScriptEngine.h"
 #include "prefs.h"
+#include "avi_vars.h"
 
 #define ENABLE_EVENT_FILTER
 
@@ -116,6 +117,12 @@ public slots:
         void dragTimerTimeout(void);
         void actionSlot(Action a)
         {
+            if(a==ACT_PlayAvi) // ugly
+            {
+                playing=1-playing;
+                setMenuItemsEnabledState();
+                playing=1-playing;
+            }
             HandleAction(a);
             setMenuItemsEnabledState();
         }
