@@ -436,6 +436,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu();
     // Crash in some cases addScriptReferencesToHelpMenu();
+    setMenuItemsEnabledState();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
     QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Projects"));
@@ -598,6 +599,71 @@ bool MainWindow::buildMyMenu(void)
 
     return true;
 }
+
+/**
+    \fn setMenuItemsEnabledState
+    \brief disable or enable some of the menu items
+*/
+void MainWindow::setMenuItemsEnabledState(void)
+{
+    bool vid=false, undo=false, redo=false, paste=false;
+    if(video_body->getVideoDuration())
+        vid=true; // a video is loaded
+
+    ui.menuFile->actions().at(1)->setEnabled(vid); // "Append"
+    ui.menuFile->actions().at(2)->setEnabled(vid); // "Save"
+    ui.menuFile->actions().at(3)->setEnabled(vid); // "Queue"
+    ui.menuFile->actions().at(4)->setEnabled(vid); // "Save as Image" submenu
+    ui.menuFile->actions().at(5)->setEnabled(vid); // "Close"
+    ui.menuFile->actions().at(9)->setEnabled(vid); // "Information"
+
+    ui.toolBar->actions().at(2)->setEnabled(vid); // "Save" button in the toolbar
+    ui.toolBar->actions().at(3)->setEnabled(vid); // "Information" button in the toolbar
+
+    for(int i=1;i<ui.menuView->actions().size();i++)
+    { // disable zoom if no video is loaded
+        ui.menuView->actions().at(i)->setEnabled(vid);
+    }
+    if(vid)
+    {
+        undo=video_body->canUndo();
+        redo=video_body->canRedo();
+        paste=1-(video_body->clipboardEmpty());
+    }
+    ui.menuEdit->actions().at(0)->setEnabled(undo); // menu item "Undo"
+    ui.menuEdit->actions().at(1)->setEnabled(redo); // menu item "Redo"
+    if(!vid || (!undo && !redo)) // if no edits have been performed, disable "Reset Edit" menu item
+    {
+        ui.menuEdit->actions().at(2)->setEnabled(false);
+    }else
+    {
+        ui.menuEdit->actions().at(2)->setEnabled(true);
+    }
+    ui.menuEdit->actions().at(3)->setEnabled(vid); // "Cut", this doesn't catch the case of cutting the entire video
+    ui.menuEdit->actions().at(4)->setEnabled(vid); // "Copy"
+    ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
+    ui.menuEdit->actions().at(6)->setEnabled(vid); // "Delete"
+    ui.menuEdit->actions().at(8)->setEnabled(vid); // marker A
+    ui.menuEdit->actions().at(9)->setEnabled(vid); // marker B
+    ui.menuEdit->actions().at(10)->setEnabled(vid); // reset markers
+    for(int i=0;i<ui.menuVideo->actions().size();i++)
+    {
+        ui.menuVideo->actions().at(i)->setEnabled(vid);
+    }
+    for(int i=0;i<ui.menuAudio->actions().size();i++)
+    {
+        ui.menuAudio->actions().at(i)->setEnabled(vid);
+    }
+    for(int i=0;i<ui.menuAuto->actions().size();i++)
+    {
+        ui.menuAuto->actions().at(i)->setEnabled(vid);
+    }
+    for(int i=0;i<ui.menuGo->actions().size();i++)
+    {
+        ui.menuGo->actions().at(i)->setEnabled(vid);
+    }
+}
+
 /**
  * \fn checkChanged
  * \brief the checkbox protecting timeshift value has changed
