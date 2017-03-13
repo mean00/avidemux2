@@ -1493,6 +1493,8 @@ uint8_t GUI_close(void)
 
 void GUI_avsProxy(void)
 {
+  if(playing)
+      return;
   uint8_t res;
 
 
