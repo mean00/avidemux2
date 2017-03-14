@@ -79,6 +79,8 @@ void UI_Qt4InitGl(void)
 	printf("[GL Render] OpenGL Version: %s\n", glGetString(GL_VERSION));
 	printf("[GL Render] OpenGL Extensions: %s\n", glGetString(GL_EXTENSIONS));
 
+    topGlWidgetRoot->hide();
+
 }
 /**
     \fn UI_Qt4CleanGl
