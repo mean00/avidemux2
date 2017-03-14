@@ -606,17 +606,62 @@ bool MainWindow::buildMyMenu(void)
 */
 void MainWindow::setMenuItemsEnabledState(void)
 {
+    if(playing) // this actually doesn't work as it should
+    {
+        for(int i=0;i<(ui.menuFile->actions().size()-1);i++)
+        {
+            ui.menuFile->actions().at(i)->setEnabled(false); // enable only the "Quit" menu item
+        }
+        for(int i=0;i<ui.menuEdit->actions().size();i++)
+        {
+            ui.menuEdit->actions().at(i)->setEnabled(false); // disable everything in the "Edit" menu
+        }
+        for(int i=1;i<ui.menuView->actions().size();i++)
+        {
+            ui.menuView->actions().at(i)->setEnabled(false); // disable zoom in the "View" menu
+        }
+        for(int i=0;i<ui.menuVideo->actions().size();i++)
+        {
+            ui.menuVideo->actions().at(i)->setEnabled(false); // disable everything in the "Video" menu
+        }
+        for(int i=0;i<ui.menuAudio->actions().size();i++)
+        {
+            ui.menuAudio->actions().at(i)->setEnabled(false); // disable everything in the "Audio" menu
+        }
+        for(int i=0;i<ui.menuAuto->actions().size();i++)
+        {
+            ui.menuAuto->actions().at(i)->setEnabled(false); // disable everything in the "Auto" menu
+        }
+        for(int i=1;i<ui.menuGo->actions().size();i++)
+        {
+            ui.menuGo->actions().at(i)->setEnabled(false); // in the "Go" menu, enable only "Start/Stop"
+        }
+        for(int i=0;i<ui.menuHelp->actions().size();i++)
+        {
+            ui.menuHelp->actions().at(i)->setEnabled(false); // disable everything in the "Help" menu
+        }
+        for(int i=1;i<ui.toolBar->actions().size();i++)
+        {
+            ui.toolBar->actions().at(i)->setEnabled(false); // disable all buttons (open, save and info) in the toolbar
+        }
+        return;
+    }
+
     bool vid=false, undo=false, redo=false, paste=false;
-    if(video_body->getVideoDuration())
+    if(avifileinfo)
         vid=true; // a video is loaded
 
+    ui.menuFile->actions().at(0)->setEnabled(true); // always enable open
     ui.menuFile->actions().at(1)->setEnabled(vid); // "Append"
     ui.menuFile->actions().at(2)->setEnabled(vid); // "Save"
     ui.menuFile->actions().at(3)->setEnabled(vid); // "Queue"
     ui.menuFile->actions().at(4)->setEnabled(vid); // "Save as Image" submenu
     ui.menuFile->actions().at(5)->setEnabled(vid); // "Close"
+    ui.menuFile->actions().at(7)->setEnabled(true); // always enable projects
     ui.menuFile->actions().at(9)->setEnabled(vid); // "Information"
+    ui.menuFile->actions().at(11)->setEnabled(true); // always enable avsproxy
 
+    ui.toolBar->actions().at(1)->setEnabled(true); // always enable open from the toolbar
     ui.toolBar->actions().at(2)->setEnabled(vid); // "Save" button in the toolbar
     ui.toolBar->actions().at(3)->setEnabled(vid); // "Information" button in the toolbar
 
@@ -646,6 +691,9 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.menuEdit->actions().at(8)->setEnabled(vid); // marker A
     ui.menuEdit->actions().at(9)->setEnabled(vid); // marker B
     ui.menuEdit->actions().at(10)->setEnabled(vid); // reset markers
+    ui.menuEdit->actions().at(12)->setEnabled(true); // preferences
+    ui.menuEdit->actions().at(14)->setEnabled(true); // set default configuration
+    ui.menuEdit->actions().at(15)->setEnabled(true); // load default configuration
     for(int i=0;i<ui.menuVideo->actions().size();i++)
     {
         ui.menuVideo->actions().at(i)->setEnabled(vid);
@@ -661,6 +709,10 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<ui.menuGo->actions().size();i++)
     {
         ui.menuGo->actions().at(i)->setEnabled(vid);
+    }
+    for(int i=0;i<ui.menuHelp->actions().size();i++)
+    {
+        ui.menuHelp->actions().at(i)->setEnabled(true); // enable everything in the "Help" menu
     }
 }
 
@@ -834,6 +886,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             break;
         case QEvent::User:
             this->openFiles(((FileDropEvent*)event)->files);
+            setMenuItemsEnabledState();
             break;
         default:
             break;
