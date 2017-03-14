@@ -778,8 +778,8 @@ int A_openVideo (const char *name)
 #endif
         /* remember any video or workbench file to "recent" */
         prefs->set_lastfile(longname);
-        UI_updateRecentMenu();
         updateLoaded();
+        UI_updateRecentMenu();
         if(video_body->getNumberOfActiveAudioTracks())
             audioCodecSetByIndex(0,ac); // try to preserve audio codec
         if (currentaudiostream)
