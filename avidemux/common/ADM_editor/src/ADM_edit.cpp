@@ -89,7 +89,14 @@ bool ADM_Composer::appendFromClipBoard(void)
 {
     return _segments.appendFromClipBoard();
 }
-
+/**
+    \fn clipboardEmpty
+    \brief Return true if we have nothing to paste or append
+*/
+bool ADM_Composer::clipboardEmpty(void)
+{
+    return _segments.clipboardEmpty();
+}
 /**
     \fn resetSeg
     \brief Redo a 1:1 mapping between ref video and segment

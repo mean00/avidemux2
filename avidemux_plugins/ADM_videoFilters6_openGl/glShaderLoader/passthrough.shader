@@ -3,7 +3,7 @@
     uniform sampler2DRect myTextureU; // tex unit 1
     uniform sampler2DRect myTextureV; // tex unit 2
     const vec2 half_vec=vec2(0.5,0.5);
-
+// This shader does nothing, just a pass through
     void main(void) {
       vec2 full_coord=gl_TexCoord[0].xy;
       vec2 half_coord=full_coord*half_vec;

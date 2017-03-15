@@ -596,8 +596,108 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
     buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
 
+    
+    // Make a list of the items that are enabled/disabled depending if video is loaded or  not
+    //-----------------------------------------------------------------------------------
+    for(int i=1;i<6;i++)
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
+    
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(2)); // "Save"
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
+    
+    for(int i=1;i<ui.menuView->actions().size();i++)
+    { // disable zoom if no video is loaded
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
+    }
+
+#define PUSH_FULL_MENU_LOADED(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsAvailableWhenFileLoaded.push_back(x.at(i));
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsDisabledOnPlayback.push_back(x.at(i));
+    
+    
+    for(int i=3;i<11;i++)
+    { 
+        if(i==7 || i==5) continue;
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
+    }
+
+#define PUSH_FULL_MENU_LOAD
+    PUSH_FULL_MENU_LOADED(ui.menuVideo->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuAudio->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuGo->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuAudio->actions(),0)
+    // Item disabled on playback
+    PUSH_FULL_MENU_PLAYBACK(ui.menuFile->actions(),1)
+    PUSH_FULL_MENU_PLAYBACK(ui.menuEdit->actions(),0)
+    PUSH_FULL_MENU_PLAYBACK(ui.menuView->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuVideo->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuAudio->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuAuto->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuGo->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuHelp->actions(),0)                        
+    PUSH_FULL_MENU_PLAYBACK(ui.toolBar->actions(),0)                        
+    
+#define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
+    
+    PUSH_ALWAYS_AVAILABLE(menuFile,0)
+    PUSH_ALWAYS_AVAILABLE(menuFile,7)
+    PUSH_ALWAYS_AVAILABLE(menuFile,11)
+
+    
+    PUSH_ALWAYS_AVAILABLE(menuEdit,12)
+    PUSH_ALWAYS_AVAILABLE(menuEdit,14)
+    PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
+            
+    ActionsAlwaysAvailable.push_back(ui.toolBar->actions().at(1));
+            
     return true;
 }
+
+/**
+    \fn setMenuItemsEnabledState
+    \brief disable or enable some of the menu items
+*/
+void MainWindow::setMenuItemsEnabledState(void)
+{
+    if(playing) // this actually doesn't work as it should
+    {
+        int n=ActionsDisabledOnPlayback.size();
+        for(int i=0;i<n;i++)
+            ActionsDisabledOnPlayback[i]->setEnabled(false);
+        return;
+    }
+
+    bool vid=false, undo=false, redo=false, paste=false;
+    if(avifileinfo)
+        vid=true; // a video is loaded
+
+    int n=ActionsAvailableWhenFileLoaded.size();
+    for(int i=0;i<n;i++)
+            ActionsAvailableWhenFileLoaded[i]->setEnabled(vid);
+    
+ 
+    if(vid)
+    {
+        undo=video_body->canUndo();
+        redo=video_body->canRedo();
+        paste=1-(video_body->clipboardEmpty());
+    }
+    ui.menuEdit->actions().at(0)->setEnabled(undo); // menu item "Undo"
+    ui.menuEdit->actions().at(1)->setEnabled(redo); // menu item "Redo"
+    if(!vid || (!undo && !redo)) // if no edits have been performed, disable "Reset Edit" menu item
+    {
+        ui.menuEdit->actions().at(2)->setEnabled(false);
+    }else
+    {
+        ui.menuEdit->actions().at(2)->setEnabled(true);
+    }
+    ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
+    
+    n=ActionsAlwaysAvailable.size();
+    for(int i=0;i<n;i++)
+        ActionsAlwaysAvailable[i]->setEnabled(true);
+    
+}
+
 /**
  * \fn checkChanged
  * \brief the checkbox protecting timeshift value has changed
@@ -1133,6 +1233,7 @@ Action searchTranslationTable(const char *name)
 void UI_updateRecentMenu( void )
 {
     ((MainWindow *)QuiMainWindows)->buildRecentMenu();
+    ((MainWindow *)QuiMainWindows)->setMenuItemsEnabledState();
 }
 
 void UI_updateRecentProjectMenu()

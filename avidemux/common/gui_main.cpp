@@ -778,8 +778,8 @@ int A_openVideo (const char *name)
 #endif
         /* remember any video or workbench file to "recent" */
         prefs->set_lastfile(longname);
-        UI_updateRecentMenu();
         updateLoaded();
+        UI_updateRecentMenu();
         if(video_body->getNumberOfActiveAudioTracks())
             audioCodecSetByIndex(0,ac); // try to preserve audio codec
         if (currentaudiostream)
@@ -1493,6 +1493,8 @@ uint8_t GUI_close(void)
 
 void GUI_avsProxy(void)
 {
+  if(playing)
+      return;
   uint8_t res;
 
 
