@@ -436,7 +436,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu();
     // Crash in some cases addScriptReferencesToHelpMenu();
-    setMenuItemsEnabledState();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
     QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Projects"));
@@ -886,7 +885,6 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             break;
         case QEvent::User:
             this->openFiles(((FileDropEvent*)event)->files);
-            setMenuItemsEnabledState();
             break;
         default:
             break;
@@ -1252,6 +1250,7 @@ Action searchTranslationTable(const char *name)
 void UI_updateRecentMenu( void )
 {
     ((MainWindow *)QuiMainWindows)->buildRecentMenu();
+    ((MainWindow *)QuiMainWindows)->setMenuItemsEnabledState();
 }
 
 void UI_updateRecentProjectMenu()
