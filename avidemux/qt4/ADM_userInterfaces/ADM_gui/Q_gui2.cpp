@@ -596,6 +596,83 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
     buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
 
+    
+    // Make a list of the items that are enabled/disabled depending if video is loaded or  not
+    
+    for(int i=1;i<6;i++)
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
+    
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(2)); // "Save"
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
+    
+    for(int i=1;i<ui.menuView->actions().size();i++)
+    { // disable zoom if no video is loaded
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
+    }
+
+    
+    for(int i=3;i<11;i++)
+    { 
+        if(i==7 || i==5) continue;
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
+    }
+
+    for(int i=0;i<ui.menuVideo->actions().size();i++)
+    {
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(i));
+    }
+    for(int i=0;i<ui.menuAudio->actions().size();i++)
+    {
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuAudio->actions().at(i));
+    }
+    for(int i=0;i<ui.menuAuto->actions().size();i++)
+    {
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuAuto->actions().at(i));
+    }
+    for(int i=0;i<ui.menuGo->actions().size();i++)
+    {
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuGo->actions().at(i));
+    }
+    
+    // List of actions disabled on playback
+    
+        for(int i=0;i<(ui.menuFile->actions().size()-1);i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuFile->actions().at(i));
+        }
+        for(int i=0;i<ui.menuEdit->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuEdit->actions().at(i));
+        }
+        for(int i=1;i<ui.menuView->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuView->actions().at(i));
+        }
+        for(int i=0;i<ui.menuVideo->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuVideo->actions().at(i));
+        }
+        for(int i=0;i<ui.menuAudio->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuAudio->actions().at(i));
+        }
+        for(int i=0;i<ui.menuAuto->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuAuto->actions().at(i));
+        }
+        for(int i=1;i<ui.menuGo->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
+        }
+        for(int i=0;i<ui.menuHelp->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.menuHelp->actions().at(i));
+        }
+        for(int i=1;i<ui.toolBar->actions().size();i++)
+        {
+            ActionsDisabledOnPlayback.push_back(ui.toolBar->actions().at(i));
+        }
+    
     return true;
 }
 
@@ -607,42 +684,9 @@ void MainWindow::setMenuItemsEnabledState(void)
 {
     if(playing) // this actually doesn't work as it should
     {
-        for(int i=0;i<(ui.menuFile->actions().size()-1);i++)
-        {
-            ui.menuFile->actions().at(i)->setEnabled(false); // enable only the "Quit" menu item
-        }
-        for(int i=0;i<ui.menuEdit->actions().size();i++)
-        {
-            ui.menuEdit->actions().at(i)->setEnabled(false); // disable everything in the "Edit" menu
-        }
-        for(int i=1;i<ui.menuView->actions().size();i++)
-        {
-            ui.menuView->actions().at(i)->setEnabled(false); // disable zoom in the "View" menu
-        }
-        for(int i=0;i<ui.menuVideo->actions().size();i++)
-        {
-            ui.menuVideo->actions().at(i)->setEnabled(false); // disable everything in the "Video" menu
-        }
-        for(int i=0;i<ui.menuAudio->actions().size();i++)
-        {
-            ui.menuAudio->actions().at(i)->setEnabled(false); // disable everything in the "Audio" menu
-        }
-        for(int i=0;i<ui.menuAuto->actions().size();i++)
-        {
-            ui.menuAuto->actions().at(i)->setEnabled(false); // disable everything in the "Auto" menu
-        }
-        for(int i=1;i<ui.menuGo->actions().size();i++)
-        {
-            ui.menuGo->actions().at(i)->setEnabled(false); // in the "Go" menu, enable only "Start/Stop"
-        }
-        for(int i=0;i<ui.menuHelp->actions().size();i++)
-        {
-            ui.menuHelp->actions().at(i)->setEnabled(false); // disable everything in the "Help" menu
-        }
-        for(int i=1;i<ui.toolBar->actions().size();i++)
-        {
-            ui.toolBar->actions().at(i)->setEnabled(false); // disable all buttons (open, save and info) in the toolbar
-        }
+        int n=ActionsDisabledOnPlayback.size();
+        for(int i=0;i<n;i++)
+            ActionsDisabledOnPlayback[i]->setEnabled(false);
         return;
     }
 
@@ -650,24 +694,15 @@ void MainWindow::setMenuItemsEnabledState(void)
     if(avifileinfo)
         vid=true; // a video is loaded
 
+    int n=ActionsAvailableWhenFileLoaded.size();
+    for(int i=0;i<n;i++)
+            ActionsAvailableWhenFileLoaded[i]->setEnabled(vid);
+    
     ui.menuFile->actions().at(0)->setEnabled(true); // always enable open
-    ui.menuFile->actions().at(1)->setEnabled(vid); // "Append"
-    ui.menuFile->actions().at(2)->setEnabled(vid); // "Save"
-    ui.menuFile->actions().at(3)->setEnabled(vid); // "Queue"
-    ui.menuFile->actions().at(4)->setEnabled(vid); // "Save as Image" submenu
-    ui.menuFile->actions().at(5)->setEnabled(vid); // "Close"
     ui.menuFile->actions().at(7)->setEnabled(true); // always enable projects
-    ui.menuFile->actions().at(9)->setEnabled(vid); // "Information"
     ui.menuFile->actions().at(11)->setEnabled(true); // always enable avsproxy
-
     ui.toolBar->actions().at(1)->setEnabled(true); // always enable open from the toolbar
-    ui.toolBar->actions().at(2)->setEnabled(vid); // "Save" button in the toolbar
-    ui.toolBar->actions().at(3)->setEnabled(vid); // "Information" button in the toolbar
-
-    for(int i=1;i<ui.menuView->actions().size();i++)
-    { // disable zoom if no video is loaded
-        ui.menuView->actions().at(i)->setEnabled(vid);
-    }
+    
     if(vid)
     {
         undo=video_body->canUndo();
@@ -683,36 +718,10 @@ void MainWindow::setMenuItemsEnabledState(void)
     {
         ui.menuEdit->actions().at(2)->setEnabled(true);
     }
-    ui.menuEdit->actions().at(3)->setEnabled(vid); // "Cut", this doesn't catch the case of cutting the entire video
-    ui.menuEdit->actions().at(4)->setEnabled(vid); // "Copy"
     ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
-    ui.menuEdit->actions().at(6)->setEnabled(vid); // "Delete"
-    ui.menuEdit->actions().at(8)->setEnabled(vid); // marker A
-    ui.menuEdit->actions().at(9)->setEnabled(vid); // marker B
-    ui.menuEdit->actions().at(10)->setEnabled(vid); // reset markers
     ui.menuEdit->actions().at(12)->setEnabled(true); // preferences
     ui.menuEdit->actions().at(14)->setEnabled(true); // set default configuration
-    ui.menuEdit->actions().at(15)->setEnabled(true); // load default configuration
-    for(int i=0;i<ui.menuVideo->actions().size();i++)
-    {
-        ui.menuVideo->actions().at(i)->setEnabled(vid);
-    }
-    for(int i=0;i<ui.menuAudio->actions().size();i++)
-    {
-        ui.menuAudio->actions().at(i)->setEnabled(vid);
-    }
-    for(int i=0;i<ui.menuAuto->actions().size();i++)
-    {
-        ui.menuAuto->actions().at(i)->setEnabled(vid);
-    }
-    for(int i=0;i<ui.menuGo->actions().size();i++)
-    {
-        ui.menuGo->actions().at(i)->setEnabled(vid);
-    }
-    for(int i=0;i<ui.menuHelp->actions().size();i++)
-    {
-        ui.menuHelp->actions().at(i)->setEnabled(true); // enable everything in the "Help" menu
-    }
+    ui.menuEdit->actions().at(15)->setEnabled(true); // load default configuration  
 }
 
 /**

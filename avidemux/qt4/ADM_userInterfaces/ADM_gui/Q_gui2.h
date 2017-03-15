@@ -111,6 +111,9 @@ protected:
     bool     refreshCapEnabled;
     uint32_t refreshCapValue;
 
+    std::vector<QAction *>ActionsAvailableWhenFileLoaded;
+    std::vector<QAction *>ActionsDisabledOnPlayback;
+    std::vector<QAction *>ActionsAlwaysAvailable;
 
 public slots:
         void updateAvailableSlot(int version, std::string date, std::string url);
