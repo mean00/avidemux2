@@ -212,6 +212,12 @@ void MainWindow::buildCustomMenu(void)
 
     this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
+
+#define PUSH_FULL_MENU_LOADED(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsAvailableWhenFileLoaded.push_back(x.at(i));
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsDisabledOnPlayback.push_back(x.at(i));
+
+    PUSH_FULL_MENU_LOADED(ui.menuAuto->actions(),0)
+    PUSH_FULL_MENU_PLAYBACK(ui.menuAuto->actions(),0)
 }
 
 void MainWindow::buildRecentMenu(QMenu *menu, std::vector<std::string>files, QAction **actions)
