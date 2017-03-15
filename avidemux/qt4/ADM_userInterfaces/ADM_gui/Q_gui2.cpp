@@ -598,7 +598,7 @@ bool MainWindow::buildMyMenu(void)
 
     
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
-    
+    //-----------------------------------------------------------------------------------
     for(int i=1;i<6;i++)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
     
@@ -610,6 +610,9 @@ bool MainWindow::buildMyMenu(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
     }
 
+#define PUSH_FULL_MENU_LOADED(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsAvailableWhenFileLoaded.push_back(x.at(i));
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsDisabledOnPlayback.push_back(x.at(i));
+    
     
     for(int i=3;i<11;i++)
     { 
@@ -617,62 +620,35 @@ bool MainWindow::buildMyMenu(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
     }
 
-    for(int i=0;i<ui.menuVideo->actions().size();i++)
-    {
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(i));
-    }
-    for(int i=0;i<ui.menuAudio->actions().size();i++)
-    {
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuAudio->actions().at(i));
-    }
-    for(int i=0;i<ui.menuAuto->actions().size();i++)
-    {
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuAuto->actions().at(i));
-    }
-    for(int i=0;i<ui.menuGo->actions().size();i++)
-    {
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuGo->actions().at(i));
-    }
+#define PUSH_FULL_MENU_LOAD
+    PUSH_FULL_MENU_LOADED(ui.menuVideo->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuAudio->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuGo->actions(),0)
+    PUSH_FULL_MENU_LOADED(ui.menuAudio->actions(),0)
+    // Item disabled on playback
+    PUSH_FULL_MENU_PLAYBACK(ui.menuFile->actions(),1)
+    PUSH_FULL_MENU_PLAYBACK(ui.menuEdit->actions(),0)
+    PUSH_FULL_MENU_PLAYBACK(ui.menuView->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuVideo->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuAudio->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuAuto->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuGo->actions(),0)            
+    PUSH_FULL_MENU_PLAYBACK(ui.menuHelp->actions(),0)                        
+    PUSH_FULL_MENU_PLAYBACK(ui.toolBar->actions(),0)                        
     
-    // List of actions disabled on playback
+#define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
     
-        for(int i=0;i<(ui.menuFile->actions().size()-1);i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuFile->actions().at(i));
-        }
-        for(int i=0;i<ui.menuEdit->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuEdit->actions().at(i));
-        }
-        for(int i=1;i<ui.menuView->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuView->actions().at(i));
-        }
-        for(int i=0;i<ui.menuVideo->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuVideo->actions().at(i));
-        }
-        for(int i=0;i<ui.menuAudio->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuAudio->actions().at(i));
-        }
-        for(int i=0;i<ui.menuAuto->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuAuto->actions().at(i));
-        }
-        for(int i=1;i<ui.menuGo->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
-        }
-        for(int i=0;i<ui.menuHelp->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.menuHelp->actions().at(i));
-        }
-        for(int i=1;i<ui.toolBar->actions().size();i++)
-        {
-            ActionsDisabledOnPlayback.push_back(ui.toolBar->actions().at(i));
-        }
+    PUSH_ALWAYS_AVAILABLE(menuFile,0)
+    PUSH_ALWAYS_AVAILABLE(menuFile,7)
+    PUSH_ALWAYS_AVAILABLE(menuFile,11)
+
     
+    PUSH_ALWAYS_AVAILABLE(menuEdit,12)
+    PUSH_ALWAYS_AVAILABLE(menuEdit,14)
+    PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
+            
+    ActionsAlwaysAvailable.push_back(ui.toolBar->actions().at(1));
+            
     return true;
 }
 
@@ -698,11 +674,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<n;i++)
             ActionsAvailableWhenFileLoaded[i]->setEnabled(vid);
     
-    ui.menuFile->actions().at(0)->setEnabled(true); // always enable open
-    ui.menuFile->actions().at(7)->setEnabled(true); // always enable projects
-    ui.menuFile->actions().at(11)->setEnabled(true); // always enable avsproxy
-    ui.toolBar->actions().at(1)->setEnabled(true); // always enable open from the toolbar
-    
+ 
     if(vid)
     {
         undo=video_body->canUndo();
@@ -719,9 +691,11 @@ void MainWindow::setMenuItemsEnabledState(void)
         ui.menuEdit->actions().at(2)->setEnabled(true);
     }
     ui.menuEdit->actions().at(5)->setEnabled(paste); // "Paste"
-    ui.menuEdit->actions().at(12)->setEnabled(true); // preferences
-    ui.menuEdit->actions().at(14)->setEnabled(true); // set default configuration
-    ui.menuEdit->actions().at(15)->setEnabled(true); // load default configuration  
+    
+    n=ActionsAlwaysAvailable.size();
+    for(int i=0;i<n;i++)
+        ActionsAlwaysAvailable[i]->setEnabled(true);
+    
 }
 
 /**
