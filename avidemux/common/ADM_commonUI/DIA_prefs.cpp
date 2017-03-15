@@ -65,6 +65,7 @@ char     *alsaDevice=NULL;
 
 bool     balternate_mp3_tag=true;
 bool     lastReadDirAsTarget=false;
+bool     extraShortcuts=false;
 
 uint32_t pp_type=3;
 uint32_t pp_value=5;
@@ -166,6 +167,9 @@ std::string currentSdlDriver=getSdlDriverName();
         // Make users happy who prefer the output dir to be the same as the input dir
         prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadDirAsTarget);
 
+        // PgUp and PgDown are cumbersome to reach on some laptops, offer alternative kbd accels
+        prefs->get(FEATURES_ENABLE_EXTRA_SHORTCUTS,&extraShortcuts);
+
         // Multithreads
         prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
@@ -219,6 +223,7 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
         diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
+        diaElemToggle enableExtraShortcuts(&extraShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts (requires restart)"));
         diaElemToggle checkForUpdate(&doAutoUpdate,QT_TRANSLATE_NOOP("adm","_Check for new release"));
 
 
@@ -422,8 +427,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* User Interface */
-        diaElem *diaUser[]={&menuMessage,&menuLanguage,&resetEncoder,&checkForUpdate};
-        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),4,diaUser);
+        diaElem *diaUser[]={&menuMessage,&menuLanguage,&resetEncoder,&enableExtraShortcuts,&checkForUpdate};
+        diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm","User Interface"),5,diaUser);
 
          /* Automation */
 
@@ -617,6 +622,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
+            // PgUp and PgDown are cumbersome to reach on some laptops, offer alternative kbd shortcuts
+            prefs->set(FEATURES_ENABLE_EXTRA_SHORTCUTS,extraShortcuts);
 
             prefs->set(DEFAULT_LANGUAGE,std::string(myLanguages[languageIndex].lang));
 
