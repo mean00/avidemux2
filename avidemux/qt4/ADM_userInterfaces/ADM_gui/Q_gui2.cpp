@@ -518,6 +518,12 @@ void MainWindow::searchToolBar(QAction *action)
 */
 bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 {
+    bool alt=false, swpud=false;
+    if(menu==&myMenuEdit[0] || menu==&myMenuGo[0])
+    {
+        prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&alt);
+        prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
+    }
     QMenu *subMenu=NULL;
     for(int i=0;i<nb;i++)
     {
@@ -549,8 +555,45 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 			a->setMenuRole(QAction::NoRole);
 #endif 
                         m->cookie=(void *)a;
-                        if(m->shortCut)
+                        if(swpud && m->shortCut=="Up")
+                            a->setShortcut(QKeySequence("Down"));
+                        else if(swpud && m->shortCut=="Down")
+                            a->setShortcut(QKeySequence("Up"));
+                        else if(m->shortCut)
                         {
+                            if(alt)
+                            {
+                                std::string sc="";
+                                switch(m->event)
+                                {
+                                    case ACT_MarkA:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_A,sc);
+                                        break;
+                                    case ACT_MarkB:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
+                                        break;
+                                    case ACT_ResetMarkers:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARKERS,sc);
+                                        break;
+                                    case ACT_GotoMarkA:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_GOTO_MARK_A,sc);
+                                        break;
+                                    case ACT_GotoMarkB:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_GOTO_MARK_B,sc);
+                                        break;
+                                    case ACT_Begin:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_BEGIN,sc);
+                                        break;
+                                    case ACT_End:
+                                        prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
+                                        break;
+                                    default:
+                                        sc=std::string(m->shortCut);
+                                }
+                                QString qsc=QString::fromUtf8(sc.c_str());
+                                a->setShortcut(QKeySequence(qsc));
+                                break;
+                            }
                             QKeySequence s(m->shortCut);
                             a->setShortcut(s);
                         }
@@ -788,7 +831,8 @@ void MainWindow::toolButtonPressed(bool i)
 bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 {
     QKeyEvent *keyEvent;
-
+    bool swpud=false;
+    prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
     switch (event->type())
     {
         case QEvent::KeyPress:
@@ -821,16 +865,34 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
                         return true;
                     case Qt::Key_Up:
-                                                if (keyEvent->modifiers() == Qt::ControlModifier) 
-                                                    sendAction(ACT_Forward1Mn);
-                                                else
-                                                    sendAction(ACT_NextKFrame);
+                        if (keyEvent->modifiers() == Qt::ControlModifier)
+                        {
+                            if(!swpud)
+                                sendAction(ACT_Forward1Mn);
+                            else
+                                sendAction(ACT_Back1Mn);
+                        }else
+                        {
+                            if(!swpud)
+                                sendAction(ACT_NextKFrame);
+                            else
+                                sendAction(ACT_PreviousKFrame);
+                        }
                         return true;
                     case Qt::Key_Down:
-                                                if (keyEvent->modifiers() == Qt::ControlModifier) 
-                                                    sendAction(ACT_Back1Mn);
-                                                else                                            
-                                                    sendAction(ACT_PreviousKFrame);
+                        if (keyEvent->modifiers() == Qt::ControlModifier)
+                        {
+                            if(!swpud)
+                                sendAction(ACT_Back1Mn);
+                            else
+                                sendAction(ACT_Forward1Mn);
+                        }else
+                        {
+                            if(!swpud)
+                                sendAction(ACT_NextKFrame);
+                            else
+                                sendAction(ACT_PreviousKFrame);
+                        }
                         return true;
                     case Qt::Key_Shift:
                         shiftKeyHeld = 1;
