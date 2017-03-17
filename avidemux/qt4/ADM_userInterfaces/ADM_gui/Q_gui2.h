@@ -95,6 +95,7 @@ public:
 	void buildCustomMenu(void);
 	void buildRecentMenu(void);
 	void buildRecentProjectMenu(void);
+	void updateActionShortcuts(void);
         static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
         static MainWindow *mainWindowSingleton;
 
@@ -194,6 +195,8 @@ protected:
         bool buildMyMenu(void);
         bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
 	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
+        void buildActionLists(void);
+        void widgetsUpdateTooltips(void);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
 #ifdef   ENABLE_EVENT_FILTER      
