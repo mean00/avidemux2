@@ -436,6 +436,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildMyMenu();
     buildCustomMenu();
     buildActionLists();
+    buildButtonLists();
     // Crash in some cases addScriptReferencesToHelpMenu();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
@@ -721,6 +722,59 @@ void MainWindow::buildActionLists(void)
 }
 
 /**
+    \fn buildButtonLists
+*/
+void MainWindow::buildButtonLists(void)
+{
+    ButtonsAvailableWhenFileLoaded.clear();
+    ButtonsDisabledOnPlayback.clear();
+    PushButtonsAvailableWhenFileLoaded.clear();
+    PushButtonsDisabledOnPlayback.clear();
+
+#define ADD_BUTTON_LOADED(x)    ButtonsAvailableWhenFileLoaded.push_back(ui.x);
+#define ADD_BUTTON_PLAYBACK(x)    ButtonsDisabledOnPlayback.push_back(ui.x);
+
+    ADD_BUTTON_LOADED(toolButtonPlay)
+    ADD_BUTTON_LOADED(toolButtonStop)
+    ADD_BUTTON_LOADED(toolButtonPreviousFrame)
+    ADD_BUTTON_LOADED(toolButtonNextFrame)
+    ADD_BUTTON_LOADED(toolButtonPreviousIntraFrame)
+    ADD_BUTTON_LOADED(toolButtonNextIntraFrame)
+    ADD_BUTTON_LOADED(toolButtonSetMarkerA)
+    ADD_BUTTON_LOADED(toolButtonSetMarkerB)
+    ADD_BUTTON_LOADED(toolButtonPreviousBlackFrame)
+    ADD_BUTTON_LOADED(toolButtonNextBlackFrame)
+    ADD_BUTTON_LOADED(toolButtonFirstFrame)
+    ADD_BUTTON_LOADED(toolButtonLastFrame)
+    ADD_BUTTON_LOADED(toolButtonBackOneMinute)
+    ADD_BUTTON_LOADED(toolButtonForwardOneMinute)
+
+    ADD_BUTTON_PLAYBACK(toolButtonPreviousFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonNextFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonPreviousIntraFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonNextIntraFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonSetMarkerA)
+    ADD_BUTTON_PLAYBACK(toolButtonSetMarkerB)
+    ADD_BUTTON_PLAYBACK(toolButtonPreviousBlackFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonNextBlackFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonFirstFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonLastFrame)
+    ADD_BUTTON_PLAYBACK(toolButtonBackOneMinute)
+    ADD_BUTTON_PLAYBACK(toolButtonForwardOneMinute)
+
+#define ADD_PUSHBUTTON_LOADED(x)    PushButtonsAvailableWhenFileLoaded.push_back(ui.x);
+#define ADD_PUSHBUTTON_PLAYBACK(x)    PushButtonsDisabledOnPlayback.push_back(ui.x);
+
+    ADD_PUSHBUTTON_LOADED(pushButtonTime)
+    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerA)
+    ADD_PUSHBUTTON_LOADED(pushButtonJumpToMarkerB)
+
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonTime)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
+}
+
+/**
     \fn setMenuItemsEnabledState
     \brief disable or enable some of the menu items
 */
@@ -731,6 +785,15 @@ void MainWindow::setMenuItemsEnabledState(void)
         int n=ActionsDisabledOnPlayback.size();
         for(int i=0;i<n;i++)
             ActionsDisabledOnPlayback[i]->setEnabled(false);
+
+        int ntb=ButtonsDisabledOnPlayback.size();
+        for(int i=0;i<ntb;i++)
+            ButtonsDisabledOnPlayback[i]->setEnabled(false);
+
+        int npb=PushButtonsDisabledOnPlayback.size();
+        for(int i=0;i<npb;i++)
+            PushButtonsDisabledOnPlayback[i]->setEnabled(false);
+
         return;
     }
 
@@ -740,8 +803,16 @@ void MainWindow::setMenuItemsEnabledState(void)
 
     int n=ActionsAvailableWhenFileLoaded.size();
     for(int i=0;i<n;i++)
-            ActionsAvailableWhenFileLoaded[i]->setEnabled(vid);
- 
+        ActionsAvailableWhenFileLoaded[i]->setEnabled(vid);
+
+    int ntb=ButtonsAvailableWhenFileLoaded.size();
+    for(int i=0;i<ntb;i++)
+        ButtonsAvailableWhenFileLoaded[i]->setEnabled(vid);
+
+    int npb=PushButtonsAvailableWhenFileLoaded.size();
+    for(int i=0;i<npb;i++)
+        PushButtonsAvailableWhenFileLoaded[i]->setEnabled(vid);
+
     if(vid)
     {
         undo=video_body->canUndo();

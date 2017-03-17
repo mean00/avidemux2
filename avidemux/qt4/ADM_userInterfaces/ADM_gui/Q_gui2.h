@@ -115,6 +115,10 @@ protected:
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
     std::vector<QAction *>ActionsAlwaysAvailable;
+    std::vector<QToolButton *>ButtonsAvailableWhenFileLoaded;
+    std::vector<QToolButton *>ButtonsDisabledOnPlayback;
+    std::vector<QPushButton *>PushButtonsAvailableWhenFileLoaded;
+    std::vector<QPushButton *>PushButtonsDisabledOnPlayback;
 
 public slots:
         void updateAvailableSlot(int version, std::string date, std::string url);
@@ -196,6 +200,7 @@ protected:
         bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
 	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
         void buildActionLists(void);
+        void buildButtonLists(void);
         void widgetsUpdateTooltips(void);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
