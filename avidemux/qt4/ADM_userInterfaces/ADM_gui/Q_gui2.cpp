@@ -474,6 +474,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.volumeWidget->setTitleBarWidget(dummy3);
     ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
+    widgetsUpdateTooltips();
+
     this->adjustSize();
         QuiTaskBarProgress=createADMTaskBarProgress();
 }
@@ -832,6 +834,74 @@ void MainWindow::updateActionShortcuts(void)
             a->setShortcut(s);
         }
     }
+
+    widgetsUpdateTooltips();
+
+}
+
+/**
+    \fn widgetsUpdateTooltips
+    \brief Update tooltips showing tunable action shortcuts in the navigation and selection widgets
+*/
+void MainWindow::widgetsUpdateTooltips(void)
+{
+    std::vector<QString> ListOfShortcuts;
+    for(int i=0;i<12;i++)
+    {
+        if(i==5 || i==6 || i==9) continue;
+        QKeySequence seq=ui.menuGo->actions().at(i)->shortcut();
+        QString s=seq.toString().toUpper();
+        ListOfShortcuts.push_back(s);
+    }
+
+    for(int i=8;i<10;i++)
+    {
+        QKeySequence seq=ui.menuEdit->actions().at(i)->shortcut();
+        QString s=seq.toString().toUpper();
+        ListOfShortcuts.push_back(s);
+    }
+
+    QString tt;
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Play/Stop"))+QString(" [")+ListOfShortcuts[0]+QString("]");
+    ui.toolButtonPlay->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Stop"))+QString(" [")+ListOfShortcuts[0]+QString("]");
+    ui.toolButtonStop->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to previous frame"))+QString(" [")+ListOfShortcuts[1]+QString("]");
+    ui.toolButtonPreviousFrame->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to next frame"))+QString(" [")+ListOfShortcuts[2]+QString("]");
+    ui.toolButtonNextFrame->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to previous keyframe"))+QString(" [")+ListOfShortcuts[3]+QString("]");
+    ui.toolButtonPreviousIntraFrame->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to next keyframe"))+QString(" [")+ListOfShortcuts[4]+QString("]");
+    ui.toolButtonNextIntraFrame->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Set start marker"))+QString(" [")+ListOfShortcuts[9]+QString("]");
+    ui.toolButtonSetMarkerA->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Set end marker"))+QString(" [")+ListOfShortcuts[10]+QString("]");
+    ui.toolButtonSetMarkerB->setToolTip(tt);
+
+    // go to black frame tooltips are static, the actions don't have shortcuts
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to first frame"))+QString(" [")+ListOfShortcuts[5]+QString("]");
+    ui.toolButtonFirstFrame->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to last frame"))+QString(" [")+ListOfShortcuts[6]+QString("]");
+    ui.toolButtonLastFrame->setToolTip(tt);
+
+    // 1 minute back and forward buttons' tooltips are static, the action shortcuts are not tunable and not defined via myOwnMenu.h
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker A"))+QString(" [")+ListOfShortcuts[7]+QString("]");
+    ui.pushButtonJumpToMarkerA->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker B"))+QString(" [")+ListOfShortcuts[8]+QString("]");
+    ui.pushButtonJumpToMarkerB->setToolTip(tt);
 }
 
 /**

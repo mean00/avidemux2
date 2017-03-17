@@ -196,6 +196,7 @@ protected:
         bool buildMenu(QMenu *root,MenuEntry *menu, int nb);
 	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
         void buildActionLists(void);
+        void widgetsUpdateTooltips(void);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
 #ifdef   ENABLE_EVENT_FILTER      
