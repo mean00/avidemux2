@@ -213,11 +213,6 @@ void MainWindow::buildCustomMenu(void)
     this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
 
-    for(int i=0;i<ui.menuAuto->actions().size();i++)
-    {
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuAuto->actions().at(i));
-        ActionsDisabledOnPlayback.push_back(ui.menuAuto->actions().at(i));
-    }
 }
 
 void MainWindow::buildRecentMenu(QMenu *menu, std::vector<std::string>files, QAction **actions)

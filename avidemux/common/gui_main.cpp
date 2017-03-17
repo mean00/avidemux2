@@ -297,6 +297,7 @@ void HandleAction (Action action)
         {
             ADM_info("Saving prefs\n");
             prefs->save ();
+            UI_updateActionShortcuts();
         }
         return;
     case ACT_SavePref:

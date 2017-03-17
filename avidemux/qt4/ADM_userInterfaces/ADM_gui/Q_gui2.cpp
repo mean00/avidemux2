@@ -435,6 +435,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     addScriptShellsToToolsMenu(myMenuTool);
     buildMyMenu();
     buildCustomMenu();
+    buildActionLists();
     // Crash in some cases addScriptReferencesToHelpMenu();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
@@ -639,14 +640,26 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
     buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
 
+    return true;
+}
+
+/**
+    \fn buildActionLists
+*/
+void MainWindow::buildActionLists(void)
+{
+    ActionsAvailableWhenFileLoaded.clear();
+    ActionsDisabledOnPlayback.clear();
+    ActionsAlwaysAvailable.clear();
+
     // Make a list of the items that are enabled/disabled depending if video is loaded or  not
     //-----------------------------------------------------------------------------------
     for(int i=1;i<6;i++)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
-    
+
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(2)); // "Save"
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
-    
+
     for(int i=1;i<ui.menuView->actions().size();i++)
     { // disable zoom if no video is loaded
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
@@ -667,8 +680,8 @@ bool MainWindow::buildMyMenu(void)
         ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
     }
 
-#define PUSH_FULL_MENU_LOADED(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsAvailableWhenFileLoaded.push_back(x.at(i));
-#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset)  for(int i=0;i<x.size()-tailOffset;i++)        ActionsDisabledOnPlayback.push_back(x.at(i));
+#define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsAvailableWhenFileLoaded.push_back(ui.x->actions().at(i));
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsDisabledOnPlayback.push_back(ui.x->actions().at(i));
     
     for(int i=3;i<11;i++)
     { 
@@ -676,16 +689,18 @@ bool MainWindow::buildMyMenu(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
     }
 
-    PUSH_FULL_MENU_LOADED(ui.menuVideo->actions(),0)
-    PUSH_FULL_MENU_LOADED(ui.menuAudio->actions(),0)
-    PUSH_FULL_MENU_LOADED(ui.menuGo->actions(),0)
+    PUSH_FULL_MENU_LOADED(menuVideo,0)
+    PUSH_FULL_MENU_LOADED(menuAudio,0)
+    PUSH_FULL_MENU_LOADED(menuAuto,0)
+    PUSH_FULL_MENU_LOADED(menuGo,0)
     // Item disabled on playback
-    PUSH_FULL_MENU_PLAYBACK(ui.menuFile->actions(),1)
-    PUSH_FULL_MENU_PLAYBACK(ui.menuEdit->actions(),0)
-    PUSH_FULL_MENU_PLAYBACK(ui.menuVideo->actions(),0)            
-    PUSH_FULL_MENU_PLAYBACK(ui.menuAudio->actions(),0)            
-    PUSH_FULL_MENU_PLAYBACK(ui.menuHelp->actions(),0)                        
-    PUSH_FULL_MENU_PLAYBACK(ui.toolBar->actions(),0)                        
+    PUSH_FULL_MENU_PLAYBACK(menuFile,1)
+    PUSH_FULL_MENU_PLAYBACK(menuEdit,0)
+    PUSH_FULL_MENU_PLAYBACK(menuVideo,0)
+    PUSH_FULL_MENU_PLAYBACK(menuAudio,0)
+    PUSH_FULL_MENU_PLAYBACK(menuAuto,0)
+    PUSH_FULL_MENU_PLAYBACK(menuHelp,0)
+    PUSH_FULL_MENU_PLAYBACK(toolBar,0)
 
     // "Always available" below doesn't override the list of menu items disabled during playback
 
@@ -699,9 +714,8 @@ bool MainWindow::buildMyMenu(void)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
     PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
 
-    ActionsAlwaysAvailable.push_back(ui.toolBar->actions().at(1));
+    PUSH_ALWAYS_AVAILABLE(toolBar,1)
 
-    return true;
 }
 
 /**
@@ -747,6 +761,77 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<n;i++)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
+}
+
+/**
+    \fn updateActionShortcuts
+*/
+void MainWindow::updateActionShortcuts(void)
+{
+    std::vector<MenuEntry *> defaultShortcuts;
+    std::vector<QAction *> listOfActionsToUpdate;
+    bool alt=false, swpud=false;
+    prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&alt);
+    prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
+
+    ui.menuGo->actions().at(4-swpud)->setShortcut(Qt::Key_Up);
+    ui.menuGo->actions().at(3+swpud)->setShortcut(Qt::Key_Down);
+
+    for(int i=8;i<11;i++)
+    {
+        defaultShortcuts.push_back(&myMenuEdit[i]);
+        listOfActionsToUpdate.push_back(ui.menuEdit->actions().at(i));
+    }
+
+    for(int i=7;i<12;i++)
+    {
+        if(i==9) continue;
+        defaultShortcuts.push_back(&myMenuGo[i]);
+        listOfActionsToUpdate.push_back(ui.menuGo->actions().at(i));
+    }
+
+    int n=listOfActionsToUpdate.size();
+    for(int i=0;i<n;i++)
+    {
+        MenuEntry *m=defaultShortcuts.at(i);
+        QAction *a=listOfActionsToUpdate.at(i);
+        if(alt)
+        {
+            std::string sc="";
+            switch(m->event)
+            {
+                case ACT_MarkA:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_A,sc);
+                    break;
+                case ACT_MarkB:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_MARK_B,sc);
+                    break;
+                case ACT_ResetMarkers:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_RESET_MARKERS,sc);
+                    break;
+                case ACT_GotoMarkA:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_GOTO_MARK_A,sc);
+                    break;
+                case ACT_GotoMarkB:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_GOTO_MARK_B,sc);
+                    break;
+                case ACT_Begin:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_BEGIN,sc);
+                    break;
+                case ACT_End:
+                    prefs->get(KEYBOARD_SHORTCUTS_ALT_END,sc);
+                    break;
+                default:
+                    sc=std::string(m->shortCut);
+            }
+            QString qsc=QString::fromUtf8(sc.c_str());
+            a->setShortcut(QKeySequence(qsc));
+        }else
+        {
+            QKeySequence s(m->shortCut);
+            a->setShortcut(s);
+        }
+    }
 }
 
 /**
@@ -1167,7 +1252,13 @@ void UI_refreshCustomMenu(void)
 {
     ((MainWindow*)QuiMainWindows)->buildCustomMenu();
 }
-
+/**
+    \fn UI_updateActionShortcuts
+*/
+void UI_updateActionShortcuts(void)
+{
+    ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
+}
 /**
     \fn UI_getCurrentPreview(void)
     \brief Read previewmode from comboxbox
