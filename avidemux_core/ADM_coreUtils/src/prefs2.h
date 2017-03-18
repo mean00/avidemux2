@@ -27,6 +27,17 @@ struct  {
 	bool use_last_read_dir_as_target;
 }features;
 struct  {
+	bool use_alternate_kbd_shortcuts;
+	bool swap_up_down_keys;
+	std::string alt_mark_a;
+	std::string alt_mark_b;
+	std::string alt_reset_markers;
+	std::string alt_goto_mark_a;
+	std::string alt_goto_mark_b;
+	std::string alt_begin;
+	std::string alt_end;
+}keyboard_shortcuts;
+struct  {
 	bool enabled;
 	uint32_t lastCheck;
 }update;
