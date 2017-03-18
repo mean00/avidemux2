@@ -735,7 +735,6 @@ void MainWindow::buildButtonLists(void)
 #define ADD_BUTTON_PLAYBACK(x)    ButtonsDisabledOnPlayback.push_back(ui.x);
 
     ADD_BUTTON_LOADED(toolButtonPlay)
-    ADD_BUTTON_LOADED(toolButtonStop)
     ADD_BUTTON_LOADED(toolButtonPreviousFrame)
     ADD_BUTTON_LOADED(toolButtonNextFrame)
     ADD_BUTTON_LOADED(toolButtonPreviousIntraFrame)
@@ -790,6 +789,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         for(int i=0;i<ntb;i++)
             ButtonsDisabledOnPlayback[i]->setEnabled(false);
 
+        ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_stop.png"));
+
         int npb=PushButtonsDisabledOnPlayback.size();
         for(int i=0;i<npb;i++)
             PushButtonsDisabledOnPlayback[i]->setEnabled(false);
@@ -834,6 +835,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<n;i++)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
+    ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_play.png"));
 }
 
 /**
@@ -936,9 +938,6 @@ void MainWindow::widgetsUpdateTooltips(void)
 
     tt=QString(QT_TRANSLATE_NOOP("qgui2","Play/Stop"))+QString(" [")+ListOfShortcuts[0]+QString("]");
     ui.toolButtonPlay->setToolTip(tt);
-
-    tt=QString(QT_TRANSLATE_NOOP("qgui2","Stop"))+QString(" [")+ListOfShortcuts[0]+QString("]");
-    ui.toolButtonStop->setToolTip(tt);
 
     tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to previous frame"))+QString(" [")+ListOfShortcuts[1]+QString("]");
     ui.toolButtonPreviousFrame->setToolTip(tt);

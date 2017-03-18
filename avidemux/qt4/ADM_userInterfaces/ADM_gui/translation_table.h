@@ -5,7 +5,6 @@ PROCESS(pushButtonAudioFilter, ACT_AUDIO_FILTERS) \
 PROCESS(pushButtonDecoderConf, ACT_DecoderOption) \
 PROCESS(pushButtonFormatConfigure, ACT_ContainerConfigure) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
-PROCESS(toolButtonStop, ACT_StopAvi) \
 PROCESS(toolButtonPreviousFrame, ACT_PreviousFrame) \
 PROCESS(toolButtonNextFrame, ACT_NextFrame) \
 PROCESS(toolButtonPreviousIntraFrame, ACT_PreviousKFrame) \
