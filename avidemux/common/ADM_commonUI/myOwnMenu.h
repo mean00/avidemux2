@@ -104,8 +104,8 @@ std::vector<MenuEntry> myMenuTool;
 
 static const MenuEntry _myMenuGo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Play/Stop"),           NULL,ACT_PlayAvi        ,MKICON(player_play),   "Space"},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Frame"),      NULL,ACT_PreviousFrame  ,MKICON(previous),      "Left"},
-            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Frame"),          NULL,ACT_NextFrame      ,MKICON(next),          "Right"},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Frame"),      NULL,ACT_PreviousFrame  ,MKICON(back),          "Left"},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Frame"),          NULL,ACT_NextFrame      ,MKICON(forward),       "Right"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Intra Frame"),NULL,ACT_PreviousKFrame ,MKICON(player_rew),    "Down"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Next Intra Frame"),    NULL,ACT_NextKFrame     ,MKICON(player_fwd),    "Up"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Previous Black Frame"),NULL,ACT_PrevBlackFrame ,MKICON(prev_black),    NULL},
