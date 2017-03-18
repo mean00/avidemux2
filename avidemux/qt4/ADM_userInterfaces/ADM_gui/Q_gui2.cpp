@@ -790,6 +790,7 @@ void MainWindow::setMenuItemsEnabledState(void)
             ButtonsDisabledOnPlayback[i]->setEnabled(false);
 
         ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_stop.png"));
+        ui.menuGo->actions().at(0)->setIcon(QIcon(":/new/prefix1/pics/player_stop.png"));
 
         int npb=PushButtonsDisabledOnPlayback.size();
         for(int i=0;i<npb;i++)
@@ -836,6 +837,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
     ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_play.png"));
+    ui.menuGo->actions().at(0)->setIcon(QIcon(":/new/prefix1/pics/player_play.png"));
 }
 
 /**
