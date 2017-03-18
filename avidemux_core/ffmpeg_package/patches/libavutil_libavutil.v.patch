@@ -1,0 +1,10 @@
+--- libavutil/libavutil.c.org	2017-03-18 18:06:53.830480523 +0100
++++ libavutil/libavutil.v	2017-03-18 18:07:02.906452634 +0100
+@@ -1,6 +1,7 @@
+ LIBAVUTIL_MAJOR {
+     global:
+         av*;
++        ff_dxva2_set_handlers*;
+     local:
+         *;
+ };
