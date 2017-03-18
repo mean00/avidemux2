@@ -66,6 +66,7 @@ bool dxva2Usable(void)
 */
 static IDirect3D9       *adm_allocate_d3d()
 {
+	ADM_warning("FFDXVA2: Allocate D3D \n");
         return admD3D::getHandle();
 }
 /**
@@ -73,6 +74,7 @@ static IDirect3D9       *adm_allocate_d3d()
 */
 static IDirect3DDevice9 *adm_allocate_d3d_device(IDirect3D9 *d3d)
 {
+	ADM_warning("FFDXVA2: Allocate device \n");
         return admD3D::getDevice();
 }
 /**
