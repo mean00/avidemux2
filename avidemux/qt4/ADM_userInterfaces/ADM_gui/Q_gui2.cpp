@@ -27,6 +27,7 @@
 
 #include "DIA_fileSel.h"
 #include "ADM_vidMisc.h"
+#include "ADM_last.h"
 #include "prefs.h"
 #include "avi_vars.h"
 
@@ -1228,6 +1229,11 @@ void MainWindow::openFiles(QList<QUrl> urlList)
                 A_appendVideo(fileName.toUtf8().constData());
             else
                 A_openVideo(fileName.toUtf8().constData());
+            // Set lastdir_read on drag'n'drop here instead of centrally in
+            // A_openVideo or in A_appendVideo to better deal with situations
+            // where videos are loaded from a project script in a different location.
+            // Otherwise lastdir_read is managed by the file selection dialog.
+            admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
         }
     }
 }
