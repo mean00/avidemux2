@@ -96,6 +96,7 @@ public:
 	void buildRecentMenu(void);
 	void buildRecentProjectMenu(void);
 	void updateActionShortcuts(void);
+        void volumeWidgetOperational(void);
         static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
         static MainWindow *mainWindowSingleton;
 

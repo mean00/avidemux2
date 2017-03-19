@@ -475,6 +475,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
     widgetsUpdateTooltips();
+    volumeWidgetOperational();
 
     this->adjustSize();
         QuiTaskBarProgress=createADMTaskBarProgress();
@@ -1247,6 +1248,29 @@ void MainWindow::nextIntraFrame(void)
     else
         sendAction(ACT_NextKFrame);
 }
+
+/**
+
+*/
+void MainWindow::volumeWidgetOperational(void)
+{
+    // PulseAudioSimple doesn't provide a way to adjust volume, don't show
+    // the volume widget when it looks like it were broken
+    std::string adev;
+    prefs->get(AUDIO_DEVICE_AUDIODEVICE, adev);
+    if(adev==std::string("PulseAudioS"))
+    {
+        ui.volumeWidget->setEnabled(false);
+        ui.volumeWidget->hide();
+        ui.actionViewVolume->setChecked(false);
+    }else
+    {
+        ui.volumeWidget->setEnabled(true);
+        ui.volumeWidget->show();
+        ui.actionViewVolume->setChecked(true);
+    }
+}
+
 MainWindow::~MainWindow()
 {
     renderDestroy(); // make sure render does not have back link to us
@@ -1394,11 +1418,13 @@ void UI_refreshCustomMenu(void)
     ((MainWindow*)QuiMainWindows)->buildCustomMenu();
 }
 /**
-    \fn UI_updateActionShortcuts
+    \fn UI_applySettings
+    \brief Do stuff when closing the preferences dialog
 */
-void UI_updateActionShortcuts(void)
+void UI_applySettings(void)
 {
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
+    ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
 }
 /**
     \fn UI_getCurrentPreview(void)
