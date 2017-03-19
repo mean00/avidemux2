@@ -20,12 +20,13 @@
 +
 +static pDirect3DCreate9 *createD3D = NULL;
 +
-+static ff_allocate_d3d  *_allocateD3D=&default_allocate_d3d;
-+static ff_release_d3d   *_releaseD3D=&default_release_d3d;
-+static ff_allocate_d3d_device  *_allocateD3DDevice=&default_allocate_d3d_device;
-+static ff_release_d3d_device   *_releaseD3DDevice=&default_release_d3d_device;
++static ff_allocate_d3d  _allocateD3D=&default_allocate_d3d;
++static ff_release_d3d   _releaseD3D=&default_release_d3d;
++static ff_allocate_d3d_device  _allocateD3DDevice=&default_allocate_d3d_device;
++static ff_release_d3d_device   _releaseD3DDevice=&default_release_d3d_device;
 +
-+void ff_dxva2_set_handlers(ff_allocate_d3d *allocateD3D, ff_release_d3d *releaseD3D,ff_allocate_d3d_device *allocateDevice,ff_release_d3d_device *release_device  )
++#undef printf
++void ff_dxva2_set_handlers(ff_allocate_d3d allocateD3D, ff_release_d3d releaseD3D,ff_allocate_d3d_device allocateDevice,ff_release_d3d_device release_device  )
 +{
 +    _allocateD3D=allocateD3D;
 +    _releaseD3D=releaseD3D;
@@ -36,7 +37,7 @@
 +*/
 +IDirect3D9       *default_allocate_d3d()
 +{
-+  return createD3D(D3D_SDK_VERSION);
++  printf("FFDXVA3: default allocate d3d\n");return createD3D(D3D_SDK_VERSION);
 +}
 +/**
 +
@@ -62,6 +63,7 @@
 +    IDirect3DDevice9 *device;
 +    HRESULT hr;
 +
++    printf("FFDXVA3: default allocate device\n");
 +    IDirect3D9_GetAdapterDisplayMode(d3d, adapter, &d3ddm);
 +    d3dpp.Windowed         = TRUE;
 +    d3dpp.BackBufferWidth  = 640;
