@@ -434,8 +434,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     addScriptEnginesToFileMenu(myMenuFile);
     addScriptShellsToToolsMenu(myMenuTool);
     buildMyMenu();
-    buildCustomMenu();
-    buildActionLists();
+    buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
     // Crash in some cases addScriptReferencesToHelpMenu();
 
