@@ -1,18 +1,10 @@
---- libavutil/hwcontext_dxva2.c.org	2017-03-18 16:33:35.823972252 +0100
-+++ libavutil/hwcontext_dxva2.c	2017-03-18 16:33:53.011915276 +0100
-@@ -15,7 +15,6 @@
-  * License along with FFmpeg; if not, write to the Free Software
-  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-  */
--
- #include <windows.h>
+--- libavutil/hwcontext_dxva2.c.org	2017-03-19 16:43:42.405325504 +0100
++++ libavutil/hwcontext_dxva2.c	2017-03-19 16:53:14.531488730 +0100
+@@ -71,7 +71,83 @@
  
- #if !defined(_WIN32_WINNT) || _WIN32_WINNT < 0x0600
-@@ -72,6 +71,77 @@
  DEFINE_GUID(video_decoder_service,   0xfc51a551, 0xd5e7, 0x11d9, 0xaf, 0x55, 0x00, 0x05, 0x4e, 0x43, 0xff, 0x02);
  DEFINE_GUID(video_processor_service, 0xfc51a552, 0xd5e7, 0x11d9, 0xaf, 0x55, 0x00, 0x05, 0x4e, 0x43, 0xff, 0x02);
- 
-+// MEANX
++// MEANX : Allow hooks to allocate d3d/d3dDevices
 +static IDirect3D9  *default_allocate_d3d();
 +static void         default_release_d3d(IDirect3D9 *x);
 +static IDirect3DDevice9 *default_allocate_d3d_device(IDirect3D9 *e);
@@ -24,8 +16,8 @@
 +static ff_release_d3d   _releaseD3D=&default_release_d3d;
 +static ff_allocate_d3d_device  _allocateD3DDevice=&default_allocate_d3d_device;
 +static ff_release_d3d_device   _releaseD3DDevice=&default_release_d3d_device;
-+
-+#undef printf
+ 
++#undef printf // for debug, to be removed asap
 +void ff_dxva2_set_handlers(ff_allocate_d3d allocateD3D, ff_release_d3d releaseD3D,ff_allocate_d3d_device allocateDevice,ff_release_d3d_device release_device  )
 +{
 +    _allocateD3D=allocateD3D;
@@ -37,7 +29,7 @@
 +*/
 +IDirect3D9       *default_allocate_d3d()
 +{
-+  printf("FFDXVA3: default allocate d3d\n");return createD3D(D3D_SDK_VERSION);
++  printf("FFDXVA3_rr: default allocate d3d\n");return createD3D(D3D_SDK_VERSION);
 +}
 +/**
 +
@@ -63,7 +55,7 @@
 +    IDirect3DDevice9 *device;
 +    HRESULT hr;
 +
-+    printf("FFDXVA3: default allocate device\n");
++    printf("FFDXVA3_rr: default allocate device\n");
 +    IDirect3D9_GetAdapterDisplayMode(d3d, adapter, &d3ddm);
 +    d3dpp.Windowed         = TRUE;
 +    d3dpp.BackBufferWidth  = 640;
@@ -85,75 +77,97 @@
 +}
 +/**
 +*/
++
++
++
++// /MEANX
  static void dxva2_frames_uninit(AVHWFramesContext *ctx)
  {
      AVDXVA2DeviceContext *device_hwctx = ctx->device_ctx->hwctx;
-@@ -312,10 +382,18 @@
-         IDirect3DDeviceManager9_Release(hwctx->devmgr);
+@@ -310,13 +386,29 @@
  
+     if (hwctx->devmgr)
+         IDirect3DDeviceManager9_Release(hwctx->devmgr);
+-
++#if 0 // MEANX
      if (priv->d3d9device)
--        IDirect3DDevice9_Release(priv->d3d9device);
+         IDirect3DDevice9_Release(priv->d3d9device);
+ 
+     if (priv->d3d9)
+         IDirect3D9_Release(priv->d3d9);
++#else
++    if (priv->d3d9device)
 +    {
 +        //MEANX IDirect3DDevice9_Release(priv->d3d9device);
 +        (*_releaseD3DDevice)(priv->d3d9device);
++        priv->d3d9device=NULL;
 +    }
 +       
- 
-     if (priv->d3d9)
--        IDirect3D9_Release(priv->d3d9);
++ 
++    if (priv->d3d9)
 +    {
-+    //    IDirect3D9_Release(priv->d3d9);
 +        (*_releaseD3D)(priv->d3d9); // MEANX
 +        priv->d3d9=NULL;
 +    }
++ 
  
++#endif // MEANX
      if (priv->d3dlib)
          FreeLibrary(priv->d3dlib);
-@@ -332,16 +410,12 @@
+ 
+@@ -332,17 +424,17 @@
      AVDXVA2DeviceContext *hwctx = ctx->hwctx;
      DXVA2DevicePriv *priv;
  
 -    pDirect3DCreate9 *createD3D = NULL;
++    // MEANX pDirect3DCreate9 *createD3D = NULL;
      pCreateDeviceManager9 *createDeviceManager = NULL;
 -    D3DPRESENT_PARAMETERS d3dpp = {0};
 -    D3DDISPLAYMODE        d3ddm;
++    // MEANX D3DPRESENT_PARAMETERS d3dpp = {0};
++    // MEANX D3DDISPLAYMODE        d3ddm;
      unsigned resetToken = 0;
 -    UINT adapter = D3DADAPTER_DEFAULT;
++    // MEANX UINT adapter = D3DADAPTER_DEFAULT;
      HRESULT hr;
  
 -    if (device)
 -        adapter = atoi(device);
-+    //if (device)
-+        //adapter = atoi(device);
- 
+-
++    // MEANX if (device)
++        // MEANX adapter = atoi(device);
++    printf("ffmpeg:DXVA2_rr Creating device\n");
      priv = av_mallocz(sizeof(*priv));
      if (!priv)
-@@ -375,25 +449,13 @@
+         return AVERROR(ENOMEM);
+@@ -375,12 +467,13 @@
          return AVERROR_UNKNOWN;
      }
  
 -    priv->d3d9 = createD3D(D3D_SDK_VERSION);
-+    priv->d3d9 = (*_allocateD3D)(); // MEANX createD3D(D3D_SDK_VERSION);
++    // MEANX priv->d3d9 = createD3D(D3D_SDK_VERSION);
++     priv->d3d9 = (*_allocateD3D)(); 
      if (!priv->d3d9) {
          av_log(ctx, AV_LOG_ERROR, "Failed to create IDirect3D object\n");
          return AVERROR_UNKNOWN;
      }
 -
--    IDirect3D9_GetAdapterDisplayMode(priv->d3d9, adapter, &d3ddm);
--    d3dpp.Windowed         = TRUE;
--    d3dpp.BackBufferWidth  = 640;
--    d3dpp.BackBufferHeight = 480;
--    d3dpp.BackBufferCount  = 0;
--    d3dpp.BackBufferFormat = d3ddm.Format;
--    d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
--    d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
--
--    hr = IDirect3D9_CreateDevice(priv->d3d9, adapter, D3DDEVTYPE_HAL, GetDesktopWindow(),
--                                 D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
--                                 &d3dpp, &priv->d3d9device);
--    if (FAILED(hr)) {
-+    priv->d3d9device=(*_allocateD3DDevice)(priv->d3d9 );
-+    if (!priv->d3d9device) {
++#if 0 // MEANX
+     IDirect3D9_GetAdapterDisplayMode(priv->d3d9, adapter, &d3ddm);
+     d3dpp.Windowed         = TRUE;
+     d3dpp.BackBufferWidth  = 640;
+@@ -397,6 +490,14 @@
          av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device\n");
          return AVERROR_UNKNOWN;
      }
++#else
++    priv->d3d9device=(*_allocateD3DDevice)(priv->d3d9 );
++    if (!priv->d3d9device) 
++    {
++         av_log(ctx, AV_LOG_ERROR, "Failed to create Direct3D device\n");
++         return AVERROR_UNKNOWN;
++     }
++#endif // MEANX
+ 
+     hr = createDeviceManager(&resetToken, &hwctx->devmgr);
+     if (FAILED(hr)) {
