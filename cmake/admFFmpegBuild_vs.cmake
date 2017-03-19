@@ -26,9 +26,16 @@ xadd(--enable-w32threads)
 #
 xadd(--toolchain=msvc)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        MESSAGE(STATUS "Compiling ffmpeg in debug mode")
+        xadd(--extra-cflags  "-Z7")
+        xadd(--extra-ldflags "/DEBUG:FASTLINK")
+        xadd(--extra-ldflags "/DEBUGTYPE:CV")
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
 #  Cross compiler override (win32 & win64)
-xadd(--extra-cflags  -I${VS_ROOT}/include)
-xadd(--extra-ldflags  user32.lib)
+xadd(--extra-cflags  -I${VS_ROOT}/include )
+xadd(--extra-ldflags  user32.lib )
 
 message(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
@@ -60,6 +67,13 @@ add_custom_command(OUTPUT
 
 
 ADM_FF_INSTALL_LIBS_AND_HEADERS()
+# This installs the .lib, we need to install also the dlls
+
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_ADM}avcodec-${LIBAVCODEC_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVCODEC_ADM}avformat-${LIBAVFORMAT_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavutil/${LIBAVCODEC_ADM}avutil-${LIBAVUTIL_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBAVCODEC_ADM}postproc-${LIBPOSTPROC_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBAVCODEC_ADM}swscale-${LIBSWSCALE_VERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 IF(USE_DXVA2)
         INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
