@@ -5822,10 +5822,6 @@ Drop timing informations ?</source>
         <translation type="obsolete">Codec-Einstellungen</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="obsolete">&lt;b&gt;Video-Decoder&lt;/b&gt;</translation>
-    </message>
-    <message>
         <location line="+216"/>
         <source>&lt;b&gt;Video Output&lt;/b&gt;</source>
         <translation type="unfinished">&lt;b&gt;Video-Codec&lt;/b&gt;</translation>
@@ -5893,28 +5889,24 @@ Drop timing informations ?</source>
         <translation>Wiedergabe/Pause [Leertaste]</translation>
     </message>
     <message>
-        <source>Stop [SPACE]</source>
-        <translation type="vanished">Stopp [Leertaste]</translation>
-    </message>
-    <message>
         <location line="+29"/>
         <source>Go to previous frame [LEFT]</source>
-        <translation>Vorheriges Bild [Pfeiltaste links]</translation>
+        <translation>Ein Frame zurück [Pfeiltaste links]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to next frame [RIGHT]</source>
-        <translation>Nächstes Bild [Pfeiltaste rechts]</translation>
+        <translation>Ein Frame vor [Pfeiltaste rechts]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to previous keyframe [DOWN]</source>
-        <translation>Zum vorherigen Keyframe [Pfeiltaste runter]</translation>
+        <translation>Ein I-Frame zurück [Pfeiltaste runter]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to next keyframe [UP]</source>
-        <translation>Zum nächsten Keyframe [Pfeiltaste hoch]</translation>
+        <translation>Ein I-Frame vor [Pfeiltaste hoch]</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -5929,22 +5921,22 @@ Drop timing informations ?</source>
     <message>
         <location line="+26"/>
         <source>Search previous black frame</source>
-        <translation>Ein schwarzes Bild rückwärts suchen</translation>
+        <translation>Ein schwarzes Frame rückwärts suchen</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Search next black frame</source>
-        <translation>Ein schwarzes Bild vorwärts suchen</translation>
+        <translation>Ein schwarzes Frame vorwärts suchen</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to first frame [HOME]</source>
-        <translation>Zum ersten Bild [Pos 1]</translation>
+        <translation>Zum ersten Frame gehen [Pos 1]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Go to last frame [END]</source>
-        <translation>Zum letzten Bild [Ende]</translation>
+        <translation>Zum letzten Frame gehen [Ende]</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -5979,7 +5971,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+33"/>
         <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Video-Decoder&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+75"/>
@@ -7278,12 +7270,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+1"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>_Alternative Tastenkombinationen aktivieren</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>_Pfeiltasten Auf und Ab zum Navigieren umkehren</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -7388,7 +7380,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation>_Den Ordner der gerade geladenen Datei als Speicherziel vorschlagen</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -7647,7 +7639,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+1"/>
         <source>Reset Markers</source>
-        <translation type="unfinished"></translation>
+        <translation>Markierungen zurücksetzen</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -7688,47 +7680,47 @@ Drop timing informations ?</source>
     <message>
         <location line="+23"/>
         <source>Play/Stop</source>
-        <translation type="unfinished">Start/Stopp</translation>
+        <translation type="unfinished">Wiedergabe/Pause</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Frame</source>
-        <translation type="unfinished">Vorheriges Bild</translation>
+        <translation>Ein Frame zurück</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Frame</source>
-        <translation type="unfinished">Nächstes Bild</translation>
+        <translation>Ein Frame vor</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">Ein I-Frame zurück</translation>
+        <translation>Ein I-Frame zurück</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">Ein I-Frame vor</translation>
+        <translation>Ein I-Frame vor</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">Ein schwarzes Bild rückwärts suchen</translation>
+        <translation>Ein schwarzes Frame rückwärts suchen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Black Frame</source>
-        <translation type="unfinished">Ein schwarzes Bild vorwärts suchen</translation>
+        <translation>Ein schwarzes Frame vorwärts suchen</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>First Frame</source>
-        <translation type="unfinished">Erstes Bild</translation>
+        <translation>Erstes Frame</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Last Frame</source>
-        <translation type="unfinished">Letztes Bild</translation>
+        <translation>Letztes Frame</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -14332,52 +14324,52 @@ Please delete the idx2 file and reopen.</source>
     <message>
         <location line="+3"/>
         <source>Go to previous frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein Frame zurück</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein Frame vor</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein I-Frame zurück</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Ein I-Frame vor</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set start marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Startmarkierung setzen</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set end marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Endmarkierung setzen</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Go to first frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Zum ersten Frame gehen</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to last frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Zum letzten Frame gehen</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Go to marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Zur Markierung A gehen</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Zur Markierung B gehen</translation>
     </message>
     <message>
         <location line="+1058"/>
