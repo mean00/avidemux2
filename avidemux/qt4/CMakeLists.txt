@@ -7,7 +7,7 @@ MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
 MESSAGE("#########################################")
 MESSAGE("")
-
+#fedora ADD_DEFINITIONS("-std=c++11")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
 IF(NOT FAKEROOT)
@@ -257,6 +257,9 @@ ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
 
 DISPLAY_SUMMARY_LIST()
 
+IF(MSVC)
+    include(./installMsvcRunTime.cmake)
+ENDIF(MSVC)
 include(admPackager)
 admPackager(qt4Package)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${QT_EXTENSION}" COMPONENT dev)
@@ -265,6 +268,7 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "$
 # install headers
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_openGL/include/"  ADM_openGL)
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_UIs/include/"  ADM_UIs)
+
 
 
 MESSAGE("")
