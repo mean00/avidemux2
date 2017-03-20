@@ -133,11 +133,16 @@ bool tsHeader::processVideoIndex(char *buffer)
                 if(*(cur)!=':')
                 {
                     printf("[TsDemuxer]  instead of : (%c %x %x):\n",*cur,*(cur-1),*cur);
+                    return false;
                 }
                 cur++;
                 next=strstr(start," ");
                 int64_t ppts,ddts;
-                ADM_assert(3==sscanf(cur,"%" PRIx32":%" PRId64":%" PRId64,&len,&ppts,&ddts));
+                if(3!=sscanf(cur,"%" PRIx32":%" PRId64":%" PRId64,&len,&ppts,&ddts))
+                {
+                        ADM_warning("Malformed line (%s)\n",buffer);
+                        return false;
+                }
                 
                 
                 dmxFrame *frame=new dmxFrame;
