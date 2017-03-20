@@ -61,33 +61,6 @@ bool dxva2Usable(void)
     if(!prefs->get(FEATURES_DXVA2,&v)) v=false;
     return v;
 }
-
-/**
-*/
-static IDirect3D9       *adm_allocate_d3d()
-{
-	ADM_warning("FFDXVA2: Allocate D3D \n");
-        return admD3D::getHandle();
-}
-/**
-
-*/
-static IDirect3DDevice9 *adm_allocate_d3d_device(IDirect3D9 *d3d)
-{
-	ADM_warning("FFDXVA2: Allocate device \n");
-        return admD3D::getDevice();
-}
-/**
-
-*/
-static void             adm_release_d3d(IDirect3D9 *x)
-{
-}
-/**
-*/
-static void adm_release_d3d_device( IDirect3DDevice9 *x)
-{
-}
 /**
     \fn dxva2Probe
     \brief Try loading d3d and dxva2...
@@ -112,12 +85,6 @@ bool dxva2Probe(void)
 
     if(false==admDxva2::init(&xinfo)) return false;
     dxva2Working=true;
-    // Set hooks in libavcodec to use our device
-    ff_dxva2_set_handlers(      (ff_allocate_d3d )&adm_allocate_d3d,
-                                (ff_release_d3d )&adm_release_d3d,
-                                (ff_allocate_d3d_device )&adm_allocate_d3d_device,
-                                (ff_release_d3d_device )&adm_release_d3d_device);
-
     return true;
 }
 //--
