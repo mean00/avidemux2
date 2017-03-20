@@ -256,6 +256,19 @@ uint8_t         AVDM_setVolume(int volume)
 
 }
 /**
+    \fn AVDM_hasVolumeControl
+*/
+bool AVDM_hasVolumeControl(void)
+{
+    bool r=true;
+    if(!device)
+        return false;
+    r=device->hasVolumeControl();
+    if(!r)
+        ADM_info("The current audio device doesn't support volume control\n");
+    return r;
+}
+/**
     \fn AVDM_AudioPlay
     \brief Send float data to be played immediately by the device
 

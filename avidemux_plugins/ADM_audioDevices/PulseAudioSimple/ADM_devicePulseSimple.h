@@ -27,7 +27,7 @@ class pulseSimpleAudioDevice : public audioDeviceThreaded
          virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels);
       public:
                 pulseSimpleAudioDevice(void);
-                
+                bool     hasVolumeControl(void) { return false; }
                 uint32_t getLatencyMs(void);
      }     ;
 #endif

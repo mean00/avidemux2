@@ -42,6 +42,7 @@ ADM_COREAUDIODEVICE6_EXPORT uint8_t ADM_av_loadPlugins(const char *path);
                         virtual uint8_t  stop(void)=0;
                         virtual uint8_t  play(uint32_t len, float *data) =0;
                         virtual uint8_t  setVolume(int volume) {return 1;}
+                        virtual bool     hasVolumeControl(void) {return true;}
                         virtual uint32_t getLatencyMs(void) {return 0;}
 }   ;
 
@@ -96,7 +97,8 @@ class dummyAudioDevice : public audioDeviceThreaded
 		  protected:
                     virtual     bool     localInit(void);
                     virtual     bool     localStop(void);
-                    virtual     void     sendData(void);    
+                    virtual     void     sendData(void);
+                    virtual     bool     hasVolumeControl(void) { return false; }
                     virtual const CHANNEL_TYPE *getWantedChannelMapping(uint32_t channels){return myChannelType;}
 }   ;
 

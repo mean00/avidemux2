@@ -98,6 +98,7 @@ QGraphicsView *drawWindow=NULL;
 
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
+extern bool AVDM_hasVolumeControl(void);
 extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
 extern bool A_loadDefaultSettings(void);;
@@ -1247,6 +1248,26 @@ void MainWindow::nextIntraFrame(void)
     else
         sendAction(ACT_NextKFrame);
 }
+
+/**
+
+*/
+void MainWindow::volumeWidgetOperational(void)
+{
+    // Hide and disable the volume widget if the audio device doesn't support setting volume
+    if(!AVDM_hasVolumeControl())
+    {
+        ui.volumeWidget->setEnabled(false);
+        ui.volumeWidget->hide();
+        ui.actionViewVolume->setChecked(false);
+    }else
+    {
+        ui.volumeWidget->setEnabled(true);
+        ui.volumeWidget->show();
+        ui.actionViewVolume->setChecked(true);
+    }
+}
+
 MainWindow::~MainWindow()
 {
     renderDestroy(); // make sure render does not have back link to us
@@ -1394,11 +1415,13 @@ void UI_refreshCustomMenu(void)
     ((MainWindow*)QuiMainWindows)->buildCustomMenu();
 }
 /**
-    \fn UI_updateActionShortcuts
+    \fn UI_applySettings
+    \brief Do stuff when closing the preferences dialog
 */
-void UI_updateActionShortcuts(void)
+void UI_applySettings(void)
 {
     ((MainWindow *)QuiMainWindows)->updateActionShortcuts();
+    ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
 }
 /**
     \fn UI_getCurrentPreview(void)
@@ -1456,6 +1479,7 @@ int UI_RunApp(void)
     
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
+    UI_applySettings();
     
     // start update checking..
     bool autoUpdateEnabled=false;
