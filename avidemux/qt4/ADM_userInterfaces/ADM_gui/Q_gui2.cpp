@@ -98,6 +98,7 @@ QGraphicsView *drawWindow=NULL;
 
 extern void saveCrashProject(void);
 extern uint8_t AVDM_setVolume(int volume);
+extern bool AVDM_hasVolumeControl(void);
 extern bool ADM_QPreviewCleanup(void);
 extern void vdpauCleanup();
 extern bool A_loadDefaultSettings(void);;
@@ -475,7 +476,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.audioMetreWidget->setTitleBarWidget(dummy4);
 
     widgetsUpdateTooltips();
-    volumeWidgetOperational();
 
     this->adjustSize();
         QuiTaskBarProgress=createADMTaskBarProgress();
@@ -1254,11 +1254,8 @@ void MainWindow::nextIntraFrame(void)
 */
 void MainWindow::volumeWidgetOperational(void)
 {
-    // PulseAudioSimple doesn't provide a way to adjust volume, don't show
-    // the volume widget when it looks like it were broken
-    std::string adev;
-    prefs->get(AUDIO_DEVICE_AUDIODEVICE, adev);
-    if(adev==std::string("PulseAudioS"))
+    // Hide and disable the volume widget if the audio device doesn't support setting volume
+    if(!AVDM_hasVolumeControl())
     {
         ui.volumeWidget->setEnabled(false);
         ui.volumeWidget->hide();
@@ -1482,6 +1479,7 @@ int UI_RunApp(void)
     
     ADM_info("Load default settings if any... \n");          
     A_loadDefaultSettings();
+    UI_applySettings();
     
     // start update checking..
     bool autoUpdateEnabled=false;

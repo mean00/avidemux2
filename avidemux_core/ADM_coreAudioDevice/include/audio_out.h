@@ -34,6 +34,7 @@ ADM_COREAUDIODEVICE6_EXPORT void 		AVDM_AudioClose(void);
 ADM_COREAUDIODEVICE6_EXPORT uint32_t    AVDM_GetLayencyMs(void);
 ADM_COREAUDIODEVICE6_EXPORT AUDIO_DEVICE 	AVDM_getCurrentDevice( void);
 ADM_COREAUDIODEVICE6_EXPORT uint8_t         AVDM_setVolume(int volume);
+ADM_COREAUDIODEVICE6_EXPORT bool            AVDM_hasVolumeControl(void);
 // Get infos
 ADM_COREAUDIODEVICE6_EXPORT uint32_t    ADM_av_getNbDevices(void);
 ADM_COREAUDIODEVICE6_EXPORT bool        ADM_av_getDeviceInfo(int filter, std::string &name, uint32_t *major,uint32_t *minor,uint32_t *patch);
