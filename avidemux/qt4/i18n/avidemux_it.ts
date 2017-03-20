@@ -3768,7 +3768,7 @@ moltiplicato per questo valore):</translation>
         <translation type="obsolete">Potrebbe essere correlato a un vecchio file di indice.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+222"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+229"/>
         <source>Attempt to open %s failed!</source>
         <translation>Tentativo di aprire %s fallito!</translation>
     </message>
@@ -5552,7 +5552,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="obsolete">&lt;b&gt;Video&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+462"/>
+        <location line="+468"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation>Copia</translation>
@@ -5586,7 +5586,6 @@ Eliminare le informazioni temporali?</translation>
     </message>
     <message>
         <location line="+265"/>
-        <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
@@ -5650,7 +5649,7 @@ Eliminare le informazioni temporali?</translation>
         <translation>000000</translation>
     </message>
     <message>
-        <location line="-1434"/>
+        <location line="-1414"/>
         <source>&amp;Help</source>
         <translation>A&amp;iuto</translation>
     </message>
@@ -5711,7 +5710,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="obsolete">A&amp;uto</translation>
     </message>
     <message>
-        <location line="+1560"/>
+        <location line="+1540"/>
         <source>&amp;Open...</source>
         <translation>&amp;Apri...</translation>
     </message>
@@ -6256,7 +6255,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="obsolete">Ctrl+W</translation>
     </message>
     <message>
-        <location line="-1161"/>
+        <location line="-1138"/>
         <source>ms</source>
         <translation>ms</translation>
     </message>
@@ -6265,7 +6264,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="obsolete">Salva selezione in immagini JPEG...</translation>
     </message>
     <message>
-        <location line="+786"/>
+        <location line="+763"/>
         <source>A:</source>
         <translation>A:</translation>
     </message>
@@ -6303,7 +6302,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="obsolete">Video CD</translation>
     </message>
     <message>
-        <location line="-1395"/>
+        <location line="-1375"/>
         <source>&amp;Toolbars</source>
         <translation>&amp;Barre degli strumenti</translation>
     </message>
@@ -6322,12 +6321,11 @@ Eliminare le informazioni temporali?</translation>
         <translation type="vanished">Opzioni codec</translation>
     </message>
     <message>
-        <location line="+74"/>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation>&lt;b&gt;Decoder video&lt;b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Decoder video&lt;b&gt;</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+152"/>
         <location line="+7"/>
         <source>XXXX</source>
         <translation>XXXX</translation>
@@ -6369,7 +6367,7 @@ Eliminare le informazioni temporali?</translation>
         <translation type="vanished">Audiometro</translation>
     </message>
     <message>
-        <location line="+1055"/>
+        <location line="+1032"/>
         <source>&amp;Codec Options</source>
         <translation>Opzioni &amp;codec</translation>
     </message>
@@ -6379,8 +6377,8 @@ Eliminare le informazioni temporali?</translation>
         <translation>Ctrl+Alt+C</translation>
     </message>
     <message>
-        <location line="-944"/>
-        <location line="+955"/>
+        <location line="-921"/>
+        <location line="+932"/>
         <source>&amp;Navigation</source>
         <translation>&amp;Navigazione</translation>
     </message>
@@ -6415,12 +6413,17 @@ Eliminare le informazioni temporali?</translation>
         <translation>Ctrl+Alt+M</translation>
     </message>
     <message>
-        <location line="-1668"/>
+        <location line="-1645"/>
         <source>Codec O&amp;ptions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+743"/>
+        <location line="+33"/>
+        <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+710"/>
         <source>Play [SPACE]</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6431,11 +6434,6 @@ Eliminare le informazioni temporali?</translation>
     </message>
     <message>
         <location line="+26"/>
-        <source>Stop [SPACE]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+23"/>
         <source>Go to previous frame [LEFT]</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8238,7 +8236,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
 <context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+205"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+217"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8259,6 +8257,16 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
     <message>
         <location line="+1"/>
         <source>_Revert to saved default output settings on video load</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Enable alternative keyboard shortcuts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Re_verse UP and DOWN arrow keys for navigation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8372,6 +8380,11 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <location line="+7"/>
         <source>_Use alternative tag for MP3 in .mp4</source>
         <translation>_Usa etichette alternative per gli MP3 in file .mp4</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>_Default to the directory of the last read file for saving</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
@@ -8505,7 +8518,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <location filename="../../common/gui_save.cpp" line="+281"/>
         <location line="+21"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+383"/>
+        <location filename="../../common/gui_savenew.cpp" line="+403"/>
         <source>Audio</source>
         <translation>Audio</translation>
     </message>
@@ -8529,7 +8542,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation>Threading</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+64"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="+65"/>
         <source>Pr&amp;eferences</source>
         <translation>Preferenze</translation>
     </message>
@@ -8539,7 +8552,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation>Preferenze</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-30"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-31"/>
         <source>Open</source>
         <translation>Apri</translation>
     </message>
@@ -8646,6 +8659,11 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <location line="+1"/>
         <source>Set Marker B</source>
         <translation>Imposta segnalibro B</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Reset Markers</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+5"/>
@@ -9045,17 +9063,17 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation type="vanished">Decodifica video usando VDPAU</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-280"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-284"/>
         <source>Enable openGl support</source>
         <translation>Attiva supporto OpenGL</translation>
     </message>
     <message>
-        <location line="+64"/>
+        <location line="+66"/>
         <source>_Split MPEG files every (MB):</source>
         <translation>_Dividi file MPEG ogni (MB):</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+12"/>
         <source>VDPAU (best)</source>
         <translation>VDPAU (migliore)</translation>
     </message>
@@ -9139,7 +9157,7 @@ It is needed to create PSP compatible video.</source>
         <translation>Seleziona lo script da salvare</translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+151"/>
         <source>Not coded in this version</source>
         <translation>Non incluso in questa versione</translation>
     </message>
@@ -9152,7 +9170,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="vanished">Seleziona il file video da aggiungere...</translation>
     </message>
     <message>
-        <location line="+228"/>
+        <location line="+238"/>
         <source>Are you sure?</source>
         <translation>Sei sicuro?</translation>
     </message>
@@ -9268,7 +9286,7 @@ Expect problems.</source>
         <translation>Traccia audio principale</translation>
     </message>
     <message>
-        <location line="+254"/>
+        <location line="+257"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -9417,7 +9435,7 @@ Is it running ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-240"/>
+        <location filename="../../common/gui_main.cpp" line="-243"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -9576,7 +9594,7 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-87"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-91"/>
         <source>Decode video using VDPAU (NVIDIA)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9596,12 +9614,12 @@ Is it running ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+8"/>
         <source>_Check for new release</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+78"/>
+        <location line="+80"/>
         <source>LIBVA (best)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9697,7 +9715,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1206"/>
+        <location filename="../../common/gui_main.cpp" line="-1217"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9712,7 +9730,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+165"/>
+        <location line="+166"/>
         <location line="+65"/>
         <source>Select Video File...</source>
         <translation type="unfinished"></translation>
@@ -9733,7 +9751,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+196"/>
+        <location line="+206"/>
         <source>Cutting</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9774,7 +9792,7 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+286"/>
+        <location line="+289"/>
         <source>Oops</source>
         <translation type="unfinished">Ops</translation>
     </message>
@@ -9835,13 +9853,13 @@ Installation mismatch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-174"/>
+        <location filename="../../common/gui_savenew.cpp" line="-196"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+138"/>
+        <location line="+160"/>
         <source>Cannot instantiate video chain</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9869,13 +9887,15 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="-244"/>
+        <location line="+255"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-26"/>
+        <location line="-281"/>
+        <location line="+255"/>
         <source>Cannot instantiate muxer</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10241,7 +10261,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+384"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
         <source>Unknown</source>
         <translation type="unfinished">Sconosciuto</translation>
     </message>
@@ -10411,16 +10431,6 @@ Installation mismatch</source>
     <message>
         <location line="-1"/>
         <source>Asharp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/DIA_flyAsharp.cpp" line="+107"/>
-        <source>Original</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Processed</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -13343,16 +13353,6 @@ I will assume it has and try to continue</source>
         <source>Mplayer Hue</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/qt4/DIA_flyHue.cpp" line="+61"/>
-        <source>Original</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Processed</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>hueDialog</name>
@@ -14711,16 +14711,6 @@ I will assume it has and try to continue</source>
         <source>Msharpen</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/DIA_flymsharpen.cpp" line="+95"/>
-        <source>Original</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Processed</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>msharpenDialog</name>
@@ -15269,7 +15259,22 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Sono richesti i privilegi di amministratore per eseguire questa operazione.</translation>
     </message>
     <message>
-        <location line="+278"/>
+        <location line="+101"/>
+        <source>First Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Pass 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Encoding...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+188"/>
         <source>The encoding is paused. Do you want to resume or abort?</source>
         <translation type="unfinished">La codifica è in pausa. Vuoi ripristinarla o annullarla?</translation>
     </message>
@@ -15288,7 +15293,7 @@ Please delete the idx2 file and reopen.</source>
     <name>qfile</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+40"/>
-        <location line="+89"/>
+        <location line="+101"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15307,12 +15312,12 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+219"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+223"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+219"/>
+        <location line="+220"/>
         <source>Recent Files</source>
         <translation type="unfinished">File recenti</translation>
     </message>
@@ -15322,18 +15327,73 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Progetti recenti</translation>
     </message>
     <message>
-        <location line="+575"/>
+        <location line="+511"/>
+        <source>Play/Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to previous frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to next frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to previous keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to next keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Set start marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Set end marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Go to first frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to last frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Go to marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+491"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+260"/>
+        <location line="+262"/>
         <source>%c-%s (%02d)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+291"/>
+        <location line="+305"/>
         <source> (%d track(s))</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15946,7 +16006,7 @@ DEI TERMINI E DELLE CONDIZIONI&lt;/span&gt;&lt;/b&gt;&lt;/p&gt;
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+177"/>
+        <location line="+179"/>
         <source>Add</source>
         <translation type="unfinished">Aggiungi</translation>
     </message>
@@ -16893,7 +16953,7 @@ Ready.
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="+185"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="+186"/>
         <source>No strategy</source>
         <translation type="unfinished">Nessuna strategia</translation>
     </message>
@@ -17048,7 +17108,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+185"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+328"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+322"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+82"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation type="unfinished"></translation>
@@ -20510,7 +20570,27 @@ If it is a system profile it will be recreated next time.</source>
         <translation type="unfinished">Personalizzato</translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+31"/>
+        <source>4:3 (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>4:3 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>16:9 (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>16:9 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>Threading</source>
         <translation type="unfinished">Threading</translation>
     </message>
@@ -20586,27 +20666,7 @@ If it is a system profile it will be recreated next time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>4:3 (PAL))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>4:3 (NTSC))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>16:9 (PAL))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>16:9 (NTSC))</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
+        <location line="+11"/>
         <source>MotionEstimation</source>
         <translation type="unfinished"></translation>
     </message>
