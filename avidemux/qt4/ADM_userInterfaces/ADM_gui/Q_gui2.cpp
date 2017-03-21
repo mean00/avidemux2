@@ -706,6 +706,13 @@ void MainWindow::buildActionLists(void)
     PUSH_FULL_MENU_PLAYBACK(menuHelp,0)
     PUSH_FULL_MENU_PLAYBACK(toolBar,0)
 
+    if(recentFiles)
+        for(int i=0;i<recentFiles->actions().size();i++)
+            ActionsDisabledOnPlayback.push_back(recentFiles->actions().at(i));
+    if(recentProjects)
+        for(int i=0;i<recentProjects->actions().size();i++)
+            ActionsDisabledOnPlayback.push_back(recentProjects->actions().at(i));
+
     // "Always available" below doesn't override the list of menu items disabled during playback
 
 #define PUSH_ALWAYS_AVAILABLE(menu,entry)   ActionsAlwaysAvailable.push_back( ui.menu->actions().at(entry));
@@ -720,6 +727,12 @@ void MainWindow::buildActionLists(void)
 
     PUSH_ALWAYS_AVAILABLE(toolBar,1)
 
+    if(recentFiles)
+        for(int i=0;i<recentFiles->actions().size();i++)
+            ActionsAlwaysAvailable.push_back(recentFiles->actions().at(i));
+    if(recentProjects)
+        for(int i=0;i<recentProjects->actions().size();i++)
+            ActionsAlwaysAvailable.push_back(recentProjects->actions().at(i));
 }
 
 /**

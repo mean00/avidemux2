@@ -239,11 +239,13 @@ void MainWindow::buildRecentMenu(QMenu *menu, std::vector<std::string>files, QAc
 void MainWindow::buildRecentMenu(void)
 {
 	this->buildRecentMenu(this->recentFiles, prefs->get_lastfiles(), this->recentFileAction);
+	buildActionLists();
 }
 
 void MainWindow::buildRecentProjectMenu(void)
 {
 	this->buildRecentMenu(this->recentProjects, prefs->get_lastprojectfiles(), this->recentProjectAction);
+	buildActionLists();
 }
 
 void MainWindow::searchRecentFiles(QAction *action, QAction **actionList, int firstEventId)
