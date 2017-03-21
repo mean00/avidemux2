@@ -14,16 +14,16 @@
  ***************************************************************************/
 
 #pragma once
+
 #include "ADM_coreDxva2_export.h"
 #include "ADM_image.h"
 #include "ADM_windowInfo.h"
 
-#define CINTERFACE
 #ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
+  #undef _WIN32_WINNT
 #endif
 #define _WIN32_WINNT 0x0600
-#define COBJMACROS
+#define DXVA2API_USE_BITFIELDS
 #include <d3d9.h>
 
 /**

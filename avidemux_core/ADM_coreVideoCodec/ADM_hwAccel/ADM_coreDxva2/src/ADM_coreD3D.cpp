@@ -15,8 +15,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define CINTERFACE
+#include "ADM_coreD3DApi.h" // Must be the 1st included
 #include "ADM_default.h"
+#include "ADM_coreD3D.h"
 
 #ifdef USE_DXVA2
 
@@ -32,16 +33,8 @@
 #include "ADM_dynamicLoading.h"
 #include <map>
 
-#define CINTERFACE
-#ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
-#endif
-#define _WIN32_WINNT 0x0600
-#define DXVA2API_USE_BITFIELDS
-#define COBJMACROS
 #include <d3d9.h>
 #include <dxva2api.h>
-#include "../include/ADM_coreD3D.h"
 
 typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
 
@@ -106,7 +99,7 @@ bool admD3D::init(GUI_WindowInfo *x)
         goto failInit;
     }
     ADM_info("D3D library loaded, creating instance\n");
-    IDirect3D9_GetAdapterDisplayMode(d3d9, adapter, &d3ddm);
+    D3DCall(IDirect3D9,GetAdapterDisplayMode,d3d9, adapter, &d3ddm);
     d3dpp.Windowed         = TRUE;
     d3dpp.BackBufferWidth  = 640;
     d3dpp.BackBufferHeight = 480;
@@ -115,12 +108,13 @@ bool admD3D::init(GUI_WindowInfo *x)
     d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
     d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
 
-    hr = IDirect3D9_CreateDevice(d3d9,
+    //hr = IDirect3D9_CreateDevice(d3d9,
+    hr = D3DCall(IDirect3D9,CreateDevice,d3d9,
                                 adapter,
                                 D3DDEVTYPE_HAL,
                                 windowID,
-                                 D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
-                                 &d3dpp, &d3d9device);
+                                D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
+                                &d3dpp, &d3d9device);
     if(ADM_FAILED(hr))
     {
         ADM_warning("D3D:Cannot create d3d9 device\n");
@@ -154,13 +148,15 @@ bool admD3D::cleanup(void)
 
     if (d3d9device)
     {
-        IDirect3DDevice9_Release(d3d9device);
+        //IDirect3DDevice9_Release(d3d9device);
+        D3DCall(IDirect3DDevice9,Release,d3d9device);
         d3d9device  =NULL;
     }
 
     if (d3d9)
     {
-        IDirect3D9_Release(d3d9);
+        //IDirect3D9_Release(d3d9);
+        D3DCall(IDirect3D9,Release,d3d9);
         d3d9        =NULL;
     }
     coreD3DWorking=false;

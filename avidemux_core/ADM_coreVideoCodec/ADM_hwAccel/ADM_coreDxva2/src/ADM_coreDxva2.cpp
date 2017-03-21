@@ -15,9 +15,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define CINTERFACE
+#include "ADM_coreD3DApi.h" // Must be the 1st included
 #include "ADM_default.h"
-#include "../include/ADM_coreD3D.h"
+#include "ADM_coreD3D.h"
 #ifdef USE_DXVA2
 
 #if 1
@@ -177,7 +177,7 @@ static bool checkDecoderConfiguration(  const GUID *guid,Dxv2SupportMap *context
     context->desc.SampleHeight=1080;
     context->desc.Format=target_format;
 
-    hr = IDirectXVideoDecoderService_GetDecoderConfigurations(decoder_service, *guid, &(context->desc), NULL, &cfg_count, &cfg_list);
+    hr = D3DCall(IDirectXVideoDecoderService,GetDecoderConfigurations,decoder_service, *guid, &(context->desc), NULL, &cfg_count, &cfg_list);
     if (ADM_FAILED(hr)) {
         ADM_warning("Unable to retrieve decoder configurations\n");
         return false;
@@ -251,7 +251,7 @@ static bool lookupCodec(const char *codecName,Dxv2SupportMap *context,unsigned i
         if (j == guid_count)
             continue;
 
-        hr = IDirectXVideoDecoderService_GetDecoderRenderTargets(decoder_service,*( mode->guid), &target_count, &target_list);
+        hr = D3DCall(IDirectXVideoDecoderService,GetDecoderRenderTargets,decoder_service,*( mode->guid), &target_count, &target_list);
         if (ADM_FAILED(hr))
         {
             continue;
@@ -334,20 +334,20 @@ bool admDxva2::init(GUI_WindowInfo *x)
         ADM_warning( "Failed to create Direct3D device manager\n");
         goto failInit;
     }
-    hr = IDirect3DDeviceManager9_ResetDevice(d3d9devmgr, admD3D::getDevice(), resetToken);
+    hr = D3DCall(IDirect3DDeviceManager9,ResetDevice,d3d9devmgr, admD3D::getDevice(), resetToken);
     if (ADM_FAILED(hr))
     {
         ADM_warning( "Failed to bind Direct3D device to device manager\n");
         goto failInit;
     }
     ADM_info("Dxva2 init step1\n");
-    hr = IDirect3DDeviceManager9_OpenDeviceHandle(d3d9devmgr, &deviceHandle);
+    hr = D3DCall(IDirect3DDeviceManager9,OpenDeviceHandle,d3d9devmgr, &deviceHandle);
     if (ADM_FAILED(hr)) {
          ADM_warning("Failed to open device handle\n");
         goto failInit;
     }
 
-    hr = IDirect3DDeviceManager9_GetVideoService(d3d9devmgr, deviceHandle, (REFIID )IID_IDirectXVideoDecoderService, (void **)&decoder_service);
+    hr = D3DCall(IDirect3DDeviceManager9,GetVideoService,d3d9devmgr, deviceHandle, (REFIID )IID_IDirectXVideoDecoderService, (void **)&decoder_service);
     if (ADM_FAILED(hr)) {
         ADM_warning("Failed to create IDirectXVideoDecoderService\n");
         goto failInit;
@@ -361,7 +361,7 @@ bool admDxva2::init(GUI_WindowInfo *x)
         unsigned int guid_count = 0;
         GUID *guid_list = NULL;
 
-        hr = IDirectXVideoDecoderService_GetDecoderDeviceGuids(decoder_service, &guid_count, &guid_list);
+        hr = D3DCall(IDirectXVideoDecoderService,GetDecoderDeviceGuids,decoder_service, &guid_count, &guid_list);
         if (ADM_FAILED(hr)) {
             ADM_warning("Failed to retrieve decoder device GUIDs\n");
             goto failInit;
@@ -389,7 +389,7 @@ bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
-     hr = IDirectXVideoDecoderService_CreateSurface(decoder_service,
+     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
                                                    height,
                                                    num - 1,
@@ -413,7 +413,7 @@ bool admDxva2::destroyD3DSurface(int num, void *zsurfaces)
     {
          if (surfaces[i])
          {
-                IDirect3DSurface9_Release(surfaces[i]);
+                D3DCall(IDirect3DSurface9,Release,surfaces[i]);
                 surfaces[i]=NULL;
          }
     }
@@ -436,24 +436,24 @@ bool admDxva2::cleanup(void)
 
     if (decoder_service)
     {
-        IDirectXVideoDecoderService_Release(decoder_service);
+        D3DCall(IDirectXVideoDecoderService,Release,decoder_service);
         decoder_service=NULL;
     }
     if (d3d9devmgr && deviceHandle != INVALID_HANDLE_VALUE)
     {
-        IDirect3DDeviceManager9_CloseDeviceHandle(d3d9devmgr, deviceHandle);
+        D3DCall(IDirect3DDeviceManager9,CloseDeviceHandle,d3d9devmgr, deviceHandle);
         deviceHandle=INVALID_HANDLE_VALUE;
     }
 
     if (d3d9devmgr)
     {
-        IDirect3DDeviceManager9_Release(d3d9devmgr);
+        D3DCall(IDirect3DDeviceManager9,Release,d3d9devmgr);
         d3d9devmgr  =NULL;
     }
 
     if (d3d9device)
     {
-        IDirect3DDevice9_Release(d3d9device);
+        D3DCall(IDirect3DDevice9,Release,d3d9device);
         d3d9device  =NULL;
     }
 
@@ -549,7 +549,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
     cmap->desc.SampleWidth=paddedWidth; // does not work with multiple video ?
     cmap->desc.SampleHeight=paddedHeight;
     //
-    hr = IDirectXVideoDecoderService_CreateVideoDecoder(decoder_service,
+    hr = D3DCall(IDirectXVideoDecoderService,CreateVideoDecoder,decoder_service,
                                                          (cmap->device_guid),
                                                          &(cmap->desc),
                                                          &(cmap->pictureDecode),
@@ -568,7 +568,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
  */
 bool admDxva2::destroyDecoder(IDirectXVideoDecoder *decoder)
 {
-    IDirectXVideoDecoder_Release(decoder);
+    D3DCall(IDirectXVideoDecoder,Release,decoder);
     return true;
 }
 
@@ -613,7 +613,7 @@ admDx2Surface::~admDx2Surface()
  */
 bool admDx2Surface::addRef()
 {
-    IDirect3DSurface9_AddRef(surface);
+    D3DCall(IDirect3DSurface9,AddRef,surface);
     return true;
 }
 /**
@@ -621,7 +621,7 @@ bool admDx2Surface::addRef()
  */
 bool admDx2Surface::removeRef()
 {
-     IDirect3DSurface9_Release(surface); // ???
+     D3DCall(IDirect3DSurface9,Release,surface); // ???
      return true;
 }
 
@@ -636,13 +636,13 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
     HRESULT            hr;
     int bits=8;
     bool r=true;
-    IDirect3DSurface9_GetDesc(surface, &surfaceDesc);
+    D3DCall(IDirect3DSurface9,GetDesc,surface, &surfaceDesc);
     if(surfaceDesc.Format==(D3DFORMAT)MKTAG('P','0','1','0'))
     {
       bits=10;
     }
     aprintf("Surface to admImage = %p\n",surface);
-    hr = IDirect3DSurface9_LockRect(surface, &LockedRect, NULL, D3DLOCK_READONLY);
+    hr = D3DCall(IDirect3DSurface9,LockRect,surface, &LockedRect, NULL, D3DLOCK_READONLY);
     if (ADM_FAILED(hr))
     {
         ADM_warning("Unable to lock DXVA2 surface\n");
@@ -682,7 +682,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
 
       default: ADM_warning("Unsupported bit depth");break;
     }
-    IDirect3DSurface9_UnlockRect(surface);
+    D3DCall(IDirect3DSurface9,UnlockRect,surface);
     return r;
 }
 
@@ -690,14 +690,14 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
  */
 bool admDxva2::decoderAddRef(IDirectXVideoDecoder *decoder)
 {
-    HRESULT            hr=IDirectXVideoDecoder_AddRef(decoder);
+    HRESULT            hr=D3DCall(IDirectXVideoDecoder,AddRef,decoder);
     return true;
 }
 /**
  */
 bool admDxva2::decoderRemoveRef(IDirectXVideoDecoder *decoder)
 {
-    HRESULT            hr=IDirectXVideoDecoder_Release(decoder);
+    HRESULT            hr=D3DCall(IDirectXVideoDecoder,Release,decoder);
     return true;
 }
 
