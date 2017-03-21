@@ -13,7 +13,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define CINTERFACE
+#include "ADM_coreD3DApi.h"
 #include "config.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
@@ -173,7 +173,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
         return false;
     }
 
-    if (ADM_FAILED(IDirect3D9_GetAdapterDisplayMode(d3dHandle,
+    if (ADM_FAILED(D3DCall(IDirect3D9,GetAdapterDisplayMode,d3dHandle,
                                                 D3DADAPTER_DEFAULT,
                                                 &displayMode)))
     {
@@ -183,7 +183,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
 
     D3DCAPS9 deviceCapabilities;
     ADM_info("D3D Checking device capabilities\n");
-    if (ADM_FAILED(IDirect3D9_GetDeviceCaps(d3dHandle,
+    if (ADM_FAILED(D3DCall(IDirect3D9,GetDeviceCaps,d3dHandle,
                                         D3DADAPTER_DEFAULT,
                                         D3DDEVTYPE_HAL,
                                         &deviceCapabilities)))
@@ -200,7 +200,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
       // Check if we support YV12
     D3DFORMAT fmt=displayMode.Format;
     D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
-    if (ADM_FAILED(IDirect3D9_CheckDeviceFormatConversion(   d3dHandle, // adapter
+    if (ADM_FAILED(D3DCall(IDirect3D9,CheckDeviceFormatConversion, d3dHandle, // adapter
                                                          D3DADAPTER_DEFAULT, // device type
                                                          D3DDEVTYPE_HAL, // adapter format
                                                          yv12, // render target format
@@ -256,7 +256,7 @@ bool dxvaRender::setup()
 
 
 #ifndef REUSE_DEVICE
-     if(ADM_FAILED(IDirect3D9_CreateDevice(  d3dHandle,
+     if(ADM_FAILED(D3DCall(IDirect3D9,CreateDevice,  d3dHandle,
                                          D3DADAPTER_DEFAULT,
                                          D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
                                          D3DCREATE_SOFTWARE_VERTEXPROCESSING,
@@ -274,14 +274,14 @@ bool dxvaRender::setup()
       D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
 
       //
-       if( ADM_FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+       if( ADM_FAILED(D3DCall(IDirect3DDevice9,CreateOffscreenPlainSurface,
                  d3dDevice, displayWidth,displayHeight,
                  displayMode.Format, D3DPOOL_DEFAULT, &mySurface, NULL)))
        {
                   ADM_warning("D3D Cannot create surface\n");
                   return false;
        }
-       if( ADM_FAILED(IDirect3DDevice9_CreateOffscreenPlainSurface(
+       if( ADM_FAILED(D3DCall(IDirect3DDevice9,CreateOffscreenPlainSurface,
                  d3dDevice, imageWidth,imageHeight,
                  yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
        {
@@ -289,17 +289,17 @@ bool dxvaRender::setup()
                   return false;
        }
       // put some defaults
-      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
-      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
-      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_ALPHAREF, (DWORD)0x0);
-      IDirect3DDevice9_SetRenderState(d3dDevice, D3DRS_LIGHTING, FALSE);
-      IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-      IDirect3DDevice9_SetSamplerState(d3dDevice, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+      D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
+      D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+      D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+      D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_ALPHAREF, (DWORD)0x0);
+      D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_LIGHTING, FALSE);
+      D3DCall(IDirect3DDevice9,SetSamplerState,d3dDevice, 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+      D3DCall(IDirect3DDevice9,SetSamplerState,d3dDevice, 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
       //
 
 
-  if(ADM_FAILED(IDirect3DDevice9_SetViewport(d3dDevice, &viewPort)))
+  if(ADM_FAILED(D3DCall(IDirect3DDevice9,SetViewport,d3dDevice, &viewPort)))
   {
       ADM_warning("D3D Cannot set D3D viewport\n");
       return false;
@@ -337,18 +337,18 @@ bool dxvaRender::cleanup()
     }
     if(mySurface)
     {
-        IDirect3DSurface9_Release(mySurface);
+        D3DCallNoArg(IDirect3DSurface9,Release,mySurface);
         mySurface=NULL;
     }
     if(myYV12Surface)
     {
-        IDirect3DSurface9_Release(myYV12Surface);
+        D3DCallNoArg(IDirect3DSurface9,Release,myYV12Surface);
         myYV12Surface=NULL;
     }
 #ifndef REUSE_DEVICE
     if(d3dDevice)
     {
-       IDirect3DDevice9_Release(d3dDevice);
+       D3DCallNoArg(IDirect3DDevice9,Release,d3dDevice);
        d3dDevice=NULL;
     }
 #endif
@@ -372,9 +372,9 @@ bool dxvaRender::cleanup()
         ADM_warning("D3D Present failed\n");
    }
 #else
-    IDirect3DDevice9_BeginScene(d3dDevice);
-    IDirect3DDevice9_EndScene(d3dDevice);   
-    if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
+    D3DCallNoArg(IDirect3DDevice9,BeginScene,d3dDevice);
+    D3DCallNoArg(IDirect3DDevice9,EndScene,d3dDevice);
+    if( ADM_FAILED(D3DCall(IDirect3DDevice9,Present,d3dDevice, &targetRect, 0, 0, 0)))
     {
         ADM_warning("D3D Present failed\n");
     }
@@ -413,7 +413,7 @@ static bool d3dBlit(ADMImage *pic,ADM_PLANE plane,uint8_t *target,int targetPitc
 static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
 {
   D3DLOCKED_RECT     lock;;
-  if (ADM_FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+  if (ADM_FAILED(D3DCall(IDirect3DSurface9,LockRect,surface,&lock, NULL, 0)))
   {
       ADM_warning("D3D Cannot lock surface\n");
       return false;
@@ -434,7 +434,7 @@ static bool  ADMImage_To_yv12Surface(ADMImage *pic, IDirect3DSurface9 *surface)
   dst+=(height/2)*(dStride/2);
   d3dBlit(pic, PLANAR_V,dst,dStride>>1,width>>1,height>>1);
 
-  if (ADM_FAILED(IDirect3DSurface9_UnlockRect(surface)))
+  if (ADM_FAILED(D3DCallNoArg(IDirect3DSurface9,UnlockRect,surface)))
   {
       ADM_warning("D3D Cannot unlock surface\n");
       return false;
@@ -448,7 +448,7 @@ static bool  ADMImage_To_argbSurface(ADMImage *pic, IDirect3DSurface9 *surface,A
 {
     D3DLOCKED_RECT     lock;
 
-    if (ADM_FAILED(IDirect3DSurface9_LockRect(surface,&lock, NULL, 0)))
+    if (ADM_FAILED(D3DCall(IDirect3DSurface9,LockRect,surface,&lock, NULL, 0)))
     {
         ADM_warning("D3D Cannot lock surface\n");
         return false;

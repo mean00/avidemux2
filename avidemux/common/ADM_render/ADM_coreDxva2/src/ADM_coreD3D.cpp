@@ -149,14 +149,14 @@ bool admD3D::cleanup(void)
     if (d3d9device)
     {
         //IDirect3DDevice9_Release(d3d9device);
-        D3DCall(IDirect3DDevice9,Release,d3d9device);
+        D3DCallNoArg(IDirect3DDevice9,Release,d3d9device);
         d3d9device  =NULL;
     }
 
     if (d3d9)
     {
         //IDirect3D9_Release(d3d9);
-        D3DCall(IDirect3D9,Release,d3d9);
+        D3DCallNoArg(IDirect3D9,Release,d3d9);
         d3d9        =NULL;
     }
     coreD3DWorking=false;

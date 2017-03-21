@@ -413,7 +413,7 @@ bool admDxva2::destroyD3DSurface(int num, void *zsurfaces)
     {
          if (surfaces[i])
          {
-                D3DCall(IDirect3DSurface9,Release,surfaces[i]);
+                D3DCallNoArg(IDirect3DSurface9,Release,surfaces[i]);
                 surfaces[i]=NULL;
          }
     }
@@ -436,7 +436,7 @@ bool admDxva2::cleanup(void)
 
     if (decoder_service)
     {
-        D3DCall(IDirectXVideoDecoderService,Release,decoder_service);
+        D3DCallNoArg(IDirectXVideoDecoderService,Release,decoder_service);
         decoder_service=NULL;
     }
     if (d3d9devmgr && deviceHandle != INVALID_HANDLE_VALUE)
@@ -447,13 +447,13 @@ bool admDxva2::cleanup(void)
 
     if (d3d9devmgr)
     {
-        D3DCall(IDirect3DDeviceManager9,Release,d3d9devmgr);
+        D3DCallNoArg(IDirect3DDeviceManager9,Release,d3d9devmgr);
         d3d9devmgr  =NULL;
     }
 
     if (d3d9device)
     {
-        D3DCall(IDirect3DDevice9,Release,d3d9device);
+        D3DCallNoArg(IDirect3DDevice9,Release,d3d9device);
         d3d9device  =NULL;
     }
 
@@ -568,7 +568,7 @@ IDirectXVideoDecoder  *admDxva2::createDecoder(AVCodecID codec, int with, int he
  */
 bool admDxva2::destroyDecoder(IDirectXVideoDecoder *decoder)
 {
-    D3DCall(IDirectXVideoDecoder,Release,decoder);
+    D3DCallNoArg(IDirectXVideoDecoder,Release,decoder);
     return true;
 }
 
@@ -613,7 +613,7 @@ admDx2Surface::~admDx2Surface()
  */
 bool admDx2Surface::addRef()
 {
-    D3DCall(IDirect3DSurface9,AddRef,surface);
+    D3DCallNoArg(IDirect3DSurface9,AddRef,surface);
     return true;
 }
 /**
@@ -621,7 +621,7 @@ bool admDx2Surface::addRef()
  */
 bool admDx2Surface::removeRef()
 {
-     D3DCall(IDirect3DSurface9,Release,surface); // ???
+     D3DCallNoArg(IDirect3DSurface9,Release,surface); // ???
      return true;
 }
 
@@ -682,7 +682,7 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
 
       default: ADM_warning("Unsupported bit depth");break;
     }
-    D3DCall(IDirect3DSurface9,UnlockRect,surface);
+    D3DCallNoArg(IDirect3DSurface9,UnlockRect,surface);
     return r;
 }
 
@@ -690,14 +690,14 @@ bool  admDx2Surface::surfaceToAdmImage( ADMImage *out)
  */
 bool admDxva2::decoderAddRef(IDirectXVideoDecoder *decoder)
 {
-    HRESULT            hr=D3DCall(IDirectXVideoDecoder,AddRef,decoder);
+    HRESULT            hr=D3DCallNoArg(IDirectXVideoDecoder,AddRef,decoder);
     return true;
 }
 /**
  */
 bool admDxva2::decoderRemoveRef(IDirectXVideoDecoder *decoder)
 {
-    HRESULT            hr=D3DCall(IDirectXVideoDecoder,Release,decoder);
+    HRESULT            hr=D3DCallNoArg(IDirectXVideoDecoder,Release,decoder);
     return true;
 }
 
