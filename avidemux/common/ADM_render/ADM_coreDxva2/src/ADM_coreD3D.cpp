@@ -36,22 +36,31 @@
 #include <d3d9.h>
 #include <dxva2api.h>
 
-typedef IDirect3D9* WINAPI pDirect3DCreate9(UINT);
+typedef IDirect3D9*   WINAPI pDirect3DCreate9(UINT);
+typedef HRESULT       WINAPI pDirect3DCreate9Ex(UINT,IDirect3D9Ex **);
 
 static bool                  coreD3DWorking=false;
 
 static ADM_LibWrapper        d3dDynaLoader;
 
-static pDirect3DCreate9      *createD3D = NULL;
+static pDirect3DCreate9      *createD3D    = NULL;
+static pDirect3DCreate9Ex    *createD3Dex  = NULL;
 
-static IDirect3D9            *d3d9        =NULL;
-static IDirect3DDevice9      *d3d9device  =NULL;
+static IDirect3D9            *d3d9         = NULL;
+static IDirect3D9Ex          *d3d9ex       = NULL;
+static IDirect3DDevice9      *d3d9device   = NULL;
+static IDirect3DDevice9Ex    *d3d9deviceex = NULL;
+
+static bool isD3D9Ex=false;
 
 
 #include <initguid.h>
 /**
  */
-
+bool              admD3D::isDirect9Ex()
+{
+  return isD3D9Ex;
+}
 /**
  */
 static bool ADM_FAILED(HRESULT hr)
@@ -64,12 +73,120 @@ static bool ADM_FAILED(HRESULT hr)
     }
     return false;
 }
+static bool admD3D_initD3D9Ex(GUI_WindowInfo *x)
+{
+    UINT adapter = D3DADAPTER_DEFAULT;
+    D3DDISPLAYMODEEX      d3ddm;
+    D3DPRESENT_PARAMETERS d3dpp = {0};
+    HWND windowID=(HWND)x->systemWindowId;
+    IDirect3D9Ex *d3d9ex = NULL;
+    IDirect3DDevice9Ex *d3d9deviceex = NULL;
+
+    HRESULT hr;
+    unsigned int resetToken = 0;
+    ADM_info("Probing for D3D9EX support\n");
+    // Load d3d9 dll
+    if(false==d3dDynaLoader.loadLibrary("d3d9.dll"))
+    {
+        ADM_warning("Dxva2: Cannot load d3d9.dll\n"); // memleak
+        goto failInit9x;
+    }
+    // Load d3d9 dll
+    createD3Dex=(pDirect3DCreate9Ex *)d3dDynaLoader.getSymbol("Direct3DCreate9Ex");
+    if(!createD3Dex)
+    {
+        ADM_warning("Dxva2: Cannot get symbol  Direct3DCreate9Ex\n");
+        goto failInit9x;
+    }
+    hr= createD3Dex(D3D_SDK_VERSION,&d3d9ex);
+
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("Dxva2: Cannot gcreate d3d9ex\n");
+        goto failInit9x;
+    }
+    ADM_info("D3D library loaded in D3D9Ex mode, Checking Adapater display mode\n");
+    memset(&d3ddm,0,sizeof(d3ddm));
+    d3ddm.Size=sizeof(d3ddm);
+    
+    hr=D3DCall(IDirect3D9Ex,GetAdapterDisplayModeEx,d3d9ex, adapter, 
+                                &d3ddm,NULL);
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("GetAdapterDisplayModeEx failed\n");
+        return false;
+    }
+    ADM_info("Display is %d x %d, fmt=0x%x\n",d3ddm.Width,d3ddm.Height,d3ddm.Format);
+
+    memset(&d3dpp,0,sizeof(d3dpp));
+    d3dpp.Windowed         = TRUE;
+    d3dpp.BackBufferWidth  = 640;
+    d3dpp.BackBufferHeight = 480;
+    d3dpp.BackBufferCount  = 0;
+    d3dpp.BackBufferFormat = d3ddm.Format;
+    d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
+    d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
+
+    //hr = IDirect3D9_CreateDevice(d3d9,
+/*
+HRESULT CreateDeviceEx(
+  [in]          UINT                  Adapter,
+  [in]          D3DDEVTYPE            DeviceType,
+  [in]          HWND                  hFocusWindow,
+  [in]          DWORD                 BehaviorFlags,
+  [in, out]     D3DPRESENT_PARAMETERS *pPresentationParameters,
+  [in, out]     D3DDISPLAYMODEEX      *pFullscreenDisplayMode,
+  [out, retval] IDirect3DDevice9Ex    **ppReturnedDeviceInterface
+);
+= pD3D->CreateDeviceEx( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+                                      &d3dpp, NULL, &pDevice ) ) )
+
+HRESULT CreateDeviceEx(
+  [in]          UINT                  Adapter,
+  [in]          D3DDEVTYPE            DeviceType,
+  [in]          HWND                  hFocusWindow,
+  [in]          DWORD                 BehaviorFlags,
+  [in, out]     D3DPRESENT_PARAMETERS *pPresentationParameters,
+  [in, out]     D3DDISPLAYMODEEX      *pFullscreenDisplayMode,
+  [out, retval] IDirect3DDevice9Ex    **ppReturnedDeviceInterface
+);
+
+
+
+*/
+    ADM_info("Creating Device9EX\n");
+    hr = D3DCall(IDirect3D9Ex,CreateDeviceEx,d3d9ex,
+                                adapter,
+                                D3DDEVTYPE_HAL,
+                                windowID,
+                                D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED | D3DCREATE_FPU_PRESERVE,
+                                &d3dpp,
+                                NULL,
+                                &d3d9deviceex);
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("D3D:Cannot create d3d9Ex device\n");
+        goto failInit9x;
+    }
+
+    coreD3DWorking=true;
+    ADM_info("D3D:d3d9Ex core successfully initialized\n");
+
+    d3d9=(IDirect3D9 *)d3d9ex;
+    d3d9device=(IDirect3DDevice9 *)d3d9deviceex;
+    isD3D9Ex=true;
+    return true;
+failInit9x:
+      ADM_warning("D3D:D3D init failed\n");
+      return false;
+}
 
 /**
  * \fn init
  * \brief initialize the low level common part of dxva2
  */
-bool admD3D::init(GUI_WindowInfo *x)
+static bool admD3D_initD3D9(GUI_WindowInfo *x)
 {
     UINT adapter = D3DADAPTER_DEFAULT;
     D3DDISPLAYMODE        d3ddm;
@@ -123,14 +240,21 @@ bool admD3D::init(GUI_WindowInfo *x)
 
     coreD3DWorking=true;
     ADM_info("D3D:d3d core successfully initialized\n");
-
+    isD3D9Ex=false;
     return true;
 failInit:
       ADM_warning("D3D:D3D init failed\n");
       return false;
 }
 
+bool admD3D::init(GUI_WindowInfo *x)
+{
+  if(admD3D_initD3D9Ex(x)) return true;
+  if(admD3D_initD3D9(x)) return true;
+  ADM_info("-- D3D:d3d core failed to initialize\n");
+  return false;
 
+}
 /**
     \fn isOperationnal
 */

@@ -37,4 +37,5 @@ public:
         static bool cleanup(void);
         static IDirect3DDevice9 *getDevice();
         static IDirect3D9       *getHandle();
+        static bool              isDirect9Ex();
 };

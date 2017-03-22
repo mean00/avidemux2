@@ -1,5 +1,5 @@
 
-#if 0 //def _MSC_VER
+#ifdef _MSC_VER
   #define ADM_D3D_CPP_API
 #endif
 
@@ -14,4 +14,3 @@
   #define D3DCallNoArg(CLASS,call,obj) EXPAND(CLASS##_##call(obj))
   #define D3DCall(CLASS,call,obj, ...) EXPAND(CLASS##_##call(obj,__VA_ARGS__))
 #endif
-
