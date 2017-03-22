@@ -10,5 +10,20 @@
 #define ADM_LAV_SAMPLE_PER_P 1024
 
 #define ADM_LAV_GLOBAL_HEADER 1
-#include "audioencoder_lavcodec.cpp"
 
+#define MENU_BITRATE     diaMenuEntry bitrateM[]={\
+                              BITRATE(56),\
+                              BITRATE(64),\
+                              BITRATE(80),\
+                              BITRATE(96),\
+                              BITRATE(112),\
+                              BITRATE(128),\
+                              BITRATE(160),\
+                              BITRATE(192),\
+                              BITRATE(224),\
+                              BITRATE(384),\
+                              BITRATE(448),\
+                              BITRATE(640)\
+                          };
+
+#include "audioencoder_lavcodec.cpp"

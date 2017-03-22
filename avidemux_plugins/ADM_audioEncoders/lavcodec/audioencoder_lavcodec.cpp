@@ -514,19 +514,7 @@ bool configure (CONFcouple **setup)
         ADM_paramLoad(*setup,lav_encoder_param,&config);
     }
 
-    diaMenuEntry bitrateM[]={
-                              BITRATE(56),
-                              BITRATE(64),
-                              BITRATE(80),
-                              BITRATE(96),
-                              BITRATE(112),
-                              BITRATE(128),
-                              BITRATE(160),
-                              BITRATE(192),
-                              BITRATE(224),
-                              BITRATE(384),
-                              BITRATE(448)
-                          };
+    MENU_BITRATE
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("lavcodec","_Bitrate:"), SZT(bitrateM),bitrateM);
 
 
