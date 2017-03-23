@@ -127,34 +127,6 @@ static bool admD3D_initD3D9Ex(GUI_WindowInfo *x)
     d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
     d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
 
-    //hr = IDirect3D9_CreateDevice(d3d9,
-/*
-HRESULT CreateDeviceEx(
-  [in]          UINT                  Adapter,
-  [in]          D3DDEVTYPE            DeviceType,
-  [in]          HWND                  hFocusWindow,
-  [in]          DWORD                 BehaviorFlags,
-  [in, out]     D3DPRESENT_PARAMETERS *pPresentationParameters,
-  [in, out]     D3DDISPLAYMODEEX      *pFullscreenDisplayMode,
-  [out, retval] IDirect3DDevice9Ex    **ppReturnedDeviceInterface
-);
-= pD3D->CreateDeviceEx( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                      D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                      &d3dpp, NULL, &pDevice ) ) )
-
-HRESULT CreateDeviceEx(
-  [in]          UINT                  Adapter,
-  [in]          D3DDEVTYPE            DeviceType,
-  [in]          HWND                  hFocusWindow,
-  [in]          DWORD                 BehaviorFlags,
-  [in, out]     D3DPRESENT_PARAMETERS *pPresentationParameters,
-  [in, out]     D3DDISPLAYMODEEX      *pFullscreenDisplayMode,
-  [out, retval] IDirect3DDevice9Ex    **ppReturnedDeviceInterface
-);
-
-
-
-*/
     ADM_info("Creating Device9EX\n");
     hr = D3DCall(IDirect3D9Ex,CreateDeviceEx,d3d9ex,
                                 adapter,
@@ -216,6 +188,8 @@ static bool admD3D_initD3D9(GUI_WindowInfo *x)
         goto failInit;
     }
     ADM_info("D3D library loaded, creating instance\n");
+    memset(&d3ddm,0,sizeof(d3ddm));
+    memset(&d3dpp,0,sizeof(d3dpp));
     D3DCall(IDirect3D9,GetAdapterDisplayMode,d3d9, adapter, &d3ddm);
     d3dpp.Windowed         = TRUE;
     d3dpp.BackBufferWidth  = 640;
@@ -225,7 +199,6 @@ static bool admD3D_initD3D9(GUI_WindowInfo *x)
     d3dpp.SwapEffect       = D3DSWAPEFFECT_DISCARD;
     d3dpp.Flags            = D3DPRESENTFLAG_VIDEO;
 
-    //hr = IDirect3D9_CreateDevice(d3d9,
     hr = D3DCall(IDirect3D9,CreateDevice,d3d9,
                                 adapter,
                                 D3DDEVTYPE_HAL,
