@@ -249,6 +249,18 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
     return AV_PIX_FMT_NONE;
 }
 }
+/**
+ * \fn cleanupSurfaces
+ */
+static void cleanupSurfaces( std::vector<admDx2Surface *>&surfaces)
+{
+    int n=surfaces.size();
+    for(int i=0;i<n;i++)
+    {
+        delete surfaces[i];
+    }
+    surfaces.clear();
+}
 
 /**
  *
@@ -305,30 +317,42 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
 
     // Allocate surfaces..
     int bits=dxvaBitDepthFromContext(avctx);
-    if(!admDxva2::allocateD3D9Surface(num_surfaces,avctx->coded_width,avctx->coded_height,surfaces,align,bits))
+    std::vector<admDx2Surface *>dmSurfaces;
+    bool er=false;
+    for(int i=0;i<num_surfaces;i++)
     {
-        ADM_warning("Cannot allocate surfaces \n");
-        return ;
+        admDx2Surface *s=admDxva2::allocateDecoderSurface(this,avctx->coded_width,avctx->coded_height,align, bits);
+        if(!s)
+        {
+            ADM_warning("Cannot allocate decoder surface\n");
+            cleanupSurfaces(dmSurfaces);
+            return;
+        }
+        dmSurfaces.push_back(s);
     }
+    
+    for(int i=0;i<num_surfaces;i++)
+        surfaces[i]=dmSurfaces[i]->surface;
     dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align,bits);
     aprintf("Decoder=%p\n",dx_context->decoder);
     if(!dx_context->decoder)
     {
         ADM_warning("Cannot create decoder\n");
+        cleanupSurfaces(dmSurfaces);
         return ;
     }
     ADM_info("DXVA2 decoder created\n");
     // Populare queue with them
     for (int i=0;i<num_surfaces;i++)
     {
-        admDx2Surface *w=new admDx2Surface(this,align);
-        w->surface=surfaces[i];
+        admDx2Surface *w=dmSurfaces[i];
         w->decoder = dx_context->decoder;
         dxvaPool.freeSurfaceQueue.append(w);
         dxvaPool.allSurfaceQueue.append(w);
         aprintf("Appending surface %p->internal %p\n",w,w->surface);
     }
     //
+    dmSurfaces.clear();
     _context->hwaccel_context = dx_context;
     _context->get_buffer2     = ADM_DXVA2getBuffer;
     _context->draw_horiz_band = NULL;

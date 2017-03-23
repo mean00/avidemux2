@@ -380,29 +380,49 @@ failInit:
 }
 /**
  */
-bool admDxva2::allocateD3D9Surface(int num,int w, int h,void *array,int surface_alignment,int bits)
+admDx2Surface *admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int bits)    
 {
     HRESULT hr;
-    LPDIRECT3DSURFACE9 *surfaces=(LPDIRECT3DSURFACE9 *)array;
-    int width=ALIGN(w,surface_alignment);
-    int height=ALIGN(h,surface_alignment);
+    LPDIRECT3DSURFACE9 surfaces=NULL;
+    HANDLE sh=NULL;
+    int width=ALIGN(w,align);
+    int height=ALIGN(h,align);
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
+    if(admD3D::isDirect9Ex())
+    {
+    
      hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
                                                    height,
-                                                   num - 1,
+                                                   0,
                                                    fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
-                                                   surfaces, NULL);
+                                                   &surfaces, NULL);
+    }else
+    {
+     hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
+                                                   width,
+                                                   height,
+                                                   0,
+                                                   fmt, D3DPOOL_DEFAULT, 0,
+                                                   DXVA2_VideoDecoderRenderTarget,
+                                                   &surfaces, &sh);
+        
+    }
      if(ADM_FAILED(hr))
      {
          ADM_warning("Cannot allocate D3D9 surfaces");
-         return false;
+         return NULL;
      }
-     ADM_info("%d surfaces allocated \n",num);
-     return true;
+     admDx2Surface *s=new admDx2Surface(parent,align);
+     s->surface=surfaces;
+     s->width=width;
+     s->height=height;
+     s->format=fmt;
+     s->sharedHandle=sh;
+     return s;
 }
 /**
  */
@@ -593,6 +613,9 @@ admDx2Surface::admDx2Surface(void *par,int alig)
     decoder=NULL;
     refCount=0;
     color10Bits=NULL;
+    width=height=0;
+    format=D3DFMT_UNKNOWN;
+    sharedHandle=NULL;
 }
 /**
  * \fn dtor

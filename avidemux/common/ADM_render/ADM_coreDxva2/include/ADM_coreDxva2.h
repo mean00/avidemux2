@@ -39,6 +39,9 @@ public:
 public:
     bool                  addRef();
     bool                  removeRef();
+    int                   width,height;
+    D3DFORMAT             format;
+    HANDLE                sharedHandle;
 protected:
     int                   alignment;
 } ;
@@ -55,10 +58,10 @@ public:
         static IDirectXVideoDecoder *createDecoder(AVCodecID codec,int width, int height,int numSurface, LPDIRECT3DSURFACE9 *surface,int align,int bits);
         static bool destroyDecoder(IDirectXVideoDecoder *decoder);
         static DXVA2_ConfigPictureDecode *getDecoderConfig(AVCodecID codec,int bits);
-        static bool allocateD3D9Surface(int num,int width, int height,void *array,int align,int bits=8);
         static bool destroyD3DSurface(int num,void *surfaces);
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
+        static admDx2Surface *allocateDecoderSurface(void *parent,int width, int height,int align,int bits=8);
 };
 
 bool ADM_COREVIDEOCODEC6_EXPORT admDxva2_exitCleanup(void);
