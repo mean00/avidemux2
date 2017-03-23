@@ -348,10 +348,12 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     MainWindow::mainWindowSingleton=this;
     qtRegisterDialog(this);
     ui.setupUi(this);
-        dragState=dragState_Normal;
-        refreshCapEnabled=false;
-        prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
-        prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+    dragState=dragState_Normal;
+    refreshCapEnabled=false;
+    prefs->get(FEATURES_CAP_REFRESH_ENABLED,&refreshCapEnabled);
+    prefs->get(FEATURES_CAP_REFRESH_VALUE,&refreshCapValue);
+    recentFiles = NULL;
+    recentProjects = NULL;
 
 #if defined(__APPLE__) && defined(USE_SDL)
     //ui.actionAbout_avidemux->setMenuRole(QAction::NoRole);
