@@ -666,6 +666,12 @@ void MainWindow::buildActionLists(void)
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(2)); // "Save"
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
 
+    for(int i=3;i<11;i++)
+    {
+        if(i==5 || i==7 || i==11 || i==13) continue;
+        ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
+    }
+
     for(int i=1;i<ui.menuView->actions().size();i++)
     { // disable zoom if no video is loaded
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
@@ -676,6 +682,15 @@ void MainWindow::buildActionLists(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.toolBar->actions().at(i));
     }
 
+#define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsAvailableWhenFileLoaded.push_back(ui.x->actions().at(i));
+#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsDisabledOnPlayback.push_back(ui.x->actions().at(i));
+
+    PUSH_FULL_MENU_LOADED(menuVideo,0)
+    PUSH_FULL_MENU_LOADED(menuAudio,0)
+    PUSH_FULL_MENU_LOADED(menuAuto,0)
+    PUSH_FULL_MENU_LOADED(menuGo,0)
+
+    // Item disabled on playback
     for(int i=1;i<ui.menuView->actions().size();i++)
     { // allow hiding widgets during playback
         ActionsDisabledOnPlayback.push_back(ui.menuView->actions().at(i));
@@ -686,20 +701,6 @@ void MainWindow::buildActionLists(void)
         ActionsDisabledOnPlayback.push_back(ui.menuGo->actions().at(i));
     }
 
-#define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsAvailableWhenFileLoaded.push_back(ui.x->actions().at(i));
-#define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsDisabledOnPlayback.push_back(ui.x->actions().at(i));
-    
-    for(int i=3;i<11;i++)
-    { 
-        if(i==5 || i==7 || i==11 || i==13) continue;
-        ActionsAvailableWhenFileLoaded.push_back(ui.menuEdit->actions().at(i));
-    }
-
-    PUSH_FULL_MENU_LOADED(menuVideo,0)
-    PUSH_FULL_MENU_LOADED(menuAudio,0)
-    PUSH_FULL_MENU_LOADED(menuAuto,0)
-    PUSH_FULL_MENU_LOADED(menuGo,0)
-    // Item disabled on playback
     PUSH_FULL_MENU_PLAYBACK(menuFile,1)
     PUSH_FULL_MENU_PLAYBACK(menuEdit,0)
     PUSH_FULL_MENU_PLAYBACK(menuVideo,0)
@@ -728,6 +729,10 @@ void MainWindow::buildActionLists(void)
     PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
 
     PUSH_ALWAYS_AVAILABLE(toolBar,1)
+
+#define PUSH_FULL_MENU_ALWAYS_AVAILABLE(menu) for(int i=0;i<ui.menu->actions().size();i++)    ActionsAlwaysAvailable.push_back(ui.menu->actions().at(i));
+
+    PUSH_FULL_MENU_ALWAYS_AVAILABLE(menuHelp)
 
     if(recentFiles)
         for(int i=0;i<recentFiles->actions().size();i++)
