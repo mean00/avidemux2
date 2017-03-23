@@ -212,6 +212,7 @@ void MainWindow::buildCustomMenu(void)
 
     this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir(), fileExts);
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir(), fileExts);
+    buildActionLists(); // since we change the menu, the list of stuff needs to be refreshed else it points to deleted items
 
 }
 
