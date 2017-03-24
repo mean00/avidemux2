@@ -245,7 +245,7 @@ void HandleAction (Action action)
 
                             ADM_assert(name[rank].size());
                             call_scriptEngine(name[rank].c_str());
-
+                            A_Resync();
                             return;
             }
     case ACT_VIDEO_CODEC_CONFIGURE:
@@ -1386,6 +1386,7 @@ void A_Resync(void)
         if(!avifileinfo) return;
         GUI_setAllFrameAndTime();
         UI_setMarkers (video_body->getMarkerAPts(),video_body->getMarkerBPts());
+        UI_setAudioTrackCount(video_body->getNumberOfActiveAudioTracks());
 }
 uint8_t  DIA_job_select(char **jobname, char **filename);
 void A_addJob(void)
