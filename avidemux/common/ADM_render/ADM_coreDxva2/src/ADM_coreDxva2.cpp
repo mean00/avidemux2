@@ -380,49 +380,87 @@ failInit:
 }
 /**
  */
-admDx2Surface *admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int bits)    
+admDx2Surface         *admDx2Surface::duplicateForMe(IDirect3DDevice9 *me)
 {
+#if 0
     HRESULT hr;
     LPDIRECT3DSURFACE9 surfaces=NULL;
+    HANDLE sh=NULL;
+    sh=this->sharedHandle;
+    if(!sh)
+        return NULL;
+    hr = D3DCall(IDirect3DDevice9Ex,CreateOffscreenPlainSurface,
+                                                   (IDirect3DDevice9Ex *)me,
+                                                   this->width,
+                                                   this->height,
+                                                   this->format, 
+                                                   D3DPOOL_DEFAULT, 
+                                                   &surfaces, &sh);
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("Cannot duplicate surface\n");
+        return NULL;
+     }
+    admDx2Surface *s=new admDx2Surface(this->parent,this->alignment);
+    s->width=this->width;
+    s->height=this->height;
+    s->parent=NULL;
+    s->sharedHandle=NULL;
+    s->surface=surfaces;
+    return s;
+#endif
+return NULL;
+}
+
+/**
+ */
+bool admDxva2::allocateDecoderSurface(void *parent,int w, int h,int align,int num, LPDIRECT3DSURFACE9 *surfaces, std::vector<admDx2Surface *>&listOf,int bits)
+{
+    HRESULT hr;
     HANDLE sh=NULL;
     int width=ALIGN(w,align);
     int height=ALIGN(h,align);
     D3DFORMAT fmt;
     fmt=dxvaBitsToFormat(bits);
 
-    if(admD3D::isDirect9Ex())
+    if(!admD3D::isDirect9Ex())
     {
     
      hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
                                                    height,
-                                                   0,
+                                                   num-1,
                                                    fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
-                                                   &surfaces, NULL);
+                                                   surfaces, NULL);
     }else
     {
      hr = D3DCall(IDirectXVideoDecoderService,CreateSurface,decoder_service,
                                                    width,
                                                    height,
-                                                   0,
+                                                   num-1,
                                                    fmt, D3DPOOL_DEFAULT, 0,
                                                    DXVA2_VideoDecoderRenderTarget,
-                                                   &surfaces, &sh);
+                                                   surfaces, &sh);
         
     }
      if(ADM_FAILED(hr))
      {
          ADM_warning("Cannot allocate D3D9 surfaces");
-         return NULL;
+         return false;
      }
-     admDx2Surface *s=new admDx2Surface(parent,align);
-     s->surface=surfaces;
-     s->width=width;
-     s->height=height;
-     s->format=fmt;
-     s->sharedHandle=sh;
-     return s;
+     ADM_info("Allocated surface %p with shared handle=%p\n",surfaces,sh);
+     for(int i=0;i<num;i++)
+     {
+         admDx2Surface *s=new admDx2Surface(parent,align);
+         s->surface=surfaces[i];
+         s->width=width;
+         s->height=height;
+         s->format=fmt;
+         s->sharedHandle=sh;
+         listOf.push_back(s);
+     }
+     return true;
 }
 /**
  */

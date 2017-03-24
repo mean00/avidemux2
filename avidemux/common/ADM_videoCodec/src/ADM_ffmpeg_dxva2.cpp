@@ -319,20 +319,11 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
     int bits=dxvaBitDepthFromContext(avctx);
     std::vector<admDx2Surface *>dmSurfaces;
     bool er=false;
-    for(int i=0;i<num_surfaces;i++)
-    {
-        admDx2Surface *s=admDxva2::allocateDecoderSurface(this,avctx->coded_width,avctx->coded_height,align, bits);
-        if(!s)
+    if(!admDxva2::allocateDecoderSurface(this,avctx->coded_width,avctx->coded_height,align,num_surfaces,surfaces,dmSurfaces, bits))
         {
-            ADM_warning("Cannot allocate decoder surface\n");
-            cleanupSurfaces(dmSurfaces);
-            return;
+                ADM_warning("Cannot allocate surfaces\n");
+                return ;
         }
-        dmSurfaces.push_back(s);
-    }
-    
-    for(int i=0;i<num_surfaces;i++)
-        surfaces[i]=dmSurfaces[i]->surface;
     dx_context->decoder=admDxva2::createDecoder(avctx->codec_id,avctx->coded_width, avctx->coded_height,num_surfaces,surfaces,align,bits);
     aprintf("Decoder=%p\n",dx_context->decoder);
     if(!dx_context->decoder)

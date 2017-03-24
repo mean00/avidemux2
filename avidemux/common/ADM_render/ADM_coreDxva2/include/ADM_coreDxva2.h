@@ -19,6 +19,7 @@
 #include "ADM_coreD3D.h"
 #include "dxva2api.h"
 #include "ADM_coreDxva2_export.h"
+#include <vector>
 extern "C"
 {
  #include "libavcodec/avcodec.h"
@@ -42,6 +43,7 @@ public:
     int                   width,height;
     D3DFORMAT             format;
     HANDLE                sharedHandle;
+    admDx2Surface         *duplicateForMe(IDirect3DDevice9 *);
 protected:
     int                   alignment;
 } ;
@@ -61,7 +63,7 @@ public:
         static bool destroyD3DSurface(int num,void *surfaces);
         static bool decoderAddRef(IDirectXVideoDecoder *decoder);
         static bool decoderRemoveRef(IDirectXVideoDecoder *decoder);
-        static admDx2Surface *allocateDecoderSurface(void *parent,int width, int height,int align,int bits=8);
+        static bool allocateDecoderSurface(void *parent,int width, int height,int align,int num, LPDIRECT3DSURFACE9 *surfaces, std::vector<admDx2Surface *>&listOf,int bits=8);
 };
 
 bool ADM_COREVIDEOCODEC6_EXPORT admDxva2_exitCleanup(void);

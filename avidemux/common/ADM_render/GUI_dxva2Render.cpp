@@ -29,7 +29,6 @@
 #include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
 
-//#define REUSE_DEVICE 1
 
 #if 1
 #define aprintf printf
@@ -239,7 +238,7 @@ bool dxvaRender::setup()
   D3DVIEWPORT9 viewPort = {0, 0, displayWidth, displayHeight, 0, 1};
 
 
-    ADM_info("D3D (re)Setting up \n");
+     ADM_info("D3D (re)Setting up \n");
      D3DPRESENT_PARAMETERS presentationParameters;
      memset(&presentationParameters, 0, sizeof(presentationParameters));
      presentationParameters.Windowed               = TRUE;
@@ -254,20 +253,38 @@ bool dxvaRender::setup()
      presentationParameters.BackBufferCount        = 1;
      presentationParameters.EnableAutoDepthStencil = FALSE;
 
+     if( admD3D::isDirect9Ex())
+     {
+        IDirect3DDevice9Ex *d3d9deviceex = NULL;
+                
+        if(ADM_FAILED(D3DCall(IDirect3D9Ex,CreateDeviceEx,  ((IDirect3D9Ex *)d3dHandle),
+                                         D3DADAPTER_DEFAULT,
+                                         D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
+                                         D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+                                         &presentationParameters,NULL, &d3d9deviceex)))
+        {
+          ADM_warning("Failed to create D3D9Ex render device\n");
+          d3dDevice=NULL;
+        }
+        else
+        {
+           d3dDevice=(IDirect3DDevice9 *)d3d9deviceex;  
+           ADM_info("DXVA2Render : device created in D3D9Ex mode\n");
+        }
+     }
 
-#ifndef REUSE_DEVICE
-     if(ADM_FAILED(D3DCall(IDirect3D9,CreateDevice,  d3dHandle,
+     if(!d3dDevice) // fallback if D3D9Ex fails or not available
+     {
+       if(ADM_FAILED(D3DCall(IDirect3D9,CreateDevice,  d3dHandle,
                                          D3DADAPTER_DEFAULT,
                                          D3DDEVTYPE_HAL,  presentationParameters.hDeviceWindow,
                                          D3DCREATE_SOFTWARE_VERTEXPROCESSING,
                                          &presentationParameters, &d3dDevice)))
-     {
-        ADM_warning("Failed to create D3D device\n");
-        return false;
-    }
-#else
-      d3dDevice=admD3D::getDevice();
-#endif
+        {
+          ADM_warning("dxvaRender::Failed to create D3D render device\n");
+          return false;
+        }
+     }
 
       //
 
@@ -305,7 +322,7 @@ bool dxvaRender::setup()
       return false;
   }
 
- scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
+  scaler=new ADMColorScalerFull(ADM_CS_BICUBIC,imageWidth,imageHeight,displayWidth,displayHeight,
           ADM_COLOR_YV12,
           ADM_COLOR_RGB32A
       );
@@ -345,13 +362,11 @@ bool dxvaRender::cleanup()
         D3DCallNoArg(IDirect3DSurface9,Release,myYV12Surface);
         myYV12Surface=NULL;
     }
-#ifndef REUSE_DEVICE
     if(d3dDevice)
     {
        D3DCallNoArg(IDirect3DDevice9,Release,d3dDevice);
        d3dDevice=NULL;
     }
-#endif
     if(videoBuffer)
     {
         delete [] videoBuffer;
@@ -366,7 +381,7 @@ bool dxvaRender::cleanup()
  bool dxvaRender::refresh(void)
  {
    ADM_info("Refresh**\n");
-   #if 0
+#if 0
    if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
    {
         ADM_warning("D3D Present failed\n");
@@ -378,7 +393,7 @@ bool dxvaRender::cleanup()
     {
         ADM_warning("D3D Present failed\n");
     }
-   #endif
+#endif
   return true;
  }
 /**
@@ -558,57 +573,44 @@ bool dxvaRender::displayImage_surface(ADMImage *pic,admDx2Surface *surface)
 
   IDirect3DSurface9 *bBuffer;
   POINT point={0,0};
-  // 1 upload to myYV12 surface
-  if(ADM_FAILED(IDirect3DDevice9_UpdateSurface(d3dDevice,
-          surface->surface,   // src
-          &panScan,       // src rect
-          myYV12Surface, // dst
-          &point         // where to
-        )))
-        {
-            ADM_warning("Copying surface failed, switching to non accelerated path \n");
-            if(!pic->hwDownloadFromRef())
-            {
-              ADM_warning("Failed to download yv12 from dxva\n");
-              return false;
-            }
-            // workaround : use default non bridged path
-              if(useYV12)
-              {
-                  return displayImage_yv12(pic);
-              }
-              return displayImage_argb(pic);
-            return false;
-        }
- // upload....
-  if( ADM_FAILED(IDirect3DDevice9_GetBackBuffer(d3dDevice, 0, 0,
-                                            D3DBACKBUFFER_TYPE_MONO,
-                                            &bBuffer)))
+  // OK
+  ADM_info("surface duplicated\n");
+  if( ADM_FAILED(D3DCall(IDirect3DDevice9,GetBackBuffer,d3dDevice, 0, 0,
+                                              D3DBACKBUFFER_TYPE_MONO,
+                                              &bBuffer)))
   {
-        ADM_warning("D3D Cannot create backBuffer\n");
-        return false;
+      ADM_warning("D3D Cannot create backBuffer\n");
+      return false;
   }
 
-
-  // data are in YV12 surface, blit it to mySurface
-  // zoom and color conversion happen there
-
-  if (ADM_FAILED(IDirect3DDevice9_StretchRect(d3dDevice,
-                  myYV12Surface,
+  // can we directly use the surface from dxva ? (can we at all ?)
+  if (ADM_FAILED(D3DCall(IDirect3DDevice9,StretchRect,d3dDevice,
+                  surface->surface,
                   NULL,
                   bBuffer,
                   NULL,
                   D3DTEXF_LINEAR)))
-                  {
-                         ADM_warning("StretchRec yv12 failed\n");
-                  }
+  {
+    ADM_warning("StretchRec yv12 failed\n");
+    // go to indirect route
+    if(!pic->hwDownloadFromRef())
+    {
+        ADM_warning("Failed to download yv12 from dxva\n");
+        return false;
+    }
+    // workaround : use default non bridged path
+    if(useYV12)
+    {
+         return displayImage_yv12(pic);
+    }
+    return displayImage_argb(pic);
+  }
   IDirect3DDevice9_BeginScene(d3dDevice);
   IDirect3DDevice9_EndScene(d3dDevice);
   if( ADM_FAILED(IDirect3DDevice9_Present(d3dDevice, &targetRect, 0, 0, 0)))
   {
     ADM_warning("D3D Present failed\n");
   }
-
   return true;
 }
 
