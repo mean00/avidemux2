@@ -460,7 +460,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     this->setFocus(Qt::OtherFocusReason);
 
     setAcceptDrops(true);
-        setWindowIcon(QIcon(":/new/prefix1/pics/avidemux_icon_small.png"));
+        setWindowIcon(QIcon(MKICON(avidemux_icon_small)));
 
     // Hook also the toolbar
     connect(ui.toolBar,  SIGNAL(actionTriggered ( QAction *)),this,SLOT(searchToolBar(QAction *)));
@@ -810,8 +810,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         for(int i=0;i<ntb;i++)
             ButtonsDisabledOnPlayback[i]->setEnabled(false);
 
-        ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_stop.png"));
-        ui.menuGo->actions().at(0)->setIcon(QIcon(":/new/prefix1/pics/player_stop.png"));
+        ui.toolButtonPlay->setIcon(QIcon(MKICON(player_stop)));
+        ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_stop)));
 
         int npb=PushButtonsDisabledOnPlayback.size();
         for(int i=0;i<npb;i++)
@@ -857,8 +857,8 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<n;i++)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
-    ui.toolButtonPlay->setIcon(QIcon(":/new/prefix1/pics/player_play.png"));
-    ui.menuGo->actions().at(0)->setIcon(QIcon(":/new/prefix1/pics/player_play.png"));
+    ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
+    ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
 }
 
 /**
@@ -1276,7 +1276,7 @@ void MainWindow::nextIntraFrame(void)
 }
 
 /**
-
+    \fn volumeWidgetOperational
 */
 void MainWindow::volumeWidgetOperational(void)
 {
