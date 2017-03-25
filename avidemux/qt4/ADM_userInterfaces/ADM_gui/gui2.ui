@@ -255,7 +255,7 @@
        <item>
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>&lt;b&gt;Video Decoder&lt;b&gt;</string>
+          <string>&lt;b&gt;Video Decoder&lt;/b&gt;</string>
          </property>
         </widget>
        </item>

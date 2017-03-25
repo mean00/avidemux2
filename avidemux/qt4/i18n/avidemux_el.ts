@@ -2755,7 +2755,7 @@ Do you want to load it  ?
         <translation type="obsolete">Ίσως να συνδέεται με ένα παλαιότερο αρχείο ευρετηρίου.</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+222"/>
+        <location filename="../../common/ADM_editor/src/ADM_edit.cpp" line="+229"/>
         <source>Attempt to open %s failed!</source>
         <translation>Η προσπάθεια ανοίγματος του %s απέτυχε.</translation>
     </message>
@@ -3870,7 +3870,7 @@ Drop timing informations ?</source>
         <translation type="obsolete">&lt;b&gt;Βίντεο&lt;/b&gt;</translation>
     </message>
     <message>
-        <location line="+462"/>
+        <location line="+468"/>
         <location line="+169"/>
         <source>Copy</source>
         <translation>Αντιγραφή</translation>
@@ -3904,7 +3904,6 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+265"/>
-        <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
         <location line="+23"/>
@@ -3968,7 +3967,7 @@ Drop timing informations ?</source>
         <translation>000000</translation>
     </message>
     <message>
-        <location line="-1434"/>
+        <location line="-1414"/>
         <source>&amp;Help</source>
         <translation>Βοή&amp;θεια</translation>
     </message>
@@ -4029,7 +4028,7 @@ Drop timing informations ?</source>
         <translation type="obsolete">Αυ&amp;τόματο</translation>
     </message>
     <message>
-        <location line="+1560"/>
+        <location line="+1540"/>
         <source>&amp;Open...</source>
         <translation>Άν&amp;οιγμα...</translation>
     </message>
@@ -4316,12 +4315,12 @@ Drop timing informations ?</source>
         <translation type="obsolete">Προη&amp;γούμενο Καρέ</translation>
     </message>
     <message>
-        <location line="-1052"/>
+        <location line="-1029"/>
         <source>ms</source>
         <translation>χιλ.τουδευτ.</translation>
     </message>
     <message>
-        <location line="+786"/>
+        <location line="+763"/>
         <source>A:</source>
         <translation>A:</translation>
     </message>
@@ -4593,7 +4592,12 @@ Drop timing informations ?</source>
         <translation>&amp;Κορυφή</translation>
     </message>
     <message>
-        <location line="-511"/>
+        <location line="-1636"/>
+        <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1125"/>
         <source>Frame type:</source>
         <translation>Τύπος στιγμιότυπου:</translation>
     </message>
@@ -4623,7 +4627,7 @@ Drop timing informations ?</source>
         <translation type="obsolete">Video CD</translation>
     </message>
     <message>
-        <location line="-1763"/>
+        <location line="-1743"/>
         <source>&amp;Toolbars</source>
         <translation>&amp;Γραμμές εργαλείων</translation>
     </message>
@@ -4638,17 +4642,16 @@ Drop timing informations ?</source>
         <translation>Π&amp;ρόσφατο</translation>
     </message>
     <message>
-        <location line="+41"/>
+        <location line="+44"/>
         <source>Codec O&amp;ptions</source>
         <translation>Ε&amp;πιλογές Κώδικα</translation>
     </message>
     <message>
-        <location line="+33"/>
         <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation>&lt;b&gt;Αποκωδικοποιητής Βίντεου&lt;b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Αποκωδικοποιητής Βίντεου&lt;b&gt;</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+108"/>
         <location line="+7"/>
         <source>XXXX</source>
         <translation>XXXX</translation>
@@ -4675,12 +4678,12 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+114"/>
-        <location line="+955"/>
+        <location line="+932"/>
         <source>&amp;Navigation</source>
         <translation>&amp;Πλοήγηση</translation>
     </message>
     <message>
-        <location line="-880"/>
+        <location line="-857"/>
         <source>Play [SPACE]</source>
         <translation>Αναπαραγωγή [ΔΙΑΣΤΗΜΑ]</translation>
     </message>
@@ -4690,12 +4693,11 @@ Drop timing informations ?</source>
         <translation>Αναπαραγωγή</translation>
     </message>
     <message>
-        <location line="+26"/>
         <source>Stop [SPACE]</source>
-        <translation>Σταμάτημα [ΔΙΑΣΤΗΜΑ]</translation>
+        <translation type="vanished">Σταμάτημα [ΔΙΑΣΤΗΜΑ]</translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+26"/>
         <source>Go to previous frame [LEFT]</source>
         <translation>Μετάβαση στο προηγούμενο στιγμιότυπο [ΑΡΙΣΤΕΡΑ]</translation>
     </message>
@@ -5420,7 +5422,7 @@ Drop timing informations ?</source>
 <context>
     <name>adm</name>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+205"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+217"/>
         <source>Decode video using DXVA2 (windows)</source>
         <translation>Αποκωδικοποίηση του βίντεου με τη χρήση DXVA2 (windows)</translation>
     </message>
@@ -5433,6 +5435,16 @@ Drop timing informations ?</source>
         <location line="+1"/>
         <source>_Revert to saved default output settings on video load</source>
         <translation>_Επαναφορά στις προεπιλεγμένες ρυθμίσεις εξόδου του βίντεου, κατά τη φόρτωση του αρχείου</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>_Enable alternative keyboard shortcuts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Re_verse UP and DOWN arrow keys for navigation</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
@@ -5542,7 +5554,12 @@ Drop timing informations ?</source>
         <translation>Ορισμός Προτεραιοτήτων</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+9"/>
+        <source>_Default to the directory of the last read file for saving</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>XVideo (best)</source>
         <translation>XVideo (καλύτερο)</translation>
     </message>
@@ -5656,7 +5673,7 @@ Drop timing informations ?</source>
         <location filename="../../common/gui_save.cpp" line="+281"/>
         <location line="+21"/>
         <location line="+7"/>
-        <location filename="../../common/gui_savenew.cpp" line="+383"/>
+        <location filename="../../common/gui_savenew.cpp" line="+403"/>
         <source>Audio</source>
         <translation>Ήχος</translation>
     </message>
@@ -5707,7 +5724,7 @@ Drop timing informations ?</source>
         <translation>Όρισε το Δείκτη Β΄</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+14"/>
         <location line="+8"/>
         <source>Filters</source>
         <translation>Μεταμορφωτές</translation>
@@ -5896,7 +5913,7 @@ Drop timing informations ?</source>
         <translation>Σφάλμα Κώδικα</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+336"/>
+        <location filename="../../common/gui_main.cpp" line="+337"/>
         <source>Not coded in this version</source>
         <translation>Δεν κωδικοποιήθηκε σε αυτή την έκδοση</translation>
     </message>
@@ -5909,7 +5926,7 @@ Drop timing informations ?</source>
         <translation type="obsolete">Επιλέξτε ένα αρχείο AVI για προσκόλληση...</translation>
     </message>
     <message>
-        <location line="+228"/>
+        <location line="+238"/>
         <source>Are you sure?</source>
         <translation>Στα σίγουρα;</translation>
     </message>
@@ -6026,7 +6043,7 @@ Expect problems.</source>
         <translation>Κύριο Κανάλι Ήχου</translation>
     </message>
     <message>
-        <location line="+254"/>
+        <location line="+257"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -6136,7 +6153,7 @@ Is it running ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-238"/>
+        <location filename="../../common/gui_main.cpp" line="-241"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -6471,7 +6488,7 @@ Is it running ?</source>
         <translation>Αφαίρεση _δακτυλίων</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-166"/>
+        <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="-170"/>
         <source>Decode video using VDPAU (NVIDIA)</source>
         <translation>Αποκωδικοποίηση του βίντεου με τη χρήση VDPAU (NVIDIA)</translation>
     </message>
@@ -6505,7 +6522,7 @@ Is it running ?</source>
         <translation>_Αποδοχή μη τυποποιημένων συχνοτήτων ήχου για DVD</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+5"/>
         <source>_Check for new release</source>
         <translation>Έλεγ_χος για νέα έκδοση</translation>
     </message>
@@ -6520,7 +6537,7 @@ Is it running ?</source>
         <translation>_Χρήση εναλλακτικής ετικέτας για MP3 μέσα σε .mp4</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+10"/>
         <source>VDPAU (best)</source>
         <translation>VDPAU (καλύτερη)</translation>
     </message>
@@ -6596,7 +6613,7 @@ Is it running ?</source>
         <translation>Προεπιλεγμένη θύρα για χρήση</translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-77"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-78"/>
         <source>Open</source>
         <translation>Άνοιγμα</translation>
     </message>
@@ -6678,7 +6695,12 @@ Is it running ?</source>
         <translation>Διαγραφή</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+4"/>
+        <source>Reset Markers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>Pr&amp;eferences</source>
         <translation>Προτιμήσεις</translation>
     </message>
@@ -6872,7 +6894,7 @@ It is needed to create PSP compatible video.</source>
 Είναι απαραίτητο για τη δημιουργία βίντεου συμβατό με PSP.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1206"/>
+        <location filename="../../common/gui_main.cpp" line="-1217"/>
         <source>Select script/project to run</source>
         <translation>Επέλεξε σενάριο ή εργασία για τρέξιμο</translation>
     </message>
@@ -6892,7 +6914,7 @@ It is needed to create PSP compatible video.</source>
         <translation>Επέλεξε σενάριο για αποθήκευση</translation>
     </message>
     <message>
-        <location line="+161"/>
+        <location line="+162"/>
         <location line="+65"/>
         <source>Select Video File...</source>
         <translation>Επιλέξτε Αρχείο Βίντεου...</translation>
@@ -6913,7 +6935,7 @@ It is needed to create PSP compatible video.</source>
         <translation>Επιλέξτε Αρχείο Βίντεου για Προσκόλληση...</translation>
     </message>
     <message>
-        <location line="+196"/>
+        <location line="+206"/>
         <source>Cutting</source>
         <translation>Αποκόβει</translation>
     </message>
@@ -6954,7 +6976,7 @@ It is needed to create PSP compatible video.</source>
         <translation>Ο ορισμός της γλώσσας για τα περιεχόμενα του δοσμένου καναλιού δεν είναι εφικτός: Μη έγκυρα περιεχόμενα καναλιού.</translation>
     </message>
     <message>
-        <location line="+176"/>
+        <location line="+179"/>
         <source>Frame Hex Dump</source>
         <translation>Εξαγωνική Απόρριψη Καρέ</translation>
     </message>
@@ -7045,14 +7067,14 @@ It is needed to create PSP compatible video.</source>
         <translation>Αδυναμία προσθήκης της διαδικασίας %s</translation>
     </message>
     <message>
-        <location filename="../../common/gui_savenew.cpp" line="-174"/>
+        <location filename="../../common/gui_savenew.cpp" line="-196"/>
         <source>Reuse previous first pass data ?
 Warning, the settings must be close.</source>
         <translation>Να επανα-χρησιμοποιηθούν τα προηγούμενα δεδομένα του πρώτου περάσματος;
 Προειδοποίηση: οι ρυθμίσεις θα πρέπει να κλείσουν.</translation>
     </message>
     <message>
-        <location line="+138"/>
+        <location line="+160"/>
         <source>Cannot instantiate video chain</source>
         <translation>Αδυναμία παράστασης της αλυσίδας του βίντεου</translation>
     </message>
@@ -7087,13 +7109,15 @@ Do you want to continue anyway ?</source>
 Να συνεχιστεί, έτσι κι αλλιώς;</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="-244"/>
+        <location line="+255"/>
         <location line="+26"/>
         <source>Muxer</source>
         <translation>Πολυπλέκτης</translation>
     </message>
     <message>
-        <location line="-26"/>
+        <location line="-281"/>
+        <location line="+255"/>
         <source>Cannot instantiate muxer</source>
         <translation>Αδυναμία παράστασης του πολυπλέκτη</translation>
     </message>
@@ -7484,7 +7508,7 @@ Do you want to continue anyway ?</source>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreUtils/src/ADM_iso639.cpp" line="+17"/>
-        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+384"/>
+        <location filename="../../../avidemux_core/ADM_coreUtils/src/avidemutils.cpp" line="+385"/>
         <source>Unknown</source>
         <translation>Άγνωστο</translation>
     </message>
@@ -7663,14 +7687,12 @@ Installation mismatch</source>
         <translation>Asharp (οξύτητα)</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/asharp/DIA_flyAsharp.cpp" line="+107"/>
         <source>Original</source>
-        <translation>Αρχικό</translation>
+        <translation type="vanished">Αρχικό</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Processed</source>
-        <translation>Επεξεργασμένο</translation>
+        <translation type="vanished">Επεξεργασμένο</translation>
     </message>
 </context>
 <context>
@@ -10523,14 +10545,12 @@ I will assume it has and try to continue</source>
         <translation>Απόχρωσ MPlayer</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/qt4/DIA_flyHue.cpp" line="+61"/>
         <source>Original</source>
-        <translation>Αρχικό</translation>
+        <translation type="vanished">Αρχικό</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Processed</source>
-        <translation>Επεξεργασμένο</translation>
+        <translation type="vanished">Επεξεργασμένο</translation>
     </message>
 </context>
 <context>
@@ -11771,16 +11791,6 @@ I will assume it has and try to continue</source>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
         <translation>Όξυνση των ακμών χωρίς ενίσχυση του θορύβου. Από τον Ντόναλντ Γκραφτ (Donald Graft).</translation>
     </message>
-    <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/qt4/DIA_flymsharpen.cpp" line="+95"/>
-        <source>Original</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Processed</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>msharpenDialog</name>
@@ -12196,7 +12206,22 @@ Please delete the idx2 file and reopen.</source>
         <translation>Απαιτούνται δικαιώματα Υπερχρήστη για να εκτελεστεί αυτή η λειτουργία.</translation>
     </message>
     <message>
-        <location line="+278"/>
+        <location line="+101"/>
+        <source>First Pass</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Pass 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Encoding...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+188"/>
         <source>The encoding is paused. Do you want to resume or abort?</source>
         <translation>Η κωδικοποίηση έχει παυθεί. Θέλεις να συνεχιστεί ή να εγκαταλειφθεί;</translation>
     </message>
@@ -12215,7 +12240,7 @@ Please delete the idx2 file and reopen.</source>
     <name>qfile</name>
     <message>
         <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+40"/>
-        <location line="+89"/>
+        <location line="+101"/>
         <source>All files (*.*)</source>
         <translation>Όλα τα αρχεία (*.*)</translation>
     </message>
@@ -12234,12 +12259,12 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+219"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+223"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Διαθέσιμη νέα έκδοση&lt;/b&gt;&lt;br&gt; Έκδοση %1&lt;br&gt;Εκδόθηκε στις %2.&lt;br&gt;Μπορείς να το κατεβάσεις από εδώ&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Μπορείς να απενεργοποιήσεις την αυτόματη ενημέρωση στις προτιμήσεις.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+219"/>
+        <location line="+220"/>
         <source>Recent Files</source>
         <translation>Πρόσφατα Αρχεία</translation>
     </message>
@@ -12249,19 +12274,74 @@ Please delete the idx2 file and reopen.</source>
         <translation>Πρόσφατες Εργασίες</translation>
     </message>
     <message>
-        <location line="+575"/>
+        <location line="+511"/>
+        <source>Play/Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to previous frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to next frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to previous keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to next keyframe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Set start marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Set end marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Go to first frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to last frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Go to marker A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Go to marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+491"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Η εφαρμογή αντιμετώπισε ένα μοιραίο πρόβλημα
 Η τωρινή επεξεργασία έχει αποθηκευθεί και θα ξαναφορτωθεί στην επόμενη εκκίνηση</translation>
     </message>
     <message>
-        <location line="+260"/>
+        <location line="+262"/>
         <source>%c-%s (%02d)</source>
         <translation>%c-%s (%02d)</translation>
     </message>
     <message>
-        <location line="+291"/>
+        <location line="+305"/>
         <source> (%d track(s))</source>
         <translation> (%d κανάλι(-α))</translation>
     </message>
@@ -12419,7 +12499,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Αυτός ε μεταμορφωτής δεν μπορεί να γίνει μερικός</translation>
     </message>
     <message>
-        <location line="+177"/>
+        <location line="+179"/>
         <source>Add</source>
         <translation>Προσθήκη</translation>
     </message>
@@ -13298,7 +13378,7 @@ Ready.
         <translation>Τηλεκινηματογράφηση από τον Ντόναλντ Γκραφτ (Donald Graft). Αντικατάσταση ivtc ακολουθιών από προοδευτικά στιγμιότυπα. Το βίντεο μένει στα 30 στιγ.ανάδευτ.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="+185"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/telecide/Telecide_utils.cpp" line="+186"/>
         <source>No strategy</source>
         <translation>Καμία στρατηγική</translation>
     </message>
@@ -13454,7 +13534,7 @@ Please delete the idx2 file and reopen.</source>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH264.cpp" line="+185"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+328"/>
+        <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexH265.cpp" line="+322"/>
         <location filename="../../../avidemux_plugins/ADM_demuxers/MpegTS/ADM_tsIndexMpeg2.cpp" line="+82"/>
         <source>There are several files with sequential file names. Should they be all loaded ?</source>
         <translation>Υπάρχουν αρκετά αρχεία με συνεχόμενες ονομασίες. Να φορτωθούν όλα μαζί;</translation>
@@ -16474,7 +16554,27 @@ If it is a system profile it will be recreated next time.</source>
         <translation>Προσαρμοσμένο</translation>
     </message>
     <message>
-        <location line="+83"/>
+        <location line="+31"/>
+        <source>4:3 (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>4:3 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>16:9 (PAL)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>16:9 (NTSC)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+49"/>
         <source>Motion Estimation</source>
         <translation>Εκτίμηση Κίνησης</translation>
     </message>
@@ -16534,27 +16634,23 @@ If it is a system profile it will be recreated next time.</source>
         <translation>1:1 (Υπολογιστής)</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>4:3 (PAL))</source>
-        <translation>4:3 (PAL))</translation>
+        <translation type="vanished">4:3 (PAL))</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>4:3 (NTSC))</source>
-        <translation>4:3 (NTSC))</translation>
+        <translation type="vanished">4:3 (NTSC))</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>16:9 (PAL))</source>
-        <translation>16:9 (PAL))</translation>
+        <translation type="vanished">16:9 (PAL))</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>16:9 (NTSC))</source>
-        <translation>16:9 (NTSC))</translation>
+        <translation type="vanished">16:9 (NTSC))</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+11"/>
         <source>MotionEstimation</source>
         <translation>ΕκτίμησηΚίνησης</translation>
     </message>

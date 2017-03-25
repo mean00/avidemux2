@@ -148,8 +148,8 @@ void rotatePlane(uint32_t angle,uint8_t *src,      uint32_t srcPitch,
         case 0:   BitBlit(dst,dstPitch,src,srcPitch,width,height);return;break;
         case 180: dstIncPix=-1;       dstIncLine=-dstPitch; dst=dst+((height-1)*dstPitch)+width-1;break;
 
-        case 90:  dstIncPix=-dstPitch;dstIncLine=1;         dst=dst+((width-1)*dstPitch);break;
-        case 270: dstIncPix=dstPitch; dstIncLine=-1;        dst=dst+height-1;break;
+        case 90:  dstIncPix=dstPitch; dstIncLine=-1;        dst=dst+height-1;break;
+        case 270: dstIncPix=-dstPitch;dstIncLine=1;         dst=dst+((width-1)*dstPitch);break;
         default:
             break;
     }
