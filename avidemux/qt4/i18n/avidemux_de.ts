@@ -5320,7 +5320,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+3"/>
         <source>Alt+Return</source>
-        <translation type="unfinished">Alt+i</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+9"/>
@@ -5775,7 +5775,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-511"/>
         <source>Frame type:</source>
-        <translation type="unfinished">Bildtyp:</translation>
+        <translation>Frame-Typ:</translation>
     </message>
     <message>
         <location line="+499"/>
@@ -5886,7 +5886,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-736"/>
         <source>Play [SPACE]</source>
-        <translation>Wiedergabe/Pause [Leertaste]</translation>
+        <translation>Wiedergabe/Stopp [Leertaste]</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -7680,7 +7680,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+23"/>
         <source>Play/Stop</source>
-        <translation type="unfinished">Wiedergabe/Pause</translation>
+        <translation>Wiedergabe/Stopp</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7965,12 +7965,12 @@ Drop timing informations ?</source>
         <location line="+27"/>
         <location line="+35"/>
         <source>Codec Error</source>
-        <translation type="unfinished">Codec Fehler</translation>
+        <translation>Codec-Fehler</translation>
     </message>
     <message>
         <location filename="../../common/gui_main.cpp" line="+337"/>
         <source>Not coded in this version</source>
-        <translation type="unfinished">Nicht in dieser Version eingebaut</translation>
+        <translation>Nicht implementiert in dieser Version</translation>
     </message>
     <message>
         <source>Select AVI File...</source>
@@ -8029,8 +8029,8 @@ Drop timing informations ?</source>
         <location line="+0"/>
         <source>The file you just loaded contains several audio tracks.
 Go to Audio-&gt;MainTrack to select the active one.</source>
-        <translation type="unfinished">Die soeben geladene Datei enthält mehrere Audio-Spuren.
-Gehe zu Audio-&gt;Hauptspur und wähle die aktive Tonspur aus.</translation>
+        <translation>Die soeben geladene Datei enthält mehrere Audio-Spuren.
+Wählen Sie unter &apos;Audio&apos; -&gt; &apos;Tonspur wählen&apos; die aktive Tonspur aus.</translation>
     </message>
     <message>
         <location line="+105"/>
@@ -8091,7 +8091,7 @@ Expect problems.</source>
         <translation type="unfinished">Haupt-Tonspur</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+258"/>
         <source>AvsProxy</source>
         <translation type="unfinished">Avs-Proxy</translation>
     </message>
@@ -8100,7 +8100,7 @@ Expect problems.</source>
         <source>Failed to connect to avsproxy.
 Is it running ?</source>
         <translation type="unfinished">Fehler beim Verbinden mit dem Avs-Proxy.
-Läuft es trotzdem?</translation>
+Läuft er?</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -8110,7 +8110,7 @@ Läuft es trotzdem?</translation>
     <message>
         <location line="+34"/>
         <source>Frame type:</source>
-        <translation type="unfinished">Bildtyp:</translation>
+        <translation>Frame-Typ:</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8200,7 +8200,7 @@ Läuft es trotzdem?</translation>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-243"/>
+        <location filename="../../common/gui_main.cpp" line="-244"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -8877,7 +8877,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+500"/>
+        <location line="+501"/>
         <source>Oops</source>
         <translation type="unfinished"></translation>
     </message>
@@ -9489,6 +9489,11 @@ Trotzdem fortsetzen?</translation>
 Installation mismatch</source>
         <translation type="unfinished">Avidemux-Core wurde ohne DXVA2-Unterstützung kompiliert, die Avidemux-Anwendung jedoch mit.
 Nichtübereinstimmende Installation</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10217,13 +10222,13 @@ Trotzdem fortsetzen?</translation>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="+64"/>
         <location line="+86"/>
         <source>Contrast</source>
-        <translation type="unfinished">Kontrast</translation>
+        <translation>Kontrast</translation>
     </message>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-85"/>
         <location line="+86"/>
         <source>Brightness</source>
-        <translation type="unfinished"></translation>
+        <translation>Helligkeit</translation>
     </message>
 </context>
 <context>
@@ -10232,19 +10237,7 @@ Trotzdem fortsetzen?</translation>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/contrast.ui" line="+14"/>
         <location line="+19"/>
         <source>Contrast</source>
-        <translation type="unfinished">Kontrast</translation>
-    </message>
-    <message>
-        <source>Contrast:</source>
-        <translation type="obsolete">Kontrast:</translation>
-    </message>
-    <message>
-        <source>Brightness:</source>
-        <translation type="obsolete">Helligkeit:</translation>
-    </message>
-    <message>
-        <source>Colour Space</source>
-        <translation type="obsolete">Farbraum</translation>
+        <translation>Kontrast</translation>
     </message>
     <message>
         <location line="+94"/>
@@ -10259,27 +10252,27 @@ Trotzdem fortsetzen?</translation>
     <message>
         <location line="-48"/>
         <source>Contrast  </source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrast  </translation>
     </message>
     <message>
         <location line="+41"/>
         <source>Brightness  </source>
-        <translation type="unfinished"></translation>
+        <translation>Helligkeit  </translation>
     </message>
     <message>
         <location line="+46"/>
         <source>ChromaU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Farbkomponente U</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>ChromaV</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Farbkomponente V</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Vorschau</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -12150,7 +12143,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12178,7 +12171,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12204,7 +12197,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12214,12 +12207,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13017,7 +13010,7 @@ der Halbbilder (deinterlaceing)</translation>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation type="unfinished">_Bitrate (kb/s):</translation>
     </message>
@@ -14307,7 +14300,7 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+443"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+445"/>
         <source>Recent Files</source>
         <translation>Zuletzt verwendete &amp;Dateien</translation>
     </message>
@@ -14317,7 +14310,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Zuletzt verwendete &amp;Projekte</translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14362,7 +14355,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Zum letzten Frame gehen</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
         <translation>Zur Markierung A gehen</translation>
     </message>
@@ -14372,20 +14365,31 @@ Please delete the idx2 file and reopen.</source>
         <translation>Zur Markierung B gehen</translation>
     </message>
     <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation>Eine Minute zurück</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
+        <translation>Eine Minute vor</translation>
+    </message>
+    <message>
         <location line="+1058"/>
         <source> (%d track(s))</source>
         <translation> (%d Tonspur(en))</translation>
     </message>
     <message>
-        <location line="-1824"/>
+        <location line="-1848"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Neue Version verfügbar&lt;/b&gt;&lt;br&gt;Version %1&lt;br&gt;Freigegeben am %2.&lt;br&gt;Das Update kann hier heruntergeladen werden:&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Sie können automatische Überprüfung auf Updates in Einstellungen deaktivieren.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+1257"/>
+        <location line="+1281"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Anwendung hat ein schwerwiegendes Problem festgestellt.
+Der letzte Bearbeitungsstand wurde gespeichert und wird beim nächsten Anwendungsstart geladen.</translation>
     </message>
     <message>
         <location line="+262"/>
@@ -14546,7 +14550,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Dieser Filter kann nicht abschnittsweise angewendet werden</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation>Hinzufügen</translation>
     </message>
@@ -15370,6 +15374,14 @@ Ready.
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
         <translation type="unfinished">Jedes Bild in zwei Halbbilder aufspalten.</translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -16246,7 +16258,7 @@ Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwen
     <message>
         <location line="+270"/>
         <source>Rate Control</source>
-        <translation type="unfinished">Bitraten-Kontrolle     [die entsprechenden x264.exe CLI Schalter sind in &quot;[ ]&quot; angegeben]</translation>
+        <translation type="unfinished">Bitraten-Kontrolle (die entsprechenden x264 CLI Schalter sind in &quot;[ ]&quot; angegeben)</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -17256,17 +17268,17 @@ Möchten Sie fortfahren?</translation>
     <message>
         <location line="-3568"/>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grundlegend</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Use advanced configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Erweiterte Konfiguration verwenden</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil:</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -17781,7 +17793,7 @@ Wenn dies eine mitgelieferte Konfiguration ist, wird sie nach Neustart der Anwen
     <message>
         <location line="+6"/>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grundlegend</translation>
     </message>
     <message>
         <location line="+6"/>
