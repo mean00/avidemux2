@@ -8,7 +8,7 @@ uniform float pts; // tex unit 2
 const vec2 haalf_vec=vec2(0.5,0.5);
 void main() 
 { 
-  vec3 shockParams=vec3( 10.0, 0.8, myResolution.x/50); // 1- pow base, 2 - pow exponent 3- Size of the wave
+  vec3 shockParams=vec3( 10.0, 0.8, myResolution.x/50.); // 1- pow base, 2 - pow exponent 3- Size of the wave
 
   vec2 pos=gl_TexCoord[0].xy;
   vec2 texCoord = pos;
@@ -28,9 +28,9 @@ void main()
     texCoord = pos + (diffUV * diffTime);
   } 
 
-  vec3 cY = texture2DRect(myTextureY, texCoord);
-  vec3 cU = texture2DRect(myTextureU, texCoord*haalf_vec);
-  vec3 cV = texture2DRect(myTextureV, texCoord*haalf_vec);
+  vec4 cY = texture2DRect(myTextureY, texCoord);
+  vec4 cU = texture2DRect(myTextureU, texCoord*haalf_vec);
+  vec4 cV = texture2DRect(myTextureV, texCoord*haalf_vec);
 
   gl_FragColor = vec4(cY.r,cU.r,cV.r,1.0);
 }
