@@ -1460,12 +1460,12 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+1"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer les raccourcis claviers alternatifs</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>Inverser les touches HAUT et BAS pour la navigation</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1577,7 +1577,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser le répertoire du dernier fichier lu comme répertoire de sauvegarde par défaut</translation>
     </message>
     <message>
         <location line="+5"/>
