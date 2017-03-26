@@ -106,10 +106,10 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 	}else
         {
             ui->comboBoxPriority->setVisible(false);
-            ui->checkBoxShutdown->setVisible(false);
             ui->labelPrio->setVisible(false);
         }
 #endif
+        ui->checkBoxShutdown->setVisible(false); // shutdown is disabled, hide the checkbox on all platforms
 
 	connect(ui->checkBoxShutdown, SIGNAL(stateChanged(int)), this, SLOT(shutdownChanged(int)));
 	connect(ui->pushButton1, SIGNAL(pressed()), this, SLOT(useTrayButtonPressed()));
@@ -155,7 +155,7 @@ DIA_encodingQt4::~DIA_encodingQt4( )
 {
     ADM_info("Destroying encoding qt4\n");
     UI_getTaskBarProgress()->disable();
-    bool shutdownRequired = (ui->checkBoxShutdown->checkState() == Qt::Checked);
+    //bool shutdownRequired = (ui->checkBoxShutdown->checkState() == Qt::Checked);
     if(tray)
     {
         UI_deiconify();
@@ -189,7 +189,7 @@ void DIA_encodingQt4::setPhasis(const char *n)
     {
         this->setWindowTitle(QT_TRANSLATE_NOOP("qencoding","Encoding..."));
         ui->tabWidget->setTabEnabled(1, true);
-#ifdef _WIN32
+#if 0
         ui->checkBoxShutdown->setVisible(true);
 #endif
         WRITEM(labelPhasis,n);
