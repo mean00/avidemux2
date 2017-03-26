@@ -43,6 +43,7 @@ protected:
         {
              return ADM_coreQtGl::downloadTexturesDma(image, fbo,bufferARB);           
         }
+        QGLShaderProgram *createShaderFromSource(QGLShader::ShaderType type,const char *proggy);
 
 public:
           ADM_coreVideoFilterQtGl(ADM_coreVideoFilter *previous,CONFcouple *conf=NULL);

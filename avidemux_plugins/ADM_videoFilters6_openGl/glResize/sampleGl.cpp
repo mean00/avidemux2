@@ -88,23 +88,10 @@ UNUSED_ARG(setup);
         _parentQGL->makeCurrent();
         fboY->bind();
         printf("Compiling shader \n");
-        glProgramY = new QGLShaderProgram(_context);
-        ADM_assert(glProgramY);
-        if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
+        glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+        if ( !glProgramY)
         {
-                ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
-                ADM_assert(0);
-        }
-        if ( !glProgramY->link())
-        {
-            ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
-            ADM_assert(0);
-        }
-
-        if ( !glProgramY->bind())
-        {
-                ADM_error("[GL Render] Binding FAILED\n");
-                ADM_assert(0);
+            ADM_error("[GL Render] Cannot compile shader\n");            
         }
 
         fboY->release();
@@ -127,6 +114,15 @@ openGlResize::~openGlResize()
 */
 bool openGlResize::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+    if(!glProgramY)
+    {
+        char strxx[80];
+        snprintf(strxx,80,"Shader was not compiled succesfully");
+        image->printString(2,4,strxx); 
+        return true;
+    }    
+    
+    
     // since we do nothing, just get the output of previous filter
     if(false==previousFilter->getNextFrame(fn,original))
     {

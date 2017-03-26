@@ -80,4 +80,44 @@ ADM_coreVideoFilterQtGl::~ADM_coreVideoFilterQtGl()
         ADM_glExt::deleteBuffers(1,&bufferARB);
     bufferARB=0;
 }
+/**
+ * 
+ * @param type
+ * @param proggy
+ * @return 
+ */
+QGLShaderProgram *ADM_coreVideoFilterQtGl::createShaderFromSource(QGLShader::ShaderType type,const char *proggy)
+{
+    QGLShaderProgram *glProg = new QGLShaderProgram(_context);
+    ADM_assert(glProg);
+    if ( !glProg->addShaderFromSourceCode(type, proggy))
+    {
+            ADM_error("[GL Render] Fragment log: %s\n", glProg->log().toUtf8().constData());
+            delete glProg;
+            glProg=NULL;
+            return NULL;
+    }
+    
+    if ( !glProg->link())
+    {
+            ADM_error("[GL Render] Link log: %s\n", glProg->log().toUtf8().constData());
+            delete glProg;
+            glProg=NULL;
+            return NULL;
+    }
+
+    if ( !glProg->bind())
+    {
+            ADM_error("[GL Render] Binding FAILED\n");
+            delete glProg;
+            glProg=NULL;
+            return NULL;
+
+    }
+
+    return glProg;
+}
+
+
+
 // EOF

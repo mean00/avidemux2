@@ -78,8 +78,6 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         ready=true;
 
         printf("Compiling shader \n");
-        glProgramY = new QGLShaderProgram(_context);
-        ADM_assert(glProgramY);
 
         // Load the file info memory
         int sourceSize=-1;
@@ -105,11 +103,15 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
                 fread(buffer,sourceSize,1,f);
                 buffer[sourceSize]=0;
                 fclose(f);
-                if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment,(char *) buffer))
+                
+                glProgramY =    createShaderFromSource(QGLShader::Fragment,(char *)buffer);
+                if(!glProgramY)
                 {
+                    ADM_error("Cannot setup shader\n");
                     ready=false;
-                    erString="Compiling shader failed"+std::string(glProgramY->log().toUtf8().constData());
-                    ADM_warning("Compilation failed (size=%d)\n",sourceSize);
+                } else
+                {
+                    
                 }
             }else
             {
@@ -117,20 +119,7 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
                 erString=std::string("Cannot open file");
                 ready=false;
             }
-        }
-        if ( ready && !glProgramY->link())
-        {
-            ready=false;
-            erString=std::string( glProgramY->log().toUtf8().constData());
-            ADM_warning("Link failed\n");
-        }
-
-        if ( ready && ! glProgramY->bind())
-        {
-                ready=false;
-                erString=std::string("OpenGl bind failed");
-                ADM_warning("Bind failed\n");
-        }
+        }      
         glList=glGenLists(1);
         genQuad();
         fboY->release();
