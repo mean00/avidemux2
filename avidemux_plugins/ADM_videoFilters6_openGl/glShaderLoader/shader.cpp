@@ -25,6 +25,7 @@
 #include "DIA_factory.h"
 #include "shaderLoader.h"
 #include "shaderLoader_desc.cpp"
+#include "DIA_coreToolkit.h"
 /**
     \class shaderLoader
 */
@@ -40,6 +41,7 @@ protected:
 
 protected:
                 bool        render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                bool        loadShader(const char *src);
 public:
                              shaderLoader(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~shaderLoader();
@@ -61,7 +63,56 @@ DECLARE_VIDEO_FILTER_PARTIALIZABLE(   shaderLoader,   // Class
                         QT_TRANSLATE_NOOP("glShader","Run an external shader program.") // Description
                     );
 
-// Now implements the interesting parts
+
+/**
+ * \fn loadShader
+ * @param src
+ * @return 
+ */
+bool shaderLoader::loadShader(const char *src)
+{
+    
+    if(!ADM_fileExist(src))
+    {
+        ADM_warning("Shader file does not exist (%s)\n",src);
+        return false;
+    }
+    
+    int sourceSize=ADM_fileSize(src);
+    if(sourceSize<5)
+    {
+        ADM_warning("Shader file is too short(%s)\n",src);
+        return false;
+    }
+    
+    uint8_t *buffer=(uint8_t *)admAlloca(sourceSize+1);
+    FILE *f=fopen(params.shaderFile.c_str(),"rt");
+    if(!f)
+    {
+        ADM_warning("Cannot open file %s\n",src);
+        return false;
+    }
+        
+    fread(buffer,sourceSize,1,f);
+    buffer[sourceSize]=0;
+    fclose(f);
+    f=NULL;
+
+    if(glProgramY)
+    {
+        delete glProgramY;
+        glProgramY=NULL;
+    }
+    glProgramY =    createShaderFromSource(QGLShader::Fragment,(char *)buffer);
+    if(!glProgramY)
+    {
+        ADM_error("Shader compiling failed\n");
+        return false;
+    }
+    ADM_info("Shader %s successfully loaded an compiled\n",src);
+    return true;
+}
+
 /**
     \fn shaderLoader
     \brief constructor
@@ -75,51 +126,13 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
         _parentQGL->makeCurrent();
         fboY->bind();
-        ready=true;
+        ready=false;
 
-        printf("Compiling shader \n");
+        ADM_info("Compiling shader %s \n",params.shaderFile.c_str());
 
         // Load the file info memory
-        int sourceSize=-1;
-        if(ADM_fileExist(params.shaderFile.c_str()))
-        {
-            sourceSize=ADM_fileSize(params.shaderFile.c_str());
-        }else
-        {
-            ADM_warning("Shader file does not exist (%s)\n",params.shaderFile.c_str());
-            ready=false;
-        }
-        if(sourceSize<5)
-        {
-            ADM_warning("File too short, needs to be at least 5 chars\n");
-            ready=false;
-        }
-        if(ready)
-        {
-            uint8_t *buffer=(uint8_t *)admAlloca(sourceSize+1);
-            FILE *f=fopen(params.shaderFile.c_str(),"rt");
-            if(f)
-            {
-                fread(buffer,sourceSize,1,f);
-                buffer[sourceSize]=0;
-                fclose(f);
-                
-                glProgramY =    createShaderFromSource(QGLShader::Fragment,(char *)buffer);
-                if(!glProgramY)
-                {
-                    ADM_error("Cannot setup shader\n");
-                    ready=false;
-                } else
-                {
-                    
-                }
-            }else
-            {
-                ADM_warning("Cannot open file %s\n",params.shaderFile.c_str());
-                erString=std::string("Cannot open file");
-                ready=false;
-            }
-        }      
+        ready=loadShader(params.shaderFile.c_str());
+        
         glList=glGenLists(1);
         genQuad();
         fboY->release();
@@ -211,12 +224,27 @@ const char *shaderLoader::getConfiguration(void)
 */
 bool shaderLoader::configure( void)
 {
+again:
     diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));
     diaElem *elems[]={&shader};
-
+    
      if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
      {
-                return true;
+        _parentQGL->makeCurrent();
+        fboY->bind();
+        ADM_info("Compiling shader %s \n",params.shaderFile.c_str());
+        // Load the file info memory
+        ready=loadShader(params.shaderFile.c_str());        
+        glList=glGenLists(1);
+        genQuad();
+        fboY->release();
+        _parentQGL->doneCurrent();
+        if(!ready)
+        {
+             GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Cannot compile shader"), NULL);
+             goto again;
+        }
+        return true;                
      }
      return false;
 }
