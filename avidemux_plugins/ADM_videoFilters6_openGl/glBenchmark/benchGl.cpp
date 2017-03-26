@@ -73,25 +73,11 @@ UNUSED_ARG(setup);
     _parentQGL->makeCurrent();
     fboY->bind();
     ADM_info("Compiling shader \n");
-    glProgramY = new QGLShaderProgram(_context);
-    ADM_assert(glProgramY);
-    if ( !glProgramY->addShaderFromSourceCode(QGLShader::Fragment, myShaderY))
+    glProgramY =    createShaderFromSource(QGLShader::Fragment,myShaderY);
+    if(!glProgramY)
     {
-            ADM_error("[GL Render] Fragment log: %s\n", glProgramY->log().toUtf8().constData());
-            ADM_assert(0);
+        ADM_error("Cannot setup shader\n");
     }
-    if ( !glProgramY->link())
-    {
-        ADM_error("[GL Render] Link log: %s\n", glProgramY->log().toUtf8().constData());
-        ADM_assert(0);
-    }
-
-    if ( !glProgramY->bind())
-    {
-            ADM_error("[GL Render] Binding FAILED\n");
-            ADM_assert(0);
-    }
-
     fboY->release();
     _parentQGL->doneCurrent();
 
@@ -111,6 +97,15 @@ openGlBenchmark::~openGlBenchmark()
 */
 bool openGlBenchmark::getNextFrame(uint32_t *fn,ADMImage *image)
 {
+    char str1[81];
+    char str2[81];
+
+    if(!glProgramY)
+    {
+        snprintf(str1,80,"Shader was not compiled succesfully");
+        image->printString(2,4,str1); 
+        return true;
+    }
     // since we do nothing, just get the output of previous filter
     if(false==previousFilter->getNextFrame(fn,image))
     {
@@ -160,8 +155,6 @@ bool openGlBenchmark::getNextFrame(uint32_t *fn,ADMImage *image)
     bench.getResultUs(avg1,min1,max1);
     bench2.getResultUs(avg2,min2,max2);
 
-    char str1[81];
-    char str2[81];
 
     snprintf(str1,80,"Qt  avg=%03.2f us, min=%d max=%d us",avg1,(int)min1,(int)max1);
     snprintf(str2,80,"DMA avg=%03.2f us, min=%d max=%d us",avg2,(int)min2,(int)max2);

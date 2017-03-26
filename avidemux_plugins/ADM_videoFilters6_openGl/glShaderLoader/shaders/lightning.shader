@@ -5,7 +5,7 @@ uniform sampler2DRect myTextureU; // tex unit 1
 uniform sampler2DRect myTextureV; // tex unit 2
 uniform vec2  myResolution;
 uniform float pts; // tex unit 2
-const vec2 half_vec=vec2(0.5,0.5);
+const vec2 haalf_vec=vec2(0.5,0.5);
 // Lightning
 // By: Brandon Fogerty
 // bfogerty at gmail dot com 
@@ -73,8 +73,8 @@ void main(void)
         vec2 pos = gl_TexCoord[0].xy ;
 	vec4 color = lightning();
         vec4 luma=color+texture2DRect(myTextureY,pos);
-        vec4 chromaU=texture2DRect(myTextureU,pos*half_vec);
-        vec4 chromaV=texture2DRect(myTextureV,pos*half_vec);
+        vec4 chromaU=texture2DRect(myTextureU,pos*haalf_vec);
+        vec4 chromaV=texture2DRect(myTextureV,pos*haalf_vec);
         gl_FragColor = vec4(luma.r,chromaU.r,chromaV.r,1.0);
 }
 
