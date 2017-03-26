@@ -42,6 +42,8 @@ protected:
 protected:
                 bool        render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
                 bool        loadShader(const char *src);
+                bool        reload( void);
+    static      void        cb(void *c);
 public:
                              shaderLoader(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~shaderLoader();
@@ -219,17 +221,17 @@ const char *shaderLoader::getConfiguration(void)
     return st;
 }
 
-/**
-    \fn configure
-*/
-bool shaderLoader::configure( void)
+void shaderLoader::cb(void *c)
 {
-again:
-    diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));
-    diaElem *elems[]={&shader};
-    
-     if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
-     {
+    shaderLoader *sl=(shaderLoader *)c;
+    sl->ready=sl->reload();
+}
+/**
+ * 
+ * @return 
+ */
+bool shaderLoader::reload( void)
+{
         _parentQGL->makeCurrent();
         fboY->bind();
         ADM_info("Compiling shader %s \n",params.shaderFile.c_str());
@@ -242,6 +244,25 @@ again:
         if(!ready)
         {
              GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Cannot compile shader"), NULL);
+             return false;
+        }
+        return true;
+}
+/**
+    \fn configure
+*/
+bool shaderLoader::configure( void)
+{
+again:
+    diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));    
+    diaElemButton reloadButton(QT_TR_NOOP("Reload shader"),cb,this);
+    diaElem *elems[]={&shader,&reloadButton};
+    
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
+     {
+        ready=reload();
+        if(!ready)
+        {
              goto again;
         }
         return true;                
