@@ -1552,12 +1552,12 @@ Drop timinginformationer?</translation>
     <message>
         <location line="+2"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>_Aktivér alternative tastaturgenveje</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>In_vertér OP- og NED-piletaster til navigation</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1679,7 +1679,7 @@ Drop timinginformationer?</translation>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Foreslå at gemme i mappen fra den sidst åbnede fil</translation>
     </message>
     <message>
         <location line="+5"/>
