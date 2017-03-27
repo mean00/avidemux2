@@ -6043,7 +6043,7 @@ Expect problems.</source>
         <translation>Κύριο Κανάλι Ήχου</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+258"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -6153,7 +6153,7 @@ Is it running ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-241"/>
+        <location filename="../../common/gui_main.cpp" line="-242"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -6976,7 +6976,7 @@ It is needed to create PSP compatible video.</source>
         <translation>Ο ορισμός της γλώσσας για τα περιεχόμενα του δοσμένου καναλιού δεν είναι εφικτός: Μη έγκυρα περιεχόμενα καναλιού.</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+180"/>
         <source>Frame Hex Dump</source>
         <translation>Εξαγωνική Απόρριψη Καρέ</translation>
     </message>
@@ -7627,6 +7627,11 @@ Do you want to continue anyway ?</source>
 Installation mismatch</source>
         <translation>Ο πυρήνας έχει συντεθεί χωρίς υποστήριξη του DXVA2, όμως, η εφαρμογή έχει συντεθεί με αυτήν.
 Αταίριαστη η εγκατάσταση.</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10244,7 +10249,7 @@ I will assume it has and try to continue</source>
         <translation>Αλλαγή των διαστάσεων με τη χρήση του openGl.</translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation>Πλάτος :</translation>
     </message>
@@ -10272,7 +10277,7 @@ I will assume it has and try to continue</source>
         <translation>Περιστροφή της εικόνας κατά ένα μικρό μέγεθος.</translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation>Γωνία (°):</translation>
     </message>
@@ -10298,7 +10303,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation>Φορτωτής Σκίασης</translation>
     </message>
@@ -10308,12 +10313,12 @@ I will assume it has and try to continue</source>
         <translation>Τρέξιμο ενός εξωτερικού προγράμματος σκίασης.</translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation>ΑρχείοΣκίασης προς φόρτωση</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation>ΦορτωτήςΣκίασης</translation>
     </message>
@@ -11062,7 +11067,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation>Ρυθμός_Μπιτιών:</translation>
     </message>
@@ -12264,7 +12269,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>&lt;b&gt;Διαθέσιμη νέα έκδοση&lt;/b&gt;&lt;br&gt; Έκδοση %1&lt;br&gt;Εκδόθηκε στις %2.&lt;br&gt;Μπορείς να το κατεβάσεις από εδώ&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Μπορείς να απενεργοποιήσεις την αυτόματη ενημέρωση στις προτιμήσεις.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+222"/>
         <source>Recent Files</source>
         <translation>Πρόσφατα Αρχεία</translation>
     </message>
@@ -12274,7 +12279,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Πρόσφατες Εργασίες</translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12319,13 +12324,23 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -12499,7 +12514,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Αυτός ε μεταμορφωτής δεν μπορεί να γίνει μερικός</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation>Προσθήκη</translation>
     </message>
@@ -13297,6 +13312,14 @@ Ready.
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
         <translation>Χωρισμός της κάθε εικόνας σε 2 πεδία.</translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

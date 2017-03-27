@@ -3809,7 +3809,7 @@ Drop timing informations ?</source>
     <message>
         <location line="-1636"/>
         <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Декодер видео&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+1125"/>
@@ -3920,10 +3920,6 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Stop [SPACE]</source>
-        <translation type="obsolete">Остановить [SPACE]</translation>
-    </message>
-    <message>
         <location line="-607"/>
         <source>Go to previous frame [LEFT]</source>
         <translation type="unfinished">Предыдущий кадр [LEFT]</translation>
@@ -3946,12 +3942,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+23"/>
         <source>Set start marker [CTRL+PAGEUP]</source>
-        <translation type="unfinished">Установить маркер A [CTRL+PAGEUP]</translation>
+        <translation type="unfinished">Поставить маркер A [CTRL+PAGEUP]</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Set end marker [CTRL+PAGEDOWN]</source>
-        <translation type="unfinished">Установить маркер B [CTRL+PAGEDOWN]</translation>
+        <translation type="unfinished">Поставить маркер B [CTRL+PAGEDOWN]</translation>
     </message>
     <message>
         <location line="+26"/>
@@ -4573,12 +4569,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+1"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>_Включить альтернативные горячие клавиши</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Обратить действие клавиш UP и DOWN при навигации</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -4690,12 +4686,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">_Сохранять видео в папке с последним прочитанным файлом по умолчании</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>XVideo (best)</source>
-        <translation type="unfinished">XVideo (лучше всего)</translation>
+        <translation type="unfinished">XVideo (лучшее)</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -4854,22 +4850,22 @@ Drop timing informations ?</source>
     <message>
         <location line="+3"/>
         <source>Previous Intra Frame</source>
-        <translation type="unfinished">Предыдущая сцена</translation>
+        <translation>Предыдущий ключевой кадр</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Intra Frame</source>
-        <translation type="unfinished">Следующая сцена</translation>
+        <translation>Следующий ключевой кадр</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Previous Black Frame</source>
-        <translation type="unfinished">Предыдущий черный кадр</translation>
+        <translation>Предыдущий черный кадр</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next Black Frame</source>
-        <translation type="unfinished">Следующий черный кадр</translation>
+        <translation>Следующий черный кадр</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="-15"/>
@@ -5100,7 +5096,7 @@ Expect problems.</source>
         <translation type="unfinished">Главная звуковая дорожка</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+258"/>
         <source>Failed to connect to avsproxy.
 Is it running ?</source>
         <translation type="unfinished">Невозможно соединиться с AvsProxy.
@@ -5204,7 +5200,7 @@ Is it running ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-243"/>
+        <location filename="../../common/gui_main.cpp" line="-244"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -5822,7 +5818,7 @@ Is it running ?</source>
     <message>
         <location line="+4"/>
         <source>Reset Markers</source>
-        <translation type="unfinished"></translation>
+        <translation>Сброс маркеров</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -6086,7 +6082,7 @@ It is needed to create PSP compatible video.</source>
         <translation type="unfinished">Установка языка дорожки невозможна: неверный индекс дорожки!</translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+138"/>
         <source>AvsProxy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6729,6 +6725,11 @@ Do you want to continue anyway ?</source>
 Installation mismatch</source>
         <translation type="unfinished">Ядро было скомпилировано без поддержки DXVA2, а приложение - с его поддержкой.
 Ошибка установки</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -9290,7 +9291,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Изменение размера с помощью OpenGL.</translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation type="unfinished">Ширина :</translation>
     </message>
@@ -9318,7 +9319,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Поворот изображения на небольшой угол.</translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation type="unfinished">Угол (°)</translation>
     </message>
@@ -9344,7 +9345,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation type="unfinished">Загрузчик шейдеров</translation>
     </message>
@@ -9354,12 +9355,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Запустите внешнюю программу шейдеров.</translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation type="unfinished">Файл шейдеров для загрузки</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10117,7 +10118,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation type="unfinished">Битрейт:</translation>
     </message>
@@ -11323,7 +11324,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>&lt;b&gt;Новая версия&lt;/b&gt;&lt;br&gt;Версия %1&lt;br&gt;Выпущена %2.&lt;br&gt;Доступна для загрузки с адреса&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Вы можете отключить автоматическую проверку обновлений в настройках.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+222"/>
         <source>Recent Files</source>
         <translation type="unfinished">Предыдущие файлы</translation>
     </message>
@@ -11333,59 +11334,69 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Предыдущие проекты</translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Старт/стоп</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Предыдущий кадр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Следующий кадр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Предыдущий ключевой кадр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Следующий ключевой кадр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set start marker</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить маркер A</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set end marker</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Поставить маркер B</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Go to first frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Первый кадр</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to last frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Последний кадр</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Перейти к маркеру A</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Перейти к маркеру B</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation>Назад на 1 минуту</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
+        <translation>Вперед на 1 минуту</translation>
     </message>
     <message>
         <location line="+491"/>
@@ -11558,7 +11569,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Этот фильтр не может быть применен частично</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation type="unfinished">Добавить</translation>
     </message>
@@ -12357,6 +12368,14 @@ Ready.
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
         <translation type="unfinished">Разделить каждое изображение на 2 поля.</translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

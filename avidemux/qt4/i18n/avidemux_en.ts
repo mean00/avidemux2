@@ -2262,7 +2262,7 @@ Expect problems.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+138"/>
         <source>AvsProxy</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3038,6 +3038,11 @@ Do you want to continue anyway ?</source>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+0"/>
         <source>Core has been compiled without DXVA2 support, but the application has been compiled with it.
 Installation mismatch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5400,7 +5405,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5428,7 +5433,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5454,7 +5459,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5464,12 +5469,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6076,7 +6081,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7101,7 +7106,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+222"/>
         <source>Recent Files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7111,7 +7116,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7156,13 +7161,23 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -7335,7 +7350,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8093,6 +8108,14 @@ Ready.
     <message>
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
