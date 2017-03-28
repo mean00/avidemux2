@@ -709,7 +709,7 @@
              <item>
               <widget class="QCheckBox" name="checkBox_TimeShift">
                <property name="text">
-                <string>&amp;Shift:</string>
+                <string>Shift:</string>
                </property>
               </widget>
              </item>
