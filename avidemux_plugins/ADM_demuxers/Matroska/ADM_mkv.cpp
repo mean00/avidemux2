@@ -176,7 +176,7 @@ uint8_t mkvHeader::open(const char *name)
         }
         if(enforePtsGreaterThanDts)
         {
-                ADM_info("Have to delay by %" PRIu32" ms so that PTS>DTS\n",enforePtsGreaterThanDts);
+                ADM_info("Have to delay by %" PRIu64" us so that PTS>DTS\n",enforePtsGreaterThanDts);
                 for(int i=0;i<_nbAudioTrack+1;i++)
                 delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
         }
