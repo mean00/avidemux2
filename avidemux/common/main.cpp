@@ -177,7 +177,8 @@ static bool admDummyHwCleanup()
 int startAvidemux(int argc, char *argv[])
 {
 
-#define MKSTRING(x) #x
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
     printf("*************************\n");
     printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
 
