@@ -46,11 +46,12 @@ int main(int argc, char *argv[])
 
     installSigHandler();
 
-    
+#define STR(x) #x
+#define MKSTRING(x) STR(x)
+
     printf("*************************\n");
-    printf("  Avidemux v" VERSION);
+    printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
 #if defined(ADM_SUBVERSION)
-#define MKSTRING(x) #x
      printf(" (%s)", MKSTRING(ADM_SUBVERSION));
 #endif
     printf("\n*************************\n");
