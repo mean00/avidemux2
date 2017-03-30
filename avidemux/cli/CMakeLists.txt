@@ -62,7 +62,9 @@ ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsCli)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesCli)
 
 SDLify(../common/main.cpp)
-ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
+if (ADM_SUBVERSION)
+        ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
+endif (ADM_SUBVERSION)
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION='\"${AVIDEMUX_VERSION}\"'")
 
 ###########################################
