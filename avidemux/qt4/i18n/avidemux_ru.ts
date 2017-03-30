@@ -3149,8 +3149,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+7"/>
         <source>1/1</source>
-        <translation type="unfinished">
-             {1/1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -5415,8 +5414,7 @@ Is it running ?</source>
     <message>
         <location line="+2"/>
         <source>5.1</source>
-        <translation type="unfinished">
-             {5.1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6698,8 +6696,7 @@ Do you want to continue anyway ?</source>
     <message>
         <location line="+1"/>
         <source>1:1</source>
-        <translation type="unfinished">
-             {1:1?}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../avidemux_core/ADM_coreVideoCodec/include/ADM_ffmp43.h" line="+157"/>
@@ -7599,25 +7596,25 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
-        <translation type="unfinished">Обрезка</translation>
+        <translation>Кадрирование</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Crop filter</source>
-        <translation type="unfinished">Фильтр обрезки</translation>
+        <translation>Фильтр кадрирования</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Warning Cropping too much width ! Width reseted !
 </source>
-        <translation type="unfinished">Предупреждение: ширина слишком сильно обрезана! Ее значение восстановлено!
+        <translation>Предупреждение: ширина слишком сильно обрезана! Ее значение восстановлено!
 </translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Warning Cropping too much height ! Height reseted !
 </source>
-        <translation type="unfinished">Предупреждение: высота слишком сильно обрезана! Ее значение восстановлено!
+        <translation>Предупреждение: высота слишком сильно обрезана! Ее значение восстановлено!
 </translation>
     </message>
 </context>
@@ -7626,37 +7623,37 @@ Do you want to load it  ?
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt4/crop.ui" line="+14"/>
         <source>Crop</source>
-        <translation type="unfinished">Обрезка   </translation>
+        <translation>Кадрирование</translation>
     </message>
     <message>
         <location line="+88"/>
         <source>Reset</source>
-        <translation type="unfinished">Сброс</translation>
+        <translation>Сброс</translation>
     </message>
     <message>
         <location line="+58"/>
         <source>Auto Crop</source>
-        <translation type="unfinished">Авто обрезка</translation>
+        <translation>Автокадрирование</translation>
     </message>
     <message>
         <location line="-108"/>
         <source>Right:</source>
-        <translation type="unfinished">Справа:</translation>
+        <translation>Справа:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Top:</source>
-        <translation type="unfinished">Сверху:</translation>
+        <translation>Сверху:</translation>
     </message>
     <message>
         <location line="+64"/>
         <source>Bottom:</source>
-        <translation type="unfinished">Слева:</translation>
+        <translation>Снизу:</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Left:</source>
-        <translation type="unfinished">Снизу:</translation>
+        <translation>Слева:</translation>
     </message>
 </context>
 <context>
