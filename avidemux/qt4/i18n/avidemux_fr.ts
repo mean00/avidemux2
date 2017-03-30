@@ -849,10 +849,6 @@ Ignorer les informations de timing ?</translation>
         <translation type="obsolete">Options</translation>
     </message>
     <message>
-        <source>&lt;b&gt;Video Decoder&lt;b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Décodeur Vidéo&lt;/b&gt;</translation>
-    </message>
-    <message>
         <location line="+182"/>
         <location line="+142"/>
         <location line="+169"/>
@@ -1013,7 +1009,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+33"/>
         <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Décodeur Vidéo&lt;/b&gt;</translation>
     </message>
     <message>
         <location line="+75"/>
@@ -1113,7 +1109,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+23"/>
         <source>Backward one minute [CTRL+DOWN]</source>
-        <translation>Reculer d&quot;une minute [CTRL+BAS]</translation>
+        <translation>Reculer d&apos;une minute [CTRL+BAS]</translation>
     </message>
     <message>
         <location line="+23"/>
@@ -1455,17 +1451,17 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+1"/>
         <source>_Revert to saved default output settings on video load</source>
-        <translation>&amp;Revenir aux paramètres par défaut enregistrés lors du chargement vidéo</translation>
+        <translation>_Revenir aux paramètres par défaut enregistrés lors du chargement vidéo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer les raccourcis claviers alternatifs</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>Inverser les touches HAUT et BAS pour la navigation</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -1577,7 +1573,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser le répertoire du dernier fichier lu comme répertoire de sauvegarde par défaut</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -1784,7 +1780,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+1"/>
         <source>Reset Markers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Réinitialiser les marqueurs</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -2763,7 +2759,7 @@ Expect problems.</source>
         <translation>Impossible de choisir la langue, piste audio invalide</translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+138"/>
         <source>AvsProxy</source>
         <translation></translation>
     </message>
@@ -3542,6 +3538,11 @@ Voulez-vous continuer ?</translation>
 Installation mismatch</source>
         <translation type="unfinished">Core a été compilé sans le support DXVA2, mais l&apos;application a été compilée avec elle.
 Incompatibilité d&apos;installation</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5962,7 +5963,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation type="unfinished">Largeur:</translation>
     </message>
@@ -5990,7 +5991,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6016,7 +6017,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6026,12 +6027,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6720,7 +6721,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7968,7 +7969,7 @@ Veuillez supprimer le fichier idx2 et rouvrir.</translation>
         <translation>&lt;b&gt;Nouvelle version disponible&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Publié le %2.&lt;br&gt;Vous pouvez la télécharger ici&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Vous pouvez désactiver autoupdate dans les préférences.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+222"/>
         <source>Recent Files</source>
         <translation>Fichiers Récents</translation>
     </message>
@@ -7978,59 +7979,69 @@ Veuillez supprimer le fichier idx2 et rouvrir.</translation>
         <translation>Projets Récents</translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Image précédente</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Image suivante</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Image clé précédente</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Image clé suivante</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set start marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre le marqueur A</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set end marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre le marqueur B</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Go to first frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au début</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to last frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller à la fin</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au marqueur A</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller au marqueur B</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation>Reculer d&apos;une minute</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
+        <translation>Avancer d&apos;une minute</translation>
     </message>
     <message>
         <location line="+491"/>
@@ -8203,7 +8214,7 @@ L&apos;édition en cours a été enregistrée et sera rechargée au prochain dé
         <translation>Ce filtre ne peut pas être partiel</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation>Ajouter</translation>
     </message>
@@ -8981,6 +8992,14 @@ Prêt.</translation>
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
         <translation>Divisez chaque image en 2 champs.</translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

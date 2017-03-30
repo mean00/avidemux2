@@ -20,6 +20,7 @@
 #include "ADM_codecType.h"
 #include "mkv_tags.h"
 #include "ADM_audioXiphUtils.h"
+#include "ADM_vidMisc.h"
 
 /**
     \fn open
@@ -175,7 +176,7 @@ uint8_t mkvHeader::open(const char *name)
         }
         if(enforePtsGreaterThanDts)
         {
-                ADM_info("Have to delay by %" PRIu32" ms so that PTS>DTS\n",enforePtsGreaterThanDts);
+                ADM_info("Have to delay by %" PRIu64" us so that PTS>DTS\n",enforePtsGreaterThanDts);
                 for(int i=0;i<_nbAudioTrack+1;i++)
                 delayTrack(i,&(_tracks[i]),enforePtsGreaterThanDts);
         }
@@ -216,7 +217,6 @@ uint8_t mkvHeader::open(const char *name)
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
         _audioStreams[i]->setLanguage(_tracks[1+i].language);
     }
-  //dumpVideoIndex(200);
   printf("[MKV]Matroska successfully read\n");
   return 1;
 }
@@ -250,6 +250,10 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     int64_t delta,maxDelta=0;
     int64_t minDelta=100000000;
     *bFramePresent=false;
+    int nbValidDts=0;
+   
+    
+    
     if(nb>1)
     {
         bool monotone=true;
@@ -272,31 +276,38 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             ADM_info("PTS is not monotonous, there are bframe\n");
             *bFramePresent=true;
         }
-    }
-
-    if(nb>1)
-    {
         // Search minimum and maximum between 2 frames
         // the minimum will give us the maximum fps
         // the maximum will give us the max PTS-DTS delta so that we can compute DTS
         for(int i=0;i<nb-1;i++) 
         {
+            if(track->index[i].Dts!=ADM_NO_PTS)
+                nbValidDts++;
             if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
             if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
                 continue;
+            
             delta=(int64_t)track->index[i+1].Pts-(int64_t)track->index[i].Pts;
             if(delta<0) delta=-delta;
+            if(!delta)
+            {
+                ADM_warning("Duplicate PTS...(%d and %d,size=%d %d)\n",i,i+1,track->index[i].size,track->index[i+1].size);
+                continue;
+            }
             if(delta<minDelta) minDelta=delta;
             if(delta>maxDelta) maxDelta=delta;
             //printf("\/=%" PRId64" Min %" PRId64" MAX %" PRId64"\n",delta,minDelta,maxDelta);
         }
     }
     if(nbBFrame) *bFramePresent=true;
+       
+    
     ADM_info("Minimum delta found %" PRId64" us\n",minDelta);
     ADM_info("Maximum delta found %" PRId64" us\n",maxDelta);
+    ADM_info("Default duration    %" PRId64" us\n",track->_defaultFrameDuration);
     if(minDelta)
     {
-        if(minDelta<track->_defaultFrameDuration && labs((long int)minDelta-(long int)track->_defaultFrameDuration)>1000)
+        if(minDelta<track->_defaultFrameDuration && labs((long int)minDelta-(long int)track->_defaultFrameDuration)>100)
         {
             ADM_info("Changing default frame duration from %" PRIu64" to %" PRIu64" us\n",
                     track->_defaultFrameDuration,minDelta);
@@ -313,6 +324,16 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     }
     ADM_info("First frame pts     %" PRId64" us\n",track->index[0].Pts);
+    
+    if(nbValidDts<3)
+    {
+            ADM_warning("Not enough valid DTS\n");
+            *minDeltaX=minDelta;
+            *maxDeltaX=0;
+            return false;
+    }
+    
+    
     uint64_t adj=0;
     int limit=32;
     if(limit>nb) limit=nb;

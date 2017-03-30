@@ -988,13 +988,30 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to last frame"))+QString(" [")+ListOfShortcuts[6]+QString("]");
     ui.toolButtonLastFrame->setToolTip(tt);
 
-    // 1 minute back and forward buttons' tooltips are static, the action shortcuts are not tunable and not defined via myOwnMenu.h
-
     tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker A"))+QString(" [")+ListOfShortcuts[7]+QString("]");
     ui.pushButtonJumpToMarkerA->setToolTip(tt);
 
     tt=QString(QT_TRANSLATE_NOOP("qgui2","Go to marker B"))+QString(" [")+ListOfShortcuts[8]+QString("]");
     ui.pushButtonJumpToMarkerB->setToolTip(tt);
+
+    // special case one minute back and forward buttons, their action shortcuts are not defined via myOwnMenu.h
+    bool swpud=false;
+    prefs->get(KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS,&swpud);
+    QString back, forward;
+    if(!swpud)
+    {
+        back="DOWN";
+        forward="UP";
+    }else
+    {
+        back="UP";
+        forward="DOWN";
+    }
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Backward one minute"))+QString(" [CTRL+")+back+QString("]");
+    ui.toolButtonBackOneMinute->setToolTip(tt);
+
+    tt=QString(QT_TRANSLATE_NOOP("qgui2","Forward one minute"))+QString(" [CTRL+")+forward+QString("]");
+    ui.toolButtonForwardOneMinute->setToolTip(tt);
 }
 
 /**

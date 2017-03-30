@@ -207,7 +207,7 @@ diaMenuEntry mePreset[]={
           /* First Tab : encoding mode */
         diaElem *diamode[]={&qzPreset,&bitrate,&maxBitrate};
 
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","libavcodec MPEG-4 configuration"),3,diamode))
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),3,diamode))
         {
           
           return true;

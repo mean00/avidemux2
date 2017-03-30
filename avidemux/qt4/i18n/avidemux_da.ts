@@ -778,10 +778,6 @@ Drop timinginformationer?</translation>
         <translation>Afspil</translation>
     </message>
     <message>
-        <source>Stop [SPACE]</source>
-        <translation type="vanished">Stop [MELLEMRUM]</translation>
-    </message>
-    <message>
         <location line="+26"/>
         <source>Go to previous frame [LEFT]</source>
         <translation>Gå til forrige billede [VENSTRE]</translation>
@@ -1556,12 +1552,12 @@ Drop timinginformationer?</translation>
     <message>
         <location line="+2"/>
         <source>_Enable alternative keyboard shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>_Aktivér alternative tastaturgenveje</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Re_verse UP and DOWN arrow keys for navigation</source>
-        <translation type="unfinished"></translation>
+        <translation>In_vertér OP- og NED-piletaster til navigation</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -1683,7 +1679,7 @@ Drop timinginformationer?</translation>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Foreslå at gemme i mappen fra den sidst åbnede fil</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -1998,7 +1994,7 @@ Gå til Lyd-&gt;Hovedspor for at vælge det aktive.</translation>
         <translation>Hovedlydspor</translation>
     </message>
     <message>
-        <location line="+257"/>
+        <location line="+258"/>
         <source>AvsProxy</source>
         <translation>AvsProxy</translation>
     </message>
@@ -2147,7 +2143,7 @@ Kører den?</translation>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
-        <location filename="../../common/gui_main.cpp" line="-243"/>
+        <location filename="../../common/gui_main.cpp" line="-244"/>
         <location line="+27"/>
         <location line="+24"/>
         <location line="+8"/>
@@ -2685,7 +2681,7 @@ Forvent problemer.</translation>
         <translation>Indstilling af sproget til det givne sporindeks er ikke muligt: ugyldigt sporindeks!</translation>
     </message>
     <message>
-        <location line="+289"/>
+        <location line="+290"/>
         <source>Oops</source>
         <translation>Ups</translation>
     </message>
@@ -3076,6 +3072,11 @@ Vil du fortsætte alligevel?</translation>
         <location line="+35"/>
         <source>Internal error opening 0x%x</source>
         <translation>Intern fejl ved åbning af 0x%x</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+246"/>
+        <source>Cannot compile shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5496,7 +5497,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Tilpas størrelse ved brug af openGL.</translation>
     </message>
     <message>
-        <location line="+150"/>
+        <location line="+146"/>
         <source>Width :</source>
         <translation>Bredde:</translation>
     </message>
@@ -5524,7 +5525,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Rotér billede en lille smule.</translation>
     </message>
     <message>
-        <location line="+120"/>
+        <location line="+118"/>
         <source>Angle (°):</source>
         <translation>Vinkel (°):</translation>
     </message>
@@ -5550,7 +5551,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>glShader</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="+60"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-182"/>
         <source>Shader Loader</source>
         <translation>Shader-indlæser</translation>
     </message>
@@ -5560,12 +5561,12 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Kør et eksternt shaderprogram.</translation>
     </message>
     <message>
-        <location line="+164"/>
+        <location line="+192"/>
         <source>ShaderFile to load</source>
         <translation>Shaderfil som skal indlæses</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+4"/>
         <source>ShaderLoader</source>
         <translation>Shaderindlæser</translation>
     </message>
@@ -6172,7 +6173,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>lavcodec</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+530"/>
+        <location filename="../../../avidemux_plugins/ADM_audioEncoders/lavcodec/audioencoder_lavcodec.cpp" line="+518"/>
         <source>_Bitrate:</source>
         <translation>_Bithastighed:</translation>
     </message>
@@ -7199,7 +7200,7 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>&lt;b&gt;Ny version tilgængelig&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Udgivet den %2.&lt;br&gt;Du kan downloade den her&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Du kan deaktivere automatisk opdatering i præferencer.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+222"/>
         <source>Recent Files</source>
         <translation>Seneste filer</translation>
     </message>
@@ -7209,59 +7210,69 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>Seneste projekter</translation>
     </message>
     <message>
-        <location line="+511"/>
+        <location line="+516"/>
         <source>Play/Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Afspil/stop</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til forrige billede</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til næste billede</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to previous keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til forrige nøglebillede</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to next keyframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til næste nøglebillede</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set start marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Sæt startmarkør</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Set end marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Sæt slutmarkør</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Go to first frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til første billede</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to last frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til sidste billede</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+3"/>
         <source>Go to marker A</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til markør A</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Go to marker B</source>
-        <translation type="unfinished"></translation>
+        <translation>Gå til markør B</translation>
+    </message>
+    <message>
+        <location line="+16"/>
+        <source>Backward one minute</source>
+        <translation>Baglæns ét minut</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Forward one minute</source>
+        <translation>Fremad ét minut</translation>
     </message>
     <message>
         <location line="+491"/>
@@ -7434,7 +7445,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
         <translation>Dette filter kan ikke gøre delvist</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+177"/>
         <source>Add</source>
         <translation>Tilføj</translation>
     </message>
@@ -8147,7 +8158,7 @@ Klar.
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+81"/>
         <source>Back one minute</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Baglæns ét minut</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8157,12 +8168,12 @@ Klar.
     <message>
         <location line="+1"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>Afspil</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Next image</source>
-        <translation type="unfinished"></translation>
+        <translation>Næste billede</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8177,7 +8188,7 @@ Klar.
     <message>
         <location line="+1"/>
         <source>Forward one minute</source>
-        <translation type="unfinished"></translation>
+        <translation>Fremad ét minut</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8196,6 +8207,14 @@ Klar.
         <location line="+1"/>
         <source>Split each image into 2 fields.</source>
         <translation>Opdel hvert billede i 2 felter.</translation>
+    </message>
+</context>
+<context>
+    <name>shaderLoader</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/glShaderLoader/shader.cpp" line="-3"/>
+        <source>Reload shader</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
