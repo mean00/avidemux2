@@ -18,7 +18,7 @@ SET(ADM_coreImage_SRCS
         ADM_imageSave.cpp
         ADM_imageOperation.cpp
 # ASM
-#        ADM_imageUtils_asm.asm
+        ADM_imageUtils_asm.asm
 )
 
 add_compiler_export_flags()
