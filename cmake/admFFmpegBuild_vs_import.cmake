@@ -88,7 +88,7 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/version.h" DESTINATION "${AVI
 
 IF(USE_DXVA2)
         INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
-        INSTALL(FILES "${IMPORT_FOLDER}/libavcodec/d3d11va.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
+        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/d3d11va.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
         INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
 ENDIF(USE_DXVA2)
 
