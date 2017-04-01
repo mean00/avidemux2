@@ -1,7 +1,7 @@
 #
 MESSAGE(STATUS "Checking for YASM")
 MESSAGE(STATUS "*****************")
-IF(ADM_CPU_X86)
+IF(ADM_CPU_X86 OR MSVC)
     find_program(YASM_YASM yasm)
     IF(YASM_YASM STREQUAL "<YASM_YASM>-NOTFOUND")
         MESSAGE(FATAL_ERROR "Yasm Not found. Stopping here.")
@@ -46,4 +46,4 @@ IF(ADM_CPU_X86)
     ENDIF(NOT CMAKE_ASM${ASM_DIALECT}_COMPILE_OBJECT)
     
     INCLUDE(CMakeASMInformation)
-ENDIF(ADM_CPU_X86)
+ENDIF(ADM_CPU_X86 OR MSVC) # Temp hack
