@@ -17,6 +17,8 @@ SET(ADM_coreImage_SRCS
 #        DIA_flyDialog.cpp
         ADM_imageSave.cpp
         ADM_imageOperation.cpp
+# ASM
+#        ADM_imageUtils_asm.asm
 )
 
 add_compiler_export_flags()

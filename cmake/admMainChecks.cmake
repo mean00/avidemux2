@@ -196,3 +196,8 @@ IF (NOT SYSTEM_HEADERS_CHECKED)
 	MESSAGE("")
 ENDIF (NOT SYSTEM_HEADERS_CHECKED)
 
+# Check we have yasm, mandatory for x86/amd64
+MESSAGE(STATUS "Bonanza")
+include(admYasm)
+
+
