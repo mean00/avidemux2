@@ -17,7 +17,7 @@
 static uint32_t fccs[]={MKFCC('V','P','8',' '),0};
 ADM_DECLARE_VIDEO_DECODER_PREAMBLE(decoderVPX);
 ADM_DECLARE_VIDEO_DECODER_MAIN("vpx",
-                               "VP8/WebmM",
+                               "VP8/WebM",
                                "Decoder using libvpx (c) mean 2010",
                                 fccs, // No configuration
                                 NULL,
