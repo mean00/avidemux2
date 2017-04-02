@@ -12,18 +12,19 @@ checkFontConfig()
 #
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 SET(ADM_LIB ADM_libass)
-#  mputils.c
-        SET(Asm x86/blend_bitmaps.asm  
-                x86/blur.asm    x86/cpuid.asm  
-                x86/rasterizer.asm  x86/utils.asm  
-                x86/x86inc.asm
-        )
-        IF(ADM_CPU_X86_64)
-                SET(Asm ${Asm} x86/be_blur.asm )
-        ENDIF(ADM_CPU_X86_64)
-        IF(ADM_CPU_X86)
-                ADD_DEFINITIONS(-DCONFIG_ASM) 
-        ENDIF(ADM_CPU_X86)
+SET(Asm x86/blend_bitmaps.asm  
+        x86/blur.asm    
+        x86/cpuid.asm  
+        x86/rasterizer.asm  
+        x86/utils.asm  
+        x86/x86inc.asm
+)
+IF(ADM_CPU_X86_64)
+        SET(Asm ${Asm} x86/be_blur.asm )
+ENDIF(ADM_CPU_X86_64)
+IF(ADM_CPU_X86)
+        ADD_DEFINITIONS(-DCONFIG_ASM) 
+ENDIF(ADM_CPU_X86)
 #
 SET(${ADM_LIB}_SRCS 
 ass_bitmap.c  ass.c  ass_cache.c  ass_fontconfig.c  ass_library.c   ass_render.c  ass_utils.c
