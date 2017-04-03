@@ -4553,7 +4553,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+10"/>
         <source>_Accept non-standard audio frequency for DVD</source>
-        <translation type="unfinished">Позволять нестандартную частоту звука для DVD</translation>
+        <translation type="unfinished">_Разрешать нестандартную частоту звука для DVD</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4660,17 +4660,17 @@ Drop timing informations ?</source>
     <message>
         <location line="+2"/>
         <source>_Encoding priority:</source>
-        <translation type="unfinished">Кодирования:</translation>
+        <translation type="unfinished">_Кодирование:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Indexing/unpacking priority:</source>
-        <translation type="unfinished">Индексации/распаковки:</translation>
+        <translation type="unfinished">_Индексация/распаковка:</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>_Playback priority:</source>
-        <translation type="unfinished">Воспроизведения:</translation>
+        <translation type="unfinished">_Воспроизведение:</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -4680,12 +4680,12 @@ Drop timing informations ?</source>
     <message>
         <location line="+7"/>
         <source>_Use alternative tag for MP3 in .mp4</source>
-        <translation type="unfinished">Использовать альтернативные тэги для MP3 в .MP4</translation>
+        <translation type="unfinished">_Использовать альтернативные тэги для MP3 в .MP4</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>_Default to the directory of the last read file for saving</source>
-        <translation type="unfinished">_Сохранять видео в папке с последним прочитанным файлом по умолчании</translation>
+        <translation type="unfinished">_Сохранять видео в папке с последним прочитанным файлом по умолчанию</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -4751,19 +4751,19 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+4"/>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished">При проигрывании звук:</translation>
+        <translation type="unfinished">_Даунмиксинг звука при локальном воспризведении:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+17"/>
         <source>_Horizontal deblocking</source>
-        <translation type="unfinished">Горизонтальный деблокинг</translation>
+        <translation type="unfinished">_Горизонтальный деблокинг</translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+1"/>
         <source>_Vertical deblocking</source>
-        <translation type="unfinished">Вертикальный деблокинг</translation>
+        <translation type="unfinished">_Вертикальный деблокинг</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+3"/>
