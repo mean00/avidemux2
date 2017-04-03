@@ -37,8 +37,20 @@ decoderVPX::decoderVPX (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataL
     vpx_codec_dec_cfg_t cfg;
     vpx_codec_flags_t flags=0; //VPX_CODEC_USE_POSTPROC
     vpx_codec_ctx_t *instance=new vpx_codec_ctx_t;
-    const struct vpx_codec_iface *iface = &vpx_codec_vp8_dx_algo;
-    
+    const struct vpx_codec_iface *iface;
+    if(fcc==MKFCC('V','P','8',' '))
+    {
+        iface = &vpx_codec_vp8_dx_algo;
+    }else if(fcc==MKFCC('V','P','9',' '))
+    {
+        iface = &vpx_codec_vp9_dx_algo;
+    }else
+    {
+        ADM_warning("Unsupported FCC\n");
+        delete instance;
+        return;
+    }
+
     memset(instance,0,sizeof(*instance));
     memset(&cfg,0,sizeof(cfg));
     cfg.threads=1;
