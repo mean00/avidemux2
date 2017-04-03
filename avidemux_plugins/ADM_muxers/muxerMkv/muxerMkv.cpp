@@ -75,6 +75,8 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     
         AVCodecContext *c;
         c = video_st->codec;
+        AVCodecParameters *par;
+        par = video_st->codecpar;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
         c->gop_size=15;
@@ -84,8 +86,8 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
             //sar=display/code  
             int num=1,den=1;
             av_reduce(&num, &den, mkvMuxerConfig.displayWidth, s->getWidth(),65535);
-            c->sample_aspect_ratio.num=num;
-            c->sample_aspect_ratio.den=den;
+            par->sample_aspect_ratio.num=num;
+            par->sample_aspect_ratio.den=den;
             video_st->sample_aspect_ratio.num=num;
             video_st->sample_aspect_ratio.den=den;
             ADM_info("Forcing display width of %d\n",(int)mkvMuxerConfig.displayWidth);

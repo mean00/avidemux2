@@ -101,6 +101,7 @@ bool muxerFlv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
     }
 
     AVCodecContext *c = video_st->codec;
+    AVCodecParameters *par = video_st->codecpar;
     AVDictionary *dict = NULL;
 
     rescaleFps(s->getAvgFps1000(),&(c->time_base));
