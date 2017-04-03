@@ -18,6 +18,7 @@
 #include "ADM_bitstream.h"
 #include "DIA_coreToolkit.h"
 
+void testYUV444();
 
 #define ADM_CLEAR_MM7()         __asm__ volatile( "pxor %%mm7,%%mm7"      ::    )
 #define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
@@ -681,6 +682,12 @@ static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 }
 #endif
 #ifdef ADM_CPU_X86
+extern "C"
+{
+extern void adm_YUV444_chroma_mmx(uint8_t *src, uint8_t *dst, uint8_t *dst2, int w4);
+}
+ 
+
 static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int w,int h,int s,int s2)
 {
     int step=w/4;
@@ -692,50 +699,11 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
 
     for(int y=0;y<h;y++)
     {
-        xsrc=src;
-        xdst=dst;
-        xdst2=dst2;
-        for(int x=0;x<step;x++)
-        {
-                        __asm__ volatile(
-                        "movq           (%0),%%mm0 \n"
-                        "movq           8(%0),%%mm1 \n"
-                        "movq           16(%0),%%mm2 \n"
-                        "movq           24(%0),%%mm3 \n"
-        
-                        "movq           %%mm0,%%mm4\n"
-                        "movq           %%mm1,%%mm5\n"
-                        "movq           %%mm2,%%mm6\n"
-                        "movq           %%mm3,%%mm7\n"
-
-                        "punpcklbw       %%mm2,%%mm0\n"
-                        "punpcklbw       %%mm3,%%mm1\n"
-                        "punpcklbw       %%mm1,%%mm0\n"
-                        
-                        "movd           %%mm0,(%1) \n"                       
-
-                        "psrlw          $8,%%mm4\n"
-                        "psrlw          $8,%%mm5\n"
-                        "psrlw          $8,%%mm6\n"
-                        "psrlw          $8,%%mm7\n"
-
-                        "punpcklbw       %%mm6,%%mm4\n"
-                        "punpcklbw       %%mm7,%%mm5\n"
-                        "punpcklbw       %%mm5,%%mm4\n"
-
-
-                        "movd           %%mm4,(%2) \n"                       
-                        :: "r"(xsrc),"r"(xdst),"r"(xdst2)
-                        :"memory"
-                        );
-                        xsrc+=32;
-                        xdst+=4;
-                        xdst2+=4;
-            }
+        adm_YUV444_chroma_mmx(src,dst,dst2,step);        
         for(int i=0;i<left;i++)
         {
-             xdst[i]=xsrc[8*i];
-             xdst2[i]=xsrc[8*i+1];
+             dst[step*4+i]=src[step*32+8*i];
+             dst2[step*4+i]=src[step*32+8*i+1];
         }
         dst+=s;
         dst2+=s2;
@@ -743,7 +711,8 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
     }
      ADM_EMMS();
 
-}
+} 
+
 #endif
 /**
     \fn YUV444_chroma_C
@@ -1082,5 +1051,34 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
         }
 
     return true;
+}
+
+#define START(x) ADM_info(#x)
+#define CHECKOK(x) if(!(x)) {ADM_warning(#x " failed at line %d , file %s\n",__LINE__,__FILE__);exit(-1);}
+#define PASS() ADM_info("   OK\n")
+void testYUV444(void)
+{
+    uint8_t src[50];
+    uint8_t dst[50],dstb[50];
+    uint8_t dst2[50],dst2b[50];
+    
+    for(int i=0;i<50;i++) src[i]=(i*0x55) ^( i+1);
+    memset(dst,50,0);
+    memset(dst2,50,0);
+    memset(dstb,50,0);
+    memset(dst2b,50,0);
+    
+    
+    YUV444_chroma_C(src,dst,20,1,20);
+    YUV444_chroma_C(src+1,dst2,20,1,20);
+
+    
+    YUV444_chroma_MMX(src,dstb,dst2b,20,1,20,20); 
+          
+    START(YUV444_chroma_C);
+    CHECKOK(!memcmp(dst,dstb,20));
+    CHECKOK(!memcmp(dst2,dst2b,20));
+    PASS();
+    
 }
 //EOF
