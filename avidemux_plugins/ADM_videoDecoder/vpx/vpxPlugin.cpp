@@ -14,10 +14,10 @@
 #include "ADM_default.h"
 #include "ADM_coreVideoDecoderInternal.h"
 #include "ADM_vpx.h"
-static uint32_t fccs[]={MKFCC('V','P','8',' '),0};
+static uint32_t fccs[]={MKFCC('V','P','8',' '),MKFCC('V','P','9',' '),0};
 ADM_DECLARE_VIDEO_DECODER_PREAMBLE(decoderVPX);
 ADM_DECLARE_VIDEO_DECODER_MAIN("vpx",
-                               "VP8/WebM",
+                               "VP8/VP9/WebM",
                                "Decoder using libvpx (c) mean 2010",
                                 fccs, // No configuration
                                 NULL,
