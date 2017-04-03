@@ -396,6 +396,21 @@ bool ivtcDupeRemover::configure( void)
 #ifdef ADM_CPU_X86
 static uint64_t __attribute__((used)) FUNNY_MANGLE(noise64);
 /**
+*/
+static uint32_t smallDiff(uint8_t  *s1,uint8_t *s2,uint32_t noise, int count)
+{
+uint32_t df=0;
+uint32_t delta;
+    for(int x=0;x<count;x++)
+    {
+            delta=abs((int)(s1[x])-(int)(s2[x]));
+            if(delta>noise)
+                    df+=delta;
+    }
+    return df;
+}
+
+/**
  * \fn computeDiffMMX
  * @param s1
  * @param s2
