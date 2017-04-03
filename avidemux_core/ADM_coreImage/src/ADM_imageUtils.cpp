@@ -20,7 +20,6 @@
 
 void testYUV444();
 
-#define ADM_CLEAR_MM7()         __asm__ volatile( "pxor %%mm7,%%mm7"      ::    )
 #define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
 
 //#undef ADM_CPU_X86
@@ -51,224 +50,8 @@ int a1,a2;
         
         return 1;
 }
-#ifdef ADM_CPU_X86
-static uint8_t tinyAverageMMX(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
-{
-int delta;
-uint32_t ww,rr;
-uint8_t *s1,*s2,*d1;
-int a1,a2;
-        s1=src1;
-        s2=src2;
-        
-        d1=dst;
-        ww=l>>2;
-        rr=l&3;
-
-        ADM_CLEAR_MM7();
-          for(int y=0;y<ww;y++)
-          {
-                __asm__ volatile(
-                        "movd           (%0),%%mm0 \n"
-                        "movd           (%1),%%mm1 \n"
-                        "punpcklbw      %%mm7,%%mm0 \n"
-                        "punpcklbw      %%mm7,%%mm1 \n"
-                        "paddw           %%mm1,%%mm0 \n"
-                        "psrlw          $1,%%mm0 \n"
-                        "packuswb       %%mm0,  %%mm0\n"
-                        "movd           %%mm0,(%2) \n"
-
-                : : "r" (s1),"r" (s2),"r"(d1)
-                :"memory"
-                );
-                        s1+=4;
-                        s2+=4;
-                        d1+=4;
-                }
-       ADM_EMMS();
-        if(rr) tinyAverage(d1, s1, s2,rr);
-        return 1;
-}
 
 
-#endif
-/**
-
-*/
-bool ADMImage::merge(ADMImage *src1,ADMImage *src2)
-{
-#ifdef ADM_CPU_X86
-        if(CpuCaps::hasMMX())
-        {
-                tinyAverageMMX(YPLANE(this),YPLANE(src1),YPLANE(src2),(_width*_height*3)>>1);
-                return 1;
-        }
-#endif
-        tinyAverage(YPLANE(this),YPLANE(src1),YPLANE(src2),(_width*_height*3)>>1);
-        return 1;
-
-
-}
-/**
-    \fn blendC
-    \brief Blend src1 and src2 into target (one plane)
-*/
-typedef bool blendFunction(int width, int height, uint8_t *target,uint32_t stride,    uint8_t *src1,uint32_t stride1,               uint8_t *src2,uint32_t stride2);
-
-static bool blendC(int width, int height,
-                    uint8_t *target,uint32_t stride,
-                    uint8_t *src1,  uint32_t stride1,
-                    uint8_t *src2,  uint32_t stride2)
-{
-          for(int y=0;y<height;y++)
-                {
-                    uint8_t *s1=src1,*s2=src2,*d=target;
-                    unsigned int a;
-                    for(int x=0;x<width;x++)
-                    {
-                        a=((unsigned int)*s1)+((unsigned int)*s2);
-                        a>>=1;
-                        *d=(uint8_t)a;
-                        s1++;
-                        s2++;
-                        d++;
-                    }
-                    src1+=stride1;src2+=stride2;target+=stride;
-                }
-        return true;
-}
-#ifdef ADM_CPU_X86
-static bool blendMMX(int width, int height,
-                    uint8_t *target,uint32_t stride,
-                    uint8_t *src1,  uint32_t stride1,
-                    uint8_t *src2,  uint32_t stride2)
-{
-uint32_t ww,rr;
-uint8_t *s1,*s2,*d1;
-        int a1,a2;
-      
-        ww=width>>2;
-        rr=width&3;
-
-
-         ADM_CLEAR_MM7();
-
-          for(int y=0;y<height;y++)
-          {
-                s1=src1;
-                s2=src2;
-                d1=target;
-                if(rr)
-                {
-                    blendC(rr,height,d1+(ww<<2), stride,s1+(ww<<2),stride1,s2+(ww<<2),stride2);
-                }
-
-                for(int x=0;x<ww;x++)
-                {
-                    __asm__ volatile(
-                            "movd           (%0),%%mm0 \n"
-                            "movd           (%1),%%mm1 \n"
-                            "punpcklbw      %%mm7,%%mm0 \n"
-                            "punpcklbw      %%mm7,%%mm1 \n"
-                            "paddw           %%mm1,%%mm0 \n"
-                            "psrlw          $1,%%mm0 \n"
-                            "packuswb       %%mm0,  %%mm0\n"
-                            "movd           %%mm0,(%2) \n"
-
-                    : : "r" (s1),"r" (s2),"r"(d1)
-                    :"memory"
-                    );
-                    s1+=4;
-                    s2+=4;
-                    d1+=4;
-                }
-                src1+=stride1;
-                src2+=stride2;
-                target+=stride;
-           }
-        ADM_EMMS();
-        return true;
-}
-/**
-    \fn blendSSE
-*/
-static bool blendSSE(int width, int height,
-                    uint8_t *target,uint32_t stride,
-                    uint8_t *src1,  uint32_t stride1,
-                    uint8_t *src2,  uint32_t stride2)
-{
-uint32_t ww,rr;
-uint8_t *s1,*s2,*d1;
-        int a1,a2;
-
-        ww=width>>3;
-        rr=width&7;
-
-          for(int y=0;y<height;y++)
-          {
-                int count=ww;
-                s1=src1;
-                s2=src2;
-                d1=target;
-                if(rr)
-                {
-                    blendC(rr,height,d1+(ww<<3), stride,s1+(ww<<3),stride1,s2+(ww<<3),stride2);
-                }
-
-                    
-                __asm__ volatile(
-                        
-                        "1: \n"
-                        "movq           (%0),%%mm0  \n"
-                        "movq           (%1),%%mm1  \n"
-                        "pavgb          %%mm1,%%mm0 \n"
-                        "movq           %%mm0,(%2)  \n"
-                        "add           $8,%0      \n"
-                        "add           $8,%1      \n"
-                        "add           $8,%2      \n"
-                        "sub           $1,%3      \n"
-                        "jnz           1b        \n"
-                        
-
-                : : "r" (s1),"r" (s2),"r"(d1),"r"(count)
-                :"memory"
-                );
-                src1+=stride1;
-                src2+=stride2;
-                target+=stride;
-           }
-        ADM_EMMS();
-        return true;
-}
-
-#endif
-/**
-    \fn blend
-    \brief Blend src1 and src2 into our image
-*/
-bool ADMImage::blend(ADMImage *src1,ADMImage *src2)
-{
-    blendFunction *myBlend=blendC;
-#ifdef ADM_CPU_X86
-    if(CpuCaps::hasMMX())
-            myBlend=blendMMX;
-    if(CpuCaps::hasSSE())
-            myBlend=blendSSE;
-#endif
-    ADM_assert(src1->_width==src2->_width);
-    ADM_assert(_width==src2->_width);
-    ADM_assert(src1->_height==src2->_height);
-    for(int x=0;x<3;x++)
-    {
-        ADM_PLANE plane=(ADM_PLANE)x;
-        myBlend(GetWidth(plane),GetHeight(plane),
-                                    GetWritePtr(plane),GetPitch(plane),
-                                    src1->GetReadPtr(plane),src1->GetPitch(plane),
-                                    src2->GetReadPtr(plane),src2->GetPitch(plane)
-                                );
-    }
-    return true;
-}
 /**
 
 */
@@ -484,63 +267,7 @@ int a1,a2;
                 }
         return 1;
 }
-#ifdef ADM_CPU_X86
-static uint8_t tinySubstractMMX(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
-{
-int delta;
-uint32_t ww,hh;
-uint8_t *s1,*s2,*d1;
-int ll,rr;
-        ll=l>>2;
-        rr=l&3;
-        s1=src1;
-        s2=src2;
-        
-        d1=dst;
-      
-        ADM_CLEAR_MM7();
-        for(int x=0;x<ll;x++)
-        {
-                        __asm__ volatile(
-                        "movd           (%0),%%mm0 \n"
-                        "movd           (%1),%%mm1 \n"
-                       
-                        "punpcklbw      %%mm7,%%mm0 \n"
-                        "punpcklbw      %%mm7,%%mm1 \n"
-                      
-                        
-                        "paddw          %%mm0,%%mm0 \n"
-                       
-                        
-                        "psubusw        %%mm1,%%mm0 \n" // mm1=sum                       
-                        "packuswb       %%mm0,  %%mm0\n"
-                        "movd           %%mm0,(%2) \n"                       
-                        :: "r"(s1),"r"(s2),"r"(d1)
-                        :"memory"
-                        );
-                        s1+=4;
-                        s2+=4;
-                        d1+=4;
-        }
-        ADM_EMMS();
-        if(rr) tinySubstractMMX(d1, s1, s2,rr);
-        return 1;
-}
-#endif
 
-bool ADMImage::substract(ADMImage *src1,ADMImage *src2)
-{
-
-#ifdef ADM_CPU_X86
-uint32_t r1,r2;
-        if(CpuCaps::hasMMX())
-        {
-                 return tinySubstractMMX(YPLANE(this),YPLANE(src1),YPLANE(src2),src1->_width*src1->_height);                
-        }
-#endif
-        return tinySubstract(YPLANE(this),YPLANE(src1),YPLANE(src2),src1->_width*src1->_height);
-}
-  
  /**
   *		\fn  copyLeftSideTo
   * 	\brief Copy half the image (left part) to dest
@@ -710,7 +437,6 @@ static inline void YUV444_chroma_MMX(uint8_t *src,uint8_t *dst,uint8_t *dst2,int
         src+=4*w*4;
     }
      ADM_EMMS();
-
 } 
 
 #endif
@@ -1068,16 +794,18 @@ void testYUV444(void)
     memset(dstb,50,0);
     memset(dst2b,50,0);
     
+
+#define ROW_SIZE 23
     
-    YUV444_chroma_C(src,dst,20,1,20);
-    YUV444_chroma_C(src+1,dst2,20,1,20);
+    YUV444_chroma_C(src,dst,ROW_SIZE,1,ROW_SIZE);
+    YUV444_chroma_C(src+1,dst2,ROW_SIZE,1,ROW_SIZE);
 
     
-    YUV444_chroma_MMX(src,dstb,dst2b,20,1,20,20); 
+    YUV444_chroma_MMX(src,dstb,dst2b,ROW_SIZE,1,ROW_SIZE,ROW_SIZE); 
           
     START(YUV444_chroma_C);
-    CHECKOK(!memcmp(dst,dstb,20));
-    CHECKOK(!memcmp(dst2,dst2b,20));
+    CHECKOK(!memcmp(dst,dstb,ROW_SIZE));
+    CHECKOK(!memcmp(dst2,dst2b,ROW_SIZE));
     PASS();
     
 }
