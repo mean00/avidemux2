@@ -1,7 +1,7 @@
 //
 // C++ Implementation: ADM_cpuCap
 //
-// Description: 
+// Description:
 //
 //
 // Author: mean <fixounet@free.fr>, (C) 2004
@@ -30,16 +30,14 @@ extern "C"
 #include "libavutil/cpu.h"
 }
 
+#ifdef ADM_CPU_X86
+  extern "C"
+  {
+  extern void adm_cpu_cpuid(int index, int *eax, int *ebx, int *ecx, int *edx);
+  extern int  adm_cpu_cpuid_test(void);
+  }
+#endif
 
-
-#define cpuid(index,eax,ebx,ecx,edx)\
-    __asm __volatile\
-        ("mov %%" REG_b", %%" REG_S"\n\t"\
-         "cpuid\n\t"\
-         "xchg %%" REG_b", %%" REG_S\
-         : "=a" (eax), "=S" (ebx),\
-           "=c" (ecx), "=d" (edx)\
-         : "0" (index));
 
 
 /**
@@ -51,87 +49,71 @@ extern "C"
     printf("[CpuCaps] Checking CPU capabilities\n");
     myCpuCaps=0;
     myCpuMask=0xffffffff;
-   
+    bool available=true;
+
 #ifdef ADM_CPU_X86
-    int eax, ebx, ecx, edx;
-    int max_std_level, max_ext_level;
+      int eax, ebx, ecx, edx;
+      int max_std_level, max_ext_level;
 
-#if !defined(ADM_CPU_64BIT) // 64 bits CPU have all cpuid
-    long a, c;
+  #ifdef ADM_CPU_X86_32
+      available=adm_cpu_cpuid_test();
+  #endif
 
-    __asm__ __volatile__ (
-                       /* See if CPUID instruction is supported ... */
-                       /* ... Get copies of EFLAGS into eax and ecx */
-                       "pushf\n\t"
-                       "pop %0\n\t"
-                       "mov %0, %1\n\t"
+      if(!available)
+      {
+        ADM_warning("CPUID not available\n");
+        goto skipIt;
+      }
 
-                       /* ... Toggle the ID bit in one copy and store */
-                       /*     to the EFLAGS reg */
-                       "xor $0x200000, %0\n\t"
-                       "push %0\n\t"
-                       "popf\n\t"
 
-                       /* ... Get the (hopefully modified) EFLAGS */
-                       "pushf\n\t"
-                       "pop %0\n\t"
-                       : "=a" (a), "=c" (c)
-                       :
-                       : "cc"
-                       );
 
- if (a == c)
-     return ; /* CPUID not supported */
-#endif
+   adm_cpu_cpuid(0, &max_std_level, &ebx, &ecx, &edx);
+   if(max_std_level >= 1)
+   {
+  	 int std_caps = 0;
 
- cpuid(0, max_std_level, ebx, ecx, edx);
- if(max_std_level >= 1)
- {
-	 int std_caps = 0;
+       adm_cpu_cpuid(1, &eax, &ebx, &ecx, &std_caps);
+       if (std_caps & (1<<23))
+      	 myCpuCaps |= ADM_CPUCAP_MMX;
+       if (std_caps & (1<<25))
+      	 myCpuCaps |= ADM_CPUCAP_MMXEXT | ADM_CPUCAP_SSE;
+       if (std_caps & (1<<26))
+      	 myCpuCaps |= ADM_CPUCAP_SSE2;
+       if (ecx & 1)
+      	 myCpuCaps |= ADM_CPUCAP_SSE3;
+       if (ecx & 0x00000200 )
+      	 myCpuCaps |= ADM_CPUCAP_SSSE3;
+   }
 
-     cpuid(1, eax, ebx, ecx, std_caps);
-     if (std_caps & (1<<23))
-    	 myCpuCaps |= ADM_CPUCAP_MMX;
-     if (std_caps & (1<<25))
-    	 myCpuCaps |= ADM_CPUCAP_MMXEXT | ADM_CPUCAP_SSE;
-     if (std_caps & (1<<26))
-    	 myCpuCaps |= ADM_CPUCAP_SSE2;
-     if (ecx & 1)
-    	 myCpuCaps |= ADM_CPUCAP_SSE3;
-     if (ecx & 0x00000200 )
-    	 myCpuCaps |= ADM_CPUCAP_SSSE3;
- }
+   adm_cpu_cpuid(0x80000000,& max_ext_level,& ebx, &ecx,& edx);
+   if(max_ext_level >= 0x80000001)
+   {
+  	 int ext_caps = 0;
 
- cpuid(0x80000000, max_ext_level, ebx, ecx, edx);
- if(max_ext_level >= 0x80000001)
- {
-	 int ext_caps = 0;
-
-     cpuid(0x80000001, eax, ebx, ecx, ext_caps);
-     if (ext_caps & (1<<31))
-    	 myCpuCaps |= ADM_CPUCAP_3DNOW;
-     if (ext_caps & (1<<30))
-    	 myCpuCaps |= ADM_CPUCAP_3DNOWEXT;
-     if (ext_caps & (1<<23))
-    	 myCpuCaps |= ADM_CPUCAP_MMX;
-     if (ext_caps & (1<<22))
-    	 myCpuCaps |= ADM_CPUCAP_MMXEXT;
- }
-
-#define CHECK(x) if (myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected"); \
-                     if (!(myCpuMask & ADM_CPUCAP_##x)) printf(", but disabled"); \
-                     printf("\n"); }
-    CHECK(MMX);
-    CHECK(3DNOW);
-    CHECK(3DNOWEXT);
-    CHECK(MMXEXT);
-    CHECK(SSE);
-    CHECK(SSE2);
-    CHECK(SSE3);
-    CHECK(SSSE3);
+       adm_cpu_cpuid(0x80000001, &eax,& ebx,& ecx,& ext_caps);
+       if (ext_caps & (1<<31))
+      	 myCpuCaps |= ADM_CPUCAP_3DNOW;
+       if (ext_caps & (1<<30))
+      	 myCpuCaps |= ADM_CPUCAP_3DNOWEXT;
+       if (ext_caps & (1<<23))
+      	 myCpuCaps |= ADM_CPUCAP_MMX;
+       if (ext_caps & (1<<22))
+      	 myCpuCaps |= ADM_CPUCAP_MMXEXT;
+   }
+skipIt:
+  #define CHECK(x) if (myCpuCaps & ADM_CPUCAP_##x) { printf("\t\t"#x" detected"); \
+                       if (!(myCpuMask & ADM_CPUCAP_##x)) printf(", but disabled"); \
+                       printf("\n"); }
+      CHECK(MMX);
+      CHECK(3DNOW);
+      CHECK(3DNOWEXT);
+      CHECK(MMXEXT);
+      CHECK(SSE);
+      CHECK(SSE2);
+      CHECK(SSE3);
+      CHECK(SSSE3);
 #endif // X86
-
-    printf("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
+    ADM_info("[CpuCaps] End of CPU capabilities check (cpuCaps: 0x%08x, cpuMask: 0x%08x)\n",myCpuCaps,myCpuMask);
     return ;
 }
 
@@ -172,17 +154,17 @@ int ADM_cpu_num_processors(void)
 #endif
 }
 /**
- * 
+ *
  * @param admMask
- * @return 
+ * @return
  */
 static int Cpu2Lav(uint32_t admMask)
 {
-   if(admMask==ADM_CPUCAP_ALL) 
+   if(admMask==ADM_CPUCAP_ALL)
        return -1; // allow all
    int out=0;
  #define LAV_CPU_CAPS(x)    	if(admMask & ADM_CPUCAP_##x) out|=AV_CPU_FLAG_##x;
-    
+
     	LAV_CPU_CAPS(MMX);
     	LAV_CPU_CAPS(MMXEXT);
     	LAV_CPU_CAPS(3DNOW);
@@ -195,27 +177,26 @@ static int Cpu2Lav(uint32_t admMask)
 }
 
 /**
- * 
+ *
  * @param mask
- * @return 
+ * @return
  */
 bool     CpuCaps::setMask(uint32_t mask)
 {
     ADM_info("[CpuCaps] Setting mask to 0x%08x\n",mask);
     myCpuMask=mask;
-    
+
     int lavCpuMask=Cpu2Lav(myCpuMask);
     av_set_cpu_flags_mask(lavCpuMask);
-    
+
     return true;
 }
 /**
- * 
+ *
  * @param mask
- * @return 
+ * @return
  */
 uint32_t     CpuCaps::getMask( )
 {
     return myCpuMask;
 }
-

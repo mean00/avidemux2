@@ -30,6 +30,10 @@ if (ADM_DEBUG AND FIND_LEAKS)
 	endif (MINGW)
 endif (ADM_DEBUG AND FIND_LEAKS)
 
+set(ADM_core_SRCS ${ADM_core_SRCS} cpuid.asm)
+YASMIFY(cpuid.asm)
+
+
 add_compiler_export_flags()
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
 include_directories("${PTHREAD_INCLUDE_DIR}")

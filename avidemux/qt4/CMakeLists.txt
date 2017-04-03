@@ -7,7 +7,8 @@ MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
 MESSAGE("#########################################")
 MESSAGE("")
-#fedora ADD_DEFINITIONS("-std=c++11")
+#fedora 
+ADD_DEFINITIONS("-std=c++11")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
 IF(NOT FAKEROOT)
@@ -15,7 +16,6 @@ IF(NOT FAKEROOT)
 else(NOT FAKEROOT)
 	SET(AVIDEMUX_FAKEROOT "${FAKEROOT}/")
 endif(NOT FAKEROOT)
-
 #-----------------------------------
 # Set extra libs, system dependant
 #-----------------------------------
