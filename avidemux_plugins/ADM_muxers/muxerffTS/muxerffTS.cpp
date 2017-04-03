@@ -88,6 +88,8 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
     
         AVCodecContext *c;
         c = video_st->codec;
+        AVCodecParameters *par;
+        par = video_st->codecpar;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
         
@@ -100,7 +102,7 @@ bool muxerffTS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         }
         
 		for(int i=0;i<nbAudioTrack;i++)
-            audio_st[i]->codec->bit_rate=a[i]->getInfo()->byterate*8;        
+            audio_st[i]->codecpar->bit_rate=a[i]->getInfo()->byterate*8;
        
         int erx = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);
 

@@ -88,11 +88,13 @@ const char *er;
     
         AVCodecContext *c;
         c = video_st->codec;
+        AVCodecParameters *par;
+        par = video_st->codecpar;
 
         // Override codec settings
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
-        c->bit_rate=psMuxerConfig.videoRatekBits*1000;
+        par->bit_rate=psMuxerConfig.videoRatekBits*1000;
         c->rc_buffer_size=psMuxerConfig.bufferSizekBytes*8*1024;
         c->rc_buffer_size_header=psMuxerConfig.bufferSizekBytes*8*1024;
         c->gop_size=15;
@@ -105,7 +107,7 @@ const char *er;
         }
         for(int i=0;i<nbAudioTrack;i++)
         {
-            audio_st[i]->codec->bit_rate=a[i]->getInfo()->byterate*8;        
+            audio_st[i]->codecpar->bit_rate=a[i]->getInfo()->byterate*8;
         }
 
         int erx = avio_open(&(oc->pb), file, AVIO_FLAG_WRITE);

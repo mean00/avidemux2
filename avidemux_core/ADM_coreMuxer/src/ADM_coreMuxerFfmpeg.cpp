@@ -36,18 +36,18 @@ extern "C" {
     \fn ffmpuxerSetExtradata
     \brief dupe the extradata if needed
 */
-bool ffmpuxerSetExtradata(AVCodecContext *context, int size, const uint8_t *data)
+bool ffmpuxerSetExtradata(AVCodecParameters *params, int size, const uint8_t *data)
 {
     if(!size)
     {
-        context->extradata=NULL;
-        context->extradata_size=0;
+        params->extradata=NULL;
+        params->extradata_size=0;
         return true;
     }
     uint8_t *copy=(uint8_t *)av_malloc( (1+(size>>4))<<4);;
     memcpy(copy,data,size);
-    context->extradata=copy;
-    context->extradata_size=size;
+    params->extradata=copy;
+    params->extradata_size=size;
     return true;
 }
 
@@ -159,31 +159,34 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 		printf("[FF] new stream failed\n");
 		return false;
 	}
-    AVCodecContext *c;
-        c = video_st->codec;
-        c->sample_aspect_ratio.num=1;
-        c->sample_aspect_ratio.den=1;
-        video_st->sample_aspect_ratio=c->sample_aspect_ratio;
+    AVCodecParameters *par;
+        par = video_st->codecpar;
+        par->sample_aspect_ratio.num=1;
+        par->sample_aspect_ratio.den=1;
+        video_st->sample_aspect_ratio=par->sample_aspect_ratio;
+        par->bit_rate=9000*1000;
+        par->codec_type = AVMEDIA_TYPE_VIDEO;
+        par->width = stream->getWidth();
+        par->height =stream->getHeight();
 
         uint32_t videoExtraDataSize=0;
         uint8_t  *videoExtraData;
         stream->getExtraData(&videoExtraDataSize,&videoExtraData);
         printf("[FF] Using %d bytes for video extradata\n",(int)videoExtraDataSize);
-        ffmpuxerSetExtradata(c,videoExtraDataSize,videoExtraData);
+        ffmpuxerSetExtradata(par,videoExtraDataSize,videoExtraData);
 
+    AVCodecContext *c;
+        c = video_st->codec;
         c->rc_buffer_size=8*1024*224;
         c->rc_max_rate=9500*1000;
         c->rc_min_rate=0;
-        c->bit_rate=9000*1000;
-        c->codec_type = AVMEDIA_TYPE_VIDEO;
         c->flags=CODEC_FLAG_QSCALE;
-        c->width = stream->getWidth();
-        c->height =stream->getHeight();
+
         uint32_t fcc=stream->getFCC();
 
         if(isMpeg4Compatible(fcc))
         {
-                c->codec_id = AV_CODEC_ID_MPEG4;
+                par->codec_id = AV_CODEC_ID_MPEG4;
                 if(stream->providePts()==true)
                 {
                     c->has_b_frames=1; // in doubt...
@@ -210,10 +213,10 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                         }
                         
                         if(isH265Compatible(fcc)) {
-                            c->codec_id = AV_CODEC_ID_HEVC;
+                            par->codec_id = AV_CODEC_ID_HEVC;
                              setAvCodec(c,AV_CODEC_ID_HEVC);
                         } else {
-                            c->codec_id = AV_CODEC_ID_H264;
+                            par->codec_id = AV_CODEC_ID_H264;
                              setAvCodec(c,AV_CODEC_ID_H264);
                         }
                 }
@@ -221,17 +224,17 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                 {
                         if(isDVCompatible(fcc))
                         {
-                          c->codec_id = AV_CODEC_ID_DVVIDEO;
+                          par->codec_id = AV_CODEC_ID_DVVIDEO;
                         }else
                         {
                           if(fourCC::check(fcc,(uint8_t *)"H263"))
                           {
-                                    c->codec_id= AV_CODEC_ID_H263;
+                                    par->codec_id= AV_CODEC_ID_H263;
                             }else
 
                            if(isVP6Compatible(stream->getFCC()))
                                 {
-                                         c->codec_id= AV_CODEC_ID_VP6F;
+                                         par->codec_id= AV_CODEC_ID_VP6F;
                                          setAvCodec(c,AV_CODEC_ID_VP6F);
                                          c->has_b_frames=0; // No PTS=cannot handle CTS...
                                          c->max_b_frames=0;
@@ -240,7 +243,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                         {
                                                 c->has_b_frames=0; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=0;
-                                                c->codec_id= AV_CODEC_ID_FLV1;
+                                                par->codec_id= AV_CODEC_ID_FLV1;
                                                 setAvCodec(c,AV_CODEC_ID_FLV1);
 
                                         }else
@@ -249,13 +252,13 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                             {
                                                 c->has_b_frames=1; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=2;
-                                                c->codec_id= AV_CODEC_ID_MPEG1VIDEO;
+                                                par->codec_id= AV_CODEC_ID_MPEG1VIDEO;
                                             }
                                             else if(fourCC::check(stream->getFCC(),(uint8_t *)"MPEG2"))
                                             {
                                                 c->has_b_frames=1; // No PTS=cannot handle CTS...
                                                 c->max_b_frames=2;
-                                                c->codec_id= AV_CODEC_ID_MPEG2VIDEO;
+                                                par->codec_id= AV_CODEC_ID_MPEG2VIDEO;
                                             }else
                                             {
                                                 uint32_t id=stream->getFCC();
@@ -266,7 +269,7 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
                                                     printf("[FF] Unknown video codec\n");
                                                     return false;
                                                 }
-                                                c->codec_id=cid;
+                                                par->codec_id=cid;
                                             }
                                         }
                         }
@@ -315,56 +318,58 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
           }
           WAVHeader *audioheader=audio[i]->getInfo();;
           AVCodecContext *c;
+          AVCodecParameters *par;
           c = audio_st[i]->codec;
-          c->frame_size=1024; //For AAC mainly, sample per frame
+          par = audio_st[i]->codecpar;
+          par->frame_size=1024; //For AAC mainly, sample per frame
           printf("[FF] Bitrate %u\n",(audioheader->byterate*8)/1000);
-          c->sample_rate = audioheader->frequency;
+          par->sample_rate = audioheader->frequency;
           switch(audioheader->encoding)
           {
                   case WAV_OGG_VORBIS:
-                                c->codec_id = AV_CODEC_ID_VORBIS;c->frame_size=6*256;
-                                ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                                par->codec_id = AV_CODEC_ID_VORBIS;par->frame_size=6*256;
+                                ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                 break;
                   case WAV_FLAC:
-                                c->codec_id = AV_CODEC_ID_FLAC;
+                                par->codec_id = AV_CODEC_ID_FLAC;
                                 // Do we already have the flac header ? FFmpeg will add it..
                                 // If we have it, skip it
                                 if(audioextraSize>=8 && audioextraData[0]==0x66 && audioextraData[1]==0x4c &&audioextraData[2]==0x61 && audioextraData[3]==0x43 )
-                                    ffmpuxerSetExtradata(c,audioextraSize-8,audioextraData+8);
+                                    ffmpuxerSetExtradata(par,audioextraSize-8,audioextraData+8);
                                 else
-                                    ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                                    ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                 break;                                
-                  case WAV_DTS: c->codec_id = AV_CODEC_ID_DTS;c->frame_size=1024;break;
-                  case WAV_OPUS:    c->codec_id = AV_CODEC_ID_OPUS;
-                                    c->frame_size=1024;
-                                    ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
+                  case WAV_DTS: par->codec_id = AV_CODEC_ID_DTS;par->frame_size=1024;break;
+                  case WAV_OPUS:    par->codec_id = AV_CODEC_ID_OPUS;
+                                    par->frame_size=1024;
+                                    ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                     break;
-                  case WAV_EAC3: c->codec_id = AV_CODEC_ID_EAC3;c->frame_size=6*256;break;
-                  case WAV_AC3: c->codec_id = AV_CODEC_ID_AC3;c->frame_size=6*256;break;
-                  case WAV_MP2: c->codec_id = AV_CODEC_ID_MP2;c->frame_size=1152;break;
+                  case WAV_EAC3: par->codec_id = AV_CODEC_ID_EAC3;par->frame_size=6*256;break;
+                  case WAV_AC3: par->codec_id = AV_CODEC_ID_AC3;par->frame_size=6*256;break;
+                  case WAV_MP2: par->codec_id = AV_CODEC_ID_MP2;par->frame_size=1152;break;
                   case WAV_MP3:
 //  #warning FIXME : Probe deeper
-                              c->frame_size=1152;
-                              c->codec_id = AV_CODEC_ID_MP3;
+                              par->frame_size=1152;
+                              par->codec_id = AV_CODEC_ID_MP3;
                               break;
                   case WAV_PCM:
                                   // One chunk is 10 ms (1/100 of fq)
-                                  c->frame_size=4;
-                                  c->codec_id = AV_CODEC_ID_PCM_S16LE;break;
+                                  par->frame_size=4;
+                                  par->codec_id = AV_CODEC_ID_PCM_S16LE;break;
                   case WAV_AAC:
-                                  ffmpuxerSetExtradata(c,audioextraSize,audioextraData);
-                                  c->codec_id = AV_CODEC_ID_AAC;
-                                  c->frame_size=1024;
+                                  ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
+                                  par->codec_id = AV_CODEC_ID_AAC;
+                                  par->frame_size=1024;
                                   break;
                   default:
                                  printf("[FF]: Unsupported audio\n");
                                  return false;
                           break;
           }
-          c->codec_type = AVMEDIA_TYPE_AUDIO;
-          c->bit_rate = audioheader->byterate*8;
-          c->rc_buffer_size=(c->bit_rate/(2*8)); // 500 ms worth
-          c->channels = audioheader->channels;
+          par->codec_type = AVMEDIA_TYPE_AUDIO;
+          par->bit_rate = audioheader->byterate*8;
+          c->rc_buffer_size=(par->bit_rate/(2*8)); // 500 ms worth
+          par->channels = audioheader->channels;
           if(useGlobalHeader()==true)
           {
             if(audioextraSize)
