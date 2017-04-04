@@ -17,7 +17,7 @@
 #include "ADM_bitmap.h"
 #include "ADM_bitstream.h"
 #include "DIA_coreToolkit.h"
-
+#include "ADM_coreUtils.h"
 void testYUV444();
 
 #ifdef ADM_CPU_X86
@@ -574,4 +574,44 @@ void testYUV444(void)
     PASS();
 
 }
+
+void testUV(void)
+{
+    
+    uint8_t src[50];
+    uint8_t dst[50],dstb[50];
+    uint8_t dst2[50],dst2b[50];
+
+    for(int i=0;i<50;i++) src[i]=(i*0x55) ^( i+1);
+    memset(dst,50,0);
+    memset(dst2,50,0);
+    memset(dstb,50,0);
+    memset(dst2b,50,0);
+    
+    
+    
+    nv12_to_uv_c(ROW_SIZE,1,ROW_SIZE,ROW_SIZE,dst,dstb,0,src);
+    nv12_to_uv_mmx(ROW_SIZE,1,ROW_SIZE,ROW_SIZE,dst2,dst2b,0,src);
+   
+    printf("U:\n");
+    mixDump(dst,ROW_SIZE);
+    mixDump(dstb,ROW_SIZE);
+    printf("V:\n");
+    mixDump(dst2,ROW_SIZE);
+    mixDump(dst2b,ROW_SIZE);
+    
+    
+    START(testUV);
+    CHECKOK(!memcmp(dst,dst2,ROW_SIZE));
+    CHECKOK(!memcmp(dstb,dst2b,ROW_SIZE));
+    PASS();
+    
+}
+
+void allTestImageUtil()
+{
+    testYUV444();
+    testUV();
+}
+
 //EOF
