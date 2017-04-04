@@ -318,7 +318,7 @@ std::string ADM_getPluginDir(const char *subfolder)
             pluginDir = std::string(p);
             delete [] p;p=NULL;
     }
-    return pluginDir+std::string(ADM_SEPARATOR)+std::string(subfolder);
+    return pluginDir+std::string(subfolder);
 }            
 
 // EOF
