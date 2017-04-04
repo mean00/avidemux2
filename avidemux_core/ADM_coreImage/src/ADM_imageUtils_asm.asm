@@ -100,4 +100,41 @@ cglobal YUV444_chroma, 4,4,8, src, dst, dst2, w4
         sub            w4d,1
         jnz             .again
         REP_RET
+;
+;
+;
+INIT_MMX mmx
+cglobal nv12_to_u_v_one_line,4,4,4, w8, dstu, dstv, src
+
+.nv12_again   
+       movq           m0 , [srcq]
+       movq           m1 , 8[srcq]
+       movq           m2, m0
+       movq           m3, m1
+
+       psllw          m0,8
+       psrlw          m0,8
+
+       psllw          m1,8
+       psrlw          m1,8
+
+
+       packuswb       m0,m1
+
+       psrlw          m2,8
+       psrlw          m3,8
+
+       packuswb       m2,m3
+
+       movq           [dstvq],m0
+       movq           [dstuq],m2
+
+       add            srcq,16
+       add            dstuq,8
+       add            dstvq,8
+       sub            w8q,1
+       jnz            .nv12_again
+       REP_RET
+
+
 ;eof

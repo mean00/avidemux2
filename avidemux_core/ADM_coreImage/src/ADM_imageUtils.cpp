@@ -20,8 +20,13 @@
 
 void testYUV444();
 
-#define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
-
+#ifdef ADM_CPU_X86
+  extern "C"
+  {
+  extern void adm2_emms_yasm(void);
+  }
+  #define ADM_EMMS()             adm2_emms_yasm()
+#endif
 
  /**
   *		\fn  copyLeftSideTo
@@ -288,7 +293,12 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcv, u
  * @param srcPitch
  * @param src
  */
+extern "C"
+{
+void adm_nv12_to_u_v_one_line_mmx(int w8, uint8_t *dstu, uint8_t *dstv, uint8_t *src);
 
+}
+#if 0
 static void nv12_to_u_v_mmx_one_line(int w8, uint8_t *dstu, uint8_t *dstv, uint8_t *src)
 {
       __asm__ volatile(
@@ -328,7 +338,7 @@ static void nv12_to_u_v_mmx_one_line(int w8, uint8_t *dstu, uint8_t *dstv, uint8
                   : "memory"
                   );
 }
-
+#endif
 static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
 {
         int mod8=w>>3;
@@ -343,7 +353,7 @@ static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, u
                 dstu+=upitch;
                 dstv+=vpitch;
 
-                nv12_to_u_v_mmx_one_line(mod8,u,v,ssrc);
+                adm_nv12_to_u_v_one_line_mmx(mod8,u,v,ssrc);
                 if(leftOver)
                 {
                     int c=mod8*8;
