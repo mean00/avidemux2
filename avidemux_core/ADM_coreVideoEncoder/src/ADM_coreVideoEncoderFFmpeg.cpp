@@ -442,7 +442,7 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         ADM_warning("No picture...\n");
         return false;
     }
-    aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d\n",out->out_quantizer,pict_type,keyframe);
+    aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d %p\n",out->out_quantizer,pict_type,keyframe,_context->coded_frame);
     out->len=size;
     out->flags=0;
     if(keyframe)
@@ -459,10 +459,17 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
             {
                 out->dts=out->pts=queueOfDts[0];
                 queueOfDts.erase(queueOfDts.begin());
+            }else
+            {
+                out->dts=out->pts=lastDts+ source->getInfo()->frameIncrement;
+                return false; // probably empty now
             }
+
     } else
-    if(!getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts)))
-        return false;
+    {
+        if(!getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts)))
+                return false;
+    }
     // update lastDts
     lastDts=out->dts;
 
