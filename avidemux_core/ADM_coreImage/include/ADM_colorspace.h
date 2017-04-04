@@ -72,8 +72,6 @@ public:
                     
 };
 
-// Some misc functions
-ADM_COREIMAGE6_EXPORT bool ADM_ConvertRgb24ToYV12(bool inverted,int w, int h, uint8_t *source, uint8_t *destination);
 #endif
 //EOF
 

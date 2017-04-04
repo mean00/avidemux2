@@ -22,34 +22,6 @@ void testYUV444();
 
 #define ADM_EMMS()              __asm__ volatile( "emms\n"                ::    )
 
-//#undef ADM_CPU_X86
-
-static uint8_t tinyAverage(uint8_t *dst, uint8_t *src1, uint8_t *src2,uint32_t l)
-{
-
-uint8_t *s1,*s2,*d1;
-int a1,a2;
-        s1=src1;
-        s2=src2;
-
-        d1=dst;
-          for(int y=0;y<l;y++)
-                {
-                        a1=*s1;
-                        a2=*s2;
-                        a1=a1+a2;
-                        a1>>=1;
-                        if(a1<0) a1=0;
-                        if(a1>255) a1=255;
-                        *d1=a1;
-
-                        s1++;
-                        s2++;
-                        d1++;
-                }
-
-        return 1;
-}
 
  /**
   *		\fn  copyLeftSideTo

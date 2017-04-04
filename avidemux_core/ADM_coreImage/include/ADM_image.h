@@ -167,7 +167,6 @@ public:
         bool    saveAsJpg(const char *filename);
         bool    printString(uint32_t x,uint32_t y, const char *strng);
 static  bool    copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane);
-static  uint32_t lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise);
         bool    convertFromYUV444(uint8_t *from);
         bool    convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV);
         bool    convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV);
