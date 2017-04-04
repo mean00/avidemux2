@@ -103,13 +103,13 @@ const std::string ADM_getI8NDir(const std::string &flavor)
     if(isPortable)
     {
         std::string i18n=pluginDir;
-        i18n+=std::string("/../../share/avidemux6/")+flavor+std::string("/i18n/");
+        i18n+=std::string("/../../share/avidemux6/")+flavor+std::string("/i18n");
         ADM_i18nDir=canonize(i18n);
         ADM_info("Relative to install i18n mode : <%s>\n",ADM_i18nDir.c_str());
         // 181n
     }else
     {        
-        std::string partialPath=flavor+std::string("/i18n/");
+        std::string partialPath=flavor+std::string("/i18n");
         char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
         ADM_i18nDir=std::string(ppath);
         delete [] ppath;
