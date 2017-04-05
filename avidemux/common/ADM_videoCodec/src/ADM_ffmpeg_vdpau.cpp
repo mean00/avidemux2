@@ -301,6 +301,7 @@ decoderFFVDPAU::decoderFFVDPAU(struct AVCodecContext *avctx,decoderFF *parent) :
             case AV_CODEC_ID_VC1:
                   name="vc1";
                   break;
+            case AV_CODEC_ID_MPEG1VIDEO:
             case AV_CODEC_ID_MPEG2VIDEO:
                   name="mpegvideo";
                   break;
