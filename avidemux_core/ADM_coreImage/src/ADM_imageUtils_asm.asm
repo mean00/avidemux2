@@ -193,3 +193,45 @@ cglobal YUV444Luma,4,4,5, w8, dst, src,mangle
 
 
 ;eof
+;__asm__ volatile(
+; "mov            %4,%3      \n" // local copy
+;  "1:\n"
+;  "movq           (%1),%%mm0   \n" // U
+;  "movq           (%2),%%mm1   \n" // V
+;  "movq           %%mm0,%%mm2  \n"
+;  "movq           %%mm1,%%mm3  \n"
+;
+;  "punpcklbw      %%mm1,%%mm0  \n"
+;  "punpckhbw      %%mm3,%%mm2  \n"
+;  "movq           %%mm0,(%0)   \n"
+;  "movq           %%mm2,8(%0)  \n"
+;
+;  "add            $16,%0       \n"
+;  "add            $8,%1        \n"
+;  "add            $8,%2        \n"
+;  "sub            $1,%3        \n"
+;  "jnz            1b           \n"
+;
+;  :
+;  : "r"(ddst),"r"(u),"r"(v),"r"(x),"r"(mod8)
+;  : "memory"
+;  );
+cglobal uv_to_nv12,4,4,4, u, v, dst,w8
+
+.nv12
+  movq           m0,[uq]
+  movq           m1,[vq]
+  movq           m2,m0
+  movq           m3,m1
+
+  punpcklbw      m0,m1
+  punpckhbw      m2,m3
+  movq           [dstq],m0
+  movq           8[dstq],m2
+
+  add            dstq,16
+  add            uq,8
+  add            vq,8
+  sub            w8q,1
+  jnz            .nv12
+  ret

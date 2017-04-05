@@ -115,7 +115,7 @@ static inline void yuv444_C(uint8_t *src,uint8_t *dst,int w,int h,int dstStride,
     }
 }
 #ifdef ADM_CPU_X86
-extern "C" 
+extern "C"
 {
 void adm_YUV444Luma_mmx(int w8,uint8_t *dst,uint8_t *src, const uint64_t *mangle);
 }
@@ -128,14 +128,14 @@ static const uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0
     int step=w>>3;
     int left=w&7;
     int targetOffset=(step<<3);
-    int sourceOffset=(step<<5);
-    
+    int sourceOffset=(step<<5)+2;
+
     for(int y=0;y<h;y++)
     {
-       
+
         adm_YUV444Luma_mmx(step,dst,src,&mask);
         for(int i=0;i<left;i++)
-             dst[targetOffset+i]=src[sourceOffset+4*i];        
+             dst[targetOffset+i]=src[sourceOffset+4*i];
         dst+=destStride;
         src+=sourceStride;
     }
@@ -203,6 +203,10 @@ static inline void YUV444_chroma_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
  * @param srcPitch
  * @param src
  */
+extern "C"
+{
+  void adm_uv_to_nv12_mmx(uint8_t *u, uint8_t *v, uint8_t *dst, int len);
+}
 static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcv, uint8_t *srcu,int strideUV, uint8_t *dst)
 {
         int mod8=w>>3;
@@ -210,48 +214,24 @@ static void uv_to_nv12_mmx(int w, int h,int upitch, int vpitch, uint8_t *srcv, u
         int x;
         for(int y=0;y<h;y++)
         {
-                uint8_t *ddst=dst;
-                uint8_t *u=srcu;
-                uint8_t *v=srcv;
-                dst+=strideUV;
-                srcu+=upitch;
-                srcv+=vpitch;
-                      __asm__ volatile(
-                        "mov            %4,%3      \n" // local copy
-                        "1:\n"
-                        "movq           (%1),%%mm0   \n" // U
-                        "movq           (%2),%%mm1   \n" // V
-                        "movq           %%mm0,%%mm2  \n"
-                        "movq           %%mm1,%%mm3  \n"
+                adm_uv_to_nv12_mmx(srcu,srcv,dst,mod8);
 
-                        "punpcklbw      %%mm1,%%mm0  \n"
-                        "punpckhbw      %%mm3,%%mm2  \n"
-                        "movq           %%mm0,(%0)   \n"
-                        "movq           %%mm2,8(%0)  \n"
-
-                        "add            $16,%0       \n"
-                        "add            $8,%1        \n"
-                        "add            $8,%2        \n"
-                        "sub            $1,%3        \n"
-                        "jnz            1b           \n"
-
-                        :
-                        : "r"(ddst),"r"(u),"r"(v),"r"(x),"r"(mod8)
-                        : "memory"
-                        );
                 if(leftOver)
                 {
-                    x=mod8*8;
-                    ddst+=x*2;
-                    v+=x;
-                    u+=x;
-                    for(;x<w;x++)
+                  uint8_t *u=srcu+mod8*8;
+                  uint8_t *v=srcv+mod8*8;
+                  uint8_t *ddst=dst+mod8*16;
+
+                    for(int x=0;x<leftOver;x++)
                     {
                         ddst[0]=*(u++);
                         ddst[1]=*(v++);
                         ddst+=2;
                     }
                 }
+                dst+=strideUV;
+                srcu+=upitch;
+                srcv+=vpitch;
         }
         ADM_EMMS();
         return ;
@@ -391,7 +371,7 @@ bool    ADMImage::convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, in
             src+=sstride;
             dst+=dstride;
         }
-        interleaveUV(uvData,strideUV);
+        interleaveUVtoNV12(uvData,strideUV);
         return true;
 }
 /**
@@ -422,16 +402,16 @@ static void uv_to_nv12_c(int w, int h,int upitch, int vpitch, uint8_t *srcu, uin
  * @param stride
  * @return
  */
-bool    ADMImage::interleaveUV(uint8_t *target, int stride)
+bool    ADMImage::interleaveUVtoNV12(uint8_t *target, int targetStride)
 {
         int w=_width/2;
         int h=_height/2;
 #if defined(ADM_CPU_X86) && 1
         if(CpuCaps::hasMMX())
-            uv_to_nv12_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),stride,target);
+            uv_to_nv12_mmx(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetWritePtr(PLANAR_U),GetWritePtr(PLANAR_V),targetStride,target);
         else
 #endif
-            uv_to_nv12_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetReadPtr(PLANAR_U),GetReadPtr(PLANAR_V),stride,target);
+            uv_to_nv12_c(w,h,GetPitch(PLANAR_U),GetPitch(PLANAR_V),GetReadPtr(PLANAR_U),GetReadPtr(PLANAR_V),targetStride,target);
         return true;
 }
 /**
@@ -512,7 +492,7 @@ void testYUV444Chroma(void)
 
 void testUV(void)
 {
-    
+
     uint8_t src[50];
     uint8_t dst[50],dstb[50];
     uint8_t dst2[50],dst2b[50];
@@ -522,25 +502,25 @@ void testUV(void)
     memset(dst2,50,0);
     memset(dstb,50,0);
     memset(dst2b,50,0);
-    
-    
-    
+
+
+
     nv12_to_uv_c(ROW_SIZE,1,ROW_SIZE,ROW_SIZE,dst,dstb,0,src);
     nv12_to_uv_mmx(ROW_SIZE,1,ROW_SIZE,ROW_SIZE,dst2,dst2b,0,src);
-   
+
     printf("U:\n");
     mixDump(dst,ROW_SIZE);
     mixDump(dstb,ROW_SIZE);
     printf("V:\n");
     mixDump(dst2,ROW_SIZE);
     mixDump(dst2b,ROW_SIZE);
-    
-    
+
+
     START(testUV);
     CHECKOK(!memcmp(dst,dst2,ROW_SIZE));
     CHECKOK(!memcmp(dstb,dst2b,ROW_SIZE));
     PASS();
-    
+
 }
 void testYUV444Luma()
 {
@@ -549,34 +529,74 @@ void testYUV444Luma()
     uint8_t dst[SRC_SIZE];
     uint8_t dst2[SRC_SIZE];
 
-    for(int i=0;i<SRC_SIZE;i++) src[i]=(i*0x55) ^( i+1);
+    for(int i=0;i<SRC_SIZE;i++) src[i]=i;
     memset(dst,SRC_SIZE,0);
     memset(dst2,SRC_SIZE,0);
-    
-    
+
+
     yuv444_MMX(src,dst,ROW_SIZE,1,ROW_SIZE,4*ROW_SIZE);
     yuv444_C(src,dst2,ROW_SIZE,1,ROW_SIZE,4*ROW_SIZE);
-   
+
     printf("SRC\n");
     mixDump(src,ROW_SIZE*4);
-    
-    
+
+
     printf("MMX\n");
     mixDump(dst,ROW_SIZE);
     printf("C\n");
     mixDump(dst2,ROW_SIZE);
-    
+
     START(testYUV444);
     CHECKOK(!memcmp(dst,dst2,ROW_SIZE));
     PASS();
 
 
 }
+
+void testInterleaveUv()
+{
+  #define SRC_SIZE 600
+      uint8_t srcu[SRC_SIZE];
+      uint8_t srcv[SRC_SIZE];
+      uint8_t dst[SRC_SIZE];
+      uint8_t dst2[SRC_SIZE];
+
+      for(int i=0;i<SRC_SIZE;i++)
+      {
+          srcu[i]=i;
+          srcv[i]=0x80^i;
+      }
+      memset(dst,SRC_SIZE,0);
+      memset(dst2,SRC_SIZE,0);
+
+
+      uv_to_nv12_mmx(ROW_SIZE,1,ROW_SIZE>>1,ROW_SIZE>>1,srcu,srcv,ROW_SIZE,dst2);
+      uv_to_nv12_c(ROW_SIZE,1,ROW_SIZE>>1,ROW_SIZE>>1,srcu,srcv,ROW_SIZE,dst);
+
+
+      printf("SRCU\n");
+      mixDump(srcu,ROW_SIZE);
+      printf("SRCV\n");
+      mixDump(srcv,ROW_SIZE);
+
+
+      printf("MMX\n");
+      mixDump(dst,ROW_SIZE*2);
+      printf("C\n");
+      mixDump(dst2,ROW_SIZE*2);
+
+      START(testInterleaveUV);
+      CHECKOK(!memcmp(dst,dst2,ROW_SIZE*2));
+      PASS();
+
+}
+
 void allTestImageUtil()
 {
     testYUV444Chroma();
     testYUV444Luma();
     testUV();
+    testInterleaveUv();
 }
 #endif
 //EOF

@@ -147,7 +147,7 @@ again:
 
 // convert to nv12
 #ifdef USE_NV12
-    image->interleaveUV(nv12,nv12Stride);
+    image->interleaveUVtoNV12(nv12,nv12Stride);
     _frame->data[0] = image->GetReadPtr(PLANAR_Y);
     _frame->data[1] = nv12;
     _frame->data[2] = NULL;

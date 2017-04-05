@@ -1,7 +1,7 @@
 //
 // C++ Interface: %{MODULE}
 //
-// Description: 
+// Description:
 //
 //
 // Author: %{AUTHOR} <%{EMAIL}>, (C) %{YEAR}
@@ -30,7 +30,7 @@
 #include "ADM_assert.h"
 #include "ADM_byteBuffer.h"
 
-typedef enum 
+typedef enum
 {
 	ADM_ASPECT_4_3=1,
 	ADM_ASPECT_16_9,
@@ -42,20 +42,20 @@ typedef enum
 //#define vi.IsYV12()   1
 #define GetRowSize GetPitch
 
-typedef enum 
+typedef enum
 {
         PLANAR_Y=0,
         PLANAR_U=1,
         PLANAR_V=2,
         PLANAR_ALPHA=3,
         PLANAR_LAST=3 // Alpha is not a real channel
-        
+
 } ADM_PLANE;
 
 typedef enum
 {
     ADM_IMAGE_DEFAULT,
-    ADM_IMAGE_REF    
+    ADM_IMAGE_REF
 }ADM_IMAGE_TYPE;
 
 typedef enum
@@ -98,8 +98,8 @@ class ADM_COREIMAGE6_EXPORT ADMImage
 public: // half public/protected, only in  ADMImageRef case it is really public
         uint8_t         *_planes[3];     /// In case of linked data store y/u/v pointers
         int             _planeStride[3]; /// Same story
-        uint8_t         *_alpha;         /// Null in most case, else alha channel 
-        int             _alphaStride; 
+        uint8_t         *_alpha;         /// Null in most case, else alha channel
+        int             _alphaStride;
 public:
         uint32_t	    _width;		/// Width of image
         uint32_t	    _height;	/// Height of image
@@ -117,16 +117,16 @@ public:
         uint8_t         *quant;
         int             _qStride;
         int             _qSize;
-        
-        
+
+
         int             GetHeight(ADM_PLANE plane) ;
         int             GetWidth(ADM_PLANE plane) ;
         bool            GetPitches(int *pitches);
         bool            GetWritePlanes(uint8_t **planes);
         bool            GetReadPlanes(uint8_t **planes);
 
-virtual                 ~ADMImage();        
-        
+virtual                 ~ADMImage();
+
 
 protected:
                                     ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type);
@@ -142,8 +142,8 @@ public:
         virtual      uint8_t        *GetReadPtr(ADM_PLANE plane)=0;
         virtual      bool           isWrittable(void)=0;
         virtual      ADMImageRef    *castToRef(void) {return NULL;};
-        
-        virtual      bool           duplicateMacro(ADMImage *src,bool swap);       /// copy an image to ourself, including info 
+
+        virtual      bool           duplicateMacro(ADMImage *src,bool swap);       /// copy an image to ourself, including info
 
                      uint8_t        getWidthHeight(uint32_t *w,uint32_t *h)
                                     {
@@ -163,7 +163,7 @@ public:
         bool    copyLeftSideTo(ADMImage *dest);
         /* Some utilitarian functions */
         bool    saveAsBmp(const char *filename);
-        
+
         bool    saveAsJpg(const char *filename);
         bool    printString(uint32_t x,uint32_t y, const char *strng);
 static  bool    copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane);
@@ -171,7 +171,7 @@ static  bool    copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane);
         bool    convertFromYUV444(uint8_t *from);
         bool    convertFromNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV);
         bool    convertToNV12(uint8_t *yData, uint8_t *uvData, int strideY, int strideUV);
-        bool    interleaveUV(uint8_t *target, int stride);
+        bool    interleaveUVtoNV12(uint8_t *target, int targetStride);
 };
 
 /**
