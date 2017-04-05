@@ -4751,7 +4751,7 @@ Drop timing informations ?</source>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+4"/>
         <source>_Local playback downmixing:</source>
-        <translation type="unfinished">_Даунмиксинг звука при локальном воспризведении:</translation>
+        <translation type="unfinished">_Даунмиксинг звука при локальном воспроизведении:</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_postproc.cpp" line="+38"/>
@@ -5912,6 +5912,26 @@ Is it running ?</source>
         <location line="+2"/>
         <source>Go To Time</source>
         <translation type="unfinished">Перейти ко времени...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 1:4</source>
+        <translation type="unfinished">Масштаб 1:4</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 1:2</source>
+        <translation type="unfinished">Масштаб 1:2</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 1:1</source>
+        <translation type="unfinished">Масштаб 1:1</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 2:1</source>
+        <translation type="unfinished">Масштаб 2:1</translation>
     </message>
     <message>
         <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="-42"/>
