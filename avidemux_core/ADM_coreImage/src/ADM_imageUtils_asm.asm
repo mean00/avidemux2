@@ -26,7 +26,7 @@
 ;                        "movq           8(%0),%%mm1 \n"
 ;                        "movq           16(%0),%%mm2 \n"
 ;                        "movq           24(%0),%%mm3 \n"
-;        
+;
 ;                        "movq           %%mm0,%%mm4\n"
 ;                        "movq           %%mm1,%%mm5\n"
 ;                        "movq           %%mm2,%%mm6\n"
@@ -35,8 +35,8 @@
 ;                        "punpcklbw       %%mm2,%%mm0\n"
 ;                        "punpcklbw       %%mm3,%%mm1\n"
 ;                        "punpcklbw       %%mm1,%%mm0\n"
-;                       
-;                        "movd           %%mm0,(%1) \n"                       
+;
+;                        "movd           %%mm0,(%1) \n"
 ;
 ;                        "psrlw          $8,%%mm4\n"
 ;                        "psrlw          $8,%%mm5\n"
@@ -48,7 +48,7 @@
 ;                        "punpcklbw       %%mm5,%%mm4\n"
 ;
 ;
-;                        "movd           %%mm4,(%2) \n"                       
+;                        "movd           %%mm4,(%2) \n"
 ;                        :: "r"(xsrc),"r"(xdst),"r"(xdst2)
 ;                        :"memory"
 ;                        );
@@ -99,14 +99,14 @@ cglobal YUV444_chroma, 4,4,8, src, dst, dst2, w4
         add            dst2q,4
         sub            w4d,1
         jnz             .again
-        REP_RET
+        ret
 ;
 ;
 ;
 INIT_MMX mmx
 cglobal nv12_to_u_v_one_line,4,4,4, w8, dstu, dstv, src
 
-.nv12_again   
+.nv12_again
        movq           m0 , [srcq]
        movq           m1 , 8[srcq]
        movq           m2, m0
@@ -134,7 +134,62 @@ cglobal nv12_to_u_v_one_line,4,4,4, w8, dstu, dstv, src
        add            dstvq,8
        sub            w8q,1
        jnz            .nv12_again
-       REP_RET
+       ret
+
+;yuv444_MMX
+;  xdst=dst;
+;        for(int x=0;x<step;x++)
+;        {
+;                        __asm__ volatile(
+;                        "movq           (%0),%%mm0 \n"
+;                        "pand           %%mm7,%%mm0\n"
+;                        "movq           8(%0),%%mm1 \n"
+;
+;                        "movq           16(%0),%%mm2 \n"
+;                        "pand           %%mm7,%%mm1\n"
+;                        "pand           %%mm7,%%mm2\n"
+;                        "movq           24(%0),%%mm3 \n"
+;                        "pand           %%mm7,%%mm3\n"
+;
+;                        "packuswb       %%mm1,%%mm0\n"
+;                        "packuswb       %%mm3,%%mm2\n"
+;                        "psrlw          $8,%%mm0\n"
+;                        "psrlw          $8,%%mm2\n"
+;                        "packuswb       %%mm2,%%mm0\n"
+;
+;                        "movq           %%mm0,(%1) \n"
+;
+;
+;                        :: "r"(xsrc),"r"(xdst)
+;                        :"memory"
+;                        );
+;                        xsrc+=32;
+;                        xdst+=8;
+;            }
+
+INIT_MMX mmx
+cglobal YUV444Luma,4,4,5, w8, dst, src,mangle
+           movq            m4,[mangleq]
+.again3
+            movq           m0,[srcq]
+            pand           m0,m4
+            movq           m1,8[srcq]
+            movq           m2,16[srcq]
+            pand           m1,m4
+            pand           m2,m4
+            movq           m3,24[srcq]
+            pand           m3,m4
+            packuswb       m0,m1
+            packuswb       m2,m3
+            psrlw          m0,8
+            psrlw          m2,8
+            packuswb       m0,m2
+            movq           [dstq],m0
+            add            srcq,32
+            add            dstq,8
+            sub            w8q,1
+            jnz            .again3
+            ret
 
 
 ;eof

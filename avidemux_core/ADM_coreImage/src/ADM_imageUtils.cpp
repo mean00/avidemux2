@@ -103,66 +103,41 @@ bool ADMImage::copyPlane(ADMImage *s, ADMImage *d, ADM_PLANE plane)
 /**
     \fn convertFromYUV444
 */
-static inline void yuv444_C(uint8_t *src,uint8_t *dst,int w,int h,int s)
+static inline void yuv444_C(uint8_t *src,uint8_t *dst,int w,int h,int dstStride,int srcStride)
 {
     src+=2;
     for(int y=0;y<h;y++)
     {
         for(int x=0;x<w;x++)
                 dst[x]=src[4*x];
-        dst+=s;
-        src+=4*w;
+        dst+=dstStride;
+        src+=srcStride;
     }
 }
 #ifdef ADM_CPU_X86
-static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int s)
+extern "C" 
 {
-static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
+void adm_YUV444Luma_mmx(int w8,uint8_t *dst,uint8_t *src, const uint64_t *mangle);
+}
 
-    __asm__ volatile(" movq " Mangle(mask)", %%mm7\n" ::);
-    __asm__ volatile(" pxor %%mm6,%%mm6\n" ::);
+static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int destStride, int sourceStride)
+{
+static const uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
-    int step=w/8;
-    int left=w-8*step;
-    uint8_t *xsrc=src;
-    uint8_t *xdst=dst;
 
+    int step=w>>3;
+    int left=w&7;
+    int targetOffset=(step<<3);
+    int sourceOffset=(step<<5);
+    
     for(int y=0;y<h;y++)
     {
-        xsrc=src;
-        xdst=dst;
-        for(int x=0;x<step;x++)
-        {
-                        __asm__ volatile(
-                        "movq           (%0),%%mm0 \n"
-                        "pand           %%mm7,%%mm0\n"
-                        "movq           8(%0),%%mm1 \n"
-                        "pand           %%mm7,%%mm1\n"
-
-                        "movq           16(%0),%%mm2 \n"
-                        "pand           %%mm7,%%mm2\n"
-                        "movq           24(%0),%%mm3 \n"
-                        "pand           %%mm7,%%mm3\n"
-
-                        "packuswb       %%mm1,%%mm0\n"
-                        "packuswb       %%mm3,%%mm2\n"
-                        "psrlw          $8,%%mm0\n"
-                        "psrlw          $8,%%mm2\n"
-                        "packuswb       %%mm2,%%mm0\n"
-
-                        "movq           %%mm0,(%1) \n"
-
-
-                        :: "r"(xsrc),"r"(xdst)
-                        :"memory"
-                        );
-                        xsrc+=32;
-                        xdst+=8;
-            }
+       
+        adm_YUV444Luma_mmx(step,dst,src,&mask);
         for(int i=0;i<left;i++)
-             xdst[i]=xsrc[4*i];
-        dst+=s;
-        src+=4*w;
+             dst[targetOffset+i]=src[sourceOffset+4*i];        
+        dst+=destStride;
+        src+=sourceStride;
     }
      ADM_EMMS();
 
@@ -298,47 +273,6 @@ extern "C"
 void adm_nv12_to_u_v_one_line_mmx(int w8, uint8_t *dstu, uint8_t *dstv, uint8_t *src);
 
 }
-#if 0
-static void nv12_to_u_v_mmx_one_line(int w8, uint8_t *dstu, uint8_t *dstv, uint8_t *src)
-{
-      __asm__ volatile(
-
-
-                  "1:\n"
-                  "movq           (%4),%%mm0   \n"
-                  "movq           8(%4),%%mm1  \n"
-                  "movq           %%mm0,%%mm2  \n"
-                  "movq           %%mm1,%%mm3  \n"
-
-                  "psllw          $8,%%mm0    \n"
-                  "psrlw          $8,%%mm0    \n"
-
-                  "psllw          $8,%%mm1    \n"
-                  "psrlw          $8,%%mm1    \n"
-
-
-                  "packuswb       %%mm1,%%mm0 \n"
-
-                  "psrlw          $8,%%mm2    \n"
-                  "psrlw          $8,%%mm3    \n"
-
-                  "packuswb       %%mm3,%%mm2 \n"
-
-                  "movq           %%mm0,(%6)  \n"
-                  "movq           %%mm2,(%5)  \n"
-
-                  "add            $16,%4\n"
-                  "add            $8,%5\n"
-                  "add            $8,%6\n"
-                  "sub            $1,%7\n"
-                  "jnz            1b\n"
-
-                  : "=r"(src),"=r"(dstu),"=r"(dstv),"=r"(w8) //00..3
-                  : "0"(src),"1"(dstu),"2"(dstv),"3"(w8)     //4..7
-                  : "memory"
-                  );
-}
-#endif
 static void nv12_to_uv_mmx(int w, int h,int upitch, int vpitch, uint8_t *dstu, uint8_t *dstv,int srcPitch, uint8_t *src)
 {
         int mod8=w>>3;
@@ -515,10 +449,10 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
 
     #if defined(ADM_CPU_X86) && 1
         if(CpuCaps::hasMMX())
-            yuv444_MMX(src,dst,width,height,stride);
+            yuv444_MMX(src,dst,width,height,stride,4*width);
         else
     #endif
-            yuv444_C(src,dst,width,height,stride);
+            yuv444_C(src,dst,width,height,stride,4*width);
 
 
     //
@@ -543,11 +477,12 @@ bool ADMImage::convertFromYUV444(uint8_t *from)
 
     return true;
 }
+#if defined(ADM_CPU_X86) && 1
 
 #define START(x) ADM_info(#x)
 #define CHECKOK(x) if(!(x)) {ADM_warning(#x " failed at line %d , file %s\n",__LINE__,__FILE__);exit(-1);}
 #define PASS() ADM_info("   OK\n")
-void testYUV444(void)
+void testYUV444Chroma(void)
 {
     uint8_t src[50];
     uint8_t dst[50],dstb[50];
@@ -607,11 +542,41 @@ void testUV(void)
     PASS();
     
 }
+void testYUV444Luma()
+{
+#define SRC_SIZE 600
+    uint8_t src[SRC_SIZE];
+    uint8_t dst[SRC_SIZE];
+    uint8_t dst2[SRC_SIZE];
 
+    for(int i=0;i<SRC_SIZE;i++) src[i]=(i*0x55) ^( i+1);
+    memset(dst,SRC_SIZE,0);
+    memset(dst2,SRC_SIZE,0);
+    
+    
+    yuv444_MMX(src,dst,ROW_SIZE,1,ROW_SIZE,4*ROW_SIZE);
+    yuv444_C(src,dst2,ROW_SIZE,1,ROW_SIZE,4*ROW_SIZE);
+   
+    printf("SRC\n");
+    mixDump(src,ROW_SIZE*4);
+    
+    
+    printf("MMX\n");
+    mixDump(dst,ROW_SIZE);
+    printf("C\n");
+    mixDump(dst2,ROW_SIZE);
+    
+    START(testYUV444);
+    CHECKOK(!memcmp(dst,dst2,ROW_SIZE));
+    PASS();
+
+
+}
 void allTestImageUtil()
 {
-    testYUV444();
+    testYUV444Chroma();
+    testYUV444Luma();
     testUV();
 }
-
+#endif
 //EOF
