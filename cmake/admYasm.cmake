@@ -3,3 +3,5 @@ IF(MSVC)
 ELSE(MSVC)
    include(admYasm_gcc)
 ENDIF(MSVC)
+
+MESSAGE("")
