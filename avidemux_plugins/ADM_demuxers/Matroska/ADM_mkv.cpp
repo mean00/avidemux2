@@ -22,10 +22,52 @@
 #include "ADM_audioXiphUtils.h"
 #include "ADM_vidMisc.h"
 
+typedef struct
+{
+    int durationInUs;
+    int num;
+    int den;
+}frameRateStruct;
+
+static const frameRateStruct candidateFrameRate[]=
+{
+   {41708,1001,24000}, // 23.976 fps
+   {41667,1000,24000}, // 24 fps
+   {40000,1000,25000}, // 25 fps
+   {33367,1001,60000}, // 30 NTSC
+   {20854,2000,24000}, // 24*2
+   {20854,2002,24000}, // 23976*2
+   {20000,1000,50000}, // 50
+   {16683,1001,60000}, // 60 NTSCs
+   {16667,1000,60000} // 60 fps
+};
+
+static int getStdFrameRate(int interval)
+{
+  int n=sizeof(candidateFrameRate)/sizeof(frameRateStruct);
+  int delta=50; // 50 us error allowed
+  int bestMatch=-1;
+  for(int i=0;i<n;i++)
+  {
+      int er=abs(interval-candidateFrameRate[i].durationInUs);
+      if(er<10) // 10 us error
+      {
+        if(er<delta)
+        {
+          delta=er;
+          bestMatch=i;
+        }
+      }
+  }
+  ADM_info("Best match is %d\n",bestMatch);
+  return bestMatch;
+}
+
+
 /**
     \fn open
     \brief Try to open the mkv file given as parameter
-    
+
 */
 
 uint8_t mkvHeader::open(const char *name)
@@ -68,7 +110,7 @@ uint8_t mkvHeader::open(const char *name)
   /* --*/
   if(!ebml.simplefind(MKV_SEGMENT,&len,true))
   {
-      printf("[MKV] Cannot find Segment\n");      
+      printf("[MKV] Cannot find Segment\n");
       return false;
   }
   _segmentPosition=ebml.tell();
@@ -77,7 +119,7 @@ uint8_t mkvHeader::open(const char *name)
   if(ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_SEEK_HEAD,&alen))
   {
        ADM_ebml_file seekHead( &ebml,alen);
-       readSeekHead(&seekHead);       
+       readSeekHead(&seekHead);
   }
   /* Now find tracks */
   /* And analyze them */
@@ -97,7 +139,7 @@ uint8_t mkvHeader::open(const char *name)
   {
     printf("[MKV] Cluster indexing failed\n");
     return 0;
-  }  
+  }
   printf("[MKV]Found %u clusters\n",_clusters.size());
   printf("[MKV] Indexing video\n");
     if(!videoIndexer(&ebml))
@@ -113,8 +155,8 @@ uint8_t mkvHeader::open(const char *name)
         updateFlagsWithCue();
     }
     _cueTime.clear();
-  
-  
+
+
   _parser=new ADM_ebml_file();
   ADM_assert(_parser->open(name));
   _filename=ADM_strdup(name);
@@ -123,12 +165,12 @@ uint8_t mkvHeader::open(const char *name)
     for(int i=0;i<1+_nbAudioTrack;i++)
         ADM_info("Track %" PRIu32" has an index size of %d entries\n",i,_tracks[i].index.size());
 
-  
+
   if(isVC1Compatible(_videostream.fccHandler))
   {
       int       nb=_tracks[0].index.size();
       mkvTrak   *vid=_tracks;
-      
+
       ADM_warning("Deleting  timestamps. For VC1, they are often wrong\n");
       for(int i=1;i<nb-1;i++)
           vid->index[i].Pts=ADM_NO_PTS;
@@ -138,8 +180,8 @@ uint8_t mkvHeader::open(const char *name)
     uint32_t ptsdtsdelta, mindelta;
     bool hasBframe;
   ComputeDeltaAndCheckBFrames(&mindelta, &ptsdtsdelta,&hasBframe);
-  
-  
+
+
   int last=_tracks[0].index.size();
   uint64_t increment=_tracks[0]._defaultFrameDuration;
   uint64_t lastDts=0;
@@ -197,7 +239,7 @@ uint8_t mkvHeader::open(const char *name)
           printf("[MKV] Video Track duration for %u ms\n",duration32);
           // Useless.....
 
-        
+
 
           for(int i=0;i<_nbAudioTrack;i++)
           {
@@ -237,11 +279,77 @@ bool mkvHeader::delayTrack(int index,mkvTrak *track, uint64_t value)
     return true;
 }
 /**
+    \fn checkDeviation
+    \brief returns the # of errors when forcing timestamp to be num/den (interval in us)
+      num=1000
+      den=24000 for a 24 fps
+
+
+*/
+int  mkvHeader::checkDeviation(int num, int den)
+{
+  mkvTrak *track=_tracks;
+  int nb=track->index.size();
+  int first=0;
+  double dHalf=(500000.*(double)num)/((double)den);
+  int half=dHalf-1; // half interval in us
+  int good=0,bad=0;
+  while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
+  uint64_t zero= track->index[first].Pts;
+  ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
+  for(int i=first+1;i<nb;i++)
+  {
+    uint64_t pts=track->index[i].Pts;
+    if(pts<zero) continue;
+    pts-=zero;
+    double dmultiple=(pts+half);
+    dmultiple*=den;
+    dmultiple/=(1000000.*(double)num);
+    uint64_t multiple=(uint64_t)dmultiple;
+    int64_t reconstructed=(multiple*1000000*num)/den;
+    int64_t deviation=pts-reconstructed;
+  //  printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
+    if(deviation>1000)
+        bad++;
+    else
+        good++;
+  }
+  ADM_info("Den=%d Num=%d Good = %d, bad=%d\n",den,num,good,bad);
+  return bad  ;
+}
+/**
+    \fn checkDeviation
+    \brief Bypass the 1ms accuracy by making sure all the frames are in the form PTS=offset + N*frameInterval
+*/
+bool mkvHeader::enforceFixedFrameRate(int num, int den)
+{
+  mkvTrak *track=_tracks;
+  int nb=track->index.size();
+  int half=(500000*num)/(den)-1; // half interval in us
+  int first=0;
+  int bad=0;
+  int good=0;
+  while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
+  uint64_t zero= track->index[first].Pts;
+  for(int i=first+1;i<nb;i++)
+  {
+    uint64_t pts=track->index[i].Pts;
+    if(pts<zero) continue;
+    pts-=zero;
+    int64_t multiple=(pts+half)*den;
+    multiple/=(1000000*num);
+    int64_t reconstructed=(multiple*1000000*num)/den;
+    track->index[i].Pts=reconstructed+zero;
+  }
+  return true;
+}
+/**
     \fn delayFrameIfBFrames
     \brief recompute max pts/dts distance and delay all tracks if needed
     we dont want a negative dts.
     \return maxdelta in us
 */
+
 bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent)
 {
     mkvTrak *track=_tracks;
@@ -251,16 +359,16 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     int64_t minDelta=100000000;
     *bFramePresent=false;
     int nbValidDts=0;
-   
-    
-    
+
+
+
     if(nb>1)
     {
         bool monotone=true;
         uint64_t pts=track->index[0].Pts;
         for(int i=1;i<nb;i++)
         {
-            if(track->index[i].Pts<pts) 
+            if(track->index[i].Pts<pts)
             {
                 monotone=false;
                 break;
@@ -269,24 +377,26 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         }
         if(monotone==true)
         {
-            ADM_info("PTS is monotonous, probably no bframe\n");        
+            ADM_info("PTS is monotonous, probably no bframe\n");
             *bFramePresent=false;
         }else
         {
             ADM_info("PTS is not monotonous, there are bframe\n");
             *bFramePresent=true;
         }
+
+
         // Search minimum and maximum between 2 frames
         // the minimum will give us the maximum fps
         // the maximum will give us the max PTS-DTS delta so that we can compute DTS
-        for(int i=0;i<nb-1;i++) 
+        for(int i=0;i<nb-1;i++)
         {
             if(track->index[i].Dts!=ADM_NO_PTS)
                 nbValidDts++;
             if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
             if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
                 continue;
-            
+
             delta=(int64_t)track->index[i+1].Pts-(int64_t)track->index[i].Pts;
             if(delta<0) delta=-delta;
             if(!delta)
@@ -300,31 +410,64 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         }
     }
     if(nbBFrame) *bFramePresent=true;
-       
-    
-    ADM_info("Minimum delta found %" PRId64" us\n",minDelta);
-    ADM_info("Maximum delta found %" PRId64" us\n",maxDelta);
-    ADM_info("Default duration    %" PRId64" us\n",track->_defaultFrameDuration);
+
+    int stdFrameRate=getStdFrameRate(track->_defaultFrameDuration);
+
+    int num= _videostream.dwScale;
+    int den= _videostream.dwRate;
+    int deviation=checkDeviation(  _videostream.dwScale,   _videostream.dwRate);
+    int deviationMinDelta=100000000;
+
     if(minDelta)
     {
-        if(minDelta<track->_defaultFrameDuration && labs((long int)minDelta-(long int)track->_defaultFrameDuration)>100)
-        {
-            ADM_info("Changing default frame duration from %" PRIu64" to %" PRIu64" us\n",
-                    track->_defaultFrameDuration,minDelta);
-            track->_defaultFrameDuration=minDelta;
-            // updated fps also
-            float f=minDelta;
-            f=1000000./f;
-            _videostream.dwScale=1000;
-            _videostream.dwRate=(uint32_t)(f*1000.);
-        }else
-        {
-            ADM_info("Keeping default frame duration  %" PRIu64" us\n", track->_defaultFrameDuration);
-        }
-
+        deviationMinDelta =checkDeviation(  minDelta,1000000   );
     }
+    ADM_info("Deviation        = %d\n",deviation);
+    ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
+    if(minDelta)
+    {
+        if(deviationMinDelta<deviation)
+        {
+            num=1000*1000;
+            den=minDelta;
+            deviation=deviationMinDelta;
+            ADM_info("Min delta is better\n");
+        }
+    }
+    // Check std value too
+    if(stdFrameRate!=-1)
+    {
+        const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
+        int deviationStd=checkDeviation(fr->num,fr->den);
+        ADM_info("Deviation for stdFrameRate%d =%d\n",stdFrameRate,deviationStd);
+        if(deviationStd<deviation)
+        {
+          num=fr->num;
+          den=fr->den;
+          deviation=deviationStd;
+          ADM_info("Std frame rate is better\n");
+        }
+    }
+    ADM_info("Old default duration    %" PRId64" us\n",track->_defaultFrameDuration);
+    if(!deviation)
+    {
+        ADM_info("We are within margin, recomputing timestamp with exact value\n");
+        enforceFixedFrameRate(num,den);
+    }
+
+    if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
+    {
+        _videostream.dwScale=num;
+        _videostream.dwRate=den;
+        track->_defaultFrameDuration=(1000000*num)/den;
+    }
+
+    ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);
+
+
+
     ADM_info("First frame pts     %" PRId64" us\n",track->index[0].Pts);
-    
+
     if(nbValidDts<3)
     {
             ADM_warning("Not enough valid DTS\n");
@@ -332,15 +475,15 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             *maxDeltaX=0;
             return false;
     }
-    
-    
+
+
     uint64_t adj=0;
     int limit=32;
     if(limit>nb) limit=nb;
     // Pts must be >= maxDelta for all frames, the first 32 will do
     for(int i=0;i<limit;i++)
     {
-        if(maxDelta>track->index[i].Pts) 
+        if(maxDelta>track->index[i].Pts)
         {
             uint64_t newAdj=maxDelta-track->index[i].Pts;
             if(newAdj>adj) adj=newAdj;
@@ -416,7 +559,7 @@ bool mkvHeader::goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,
     {
         printf("Found %s instead of %s, ignored \n",ss,txt);
         return false;
-    }    
+    }
     outputLen=len;
     return true;
 }
@@ -431,13 +574,13 @@ bool mkvHeader::analyzeTracks(ADM_ebml_file *parser)
   uint64_t id;
   const char *ss;
   ADM_MKV_TYPE type;
-  
+
   if(!goBeforeAtomAtPosition(parser, _trackPosition,len, MKV_TRACKS,"MKV_TRACKS"))
   {
       ADM_warning("Cannot go to the TRACKS atom\n");
       return false;
   }
-  
+
     ADM_ebml_file father( parser,len);
     while(!father.finished())
     {
@@ -627,7 +770,7 @@ uint8_t mkvHeader::close(void)
   _currentAudioTrack=0;
   _access=NULL;
   _audioStreams=NULL;
-  
+
   readBuffer=NULL;
   _cuePosition=0;
   _segmentPosition=0;
@@ -729,19 +872,19 @@ uint8_t  mkvHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
                 return 1;
 }
 /**
- * 
+ *
  * @param hd
- * @return 
+ * @return
  */
 static int xypheLacingRead(uint8_t **hd)
 {
-      int x=0; 
+      int x=0;
       uint8_t *p=*hd;
-      while(*p==0xff)  
-      { 
-        x+=0xff; 
-        p++; 
-      } 
+      while(*p==0xff)
+      {
+        x+=0xff;
+        p++;
+      }
       x+=*p;
       p++;
       *hd=p;
@@ -808,13 +951,13 @@ uint8_t                 mkvHeader::getAudioStream(uint32_t i,ADM_audioStream  **
 bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 {
      ADM_assert(_parser);
-     if(frame>=_tracks[0].index.size()) 
+     if(frame>=_tracks[0].index.size())
      {
             printf("[MKV] Frame %" PRIu32" exceeds # of frames %" PRIu32"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);
-    
+
     *dts=dx->Dts; // FIXME
     *pts=dx->Pts;
     return true;
@@ -825,13 +968,13 @@ bool    mkvHeader::getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)
 bool    mkvHeader::setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)
 {
       ADM_assert(_parser);
-     if(frame>=_tracks[0].index.size()) 
+     if(frame>=_tracks[0].index.size())
      {
             printf("[MKV] Frame %" PRIu32" exceeds # of frames %" PRIu32"\n",frame,(uint32_t)_tracks[0].index.size());
             return false;
      }
     mkvIndex *dx=&(_tracks[0].index[frame]);
-    
+
     dx->Dts=dts; // FIXME
     dx->Pts=pts;
     return true;
@@ -848,8 +991,8 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
     while(!body->finished())
     {
         if(!body->simplefind(MKV_SEEK,&vlen,false))
-             break;         
-        ADM_ebml_file item(body,vlen);              
+             break;
+        ADM_ebml_file item(body,vlen);
         uint64_t id;
         ADM_MKV_TYPE type;
         const char *ss;
@@ -900,7 +1043,7 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
             default:
                     break;
         }
-              
+
     }
     ADM_info("Parsing SeekHead done successfully\n");
     if(!_trackPosition )

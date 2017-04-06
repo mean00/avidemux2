@@ -3,7 +3,7 @@
                              -------------------
 
     Matroska demuxer
-    
+
     copyright            : (C) 2008 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -71,7 +71,7 @@ public:
   uint32_t  nbPackets; // number of blocks (used for audio)
   uint32_t  nbFrames;  // number of distinct frames
   uint32_t  length;    // Number o;f bytes seen
-  
+
   /* Used for both */
   uint8_t    *extraData;
   uint32_t   extraDataLen;
@@ -129,7 +129,7 @@ public:
                 virtual uint64_t  getDurationInUs(void);
                                     /// Go to a given time
                 virtual bool      goToTime(uint64_t timeUs);
-                                    /// Grab extra data                
+                                    /// Grab extra data
                 virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
                 virtual bool      getExtraData(uint32_t *l, uint8_t **d);
 };
@@ -183,12 +183,14 @@ class mkvHeader         :public vidHeader
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
 
     bool                    delayTrack(int index,mkvTrak *track, uint64_t value);
-    
+
     bool                    ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDeltaX, bool *bFramePresent);
     bool                    updateFlagsWithCue(void); // in case we can trust it, update KEY_FRAME_FLAGS
     bool                    dumpVideoIndex(int maxIndex);
-    bool                    goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,uint64_t &outputLen, 
+    bool                    goBeforeAtomAtPosition(ADM_ebml_file *parser, uint64_t position,uint64_t &outputLen,
                                                 MKV_ELEM_ID searchedId,const char *txt);
+    int                     checkDeviation(int num, int den);
+    bool                    enforceFixedFrameRate(int num, int den);
   public:
 
 
@@ -239,5 +241,3 @@ virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
         int     readBufferSize;
 };
 #endif
-
-
