@@ -142,7 +142,7 @@ again:
     image.data=out->data;
     if(false==video_body->getCompressedPicture(videoDelay,&image))
     {
-            ADM_warning(" Get packet failed ");
+            ADM_warning("Get packet failed\n");
             return false;
     }
     out->len=image.dataLength;
