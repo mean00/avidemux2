@@ -66,5 +66,6 @@ public:
 
 
 };
+ADM_CORE6_EXPORT void ADM_emms(void); // Returns the # of cores/CPUs
 ADM_CORE6_EXPORT int ADM_cpu_num_processors(void); // Returns the # of cores/CPUs
 #endif

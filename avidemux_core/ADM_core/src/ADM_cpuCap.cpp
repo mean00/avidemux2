@@ -200,3 +200,16 @@ uint32_t     CpuCaps::getMask( )
 {
     return myCpuMask;
 }
+extern "C"
+{
+extern void adm2_emms_yasm(void);
+}
+/**
+ *
+ *
+ */
+void ADM_emms()
+{
+    adm2_emms_yasm();
+}
+
