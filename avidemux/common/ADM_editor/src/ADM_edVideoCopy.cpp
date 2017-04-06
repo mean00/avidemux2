@@ -334,8 +334,12 @@ againGet:
         {
             if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/10)))
             {
-                ADM_error("Frame %d DTS is going back in time : expected:%s ",(int)vid->lastSentFrame, ADM_us2plain(_nextFrameDts));
-                ADM_error("\t got:%s (%ld vs %ld)\n", ADM_us2plain(signedDts),_nextFrameDts,signedDts);
+                ADM_error("Frame %d DTS is going back in time: expected: %s \t got: %s (%ld vs %ld)\n",
+                          (int)vid->lastSentFrame,
+                          ADM_us2plain(_nextFrameDts),
+                          ADM_us2plain(signedDts),
+                          _nextFrameDts,
+                          signedDts);
                 goto againGet;
             }
         }
