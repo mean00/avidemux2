@@ -31,12 +31,13 @@ if (ADM_DEBUG AND FIND_LEAKS)
 endif (ADM_DEBUG AND FIND_LEAKS)
 
 set(ADM_core_SRCS ${ADM_core_SRCS} cpuid.asm adm_emms.asm)
-YASMIFY(cpuid.asm)
-YASMIFY(adm_emms.asm)
-
-
 add_compiler_export_flags()
-ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS})
+
+SET(asmFiles "")
+YASMIFY(asmFiles cpuid)
+YASMIFY(asmFiles adm_emms)
+MESSAGE(STATUS "List of asm files ${asmFiles}")
+ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS} ${asmFiles})
 include_directories("${PTHREAD_INCLUDE_DIR}")
 
 IF (WIN32)

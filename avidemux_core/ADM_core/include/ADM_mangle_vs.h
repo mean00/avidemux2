@@ -8,8 +8,10 @@
 #pragma once
 
 #include "ADM_coreConfig.h"
-#ifdef _MSC_VER
-#include "ADM_mangle_vs.h"
-#else
-#include "ADM_mangle_gcc.h"
-#endif
+#define MANGLE(a)  #a
+#define LOCAL_MANGLE(a) #a
+#define FUNNY_MANGLE(x) x
+#define FUNNY_MANGLE_ARRAY(x, y) x[y] 
+#define attribute_used
+#define ASM_CONST attribute_used 
+#define ADM_NO_OPTIMIZE 
