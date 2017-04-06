@@ -18,14 +18,11 @@
 #include "ADM_bitstream.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
+#include "ADM_cpuCap.h"
 void testYUV444();
 
 #ifdef ADM_CPU_X86
-  extern "C"
-  {
-  extern void adm2_emms_yasm(void);
-  }
-  #define ADM_EMMS()             adm2_emms_yasm()
+  #define ADM_EMMS()             ADM_emms()
 #endif
 
  /**
@@ -122,7 +119,7 @@ void adm_YUV444Luma_mmx(int w8,uint8_t *dst,uint8_t *src, const uint64_t *mangle
 
 static inline void yuv444_MMX(uint8_t *src,uint8_t *dst,int w,int h,int destStride, int sourceStride)
 {
-static const uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
+static const uint64_t attribute_used FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
 
 
     int step=w>>3;
