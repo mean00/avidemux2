@@ -457,9 +457,9 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
     {
-        _videostream.dwScale=num;
-        _videostream.dwRate=den;
-        track->_defaultFrameDuration=(1000000*num)/den;
+        _videostream.dwScale=den;
+        _videostream.dwRate=num;
+        track->_defaultFrameDuration=(1000000*den)/num;
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);
