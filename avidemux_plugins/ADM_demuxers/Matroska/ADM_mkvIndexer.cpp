@@ -46,7 +46,7 @@ uint8_t mkvHeader::videoIndexer(ADM_ebml_file *parser)
 
    parser->seek(0);
    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska Images"));
-   
+
    readBufferSize=200*1024;
    readBuffer=new uint8_t[readBufferSize];
     //************
@@ -159,8 +159,8 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
       return 1;
 }
 /**
- * 
- * @return 
+ *
+ * @return
  */
 static int mkvFindStartCode(uint8_t *& start, uint8_t *end)
 {
@@ -185,7 +185,7 @@ static bool canRederiveFrameType(uint32_t fcc)
     if(isH264Compatible(fcc)) return true;
     if(isMpeg12Compatible(fcc)) return true;
     return false;
-    
+
 }
 
 /**
@@ -204,8 +204,9 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   ix.flags=0;
   ix.Dts=timecodeMS*_timeBase;
   ix.Pts=timecodeMS*_timeBase;
+  //printf("Track=%d, timecode=%d timeBase=%d, Pts=%d\n",track,(int)timecodeMS,(int)_timeBase,ix.Pts);
    uint32_t rpt=_tracks[0].headerRepeatSize;
-   
+
    // expand buffer if needed
    if(size>readBufferSize)
    {
@@ -220,12 +221,12 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
   // since frame type is unreliable for mkv, we scan each frame
   // For the 2 most common cases : mp4 & h264.
   // Hackish, we already read the 3 bytes header
-  // But they are already taken into account in the size part 
+  // But they are already taken into account in the size part
   if(!track && canRederiveFrameType(_videostream.fccHandler)) // Track 0 is video
   {
     if( isMpeg4Compatible(_videostream.fccHandler))
     {
-        
+
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
             parser->readBin(readBuffer+rpt,size-3);
@@ -236,13 +237,13 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
              vops[0].type=AVI_KEY_FRAME;
              ADM_searchVop(readBuffer,readBuffer+rpt+size-3,&nb,vops, &timeinc);
              ix.flags=vops[0].type;
-        
+
     }else
     if(isH264Compatible(_videostream.fccHandler))
     {
-                
+
                 uint32_t flags=AVI_KEY_FRAME;
-                
+
                 if(rpt)
                         memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
                 parser->readBin(readBuffer+rpt,size-3);
@@ -256,9 +257,9 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
     }/*else if(isH265Compatible(_videostream.fccHandler))
     {
-                
+
                 uint32_t flags=AVI_KEY_FRAME;
-                
+
                 if(rpt)
                         memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
                 parser->readBin(readBuffer+rpt,size-3);
@@ -282,7 +283,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                 while(begin<end)
                 {
                     int code=mkvFindStartCode(begin,end);
-                    if(code==-1) 
+                    if(code==-1)
                     {
                         ADM_warning("[Mpg2InMkv]No startcode found\n");
                         break;
@@ -303,9 +304,9 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
                         }
                         break;
                     }
-                    
-                }             
-                
+
+                }
+
     }else if(isVC1Compatible(_videostream.fccHandler))
     {
         if(rpt)
@@ -351,8 +352,8 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
   ADM_MKV_TYPE type;
   const char *ss;
   uint64_t time;
-  
-  
+
+
 
   if(!goBeforeAtomAtPosition(parser, _cuePosition,vlen, MKV_CUES,"MKV_CUES"))
   {
@@ -417,7 +418,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
               }
             }
             aprintf("Track %" PRIx64" segmentPos=%" PRIx64" Cluster Position 0x%" PRIx64" Cue position 0x%" PRIx64" Absolute=%" PRIx64" time %" PRIu64"\n",
-                  tid,_segmentPosition,cluster_position,cue_position,cue_position+cluster_position+_segmentPosition,time);  
+                  tid,_segmentPosition,cluster_position,cue_position,cue_position+cluster_position+_segmentPosition,time);
 
             if(!searchTrackFromTid(tid)) //only keep video i.e. track zero
             {
@@ -435,7 +436,7 @@ bool     mkvHeader::readCue(ADM_ebml_file *parser)
        ADM_info("[MKV] No Cue found\n");
        return false;
    }
-   
+
 }
 /**
         \fn indexClusters
@@ -469,7 +470,7 @@ uint8_t   mkvHeader::indexClusters(ADM_ebml_file *parser)
         vlen=fileSize-pos;
     }
    ADM_ebml_file segment(parser,vlen);
-   
+
    DIA_workingBase *work=createWorking(QT_TRANSLATE_NOOP("matroskademuxer","Matroska clusters"));
    while(segment.simplefind(MKV_CLUSTER,&alen,0))
    {
@@ -522,13 +523,13 @@ tryAgain:
  *     length
  *     Actual image <= We point here
  * Typically the difference is ~ 16 bytes, so we accept anything between 0 and32
- * @return 
+ * @return
  */
 bool  mkvHeader::updateFlagsWithCue(void)
 {
     int nbImages=_tracks[0].index.size();
     int nbCues=_cueTime.size();
-    
+
     int lastImage=0;
     ADM_info("Updating Flags with Cue\n");
     for(int curCue=0;curCue<nbCues;curCue++)
@@ -536,7 +537,7 @@ bool  mkvHeader::updateFlagsWithCue(void)
         uint64_t tim=_cueTime[curCue];
         for(int curImage=lastImage;curImage<nbImages;curImage++)
         {
-            uint64_t thisTime=_tracks[0].index[curImage].Pts/_timeBase;            
+            uint64_t thisTime=_tracks[0].index[curImage].Pts/_timeBase;
             if( tim== thisTime)
             {
                 // match!
@@ -548,12 +549,12 @@ bool  mkvHeader::updateFlagsWithCue(void)
         }
     }
     ADM_info("Updating Flags with Cue done\n");
-    return true;   
+    return true;
 }
 /**
- * 
+ *
  * @param mx
- * @return 
+ * @return
  */
 bool mkvHeader::dumpVideoIndex(int mx)
 {
