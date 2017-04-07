@@ -10,13 +10,13 @@ MACRO(INSTALL_VIDEO_ENCODER_SETTINGS PLUGIN)
                         ""
                         ${ARGN})   
     MESSAGE(STATUS "Will install plugin ${PLUGIN} version ${SETTINGS_VERSION}")
-    IF(SETTING_FILES)
+    IF(SETTINGS_FILES)
         MESSAGE(STATUS "Will install ${SETTINGS_FILES}")
         INSTALL(FILES ${SETTINGS_FILES}
                 DESTINATION "${VE_SETTINGS_DIR}/${PLUGIN}/${SETTINGS_VERSION}/"
                 COMPONENT   settings
                 )
-    ENDIF(SETTING_FILES)
+    ENDIF(SETTINGS_FILES)
     MESSAGE("")
 ENDMACRO(INSTALL_VIDEO_ENCODER_SETTINGS)
 
