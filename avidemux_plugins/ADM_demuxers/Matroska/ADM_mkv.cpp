@@ -35,7 +35,7 @@ static const frameRateStruct candidateFrameRate[]=
    {41667,1000,24000}, // 24 fps
    {40000,1000,25000}, // 25 fps
    {33367,1001,60000}, // 30 NTSC
-   {20854,2000,24000}, // 24*2
+   {20853,2000,24000}, // 24*2
    {20854,2002,24000}, // 23976*2
    {20000,1000,50000}, // 50
    {16683,1001,60000}, // 60 NTSCs
@@ -45,12 +45,12 @@ static const frameRateStruct candidateFrameRate[]=
 static int getStdFrameRate(int interval)
 {
   int n=sizeof(candidateFrameRate)/sizeof(frameRateStruct);
-  int delta=50; // 50 us error allowed
+  int delta=1000; // 1000 us error allowed
   int bestMatch=-1;
   for(int i=0;i<n;i++)
   {
       int er=abs(interval-candidateFrameRate[i].durationInUs);
-      if(er<10) // 10 us error
+      if(er<1000) // 10 us error
       {
         if(er<delta)
         {
@@ -308,8 +308,8 @@ int  mkvHeader::checkDeviation(int num, int den)
     uint64_t multiple=(uint64_t)dmultiple;
     int64_t reconstructed=(multiple*1000000*num)/den;
     int64_t deviation=pts-reconstructed;
-  //  printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
-    if(deviation>1000)
+    //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
+    if(deviation>2000)
         bad++;
     else
         good++;
@@ -325,21 +325,26 @@ bool mkvHeader::enforceFixedFrameRate(int num, int den)
 {
   mkvTrak *track=_tracks;
   int nb=track->index.size();
-  int half=(500000*num)/(den)-1; // half interval in us
+  double dHalf=(500000.*(double)num)/((double)den);
+  int half=dHalf-1; // half interval in us
   int first=0;
   int bad=0;
   int good=0;
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
+  ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
   for(int i=first+1;i<nb;i++)
   {
     uint64_t pts=track->index[i].Pts;
     if(pts<zero) continue;
     pts-=zero;
-    int64_t multiple=(pts+half)*den;
-    multiple/=(1000000*num);
-    int64_t reconstructed=(multiple*1000000*num)/den;
-    track->index[i].Pts=reconstructed+zero;
+    double dmultiple=(pts+half);
+    dmultiple*=den;
+    dmultiple/=(1000000.*(double)num);
+    uint64_t multiple=(uint64_t)dmultiple;
+    int64_t reconstructed=(multiple*1000000*num)/den+zero;
+    //printf("frame %d multiple = %d, pts=%d, reconstructed=%d,delta = %d\n",i,(int)multiple,(int)pts,(int)reconstructed,(int)(pts-reconstructed));
+    track->index[i].Pts=reconstructed;
   }
   return true;
 }
@@ -415,11 +420,13 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     int num= _videostream.dwScale;
     int den= _videostream.dwRate;
+    ADM_info("Checking deviation for native %d %d\n", _videostream.dwScale,   _videostream.dwRate);
     int deviation=checkDeviation(  _videostream.dwScale,   _videostream.dwRate);
     int deviationMinDelta=100000000;
 
     if(minDelta)
     {
+        ADM_info("Checking deviation for minDelata %d %d\n",minDelta,1000000);
         deviationMinDelta =checkDeviation(  minDelta,1000000   );
     }
     ADM_info("Deviation        = %d\n",deviation);
@@ -438,6 +445,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     if(stdFrameRate!=-1)
     {
         const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
+        ADM_info("Checking deviation for stdFrameRate %d %d\n",fr->num,fr->den);
         int deviationStd=checkDeviation(fr->num,fr->den);
         ADM_info("Deviation for stdFrameRate%d =%d\n",stdFrameRate,deviationStd);
         if(deviationStd<deviation)
@@ -451,18 +459,46 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     ADM_info("Old default duration    %" PRId64" us\n",track->_defaultFrameDuration);
     if(!deviation)
     {
-        ADM_info("We are within margin, recomputing timestamp with exact value\n");
+        ADM_info("We are within margin, recomputing timestamp with exact value (%d vs %d)\n",num,den);
         enforceFixedFrameRate(num,den);
+        // do it again, the old may not be valid 
+        // Search minimum and maximum between 2 frames
+        // the minimum will give us the maximum fps
+        // the maximum will give us the max PTS-DTS delta so that we can compute DTS
+        maxDelta=0;
+        minDelta=100000000;
+        for(int i=0;i<nb-1;i++)
+        {
+            if(track->index[i].Dts!=ADM_NO_PTS)
+                nbValidDts++;
+            if(track->index[i].flags==AVI_B_FRAME) nbBFrame++;
+            if(track->index[i+1].Pts==ADM_NO_PTS || track->index[i].Pts==ADM_NO_PTS)
+                continue;
+
+            delta=(int64_t)track->index[i+1].Pts-(int64_t)track->index[i].Pts;
+            if(delta<0) delta=-delta;
+            if(!delta)
+            {
+                ADM_warning("Duplicate PTS...%s (%d and %d,size=%d %d)\n",ADM_us2plain(track->index[i].Pts),i,i+1,track->index[i].size,track->index[i+1].size);
+                continue;
+            }
+            if(delta<minDelta) minDelta=delta;
+            if(delta>maxDelta) maxDelta=delta;
+            //printf("\/=%" PRId64" Min %" PRId64" MAX %" PRId64"\n",delta,minDelta,maxDelta);
+        }
+
     }
 
-    if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
+    //if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
     {
-        _videostream.dwScale=den;
-        _videostream.dwRate=num;
-        double f=den;
+        _videostream.dwScale=num;
+        _videostream.dwRate=den;
+        double f=num;
         f=f*1000000.;
-        f/=num;
+        f/=den;
         track->_defaultFrameDuration=f;
+       
+
     }
 
     ADM_info("New default duration    %" PRId64" us\n",track->_defaultFrameDuration);
