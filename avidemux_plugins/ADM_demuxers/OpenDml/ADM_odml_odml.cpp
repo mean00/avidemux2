@@ -30,7 +30,11 @@
 #ifdef _MSC_VER
         #define ADM_PACKED(c,n)   __pragma( pack(push, 1) ) c n  __pragma( pack(pop) )
 #else
-	#define ADM_PACKED(c,n) c  __attribute__ ((packed, gcc_struct)) n
+        #ifdef ADM_CPU_X86
+	        #define ADM_PACKED(c,n) c  __attribute__ ((packed, gcc_struct)) n
+        #else
+                #define ADM_PACKED(c,n) c  __attribute__ ((packed)) n
+        #endif
 #endif
 ADM_PACKED(
 typedef struct  //
