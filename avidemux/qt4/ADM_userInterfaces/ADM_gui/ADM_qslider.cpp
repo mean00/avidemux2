@@ -99,7 +99,11 @@ void ADM_QSlider::setTotalDuration(uint64_t duration)
  */
 void ADM_QSlider::wheelEvent(QWheelEvent *e)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     //printf("Wheel : %d\n",e->delta());
     emit sliderAction(e->delta());
+#else
+    emit sliderAction(e->angleDelta().ry());
+#endif
 }
 //EOF 
