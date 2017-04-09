@@ -13,6 +13,13 @@
 #include "ADM_audioStreamConstantChunk.h"
 #include "ADM_audioCodecEnum.h"
 /**
+ * 
+ */
+ ADM_audioStream::~ADM_audioStream()
+ { 
+ }
+
+/**
     \fn ADM_audioStream
     \brief constructor
 */
