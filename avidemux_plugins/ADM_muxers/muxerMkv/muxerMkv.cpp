@@ -77,6 +77,8 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         c = video_st->codec;
         rescaleFps(s->getAvgFps1000(),&(c->time_base));
         video_st->time_base=c->time_base;
+        video_st->avg_frame_rate.den =c->time_base.num;
+        video_st->avg_frame_rate.num =c->time_base.den;
         c->gop_size=15;
         
         if(true==mkvMuxerConfig.forceDisplayWidth && mkvMuxerConfig.displayWidth)
@@ -116,6 +118,7 @@ bool muxerMkv::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         ADM_assert(avformat_write_header(oc, &dict) >= 0);
         ADM_info("Timebase codec = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
+        ADM_info("Timebase codec2 = %d/%d\n",c->time_base.num,c->time_base.den);
 //        ADM_info("Original timebase = %d/%d\n",myTimeBase.num,myTimeBase.den);
         
         

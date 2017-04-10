@@ -44,7 +44,7 @@ void  rescaleFps(uint32_t fps1000, AVRational *rational)
     rational->num=1000;
     rational->den=fps1000;
     }
-    printf("[MP3] TimeBase for video %d/%d\n",rational->num,rational->den);
+    ADM_info(" TimeBase for video %d/%d\n",rational->num,rational->den);
 }
 /**
         \fn rescaleLavPts
