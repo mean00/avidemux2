@@ -26,7 +26,6 @@ static const char *yesno[2]={QT_TRANSLATE_NOOP("qprops","No"),QT_TRANSLATE_NOOP(
 propWindow::propWindow(QWidget *parent) : QDialog(parent)
 {
     ui.setupUi(this);
-    uint32_t info=0;
     uint32_t war,har;
     uint32_t hh, mm, ss, ms;
     char text[80];
@@ -166,7 +165,6 @@ void propWindow::propsCopyToClipboard(void)
     if((QString)listOfValues.at(5) != QString("00"))
     {
         hasExtraData=true;
-        ADM_info("hasExtraData is %d\n",hasExtraData);
         ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Extra data"),listOfValues.at(6))
     }
 
