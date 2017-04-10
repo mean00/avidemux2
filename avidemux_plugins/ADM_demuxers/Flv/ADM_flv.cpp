@@ -582,13 +582,13 @@ uint8_t flvHeader::open(const char *name)
     // audio track
     if(_isaudiopresent)
     {
-        ADM_flvAccess *access=new ADM_flvAccess(name,audioTrack);
-        _audioStream=ADM_audioCreateStream(&wavHeader,access);
+        _access=new ADM_flvAccess(name,audioTrack);
+        _audioStream=ADM_audioCreateStream(&wavHeader,_access);
     }
     else
     {
         _audioStream = NULL;
-       access=NULL;
+       _access=NULL;
     }
 
   printf("[FLV]FLV successfully read\n");
@@ -827,7 +827,7 @@ uint8_t flvHeader::close(void)
   }
   if(_fd) fclose(_fd);
   if(_audioStream) delete _audioStream;
-  if(access) delete access;
+  if(_access) delete _access;
   
   
   _fd=NULL;
@@ -835,7 +835,7 @@ uint8_t flvHeader::close(void)
   videoTrack=NULL;
   audioTrack=NULL;
   _audioStream=NULL;
-  access=NULL;
+  _access=NULL;
   return 1;
 }
 /**
@@ -851,7 +851,7 @@ uint8_t flvHeader::close(void)
     videoTrack=NULL;
     audioTrack=NULL;
     _audioStream=NULL;
-    access=NULL;
+    _access=NULL;
     memset(&wavHeader,0,sizeof(wavHeader));
     metaWidth=0;
     metaHeight=0;

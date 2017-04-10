@@ -100,7 +100,7 @@ class flvHeader         :public vidHeader
     flvTrak                 *audioTrack;
     WAVHeader               wavHeader;
     ADM_audioStream         *_audioStream;
-    ADM_flvAccess           *access;
+    ADM_flvAccess           *_access;
     /* */
     uint32_t            metaWidth,metaHeight,metaFps1000,videoCodec;
     uint32_t            metaFrameWidth,metaFrameHeight;
