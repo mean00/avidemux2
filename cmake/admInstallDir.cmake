@@ -75,7 +75,7 @@ ENDMACRO(ADM_INSTALL_BIN )
 #
 MACRO(ADM_INSTALL_INCLUDE_FOLDER folder targetName)
         INSTALL(DIRECTORY ${folder} 
-                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${targetName}
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${targetName}
                 COMPONENT dev
                 FILES_MATCHING PATTERN "*.h*"
                 )
@@ -86,7 +86,7 @@ ENDMACRO(ADM_INSTALL_INCLUDE_FOLDER )
 #
 MACRO(ADM_INSTALL_QT_INCLUDE_FOLDER folder targetName)
         INSTALL(DIRECTORY ${folder} 
-                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${QT_EXTENSION}/${targetName}
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${QT_EXTENSION}/${targetName}
                 COMPONENT dev
                 FILES_MATCHING PATTERN "*.h*"
                 )
@@ -97,7 +97,7 @@ ENDMACRO(ADM_INSTALL_QT_INCLUDE_FOLDER )
 #
 MACRO(ADM_INSTALL_CMAKE_FOLDER folder targetName)
         INSTALL(DIRECTORY ${folder} 
-                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${targetName}
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${targetName}
                 COMPONENT dev
                 FILES_MATCHING PATTERN "*.cmake*"
                 )
@@ -108,7 +108,7 @@ ENDMACRO(ADM_INSTALL_CMAKE_FOLDER )
 #
 MACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER folder targetName)
         INSTALL(DIRECTORY ${folder} 
-                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cmake/${targetName}
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/${targetName}
                 COMPONENT dev
                 FILES_MATCHING PATTERN "*.c*"
                 )
@@ -118,7 +118,7 @@ ENDMACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER )
 #
 MACRO(ADM_INSTALL_APP_HEADER folder )
         INSTALL(FILE ${folder} ${ARGN} 
-                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/ADM_app
+                DESTINATION ${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/ADM_app
                 COMPONENT dev
                 )
 ENDMACRO(ADM_INSTALL_APP_HEADER folder)

@@ -1,3 +1,4 @@
+include(avidemuxVersion)
 IF(WIN32)
         IF(CROSS)
                 MESSAGE(STATUS "Using mingw Cross compiler setup")

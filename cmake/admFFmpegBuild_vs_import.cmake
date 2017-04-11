@@ -44,17 +44,17 @@ ADM_INSTALL_LIB_FILES("${LIBSWSCALE_LIB}")
 #INSTALL .dll => TODO
 
 # install header
-INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/avcodec.h" "${IMPORT_FOLDER}/include/libavcodec/vdpau.h"
         "${IMPORT_FOLDER}/include/libavcodec/version.h"
         "${IMPORT_FOLDER}/include/libavcodec/audioconvert.h"
-        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libavformat/avformat.h" "${IMPORT_FOLDER}/include/libavformat/avio.h"
         "${IMPORT_FOLDER}/include/libavformat/version.h"
         "${IMPORT_FOLDER}/include/libavformat/flv.h" 
-        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavformat" COMPONENT dev)
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavformat" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h" 
         "${IMPORT_FOLDER}/include/libavutil/avutil.h"
@@ -78,18 +78,18 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h"
         "${IMPORT_FOLDER}/include/libavutil/macros.h"
         "${IMPORT_FOLDER}/include/libavutil/samplefmt.h"
         "${IMPORT_FOLDER}/include/libavutil/rational.h" 
-        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavutil" COMPONENT dev)
+        DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
-INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
-INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libpostproc" COMPONENT dev)
-INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale" COMPONENT dev)
-INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libswscale" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
+INSTALL(FILES "${IMPORT_FOLDER}/include/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
 
 
 IF(USE_DXVA2)
-        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
-        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/d3d11va.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
-        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/libavcodec" COMPONENT dev)
+        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
+        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/d3d11va.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
+        INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 ENDIF(USE_DXVA2)
 
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
 
 MESSAGE("")
 MESSAGE("#########################################")
@@ -158,13 +158,13 @@ ADM_INSTALL_CMAKE_FOLDER("${CMAKE_TOP_SOURCE_DIR}/" cmake)
 ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_SOURCE_DIR}/../cmake/cmake_compile_check/" cmake_compile_check)     
 # 
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/cmake/" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/" COMPONENT dev)
 
 IF(MSVC)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/stdint.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/inttypes.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6" COMPONENT dev)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/GL/glext.h  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/GL" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/stdint.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/inttypes.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/GL/glext.h  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/GL" COMPONENT dev)
 ENDIF(MSVC)
 
 

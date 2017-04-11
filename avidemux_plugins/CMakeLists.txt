@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-SET(AVIDEMUX_API_VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
+SET(AVIDEMUX_API_VERSION 2.7)
 
 SET(ADM_PROJECT AdmPlugins)
 SET(PLUGINS TRUE)

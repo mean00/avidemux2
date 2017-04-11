@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
-SET(AVIDEMUX_API_VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
+SET(AVIDEMUX_API_VERSION 2.7)
 SET(ADM_PROJECT Avidemux_qt4)
 
 MESSAGE("")
@@ -264,7 +264,7 @@ IF(MSVC)
 ENDIF(MSVC)
 include(admPackager)
 admPackager(qt4Package)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/${QT_EXTENSION}" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/${QT_EXTENSION}" COMPONENT dev)
 
 
 # install headers
