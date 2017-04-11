@@ -13,10 +13,10 @@
 #include "ADM_audioStreamConstantChunk.h"
 #include "ADM_audioCodecEnum.h"
 /**
- * 
+ *
  */
  ADM_audioStream::~ADM_audioStream()
- { 
+ {
  }
 
 /**
@@ -27,7 +27,7 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
 {
     if(header)
         wavHeader=*header;
-    else    
+    else
         memset(&wavHeader,0,sizeof(wavHeader));
     this->access=access;
     lastDts=ADM_AUDIO_NO_DTS;
@@ -37,7 +37,7 @@ ADM_audioStream::ADM_audioStream(WAVHeader *header,ADM_audioAccess *access)
     {
         if(access->canGetDuration()==true)
                 durationInUs=access->getDurationInUs();
-        else    
+        else
                 durationInUs=0;
     }
     language=ADM_UNKNOWN_LANGUAGE;
@@ -85,15 +85,22 @@ uint64_t dts=0;
     if(!access->getPacket(buffer,size,sizeMax,&dts)) return 0;
     // We got the packet
     // Try to guess the nbSample
+    // if it is AAC, we hardcodec 1024 samples
+
+    if(wavHeader.encoding==WAV_AAC)
+    {
+        *nbSample=1024;
+        if(dts!=ADM_AUDIO_NO_DTS)
+        {
+            setDts(dts);
+        }
+        *odts=dts;
+        return 1;
+    }
     if(dts==ADM_AUDIO_NO_DTS)
     {
-        if(wavHeader.encoding==WAV_AAC) 
-            *nbSample=1024;
-        else        
-        {
-            *nbSample=512;
-            printf("[audioStream] Cant guess nb sample, setting 512\n");
-        }
+        *nbSample=512;
+        ADM_warning("[audioStream] Cant guess nb sample, setting 512\n");
         *odts=ADM_AUDIO_NO_DTS;
         return 1;
     }
@@ -145,14 +152,14 @@ bool    ADM_audioStream::advanceDtsBySample(uint32_t samples)
 bool              ADM_audioStream::isLanguageSet(void)
 {
     const std::string lang=getLanguage();
-    if(lang.size()!=3) 
+    if(lang.size()!=3)
         return false; // hackish...
     return true;
 }
 /**
  * @param samples
  * @param fq
- * @return 
+ * @return
  */
 /**
         \fn advanceDtsByCustomSample
@@ -176,7 +183,7 @@ uint32_t size;
     switch(wavheader->encoding)
     {
         case WAV_EAC3:
-            return new ADM_audioStreamEAC3(wavheader,access);    
+            return new ADM_audioStreamEAC3(wavheader,access);
         case WAV_AC3:
             return new ADM_audioStreamAC3(wavheader,access);
         case WAV_MP2:
@@ -231,4 +238,3 @@ const char *getStrFromAudioCodec( uint32_t codec)
 }
 
 // EOF
-
