@@ -78,11 +78,18 @@ typedef struct queueElem
     bool pushBack(T *data)
     {
         queueElem *elem=new queueElem;
-        elem->next=head;
+        elem->next=NULL;
         elem->data=data;
-        if(!head) tail=elem;
-        head=elem;
-        return 1;
+
+        if(tail)
+        {
+            tail->next=elem;
+            tail=elem;
+        }else
+        {
+            head=tail=elem;
+        }
+        return true;
     }
     T *pop()
     {
