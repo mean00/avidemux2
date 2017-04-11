@@ -25,6 +25,7 @@
 
 extern "C" {
 #include "libavformat/url.h"
+#include "ADM_audioClock.h"
 }
 
 #if 1
@@ -396,16 +397,28 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
         return true;
 }
 #define AUDIO_BUFFER_SIZE 48000*6*sizeof(float)
+/**
+ * \class MuxAudioPacket
+ */
 class MuxAudioPacket
 {
 public:
-    MuxAudioPacket() {eof=false;dts=ADM_NO_PTS;present=false;size=0;}
+    MuxAudioPacket() {eof=false;dts=ADM_NO_PTS;present=false;size=0;clock=NULL;}
+    ~MuxAudioPacket() 
+    {
+        if(clock) 
+        {
+            delete clock;
+            clock=NULL;
+        }
+    }
     uint8_t     buffer[AUDIO_BUFFER_SIZE];
     uint32_t    size;
     bool        eof;
     bool        present;
     uint64_t    dts;
     uint32_t    samples;
+    audioClock  *clock;
 };
 
 /**
@@ -439,6 +452,8 @@ bool muxerFFmpeg::saveLoop(const char *title)
     initUI(QT_TRANSLATE_NOOP("adm","Saving"));
     encoding->setContainer(getContainerName());
     MuxAudioPacket *audioPackets=new MuxAudioPacket[nbAStreams];
+    for(int i=0;i<nbAStreams;i++) // ugly...
+            audioPackets[i].clock=new audioClock(aStreams[i]->getInfo()->frequency);
     ADMBitstream out(bufSize);
     out.data=buffer;
 
@@ -540,6 +555,11 @@ bool muxerFFmpeg::saveLoop(const char *title)
                     AVPacket pkt;
                     uint64_t rescaledDts;
                     rescaledDts=audioTrack->dts;
+                    if(rescaledDts==ADM_NO_PTS)
+                        rescaledDts=audioTrack->clock->getTimeUs(); // we assume the 1st one has a PTS/DTS..., can we ?
+                    else
+                        audioTrack->clock->setTimeUs(rescaledDts);
+                    audioTrack->clock->advanceBySample(audioTrack->samples);
                     encoding->pushAudioFrame(audioTrack->size);
                     muxerRescaleAudioTime(audio,&rescaledDts,a->getInfo()->frequency);
                    //printf("[FF] A: Video frame  %d, audio Dts :%"PRIu64" size :%"PRIu32" nbSample : %"PRIu32" rescaled:%"PRIu64"\n",
