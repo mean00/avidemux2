@@ -248,12 +248,12 @@ endQt${LANG_CODE}:
 !macroend
 #
 !macro InstallDev xname
-         SetOutPath $INSTDIR\include\avidemux\2.6\${xname}
-         ${File} ${DEV_FOLDER}/include/avidemux/2.6/${xname}/*
+         SetOutPath $INSTDIR\include\avidemux\${API_VERSION}\${xname}
+         ${File} ${DEV_FOLDER}/include/avidemux/${API_VERSION}/${xname}/*
 !macroend
 !macro InstallDevQt5 xname
-         SetOutPath $INSTDIR\include\avidemux\2.6\qt5\${xname}
-         ${File} ${DEV_FOLDER}/include/avidemux/2.6/qt5/${xname}/*
+         SetOutPath $INSTDIR\include\avidemux\${API_VERSION}\qt5\${xname}
+         ${File} ${DEV_FOLDER}/include/avidemux/${API_VERSION}/qt5/${xname}/*
 !macroend
 
 
@@ -349,10 +349,10 @@ Section "SDK (to write plugins)" SecGrpDev
         SetOverwrite on
         SetOutPath $INSTDIR
         ${File} ${DEV_FOLDER}/*.dll.a
-        SetOutPath $INSTDIR\include\avidemux\2.6
-        ${File} ${DEV_FOLDER}/include/avidemux/2.6/*
-        SetOutPath $INSTDIR\include\avidemux\2.6
-        ${File} ${DEV_FOLDER}/include/avidemux/2.6/*
+        SetOutPath $INSTDIR\include\avidemux\${API_VERSION}
+        ${File} ${DEV_FOLDER}/include/avidemux/${API_VERSION}/*
+        SetOutPath $INSTDIR\include\avidemux\${API_VERSION}
+        ${File} ${DEV_FOLDER}/include/avidemux/${API_VERSION}/*
         !insertmacro InstallDev cmake
         !insertmacro InstallDev ADM_core
         !insertmacro InstallDev ADM_coreAudio

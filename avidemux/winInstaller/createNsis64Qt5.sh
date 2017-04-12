@@ -9,5 +9,5 @@ echo "Revision : $REV"
 echo "Creating NSIS Package"
 mkdir -p install
 rm -f install/*
-makensis  -DNSIDIR=$PWD avidemux_cross64Qt5.nsi
+makensis  -DAPI_VERSION=2.7 -DNSIDIR=$PWD avidemux_cross64Qt5.nsi
 echo "Done"
