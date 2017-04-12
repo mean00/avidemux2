@@ -10,7 +10,9 @@ IF(USE_VAPOURSYNTH)
         ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
         SET(SRCS ADM_vsProxy.cpp ADM_vsProxy_cli.cpp)
         ADD_EXECUTABLE(vsProxy ${SRCS})
-        GET_PROPERTY(OLD TARGET vsProxy  PROPERTY LINK_FLAGS)
+        GET_PROPERTY(OLD 
+                        TARGET vsProxy  
+                        PROPERTY LINK_FLAGS)
         IF("${OLD}" MATCHES ".*NOT.*FOUND")
                 SET(OLD "")
         ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")

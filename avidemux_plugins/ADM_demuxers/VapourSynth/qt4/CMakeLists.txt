@@ -4,21 +4,6 @@
 ADD_DEFINITIONS("-std=c++11")
 
 ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
-GET_TARGET_PROPERTY(OLD PROPERTIES LINK_FLAGS)
-IF("${OLD}" MATCHES ".*NOT.*FOUND")
-   SET(OLD "")
-ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")
-# Keep -L, discard everything else
-FOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
-  IF(${i} MATCHES "^-L")
-        MESSAGE(STATUS "Updating linker flags  => ${i}")
-        SET(OLD "${i} ${OLD} ") 
-  ELSE(${i} MATCHES "^-L")
-        MESSAGE(STATUS "Updating linker libs  => ${i}")
-        LIST(APPEND LIBS_TO_LINK  ${i})
-  ENDIF(${i} MATCHES "^-L")
-ENDFOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
-
 #
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
@@ -49,6 +34,24 @@ SET(ADM_vsPROXY_SRCS
 # Executable
 ###########################################
 ADD_EXECUTABLE(vsProxy_gui_${QT_EXTENSION} ${ADM_vsPROXY_SRCS})
+#
+GET_PROPERTY(OLD 
+                        TARGET vsProxy_gui_${QT_EXTENSION}
+                        PROPERTY LINK_FLAGS)
+IF("${OLD}" MATCHES ".*NOT.*FOUND")
+   SET(OLD "")
+ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")
+# Keep -L, discard everything else
+FOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
+  IF(${i} MATCHES "^-L")
+        MESSAGE(STATUS "Updating linker flags  => ${i}")
+        SET(OLD "${i} ${OLD} ") 
+  ELSE(${i} MATCHES "^-L")
+        MESSAGE(STATUS "Updating linker libs  => ${i}")
+        LIST(APPEND LIBS_TO_LINK  ${i})
+  ENDIF(${i} MATCHES "^-L")
+ENDFOREACH(i ${VAPOURSYNTHSCRIPT_LDFLAGS})
+
 SET_TARGET_PROPERTIES(vsProxy_gui_${QT_EXTENSION}  PROPERTIES LINK_FLAGS "${OLD}")
 
 ###########################################
