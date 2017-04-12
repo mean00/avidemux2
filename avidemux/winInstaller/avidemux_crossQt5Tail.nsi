@@ -22,7 +22,7 @@ ${MementoSection} "-Start menu AVS Proxy GUI" SecStartMenuAvsProxyGui
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $INSTDIR
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\avsproxy_gui.exe"
-    CreateShortcut "$SMPROGRAMS\$StartMenuGroup\VS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\vsProxy_gui_qt5.exe"
+    ;!! CreateShortcut "$SMPROGRAMS\$StartMenuGroup\VS Proxy GUI ${CORE_VERSION}.lnk" "$INSTDIR\vsProxy_gui_qt5.exe"
     !insertmacro MUI_STARTMENU_WRITE_END
 ${MementoSectionEnd}
 
@@ -68,7 +68,7 @@ Section Uninstall
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\${SHORTCUT_NAME}.lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Avidemux job control (${BUILD_BITS} Bits).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Change Log ${CORE_VERSION}.lnk"
-    Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk"
+    ; !! Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\AVS Proxy GUI ${CORE_VERSION}.lnk"
     RmDir /REBOOTOK $SMPROGRAMS\$StartMenuGroup
     DeleteRegValue HKLM "${REGKEY}" StartMenuGroup
     
