@@ -108,11 +108,11 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 
         FILLQT_TRANSLATE_NOOP("qprops",labelChannels);
 
-        FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
+        FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000);
 
         FILLTEXT(labelVBR,"%s","n/a");
 
-        FILLTEXT4(labelBitrate, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Bps / %" PRIu32" kbps"), wavinfo->byterate, wavinfo->byterate * 8 / 1000);
+        FILLTEXT(labelFrequency, QT_TRANSLATE_NOOP("qprops","%" PRIu32" Hz"), wavinfo->frequency);
 
         duration=st->getDurationInUs();
         ms2time(duration/1000,&hh,&mm,&ss,&ms);
@@ -131,7 +131,7 @@ propWindow::propWindow(QWidget *parent) : QDialog(parent)
 #define ADDCATEGORY(a) props += QString("\n=====================================================\n")\
                                +QString(a)\
                                +QString("\n=====================================================\n");
-#define ADDNAMEVALUE(a,b) props += QString(a)+QString(":\t\t")+QString(b)+QString("\n");
+#define ADDNAMEVALUE(a,b) props += QString(a)+QString("\t")+QString(b)+QString("\n");
 
 /**
     \fn propsCopyToClipboard
@@ -147,42 +147,42 @@ void propWindow::propsCopyToClipboard(void)
 
     ADDCATEGORY(QT_TRANSLATE_NOOP("qprops","Video"))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec 4CC"),listOfValues.at(0))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec 4CC:\t"),listOfValues.at(0))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Image Size"),listOfValues.at(1))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Image Size:\t"),listOfValues.at(1))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Aspect Ratio"),listOfValues.at(2))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Aspect Ratio:\t"),listOfValues.at(2))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frame Rate"),listOfValues.at(3))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frame Rate:\t"),listOfValues.at(3))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration"),listOfValues.at(4))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration:\t"),listOfValues.at(4))
 
     ADDCATEGORY(QT_TRANSLATE_NOOP("qprops","Extra Video Properties"))
 
-    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","ExtraDataSize"),listOfValues.at(5))
+    ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","ExtraDataSize:\t"),listOfValues.at(5))
 
     bool hasExtraData=false;
     if((QString)listOfValues.at(5) != QString("00"))
     {
         hasExtraData=true;
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Extra data"),listOfValues.at(6))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Extra data:\t"),listOfValues.at(6))
     }
 
     ADDCATEGORY(QT_TRANSLATE_NOOP("qprops","Audio"))
 
     if(listOfValues.size() > 6+hasExtraData)
     {
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec"),QString("\t")+listOfValues.at(6+hasExtraData))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Codec:\t\t"),listOfValues.at(6+hasExtraData))
 
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Channels"),listOfValues.at(7+hasExtraData))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Channels:\t"),listOfValues.at(7+hasExtraData))
 
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Bitrate"),listOfValues.at(8+hasExtraData))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Bitrate:\t"),listOfValues.at(8+hasExtraData))
 
         //ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Variable Bitrate"),listOfValues.at(9+hasExtraData))
 
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frequency"),listOfValues.at(10+hasExtraData))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Frequency:\t"),listOfValues.at(10+hasExtraData))
 
-        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration"),listOfValues.at(11+hasExtraData))
+        ADDNAMEVALUE(QT_TRANSLATE_NOOP("qprops","Total Duration:\t"),listOfValues.at(11+hasExtraData))
     }else
     {
         props += QT_TRANSLATE_NOOP("qprops","No Audio");
