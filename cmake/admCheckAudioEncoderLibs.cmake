@@ -16,7 +16,6 @@ IF (AFTEN)
                 IF(CROSS)
                                         MESSAGE(WARNING "  Cross compiling mode used. Let's assume aften is recent, it might fail at compile time!")
                                         SET(USE_AFTEN True CACHE BOOL "")
-			                SET(USE_AFTEN_08 1)
                 ELSE(CROSS)
 
         		IF (NOT DEFINED AFTEN_TEST_RUN_RESULT)
