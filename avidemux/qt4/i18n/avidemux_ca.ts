@@ -7780,7 +7780,7 @@ Voleu continuar de totes formes?</translation>
     </message>
     <message>
         <location line="+5"/>
-        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+202"/>
+        <location filename="../../../avidemux_core/ADM_coreAudio/src/ADM_audioStream.cpp" line="+216"/>
         <source>PCM</source>
         <translation type="unfinished">PCM</translation>
     </message>
@@ -8430,7 +8430,7 @@ Segur que està funcionant?</translation>
         <location filename="../../common/ADM_editor/src/ADM_segment.cpp" line="+614"/>
         <location line="+42"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_dxva2.cpp" line="+81"/>
-        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+135"/>
+        <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_libva.cpp" line="+138"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_vdpau_utils.cpp" line="+51"/>
         <location filename="../../common/ADM_videoCodec/src/ADM_ffmpeg_xvba.cpp" line="+134"/>
         <location filename="../../common/gui_main.cpp" line="-244"/>
@@ -8711,7 +8711,7 @@ Segur que està funcionant?</translation>
         <translation type="unfinished">Guany</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+434"/>
+        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+452"/>
         <source>Saving</source>
         <translation type="unfinished">S&apos;està desant</translation>
     </message>
@@ -9066,6 +9066,26 @@ Segur que està funcionant?</translation>
     <message>
         <location line="+2"/>
         <source>Go To Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Zoom 1:4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 1:2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 1:1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Zoom 2:1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -9707,7 +9727,7 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">S&apos;ha produït un error de memòria</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+132"/>
+        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+139"/>
         <source>Too short</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12000,59 +12020,73 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEnc/ADM_ffNvEnc.cpp" line="+192"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+192"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+219"/>
         <source>Low Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>High Quality</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>BluRay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency (LQ)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Low Latency (HQ)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+7"/>
         <source>Preset:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Bitrate (kbps):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffNvEncHEVC/ADM_ffNvEnc.cpp" line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+1"/>
         <source>Max Bitrate (kbps):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
+        <source>NVENC H.264 configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/ffVaH264/ADM_ffVAEncH264.cpp" line="+4"/>
         <source>libavcodec MPEG-4 configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12070,7 +12104,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+76"/>
+        <location line="+78"/>
         <source>Saving mpeg PS (ff)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12166,7 +12200,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>fftsmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="+141"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerffTS/muxerffTS.cpp" line="+143"/>
         <source>Saving mpeg TS (ff)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12882,7 +12916,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>ivtcRemover</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+81"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+82"/>
         <source>Remove IVTC dupe.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13751,7 +13785,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+425"/>
+        <location line="+426"/>
         <source>Matroska clusters</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13851,7 +13885,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mkvmuxer</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+134"/>
+        <location filename="../../../avidemux_plugins/ADM_muxers/muxerMkv/muxerMkv.cpp" line="+139"/>
         <source>Saving Mkv</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13971,7 +14005,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+79"/>
+        <location line="+81"/>
         <source>Saving mp4</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14407,12 +14441,12 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Propietats</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+6"/>
         <source>Video</source>
         <translation type="unfinished">Vídeo</translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+24"/>
         <location line="+14"/>
         <location line="+14"/>
         <location line="+14"/>
@@ -14431,12 +14465,12 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+14"/>
-        <location line="+117"/>
+        <location line="+135"/>
         <source>Total Duration:</source>
         <translation type="unfinished">Durada total:</translation>
     </message>
     <message>
-        <location line="-103"/>
+        <location line="-121"/>
         <source>Aspect Ratio:</source>
         <translation type="unfinished">Relació d&apos;aspecte:</translation>
     </message>
@@ -14468,7 +14502,7 @@ I will assume it has and try to continue</source>
         <translation type="obsolete">Quart de píxel:</translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+52"/>
         <source>Audio</source>
         <translation type="unfinished">Àudio</translation>
     </message>
@@ -14477,7 +14511,7 @@ I will assume it has and try to continue</source>
         <translation type="obsolete">Mida del fitxer:</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+38"/>
         <source>Frequency:</source>
         <translation type="unfinished">Freqüència:</translation>
     </message>
@@ -14502,12 +14536,17 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Còdec:  </translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+12"/>
+        <source>Copy to Clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+29"/>
         <source>OK</source>
         <translation type="unfinished">Accepta</translation>
     </message>
     <message>
-        <location line="-135"/>
+        <location line="-166"/>
         <source>ExtraDataSize:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14897,7 +14936,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qmainfilter</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+319"/>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+321"/>
         <source>Partial</source>
         <translation type="unfinished">Partial</translation>
     </message>
@@ -14973,7 +15012,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qprops</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+23"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/Q_props.cpp" line="+24"/>
         <source>No</source>
         <translation type="unfinished">No</translation>
     </message>
@@ -14983,7 +15022,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Sí</translation>
     </message>
     <message>
-        <location line="+69"/>
+        <location line="+75"/>
         <source>Mono</source>
         <translation type="unfinished">Mono</translation>
     </message>
@@ -14993,7 +15032,83 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Estèreo</translation>
     </message>
     <message>
-        <location line="-46"/>
+        <location line="+46"/>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Codec 4CC:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Image Size:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Aspect Ratio:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Frame Rate:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+27"/>
+        <source>Total Duration:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-25"/>
+        <source>Extra Video Properties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>ExtraDataSize:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Extra data:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Codec:		</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Channels:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Bitrate:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Frequency:	</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>No Audio</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-132"/>
         <source>%2.3f fps</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15004,7 +15119,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-53"/>
+        <location line="-65"/>
         <source>%s (%u:%u)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -16102,6 +16217,24 @@ Please delete the idx2 file and reopen.</source>
     </message>
 </context>
 <context>
+    <name>vaenc</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/vaEnc/ADM_ffVaEnc.cpp" line="+247"/>
+        <source>Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Max Bitrate (kbps):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>VAAPI H264 Encoder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>vdpaudeint</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/vdpauFilters/ADM_vidVdpauFilterDeint.cpp" line="+131"/>
@@ -16398,7 +16531,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+76"/>
+        <location line="+78"/>
         <source>Saving Webm</source>
         <translation type="unfinished"></translation>
     </message>
