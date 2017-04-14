@@ -136,8 +136,6 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
                     label->setBackgroundRole(QPalette::Window);
     else
             label->setBackgroundRole(QPalette::Base);
-    // Repaint the parent to keep selected labels from bleeding into adjacent columns
-    qobject_cast<QWidget*>(label->parent())->update();
 }
 /**
     \fn preview
