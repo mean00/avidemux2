@@ -15,7 +15,7 @@
 #include <qfiledialog.h>
 
 #include "ADM_default.h"
-
+#include "ADM_toolkitQt.h"
 
 #include "DIA_fileSel.h"
 #include "DIA_coreToolkit.h"
@@ -24,9 +24,18 @@
 #include "prefs.h"
 #include "ADM_last.h"
 
+extern QWidget *QuiMainWindows;
+
 namespace ADM_QT4_fileSel
 {
 
+QWidget *fileSelGetParent(void)
+{
+    QWidget *parent=qtLastRegisteredDialog();
+    if(!parent)
+        parent=QuiMainWindows;
+    return parent;
+}
 
 /**
           \fn GUI_FileSelWrite (const char *label, char **name, uint32_t access) 
@@ -91,7 +100,7 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     {
         filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
-    fileName = QFileDialog::getSaveFileName(NULL, 
+    fileName = QFileDialog::getSaveFileName(fileSelGetParent(),
                     label,  // caption
                     str,    // folder
                     filterFile,   // filter
@@ -158,7 +167,7 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
         {
             filterFile=QString(ext)+QString(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
         }
-        fileName = QFileDialog::getOpenFileName(NULL, 
+        fileName = QFileDialog::getOpenFileName(fileSelGetParent(),
                                 label,  // caption
                                 str,    // folder
                                 filterFile,   // filter
@@ -225,7 +234,7 @@ uint8_t FileSel_SelectWrite(const char *title, char *target, uint32_t max, const
         QString fileName;
         QFileDialog::Options options = 0;
 
-        fileName=QFileDialog::getSaveFileName(NULL, title, source, NULL, NULL, options);
+        fileName=QFileDialog::getSaveFileName(fileSelGetParent(), title, source, NULL, NULL, options);
 
         if (!fileName.isNull())
         {
@@ -250,7 +259,7 @@ uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const 
         QString fileName;
         QFileDialog::Options options = 0;
 
-        fileName = QFileDialog::getOpenFileName(NULL, title, source, NULL, NULL, options);
+        fileName = QFileDialog::getOpenFileName(fileSelGetParent(), title, source, NULL, NULL, options);
 
         if (!fileName.isNull())
         {
@@ -275,8 +284,7 @@ uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const c
         QString fileName;
         QFileDialog::Options options = QFileDialog::ShowDirsOnly;
 
-
-        fileName = QFileDialog::getExistingDirectory(NULL, title, source, options);
+        fileName = QFileDialog::getExistingDirectory(fileSelGetParent(), title, source, options);
 
         if (!fileName.isNull())
         {
