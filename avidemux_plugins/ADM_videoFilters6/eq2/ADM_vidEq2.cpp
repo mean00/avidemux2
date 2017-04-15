@@ -26,6 +26,13 @@
 
 #include "eq2_desc.cpp"
 #include <math.h>
+
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+        void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
+#endif
+
+
 /**
     \class ADMVideoEq2
 */
@@ -142,7 +149,7 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
   *fn=nextFrame++;
   image->copyInfo(mysrc);
 
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
   if(CpuCaps::hasMMX())
   {
         affine_1d_MMX(&(settings.param[0]),mysrc,image,PLANAR_Y);
@@ -253,7 +260,7 @@ void create_lut (oneSetting *par)
   par->lut_clean = 1;
 }
 
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 /**
     \fn affine_1d_MMX
 */  

@@ -32,6 +32,12 @@
 
 #include "ADM_vidMSharpen.h"
 #include "msharpen_desc.cpp"
+
+
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
+
 // DECLARE FILTER 
 extern bool DIA_msharpen(msharpen &param, ADM_coreVideoFilter *source);
 DECLARE_VIDEO_FILTER(   Msharpen,   // Class
@@ -184,7 +190,7 @@ int wh ,ww,hh;
         int val;
 
   // Vertical only for now      
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
   if(CpuCaps::hasMMX())
   {
   int off;

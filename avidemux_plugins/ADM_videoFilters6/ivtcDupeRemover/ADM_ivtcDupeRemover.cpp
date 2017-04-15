@@ -22,6 +22,10 @@
 #include "ivtcDupeRemover.h"
 #include "ivtcDupeRemover_desc.cpp"
 
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
+
 #define PERIOD 4
 #if 0
 #define aprintf printf
@@ -393,7 +397,7 @@ bool ivtcDupeRemover::configure( void)
         diaElem *elems[3]={&threshold,&show,&eMode};
         return diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),3,elems);
 }
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 static uint64_t __attribute__((used)) FUNNY_MANGLE(noise64);
 /**
 */
@@ -550,7 +554,7 @@ uint32_t delta;
 uint32_t ivtcDupeRemover::lumaDiff(ADMImage *src1,ADMImage *src2,uint32_t noise)
 {
 
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 uint32_t r1,r2;
         if(CpuCaps::hasMMX())
         {

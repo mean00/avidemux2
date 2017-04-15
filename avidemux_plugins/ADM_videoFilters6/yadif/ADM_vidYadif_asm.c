@@ -3,7 +3,13 @@
 
 #include "ADM_default.h"
 
-#ifdef ADM_CPU_X86
+
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
+
+
+#ifdef CAN_DO_INLINE_X86_ASM
 #ifdef ADM_CPU_64BIT
 typedef int64_t x86_reg;
 #else

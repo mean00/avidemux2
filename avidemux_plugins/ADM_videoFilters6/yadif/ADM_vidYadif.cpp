@@ -32,6 +32,12 @@
 #include "DIA_factory.h"
 #include "yadif.h"
 #include "yadif_desc.cpp"
+
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
+
+
 //************************************************
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
 #define MAX(a,b) ((a) < (b) ? (b) : (a))
@@ -41,7 +47,7 @@
 #define MAX3(a,b,c) MAX(MAX(a,b),c)
 
 //===========================================================================//
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 extern "C"
 {
 void filter_line_mmx2(int mode, uint8_t *dst, const uint8_t *prev, const uint8_t *cur, const uint8_t *next, int w, int refs, int parity);
@@ -379,7 +385,7 @@ void filter_plane(int mode, uint8_t *dst, int dst_stride, const uint8_t *prev0, 
 void (*filter_line)(int mode, uint8_t *dst, const uint8_t *prev, const uint8_t *cur, const uint8_t *next, int w, int refs, int parity);
 	int y;
 	filter_line = filter_line_c;
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 	if (CpuCaps::hasMMXEXT()) 
 		filter_line = filter_line_mmx2;
 #endif
@@ -399,7 +405,7 @@ void (*filter_line)(int mode, uint8_t *dst, const uint8_t *prev, const uint8_t *
         }
         memcpy(dst + (h-1)*dst_stride, cur0 + (h-1)*refs, w);
 
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 	if (CpuCaps::hasMMXEXT()) 
 		asm volatile("emms");
 #endif

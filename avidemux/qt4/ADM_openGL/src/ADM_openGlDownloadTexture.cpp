@@ -13,6 +13,9 @@
 #define TEX_V_OFFSET 0  
 #define TEX_A_OFFSET 3   
 
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
 
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
 typedef void typeGlYUV444(const uint8_t *src,uint8_t *dstY,uint8_t *dstU, uint8_t *dstV,const int width);
@@ -22,7 +25,7 @@ typedef void typeGlYUV444(const uint8_t *src,uint8_t *dstY,uint8_t *dstU, uint8_
 
 /**
  * \fn glYUV444_ChromaC
- * \brief very stupid downsampler for U & V plane, one line is discarder
+ * \brief very stupid downsampler for U & V plane, one line is discarded
  * @param src
  * @param toU
  * @param toV
@@ -49,7 +52,7 @@ static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *t
 /**
  * 
  */
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 static inline void glYUV444_MMXInit(void)
 {
    static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
@@ -194,7 +197,7 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
     int height=image->GetHeight(PLANAR_Y);
     typeGlYv444  *luma=glYUV444_C;
     typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
       if(1 && CpuCaps::hasMMX())
       {
             glYUV444_MMXInit();
@@ -227,7 +230,7 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
        luma(src,toY,width);
        toY+=strideY;        
     }
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
     __asm__( "emms\n"::  );
 #endif
     yy=NULL;
@@ -285,7 +288,7 @@ bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *f
         int height=image->GetHeight(PLANAR_Y);
         typeGlYv444 *luma=glYUV444_C;
         typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
-    #ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
           if(1 && CpuCaps::hasMMX())
           {
                 glYUV444_MMXInit();
@@ -306,7 +309,7 @@ bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *f
            toU+=strideU;
            toV+=strideV;
         }
-    #ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
         __asm__( "emms\n"::  );
     #endif
         ADM_glExt::unmapBuffer(GL_PIXEL_PACK_BUFFER_ARB);

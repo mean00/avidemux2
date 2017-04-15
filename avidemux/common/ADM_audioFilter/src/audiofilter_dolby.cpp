@@ -23,6 +23,11 @@
 #include "audiofilter_dolby.h"
 #include "audiofilter_dolby_table.h"
 
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+#endif
+
+
 bool ADMDolbyContext::skip=false;
 
 void ADMDolbyContext::DolbySkip(bool on)
@@ -165,7 +170,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlign3(float *oldie, float *coef)
   * @param isamp
   * @return 
   */
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
 {
      float *src1=oldie;         // Aligned also
@@ -239,7 +244,7 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         float sum;
         if(skip) return isamp;
         setValue(xv_left,posLeft,isamp / GAIN);
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
         if(CpuCaps::hasSSE())
         {
             int mod=posLeft&3;
@@ -267,7 +272,7 @@ float ADMDolbyContext::DolbyShiftRight(float isamp)
         float sum;
         if(skip) return isamp;
         setValue(xv_right,posRight,isamp / GAIN);
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
         if(CpuCaps::hasSSE())
         {
             int mod=posRight&3;

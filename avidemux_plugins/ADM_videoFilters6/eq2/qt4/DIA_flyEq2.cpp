@@ -59,7 +59,7 @@ uint8_t    flyEq2::processYuv(ADMImage* in, ADMImage *out)
 			lutMeType *lutMe=apply_lut;
 			
 
-#ifdef ADM_CPU_X86
+#ifdef CAN_DO_INLINE_X86_ASM
 	        if(CpuCaps::hasMMX())
 	        {
 	        		lutMe=affine_1d_MMX;

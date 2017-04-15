@@ -1,6 +1,4 @@
-
-#ifndef EQ2_PARAM
-#define EQ2_PARAM
+#pragma once
 #define LUT16
 
 #include "eq2.h"
@@ -40,9 +38,9 @@ void update_lut(Eq2Settings *settings,eq2 *_param);
 void apply_lut (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
 void create_lut (oneSetting *par);
 
-#ifdef ADM_CPU_X86
-void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+        #define CAN_DO_INLINE_X86_ASM
+        void affine_1d_MMX (oneSetting *par, ADMImage *srcImage, ADMImage *destImage,ADM_PLANE plane);
 #endif
 
 
-#endif
