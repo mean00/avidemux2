@@ -101,6 +101,7 @@
 #endif
 
 #define ASM_CONST attribute_used __attribute__ ((aligned(8)))
+#define ASM_ALIGNED(x)  __attribute__((__aligned__(x))) 
 /**
         In some assembly part, gcc optimize way too much and reorganize the code
         The right fix would be to use yasm for those, but i' m lazy

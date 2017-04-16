@@ -15,3 +15,4 @@
 #define attribute_used
 #define ASM_CONST attribute_used 
 #define ADM_NO_OPTIMIZE 
+#define ASM_ALIGNED(x) __declspec(align(x))
