@@ -289,5 +289,19 @@ void testDolbyAsm()
         ADM_error("FAILED at line %d\n",__LINE__);
         exit(-1);
     }
+    
+    for(int i=16;i<512+16;i++) 
+        samples[i-16]=((float)((i*4)&511))/512.;
+    sum1 = ADMDolbyContext::DolbyShift_convolutionAlignSSE(samples,xcoeffs);
+    sum2 = ADMDolbyContext::DolbyShift_convolution(0,samples,xcoeffs);
+    
+    ADM_info("SSE = %f, C = %f\n",sum1,sum2);
+    if(fabs(sum1-sum2)>0.0001)
+    {
+        ADM_error("FAILED at line %d\n",__LINE__);
+        exit(-1);
+    }
+    ADM_info("** PASS **\n");
+    
 }
 #endif
