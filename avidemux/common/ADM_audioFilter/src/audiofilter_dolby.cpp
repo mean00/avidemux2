@@ -22,9 +22,11 @@
 
 #include "audiofilter_dolby.h"
 #include "audiofilter_dolby_table.h"
+#include <math.h>
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
+#if defined( ADM_CPU_X86)
+extern "C"     void adm_dolby_asm_sse2(float *src1,float *src2,float *sum, int count);
+void           testDolbyAsm();
 #endif
 
 
@@ -170,7 +172,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlign3(float *oldie, float *coef)
   * @param isamp
   * @return 
   */
-#ifdef CAN_DO_INLINE_X86_ASM
+#ifdef ADM_CPU_X86
 float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
 {
      float *src1=oldie;         // Aligned also
@@ -179,23 +181,9 @@ float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
     int left=(1+NZEROS)&3;
     static float __attribute__ ((__aligned__ (16))) sum16[4];
     
+    adm_dolby_asm_sse2(src1,src2,sum16,mod16);    
     float sum = 0;
-     __asm__(
-                        "xorps          %%xmm2,%%xmm2     \n" // carry
-                        "1: \n"
-                        "movaps         (%0),%%xmm0  \n" // src1
-                        "movaps         (%1),%%xmm1  \n" // src2
-                        "mulps          %%xmm1,%%xmm0 \n" // src1*src2
-                        "addps          %%xmm0,%%xmm2 \n" // sum+=src1*src2
-                        "add           $16,%0      \n"
-                        "add           $16,%1      \n"
-                        "sub           $1,%3      \n"
-                        "jnz             1b        \n"
-                        "movaps        %%xmm2,(%2)        \n"
 
-                : : "r" (src1),"r" (src2),"r"(sum16),"r"(mod16)
-                );
-   
     
 	for (int i = 0; i <left; i++)
 		sum += (*src1++)*(*src2++);
@@ -244,8 +232,8 @@ float ADMDolbyContext::DolbyShiftLeft(float isamp)
         float sum;
         if(skip) return isamp;
         setValue(xv_left,posLeft,isamp / GAIN);
-#ifdef CAN_DO_INLINE_X86_ASM
-        if(CpuCaps::hasSSE())
+#ifdef ADM_CPU_X86
+        if(CpuCaps::hasSSE2())
         {
             int mod=posLeft&3;
             int of2=posLeft-mod;
@@ -272,8 +260,8 @@ float ADMDolbyContext::DolbyShiftRight(float isamp)
         float sum;
         if(skip) return isamp;
         setValue(xv_right,posRight,isamp / GAIN);
-#ifdef CAN_DO_INLINE_X86_ASM
-        if(CpuCaps::hasSSE())
+#ifdef ADM_CPU_X86
+        if(CpuCaps::hasSSE2())
         {
             int mod=posRight&3;
             int of2=posRight-mod;
@@ -289,3 +277,21 @@ float ADMDolbyContext::DolbyShiftRight(float isamp)
 		posRight = 0;
 	return -sum;
 }
+
+#if defined( ADM_CPU_X86)
+void testDolbyAsm()
+{
+    float samples[512];
+    for(int i=0;i<512;i++) samples[i]=((float)i)/512.;
+    
+    float sum1 = ADMDolbyContext::DolbyShift_convolutionAlignSSE(samples,xcoeffs);
+    float sum2 = ADMDolbyContext::DolbyShift_convolution(0,samples,xcoeffs);
+    
+    ADM_info("SSE = %f, C = %f\n",sum1,sum2);
+    if(fabs(sum1-sum2)>0.0001)
+    {
+        ADM_error("FAILED at line %d\n",__LINE__);
+        exit(-1);
+    }
+}
+#endif

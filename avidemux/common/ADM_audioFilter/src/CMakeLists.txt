@@ -21,7 +21,10 @@ ADM_libsamplerate/samplerate.cpp
 ADM_libsamplerate/src_linear.cpp 
 ADM_libsamplerate/src_sinc.cpp 
 ADM_libsamplerate/src_zoh.cpp
+audiofilter_dolby_asm.asm
 )
+YASMIFY(dolbyAsm audiofilter_dolby_asm.asm)
+
 # Needed by libsamplerate
 ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)
 ADD_DEFINITIONS(-DCPU_CLIPS_POSITIVE=0 -DCPU_CLIPS_NEGATIVE=0)
@@ -35,5 +38,5 @@ else (MSVC)
 endif (MSVC)
 
 include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_LIBRARY(ADM_audioFilter6 STATIC ${ADM_audioFilter_SRCS})
+ADD_LIBRARY(ADM_audioFilter6 STATIC ${ADM_audioFilter_SRCS} ${dolbyAsm})
 # END
