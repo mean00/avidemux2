@@ -18,7 +18,9 @@ extern "C"
 {
     void adm_glYUV444_Init_mmx();
     void adm_glYUV444_luma_mmx(const uint8_t *src, uint8_t *dst, int count);
+    void adm_glYUV444_luma2_mmx(const uint8_t *src, uint8_t *dst, int count);
 }
+void admTestDownloadTexture();
 #endif
 
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
@@ -57,16 +59,13 @@ static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *t
  * 
  */
 #ifdef ADM_CPU_X86
-ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width2)
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width)
 {
-    int width=width2;
     int count=width/8;
-    adm_glYUV444_luma_mmx(src,dst,count);
-                  
+    adm_glYUV444_luma_mmx(src,dst,count);                 
     if(width&7)
     {
-        count=width/8;
-        for(int i=count*8;i<width2;i++)
+        for(int i=count*8;i<width;i++)
             dst[i]  = src[i*4+TEX_Y_OFFSET];
     }
 }
@@ -74,7 +73,7 @@ ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst
  * 
  * @param src
  * @param dstY
- * @param dstU
+ * @param dstU  ** NOT USED AT THE MOMENT **
  * @param dstV
  * @param width
  */
@@ -83,41 +82,7 @@ ADM_NO_OPTIMIZE static inline void glYUV444_MMX_Chroma(const uint8_t *src2, uint
     const uint8_t *src=src2;
     uint8_t *dstY=dstY2, *dstU=dstU2, *dstV=dstV2;
     int count=width/8;
-                    __asm__(
-                        "1:\n"
-                        "movq           (%0),%%mm0 \n"
-                        "pmov           %%mm0,%%mm4 \n"
-                        "pand           %%mm7,%%mm0\n"
-                        "movq           8(%0),%%mm1 \n"
-                        "pmov           %%mm1,%%mm5 \n"
-                        "pand           %%mm7,%%mm1\n"
-
-                        "movq           16(%0),%%mm2 \n"
-                        "pmov           %%mm2,%%mm6 \n"
-                        "pand           %%mm7,%%mm2\n"
-                        "movq           24(%0),%%mm3 \n"
-                        "packuswb       %%mm1,%%mm0\n"
-                        "pmov           %%mm3,%%mm1 \n" // We have a copy in MM4/MM5/MM6/MM1
-                        "pand           %%mm7,%%mm3\n"
-
-                        // Pack luma
-                        "packuswb       %%mm3,%%mm2\n"
-                        "psrlw          $8,%%mm0\n"
-                        "psrlw          $8,%%mm2\n"
-                        "packuswb       %%mm2,%%mm0\n"
-                        "movq           %%mm0,(%1)  \n"  
-                            
-                        // now do chroma, it is similar    
-                            
-                        // Next..
-                        "add            $32,%0      \n"
-                        "add            $8,%1       \n"
-                        "sub            $1,%2        \n"
-                        "jnz             1b         \n"
-                        
-                        :  "=r"(src),"=r"(dstY),"=r"(dstU),"=r"(dstV),"=r"(count)
-                        :  "0"(src),"1"(dstY),"2"(dstU),"3"(dstV),"4"(count)
-                        );
+    adm_glYUV444_luma2_mmx(src2,dstY2,count);
     if(width&7)
     {
         count=width/8;
@@ -355,6 +320,44 @@ bool ADM_coreQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo,
         return downloadTexturesDma(image,fbo,bufferArb);
 #endif
     return downloadTexturesQt(image,fbo);
+}
+
+
+void admTestDownloadTexture()
+{
+    adm_glYUV444_Init_mmx();
+    uint8_t src[512*4+8],dst[512*4+8],dst2[512*4+8];
+    bool fail=false;
+    
+    for(int i=0;i<512*4+8;i++)
+    {
+        src[i]=i;
+        dst[i]=0;
+        dst2[i]=0;
+    }
+#define CHECK(x) \
+    glYUV444_C(src,dst,x); \
+    glYUV444_MMX(src,dst2,x); \
+    if(memcmp(dst,dst2,x)) \
+    { \
+        printf("Fail with width=%d at line %d\n",x,__LINE__); \
+        fail=true; \
+    } else\
+    printf(" OK with width =%d\n",x);
+    
+    CHECK(512);
+    CHECK(510);
+    CHECK(508);
+    CHECK(504);
+    if(fail)
+    {
+        printf("** FAIL **\n");
+        exit(-1);
+    }
+    else
+    {
+        printf("PASS \n");
+    }
 }
 
 // EOF
