@@ -13,8 +13,12 @@
 #define TEX_V_OFFSET 0  
 #define TEX_A_OFFSET 3   
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
-        #define CAN_DO_INLINE_X86_ASM
+#if defined( ADM_CPU_X86) 
+extern "C"
+{
+    void adm_glYUV444_Init_mmx();
+    void adm_glYUV444_luma_mmx(const uint8_t *src, uint8_t *dst, int count);
+}
 #endif
 
 typedef void typeGlYv444(const uint8_t *src,uint8_t *dst,const int width);
@@ -52,51 +56,18 @@ static inline void glYUV444_ChromaC(const uint8_t *src, uint8_t *toU, uint8_t *t
 /**
  * 
  */
-#ifdef CAN_DO_INLINE_X86_ASM
-static inline void glYUV444_MMXInit(void)
+#ifdef ADM_CPU_X86
+ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src, uint8_t *dst, const int width2)
 {
-   static uint64_t __attribute__((used)) FUNNY_MANGLE(mask) = 0x00ff000000ff0000LL;
-
-    __asm__(" movq " Mangle(mask)", %%mm7\n" ::);
-}
-ADM_NO_OPTIMIZE static inline void glYUV444_MMX(const uint8_t *src2, uint8_t *dst2, const int width2)
-{
-    uint8_t *src=(uint8_t *)src2;
-    uint8_t *dst=(uint8_t *)dst2;
     int width=width2;
     int count=width/8;
-                    __asm__(
-                        "1:\n"
-                        "movq           (%0),%%mm0 \n"
-                        "pand           %%mm7,%%mm0\n"
-                        "movq           8(%0),%%mm1 \n"
-                        "pand           %%mm7,%%mm1\n"
-
-                        "movq           16(%0),%%mm2 \n"
-                        "pand           %%mm7,%%mm2\n"
-                        "movq           24(%0),%%mm3 \n"
-                        "pand           %%mm7,%%mm3\n"
-
-                        "packuswb       %%mm1,%%mm0\n"
-                        "packuswb       %%mm3,%%mm2\n"
-                        "psrlw          $8,%%mm0\n"
-                        "psrlw          $8,%%mm2\n"
-                        "packuswb       %%mm2,%%mm0\n"
-
-                        "movq           %%mm0,(%1)  \n"  
-                        "add            $32,%0      \n"
-                        "add            $8,%1       \n"
-                        "sub            $1,%2        \n"
-                        "jnz             1b         \n"
-                        
-                        : "=r"(src),"=r"(dst),"=r"(count)
-                        : "0"(src),"1"(dst),"2"(count)
-                        );
+    adm_glYUV444_luma_mmx(src,dst,count);
+                  
     if(width&7)
     {
         count=width/8;
         for(int i=count*8;i<width2;i++)
-            dst2[i]  = src2[i*4+TEX_Y_OFFSET];
+            dst[i]  = src[i*4+TEX_Y_OFFSET];
     }
 }
 /**
@@ -197,10 +168,10 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
     int height=image->GetHeight(PLANAR_Y);
     typeGlYv444  *luma=glYUV444_C;
     typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
-#ifdef CAN_DO_INLINE_X86_ASM
+#ifdef ADM_CPU_X86
       if(1 && CpuCaps::hasMMX())
       {
-            glYUV444_MMXInit();
+            adm_glYUV444_Init_mmx();
             luma=glYUV444_MMX;
             lumaAndChroma=glYUV444_YUVMMX;
       }
@@ -230,8 +201,9 @@ bool ADM_coreQtGl::downloadTexturesQt(ADMImage *image,  QGLFramebufferObject *fb
        luma(src,toY,width);
        toY+=strideY;        
     }
-#ifdef CAN_DO_INLINE_X86_ASM
-    __asm__( "emms\n"::  );
+    
+#ifdef ADM_CPU_X86
+    ADM_emms();    
 #endif
     yy=NULL;
     return true;
@@ -288,10 +260,10 @@ bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *f
         int height=image->GetHeight(PLANAR_Y);
         typeGlYv444 *luma=glYUV444_C;
         typeGlYUV444 *lumaAndChroma=glYUV444_C_withChroma;
-#ifdef CAN_DO_INLINE_X86_ASM
+#ifdef ADM_CPU_X86
           if(1 && CpuCaps::hasMMX())
           {
-                glYUV444_MMXInit();
+                adm_glYUV444_Init_mmx();
                 luma=glYUV444_MMX;
                 lumaAndChroma=glYUV444_YUVMMX;
           }
@@ -309,9 +281,9 @@ bool ADM_coreQtGl::downloadTexturesDma(ADMImage *image,  QGLFramebufferObject *f
            toU+=strideU;
            toV+=strideV;
         }
-#ifdef CAN_DO_INLINE_X86_ASM
-        __asm__( "emms\n"::  );
-    #endif
+#ifdef ADM_CPU_X86
+        ADM_emms();        
+#endif
         ADM_glExt::unmapBuffer(GL_PIXEL_PACK_BUFFER_ARB);
     }
     ADM_glExt::bindBuffer(GL_PIXEL_PACK_BUFFER_ARB,0);
