@@ -23,7 +23,7 @@ ADM_libsamplerate/src_sinc.cpp
 ADM_libsamplerate/src_zoh.cpp
 audiofilter_dolby_asm.asm
 )
-YASMIFY(dolbyAsm audiofilter_dolby_asm.asm)
+YASMIFY(dolbyAsm audiofilter_dolby_asm)
 
 # Needed by libsamplerate
 ADD_DEFINITIONS(-DADM_LEGACY_PROGGY)

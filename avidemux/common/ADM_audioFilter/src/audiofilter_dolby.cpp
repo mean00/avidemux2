@@ -175,7 +175,7 @@ float ADMDolbyContext::DolbyShift_convolutionAlignSSE(float *oldie, float *coef)
      float *src2=coef;          // that one is always aligned to a 16 bytes boundary
     int mod16=(1+NZEROS)>>2;
     int left=(1+NZEROS)&3;
-    static float __attribute__ ((__aligned__ (16))) sum16[4];
+    static float ASM_ALIGNED(16)  sum16[4];
     
     adm_dolby_asm_sse2(src1,src2,sum16,mod16);    
     float sum = 0;
