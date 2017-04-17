@@ -95,6 +95,7 @@ public slots:
     void addSlot(void);
     void removeAction(void);
     void configureAction(void);
+    void activeListContextMenu(const QPoint &pos);
     // Move filters around
     void indexesMoved(const QModelIndexList & indexes);
 protected:
@@ -103,5 +104,6 @@ private:
     void setSelected(int sel);
     void displayFamily(uint32_t family);
     void setupFilters(void);
+    void updateContextMenu(QMenu *contextMenu);
 };
 
