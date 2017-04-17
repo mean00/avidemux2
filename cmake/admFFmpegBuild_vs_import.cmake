@@ -78,6 +78,7 @@ INSTALL(FILES "${IMPORT_FOLDER}/include/libavutil/attributes.h"
         "${IMPORT_FOLDER}/include/libavutil/macros.h"
         "${IMPORT_FOLDER}/include/libavutil/samplefmt.h"
         "${IMPORT_FOLDER}/include/libavutil/rational.h" 
+        "${IMPORT_FOLDER}/include/libavutil/hwcontext_dxva2.h" 
         DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
 INSTALL(FILES "${IMPORT_FOLDER}/include/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
