@@ -47,6 +47,8 @@ using std::string;
 #include "ADM_edScriptGenerator.h"
 #include "DIA_fileSel.h"
 #include "ADM_script2/include/ADM_script.h"
+
+#include <QMenu>
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -446,6 +448,70 @@ void filtermainWindow::buildActiveFilterList(void)
     }
 
 }
+
+/**
+    \fn activeListContextMenu
+*/
+void filtermainWindow::activeListContextMenu(const QPoint &pos)
+{
+    QMenu *cm=new QMenu();
+
+    QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
+    QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
+    QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
+    QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
+    QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
+
+    cm->addAction(up);
+    cm->addAction(down);
+    cm->addAction(configure);
+    cm->addAction(remove);
+    cm->addAction(partial);
+
+    connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
+    connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
+    connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+    connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
+    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+
+    updateContextMenu(cm);
+    cm->exec(activeList->viewport()->mapToGlobal(pos));
+}
+
+/**
+    \fn updateContextMenu
+    \brief Disable not applicable entries in the active filters context menu
+*/
+void filtermainWindow::updateContextMenu(QMenu *contextMenu)
+{
+    if(!nb_active_filter)
+        return;
+    if(!contextMenu->actions().size())
+        return;
+    bool canMoveUp=true;
+    bool canMoveDown=true;
+    bool canPartialize=true;
+    QListWidgetItem *item=activeList->currentItem();
+    if(!item)
+        return;
+
+    int itag=item->type();
+    ADM_assert(itag>=ACTIVE_FILTER_BASE);
+    itag -= ACTIVE_FILTER_BASE;
+    uint32_t tag=ADM_vf_getTag(itag);
+    canPartialize=ADM_vf_canBePartialized(tag);
+
+    int row=item->listWidget()->row(item);
+    if(!row)
+        canMoveUp=false;
+    if(row==nb_active_filter-1)
+        canMoveDown=false;
+
+    contextMenu->actions().at(0)->setEnabled(canMoveUp);
+    contextMenu->actions().at(1)->setEnabled(canMoveDown);
+    contextMenu->actions().at(4)->setEnabled(canPartialize);
+}
+
   /**
   */
 filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
@@ -497,26 +563,9 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
-    
-    
-    QAction *remove = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
-    QAction *configure = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
-    QAction *up = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
-    QAction *down = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
-    QAction *partial = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
-    
-    activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
-    activeList->addAction(up);
-    activeList->addAction(down);
-    activeList->addAction(configure);
-    activeList->addAction(remove);
-    activeList->addAction(partial);
-    
-    connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
-    connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
-    connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
-    connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
-    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+
+    activeList->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
  }
 /**
