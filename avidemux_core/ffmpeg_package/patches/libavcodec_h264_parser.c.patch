@@ -55,7 +55,7 @@
 +        return 0;
 +    }
 +    info->width=sps->mb_width  * 16;
-+    info->height=(2-sps->frame_mbs_only_flag)*sps->mb_height * 16;
++    info->height=sps->mb_height * 16;
 +    if(sps->timing_info_present_flag)
 +    {
 +            float scale=sps->time_scale ;
