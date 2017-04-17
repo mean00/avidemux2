@@ -31,6 +31,7 @@ extern "C"
 {
 #include "libavcodec/parser.h"
 #include "libavcodec/hevc.h"
+#include "libavcodec/hevc_ps.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
 }

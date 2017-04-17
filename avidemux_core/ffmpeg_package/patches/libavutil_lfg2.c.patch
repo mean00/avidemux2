@@ -1,0 +1,11 @@
+--- libavutil/lfg.c.org	2017-04-17 08:33:40.429696132 +0200
++++ libavutil/lfg.c	2017-04-17 08:33:48.065668821 +0200
+@@ -69,7 +69,7 @@
+     /* avoid integer overflow in the loop below. */
+     if (length > (UINT_MAX / 128U)) return AVERROR(EINVAL);
+ 
+-    c->index = 0;
++    c->xindex = 0;
+     avcrc = av_crc_get_table(AV_CRC_32_IEEE); /* This can't fail. It's a well-defined table in crc.c */
+ 
+     /* across 64 segments of the incoming data,

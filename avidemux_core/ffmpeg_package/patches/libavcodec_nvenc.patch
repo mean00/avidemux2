@@ -1,6 +1,6 @@
---- libavcodec/nvenc.c.org	2016-12-21 13:28:00.898964812 +0100
-+++ libavcodec/nvenc.c	2016-12-21 13:51:03.637805297 +0100
-@@ -79,10 +79,10 @@
+--- libavcodec/nvenc.c.org	2017-04-17 08:23:35.667815437 +0200
++++ libavcodec/nvenc.c	2017-04-17 08:28:14.842850247 +0200
+@@ -40,11 +40,11 @@
      AV_PIX_FMT_YUV420P,
      AV_PIX_FMT_NV12,
      AV_PIX_FMT_P010,
@@ -8,62 +8,38 @@
 -    AV_PIX_FMT_YUV444P16,
 -    AV_PIX_FMT_0RGB32,
 -    AV_PIX_FMT_0BGR32,
+-    AV_PIX_FMT_CUDA,
 +    // MEANX AV_PIX_FMT_YUV444P,
 +    // MEANX AV_PIX_FMT_YUV444P16,
 +    // MEANX AV_PIX_FMT_0RGB32,
 +    // MEANX AV_PIX_FMT_0BGR32,
- #if CONFIG_CUDA
-     AV_PIX_FMT_CUDA,
- #endif
-@@ -1079,8 +1079,8 @@
++    // MEANX AV_PIX_FMT_CUDA,
+     AV_PIX_FMT_NONE
+ };
  
-     switch (ctx->data_pix_fmt) {
+@@ -1063,11 +1063,12 @@
+ {
+     switch (pix_fmt) {
      case AV_PIX_FMT_YUV420P:
--        ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YV12_PL;
--        break;
-+        // MEANX ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YV12_PL;
-+        // MEANX break;
- 
+-        return NV_ENC_BUFFER_FORMAT_YV12_PL;
++        // MEANX return NV_ENC_BUFFER_FORMAT_YV12_PL;
      case AV_PIX_FMT_NV12:
-         ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_NV12_PL;
-@@ -1090,21 +1090,21 @@
-         ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YUV420_10BIT;
-         break;
- 
--    case AV_PIX_FMT_YUV444P:
--        ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YUV444_PL;
--        break;
--
--    case AV_PIX_FMT_YUV444P16:
--        ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YUV444_10BIT;
--        break;
--
--    case AV_PIX_FMT_0RGB32:
--        ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_ARGB;
--        break;
--
--    case AV_PIX_FMT_0BGR32:
--        ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_ABGR;
--        break;
-+    // MEANX case AV_PIX_FMT_YUV444P:
-+        // MEANX ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YUV444_PL;
-+        // MEANX break;
-+
-+    // MEANX case AV_PIX_FMT_YUV444P16:
-+        // MEANX ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_YUV444_10BIT;
-+        // MEANX break;
-+
-+    // MEANX case AV_PIX_FMT_0RGB32:
-+        // MEANX ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_ARGB;
-+        // MEANX break;
-+
-+    // MEANX case AV_PIX_FMT_0BGR32:
-+        // MEANX ctx->surfaces[idx].format = NV_ENC_BUFFER_FORMAT_ABGR;
-+        // MEANX break;
- 
+         return NV_ENC_BUFFER_FORMAT_NV12_PL;
+     case AV_PIX_FMT_P010:
+         return NV_ENC_BUFFER_FORMAT_YUV420_10BIT;
++#if 0 // MEANX
+     case AV_PIX_FMT_YUV444P:
+         return NV_ENC_BUFFER_FORMAT_YUV444_PL;
+     case AV_PIX_FMT_YUV444P16:
+@@ -1076,6 +1077,7 @@
+         return NV_ENC_BUFFER_FORMAT_ARGB;
+     case AV_PIX_FMT_0BGR32:
+         return NV_ENC_BUFFER_FORMAT_ABGR;
++#endif // MEANX
      default:
-         av_log(avctx, AV_LOG_FATAL, "Invalid input pixel format\n");
-@@ -1349,10 +1349,33 @@
+         return NV_ENC_BUFFER_FORMAT_UNDEFINED;
+     }
+@@ -1316,10 +1318,33 @@
  
      return NULL;
  }
@@ -93,15 +69,15 @@
  static int nvenc_copy_frame(AVCodecContext *avctx, NvencSurface *nv_surface,
              NV_ENC_LOCK_INPUT_BUFFER *lock_buffer_params, const AVFrame *frame)
  {
-+#if 0
++#if 0 // MEANX
      int dst_linesize[4] = {
          lock_buffer_params->pitch,
          lock_buffer_params->pitch,
-@@ -1378,6 +1401,34 @@
+@@ -1345,6 +1370,34 @@
                    avctx->width, avctx->height);
  
      return 0;
-+#else
++#else // MEANX
 +  // MEANX
 +        uint8_t *buf = lock_buffer_params->bufferDataPtr;
 +          av_image_copy_plane(buf, lock_buffer_params->pitch,
@@ -125,10 +101,10 @@
 +                        av_log(avctx, AV_LOG_FATAL, "NVENC: Invalid pixel format!\n");
 +                        return AVERROR(EINVAL);
 +        } 
-+// /MEANX
-+#endif 
-+  return 0;
 +
++#endif // MEANX
++        
++ return 0;
  }
  
  static int nvenc_find_free_reg_resource(AVCodecContext *avctx)
