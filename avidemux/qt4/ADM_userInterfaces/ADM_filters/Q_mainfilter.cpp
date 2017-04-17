@@ -49,6 +49,8 @@ using std::string;
 #include "ADM_script2/include/ADM_script.h"
 
 #include <QMenu>
+#include <QAbstractScrollArea>
+#include <QScrollBar>
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -79,7 +81,6 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
     zprintf("Parent : %p\n",parent());
 #if !defined(NO_EVENT_FILTER)
     QListWidget *list=qobject_cast<QListWidget*>(parent());
-    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     //printf("Event %d\n",event->type());
     switch(event->type())
     {
@@ -119,17 +120,28 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     QLabel *label;
 
+    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    int width=qobject_cast<QWidget*>(view)->width();
+    if(qobject_cast<QAbstractScrollArea*>(view)->verticalScrollBar()->isVisible())
+        width -= scrollbarWidth;
+    width -= 6;
+
     if (view->indexWidget(index) == 0)
     {
             label = new QLabel();
             label->installEventFilter(filter);
             label->setAutoFillBackground(true);
             label->setFocusPolicy(Qt::TabFocus);
+            label->setMargin(2);
             label->setText(index.data().toString());
             view->setIndexWidget(index, label);
     }
 
     label = (QLabel*)view->indexWidget(index);
+    // If label width exceeds the width of the viewport, labels get sometimes painted
+    // over other widgets, especially bad on Windows, where they overlay scrollbars.
+    // Set the width to a fixed value small enough to avoid horizontal scrolling.
+    label->setFixedWidth(width);
 
     if (option.state & QStyle::State_Selected)
             if (option.state & QStyle::State_HasFocus)
@@ -369,6 +381,22 @@ void filtermainWindow::filterFamilyClick(int  m)
             displayFamily(m);
 
 }
+
+/**
+    \fn calculateListItemHeight
+ */
+int filtermainWindow::calculateListItemHeight(void)
+{
+    QLabel *dummy=new QLabel();
+    QFontMetrics fm=dummy->fontMetrics();
+    int height=fm.lineSpacing();
+    height *= 2;
+    height += 4;
+    delete dummy;
+    dummy=NULL;
+    return height;
+}
+
 /**
  * \fn displayFamily
  * @param family
@@ -379,8 +407,8 @@ void filtermainWindow::displayFamily(uint32_t family)
 
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
   ADM_info("Video filter Family :%u, nb %d\n",family,nb);
-  QSize sz;
   availableList->clear();
+  int listItemHeight=calculateListItemHeight();
   for (uint32_t i = 0; i < nb; i++)
     {
         const char *name,*desc;
@@ -390,6 +418,7 @@ void filtermainWindow::displayFamily(uint32_t family)
 
           QListWidgetItem *item;
           item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
+          item->setSizeHint(QSize(availableList->frameSize().width(),listItemHeight));
           item->setToolTip(desc);
           availableList->addItem(item);
      }
@@ -444,6 +473,7 @@ void filtermainWindow::buildActiveFilterList(void)
         QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
         QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
         printf("Active item :%p\n",item);
+        item->setSizeHint(QSize(item->sizeHint().width(),calculateListItemHeight()));
         activeList->addItem(item);
     }
 
@@ -546,7 +576,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-
+    qobject_cast<QAbstractScrollArea*>(availableList)->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
