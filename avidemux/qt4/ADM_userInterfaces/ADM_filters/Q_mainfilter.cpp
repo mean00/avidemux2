@@ -63,6 +63,7 @@ using std::string;
 /*******************************************************/
 #define zprintf(...) {}
 //#define NO_DELEGATE
+#define LABEL_SECURITY_MARGIN 6
 
 extern ADM_Composer *video_body;
 
@@ -79,7 +80,6 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
     zprintf("Parent : %p\n",parent());
 #if !defined(NO_EVENT_FILTER)
     QListWidget *list=qobject_cast<QListWidget*>(parent());
-    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     //printf("Event %d\n",event->type());
     switch(event->type())
     {
@@ -119,17 +119,28 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     QLabel *label;
 
+    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    int width=qobject_cast<QWidget*>(view)->width();
+    width -= scrollbarWidth;
+    width -= LABEL_SECURITY_MARGIN;
+
     if (view->indexWidget(index) == 0)
     {
             label = new QLabel();
             label->installEventFilter(filter);
             label->setAutoFillBackground(true);
             label->setFocusPolicy(Qt::TabFocus);
+            label->setMargin(2);
+            label->setWordWrap(true);
             label->setText(index.data().toString());
             view->setIndexWidget(index, label);
     }
 
     label = (QLabel*)view->indexWidget(index);
+    // If label width exceeds the width of the viewport, labels get sometimes painted
+    // over other widgets, especially bad on Windows, where they overlay scrollbars.
+    // Set the width to a fixed value small enough to avoid horizontal scrolling.
+    label->setFixedWidth(width);
 
     if (option.state & QStyle::State_Selected)
             if (option.state & QStyle::State_HasFocus)
@@ -369,6 +380,34 @@ void filtermainWindow::filterFamilyClick(int  m)
             displayFamily(m);
 
 }
+
+/**
+    \fn calculateListItemHeight
+ */
+int filtermainWindow::calculateListItemHeight(QListWidget *parent, QString text)
+{
+    QLabel *dummy=new QLabel();
+
+    int width=parent->frameSize().width();
+    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    width -= scrollbarWidth;
+    width -= LABEL_SECURITY_MARGIN;
+    dummy->setFixedWidth(width);
+    dummy->setMargin(2);
+    dummy->setWordWrap(true);
+    dummy->setText(text);
+
+    QFont fnt=dummy->font();
+    QFontMetrics fm(fnt);
+    int height=fm.boundingRect(0, 0, width, dummy->height(), Qt::TextWordWrap | Qt::AlignLeft, text).height();
+    if(height < (fm.lineSpacing() * 2))
+        height=fm.lineSpacing() * 2;
+    height += 2; // the height might be insufficient at very small font sizes
+    delete dummy;
+    dummy=NULL;
+    return height;
+}
+
 /**
  * \fn displayFamily
  * @param family
@@ -379,7 +418,6 @@ void filtermainWindow::displayFamily(uint32_t family)
 
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
   ADM_info("Video filter Family :%u, nb %d\n",family,nb);
-  QSize sz;
   availableList->clear();
   for (uint32_t i = 0; i < nb; i++)
     {
@@ -390,7 +428,7 @@ void filtermainWindow::displayFamily(uint32_t family)
 
           QListWidgetItem *item;
           item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
-          item->setToolTip(desc);
+          item->setSizeHint(QSize(availableList->frameSize().width(),calculateListItemHeight(availableList,str)));
           availableList->addItem(item);
      }
 
@@ -444,6 +482,7 @@ void filtermainWindow::buildActiveFilterList(void)
         QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
         QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
         printf("Active item :%p\n",item);
+        item->setSizeHint(QSize(item->sizeHint().width(),calculateListItemHeight(activeList,str)));
         activeList->addItem(item);
     }
 
@@ -546,7 +585,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-
+    qobject_cast<QAbstractScrollArea*>(availableList)->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
