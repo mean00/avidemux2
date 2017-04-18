@@ -13223,7 +13223,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="+61"/>
         <source>&lt;big&gt;&lt;b&gt;Active Filters&lt;/b&gt;&lt;/big&gt;</source>
-        <translation type="unfinished">&lt;big&gt;&lt;b&gt;aktivierte Filter&lt;/b&gt;&lt;/big&gt;</translation>
+        <translation>&lt;big&gt;&lt;b&gt;Aktive Filter&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
         <source>C&amp;onfigure</source>
@@ -13328,7 +13328,7 @@ der Halbbilder (deinterlaceing)</translation>
     <message>
         <location line="-166"/>
         <source>&lt;big&gt;&lt;b&gt;Available Filters&lt;/b&gt;&lt;/big&gt;</source>
-        <translation type="unfinished">&lt;big&gt;&lt;b&gt;verfügbare Filter&lt;/b&gt;&lt;/big&gt;</translation>
+        <translation>&lt;big&gt;&lt;b&gt;Verfügbare Filter&lt;/b&gt;&lt;/big&gt;</translation>
     </message>
     <message>
         <location line="+155"/>
