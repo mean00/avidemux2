@@ -48,9 +48,6 @@
          <height>0</height>
         </size>
        </property>
-       <property name="spacing">
-        <number>2</number>
-       </property>
       </widget>
      </item>
      <item row="1" column="4">
@@ -95,9 +92,6 @@
          <width>340</width>
          <height>0</height>
         </size>
-       </property>
-       <property name="spacing">
-        <number>2</number>
        </property>
       </widget>
      </item>
