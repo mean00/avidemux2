@@ -47,6 +47,8 @@ using std::string;
 #include "ADM_edScriptGenerator.h"
 #include "DIA_fileSel.h"
 #include "ADM_script2/include/ADM_script.h"
+
+#include <QMenu>
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -61,6 +63,7 @@ using std::string;
 /*******************************************************/
 #define zprintf(...) {}
 //#define NO_DELEGATE
+#define LABEL_SECURITY_MARGIN 6
 
 extern ADM_Composer *video_body;
 
@@ -77,7 +80,6 @@ bool FilterItemEventFilter::eventFilter(QObject *object, QEvent *event)
     zprintf("Parent : %p\n",parent());
 #if !defined(NO_EVENT_FILTER)
     QListWidget *list=qobject_cast<QListWidget*>(parent());
-    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     //printf("Event %d\n",event->type());
     switch(event->type())
     {
@@ -117,17 +119,28 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
     QLabel *label;
 
+    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    int width=qobject_cast<QWidget*>(view)->width();
+    width -= scrollbarWidth;
+    width -= LABEL_SECURITY_MARGIN;
+
     if (view->indexWidget(index) == 0)
     {
             label = new QLabel();
             label->installEventFilter(filter);
             label->setAutoFillBackground(true);
             label->setFocusPolicy(Qt::TabFocus);
+            label->setMargin(2);
+            label->setWordWrap(true);
             label->setText(index.data().toString());
             view->setIndexWidget(index, label);
     }
 
     label = (QLabel*)view->indexWidget(index);
+    // If label width exceeds the width of the viewport, labels get sometimes painted
+    // over other widgets, especially bad on Windows, where they overlay scrollbars.
+    // Set the width to a fixed value small enough to avoid horizontal scrolling.
+    label->setFixedWidth(width);
 
     if (option.state & QStyle::State_Selected)
             if (option.state & QStyle::State_HasFocus)
@@ -367,6 +380,34 @@ void filtermainWindow::filterFamilyClick(int  m)
             displayFamily(m);
 
 }
+
+/**
+    \fn calculateListItemHeight
+ */
+int filtermainWindow::calculateListItemHeight(QListWidget *parent, QString text)
+{
+    QLabel *dummy=new QLabel();
+
+    int width=parent->frameSize().width();
+    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
+    width -= scrollbarWidth;
+    width -= LABEL_SECURITY_MARGIN;
+    dummy->setFixedWidth(width);
+    dummy->setMargin(2);
+    dummy->setWordWrap(true);
+    dummy->setText(text);
+
+    QFont fnt=dummy->font();
+    QFontMetrics fm(fnt);
+    int height=fm.boundingRect(0, 0, width, dummy->height(), Qt::TextWordWrap | Qt::AlignLeft, text).height();
+    if(height < (fm.lineSpacing() * 2))
+        height=fm.lineSpacing() * 2;
+    height += 2; // the height might be insufficient at very small font sizes
+    delete dummy;
+    dummy=NULL;
+    return height;
+}
+
 /**
  * \fn displayFamily
  * @param family
@@ -377,7 +418,6 @@ void filtermainWindow::displayFamily(uint32_t family)
 
   uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
   ADM_info("Video filter Family :%u, nb %d\n",family,nb);
-  QSize sz;
   availableList->clear();
   for (uint32_t i = 0; i < nb; i++)
     {
@@ -388,7 +428,7 @@ void filtermainWindow::displayFamily(uint32_t family)
 
           QListWidgetItem *item;
           item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
-          item->setToolTip(desc);
+          item->setSizeHint(QSize(availableList->frameSize().width(),calculateListItemHeight(availableList,str)));
           availableList->addItem(item);
      }
 
@@ -442,10 +482,75 @@ void filtermainWindow::buildActiveFilterList(void)
         QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
         QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
         printf("Active item :%p\n",item);
+        item->setSizeHint(QSize(item->sizeHint().width(),calculateListItemHeight(activeList,str)));
         activeList->addItem(item);
     }
 
 }
+
+/**
+    \fn activeListContextMenu
+*/
+void filtermainWindow::activeListContextMenu(const QPoint &pos)
+{
+    QMenu *cm=new QMenu();
+
+    QAction *up = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
+    QAction *down = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
+    QAction *configure = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
+    QAction *remove = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
+    QAction *partial = new QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
+
+    cm->addAction(up);
+    cm->addAction(down);
+    cm->addAction(configure);
+    cm->addAction(remove);
+    cm->addAction(partial);
+
+    connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
+    connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
+    connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
+    connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
+    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+
+    updateContextMenu(cm);
+    cm->exec(activeList->viewport()->mapToGlobal(pos));
+}
+
+/**
+    \fn updateContextMenu
+    \brief Disable not applicable entries in the active filters context menu
+*/
+void filtermainWindow::updateContextMenu(QMenu *contextMenu)
+{
+    if(!nb_active_filter)
+        return;
+    if(!contextMenu->actions().size())
+        return;
+    bool canMoveUp=true;
+    bool canMoveDown=true;
+    bool canPartialize=true;
+    QListWidgetItem *item=activeList->currentItem();
+    if(!item)
+        return;
+
+    int itag=item->type();
+    ADM_assert(itag>=ACTIVE_FILTER_BASE);
+    itag -= ACTIVE_FILTER_BASE;
+    uint32_t tag=ADM_vf_getTag(itag);
+    canPartialize=ADM_vf_canBePartialized(tag);
+
+    int row=item->listWidget()->row(item);
+    if(!row)
+        canMoveUp=false;
+    if(row==nb_active_filter-1)
+        canMoveDown=false;
+
+    contextMenu->actions().at(0)->setEnabled(canMoveUp);
+    contextMenu->actions().at(1)->setEnabled(canMoveDown);
+    contextMenu->actions().at(4)->setEnabled(canPartialize);
+}
+
   /**
   */
 filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
@@ -480,7 +585,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
 
-
+    qobject_cast<QAbstractScrollArea*>(availableList)->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
@@ -497,26 +602,9 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     availableList->setContextMenuPolicy(Qt::ActionsContextMenu);
     availableList->addAction(add );
     connect(add,SIGNAL(triggered(bool )),this,SLOT(addSlot()));
-    
-    
-    QAction *remove = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Remove")),this);
-    QAction *configure = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Configure")),this);
-    QAction *up = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move up")),this);
-    QAction *down = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Move down")),this);
-    QAction *partial = new  QAction(QString(QT_TRANSLATE_NOOP("qmainfilter","Make partial")),this);
-    
-    activeList->setContextMenuPolicy(Qt::ActionsContextMenu);
-    activeList->addAction(up);
-    activeList->addAction(down);
-    activeList->addAction(configure);
-    activeList->addAction(remove);
-    activeList->addAction(partial);
-    
-    connect(remove,SIGNAL(triggered()),this,SLOT(removeAction()));
-    connect(configure,SIGNAL(triggered()),this,SLOT(configureAction()));
-    connect(up,SIGNAL(triggered()),this,SLOT(moveUp()));
-    connect(down,SIGNAL(triggered()),this,SLOT(moveDown()));
-    connect(partial,SIGNAL(triggered()),this,SLOT(makePartial()));
+
+    activeList->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
  }
 /**
