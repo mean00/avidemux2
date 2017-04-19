@@ -435,8 +435,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     {
         if(deviationMinDelta<deviation)
         {
-            num=1000*1000;
-            den=minDelta;
+            den=1000*1000;
+            num=minDelta;
             deviation=deviationMinDelta;
             ADM_info("Min delta is better\n");
         }
@@ -445,9 +445,9 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     if(stdFrameRate!=-1)
     {
         const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
-        ADM_info("Checking deviation for stdFrameRate %d %d\n",fr->num,fr->den);
+        ADM_info("Checking deviation for stdFrameRate=%d:%d\n",fr->num,fr->den);
         int deviationStd=checkDeviation(fr->num,fr->den);
-        ADM_info("Deviation for stdFrameRate%d =%d\n",stdFrameRate,deviationStd);
+        ADM_info("Deviation for stdFrameRate(%d) =%d\n",stdFrameRate,deviationStd);
         if(deviationStd<deviation)
         {
           num=fr->num;
@@ -491,6 +491,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     //if( num!= _videostream.dwScale ||  den!= _videostream.dwRate)
     {
+        ADM_info("New framerate values : %d:%d\n",num,den);
         _videostream.dwScale=num;
         _videostream.dwRate=den;
         double f=num;
