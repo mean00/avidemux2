@@ -1943,7 +1943,7 @@ Ignorer les informations de timing ?</translation>
     <message>
         <location line="+1"/>
         <source>PAL to Film</source>
-        <translation>Film vers PAL</translation>
+        <translation>PAL vers Film</translation>
     </message>
     <message>
         <location line="+3"/>
