@@ -1047,7 +1047,8 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
         {
           printf("Found %s in CUES, ignored \n",ss);
           item.skip(len);
-          return false;
+          //return false;
+          continue;
         }
         // read id
         uint64_t t=item.readEBMCode_Full();
@@ -1067,7 +1068,8 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
         {
           printf("Found %s in CUES, ignored \n",ss);
           item.skip(len);
-          return false;
+          //return false;
+          continue;
         }
         uint64_t position=item.readUnsignedInt(len);
         switch(t)
