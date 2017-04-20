@@ -258,7 +258,7 @@
    <item row="4" column="0" colspan="3">
     <widget class="QGraphicsView" name="graphicsView"/>
    </item>
-   <item row="2" column="0">
+   <item row="2" column="0" colspan="2">
     <layout class="QHBoxLayout" name="toolboxLayout"/>
    </item>
   </layout>
