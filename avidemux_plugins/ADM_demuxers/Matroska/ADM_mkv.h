@@ -85,7 +85,7 @@ public:
   std::string language;
 };
 
-#define MKV_MAX_LACES 31 // ?
+#define MKV_MAX_LACES 101 // ?
 /**
     \class mkvAccess
     \brief Matroska audio demuxer
