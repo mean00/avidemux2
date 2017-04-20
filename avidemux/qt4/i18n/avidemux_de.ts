@@ -10348,35 +10348,27 @@ Soll dieses jetzt geladen werden ?
 <context>
     <name>crop</name>
     <message>
-        <source>crop</source>
-        <translation type="vanished">Zuschneiden</translation>
-    </message>
-    <message>
-        <source>crop filter</source>
-        <translation type="obsolete">Bildränder wegschneiden.</translation>
-    </message>
-    <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/ADM_vidCrop.cpp" line="+56"/>
         <source>Crop</source>
-        <translation type="unfinished"></translation>
+        <translation>Zuschneiden</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Crop filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Bildrand entfernen.</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Warning Cropping too much width ! Width reseted !
 </source>
-        <translation type="unfinished">Kann die Breite nicht im geforderten Maße verkleinern! Die Breite wird zurückgesetzt!
+        <translation>Die Breite kann nicht im geforderten Maße verkleinert werden. Die Breite wird zurückgesetzt!
 </translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Warning Cropping too much height ! Height reseted !
 </source>
-        <translation type="unfinished">Kann die Höhe nicht im geforderten Maße verkleinern! Die Höhe wird zurückgesetzt!
+        <translation>Die Höhe kann nicht im geforderten Maße verkleinert werden. Die Höhe wird zurückgesetzt!
 </translation>
     </message>
 </context>
