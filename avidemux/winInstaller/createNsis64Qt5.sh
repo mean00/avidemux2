@@ -1,7 +1,6 @@
 #!/bin/bash
 mkdir -p install
 rm -f install/*
-sh genlog.sh
 echo "#* Preparing 7z svn build *#*"
 echo "** Getting svn revision **"
 #cp /mingw/bin/iconv.dll /mingw/Release/
