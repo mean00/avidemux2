@@ -402,7 +402,7 @@ int filtermainWindow::calculateListItemHeight(QListWidget *parent, QString text)
     int height=fm.boundingRect(0, 0, width, dummy->height(), Qt::TextWordWrap | Qt::AlignLeft, text).height();
     if(height < (fm.lineSpacing() * 2))
         height=fm.lineSpacing() * 2;
-    height += 2; // the height might be insufficient at very small font sizes
+    height += 8; // the height might be insufficient at very small font sizes
     delete dummy;
     dummy=NULL;
     return height;
