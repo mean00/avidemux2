@@ -275,7 +275,8 @@ ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_UIs/include/"  AD
 IF(WIN32)
         include(FindBourne)
         IF(RELEASE)
-                FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.release ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.html) 
+                FILE(COPY        ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.release 
+                     DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.html) 
         ELSE(RELEASE)
                 execute_process(
                         COMMAND ${BASH_EXECUTABLE} genlog.sh
