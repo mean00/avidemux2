@@ -1,0 +1,24 @@
+<html><head><link rel=stylesheet type=text/css href=change.css></head>
+<body>Avidemux Changelog:<br>
+<table><tr><th>Message</th><th>Commit</th></tr>
+<tr><td> [mkv/demux] increase max number of laces to 100, which is absurdely high </td><td><a href="https://github.com/mean00/avidemux2/commit/f81f96f458d70d5d09a6a8b0424065ad6a31ed75"> commit</td></tr>
+<tr><td> Merge branch 'master' of github.com:mean00/avidemux2 </td><td><a href="https://github.com/mean00/avidemux2/commit/d6e470bbfa4d8330af718942b203901b157181e1"> commit</td></tr>
+<tr><td> [mkv/demux] Search for MKV_TRACKS harder </td><td><a href="https://github.com/mean00/avidemux2/commit/3c18e12db4c297f575bd6e7dc386c24555232ccc"> commit</td></tr>
+<tr><td> [i18n/fr] Fix inversed 'PAL to Film' translation </td><td><a href="https://github.com/mean00/avidemux2/commit/3cefa4d85630fb468b163897646f15474a12c06a"> commit</td></tr>
+<tr><td> Merge branch 'master' of github.com:mean00/avidemux2 </td><td><a href="https://github.com/mean00/avidemux2/commit/4de61805b2428309d33fcdc06a7195b7031072f8"> commit</td></tr>
+<tr><td> [mkv/demux] fix inverted fps </td><td><a href="https://github.com/mean00/avidemux2/commit/32b320378fa5d5ccc9cf580543e234f4dbee2b86"> commit</td></tr>
+<tr><td> Merge remote-tracking branch 'eumagga0x2a/filter-label2' </td><td><a href="https://github.com/mean00/avidemux2/commit/89df78321afe02e869df24f2702b7cdecb0e2686"> commit</td></tr>
+<tr><td> [Qt/mainfilter] Set the filter label height in relation to the length of the description </td><td><a href="https://github.com/mean00/avidemux2/commit/c4b0eb45b582c69980065fa5574917ebdc305137"> commit</td></tr>
+<tr><td> [i18n/de] Start filter list label with an uppercase letter </td><td><a href="https://github.com/mean00/avidemux2/commit/ac76ee99b022bd1e0b2b8b2f8502277538e456a5"> commit</td></tr>
+<tr><td> Merge remote-tracking branch 'eumagga0x2a/filter-context-menu' </td><td><a href="https://github.com/mean00/avidemux2/commit/0f722b66b3684318ae7bef1000d2390afbacb924"> commit</td></tr>
+<tr><td> [Qt/mainfilter] Disable context menu entries when not applicable </td><td><a href="https://github.com/mean00/avidemux2/commit/fb9eb4dbe469eb05670b87c8eb8a9cf43464f0ed"> commit</td></tr>
+<tr><td> [h264/info extractor] mb_height in sps is already multipled by two for interlaced content, no need to multiply it again </td><td><a href="https://github.com/mean00/avidemux2/commit/c2e272eb8d84a1c07484ad4a8e2373db4cf29823"> commit</td></tr>
+<tr><td> [ffmpeg/vs/import] Add missing file </td><td><a href="https://github.com/mean00/avidemux2/commit/59471fd1b7aaf1b5111b30ca62db1e819df12ba5"> commit</td></tr>
+<tr><td> [build] memalign hack no longer needed </td><td><a href="https://github.com/mean00/avidemux2/commit/aef46ae01b3d45dd10ab469e29a12f0fed11b54e"> commit</td></tr>
+<tr><td> [ffmpeg] update to ffmpeg 3.3 </td><td><a href="https://github.com/mean00/avidemux2/commit/9da506e4ce7288f88cde0628c19142456d9e9fb5"> commit</td></tr>
+<tr><td> [ffmpeg] update to ffmpeg 3.3 </td><td><a href="https://github.com/mean00/avidemux2/commit/509ad67a2827e991cf9dddcfa07e620865ddab39"> commit</td></tr>
+<tr><td> [yasm] vs fix </td><td><a href="https://github.com/mean00/avidemux2/commit/de20290703c9972a72e8898ce6d27737b89dd327"> commit</td></tr>
+<tr><td> [yasm] Add unit test for download texture </td><td><a href="https://github.com/mean00/avidemux2/commit/90db8c261f3696b10f06597849f8a480091a8ef5"> commit</td></tr>
+<tr><td> [yasmifi] openGl download texture, part1 luma </td><td><a href="https://github.com/mean00/avidemux2/commit/ae2dd43cb712a92313c0a628c106a765b7e074d3"> commit</td></tr>
+<tr><td> [coreImage] move old files to attic </td><td><a href="https://github.com/mean00/avidemux2/commit/7653e8aab48e60eb00495b6503c77d07168b9ad6"> commit</td></tr>
+</body>
