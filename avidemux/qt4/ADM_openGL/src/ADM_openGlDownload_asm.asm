@@ -51,10 +51,12 @@ MASK:
       dq 0x00ff000000ff0000
 section .text
 INIT_MMX mmx
+default rel
 cglobal glYUV444_Init
         movq          m7,[MASK]
         ret
 
+default abs
 INIT_MMX mmx
 cglobal glYUV444_luma, 3,4,4, src, dst, count
 .luma:

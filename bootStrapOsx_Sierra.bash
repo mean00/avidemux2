@@ -213,11 +213,11 @@ echo "**  Remapping libraries **"
 python $TOP/cmake/osx_libs_remap.py
 python $TOP/cmake/osx_libs_remap.py
 echo "** Finishing **"
-cp $TOP/cmake/osx/Info.plist $PREFIX/../
+cat $TOP/cmake/osx/Info.plist.in  | sed "s/2\.6/$API_VERSION//g" > $PREFIX/../Info.plist
 mkdir $PREFIX/fonts
 cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
 mkdir -p $PREFIX/../MacOS
-cp $TOP/cmake/osx/Avidemux${API_VERSION} $PREFIX/../MacOS/Avidemux${API_VERSION}.app
+cp $TOP/cmake/osx/Avidemux.in $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 chmod +x $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 # Copy icons
 echo "Copying icons"
