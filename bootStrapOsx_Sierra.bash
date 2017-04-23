@@ -3,6 +3,7 @@
 # (c) Mean 2009
 export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
 export PATH=$PATH:$MYQT/bin/:/usr/local/bin:/opt//local/libexec/qt5/bin/ # Both brew and macport
+export API_VERSION=2.7
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
 export DAT=`date +"%Y_%m_%d"`
@@ -15,7 +16,7 @@ export FLAVOR="-DENABLE_QT5=True"
 export qt_ext=Qt5
 #
 export BASE_INSTALL_DIR="/";
-export BASE_APP="$HOME/Avidemux2.6.app/"
+export BASE_APP="$HOME/Avidemux${API_VERSION}.app/"
 export PREFIX="${BASE_APP}/Contents/Resources/"
 rm ~/A*.dmg
 rm -Rf $BASE_APP/*
@@ -92,7 +93,7 @@ config()
 }
 usage()
 {
-        echo "Bootstrap avidemux 2.6:"
+        echo "Bootstrap avidemux ${API_VERSION}:"
         echo "***********************"
         echo "  --help            : Print usage"
         echo "  --tgz             : Build tgz packages"
@@ -216,14 +217,14 @@ cp $TOP/cmake/osx/Info.plist $PREFIX/../
 mkdir $PREFIX/fonts
 cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
 mkdir -p $PREFIX/../MacOS
-cp $TOP/cmake/osx/Avidemux2.6 $PREFIX/../MacOS/Avidemux2.6.app
-chmod +x $PREFIX/../MacOS/Avidemux2.6.app
+cp $TOP/cmake/osx/Avidemux${API_VERSION} $PREFIX/../MacOS/Avidemux${API_VERSION}.app
+chmod +x $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 # Copy icons
 echo "Copying icons"
 cp $TOP/cmake/osx/*.icns $PREFIX/
 # creating dmg file
 cd $TOP
 rm -f *.dmg
-hdiutil create Avidemux2.6_r${REV}.dmg -srcfolder $HOME/Avidemux2.6.app/ -ov
+hdiutil create Avidemux${API_VERSION}_r${REV}.dmg -srcfolder $HOME/Avidemux${API_VERSION}.app/ -ov
 echo "** Preparing packaging **"
 echo "** ALL DONE **"

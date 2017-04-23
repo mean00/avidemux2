@@ -6,7 +6,7 @@ import subprocess
 import os
 home=os.getenv("HOME")
 print "Preparing independant bundle, home="+home+"..."
-rootFolder=home+"/Avidemux2.6.app/Contents/Resources"
+rootFolder=home+"/Avidemux2.7.app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"
