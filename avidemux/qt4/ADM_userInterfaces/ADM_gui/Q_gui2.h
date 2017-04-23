@@ -202,6 +202,7 @@ protected:
 	void buildRecentMenu(QMenu *menu,std::vector<std::string>files, QAction **actions);
         void buildActionLists(void);
         void buildButtonLists(void);
+        void updateCodecWidgetControlsState(void);
         void widgetsUpdateTooltips(void);
         void searchMenu(QAction * action,MenuEntry *menu, int nb);
 	void searchRecentFiles(QAction *action, QAction **actionList, int firstEventId);
