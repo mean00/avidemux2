@@ -211,7 +211,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoMPD3D,   // Class
 const char 	*ADMVideoMPD3D::getConfiguration(void)
  {
       static char str[1024];
-	  snprintf(str,1023," MPlayer Denoise 3D (Sp : %2.1f - %2.1f, Tmp:%2.1f - %2.1f)'",
+	  snprintf(str,1023," MPlayer hqdn3d (Sp : %2.1f - %2.1f, Tmp:%2.1f - %2.1f)'",
 						param.luma_spatial,param.chroma_spatial,param.luma_temporal,param.chroma_temporal);
       return str;
         
@@ -234,12 +234,12 @@ bool ADMVideoMPD3D::configure(void)
         
         diaElemFloat   luma(PX(fluma_spatial),QT_TRANSLATE_NOOP("mp3d","_Spatial luma strength:"),0.1,100.);
         diaElemFloat   chroma(PX(fchroma_spatial),QT_TRANSLATE_NOOP("mp3d","S_patial chroma strength:"),0.,100.);
-        diaElemFloat   lumaTemporal(PX(fluma_temporal),QT_TRANSLATE_NOOP("mp3d","Luma _Temporal strength:"),0.,100.);
-        diaElemFloat   chromaTemporal(PX(fchroma_temporal),QT_TRANSLATE_NOOP("mp3d","Luma _Temporal strength:"),0.,100.);
+        diaElemFloat   lumaTemporal(PX(fluma_temporal),QT_TRANSLATE_NOOP("mp3d","_Temporal luma strength:"),0.,100.);
+        diaElemFloat   chromaTemporal(PX(fchroma_temporal),QT_TRANSLATE_NOOP("mp3d","T_emporal chroma strength:"),0.,100.);
     
         diaElem *elems[4]={&luma,&chroma,&lumaTemporal,&chromaTemporal};
   
-        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3d","MPlayer denoise3d"),4,elems))
+        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3d","MPlayer Denoise 3D HQ"),4,elems))
         {
 #undef OOP
 #define OOP(x,y) param.x=(float) f##x

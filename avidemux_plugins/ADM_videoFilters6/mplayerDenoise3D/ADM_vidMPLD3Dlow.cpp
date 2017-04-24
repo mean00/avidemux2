@@ -46,7 +46,7 @@ DECLARE_VIDEO_FILTER(   ADMVideoMPD3Dlow,   // Class
 const char 	*ADMVideoMPD3Dlow::getConfiguration(void)
  {
       static char str[1024];
-	  snprintf(str,1023," MPlayer Denoise 3D (%2.1f - %2.1f - %2.1f)'",
+	  snprintf(str,1023," MPlayer denoise3d (%2.1f - %2.1f - %2.1f)'",
 						param.luma,param.chroma,param.temporal);
       return str;
         
@@ -72,7 +72,7 @@ bool ADMVideoMPD3Dlow::configure(void)
     
         diaElem *elems[3]={&luma,&chroma,&temporal};
   
-        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3dlow","MPlayer denoise3d"),3,elems))
+        if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3dlow","MPlayer Denoise 3D"),3,elems))
         {
 #undef OOP
 #define OOP(x,y) param.x=(float) f##x
