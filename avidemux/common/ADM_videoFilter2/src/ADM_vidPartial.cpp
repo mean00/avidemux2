@@ -271,8 +271,9 @@ void partialFilter::setCoupledConf(CONFcouple *couples)
 */
 const char *partialFilter::getConfiguration(void)
 {
-  sprintf(description,"Partial : %s -- ",ADM_us2plain(configuration.startBlack*1000));
-  strcat(description,ADM_us2plain(configuration.endBlack*1000));
+  sprintf(description,"Partial : %s -- ",ADM_us2plain((uint64_t)(configuration.startBlack)*1000));
+  strcat(description,ADM_us2plain((uint64_t)(configuration.endBlack)*1000));
+  strcat(description," ");
   strcat(description,sonFilter->getConfiguration());
   return description;
 }
