@@ -5,8 +5,9 @@ import re
 import subprocess
 import os
 home=os.getenv("HOME")
-print "Preparing independant bundle, home="+home+"..."
-rootFolder=home+"/Avidemux2.7.app/Contents/Resources"
+api_version=os.getenv("API_VERSION")
+print "Preparing independant bundle, home="+home+"..., version ) "+str(api_version)
+rootFolder=home+"/Avidemux"+str(api_version)+".app/Contents/Resources"
 libFolder=rootFolder+"/lib"
 binFolder=rootFolder+"/bin"
 frameWorkFolder=rootFolder+"/../Frameworks"

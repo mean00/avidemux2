@@ -3,7 +3,8 @@
 # (c) Mean 2009
 export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
 export PATH=$PATH:$MYQT/bin/:/usr/local/bin:/opt//local/libexec/qt5/bin/ # Both brew and macport
-export API_VERSION=2.7
+export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
+export API_VERSION=2.$MINOR
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
 export DAT=`date +"%Y_%m_%d"`
