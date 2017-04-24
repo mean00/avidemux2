@@ -156,27 +156,10 @@ void MainWindow::comboChanged(int z)
     QObject *obj = sender();
 
     if (obj == ui.comboBoxVideo)
-    {
-        bool b=false;
-        if(ui.comboBoxVideo->currentIndex())
-        {
-            b=true;
-        }
-        ui.pushButtonVideoConf->setEnabled(b);
-        ui.pushButtonVideoFilter->setEnabled(b);
         sendAction (ACT_VIDEO_CODEC_CHANGED) ;
-    }
     else if (obj == ui.comboBoxAudio)
-    {
-        bool b=false;
-        if(ui.comboBoxAudio->currentIndex())
-        {
-            b=true;
-        }
-        ui.pushButtonAudioConf->setEnabled(b);
-        ui.pushButtonAudioFilter->setEnabled(b);
         sendAction (ACT_AUDIO_CODEC_CHANGED) ;
-    }
+    setMenuItemsEnabledState();
 }
 /**
  * \fn sliderValueChanged
@@ -792,6 +775,13 @@ void MainWindow::buildButtonLists(void)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonTime)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerA)
     ADD_PUSHBUTTON_PLAYBACK(pushButtonJumpToMarkerB)
+
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonDecoderConf)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoConf)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonVideoFilter)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonAudioConf)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonAudioFilter)
+    ADD_PUSHBUTTON_PLAYBACK(pushButtonFormatConfigure)
 }
 
 /**
@@ -816,6 +806,9 @@ void MainWindow::setMenuItemsEnabledState(void)
         int npb=PushButtonsDisabledOnPlayback.size();
         for(int i=0;i<npb;i++)
             PushButtonsDisabledOnPlayback[i]->setEnabled(false);
+
+        ui.checkBox_TimeShift->setEnabled(false);
+        ui.spinBox_TimeValue->setEnabled(false);
 
         return;
     }
@@ -859,6 +852,46 @@ void MainWindow::setMenuItemsEnabledState(void)
 
     ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
     ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
+
+    updateCodecWidgetControlsState();
+}
+
+/**
+    \fn updateCodecWidgetControlsState
+*/
+void MainWindow::updateCodecWidgetControlsState(void)
+{
+    bool b=false;
+    // currently only lavc provides some decoder options
+    if(avifileinfo && !strcmp(video_body->getVideoDecoderName(),"Lavcodec"))
+        b=true;
+    ui.pushButtonDecoderConf->setEnabled(b);
+
+    b=false;
+    if(ui.comboBoxVideo->currentIndex())
+        b=true;
+    ui.pushButtonVideoConf->setEnabled(b);
+    if(avifileinfo)
+    {
+        ui.pushButtonVideoFilter->setEnabled(b);
+    }else
+    {
+        ui.pushButtonVideoFilter->setEnabled(false);
+    }
+
+    b=false;
+    if(avifileinfo && video_body->getDefaultEditableAudioTrack())
+    {
+        if(ui.comboBoxAudio->currentIndex())
+            b=true;
+    }
+    ui.pushButtonAudioConf->setEnabled(b);
+    ui.pushButtonAudioFilter->setEnabled(b);
+
+    // reenable the controls below unconditionally after playback
+    ui.pushButtonFormatConfigure->setEnabled(true);
+    ui.checkBox_TimeShift->setEnabled(true);
+    ui.spinBox_TimeValue->setEnabled(true);
 }
 
 /**
@@ -1967,7 +2000,7 @@ bool UI_setVUMeter( uint32_t volume[6])
     return true;
 }
 /**
-    \fn setDecodeName
+    \fn UI_setDecoderName
 */
 bool UI_setDecoderName(const char *name)
 {
