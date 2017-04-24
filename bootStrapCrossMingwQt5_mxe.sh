@@ -14,8 +14,21 @@ external_libass=0
 external_liba52=0
 external_libmad=0
 do_release_pkg=1
+author_setup=0
 
 # Functions
+
+authorSetup()
+{
+    export SDLDIR=/mingw
+    export MINGW=/mingw
+    export MINGWDEV=/mingw_dev
+    export PATH=${MINGW}/bin:$PATH
+    export INSTALL_DIR=${MINGW}/Release
+    export QT_HOME=/mingw/Qt/current
+    export O_PARAL="-j 2"
+    export TOOLCHAIN_LOCATION=/mingw
+}
 
 setupEnv()
 {
@@ -39,18 +52,23 @@ setupEnv()
     export MXE_ROOT=$mxerootdir
     export MXE_TARGET=${ARCH}-w64-mingw32.shared
     export QT_SELECT=5
-    export QT_HOME=${MXE_ROOT}/usr/${MXE_TARGET}/qt5
-    export MINGW=${MXE_ROOT}/usr/${MXE_TARGET}
-    export PATH=$PATH:${MXE_ROOT}/usr/bin:${QT_HOME}/bin
+    if [ "x$author_setup" = "x1" ]; then
+        authorSetup
+        export TYPE2_CROSS_SETUP=false
+    else
+        export QT_HOME=${MXE_ROOT}/usr/${MXE_TARGET}/qt5
+        export MINGW=${MXE_ROOT}/usr/${MXE_TARGET};
+        export PATH=$PATH:${MXE_ROOT}/usr/bin:${QT_HOME}/bin
+        export TOOLCHAIN_LOCATION=${MXE_ROOT}/usr
+        export SDL2DIR=${MXE_ROOT}/usr/${MXE_TARGET}
+        export PARAL="-j $(nproc)"
+        export INSTALL_DIR=${MINGW}/out/avidemux
+        export TYPE2_CROSS_SETUP=true
+    fi
+    export CROSS_PREFIX=$MXE_TARGET
     export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
     export PKG_CONFIG_LIBDIR=$MINGW/lib/pkgconfig
-    export CROSS_PREFIX=$MXE_TARGET
-    export SDL2DIR=${MXE_ROOT}/usr/${MXE_TARGET}
-    export INSTALL_DIR=${MINGW}/out/avidemux
-    #export INSTALL_DEV=${INSTALL_DIR}-dev
     export CXXFLAGS="-std=c++11"
-    export PARAL="-j $(nproc)"
-    export TOOLCHAIN_LOCATION=${MXE_ROOT}/usr
     export CROSS_C_COMPILER=gcc
     export CROSS_CXX_COMPILER=g++
 }
@@ -87,14 +105,16 @@ Process()
     -DCMAKE_AR:STRING=${CROSS_PREFIX}-ar \
     -DCMAKE_RC_COMPILER:STRING=${CROSS_PREFIX}-windres \
     -DAVIDEMUX_TOP_SOURCE_DIR="$TOP" \
-    -DTYPE2_CROSS_SETUP=true \
+    -DTYPE2_CROSS_SETUP=$TYPE2_CROSS_SETUP \
     -G "Unix Makefiles" \
     $EXTRA \
     $SOURCEDIR || fail cmake
     make $PARAL VERBOSE=1 >& /tmp/log$BUILDDIR || fail make
     make install || fail make_install
     # Only install  component=dev for dev package
-    # DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
+    if [ "x$author_setup" = "x1" ]; then
+        DESTDIR=${MINGWDEV} cmake -DCOMPONENT=dev -P cmake_install.cmake || fail make_install_dev
+    fi
 }
 
 usage()
@@ -117,6 +137,7 @@ usage()
     echo "  --with-system-liba52  : Use the system liba52 (a52dec) instead of the bundled one"
     echo "  --with-system-libmad  : Use the system libmad instead of the bundled one"
     echo "  --nopkg               : Don't create a ZIP archive with all required libraries"
+    echo "  -a, --author          : Match the env setup used by the Author, implies --nopkg"
 }
 
 option_value()
@@ -256,6 +277,10 @@ while [ $# != 0 ]; do
         --64)
             bits=64
             ;;
+        -a|--author)
+            export author_setup=1
+            do_release_pkg=0
+            ;;
         --mxe-root=*)
             mxerootdir=$(dir_check $(option_name "$config_option") $(option_value "$config_option")) || exit 1
             ;;
@@ -318,6 +343,9 @@ setupEnv
 # Create destination directory
 
 echo "** Bootstrapping Avidemux **"
+if [ "x$author_setup" = "x1" ]; then
+    rm -Rf ${MINGWDEV}/*
+fi
 if [ -e "$INSTALL_DIR" -a "x$do_core" = "x1" -a "x$do_qt" = "x1" ]; then
     rm -Rf "$INSTALL_DIR";
 fi
