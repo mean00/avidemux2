@@ -4,7 +4,7 @@ import shutil
 import re
 import subprocess
 import os
-home=os.getenv['HOME']
+home=os.getenv("HOME")
 api_version=os.getenv("API_VERSION")
 print "Preparing independant bundle, home="+home+"..., version ) "+str(api_version)
 rootFolder=home+"/Avidemux"+str(api_version)+".app/Contents/Resources" 
