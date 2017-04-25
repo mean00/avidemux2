@@ -1,5 +1,71 @@
-<html><head><link rel=stylesheet type=text/css href=change.css></head>
-<body>Avidemux Changelog:<br>
-<table><tr><th>Message</th><th>Commit</th></tr>
-<tr><td> Dummy Release Message </td><td>Dummy</td></tr>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <style type="text/css">
+        body {
+            margin: 0;
+            height: 100%;
+            font-family: Tahoma,Helvetica,Arial,sans-serif;
+            color: #333;
+        }
+
+        #inner {
+            margin: 0% 1% 0% 1%;
+        }
+
+        h1 {
+            padding: 0.5em;
+            font-family: Helvetica,Arial,sans-serif;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1B57B1;
+            vertical-align: middle;
+            margin: 1em;
+        }
+
+        ul li {
+            list-style: inside;
+            padding: 0.8em;
+            margin: 0.2em;
+            border: 1px solid #ddd;
+            border-radius: 0.2em;
+            font-size: 0.8em;
+        }
+
+        ul li:nth-child(odd) {
+            background-color: #fafafa;
+        }
+
+        ul li:nth-child(even) {
+            background-color: #f0f0f0;
+        }
+
+    </style>
+    <title>Avidemux Changelog</title>
+</head>
+<body>
+    <div id="inner">
+        <h1>Changes in Avidemux v2.6.19 – v2.6.20</h1>
+        <ul>
+            <li><strong>Core:</strong> The bundled FFmpeg has been updated to version 3.0.7</li>
+            <li><strong>Core Encoder:</strong> A crash encoding MPEG-2 with B-frames disabled has been fixed</li>
+            <li><strong>Core Encoder:</strong> An error due to invalid decoding timestamps at the end of encoding with MPEG-2 has been fixed</li>
+            <li><strong>Core Audio:</strong> LATM demuxer fixed solving garbled sound with some DVB-T2 streams</li>
+            <li><strong>MKV Demuxer:</strong> FPS calculation improved</li>
+            <li><strong>MKV Demuxer:</strong> A crash with audio tracks using lacing extensively fixed</li>
+            <li><strong>MKV Muxer:</strong> The FPS value is set correctly now</li>
+            <li><strong>FLV Demuxer:</strong> File kept open preventing deletion fixed</li>
+            <li><strong>VPX Decoder:</strong> Swapped colors fixed, support for VP9 added</li>
+            <li><strong>macOS:</strong> Passing command line arguments to the application fixed</li>
+            <li><strong>VDPAU:</strong> Decode MPEG-1 instead of crashing</li>
+            <li><strong>Qt / Properties Dialog:</strong> A button to copy the data to clipboard added</li>
+            <li><strong>Qt / Filter Manager:</strong> Dynamically disable not applicable context menu entries in the list of active filters</li>
+            <li><strong>Qt / Filter Manager:</strong> Horizontal scrolling in the list of available filters eliminated</li>
+            <li><strong>Qt / MPlayer eq2 Plugin:</strong> The sliders on the right becoming squeezed horizontally fixed</li>
+            <li><strong>i18n:</strong> Russian and German translations updated (TotalCaesar659 / eumagga0x2a)</li>
+            <li><strong>Debug:</strong> Avidemux now prints the correct version string to the console or to the application log</li>
+        </ul>
+    </div>
 </body>
+</html>
