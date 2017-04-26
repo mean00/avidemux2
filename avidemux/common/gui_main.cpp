@@ -171,19 +171,20 @@ void HandleAction (Action action)
         int actionId = (action - ACT_SCRIPT_ENGINE_FIRST) % 3;
 
         tempEngine = getScriptEngines()[engineIndex];
+        const char *ext=tempEngine->defaultFileExtension().c_str();
 
         switch (actionId)
         {
             case 0:
-                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to run"), RunScript);
+                GUI_FileSelReadExtension(QT_TRANSLATE_NOOP("adm","Select script to run"), ext, RunScript);
                 break;
 
             case 1:
-                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to debug"), DebugScript);
+                GUI_FileSelReadExtension(QT_TRANSLATE_NOOP("adm","Select script to debug"), ext, DebugScript);
                 break;
 
             case 2:
-                GUI_FileSelWrite(QT_TRANSLATE_NOOP("adm","Select script to save"), SaveScript);
+                GUI_FileSelWriteExtension(QT_TRANSLATE_NOOP("adm","Select script to save"), ext, SaveScript);
                 UI_refreshCustomMenu();
                 break;
         }
