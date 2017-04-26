@@ -51,7 +51,7 @@
             <li><strong>Core:</strong> The bundled FFmpeg has been updated to version 3.0.7</li>
             <li><strong>Core Encoder:</strong> A crash encoding MPEG-2 with B-frames disabled has been fixed</li>
             <li><strong>Core Encoder:</strong> An error due to invalid decoding timestamps at the end of encoding with MPEG-2 has been fixed</li>
-            <li><strong>Core Audio:</strong> LATM demuxer fixed solving garbled sound with some DVB-T2 streams</li>
+            <li><strong>Core Audio:</strong> Sound issues including audio dropouts with AAC in MPEG TS fixed</li>
             <li><strong>MKV Demuxer:</strong> FPS calculation improved</li>
             <li><strong>MKV Demuxer:</strong> A crash with audio tracks using lacing extensively fixed</li>
             <li><strong>MKV Muxer:</strong> The FPS value is set correctly now</li>
