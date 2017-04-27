@@ -190,16 +190,16 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
             return false;
     };
     // Need a 2nd packet...
-    const uint8_t *second=data+syncOffset;
+    const uint8_t *second=data+syncOffset+info.frameSizeInBytes;
     int size2=bufferSize-syncOffset;
     ADM_assert(size2>0);
     ADM_info("Maybe EAC3... \n");
     // Try on 2nd packet...
     if( ADM_EAC3GetInfo(second,size2, &syncOffset,&info2))
     {
-        if((info.frequency==info2.frequency) && (info.channels==info2.channels) && (info.byterate==info2.byterate))
+        if((info.frequency==info2.frequency) && (info.channels==info2.channels) && (info.byterate==info2.byterate) && !syncOffset)
         {
-            ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels);
+            ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,syncOffset);
             oinfo.encoding=WAV_EAC3;
             oinfo.channels=info.channels;
             oinfo.byterate=info.byterate; // already in bytes/sec
