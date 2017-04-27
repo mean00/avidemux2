@@ -28,6 +28,7 @@ authorSetup()
     export QT_HOME=/mingw/Qt/current
     export O_PARAL="-j 2"
     export TOOLCHAIN_LOCATION=/mingw
+    export CFLAGS="-I/mingw/include -L/mingw/lib"
 }
 
 setupEnv()
