@@ -660,6 +660,8 @@ void MainWindow::buildActionLists(void)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuView->actions().at(i));
     }
 
+    ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(1)); // post-processing
+
     for(int i=2;i<ui.toolBar->actions().size();i++)
     { // disable "Save" and "Information" buttons in the toolbar if no video is loaded
         ActionsAvailableWhenFileLoaded.push_back(ui.toolBar->actions().at(i));
@@ -668,8 +670,7 @@ void MainWindow::buildActionLists(void)
 #define PUSH_FULL_MENU_LOADED(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsAvailableWhenFileLoaded.push_back(ui.x->actions().at(i));
 #define PUSH_FULL_MENU_PLAYBACK(x,tailOffset) for(int i=0;i<ui.x->actions().size()-tailOffset;i++)    ActionsDisabledOnPlayback.push_back(ui.x->actions().at(i));
 
-    PUSH_FULL_MENU_LOADED(menuVideo,0)
-    PUSH_FULL_MENU_LOADED(menuAudio,0)
+    PUSH_FULL_MENU_LOADED(menuAudio,2)
     PUSH_FULL_MENU_LOADED(menuAuto,0)
     PUSH_FULL_MENU_LOADED(menuGo,0)
 
@@ -866,6 +867,8 @@ void MainWindow::updateCodecWidgetControlsState(void)
     if(avifileinfo && !strcmp(video_body->getVideoDecoderName(),"Lavcodec"))
         b=true;
     ui.pushButtonDecoderConf->setEnabled(b);
+    // take care of the "Decoder Options" item in the menu "Video"
+    ui.menuVideo->actions().at(0)->setEnabled(b);
 
     b=false;
     if(ui.comboBoxVideo->currentIndex())
@@ -874,19 +877,28 @@ void MainWindow::updateCodecWidgetControlsState(void)
     if(avifileinfo)
     {
         ui.pushButtonVideoFilter->setEnabled(b);
+        // take care of the "Filter" item in the menu "Video" as well
+        ui.menuVideo->actions().at(2)->setEnabled(b);
     }else
     {
         ui.pushButtonVideoFilter->setEnabled(false);
+        ui.menuVideo->actions().at(2)->setEnabled(false);
     }
 
     b=false;
     if(avifileinfo && video_body->getDefaultEditableAudioTrack())
     {
+        ui.menuAudio->actions().at(1)->setEnabled(true);
         if(ui.comboBoxAudio->currentIndex())
             b=true;
+    }else
+    {   // disable "Save Audio" item in the menu "Audio" if we have no audio tracks
+        ui.menuAudio->actions().at(1)->setEnabled(false);
     }
     ui.pushButtonAudioConf->setEnabled(b);
     ui.pushButtonAudioFilter->setEnabled(b);
+    // take care of the "Filter" item in the menu "Audio"
+    ui.menuAudio->actions().at(2)->setEnabled(b);
 
     // reenable the controls below unconditionally after playback
     ui.pushButtonFormatConfigure->setEnabled(true);

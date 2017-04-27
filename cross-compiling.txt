@@ -120,10 +120,6 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 7. Issues:
 
-The build of the subtitle plugin and subsequently of the entire Avidemux
-package fails as of this writing unless the '--with-system-libass' option is
-added.
-
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2016-12-13 UTC 09:02
+2017-04-25 UTC 22:21
