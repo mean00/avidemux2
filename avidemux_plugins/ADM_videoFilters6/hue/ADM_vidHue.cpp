@@ -20,6 +20,9 @@
 #include "hue.h"
 #include "hue_desc.cpp"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 extern uint8_t DIA_getHue(hue *param, ADM_coreVideoFilter *in);
 /**
