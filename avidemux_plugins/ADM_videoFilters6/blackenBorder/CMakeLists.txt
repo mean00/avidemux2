@@ -20,6 +20,6 @@ ENDIF(DO_QT4)
 INCLUDE(vf_plugin_cli)
 SET(CropCli_SRCS cli/DIA_blackenBorders.cpp)
 IF(DO_CLI)
-INIT_VIDEO_FILTER_CLI(  ADM_vf_blackenBordersCli ${CropCli_SRCS} ${CropCommon_SRCS})
+INIT_VIDEO_FILTER_CLI(  ADM_vf_blackenBordersCli ${CropCli_SRCS} ${ADM_vf_blackenBorders_SRCS})
 ENDIF(DO_CLI)
 #
