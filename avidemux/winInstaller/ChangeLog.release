@@ -64,7 +64,7 @@
             <li><strong>Qt / Filter Manager:</strong> Dynamically disable not applicable context menu entries in the list of active filters</li>
             <li><strong>Qt / Filter Manager:</strong> Horizontal scrolling in the list of available filters eliminated</li>
             <li><strong>Qt / MPlayer eq2 Plugin:</strong> The sliders on the right becoming squeezed horizontally fixed</li>
-            <li><strong>UI:</strong> File dialog not adding a file name extension when saving projects fixed</li>
+            <li><strong>UI:</strong> File dialog not adding a file name extension when saving projects fixed (not in 64 bit builds for Windows yet)</li>
             <li><strong>i18n:</strong> Russian and German translations updated (TotalCaesar659 / eumagga0x2a)</li>
             <li><strong>Debug:</strong> Avidemux now prints the correct version string to the console or to the application log</li>
         </ul>

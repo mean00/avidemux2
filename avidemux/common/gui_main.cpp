@@ -171,20 +171,33 @@ void HandleAction (Action action)
         int actionId = (action - ACT_SCRIPT_ENGINE_FIRST) % 3;
 
         tempEngine = getScriptEngines()[engineIndex];
+#ifndef _WIN64
         std::string ext=tempEngine->defaultFileExtension();
-
+#endif
         switch (actionId)
         {
             case 0:
+#ifdef _WIN64
+                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to run"), RunScript);
+#else
                 GUI_FileSelReadExtension(QT_TRANSLATE_NOOP("adm","Select script to run"), ext.c_str(), RunScript);
+#endif
                 break;
 
             case 1:
+#ifdef _WIN64
+                GUI_FileSelRead(QT_TRANSLATE_NOOP("adm","Select script to debug"), DebugScript);
+#else
                 GUI_FileSelReadExtension(QT_TRANSLATE_NOOP("adm","Select script to debug"), ext.c_str(), DebugScript);
+#endif
                 break;
 
             case 2:
+#ifdef _WIN64
+                GUI_FileSelWrite(QT_TRANSLATE_NOOP("adm","Select script to save"), SaveScript);
+#else
                 GUI_FileSelWriteExtension(QT_TRANSLATE_NOOP("adm","Select script to save"), ext.c_str(), SaveScript);
+#endif
                 UI_refreshCustomMenu();
                 break;
         }
