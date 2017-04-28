@@ -38,9 +38,9 @@ static uint8_t scriptAddVar(char *var,char *value);
 static void show_info(char *p);
 void call_scriptEngine(const char *scriptFile);
 static void call_quit(char *p) ;
-static void call_help(char *p) 	;
-static void call_setAudio(char *p) 	;
-static void call_audiocodec(char *p) 	;
+static void call_help(char *p)     ;
+static void call_setAudio(char *p)     ;
+static void call_audiocodec(char *p)     ;
 static void call_videocodec(char *p) ;
 static int searchReactionTable(char *string);
 static void call_slave(char *p);
@@ -60,8 +60,8 @@ char **global_argv;
 //_________________________________________________________________________
 
 typedef void (*one_arg_type)(char *arg);
-typedef	void (*two_arg_type)(char *arg,char *otherarg);
-typedef	void (*three_arg_type)(char *arg,char *otherarg,char *yetother);
+typedef    void (*two_arg_type)(char *arg,char *otherarg);
+typedef    void (*three_arg_type)(char *arg,char *otherarg,char *yetother);
 //_________________________________________________________________________
 
 typedef struct
@@ -222,14 +222,17 @@ void call_scriptEngine(const char *scriptFile)
     std::string root,ext;
     ADM_PathSplit(std::string(scriptFile),root,ext);
   
-	if (engines.size() == 1)
-	{
+    if (engines.size() == 1)
+    {
             A_parseScript(engines[0], scriptFile);
-	    A_Rewind();
-            UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
-        return;
-	}
-	
+            if(avifileinfo)
+            {
+            A_Rewind();
+                UI_setMarkers(video_body->getMarkerAPts(),video_body->getMarkerBPts());
+            }
+            return;
+    }
+    
     for (int i = 0; i < engines.size(); i++)
     {
         if (!engines[i]->defaultFileExtension().compare(ext))
@@ -241,7 +244,7 @@ void call_scriptEngine(const char *scriptFile)
         }
     }
 
-    ADM_warning("Unable to appropriate script engine for script file\n");	
+    ADM_warning("Unable to appropriate script engine for script file\n");    
 }
 /**
  * \fn call_quit
@@ -324,10 +327,10 @@ void call_help(char *p)
         printf("\n    --%s, %s ", reaction_table[i].string,reaction_table[i].help_string);
         switch(reaction_table[i].have_arg)
         {
-          case 0:	 printf(" ( no arg )");break;
-          case 1:	 printf(" (one arg )");break;
-          case 2:	 printf(" (two args )");break;
-          case 3:	 printf(" (three args) ");break;
+          case 0:     printf(" ( no arg )");break;
+          case 1:     printf(" (one arg )");break;
+          case 2:     printf(" (two args )");break;
+          case 3:     printf(" (three args) ");break;
           default: break;
         }
       }
@@ -427,7 +430,7 @@ void show_info(char *p)
    }
    else
    {
-   	printf("Nothing to get infos from\n");
+       printf("Nothing to get infos from\n");
    }
 }
 /**
