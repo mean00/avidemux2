@@ -720,8 +720,6 @@ void MainWindow::buildActionLists(void)
     PUSH_ALWAYS_AVAILABLE(menuFile,7)
     PUSH_ALWAYS_AVAILABLE(menuFile,11)
 
-    PUSH_ALWAYS_AVAILABLE(menuRecent,pos)
-
     PUSH_ALWAYS_AVAILABLE(menuEdit,12)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
     PUSH_ALWAYS_AVAILABLE(menuEdit,15)            
@@ -867,6 +865,22 @@ void MainWindow::setMenuItemsEnabledState(void)
 
     ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
     ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
+
+    int pos=1;
+    bool haveRecentItems=false;
+    if(recentFiles)
+    {
+        pos++;
+        if(recentFiles->actions().size())
+            haveRecentItems=true;
+    }
+    if(recentProjects)
+    {
+        pos++;
+        if(recentProjects->actions().size())
+            haveRecentItems=true;
+    }
+    ui.menuRecent->actions().at(pos)->setEnabled(haveRecentItems);
 
     updateCodecWidgetControlsState();
 }
