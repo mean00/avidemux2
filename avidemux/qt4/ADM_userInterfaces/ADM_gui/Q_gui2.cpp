@@ -697,20 +697,14 @@ void MainWindow::buildActionLists(void)
     PUSH_FULL_MENU_PLAYBACK(menuHelp,0)
     PUSH_FULL_MENU_PLAYBACK(toolBar,0)
 
-    int pos=1;
     if(recentFiles)
-    {
-        pos++;
         for(int i=0;i<recentFiles->actions().size();i++)
             ActionsDisabledOnPlayback.push_back(recentFiles->actions().at(i));
-    }
     if(recentProjects)
-    {
-        pos++;
         for(int i=0;i<recentProjects->actions().size();i++)
             ActionsDisabledOnPlayback.push_back(recentProjects->actions().at(i));
-    }
-    ActionsDisabledOnPlayback.push_back(ui.menuRecent->actions().at(pos));
+
+    ActionsDisabledOnPlayback.push_back(ui.menuRecent->actions().back());
 
     // "Always available" below doesn't override the list of menu items disabled during playback
 
@@ -866,21 +860,12 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
     ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
 
-    int pos=1;
     bool haveRecentItems=false;
-    if(recentFiles)
-    {
-        pos++;
-        if(recentFiles->actions().size())
-            haveRecentItems=true;
-    }
-    if(recentProjects)
-    {
-        pos++;
-        if(recentProjects->actions().size())
-            haveRecentItems=true;
-    }
-    ui.menuRecent->actions().at(pos)->setEnabled(haveRecentItems);
+    if(recentFiles && recentFiles->actions().size())
+        haveRecentItems=true;
+    if(recentProjects && recentProjects->actions().size())
+        haveRecentItems=true;
+    ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
 
     updateCodecWidgetControlsState();
 }
