@@ -249,6 +249,18 @@ void HandleAction (Action action)
                             A_Resync();
                             return;
             }
+        case ACT_CLEAR_RECENT:
+            {
+                if(GUI_Question(QT_TRANSLATE_NOOP("adm","You are about to clear the list of recent files and projects. This can't be undone. Proceed?")))
+                {
+                    prefs->clear_lastfiles();
+                    prefs->clear_lastprojects();
+                    prefs->save();
+                    UI_updateRecentProjectMenu();
+                    UI_updateRecentMenu(); // the order matters here
+                }
+            }
+            return;
     case ACT_VIDEO_CODEC_CONFIGURE:
             videoEncoder6Configure();
             return;

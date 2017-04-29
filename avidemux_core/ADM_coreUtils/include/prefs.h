@@ -44,6 +44,8 @@ class ADM_COREUTILS6_EXPORT preferences {
 
 		bool  set_lastfile(const char* file);
 		bool  set_lastprojectfile(const char* file);
+                bool  clear_lastfiles(void);
+                bool  clear_lastprojects(void);
 		std::vector< std::string>get_lastfiles(void);
 		std::vector< std::string>get_lastprojectfiles(void);		
 };

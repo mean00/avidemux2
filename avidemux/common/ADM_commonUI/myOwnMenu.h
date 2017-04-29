@@ -49,6 +49,13 @@ static const MenuEntry _myMenuFile[] = {
 
 std::vector<MenuEntry> myMenuFile(_myMenuFile, _myMenuFile + sizeof(_myMenuFile) / sizeof(_myMenuFile[0]));
 
+static const MenuEntry _myMenuRecent[] = {
+            {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Clear recent items"), NULL,ACT_CLEAR_RECENT,NULL,"Ctrl+Shift+Delete"}
+        };
+
+std::vector<MenuEntry> myMenuRecent(_myMenuRecent, _myMenuRecent + sizeof(_myMenuRecent) / sizeof(_myMenuRecent[0]));
+
 static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Undo"),               NULL,ACT_Undo       ,NULL,"Ctrl+Z"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Redo"),               NULL,ACT_Redo       ,NULL,"Ctrl+Y"},
