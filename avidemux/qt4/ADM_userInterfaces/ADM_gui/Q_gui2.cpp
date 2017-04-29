@@ -420,10 +420,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
     addScriptShellsToToolsMenu(myMenuTool);
-    buildMyMenu();
-    buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
-    buildButtonLists();
-    // Crash in some cases addScriptReferencesToHelpMenu();
 
     QString rFiles=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Files"));
     QString rProjects=QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2","Recent Projects"));
@@ -434,6 +430,11 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     ui.menuRecent->addMenu(recentProjects);
     connect(this->recentFiles, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentFiles(QAction*)));
     connect(this->recentProjects, SIGNAL(triggered(QAction*)), this, SLOT(searchRecentProjects(QAction*)));
+
+    buildMyMenu();
+    buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
+    buildButtonLists();
+    // Crash in some cases addScriptReferencesToHelpMenu();
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
@@ -604,6 +605,9 @@ bool MainWindow::buildMyMenu(void)
     connect( ui.menuFile,SIGNAL(triggered(QAction*)),this,SLOT(searchFileMenu(QAction*)));
     buildMenu(ui.menuFile, &myMenuFile[0], myMenuFile.size());
 
+    connect( ui.menuRecent,SIGNAL(triggered(QAction*)),this,SLOT(searchRecentMenu(QAction*)));
+    buildMenu(ui.menuRecent, &myMenuRecent[0], myMenuRecent.size());
+
     connect( ui.menuEdit,SIGNAL(triggered(QAction*)),this,SLOT(searchEditMenu(QAction*)));
     buildMenu(ui.menuEdit, &myMenuEdit[0], myMenuEdit.size());
 
@@ -693,12 +697,20 @@ void MainWindow::buildActionLists(void)
     PUSH_FULL_MENU_PLAYBACK(menuHelp,0)
     PUSH_FULL_MENU_PLAYBACK(toolBar,0)
 
+    int pos=1;
     if(recentFiles)
+    {
+        pos++;
         for(int i=0;i<recentFiles->actions().size();i++)
             ActionsDisabledOnPlayback.push_back(recentFiles->actions().at(i));
+    }
     if(recentProjects)
+    {
+        pos++;
         for(int i=0;i<recentProjects->actions().size();i++)
             ActionsDisabledOnPlayback.push_back(recentProjects->actions().at(i));
+    }
+    ActionsDisabledOnPlayback.push_back(ui.menuRecent->actions().at(pos));
 
     // "Always available" below doesn't override the list of menu items disabled during playback
 
@@ -707,6 +719,8 @@ void MainWindow::buildActionLists(void)
     PUSH_ALWAYS_AVAILABLE(menuFile,0)
     PUSH_ALWAYS_AVAILABLE(menuFile,7)
     PUSH_ALWAYS_AVAILABLE(menuFile,11)
+
+    PUSH_ALWAYS_AVAILABLE(menuRecent,pos)
 
     PUSH_ALWAYS_AVAILABLE(menuEdit,12)
     PUSH_ALWAYS_AVAILABLE(menuEdit,14)
@@ -1105,7 +1119,7 @@ void MainWindow::searchMenu(QAction * action,MenuEntry *menu, int nb)
 
 MKMENU(File)
 MKMENU(Edit)
-//MKMENU(Recent)
+MKMENU(Recent)
 MKMENU(View)
 MKMENU(Tool)
 MKMENU(Go)

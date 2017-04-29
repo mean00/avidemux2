@@ -164,6 +164,7 @@ public slots:
     void thumbSlider_valueEmitted(int value);
 
     void searchFileMenu(QAction * action);
+    void searchRecentMenu(QAction * action);
     void searchEditMenu(QAction * action);
     void searchVideoMenu(QAction * action);
     void searchAudioMenu(QAction * action);

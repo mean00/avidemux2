@@ -449,6 +449,30 @@ bool preferences::set_lastprojectfile(const char* file)
 	return RC_OK;
 }
 
+bool preferences::clear_lastfiles(void)
+{
+    myPrefs.lastfiles.lastdir_read.clear();
+    myPrefs.lastfiles.lastdir_write.clear();
+    myPrefs.lastfiles.file1.clear();
+    myPrefs.lastfiles.file2.clear();
+    myPrefs.lastfiles.file3.clear();
+    myPrefs.lastfiles.file4.clear();
+
+    return RC_OK;
+}
+
+bool preferences::clear_lastprojects(void)
+{
+    myPrefs.lastprojects.lastdir_read.clear();
+    myPrefs.lastprojects.lastdir_write.clear();
+    myPrefs.lastprojects.file1.clear();
+    myPrefs.lastprojects.file2.clear();
+    myPrefs.lastprojects.file3.clear();
+    myPrefs.lastprojects.file4.clear();
+
+    return RC_OK;
+}
+
 #undef PRT_LAFI
 #define PRT_LAFI(y,z) fprintf(stderr,"Prefs: ret idx[%u] %s\n",y,(z?z:"NULL"))
 /**
