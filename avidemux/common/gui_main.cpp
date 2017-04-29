@@ -974,6 +974,7 @@ void cleanUp (void)
  * @param mode
  * @return 
  */
+#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
     bool ret;
@@ -991,12 +992,14 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
         video_body->setProjectName(longname);
     }
 
-    prefs->set_lastprojectfile(longname);
+    if (std::string(longname) != DEFAULT_SETTINGS_FILE)
+    {
+        prefs->set_lastprojectfile(longname);
+        UI_updateRecentProjectMenu();
+    }
     delete [] longname;
     longname=NULL;
-    
-    
-    UI_updateRecentProjectMenu();
+
     // update main menu shift
     EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
     if(ed)
@@ -1053,7 +1056,7 @@ void A_saveScript(IScriptEngine* engine, const char* name)
  * @param engine
  * @param name
  */
-#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
+
 void A_saveDefaultSettings()
 {
     IScriptEngine *engine=getPythonScriptEngine();
