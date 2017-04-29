@@ -73,6 +73,38 @@ void admCoreUtils::getLastWriteFolder( std::string &folder)
 }
 
 /**
+ * \fn setLastProjectReadFolder
+ */
+void admCoreUtils::setLastProjectReadFolder(const std::string &folder)
+{
+    internalSetFolder(LASTPROJECTS_LASTDIR_READ,folder);
+}
+
+/**
+ * \fn setLastProjectWriteFolder
+ */
+void admCoreUtils::setLastProjectWriteFolder(const std::string &folder)
+{
+    internalSetFolder(LASTPROJECTS_LASTDIR_WRITE,folder);
+}
+
+/**
+ * \fn getLastProjectReadFolder
+ */
+void admCoreUtils::getLastProjectReadFolder( std::string &folder)
+{
+    internalGetFolder(LASTPROJECTS_LASTDIR_READ,folder);
+}
+
+/**
+ * \fn getLastProjectWriteFolder
+ */
+void admCoreUtils::getLastProjectWriteFolder( std::string &folder)
+{
+    internalGetFolder(LASTPROJECTS_LASTDIR_WRITE,folder);
+}
+
+/**
  * \fn getLastReadFile
  * \brief get the file name and path of the currently loaded video
  */
