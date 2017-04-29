@@ -33,12 +33,12 @@ ADM_scriptDFMenuHelper::~ADM_scriptDFMenuHelper(void)
 	std::vector<char*>::iterator it;
 
 	for (it = _items.begin(); it != _items.end(); it++)
-		delete *it;
+		ADM_dealloc( *it);
 
 	_items.clear();
 
 	if (_menuEntries)
-		delete _menuEntries;
+		delete [] _menuEntries;
 
 	_menuEntries = NULL;
 }
@@ -51,7 +51,7 @@ void ADM_scriptDFMenuHelper::addItem(const char* item)
 diaElem* ADM_scriptDFMenuHelper::getControl(void)
 {
 	if (_menuEntries)
-		delete _menuEntries;
+		delete [] _menuEntries;
 
 	std::vector<char*>::iterator it;
 	int i = 0;
