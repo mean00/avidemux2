@@ -25,4 +25,10 @@ ADM_COREUTILS6_EXPORT void  getLastReadFile( std::string &file);
 ADM_COREUTILS6_EXPORT void  setLastWriteFolder(const std::string &folder);
 ADM_COREUTILS6_EXPORT void  getLastWriteFolder( std::string &folder);
 
+ADM_COREUTILS6_EXPORT void  setLastProjectReadFolder(const std::string &folder);
+ADM_COREUTILS6_EXPORT void  getLastProjectReadFolder( std::string &folder);
+
+ADM_COREUTILS6_EXPORT void  setLastProjectWriteFolder(const std::string &folder);
+ADM_COREUTILS6_EXPORT void  getLastProjectWriteFolder( std::string &folder);
+
 };

@@ -23,8 +23,10 @@
 
 #include "prefs.h"
 #include "ADM_last.h"
+#include "ADM_script2/include/ADM_script.h"
 
 extern QWidget *QuiMainWindows;
+static IScriptEngine *tempEngine;
 
 namespace ADM_QT4_fileSel
 {
@@ -48,21 +50,48 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
     QString fileName,dot=QString(".");
     QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
+    bool isProject=false;
     QFileDialog::Options opts;
     int extSize=1;
 
     if(doFilter)
     {
         extSize+=strlen(ext);
+        for(int i=0; i < getScriptEngines().size(); i++)
+        {
+            tempEngine = getScriptEngines()[i];
+            std::string dext = tempEngine->defaultFileExtension();
+            if(!dext.empty() && dext == std::string(ext))
+            {
+                isProject=true;
+                break;
+            }
+        }
     }
     //printf("Do filer=%d\n",(int)doFilter);
     bool lastReadAsTarget=false;
     prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadAsTarget);
     std::string lastFolder;
     if(!lastReadAsTarget)
-        admCoreUtils::getLastWriteFolder(lastFolder);
+    {
+        if(!isProject)
+        {
+            admCoreUtils::getLastWriteFolder(lastFolder);
+        }else
+        {
+            admCoreUtils::getLastProjectWriteFolder(lastFolder);
+        }
+    }
     if(!lastFolder.size() || lastReadAsTarget)
-        admCoreUtils::getLastReadFolder(lastFolder);
+    {
+        if(!isProject)
+        {
+            admCoreUtils::getLastReadFolder(lastFolder);
+        }else
+        {
+            admCoreUtils::getLastProjectReadFolder(lastFolder);
+        }
+    }
     if (lastFolder.size())
     {
         QString outputPath = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
@@ -134,7 +163,13 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
             return;
         }
     }
-    admCoreUtils::setLastWriteFolder( std::string(fileName.toUtf8().constData()));
+    if(!isProject)
+    {
+        admCoreUtils::setLastWriteFolder( std::string(fileName.toUtf8().constData()));
+    }else
+    {
+        admCoreUtils::setLastProjectWriteFolder( std::string(fileName.toUtf8().constData()));
+    }
 }
 
 
@@ -149,11 +184,32 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
         QString fileName,dot=QString(".");
         QString filterFile=QString(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
         bool doFilter = !!(ext && strlen(ext));
+        bool isProject=false;
         QFileDialog::Options opts;
+
+        if(doFilter)
+        {
+            for(int i=0; i < getScriptEngines().size(); i++)
+            {
+                tempEngine = getScriptEngines()[i];
+                std::string dext = tempEngine->defaultFileExtension();
+                if(!dext.empty() && dext == std::string(ext))
+                {
+                    isProject=true;
+                    break;
+                }
+            }
+        }
 
         //printf("Do filer=%d\n",(int)doFilter);
         std::string lastFolder;
-        admCoreUtils::getLastReadFolder(lastFolder);
+        if(!isProject)
+        {
+            admCoreUtils::getLastReadFolder(lastFolder);
+        }else
+        {
+            admCoreUtils::getLastProjectReadFolder(lastFolder);
+        }
 
         if (lastFolder.size())
         {
@@ -177,7 +233,13 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
         if (fileName.isNull() ) return;
 
         *name=ADM_strdup(fileName.toUtf8().constData());
-        admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
+        if(!isProject)
+        {
+            admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
+        }else
+        {
+            admCoreUtils::setLastProjectReadFolder(std::string(fileName.toUtf8().constData()));
+        }
 }        
 
 void GUI_FileSelRead(const char *label, char **name)
