@@ -81,16 +81,19 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
         {
             admCoreUtils::getLastProjectWriteFolder(lastFolder);
         }
-    }
-    if(!lastFolder.size() || lastReadAsTarget)
-    {
-        if(!isProject)
+        if(!lastFolder.size())
         {
-            admCoreUtils::getLastReadFolder(lastFolder);
-        }else
-        {
-            admCoreUtils::getLastProjectReadFolder(lastFolder);
+            if(!isProject)
+            {
+                admCoreUtils::getLastReadFolder(lastFolder);
+            }else
+            {
+                admCoreUtils::getLastProjectReadFolder(lastFolder);
+            }
         }
+    }else
+    {
+        admCoreUtils::getLastReadFolder(lastFolder);
     }
     if (lastFolder.size())
     {
