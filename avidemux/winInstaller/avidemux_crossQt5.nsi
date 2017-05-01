@@ -325,8 +325,8 @@ Section "Avisynth_VapourSynth" SecGrpAvisynth
         SetOverwrite on
         ${File} ${ROOT_FOLDER}/avsproxy.exe
         ${File} ${ROOT_FOLDER}/avsproxy_gui.exe
-        ${File} ${ROOT_FOLDER}/vsProxy.exe
-        ${File} ${ROOT_FOLDER}/vsProxy_gui_qt5.exe
+        # TMP ${File} ${ROOT_FOLDER}/vsProxy.exe
+        # TMP ${File} ${ROOT_FOLDER}/vsProxy_gui_qt5.exe
 SectionEnd
 #
 Section "ShaderDemo" SecShaderDemo
