@@ -55,8 +55,11 @@ private:
     FilterItemEventFilter *filter;
 
 public:
-         FilterItemDelegate(QWidget *parent = 0);
+    FilterItemDelegate(QWidget *parent = 0);
+    enum datarole { FilterNameRole = Qt::UserRole, DescriptionRole };
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    static int padding;
 };
 /**
  * \class filtermainWindow
@@ -96,8 +99,6 @@ public slots:
     void removeAction(void);
     void configureAction(void);
     void activeListContextMenu(const QPoint &pos);
-    // Move filters around
-    void indexesMoved(const QModelIndexList & indexes);
 protected:
     int  getTagForActiveSelection();
 private:
@@ -105,6 +106,5 @@ private:
     void displayFamily(uint32_t family);
     void setupFilters(void);
     void updateContextMenu(QMenu *contextMenu);
-    int  calculateListItemHeight(QListWidget *parent, QString text);
 };
 
