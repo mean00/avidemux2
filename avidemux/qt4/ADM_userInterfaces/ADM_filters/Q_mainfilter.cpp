@@ -505,11 +505,6 @@ void filtermainWindow::displayFamily(uint32_t family)
         item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
         item->setData(FilterItemDelegate::FilterNameRole, s1);
         item->setData(FilterItemDelegate::DescriptionRole, s2);
-
-        FilterItemDelegate *delegate;
-        delegate=new FilterItemDelegate(availableList);
-
-        availableList->setItemDelegate(delegate);
         availableList->addItem(item);
     }
 
@@ -568,11 +563,6 @@ void filtermainWindow::buildActiveFilterList(void)
         item->setData(FilterItemDelegate::DescriptionRole, s2);
         printf("Active item :%p\n",item);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsEnabled);
-
-        FilterItemDelegate *delegate;
-        delegate=new FilterItemDelegate(activeList);
-
-        activeList->setItemDelegate(delegate);
         activeList->addItem(item);
     }
 }
@@ -660,7 +650,10 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     activeList->setDropIndicatorShown(true);
     activeList->viewport()->setAcceptDrops(true);
 #endif    
-    
+
+    availableList->setItemDelegate(new FilterItemDelegate(availableList));
+    activeList->setItemDelegate(new FilterItemDelegate(activeList));
+
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
