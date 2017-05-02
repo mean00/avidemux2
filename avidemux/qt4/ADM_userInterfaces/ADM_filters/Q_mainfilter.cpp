@@ -126,17 +126,23 @@ QSize FilterItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QMo
     QFont filterNameFont = QApplication::font();
     QFont descFont = QApplication::font();
     int fontSize = descFont.pointSize();
-    if(fontSize > 0 && fontSize > 8)
+    if(fontSize > 0)
     {
-        if(fontSize > 9)
-            fontSize -= 2;
-        else
-            fontSize--;
-        descFont.setPointSize(fontSize);
+        if(fontSize > 8)
+        {
+            if(fontSize > 9)
+            {
+                fontSize -= 2;
+            }else
+            {
+                fontSize--;
+            }
+            descFont.setPointSize(fontSize);
+        }
     }else // i.e. the font size has been specified in pixels instead of points
     {
         fontSize = descFont.pixelSize();
-        if(fontSize > 0 && fontSize > 10)
+        if(fontSize > 10)
         {
             fontSize -= 2;
             descFont.setPixelSize(fontSize);
@@ -195,19 +201,27 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QFont filterNameFont = QApplication::font();
     QFont descFont = QApplication::font();
     int fontSize = descFont.pointSize();
-    if(fontSize > 0 && fontSize > 8)
+    if(fontSize > 0)
     {
-        if(fontSize > 9)
-            fontSize -= 2;
-        else
-            fontSize--;
-        descFont.setPointSize(fontSize);
+        if(fontSize > 8)
+        {
+            if(fontSize > 9)
+            {
+                fontSize -= 2;
+            }else
+            {
+                fontSize--;
+            }
+            descFont.setPointSize(fontSize);
+        }
     }else // i.e. the font size has been specified in pixels instead of points
     {
         fontSize = descFont.pixelSize();
-        if(fontSize > 0 && fontSize > 10)
+        if(fontSize > 10)
+        {
             fontSize -= 2;
-        descFont.setPixelSize(fontSize);
+            descFont.setPixelSize(fontSize);
+        }
     }
     filterNameFont.setBold(true);
     descFont.setBold(false);
