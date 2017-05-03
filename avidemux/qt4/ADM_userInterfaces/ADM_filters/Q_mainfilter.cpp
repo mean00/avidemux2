@@ -50,6 +50,7 @@ using std::string;
 
 #include <QMenu>
 #include <QPainter>
+#include <QKeyEvent>
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -63,8 +64,6 @@ using std::string;
 
 /*******************************************************/
 #define zprintf(...) {}
-//#define NO_DELEGATE
-#define LABEL_SECURITY_MARGIN 6
 
 extern ADM_Composer *video_body;
 
@@ -224,7 +223,6 @@ void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
         }
     }
     filterNameFont.setBold(true);
-    descFont.setBold(false);
     QFontMetrics filterNameFm(filterNameFont);
     QFontMetrics descFm(descFont);
 
@@ -338,8 +336,8 @@ void filtermainWindow::add( bool b)
 }
 
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn removeAction
+    \brief active filter context menu item
 */
 void filtermainWindow::removeAction(void)
 {
@@ -363,8 +361,8 @@ void filtermainWindow::remove( bool b)
     }
 }
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn configureAction
+    \brief active filter context menu item
 */
 void filtermainWindow::configureAction(void)
 {
@@ -643,13 +641,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     
     printf("active : %p\n",activeList);
     
-#if 1 //def NO_DELEGATE    
     activeList->setSelectionMode(QAbstractItemView::SingleSelection);
     activeList->setDragEnabled(true);
     activeList->setDragDropMode(QAbstractItemView::InternalMove);
     activeList->setDropIndicatorShown(true);
     activeList->viewport()->setAcceptDrops(true);
-#endif    
 
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
@@ -682,6 +678,8 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
+
+    this->installEventFilter(this);
 }
 
 /**
@@ -696,8 +694,45 @@ filtermainWindow::~filtermainWindow()
 }
 
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn eventFilter
+    \brief keyboard accessibility
+*/
+bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
+{
+    QKeyEvent *keyEvent;
+    if(event->type() == QEvent::KeyPress)
+    {
+        keyEvent = (QKeyEvent*)event;
+        switch (keyEvent->key())
+        {
+            case Qt::Key_Delete:
+                remove(true);
+                return true;
+            case Qt::Key_Return:
+                if(keyEvent->modifiers() == Qt::ControlModifier)
+                {
+                    accept();
+                    return true;
+                }
+                if(ui.listFilterCategory->hasFocus())
+                    filterFamilyClick(ui.listFilterCategory->currentRow());
+                else if(availableList->hasFocus())
+                    add(true);
+                else if(activeList->hasFocus())
+                    configure(true);
+                else
+                    accept();
+                return true;
+            default:
+                return false;
+        }
+    }
+    return QObject::eventFilter(watched, event);
+}
+
+/**
+    \fn addSlot
+    \brief context menu item of an available filter
 */
 void filtermainWindow::addSlot(void)
 {
