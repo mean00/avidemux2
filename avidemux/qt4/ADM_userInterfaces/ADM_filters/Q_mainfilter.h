@@ -106,5 +106,6 @@ private:
     void displayFamily(uint32_t family);
     void setupFilters(void);
     void updateContextMenu(QMenu *contextMenu);
+    bool eventFilter(QObject* watched, QEvent* event);
 };
 
