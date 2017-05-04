@@ -21,9 +21,9 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/libiconv-2.dll # MXE libiconv.dll
     ${File} ${ROOT_FOLDER}/libpcre16-0.dll
     ${File} ${ROOT_FOLDER}/libpcre-1.dll
-    ${File} ${ROOT_FOLDER}/libfaad-2.dll
-    ${File} ${ROOT_FOLDER}/libfaac-0.dll
-    ${File} ${ROOT_FOLDER}/libtwolame-0.dll
+    #${File} ${ROOT_FOLDER}/libfaad-2.dll
+    #${File} ${ROOT_FOLDER}/libfaac-0.dll
+    #${File} ${ROOT_FOLDER}/libtwolame-0.dll
     ${File} ${ROOT_FOLDER}/libbz2.dll
     ${File} ${ROOT_FOLDER}/libpng16-16.dll
     ${File} ${ROOT_FOLDER}/libsqlite3-0.dll
@@ -41,13 +41,13 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/Qt5Network.dll
     ${File} ${ROOT_FOLDER}/Qt5OpenGL.dll
     ${File} ${ROOT_FOLDER}/Qt5WinExtras.dll
-    ${File} ${ROOT_FOLDER}/icudt56.dll 
-    ${File} ${ROOT_FOLDER}/icuin56.dll  
-    ${File} ${ROOT_FOLDER}/icuio56.dll  
-    ${File} ${ROOT_FOLDER}/icule56.dll  
-    ${File} ${ROOT_FOLDER}/iculx56.dll  
-    ${File} ${ROOT_FOLDER}/icutu56.dll  
-    ${File} ${ROOT_FOLDER}/icuuc56.dll
+    #${File} ${ROOT_FOLDER}/icudt56.dll 
+    #${File} ${ROOT_FOLDER}/icuin56.dll  
+    #${File} ${ROOT_FOLDER}/icuio56.dll  
+    #${File} ${ROOT_FOLDER}/icule56.dll  
+    #${File} ${ROOT_FOLDER}/iculx56.dll  
+    #${File} ${ROOT_FOLDER}/icutu56.dll  
+    #${File} ${ROOT_FOLDER}/icuuc56.dll
     ${File} ${ROOT_FOLDER}/libintl-8.dll
 # SSL
     ${File} ${ROOT_FOLDER}/libeay32.dll
