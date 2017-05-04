@@ -34,8 +34,8 @@ static void doLineYUVbis(int w,uint8_t *src, uint8_t *y, uint8_t *u, uint8_t *v,
       {
 	    y[0] = src[1];
             y[1] = src[3];
-            v[0] = (src[0]+src[0+stride])>>1;
-            u[0] = (src[2]+src[2+stride])>>1;
+            u[0] = (src[0]+src[0+stride])>>1;
+            v[0] = (src[2]+src[2+stride])>>1;
             y+=2;
             u++;
             v++;
