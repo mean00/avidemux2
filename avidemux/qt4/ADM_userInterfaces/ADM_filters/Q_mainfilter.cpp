@@ -49,6 +49,8 @@ using std::string;
 #include "ADM_script2/include/ADM_script.h"
 
 #include <QMenu>
+#include <QPainter>
+#include <QKeyEvent>
 /*******************************************************/
 #define NB_TREE 8
 #define myFg 0xFF
@@ -62,10 +64,10 @@ using std::string;
 
 /*******************************************************/
 #define zprintf(...) {}
-//#define NO_DELEGATE
-#define LABEL_SECURITY_MARGIN 6
 
 extern ADM_Composer *video_body;
+
+int FilterItemDelegate::padding = 4;
 
 FilterItemEventFilter::FilterItemEventFilter(QWidget *parent) : QObject(parent) {}
 /**
@@ -108,6 +110,54 @@ FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
     zprintf("Delegate : %p\n",this);
     filter = new FilterItemEventFilter(parent);
 }
+
+/**
+    \fn sizeHint
+*/
+QSize FilterItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{ // The code below is stolen from http://3adly.blogspot.de/2013/09/qt-custom-qlistview-delegate-with-word.html
+    if(!index.isValid())
+        return QSize();
+
+    QString filterNameText = index.data(FilterNameRole).toString();
+    QString descText = index.data(DescriptionRole).toString();
+
+    QFont filterNameFont = QApplication::font();
+    QFont descFont = QApplication::font();
+    int fontSize = descFont.pointSize();
+    if(fontSize > 0)
+    {
+        if(fontSize > 8)
+        {
+            if(fontSize > 9)
+            {
+                fontSize -= 2;
+            }else
+            {
+                fontSize--;
+            }
+            descFont.setPointSize(fontSize);
+        }
+    }else // i.e. the font size has been specified in pixels instead of points
+    {
+        fontSize = descFont.pixelSize();
+        if(fontSize > 10)
+        {
+            fontSize -= 2;
+            descFont.setPixelSize(fontSize);
+        }
+    }
+    filterNameFont.setBold(true);
+    QFontMetrics filterNameFm(filterNameFont);
+    QFontMetrics descFm(descFont);
+
+    QRect filterNameRect = filterNameFm.boundingRect(0, 0, option.rect.width() - padding * 2, 0, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, filterNameText);
+    QRect descRect = descFm.boundingRect(0, 0, option.rect.width() - padding * 2, 0, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descText);
+
+    QSize size(option.rect.width(), filterNameRect.height() + descRect.height() +  padding * 3);
+    return size;
+}
+
 /**
  * 
  * @param painter
@@ -115,40 +165,88 @@ FilterItemDelegate::FilterItemDelegate(QWidget *parent) : QItemDelegate(parent)
  * @param index
  */
 void FilterItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    QAbstractItemView *view = qobject_cast<QAbstractItemView*>(parent());
-    QLabel *label;
+{ // The code below is stolen from http://3adly.blogspot.de/2013/09/qt-custom-qlistview-delegate-with-word.html
+    if(!index.isValid())
+        return;
 
-    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
-    int width=qobject_cast<QWidget*>(view)->width();
-    width -= scrollbarWidth;
-    width -= LABEL_SECURITY_MARGIN;
+    painter->save();
 
-    if (view->indexWidget(index) == 0)
+    QPen pen;
+    QColor fg, bg;
+    QPalette pal;
+    if(option.state & QStyle::State_Selected)
     {
-            label = new QLabel();
-            label->installEventFilter(filter);
-            label->setAutoFillBackground(true);
-            label->setFocusPolicy(Qt::TabFocus);
-            label->setMargin(2);
-            label->setWordWrap(true);
-            label->setText(index.data().toString());
-            view->setIndexWidget(index, label);
+        if(option.state & QStyle::State_HasFocus)
+        {
+            fg = pal.color(QPalette::HighlightedText);
+            bg = pal.color(QPalette::Highlight);
+        }else
+        {
+            fg = pal.color(QPalette::WindowText);
+            bg = pal.color(QPalette::Window);
+        }
+    }else
+    {
+        fg = pal.color(QPalette::Text);
+        bg = pal.color(QPalette::Base);
     }
+    painter->fillRect(option.rect, bg);
+    pen.setColor(fg);
+    painter->setPen(pen);
 
-    label = (QLabel*)view->indexWidget(index);
-    // If label width exceeds the width of the viewport, labels get sometimes painted
-    // over other widgets, especially bad on Windows, where they overlay scrollbars.
-    // Set the width to a fixed value small enough to avoid horizontal scrolling.
-    label->setFixedWidth(width);
+    QString filterNameText = index.data(FilterNameRole).toString();
+    QString descText = index.data(DescriptionRole).toString();
 
-    if (option.state & QStyle::State_Selected)
-            if (option.state & QStyle::State_HasFocus)
-                    label->setBackgroundRole(QPalette::Highlight);
-            else
-                    label->setBackgroundRole(QPalette::Window);
-    else
-            label->setBackgroundRole(QPalette::Base);
+    QFont filterNameFont = QApplication::font();
+    QFont descFont = QApplication::font();
+    int fontSize = descFont.pointSize();
+    if(fontSize > 0)
+    {
+        if(fontSize > 8)
+        {
+            if(fontSize > 9)
+            {
+                fontSize -= 2;
+            }else
+            {
+                fontSize--;
+            }
+            descFont.setPointSize(fontSize);
+        }
+    }else // i.e. the font size has been specified in pixels instead of points
+    {
+        fontSize = descFont.pixelSize();
+        if(fontSize > 10)
+        {
+            fontSize -= 2;
+            descFont.setPixelSize(fontSize);
+        }
+    }
+    filterNameFont.setBold(true);
+    QFontMetrics filterNameFm(filterNameFont);
+    QFontMetrics descFm(descFont);
+
+    QRect filterNameRect = filterNameFm.boundingRect(option.rect.left() + padding,
+                                     option.rect.top() + padding,
+                                     option.rect.width() - padding * 2,
+                                     0,
+                                     Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap,
+                                     filterNameText);
+
+    QRect descRect = descFm.boundingRect(filterNameRect.left(),
+                                     filterNameRect.bottom() + padding,
+                                     option.rect.width() - padding * 2,
+                                     0,
+                                     Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap,
+                                     descText);
+
+    painter->setFont(filterNameFont);
+    painter->drawText(filterNameRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, filterNameText);
+
+    painter->setFont(descFont);
+    painter->drawText(descRect, Qt::AlignLeft | Qt::AlignTop | Qt::TextWordWrap, descText);
+
+    painter->restore();
 }
 /**
     \fn preview
@@ -238,8 +336,8 @@ void filtermainWindow::add( bool b)
 }
 
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn removeAction
+    \brief active filter context menu item
 */
 void filtermainWindow::removeAction(void)
 {
@@ -263,8 +361,8 @@ void filtermainWindow::remove( bool b)
     }
 }
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn configureAction
+    \brief active filter context menu item
 */
 void filtermainWindow::configureAction(void)
 {
@@ -382,58 +480,34 @@ void filtermainWindow::filterFamilyClick(int  m)
 }
 
 /**
-    \fn calculateListItemHeight
- */
-int filtermainWindow::calculateListItemHeight(QListWidget *parent, QString text)
-{
-    QLabel *dummy=new QLabel();
-
-    int width=parent->frameSize().width();
-    int scrollbarWidth = qApp->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
-    width -= scrollbarWidth;
-    width -= LABEL_SECURITY_MARGIN;
-    dummy->setFixedWidth(width);
-    dummy->setMargin(2);
-    dummy->setWordWrap(true);
-    dummy->setText(text);
-
-    QFont fnt=dummy->font();
-    QFontMetrics fm(fnt);
-    int height=fm.boundingRect(0, 0, width, dummy->height(), Qt::TextWordWrap | Qt::AlignLeft, text).height();
-    if(height < (fm.lineSpacing() * 2))
-        height=fm.lineSpacing() * 2;
-    height += 8; // the height might be insufficient at very small font sizes
-    delete dummy;
-    dummy=NULL;
-    return height;
-}
-
-/**
  * \fn displayFamily
  * @param family
  */
 void filtermainWindow::displayFamily(uint32_t family)
 {
-  ADM_assert(family<VF_MAX);
+    ADM_assert(family<VF_MAX);
 
-  uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
-  ADM_info("Video filter Family :%u, nb %d\n",family,nb);
-  availableList->clear();
-  for (uint32_t i = 0; i < nb; i++)
+    uint32_t nb=ADM_vf_getNbFiltersInCategory((VF_CATEGORY)family);
+    ADM_info("Video filter Family :%u, nb %d\n",family,nb);
+    availableList->clear();
+    for (uint32_t i = 0; i < nb; i++)
     {
         const char *name,*desc;
         uint32_t major,minor,patch;
-          ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
-          QString str = QString("<b>") + name + QString("</b><br>\n<small>") + desc + QString("</small>");
+        ADM_vf_getFilterInfo((VF_CATEGORY)family,i,&name, &desc,&major,&minor,&patch);
 
-          QListWidgetItem *item;
-          item=new QListWidgetItem(str,availableList,ALL_FILTER_BASE+i+family*100);
-          item->setSizeHint(QSize(availableList->frameSize().width(),calculateListItemHeight(availableList,str)));
-          availableList->addItem(item);
-     }
+        QString s1 = QString(name);
+        QString s2 = QString(desc);
 
-  if (nb)
-    availableList->setCurrentRow(0);
+        QListWidgetItem *item;
+        item=new QListWidgetItem(NULL,availableList,ALL_FILTER_BASE+i+family*100);
+        item->setData(FilterItemDelegate::FilterNameRole, s1);
+        item->setData(FilterItemDelegate::DescriptionRole, s2);
+        availableList->addItem(item);
+    }
+
+    if (nb)
+       availableList->setCurrentRow(0);
 }
 
 /**
@@ -468,7 +542,6 @@ void filtermainWindow::setupFilters(void)
 */
 void filtermainWindow::buildActiveFilterList(void)
 {
-
     activeList->clear();
     int nb=ADM_vf_getSize();
     printf("%d active filters\n",nb);
@@ -479,13 +552,17 @@ void filtermainWindow::buildActiveFilterList(void)
         const char *name= ADM_vf_getDisplayNameFromTag(instanceTag);
         const char *conf=instance->getConfiguration();
         printf("%d %s\n",i,name);
-        QString str = QString("<b>") + name + QString("</b><br>\n<small>") + conf + QString("</small>");
-        QListWidgetItem *item=new QListWidgetItem(str,activeList,ACTIVE_FILTER_BASE+i);
+
+        QString s1 = QString(name);
+        QString s2 = QString(conf);
+
+        QListWidgetItem *item=new QListWidgetItem(NULL,activeList,ACTIVE_FILTER_BASE+i);
+        item->setData(FilterItemDelegate::FilterNameRole, s1);
+        item->setData(FilterItemDelegate::DescriptionRole, s2);
         printf("Active item :%p\n",item);
-        item->setSizeHint(QSize(item->sizeHint().width(),calculateListItemHeight(activeList,str)));
+        item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsEnabled);
         activeList->addItem(item);
     }
-
 }
 
 /**
@@ -551,11 +628,11 @@ void filtermainWindow::updateContextMenu(QMenu *contextMenu)
     contextMenu->actions().at(4)->setEnabled(canPartialize);
 }
 
-  /**
-  */
+/**
+    \brief ctor
+*/
 filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
- {
-
+{
     ui.setupUi(this);
     setupFilters();
 
@@ -564,16 +641,15 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     
     printf("active : %p\n",activeList);
     
-#if 1 //def NO_DELEGATE    
     activeList->setSelectionMode(QAbstractItemView::SingleSelection);
     activeList->setDragEnabled(true);
     activeList->setDragDropMode(QAbstractItemView::InternalMove);
     activeList->setDropIndicatorShown(true);
     activeList->viewport()->setAcceptDrops(true);
-    connect(activeList,SIGNAL(indexesMoved(const QModelIndexList &)),this,SLOT(indexesMoved(const QModelIndexList &)));
-#endif    
+
+    availableList->setItemDelegate(new FilterItemDelegate(availableList));
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
-    
+
     connect(ui.listFilterCategory,SIGNAL(itemDoubleClicked(QListWidgetItem *)),
                 this,SLOT(filterFamilyClick(QListWidgetItem *)));
     connect(ui.listFilterCategory,SIGNAL(itemClicked(QListWidgetItem *)),
@@ -584,9 +660,6 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
 
     connect(ui.buttonClose, SIGNAL(clicked(bool)), this, SLOT(accept()));
     connect(ui.pushButtonPreview, SIGNAL(clicked(bool)), this, SLOT(preview(bool)));
-
-    qobject_cast<QAbstractScrollArea*>(availableList)->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    availableList->setItemDelegate(new FilterItemDelegate(availableList));
 
     displayFamily(0);
     buildActiveFilterList();
@@ -606,9 +679,11 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     activeList->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
- }
+    this->installEventFilter(this);
+}
+
 /**
-    \fn dtor
+    \brief dtor
 */
 filtermainWindow::~filtermainWindow()
 {
@@ -619,27 +694,51 @@ filtermainWindow::~filtermainWindow()
 }
 
 /**
-    \fn    Add
-    \brief Right click on an available filer
+    \fn eventFilter
+    \brief keyboard accessibility
+*/
+bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
+{
+    QKeyEvent *keyEvent;
+    if(event->type() == QEvent::KeyPress)
+    {
+        keyEvent = (QKeyEvent*)event;
+        switch (keyEvent->key())
+        {
+            case Qt::Key_Delete:
+                remove(true);
+                return true;
+            case Qt::Key_Return:
+                if(keyEvent->modifiers() == Qt::ControlModifier)
+                {
+                    accept();
+                    return true;
+                }
+                if(ui.listFilterCategory->hasFocus())
+                    filterFamilyClick(ui.listFilterCategory->currentRow());
+                else if(availableList->hasFocus())
+                    add(true);
+                else if(activeList->hasFocus())
+                    configure(true);
+                else
+                    accept();
+                return true;
+            default:
+                return false;
+        }
+    }
+    return QObject::eventFilter(watched, event);
+}
+
+/**
+    \fn addSlot
+    \brief context menu item of an available filter
 */
 void filtermainWindow::addSlot(void)
 {
     add(true);
 }
-/**
- * 
- * @return 
- */
-void filtermainWindow::indexesMoved(const QModelIndexList & indexes)
-{
-    int n=indexes.size();
-    printf(" -- Moved with %d inputs\n",n);
-    for(int i=0;i<n;i++)
-    {
-        //indexes[i].
-        
-    }
-}
+
 /*******************************************************/
 
 int GUI_handleVFilter(void);

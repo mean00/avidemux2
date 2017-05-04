@@ -40,9 +40,8 @@ QWidget *fileSelGetParent(void)
 }
 
 /**
-          \fn GUI_FileSelWrite (const char *label, char **name, uint32_t access) 
-          \brief Ask for a file for reading (access=0) or writing (access=1)
-        */
+ * \fn GUI_FileSelSelectWriteInternal
+ */
 static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, char **name)
 {
     *name = NULL;		
@@ -81,16 +80,19 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
         {
             admCoreUtils::getLastProjectWriteFolder(lastFolder);
         }
-    }
-    if(!lastFolder.size() || lastReadAsTarget)
-    {
-        if(!isProject)
+        if(!lastFolder.size())
         {
-            admCoreUtils::getLastReadFolder(lastFolder);
-        }else
-        {
-            admCoreUtils::getLastProjectReadFolder(lastFolder);
+            if(!isProject)
+            {
+                admCoreUtils::getLastReadFolder(lastFolder);
+            }else
+            {
+                admCoreUtils::getLastProjectReadFolder(lastFolder);
+            }
         }
+    }else
+    {
+        admCoreUtils::getLastReadFolder(lastFolder);
     }
     if (lastFolder.size())
     {
@@ -112,10 +114,10 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
         QString separator = QString("/");
         str = outputPath+separator+inputBaseName+outputExt;
 
-        /* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
+        /* LASTDIR may have gone; then use the user's homedir instead */
         if (!QDir(outputPath).exists())
         {
-                str.clear();
+            str = QDir::homePath();
         }else
         {
             if(str==QString::fromUtf8(lastRead.c_str()))
@@ -123,6 +125,9 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
                 str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
             }
         }
+    }else
+    {
+        str = QDir::homePath();
     }
 
     if(doFilter)
@@ -174,9 +179,8 @@ static	void GUI_FileSelSelectWriteInternal(const char *label, const char *ext, c
 
 
 /**
-          \fn GUI_FileSelWrite (const char *label, char **name, uint32_t access) 
-          \brief Ask for a file for reading (access=0) or writing (access=1)
-        */
+ * \fn GUI_FileSelSelectReadInternal
+ */
 static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, char **name)
 {
         *name = NULL;		
@@ -214,9 +218,12 @@ static	void GUI_FileSelSelectReadInternal(const char *label, const char *ext, ch
         if (lastFolder.size())
         {
                 str = QFileInfo(QString::fromUtf8(lastFolder.c_str())).path();
-                /* LASTDIR may have gone; then do nothing and use current dir instead (implied) */
+                /* LASTDIR may have gone; then use the user's homedir instead */
                 if (!QDir(str).exists())
-                        str.clear();
+                    str = QDir::homePath();
+        }else
+        {
+            str = QDir::homePath();
         }
 
         if(doFilter)
