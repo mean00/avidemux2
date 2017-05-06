@@ -20,6 +20,7 @@
 #include "ADM_vidMisc.h"
 #include "partial.h"
 #include "partial_desc.cpp"
+#include "avi_vars.h"
 
 extern ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *last, CONFcouple *couples);
 extern uint32_t    ADM_vf_getTagFromInternalName(const char *name);
@@ -359,8 +360,17 @@ ADM_coreVideoFilter *createPartialFilter(const char *internalName,CONFcouple *co
   int sonNbItems=couples->getSize();
   CONFcouple tmp(3+sonNbItems);
 
-  uint32_t start=1000;
-  uint32_t end=5000;
+  uint32_t start, end;
+  if(source->getInfo()->totalDuration == video_body->getVideoDuration())
+  {
+      start=video_body->getMarkerAPts()/1000;
+      end=video_body->getMarkerBPts()/1000;
+  }else
+  {
+      double f=(double)(source->getInfo()->totalDuration) / video_body->getVideoDuration();
+      start=(uint32_t)(video_body->getMarkerAPts() * f / 1000);
+      end=(uint32_t)(video_body->getMarkerBPts() * f / 1000);
+  }
 
   tmp.writeAsString("filterName",internalName);
   tmp.writeAsUint32 ("startBlack",start);
