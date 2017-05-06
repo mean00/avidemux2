@@ -99,6 +99,8 @@ public slots:
     void removeAction(void);
     void configureAction(void);
     void activeListContextMenu(const QPoint &pos);
+    // reorder active filters using drag-n-drop
+    void rowsMovedSlot(void);
 protected:
     int  getTagForActiveSelection();
 private:
