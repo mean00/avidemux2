@@ -215,7 +215,11 @@ const char* getNativeRendererDesc(int engine)
 
 void GUI_OpenApplicationLog()
 {
-	QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getLogDir()) + "admlog.txt"));
+#ifdef _WIN32
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getLogDir()) + "admlog.txt"));
+#else
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir()) + "admlog.txt"));
+#endif
 }
 
 void GUI_OpenApplicationDataFolder()
