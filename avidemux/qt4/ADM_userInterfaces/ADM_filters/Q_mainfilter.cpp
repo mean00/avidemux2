@@ -645,7 +645,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     activeList->setDragEnabled(true);
     activeList->setDragDropMode(QAbstractItemView::InternalMove);
     activeList->setDropIndicatorShown(true);
-    activeList->viewport()->setAcceptDrops(true);
+    connect(activeList->model(),SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),this,SLOT(rowsMovedSlot()));
 
     availableList->setItemDelegate(new FilterItemDelegate(availableList));
     activeList->setItemDelegate(new FilterItemDelegate(activeList));
@@ -737,6 +737,33 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
 void filtermainWindow::addSlot(void)
 {
     add(true);
+}
+
+/**
+    \fn rowsMovedSlot
+    \brief actually move filters upon reordering active list items using drag-n-drop
+*/
+void filtermainWindow::rowsMovedSlot(void)
+{
+    int moved = activeList->currentRow();
+    int itag = activeList->item(moved)->type();
+    ADM_assert(itag>=ACTIVE_FILTER_BASE);
+    itag -= ACTIVE_FILTER_BASE;
+    if(moved==itag) // this can't happen, can it?
+        return;
+    if(moved<itag)
+    {
+        for(int i=0; i<itag-moved; i++)
+        {
+            ADM_vf_moveFilterUp(itag-i);
+        }
+    }else
+    {
+        for(int i=0; i<moved-itag; i++)
+        {
+            ADM_vf_moveFilterDown(itag+i);
+        }
+    }
 }
 
 /*******************************************************/
