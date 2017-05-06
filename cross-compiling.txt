@@ -42,7 +42,7 @@ to the settings.mk file.
 3. Build required MXE packages for the targets specified above with
 
     cd /opt/mxe
-    make qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264
+    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264
 
 This pulls in all the dependencies and can take a couple of hours. The final
 total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
@@ -122,4 +122,4 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2017-04-25 UTC 22:21
+2017-05-06 UTC 16:31
