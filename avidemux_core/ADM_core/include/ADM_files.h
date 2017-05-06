@@ -22,6 +22,9 @@ ADM_CORE6_EXPORT void ADM_initBaseDir(int argc, char *argv[]);
 #endif
 // Returns dir to ~/.avidemux, no need to free it
 ADM_CORE6_EXPORT const char *ADM_getBaseDir(void);
+#ifdef _WIN32
+ADM_CORE6_EXPORT const char *ADM_getLogDir(void);
+#endif
 // Returns dir to ~/.avidemux/jobs, no need to free it
 ADM_CORE6_EXPORT const char *ADM_getJobDir(void);
 // Returns dir to ~/.avidemux/custom, no need to free it

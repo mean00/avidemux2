@@ -26,6 +26,7 @@
 extern void simplify_path(char **buf);
 char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 static char ADM_basedir[1024] = {0};
+static char ADM_logdir[1024] = {0};
 static char *ADM_autodir = NULL;
 static char *ADM_systemPluginSettings=NULL;
 
@@ -84,6 +85,14 @@ const char *ADM_getBaseDir(void)
 	return ADM_basedir;
 }
 
+/*
+      Get the root directory for .avidemux stuff
+******************************************************/
+const char *ADM_getLogDir(void)
+{
+	return ADM_logdir;
+}
+
 /**
  * \fn ADM_initBaseDir
  * \brief ADM_initBaseDir
@@ -91,6 +100,7 @@ const char *ADM_getBaseDir(void)
 void ADM_initBaseDir(int argc, char *argv[])
 {
 	char *home = NULL;
+	char *log = NULL;
 
     bool portableMode=isPortableMode(argc,argv);
 	// Get the base directory
@@ -99,10 +109,12 @@ void ADM_initBaseDir(int argc, char *argv[])
     {
         // Portable mode...
         home = ADM_getInstallRelativePath(NULL, NULL, NULL);
+        log = ADM_getInstallRelativePath(NULL, NULL, NULL);
     }
 	else
     {
         wchar_t wcHome[MAX_PATH];
+        wchar_t wcLog[MAX_PATH];
 
         if (SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, wcHome) == S_OK)
         {
@@ -117,6 +129,20 @@ void ADM_initBaseDir(int argc, char *argv[])
             home=new char[10];
             strcpy(home,"c:\\");
         }
+        
+        if (SHGetFolderPathW(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, wcLog) == S_OK)
+        {
+            int len = wideCharStringToUtf8(wcLog, -1, NULL);
+            log = new char[len];
+
+            wideCharStringToUtf8(wcLog, -1, log);
+        }
+        else
+        {
+            printf("Oops: can't determine the Local Application Data folder.");
+            log=new char[10];
+            strcpy(log,"c:\\");
+        }        
     }
 
 
@@ -147,6 +173,34 @@ void ADM_initBaseDir(int argc, char *argv[])
 		else
 		{
 			ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
+		}
+	}
+	
+	if (log)
+	{
+		strcpy(ADM_logdir, log);
+		AddSeparator(ADM_logdir);
+
+
+		const char *ADM_DIR_NAME;
+
+		if (portableMode)
+			ADM_DIR_NAME = "settings";
+		else
+			ADM_DIR_NAME = "avidemux";
+
+		strcat(ADM_logdir, ADM_DIR_NAME);
+		strcat(ADM_logdir, ADM_SEPARATOR);
+
+		delete [] log;
+
+		if (ADM_mkdir(ADM_logdir))
+		{
+			printf("Using %s as log directory.\n", ADM_logdir);
+		}
+		else
+		{
+			ADM_error("Oops: cannot create the log directory (%s)\n", ADM_logdir);
 		}
 	}
 }

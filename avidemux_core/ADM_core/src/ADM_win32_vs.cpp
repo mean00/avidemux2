@@ -41,7 +41,7 @@ void redirectStdoutToFile(void)
     // Redirect output to log file in the user's profile directory
     const char* logFile = "admlog.txt";
 
-    std::string filePath=std::string(ADM_getBaseDir())+std::string(logFile);
+    std::string filePath=std::string(ADM_getLogDir())+std::string(logFile);
 
     freopen(filePath.c_str(),"w",stdout);
  
