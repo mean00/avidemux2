@@ -7,12 +7,9 @@
 #include <QDesktopServices>
 #include <QWidget>
 #include <QtCore/QString>
-
 #ifdef _WIN32
-#include <time.h>
 #include <QFile>
 #endif
-
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #endif
@@ -229,22 +226,24 @@ void GUI_OpenApplicationLog()
 
 void GUI_OpenApplicationDataFolder()
 {
+    QString baseDir = QString(ADM_getBaseDir());
 #ifdef __WIN32
     QString logDir = QString(ADM_getLogDir());
-    QString baseDir = QString(ADM_getBaseDir());
     if(logDir != baseDir)
     {
-        time_t now = time(NULL);
-        struct tm *ct = localtime(&now);
-        char buffer[40];
-        // strftime(buffer,40,"%F_%H%M%S",ct); // fails with mingw
-        snprintf(buffer,40,"%04d-%02d-%02d_%02d%02d%02d",ct->tm_year + 1900,ct->tm_mon,ct->tm_mday,ct->tm_hour,ct->tm_min,ct->tm_sec);
-        QString timestamp = QString::fromUtf8(buffer);
         QString src = logDir + QString("admlog.txt");
-        QString dest = baseDir + QString("admlog_") + timestamp + QString(".txt");
-        if(!QFile::copy(src,dest))
-            ADM_warning("copying %s to %s failed\n",src.toUtf8().constData(),dest.toUtf8().constData());
+        QString old = baseDir + QString("admlog_old.txt");
+        bool r = true;
+        if(QFile::exists(old))
+            r = QFile::remove(old);
+        QString dest = baseDir + QString("admlog.txt");
+        if(r && QFile::exists(dest))
+            QFile::copy(dest,old);
+        if(QFile::exists(dest) && !QFile::remove(dest))
+            ADM_warning("Could not delete %s to copy %s there\n",dest.toUtf8().constData(),src.toUtf8().constData());
+        else if(!QFile::copy(src,dest))
+            ADM_warning("Copying %s to %s failed\n",src.toUtf8().constData(),dest.toUtf8().constData());
     }
 #endif
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir())));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(baseDir));
 }
