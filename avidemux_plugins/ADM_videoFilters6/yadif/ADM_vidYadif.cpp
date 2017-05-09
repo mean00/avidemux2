@@ -209,7 +209,7 @@ bool yadifFilter::getNextFrame(uint32_t *fn,ADMImage *image)
                 n = nextFrame;
 
         src = vidCache->getImage(n);
-        *fn=n;
+        *fn=nextFrame;
         if(!src) return false;
         
   
