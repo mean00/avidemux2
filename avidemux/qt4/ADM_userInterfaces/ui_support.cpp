@@ -7,7 +7,9 @@
 #include <QDesktopServices>
 #include <QWidget>
 #include <QtCore/QString>
-
+#ifdef _WIN32
+#include <QFile>
+#endif
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #endif
@@ -224,5 +226,24 @@ void GUI_OpenApplicationLog()
 
 void GUI_OpenApplicationDataFolder()
 {
-	QDesktopServices::openUrl(QUrl::fromLocalFile(QString(ADM_getBaseDir())));
+    QString baseDir = QString(ADM_getBaseDir());
+#ifdef __WIN32
+    QString logDir = QString(ADM_getLogDir());
+    if(logDir != baseDir)
+    {
+        QString src = logDir + QString("admlog.txt");
+        QString old = baseDir + QString("admlog_old.txt");
+        bool r = true;
+        if(QFile::exists(old))
+            r = QFile::remove(old);
+        QString dest = baseDir + QString("admlog.txt");
+        if(r && QFile::exists(dest))
+            QFile::copy(dest,old);
+        if(QFile::exists(dest) && !QFile::remove(dest))
+            ADM_warning("Could not delete %s to copy %s there\n",dest.toUtf8().constData(),src.toUtf8().constData());
+        else if(!QFile::copy(src,dest))
+            ADM_warning("Copying %s to %s failed\n",src.toUtf8().constData(),dest.toUtf8().constData());
+    }
+#endif
+    QDesktopServices::openUrl(QUrl::fromLocalFile(baseDir));
 }
