@@ -5,7 +5,7 @@ Mplayer HQDenoise3d port to avidemux2
 Original Authors
 Copyright (C) 2003
 Daniel Moreno <comac@comac.darktech.org>
-	& A'rpi
+        & A'rpi
 Resynced with ffmpeg lavfilter
  * Copyright (c) 2003 Daniel Moreno <comac AT comac DOT darktech DOT org>
  * Copyright (c) 2010 Baptiste Coudurier
@@ -211,45 +211,44 @@ DECLARE_VIDEO_FILTER(   ADMVideoMPD3D,   // Class
 const char 	*ADMVideoMPD3D::getConfiguration(void)
  {
       static char str[1024];
-	  snprintf(str,1023," MPlayer hqdn3d (Sp : %2.1f - %2.1f, Tmp:%2.1f - %2.1f)'",
-						param.luma_spatial,param.chroma_spatial,param.luma_temporal,param.chroma_temporal);
+   
+      snprintf(str,1023," MPlayer hqdn3d (Sp : %2.1f - %2.1f, Tmp:%2.1f - %2.1f)'",
+                                                param.luma_spatial,param.chroma_spatial,param.luma_temporal,param.chroma_temporal);
       return str;
-        
+
 }
 /**
     \fn configure
 */
 bool ADMVideoMPD3D::configure(void)
 {
-
-        
         ELEM_TYPE_FLOAT fluma_spatial,fchroma_spatial,fluma_temporal,fchroma_temporal;
 #define PX(x) &x
 #define OOP(x,y) f##x=(ELEM_TYPE_FLOAT )param.x;
-        
+
         OOP(luma_spatial,Luma);
         OOP(chroma_spatial,Chroma);
         OOP(luma_temporal,LumaTemporal);
         OOP(chroma_temporal,ChromaTemporal);
-        
+
         diaElemFloat   luma(PX(fluma_spatial),QT_TRANSLATE_NOOP("mp3d","_Spatial luma strength:"),0.1,100.);
         diaElemFloat   chroma(PX(fchroma_spatial),QT_TRANSLATE_NOOP("mp3d","S_patial chroma strength:"),0.,100.);
         diaElemFloat   lumaTemporal(PX(fluma_temporal),QT_TRANSLATE_NOOP("mp3d","_Temporal luma strength:"),0.,100.);
         diaElemFloat   chromaTemporal(PX(fchroma_temporal),QT_TRANSLATE_NOOP("mp3d","T_emporal chroma strength:"),0.,100.);
-    
+
         diaElem *elems[4]={&luma,&chroma,&lumaTemporal,&chromaTemporal};
-  
+
         if(  diaFactoryRun(QT_TRANSLATE_NOOP("mp3d","MPlayer Denoise 3D HQ"),4,elems))
         {
 #undef OOP
 #define OOP(x,y) param.x=(float) f##x
-                OOP(luma_spatial,Luma);
-                OOP(chroma_spatial,Chroma);
-                OOP(luma_temporal,LumaTemporal);
-                OOP(chroma_temporal,ChromaTemporal);
-          
-                setup();
-                return 1;
+            OOP(luma_spatial,Luma);
+            OOP(chroma_spatial,Chroma);
+            OOP(luma_temporal,LumaTemporal);
+            OOP(chroma_temporal,ChromaTemporal);
+
+            setup();
+            return 1;
         }
         return 0;
 }
@@ -259,10 +258,10 @@ bool ADMVideoMPD3D::configure(void)
 ADMVideoMPD3D::~ADMVideoMPD3D()
 {
     if (context.Line)
-	{
-		delete [] context.Line;
-		context.Line=NULL;
-	}
+    {
+        delete [] context.Line;
+        context.Line=NULL;
+    }
 
     for(int i=0;i<3;i++)
     {
@@ -291,7 +290,7 @@ uint8_t  ADMVideoMPD3D::setup(void)
     ChromSpac = Param2 * Param1 / Param1;
     LumTmp    = Param3 * Param1 / Param1;
     ChromTmp  = LumTmp * ChromSpac / LumSpac;
-    
+
     PrecalcCoefs(context.Coefs[0], LumSpac);
     PrecalcCoefs(context.Coefs[1], LumTmp);
     PrecalcCoefs(context.Coefs[2], ChromSpac);
@@ -307,17 +306,17 @@ ADMVideoMPD3D::ADMVideoMPD3D(	ADM_coreVideoFilter *in,CONFcouple *couples)
 {
 uint32_t page;
   memset(&context,0,sizeof(context));
-  
+
   context.Line=new unsigned int [in->getInfo()->width];
   page=info.width*info.height;
-  
+
   if(!couples || !ADM_paramLoad(couples,denoise3dhq_param,&param))
   {  		
-            param.mode=4;	
-			param.luma_spatial=PARAM1_DEFAULT;
-			param.chroma_spatial=PARAM2_DEFAULT;
-			param.luma_temporal=PARAM3_DEFAULT;
-            param.chroma_temporal=PARAM3_DEFAULT*PARAM2_DEFAULT/PARAM1_DEFAULT; //   ChromTmp  = LumTmp * ChromSpac / LumSpac;
+        param.mode=4;	
+        param.luma_spatial=PARAM1_DEFAULT;
+        param.chroma_spatial=PARAM2_DEFAULT;
+        param.luma_temporal=PARAM3_DEFAULT;
+        param.chroma_temporal=PARAM3_DEFAULT*PARAM2_DEFAULT/PARAM1_DEFAULT; //   ChromTmp  = LumTmp * ChromSpac / LumSpac;
   }
   setup();
 
@@ -329,7 +328,7 @@ uint32_t page;
 bool	ADMVideoMPD3D::getCoupledConf( CONFcouple **couples)
 {
     return ADM_paramSave(couples, denoise3dhq_param,&param);
-	
+
 }
 
 void ADMVideoMPD3D::setCoupledConf(CONFcouple *couples)
@@ -342,24 +341,24 @@ void ADMVideoMPD3D::setCoupledConf(CONFcouple *couples)
 */
 bool ADMVideoMPD3D::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-	int cw= info.width>>1;
-	int ch= info.height>>1;
-    int W = info.width;
-	int H  = info.height;
-	uint32_t dlen,dflags;
+        int cw= info.width>>1;
+        int ch= info.height>>1;
+        int W = info.width;
+        int H  = info.height;
+        uint32_t dlen,dflags;
 
-    ADMImage *src, *dst;
-    
+        ADMImage *src, *dst;
+
         *fn=nextFrame;
         uint32_t n = nextFrame;
         printf("MP3d: next frame= %d\n",(int)n);
         src = vidCache->getImage(n);
         if(!src) return false;
-        
-		uint8_t *c,*d;
 
-		d=YPLANE(image);
-		c=YPLANE(src);
+        uint8_t *c,*d;
+
+        d=YPLANE(image);
+        c=YPLANE(src);
 
         deNoise(c,d,
                 context.Line,
@@ -371,9 +370,9 @@ bool ADMVideoMPD3D::getNextFrame(uint32_t *fn,ADMImage *image)
                 context.Coefs[0],
                 context.Coefs[1]);
 
-	
-		d=UPLANE(image);
-		c=UPLANE(src);
+
+        d=UPLANE(image);
+        c=UPLANE(src);
 
        deNoise(c,d,
                 context.Line,
@@ -399,10 +398,10 @@ bool ADMVideoMPD3D::getNextFrame(uint32_t *fn,ADMImage *image)
                 context.Coefs[3]);
 
 
-	nextFrame++;
-	image->copyInfo(src);
-    vidCache->unlockAll();
-	return 1;
+        nextFrame++;
+        image->copyInfo(src);
+        vidCache->unlockAll();
+        return 1;
 }
 /**
     \fn goToTime
@@ -416,6 +415,7 @@ bool         ADMVideoMPD3D::goToTime(uint64_t usSeek)
         context.Frame[i]=NULL;
         if(t) av_free(t);
     }
+
     // Flush 
     return ADM_coreVideoFilterCached::goToTime(usSeek);
 }
