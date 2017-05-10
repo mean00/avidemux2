@@ -320,17 +320,18 @@ const CHANNEL_TYPE *alsaAudioDevice::getWantedChannelMapping(uint32_t channels)
  {
        /* Stop PCM device and drop pending frames */
     snd_pcm_drop(pcm_handle);
-
     /* Stop PCM device after pending frames have been played */
     snd_pcm_drain(pcm_handle);
-      if (snd_pcm_close(pcm_handle) < 0)
-      {
-		printf("[Alsa] Troubles closing alsa\n");
+    snd_pcm_hw_free(pcm_handle);
+    if (snd_pcm_close(pcm_handle) < 0)
+    {
+        ADM_warning("[Alsa] Troubles closing alsa\n");
 
-      }
-     }
-     _init=0;
-     return true;
+    }
+    snd_config_update_free_global();
+  }
+  _init=0;
+  return true;
 }
 
 uint8_t alsaAudioDevice::setVolume(int volume){
