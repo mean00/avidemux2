@@ -33,7 +33,7 @@ public:
 };
 
 
-DECLARE_VIDEO_FILTER(   blackenBorders,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   blackenBorders,   // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_TRANSFORM,            // Category
