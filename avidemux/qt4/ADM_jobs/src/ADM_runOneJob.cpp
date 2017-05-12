@@ -27,7 +27,18 @@
 #include "pthread.h"
 
 #ifdef _WIN32
-int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
+    int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
+    #define MKCLI() "avidemux_cli.exe"
+    #define MKQT()  "avidemux.exe"
+    const string slash=string("\\");
+#else
+    #define MKCLI() "avidemux3_cli"
+    #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+        #define MKQT() "avidemux3_qt5"
+    #else
+        #define MKQT() "avidemux3_qt4"
+    #endif
+    const string slash=string("/");
 #endif
 
 /**
@@ -161,15 +172,6 @@ bool jobWindow::runOneJob( ADMJob &job)
     // 2- Spawn  child
     string ScriptFullPath;
     
-#ifdef _WIN32
-    #define MKCLI() "avidemux_cli.exe"
-    #define MKQT()  "avidemux.exe"
-    string slash=string("\\");
-#else
-    #define MKCLI() "avidemux3_cli"
-    #define MKQT() "avidemux3_qt4"
-    string slash=string("/");
-#endif
     
     ScriptFullPath=string(ADM_getJobDir())+slash+string(job.scriptName);
     const char *avidemuxVersion=MKCLI();
