@@ -22,6 +22,7 @@
 #include "DIA_flyDialogQt4.h"
 #include "../ADM_dialog/DIA_flyPreview.h"
 #include <QTimer>
+#include <QResizeEvent>
 
 class Ui_seekablePreviewWindow : public QDialog
 {
@@ -36,9 +37,8 @@ public:
                 ~Ui_seekablePreviewWindow();
 	void    resetVideoStream(ADM_coreVideoFilter *videoStream);
 	uint32_t frameIndex();
-        bool     setDuration(uint64_t duration);
 public slots:
 	void sliderChanged(int value);
-        
-
+private:
+        void resizeEvent(QResizeEvent *event);
 };

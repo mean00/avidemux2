@@ -64,15 +64,9 @@ public:
             pushButton_fwd1mn->setAutoRepeatDelay(1000);
 
             horizontalLayout_4->addWidget(pushButton_fwd1mn);
-
-            radioButton_autoZoom = new QRadioButton();
-            radioButton_autoZoom->setObjectName(QString("radioButton_autoZoom"));
-            radioButton_autoZoom->setChecked(true);
-
-            horizontalLayout_4->addWidget(radioButton_autoZoom);
             //
             labelTime=new QLabel();
-            labelTime->setText("00:00:00.000");
+            labelTime->setText("00:00:00.000 / 00:00:00.000");
             horizontalLayout_4->addWidget(labelTime);
             //
             QSpacerItem  *horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -85,7 +79,6 @@ public:
             pushButton_next->setText(QApplication::translate("seekablePreviewDialog", ">", 0));
             pushButton_fwd1mn->setText(QApplication::translate("seekablePreviewDialog", ">>", 0));
             pushButton_fwd1mn->setToolTip(QApplication::translate("seekablePreviewDialog", "Forward one minute", 0));
-            radioButton_autoZoom->setText(QApplication::translate("seekablePreviewDialog", "A&utoZoom", 0));    
          }
         void disableButtons()
         {
@@ -104,7 +97,6 @@ public:
         QPushButton *pushButton_play;
         QPushButton *pushButton_next;
         QPushButton *pushButton_fwd1mn;
-        QRadioButton *radioButton_autoZoom;
         QLabel       *labelTime;
 };
 
@@ -251,15 +243,13 @@ ADM_colorspace ADM_flyDialog::toRgbColor(void)
  */
 bool        ADM_flyDialog::addControl(QHBoxLayout *horizontalLayout_4)
 {
-       
         _parent->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
         _control=new flyControl(horizontalLayout_4);
         QObject::connect(_control->pushButton_next ,SIGNAL(clicked()),this,SLOT(nextImage()));
         QObject::connect(_control->pushButton_back1mn ,SIGNAL(clicked()),this,SLOT(backOneMinute()));
         QObject::connect(_control->pushButton_fwd1mn ,SIGNAL(clicked()),this,SLOT(fwdOneMinute()));
         QObject::connect(_control->pushButton_play ,SIGNAL(toggled(bool )),this,SLOT(play(bool)));
-        QObject::connect(_control->radioButton_autoZoom ,SIGNAL(toggled(bool )),this,SLOT(autoZoom(bool)));
-      
+
         return true;
 }
 
@@ -288,8 +278,10 @@ bool ADM_flyDialog::nextImageInternal(void)
     }
     lastPts=_yuvBuffer->Pts;
     setCurrentPts(lastPts);
+    uint64_t duration=_in->getInfo()->totalDuration;
+    QString time=QString(ADM_us2plain(lastPts)) + QString(" / ") + QString(ADM_us2plain(duration));
     if(_control)
-        _control->labelTime->setText(ADM_us2plain(lastPts));
+        _control->labelTime->setText(time);
     // Process...   
     process();
     return display(_rgbByteBufferDisplay.at(0));
@@ -341,7 +333,6 @@ bool ADM_flyDialog::initializeSize()
         _zoomW = uint32_t(_w * _zoom);
         _zoomH = uint32_t(_h * _zoom);
     }
-    
     
     ADM_info("xAutoZoom : base size= %d x %d\n",_usedWidth,_usedHeight);
     return true;
@@ -532,11 +523,14 @@ bool FlyDialogEventFilter::eventFilter(QObject *obj, QEvent *event)
     _yuvBuffer=new ADMImageDefault(_w,_h);
     _usedWidth= _usedHeight=0;
     lastPts=0;
-   
-    
+
+    QGraphicsScene *sc=new QGraphicsScene(this);
+    sc->setBackgroundBrush(QBrush(Qt::darkGray, Qt::SolidPattern));
+    qobject_cast<QGraphicsView*>(_canvas->parentWidget())->setScene(sc);
+    qobject_cast<QFrame*>(_canvas->parentWidget())->setFrameStyle(QFrame::NoFrame);
+
     connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
     timer.setSingleShot(true);
-    
 
     int incrementUs=getUnderlyingFilter()->getInfo()->frameIncrement;
 
@@ -571,8 +565,58 @@ void ADM_flyDialog::postInit(uint8_t reInit)
 
 	((ADM_QCanvas*)_canvas)->changeSize(_zoomW, _zoomH);
 	graphicsView->setMinimumSize(_zoomW, _zoomH);
-	graphicsView->resize(_zoomW, _zoomH);
 }
+
+/**
+    \fn adjustCanvasPosition
+    \brief center canvas within the viewport (graphicsView)
+*/
+void ADM_flyDialog::adjustCanvasPosition(void)
+{
+    uint32_t graphicsViewWidth = _canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = _canvas->parentWidget()->height();
+    uint32_t canvasWidth = _canvas->width();
+    uint32_t canvasHeight = _canvas->height();
+    int h = 0;
+    int v = 0;
+    if(graphicsViewWidth > canvasWidth)
+        h = (graphicsViewWidth - canvasWidth)/2;
+    if(graphicsViewHeight > canvasHeight)
+        v = (graphicsViewHeight - canvasHeight)/2;
+    if(h||v)
+        _canvas->move(h,v);
+}
+
+/**
+    \fn fitCanvasIntoView
+*/
+void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
+{
+    double ar = (double)_w / _h;
+    double viewAr = (double)width / height;
+
+    if(viewAr != ar)
+    {
+        uint32_t tmpZoomW = 0;
+        uint32_t tmpZoomH = 0;
+        if(viewAr > ar)
+        {
+            tmpZoomW = (uint32_t)((double)height * ar);
+            tmpZoomH = height;
+        }else
+        {
+            tmpZoomW = width;
+            tmpZoomH = (uint32_t)((double)width / ar);
+        }
+        _zoomW = tmpZoomW;
+        _zoomH = tmpZoomH;
+        _zoom = (float)_zoomW / _w;
+        updateZoom();
+        _canvas->changeSize(_zoomW, _zoomH);
+        sameImage();
+    }
+}
+
 /**
     \fn    calcZoomFactor
     \brief
@@ -587,8 +631,7 @@ float ADM_flyDialog::calcZoomFactor(void)
     // zoom it ?
     if((zoom)>1)
     {
-        _computedZoom=floor(APPROXIMATE*(zoom))/APPROXIMATE;
-        ADM_info("AutoZoom %f ->%f \n",(float)zoom,(float)_computedZoom);
+        _computedZoom=1.; // never upscale automatically
         return _computedZoom;
     }
     double invertZoom=1/zoom;
@@ -715,30 +758,15 @@ void ADM_flyDialog::play(bool state)
 }
 
 /**
- * 
- */
-void ADM_flyDialog::autoZoom(bool state)
-{
-    ADM_info("*** AUTO ZOOM = %d\n",(int)state);
-    if(!state)
-    {
-        disableZoom();
-        _canvas->setSizePolicy(QSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum));
-        _parent->adjustSize();
-        
-    }else
-    {
-        enableZoom();
-        _parent->adjustSize();
-    }
-
-}
-
+    \fn timeout
+    \brief play filtered video
+*/
 void ADM_flyDialog::timeout()
 {
-    
     bool r=nextImage();
-    _control->labelTime->setText(ADM_us2plain(_yuvBuffer->Pts));
+    uint64_t duration=_in->getInfo()->totalDuration;
+    QString time=QString(ADM_us2plain(_yuvBuffer->Pts)) + QString(" / ") + QString(ADM_us2plain(duration));
+    _control->labelTime->setText(time);
     if(r)
     {
         int now=_clock.getElapsedMS();
