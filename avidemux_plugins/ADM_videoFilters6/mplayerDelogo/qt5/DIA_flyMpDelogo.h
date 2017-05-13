@@ -51,7 +51,7 @@ public:
 */
 class flyMpDelogo : public ADM_flyDialogYuv
 {
-protected:
+public:
     bool    blockChanges(bool block)  ;
 public:
    delogo      param;
@@ -77,6 +77,5 @@ public:
                     return true;
                 }
     bool    bandResized(int x,int y,int w, int h);
-    void    autoZoom(bool state);
 };
 // EOF
