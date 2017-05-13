@@ -237,9 +237,9 @@ bool jobWindow::runOneJob( ADMJob &job)
                                 break;
             }
         }
-        ADM_assert(dialog);
+        else
+            ADM_usleep(1000*1000); // Refresh once per sec
         QApplication::processEvents();
-        ADM_usleep(1000*1000); // Refresh once per sec
     }
     ADM_info("** End of slave process **\n");
     ADM_info("** End of slave process **\n");
