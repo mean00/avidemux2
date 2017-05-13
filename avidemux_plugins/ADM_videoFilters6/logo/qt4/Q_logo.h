@@ -62,8 +62,8 @@ private slots:
         void                moved(int x,int y);
         void                preview(int x);
         void                imageSelect();
-        
-       
-    
+
+private:
+        void                resizeEvent(QResizeEvent *event);
 };
 #endif
