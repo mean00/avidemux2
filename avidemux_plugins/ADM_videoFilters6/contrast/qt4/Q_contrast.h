@@ -29,6 +29,7 @@ class Ui_contrastWindow : public QDialog
 
 private:
         void setDialTitles(void);
+        void resizeEvent(QResizeEvent *event);
 
 protected : 
 	int lock;

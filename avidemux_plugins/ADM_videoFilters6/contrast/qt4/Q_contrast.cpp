@@ -76,6 +76,9 @@
           connect( ui.checkBox_Enabled,SIGNAL(stateChanged(int)),this,SLOT(previewActivated(int)));  
           connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
+        show();
+        myCrop->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
 /**
  * 
@@ -151,6 +154,19 @@ void Ui_contrastWindow::setDialTitles(void)
     QString title2=QString(QT_TRANSLATE_NOOP("contrast","Brightness"))+QString(": %2").arg(myCrop->param.offset);
     ui.labelContrast->setText(title);
     ui.labelBrightness->setText(title2);
+}
+
+/**
+    \fn resizeEvent
+*/
+void Ui_contrastWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myCrop->adjustCanvasPosition();
 }
 
 #define MYSPIN(x) w->dial##x
