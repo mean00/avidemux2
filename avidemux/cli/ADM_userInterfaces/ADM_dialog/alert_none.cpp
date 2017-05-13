@@ -154,10 +154,18 @@ int             GUI_YesNo(const char *primary, const char *secondary_format)
 int             GUI_Question(const char *alertstring)
 {
   
+  if(beQuiet)  
+  {
+      printf("%s => No\n",alertstring);
+      return false;
+  }
+    
   boxStart();
   boxAdd("Question");
   boxAdd(alertstring);
   boxEnd();
+  
+  
   
   while(1)
           {
@@ -170,6 +178,14 @@ int             GUI_Question(const char *alertstring)
 
 int      GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
+  if(beQuiet)  
+  {
+      printf("%s => %s\n",title,choice1);
+      return 0;
+  }
+  
+    
+    
   boxStart();
   boxAdd("Choice");
   boxAdd(title);
