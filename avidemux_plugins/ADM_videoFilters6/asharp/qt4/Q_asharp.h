@@ -28,5 +28,8 @@ private slots:
 	void sliderUpdate(int foo);
 	void valueChanged(double foo);
     void valueChanged2(int foo);
+
+private:
+        void resizeEvent(QResizeEvent *event);
 };
 #endif	// Q_asharp_h

@@ -51,6 +51,9 @@
           SPINNER(Block);
           connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int))); 
 
+        show();
+        myCrop->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_asharpWindow::sliderUpdate(int foo)
   {
@@ -81,6 +84,16 @@ void Ui_asharpWindow::valueChanged( double f )
   myCrop->download();
   myCrop->sameImage();
   lock--;
+}
+
+void Ui_asharpWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myCrop->adjustCanvasPosition();
 }
 
 #define MYSPIN(x) w->doubleSpinBox##x
