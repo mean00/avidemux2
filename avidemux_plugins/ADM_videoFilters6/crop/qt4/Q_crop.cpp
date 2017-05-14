@@ -59,7 +59,7 @@ Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *i
 
         show();
         myCrop->adjustCanvasPosition();
-        //canvas->parentWidget()->setMinimumSize(30,30); // downscaling doesn't work right with RGB
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
   }
   void Ui_cropWindow::sliderUpdate(int foo)
   {
@@ -114,7 +114,7 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
         return;
     uint32_t graphicsViewWidth = canvas->parentWidget()->width();
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    //myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight); // doesn't work right, crashes
+    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
 }
 
