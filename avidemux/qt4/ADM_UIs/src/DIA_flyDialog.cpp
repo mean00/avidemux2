@@ -608,8 +608,9 @@ void ADM_flyDialog::fitCanvasIntoView(uint32_t width, uint32_t height)
             tmpZoomW = width;
             tmpZoomH = (uint32_t)((double)width / ar);
         }
-        _zoomW = tmpZoomW;
-        _zoomH = tmpZoomH;
+        _resizeMethod = RESIZE_AUTO;
+        _zoomW = tmpZoomW&0xfffffffe;
+        _zoomH = tmpZoomH&0xfffffffe;
         _zoom = (float)_zoomW / _w;
         updateZoom();
         _canvas->changeSize(_zoomW, _zoomH);
