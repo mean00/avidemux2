@@ -112,8 +112,12 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
                              param.lw,  param.lh,param.band,param.show);        
     else
     {
+        rubber->nestedIgnore++;
+        blockChanges(true);
         rubber->move(_zoom*(float)param.xoff,_zoom*(float)param.yoff);
         rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
+        blockChanges(false);
+        rubber->nestedIgnore--;
     }
     return 1;
 }
