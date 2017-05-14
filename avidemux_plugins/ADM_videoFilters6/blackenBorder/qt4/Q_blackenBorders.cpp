@@ -101,7 +101,7 @@ void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
         return;
     uint32_t graphicsViewWidth = canvas->parentWidget()->width();
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
-    //myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight); // doesn't work right with RGB, crashes
+    myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight); // doesn't work right with RGB, crashes
     myBlacken->adjustCanvasPosition();
 }
 
