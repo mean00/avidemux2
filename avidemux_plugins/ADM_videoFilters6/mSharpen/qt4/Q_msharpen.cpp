@@ -53,6 +53,10 @@
         
         SPINNER(Threshold);
         SPINNER(Strength);
+
+        show();
+        flymsharpen->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_msharpenWindow::sliderUpdate(int foo)
   {
@@ -79,6 +83,16 @@ void Ui_msharpenWindow::valueChanged( int f )
   flymsharpen->download();
   flymsharpen->sameImage();
   lock--;
+}
+
+void Ui_msharpenWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    flymsharpen->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    flymsharpen->adjustCanvasPosition();
 }
 
 #define MYSPIN(x) w->doubleSpinBox##x

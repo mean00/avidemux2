@@ -214,7 +214,29 @@ void Resizable_rubber_band::resizeEvent(QResizeEvent *)
             doOnce=true;
         }
         ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
+
+        show();
+        myCrop->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
+
+/**
+    \fn resizeEvent
+*/
+void Ui_mpdelogoWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    myCrop->rubber->nestedIgnore++;
+    myCrop->blockChanges(true);
+    myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myCrop->adjustCanvasPosition();
+    myCrop->blockChanges(false);
+    myCrop->rubber->nestedIgnore--;
+}
+
 /**
     \fn sliderUpdate
 */
@@ -351,18 +373,6 @@ uint8_t flyMpDelogo::download(void)
         printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;
-}
-
-/**
-    \fn autoZoom
-*/
-void flyMpDelogo::autoZoom(bool state)
-{
-    rubber->nestedIgnore++;
-    blockChanges(true);
-    ADM_flyDialog::autoZoom(state);
-    blockChanges(false);
-    rubber->nestedIgnore--;
 }
 
 /**

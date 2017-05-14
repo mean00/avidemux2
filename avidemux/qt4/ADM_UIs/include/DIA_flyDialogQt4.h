@@ -156,9 +156,10 @@ public slots:
         virtual bool nextImage(void);
         virtual void backOneMinute(void);
         virtual void fwdOneMinute(void);
-        virtual void autoZoom(bool status);
         virtual void play(bool status);
-        virtual void timeout();  
+        virtual void timeout(void);
+        virtual void adjustCanvasPosition(void);
+        virtual void fitCanvasIntoView(uint32_t width, uint32_t height);
 };
 /**
  * \class ADM_flyDialogYuv

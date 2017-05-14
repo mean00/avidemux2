@@ -48,6 +48,9 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Top);
     SPINNER(Bottom);
 
+    show();
+    myBlacken->adjustCanvasPosition();
+    //canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
   void Ui_blackenWindow::sliderUpdate(int foo)
   {
@@ -90,6 +93,16 @@ void Ui_blackenWindow::reset( bool f )
     myBlacken->upload();
     myBlacken->sameImage();
     lock--;
+}
+
+void Ui_blackenWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    //myBlacken->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight); // doesn't work right with RGB, crashes
+    myBlacken->adjustCanvasPosition();
 }
 
 //************************

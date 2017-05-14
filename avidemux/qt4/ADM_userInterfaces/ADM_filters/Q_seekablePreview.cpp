@@ -37,6 +37,10 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+
+        show();
+        seekablePreview->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
@@ -61,10 +65,9 @@ void Ui_seekablePreviewWindow::resetVideoStream(ADM_coreVideoFilter *videoStream
 	uint32_t canvasWidth = videoStream->getInfo()->width;
 	uint32_t canvasHeight = videoStream->getInfo()->height;
 
-	canvas = new ADM_QCanvas(ui.frame, canvasWidth, canvasHeight);
+	canvas = new ADM_QCanvas(ui.graphicsView, canvasWidth, canvasHeight);
 	canvas->show();
 	seekablePreview = new flySeekablePreview(this,canvasWidth, canvasHeight, videoStream, canvas, ui.horizontalSlider);	
-        setDuration(videoStream->getInfo()->totalDuration);
 	seekablePreview->sliderChanged();
 }
 /**
@@ -75,16 +78,7 @@ uint32_t Ui_seekablePreviewWindow::frameIndex()
 {
 	return seekablePreview->sliderGet();
 }
-/**
-    \fn setDuration
-    \brief Set total duration
-*/
-bool      Ui_seekablePreviewWindow::setDuration(uint64_t duration)
-{
-    const char *s=ADM_us2plain(duration);
-    ui.label->setText(s);
-    return true;
-}
+
 /**
   * 
  * @param value
@@ -92,6 +86,17 @@ bool      Ui_seekablePreviewWindow::setDuration(uint64_t duration)
 void Ui_seekablePreviewWindow::sliderChanged(int value)
 {
 	seekablePreview->sliderChanged();
+}
+
+
+void Ui_seekablePreviewWindow::resizeEvent(QResizeEvent *event)
+{
+    if(!canvas->height())
+        return;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    seekablePreview->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    seekablePreview->adjustCanvasPosition();
 }
 
 // EOF

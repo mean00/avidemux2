@@ -27,6 +27,6 @@ class Ui_chromaShiftWindow : public QDialog
    void valueChanged(int foo);
 
  private:
-     
+   void resizeEvent(QResizeEvent *event);
  };
 

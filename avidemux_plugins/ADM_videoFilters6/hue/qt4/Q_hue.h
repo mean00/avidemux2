@@ -26,5 +26,8 @@ public slots:
 private slots:
 	void sliderUpdate(int foo);
 	void valueChanged(int foo);
+
+private:
+        void resizeEvent(QResizeEvent *event);
 };
 #endif	// Q_hue_h

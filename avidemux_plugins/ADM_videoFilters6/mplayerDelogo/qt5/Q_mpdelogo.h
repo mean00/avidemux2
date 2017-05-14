@@ -32,6 +32,7 @@ private slots:
         void                valueChanged(int foo);
         void                preview(int x);
 
-
+private:
+        void                resizeEvent(QResizeEvent *event);
 };
 

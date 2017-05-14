@@ -22,7 +22,7 @@
 #include "ADM_imageLoader.h"
 #include "DIA_fileSel.h"
 
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -59,22 +59,13 @@ void ADM_LogoCanvas::mousePressEvent(QMouseEvent * event)
  */
 void ADM_LogoCanvas::mouseReleaseEvent(QMouseEvent * event)
 {
-   
-    int x,y;
     QPoint p=event->pos();
-    QPoint pp=pos();
-    aprintf("Evt %d %d, %d %d\n",p.x(),p.y(), pp.x(),pp.y());
-#if 1 
-     x=p.x()-pp.x();
-     y=p.y()-pp.y();
-#else
-     x=p.x();
-     y=p.y();
-#endif     
-    
+    int x=p.x();
+    int y=p.y();
+
     if(x<0) x=0;
     if(y<0) y=0;    
-    
+
     aprintf("Released %d %d\n",x,y);
     emit movedSignal(x,y);
 
@@ -208,7 +199,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->addControl(ui.toolboxLayout);
         
         show();
-          
+        myLogo->adjustCanvasPosition();
+        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
   }
 /**
     \fn sliderUpdate
@@ -285,6 +277,22 @@ void Ui_logoWindow::moved(int x,int y)
  }
 
 /**
+    \fn resizeEvent
+*/
+void Ui_logoWindow::resizeEvent(QResizeEvent *event)
+{
+    if(lock) return;
+    if(!canvas->height())
+        return;
+    lock++;
+    uint32_t graphicsViewWidth = canvas->parentWidget()->width();
+    uint32_t graphicsViewHeight = canvas->parentWidget()->height();
+    myLogo->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
+    myLogo->adjustCanvasPosition();
+    lock--;
+}
+
+/**
  * 
  * @param x
  * @param y
@@ -294,8 +302,10 @@ bool flyLogo::setXy(int x,int y)
 {
     if(x<0) x=0;
     if(y<0) y=0;
-    param.x= x;
-    param.y= y;      
+    Ui_logoWindow *parent=(Ui_logoWindow *)this->_cookie;
+    double scale=(double)(parent->canvas->width()) / parent->_in->getInfo()->width;
+    param.x= (int)((double)x / scale);
+    param.y= (int)((double)y / scale);
     upload();
     return true;
 }

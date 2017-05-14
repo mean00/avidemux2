@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Mplayer Delogo</string>
   </property>
-  <layout class="QFormLayout" name="formLayout">
+  <layout class="QGridLayout" name="gridLayoutMain">
    <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
