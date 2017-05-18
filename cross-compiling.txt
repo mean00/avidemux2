@@ -42,7 +42,7 @@ to the settings.mk file.
 3. Build required MXE packages for the targets specified above with
 
     cd /opt/mxe
-    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264
+    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264 libvpx
 
 This pulls in all the dependencies and can take a couple of hours. The final
 total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
