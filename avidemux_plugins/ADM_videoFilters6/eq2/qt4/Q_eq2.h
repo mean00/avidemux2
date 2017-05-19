@@ -36,6 +36,7 @@ public:
 	Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in);
 	~Ui_eq2Window();
 	Ui_eq2Dialog ui;
+	static const int initialValues[];
 
 public slots:
 	void gather(eq2 *param);
@@ -43,8 +44,10 @@ public slots:
 private slots:
 	void sliderUpdate(int foo);
 	void valueChanged(int foo);
+	void resetSlider(QWidget *control);
 
 private:
         void resizeEvent(QResizeEvent *event);
+        void setResetSliderEnabledState(void);
 };
 #endif	// Q_eq2_h

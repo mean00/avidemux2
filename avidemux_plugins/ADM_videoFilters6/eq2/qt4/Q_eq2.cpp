@@ -16,6 +16,7 @@
 
 #include "Q_eq2.h"
 #include "ADM_toolkitQt.h"
+#include <QSignalMapper>
 
 //
 //	Video is in YV12 Colorspace
@@ -40,9 +41,16 @@
         myCrop->sliderChanged();
         myCrop->update();
 
-
+        QSignalMapper *signalMapper = new QSignalMapper(this);
+        connect( signalMapper,SIGNAL(mapped(QWidget*)),this,SLOT(resetSlider(QWidget*)));
         connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-#define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+        QString rst = QString(QT_TRANSLATE_NOOP("eq2","Reset"));
+#define SPINNER(x) connect( ui.horizontalSlider##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int)));\
+                   ui.horizontalSlider##x->setContextMenuPolicy(Qt::ActionsContextMenu);\
+                   QAction *reset##x = new QAction(rst,this);\
+                   ui.horizontalSlider##x->addAction(reset##x);\
+                   signalMapper->setMapping(reset##x,ui.horizontalSlider##x);\
+                   connect( reset##x,SIGNAL(triggered(bool)),signalMapper,SLOT(map()));
         SPINNER(Red);
         SPINNER(Blue);
         SPINNER(Green);
@@ -53,6 +61,8 @@
 
         SPINNER(Initial);
         SPINNER(Weight);
+
+        setResetSliderEnabledState();
 
         show();
         myCrop->adjustCanvasPosition();
@@ -68,6 +78,60 @@
         myCrop->download();
         memcpy(param,&(myCrop->param),sizeof(eq2));
   }
+
+const int Ui_eq2Window::initialValues[]
+{
+    100, // contrast
+    0,   // brightness
+    100, // saturation
+
+    100, // initial
+    100, // weight
+
+    100, // red
+    100, // blue
+    100  // green
+};
+
+#define RESET_SLIDER(x,y) if(control == ui.horizontalSlider##x) qobject_cast<QSlider*>(ui.horizontalSlider##x)->setValue(y);
+void Ui_eq2Window::resetSlider(QWidget *control)
+{
+    if(!control)
+        return;
+    RESET_SLIDER(Contrast,initialValues[0])
+    RESET_SLIDER(Brightness,initialValues[1])
+    RESET_SLIDER(Saturation,initialValues[2])
+
+    RESET_SLIDER(Initial,initialValues[3])
+    RESET_SLIDER(Weight,initialValues[4])
+
+    RESET_SLIDER(Red,initialValues[5])
+    RESET_SLIDER(Blue,initialValues[6])
+    RESET_SLIDER(Green,initialValues[7])
+}
+
+#define CAN_RESET(x,y)\
+    if(ui.horizontalSlider##x->value() == y)\
+        ui.horizontalSlider##x->actions().at(0)->setEnabled(false);\
+    else\
+        ui.horizontalSlider##x->actions().at(0)->setEnabled(true);
+void Ui_eq2Window::setResetSliderEnabledState(void)
+{
+    CAN_RESET(Contrast,initialValues[0])
+    CAN_RESET(Brightness,initialValues[1])
+    CAN_RESET(Saturation,initialValues[2])
+
+    CAN_RESET(Initial,initialValues[3])
+    CAN_RESET(Weight,initialValues[4])
+
+    CAN_RESET(Red,initialValues[5])
+    CAN_RESET(Blue,initialValues[6])
+    CAN_RESET(Green,initialValues[7])
+}
+
+/**
+    \fn dtor
+*/
 Ui_eq2Window::~Ui_eq2Window()
 {
   if(myCrop) delete myCrop;
@@ -81,6 +145,7 @@ void Ui_eq2Window::valueChanged( int f )
   lock++;
   myCrop->download();
   myCrop->sameImage();
+  setResetSliderEnabledState();
   lock--;
 }
 
