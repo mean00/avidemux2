@@ -263,6 +263,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>horizontalSlider</tabstop>
+  <tabstop>horizontalSliderContrast</tabstop>
+  <tabstop>horizontalSliderBrightness</tabstop>
+  <tabstop>horizontalSliderSaturation</tabstop>
+  <tabstop>horizontalSliderInitial</tabstop>
+  <tabstop>horizontalSliderRed</tabstop>
+  <tabstop>horizontalSliderGreen</tabstop>
+  <tabstop>horizontalSliderBlue</tabstop>
+  <tabstop>horizontalSliderWeight</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

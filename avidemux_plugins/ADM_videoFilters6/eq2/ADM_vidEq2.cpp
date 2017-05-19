@@ -41,8 +41,6 @@ class  ADMVideoEq2:public ADM_coreVideoFilterCached
 
   protected:
             eq2             _param;    
-            float           _hue;
-            float           _saturation;
             Eq2Settings     settings;   
             void            update(void);
   public:
@@ -226,8 +224,11 @@ void create_lut (oneSetting *par)
   gw = par->w;
   lw = 1.0 - gw;
 
-  if ((g < 0.001) || (g > 1000.0)) {
-    g = 1.0;
+  if (g < 0.001) {
+    g = 0.001;
+  }
+  if (g > 1000.0) {
+    g = 1000.0;
   }
 
   g = 1.0 / g;
