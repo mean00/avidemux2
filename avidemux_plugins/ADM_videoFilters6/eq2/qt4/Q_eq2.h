@@ -25,29 +25,29 @@
 */
 class Ui_eq2Window : public QDialog
 {
-	Q_OBJECT
+    Q_OBJECT
 
 protected:
-	int lock;
+    int lock;
 
 public:
-	flyEq2 *myCrop;
-	ADM_QCanvas *canvas;
-	Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in);
-	~Ui_eq2Window();
-	Ui_eq2Dialog ui;
-	static const int initialValues[];
+    flyEq2 *myCrop;
+    ADM_QCanvas *canvas;
+    Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in);
+    ~Ui_eq2Window();
+    Ui_eq2Dialog ui;
+    static const int initialValues[];
 
 public slots:
-	void gather(eq2 *param);
+    void gather(eq2 *param);
 
 private slots:
-	void sliderUpdate(int foo);
-	void valueChanged(int foo);
-	void resetSlider(QWidget *control);
+    void sliderUpdate(int foo);
+    void valueChanged(int foo);
+    void resetSlider(QWidget *control);
 
 private:
-        void resizeEvent(QResizeEvent *event);
-        void setResetSliderEnabledState(void);
+    void resizeEvent(QResizeEvent *event);
+    void setResetSliderEnabledState(void);
 };
 #endif	// Q_eq2_h
