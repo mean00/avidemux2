@@ -93,7 +93,7 @@ void Ui_eq2Window::gather(eq2 *param)
 /**
     \brief when resetting sliders, set them to the following values
 */
-const int Ui_eq2Window::initialValues[]
+const int Ui_eq2Window::initialValues[]=
 {
     100, // contrast
     0,   // brightness
