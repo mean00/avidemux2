@@ -82,8 +82,7 @@ static const aspectRatio predefinedARs[]={
 static const char* listOfPresets[] = { "ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow", "placebo" };
 #define NB_PRESET sizeof(listOfPresets)/sizeof(char*)
 
-// Empty string "" as tuning means no tuning. This is the default.
-static const char* listOfTunings[] = { "", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
+static const char* listOfTunings[] = { "none", "psnr", "ssim", "grain", "zerolatency", "fastdecode" };
 #define NB_TUNE sizeof(listOfTunings)/sizeof(char*)
 
 static const char* listOfProfiles[] = { "main", "main10", "mainstillpicture" };
@@ -180,10 +179,8 @@ x265Dialog::x265Dialog(QWidget *parent, void *param) : QDialog(parent)
         tunings->clear();
         for(int i=0;i<NB_TUNE;i++)
         {
-            // we pass an empty string to the encoder in order to disable tuning,
-            // but want to show a descriptive label to the user
             const char* _tn=listOfTunings[i];
-            if(_tn=="")
+            if(!strcmp(_tn,"none"))
                 _tn=QT_TRANSLATE_NOOP("x265","none");
             tunings->addItem(QString(_tn));
         }
