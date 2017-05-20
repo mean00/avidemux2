@@ -27,7 +27,7 @@ mkdir -p $BASE_APP/Contents/Resources
 echo "Revision : $REV"
 packages_ext=""
 do_core=1
-do_cli=0
+do_cli=1
 do_gtk=0   # Note that gtk is no fully longer supported on OSX. You are on your own here
 do_qt4=1
 do_plugins=1
