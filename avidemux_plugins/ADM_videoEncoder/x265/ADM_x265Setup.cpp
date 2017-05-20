@@ -46,9 +46,13 @@ bool x265Encoder::setup(void)
   // -------------- preset, tune, idc ------------
   if(!x265Settings.useAdvancedConfiguration)
   {
-    char tune[200] = {0};
-    strcat(tune, x265Settings.general.tuning.c_str());
-    x265_param_default_preset(&param, x265Settings.general.preset.c_str(), tune);
+    if(x265Settings.general.tuning == std::string("none"))
+    {
+        x265_param_default_preset(&param, x265Settings.general.preset.c_str(), NULL);
+    }else
+    {
+        x265_param_default_preset(&param, x265Settings.general.preset.c_str(), x265Settings.general.tuning.c_str());
+    }
   }
   param.logLevel=x265Settings.level; 
 
