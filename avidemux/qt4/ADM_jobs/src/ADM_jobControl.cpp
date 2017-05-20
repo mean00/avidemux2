@@ -16,6 +16,8 @@
 #include "ADM_default.h"
 #include "ADM_coreJobs.h"
 #include "DIA_coreToolkit.h"
+#include <QtCore/QDir>
+
 
 static QTableWidgetItem *fromText(const string &t,int id)
 {
@@ -197,6 +199,18 @@ bool jobRun(int ac,char **av)
     QApplication *app=new QApplication(ac,av,0);
     Q_INIT_RESOURCE(jobs);
     jobWindow *jWindow=new jobWindow();
+
+#if defined(__APPLE__)
+        printf("Setting qt plugin folder\n");
+        QDir dir(QApplication::applicationDirPath());
+        dir.cdUp();
+        dir.cdUp();
+        dir.cd("plugins");
+        printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
+        QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
+#endif
+
+
     jWindow->exec();
     delete jWindow;
     delete app;
