@@ -44,9 +44,11 @@ static OSStatus OverloadListenerProc(AudioDeviceID inDevice, UInt32 inChannel, B
 /**
 
 */
-uint8_t coreAudioDevice::setVolume(int volume) 
+uint8_t coreAudioDevice::setVolume(int volume)
 {
-        return 1;
+    float factor = volume / 100.0;
+    AudioUnitSetParameter(theOutputUnit, kHALOutputParam_Volume, kAudioUnitScope_Global, 0, factor, 0);
+    return 1;
 }
 /**
 
