@@ -31,16 +31,33 @@
     #define MKCLI() "avidemux_cli.exe"
     #define MKQT()  "avidemux.exe"
     const string slash=string("\\");
-#else
-    #define MKCLI() "avidemux3_cli"
-    #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
-        #define MKQT() "avidemux3_qt5"
+#else    
+    
+    #ifdef __APPLE__
+        #define MKQT()  admExecutable("avidemux")
+        #define MKCLI() admExecutable( "avidemux3_cli")
     #else
-        #define MKQT() "avidemux3_qt4"
+        #define MKCLI() admExecutable("avidemux3_cli")
+        #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
+            #define MKQT() admExecutable("avidemux3_qt5")
+        #else
+            #define MKQT() admExecutable("avidemux3_qt4")
+        #endif
     #endif
     const string slash=string("/");
 #endif
-
+/**
+ * 
+ * @param exeName
+ * @return 
+ */
+const char *admExecutable(const char *exeName)    
+{
+   static char fullName[2048]; // only use once per job, so "safe" to use static
+   sprintf(fullName,"%s%s%s",QCoreApplication::applicationDirPath().toStdString().c_str(),slash.c_str(),exeName);
+   return fullName;
+}
+    
 /**
     \fn spawnerBoomerang
     \brief Allow to do class -> plain C -> class 
