@@ -61,19 +61,23 @@ bool x264Encoder::setup(void)
   // -------------- preset, tune, idc ------------
   if(!x264Settings.useAdvancedConfiguration)
   {
-    char tune[200] = {0};
-    strcat(tune, x264Settings.general.tuning.c_str());
-    if(x264Settings.general.fast_decode) 
-    {
-      strcat(tune, ",");
-      strcat(tune, "fastdecode");
-    }
-    if(x264Settings.general.zero_latency)
-    {
-      strcat(tune, ",");
-      strcat(tune, "zero_latency");
-    }
-    x264_param_default_preset(&param, x264Settings.general.preset.c_str(), tune);
+        std::string tune;
+        if(x264Settings.general.tuning != std::string("none"))
+            tune = x264Settings.general.tuning;
+        if(x264Settings.general.fast_decode)
+        {
+            tune += std::string(",");
+            tune += std::string("fastdecode");
+        }
+        if(x264Settings.general.zero_latency)
+        {
+            tune += std::string(",");
+            tune += std::string("zerolatency");
+        }
+        if(tune.empty())
+            x264_param_default_preset(&param, x264Settings.general.preset.c_str(), NULL);
+        else
+            x264_param_default_preset(&param, x264Settings.general.preset.c_str(), tune.c_str());
   }else
   {
         param.b_bluray_compat=x264Settings.general.blueray_compatibility;
