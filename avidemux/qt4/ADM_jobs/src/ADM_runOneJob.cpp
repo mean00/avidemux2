@@ -35,7 +35,7 @@
     
     #ifdef __APPLE__
         #define MKQT()  admExecutable("avidemux")
-        #define MKCLI() admExecutable( "avidemux3_cli")
+        #define MKCLI() admExecutable( "avidemux_cli")
     #else
         #define MKCLI() admExecutable("avidemux3_cli")
         #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
