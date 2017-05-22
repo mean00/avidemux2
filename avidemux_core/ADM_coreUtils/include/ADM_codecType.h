@@ -26,6 +26,7 @@ ADM_COREUTILS6_EXPORT bool isDVCompatible     (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isVP6Compatible    (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isMpeg12Compatible (uint32_t fourcc);
 ADM_COREUTILS6_EXPORT bool isVC1Compatible    (uint32_t fourcc);
+ADM_COREUTILS6_EXPORT bool isVP9Compatible    (uint32_t fourcc);
 
 #endif
 //EOF

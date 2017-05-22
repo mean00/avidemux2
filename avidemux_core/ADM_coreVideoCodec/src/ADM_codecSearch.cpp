@@ -35,6 +35,7 @@ extern "C"
 #include "ADM_uyvy.h"
 #include "ADM_codecEmpty.h"
 #include "ADM_ffmp43.h"
+#include "ADM_codecFFVP9.h"
 #include "ADM_codecFFsimple.h"
 #include "fourcc.h"
 
@@ -127,6 +128,10 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
   if (isMpeg12Compatible (fcc))
 	  return (decoders *) (new decoderFFMpeg12 (w,h,fcc,extraLen,extraData,bpp));
 
+  if(isVP9Compatible(fcc))
+  {
+       return (decoders *) (new decoderFFVP9 (w,h,fcc,extraLen,extraData,bpp));
+  }
     // Search ffsimple
     decoders *dec=admCreateFFSimple(w,h,fcc,extraLen,extraData,bpp);
     if(dec)

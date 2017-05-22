@@ -176,6 +176,8 @@ bool isVP6Compatible (uint32_t fourcc)
 #undef CHECK
 }
 
+
+
 /**
     \fn isVP9Compatible
 */
