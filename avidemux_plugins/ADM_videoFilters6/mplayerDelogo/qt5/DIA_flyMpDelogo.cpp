@@ -134,6 +134,11 @@ Resizable_rubber_band::Resizable_rubber_band(flyMpDelogo *fly,QWidget *parent) :
   layout->setContentsMargins(0, 0, 0, 0);
   QSizeGrip* grip1 = new QSizeGrip(this);
   QSizeGrip* grip2 = new QSizeGrip(this);
+#ifdef __APPLE__
+  // work around grips not shown on macOS
+  grip1->setFixedSize(10,10);
+  grip2->setFixedSize(10,10);
+#endif
   grip1->setVisible(true);
   grip2->setVisible(true);
   layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);
