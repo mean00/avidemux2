@@ -37,7 +37,11 @@ decoderFFVP9::decoderFFVP9 (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
  */
 decoderFFVP9::~decoderFFVP9 ()
 {
-    
+    if(_parserContext)
+    {   
+        av_parser_close(_parserContext);
+        _parserContext=NULL;
+    }
 }
 /**
  * \fn uncompress
