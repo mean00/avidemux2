@@ -45,7 +45,7 @@ class partialFilter : public  ADM_coreVideoFilter
        virtual void         setCoupledConf(CONFcouple *couples);
        virtual bool         configure(void) ;                          /// Start graphical user interface
        virtual uint64_t     getAbsoluteStartTime(void)   ;              /// Return the absolute offset of the current frame. Used to display time of for filter
-       virtual bool         goToTime(uint64_t usSeek) {return true;}   /// Start graphical user interface
+       virtual bool         goToTime(uint64_t usSeek); // needed for seekable preview when reconfiguring a partialized filter
     };
 
 
@@ -58,6 +58,7 @@ protected:
                 ADMImage     *intermediate;
                 bool         hasIntermediate;
                 uint32_t     intermediateFn;
+                bool         sonFilterPreview;
 
 
                 bool        isInRange(uint64_t tme);
@@ -97,6 +98,7 @@ partialFilter::partialFilter(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_
 {
     trampoline=NULL;
     sonFilter=NULL;
+    sonFilterPreview=false;
     byPass=true;
 
     intermediate=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
@@ -171,6 +173,8 @@ partialFilter::~partialFilter()
  */
 bool         partialFilter::getNextFrameForSon(uint32_t *fn,ADMImage *image)
 {
+  if(sonFilterPreview)
+      return previousFilter->getNextFrame(fn,image);
   if(!hasIntermediate)
     {
       ADM_warning("Partial filter requesting image, no image in store!!\n");
@@ -289,7 +293,9 @@ void partialFilter::reconfigureCallback(void *cookie)
  */
 void partialFilter::reconfigureSon(void)
 {
+  sonFilterPreview=true;
   sonFilter->configure();
+  sonFilterPreview=false;
 }
 
 /**
@@ -340,6 +346,12 @@ bool          partialFilter::trampolineFilter::configure()
 uint64_t          partialFilter::trampolineFilter::getAbsoluteStartTime()
 {
     return previousFilter->getAbsoluteStartTime(); // never called
+}
+
+bool partialFilter::trampolineFilter::goToTime(uint64_t usSeek)
+{
+    partialFilter *p=(partialFilter *)previousFilter;
+    return p->previousFilter->goToTime(usSeek);
 }
 
 bool         partialFilter::trampolineFilter::getNextFrame(uint32_t *frameNumber,ADMImage *image)
