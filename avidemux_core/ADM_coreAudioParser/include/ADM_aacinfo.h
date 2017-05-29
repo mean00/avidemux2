@@ -5,6 +5,7 @@
 
 #ifndef ADM__AAC__INFO
 #define ADM__AAC__INFO
+#include "ADM_audioParser6_export.h"
 /**
     \fn AacAudioInfo
 */
@@ -16,5 +17,6 @@ typedef struct
 }AacAudioInfo;
 
 /// extract fq etc.. from ESDS atom
-bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo &info);
+ADM_AUDIOPARSER6_EXPORT bool getAdtsAacInfo(int size, uint8_t *data, AacAudioInfo &info);
+ADM_AUDIOPARSER6_EXPORT bool ADM_getAacInfoFromConfig(int size, uint8_t *data, AacAudioInfo &info);
 #endif
