@@ -21,7 +21,7 @@ Not sure if the timestamp is PTS or DTS (...)
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_videoInfoExtractor.h"
-
+#include "ADM_aacinfo.h"
 #include "ADM_flv.h"
 
 #include <math.h>
@@ -579,6 +579,18 @@ uint8_t flvHeader::open(const char *name)
     _videostream.dwStart= 0;
     videoTrack->_index[0].flags=AVI_KEY_FRAME;
 
+    // if it is AAC and we have extradata...
+    if(_isaudiopresent && wavHeader.encoding && audioTrack->extraDataLen>=2)
+    {
+        AacAudioInfo info;
+        // Check frequency..
+        if(ADM_getAacInfoFromConfig(audioTrack->extraDataLen,audioTrack->extraData,info))
+        {
+            ADM_info("AAC detected with fq=%d, sbr=%d\n",info.frequency,info.sbr);
+            wavHeader.frequency=info.frequency;
+        }
+    }
+    
     // audio track
     if(_isaudiopresent)
     {
