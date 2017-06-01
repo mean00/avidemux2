@@ -51,7 +51,11 @@ std::vector<MenuEntry> myMenuFile(_myMenuFile, _myMenuFile + sizeof(_myMenuFile)
 
 static const MenuEntry _myMenuRecent[] = {
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY,NULL,NULL},
+#ifdef __APPLE__
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Clear recent items"), NULL,ACT_CLEAR_RECENT,NULL,"Ctrl+Shift+Backspace"}
+#else
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Clear recent items"), NULL,ACT_CLEAR_RECENT,NULL,"Ctrl+Shift+Delete"}
+#endif
         };
 
 std::vector<MenuEntry> myMenuRecent(_myMenuRecent, _myMenuRecent + sizeof(_myMenuRecent) / sizeof(_myMenuRecent[0]));
@@ -63,7 +67,11 @@ static const MenuEntry _myMenuEdit[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Cut"),                NULL,ACT_Cut        ,NULL,"Ctrl+X"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Copy"),               NULL,ACT_Copy       ,NULL,"Ctrl+C"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Paste"),              NULL,ACT_Paste      ,NULL,"Ctrl+V"},
+#ifdef __APPLE__
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete     ,NULL,"Backspace"},
+#else
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Delete"),             NULL,ACT_Delete     ,NULL,"Delete"},
+#endif
             {MENU_SEPARATOR,"-",NULL,ACT_DUMMY             ,NULL,       NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker A"),       NULL,ACT_MarkA      ,NULL,"Ctrl+PgUp"},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Set Marker B"),       NULL,ACT_MarkB      ,NULL,"Ctrl+PgDown"},

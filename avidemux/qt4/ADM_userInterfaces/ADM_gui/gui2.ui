@@ -1580,65 +1580,70 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QVBoxLayout" name="verticalLayout_4">
-     <property name="alignment">
-      <set>Qt::AlignHCenter</set>
-     </property>
      <item>
-      <widget class="QToolButton" name="toolButtonAudioToggle">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>22</width>
-         <height>22</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>...</string>
-       </property>
-       <property name="icon">
-        <iconset resource="avidemux.qrc">
-         <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="volumeWidgetHorizLayout_1">
+       <item>
+        <widget class="QToolButton" name="toolButtonAudioToggle">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>22</width>
+           <height>22</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="avidemux.qrc">
+          <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider_2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>22</width>
-         <height>50</height>
-        </size>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="volumeWidgetHorizLayout_2">
+       <item>
+        <widget class="QSlider" name="horizontalSlider_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>22</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -1928,7 +1933,6 @@
   <tabstop>pushButtonFormatConfigure</tabstop>
   <tabstop>horizontalSlider</tabstop>
   <tabstop>toolButtonPlay</tabstop>
-  <tabstop>toolButtonStop</tabstop>
   <tabstop>toolButtonPreviousFrame</tabstop>
   <tabstop>toolButtonNextFrame</tabstop>
   <tabstop>toolButtonPreviousIntraFrame</tabstop>
