@@ -524,7 +524,10 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 MuxAudioPacket *audioTrack=&(audioPackets[audio]);
                 ADM_audioStream*a=aStreams[audio];
-                uint32_t fq=a->getInfo()->frequency;
+                WAVHeader *info=a->getInfo();
+                if(!info) // no more track
+                    continue;
+                uint32_t fq=info->frequency;
 
                 while(1)
                 {

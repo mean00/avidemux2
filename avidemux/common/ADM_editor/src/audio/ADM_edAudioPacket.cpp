@@ -62,6 +62,11 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
         _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
         ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
         //
+        if(!trk)
+        {
+            ADM_warning("No next segment audio\n");
+            return false;
+        }
         ADM_Audiocodec *codec=NULL;
         if(trk)
             if(trk->codec)
