@@ -27,10 +27,10 @@ class vdpauRender: public VideoRenderBase
       public:
                              vdpauRender( void ) ;
                              ~vdpauRender();
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
-              virtual	bool stop(void);				
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
+              virtual	bool stop(void);
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newzoom);
+              virtual   bool changeZoom(float newzoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return false;}; // we can redraw by ourself
               virtual   ADM_HW_IMAGE getPreferedImage(void ) {return ADM_HW_VDPAU;}

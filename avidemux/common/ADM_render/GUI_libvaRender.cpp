@@ -84,7 +84,7 @@ bool libvaRender::realloc(int newFormat)
 /**
     \fn init
 */
-bool libvaRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
+bool libvaRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     ADM_info("[libva]Xv start\n");
     info=*window;
@@ -169,7 +169,7 @@ bool libvaRender::displayImage(ADMImage *pic)
 /**
     \fn changeZoom
 */
-bool libvaRender::changeZoom(renderZoom newZoom)
+bool libvaRender::changeZoom(float newZoom)
 {
         ADM_info("[libva]changing zoom.\n");
         calcDisplayFromZoom(newZoom);

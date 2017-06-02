@@ -24,20 +24,14 @@ typedef bool (*refreshSB)(void);
 #include "ADM_windowInfo.h"
 #include <string>
 
-typedef enum 
-{
-        ZOOM_1_4,
-        ZOOM_1_2,
-        ZOOM_1_1,
-        ZOOM_2,
-        ZOOM_4,
-        ZOOM_AUTO,
-        ZOOM_INVALID
-}renderZoom;
+#define ZOOM_AUTO -1.
+#define ZOOM_1_4   0.25
+#define ZOOM_1_2   0.5
+#define ZOOM_1_1   1.
 
 ADM_RENDER6_EXPORT uint8_t renderInit( void );
 ADM_RENDER6_EXPORT void    renderDestroy(void);
-ADM_RENDER6_EXPORT uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom);
+ADM_RENDER6_EXPORT uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom);
 uint8_t renderRefresh(void);
 ADM_RENDER6_EXPORT uint8_t renderExpose(void);
 ADM_RENDER6_EXPORT uint8_t renderUpdateImage(ADMImage *img);
@@ -63,6 +57,8 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo);
 void UI_resize(uint32_t width, uint32_t height);
 bool UI_getNeedsResizingFlag(void);
 void UI_setNeedsResizingFlag(bool resize);
+void UI_setBlockZoomChangesFlag(bool block);
+void UI_resetZoomThreshold(void);
 
 /* The list of render engine we support. Warning the list is UI dependant, i.e. for example on macOsX, the GTK version can do Xv, but the QT4 one cannot */
 typedef enum 

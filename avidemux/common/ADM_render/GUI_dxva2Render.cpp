@@ -59,10 +59,10 @@ class dxvaRender: public VideoRenderBase,public ADM_QvideoDrawer
   public:
                              dxvaRender( void ) ;
               virtual       ~dxvaRender();
-              virtual	  bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              virtual	  bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
               virtual	  bool stop(void);
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool changeZoom(float newZoom);
               virtual   bool usingUIRedraw(void) {return false;};
               virtual   bool refresh(void) ;
                         const char *getName() {return "DXVA2";}
@@ -144,7 +144,7 @@ bool dxvaRender::stop(void)
 /**
     \fn changeZoom
 */
-bool dxvaRender::changeZoom(renderZoom newZoom)
+bool dxvaRender::changeZoom(float newZoom)
 {
         ADM_info("changing zoom, dxva/d3D render.\n");
         calcDisplayFromZoom(newZoom);
@@ -158,7 +158,7 @@ bool dxvaRender::changeZoom(renderZoom newZoom)
 /**
     \fn changeZoom
 */
-bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+bool dxvaRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     ADM_info("Initializing dxva2/D3D render\n");
     info=*window;
@@ -225,7 +225,7 @@ bool dxvaRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZo
     videoWidget->useExternalRedraw(true); // deactivate Qt Double buffering
     videoWidget->setDrawer(this);
 
-    ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d,zoom=%d, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,(int)zoom,(int)displayWidth,(int)displayHeight);
+    ADM_info("Dxva (D3D) init successful, dxva render. w=%d, h=%d, zoom=%.4f, displayWidth=%d, displayHeight=%d\n",(int)w,(int)h,zoom,(int)displayWidth,(int)displayHeight);
     return true;
 }
 

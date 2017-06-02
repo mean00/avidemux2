@@ -55,10 +55,10 @@ class sdlRenderImpl: public VideoRenderBase
   public:
                              sdlRenderImpl( void ) ;
               virtual        ~sdlRenderImpl();
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool changeZoom(float newZoom);
               virtual   bool usingUIRedraw(void) {return false;};
               virtual   bool refresh(void) ;
                         const char *getName() {return "SDL2i";}
@@ -183,7 +183,7 @@ sdlRender::~sdlRender()
  * @param zoom
  * @return 
  */
-bool sdlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+bool sdlRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     sdlRenderImpl *im=(sdlRenderImpl *)impl;
     ADM_assert(im);
@@ -215,7 +215,7 @@ bool  sdlRender::displayImage(ADMImage *pic)
  * @param newZoom
  * @return 
  */
-bool  sdlRender::changeZoom(renderZoom newZoom)
+bool  sdlRender::changeZoom(float newZoom)
 {
     sdlRenderImpl *im=(sdlRenderImpl *)impl;
     ADM_assert(im);
@@ -282,7 +282,7 @@ bool sdlRenderImpl::stop( void)
 /**
     \fn init
 */
-bool sdlRenderImpl::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
+bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     ADM_info("[SDL] Initializing video subsystem\n");
 
@@ -441,7 +441,7 @@ bool sdlRenderImpl::refresh(void)
 /**
     \fn changeZoom
 */
-bool sdlRenderImpl::changeZoom(renderZoom newZoom)
+bool sdlRenderImpl::changeZoom(float newZoom)
 {
         ADM_info("[SDL]changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);

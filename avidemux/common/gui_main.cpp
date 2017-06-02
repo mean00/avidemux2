@@ -50,7 +50,7 @@
 
 admMutex singleThread;
 
-renderZoom currentZoom=ZOOM_1_1;
+float currentZoom=ZOOM_1_1;
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -414,8 +414,11 @@ void HandleAction (Action action)
         case ACT_ZOOM_1_1:
         case ACT_ZOOM_2_1:
         case ACT_ZOOM_4_1:
-                currentZoom=(renderZoom)((action-ACT_ZOOM_1_4)+ZOOM_1_4);
+                currentZoom=(float)(2<<(action-ACT_ZOOM_1_4))/8;
+                UI_setBlockZoomChangesFlag(true);
                 changePreviewZoom(currentZoom);
+                UI_setBlockZoomChangesFlag(false);
+                UI_resetZoomThreshold();
                 admPreview::samePicture();
                 break;
         case ACT_AUDIO_SELECT_TRACK:
@@ -863,7 +866,7 @@ void  updateLoaded (bool resetMarker)
     }
 
   // Init renderer
-    admPreview::setMainDimension(avifileinfo->width, avifileinfo->height,ZOOM_AUTO);
+    admPreview::setMainDimension(avifileinfo->width, avifileinfo->height, ZOOM_AUTO);
   // Draw first frame
     GUI_setAllFrameAndTime();
     if(resetMarker)
@@ -1480,7 +1483,7 @@ uint8_t GUI_close(void)
   if (avifileinfo)        // already opened ?
     {                // delete everything
       // if preview is on
-      admPreview::setMainDimension(0, 0,ZOOM_1_1);
+      admPreview::setMainDimension(0, 0, ZOOM_1_1);
       if(getPreviewMode()!=ADM_PREVIEW_NONE)
       {
         admPreview::stop();

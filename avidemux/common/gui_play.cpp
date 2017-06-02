@@ -110,7 +110,7 @@ void GUI_PlayAvi(void)
     uint32_t max,err;
     uint64_t oldTimeFrame;
     aviInfo info;
-    renderZoom oldZoom=admPreview::getCurrentZoom();
+    float oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
 
     // check we got everything...
@@ -143,10 +143,12 @@ void GUI_PlayAvi(void)
     playing = 0;
 
    admPreview::deferDisplay(false);
+#if 0
    // Resize the output window to original size...
    ADM_info("Restoring display.\n");
    
    admPreview::setMainDimension(info.width,info.height,oldZoom);
+#endif
     // If we are processing the video, the current time
     // might not be matching a source video time => PROBLEM
     // Go back to the beginning to be on safe ground
@@ -221,17 +223,17 @@ bool GUIPlayback::initialize(void)
     int nb=videoChain->size();
     videoFilter=(*videoChain)[nb-1];
     FilterInfo *info=videoFilter->getInfo();
-    renderZoom currentZoom=admPreview::getCurrentZoom();
-    renderZoom zoom=ZOOM_AUTO;
+#if 0
+    float currentZoom=admPreview::getCurrentZoom();
+    float zoom=ZOOM_AUTO;
     // if the video output has same width/height as input, we keep the same zoom
     aviInfo originalVideo;
     video_body->getVideoInfo(&originalVideo);
-    
     if(info->width==originalVideo.width && info->height==originalVideo.height)
         zoom=currentZoom;
     //
     admPreview::setMainDimension(info->width,info->height,zoom);
-
+#endif
     initializeAudio();
     return true;
 }

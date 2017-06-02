@@ -97,6 +97,12 @@ public:
 	void buildRecentProjectMenu(void);
 	void updateActionShortcuts(void);
         void volumeWidgetOperational(void);
+        void calcDockWidgetDimensions(uint32_t &width, uint32_t &height);
+        void setBlockZoomChangesFlag(bool block);
+        bool getBlockResizingFlag(void);
+        void setBlockResizingFlag(bool block);
+        void setResizeThreshold(int value);
+        void setActZoomCalledFlag(bool called);
         static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
         static MainWindow *mainWindowSingleton;
 
@@ -215,5 +221,11 @@ protected:
 	void dropEvent(QDropEvent *event);
 	void openFiles(QList<QUrl>);
         void changeEvent(QEvent* event);
+        /* Zoom control */
+        bool blockResizing;
+        bool blockZoomChanges;
+        bool justLaunched; // work around wrong oldSize() reported after loading the first video // FIXME
+        bool actZoomCalled; // zoom was set to a pre-defined fraction by a menu action
+        int  threshold; // track how much the window was resized
 };
 #endif	// Q_gui2_h
