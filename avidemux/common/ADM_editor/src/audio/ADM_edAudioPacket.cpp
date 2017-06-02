@@ -248,9 +248,14 @@ uint8_t ADM_edAudioTrackFromVideo::getAudioStream (ADM_audioStream ** audio)
 WAVHeader       *ADM_edAudioTrackFromVideo::getInfo(void)
 {
 
-  _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
     ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
-    if(!trk) return NULL;
+    if(!trk) // this segment has no audio, try to get info from another one
+    {
+        trk=getTrackAtVideoNumber(0); // might be wrong, does not matter
+        if(!trk)
+            return NULL;
+    }
     return trk->stream->getInfo();
 }
 /**
