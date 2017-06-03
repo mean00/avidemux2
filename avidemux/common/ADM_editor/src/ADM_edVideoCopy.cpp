@@ -332,14 +332,19 @@ againGet:
 // we add a bit of timeIncrement to compensate for rounding
         if(_nextFrameDts!=ADM_NO_PTS)
         {
-            if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/10)))
+            if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/3)))
             {
-                ADM_error("Frame %d DTS is going back in time: expected: %s \t got: %s (%ld vs %ld)\n",
+                double delta=_nextFrameDts-signedDts;
+                delta=fabs(delta);
+                ADM_error("Frame %d DTS is going back in time: expected: %s : %d\n",
                           (int)vid->lastSentFrame,
                           ADM_us2plain(_nextFrameDts),
+                          (_nextFrameDts));
+                ADM_error("and got %s : %d, timeIncrement=%d us, delta=%d\n",
                           ADM_us2plain(signedDts),
-                          _nextFrameDts,
-                          signedDts);
+                          signedDts,(int)vid->timeIncrementInUs,
+                          (int)delta);
+                
                 goto againGet;
             }
         }

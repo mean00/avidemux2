@@ -104,7 +104,10 @@ bool muxerAvi::fillAudio(uint64_t targetDts)
             for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
             {
                 ADM_audioStream*a=aStreams[audioIndex];
-                uint32_t fq=a->getInfo()->frequency;
+                WAVHeader *info=a->getInfo();
+                if(!info) // no more track
+                    continue;
+                uint32_t fq=info->frequency;
                 int nb=0;
                 audioClock *clk=clocks[audioIndex];
                 aviAudioPacket *aPacket=audioPackets+audioIndex;

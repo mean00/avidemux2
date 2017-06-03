@@ -243,11 +243,16 @@ bool muxerMp4v2::fillAudio(uint64_t targetDts)
     for(int audioIndex=0;audioIndex<nbAStreams;audioIndex++)
     {
                 ADM_audioStream         *a=aStreams[audioIndex];
-                uint32_t                fq=a->getInfo()->frequency;
                 mp4v2AudioPacket       *pkt=&(audioPackets[audioIndex]);
                 audioClock             *clock=pkt->clock;
                 if(pkt->eos)            continue;
                 uint64_t                extraSamples=0;
+                
+                 WAVHeader *info=a->getInfo();
+                if(!info) // no more track
+                    continue;
+                uint32_t fq=info->frequency;
+                
                 while(1)
                 {
                         int current=!pkt->nextWrite;
