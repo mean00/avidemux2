@@ -557,12 +557,13 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 			a->setMenuRole(QAction::NoRole);
 #endif 
                         m->cookie=(void *)a;
-                        if(swpud && m->shortCut=="Up")
-                            a->setShortcut(QKeySequence("Down"));
-                        else if(swpud && m->shortCut=="Down")
-                            a->setShortcut(QKeySequence("Up"));
-                        else if(m->shortCut)
+                        if(m->shortCut)
                         {
+                            if(swpud && !strcmp(m->shortCut,"Up"))
+                                a->setShortcut(Qt::Key_Down);
+                            else if(swpud && !strcmp(m->shortCut,"Down"))
+                                a->setShortcut(Qt::Key_Up);
+
                             if(alt)
                             {
                                 std::string sc="";
