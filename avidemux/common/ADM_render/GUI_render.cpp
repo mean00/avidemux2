@@ -64,7 +64,7 @@ static bool             spawnRenderer(void);
 
 static void         *draw=NULL;
 static uint32_t     phyW=0,phyH=0; /* physical window size */
-static renderZoom   lastZoom=ZOOM_1_1;
+static float        lastZoom=ZOOM_1_1;
 static uint8_t      _lock=0;
 
 static const UI_FUNCTIONS_T *HookFunc=NULL;
@@ -175,11 +175,11 @@ uint8_t renderUnlock(void)
 
 */
 //----------------------------------------
-uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
+uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
 {
         bool create=false;
         enableDraw=false;
-        ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%d, old one =%d x %d, zoom=%d, render=%p\n",w,h,zoom,phyW,phyH,lastZoom,renderer);
+        ADM_info("Render to %" PRIu32"x%" PRIu32" zoom=%.4f, old one =%d x %d, zoom=%.4f, renderer=%p\n",w,h,zoom,phyW,phyH,lastZoom,renderer);
         // Check if something has changed...
         
         
@@ -207,18 +207,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h,renderZoom zoom)
         }
          // Resize widget to be the same as input after zoom
          lastZoom=zoom;
-         int mul;
-         switch(zoom)
-            {
-                    case ZOOM_1_4: mul=1;break;
-                    case ZOOM_1_2: mul=2;break;
-                    case ZOOM_1_1: mul=4;break;
-                    case ZOOM_2:   mul=8;break;
-                    case ZOOM_4:   mul=16;break;
-                    default : ADM_assert(0);break;
-    
-            }
-        MUI_updateDrawWindowSize(draw,(w*mul)/4,(h*mul)/4);
+        MUI_updateDrawWindowSize(draw,(uint32_t)((float)w*zoom),(uint32_t)((float)h*zoom));
         renderCompleteRedrawRequest();
         UI_purge();
         return 1;
@@ -419,30 +408,19 @@ ADM_HW_IMAGE renderGetPreferedImageFormat(void)
 
 //***************************************
 /**
-    \fn bool calcDisplayFromZoom(renderZoom zoom);
+    \fn calcDisplayFromZoom
 */
-bool VideoRenderBase::calcDisplayFromZoom(renderZoom zoom)
+bool VideoRenderBase::calcDisplayFromZoom(float zoom)
 {
-        int mul;
-         switch(zoom)
-            {
-                    case ZOOM_1_4: mul=1;break;
-                    case ZOOM_1_2: mul=2;break;
-                    case ZOOM_1_1: mul=4;break;
-                    case ZOOM_2:   mul=8;break;
-                    case ZOOM_4:   mul=16;break;
-                    default : ADM_assert(0);break;
-    
-            }
-        displayWidth=(imageWidth*mul)/4;
-        displayHeight=(imageHeight*mul)/4;
-        return true;
+    displayWidth=(uint32_t)((float)imageWidth * zoom);
+    displayHeight=(uint32_t)((float)imageHeight * zoom);
+    return true;
 }
 
 /**
     \fn baseInit
 */
-bool VideoRenderBase::baseInit(uint32_t w,uint32_t h,renderZoom zoom)
+bool VideoRenderBase::baseInit(uint32_t w, uint32_t h, float zoom)
 {
         imageWidth=w;
         imageHeight=h;

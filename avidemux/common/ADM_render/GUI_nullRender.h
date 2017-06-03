@@ -23,11 +23,11 @@ class nullRender: public VideoRenderBase
       public:
                              nullRender( void ) {ADM_info("Starting null renderer\n");};
                              ~nullRender(){ADM_info("Destroying null renderer\n");};
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom) 
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
                                                             {return true;}
               virtual	bool stop(void)			    {return true;}
               virtual   bool displayImage(ADMImage *pic)    {return true;}
-              virtual   bool changeZoom(renderZoom newZoom) {return true;}
+              virtual   bool changeZoom(float newZoom)      {return true;}
               virtual   bool refresh(void)                  {return true;}
               virtual   bool usingUIRedraw(void)            {return false;};
                         const char *getName() {return "Null";}

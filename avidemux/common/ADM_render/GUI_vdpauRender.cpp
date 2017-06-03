@@ -64,7 +64,7 @@ vdpauRender::~vdpauRender()
 /**
     \fn init
 */
-bool vdpauRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
+bool vdpauRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     if(!w || !h)
     {
@@ -215,7 +215,7 @@ bool vdpauRender::displayImage(ADMImage *pic)
 /**
     \fn changeZoom
 */
-bool vdpauRender::changeZoom(renderZoom newZoom)
+bool vdpauRender::changeZoom(float newZoom)
 {
         ADM_info("[Vdpau]changing zoom.\n");
         calcDisplayFromZoom(newZoom);

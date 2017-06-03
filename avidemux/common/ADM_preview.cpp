@@ -47,7 +47,7 @@ static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t sta
 static ADM_PREVIEW_MODE     previewMode=ADM_PREVIEW_NONE;
 
 static bool                 defered_display=false;  /* When 1, it means we are in playback mode */
-static renderZoom           zoom=ZOOM_1_1;
+static float                zoom=ZOOM_1_1;
 static ADMImage             *resized=NULL;
 static ADMImageResizer      *resizer=NULL;
 
@@ -86,9 +86,8 @@ ADM_HW_IMAGE admPreview::getPreferedHwImageFormat(void)
       @param h : height
 */
 
-void admPreview::setMainDimension(uint32_t w, uint32_t h,renderZoom nzoom)
+void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
 {
-  
   if(rdrImage) delete rdrImage;
   rdrImage=new ADMImageDefault(w,h);
   rdrPhysicalW=w;
@@ -125,7 +124,7 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h,renderZoom nzoom)
 /**
     \fn getCurrentZoom
 */
-renderZoom admPreview::getCurrentZoom()
+float admPreview::getCurrentZoom(void)
 {
     return zoom;
 }
@@ -144,10 +143,10 @@ ADM_PREVIEW_MODE getPreviewMode(void)
 /**
     \fn changePreviewZoom
 */
-void changePreviewZoom(renderZoom nzoom)
+void changePreviewZoom(float nzoom)
 {
     admPreview::stop();
-    ADM_info("Preview :: Change zoom %d->%d\n",zoom,nzoom);
+    ADM_info("Preview :: Change zoom %.4f->%.4f\n",zoom,nzoom);
     zoom=nzoom;
     renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
     admPreview::start();

@@ -62,10 +62,10 @@ class QtGlRender: public VideoRenderBase
       public:
                              QtGlRender( void ) ;
               virtual        ~QtGlRender();
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
-              virtual	bool stop(void);				
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
+              virtual	bool stop(void);
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newzoom);
+              virtual   bool changeZoom(float newzoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return false;}; // We can! redraw by ourself
               

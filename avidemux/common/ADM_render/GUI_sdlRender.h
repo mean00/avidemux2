@@ -40,10 +40,10 @@ class sdlRender: public VideoRenderBase
   public:
                              sdlRender( void ) ;
               virtual       ~sdlRender();
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool changeZoom(float newZoom);
               virtual   bool usingUIRedraw(void);
               virtual   bool refresh(void) ;    
                         const char *getName() {return "SDL2";}
