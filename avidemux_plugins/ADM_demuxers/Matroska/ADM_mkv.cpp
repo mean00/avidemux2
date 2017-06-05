@@ -13,7 +13,7 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include <math.h>
-
+#include <stdlib.h>
 #include "ADM_default.h"
 #include "ADM_Video.h"
 #include "ADM_mkv.h"
@@ -286,6 +286,16 @@ bool mkvHeader::delayTrack(int index,mkvTrak *track, uint64_t value)
 
 
 */
+
+int comp64_t (const void * elem1, const void * elem2) 
+{
+    uint64_t left=*(uint64_t *)elem1;
+    uint64_t right=*(uint64_t *)elem2;
+    if(left==right) return 0;
+    if(left>right) return 1;
+    return -1;
+}
+
 int  mkvHeader::checkDeviation(int num, int den)
 {
   mkvTrak *track=_tracks;
@@ -297,25 +307,46 @@ int  mkvHeader::checkDeviation(int num, int den)
   while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
   uint64_t zero= track->index[first].Pts;
   ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
-  for(int i=first+1;i<nb;i++)
+  double sumOfError=0;
+  uint64_t *sorted=new uint64_t[nb];
+  int nbValid=0;
+  for(int i=first;i<nb;i++)
   {
-    uint64_t pts=track->index[i].Pts;
-    if(pts<zero) continue;
-    pts-=zero;
-    double dmultiple=(pts+half);
-    dmultiple*=den;
-    dmultiple/=(1000000.*(double)num);
-    uint64_t multiple=(uint64_t)dmultiple;
-    int64_t reconstructed=(multiple*1000000*num)/den;
-    int64_t deviation=pts-reconstructed;
-    //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
-    if(deviation>2000)
-        bad++;
-    else
-        good++;
+      uint64_t pts=track->index[i].Pts;
+      if(pts==ADM_NO_PTS) continue;
+      sorted[nbValid++]=pts;
   }
-  ADM_info("Den=%d Num=%d Good = %d, bad=%d\n",den,num,good,bad);
-  return bad  ;
+  ADM_info("Found %d valid pts\n",nbValid);
+  qsort(sorted,nbValid,sizeof(uint64_t),comp64_t);
+  
+  // Sorted contains the sorted list of valid PTS
+  double coeff=(double)num*1000000.;
+  coeff=coeff/(double)den;
+  
+  int lastValidFrame=1;
+  for(int i=0;i<nbValid;i++)
+  {
+    uint64_t pts=sorted[i];
+    double dmultiple=(pts+half);
+    dmultiple/=coeff;
+    uint64_t multiple=(uint64_t)dmultiple;
+    double reconstructed=(double)multiple*coeff;
+    double deviation=(double)fabs((double)pts-reconstructed);
+    if(multiple<=lastValidFrame)
+        printf("Warning : Multiple match for the same number (%d)\n",multiple);
+    lastValidFrame=multiple;
+    //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
+    
+    // We have an accuracy of 1ms, so if the error is less than 2 ms, we ignore it
+    if(deviation>2000.)
+        sumOfError=sumOfError+(deviation*deviation);
+  }
+  ADM_info("Den=%d Num=%d Good = %d, bad=%d, sum of error=%f\n",den,num,good,bad,(float)sumOfError);
+  double scale=nbValid;
+  sumOfError/=scale*scale;
+  ADM_info("Den=%d Num=%d Good = %d, bad=%d, sum of error=%f, %d\n",den,num,good,bad,(float)sumOfError,(int)sumOfError);
+  delete [] sorted;
+  return (int)sumOfError  ;
 }
 /**
     \fn checkDeviation
@@ -431,6 +462,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     }
     ADM_info("Deviation        = %d\n",deviation);
     ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
+#if 1
     if(minDelta)
     {
         if(deviationMinDelta<deviation)
@@ -441,6 +473,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             ADM_info("Min delta is better\n");
         }
     }
+#endif
     // Check std value too
     if(stdFrameRate!=-1)
     {
