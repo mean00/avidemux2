@@ -21,7 +21,7 @@
 #include "mkv_tags.h"
 #include "ADM_audioXiphUtils.h"
 #include "ADM_vidMisc.h"
-
+#include "ADM_mkvDeviation.h"
 typedef struct
 {
     int durationInUs;
@@ -280,76 +280,6 @@ bool mkvHeader::delayTrack(int index,mkvTrak *track, uint64_t value)
 }
 /**
     \fn checkDeviation
-    \brief returns the # of errors when forcing timestamp to be num/den (interval in us)
-      num=1000
-      den=24000 for a 24 fps
-
-
-*/
-
-int comp64_t (const void * elem1, const void * elem2) 
-{
-    uint64_t left=*(uint64_t *)elem1;
-    uint64_t right=*(uint64_t *)elem2;
-    if(left==right) return 0;
-    if(left>right) return 1;
-    return -1;
-}
-
-int  mkvHeader::checkDeviation(int num, int den)
-{
-  mkvTrak *track=_tracks;
-  int nb=track->index.size();
-  int first=0;
-  double dHalf=(500000.*(double)num)/((double)den);
-  int half=dHalf-1; // half interval in us
-  int good=0,bad=0;
-  while(  track->index[first].Pts==ADM_NO_PTS && first<nb) first++; // we should have some at least
-  uint64_t zero= track->index[first].Pts;
-  ADM_info("Num=%d Den=%d half=%d zero=%d first=%d\n",num,den,half,(int)zero,first);
-  double sumOfError=0;
-  uint64_t *sorted=new uint64_t[nb];
-  int nbValid=0;
-  for(int i=first;i<nb;i++)
-  {
-      uint64_t pts=track->index[i].Pts;
-      if(pts==ADM_NO_PTS) continue;
-      sorted[nbValid++]=pts;
-  }
-  ADM_info("Found %d valid pts\n",nbValid);
-  qsort(sorted,nbValid,sizeof(uint64_t),comp64_t);
-  
-  // Sorted contains the sorted list of valid PTS
-  double coeff=(double)num*1000000.;
-  coeff=coeff/(double)den;
-  
-  int lastValidFrame=1;
-  for(int i=0;i<nbValid;i++)
-  {
-    uint64_t pts=sorted[i];
-    double dmultiple=(pts+half);
-    dmultiple/=coeff;
-    uint64_t multiple=(uint64_t)dmultiple;
-    double reconstructed=(double)multiple*coeff;
-    double deviation=(double)fabs((double)pts-reconstructed);
-    if(multiple<=lastValidFrame)
-        printf("Warning : Multiple match for the same number (%d)\n",multiple);
-    lastValidFrame=multiple;
-    //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
-    
-    // We have an accuracy of 1ms, so if the error is less than 2 ms, we ignore it
-    if(deviation>2000.)
-        sumOfError=sumOfError+(deviation*deviation);
-  }
-  ADM_info("Den=%d Num=%d Good = %d, bad=%d, sum of error=%f\n",den,num,good,bad,(float)sumOfError);
-  double scale=nbValid;
-  sumOfError/=scale*scale;
-  ADM_info("Den=%d Num=%d Good = %d, bad=%d, sum of error=%f, %d\n",den,num,good,bad,(float)sumOfError,(int)sumOfError);
-  delete [] sorted;
-  return (int)sumOfError  ;
-}
-/**
-    \fn checkDeviation
     \brief Bypass the 1ms accuracy by making sure all the frames are in the form PTS=offset + N*frameInterval
 */
 bool mkvHeader::enforceFixedFrameRate(int num, int den)
@@ -451,42 +381,62 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     int num= _videostream.dwScale;
     int den= _videostream.dwRate;
-    ADM_info("Checking deviation for native %d %d\n", _videostream.dwScale,   _videostream.dwRate);
-    int deviation=checkDeviation(  _videostream.dwScale,   _videostream.dwRate);
-    int deviationMinDelta=100000000;
-
-    if(minDelta)
+    int deviation=0;
     {
-        ADM_info("Checking deviation for minDelata %d %d\n",minDelta,1000000);
-        deviationMinDelta =checkDeviation(  minDelta,1000000   );
-    }
-    ADM_info("Deviation        = %d\n",deviation);
-    ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
-#if 1
-    if(minDelta)
-    {
-        if(deviationMinDelta<deviation)
+        // Initialize deviation
+        // 
+        mkvDeviation devEngine(nb);      
+        int first=0;
+        while(  track->index[first].Pts==ADM_NO_PTS && first<nb) 
+              first++; // we should have some at least
+        uint64_t zero= track->index[first].Pts;
+        ADM_info("Num=%d Den=%d zero=%d first=%d\n",num,den,(int)zero,first);
+        for(int i=first;i<nb;i++)
         {
-            den=1000*1000;
-            num=minDelta;
-            deviation=deviationMinDelta;
-            ADM_info("Min delta is better\n");
+          uint64_t pts=track->index[i].Pts;
+          if(pts==ADM_NO_PTS) continue;
+          if(pts<zero) continue;
+            
+          devEngine.add(pts-zero);
         }
-    }
-#endif
-    // Check std value too
-    if(stdFrameRate!=-1)
-    {
-        const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
-        ADM_info("Checking deviation for stdFrameRate=%d:%d\n",fr->num,fr->den);
-        int deviationStd=checkDeviation(fr->num,fr->den);
-        ADM_info("Deviation for stdFrameRate(%d) =%d\n",stdFrameRate,deviationStd);
-        if(deviationStd<deviation)
+
+        ADM_info("Checking deviation for native %d %d\n", _videostream.dwScale,   _videostream.dwRate);
+        deviation=devEngine.computeDeviation(  _videostream.dwScale,   _videostream.dwRate);
+        int deviationMinDelta=100000000;
+
+        if(minDelta)
         {
-          num=fr->num;
-          den=fr->den;
-          deviation=deviationStd;
-          ADM_info("Std frame rate is better\n");
+            ADM_info("Checking deviation for minDelata %d %d\n",minDelta,1000000);
+            deviationMinDelta =devEngine.computeDeviation(  minDelta,1000000   );
+        }
+        ADM_info("Deviation        = %d\n",deviation);
+        ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
+    #if 1
+        if(minDelta)
+        {
+            if(deviationMinDelta<deviation)
+            {
+                den=1000*1000;
+                num=minDelta;
+                deviation=deviationMinDelta;
+                ADM_info("Min delta is better\n");
+            }
+        }
+    #endif
+        // Check std value too
+        if(stdFrameRate!=-1)
+        {
+            const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
+            ADM_info("Checking deviation for stdFrameRate=%d:%d\n",fr->num,fr->den);
+            int deviationStd=devEngine.computeDeviation(fr->num,fr->den);
+            ADM_info("Deviation for stdFrameRate(%d) =%d\n",stdFrameRate,deviationStd);
+            if(deviationStd<deviation)
+            {
+              num=fr->num;
+              den=fr->den;
+              deviation=deviationStd;
+              ADM_info("Std frame rate is better\n");
+            }
         }
     }
     ADM_info("Old default duration    %" PRId64" us\n",track->_defaultFrameDuration);

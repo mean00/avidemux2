@@ -8,6 +8,7 @@ SET(ADM_matroska_SRCS
     ADM_mkvPlugin.cpp  
     ebml.cpp  
     mkv_tags.cpp
+    ADM_mkvDeviation.cpp
 )
 ADD_DEMUXER(ADM_dm_matroska ${ADM_matroska_SRCS})
 
