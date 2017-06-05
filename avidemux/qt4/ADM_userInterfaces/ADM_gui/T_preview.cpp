@@ -172,7 +172,9 @@ void  UI_updateDrawWindowSize(void *win,uint32_t w,uint32_t h)
     // Instead, resize the window later on restore event if necessary.
     if(!QuiMainWindows->isMaximized())
     {
+        UI_setBlockZoomChangesFlag(true);
         UI_resize(w,h);
+        UI_setBlockZoomChangesFlag(false);
         UI_setNeedsResizingFlag(false);
     }else
     {

@@ -62,7 +62,7 @@ XvRender::~XvRender()
 /**
     \fn init
 */
-bool XvRender::init( GUI_WindowInfo * window, uint32_t w, uint32_t h,renderZoom zoom)
+bool XvRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     ADM_info("[Xvideo]Xv start\n");
     info=*window;
@@ -112,7 +112,7 @@ bool XvRender::displayImage(ADMImage *src)
 /**
     \fn changeZoom
 */
-bool XvRender::changeZoom(renderZoom newZoom)
+bool XvRender::changeZoom(float newZoom)
 {
         ADM_info("changing zoom, xv render.\n");
         calcDisplayFromZoom(newZoom);

@@ -36,10 +36,10 @@ class simpleRender: public VideoRenderBase, public ADM_QvideoDrawer
       public:
                              simpleRender( void ) ;
                              ~simpleRender();
-              virtual	bool init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom);
+              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
               virtual	bool stop(void);				
               virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(renderZoom newZoom);
+              virtual   bool changeZoom(float newZoom);
               virtual   bool refresh(void);
               virtual   bool usingUIRedraw(void) {return true;};
                   const char *getName() {return "RGB";}

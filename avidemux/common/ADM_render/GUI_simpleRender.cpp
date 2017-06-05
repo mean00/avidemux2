@@ -113,7 +113,7 @@ bool simpleRender::allocateStuff(void)
 /**
     \fn changeZoom
 */
-bool simpleRender::changeZoom(renderZoom newZoom)
+bool simpleRender::changeZoom(float newZoom)
 {
         ADM_info("changing zoom, simple render.\n");
         calcDisplayFromZoom(newZoom);
@@ -124,11 +124,11 @@ bool simpleRender::changeZoom(renderZoom newZoom)
 /**
     \fn changeZoom
 */
-bool simpleRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+bool simpleRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     info=*window;
     baseInit(w,h,zoom);
-    ADM_info("init, simple render. w=%d, h=%d,zoom=%d\n",(int)w,(int)h,(int)zoom);
+    ADM_info("init, simple render. w=%d, h=%d,zoom=%.4f\n",(int)w,(int)h,zoom);
     allocateStuff();
     videoWidget=(ADM_Qvideo *)info.widget;
     videoWidget->useExternalRedraw(false);

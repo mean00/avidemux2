@@ -17,7 +17,7 @@ typedef enum
 
 ADM_PREVIEW_MODE  getPreviewMode(void);
 void             setPreviewMode(ADM_PREVIEW_MODE preview);
-void             changePreviewZoom(renderZoom nzoom);
+void             changePreviewZoom(float nzoom);
 /**
     class admPreview
 */
@@ -33,7 +33,7 @@ class admPreview
       static bool seekToIntraPts(uint64_t timeframe);
       static void start(void);
       static void stop(void);
-      static void setMainDimension(uint32_t, uint32_t ,renderZoom);
+      static void setMainDimension(uint32_t, uint32_t, float);
       static void deferDisplay(bool onoff);
       static void displayNow(void);
       static void cleanUp(void);
@@ -45,7 +45,7 @@ class admPreview
       static void destroy(void);
       static bool updateImage(void);
       static ADM_HW_IMAGE getPreferedHwImageFormat(void);
-      static renderZoom getCurrentZoom();
+      static float getCurrentZoom();
 	  static void getFrameFlags(uint32_t *flags, uint32_t *quantiser);
 };
 #endif

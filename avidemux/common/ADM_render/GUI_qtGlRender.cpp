@@ -264,7 +264,7 @@ bool QtGlRender::stop(void)
     \fn init
 */
 
-bool QtGlRender::init( GUI_WindowInfo *  window, uint32_t w, uint32_t h,renderZoom zoom)
+bool QtGlRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
     ADM_info("[GL Render] Initialising renderer\n");
     baseInit(w,h,zoom);
@@ -312,7 +312,7 @@ bool QtGlRender::displayImage(ADMImage *pic)
 /**
     \fn changeZoom
 */
-bool QtGlRender::changeZoom(renderZoom newZoom)
+bool QtGlRender::changeZoom(float newZoom)
 {
     ADM_info("changing zoom, qtGl render.\n");
     glWidget->makeCurrent();

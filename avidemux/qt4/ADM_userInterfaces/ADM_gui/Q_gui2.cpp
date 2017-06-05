@@ -16,6 +16,7 @@
 #include <QtCore/QMimeData>
 #include <QtCore/QUrl>
 #include <QKeyEvent>
+#include <QResizeEvent>
 #include <QGraphicsView>
 #include <QtCore/QDir>
 #include <QMessageBox>
@@ -48,6 +49,9 @@ using namespace std;
 #define ADM_SLIDER_REFRESH_PERIOD 500
 #define ADM_LARGE_SCALE     (10LL*1000LL)
 #define ADM_SCALE_INCREMENT (ADM_LARGE_SCALE/100LL)
+// if the dimensions of an autozoomed video are smaller than the available space,
+// don't adjust zoom unless the window has been enlarged beyond a threshold
+#define RESIZE_THRESHOLD 20
 
 #if defined(USE_SDL) && ( !defined(_WIN32) && !defined(__APPLE__))
     #define SDL_ON_LINUX
@@ -465,7 +469,14 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     widgetsUpdateTooltips();
 
     this->adjustSize();
-        QuiTaskBarProgress=createADMTaskBarProgress();
+
+    threshold = RESIZE_THRESHOLD;
+    actZoomCalled = false;
+    justLaunched = true;
+    blockResizing = false;
+    blockZoomChanges = true;
+
+    QuiTaskBarProgress=createADMTaskBarProgress();
 }
 /**
     \fn searchToolBar
@@ -546,12 +557,13 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
 			a->setMenuRole(QAction::NoRole);
 #endif 
                         m->cookie=(void *)a;
-                        if(swpud && m->shortCut=="Up")
-                            a->setShortcut(QKeySequence("Down"));
-                        else if(swpud && m->shortCut=="Down")
-                            a->setShortcut(QKeySequence("Up"));
-                        else if(m->shortCut)
+                        if(m->shortCut)
                         {
+                            if(swpud && !strcmp(m->shortCut,"Up"))
+                                a->setShortcut(Qt::Key_Down);
+                            else if(swpud && !strcmp(m->shortCut,"Down"))
+                                a->setShortcut(Qt::Key_Up);
+
                             if(alt)
                             {
                                 std::string sc="";
@@ -1245,6 +1257,59 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
             break;
         case QEvent::Resize:
+            if(watched == QuiMainWindows)
+            {
+                if(blockZoomChanges || playing || !avifileinfo)
+                    break;
+                uint32_t reqw, reqh;
+                calcDockWidgetDimensions(reqw,reqh);
+
+                uint32_t availw = 1;
+                if(QuiMainWindows->width() > reqw)
+                    availw = QuiMainWindows->width() - reqw;
+                else
+                    break;
+
+                uint32_t availh = 1;
+                if(QuiMainWindows->height() > reqh)
+                    availh = QuiMainWindows->height() - reqh;
+                else
+                    break;
+
+                uint32_t w = avifileinfo->width;
+                uint32_t h = avifileinfo->height;
+                if(!w || !h)
+                    break;
+                // We've got the available space and the video resolution,
+                // now calculate the zoom to fit the video into this space.
+                float widthRatio = (float)availw / (float)w;
+                float heightRatio = (float)availh / (float)h;
+                float zoom = (widthRatio < heightRatio ? widthRatio : heightRatio);
+
+                // Detect if the zoom has been likely set automatically on loading a new video or
+                // changed using a keyboard shortcut. In this case imitate physical friction
+                // requiring the window to be resized beyond certain threshold first.
+                float oldzoom = admPreview::getCurrentZoom();
+                QSize os = static_cast<QResizeEvent*>(event)->oldSize();
+                if(zoom > oldzoom && actZoomCalled)
+                {
+                    if(!justLaunched && QuiMainWindows->width() > os.width())
+                        threshold -= QuiMainWindows->width() - os.width();
+                    if(!justLaunched && QuiMainWindows->height() > os.height())
+                        threshold -= QuiMainWindows->height() - os.height();
+                    justLaunched = false;
+                    if(threshold > 0)
+                        break;
+                    if(threshold < 0)
+                        threshold = 0;
+                }
+
+                blockResizing = true;
+                renderDisplayResize(w,h,zoom);
+                actZoomCalled = false;
+                admPreview::samePicture(); // required at least for VDPAU
+                blockResizing = false;
+            }
             if (watched == ui.sliderPlaceHolder)
             {
                     thumbSlider->resize(ui.sliderPlaceHolder->width(), 16);
@@ -1332,6 +1397,69 @@ void MainWindow::openFiles(QList<QUrl> urlList)
             admCoreUtils::setLastReadFolder(std::string(fileName.toUtf8().constData()));
         }
     }
+}
+
+/**
+    \fn calcDockWidgetDimensions
+    \brief calculate the total width and height occupied by the toolbar and the codec, navigation etc. dock widgets
+*/
+void MainWindow::calcDockWidgetDimensions(uint32_t &width, uint32_t &height)
+{
+    uint32_t reqw=18; // 2 x 9px margin
+    if(ui.codecWidget->isVisible())
+        reqw += ui.codecWidget->frameSize().width() + 6; // with codec widget visible a small extra margin is necessary
+    if(ui.toolBar->orientation()==Qt::Vertical && ui.toolBar->isVisible() && false==ui.toolBar->isFloating())
+        reqw += ui.toolBar->frameSize().width();
+    width = reqw;
+
+    uint32_t reqh=18; // 2 x 9px margin
+    if(ui.menubar->isVisible())
+        reqh += ui.menubar->height();
+    if(ui.toolBar->isVisible() && false==ui.toolBar->isFloating() && ui.toolBar->orientation()==Qt::Horizontal)
+        reqh += ui.toolBar->frameSize().height();
+    if(ui.navigationWidget->isVisible() || ui.selectionWidget->isVisible() || ui.volumeWidget->isVisible() || ui.audioMetreWidget->isVisible())
+       reqh += ui.navigationWidget->frameSize().height();
+    height = reqh;
+}
+
+/**
+    \fn setResizeThreshold
+*/
+void MainWindow::setResizeThreshold(int value)
+{
+    threshold = value;
+}
+
+/**
+    \fn setActZoomCalledFlag
+*/
+void MainWindow::setActZoomCalledFlag(bool called)
+{
+    actZoomCalled = called;
+}
+
+/**
+    \fn setBlockZoomChangesFlag
+*/
+void MainWindow::setBlockZoomChangesFlag(bool block)
+{
+    blockZoomChanges = block;
+}
+
+/**
+    \fn getBlockResizingFlag
+*/
+bool MainWindow::getBlockResizingFlag(void)
+{
+    return blockResizing;
+}
+
+/**
+    \fn setBlockResizingFlag
+*/
+void MainWindow::setBlockResizingFlag(bool block)
+{
+    blockResizing = block;
 }
 
 void MainWindow::previousIntraFrame(void)
@@ -2084,23 +2212,16 @@ void UI_deiconify( void )
  */
 void UI_resize(uint32_t w,uint32_t h)
 {
-    uint32_t reqw=18; // 2 x 9px margin
-    if(WIDGET(codecWidget)->isVisible())
-        reqw += WIDGET(codecWidget)->frameSize().width() + 6; // with codec widget visible a small extra margin is necessary
-    if(WIDGET(toolBar)->orientation()==Qt::Vertical && WIDGET(toolBar)->isVisible() && false==WIDGET(toolBar)->isFloating())
-        reqw += WIDGET(toolBar)->frameSize().width();
-
-    uint32_t reqh=18; // 2 x 9px margin
-    if(WIDGET(menubar)->isVisible())
-        reqh += WIDGET(menubar)->height();
-    if(WIDGET(toolBar)->isVisible() && false==WIDGET(toolBar)->isFloating() && WIDGET(toolBar)->orientation()==Qt::Horizontal)
-        reqh += WIDGET(toolBar)->frameSize().height();
-    if(WIDGET(navigationWidget)->isVisible() || WIDGET(selectionWidget)->isVisible() || WIDGET(volumeWidget)->isVisible() || WIDGET(audioMetreWidget)->isVisible())
-        reqh += WIDGET(navigationWidget)->frameSize().height();
-
+    if(((MainWindow *)QuiMainWindows)->getBlockResizingFlag())
+        return;
+    uint32_t reqw, reqh;
+    ((MainWindow *)QuiMainWindows)->calcDockWidgetDimensions(reqw,reqh);
     reqw += w;
     reqh += h;
+    UI_setBlockZoomChangesFlag(true);
     QuiMainWindows->resize(reqw,reqh);
+    UI_setBlockZoomChangesFlag(false);
+    ((MainWindow *)QuiMainWindows)->setResizeThreshold(RESIZE_THRESHOLD);
     ADM_info("Resizing the main window to %dx%d px\n",reqw,reqh);
 }
 
@@ -2118,6 +2239,23 @@ bool UI_getNeedsResizingFlag(void)
 void UI_setNeedsResizingFlag(bool resize)
 {
     needsResizing=resize;
+}
+
+/**
+    \fn UI_setBlockZoomChangesFlag
+*/
+void UI_setBlockZoomChangesFlag(bool block)
+{
+    ((MainWindow *)QuiMainWindows)->setBlockZoomChangesFlag(block);
+}
+
+/**
+    \fn UI_resetZoomThreshold
+*/
+void UI_resetZoomThreshold(void)
+{
+    ((MainWindow *)QuiMainWindows)->setResizeThreshold(RESIZE_THRESHOLD);
+    ((MainWindow *)QuiMainWindows)->setActZoomCalledFlag(true);
 }
 
 /**
