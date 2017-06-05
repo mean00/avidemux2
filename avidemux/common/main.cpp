@@ -436,6 +436,13 @@ bool setPrefsDefault(void)
             prefs->set(VIDEODEVICE,(uint32_t)1); // XV
     #endif
 #endif
+#ifdef __APPLE__
+        prefs->set(AUDIO_DEVICE_AUDIODEVICE,std::string("CoreAudio"));
+    #ifdef USE_OPENGL
+        prefs->set(FEATURES_ENABLE_OPENGL,true);
+        prefs->set(VIDEODEVICE,(uint32_t)5); // QTGL
+    #endif
+#endif
     return true;
 }
 //EOF
