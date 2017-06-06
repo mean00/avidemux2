@@ -798,6 +798,7 @@ uint8_t mkvHeader::close(void)
   _cuePosition=0;
   _segmentPosition=0;
   _trackPosition=0;
+  _H264Recovery=16;
 }
 /**
     \fn ~mkvHeader

@@ -161,6 +161,7 @@ class mkvHeader         :public vidHeader
     uint64_t                _segmentPosition;
     uint64_t                _cuePosition;
     uint64_t                _trackPosition;
+    uint32_t                _H264Recovery;
 
     uint8_t                 checkHeader(void *head,uint32_t headlen);
     bool                    analyzeTracks(ADM_ebml_file *parser);

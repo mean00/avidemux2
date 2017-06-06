@@ -573,7 +573,7 @@ static bool getNalType (uint8_t * head, uint8_t * tail, uint32_t * flags,int rec
                     but 4 bytes NALU
 
 */
-uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,  uint32_t * flags)
+uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len,  uint32_t * flags,uint32_t *extRecovery)
 {
   uint8_t *head = buffer, *tail = buffer + len;
   uint8_t stream;
@@ -586,6 +586,8 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
       if(length>len) nalSize=3;
   }
   uint32_t recovery=0xff;
+  
+  
   *flags=0;
   while (head + nalSize < tail)
     {
@@ -606,7 +608,17 @@ uint8_t extractH264FrameType (uint32_t nalSize, uint8_t * buffer, uint32_t len, 
       switch (stream)
         {
             case NAL_SEI:
-                getRecoveryFromSei(length-1, head+1,&recovery);
+            {
+
+                bool sei=getRecoveryFromSei(length-1, head+1,&recovery);
+                if(extRecovery)
+                {
+                    if(sei)
+                        *extRecovery=recovery;
+                    else
+                        recovery=*extRecovery;
+                }
+            }
                 break;
             case NAL_SPS:
             case NAL_PPS:
