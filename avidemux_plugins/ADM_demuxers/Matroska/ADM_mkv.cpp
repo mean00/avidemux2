@@ -414,7 +414,19 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
     #if 1
         if(minDelta)
         {
-            if(deviationMinDelta<deviation)
+            bool preferMinDelta=false;
+            // Hack to rescale double fps, ugly, might cause problem
+            if(deviationMinDelta==deviation)
+            {
+                // min num/den > std num/den
+                if(minDelta*_videostream.dwRate >  _videostream.dwScale*1000000*1.5)
+                {
+                    ADM_info("Both are equal but prefering minDelta\n");
+                    preferMinDelta=true;
+                }
+            }
+            //
+            if(deviationMinDelta<deviation || preferMinDelta)
             {
                 den=1000*1000;
                 num=minDelta;
@@ -493,7 +505,7 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     if(nbValidDts<3)
     {
-            ADM_warning("Not enough valid DTS\n");
+            ADM_warning("Not enough valid DTS (%d)\n",(int)nbValidDts);
             *minDeltaX=minDelta;
             *maxDeltaX=0;
             return false;

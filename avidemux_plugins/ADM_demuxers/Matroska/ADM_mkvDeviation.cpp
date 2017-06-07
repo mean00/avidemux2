@@ -72,8 +72,10 @@ int mkvDeviation::computeDeviation(int num, int den)
     uint64_t multiple=(uint64_t)dmultiple;
     double reconstructed=(double)multiple*coeff;
     double deviation=(double)fabs((double)pts-reconstructed);
+#if 0
     if(multiple<=lastValidFrame)
         printf("Warning : Multiple match for the same number (%d)\n",multiple);
+#endif
     lastValidFrame=multiple;
     //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
     
