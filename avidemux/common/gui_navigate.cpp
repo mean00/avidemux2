@@ -504,7 +504,6 @@ bool GUI_GoToTime(uint64_t time)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Seek"), QT_TRANSLATE_NOOP("navigate","Error seeking to %" PRIu64" ms"),time/1000);
     }
-    admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     return true;
 }   
@@ -529,23 +528,31 @@ bool GUI_infiniteForward(uint64_t pts)
  */
 bool GUI_lastFrameBeforePts(uint64_t pts)
 {
-    uint64_t pts2=pts;
-    // Try to find a keyframe just before pts
-    if(video_body->getPKFramePTS(&pts2))
-    { // Starting from there, approach the last frame before pts
-        admPreview::deferDisplay(1);
-        GUI_GoToTime(pts2);
-        uint64_t tmp;
-        while(pts2<pts)
+    uint64_t tmp=pts;
+    uint64_t current=admPreview::getCurrentPts();
+    // Try to find a keyframe just before pts...
+    if(video_body->getPKFramePTS(&tmp))
+    {
+        bool r=true;
+        if(tmp<=current && pts>current) // within the same GOP, seeking forward
+            tmp=current; // no need to go back to the keyframe
+        else
+            r=video_body->goToTimeVideo(tmp);
+        // Starting from tmp, approach the last frame before pts
+        if(r)
         {
-            tmp=pts2;
-            admPreview::nextPicture();
-            tmp=admPreview::getCurrentPts();
-            if(tmp>pts) break; // otherwise we may overshoot
-            pts2=tmp;
+            admPreview::deferDisplay(1);
+            uint64_t inc=video_body->getFrameIncrement();
+            while(tmp+inc <= pts) // otherwise we may overshoot
+            {
+                admPreview::nextPicture();
+                tmp=admPreview::getCurrentPts();
+            }
+            admPreview::deferDisplay(0);
+            admPreview::samePicture();
+            GUI_setCurrentFrameAndTime();
+            return true;
         }
-        admPreview::deferDisplay(0);
-        return GUI_GoToTime(pts2);
     }
     return false;
 }
