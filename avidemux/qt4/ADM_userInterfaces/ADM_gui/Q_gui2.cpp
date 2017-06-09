@@ -1178,6 +1178,11 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 switch (keyEvent->key())
                 {
                     case Qt::Key_Left:
+#ifdef __APPLE__
+                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                            sendAction(ACT_Back4Seconds);
+                        else
+#endif
                         if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Back1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
@@ -1189,6 +1194,11 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
                         return true;
                     case Qt::Key_Right:
+#ifdef __APPLE__
+                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                            sendAction(ACT_Forward4Seconds);
+                        else
+#endif
                         if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Forward1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
