@@ -157,7 +157,6 @@ uint8_t DIA_workingQt4::update(uint32_t cur, uint32_t total)
     n=n/d;
 
     percent=(uint32_t )floor(n);
-    if(percent<0) percent=0;
     if(percent>100) percent=100;
     return update(percent);
 }
