@@ -70,7 +70,6 @@ void checkCrashFile(void)
     if(buildDirectoryContent(&nbFile, baseDir, files, 20, "py"))
      {
         for(int i=0;i<nbFile;i++) printf("%d : %s\n",i,files[i]);
-                 printf("[ADM_ae_plugin] Cannot parse plugin\n");
         clearDirectoryContent(nbFile,files);
       }
 #endif

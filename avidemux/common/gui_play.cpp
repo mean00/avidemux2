@@ -109,9 +109,11 @@ void GUI_PlayAvi(void)
     uint32_t framelen,flags;
     uint32_t max,err;
     uint64_t oldTimeFrame;
+#if 0
     aviInfo info;
     float oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
+#endif
 
     // check we got everything...
     if (!video_body->getNbSegment())	return;

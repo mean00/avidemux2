@@ -1178,9 +1178,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 switch (keyEvent->key())
                 {
                     case Qt::Key_Left:
-                        if (keyEvent->modifiers() == Qt::ShiftModifier)
+#ifdef __APPLE__
+                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                            sendAction(ACT_Back4Seconds);
+                        else
+#endif
+                        if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Back1Second);
-                        else if (keyEvent->modifiers() == Qt::ControlModifier)
+                        else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Back2Seconds);
                         else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
                             sendAction(ACT_Back4Seconds);
@@ -1189,9 +1194,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
                         return true;
                     case Qt::Key_Right:
-                        if (keyEvent->modifiers() == Qt::ShiftModifier) 
+#ifdef __APPLE__
+                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                            sendAction(ACT_Forward4Seconds);
+                        else
+#endif
+                        if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Forward1Second);
-                        else if (keyEvent->modifiers() == Qt::ControlModifier) 
+                        else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Forward2Seconds);
                         else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
                             sendAction(ACT_Forward4Seconds);
@@ -1200,7 +1210,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
                         return true;
                     case Qt::Key_Up:
-                        if (keyEvent->modifiers() == Qt::ControlModifier)
+                        if (keyEvent->modifiers() & Qt::ControlModifier)
                         {
                             if(!swpud)
                                 sendAction(ACT_Forward1Mn);
@@ -1215,7 +1225,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                         }
                         return true;
                     case Qt::Key_Down:
-                        if (keyEvent->modifiers() == Qt::ControlModifier)
+                        if (keyEvent->modifiers() & Qt::ControlModifier)
                         {
                             if(!swpud)
                                 sendAction(ACT_Back1Mn);
@@ -1234,13 +1244,13 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                         break;
 
                     case Qt::Key_PageUp:
-                                                if (keyEvent->modifiers() == Qt::ControlModifier)
+                                                if (keyEvent->modifiers() & Qt::ControlModifier)
                                                         sendAction(ACT_MarkA);
                                                 else
                                                         sendAction(ACT_GotoMarkA);
                                                 return true;
                     case Qt::Key_PageDown:
-                                                if (keyEvent->modifiers() == Qt::ControlModifier)
+                                                if (keyEvent->modifiers() & Qt::ControlModifier)
                                                         sendAction(ACT_MarkB);
                                                 else
                                                         sendAction(ACT_GotoMarkB);
