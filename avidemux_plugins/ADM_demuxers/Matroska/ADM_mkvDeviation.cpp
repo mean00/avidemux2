@@ -54,7 +54,7 @@ void mkvDeviation::sort()
 
 
 */
-int mkvDeviation::computeDeviation(int num, int den)
+int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
 {
   double dHalf=(500000.*(double)num)/((double)den);
   int half=dHalf-1; // half interval in us
@@ -62,30 +62,71 @@ int mkvDeviation::computeDeviation(int num, int den)
   // Sorted contains the sorted list of valid PTS
   double coeff=(double)num*1000000.;
   coeff=coeff/(double)den;
-  
+  int multipleError=0;
   int lastValidFrame=1;
-  for(int i=0;i<nbValid;i++)
+  
+  int multipleCount=5;
+  int maxDelta=0;
+  int minDelta=8*1000 *1000;
+
+  
+  for(int i=1;i<nbValid;i++)
+  {
+      int delta=(int)(sorted[i]-sorted[i-1]);
+      if(delta>maxDelta) maxDelta=delta;
+      if(delta<minDelta) minDelta=delta;
+      if(sorted[i]<=sorted[i-1])
+          ADM_warning("Sorting error : [%d] %lld : %lld\n",i,sorted[i],sorted[i-1]);
+      
+  }
+      
+  
+  for(int i=2;i<nbValid;i++) // skip the 2 first frames, often wrong
   {
     uint64_t pts=sorted[i];
-    double dmultiple=(pts+half);
+    double dmultiple=(pts+half)+coeff/2;
     dmultiple/=coeff;
     uint64_t multiple=(uint64_t)dmultiple;
     double reconstructed=(double)multiple*coeff;
     double deviation=(double)fabs((double)pts-reconstructed);
-#if 0
-    if(multiple<=lastValidFrame)
-        printf("Warning : Multiple match for the same number (%d)\n",multiple);
-#endif
+    
+    if(multiple<=lastValidFrame )
+    {
+     //   printf("Warning : Multiple match for the same number (%d)\n",multiple);
+        sumOfError+=coeff*coeff; // full frame error
+        multipleError++;
+        if(multipleCount)
+        {
+            multipleCount--;
+            printf("Frame %d, multiple = %d\n",i,multiple);
+        }
+        continue;
+    }
+    int jump=(multiple-lastValidFrame)-1;
+    if(jump)
+    {
+        //printf("Skipped %d %d\n",i,jump);
+        nbSkipped+=jump;
+        sumOfError=sumOfError+(1+jump)*(1+jump)*coeff*coeff;
+        lastValidFrame=multiple;
+        continue;
+    }
     lastValidFrame=multiple;
     //printf("frame %d multiple = %d, deviation=%d\n",i,(int)multiple,(int)deviation);
     
     // We have an accuracy of 1ms, so if the error is less than 2 ms, we ignore it
-    if(deviation>2000.)
+    if(deviation>1000.)
+    {
+        int dev=(int)deviation;
+        dev=dev-dev%1000;
+        deviation=dev;
         sumOfError=sumOfError+(deviation*deviation);
+    }
   }
 
   double scale=nbValid;
   sumOfError/=scale*scale;
-  ADM_info("Den=%d Num=%d  sum of error=%f, %d\n",den,num,(float)sumOfError,(int)sumOfError);
+  ADM_info("Den=%d Num=%d  sum of error=%d, multiple=%d\n",den,num,(int)sumOfError,multipleError);
+  ADM_info("MinDelta=%d maxDelta=%d skipped=%d\n",minDelta,maxDelta,nbSkipped);
   return (int)sumOfError  ;
 }

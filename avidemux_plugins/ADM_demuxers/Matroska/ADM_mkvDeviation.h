@@ -21,11 +21,11 @@ class mkvDeviation
 public:
         mkvDeviation(int n);
         ~mkvDeviation();
-        int computeDeviation(int num, int den);
+        int computeDeviation(int num, int den,int &nbSkipped);
         void sort(void);
         void add(uint64_t p)
         {
-            sorted[nbValid++]=p;
+            sorted[nbValid++]=p+500; // one ms error, take in the middle
             ADM_assert(nbValid<=total);
         }
 

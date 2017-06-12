@@ -381,6 +381,8 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
 
     int num= _videostream.dwScale;
     int den= _videostream.dwRate;
+    int skipped=0;
+    
     int deviation=0;
     {
         // Initialize deviation
@@ -399,19 +401,27 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             
           devEngine.add(pts-zero);
         }
-
+        devEngine.sort();
         ADM_info("Checking deviation for native %d %d\n", _videostream.dwScale,   _videostream.dwRate);
-        deviation=devEngine.computeDeviation(  _videostream.dwScale,   _videostream.dwRate);
+        deviation=devEngine.computeDeviation(  _videostream.dwScale,   _videostream.dwRate,skipped);
+        
         int deviationMinDelta=100000000;
-
+        int minDeltaSkip;
         if(minDelta)
         {
-            ADM_info("Checking deviation for minDelata %d %d\n",minDelta,1000000);
-            deviationMinDelta =devEngine.computeDeviation(  minDelta,1000000   );
+            ADM_info("Checking deviation for minDelta %d %d\n",minDelta,1000000);
+            deviationMinDelta =devEngine.computeDeviation(  minDelta,1000000,minDeltaSkip   );
         }
         ADM_info("Deviation        = %d\n",deviation);
         ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
-    #if 1
+        ADM_info("Deviation skip    = %d\n",minDeltaSkip);
+    
+        if(minDeltaSkip>skipped*3) // we are skipping a lot more frame, fps too high
+        {
+            ADM_info("Too many skipped frames, dropping candidates\n");
+            deviationMinDelta=deviation*2;
+        }
+                
         if(minDelta)
         {
             bool preferMinDelta=false;
@@ -431,18 +441,20 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
                 den=1000*1000;
                 num=minDelta;
                 deviation=deviationMinDelta;
+                skipped=minDeltaSkip;
                 ADM_info("Min delta is better\n");
             }
         }
-    #endif
+
         // Check std value too
         if(stdFrameRate!=-1)
         {
+            int stdSkip;
             const frameRateStruct *fr=&(candidateFrameRate[stdFrameRate]);
             ADM_info("Checking deviation for stdFrameRate=%d:%d\n",fr->num,fr->den);
-            int deviationStd=devEngine.computeDeviation(fr->num,fr->den);
+            int deviationStd=devEngine.computeDeviation(fr->num,fr->den,stdSkip);
             ADM_info("Deviation for stdFrameRate(%d) =%d\n",stdFrameRate,deviationStd);
-            if(deviationStd<deviation)
+            if(deviationStd<deviation && stdSkip<skipped*3)
             {
               num=fr->num;
               den=fr->den;
