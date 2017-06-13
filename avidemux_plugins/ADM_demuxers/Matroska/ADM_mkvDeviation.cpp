@@ -68,7 +68,7 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
   int multipleCount=5;
   int maxDelta=0;
   int minDelta=8*1000 *1000;
-
+  nbSkipped=0;
   
   for(int i=1;i<nbValid;i++)
   {
