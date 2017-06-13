@@ -47,7 +47,7 @@
 
 #include "ADM_edAudioTrackExternal.h"
 #include "ADM_threads.h"
-
+#include "ADM_muxerProto.h"
 admMutex singleThread;
 
 float currentZoom=ZOOM_1_1;
@@ -89,7 +89,7 @@ void        updateLoaded (bool resetMarker=true);
 extern void GUI_OpenApplicationLog();
 extern void GUI_OpenApplicationDataFolder();
 
-extern bool ADM_mux_configure(int index);
+//extern bool ADM_mux_configure(int index);
 void brokenAct(void);
 //
 //  Sub gui files...
