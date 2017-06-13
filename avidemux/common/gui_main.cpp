@@ -38,6 +38,7 @@
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_videoEncoderApi.h"
+#include "ADM_muxerProto.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 #include "avi_vars.h"
@@ -265,11 +266,12 @@ void HandleAction (Action action)
             videoEncoder6Configure();
             return;
     case ACT_ContainerConfigure:
-            {
+        {
+            if(!ADM_mx_getNbMuxers()) return;
             int index=UI_GetCurrentFormat();
             ADM_mux_configure(index);
             return;
-            }
+        }
     case ACT_VIDEO_CODEC_CHANGED:
         {
             int nw=UI_getCurrentVCodec();
@@ -1106,12 +1108,12 @@ bool A_loadDefaultSettings(void)
 {
   
     std::string defaultSettings=DEFAULT_SETTINGS_FILE;
-    if(ADM_fileExist(defaultSettings.c_str()))
-    {        
-        if(ADM_fileSize(defaultSettings.c_str())>5)
-        {
-                return A_runPythonScript( defaultSettings);
-        }
+    if(ADM_fileExist(defaultSettings.c_str()) && ADM_fileSize(defaultSettings.c_str())>5)
+    {
+        return A_runPythonScript( defaultSettings);
+    }else
+    { // default to MKV as output container instead of AVI if no user defined default settings exist
+        return video_body->setContainer("MKV",NULL);
     }
     return false;
 }

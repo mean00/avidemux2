@@ -662,7 +662,6 @@ void MainWindow::buildActionLists(void)
     for(int i=1;i<6;i++)
         ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(i));        
 
-    ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(2)); // "Save"
     ActionsAvailableWhenFileLoaded.push_back(ui.menuFile->actions().at(9)); // "Information"
 
     for(int i=3;i<11;i++)
@@ -678,8 +677,9 @@ void MainWindow::buildActionLists(void)
 
     ActionsAvailableWhenFileLoaded.push_back(ui.menuVideo->actions().at(1)); // post-processing
 
-    for(int i=2;i<ui.toolBar->actions().size();i++)
-    { // disable "Save" and "Information" buttons in the toolbar if no video is loaded
+    bool canSave=!!ADM_mx_getNbMuxers();
+    for(int i=3-canSave;i<ui.toolBar->actions().size();i++)
+    { // disable "Save" and "Information" buttons in the toolbar if no video is loaded, "Save" also if we've got zero muxers
         ActionsAvailableWhenFileLoaded.push_back(ui.toolBar->actions().at(i));
     }
 
@@ -848,6 +848,7 @@ void MainWindow::setMenuItemsEnabledState(void)
     for(int i=0;i<npb;i++)
         PushButtonsAvailableWhenFileLoaded[i]->setEnabled(vid);
 
+    ui.menuFile->actions().at(2)->setEnabled(vid && !!ADM_mx_getNbMuxers()); // disable saving video if there are no muxers
     if(vid)
     {
         undo=video_body->canUndo();
@@ -926,9 +927,15 @@ void MainWindow::updateCodecWidgetControlsState(void)
     ui.menuAudio->actions().at(2)->setEnabled(b);
 
     // reenable the controls below unconditionally after playback
-    ui.pushButtonFormatConfigure->setEnabled(true);
     ui.checkBox_TimeShift->setEnabled(true);
     ui.spinBox_TimeValue->setEnabled(true);
+    // disable the "Save" button in the toolbar and the "Configure" button for the output format if we have no muxers
+    b=false;
+    bool gotMuxers=(bool)ADM_mx_getNbMuxers();
+    if(avifileinfo && gotMuxers)
+        b=true;
+    ui.toolBar->actions().at(2)->setEnabled(b);
+    ui.pushButtonFormatConfigure->setEnabled(gotMuxers);
 }
 
 /**
@@ -1178,33 +1185,23 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 switch (keyEvent->key())
                 {
                     case Qt::Key_Left:
-#ifdef __APPLE__
                         if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Back4Seconds);
-                        else
-#endif
-                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Back1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Back2Seconds);
-                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-                            sendAction(ACT_Back4Seconds);
                         else
                             sendAction(ACT_PreviousFrame);
 
                         return true;
                     case Qt::Key_Right:
-#ifdef __APPLE__
                         if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Forward4Seconds);
-                        else
-#endif
-                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Forward1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Forward2Seconds);
-                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
-                            sendAction(ACT_Forward4Seconds);
                         else 
                             sendAction(ACT_NextFrame);
 
@@ -1847,7 +1844,7 @@ void setupMenus(void)
         const char *name=ADM_mx_getDisplayName(i);
         WIDGET(comboBoxFormat)->addItem(name);
     }
-
+    WIDGET(pushButtonFormatConfigure)->setEnabled((bool)nbFormat);
 }
 /*
     Return % of scale (between 0 and 1)

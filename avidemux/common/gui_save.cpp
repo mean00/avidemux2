@@ -115,6 +115,7 @@ void HandleAction_Save(Action action)
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
     {
+      if(!ADM_mx_getNbMuxers()) break;
       int  muxerIndex=UI_GetCurrentFormat();
       const char *defaultExtension=ADM_MuxerGetDefaultExtension(muxerIndex);
       GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select File to Save"),defaultExtension,(SELFILE_CB *)A_SaveWrapper); // A_SaveAudioNVideo);
