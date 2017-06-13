@@ -84,7 +84,7 @@ int mkvDeviation::computeDeviation(int num, int den,int &nbSkipped)
   for(int i=2;i<nbValid;i++) // skip the 2 first frames, often wrong
   {
     uint64_t pts=sorted[i];
-    double dmultiple=(pts+half)+coeff/2;
+    double dmultiple=(pts+half);
     dmultiple/=coeff;
     uint64_t multiple=(uint64_t)dmultiple;
     double reconstructed=(double)multiple*coeff;
