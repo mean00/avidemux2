@@ -222,7 +222,7 @@ create_release_package()
     libmp3lame-*.dll \
     libogg-*.dll \
     libopus-*.dll \
-    libpcre16-*.dll \
+    libpcre2-16-*.dll \
     libpcre-*.dll \
     libpng16-*.dll \
     libsqlite3-*.dll \
