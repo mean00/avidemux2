@@ -1108,12 +1108,12 @@ bool A_loadDefaultSettings(void)
 {
   
     std::string defaultSettings=DEFAULT_SETTINGS_FILE;
-    if(ADM_fileExist(defaultSettings.c_str()))
-    {        
-        if(ADM_fileSize(defaultSettings.c_str())>5)
-        {
-                return A_runPythonScript( defaultSettings);
-        }
+    if(ADM_fileExist(defaultSettings.c_str()) && ADM_fileSize(defaultSettings.c_str())>5)
+    {
+        return A_runPythonScript( defaultSettings);
+    }else
+    { // default to MKV as output container instead of AVI if no user defined default settings exist
+        return video_body->setContainer("MKV",NULL);
     }
     return false;
 }
