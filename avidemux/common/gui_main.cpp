@@ -38,6 +38,7 @@
 #include "ADM_preview.h"
 #include "ADM_coreVideoEncoder.h"
 #include "ADM_videoEncoderApi.h"
+#include "ADM_muxerProto.h"
 #include "ADM_audioFilter/include/ADM_audioFilterInterface.h"
 
 #include "avi_vars.h"
@@ -265,11 +266,12 @@ void HandleAction (Action action)
             videoEncoder6Configure();
             return;
     case ACT_ContainerConfigure:
-            {
+        {
+            if(!ADM_mx_getNbMuxers()) return;
             int index=UI_GetCurrentFormat();
             ADM_mux_configure(index);
             return;
-            }
+        }
     case ACT_VIDEO_CODEC_CHANGED:
         {
             int nw=UI_getCurrentVCodec();
