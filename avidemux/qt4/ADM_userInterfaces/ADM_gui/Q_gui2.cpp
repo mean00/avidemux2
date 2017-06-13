@@ -1312,7 +1312,7 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 }
 
                 blockResizing = true;
-                renderDisplayResize(w,h,zoom);
+                admPreview::setMainDimension(w,h,zoom);
                 actZoomCalled = false;
                 admPreview::samePicture(); // required at least for VDPAU
                 blockResizing = false;
