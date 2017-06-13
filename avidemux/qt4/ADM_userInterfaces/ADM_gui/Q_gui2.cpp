@@ -1185,33 +1185,23 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 switch (keyEvent->key())
                 {
                     case Qt::Key_Left:
-#ifdef __APPLE__
                         if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Back4Seconds);
-                        else
-#endif
-                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Back1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Back2Seconds);
-                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier))
-                            sendAction(ACT_Back4Seconds);
                         else
                             sendAction(ACT_PreviousFrame);
 
                         return true;
                     case Qt::Key_Right:
-#ifdef __APPLE__
                         if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Forward4Seconds);
-                        else
-#endif
-                        if (keyEvent->modifiers() & Qt::ShiftModifier)
+                        else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Forward1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Forward2Seconds);
-                        else if (keyEvent->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) 
-                            sendAction(ACT_Forward4Seconds);
                         else 
                             sendAction(ACT_NextFrame);
 
