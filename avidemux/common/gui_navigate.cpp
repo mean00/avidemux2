@@ -504,6 +504,7 @@ bool GUI_GoToTime(uint64_t time)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Seek"), QT_TRANSLATE_NOOP("navigate","Error seeking to %" PRIu64" ms"),time/1000);
     }
+    admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     return true;
 }   
