@@ -34,7 +34,8 @@ typedef enum
     ADM_TS_AAC_ADTS,
     ADM_TS_AAC_LATM,
     ADM_TS_EAC3,
-    ADM_TS_VC1
+    ADM_TS_VC1,
+    ADM_TS_LPCM,
 }ADM_TS_TRACK_TYPE;
 
 typedef enum

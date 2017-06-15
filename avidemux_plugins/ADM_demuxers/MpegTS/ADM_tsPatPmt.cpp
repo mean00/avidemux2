@@ -158,7 +158,7 @@ bool TS_scanForPrograms(const char *file,uint32_t *nbTracks, ADM_TS_TRACK **outT
         {
             ADM_TS_TRACK_TYPE type=list[i].trackType;
             if(type==ADM_TS_MPEG_AUDIO || type==ADM_TS_AC3 || type==ADM_TS_AAC_ADTS ||type==ADM_TS_AAC_LATM
-                        || type==ADM_TS_EAC3)
+                        || type==ADM_TS_EAC3 || type==ADM_TS_LPCM)
             {
                 TSpacketInfo pkt;
                 t->setPos(0);
@@ -331,6 +331,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
                 case 0x87:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
                 case 0xea:     *str= "VC1 (Not sure)";return ADM_TS_VC1;break;
                 case 0x90:     *str= "Presentation graphics (BluRay)";return ADM_TS_UNKNOWN;break;
+                case 0x80:     *str= "PCM big endian";return ADM_TS_LPCM;break;
                 
                 //   case 0x10:        *streamType=ADM_STREAM_MPEG4;return "MP4 Video";
                 default : break;

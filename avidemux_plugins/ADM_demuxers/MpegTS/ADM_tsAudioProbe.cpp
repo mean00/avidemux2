@@ -62,6 +62,7 @@ uint64_t pts,dts,startAt;
             case ADM_TS_EAC3:
             case ADM_TS_AAC_ADTS:
             case ADM_TS_AAC_LATM:
+            case ADM_TS_LPCM:
                         break;
             default:
                 ADM_warning("Unsupported audio track (%d)\n",trackInfo->trackType);
@@ -194,6 +195,12 @@ again:
                                 }
                             }
                             break;
+            case ADM_TS_LPCM:
+                                trackInfo->wav.encoding=WAV_LPCM;
+                                trackInfo->wav.frequency=48000;
+                                trackInfo->wav.channels=2;
+                                trackInfo->wav.byterate=2*2*48000;
+                                break;
             case ADM_TS_AC3: // AC3 or DTS
                             // AC3
                             {
