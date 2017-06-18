@@ -10128,7 +10128,7 @@ Má se znovu použít log soubor?</translation>
         <location line="+23"/>
         <location line="+23"/>
         <location line="+26"/>
-        <location line="+345"/>
+        <location line="+344"/>
         <source>...</source>
         <translation type="unfinished">...</translation>
     </message>
@@ -10145,7 +10145,7 @@ Má se znovu použít log soubor?</translation>
         <translation type="obsolete">/ 0</translation>
     </message>
     <message>
-        <location line="-290"/>
+        <location line="-289"/>
         <source>Time:</source>
         <translation type="unfinished">Čas:</translation>
     </message>
@@ -10240,7 +10240,7 @@ Má se znovu použít log soubor?</translation>
         <translation type="obsolete">Au&amp;to</translation>
     </message>
     <message>
-        <location line="+1540"/>
+        <location line="+1545"/>
         <source>&amp;Open...</source>
         <translation type="unfinished">&amp;Otevřít...</translation>
     </message>
@@ -10660,7 +10660,7 @@ Má se znovu použít log soubor?</translation>
         <translation type="unfinished">&amp;Na sebe</translation>
     </message>
     <message>
-        <location line="-1636"/>
+        <location line="-1641"/>
         <source>&lt;b&gt;Video Decoder&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10670,12 +10670,12 @@ Má se znovu použít log soubor?</translation>
         <translation type="unfinished">Typ snímku:</translation>
     </message>
     <message>
-        <location line="+499"/>
+        <location line="+504"/>
         <source>&amp;Separate</source>
         <translation type="unfinished">S&amp;amostatně</translation>
     </message>
     <message>
-        <location line="-1138"/>
+        <location line="-1143"/>
         <source>ms</source>
         <translation type="unfinished">ms</translation>
     </message>
@@ -10805,12 +10805,12 @@ Má se znovu použít log soubor?</translation>
     </message>
     <message>
         <location line="+114"/>
-        <location line="+932"/>
+        <location line="+937"/>
         <source>&amp;Navigation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-857"/>
+        <location line="-862"/>
         <source>Play [SPACE]</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10915,7 +10915,7 @@ Má se znovu použít log soubor?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+84"/>
+        <location line="+89"/>
         <source>Audio &amp;Metre</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12478,7 +12478,7 @@ Má se znovu použít log soubor?</translation>
         <location filename="../../common/ADM_commonUI/DIA_prefs.cpp" line="+6"/>
         <location line="+3"/>
         <location line="+5"/>
-        <location filename="../../common/gui_save.cpp" line="+281"/>
+        <location filename="../../common/gui_save.cpp" line="+282"/>
         <location line="+21"/>
         <location line="+7"/>
         <location filename="../../common/gui_savenew.cpp" line="+403"/>
@@ -12532,12 +12532,12 @@ Má se znovu použít log soubor?</translation>
         <translation type="unfinished">Připojit se k avsproxy</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+23"/>
         <source>Copy</source>
         <translation type="unfinished">Kopie</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+8"/>
         <source>Set Marker A</source>
         <translation type="unfinished">Nastavit značku A</translation>
     </message>
@@ -12832,7 +12832,7 @@ It is needed to create PSP compatible video.</source>
 To je potřeba k vytvoření PSP kompatibilního videa.</translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="+337"/>
+        <location filename="../../common/gui_main.cpp" line="+352"/>
         <source>Not coded in this version</source>
         <translation type="unfinished">Nepodporováno v této verzi</translation>
     </message>
@@ -12845,7 +12845,7 @@ To je potřeba k vytvoření PSP kompatibilního videa.</translation>
         <translation type="obsolete">Vyberte AVI soubor k připojení...</translation>
     </message>
     <message>
-        <location line="+238"/>
+        <location line="+241"/>
         <source>Are you sure?</source>
         <translation type="unfinished">Určitě?</translation>
     </message>
@@ -12888,7 +12888,7 @@ V nabídce Audio-&gt;Hlavní stopa vyberte tu aktivní.</translation>
     </message>
     <message>
         <location line="+5"/>
-        <location line="+265"/>
+        <location line="+268"/>
         <source>Something bad happened (II)</source>
         <translation type="unfinished">Přihodilo se něco zlého (II)</translation>
     </message>
@@ -12998,7 +12998,7 @@ Je spuštěno?</translation>
         <translation type="unfinished">_Deringing</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-221"/>
+        <location filename="../../common/gui_save.cpp" line="-222"/>
         <source>Select Workbench to Save</source>
         <translation type="unfinished">Zvolte projekt k uložení</translation>
     </message>
@@ -13023,7 +13023,7 @@ Je spuštěno?</translation>
         <translation type="unfinished">Vyberte JPEG soubor k uložení</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+9"/>
         <source>Select File to Save</source>
         <translation type="unfinished">Zvolte soubor k uložení</translation>
     </message>
@@ -13789,7 +13789,7 @@ Je spuštěno?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-78"/>
+        <location filename="../../common/ADM_commonUI/myOwnMenu.h" line="-93"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13831,7 +13831,13 @@ Je spuštěno?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+8"/>
+        <location line="+2"/>
+        <source>Clear recent items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
         <source>Undo</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13856,12 +13862,13 @@ Je spuštěno?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+2"/>
+        <location line="+2"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>Reset Markers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14032,12 +14039,12 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_main.cpp" line="-1217"/>
+        <location filename="../../common/gui_main.cpp" line="-1237"/>
         <source>Select script/project to run</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+23"/>
+        <location line="+24"/>
         <source>Select script to run</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14052,13 +14059,18 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+162"/>
-        <location line="+65"/>
+        <location line="+67"/>
+        <source>You are about to clear the list of recent files and projects. This can&apos;t be undone. Proceed?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+108"/>
+        <location line="+68"/>
         <source>Select Video File...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-40"/>
+        <location line="-43"/>
         <source>No engine</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14068,7 +14080,7 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+46"/>
         <source>Select Video File to Append...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14098,7 +14110,7 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+534"/>
+        <location line="+537"/>
         <location line="+7"/>
         <source>Invalid audio index given</source>
         <translation type="unfinished"></translation>
@@ -14139,12 +14151,12 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../common/gui_play.cpp" line="+415"/>
+        <location filename="../../common/gui_play.cpp" line="+413"/>
         <source>Trouble initializing audio device</source>
         <translation type="unfinished">Chyba inicializace zvukového zařízení</translation>
     </message>
     <message>
-        <location filename="../../common/gui_save.cpp" line="-390"/>
+        <location filename="../../common/gui_save.cpp" line="-391"/>
         <source>No</source>
         <translation type="unfinished">Ne</translation>
     </message>
@@ -14179,7 +14191,7 @@ Install lame plugin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+208"/>
+        <location line="+209"/>
         <source>Function not implemented
 </source>
         <translation type="unfinished"></translation>
@@ -14437,7 +14449,7 @@ Do you want to continue anyway ?</source>
         <translation type="unfinished">Chyba paměti</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+139"/>
+        <location filename="../../../avidemux_core/ADM_coreMuxer/src/ADM_coreMuxerFfmpeg.cpp" line="+142"/>
         <source>Too short</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15330,13 +15342,13 @@ This message will not be displayed again.</source>
     <message>
         <location line="-1"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="+64"/>
-        <location line="+86"/>
+        <location line="+89"/>
         <source>Contrast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-85"/>
-        <location line="+86"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/contrast/qt4/Q_contrast.cpp" line="-88"/>
+        <location line="+89"/>
         <source>Brightness</source>
         <translation type="unfinished"></translation>
     </message>
@@ -15428,7 +15440,7 @@ This message will not be displayed again.</source>
 <context>
     <name>crash</name>
     <message>
-        <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="+85"/>
+        <location filename="../../common/ADM_osSupport/ADM_crashHook.cpp" line="+84"/>
         <source>Load it</source>
         <translation type="unfinished">Načíst</translation>
     </message>
@@ -16011,7 +16023,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>eq2</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+59"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/ADM_vidEq2.cpp" line="+64"/>
         <source>MPlayer eq2</source>
         <translation type="unfinished">MPlayer eq2</translation>
     </message>
@@ -16019,6 +16031,11 @@ p, li { white-space: pre-wrap; }
         <location line="+1"/>
         <source>Adjust contrast, brightness, saturation and gamma.</source>
         <translation type="unfinished">Úprava kontrastu, jasu, sytosti a gama.</translation>
+    </message>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+51"/>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -17538,7 +17555,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>hue</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/ADM_vidHue.cpp" line="+58"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/hue/ADM_vidHue.cpp" line="+61"/>
         <source>Adjust hue and saturation.</source>
         <translation type="unfinished">Úprava odstínu a sytosti.</translation>
     </message>
@@ -17624,7 +17641,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>ivtcRemover</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+82"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+86"/>
         <source>Remove IVTC dupe.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -18244,7 +18261,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+113"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+104"/>
         <source>Select Logo Image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -18620,7 +18637,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>mp3d</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="+235"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mplayerDenoise3D/ADM_vidMPLD3D.cpp" line="+234"/>
         <source>_Spatial luma strength:</source>
         <translation type="unfinished">_Prostorový práh luminance:</translation>
     </message>
@@ -18630,24 +18647,32 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">P_rostorový práh chrominance:</translation>
     </message>
     <message>
-        <location line="+6"/>
-        <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <location line="+1"/>
+        <source>_Temporal luma strength:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-41"/>
+        <location line="+1"/>
+        <source>T_emporal chroma strength:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>MPlayer Denoise 3D HQ</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MPlayer denoise3d</source>
+        <translation type="obsolete">MPlayer denoise3d</translation>
+    </message>
+    <message>
+        <location line="-40"/>
         <source>Mplayer Denoise 3D HQ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Reduce noise, smooth image, increase compressibility. HQ Version.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+35"/>
-        <location line="+1"/>
-        <source>Luma _Temporal strength:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -18675,8 +18700,12 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+4"/>
+        <source>MPlayer Denoise 3D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>MPlayer denoise3d</source>
-        <translation type="unfinished">MPlayer denoise3d</translation>
+        <translation type="obsolete">MPlayer denoise3d</translation>
     </message>
     <message>
         <location line="-39"/>
@@ -18868,7 +18897,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>msharpen</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/mSharpen/ADM_vidMSharpen.cpp" line="+49"/>
         <source>Sharpen edges without amplifying noise. By Donald Graft.</source>
         <translation type="unfinished">Zaostří obrysy, aniž by zvětšil šum. Od Donalda Grafta.</translation>
     </message>
@@ -18944,7 +18973,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+57"/>
+        <location line="+65"/>
         <source>Error</source>
         <translation type="unfinished">Chyba</translation>
     </message>
@@ -19065,7 +19094,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>partial</name>
     <message>
-        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+299"/>
+        <location filename="../../common/ADM_videoFilter2/src/ADM_vidPartial.cpp" line="+307"/>
         <source>Start time (ms):</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19463,19 +19492,19 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qfile</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+40"/>
-        <location line="+101"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/file_qt4.cpp" line="+50"/>
+        <location line="+139"/>
         <source>All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-49"/>
-        <location line="+67"/>
+        <location line="-54"/>
+        <location line="+96"/>
         <source> files (*.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-39"/>
+        <location line="-68"/>
         <source>Overwrite file </source>
         <translation type="unfinished"></translation>
     </message>
@@ -19483,12 +19512,12 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+223"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+210"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+222"/>
+        <location line="+218"/>
         <source>Recent Files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19498,7 +19527,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Nedávné projekty</translation>
     </message>
     <message>
-        <location line="+516"/>
+        <location line="+610"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19563,7 +19592,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+491"/>
+        <location line="+607"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
@@ -19574,7 +19603,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+305"/>
+        <location line="+315"/>
         <source> (%d track(s))</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19722,7 +19751,7 @@ The current editing has been saved and will be reloaded at next start</source>
 <context>
     <name>qmainfilter</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+321"/>
+        <location filename="../ADM_userInterfaces/ADM_filters/Q_mainfilter.cpp" line="+430"/>
         <source>Partial</source>
         <translation type="unfinished">Částečný</translation>
     </message>
@@ -19732,22 +19761,22 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+177"/>
+        <location line="+244"/>
         <source>Add</source>
         <translation type="unfinished">Přidat</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="-96"/>
         <source>Remove</source>
         <translation type="unfinished">Odstranit</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-1"/>
         <source>Configure</source>
         <translation type="unfinished">Nastavit</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-2"/>
         <source>Move up</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19757,12 +19786,12 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+3"/>
         <source>Make partial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+79"/>
+        <location line="+220"/>
         <source>Load video filters..</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20572,12 +20601,11 @@ Ready.
         <translation type="unfinished">Náhled</translation>
     </message>
     <message>
-        <location line="+48"/>
         <source>00:00:00.000</source>
-        <translation type="unfinished">00:00:00.000</translation>
+        <translation type="obsolete">00:00:00.000</translation>
     </message>
     <message>
-        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+81"/>
+        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+75"/>
         <source>Back one minute</source>
         <translation type="unfinished"></translation>
     </message>
@@ -20609,11 +20637,6 @@ Ready.
     <message>
         <location line="+1"/>
         <source>Forward one minute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>A&amp;utoZoom</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -20917,7 +20940,7 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>uisupport</name>
     <message>
-        <location filename="../ADM_userInterfaces/ui_support.cpp" line="+196"/>
+        <location filename="../ADM_userInterfaces/ui_support.cpp" line="+198"/>
         <source>X11</source>
         <translation type="unfinished">X11</translation>
     </message>
@@ -21357,7 +21380,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
 <context>
     <name>x264</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/ADM_x264Setup.cpp" line="+182"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/ADM_x264Setup.cpp" line="+186"/>
         <source>Not coded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -21368,7 +21391,7 @@ Only VP8/VP9 video and Vorbis/Opus audio supported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+179"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x264/qt4/Q_x264.cpp" line="+176"/>
         <source>none</source>
         <translation type="unfinished"></translation>
     </message>
@@ -22908,7 +22931,7 @@ Chcete pokračovat?</translation>
 <context>
     <name>x265</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/ADM_x265Setup.cpp" line="+158"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/ADM_x265Setup.cpp" line="+162"/>
         <source>Not coded</source>
         <translation type="unfinished"></translation>
     </message>
@@ -22919,7 +22942,7 @@ Chcete pokračovat?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/Q_x265.cpp" line="+187"/>
+        <location filename="../../../avidemux_plugins/ADM_videoEncoder/x265/qt4/Q_x265.cpp" line="+184"/>
         <source>none</source>
         <translation type="unfinished"></translation>
     </message>
@@ -24369,7 +24392,7 @@ Chcete pokračovat?</translation>
 <context>
     <name>yadif</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="+77"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/yadif/ADM_vidYadif.cpp" line="+83"/>
         <source>Yadif</source>
         <translation type="unfinished"></translation>
     </message>
