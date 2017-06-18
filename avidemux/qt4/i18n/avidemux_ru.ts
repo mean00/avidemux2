@@ -5787,7 +5787,7 @@ Is it running ?</source>
         <location line="+8"/>
         <location line="+2"/>
         <source>Clear recent items</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистить список</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6047,7 +6047,7 @@ It is needed to create PSP compatible video.</source>
     <message>
         <location line="+67"/>
         <source>You are about to clear the list of recent files and projects. This can&apos;t be undone. Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы собираетесь очистить список недавно открытых файлов и проектов. Этот шаг необратим. Продолжить?</translation>
     </message>
     <message>
         <location line="+108"/>
