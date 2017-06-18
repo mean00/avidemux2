@@ -1081,7 +1081,7 @@ Drop timinginformationer?</translation>
         <location line="+8"/>
         <location line="+2"/>
         <source>Clear recent items</source>
-        <translation type="unfinished"></translation>
+        <translation>Slet seneste filer og projekter</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -1909,7 +1909,7 @@ Det er nødvendigt for at kunne oprette PSP-kompatibel video.</translation>
     <message>
         <location line="+67"/>
         <source>You are about to clear the list of recent files and projects. This can&apos;t be undone. Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Du er igang med at slette listen over de sidst åbnede filer og projekter. Dette kan ikke fortrydes. Fortsæt?</translation>
     </message>
     <message>
         <location line="+97"/>
