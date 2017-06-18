@@ -705,11 +705,15 @@ bool filtermainWindow::eventFilter(QObject* watched, QEvent* event)
         keyEvent = (QKeyEvent*)event;
         switch (keyEvent->key())
         {
+#ifndef __APPLE__
             case Qt::Key_Delete:
+#else
+            case Qt::Key_Backspace:
+#endif
                 remove(true);
                 return true;
             case Qt::Key_Return:
-                if(keyEvent->modifiers() == Qt::ControlModifier)
+                if(keyEvent->modifiers() & Qt::ControlModifier)
                 {
                     accept();
                     return true;
