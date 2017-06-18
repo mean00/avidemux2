@@ -165,6 +165,11 @@ IF(MSVC)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/stdint.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/inttypes.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/GL/glext.h  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/GL" COMPONENT dev)
+        # install runtimes also
+        SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${AVIDEMUX_BIN_DIR})
+        include(InstallRequiredSystemLibraries)
+        FILE(GLOB dlls   ${VS_ROOT}/bin/*.dll )
+        INSTALL(FILES ${dlls} DESTINATION ${AVIDEMUX_BIN_DIR})
 ENDIF(MSVC)
 
 
