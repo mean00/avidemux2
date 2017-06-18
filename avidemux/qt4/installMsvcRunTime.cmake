@@ -4,7 +4,7 @@
 SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${AVIDEMUX_BIN_DIR})
 include(InstallRequiredSystemLibraries)
 MESSAGE(STATUS "MSVC Runtime files = ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}")
-ADM_INSTALL_LIB_FILES( ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+ADM_INSTALL_LIB_FILES( "${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}")
 #
 # Qt5
 #
@@ -12,7 +12,7 @@ macro(COPY_QT5_DLL module)
     #get_target_property( Qt5_${module}Location ${Qt5${module}_LIBRARIES} LOCATION)
     get_target_property(Qt5_${module}Location Qt5::${module} LOCATION) 
     MESSAGE(STATUS "Adding ${Qt5_${module}Location} as lib to install")
-    ADM_INSTALL_LIB_FILES( ${Qt5_${module}Location})
+    ADM_INSTALL_LIB_FILES( "${Qt5_${module}Location}")
 endmacro(COPY_QT5_DLL module)
 
 COPY_QT5_DLL(Core)
@@ -24,5 +24,5 @@ COPY_QT5_DLL(WinExtras)
 
 # Need the platform one too => TODO
 
-INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qminimal.dll" DESTINATION ${AVIDEMUX_BIN_DIR})
-INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qwindows.dll" DESTINATION ${AVIDEMUX_BIN_DIR})
+INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qminimal.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
+INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qwindows.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
