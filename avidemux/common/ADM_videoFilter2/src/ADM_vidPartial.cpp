@@ -47,7 +47,7 @@ class partialFilter : public  ADM_coreVideoFilter
        virtual uint64_t     getAbsoluteStartTime(void)   ;              /// Return the absolute offset of the current frame. Used to display time of for filter
        virtual bool         goToTime(uint64_t usSeek); // needed for seekable preview when reconfiguring a partialized filter
     };
-
+        friend class trampolineFilter;
 
 protected:
                 trampolineFilter *trampoline;
