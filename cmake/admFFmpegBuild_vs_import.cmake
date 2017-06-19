@@ -93,6 +93,9 @@ IF(USE_DXVA2)
         INSTALL(FILES "${IMPORT_FOLDER}/include/libavcodec/dxva2_internal.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
 ENDIF(USE_DXVA2)
 
+#The above install the .libs
+# also install the .dll manually
 
-
+FILE(GLOB ffmpegDll "${IMPORT_FOLDER}/lib/*.dll")
+ADM_INSTALL_LIB_FILES(${ffmpegDll})
 # EOF
