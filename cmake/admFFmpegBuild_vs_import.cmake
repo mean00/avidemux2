@@ -96,7 +96,7 @@ ENDIF(USE_DXVA2)
 #The above install the .libs
 # also install the .dll manually
 
-FILE(GLOB ffmpegDll "${IMPORT_FOLDER}/lib/*.dll")
+FILE(GLOB ffmpegDll "${IMPORT_FOLDER}/lib/*-*.dll")
 FOREACH(one ${ffmpegDll})
         ADM_INSTALL_LIB_FILES(${one})
 ENDFOREACH(one ${ffmpegDll})
