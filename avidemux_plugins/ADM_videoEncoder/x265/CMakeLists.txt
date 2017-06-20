@@ -2,6 +2,8 @@
 INCLUDE(ve_plugin)
 INCLUDE(ve_settings_plugin)
 
+
+
 SET(x265_SRCS 
         ADM_x265.cpp
         ADM_x265Plugin.cpp
@@ -11,7 +13,9 @@ SET(x265_SRCS
 include(admCheckX265)
 checkX265()
 IF(USE_X265)
-  MESSAGE(STATUS "x265 plugin activated.")
+
+  MESSAGE(STATUS "x265 plugin activated, with cflags=${X265_CFLAGS}.")
+  ADD_DEFINITIONS(${X265_CFLAGS})
   INCLUDE_DIRECTORIES(${X265_INCLUDE_DIR})
 
   #-----------------------QT4 VERSION---------------------
