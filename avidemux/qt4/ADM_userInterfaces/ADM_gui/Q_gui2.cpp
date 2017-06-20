@@ -554,7 +554,20 @@ bool MainWindow::buildMenu(QMenu *root,MenuEntry *menu, int nb)
                         }else
                             a=insert->addAction(qs);
 #if defined(__APPLE__)
-			a->setMenuRole(QAction::NoRole);
+                        switch(m->event)
+                        {
+                            case(ACT_EXIT):
+                                a->setMenuRole(QAction::QuitRole);
+                                break;
+                            case(ACT_PREFERENCES):
+                                a->setMenuRole(QAction::PreferencesRole);
+                                break;
+                            case(ACT_ABOUT):
+                                a->setMenuRole(QAction::AboutRole);
+                                break;
+                            default:
+			                    a->setMenuRole(QAction::NoRole);
+			            }
 #endif 
                         m->cookie=(void *)a;
                         if(m->shortCut)
