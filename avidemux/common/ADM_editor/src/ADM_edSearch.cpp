@@ -262,6 +262,8 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                 curFrame -= splitMoval;
         else
                 curFrame += splitMoval;
+        if(splitMoval == 3)
+            splitMoval++;
         splitMoval >>= 1;
         pivotPrintf("Split=%d\n",splitMoval);        
     } while(refTime != pts);
