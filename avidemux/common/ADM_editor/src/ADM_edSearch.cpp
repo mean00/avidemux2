@@ -233,7 +233,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
     uint32_t nbFrame = v->_nb_video_frames;
     uint64_t pts, dts;
     uint32_t curFrame=nbFrame >> 1;
-    uint32_t splitMoval = curFrame >> 1;
+    uint32_t splitMoval = (curFrame + 1) >> 1;
     pivotPrintf("Looking for frame with a pts   %s\n",ADM_us2plain(refTime));
     // Try to find the frame that as the timestamp close enough to refTime, while being smaller
     do 
@@ -262,7 +262,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                 curFrame -= splitMoval;
         else
                 curFrame += splitMoval;
-        if(splitMoval == 3)
+        if(splitMoval > 1)
             splitMoval++;
         splitMoval >>= 1;
         pivotPrintf("Split=%d\n",splitMoval);        
