@@ -52,9 +52,9 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     {
         // Do we have non droppable b frame ?
         uint32_t bframeDelay;
-        if(true==video_body->getNonClosedGopDelay(ptsStart,&bframeDelay))
+        if(true==video_body->getNonClosedGopDelay(ptsStart,&bframeDelay) && bframeDelay)
         {
-            ADM_info("Some B frames are non droppable, increasing delat by %d us\n",bframeDelay);
+            ADM_info("Some B-frames are not droppable, increasing delay by %d us\n",bframeDelay);
             videoDelay+=bframeDelay;
         }
         else
@@ -71,7 +71,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         {
             videoDelay+=delta-ptsStart;
             dtsStart=0;
-            ADM_info("Dts is too early, delaying everything by %" PRIu64" ms\n",videoDelay/1000);
+            ADM_info("Dts is too early, delaying everything by %" PRIu64" us\n",videoDelay);
         }else
         {
             dtsStart=ptsStart-delta;
