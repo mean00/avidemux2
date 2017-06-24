@@ -188,7 +188,7 @@ int startAvidemux(int argc, char *argv[])
 
     printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
-    printf(" Code      : Mean, JSC, Grant Pedersen\n");
+    printf(" Code      : Mean, JSC, Grant Pedersen,eumagga0x2a\n");
     printf(" GFX       : Nestor Di, nestordi@augcyl.org\n");
     printf(" Design    : Jakub Misak\n");
     printf(" FreeBSD   : Anish Mistry, amistry@am-productions.biz\n");
