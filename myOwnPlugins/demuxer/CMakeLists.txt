@@ -52,7 +52,7 @@ include(admInstallDir)
 #########################################
 include(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_LIB_DIR}")
-INCLUDE_DIRECTORIES(${AVIDEMUX_INCLUDE_DIR}/avidemux/2.6/)
+INCLUDE_DIRECTORIES(${AVIDEMUX_INCLUDE_DIR}/avidemux/2.7/)
 
 IF (FRESH_BUILD)
 	MESSAGE("")
