@@ -13,6 +13,10 @@
 
 #include "ADM_default.h"
 #include "ADM_image.h"
+extern "C"
+{
+#include "libavutil/imgutils.h"
+}
 
 static uint32_t imgMaxMem=0;
 static uint32_t imgCurMem=0;
@@ -143,14 +147,20 @@ bool BitBlitAlpha(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc
  */
 bool BitBlit(uint8_t *dst, uint32_t pitchDst,uint8_t *src,uint32_t pitchSrc,uint32_t width, uint32_t height)
 {
-
+#if 1
+    // ffmpeg makes it better
+     av_image_copy_plane(dst, (int) pitchDst,
+                         src, (int) pitchSrc,
+                         width, height);
+#else
     for(int y=0;y<height;y++)
     {
         memcpy(dst,src,width);
         src+=pitchSrc;
         dst+=pitchDst;
     }
-    return 1;
+#endif
+  return 1;
 }
 //****************************************
 /**
