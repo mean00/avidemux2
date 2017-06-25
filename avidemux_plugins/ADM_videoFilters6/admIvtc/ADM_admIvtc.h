@@ -21,13 +21,15 @@
 enum ivtcMatch
 {
     IVTC_NO_MATCH=0,
-    IVTC_LEFT_MATCH=1,
-    IVTC_RIGHT_MATCH=2
+    IVTC_TOP_MATCH=1,
+    IVTC_BOTTOM_MATCH=2
 };
 enum ivtcState
 {
     IVTC_SYNCING,
-    IVTC_PROCESSING
+    IVTC_PROCESSING,
+    IVTC_RESYNCING,
+    IVTC_SKIPPING
 };
 /**
     \class admIvtc
@@ -41,14 +43,8 @@ public:
                     fast=1,
                     veryFast=2
                 };
-                
-                int             incomingNum; // Incoming frame number
-                int             currentNum;  // outgoing frame number
-                int             phaseStart;  // Frame Number of 1st frame of cycle
-                uint64_t        phaseStartPts; // its PTS
-                int             dupeOffset;  // offset of the duplicate to drop,  i.e. abs number = phaseStart+dupeOffset
-                uint32_t        delta[PERIOD+1]; // List of image difference
-                unsigned int    hints[PERIOD+1]; // From D. Graft ivtc if used
+                                
+                                
 protected:
                 dupeRemover        configuration;
                 ivtcMatch          searchSync(int &offset);
@@ -59,16 +55,24 @@ public:
                                    ~admIvtc();
                 bool               goToTime(uint64_t usSeek);
         virtual const char         *getConfiguration(void);                   /// Return  current configuration as a human readable string
-        virtual bool               getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image
-	 //  virtual FilterInfo  *getInfo(void);                             /// Return picture parameters after this filter
+        virtual bool               getNextFrame(uint32_t *fn,ADMImage *image);    /// Return the next image	 
         virtual bool               getCoupledConf(CONFcouple **couples) ;     /// Return the current filter configuration
         virtual void               setCoupledConf(CONFcouple *couples);
         virtual bool               configure(void);                           /// Start graphical user interface
-                uint32_t           lumaDiff(bool field,ADMImage *src1,ADMImage *src2,uint32_t noise);
+                uint32_t           lumaDiff(bool bottom,ADMImage *src1,ADMImage *src2,uint32_t noise);
                 
 protected:                
-                ivtcState       state;
-                ivtcMatch       mode;
-                int             offsetInSequence;
-                int             startSequence;
+                ivtcState       state; // synced or searching
+                ivtcMatch       mode; // top or bottom
+                int             offsetInSequence; // Current frame in the IVTC pattern AA / AB / BC / CC / DD
+                int             startSequence;  // frame number of AA
+                ivtcMatch       matches[PERIOD*2]; //       
+                int             skipCount;
+protected:
+                bool            getNextImageInSequence(uint32_t *fn,ADMImage *image);
+                bool            trySimpleFieldMatching();
+                bool            tryInterlacingDetection(ADMImage **img);
+                bool            verifySamePattern(ADMImage **images, ivtcMatch candidate);
+                bool            displayStatus(ADMImage *image,const char *st);
+                ADMImage        *spare[2];
 };

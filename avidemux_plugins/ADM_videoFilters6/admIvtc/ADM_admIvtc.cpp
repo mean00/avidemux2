@@ -59,12 +59,12 @@ admIvtc::admIvtc(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFil
         configuration.mode=1; // fast!
 
     }
+    for(int i=0;i<2;i++)
+        spare[i]=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
     myName="admIvtc";
 
-    incomingNum=0;
-    currentNum=0;
-    phaseStart=0;
-    dupeOffset=0;
+
+
     startSequence=0;
     state=IVTC_SYNCING;
 }
@@ -74,57 +74,13 @@ admIvtc::admIvtc(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFil
 */
 admIvtc::~admIvtc()
 {
+    for(int i=0;i<2;i++)
+    {
+        delete spare[i];
+        spare[i]=NULL;
+    }
 }
 
-/**
- * \fn lookupSync
- * \brief Try to search for a sequence
- * @return
- */
-ivtcMatch  admIvtc::searchSync(int  &offset)
-{
-    ADMImage *images[PERIOD*2];
-    ivtcMatch matches[PERIOD*2];
-    offset=0xff;
-
-    aprintf("Searching sync\n");
-
-    for(int i=0;i<(PERIOD+2);i++)
-    {
-        images[i]=vidCache->getImage(incomingNum+i);
-        if(!images[i])
-        {            
-            return IVTC_NO_MATCH;
-        }
-    }
-    // if it not all NTSC, dont even try           
-    
-    int film=0;
-    for(int i=0;i<PERIOD;i++)
-    {
-        delta[i]=0;
-        if((images[i+1]->Pts-images[i]->Pts)> 41000) // 24 fps
-            film++;
-    }
-    if(film)
-    {
-        aprintf("Not all NTSC, not even trying\n");
-         return IVTC_NO_MATCH;
-    }
-    for(int i=0;i<PERIOD+1;i++)
-    {
-        matches[i]=computeMatch(images[i],images[i+1],configuration.threshold);
-    }
-    for(int i=0;i<PERIOD;i++)
-    {
-        if(matches[i]!=IVTC_NO_MATCH && matches[i+1]==IVTC_NO_MATCH && matches[i+2]!=IVTC_NO_MATCH && matches[i+2]!=matches[i])
-        {
-            offset=i;
-            return matches[i];
-        }
-    }
-    return IVTC_NO_MATCH;   
-}
 
 /**
  *
@@ -141,7 +97,7 @@ bool admIvtc::postProcess(ADMImage *in,ADMImage *out,uint64_t newPts)
 /**
     \fn copyField
 */
-static bool copyField(ADMImage *target, ADMImage *source, bool top)
+ bool copyField(ADMImage *target, ADMImage *source, bool top)
 {
     for(int i=0;i<3;i++)
     {
@@ -173,100 +129,6 @@ static bool copyField(ADMImage *target, ADMImage *source, bool top)
     return true;
 }
 
-
-
-bool admIvtc::getNextFrame(uint32_t *fn,ADMImage *image)
-{
-    aprintf("--------------------\nMode = %d, offsetInSequence=%d\n",state,offsetInSequence);
-    switch(state)
-    {
-        case IVTC_SYNCING:
-        {
-            int offset;
-            ivtcMatch match=searchSync(offset);
-            aprintf(">>Match = %d, offset=%d,in =%d, out=%d\n",match,offset,incomingNum,currentNum);
-            if(match!=IVTC_NO_MATCH &&  !offset) // Gotcha
-            {
-                state=IVTC_PROCESSING;
-                mode=match;
-                offsetInSequence=1;
-                startSequence=incomingNum;
-                aprintf("Synced mode = %d\n",mode);
-            }
-        }
-            break;
-        case IVTC_PROCESSING:
-        {
-            int left,right;
-            switch(offsetInSequence)
-            {
-                
-                case 1:
-                        left=startSequence+2;
-                        right=startSequence+1;
-                        break;
-                case 2:
-                        left=startSequence+3;
-                        right=startSequence+2;
-                        break;
-                case 3:
-                case 4:
-                default:
-                    left=right=startSequence+offsetInSequence;
-                    break;
-            }
-            if(mode==IVTC_LEFT_MATCH)
-            {
-                int med=left;
-                left=right;
-                right=med;
-            }else
-            {
-               
-            }
-            ADMImage *source1=vidCache->getImage(left);
-            if(!source1)
-            {
-                vidCache->unlockAll();
-                return false;
-            }
-            ADMImage *source2=vidCache->getImage(right);
-            if(!source2)
-            {
-                source2=source1;
-            }
-            copyField(image,source1,true);
-            copyField(image,source1,false);
-                     
-            
-            offsetInSequence++;
-            if(offsetInSequence>=PERIOD)
-                state=IVTC_SYNCING;
-             vidCache->unlockAll();
-            *fn=currentNum;
-            currentNum++,
-            incomingNum++;
-            
-            
-            return true;               
-            
-        }
-            break;
-    }
-    
-    ADMImage *i=vidCache->getImage(incomingNum);
-    if(!i)
-    {
-        vidCache->unlockAll();
-        return false;
-    }
-    image->duplicateFull(i);
-    vidCache->unlockAll();
-    *fn=currentNum;
-    currentNum++,
-    incomingNum++;
-    return true;               
-}
 /**
     \fn getCoupledConf
     \brief Return our current configuration as couple name=value
@@ -301,8 +163,7 @@ const char *admIvtc::getConfiguration(void)
 bool         admIvtc::goToTime(uint64_t usSeek)
 {
     vidCache->flush();
-    incomingNum=0;
-    currentNum=0;
+    nextFrame=0;
     state=IVTC_SYNCING;
     return previousFilter->goToTime(usSeek);
 }
@@ -370,7 +231,7 @@ uint32_t delta;
 /**
  * \fn lumaDiff
 */
-uint32_t admIvtc::lumaDiff(bool field,ADMImage *src1,ADMImage *src2,uint32_t noise)
+uint32_t admIvtc::lumaDiff(bool bottom,ADMImage *src1,ADMImage *src2,uint32_t noise)
 {
     int stride1=src1->GetPitch(PLANAR_Y);
     int stride2=src2->GetPitch(PLANAR_Y);
@@ -378,7 +239,7 @@ uint32_t admIvtc::lumaDiff(bool field,ADMImage *src1,ADMImage *src2,uint32_t noi
     uint8_t *p2=YPLANE(src2);
     int w=src1->GetWidth(PLANAR_Y);
     int h=src1->GetHeight(PLANAR_Y);
-    if(field)
+    if(bottom)
     {
         p1+=stride1;
         p2+=stride2;
@@ -386,8 +247,8 @@ uint32_t admIvtc::lumaDiff(bool field,ADMImage *src1,ADMImage *src2,uint32_t noi
             
     return computeFieldDiff(p1,p2,
                 noise,
-                w,h,
-                stride1,stride2);
+                w,h>>configuration.mode,
+                stride1<<configuration.mode,stride2<<configuration.mode);
 }
 
 /**
@@ -400,26 +261,34 @@ uint32_t admIvtc::lumaDiff(bool field,ADMImage *src1,ADMImage *src2,uint32_t noi
 ivtcMatch admIvtc::computeMatch(ADMImage *left,ADMImage *right, int threshold)
 {
    
-        uint32_t even=lumaDiff(false,left,right,threshold);
-        uint32_t odd= lumaDiff(true,left,right,threshold);
+        uint32_t top=lumaDiff(false,left,right,threshold);
+        uint32_t bottom= lumaDiff(true,left,right,threshold);
         
 #define MATCH_THRESHOLD        
         
         ivtcMatch match=IVTC_NO_MATCH;
         const char *r="-";
-        if(even > 10*odd)
+        if(top > 10*bottom)
         {
-           r="Left match";
-           match= IVTC_LEFT_MATCH;
+           r="BOTTOM match";
+           match= IVTC_BOTTOM_MATCH;
         }
-        if(odd > 10*even) 
+        if(bottom > 10*top) 
         {
             r="Right match";
-            match= IVTC_RIGHT_MATCH;
+            match= IVTC_TOP_MATCH;
         }
-        aprintf("[Even:%d : Odd:%d] %s\n",even,odd,r);
+        aprintf("[Even:%d : Odd:%d] %s\n",top,bottom,r);
 
         return match;
 }
+bool            admIvtc::displayStatus(ADMImage *image,const char *st)
+{
+    if(configuration.show)
+          image->printString(2,16,st);
+    return true;
+}
+
+
 /************************************************/
 //EOF
