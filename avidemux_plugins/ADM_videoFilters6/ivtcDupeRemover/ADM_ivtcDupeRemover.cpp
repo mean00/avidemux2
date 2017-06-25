@@ -32,6 +32,11 @@
 #else
 #define aprintf(...) {}
 #endif
+
+
+#define MARK_PROGRESSIVE 'PRGS'
+#define MARK_DUPLICATE   'DUPE'
+
 /**
     \class ivtcDupeRemover
 */
@@ -165,7 +170,7 @@ ivtcDupeRemover::dupeState ivtcDupeRemover::searchSync()
             vidCache->unlockAll();
             return dupeSyncing;
         }
-        if(GetHintingData(images[i]->GetReadPtr(PLANAR_Y),hints+i))
+        if(GetHintingData(images[i]->GetReadPtr(PLANAR_Y),hints+i)) // Returns true on error
         {
             hints[i]=0;
         }

@@ -18,6 +18,10 @@
 
 #define PERIOD 4
 
+#define MARK_PROGRESSIVE 'PRGS'
+#define MARK_DUPLICATE   'DUPE'
+
+
 enum ivtcMatch
 {
     IVTC_NO_MATCH=0,

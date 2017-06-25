@@ -89,6 +89,7 @@ ivtcMatch  admIvtc::searchSync(int  &offset)
 bool admIvtc::getNextImageInSequence(uint32_t *fn,ADMImage *image)
 {
     int left,right;
+    uint8_t *hint=image->GetReadPtr(PLANAR_Y);
     switch(offsetInSequence)
     {
 
@@ -103,7 +104,7 @@ bool admIvtc::getNextImageInSequence(uint32_t *fn,ADMImage *image)
         case 3:
         case 4:
         default:
-            left=right=startSequence+offsetInSequence;
+            left=right=startSequence+offsetInSequence;            
             break;
     }
     if(mode==IVTC_TOP_MATCH)
@@ -126,6 +127,11 @@ bool admIvtc::getNextImageInSequence(uint32_t *fn,ADMImage *image)
     copyField(image,source1,false);
     copyField(image,source2,true);
 
+    if(offsetInSequence==2)
+        PutHintingData(image->GetReadPtr(PLANAR_Y),MARK_DUPLICATE);
+    else
+        PutHintingData(image->GetReadPtr(PLANAR_Y),MARK_PROGRESSIVE);
+    
     if(configuration.show)
     {
         char st[200];
@@ -308,11 +314,13 @@ bool admIvtc::getNextFrame(uint32_t *fn,ADMImage *image)
         
         skipCount--;
         DUPLICATE_FROM_AND_END(images[0]);
+         PutHintingData(image->GetReadPtr(PLANAR_Y),0);
         if(!skipCount)
         {
             state=IVTC_PROCESSING;
             aprintf("Swiching to processing\n");
             displayStatus(image,"SEQ 0 ");
+            PutHintingData(image->GetReadPtr(PLANAR_Y),MARK_PROGRESSIVE);
         }else
             displayStatus(image,"SKIPPING");
          
@@ -350,6 +358,7 @@ bool admIvtc::getNextFrame(uint32_t *fn,ADMImage *image)
             startSequence=nextFrame;           
             DUPLICATE_FROM_AND_END(images[0]);
             displayStatus(image,"Seq: 0, same pattern");
+            PutHintingData(image->GetReadPtr(PLANAR_Y),MARK_PROGRESSIVE);
             return true;
         }else
         {            
@@ -380,6 +389,7 @@ bool admIvtc::getNextFrame(uint32_t *fn,ADMImage *image)
     }else
     {
         displayStatus(image,"SEQ 0 ");
+        PutHintingData(image->GetReadPtr(PLANAR_Y),MARK_PROGRESSIVE);
     }
     return true;               
 }
