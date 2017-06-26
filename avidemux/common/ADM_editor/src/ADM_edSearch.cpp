@@ -290,6 +290,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                     minFrame = tmpFrame;
                 }
             }
+            curFrame = tmpFrame;
         }
         pivotPrintf("SplitMoval=%d\n",splitMoval);
         if(!splitMoval)
