@@ -8,6 +8,7 @@ admJson json;
 json.addUint32("threshold",key->threshold);
 json.addBool("show",key->show);
 json.addUint32("mode",key->mode);
+json.addBool("removeDupe",key->removeDupe);
 return json.dumpToFile(file);
 };
 bool  dupeRemover_jdeserialize(const char *file, const ADM_paramList *tmpl,dupeRemover *key){

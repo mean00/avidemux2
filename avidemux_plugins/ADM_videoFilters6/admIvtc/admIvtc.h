@@ -5,4 +5,5 @@ typedef struct {
 uint32_t threshold;
 bool show;
 uint32_t mode;
+bool removeDupe;
 }dupeRemover;

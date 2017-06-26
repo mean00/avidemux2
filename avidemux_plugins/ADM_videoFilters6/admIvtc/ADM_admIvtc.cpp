@@ -57,6 +57,7 @@ admIvtc::admIvtc(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFil
         configuration.threshold=3;
         configuration.show=false;
         configuration.mode=1; // fast!
+        configuration.removeDupe=false;
 
     }
     for(int i=0;i<2;i++)
@@ -176,6 +177,7 @@ bool admIvtc::configure( void)
 #define PX(x) &(configuration.x)
         diaElemUInteger   threshold(PX(threshold),QT_TRANSLATE_NOOP("ivtcRemover","_Noise:"),0,255);
         diaElemToggle     show(PX(show),QT_TRANSLATE_NOOP("ivtcRemover","_Show:"));
+        diaElemToggle     remove(PX(removeDupe),QT_TRANSLATE_NOOP("ivtcRemover","_Remove duplicate:"));
 
 
         diaMenuEntry menuMode[]={
@@ -188,8 +190,8 @@ bool admIvtc::configure( void)
 
         diaElemMenu      eMode(&configuration.mode,QT_TRANSLATE_NOOP("ivtcRemover","_Frame rate change:"),3,menuMode);
 
-        diaElem *elems[3]={&threshold,&show,&eMode};
-        return diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),3,elems);
+        diaElem *elems[4]={&threshold,&remove,&eMode,&show};
+        return diaFactoryRun(QT_TRANSLATE_NOOP("ivtcRemover","DupeRemover"),4,elems);
 }
 /**
 */

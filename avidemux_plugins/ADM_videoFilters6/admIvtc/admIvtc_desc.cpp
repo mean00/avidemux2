@@ -3,5 +3,6 @@ extern const ADM_paramList dupeRemover_param[]={
  {"threshold",offsetof(dupeRemover,threshold),"uint32_t",ADM_param_uint32_t},
  {"show",offsetof(dupeRemover,show),"bool",ADM_param_bool},
  {"mode",offsetof(dupeRemover,mode),"uint32_t",ADM_param_uint32_t},
+ {"removeDupe",offsetof(dupeRemover,removeDupe),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };
