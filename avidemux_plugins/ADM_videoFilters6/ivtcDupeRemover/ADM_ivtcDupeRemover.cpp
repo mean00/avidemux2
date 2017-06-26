@@ -114,6 +114,12 @@ ivtcDupeRemover::ivtcDupeRemover(  ADM_coreVideoFilter *in,CONFcouple *setup) : 
     phaseStart=0;
     dupeOffset=0;
     state=dupeSyncing;
+    // ajust fps
+    double fps=info.frameIncrement;
+    
+    fps*=PERIOD+1;
+    fps/=PERIOD;
+    info.frameIncrement=fps;
 }
 /**
     \fn ivtcDupeRemover
