@@ -132,7 +132,7 @@ again:
     {
         if(!seg)
         {
-            ADM_warning(" No previous previous keyfr for frameTime %" PRIu64" in ref %" PRIu32" seg:%" PRIu32" nkTime %" PRIu64" refTime:%" PRIu64" ms startTime=%" PRIu64" r=%d\n",
+            ADM_warning("No previous keyframe for frameTime %" PRIu64" in ref %" PRIu32" seg: %" PRIu32" nkTime %" PRIu64" refTime: %" PRIu64" ms startTime=%" PRIu64" r=%d\n",
                             *frameTime,ref,seg,nkTime/1000,refTime/1000,s->_refStartTimeUs/1000,r);
             return false;
         }
@@ -220,7 +220,7 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
     return false;
 }
 /** 
- * \fn getFrameNumberBeforePts
+ * \fn getFrameNumBeforePtsOrBefore
  * \brief Search the framenumber that has a valid PTS = what's given or  before
  *         it can be equal to refTime
  * @param v
@@ -232,37 +232,74 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
 {
     uint32_t nbFrame = v->_nb_video_frames;
     uint64_t pts, dts;
-    uint32_t curFrame = (nbFrame + 1) >> 1;
+    uint32_t curFrame = nbFrame >> 1;
     uint32_t splitMoval = (curFrame + 1) >> 1;
-    pivotPrintf("Looking for frame with a pts   %s\n",ADM_us2plain(refTime));
+    uint32_t minFrame = 0;
+    pivotPrintf("Looking for frame with pts %" PRIu64" us (%s)\n",refTime,ADM_us2plain(refTime));
     // Try to find the frame that as the timestamp close enough to refTime, while being smaller
     do 
     {
         // seems like the pts determination, not always works -> retry if necessary
         bool worked;
-        do {
-                pts=ADM_NO_PTS;
-                worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
-                if (worked && pts != ADM_NO_PTS) 
-                    break; // found                
-                curFrame--;
-                if (!curFrame)
-                {
-                        ADM_warning("The whole segment is corrupted. Abort the search");
-                        return false;
-                }
+        uint32_t skipped = 0;
+        uint32_t tmpFrame = curFrame;
+        do
+        {
+            pts = ADM_NO_PTS;
+            worked = v->_aviheader->getPtsDts(tmpFrame,&pts,&dts);
+            if(worked && pts != ADM_NO_PTS)
+                break; // found
+            tmpFrame--;
+            if(!tmpFrame)
+            {
+                ADM_warning("The whole segment is corrupted. Aborting the search");
+                return false;
+            }
+            skipped++;
         } while(true);
-        pivotPrintf("SplitMoval=%d\n",splitMoval);
-        if(pts==refTime)
+        if(pts == refTime)
             break;
-        if (!splitMoval) 
+        if(skipped && pts < refTime)
+        { // if we slid past the target frame...
+            pivotPrintf("skipped %" PRIu32" frames seeking back\n",skipped);
+            skipped = 0;
+            tmpFrame = curFrame; // ...go back to the frame where we first encountered corrupted video...
+            do
+            { // ...and seek forward until we get a valid pts
+                pts = ADM_NO_PTS;
+                worked = v->_aviheader->getPtsDts(tmpFrame,&pts,&dts);
+                if(worked && pts != ADM_NO_PTS)
+                    break; // found                
+                tmpFrame++;
+                if(tmpFrame == nbFrame)
+                {
+                    ADM_warning("The whole segment is corrupted. Aborting the search");
+                    return false;
+                }
+                skipped++;
+            } while(true);
+            if(skipped)
+            {
+                pivotPrintf("skipped %" PRIu32" frames seeking forward\n",skipped);
+                if(pts > refTime)
+                {
+                    ADM_warning("The video at the specified time in ref is corrupted. Aborting seek");
+                    return false;
+                }else
+                {
+                    minFrame = tmpFrame;
+                }
+            }
+        }
+        pivotPrintf("SplitMoval=%d\n",splitMoval);
+        if(!splitMoval)
             break;        
-        pivotPrintf("Pivot time is %d, %s\n",curFrame,ADM_us2plain(pts));
+        pivotPrintf("Pivot frame is %" PRIu32" at %s\n",curFrame,ADM_us2plain(pts));
         if (pts >= refTime)
         {
-            if (curFrame <= splitMoval)
+            if (curFrame <= splitMoval + minFrame)
             {
-                curFrame = 0;
+                curFrame = minFrame;
             }else
             {
                 curFrame -= splitMoval;
@@ -270,6 +307,8 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
         }else
         {
             curFrame += splitMoval;
+            if(curFrame >= nbFrame)
+                curFrame = nbFrame - 1;
         }
         if(splitMoval > 1)
             splitMoval++;
@@ -277,10 +316,11 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
         pivotPrintf("Split=%d\n",splitMoval);        
     } while(refTime != pts);
 
-    pivotPrintf("-Matching frame is %d, time is  %s\n",curFrame,ADM_us2plain(pts));
-    if (pts > refTime && curFrame)
-            curFrame--;
-    frameNumber=curFrame;
+    pivotPrintf("Matching frame is %" PRIu32" at %s\n",curFrame,ADM_us2plain(pts));
+    if(pts > refTime && curFrame)
+        curFrame--;
+    pivotPrintf("Our target frame is %" PRIu32"\n",curFrame);
+    frameNumber = curFrame;
     return true;
 }
 /**
