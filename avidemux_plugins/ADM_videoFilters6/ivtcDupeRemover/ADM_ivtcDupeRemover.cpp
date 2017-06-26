@@ -27,7 +27,7 @@
 #endif
 
 #define PERIOD 4
-#if 0
+#if 1
 #define aprintf printf
 #else
 #define aprintf(...) {}
@@ -160,7 +160,7 @@ ivtcDupeRemover::dupeState ivtcDupeRemover::searchSync()
     ADMImage *images[PERIOD+1];
 
 
-    aprintf("Searching sync\n");
+    aprintf("dupeRemover : Searching sync\n");
 
     for(int i=0;i<(PERIOD+1);i++)
     {
@@ -168,19 +168,26 @@ ivtcDupeRemover::dupeState ivtcDupeRemover::searchSync()
         if(!images[i])
         {
             vidCache->unlockAll();
+            aprintf("No image (%d)\n",i);
             return dupeSyncing;
         }
         if(GetHintingData(images[i]->GetReadPtr(PLANAR_Y),hints+i)) // Returns true on error
         {
+            aprintf("[%d] No hint\n",i);
             hints[i]=0;
+        }else
+        {
+            aprintf("[%d] Got hint %x\n",i,hints[i]);
         }
     }
 
     int film=0;
     for(int i=0;i<PERIOD;i++)
     {
+        int deltaPts=(int)(images[i+1]->Pts-images[i]->Pts);
         delta[i]=0;
-        if((images[i+1]->Pts-images[i]->Pts)> 41000) // 24 fps
+        aprintf("DeltaPts=%d\n",deltaPts);
+        if(deltaPts> 41000) // 24 fps
             film++;
     }
     // All of it is 24 fps, pass through
@@ -197,23 +204,47 @@ ivtcDupeRemover::dupeState ivtcDupeRemover::searchSync()
         vidCache->unlockAll();
         return dupeSyncing;
     }
-    // Ok, they are all NTSC,  let's find the minimum one
-    aprintf("Lets look for the closest one\n");
-    for(int i=0;i<PERIOD;i++)
+    
+    // Do we have hints ?
+    int nbProgressiveHint=0;
+    int nbDupeHint=0;
+    bool found=false;
+    for(int i=0;i<PERIOD+1;i++)
     {
-        if(images[i] && images[i+1])
-            delta[i]=computeDelta(images[i],images[i+1],configuration.threshold);
-        else
-            delta[i]=0x70000000; // Big number
-    }
-    uint32_t minDelta=0x7f000000;
-    for(int i=0;i<PERIOD;i++)
-    {
-        if(minDelta>delta[i])
+        switch(hints[i])
         {
-            minDelta=delta[i];
-            dupeOffset=i;
+            case MARK_PROGRESSIVE: nbProgressiveHint++;break;
+            case MARK_DUPLICATE:  nbDupeHint++;dupeOffset=i;break;
+            default:break;
+        }
+    }
+    if(nbProgressiveHint==PERIOD && nbDupeHint==1)
+    {
+        aprintf("Hinting is giving the dupe at %d\n",dupeOffset);
+        found=true;
+    }
 
+    
+    // Ok, they are all NTSC,  let's find the minimum one
+    if(!found)
+    {
+        aprintf("Lets look for the closest one\n");
+        for(int i=0;i<PERIOD;i++)
+        {
+            if(images[i] && images[i+1])
+                delta[i]=computeDelta(images[i],images[i+1],configuration.threshold);
+            else
+                delta[i]=0x70000000; // Big number
+        }
+        uint32_t minDelta=0x7f000000;
+        for(int i=0;i<PERIOD;i++)
+        {
+            if(minDelta>delta[i])
+            {
+                minDelta=delta[i];
+                dupeOffset=i;
+
+            }
         }
     }
     phaseStart=incomingNum;

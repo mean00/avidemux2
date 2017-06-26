@@ -95,7 +95,7 @@ bool admIvtc::getNextImageInSequence(uint32_t *fn,ADMImage *image)
 
         case 1:
                 left=startSequence+2;
-                right=startSequence+1;
+                right=startSequence+1;                
                 break;
         case 2:
                 left=startSequence+3;
@@ -146,12 +146,14 @@ bool admIvtc::getNextImageInSequence(uint32_t *fn,ADMImage *image)
 
 
     }
+    image->Pts=vidCache->getImage(offsetInSequence+startSequence)->Pts;
     offsetInSequence++;
     if(offsetInSequence>PERIOD)
         state=IVTC_RESYNCING;
      vidCache->unlockAll();
     *fn=nextFrame;
     nextFrame++;
+    
     return true;               
 }
 
