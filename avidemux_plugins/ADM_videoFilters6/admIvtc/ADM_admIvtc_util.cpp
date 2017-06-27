@@ -19,23 +19,29 @@
 #define SKIP_FACTOR 2   
 
 // C version
-uint32_t      ADMVideo_interlaceCount_C( ADMImage *image, int threshold,int skipFactor)
+uint32_t      ADMVideo_interlaceCount_C( ADMImage *top,ADMImage *bottom, int threshold,int skipFactor)
 
 {
     uint32_t m=0;
-    int w=image->GetWidth(PLANAR_Y);
-    int h=image->GetHeight(PLANAR_Y);
-    int pitch=image->GetPitch(PLANAR_Y)<<skipFactor;
-    uint8_t *src=image->GetReadPtr(PLANAR_Y);
+    int w=top->GetWidth(PLANAR_Y);
+    int h=top->GetHeight(PLANAR_Y);
+    
+    int pitchTop=top->GetPitch(PLANAR_Y);
+    uint8_t *srcTop=top->GetReadPtr(PLANAR_Y);
+
+    int pitchBottom=bottom->GetPitch(PLANAR_Y);
+    uint8_t *srcBottom=bottom->GetReadPtr(PLANAR_Y);
+
     
     uint8_t *p,*n,*c;
     int j;
-    c=src + pitch;
-    n=src + pitch+pitch;
-    p=src ;
+    p=srcTop ;
+    c=srcBottom + pitchBottom;    
+    n=srcTop + pitchTop+pitchTop;
+    
 
 
-    for(int y=h>>skipFactor;  y >2 ; y--)
+    for(int y=h>>(skipFactor+1);  y >2 ; y--)
     {
         for(int x=0;x<w;x++)
         {
@@ -44,9 +50,9 @@ uint32_t      ADMVideo_interlaceCount_C( ADMImage *image, int threshold,int skip
             if(  j >threshold)
                 m++;
         }
-        p+=pitch;
-        n+=pitch;
-        c+=pitch;
+        p+=(2*pitchTop)<<skipFactor;
+        n+=(2*pitchTop)<<skipFactor;
+        c+=(2*pitchBottom)<<skipFactor;
     }
     return m;
 }

@@ -202,13 +202,13 @@ bool admIvtc::trySimpleFieldMatching()
  * 
  * @return 
  */
-uint32_t      ADMVideo_interlaceCount_C( ADMImage *image, int threshold,int skipFactor);
+uint32_t      ADMVideo_interlaceCount_C( ADMImage *top, ADMImage *bottom, int threshold,int skipFactor);
 bool admIvtc::tryInterlacingDetection(ADMImage **images)
 {
     int ilaced[PERIOD+1];
     for(int i=0;i<PERIOD+1;i++)
     {
-        ilaced[i]=ADMVideo_interlaceCount_C(images[i],INTERLACED_THRESHOLD,configuration.mode);
+        ilaced[i]=ADMVideo_interlaceCount_C(images[i],images[i],INTERLACED_THRESHOLD,configuration.mode);
         aprintf("Interlaced [%d] %d\n",i,ilaced[i]);
         
     }
@@ -220,14 +220,14 @@ bool admIvtc::tryInterlacingDetection(ADMImage **images)
     {
         aprintf("Maybe IVTC pattern\n");
         // Reconstruct first interlaced image, it should not be interlaced anymore
-        copyField(spare[0],images[2],false);
-        copyField(spare[0],images[1],true);
+        //copyField(spare[0],images[2],false); // bottom
+        //copyField(spare[0],images[1],true); //top
         
-        copyField(spare[1],images[2],true);
-        copyField(spare[1],images[1],false);
+        //copyField(spare[1],images[2],true);
+        //copyField(spare[1],images[1],false);
 
-        int top=ADMVideo_interlaceCount_C(spare[0],INTERLACED_THRESHOLD,0);
-        int bottom=ADMVideo_interlaceCount_C(spare[1],INTERLACED_THRESHOLD,0);
+        int top=ADMVideo_interlaceCount_C(images[1],images[2],INTERLACED_THRESHOLD,configuration.mode);
+        int bottom=ADMVideo_interlaceCount_C(images[2],images[1],INTERLACED_THRESHOLD,configuration.mode);
         
         aprintf("Top = %d/%d\n",top,ilaced[1]);
         aprintf("Bottom = %d/%d\n",bottom,ilaced[1]);
@@ -263,12 +263,16 @@ bool admIvtc::verifySamePattern(ADMImage **images, ivtcMatch candidate)
     else 
         toptop=false;
     
-    int before=ADMVideo_interlaceCount_C(images[1],INTERLACED_THRESHOLD,0);
+    int before=ADMVideo_interlaceCount_C(images[1],images[1],INTERLACED_THRESHOLD,configuration.mode);
     
-    copyField(spare[0],images[2],toptop);
-    copyField(spare[0],images[1],!toptop);   
+    //copyField(spare[0],images[2],toptop);
+    //copyField(spare[0],images[1],!toptop);   
     
-    int after=ADMVideo_interlaceCount_C(spare[0],INTERLACED_THRESHOLD,0);
+    int after=0;
+    if(toptop)
+        after=ADMVideo_interlaceCount_C(images[2],images[1],INTERLACED_THRESHOLD,configuration.mode);
+    else
+        after=ADMVideo_interlaceCount_C(images[1],images[2],INTERLACED_THRESHOLD,configuration.mode);
     
     aprintf("Before %d, After %d\n",before,after);
     if(after*3 < before*2)
