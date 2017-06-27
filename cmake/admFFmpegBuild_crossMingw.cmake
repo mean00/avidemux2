@@ -76,6 +76,10 @@ ADM_FF_SET_EXTRA_FLAGS()
 IF(USE_DXVA2)
       xadd(--enable-dxva2)
       set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_dxva2 hevc_dxva2)
+      # We assume 32 bits mean windows XP; disable d3d11
+      IF(NOT ADM_CPU_X86_64)
+            xadd(--disable-d3d11va)
+      ENDIF(NOT ADM_CPU_X86_64)
 ENDIF(USE_DXVA2)
 
 #@@
