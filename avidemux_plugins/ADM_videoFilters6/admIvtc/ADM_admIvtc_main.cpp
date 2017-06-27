@@ -264,18 +264,30 @@ bool admIvtc::verifySamePattern(ADMImage **images, ivtcMatch candidate)
         toptop=false;
     
     int before=ADMVideo_interlaceCount_C(images[1],images[1],INTERLACED_THRESHOLD,configuration.mode);
-    
+    int before2=ADMVideo_interlaceCount_C(images[2],images[2],INTERLACED_THRESHOLD,configuration.mode);
     //copyField(spare[0],images[2],toptop);
     //copyField(spare[0],images[1],!toptop);   
     
     int after=0;
+    int after2=0;
     if(toptop)
+    {
         after=ADMVideo_interlaceCount_C(images[2],images[1],INTERLACED_THRESHOLD,configuration.mode);
+        after2=ADMVideo_interlaceCount_C(images[3],images[2],INTERLACED_THRESHOLD,configuration.mode);
+    }
     else
+    {
         after=ADMVideo_interlaceCount_C(images[1],images[2],INTERLACED_THRESHOLD,configuration.mode);
+        after2=ADMVideo_interlaceCount_C(images[2],images[3],INTERLACED_THRESHOLD,configuration.mode);
+    }
     
-    aprintf("Before %d, After %d\n",before,after);
-    if(after*3 < before*2)
+    aprintf("Before1  %d, After %d\n",before,after);
+    aprintf("Before2  %d, After %d\n",before2,after2);
+    
+    
+    
+    
+    if((after*3 < before*2) && (after2*3 < before2 *2))
         return true;
     return false;
 }

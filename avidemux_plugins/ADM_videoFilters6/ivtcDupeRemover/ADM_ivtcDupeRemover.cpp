@@ -27,7 +27,7 @@
 #endif
 
 #define PERIOD 4
-#if 1
+#if 0
 #define aprintf printf
 #else
 #define aprintf(...) {}
