@@ -20,6 +20,7 @@
 #include <QGraphicsView>
 #include <QtCore/QDir>
 #include <QMessageBox>
+#include <QClipboard>
 #include "ADM_cpp.h"
 #define MENU_DECLARE
 #include "Q_gui2.h"
@@ -325,6 +326,18 @@ void MainWindow::currentTimeChanged(void)
     sendAction(ACT_GotoTime);
 
     this->setFocus(Qt::OtherFocusReason);
+}
+
+/**
+    \fn currentTimeToClipboard
+*/
+void MainWindow::currentTimeToClipboard(void)
+{
+    QString ct = QString();
+    ct = ui.currentTime->text();
+    QClipboard *clipboard = QApplication::clipboard();
+    clipboard->clear();
+    clipboard->setText(ct);
 }
 
 /**
@@ -1248,6 +1261,10 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                             else
                                 sendAction(ACT_PreviousKFrame);
                         }
+                        return true;
+                    case Qt::Key_C:
+                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                            currentTimeToClipboard();
                         return true;
                     case Qt::Key_Shift:
                         shiftKeyHeld = 1;

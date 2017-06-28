@@ -227,5 +227,7 @@ protected:
         bool justLaunched; // work around wrong oldSize() reported after loading the first video // FIXME
         bool actZoomCalled; // zoom was set to a pre-defined fraction by a menu action
         int  threshold; // track how much the window was resized
+        /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
+        void currentTimeToClipboard(void);
 };
 #endif	// Q_gui2_h
