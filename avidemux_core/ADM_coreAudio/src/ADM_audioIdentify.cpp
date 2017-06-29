@@ -194,21 +194,43 @@ static bool idEAC3(int bufferSize,const uint8_t *data,WAVHeader &oinfo,uint32_t 
     int size2=bufferSize-syncOffset;
     ADM_assert(size2>0);
     ADM_info("Maybe EAC3... \n");
-    // Try on 2nd packet...
-    if( ADM_EAC3GetInfo(second,size2, &syncOffset,&info2))
+    // Try with 6 packets
+    bool r=true;
+    for(int i=0;i<2;i++)
     {
-        if((info.frequency==info2.frequency) && (info.channels==info2.channels) && (info.byterate==info2.byterate) && !syncOffset)
+        ADM_info("\t pass %d\n",i);
+        if( !ADM_EAC3GetInfo(second,size2, &syncOffset,&info2))
         {
-            ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,syncOffset);
-            oinfo.encoding=WAV_EAC3;
-            oinfo.channels=info.channels;
-            oinfo.byterate=info.byterate; // already in bytes/sec
-            oinfo.frequency=info.frequency;
-            return true;
+            ADM_info("Cannot sync (pass %d)\n",i);
+            r=false;
+            break;
+        }
+        if((info.frequency!=info2.frequency) || (info.channels!=info2.channels) || (info.byterate!=info2.byterate))
+        {
+            ADM_info("Not same infos (pass %d)\n",i);
+            r=false;
+            break;
+        }
+        if(syncOffset)
+        {
+            ADM_info("Offset between packets (pass %d)\n",i);
+            r=false;
+            break;
         }
     }
-    ADM_info("Cannot confirm EAC3\n");
-    return false; 
+    if(r)                                                                            
+    {
+        ADM_warning("\tProbably EAC3 : Fq=%d br=%d chan=%d, offset=%d\n",(int)info.frequency,(int)info.byterate,(int)info.channels,syncOffset);
+        oinfo.encoding=WAV_EAC3;
+        oinfo.channels=info.channels;
+        oinfo.byterate=info.byterate; // already in bytes/sec
+        oinfo.frequency=info.frequency;
+        return true;
+    }else
+    {
+        ADM_info("Cannot confirm EAC3\n");
+    }
+    return r; 
 }
 
 /**
@@ -307,6 +329,7 @@ bool ADM_identifyAudioStream(int bufferSize,const uint8_t *buffer,WAVHeader &inf
     if(idWAV(bufferSize,buffer,info,offset)) return true;
     if(idMP2(bufferSize,buffer,info,offset)) return true;
     if(idEAC3(bufferSize,buffer,info,offset)) return true;
+    if(idAC3(bufferSize,buffer,info,offset)) return true;
     if(idAAACADTS(bufferSize,buffer,info,offset)) return true;
     if(idAC3(bufferSize,buffer,info,offset)) return true;
     
