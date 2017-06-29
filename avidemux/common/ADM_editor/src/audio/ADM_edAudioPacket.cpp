@@ -141,14 +141,34 @@ zgain:
     bool r=trk->stream->getPacket(dest,len,sizeMax,samples,odts);
     if(r==false) 
     {
-            ADM_warning("AudioGetPacket failed, audioSegment=%d\n",(int)_audioSeg);
-            // if it fails, we have to switch segment
-            if(false==switchToNextAudioSegment())
+        if(msgRatelimit->done())
+        {
+            if(msgSuppressed)
+            {
+                ADM_warning("Audio getPacket failed, audioSegment=%d (message repeated %d times)\n",(int)_audioSeg,msgSuppressed+1);
+                msgSuppressed = 0;
+            }else
+            {
+                ADM_warning("Audio getPacket failed, audioSegment=%d\n",(int)_audioSeg);
+            }
+        }else
+        {
+            msgSuppressed++;
+        }
+        // if it fails, we have to switch segment
+        if(false==switchToNextAudioSegment())
+        {
+            if(msgRatelimit->done())
             {
                 ADM_warning("..and this is the last segment\n");
-                return false;
+                msgRatelimit->reset();
             }
-            goto zgain;
+            return false;
+        }
+        goto zgain;
+    }else
+    {
+        msgSuppressed = 0;
     }
 
     // Rescale odts

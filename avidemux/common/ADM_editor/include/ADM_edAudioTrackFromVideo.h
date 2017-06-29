@@ -35,6 +35,8 @@ protected:
                     bool        switchToNextAudioSegment(void);
                     bool        refillPacketBuffer(void);
                     ADM_Composer *parent;
+                    ADMCountdown *msgRatelimit;
+                    int          msgSuppressed;
 public:
                                  ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track,int trackNumber, ADM_Composer *parent);
             virtual            ~ADM_edAudioTrackFromVideo();

@@ -37,6 +37,9 @@ ADM_edAudioTrackFromVideo::ADM_edAudioTrackFromVideo(ADM_audioStreamTrack *track
     wavHeader=track->wavheader;
     durationInUs = track->stream->getDurationInUs();    
     setLanguage(track->stream->getLanguage());
+    msgRatelimit = new ADMCountdown(100); // if getPacket fails, wait 100 ms before warning again
+    msgRatelimit->reset();
+    msgSuppressed = 0;
 }
 /**
     \fn isCBR
@@ -55,6 +58,9 @@ bool ADM_edAudioTrackFromVideo::isCBR()
 ADM_edAudioTrackFromVideo::~ADM_edAudioTrackFromVideo()
 {
     ADM_info("Destroying edAudio from video track %d at %" PRIx32"\n",myTrackNumber,this);
+    if(msgRatelimit)
+        delete msgRatelimit;
+    msgRatelimit = NULL;
     // No need to destroy, we are just a wrapper
 }
 /**
