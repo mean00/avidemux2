@@ -17,7 +17,7 @@ export FLAVOR="-DENABLE_QT5=True"
 export qt_ext=Qt5
 #
 export BASE_INSTALL_DIR="/";
-export BASE_APP="$HOME/Avidemux${API_VERSION}.app/"
+export BASE_APP="$PWD/Avidemux${API_VERSION}.app/"
 export PREFIX="${BASE_APP}/Contents/Resources/"
 rm ~/A*.dmg
 rm -Rf $BASE_APP/*
@@ -209,15 +209,17 @@ echo "**  Copying libraries **"
 echo "    Overriding icu libraries "
 cp $HOME/lib_override/* $PREFIX/lib/
 echo "** Deploy **"
-python $TOP/cmake/osx_libs_copyLibsSierra.py
+
+#python $TOP/cmake/osx_libs_copyLibsSierra.py
 echo "**  Remapping libraries **"
-python $TOP/cmake/osx_libs_remap.py
-python $TOP/cmake/osx_libs_remap.py
+#python $TOP/cmake/osx_libs_remap.py
+#python $TOP/cmake/osx_libs_remap.py
 echo "** Finishing **"
-cat $TOP/cmake/osx/Info.plist.in  | sed "s/2\.6/$API_VERSION/g" > $PREFIX/../Info.plist
+#cat $TOP/cmake/osx/Info.plist.in  | sed "s/2\.6/$API_VERSION/g" > $PREFIX/../Info.plist
 mkdir $PREFIX/fonts
 cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
 mkdir -p $PREFIX/../MacOS
+mv $PREFIX/../MacOS/Avidemux${API_VERSION}.app $PREFIX../Resources/bin/avidemux
 cp $TOP/cmake/osx/Avidemux.in $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 chmod +x $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 # Copy icons
