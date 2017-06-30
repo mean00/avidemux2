@@ -21,6 +21,7 @@ MACRO(ADM_MAIN_APP)
 ENDMACRO(ADM_MAIN_APP)
 #
 MACRO(ADM_POSTBUILD)
+	ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
         include(FindBourne)
         IF(RELEASE)
                 configure_file(

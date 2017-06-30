@@ -217,11 +217,10 @@ ENDIF(QT_QTOPENGL_FOUND)
 # i18n
 #
 ADD_SUBDIRECTORY(i18n)
+ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
 ###########################################
 # Install
 ###########################################
-ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
-ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
 
 DISPLAY_SUMMARY_LIST()
 
