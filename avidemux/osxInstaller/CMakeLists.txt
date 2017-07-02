@@ -68,12 +68,14 @@ file(GLOB  kind "${BUNDLE}/Contents/lib/ADM_plugins6/*")
 MESSAGE(STATUS "* -----<${kind}>-----  *")
 FOREACH(k ${kind})
         MESSAGE(STATUS "* Processing ${k} *")
-        file(GLOB_RECURSE  kind_${k} "${BUNDLE}/Contents/lib/ADM_plugins6/k/*.dylib")
+        file(GLOB_RECURSE  kind_${k} "${k}/*.dylib")
+        MESSAGE(STATUS "\t ${kind_${k}}")
         LIST(APPEND all_adm_plugin  ${kind_${k}})
 ENDFOREACH(k ${kind})
 #
 LIST(APPEND all ${myPlugins})
 LIST(APPEND all ${all_adm_plugin})
+MESSAGE(STATUS "Plugin to fix : ${all}")
 FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${all}" "${bundleDirs}")
 
 # Now we can move the old libs
