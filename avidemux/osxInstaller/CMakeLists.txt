@@ -5,7 +5,7 @@ MESSAGE(STATUS  "* Start *")
 set(BU_CHMOD_BUNDLE_ITEMS ON)
 SET(BU_COPY_FULL_FRAMEWORK_CONTENTS ON)
 #
-include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/BundleUtilities.cmake")
+#include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/BundleUtilities.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/DeployQt5.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/admCheckQt5.cmake")
 #
@@ -36,24 +36,37 @@ MESSAGE(STATUS "* Copying plugins *")
 #
 FILE(COPY  "/opt/local/libexec/qt5/plugins/platforms" DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/PlugIns/")
 # Update Qt plugins
-file(GLOB  pluginlist "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/PlugIns/platforms/*.dylib")
-MESSAGE(STATUS "List of plugins ${pluginlist}")
+#
+file(GLOB  pluginList "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/PlugIns/platforms/*.dylib")
+MESSAGE(STATUS "List of plugins ${pluginList}")
 FOREACH(plugin ${pluginList})
         MESSAGE(STATUS "=> ${plugin}")
-        LIST(APPEND plugins ${plugin})
+        LIST(APPEND myPlugins ${plugin})
 ENDFOREACH(plugin ${pluginList})
-MESSAGE(STATUS "List of plugins ${plugins}")
-
+MESSAGE(STATUS ">>List of plugins to process ${myPlugins}")
+MESSAGE(STATUS " * plugin *")
+FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${myPlugins}" "")
 #
-#fixup_qt5_executable("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "" "" "")#"${RESOURCES}/bin")
-#install_qt5_executable("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "" )#"${RESOURCES}/bin")
-FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${pluginList}" "")
+# Update avidemux plugins
+# 
+MESSAGE(STATUS "* ADM plugins *")
+#
+MESSAGE(STATUS " * ADMplugin *")
+file(GLOB  kind "${BUNDLE}/Contents/lib/ADM_plugins6/*")
+MESSAGE(STATUS "* -----<${kind}>-----  *")
+FOREACH(k ${kind})
+        MESSAGE(STATUS "* Processing ${k} *")
+        file(GLOB  kind_${k} "${BUNDLE}/Contents/lib/ADM_plugins6/k/*.dylib")
+        LIST(APPEND all_adm_plugin  ${kind_${k}})
+ENDFOREACH(k ${kind})
+FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${all_adm_plugin}" "")
 
-# Now we can remove the old libs
-MESSAGE(STATUS "Cleanup")
-file(GLOB  oldLibs "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/lib/libADM*.dylib")
-FILE(REMOVE ${oldLibs})
+# Now we can move the old libs
+MESSAGE(STATUS " * Cleanup * ")
+FILE(COPY "${BUNDLE}/Contents/lib/ADM_plugins6" DESTINATION "${BUNDLE}/Contents/MacOS/")
+FILE(REMOVE  "${BUNDLE}/Contents/lib")
 
+# Create symlink
 MESSAGE(STATUS "* Verifying *")
 VERIFY_APP("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" )
 
