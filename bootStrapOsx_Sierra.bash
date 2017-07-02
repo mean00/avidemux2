@@ -202,38 +202,18 @@ if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         cd $TOP
         Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI 
 fi
-#echo "** Copying Qt nib files**"
-#cp -Rap $MYQT/qt_menu.nib   $PREFIX/bin/
-#mkdir -p $PREFIX/Frameworks
-#echo "**  Copying libraries **"
-#echo "    Overriding icu libraries "
-#cp $HOME/lib_override/* $PREFIX/lib/
-echo "** Deploy **"
-        cd $TOP
-        mkdir -p installer
-        cd installer
-        rm -Rf *
-        cmake -DAVIDEMUX_MAJOR_MINOR="$API_VERSION" ../avidemux/osxInstaller
-        make && make install
-        cd $TOP
-#python $TOP/cmake/osx_libs_copyLibsSierra.py
-echo "**  Remapping libraries **"
-#python $TOP/cmake/osx_libs_remap.py
-#python $TOP/cmake/osx_libs_remap.py
-echo "** Finishing **"
-#cat $TOP/cmake/osx/Info.plist.in  | sed "s/2\.6/$API_VERSION/g" > $PREFIX/../Info.plist
 mkdir $PREFIX/fonts
 cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
 mkdir -p $PREFIX/../MacOS
-mv $PREFIX/../MacOS/Avidemux${API_VERSION}.app $PREFIX../Resources/bin/avidemux
-cp $TOP/cmake/osx/Avidemux.in $PREFIX/../MacOS/Avidemux${API_VERSION}.app
-chmod +x $PREFIX/../MacOS/Avidemux${API_VERSION}.app
 # Copy icons
 echo "Copying icons"
 cp $TOP/cmake/osx/*.icns $PREFIX/
-# creating dmg file
+# 
 cd $TOP
-rm -f *.dmg
-hdiutil create Avidemux${API_VERSION}_r${REV}.dmg -srcfolder $HOME/Avidemux${API_VERSION}.app/ -ov
+mkdir -p installer
+rm -Rf installer/*
+cd installer
+cmake -DAVIDEMUX_MAJOR_MINOR="2.7" ../avidemux/osxInstaller/ 
+make && make install
 echo "** Preparing packaging **"
 echo "** ALL DONE **"
