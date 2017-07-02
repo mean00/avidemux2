@@ -40,7 +40,7 @@ Todo:
 //#define AUDIOSEG 	_segments[_audioseg]._reference
 //#define SEG 		_segments[seg]._reference
 
-
+static bool warned = false;
 
 #if 1
 #define vprintf(...) {}
@@ -92,36 +92,42 @@ bool ADM_edAudioTrackFromVideo::switchToNextAudioSegment(void)
 */
 bool ADM_edAudioTrackFromVideo::refillPacketBuffer(void)
 {
-   packetBufferSize=0; 
-   uint64_t dts;
-   _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
-   static bool endOfAudio=false;
-   if(!seg) return false;
+    packetBufferSize=0;
+    uint64_t dts;
+    _SEGMENT *seg=parent->_segments.getSegment(_audioSeg);
+    static bool endOfAudio=false;
+    if(!seg) return false;
 
-   if(lastDts>=seg->_startTimeUs+seg->_durationUs)
-     {
-       ADM_info("Consumed all data from this audio segment\n");
-       switchToNextAudioSegment();
-       seg=parent->_segments.getSegment(_audioSeg);
-       if(!seg) return false;
-     }
+    if(lastDts>=seg->_startTimeUs+seg->_durationUs)
+    {
+        if(!warned)
+        {
+            ADM_info("Consumed all data from this audio segment\n");
+            warned = true;
+        }
+        if(switchToNextAudioSegment())
+            warned = false;
+        seg=parent->_segments.getSegment(_audioSeg);
+        if(!seg) return false;
+    }
 
 
 
-   ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
-    if(!trk) return false;    
+    ADM_audioStreamTrack *trk=getTrackAtVideoNumber(seg->_reference);
+    if(!trk) return false;
 
     if(!getPacket(packetBuffer,&packetBufferSize,ADM_EDITOR_PACKET_BUFFER_SIZE,
                         &packetBufferSamples,&dts))
     {
-             if(endOfAudio==false)
-                ADM_warning("End of audio\n");
-             endOfAudio=true;
-             return false;
+        if(endOfAudio==false)
+            ADM_warning("End of audio\n");
+        endOfAudio=true;
+        return false;
     }
     // fixup dts
     packetBufferDts=dts;
     endOfAudio=false;
+    warned = false;
     return true;
 }
 
@@ -200,6 +206,7 @@ zgain:
     }
     //ADM_info("Time : %s\n",ADM_us2plain(*odts));
     //advanceDtsBySample(*samples);
+    msgSuppressed = 0;
     return true;
 }
 /**
