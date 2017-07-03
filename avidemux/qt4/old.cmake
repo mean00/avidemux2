@@ -23,7 +23,6 @@ IF(WIN32)
                 include(adm_win32_vs.cmake)
         ELSEIF(MINGW)
                 include(adm_win32_mingw.cmake)
-        ENDIF(MINGW)
 ELSE(WIN32)
         IF(APPLE)
                 include(adm_osx.cmake)
@@ -34,7 +33,26 @@ ENDIF(WIN32)
 #-----------------------------------
 # Set extra libs, system dependant
 #-----------------------------------
-ADM_PREBUILD()
+# -- Windows --
+IF(WIN32)
+	IF(MSVC)
+			LIST(APPEND PlatformLibs  Qt5::WinMain)
+	ENDIF(MSVC)
+	IF(MINGW)
+		LIST(APPEND PlatformLibs   "-lm -lstdc++")
+		LIST(APPEND PlatformLibs   "winmm -mwindows -Wl,--export-all-symbols")
+	ENDIF (MINGW)
+# -- Windows --
+ELSE(WIN32) # OSx, linux, BSD
+		LIST(APPEND PlatformLibs   "-lm -lstdc++")
+		IF(APPLE)  # OSX
+				LIST(APPEND PlatformLibs  "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
+				LIST(APPEND PlatformLibs  "-Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+		ELSE(APPLE)
+			LIST(APPEND PlatformLibs   "X11") # Linux, BSD
+		ENDIF(APPLE)
+ENDIF(WIN32)
+
 #
 #
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
@@ -147,9 +165,14 @@ endif (WIN32)
 # Executable
 ###########################################
 include_directories("${PTHREAD_INCLUDE_DIR}")
-
-ADM_MAIN_APP()
-
+IF(MSVC)
+		SET(EXEC_TYPE "WIN32")
+ENDIF(MSVC)
+ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} ${EXEC_TYPE} ${ADM_EXE_SRCS})
+IF(MSVC)
+	set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+	set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
+ENDIF(MSVC)
 ###########################################
 # Construct common libraries
 ###########################################
@@ -175,7 +198,7 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION}
 	ADM_filters${QT_LIBRARY_EXTENSION}
 	ADM_UI${QT_LIBRARY_EXTENSION}6
 	ADM_dialogQt4
-        ADM_update${QT_LIBRARY_EXTENSION}6
+  ADM_update${QT_LIBRARY_EXTENSION}6
 	ADM_internalVideoFilter6
 	ADM_UI${QT_LIBRARY_EXTENSION}6
 	ADM_gui${QT_LIBRARY_EXTENSION}
@@ -207,6 +230,31 @@ ENDIF (USE_SDL)
 ###########################################
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${PTHREAD_LIBRARIES})
 
+###########################################
+# OS Specific
+###########################################
+if (WIN32 OR APPLE)
+	set_property(TARGET avidemux3_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux)
+endif (WIN32 OR APPLE)
+
+
+IF (APPLE)
+	IF (USE_SDL)
+		TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_libsdl)
+	ENDIF(USE_SDL)
+ENDIF (APPLE)
+#
+# Needed for cross compiling
+#
+if(CROSS)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_${QT_LIBRARY_EXTENSION}6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_UI_${QT_LIBRARY_EXTENSION}6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_render6_${QT_LIBRARY_EXTENSION})
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_coreUtils6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
+        TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ADM_core6)
+endif(CROSS)
+
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} ${PlatformLibs})
 
 
@@ -217,14 +265,17 @@ ENDIF(QT_QTOPENGL_FOUND)
 # i18n
 #
 ADD_SUBDIRECTORY(i18n)
-ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
 ###########################################
 # Install
 ###########################################
+ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
+ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
 
 DISPLAY_SUMMARY_LIST()
 
-ADM_POSTBUILD()
+IF(MSVC)
+    include(./installMsvcRunTime.cmake)
+ENDIF(MSVC)
 include(admPackager)
 admPackager(qt4Package)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/${QT_EXTENSION}" COMPONENT dev)
@@ -235,4 +286,19 @@ ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_openGL/include/" 
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_UIs/include/"  ADM_UIs)
 
 #
+IF(WIN32)
+        include(FindBourne)
+        IF(RELEASE)
+                configure_file(
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.release 
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.html
+                                COPYONLY)
+        ELSE(RELEASE)
+                execute_process(
+                        COMMAND ${BASH_EXECUTABLE} genlog.sh
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/
+                        )
+        ENDIF(RELEASE)
+ENDIF(WIN32)
+
 MESSAGE("")

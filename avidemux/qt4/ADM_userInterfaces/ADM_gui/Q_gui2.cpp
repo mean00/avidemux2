@@ -1587,8 +1587,7 @@ int UI_Init(int nargc, char **nargv)
  printf("Setting qt plugin folder\n");
  QDir dir(QApplication::applicationDirPath());
  dir.cdUp();
- dir.cdUp();
- dir.cd("plugins");
+ dir.cd("PlugIns");
  printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
  QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
