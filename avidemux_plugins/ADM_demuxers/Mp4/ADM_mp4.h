@@ -85,10 +85,13 @@ public:
 class ADM_mp4AudioAccess : public ADM_audioAccess
 {
 protected:
-                uint32_t 					_nb_chunks;
-              	uint32_t 					_current_index;
-                MP4Index 					*_index;
-                FILE						*_fd; 
+                uint32_t        _nb_chunks;
+                uint32_t        _current_index;
+                MP4Index        *_index;
+                FILE            *_fd;
+                // Suppress repeated debug messages from getPacket
+                ADMCountdown    *_msg_ratelimit;
+                uint32_t        _msg_counter;
 public:
                                   ADM_mp4AudioAccess(const char *name,MP4Track *trak) ;
                 virtual           ~ADM_mp4AudioAccess();

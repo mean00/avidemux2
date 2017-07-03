@@ -118,7 +118,7 @@ uint32_t   audioDeviceThreaded:: getBufferFullness(void)
 uint8_t audioDeviceThreaded::stop()
 {
  uint32_t maxWait=3*1000; // Should be enough to drain
-    ADM_info("[audioDevice]Stopping device...");
+    ADM_info("[audioDevice] Stopping device...\n");
     if(stopRequest==AUDIO_DEVICE_STARTED)
     {
         CHANGE_STATE(AUDIO_DEVICE_STOP_REQ);

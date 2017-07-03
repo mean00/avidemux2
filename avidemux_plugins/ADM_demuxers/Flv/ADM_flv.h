@@ -60,10 +60,10 @@ protected:
                 flvTrak          *_track;
                 uint32_t         currentBlock;
                 bool             goToBlock(uint32_t block);
+                // Suppress repeated debug messages from getPacket
+                ADMCountdown     *_msg_ratelimit;
+                uint32_t         _msg_counter;
 
-
-                
-                
 public:
                                   ADM_flvAccess(const char *name,flvTrak *trak); 
                 virtual           ~ADM_flvAccess();
