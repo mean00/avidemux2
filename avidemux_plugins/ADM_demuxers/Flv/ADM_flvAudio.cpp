@@ -44,11 +44,14 @@ bool      ADM_flvAccess::getExtraData(uint32_t *l, uint8_t **d)
 */
 ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess()
 {
-        _fd=ADM_fopen(name,"rb");
-        ADM_assert(_fd);
-        _track=track;
-        goToBlock(0);
-        currentBlock=0;
+    _fd=ADM_fopen(name,"rb");
+    ADM_assert(_fd);
+    _track=track;
+    goToBlock(0);
+    currentBlock=0;
+    _msg_counter = 0;
+    _msg_ratelimit = new ADMCountdown(200);
+    _msg_ratelimit->reset();
 }
 /**
     \fn ADM_audioAccess
@@ -57,8 +60,11 @@ ADM_flvAccess::ADM_flvAccess(const char *name,flvTrak *track) : ADM_audioAccess(
 */
 ADM_flvAccess::~ADM_flvAccess()
 {
-        if(_fd) fclose(_fd);
-        _fd=NULL;
+    if(_fd) fclose(_fd);
+    _fd=NULL;
+    if(_msg_ratelimit)
+        delete _msg_ratelimit;
+    _msg_ratelimit = NULL;
 }
 /**
     \fn getDurationInUs
@@ -111,8 +117,22 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
     flvIndex *x;
     if(false==goToBlock(currentBlock))
     {
-      printf("[ADM_flvAccess] Get packet out of bound\n");
-      return false;
+        if(_msg_ratelimit->done())
+        {
+            if(_msg_counter)
+            {
+                printf("[ADM_flvAccess::getPacket] Packet out of bounds (message repeated %" PRIu32" times)\n",_msg_counter);
+                _msg_counter = 0;
+            }else
+            {
+                printf("[ADM_flvAccess::getPacket] Packet out of bounds\n");
+            }
+            _msg_ratelimit->reset();
+        }else
+        {
+            _msg_counter++;
+        }
+        return false;
     }
     x=&(_track->_index[currentBlock]);
     fread(buffer,x->size,1,_fd);
@@ -120,7 +140,7 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
     *dts=((uint64_t)x->dtsUs);
     
     currentBlock++;
-    //
+    _msg_counter = 0;
     return 1;
 }
 /**
@@ -128,14 +148,20 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
 */
 bool      ADM_flvAccess::goToBlock(uint32_t block)
 {
-  if(block>=_track->_nbIndex)
-  {
-    printf("[FLVAUDIO]Exceeding max cluster : asked: %u max :%u\n",block,_track->_nbIndex); 
-    return false;  // FIXME
-  }
-  currentBlock=block;
-  fseeko(_fd,_track->_index[currentBlock].pos,SEEK_SET);
-  return 1;
+    if(block>=_track->_nbIndex)
+    {
+        if(_msg_ratelimit->done())
+        {
+            if(_msg_counter)
+                printf("[ADM_flvAccess::goToBlock] Exceeding max cluster: asked: %u max: %u (message repeated %" PRIu32" times)\n",block,_track->_nbIndex,_msg_counter);
+            else
+                printf("[ADM_flvAccess::goToBlock] Exceeding max cluster: asked: %u max: %u\n",block,_track->_nbIndex);
+        }
+        return false;  // FIXME
+    }
+    currentBlock=block;
+    fseeko(_fd,_track->_index[currentBlock].pos,SEEK_SET);
+    return 1;
 }
 
 //EOF
