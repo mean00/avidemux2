@@ -64,7 +64,8 @@ MESSAGE(STATUS " * plugin *")
 MESSAGE(STATUS "* ADM plugins *")
 #
 MESSAGE(STATUS " * ADMplugin *")
-file(GLOB  kind "${BUNDLE}/Contents/lib/ADM_plugins6/*")
+FILE(COPY "${BUNDLE}/Contents/lib/ADM_plugins6" DESTINATION "${BUNDLE}/Contents/MacOS/")
+file(GLOB  kind "${BUNDLE}/Contents/MacOS/ADM_plugins6/*")
 MESSAGE(STATUS "* -----<${kind}>-----  *")
 FOREACH(k ${kind})
         MESSAGE(STATUS "* Processing ${k} *")
@@ -77,17 +78,14 @@ LIST(APPEND all ${myPlugins})
 LIST(APPEND all ${all_adm_plugin})
 MESSAGE(STATUS "Plugin to fix : ${all}")
 FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${all}" "${bundleDirs}")
-
 # Now we can move the old libs
 MESSAGE(STATUS " * Cleanup * ")
-FILE(COPY "${BUNDLE}/Contents/lib/ADM_plugins6" DESTINATION "${BUNDLE}/Contents/MacOS/")
 FILE(REMOVE_RECURSE  "${BUNDLE}/Contents/lib")
 FILE(REMOVE_RECURSE  "${BUNDLE}/Contents/Resources/lib")
 makeLink("MacOS"  "lib" ${BUNDLE}/Contents/)
 
-MESSAGE(STATUS "* Last pass *")
+MESSAGE(STATUS "*  Wrapper script *")
 #
-FIXUP_BUNDLE("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" "${all_adm_plugin}" "${bundleDirs}")
 
 # Create symlink
 SET(BIN     "${BUNDLE}/Contents/MacOS/")
@@ -100,10 +98,17 @@ FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=$DIR/../Resources/fonts/fonts.c
 FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"")
 execute_process( COMMAND chmod +x ${ExeName})
 
-MESSAGE(STATUS "* Verifying *")
-VERIFY_APP("${CMAKE_BINARY_DIR}/${BUNDLE_NAME}" )
+# Copy fonts, i18n and icons
+FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/share" DESTINATION "${RESOURCES}") 
+FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/fonts" DESTINATION "${RESOURCES}") 
+FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}") 
 
+#
 # Qt plugin  => ko, adm_plugin => ko, Qt FRamework OK
+MESSAGE(STATUS "* Creating dmg *")
+string(TIMESTAMP now "%Y%m%d")
+execute_process( COMMAND hdiutil create Avidemux${AVIDEMUX_MAJOR_MINOR}_${now}.dmg -srcfolder ${CMAKE_BINARY_DIR}/Avidemux${AVIDEMUX_MAJOR_MINOR}.app/ -ov
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 MESSAGE(STATUS "* All done *")
 
