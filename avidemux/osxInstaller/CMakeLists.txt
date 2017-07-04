@@ -103,6 +103,22 @@ FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/share" DESTI
 FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/fonts" DESTINATION "${RESOURCES}") 
 FILE(COPY "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}") 
 
+# Remove the copies of Qt lib in framework, we only keep "5"
+FILE(GLOB  frameworks "${BUNDLE}/Contents/Frameworks/*")
+MESSAGE(STATUS "Frameworks to clean : ${frameworks}")
+FOREACH(frame ${frameworks})
+        MESSAGE(STATUS "    Cleaning ${frame}")
+        FILE(REMOVE_RECURSE  "${frame}/Headers")
+        FILE(GLOB  qtop      "${frame}/Qt*")
+        FOREACH(q ${qtop})
+                MESSAGE(STATUS "  >${q}")
+                FILE(REMOVE    "${q}")
+        ENDFOREACH(q ${qtop})
+        FILE(REMOVE_RECURSE  "${frame}/Versions/Current")
+        FILE(REMOVE_RECURSE  "${frame}/Versions/5/Headers")
+        # Create symlinks ?
+ENDFOREACH(frame ${frameworks})
+
 #
 # Qt plugin  => ko, adm_plugin => ko, Qt FRamework OK
 MESSAGE(STATUS "* Creating dmg *")
