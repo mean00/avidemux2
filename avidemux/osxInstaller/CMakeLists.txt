@@ -12,7 +12,7 @@ include(admCheckQt5)
 include(avidemuxVersion)
 
 #
-SET(BUNDLE_NAME "Avidemux ${AVIDEMUX_VERSION}.app")
+SET(BUNDLE_NAME "Avidemux_${AVIDEMUX_VERSION}.app")
 SET(BUNDLE "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}")
 SET(RESOURCES  "${BUNDLE}/Contents/Resources")
 SET(ORIGINAL  "${CMAKE_BINARY_DIR}/../Avidemux${AVIDEMUX_MAJOR_MINOR}.app")
@@ -101,7 +101,7 @@ FILE(RENAME "${ExeName}"  "${BIN}/avidemux")
 #
 FILE(WRITE  "${ExeName}" "#!/bin/sh\n")
 FILE(APPEND "${ExeName}" "DIR=`dirname $0`\n")
-FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=$DIR/../Resources/fonts/fonts.conf\n")
+FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=\"$DIR/../Resources/fonts/fonts.conf\"\n")
 FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"")
 execute_process( COMMAND chmod +x ${ExeName})
 
