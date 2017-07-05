@@ -144,8 +144,12 @@ void ADM_initBaseDir(int argc, char *argv[])
 const std::string ADM_getI8NDir(const std::string &flavor)
 {    
     
-    std::string partialPath=flavor+std::string("/i18n/");
+    std::string partialPath=flavor+std::string("/i18n");
+#ifdef CREATE_BUNDLE
+    char *ppath=ADM_getInstallRelativePath("../Resources/share","avidemux6",partialPath.c_str());
+#else
     char *ppath=ADM_getInstallRelativePath("../share","avidemux6",partialPath.c_str());
+#endif
     std::string r=std::string(ppath);
     delete [] ppath;
     ppath=NULL;

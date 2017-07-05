@@ -1580,10 +1580,8 @@ int UI_Init(int nargc, char **nargv)
     global_argc=nargc;
     global_argv=nargv;
     ADM_renderLibInit(&UI_Hooks);
-        Q_INIT_RESOURCE(avidemux);
-    Q_INIT_RESOURCE(filter);
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && defined(CREATE_BUNDLE)
  printf("Setting qt plugin folder\n");
  QDir dir(QApplication::applicationDirPath());
  dir.cdUp();
@@ -1593,8 +1591,9 @@ int UI_Init(int nargc, char **nargv)
 #endif
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
-        myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
-        
+    myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));
+    Q_INIT_RESOURCE(avidemux);
+    Q_INIT_RESOURCE(filter);
 
     loadTranslator();
 

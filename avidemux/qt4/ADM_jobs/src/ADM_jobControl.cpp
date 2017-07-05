@@ -197,12 +197,11 @@ bool        jobWindow::popup(const char *errorMessage)
 bool jobRun(int ac,char **av)
 {
 
-#if defined(__APPLE__)
+#if defined(__APPLE__) && defined(CREATE_BUNDLE)
         printf("Setting qt plugin folder\n");
         QDir dir(QApplication::applicationDirPath());
         dir.cdUp();
-        dir.cdUp();
-        dir.cd("plugins");
+        dir.cd("PlugIns");
         printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
         QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
 #endif
