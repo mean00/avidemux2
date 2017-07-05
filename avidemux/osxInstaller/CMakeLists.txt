@@ -39,7 +39,10 @@ LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
 #
 MESSAGE(STATUS "* Creating Skeleton *")
 FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/MacOS/")
-FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Info.plist"                            DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/")
+# Copy jobs and cli too
+FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/MacOS/")
+FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/bin/avidemux_jobs"         DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/MacOS/")
+FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Info.plist"                          DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/")
 FILE(COPY  "${CMAKE_BINARY_DIR}/../${BUNDLE_NAME}/Contents/Resources/lib"                       DESTINATION "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}/Contents/Resources/")
 
 
