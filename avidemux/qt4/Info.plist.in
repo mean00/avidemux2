@@ -7,7 +7,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Avidemux@S_VERSION@.app</string>
 	<key>CFBundleExecutable</key>
-	<string>Avidemux@S_VERSION@.app</string>
+	<string>Avidemux@S_VERSION@</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Avidemux @B_VERSION@ Copyright 2001-2015 Mean</string>
 	<key>CFBundleIconFile</key>
