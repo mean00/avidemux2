@@ -235,8 +235,8 @@ if [ "x$create_app_bundle" = "x1" ] ; then
     mkdir -p installer
     rm -Rf installer/*
     cd installer
-    cmake -DAVIDEMUX_MAJOR_MINOR="2.7" ../avidemux/osxInstaller
-    make && make install
+    cmake  ../avidemux/osxInstaller
+    make && make package
 echo "** Preparing packaging **"
 fi
 echo "** ALL DONE **"
