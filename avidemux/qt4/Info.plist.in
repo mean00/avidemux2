@@ -5,23 +5,23 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>Avidemux2.6.app</string>
+	<string>Avidemux@S_VERSION@.app</string>
 	<key>CFBundleExecutable</key>
-	<string>Avidemux2.6.app</string>
+	<string>Avidemux@S_VERSION@.app</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Avidemux 2.6 Copyright 2001-2015 Mean</string>
+	<string>Avidemux @B_VERSION@ Copyright 2001-2015 Mean</string>
 	<key>CFBundleIconFile</key>
-	<string>appIcon.icns</string>
+	<string>avidemux.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>Avidemux.org</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Avidemux2.6.app</string>
+	<string>Avidemux@S_VERSION@.app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>Avidemux 2.6.xx</string>
+	<string>Avidemux @B_VERSION@</string>
 	<key>CFBundleSignature</key>
 	<string>Avid</string>
 	<key>LSEnvironment</key>
@@ -35,7 +35,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Avidemux 2.6.x Copyright 2001-2015 Mean</string>
+	<string>Avidemux @B_VERSION@ Copyright 2001-2015 Mean</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
