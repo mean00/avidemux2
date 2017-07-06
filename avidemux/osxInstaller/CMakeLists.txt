@@ -98,12 +98,17 @@ MESSAGE(STATUS "*  Wrapper script *")
 SET(BIN     "${BUNDLE}/Contents/MacOS/")
 SET(ExeName "${BIN}/Avidemux${AVIDEMUX_MAJOR_MINOR}")
 FILE(RENAME "${ExeName}"  "${BIN}/avidemux")
-#
+# Create wrapper executable
 FILE(WRITE  "${ExeName}" "#!/bin/sh\n")
 FILE(APPEND "${ExeName}" "DIR=`dirname $0`\n")
 FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=\"$DIR/../Resources/fonts/fonts.conf\"\n")
 FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"")
 execute_process( COMMAND chmod +x ${ExeName})
+
+# Create Qt.conf
+SET(QT_CONF "${BUNDLE}/Contents/Resources/qt.conf")
+FILE(WRITE  "${QT_CONF}" "[Paths]\n")
+FILE(APPEND "${QT_CONF}" "Plugins = PlugIns\n")
 
 # Copy fonts, i18n and icons
 FILE(COPY "${ORIGINAL}/Contents/Resources/share" DESTINATION "${RESOURCES}") 
@@ -127,7 +132,6 @@ FOREACH(frame ${frameworks})
 ENDFOREACH(frame ${frameworks})
 
 #
-# Qt plugin  => ko, adm_plugin => ko, Qt FRamework OK
 MESSAGE(STATUS "* Creating dmg *")
 # Call cpack to create the dmg using the dragndrop installer
 # 
@@ -140,12 +144,11 @@ SET(CPACK_PACKAGE_FILE_NAME "Avidemux ${AVIDEMUX_VERSION}")
 SET(CPACK_DMG_FORMAT        "UDBZ")
 SET(CPACK_DMG_VOLUME_NAME   "Avidemux ${AVIDEMUX_VERSION}")
 SET(CPACK_BINARY_DRAGNDROP  ON)
+SET(CPACK_PACKAGE_ICON      "${CMAKE_CURRENT_SOURCE_DIR}/avidemux_dmg.icns")
 INSTALL(DIRECTORY ${BUNDLE} DESTINATION .
 	         USE_SOURCE_PERMISSIONS)
 #
 include(CPack)
-
-
 
 MESSAGE(STATUS "* All done *")
 

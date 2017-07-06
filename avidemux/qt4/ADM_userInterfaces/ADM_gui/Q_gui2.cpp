@@ -1581,14 +1581,6 @@ int UI_Init(int nargc, char **nargv)
     global_argv=nargv;
     ADM_renderLibInit(&UI_Hooks);
 
-#if defined(__APPLE__) && defined(CREATE_BUNDLE)
- printf("Setting qt plugin folder\n");
- QDir dir(QApplication::applicationDirPath());
- dir.cdUp();
- dir.cd("PlugIns");
- printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
- QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
-#endif
     myApplication=new myQApplication (global_argc, global_argv);
     myApplication->connect(myApplication, SIGNAL(lastWindowClosed()), myApplication, SLOT(quit()));
     myApplication->connect(myApplication, SIGNAL(aboutToQuit()), myApplication, SLOT(cleanup()));

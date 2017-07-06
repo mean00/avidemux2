@@ -197,14 +197,6 @@ bool        jobWindow::popup(const char *errorMessage)
 bool jobRun(int ac,char **av)
 {
 
-#if defined(__APPLE__) && defined(CREATE_BUNDLE)
-        printf("Setting qt plugin folder\n");
-        QDir dir(QApplication::applicationDirPath());
-        dir.cdUp();
-        dir.cd("PlugIns");
-        printf("New plugin path =%s\n",dir.absolutePath().toUtf8().constData());
-        QApplication::setLibraryPaths(QStringList(dir.absolutePath()));
-#endif
     QApplication *app=new QApplication(ac,av,0);
     Q_INIT_RESOURCE(jobs);
     jobWindow *jWindow=new jobWindow();
