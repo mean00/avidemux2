@@ -973,16 +973,17 @@ nextAtom:
                                         break;
                                 case 2:
                                         {
-                                          son.skipBytes(4);
-                                          son.skipBytes(4);son.skipBytes(4); // sample rate
-                                          int nbChan=son.read32();
-                                          printf("Channels = %d\n",nbChan);
-                                          son.skipBytes(4); // 0x7f000
-                                          son.skipBytes(4); // bits per coded channel
-                                          son.skipBytes(4); // lpcm flags
-                                          son.skipBytes(4); // byte per frame
-                                          son.skipBytes(4); // sample per frame
-                                          left-=4*8;
+                                          printf("v2.0 = %d\n",son.read32());
+                                          printf("v2.1 = %d\n",son.read32());
+                                          printf("v2.2 = %d\n",son.read32());
+#define MARK(x) {uint32_t v=son.read32(); printf(#x " => %d\n",v);x=v;}                                          
+                                          MARK(channels);
+                                          printf("0x7f000 = 0x%x\n",son.read32());
+                                          MARK(bpp);                                          
+                                          printf("LPCM flags= %d\n",son.read32());
+                                          printf("byte per frame = %d\n",son.read32());
+                                          printf("sample per frame = %d\n",son.read32());
+                                          left-=4*9;
                                         }
                                           break;
                                 }
@@ -1060,7 +1061,15 @@ nextAtom:
                                         }
                                         break;
                                     
-                                
+                                    case MKFCCR('l','p','c','m'): // lpcm
+                                    {
+                                        ADIO.frequency=44100;
+                                        ADIO.channels=channels;
+                                        ADIO.bitspersample=bpp;
+                                        ADIO.byterate=(ADIO.frequency*ADIO.channels*ADIO.bitspersample)/8;
+                                        audioCodec(LPCM);
+                                        break;
+                                    }
                                     case MKFCCR('m','s',0,0x55): // why 55 ???
                                     case MKFCCR('m','s',0,0x11): // why 11 ???
                                     case MKFCCR('m','p','4','a'):
