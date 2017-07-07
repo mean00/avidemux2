@@ -102,8 +102,8 @@ FILE(RENAME "${ExeName}"  "${BIN}/avidemux")
 FILE(WRITE  "${ExeName}" "#!/bin/sh\n")
 FILE(APPEND "${ExeName}" "DIR=`dirname $0`\n")
 FILE(APPEND "${ExeName}" "export FONTCONFIG_FILE=\"$DIR/../Resources/fonts/fonts.conf\"\n")
-FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"")
-execute_process( COMMAND chmod +x ${ExeName})
+FILE(APPEND "${ExeName}" "cd \"$DIR\" && ./avidemux \"$@\"\n")
+execute_process( COMMAND chmod +x "${ExeName}")
 
 # Create Qt.conf
 SET(QT_CONF "${BUNDLE}/Contents/Resources/qt.conf")
@@ -134,15 +134,21 @@ ENDFOREACH(frame ${frameworks})
 #
 MESSAGE(STATUS "* Creating dmg *")
 # Call cpack to create the dmg using the dragndrop installer
-# 
+IF(NOT DMG_BASENAME)
+        SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}")
+        IF(NOT RELEASE AND BUILD_REV)
+                SET(DMG_BASENAME "${DMG_BASENAME} ${BUILD_REV}")
+        ENDIF(NOT RELEASE AND BUILD_REV)
+ENDIF(NOT DMG_BASENAME)
+
 #
 SET(CPACK_GENERATOR         "DragNDrop")
 SET(CPACK_PACKAGE_NAME      "Avidemux")
 SET(CPACK_PACKAGE_VENDOR    "Mean")
 SET(CPACK_SOURCE_GENERATOR  "")
-SET(CPACK_PACKAGE_FILE_NAME "Avidemux ${AVIDEMUX_VERSION}")
+SET(CPACK_PACKAGE_FILE_NAME "${DMG_BASENAME}")
 SET(CPACK_DMG_FORMAT        "UDBZ")
-SET(CPACK_DMG_VOLUME_NAME   "Avidemux ${AVIDEMUX_VERSION}")
+SET(CPACK_DMG_VOLUME_NAME   "${CPACK_PACKAGE_FILE_NAME}")
 SET(CPACK_BINARY_DRAGNDROP  ON)
 SET(CPACK_PACKAGE_ICON      "${CMAKE_CURRENT_SOURCE_DIR}/avidemux_dmg.icns")
 INSTALL(DIRECTORY ${BUNDLE} DESTINATION .
