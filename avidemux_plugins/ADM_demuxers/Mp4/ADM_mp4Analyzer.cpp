@@ -41,10 +41,10 @@
 // 14496-1 / 8.2.1
 typedef enum
 {
-	Tag_InitialObjDesc	=0x02,
-	Tag_ES_Desc		=0x03,
-	Tag_DecConfigDesc 	=0x04,
-	Tag_DecSpecificInfo 	=0x05
+    Tag_InitialObjDesc    =0x02,
+    Tag_ES_Desc           =0x03,
+    Tag_DecConfigDesc     =0x04,
+    Tag_DecSpecificInfo   =0x05
 }MP4_Tag;
 
 //extern char* ms2timedisplay(uint32_t ms);
@@ -165,34 +165,34 @@ uint8_t     MP4Header::lookupMainAtoms(void *ztom)
 */
 void MP4Header::parseMvhd(void *ztom)
 {
-	adm_atom *tom = (adm_atom*)ztom;
-	int version = tom->read();
+    adm_atom *tom = (adm_atom*)ztom;
+    int version = tom->read();
 
-	tom->skipBytes(3);	// flags
+    tom->skipBytes(3);    // flags
 
-	if (version == 1)
-		tom->skipBytes(16);
-	else
-		tom->skipBytes(8);
+    if (version == 1)
+        tom->skipBytes(16);
+    else
+        tom->skipBytes(8);
 
-	int scale = tom->read32();
-	uint64_t duration = (version == 1) ? tom->read64() : tom->read32();
+    int scale = tom->read32();
+    uint64_t duration = (version == 1) ? tom->read64() : tom->read32();
 
-	_videoScale = scale;
+    _videoScale = scale;
 
-	printf("Warning: scale is not in ms %" PRIu32"!\n", _videoScale);
+    printf("Warning: scale is not in ms %" PRIu32"!\n", _videoScale);
 
-	if (_videoScale)
-	{
-		duration = 1000 * duration; // In ms
-		duration /= _videoScale;
-	}
-	else
-		_videoScale = 1000;
+    if (_videoScale)
+    {
+        duration = 1000 * duration; // In ms
+        duration /= _videoScale;
+    }
+    else
+        _videoScale = 1000;
 
-	//printf("Movie duration: %s\n", ms2timedisplay(duration));
+    //printf("Movie duration: %s\n", ms2timedisplay(duration));
 
-	_movieDuration = duration;
+    _movieDuration = duration;
 }
 
 /**
@@ -222,30 +222,30 @@ uint8_t MP4Header::parseTrack(void *ztom)
      {
        case ADM_MP4_TKHD:
               {
-				  int version = son.read();
+                  int version = son.read();
 
-				  son.skipBytes(3);
+                  son.skipBytes(3);
 
-				  if (version == 1)
-					  tom->skipBytes(16);
-				  else
-					  tom->skipBytes(8);
+                  if (version == 1)
+                      tom->skipBytes(16);
+                  else
+                      tom->skipBytes(8);
 
-				  aprintf("Track Id: %" PRIu32"\n", son.read32());
-				  son.skipBytes(4);
+                  aprintf("Track Id: %" PRIu32"\n", son.read32());
+                  son.skipBytes(4);
 
-				  uint64_t duration = (version == 1) ? son.read64() : son.read32();
+                  uint64_t duration = (version == 1) ? son.read64() : son.read32();
 
-				  aprintf( "Duration: %" PRIu32" (ms)\n", (duration * 1000) / _videoScale);
-				  son.skipBytes(8);
-				  son.skipBytes(8);
-				  son.skipBytes(36);
+                  aprintf( "Duration: %" PRIu32" (ms)\n", (duration * 1000) / _videoScale);
+                  son.skipBytes(8);
+                  son.skipBytes(8);
+                  son.skipBytes(36);
 
-				  w = son.read32() >> 16;
-				  h = son.read32() >> 16;
+                  w = son.read32() >> 16;
+                  h = son.read32() >> 16;
 
-				  aprintf("tkhd: %ld %ld\n", w, h);
-				  break;
+                  aprintf("tkhd: %ld %ld\n", w, h);
+                  break;
               }
         case ADM_MP4_MDIA:
         {
@@ -293,31 +293,31 @@ uint8_t MP4Header::parseMdia(void *ztom,uint32_t *trackType,uint32_t w, uint32_t
      {
        case ADM_MP4_MDHD:
        {
-		   int version = son.read();
+           int version = son.read();
 
-		   son.skipBytes(3); // flags
+           son.skipBytes(3); // flags
 
-		   if (version == 1)
-			   son.skipBytes(16);
-		   else
-			   son.skipBytes(8);
+           if (version == 1)
+               son.skipBytes(16);
+           else
+               son.skipBytes(8);
 
-		   trackScale = son.read32();
+           trackScale = son.read32();
 
-		   aprintf( "MDHD, Trackscale in mdhd: %u\n", trackScale);
+           aprintf( "MDHD, Trackscale in mdhd: %u\n", trackScale);
 
-		   if (!trackScale)
-			   trackScale = 600; // default
+           if (!trackScale)
+               trackScale = 600; // default
 
-		   uint64_t duration = (version == 1) ? son.read64() : son.read32();
+           uint64_t duration = (version == 1) ? son.read64() : son.read32();
 
-		   aprintf( "MDHD, duration in mdhd: %u (unscaled)\n", duration);
-		   duration = (duration * 1000.) / trackScale;
-		   aprintf( "MDHD, duration in mdhd: %u (scaled ms)\n", duration);
-		   trackDuration = duration;
-//		   printf("MDHD, Track duration: %s, trackScale: %u\n", ms2timedisplay((1000 * duration) / trackScale), trackScale);
+           aprintf( "MDHD, duration in mdhd: %u (unscaled)\n", duration);
+           duration = (duration * 1000.) / trackScale;
+           aprintf( "MDHD, duration in mdhd: %u (scaled ms)\n", duration);
+           trackDuration = duration;
+//           printf("MDHD, Track duration: %s, trackScale: %u\n", ms2timedisplay((1000 * duration) / trackScale), trackScale);
 
-		   break;
+           break;
        }
        case ADM_MP4_HDLR:
        {
@@ -625,34 +625,34 @@ uint8_t       MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t w,uint
             break;
        case ADM_MP4_STCO:
        {
-		   son.skipBytes(4);
+           son.skipBytes(4);
 
-		   info.nbCo = son.read32();
-		   printf("\t\tnbCo: %u\n", info.nbCo);
+           info.nbCo = son.read32();
+           printf("\t\tnbCo: %u\n", info.nbCo);
 
-		   info.Co = new uint64_t[info.nbCo];
+           info.Co = new uint64_t[info.nbCo];
 
-		   for(int j = 0; j < info.nbCo; j++)
-		   {
-			   info.Co[j] = son.read32();
-			   aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
-		   }
+           for(int j = 0; j < info.nbCo; j++)
+           {
+               info.Co[j] = son.read32();
+               aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+           }
        }
        break;
        case ADM_MP4_STCO64:
        {
-		   son.skipBytes(4);
+           son.skipBytes(4);
 
-		   info.nbCo = son.read32();
-		   printf("\t\tnbCo: %u\n", info.nbCo);
+           info.nbCo = son.read32();
+           printf("\t\tnbCo: %u\n", info.nbCo);
 
-		   info.Co = new uint64_t[info.nbCo];
+           info.Co = new uint64_t[info.nbCo];
 
-		   for(int j = 0; j< info.nbCo; j++)
-		   {
-			   info.Co[j] = son.read64();
-			   aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
-		   }
+           for(int j = 0; j< info.nbCo; j++)
+           {
+               info.Co[j] = son.read64();
+               aprintf( "Chunk offset: %u / %u : %" PRIu64"\n", j, info.nbCo - 1, info.Co[j]);
+           }
        }
        break;
        case ADM_MP4_STSD:
@@ -983,6 +983,9 @@ nextAtom:
                                           printf("LPCM flags= %d\n",son.read32());
                                           printf("byte per frame = %d\n",son.read32());
                                           printf("sample per frame = %d\n",son.read32());
+                                          ADIO.channels=channels;
+                                          info.bytePerPacket=bpp/8;
+                                          info.bytePerFrame=info.bytePerPacket*ADIO.channels;
                                           left-=4*9;
                                         }
                                           break;
@@ -996,7 +999,11 @@ nextAtom:
                                             audioCodec(AC3);
                                             ADIO.byterate=128000>>3;
                                             break;
-
+                                    case MKFCCR('l','p','c','m'):
+                                            ADIO.frequency=44100; // Wrong !
+                                            ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
+                                            audioCodec(PCM);
+                                            break;
                                     case MKFCCR('t','w','o','s'):
                                             audioCodec(LPCM);
                                             ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
@@ -1060,16 +1067,6 @@ nextAtom:
                                               left=0;
                                         }
                                         break;
-                                    
-                                    case MKFCCR('l','p','c','m'): // lpcm
-                                    {
-                                        ADIO.frequency=44100;
-                                        ADIO.channels=channels;
-                                        ADIO.bitspersample=bpp;
-                                        ADIO.byterate=(ADIO.frequency*ADIO.channels*ADIO.bitspersample)/8;
-                                        audioCodec(LPCM);
-                                        break;
-                                    }
                                     case MKFCCR('m','s',0,0x55): // why 55 ???
                                     case MKFCCR('m','s',0,0x11): // why 11 ???
                                     case MKFCCR('m','p','4','a'):
@@ -1310,8 +1307,8 @@ int tag,l;
                                           case 0x69:
                                           case 0x6b:
                                           case 0x6d:
-											  ADIO.encoding=WAV_MP3;
-											  break;
+                                                  ADIO.encoding=WAV_MP3;
+                                                  break;
                                           case 226:ADIO.encoding=WAV_AC3;break;
                                           break;
 
@@ -1390,5 +1387,3 @@ MPsampleinfo::~MPsampleinfo()
 }
 
 // EOF
-
-
