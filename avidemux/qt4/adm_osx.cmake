@@ -4,10 +4,6 @@
 #
 SET(bundle avidemux3_${QT_EXTENSION})
 #
-IF(CREATE_BUNDLE)
-    ADD_DEFINITIONS(-DCREATE_BUNDLE)
-ENDIF(CREATE_BUNDLE)
-#
 MACRO(ADM_PREBUILD)
         LIST(APPEND PlatformLibs   "-lm -lstdc++")
         LIST(APPEND PlatformLibs  "-framework CoreServices -framework CoreAudio -framework AudioUnit -framework Carbon")
