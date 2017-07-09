@@ -228,7 +228,7 @@ fi
 if [ "x$create_app_bundle" = "x1" ] ; then
     export DO_BUNDLE="-DCREATE_BUNDLE=true"
 else
-    export DO_BUNDLE=""
+    export DO_BUNDLE="-UCREATE_BUNDLE"
 fi
 if [ "x$do_core" = "x1" ] ; then
         echo "** CORE **"
