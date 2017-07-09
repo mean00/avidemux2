@@ -4,9 +4,11 @@
 export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
 #export MYQT=/usr/local/Cellar/qt/5.9.1
 export PATH=$PATH:$MYQT/bin:/usr/local/bin:/opt/local/libexec/qt5/bin # Both brew and macport
+export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
-export API_VERSION=2.$MINOR
-export DAT=`date +"%Y-%m-%d_%H%M"`
+export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
+export API_VERSION="${MAJOR}.${MINOR}"
+export DAT=`date +"%y%m%d-%Hh%Mm"`
 export gt=`git log --format=oneline -1 | head -c 11`
 export REV="${DAT}_$gt"
 #
@@ -15,7 +17,6 @@ export REV="${DAT}_$gt"
 export FLAVOR="-DENABLE_QT5=True"
 export qt_ext=Qt5
 #
-echo "Revision : $REV"
 packages_ext=""
 do_core=1
 do_cli=1
@@ -71,7 +72,7 @@ Process()
         fi
         mkdir -p $BUILDDIR || fail mkdir
         cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP  $EXTRA $FLAVOR $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
+        cmake $COMPILER $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_EDIT_COMMAND=vim -DAVIDEMUX_SOURCE_DIR=$TOP -DAVIDEMUX_VERSION="$ADM_VERSION" $EXTRA $FLAVOR $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
         make -j 2 > /tmp/log$BUILDDIR || fail make
         echo "** installing at $FAKEROOT_DIR **"
         make install DESTDIR=$FAKEROOT_DIR || fail install
@@ -93,6 +94,12 @@ config()
         if [ "x$debug" = "x1" ] ; then echo   "Debug build"
         else echo   "Release build"
         fi
+        if [ "x$adm_version" = "x" ] ; then
+            export ADM_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+        else
+            export ADM_VERSION=$adm_version
+        fi
+        echo "Avidemux version : $ADM_VERSION"
         if [ "x$create_app_bundle" != "x1" ] ; then
             echo "No macOS app bundle will be created"
         fi
@@ -114,6 +121,8 @@ usage()
         echo "  --nopkg           : Don't create macOS app bundle"
         echo "  --debug           : Switch debugging on"
         echo "  --rebuild         : Preserve existing build directories"
+        echo "  --output=NAME     : Specify a custom basename for dmg"
+        echo "  --version=STRING  : Specify a custom Avidemux version string"
         echo "  --with-core       : Build core (default)"
         echo "  --without-core    : Don't build core"
         echo "  --with-cli        : Build cli (default)"
@@ -123,11 +132,34 @@ usage()
         echo "  --with-plugins    : Build plugins (default)"
         echo "  --without-plugins : Don't build plugins"
         config
-
+}
+option_value()
+{
+        echo $(echo $* | cut -d '=' -f 2-)
+}
+validate()
+{
+        opt="$1"
+        str="$2"
+        if [ "$opt" = "adm_version" ] ; then
+            reg="[^a-zA-Z0-9_.-]"
+            msg="Only alphanumeric characters, hyphen, underscore and period are allowed for Avidemux version, aborting."
+        elif [ "$opt" = "output" ] ; then
+            reg="[^a-zA-Z0-9\ _.-]"
+            msg="Only alphanumeric characters, space, hyphen, underscore and period are allowed for .dmg basename, aborting."
+        else
+            >&2 echo "incorrect usage of validate(), aborting."
+            exit 1
+        fi
+        if [[ "$str" =~ $reg ]] ; then
+            >&2 echo $msg
+            exit 1
+        fi
 }
 # Could probably do it with getopts...
 while [ $# != 0 ] ;do
-        case "$1" in
+        config_option="$1"
+        case "$config_option" in
          -h|--help)
              usage
              exit 1
@@ -138,15 +170,18 @@ while [ $# != 0 ] ;do
          --rebuild)
                 do_rebuild=1
                 ;;
-         --pause)
-                pause_script=true
-                ;;
          --tgz)
                 packages_ext=tar.gz
                 PKG="$PKG -DAVIDEMUX_PACKAGER=tgz"
                 ;;
          --nopkg)
                 create_app_bundle=0
+                ;;
+         --output=*)
+                output=$(option_value "$config_option")
+                ;;
+         --version=*)
+                adm_version=$(option_value "$config_option")
                 ;;
          --without-qt)
                 do_qt4=0
@@ -173,13 +208,15 @@ while [ $# != 0 ] ;do
                 do_core=1
              ;;
         *)
-                echo "unknown parameter $1"
+                echo "unknown parameter $config_option"
                 usage
                 exit 1
                 ;;
      esac
      shift
 done
+validate adm_version "$adm_version" || exit 1
+validate output "$output" || exit 1
 config
 echo "** BootStrapping avidemux **"
 export TOP=$PWD
@@ -191,7 +228,7 @@ fi
 if [ "x$create_app_bundle" = "x1" ] ; then
     export DO_BUNDLE="-DCREATE_BUNDLE=true"
 else
-    export DO_BUNDLE=""
+    export DO_BUNDLE="-UCREATE_BUNDLE"
 fi
 if [ "x$do_core" = "x1" ] ; then
         echo "** CORE **"
@@ -235,7 +272,7 @@ if [ "x$create_app_bundle" = "x1" ] ; then
     mkdir -p installer
     rm -Rf installer/*
     cd installer
-    cmake  ../avidemux/osxInstaller
+    cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" ../avidemux/osxInstaller
     make && make package
 echo "** Preparing packaging **"
 fi

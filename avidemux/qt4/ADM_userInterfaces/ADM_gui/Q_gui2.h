@@ -224,7 +224,7 @@ protected:
         /* Zoom control */
         bool blockResizing;
         bool blockZoomChanges;
-        bool justLaunched; // work around wrong oldSize() reported after loading the first video // FIXME
+        bool ignoreResizeEvent; // suppress unwanted zoom changes
         bool actZoomCalled; // zoom was set to a pre-defined fraction by a menu action
         int  threshold; // track how much the window was resized
         /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */

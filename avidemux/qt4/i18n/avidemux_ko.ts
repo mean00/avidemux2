@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko_KR">
+<TS version="2.0" language="ko_KR">
 <context>
     <name>ADM_Composer</name>
     <message>
@@ -1055,7 +1055,7 @@ Drop timing informations ?</source>
         <location line="+8"/>
         <location line="+2"/>
         <source>Clear recent items</source>
-        <translation type="unfinished"></translation>
+        <translation>최근 항목 지우기</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -2120,7 +2120,7 @@ It is needed to create PSP compatible video.</source>
     <message>
         <location line="+67"/>
         <source>You are about to clear the list of recent files and projects. This can&apos;t be undone. Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>최근 파일과 프로젝트의 목록을 지우려고 합니다. 이 작업은 복구할 수 없습니다. 진행할까요?</translation>
     </message>
     <message>
         <location line="+97"/>
@@ -4374,7 +4374,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/eq2/qt4/Q_eq2.cpp" line="+51"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>초기화</translation>
     </message>
 </context>
 <context>
@@ -6577,25 +6577,25 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>_Temporal luma strength:</source>
-        <translation type="unfinished"></translation>
+        <translation>시간 루마 강도</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>T_emporal chroma strength:</source>
-        <translation type="unfinished"></translation>
+        <translation>시간 크로마 강도</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>MPlayer Denoise 3D HQ</source>
-        <translation type="unfinished"></translation>
+        <translation>MPlayer 디노이즈 3D HQ</translation>
     </message>
     <message>
         <source>Luma _Temporal strength:</source>
-        <translation type="vanished">루마 시간 강도:</translation>
+        <translation>루마 시간 강도:</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
+        <translation>MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -6628,11 +6628,11 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+4"/>
         <source>MPlayer Denoise 3D</source>
-        <translation type="unfinished"></translation>
+        <translation>Mplayer 디노이즈 3D</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
+        <translation>MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -8259,7 +8259,7 @@ Ready.
     </message>
     <message>
         <source>00:00:00.000</source>
-        <translation type="vanished">00:00:00.000</translation>
+        <translation>00:00:00.000</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+75"/>
@@ -8298,7 +8298,7 @@ Ready.
     </message>
     <message>
         <source>A&amp;utoZoom</source>
-        <translation type="vanished">자동 확대/축소</translation>
+        <translation>자동 확대/축소</translation>
     </message>
 </context>
 <context>
