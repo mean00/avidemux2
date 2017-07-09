@@ -485,7 +485,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     threshold = RESIZE_THRESHOLD;
     actZoomCalled = false;
-    justLaunched = true;
+    ignoreResizeEvent = true;
     blockResizing = false;
     blockZoomChanges = true;
 
@@ -907,6 +907,10 @@ void MainWindow::setMenuItemsEnabledState(void)
     ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
 
     updateCodecWidgetControlsState();
+    // actions performed by the code above may result in a window resize event,
+    // which in turn may initiate unwanted zoom changes e.g. when stopping playback
+    // or loading a video with small dimensions, so ignore just this one resize event
+    ignoreResizeEvent = true;
 }
 
 /**
@@ -1298,6 +1302,11 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
             {
                 if(blockZoomChanges || playing || !avifileinfo)
                     break;
+                if(ignoreResizeEvent)
+                {
+                    ignoreResizeEvent = false;
+                    break;
+                }
                 uint32_t reqw, reqh;
                 calcDockWidgetDimensions(reqw,reqh);
 
@@ -1330,11 +1339,10 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 QSize os = static_cast<QResizeEvent*>(event)->oldSize();
                 if(zoom > oldzoom && actZoomCalled)
                 {
-                    if(!justLaunched && QuiMainWindows->width() > os.width())
+                    if(QuiMainWindows->width() > os.width())
                         threshold -= QuiMainWindows->width() - os.width();
-                    if(!justLaunched && QuiMainWindows->height() > os.height())
+                    if(QuiMainWindows->height() > os.height())
                         threshold -= QuiMainWindows->height() - os.height();
-                    justLaunched = false;
                     if(threshold > 0)
                         break;
                     if(threshold < 0)
