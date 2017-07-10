@@ -1,27 +1,21 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-myqt_candidate1=/usr/local/Cellar/qt5/5.6.1-1
-myqt_candidate2=/usr/local/opt/qt5
-if [ "x$MYQT" != "x" ] && [ -e "$MYQT" ] ; then
-    echo "Qt install path specified via env: $MYQT"
+fallback_qtdir=/usr/local/opt/qt5
+if [ "x$MYQT" != "x" ] && [ -e "${MYQT}/bin/qmake" ] ; then
+    export PATH=$PATH:$MYQT/bin:/opt/local/libexec/qt5/bin # for macports; /usr/local/bin is in PATH by default anyway
 else
-    if [ -e "$myqt_candidate1" ] ; then
-        export MYQT="$myqt_candidate1"
-    else
-        if [ -e "$myqt_candidate2" ] ; then
-            export MYQT="$myqt_candidate2"
-        else
-            echo " Error: Neither $myqt_candidate1 nor $myqt_candidate2 exists
-        and no valid value for MYQT provided via env, an attempt to build Qt
-        dependent components will likely fail. Aborting."
-            exit 1
-        fi
-    fi
-    echo "Will try to use $MYQT as qt5 installation"
+    export PATH=$PATH:/opt/local/libexec/qt5/bin
+fi
+if ! $(which -s qmake) && [ -e "${fallback_qtdir}/bin/qmake" ] ; then
+    echo "Using ${fallback_qtdir} as fallback qt5 install path"
+    export PATH=$PATH:${fallback_qtdir}/bin
+fi
+if ! $(which -s qmake) ; then
+    echo "Error: No qmake executable found, aborting."
+    exit 1
 fi
 
-export PATH=$PATH:$MYQT/bin:/usr/local/bin:/opt/local/libexec/qt5/bin # Both brew and macport
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
