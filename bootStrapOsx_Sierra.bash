@@ -1,8 +1,22 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
-#export MYQT=/usr/local/Cellar/qt/5.9.1
+myqt_candidate1=/usr/local/Cellar/qt5/5.6.1-1
+myqt_candidate2=/usr/local/opt/qt5
+if [ -e "$myqt_candidate1" ] ; then
+    export MYQT="$myqt_candidate1"
+else
+    if [ -e "$myqt_candidate2" ]; then
+        export MYQT="$myqt_candidate2"
+    else
+        echo " Error: Neither $myqt_candidate1 nor $myqt_candidate2 exists,
+        an attempt to build Qt dependent components will likely fail.
+        Please check your installation and edit $0 accordingly. Aborting."
+        exit 1
+    fi
+fi
+echo "Will try to use $MYQT as qt5 installation"
+
 export PATH=$PATH:$MYQT/bin:/usr/local/bin:/opt/local/libexec/qt5/bin # Both brew and macport
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
