@@ -3,19 +3,23 @@
 # (c) Mean 2009
 myqt_candidate1=/usr/local/Cellar/qt5/5.6.1-1
 myqt_candidate2=/usr/local/opt/qt5
-if [ -e "$myqt_candidate1" ] ; then
-    export MYQT="$myqt_candidate1"
+if [ "x$MYQT" != "x" ] && [ -e "$MYQT" ] ; then
+    echo "Qt install path specified via env: $MYQT"
 else
-    if [ -e "$myqt_candidate2" ]; then
-        export MYQT="$myqt_candidate2"
+    if [ -e "$myqt_candidate1" ] ; then
+        export MYQT="$myqt_candidate1"
     else
-        echo " Error: Neither $myqt_candidate1 nor $myqt_candidate2 exists,
-        an attempt to build Qt dependent components will likely fail.
-        Please check your installation and edit $0 accordingly. Aborting."
-        exit 1
+        if [ -e "$myqt_candidate2" ] ; then
+            export MYQT="$myqt_candidate2"
+        else
+            echo " Error: Neither $myqt_candidate1 nor $myqt_candidate2 exists
+        and no valid value for MYQT provided via env, an attempt to build Qt
+        dependent components will likely fail. Aborting."
+            exit 1
+        fi
     fi
+    echo "Will try to use $MYQT as qt5 installation"
 fi
-echo "Will try to use $MYQT as qt5 installation"
 
 export PATH=$PATH:$MYQT/bin:/usr/local/bin:/opt/local/libexec/qt5/bin # Both brew and macport
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
