@@ -55,7 +55,6 @@ setupEnv()
     export QT_SELECT=5
     if [ "x$author_setup" = "x1" ]; then
         authorSetup
-        export TYPE2_CROSS_SETUP=false
     else
         export QT_HOME=${MXE_ROOT}/usr/${MXE_TARGET}/qt5
         export MINGW=${MXE_ROOT}/usr/${MXE_TARGET};
@@ -64,7 +63,6 @@ setupEnv()
         export SDL2DIR=${MXE_ROOT}/usr/${MXE_TARGET}
         export PARAL="-j $(nproc)"
         export INSTALL_DIR=${MINGW}/out/avidemux
-        export TYPE2_CROSS_SETUP=true
     fi
     export CROSS_PREFIX=$MXE_TARGET
     export PKG_CONFIG_PATH=$MINGW/lib/pkgconfig
@@ -106,7 +104,6 @@ Process()
     -DCMAKE_AR:STRING=${CROSS_PREFIX}-ar \
     -DCMAKE_RC_COMPILER:STRING=${CROSS_PREFIX}-windres \
     -DAVIDEMUX_TOP_SOURCE_DIR="$TOP" \
-    -DTYPE2_CROSS_SETUP=$TYPE2_CROSS_SETUP \
     -G "Unix Makefiles" \
     $EXTRA \
     $SOURCEDIR || fail cmake
