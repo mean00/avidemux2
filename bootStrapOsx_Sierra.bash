@@ -1,9 +1,21 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-export MYQT=/usr/local/Cellar/qt5/5.6.1-1/
-#export MYQT=/usr/local/Cellar/qt/5.9.1
-export PATH=$PATH:$MYQT/bin:/usr/local/bin:/opt/local/libexec/qt5/bin # Both brew and macport
+fallback_qtdir=/usr/local/opt/qt5
+if [ "x$MYQT" != "x" ] && [ -e "${MYQT}/bin/qmake" ] ; then
+    export PATH=$PATH:$MYQT/bin:/opt/local/libexec/qt5/bin # for macports; /usr/local/bin is in PATH by default anyway
+else
+    export PATH=$PATH:/opt/local/libexec/qt5/bin
+fi
+if ! $(which -s qmake) && [ -e "${fallback_qtdir}/bin/qmake" ] ; then
+    echo "Using ${fallback_qtdir} as fallback qt5 install path"
+    export PATH=$PATH:${fallback_qtdir}/bin
+fi
+if ! $(which -s qmake) ; then
+    echo "Error: No qmake executable found, aborting."
+    exit 1
+fi
+
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
