@@ -88,6 +88,11 @@ Section "Avidemux Core" SecCore
     ${File} ${ROOT_FOLDER}/postproc-*.dll
     ${File} ${ROOT_FOLDER}/swscale-*.dll
 
+    ${File} ${ROOT_FOLDER}/libfribidi*.dll
+    ${File} ${ROOT_FOLDER}/libfontconfig*.dll
+    ${File} ${ROOT_FOLDER}/libfreetype*.dll
+    ${File} ${ROOT_FOLDER}/libharfbuzz*.dll
+
 	WriteRegStr HKLM "${REGKEY}" CreateDesktopIcon $CreateDesktopIcon
 	WriteRegStr HKLM "${REGKEY}" CreateStartMenuGroup $CreateStartMenuGroup
 
