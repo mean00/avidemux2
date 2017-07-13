@@ -21,6 +21,7 @@
 #include "ADM_toolkitQt.h"
 #include "ADM_imageLoader.h"
 #include "DIA_fileSel.h"
+#include "ADM_last.h"
 
 #if 0
 #define aprintf printf
@@ -101,8 +102,14 @@ void                   Ui_logoWindow::imageSelect()
 {
      
     char buffer[2048];
-    if(FileSel_SelectRead(QT_TRANSLATE_NOOP("logo","Select Logo Image"),buffer,2048,""))
+    std::string source;
+    if(imageName.size())
+        source=imageName;
+    else
+        source=lastFolder;
+    if(FileSel_SelectRead(QT_TRANSLATE_NOOP("logo","Select Logo Image"),buffer,2048,source.c_str()))
     {
+        admCoreUtils::setLastReadFolder(std::string(buffer));
         if(tryToLoadimage(buffer))
         {
             myLogo->sameImage();
@@ -154,6 +161,7 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         
         image=NULL;;
         alpha=param->alpha;
+        admCoreUtils::getLastReadFolder(lastFolder);
         if(param->logoImageFile.size())
         {
             if(tryToLoadimage(param->logoImageFile.c_str()))
@@ -227,6 +235,7 @@ void Ui_logoWindow::gather(logo *param)
 */
 Ui_logoWindow::~Ui_logoWindow()
 {
+    admCoreUtils::setLastReadFolder(lastFolder);
     if(myLogo) delete myLogo;
     myLogo=NULL; 
     if(canvas) delete canvas;
