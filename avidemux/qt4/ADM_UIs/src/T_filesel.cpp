@@ -19,6 +19,7 @@
 #include "DIA_factory.h"
 #include "DIA_fileSel.h"
 #include "ADM_dialogFactoryQt4.h"
+#include "ADM_last.h"
 
 extern const char *shortkey(const char *);
 #define MAX_SEL 2040
@@ -61,12 +62,13 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 { 
 	uint8_t r=0;
 	char buffer[MAX_SEL+1];
-        const char *txt="";
-	txt="";
+        //const char *txt="";
+	std::string lastFolder;
 	switch(fileMode)
 	{
 		case ADM_FILEMODE_READ:
-			r=FileSel_SelectRead(selectDesc,buffer,MAX_SEL,txt);
+			admCoreUtils::getLastReadFolder(lastFolder);
+			r=FileSel_SelectRead(selectDesc,buffer,MAX_SEL,lastFolder.c_str());
 			break;
 		case ADM_FILEMODE_WRITE:
 //#warning FIXME
@@ -94,11 +96,13 @@ void ADM_Qfilesel::buttonPressed(QAbstractButton *s)
 				}
 			}
 #endif
-			r=FileSel_SelectWrite(selectDesc,buffer,MAX_SEL,txt);
+			admCoreUtils::getLastWriteFolder(lastFolder);
+			r=FileSel_SelectWrite(selectDesc,buffer,MAX_SEL,lastFolder.c_str());
 			break;
 
 		case ADM_FILEMODE_DIR:
-			r=FileSel_SelectDir(selectDesc,buffer,MAX_SEL,txt);
+			admCoreUtils::getLastReadFolder(lastFolder);
+			r=FileSel_SelectDir(selectDesc,buffer,MAX_SEL,lastFolder.c_str());
 			break;
 		default:
 			ADM_assert(0);break;
