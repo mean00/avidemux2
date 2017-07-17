@@ -261,6 +261,14 @@ bool admD3D::isOperationnal(void)
     return coreD3DWorking;
 }
 /**
+
+*/
+admD3D::ADM_vendorID      admD3D::getVendorID(void)
+{
+  return d3dVendorId;
+}
+
+/**
  */
 bool admD3D::cleanup(void)
 {

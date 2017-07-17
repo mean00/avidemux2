@@ -224,9 +224,21 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
         switch(avctx->codec_id)  //AV_CODEC_ID_H265
         {
             FMT_V_CHECK(H264,H264)
-            FMT_V_CHECK(H265,H265)
-//            FMT_V_CHECK(VC1,VC1)
-//            FMT_V_CHECK(VP9,VP9)
+            case AV_CODEC_ID_H265:
+              {
+                    admD3D::ADM_vendorID vid=admD3D::getVendorID();
+                    if(vid==admD3D::VENDOR_INTEL)
+                    {
+                        ADM_warning("Intel blacklisted for H265 decoding \n");
+                    }
+                    else
+                    {
+                      outPix=AV_PIX_FMT_DXVA2_VLD;
+                      id=avctx->codec_id;
+                    }
+              }
+              break;
+            //FMT_V_CHECK(H265,H265)
             default:
                 ADM_info("DXVA2 No hw support for format %d\n",avctx->codec_id);
                 continue;
