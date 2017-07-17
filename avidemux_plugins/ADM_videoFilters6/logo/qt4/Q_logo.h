@@ -36,7 +36,7 @@ class Ui_logoWindow : public QDialog
 
 protected: 
 	int lock;
-        
+        std::string         lastFolder;
         bool                enableLowPart(bool enabled);
         bool                tryToLoadimage(const char *image);
 public:
