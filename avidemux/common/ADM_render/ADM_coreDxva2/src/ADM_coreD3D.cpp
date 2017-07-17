@@ -50,6 +50,7 @@ static IDirect3D9            *d3d9         = NULL;
 static IDirect3D9Ex          *d3d9ex       = NULL;
 static IDirect3DDevice9      *d3d9device   = NULL;
 static IDirect3DDevice9Ex    *d3d9deviceex = NULL;
+static admD3D::ADM_vendorID  d3dVendorId  =  admD3D::VENDOR_UNKNOWN;
 
 static bool isD3D9Ex=false;
 
@@ -108,8 +109,8 @@ static bool admD3D_initD3D9Ex(GUI_WindowInfo *x)
     ADM_info("D3D library loaded in D3D9Ex mode, Checking Adapater display mode\n");
     memset(&d3ddm,0,sizeof(d3ddm));
     d3ddm.Size=sizeof(d3ddm);
-    
-    hr=D3DCall(IDirect3D9Ex,GetAdapterDisplayModeEx,d3d9ex, adapter, 
+
+    hr=D3DCall(IDirect3D9Ex,GetAdapterDisplayModeEx,d3d9ex, adapter,
                                 &d3ddm,NULL);
     if(ADM_FAILED(hr))
     {
@@ -117,6 +118,28 @@ static bool admD3D_initD3D9Ex(GUI_WindowInfo *x)
         return false;
     }
     ADM_info("Display is %d x %d, fmt=0x%x\n",d3ddm.Width,d3ddm.Height,d3ddm.Format);
+
+    D3DADAPTER_IDENTIFIER9 id;
+    hr=D3DCall(IDirect3D9,GetAdapterIdentifier,d3d9ex,  adapter, 0, &id);
+    if(ADM_FAILED(hr))
+    {
+        ADM_warning("GetAdapterIdentifier failed\n");
+        d3dVendorId=admD3D::VENDOR_UNKNOWN;
+    }else
+    {
+        ADM_info("D3D Device: %s Vendor: %x Device:%x Rev:%x\n", id.Description,id.VendorId, id.DeviceId, id.Revision );
+        switch(id.VendorId)
+        {
+        case  0x1002: d3dVendorId=admD3D::VENDOR_AMD;break;
+        case  0x10DE: d3dVendorId=admD3D::VENDOR_NVIDIA;break;
+        case  0x8086: d3dVendorId=admD3D::VENDOR_INTEL;break;
+        default:
+                      d3dVendorId=admD3D::VENDOR_UNKNOWN;
+                      break;
+        }
+    }
+
+
 
     memset(&d3dpp,0,sizeof(d3dpp));
     d3dpp.Windowed         = TRUE;

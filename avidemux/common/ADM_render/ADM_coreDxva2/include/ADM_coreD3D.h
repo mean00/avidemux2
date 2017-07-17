@@ -32,10 +32,19 @@
 class ADM_COREVIDEOCODEC6_EXPORT admD3D
 {
 public:
+    enum ADM_vendorID
+    {
+      VENDOR_UNKNOWN=0,
+      VENDOR_AMD=1,
+      VENDOR_NVIDIA=2,
+      VENDOR_INTEL=3
+    };
+public:
         static bool init(GUI_WindowInfo *x);
         static bool isOperationnal(void);
         static bool cleanup(void);
         static IDirect3DDevice9 *getDevice();
         static IDirect3D9       *getHandle();
         static bool              isDirect9Ex();
+        static ADM_vendorID      getVendorID();
 };
