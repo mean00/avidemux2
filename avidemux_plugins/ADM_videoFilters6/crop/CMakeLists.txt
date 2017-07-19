@@ -5,10 +5,19 @@ SET(CropCommon_SRCS ADM_vidCrop.cpp  )
 
 # ---------- QT4 Version ----------------
 INCLUDE(vf_plugin_qt4)
-SET(ADM_vf_cropQT4_SRCS    qt4/Q_crop.cpp)
-SET(ADM_vf_cropQT4_Headers qt4/Q_crop.h)
-SET(ADM_vf_cropQT4_UI      qt4/crop)
-INIT_VIDEO_FILTER_QT4(ADM_vf_crop${QT_LIBRARY_EXTENSION} ${ADM_vf_cropQT4_SRCS} ${ADM_vf_cropQT4_Headers} ${ADM_vf_cropQT4_UI} ${CropCommon_SRCS} qt4/DIA_flyCrop.cpp)
+IF(DO_QT4)
+  IF(ADM_QT_VERSION EQUAL 4)
+    SET(QT_TAG qt4)
+  ELSE(ADM_QT_VERSION EQUAL 4)
+      SET(QT_TAG qt5)
+  ENDIF(ADM_QT_VERSION EQUAL 4)
+  SET(ADM_vf_cropQT4_SRCS    ${QT_TAG}/Q_crop.cpp)
+  SET(ADM_vf_cropQT4_Headers ${QT_TAG}/Q_crop.h)
+  SET(ADM_vf_cropQT4_UI      ${QT_TAG}/crop)
+  INIT_VIDEO_FILTER_QT4(ADM_vf_crop${QT_LIBRARY_EXTENSION} ${ADM_vf_cropQT4_SRCS} ${ADM_vf_cropQT4_Headers} ${ADM_vf_cropQT4_UI} ${CropCommon_SRCS} 
+        ${QT_TAG}/DIA_flyCrop.cpp)
+ENDIF(DO_QT4)
+
 # /QT4
 
 
