@@ -28,20 +28,18 @@
 */
 int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in)
 {
-        uint8_t ret=0;
-        
-        Ui_cropWindow dialog(qtLastRegisteredDialog(), param,in);
-		qtRegisterDialog(&dialog);
+    uint8_t ret=0;
 
-        if(dialog.exec()==QDialog::Accepted)
-        {
-            dialog.gather(param); 
-            ret=1;
-        }
+    Ui_cropWindow dialog(qtLastRegisteredDialog(), param,in);
+    qtRegisterDialog(&dialog);
 
-		qtUnregisterDialog(&dialog);
-
-        return ret;
+    if(dialog.exec()==QDialog::Accepted)
+    {
+        dialog.gather(param); 
+        ret=1;
+    }
+    qtUnregisterDialog(&dialog);
+    return ret;
 }
 //____________________________________
 // EOF

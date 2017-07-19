@@ -19,11 +19,9 @@
 #include "DIA_flyDialogQt4.h"
 #include "ADM_default.h"
 #include "ADM_image.h"
-#include "DIA_flyCrop.h"
-#include "Q_crop.h"
+#include "./DIA_flyCrop.h"
+#include "./Q_crop.h"
 #include "ADM_toolkitQt.h"
-
-
 
 uint8_t 		Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt);
 uint8_t 		MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t *avg, uint32_t *eqt);
@@ -54,71 +52,27 @@ flyCrop::~flyCrop()
     \fn process
 	\brief 
 */
+
+static void blank(uint8_t *in, int w,int h,int stride)
+{
+    for(int y=0;y<h;y++)
+    {
+        memset(in,0,4*w);
+        uint8_t *p=in+1;
+        for(int x=0;x<w;x+=4)        
+            p[x]=0xff;        
+        in+=stride;
+    }  
+}
+
 uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
-        uint32_t x,y;
-        uint8_t  *in;
-        uint32_t w=_w,h=_h;
-  
-        
-        memcpy(imageOut,imageIn,_w*_h*4);
-        in=imageOut;
-        for(y=0;y<top;y++)
-        {
-                for(x=0;x<w;x++)
-                {
-                        *in++=0;
-                        
-                        
-                        *in++=0xff;
-                        
-                        *in++=0;
-                        *in++=0;
-                }
-        }
-        // bottom
-        in=imageOut+(w*4)*(h-bottom);
-        for(y=0;y<bottom;y++)
-        {
-                for(x=0;x<w;x++)
-                {
-                        *in++=0;
-                        
-                        
-                        *in++=0xff;
-                        *in++=0;
-                        *in++=0;
-                }
-        }
-        // left
-        in=imageOut;
-        uint32_t stride=4*w-4;
-        for(y=0;y<h;y++)
-        {
-                for(x=0;x<left;x++)
-                {
-                        *(in+4*x)=0;
-                        
-                        
-                        *(in+4*x+1)=0xff;
-                        *(in+4*x+2)=0;
-                        *(in+4*x+3)=0;
-                }
-                for(x=0;x<right;x++)
-                {
-                        *(in-4*x+stride-4)=0;
-                        
-                        
-                        *(in-4*x+stride-3)=0xff;
-                        *(in-4*x+stride-2)=0;
-                        *(in-4*x+stride-1)=0;
-                        
-                }
-                in+=4*w;
-  
-        }
-        return true;
-
+    memcpy(imageOut,imageIn,_w*_h*4);
+    blank(imageOut,_w,top,4*_w);
+    blank(imageOut+(_w*4)*(_h-bottom),_w,bottom,4*_w);
+    blank(imageOut,left,_h,4*_w);
+    blank(imageOut+(_w-right),right,_h,4*_w);
+    return true;
 }
 
 /**
@@ -129,8 +83,6 @@ uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
  * @param h
  * @return 
  */
-
-
 bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
@@ -152,7 +104,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     if(b+top>_h) 
         { b=_h-top;}
     bottom=b;
-    upload();
+    upload(false);
     return true; 
 }
 /**
@@ -255,46 +207,62 @@ uint32_t y,avg,eqt;
 
 
 //************************
-uint8_t flyCrop::upload(void)
+uint8_t flyCrop::upload(bool redraw)
 {
         Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
-        
+        if(!redraw)
+        {
+            blockChanges(true);
+        }
         w->spinBoxLeft->setValue(left);
         w->spinBoxRight->setValue(right);
         w->spinBoxTop->setValue(top);
-        w->spinBoxBottom->setValue(bottom);
+        w->spinBoxBottom->setValue(bottom);        
+        if(!redraw)
+        {
+             blockChanges(false);
+        }
         return 1;
 }
+/**
+ * 
+ * @return 
+ */
 uint8_t flyCrop::download(void)
 {
-        int reject=0;
+int reject=0;
 Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 #define SPIN_GET(x,y) x=w->spinBox##y->value();
-                        SPIN_GET(left,Left);
-                        SPIN_GET(right,Right);
-                        SPIN_GET(top,Top);
-                        SPIN_GET(bottom,Bottom);
-                        
-                        printf("%d %d %d %d\n",left,right,top,bottom);
-                        
-                        left&=0xffffe;
-                        right&=0xffffe;
-                        top&=0xffffe;
-                        bottom&=0xffffe;
-                        
-                        if((top+bottom)>_h)
-                                {
-                                        top=bottom=0;
-                                        reject=1;
-                                }
-                        if((left+right)>_w)
-                                {
-                                        left=right=0;
-                                        reject=1;
-                                }
-                        if(reject)
-                                upload();
-                        return true;
+    SPIN_GET(left,Left);
+    SPIN_GET(right,Right);
+    SPIN_GET(top,Top);
+    SPIN_GET(bottom,Bottom);
+
+    printf("%d %d %d %d\n",left,right,top,bottom);
+
+    left&=0xffffe;
+    right&=0xffffe;
+    top&=0xffffe;
+    bottom&=0xffffe;
+
+    if((top+bottom)>_h)
+            {
+                    top=bottom=0;
+                    reject=1;
+            }
+    if((left+right)>_w)
+            {
+                    left=right=0;
+                    reject=1;
+            }
+    if(reject)
+            upload(false);
+    else
+    {
+        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        blockChanges(false);
+    }
+    return true;
 }
 
 //
@@ -302,53 +270,63 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
 //
 //
 Ui_cropWindow::Ui_cropWindow(QWidget* parent, crop *param,ADM_coreVideoFilter *in) : QDialog(parent)
-  {
-    uint32_t width,height;
-        ui.setupUi(this);
-        lock=0;
-        // Allocate space for green-ised video
-        width=in->getInfo()->width;
-        height=in->getInfo()->height;
+{
+uint32_t width,height;
+    ui.setupUi(this);
+    lock=0;
+    // Allocate space for green-ised video
+    width=in->getInfo()->width;
+    height=in->getInfo()->height;
 
-        canvas=new ADM_QCanvas(ui.graphicsView,width,height);
-        
-        myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
-        myCrop->left=param->left;
-        myCrop->right=param->right;
-        myCrop->top=param->top;
-        myCrop->bottom=param->bottom;
-        myCrop->_cookie=&ui;
-        myCrop->addControl(ui.toolboxLayout);
-        myCrop->upload();
-        myCrop->sliderChanged();
+    canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
-
-        connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
-        connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
-        connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
-#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
-          SPINNER(Left);
-          SPINNER(Right);
-          SPINNER(Top);
-          SPINNER(Bottom);
-
-        show();
-        myCrop->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
-  }
-  void Ui_cropWindow::sliderUpdate(int foo)
-  {
+    myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
+    myCrop->left=param->left;
+    myCrop->right=param->right;
+    myCrop->top=param->top;
+    myCrop->bottom=param->bottom;
+    myCrop->_cookie=&ui;
+    myCrop->addControl(ui.toolboxLayout);
+    myCrop->upload();
     myCrop->sliderChanged();
-  }
-  void Ui_cropWindow::gather(crop *param)
-  {
-    
-        myCrop->download();
-        param->left=myCrop->left;
-        param->right=myCrop->right;
-        param->top=myCrop->top;
-        param->bottom=myCrop->bottom;
-  }
+
+    connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+    connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
+    connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
+#define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
+      SPINNER(Left);
+      SPINNER(Right);
+      SPINNER(Top);
+      SPINNER(Bottom);
+
+    show();
+    myCrop->adjustCanvasPosition();
+    canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+}
+/**
+ * 
+ * @param foo
+ */
+void Ui_cropWindow::sliderUpdate(int foo)
+{
+    myCrop->sliderChanged();
+}
+/**
+ * 
+ * @param param
+ */
+void Ui_cropWindow::gather(crop *param)
+{
+
+      myCrop->download();
+      param->left=myCrop->left;
+      param->right=myCrop->right;
+      param->top=myCrop->top;
+      param->bottom=myCrop->bottom;
+}
+/**
+ * 
+ */
 Ui_cropWindow::~Ui_cropWindow()
 {
   if(myCrop) delete myCrop;
@@ -356,6 +334,10 @@ Ui_cropWindow::~Ui_cropWindow()
   if(canvas) delete canvas;
   canvas=NULL;
 }
+/**
+ * 
+ * @param f
+ */
 void Ui_cropWindow::valueChanged( int f )
 {
   if(lock) return;
@@ -364,23 +346,30 @@ void Ui_cropWindow::valueChanged( int f )
   myCrop->sameImage();
   lock--;
 }
-
+/**
+ * 
+ * @param f
+ */
 void Ui_cropWindow::autoCrop( bool f )
 {
   lock++;
   myCrop->autocrop();
   lock--;
 }
+/**
+ * 
+ * @param f
+ */
 void Ui_cropWindow::reset( bool f )
 {
-         myCrop->left=0;
-         myCrop->right=0;
-         myCrop->bottom=0;
-         myCrop->top=0;
-         lock++;
-         myCrop->upload();
-         myCrop->sameImage();
-         lock--;
+    myCrop->left=0;
+    myCrop->right=0;
+    myCrop->bottom=0;
+    myCrop->top=0;
+    lock++;
+    myCrop->upload();
+    myCrop->sameImage();
+    lock--;
 }
 
 void Ui_cropWindow::resizeEvent(QResizeEvent *event)
