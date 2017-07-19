@@ -5,6 +5,15 @@
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyCrop.h"
 #include "crop.h"
+
+
+
+#if 1
+    #define aprintf ADM_info
+#else
+    #define aprintf(...) {}
+#endif
+
 #if 1
 class Ui_cropWindow : public QDialog
 {
