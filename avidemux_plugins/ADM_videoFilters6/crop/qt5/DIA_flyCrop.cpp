@@ -162,13 +162,13 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
  * @param block
  * @return 
  */
-#define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;}
+#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;}
 bool flyCrop::blockChanges(bool block)
 {
-    // Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
-    // APPLY_TO_ALL(blockSignals(block));
-     rubber->blockSignals(block);
-     return true;
+//    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+//    APPLY_TO_ALL(blockSignals(block));
+    rubber->blockSignals(block);
+    return true;
 }
 /**
      \fn autocrop
