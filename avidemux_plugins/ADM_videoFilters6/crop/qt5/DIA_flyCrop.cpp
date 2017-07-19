@@ -131,12 +131,45 @@ uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
  * @param h
  * @return 
  */
+
+
 bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
+    int nw,nh,nx,ny;
+        
+    double halfzoom=_zoom/2-0.01;
+    
+    top=((double)y+halfzoom)/_zoom;
+    left=((double)x+halfzoom)/_zoom;
+    int r=_w-(((double)(x+w)+halfzoom)/_zoom);
+    if(r<0) 
+        r=0;
+    if(r+left>_w) 
+        { r=_w-left;}
+    right=r;
+    int b=_h-(((double)(y+h)+halfzoom)/_zoom);
+    if(b<0) 
+        b=0;
+    if(b+top>_h) 
+        { b=_h-top;}
+    bottom=b;
+    upload();
     return true; 
 }
-
+/**
+ * 
+ * @param block
+ * @return 
+ */
+#define APPLY_TO_ALL(x) {w->spinX->x;w->spinY->x;w->spinW->x;w->spinH->x;w->spinBand->x;}
+bool flyCrop::blockChanges(bool block)
+{
+    // Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
+    // APPLY_TO_ALL(blockSignals(block));
+     rubber->blockSignals(block);
+     return true;
+}
 /**
      \fn autocrop
 	\brief 

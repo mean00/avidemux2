@@ -121,13 +121,12 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
 //************************
 uint8_t flyCrop::upload(void)
 {
-      Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+        Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
         
         w->spinBoxLeft->setValue(left);
         w->spinBoxRight->setValue(right);
         w->spinBoxTop->setValue(top);
         w->spinBoxBottom->setValue(bottom);
-        
         return 1;
 }
 uint8_t flyCrop::download(void)

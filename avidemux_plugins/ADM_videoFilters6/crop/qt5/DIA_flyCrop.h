@@ -40,5 +40,6 @@ class flyCrop : public ADM_flyDialogRgb
     virtual   ~flyCrop();
 protected:
     cropRubber  *rubber;
+    bool        blockChanges(bool block);
 };
 
