@@ -168,7 +168,7 @@ uint32_t y,avg,eqt;
     bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
     left=autoRun(in,_w,((_w>>1)-2),1);
     right=autoRun(in+_w-1,_w,((_w>>1)-2),-1);
-    upload();
+    upload(false);
     sameImage();
     return 1;
 }
