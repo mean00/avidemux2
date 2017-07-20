@@ -1,11 +1,6 @@
 /***************************************************************************
-                          DIA_flyCrop.cpp  -  description
-                             -------------------
-
-        Common part of the crop dialog
-    
-    copyright            : (C) 2002/2017 by mean
-    email                : fixounet@free.fr
+ * \file GUI for crop filter
+ * \author mean 2002/2017 fixounet@free.fr
  ***************************************************************************/
 
 /***************************************************************************
@@ -106,8 +101,8 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
     double halfzoom=_zoom/2-0.01;
-    y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;
     x=(int)(((double)x+halfzoom)/_zoom)&0xfffe;
+    y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;  
     w=(int)(((double)w+halfzoom)/_zoom)&0xfffe;
     h=(int)(((double)h+halfzoom)/_zoom)&0xfffe;
     
@@ -117,6 +112,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     right=bound(x,w,_w);
 
     upload(false);
+    sameImage();
     return true; 
 }
 /**
@@ -191,7 +187,12 @@ uint8_t flyCrop::upload(bool redraw)
     w->spinBoxLeft->setValue(left);
     w->spinBoxRight->setValue(right);
     w->spinBoxTop->setValue(top);
-    w->spinBoxBottom->setValue(bottom);        
+    w->spinBoxBottom->setValue(bottom);     
+    
+    
+    rubber->move(left,top);
+    rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));        
+
     if(!redraw)
     {
          blockChanges(false);
@@ -223,18 +224,21 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     {
             top=bottom=0;
             reject=1;
+            ADM_warning(" ** Rejected top bottom **\n");
     }
     if((left+right)>_w)
     {
             left=right=0;
             reject=1;
+            ADM_warning(" ** Rejected left right **\n");
     }
     if(reject)
             upload(false);
     else
     {
         blockChanges(true);
-        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        rubber->move(left,top);
+        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));      
         blockChanges(false);
     }
     return true;
