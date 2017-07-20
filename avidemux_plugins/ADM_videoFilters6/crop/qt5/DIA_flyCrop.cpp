@@ -23,8 +23,8 @@
 #include "./Q_crop.h"
 #include "ADM_toolkitQt.h"
 
-uint8_t 		Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt);
-uint8_t 		MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t *avg, uint32_t *eqt);
+uint8_t Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt);
+uint8_t MetricsV( uint8_t *in, uint32_t width,uint32_t height,uint32_t *avg, uint32_t *eqt);
 
 /**
  * 
@@ -59,11 +59,12 @@ static void blank(uint8_t *in, int w,int h,int stride)
     {
         memset(in,0,4*w);
         uint8_t *p=in+1;
-        for(int x=0;x<w;x+=4)        
-            p[x]=0xff;        
+        for(int x=0;x<w;x++)        
+            p[x<<2]=0xff;        
         in+=stride;
     }  
 }
+
 /**
  * \fn processRgb
  * @param imageIn
@@ -73,13 +74,26 @@ static void blank(uint8_t *in, int w,int h,int stride)
 uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
     memcpy(imageOut,imageIn,_w*_h*4);
+    
     blank(imageOut,_w,top,4*_w);
     blank(imageOut+(_w*4)*(_h-bottom),_w,bottom,4*_w);
     blank(imageOut,left,_h,4*_w);
-    blank(imageOut+(_w-right),right,_h,4*_w);
+    blank(imageOut+(_w-right-1)*4,right,_h,4*_w);
     return true;
 }
-
+/**
+ * 
+ * @param imageIn
+ * @param imageOut
+ * @return 
+ */
+int bound(int val, int other, int maxx)
+{
+   int r=(int)maxx-(int)(val+other);
+   if(r<0) 
+        r=0;
+   return r;
+}
 /**
  * \fn bandResized
  * @param x
@@ -99,20 +113,9 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     
     top=y;
     left=x;
-    
-    int r=(int)_w-(int)(w+x);
-    if(r<0) 
-        r=0;
-    if(r+left>_w) 
-        { r=_w-left;}
-    right=r;
-    
-    int b=(int)_h-(int)(y+h);
-    if(b<0) 
-        b=0;
-    if(b+top>_h) 
-        { b=_h-top;}
-    bottom=b;
+    bottom=bound(y,h,_h);
+    right=bound(x,w,_w);
+
     upload(false);
     return true; 
 }
@@ -259,7 +262,7 @@ uint32_t width,height;
     myCrop->bottom=param->bottom;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
-    myCrop->upload();
+    myCrop->upload(false);
     myCrop->sliderChanged();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
@@ -342,7 +345,10 @@ void Ui_cropWindow::reset( bool f )
     myCrop->sameImage();
     lock--;
 }
-
+/**
+ * 
+ * @param event
+ */
 void Ui_cropWindow::resizeEvent(QResizeEvent *event)
 {
     if(!canvas->height())

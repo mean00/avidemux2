@@ -41,9 +41,6 @@ int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in)
     qtUnregisterDialog(&dialog);
     return ret;
 }
-//____________________________________
-// EOF
-
 
 /**
         \fn Ctor
@@ -129,18 +126,18 @@ uint8_t MetricsV( uint8_t *in,uint32_t width, uint32_t height,uint32_t *avg, uin
 uint32_t x;
 uint32_t sum=0,eq=0;
 uint8_t v;
-              for(x=0;x<height;x++)
-              {
-                      sum+=*(in+x*width);
-              }
-              sum=sum/height;
-              *avg=sum;
-              for(x=0;x<height;x++)
-              {
-                      v=*(in+x*width)-sum;
-                      eq+=v*v;
-              }
-              eq=eq/(height*height);
-              *eqt=eq;
-              return 1;
+    for(x=0;x<height;x++)
+    {
+            sum+=*(in+x*width);
+    }
+    sum=sum/height;
+    *avg=sum;
+    for(x=0;x<height;x++)
+    {
+            v=*(in+x*width)-sum;
+            eq+=v*v;
+    }
+    eq=eq/(height*height);
+    *eqt=eq;
+    return 1;
 }
