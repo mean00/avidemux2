@@ -150,6 +150,21 @@ int flyCrop::autoRun(uint8_t *in,int w,int h, int increment)
         y=y-1;
     return y&0xfffe;
 }
+int flyCrop::autoRunV(uint8_t *in,int w,int h, int increment)
+{
+    uint32_t avg,eqt;
+    int y;
+    for(y=0;y<h;y++)	
+    {
+        MetricsV(in,w,h,&avg,&eqt);
+        in+=increment;
+        if(avg> THRESH_AVG || eqt > THRESH_EQT)
+                break;
+    }
+    if(y)
+        y=y-1;
+    return y&0xfffe;
+}
 /**
  * 
  * @return 
@@ -166,8 +181,8 @@ uint32_t y,avg,eqt;
     
     top=autoRun(in,_w,((_h>>1)-2),stride);
     bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
-    left=autoRun(in,_w,((_w>>1)-2),1);
-    right=autoRun(in+_w-1,_w,((_w>>1)-2),-1);
+    left=autoRunV(in,_w,((_w>>1)-2),1);
+    right=autoRunV(in+_w-1,_w,((_w>>1)-2),-1);
     upload(false);
     sameImage();
     return 1;
