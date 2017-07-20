@@ -49,8 +49,8 @@ flyCrop::~flyCrop()
 }
 
 /**
-    \fn process
-	\brief 
+    \fn blank
+    \brief 
 */
 
 static void blank(uint8_t *in, int w,int h,int stride)
@@ -64,7 +64,12 @@ static void blank(uint8_t *in, int w,int h,int stride)
         in+=stride;
     }  
 }
-
+/**
+ * \fn processRgb
+ * @param imageIn
+ * @param imageOut
+ * @return 
+ */
 uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
     memcpy(imageOut,imageIn,_w*_h*4);
@@ -76,7 +81,7 @@ uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 }
 
 /**
- * 
+ * \fn bandResized
  * @param x
  * @param y
  * @param w
@@ -86,19 +91,23 @@ uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
-    int nw,nh,nx,ny;
-        
     double halfzoom=_zoom/2-0.01;
+    y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;
+    x=(int)(((double)x+halfzoom)/_zoom)&0xfffe;
+    w=(int)(((double)w+halfzoom)/_zoom)&0xfffe;
+    h=(int)(((double)h+halfzoom)/_zoom)&0xfffe;
     
-    top=((double)y+halfzoom)/_zoom;
-    left=((double)x+halfzoom)/_zoom;
-    int r=_w-(((double)(x+w)+halfzoom)/_zoom);
+    top=y;
+    left=x;
+    
+    int r=(int)_w-(int)(w+x);
     if(r<0) 
         r=0;
     if(r+left>_w) 
         { r=_w-left;}
     right=r;
-    int b=_h-(((double)(y+h)+halfzoom)/_zoom);
+    
+    int b=(int)_h-(int)(y+h);
     if(b<0) 
         b=0;
     if(b+top>_h) 
@@ -108,121 +117,83 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     return true; 
 }
 /**
- * 
+ * \fn blockChanges
  * @param block
  * @return 
  */
 #define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;}
 bool flyCrop::blockChanges(bool block)
 {
-//    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
-//    APPLY_TO_ALL(blockSignals(block));
+    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    APPLY_TO_ALL(blockSignals(block));
     rubber->blockSignals(block);
     return true;
 }
 /**
-     \fn autocrop
-	\brief 
+     \fn autoRun
+    \brief 
 */
+#define THRESH_AVG   30
+#define THRESH_EQT   50
 
+int flyCrop::autoRun(uint8_t *in,int w,int h, int increment)
+{
+    uint32_t avg,eqt;
+    int y;
+    for(y=0;y<h;y++)	
+    {
+        Metrics(in,w,&avg,&eqt);
+        in+=increment;
+        if(avg> THRESH_AVG || eqt > THRESH_EQT)
+                break;
+    }
+    if(y)
+        y=y-1;
+    return y&0xfffe;
+}
+/**
+ * 
+ * @return 
+ */
 uint8_t  flyCrop::autocrop(void)
 {
 uint8_t *in;
 uint32_t y,avg,eqt;
-	// Top
+    // Top
 
-#define THRESH_AVG   30
-#define THRESH_EQT   50
-        
-        in=_yuvBuffer->GetReadPtr(PLANAR_Y);
-        for(y=0;y<((_h>>1)-2);y++)	
-        {
-                Metrics(in,_w,&avg,&eqt);
-                in+=_w;
-                //printf("LineT :%d avg: %d eqt: %d\n",y,avg,eqt);
-                if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                        break;
-        }
-//gotcha_:	
-        if(y)
-                top=y-1;
-        else 
-                top=0;
-                
-        in=_yuvBuffer->GetReadPtr(PLANAR_Y)+_w*(_h-1);
-        for(y=0;y<((_h>>1)-2);y++)	
-        {
-                Metrics(in,_w,&avg,&eqt);
-                in-=_w;
-                //printf("Line B :%d avg: %d eqt: %d\n",y,avg,eqt);
-                if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                                break;
-        }
-//gotcha_:	
-        if(y)
-                bottom=y-1;
-        else
-                bottom=0;
 
-                
-// Left
-        in=_yuvBuffer->GetReadPtr(PLANAR_Y);
-        for(y=0;y<((_w>>1)-2);y++)	
-        {
-                MetricsV(in,_w,_h,&avg,&eqt);
-                in++;
-                //printf("Line L :%d avg: %d eqt: %d\n",y,avg,eqt);
-                if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                                break;
-        }
-//gotcha_:	
-        if(y)
-                left=y-1;
-        else
-                left=0;		
-// Right
-        in=_yuvBuffer->GetReadPtr(PLANAR_Y)+_w-1;
-        for(y=0;y<((_w>>1)-2);y++)	
-        {
-                MetricsV(in,_w,_h,&avg,&eqt);
-                in--;
-                //printf("Line R :%d avg: %d eqt: %d\n",y,avg,eqt);
-                if(avg> THRESH_AVG || eqt > THRESH_EQT)
-                                break;
-        }
-//gotcha_:	
-        if(y)
-                right=y-1;
-        else
-                right=0;
-  
-              
-        // Update display
-        top=top & 0xfffe;
-        bottom=bottom & 0xfffe;
-        upload();
-        sameImage();
-        return 1;
+    in=_yuvBuffer->GetReadPtr(PLANAR_Y);
+    int stride=_yuvBuffer->GetPitch(PLANAR_Y);
+    
+    top=autoRun(in,_w,((_h>>1)-2),stride);
+    bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
+    left=autoRun(in,_w,((_w>>1)-2),1);
+    right=autoRun(in+_w-1,_w,((_w>>1)-2),-1);
+    upload();
+    sameImage();
+    return 1;
 }
-
-
-//************************
+/**
+ * 
+ * @param redraw
+ * @return 
+ */
 uint8_t flyCrop::upload(bool redraw)
 {
-        Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
-        if(!redraw)
-        {
-            blockChanges(true);
-        }
-        w->spinBoxLeft->setValue(left);
-        w->spinBoxRight->setValue(right);
-        w->spinBoxTop->setValue(top);
-        w->spinBoxBottom->setValue(bottom);        
-        if(!redraw)
-        {
-             blockChanges(false);
-        }
-        return 1;
+    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    if(!redraw)
+    {
+        blockChanges(true);
+    }
+    w->spinBoxLeft->setValue(left);
+    w->spinBoxRight->setValue(right);
+    w->spinBoxTop->setValue(top);
+    w->spinBoxBottom->setValue(bottom);        
+    if(!redraw)
+    {
+         blockChanges(false);
+    }
+    return 1;
 }
 /**
  * 
@@ -238,7 +209,7 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     SPIN_GET(top,Top);
     SPIN_GET(bottom,Bottom);
 
-    printf("%d %d %d %d\n",left,right,top,bottom);
+    aprintf("%d %d %d %d\n",left,right,top,bottom);
 
     left&=0xffffe;
     right&=0xffffe;
@@ -246,19 +217,20 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     bottom&=0xffffe;
 
     if((top+bottom)>_h)
-            {
-                    top=bottom=0;
-                    reject=1;
-            }
+    {
+            top=bottom=0;
+            reject=1;
+    }
     if((left+right)>_w)
-            {
-                    left=right=0;
-                    reject=1;
-            }
+    {
+            left=right=0;
+            reject=1;
+    }
     if(reject)
             upload(false);
     else
     {
+        blockChanges(true);
         rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
         blockChanges(false);
     }
@@ -317,22 +289,21 @@ void Ui_cropWindow::sliderUpdate(int foo)
  */
 void Ui_cropWindow::gather(crop *param)
 {
-
-      myCrop->download();
-      param->left=myCrop->left;
-      param->right=myCrop->right;
-      param->top=myCrop->top;
-      param->bottom=myCrop->bottom;
-}
+    myCrop->download();
+    param->left=myCrop->left;
+    param->right=myCrop->right;
+    param->top=myCrop->top;
+    param->bottom=myCrop->bottom;
+    }
 /**
  * 
  */
 Ui_cropWindow::~Ui_cropWindow()
 {
-  if(myCrop) delete myCrop;
-  myCrop=NULL; 
-  if(canvas) delete canvas;
-  canvas=NULL;
+    if(myCrop) delete myCrop;
+    myCrop=NULL; 
+    if(canvas) delete canvas;
+    canvas=NULL;
 }
 /**
  * 
@@ -340,11 +311,11 @@ Ui_cropWindow::~Ui_cropWindow()
  */
 void Ui_cropWindow::valueChanged( int f )
 {
-  if(lock) return;
-  lock++;
-  myCrop->download();
-  myCrop->sameImage();
-  lock--;
+    if(lock) return;
+    lock++;
+    myCrop->download();
+    myCrop->sameImage();
+    lock--;
 }
 /**
  * 
@@ -352,9 +323,9 @@ void Ui_cropWindow::valueChanged( int f )
  */
 void Ui_cropWindow::autoCrop( bool f )
 {
-  lock++;
-  myCrop->autocrop();
-  lock--;
+    lock++;
+    myCrop->autocrop();
+    lock--;
 }
 /**
  * 

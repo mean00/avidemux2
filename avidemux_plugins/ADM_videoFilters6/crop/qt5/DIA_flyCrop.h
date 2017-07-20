@@ -42,5 +42,6 @@ class flyCrop : public ADM_flyDialogRgb
 protected:
     cropRubber  *rubber;
     bool        blockChanges(bool block);
+    int         autoRun(uint8_t *in,int w,int h, int increment);
 };
 
