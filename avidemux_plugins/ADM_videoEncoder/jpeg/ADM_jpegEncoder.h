@@ -39,7 +39,7 @@ public:
                            ~ADM_jpegEncoder();
 virtual        bool        setup(void); 
 virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "jpeg";}
+virtual const  char        *getFourcc(void) {return "MJPG";}
 };
 
 
