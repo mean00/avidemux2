@@ -34,6 +34,7 @@ const ffVideoCodec ffCodec[]=
   {"FLV1",  AV_CODEC_ID_FLV1,      false, false,    false},
   {"AMV",   AV_CODEC_ID_AMV,       false, false,    false},
   {"MJPG",  AV_CODEC_ID_MJPEG,     false, false,    false},
+  {"jpeg",  AV_CODEC_ID_MJPEG,     false, false,    false},
   {"mjpa",  AV_CODEC_ID_MJPEG,     false, false,    false},
   {"MJPB",  AV_CODEC_ID_MJPEGB,    false, false,    false},
   {"FPS1",  AV_CODEC_ID_FRAPS,     false, false,    false},
