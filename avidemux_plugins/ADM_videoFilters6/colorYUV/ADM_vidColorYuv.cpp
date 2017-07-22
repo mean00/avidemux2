@@ -103,10 +103,10 @@ bool         vidColorYuv::configure(void)
 
 // --- Tab 4 ----
 
-    diaElemFloat        vGain(PX(u_gain),QT_TRANSLATE_NOOP("coloryuv","V gain"),0,256*3,NULL,3);
-    diaElemFloat        vBright(PX(u_bright),QT_TRANSLATE_NOOP("coloryuv","V Brightness"),0,256*3,NULL,3);
+    diaElemFloat        vGain(PX(v_gain),QT_TRANSLATE_NOOP("coloryuv","V gain"),0,256*3,NULL,3);
+    diaElemFloat        vBright(PX(v_bright),QT_TRANSLATE_NOOP("coloryuv","V Brightness"),0,256*3,NULL,3);
     //diaElemFloat        vGamma(PX(u_gamma),QT_TRANSLATE_NOOP("coloryuv","V Gamma"),0,100,NULL,3);
-    diaElemFloat        vContrast(PX(u_contrast),QT_TRANSLATE_NOOP("coloryuv","V Contrast"),-256*3,256*3,NULL,3);
+    diaElemFloat        vContrast(PX(v_contrast),QT_TRANSLATE_NOOP("coloryuv","V Contrast"),-256*3,256*3,NULL,3);
  
     diaElem *dia4[]={&vGain,&vBright,&vContrast};
 //
