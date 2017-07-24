@@ -546,12 +546,12 @@ void HandleAction (Action action)
               }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
-              if(markA>=currentPts)
+              if(markA>currentPts)
               {
                   markA+=d;
                   markB+=d;
               }
-              if(markA<currentPts && currentPts<markB)
+              if(markA<=currentPts && currentPts<=markB)
               {
                   markB+=d;
               }
