@@ -50,15 +50,34 @@ x265Encoder::x265Encoder(ADM_coreVideoFilter *src,bool globalHeader) : ADM_coreV
     passNumber=0;
     logFile=NULL;
 }
+/**
+ * 
+ * @param naltype
+ * @return 
+ */
+static bool isIDRNal(NalUnitType naltype)
+{
+    switch (naltype) {
+    case NAL_UNIT_CODED_SLICE_BLA_W_LP:
+    case NAL_UNIT_CODED_SLICE_BLA_W_RADL:
+    case NAL_UNIT_CODED_SLICE_BLA_N_LP:
+    case NAL_UNIT_CODED_SLICE_IDR_W_RADL:
+    case NAL_UNIT_CODED_SLICE_IDR_N_LP:
+    case NAL_UNIT_CODED_SLICE_CRA:
+        return true;
+    default:
+        return false;
+    }
+}
 
 /**
     \fn encodeNals
 */
-int x265Encoder::encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount, bool skipSei)
+int x265Encoder::encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount, bool skipSei,bool &idrHint)
 {
     uint8_t *p = buf;
     int i;
-
+    idrHint=false;
     if (seiUserDataLen > 0 && nalCount > 0)
         {
         memcpy(p, seiUserData, seiUserDataLen);
@@ -69,15 +88,24 @@ int x265Encoder::encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount
     }
 
     for (i = 0; i < nalCount; i++)
+    {
+        if(isIDRNal((NalUnitType)nals[i].type))
         {
-        if (skipSei && (nals[i].type == NAL_UNIT_PREFIX_SEI || nals[i].type == NAL_UNIT_SUFFIX_SEI))
-                {
-            seiUserDataLen = nals[i].sizeBytes;
-            seiUserData = new uint8_t[seiUserDataLen];
-            memcpy(seiUserData, nals[i].payload, nals[i].sizeBytes);
-            continue;
+            aprintf("NAL IDR TYPE\n");
+            idrHint=true;
+        }
+        else
+        {
+            if (skipSei && (nals[i].type == NAL_UNIT_PREFIX_SEI || nals[i].type == NAL_UNIT_SUFFIX_SEI))
+            {
+                seiUserDataLen = nals[i].sizeBytes;
+                seiUserData = new uint8_t[seiUserDataLen];
+                memcpy(seiUserData, nals[i].payload, nals[i].sizeBytes);
+                continue;
+            }
         }
 
+        aprintf("Nal %d, type %d\n",i,nals[i].type);
         memcpy(p, nals[i].payload, nals[i].sizeBytes);
         p += nals[i].sizeBytes;
     }
@@ -97,7 +125,8 @@ bool x265Encoder::createHeader (void)
 
     extraDataLen = x265_encoder_headers(handle, &nal, &nalCount);
     extraData = new uint8_t[extraDataLen];
-    extraDataLen = encodeNals(extraData, extraDataLen, nal, nalCount, true);
+    bool idr;
+    extraDataLen = encodeNals(extraData, extraDataLen, nal, nalCount, true,idr);
 
   return 1;
 }
@@ -175,7 +204,7 @@ again:
       x265_nal          *nal;
       uint32_t          nbNal = 0;
       x265_picture      pic_out;
-
+      x265_picture_init(&param,&pic_out);
       out->flags = 0;
       
         int er;
@@ -249,7 +278,8 @@ bool  x265Encoder::preAmble (ADMImage * in)
 */
 bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x265_picture *picout)
 {
-        int size = encodeNals(out->data, out->bufferSize, nal, nbNals, false);
+    bool idrHint;
+        int size = encodeNals(out->data, out->bufferSize, nal, nbNals, false,idrHint);
 
         if (size < 0)
         {
@@ -292,11 +322,16 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
             }
             out->dts=out->pts;
         }
+        if(picout->sliceType==X265_TYPE_I && idrHint)
+        {
+            picout->sliceType=X265_TYPE_IDR;
+        }
         switch (picout->sliceType)
         {
         case X265_TYPE_IDR:
           out->flags = AVI_KEY_FRAME;
           /* First Idr ?*/
+          aprintf("NAL IDR\n");
           if(!param.bRepeatHeaders && seiUserData && firstIdr==true)
           {
               // Put our SEI front...
@@ -318,16 +353,20 @@ bool x265Encoder::postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x2
           }
           break;
         case X265_TYPE_I:
+          aprintf("NAL I\n");
           out->flags = AVI_P_FRAME;
           break;
         case X265_TYPE_P:
+          aprintf("NAL P\n");
           out->flags = AVI_P_FRAME;
           break;
         case X265_TYPE_B:
         case X265_TYPE_BREF:
+          aprintf("NAL B\n");
           out->flags = AVI_B_FRAME;
           break;
         default:
+          aprintf("NAL X\n");
           ADM_error ("[x265] Unknown image type: %d\n", picout->sliceType);
           //ADM_assert(0);
         }

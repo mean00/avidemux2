@@ -111,7 +111,7 @@ protected:
                bool            preAmble (ADMImage * in);
                bool            postAmble (ADMBitstream * out,uint32_t nbNals,x265_nal *nal,x265_picture *picout);
                bool            createHeader(void);
-               int             encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount, bool skipSei);
+               int             encodeNals(uint8_t *buf, int size, x265_nal *nals, int nalCount, bool skipSei,bool &idrHint);
                uint32_t        extraDataLen;
                uint8_t         *extraData;
                uint32_t        seiUserDataLen;

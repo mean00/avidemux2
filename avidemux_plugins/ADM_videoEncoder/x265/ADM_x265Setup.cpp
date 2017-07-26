@@ -335,6 +335,7 @@ void dumpx265Setup(x265_param *param)
     PI(bFrameAdaptive);
     PI(bframes);
     PI(bBPyramid);
+    PI(bIntraRefresh);
     PI(lookaheadDepth);
     PI(bFrameBias);
     PI(scenecutThreshold);
