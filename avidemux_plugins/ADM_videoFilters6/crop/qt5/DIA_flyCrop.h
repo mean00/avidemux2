@@ -26,7 +26,7 @@ public:
 
 class flyCrop : public ADM_flyDialogRgb
 {
-  
+  friend class Ui_cropWindow;
   public:
    uint32_t left,right,top,bottom;
   public:
@@ -44,5 +44,7 @@ protected:
     bool        blockChanges(bool block);
     int         autoRun(uint8_t *in,int w,int h, int increment);
     int         autoRunV(uint8_t *in,int w,int h, int increment);
+private:
+    uint32_t _ox,_oy,_ow,_oh;
 };
 

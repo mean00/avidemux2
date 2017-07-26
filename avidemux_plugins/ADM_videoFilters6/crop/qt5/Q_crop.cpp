@@ -83,7 +83,7 @@ void cropRubber::resizeEvent(QResizeEvent *)
   y=pos().y();
   w=size().width();
   h=size().height();
-  aprintf("Resize event : %d x %d , %d x %d\n",x,y,w,h);
+  aprintf("Resize event : x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
   rubberband->resize(size());
   if(!nestedIgnore)
     flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());

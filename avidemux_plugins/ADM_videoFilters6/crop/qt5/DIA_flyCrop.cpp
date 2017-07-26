@@ -36,6 +36,10 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
 {
     rubber=new cropRubber(this,canvas);
     rubber->resize(width,height);
+    _ox=0;
+    _oy=0;
+    _ow=width;
+    _oh=height;
 }
 flyCrop::~flyCrop()
 {
@@ -100,12 +104,27 @@ int bound(int val, int other, int maxx)
 bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
+    if(x<0) x=0;
+    if(y<0) y=0;
+    if(x>_w) x=_w;
+    if(y>_h) y=_h;
+
     double halfzoom=_zoom/2-0.01;
-    x=(int)(((double)x+halfzoom)/_zoom)&0xfffe;
-    y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;  
-    w=(int)(((double)w+halfzoom)/_zoom)&0xfffe;
-    h=(int)(((double)h+halfzoom)/_zoom)&0xfffe;
-    
+    // try to recalculate values only if these values were actually modified by moving the handles
+    if(x!=_ox)
+        x=(int)(((double)x+halfzoom)/_zoom)&0xfffe;
+    if(y!=_oy)
+        y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;
+    if(w!=_ow)
+        w=(int)(((double)w+halfzoom)/_zoom)&0xfffe;
+    if(h!=_oh)
+        h=(int)(((double)h+halfzoom)/_zoom)&0xfffe;
+
+    _ox=x;
+    _oy=y;
+    _ow=w;
+    _oh=h;
+
     top=y;
     left=x;
     bottom=bound(y,h,_h);
@@ -120,12 +139,11 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
  * @param block
  * @return 
  */
-#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;}
+#define APPLY_TO_ALL(x) {w->spinBoxLeft->x;w->spinBoxRight->x;w->spinBoxTop->x;w->spinBoxBottom->x;rubber->x;}
 bool flyCrop::blockChanges(bool block)
 {
     Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     APPLY_TO_ALL(blockSignals(block));
-    rubber->blockSignals(block);
     return true;
 }
 /**
@@ -202,11 +220,12 @@ uint8_t flyCrop::upload(bool redraw)
     w->spinBoxLeft->setValue(left);
     w->spinBoxRight->setValue(right);
     w->spinBoxTop->setValue(top);
-    w->spinBoxBottom->setValue(bottom);     
-    
-    
-    rubber->move(left,top);
-    rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));        
+    w->spinBoxBottom->setValue(bottom);
+
+    rubber->nestedIgnore++;
+    rubber->move(_zoom*(float)left,_zoom*(float)top);
+    rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+    rubber->nestedIgnore--;
 
     if(!redraw)
     {
@@ -252,8 +271,10 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     else
     {
         blockChanges(true);
-        rubber->move(left,top);
-        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));      
+        rubber->nestedIgnore++;
+        rubber->move(_zoom*(float)left,_zoom*(float)top);
+        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        rubber->nestedIgnore--;
         blockChanges(false);
     }
     return true;
@@ -275,6 +296,7 @@ uint32_t width,height;
     canvas=new ADM_QCanvas(ui.graphicsView,width,height);
 
     myCrop=new flyCrop( this,width, height,in,canvas,ui.horizontalSlider);
+    myCrop->rubber->nestedIgnore++; // don't modify crop parameters simply by opening the dialog
     myCrop->left=param->left;
     myCrop->right=param->right;
     myCrop->top=param->top;
@@ -296,6 +318,7 @@ uint32_t width,height;
     show();
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled
+    myCrop->rubber->nestedIgnore--;
 }
 /**
  * 
@@ -335,8 +358,10 @@ void Ui_cropWindow::valueChanged( int f )
 {
     if(lock) return;
     lock++;
+    myCrop->rubber->nestedIgnore++;
     myCrop->download();
     myCrop->sameImage();
+    myCrop->rubber->nestedIgnore--;
     lock--;
 }
 /**
@@ -376,6 +401,18 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
+
+    int x=(int)((double)myCrop->left*myCrop->_zoom);
+    int y=(int)((double)myCrop->top*myCrop->_zoom);
+    int w=(int)((double)(myCrop->_w-(myCrop->left+myCrop->right))*myCrop->_zoom);
+    int h=(int)((double)(myCrop->_h-(myCrop->top+myCrop->bottom))*myCrop->_zoom);
+
+    myCrop->blockChanges(true);
+    myCrop->rubber->nestedIgnore++;
+    myCrop->rubber->move(x,y);
+    myCrop->rubber->resize(w,h);
+    myCrop->rubber->nestedIgnore--;
+    myCrop->blockChanges(false);
 }
 
 //EOF
