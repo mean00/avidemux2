@@ -401,16 +401,18 @@ void Ui_cropWindow::resizeEvent(QResizeEvent *event)
     uint32_t graphicsViewHeight = canvas->parentWidget()->height();
     myCrop->fitCanvasIntoView(graphicsViewWidth,graphicsViewHeight);
     myCrop->adjustCanvasPosition();
-#if 0
+
+    int x=(int)((double)myCrop->left*myCrop->_zoom);
+    int y=(int)((double)myCrop->top*myCrop->_zoom);
+    int w=(int)((double)(myCrop->_w-(myCrop->left+myCrop->right))*myCrop->_zoom);
+    int h=(int)((double)(myCrop->_h-(myCrop->top+myCrop->bottom))*myCrop->_zoom);
+
     myCrop->blockChanges(true);
     myCrop->rubber->nestedIgnore++;
-    myCrop->rubber->resize(
-        (int)((double)(myCrop->_w-myCrop->left-myCrop->right)*myCrop->_zoom/(double)graphicsViewWidth),
-        (int)((double)(myCrop->_h-myCrop->top-myCrop->bottom)*myCrop->_zoom/(double)graphicsViewHeight)
-    );
+    myCrop->rubber->move(x,y);
+    myCrop->rubber->resize(w,h);
     myCrop->rubber->nestedIgnore--;
     myCrop->blockChanges(false);
-#endif
 }
 
 //EOF
