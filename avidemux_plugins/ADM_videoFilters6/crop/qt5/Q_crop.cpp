@@ -78,15 +78,15 @@ cropRubber::cropRubber(flyCrop *fly,QWidget *parent) : QWidget(parent)
 */
 void cropRubber::resizeEvent(QResizeEvent *) 
 {
-  int x,y,w,h;
-  x=pos().x();
-  y=pos().y();
-  w=size().width();
-  h=size().height();
-  aprintf("Resize event : x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
-  rubberband->resize(size());
-  if(!nestedIgnore)
-    flyParent->bandResized(pos().x(),pos().y(),size().width(),size().height());
+    int x,y,w,h;
+    x=pos().x();
+    y=pos().y();
+    w=size().width();
+    h=size().height();
+    aprintf("Resize event : x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
+    rubberband->resize(size());
+    if(!nestedIgnore)
+        flyParent->bandResized(x,y,w,h);
 }
 
 

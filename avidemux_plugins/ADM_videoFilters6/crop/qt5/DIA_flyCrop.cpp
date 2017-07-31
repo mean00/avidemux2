@@ -103,34 +103,60 @@ int bound(int val, int other, int maxx)
  */
 bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
-    aprintf("Rubber resize %d x %d, w=%d h=%d\n",x,y,w,h);
-    if(x<0) x=0;
-    if(y<0) y=0;
-    if(x>_w) x=_w;
-    if(y>_h) y=_h;
+    aprintf("Rubber resized: x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
+    aprintf("Debug: old values: x=%d, y=%d, w=%d, h=%d\n",_ox,_oy,_ow,_oh);
+    int normX, normY, normW, normH;
+    normX=left;
+    normY=top;
+    normW=_w-left-right;
+    normY=_h-top-bottom;
 
     double halfzoom=_zoom/2-0.01;
     // try to recalculate values only if these values were actually modified by moving the handles
-    if(x!=_ox)
-        x=(int)(((double)x+halfzoom)/_zoom)&0xfffe;
-    if(y!=_oy)
-        y=(int)(((double)y+halfzoom)/_zoom)&0xfffe;
-    if(w!=_ow)
-        w=(int)(((double)w+halfzoom)/_zoom)&0xfffe;
-    if(h!=_oh)
-        h=(int)(((double)h+halfzoom)/_zoom)&0xfffe;
+    bool leftHandleMoved=false;
+    bool rightHandleMoved=false;
+    if((x+w)==(_ox+_ow) && (y+h)==(_oy+_oh))
+        leftHandleMoved=true;
+    if(x==_ox && y==_oy)
+        rightHandleMoved=true;
 
     _ox=x;
     _oy=y;
     _ow=w;
     _oh=h;
 
-    top=y;
-    left=x;
-    bottom=bound(y,h,_h);
-    right=bound(x,w,_w);
+    if(leftHandleMoved && rightHandleMoved) // bogus event, ignore
+        return false;
 
-    upload(false);
+    normX=(int)(((double)x+halfzoom)/_zoom);
+    normY=(int)(((double)y+halfzoom)/_zoom);
+    normW=(int)(((double)w+halfzoom)/_zoom);
+    normH=(int)(((double)h+halfzoom)/_zoom);
+
+    // resize the rubberband back into bounds once the user tries to drag handles out of sight
+    bool resizeRubber=false;
+    if(normX<0 || normY<0 || normX+normW>_w || normY+normH>_h)
+    {
+        resizeRubber=true;
+        aprintf("rubberband out of bounds, will be resized back\n");
+    }
+
+    if(rightHandleMoved)
+    {
+        right=bound(normX,normW,_w)&0xfffe;
+        bottom=bound(normY,normH,_h)&0xfffe;
+    }
+
+    if(normX<0) normX=0;
+    if(normY<0) normY=0;
+
+    if(leftHandleMoved)
+    {
+        top=normY&0xfffe;
+        left=normX&0xfffe;
+    }
+
+    upload(false,resizeRubber);
     sameImage();
     return true; 
 }
@@ -201,7 +227,7 @@ uint32_t y,avg,eqt;
     bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
     left=autoRunV(in,_w,((_w>>1)-2),1);
     right=autoRunV(in+_w-1,_w,((_w>>1)-2),-1);
-    upload(false);
+    upload(false,true);
     sameImage();
     return 1;
 }
@@ -210,8 +236,9 @@ uint32_t y,avg,eqt;
  * @param redraw
  * @return 
  */
-uint8_t flyCrop::upload(bool redraw)
+uint8_t flyCrop::upload(bool redraw, bool toRubber)
 {
+    aprintf("left=%d, right=%d, top=%d, bottom=%d\n",left,right,top,bottom);
     Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
     if(!redraw)
     {
@@ -222,10 +249,13 @@ uint8_t flyCrop::upload(bool redraw)
     w->spinBoxTop->setValue(top);
     w->spinBoxBottom->setValue(bottom);
 
-    rubber->nestedIgnore++;
-    rubber->move(_zoom*(float)left,_zoom*(float)top);
-    rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
-    rubber->nestedIgnore--;
+    if(toRubber)
+    {
+        rubber->nestedIgnore++;
+        rubber->move(_zoom*(float)left,_zoom*(float)top);
+        rubber->resize(_zoom*(float)(_w-left-right),_zoom*(float)(_h-top-bottom));
+        rubber->nestedIgnore--;
+    }
 
     if(!redraw)
     {
@@ -267,7 +297,7 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
             ADM_warning(" ** Rejected left right **\n");
     }
     if(reject)
-            upload(false);
+            upload(false,true);
     else
     {
         blockChanges(true);
@@ -303,7 +333,7 @@ uint32_t width,height;
     myCrop->bottom=param->bottom;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
-    myCrop->upload(false);
+    myCrop->upload(false,true);
     myCrop->sliderChanged();
 
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));

@@ -32,8 +32,8 @@ class flyCrop : public ADM_flyDialogRgb
   public:
    uint8_t    processRgb(uint8_t *imageIn, uint8_t *imageOut);
    uint8_t    download(void);
-   uint8_t    upload(void) {return upload(true);}
-   uint8_t    upload(bool redraw);
+   uint8_t    upload(void) {return upload(true,true);}
+   uint8_t    upload(bool redraw, bool toRubber);
    uint8_t    autocrop(void);
    bool       bandResized(int x,int y,int w, int h);
               flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
