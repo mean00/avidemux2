@@ -105,11 +105,6 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
 {
     aprintf("Rubber resized: x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
     aprintf("Debug: old values: x=%d, y=%d, w=%d, h=%d\n",_ox,_oy,_ow,_oh);
-    int normX, normY, normW, normH;
-    normX=left;
-    normY=top;
-    normW=_w-left-right;
-    normY=_h-top-bottom;
 
     double halfzoom=_zoom/2-0.01;
     // try to recalculate values only if these values were actually modified by moving the handles
@@ -128,6 +123,7 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     if(leftHandleMoved && rightHandleMoved) // bogus event, ignore
         return false;
 
+    int normX, normY, normW, normH;
     normX=(int)(((double)x+halfzoom)/_zoom);
     normY=(int)(((double)y+halfzoom)/_zoom);
     normW=(int)(((double)w+halfzoom)/_zoom);
