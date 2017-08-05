@@ -34,7 +34,7 @@ flyCrop::flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFi
                                     ADM_QCanvas *canvas, QSlider *slider) 
                 : ADM_flyDialogRgb(parent,width, height,in,canvas, slider,RESIZE_LAST)
 {
-    rubber=new cropRubber(this,canvas);
+    rubber=new ADM_rubberControl(this,canvas);
     rubber->resize(width,height);
     _ox=0;
     _oy=0;
