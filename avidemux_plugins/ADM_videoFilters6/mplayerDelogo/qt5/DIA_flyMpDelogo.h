@@ -17,34 +17,8 @@
     \class flyASharp
 */
 #include "delogo.h"
-class QRubberBand;
+class ADM_rubberControl;
 class flyMpDelogo;
-/**
-        \class Resizable_rubber_band
-        \brief http://stackoverflow.com/questions/19066804/implementing-resize-handles-on-qrubberband-is-qsizegrip-relevant
-*/
-class Resizable_rubber_band : public QWidget 
-{
-public:
-  flyMpDelogo     *flyParent;
-  Resizable_rubber_band(flyMpDelogo *fly,QWidget* parent = 0);
-  int               nestedIgnore;
-
-public:
-  QRubberBand* rubberband;
-  void resizeEvent(QResizeEvent *);
-  void blockSignals(bool sig)
-  {
-      rubberband->blockSignals(sig);
-  }
-  
-#if 0
-  void update()
-  {
-    rubberband->update();
-  }
-#endif
-};
 
 /**
     \class flyMpDelogo
@@ -56,7 +30,7 @@ public:
 public:
    delogo      param;
    bool        preview;
-   Resizable_rubber_band *rubber;
+   ADM_rubberControl *rubber;
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
