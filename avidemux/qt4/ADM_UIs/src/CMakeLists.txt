@@ -13,6 +13,7 @@ SET(${ADM_LIB}_T
         DIA_flyDialog.cpp
         T_QCanvas.cpp
         T_qtFactory.cpp
+        T_RubberControl.cpp
 )
 if(USE_OPENGL)
         INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}//ADM_openGL/include/)
