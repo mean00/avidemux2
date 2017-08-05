@@ -43,54 +43,6 @@ int DIA_getCropParams(	const char *name,crop *param,ADM_coreVideoFilter *in)
 }
 
 /**
-        \fn Ctor
-*/
-cropRubber::cropRubber(flyCrop *fly,QWidget *parent) : QWidget(parent) 
-{
-  nestedIgnore=0;
-  flyParent=fly;
-  //tell QSizeGrip to resize this widget instead of top-level window
-  setWindowFlags(Qt::SubWindow);
-  QHBoxLayout* layout = new QHBoxLayout(this);
-  layout->setContentsMargins(0, 0, 0, 0);
-  QSizeGrip* grip1 = new QSizeGrip(this);
-  QSizeGrip* grip2 = new QSizeGrip(this);
-#ifdef __APPLE__
-  // work around grips not shown on macOS
-  grip1->setFixedSize(10,10);
-  grip2->setFixedSize(10,10);
-#endif
-  grip1->setVisible(true);
-  grip2->setVisible(true);
-  layout->addWidget(grip1, 0, Qt::AlignLeft | Qt::AlignTop);
-  layout->addWidget(grip2, 0, Qt::AlignRight | Qt::AlignBottom);
-  rubberband = new QRubberBand(QRubberBand::Rectangle, this);
-  QPalette pal;
-  pal.setBrush(QPalette::Highlight, QBrush(Qt::red,Qt::DiagCrossPattern));
-  rubberband->setPalette(pal);
-  rubberband->setForegroundRole(QPalette::Highlight);
-  rubberband->move(0, 0);
-  rubberband->show();
-  show();
-}
-/**
-        \fn resizeEvent
-*/
-void cropRubber::resizeEvent(QResizeEvent *) 
-{
-    int x,y,w,h;
-    x=pos().x();
-    y=pos().y();
-    w=size().width();
-    h=size().height();
-    aprintf("Resize event : x=%d, y=%d, w=%d, h=%d\n",x,y,w,h);
-    rubberband->resize(size());
-    if(!nestedIgnore)
-        flyParent->bandResized(x,y,w,h);
-}
-
-
-/**
      \fn Metrics
 	\brief Compute the average value of pixels	and eqt is the "ecart type"
 */

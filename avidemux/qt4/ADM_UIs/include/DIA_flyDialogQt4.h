@@ -30,6 +30,7 @@
 #include <QTimer>
 #include <QDialog>
 #include <QLabel>
+#include <QRubberBand>
 
 #include "ADM_default.h"
 #include "ADM_rgb.h"
@@ -64,7 +65,6 @@ public:
         void paintEvent(QPaintEvent *ev);
         void changeSize(uint32_t w, uint32_t h);
 };
-
 
 class flyControl;
 /**
@@ -132,7 +132,7 @@ public:
   //virtual uint8_t  update(void)=0;
 
   virtual bool       setCurrentPts(uint64_t pts) {return true;};
-
+  virtual bool       bandResized(int x, int y, int w, int h) { return true; }
 
 
 // UI dependant part : They are implemented in ADM_flyDialogGtk/Qt/...
@@ -183,7 +183,7 @@ public:
 };
 
 /**
- * \class ADM_flyDialogYuv
+ * \class ADM_flyDialogRgb
  */
 class ADM_UIQT46_EXPORT ADM_flyDialogRgb: public  ADM_flyDialog
 {
@@ -218,3 +218,38 @@ protected:
         bool eventFilter(QObject *obj, QEvent *event);
 };
 
+/**
+    \fn ADM_QRubberBand
+    \brief Override platform-dependent appearance of QRubberBand
+*/
+class ADM_UIQT46_EXPORT ADM_QRubberBand : public QRubberBand
+{
+public:
+        ADM_QRubberBand(QWidget *parent);
+        ~ADM_QRubberBand();
+private:
+        void paintEvent(QPaintEvent *event);
+};
+
+/**
+    \fn ADM_rubberControl
+    \brief http://stackoverflow.com/questions/19066804/implementing-resize-handles-on-qrubberband-is-qsizegrip-relevant
+*/
+class ADM_UIQT46_EXPORT ADM_rubberControl : public QWidget
+{
+public:
+        ADM_rubberControl(ADM_flyDialog *fly, QWidget *parent);
+        ADM_flyDialog *flyParent;
+        int nestedIgnore;
+
+public:
+        ADM_QRubberBand *rubberband;
+        void blockSignals(bool block)
+        {
+            rubberband->blockSignals(block);
+        }
+private:
+        void resizeEvent(QResizeEvent *);
+};
+
+//EOF

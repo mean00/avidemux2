@@ -1,28 +1,6 @@
-
 #pragma once
-#include "QHBoxLayout"
-#include "QSizeGrip"
-#include "QRubberBand"
-class flyCrop;
-/**
-        \class Resizable_rubber_band
-        \brief http://stackoverflow.com/questions/19066804/implementing-resize-handles-on-qrubberband-is-qsizegrip-relevant
-*/
-class cropRubber : public QWidget 
-{
-public:
-                cropRubber(flyCrop *fly,QWidget* parent = 0);
-  flyCrop       *flyParent;
-  int           nestedIgnore;
 
-public:
-  QRubberBand* rubberband;
-  void resizeEvent(QResizeEvent *);
-  void blockSignals(bool sig)
-  {
-      rubberband->blockSignals(sig);
-  }  
-};
+class flyCrop;
 
 class flyCrop : public ADM_flyDialogRgb
 {
@@ -40,7 +18,7 @@ class flyCrop : public ADM_flyDialogRgb
                                     ADM_QCanvas *canvas, QSlider *slider);
     virtual   ~flyCrop();
 protected:
-    cropRubber  *rubber;
+    ADM_rubberControl *rubber;
     bool        blockChanges(bool block);
     int         autoRun(uint8_t *in,int w,int h, int increment);
     int         autoRunV(uint8_t *in,int w,int h, int increment);

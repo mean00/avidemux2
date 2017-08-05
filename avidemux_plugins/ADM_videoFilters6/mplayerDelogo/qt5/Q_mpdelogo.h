@@ -3,7 +3,6 @@
 #include "ADM_image.h"
 #include "DIA_flyDialogQt4.h"
 #include "DIA_flyMpDelogo.h"
-#include "QMouseEvent"
 
 /**
  * 
