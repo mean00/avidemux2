@@ -31,14 +31,15 @@ void ADM_QRubberBand::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QPen pen;
-    pen.setWidth(3);
+    pen.setWidth(2);
     QColor color(Qt::red);
     pen.setColor(color);
     painter.setPen(pen);
-    painter.drawRect(rect());
     QRect adjustedRect = rect().adjusted(1,1,-1,-1);
+    painter.drawRect(adjustedRect);
     color.setAlpha(80);
     QBrush brush = QBrush(color, Qt::DiagCrossPattern);
+    adjustedRect = adjustedRect.adjusted(1,1,-1,-1);
     painter.fillRect(adjustedRect, brush);
     painter.end();
 }
