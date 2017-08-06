@@ -23,6 +23,6 @@ protected:
     int         autoRun(uint8_t *in,int w,int h, int increment);
     int         autoRunV(uint8_t *in,int w,int h, int increment);
 private:
-    uint32_t _ox,_oy,_ow,_oh;
+    int _ox,_oy,_ow,_oh;
 };
 
