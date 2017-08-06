@@ -52,6 +52,10 @@
  {
     rubber=new ADM_rubberControl(this,canvas);
     rubber->resize(width,height);
+    _ox=0;
+    _oy=0;
+    _ow=width/2;
+    _oh=height/2;
  }
  /**
   * 
@@ -72,26 +76,59 @@ flyMpDelogo::~flyMpDelogo()
  */
 bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
 {
-    aprintf("BandResized\n");        
+    bool leftGripMoved=false;
+    bool rightGripMoved=false;
+    if((x+w)==(_ox+_ow) && (y+h)==(_oy+_oh))
+        leftGripMoved=true;
+    if(x==_ox && y==_oy)
+        rightGripMoved=true;
+
+    _ox=x;
+    _oy=y;
+    _ow=w;
+    _oh=h;
+
+    if(leftGripMoved && rightGripMoved) // bogus event, ignore
+        return false;
+
     int nw,nh,nx,ny;
-    
-    delogo newParam;
-    
     double halfzoom=_zoom/2-0.01;
-    
-    newParam.lw=((double)w+halfzoom)/_zoom;
-    newParam.lh=((double)h+halfzoom)/_zoom;
-    newParam.xoff=((double)x+halfzoom)/_zoom;
-    newParam.yoff=((double)y+halfzoom)/_zoom;
-    
-    aprintf("%d x %d => %d x %d, %f\n",param.lw,param.lh,newParam.lw,newParam.lh,_zoom);
-    
-    param.lw=newParam.lw;
-    param.lh=newParam.lh;
-    param.xoff=newParam.xoff;
-    param.yoff=newParam.yoff;
-    
-    upload(false);
+    nw=(int)(((double)w-halfzoom)/_zoom);
+    nh=(int)(((double)h-halfzoom)/_zoom);
+    nx=(int)(((double)x+halfzoom)/_zoom);
+    ny=(int)(((double)y+halfzoom)/_zoom);
+
+    aprintf("%d x %d => %d x %d, normalized offsets nx=%d, ny=%d, zoom=%f\n",param.lw,param.lh,nw,nh,nx,ny,_zoom);
+    bool resizeRubber=false;
+    if(nx<0 || ny<0 || nx+nw>_w || ny+nh>_h)
+        resizeRubber=true;
+
+    uint32_t right=param.xoff+param.lw;
+    uint32_t bottom=param.yoff+param.lh;
+
+    if(nx+nw>_w)
+        nw=_w-nx;
+    if(ny+nh>_h)
+        nh=_h-ny;
+
+    if(nx<0) nx=0;
+    if(ny<0) ny=0;
+
+    if(leftGripMoved)
+    {
+        param.xoff=nx;
+        param.yoff=ny;
+        param.lw=right-nx;
+        param.lh=bottom-ny;
+    }
+
+    if(rightGripMoved)
+    {
+        param.lw=nw;
+        param.lh=nh;
+    }
+
+    upload(false,resizeRubber);
     //
     return true;
 }
@@ -151,10 +188,6 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
         SPINENTRY(spinY)->setMaximum(height);
         SPINENTRY(spinH)->setMaximum(height);
 
-        SPINENTRY(spinX)->setSingleStep(5);
-        SPINENTRY(spinY)->setSingleStep(5);
-        SPINENTRY(spinW)->setSingleStep(5);
-        SPINENTRY(spinH)->setSingleStep(5);
         aprintf("Uploading\n");
         myCrop->upload();
         myCrop->sliderChanged();
@@ -258,21 +291,6 @@ void Ui_mpdelogoWindow::valueChanged( int f )
      }
  }
 
-/**
- * 
- * @param x
- * @param y
- * @return 
- */
-bool flyMpDelogo::setXy(int x,int y)
-{
-      printf("setXy\n");
-      param.xoff= x;
-      param.yoff= y;
-      upload(false);
-      return true;
-}
-
 #define MYSPIN(x) w->x
 //************************
 /**
@@ -289,7 +307,7 @@ bool flyMpDelogo::blockChanges(bool block)
      return true;
 }
 
-uint8_t flyMpDelogo::upload(bool redraw)
+uint8_t flyMpDelogo::upload(bool redraw, bool toRubber)
 {
     Ui_mpdelogoDialog *w=(Ui_mpdelogoDialog *)_cookie;
     if(!redraw)
@@ -303,6 +321,14 @@ uint8_t flyMpDelogo::upload(bool redraw)
     MYSPIN(spinW)->setValue(param.lw);
     MYSPIN(spinH)->setValue(param.lh);   
     MYSPIN(spinBand)->setValue(param.band);   
+
+    if(toRubber)
+    {
+        rubber->nestedIgnore++;
+        rubber->resize((float)(param.lw)*_zoom,(float)(param.lh)*_zoom);
+        rubber->move((float)(param.xoff)*_zoom,(float)(param.yoff)*_zoom);
+        rubber->nestedIgnore--;
+    }
 
     if(!redraw)
     {

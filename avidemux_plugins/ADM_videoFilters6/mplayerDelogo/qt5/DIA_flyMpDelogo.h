@@ -34,13 +34,12 @@ public:
 public:
    uint8_t     processYuv(ADMImage* in, ADMImage *out);
    uint8_t     download(void);
-   uint8_t     upload() {return upload(true);}
-   uint8_t     upload(bool update);
+   uint8_t     upload() {return upload(true,true);}
+   uint8_t     upload(bool update, bool toRubber);
                flyMpDelogo (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, QSlider *slider);
                 
    virtual     ~flyMpDelogo() ;
-   bool         setXy(int x,int y);
    bool         setPreview(bool onoff)
                 {
                     preview=onoff;
@@ -51,5 +50,7 @@ public:
                     return true;
                 }
     bool    bandResized(int x,int y,int w, int h);
+private:
+    int _ox,_oy,_ow,_oh;
 };
 // EOF
