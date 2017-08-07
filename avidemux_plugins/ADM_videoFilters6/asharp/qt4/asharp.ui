@@ -92,7 +92,7 @@
     </spacer>
    </item>
    <item row="5" column="0" colspan="4">
-    <widget class="QSlider" name="horizontalSlider">
+    <widget class="ADM_QSlider" name="horizontalSlider">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -143,6 +143,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ADM_QSlider</class>
+   <extends>QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
