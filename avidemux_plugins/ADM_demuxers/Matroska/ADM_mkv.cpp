@@ -149,6 +149,11 @@ uint8_t mkvHeader::open(const char *name)
     }
   // update some infos
   _videostream.dwLength= _mainaviheader.dwTotalFrames=_tracks[0].index.size();;
+    if(! _videostream.dwLength)
+    {
+        ADM_warning("No image found in this video\n");
+        return 0;
+    }
 
     if(!isH264Compatible(_videostream.fccHandler) && !isMpeg4Compatible(_videostream.fccHandler) && !isMpeg12Compatible(_videostream.fccHandler))
     {
