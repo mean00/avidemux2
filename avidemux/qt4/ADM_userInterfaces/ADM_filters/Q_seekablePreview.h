@@ -19,6 +19,7 @@
 #include "ui_seekablePreview.h"
 
 #include "ADM_assert.h"
+#include "ADM_toolkitQt.h"
 #include "DIA_flyDialogQt4.h"
 #include "../ADM_dialog/DIA_flyPreview.h"
 #include <QTimer>
