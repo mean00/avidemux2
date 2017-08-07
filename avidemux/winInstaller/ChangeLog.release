@@ -1,5 +1,16 @@
 <html><head><link rel=stylesheet type=text/css href=change.css></head>
 <body>Avidemux Changelog:<br>
-<table><tr><th>Message</th><th>Commit</th></tr>
-<tr><td> Dummy Release Message </td><td>Dummy</td></tr>
+<li>Core       : ffmpeg switched to the 3.3.x branch</li>
+<li>Editing    : Fixed frame computation bug that led to bad cutting (euma)</li>
+<li>i18n       : KO translation (sheppaul)</li>
+<li>win32      : Put log files in the local folder (achim71)</li>
+<li>Jobs       : Fix name of the executable search</li>
+<li>UI         : On the fly resize preview window (euma)</li>
+<li>Filter     : eq2: Better UI (euma)</li>
+<li>Decoding   : Fix VP9 decoding</li>
+<li>Filter     : Using rubber bands for crop too (me+euma)</li>
+<li>Build      : Redone packaging on OsX</li>
+<li>Decoding   : x265/dxva2 blacklisted on win32, active on win64</li>
+<li>New filter : ADM ivtc</li>
+<li>Audio      : Distinguish between AC3 and EAC3 when importing</li>
 </body>
