@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    height: 100%;
+    font-family: Tahoma,Helvetica,Arial,sans-serif;
+    color: #333;
+}
+
+#inner {
+    margin: 0% 1% 0% 1%;
+}
+
+h1 {
+    padding: 0.5em;
+    font-family: Helvetica,Arial,sans-serif;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #1B57B1;
+    vertical-align: middle;
+    margin: 1em;
+}
+
+ul li {
+    list-style: inside;
+    padding: 0.3em 0.5em;
+    margin: 0.2em;
+    border: 1px solid #ddd;
+    border-radius: 0.2em;
+    font-size: 0.8em;
+}
+
+ul li:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+ul li:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+tab {
+    padding-left: 8em;
+}
+

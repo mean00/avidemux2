@@ -1,16 +1,29 @@
-<html><head><link rel=stylesheet type=text/css href=change.css></head>
-<body>Avidemux Changelog:<br>
-<li>Core       : ffmpeg switched to the 3.3.x branch</li>
-<li>Editing    : Fixed frame computation bug that led to bad cutting (euma)</li>
-<li>i18n       : KO translation (sheppaul)</li>
-<li>win32      : Put log files in the local folder (achim71)</li>
-<li>Jobs       : Fix name of the executable search</li>
-<li>UI         : On the fly resize preview window (euma)</li>
-<li>Filter     : eq2: Better UI (euma)</li>
-<li>Decoding   : Fix VP9 decoding</li>
-<li>Filter     : Using rubber bands for crop too (me+euma)</li>
-<li>Build      : Redone packaging on OsX</li>
-<li>Decoding   : x265/dxva2 blacklisted on win32, active on win64</li>
-<li>New filter : ADM ivtc</li>
-<li>Audio      : Distinguish between AC3 and EAC3 when importing</li>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="changeRel.css">
+    <title>Avidemux Changelog</title>
+</head>
+<body>
+    <div id="inner">
+        <h1>Changes in Avidemux v2.6.20/21 – v2.7.0</h1>
+        <ul>
+            <li><strong>Core:</strong><br><tab>FFmpeg switched to the 3.3.x branch</tab></li>
+            <li><strong>Editing:</strong><br><tab>Fixed frame computation bug that led to bad cutting (euma)</tab></li>
+            <li><strong>i18n:</strong><br><tab>Korean translation (sheppaul)</tab></li>
+            <li><strong>win32:</strong><br><tab>Put log files into the local folder (achim71)</tab></li>
+            <li><strong>Jobs:</strong><br><tab>Fix name of the executable search</tab></li>
+            <li><strong>UI:</strong><br><tab>Steplessly zoom paused video when the window is resized (euma)</tab></li>
+            <li><strong>UI:</strong><br><tab>Added Ctrl+Shift+C shortcut to copy the current PTS to clipboard (euma)</tab></li>
+            <li><strong>Filter:</strong><br><tab>eq2: UI improvements (euma)</tab></li>
+            <li><strong>Decoding:</strong><br><tab>Fix VP9 decoding</tab></li>
+            <li><strong>Filter:</strong><br><tab>Using rubber bands for crop too (me+euma)</tab></li>
+            <li><strong>Build:</strong><br><tab>Redone packaging on macOS</tab></li>
+            <li><strong>Decoding:</strong><br><tab>HEVC decoding via DXVA2 blacklisted on win32, active on win64</tab></li>
+            <li><strong>New Filter:</strong><br><tab>ADM ivtc</tab></li>
+            <li><strong>Audio:</strong><br><tab>Distinguish between AC3 and EAC3 when importing</tab></li>
+        </ul>
+    </div>
 </body>
+</html>
