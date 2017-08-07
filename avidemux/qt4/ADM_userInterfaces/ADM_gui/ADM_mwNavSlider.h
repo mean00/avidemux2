@@ -16,12 +16,13 @@ Custom slider
 #include "QWheelEvent"
 #include "QSlider"
 #include "ADM_inttype.h"
+#include "ADM_toolkitQt.h"
 
 /**
-    \class ADM_QSlider
+    \class ADM_mwNavSlider
 
 */
-class ADM_QSlider : public QSlider
+class ADM_mwNavSlider : public ADM_QSlider
 {
     Q_OBJECT
 protected:
@@ -29,7 +30,7 @@ protected:
 	void paintEvent(QPaintEvent *event);
 
 public:
-	ADM_QSlider(QWidget *parent = 0); 
+	ADM_mwNavSlider(QWidget *parent = 0);
 
 	void setMarkerA(uint64_t frameIndex);
 	void setMarkerB(uint64_t frameIndex);

@@ -10,7 +10,7 @@
 #include <QtCore/QTimer>
 #include <string>
 
-#include "ADM_qslider.h"
+#include "ADM_mwNavSlider.h"
 #include "T_thumbSlider.h"
 #include "ui_gui2.h"
 #include "gui_action.hxx"

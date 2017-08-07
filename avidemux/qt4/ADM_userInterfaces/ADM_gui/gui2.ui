@@ -919,7 +919,7 @@
       <number>9</number>
      </property>
      <item>
-      <widget class="ADM_QSlider" name="horizontalSlider">
+      <widget class="ADM_mwNavSlider" name="horizontalSlider">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -1914,9 +1914,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ADM_QSlider</class>
+   <class>ADM_mwNavSlider</class>
    <extends>QSlider</extends>
-   <header>ADM_qslider.h</header>
+   <header>ADM_mwNavSlider.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
