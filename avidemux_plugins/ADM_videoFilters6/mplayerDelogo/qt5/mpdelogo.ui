@@ -161,7 +161,7 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2"/>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="ADM_QSlider" name="horizontalSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -181,6 +181,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ADM_QSlider</class>
+   <extends>QSlider</extends>
+   <header>ADM_toolkitQt.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>spinX</tabstop>
   <tabstop>spinW</tabstop>
