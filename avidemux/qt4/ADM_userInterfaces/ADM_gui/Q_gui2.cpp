@@ -88,7 +88,7 @@ extern int A_appendVideo(const char *name);
 int SliderIsShifted=0;
 static void setupMenus(void);
 static int shiftKeyHeld=0;
-static ADM_QSlider *slider=NULL;
+static ADM_mwNavSlider *slider=NULL;
 static int _upd_in_progres=0;
 static int currentFps = 0;
 static int frameCount = 0;
@@ -380,7 +380,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     // Slider
     slider=ui.horizontalSlider;
-        ADM_QSlider *qslider=(ADM_QSlider *)slider;
+        ADM_mwNavSlider *qslider=(ADM_mwNavSlider *)slider;
     slider->setMinimum(0);
     slider->setMaximum(ADM_LARGE_SCALE);
 #if 1

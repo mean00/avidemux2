@@ -291,7 +291,7 @@ HEADERS = \
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/FileAction.h \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/Q_dummyWidget.h \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/T_thumbSlider.h \ 
-../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_qslider.h \ 
+../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_mwNavSlider.h \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_systemTrayProgress.h \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/Q_gui2.h \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/T_vumeter.h \ 
@@ -974,7 +974,7 @@ SOURCES = \
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/Q_gui2.cpp \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/T_thumbSlider.cpp \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/Q_gui2_menu.cpp \ 
-../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_qslider.cpp \ 
+../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_mwNavSlider.cpp \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_systemTrayProgress_win32.cpp \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/ADM_qtray.cpp \ 
 ../../../avidemux/qt4/ADM_userInterfaces/ADM_gui/Q_dummyWidget.cpp \ 
