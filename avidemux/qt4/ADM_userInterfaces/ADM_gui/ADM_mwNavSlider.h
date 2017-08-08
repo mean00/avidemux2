@@ -13,32 +13,27 @@ Custom slider
 ***************************************************************************/
 
 #pragma once
-#include "QWheelEvent"
-#include "QSlider"
-#include "ADM_inttype.h"
 #include "ADM_toolkitQt.h"
 
 /**
     \class ADM_mwNavSlider
-
 */
 class ADM_mwNavSlider : public ADM_QSlider
 {
     Q_OBJECT
 protected:
-	uint64_t totalDuration, markerATime, markerBTime;
-	void paintEvent(QPaintEvent *event);
+    uint64_t totalDuration, markerATime, markerBTime;
+    void paintEvent(QPaintEvent *event);
 
 public:
-	ADM_mwNavSlider(QWidget *parent = 0);
+    ADM_mwNavSlider(QWidget *parent);
 
-	void setMarkerA(uint64_t frameIndex);
-	void setMarkerB(uint64_t frameIndex);
-	void setMarkers(uint64_t frameIndexA, uint64_t frameIndexB);
-	void setTotalDuration(uint64_t duration);
-        void wheelEvent(QWheelEvent *e);
+    void setMarkerA(uint64_t frameIndex);
+    void setMarkerB(uint64_t frameIndex);
+    void setMarkers(uint64_t frameIndexA, uint64_t frameIndexB);
+    void setTotalDuration(uint64_t duration);
+    void wheelEvent(QWheelEvent *e);
 signals:
-        void sliderAction(int value);        
+    void sliderAction(int value);
 };
-
 
