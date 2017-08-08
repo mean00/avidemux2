@@ -16,13 +16,13 @@ Custom slider
 #include "ADM_inttype.h"
 #include <QPainter>
 #include <QSlider>
-#include "ADM_qslider.h"
+#include "ADM_mwNavSlider.h"
 #include "ADM_assert.h"
 /**
     \fn ADM_QSlider
 */
 
-ADM_QSlider::ADM_QSlider(QWidget *parent) : QSlider(parent)
+ADM_mwNavSlider::ADM_mwNavSlider(QWidget *parent) : ADM_QSlider(parent)
 {
    totalDuration= markerATime= markerBTime =0;
 	
@@ -30,7 +30,7 @@ ADM_QSlider::ADM_QSlider(QWidget *parent) : QSlider(parent)
 /**
     \fn paintEvent
 */
-void ADM_QSlider::paintEvent(QPaintEvent *event)
+void ADM_mwNavSlider::paintEvent(QPaintEvent *event)
 {
 	QSlider::paintEvent(event);	
 
@@ -58,21 +58,21 @@ void ADM_QSlider::paintEvent(QPaintEvent *event)
     \fn setMarkerA
 */
 
-void ADM_QSlider::setMarkerA(uint64_t frameIndex)
+void ADM_mwNavSlider::setMarkerA(uint64_t frameIndex)
 {
 	setMarkers(frameIndex, markerBTime);
 }
 /**
     \fn setMarkerB
 */
-void ADM_QSlider::setMarkerB(uint64_t frameIndex)
+void ADM_mwNavSlider::setMarkerB(uint64_t frameIndex)
 {
 	setMarkers(markerATime, frameIndex);
 }
 /**
     \fn setMarkers
 */
-void ADM_QSlider::setMarkers(uint64_t frameIndexA, uint64_t frameIndexB)
+void ADM_mwNavSlider::setMarkers(uint64_t frameIndexA, uint64_t frameIndexB)
 {
 	if (frameIndexA > totalDuration)
 		printf("[ADM_QSlider] Marker A is out of bounds (%" PRIu64", %" PRIu64")\n", markerATime, totalDuration);
@@ -89,7 +89,7 @@ void ADM_QSlider::setMarkers(uint64_t frameIndexA, uint64_t frameIndexB)
 /**
         \fn setTotalDuration
 */
-void ADM_QSlider::setTotalDuration(uint64_t duration)
+void ADM_mwNavSlider::setTotalDuration(uint64_t duration)
 {
 	totalDuration = duration;
 	repaint();
@@ -97,7 +97,7 @@ void ADM_QSlider::setTotalDuration(uint64_t duration)
 /*
     \fn Intercept Event
  */
-void ADM_QSlider::wheelEvent(QWheelEvent *e)
+void ADM_mwNavSlider::wheelEvent(QWheelEvent *e)
 {
 #if QT_VERSION < QT_VERSION_CHECK(5,0,0)
     //printf("Wheel : %d\n",e->delta());

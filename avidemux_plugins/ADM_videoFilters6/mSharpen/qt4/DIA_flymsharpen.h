@@ -30,7 +30,7 @@ public:
    uint8_t     download(void);
    uint8_t     upload();
                flyMSharpen (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
                 
    virtual     ~flyMSharpen() ;
 };

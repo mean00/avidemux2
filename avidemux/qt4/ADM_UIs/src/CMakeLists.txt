@@ -14,6 +14,7 @@ SET(${ADM_LIB}_T
         T_QCanvas.cpp
         T_qtFactory.cpp
         T_RubberControl.cpp
+        T_QSlider.cpp
 )
 if(USE_OPENGL)
         INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}//ADM_openGL/include/)

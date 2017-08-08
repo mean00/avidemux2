@@ -15,7 +15,7 @@ class flyCrop : public ADM_flyDialogRgb
    uint8_t    autocrop(void);
    bool       bandResized(int x,int y,int w, int h);
               flyCrop (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
-                                    ADM_QCanvas *canvas, QSlider *slider);
+                                    ADM_QCanvas *canvas, ADM_QSlider *slider);
     virtual   ~flyCrop();
 protected:
     ADM_rubberControl *rubber;

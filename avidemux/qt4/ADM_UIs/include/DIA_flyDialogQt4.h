@@ -21,11 +21,10 @@
 #include "ADM_image.h"
 
 #include "ADM_coreVideoFilter6_export.h"
-
+#include "ADM_toolkitQt.h"
 
 #include <QWidget>
 #include <QDialog>
-#include <QSlider>
 #include <QFrame>
 #include <QTimer>
 #include <QDialog>
@@ -100,12 +99,12 @@ class ADM_UIQT46_EXPORT ADM_flyDialog : public QObject
 
   public:
           void          *_cookie; // whatever, usually the ui_xxx component
-          QSlider       *_slider; // widget
+          ADM_QSlider   *_slider; // widget
           ADM_QCanvas   *_canvas; // Drawing zone
 
   public:
                             ADM_flyDialog(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                 ADM_QCanvas *canvas, QSlider *slider, ResizeMethod resizeMethod);
+                                 ADM_QCanvas *canvas, ADM_QSlider *slider, ResizeMethod resizeMethod);
           virtual           ~ADM_flyDialog(void);    
           void               recomputeSize(void);
           virtual bool       disableZoom(void);
@@ -175,7 +174,7 @@ public:
           virtual    void resetScaler(void);
 
                                 ADM_flyDialogYuv(QDialog *parent,uint32_t width, uint32_t height, ADM_coreVideoFilter *in,
-                                ADM_QCanvas *canvas, QSlider *slider, 
+                                ADM_QCanvas *canvas, ADM_QSlider *slider,
                                 ResizeMethod resizeMethod);
             virtual             ~ADM_flyDialogYuv();
             virtual uint8_t    processYuv(ADMImage* in, ADMImage *out) =0;
@@ -198,7 +197,7 @@ public:
           virtual    void resetScaler(void);
 
                             ADM_flyDialogRgb(QDialog *parent,uint32_t width, uint32_t height, 
-                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  QSlider *slider, ResizeMethod resizeMethod);
+                                 ADM_coreVideoFilter *in,  ADM_QCanvas *canvas,  ADM_QSlider *slider, ResizeMethod resizeMethod);
            virtual          ~ADM_flyDialogRgb();
            virtual uint8_t  processRgb(uint8_t *in, uint8_t *out) =0;
 };
