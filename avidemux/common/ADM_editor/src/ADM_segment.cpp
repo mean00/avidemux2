@@ -114,7 +114,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
   uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
   int firstNonZeroDtsFrame;
-  ADM_info("[editor] Original frame increment %s\n",ADM_us2plain(ref->timeIncrementInUs));
+  ADM_info("[editor] Original frame increment %s %d\n",ADM_us2plain(ref->timeIncrementInUs),(int)ref->timeIncrementInUs);
   uint64_t minDelta=100000;
   uint64_t maxDelta=0;
   for (int frame=0; frame<info.nb_frames; frame++)
@@ -135,8 +135,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           firstNonZeroDtsFrame=frame;
       }
   }
-  ADM_info("[Editor] min increment %s\n",ADM_us2plain(minDelta));
-  ADM_info("[Editor] max increment %s\n",ADM_us2plain(maxDelta));
+  ADM_info("[Editor] min increment %s - %d\n",ADM_us2plain(minDelta),(int)minDelta);
+  ADM_info("[Editor] max increment %s - %d\n",ADM_us2plain(maxDelta),(int)maxDelta);
   
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
