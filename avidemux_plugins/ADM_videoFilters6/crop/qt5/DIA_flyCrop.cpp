@@ -120,8 +120,9 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     _ow=w;
     _oh=h;
 
-    if(leftHandleMoved && rightHandleMoved) // bogus event, ignore
-        return false;
+    bool ignore=false;
+    if(leftHandleMoved && rightHandleMoved) // bogus event
+        ignore=true;
 
     int normX, normY, normW, normH;
     normX=(int)(((double)x+halfzoom)/_zoom);
@@ -135,6 +136,12 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     {
         resizeRubber=true;
         aprintf("rubberband out of bounds, will be resized back\n");
+    }
+
+    if(ignore)
+    {
+        upload(false,resizeRubber);
+        return false;
     }
 
     if(rightHandleMoved)
