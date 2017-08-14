@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko_KR">
+<TS version="2.0" language="ko_KR">
 <context>
     <name>ADM_Composer</name>
     <message>
@@ -945,11 +945,11 @@ Drop timing informations ?</source>
     <message>
         <location line="+10"/>
         <source>© 2001 - 2017  Mean</source>
-        <translation type="unfinished"></translation>
+        <translation>© 2001 - 2017  Mean</translation>
     </message>
     <message>
         <source>© 2001 - 2016  Mean</source>
-        <translation type="vanished">© 2001 - 2016  Mean</translation>
+        <translation>© 2001 - 2016  Mean</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -3102,12 +3102,12 @@ Installation mismatch</source>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+43"/>
         <source>ADM ivtc.</source>
-        <translation type="unfinished"></translation>
+        <translation>ADM ivtc.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>All in one ivtc.</source>
-        <translation type="unfinished"></translation>
+        <translation>일체형 ivtc.</translation>
     </message>
 </context>
 <context>
@@ -5929,7 +5929,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+1"/>
         <source>_Remove duplicate:</source>
-        <translation type="unfinished"></translation>
+        <translation>중복 제거:</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -6627,11 +6627,11 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>Luma _Temporal strength:</source>
-        <translation type="vanished">루마 시간 강도:</translation>
+        <translation>루마 시간 강도:</translation>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
+        <translation>MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -6668,7 +6668,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>MPlayer denoise3d</source>
-        <translation type="vanished">MPlayer denoise3d</translation>
+        <translation>MPlayer denoise3d</translation>
     </message>
 </context>
 <context>
@@ -6680,7 +6680,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <source>No stts table</source>
-        <translation type="vanished">Stts 테이블이 없습니다</translation>
+        <translation>Stts 테이블이 없습니다</translation>
     </message>
 </context>
 <context>
@@ -8293,7 +8293,7 @@ Ready.
     </message>
     <message>
         <source>00:00:00.000</source>
-        <translation type="vanished">00:00:00.000</translation>
+        <translation>00:00:00.000</translation>
     </message>
     <message>
         <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
@@ -8332,7 +8332,7 @@ Ready.
     </message>
     <message>
         <source>A&amp;utoZoom</source>
-        <translation type="vanished">자동 확대/축소</translation>
+        <translation>자동 확대/축소</translation>
     </message>
 </context>
 <context>
