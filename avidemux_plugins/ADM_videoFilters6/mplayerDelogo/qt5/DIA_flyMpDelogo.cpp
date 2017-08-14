@@ -88,8 +88,9 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     _ow=w;
     _oh=h;
 
-    if(leftGripMoved && rightGripMoved) // bogus event, ignore
-        return false;
+    bool ignore=false;
+    if(leftGripMoved && rightGripMoved) // bogus event
+        ignore=true;
 
     int nw,nh,nx,ny;
     double halfzoom=_zoom/2-0.01;
@@ -102,6 +103,12 @@ bool    flyMpDelogo::bandResized(int x,int y,int w, int h)
     bool resizeRubber=false;
     if(nx<0 || ny<0 || nx+nw>_w || ny+nh>_h)
         resizeRubber=true;
+
+    if(ignore)
+    {
+        upload(false,resizeRubber);
+        return false;
+    }
 
     uint32_t right=param.xoff+param.lw;
     uint32_t bottom=param.yoff+param.lh;
@@ -351,11 +358,6 @@ uint8_t flyMpDelogo::download(void)
         param.lw= MYSPIN(spinW)->value();
         param.lh= MYSPIN(spinH)->value();
         param.band= MYSPIN(spinBand)->value();
-        rubber->nestedIgnore++;
-        blockChanges(true);
-        rubber->resize(_zoom*(float)param.lw,_zoom*(float)param.lh);
-        blockChanges(false);
-        rubber->nestedIgnore--;
         printf(">>>Download event : %d x %d , %d x %d\n",param.xoff,param.yoff,param.lw,param.lh);
         printf("Download\n");
         return true;

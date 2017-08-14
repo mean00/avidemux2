@@ -4437,12 +4437,12 @@ Drop timing informations ?</source>
 <context>
     <name>aboutDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+16"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+14"/>
         <source>About Avidemux</source>
         <translation type="unfinished">О программе</translation>
     </message>
     <message>
-        <location line="+94"/>
+        <location line="+112"/>
         <source>Multi-platform Video Editor</source>
         <translation type="unfinished">Мультиплатформенный видеоредактор</translation>
     </message>
@@ -4453,7 +4453,7 @@ Drop timing informations ?</source>
     </message>
     <message>
         <location line="+29"/>
-        <source>© 2001 - 2016  Mean</source>
+        <source>© 2001 - 2017  Mean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4462,7 +4462,7 @@ Drop timing informations ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+45"/>
         <source>&amp;License</source>
         <translation type="unfinished">&amp;Лицензия</translation>
     </message>
@@ -6762,6 +6762,19 @@ Installation mismatch</source>
     </message>
 </context>
 <context>
+    <name>admIvtc</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+43"/>
+        <source>ADM ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>All in one ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>aften</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="+240"/>
@@ -7654,36 +7667,43 @@ Do you want to load it  ?
     <name>cropDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt4/crop.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+14"/>
         <source>Crop</source>
         <translation>Кадрирование</translation>
     </message>
     <message>
         <location line="+88"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+88"/>
         <source>Reset</source>
         <translation>Сброс</translation>
     </message>
     <message>
         <location line="+58"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+58"/>
         <source>Auto Crop</source>
         <translation>Автокадрирование</translation>
     </message>
     <message>
         <location line="-108"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="-108"/>
         <source>Right:</source>
         <translation>Справа:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Top:</source>
         <translation>Сверху:</translation>
     </message>
     <message>
         <location line="+64"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+64"/>
         <source>Bottom:</source>
         <translation>Снизу:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Left:</source>
         <translation>Слева:</translation>
     </message>
@@ -9709,7 +9729,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>ivtcRemover</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+86"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+91"/>
         <source>Remove IVTC dupe.</source>
         <translation type="unfinished">Удалить IVTC dupe.</translation>
     </message>
@@ -9719,37 +9739,49 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Удалить удвоенные кадры после ivtc.</translation>
     </message>
     <message>
-        <location line="+296"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+134"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+333"/>
         <source>_Noise:</source>
         <translation type="unfinished">Шум:</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>_Show:</source>
         <translation type="unfinished">_Показать:</translation>
     </message>
     <message>
+        <location line="+1"/>
+        <source>_Remove duplicate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+4"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+4"/>
         <source>Full</source>
         <translation type="unfinished">Полностью</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>Fast</source>
         <translation type="unfinished">Быстро</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>VeryFast</source>
         <translation type="unfinished">Очень быстро</translation>
     </message>
     <message>
         <location line="+5"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+5"/>
         <source>_Frame rate change:</source>
         <translation type="unfinished">Изменить частоту:</translation>
     </message>
     <message>
         <location line="+3"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+3"/>
         <source>DupeRemover</source>
         <translation type="unfinished"></translation>
     </message>
@@ -10293,7 +10325,7 @@ I will assume it has and try to continue</source>
         <translation type="unfinished">Добавить на видео логотип с альфа-наложением.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+104"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+110"/>
         <source>Select Logo Image</source>
         <translation type="unfinished">Выбрать изображение для логотипа</translation>
     </message>
@@ -10689,14 +10721,12 @@ I will assume it has and try to continue</source>
     <name>mp4demuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+791"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp.orig" line="+735"/>
         <source>Problem reading SVQ3 headers</source>
         <translation type="unfinished">Ошибка чтения заголовков SVQ3</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="+343"/>
         <source>No stts table</source>
-        <translation type="unfinished">Нет таблицы stts</translation>
+        <translation type="obsolete">Нет таблицы stts</translation>
     </message>
 </context>
 <context>
@@ -11380,12 +11410,12 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+210"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+211"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Новая версия&lt;/b&gt;&lt;br&gt;Версия %1&lt;br&gt;Выпущена %2.&lt;br&gt;Доступна для загрузки с адреса&lt;br&gt;&lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt;Вы можете отключить автоматическую проверку обновлений в настройках.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+218"/>
+        <location line="+230"/>
         <source>Recent Files</source>
         <translation type="unfinished">Предыдущие файлы</translation>
     </message>
@@ -11395,7 +11425,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished">Предыдущие проекты</translation>
     </message>
     <message>
-        <location line="+610"/>
+        <location line="+627"/>
         <source>Play/Stop</source>
         <translation type="unfinished">Старт/стоп</translation>
     </message>
@@ -11460,7 +11490,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Вперед на 1 минуту</translation>
     </message>
     <message>
-        <location line="+607"/>
+        <location line="+605"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Приложение столкнулось с критической проблемой
@@ -11660,7 +11690,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation type="unfinished">Сделать частичным</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+224"/>
         <source>Load video filters..</source>
         <translation type="unfinished">Загрузить фильтры видео...</translation>
     </message>
@@ -12449,7 +12479,7 @@ Ready.
         <translation type="obsolete">дальше</translation>
     </message>
     <message>
-        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+75"/>
+        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
         <source>Back one minute</source>
         <translation type="unfinished">Назад на 1 мин</translation>
     </message>

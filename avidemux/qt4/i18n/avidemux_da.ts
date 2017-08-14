@@ -932,12 +932,12 @@ Drop timinginformationer?</translation>
 <context>
     <name>aboutDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+16"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+14"/>
         <source>About Avidemux</source>
         <translation>Om Avidemux</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+93"/>
         <source>Avidemux </source>
         <translation>Avidemux </translation>
     </message>
@@ -947,12 +947,17 @@ Drop timinginformationer?</translation>
         <translation>Multi-platform videoredigering</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+10"/>
+        <source>© 2001 - 2017  Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
         <source>http://www.avidemux.org</source>
         <translation>http://www.avidemux.org</translation>
     </message>
     <message>
-        <location line="+36"/>
+        <location line="+45"/>
         <source>&amp;License</source>
         <translation>&amp;Licens</translation>
     </message>
@@ -962,9 +967,8 @@ Drop timinginformationer?</translation>
         <translation>OK</translation>
     </message>
     <message>
-        <location line="-75"/>
         <source>© 2001 - 2016  Mean</source>
-        <translation>© 2001 - 2016  Mean</translation>
+        <translation type="vanished">© 2001 - 2016  Mean</translation>
     </message>
 </context>
 <context>
@@ -3112,6 +3116,19 @@ Vil du fortsætte alligevel?</translation>
     </message>
 </context>
 <context>
+    <name>admIvtc</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+43"/>
+        <source>ADM ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>All in one ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>aften</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="+240"/>
@@ -3930,36 +3947,43 @@ Vil du indlæse den?
     <name>cropDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt4/crop.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+14"/>
         <source>Crop</source>
         <translation>Beskær</translation>
     </message>
     <message>
         <location line="+38"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+38"/>
         <source>Right:</source>
         <translation>Højre:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Top:</source>
         <translation>Øverst:</translation>
     </message>
     <message>
         <location line="+43"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+43"/>
         <source>Reset</source>
         <translation>Nulstil</translation>
     </message>
     <message>
         <location line="+21"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+21"/>
         <source>Bottom:</source>
         <translation>Nederst:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Left:</source>
         <translation>Venstre:</translation>
     </message>
     <message>
         <location line="+30"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+30"/>
         <source>Auto Crop</source>
         <translation>Automatisk beskæring</translation>
     </message>
@@ -5918,7 +5942,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
 <context>
     <name>ivtcRemover</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+86"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+91"/>
         <source>Remove IVTC dupe.</source>
         <translation>Fjern IVTC-duplet.</translation>
     </message>
@@ -5928,37 +5952,49 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Fjern de duplikerede billeder som er tilstede efter ivtc.</translation>
     </message>
     <message>
-        <location line="+296"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+134"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+333"/>
         <source>_Noise:</source>
         <translation>_Støj:</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>_Show:</source>
         <translation>_Vis:</translation>
     </message>
     <message>
+        <location line="+1"/>
+        <source>_Remove duplicate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+4"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+4"/>
         <source>Full</source>
         <translation>Fuld</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>Fast</source>
         <translation>Hurtig</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>VeryFast</source>
         <translation>Meget hurtig</translation>
     </message>
     <message>
         <location line="+5"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+5"/>
         <source>_Frame rate change:</source>
         <translation>Ændring af _billedhastighed:</translation>
     </message>
     <message>
         <location line="+3"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+3"/>
         <source>DupeRemover</source>
         <translation>DupletFjerner</translation>
     </message>
@@ -6331,7 +6367,7 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
         <translation>Tilføj logo</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+104"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+110"/>
         <source>Select Logo Image</source>
         <translation>Vælg logobillede</translation>
     </message>
@@ -6676,14 +6712,12 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     <name>mp4demuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+791"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp.orig" line="+735"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Problem ved læsning af SVQ3-hoveder</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="+343"/>
         <source>No stts table</source>
-        <translation>Ingen STTS-tabel</translation>
+        <translation type="vanished">Ingen STTS-tabel</translation>
     </message>
 </context>
 <context>
@@ -7267,12 +7301,12 @@ Slet venligst idx2-filen og genåbn.</translation>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+210"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+211"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Ny version tilgængelig&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Udgivet den %2.&lt;br&gt;Du kan downloade den her&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Du kan deaktivere automatisk opdatering i præferencer.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+218"/>
+        <location line="+230"/>
         <source>Recent Files</source>
         <translation>Seneste filer</translation>
     </message>
@@ -7282,7 +7316,7 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>Seneste projekter</translation>
     </message>
     <message>
-        <location line="+610"/>
+        <location line="+627"/>
         <source>Play/Stop</source>
         <translation>Afspil/stop</translation>
     </message>
@@ -7347,7 +7381,7 @@ Slet venligst idx2-filen og genåbn.</translation>
         <translation>Fremad ét minut</translation>
     </message>
     <message>
-        <location line="+607"/>
+        <location line="+605"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Programmet er stødt på et fatalt problem
@@ -7547,7 +7581,7 @@ Den aktuelle redigering er blevet gemt og vil blive genindlæst ved næste start
         <translation>Gør delvist</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+224"/>
         <source>Load video filters..</source>
         <translation>Indlæs videofiltre..</translation>
     </message>
@@ -8303,7 +8337,7 @@ Klar.
         <translation type="vanished">00:00:00,000</translation>
     </message>
     <message>
-        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+75"/>
+        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
         <source>Back one minute</source>
         <translation type="unfinished">Baglæns ét minut</translation>
     </message>

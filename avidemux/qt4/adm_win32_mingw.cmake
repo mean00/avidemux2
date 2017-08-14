@@ -28,10 +28,18 @@ MACRO(ADM_POSTBUILD)
                                 ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.release 
                                 ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.html
                                 COPYONLY)
+                configure_file(
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css.release
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css
+                                COPYONLY)
         ELSE(RELEASE)
                 execute_process(
                         COMMAND ${BASH_EXECUTABLE} genlog.sh
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/
                         )
+                configure_file(
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css.devbuild
+                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css
+                                COPYONLY)
         ENDIF(RELEASE)
 ENDMACRO(ADM_POSTBUILD)

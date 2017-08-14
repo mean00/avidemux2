@@ -5313,12 +5313,17 @@ Drop timing informations ?</source>
 <context>
     <name>aboutDialog</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+16"/>
+        <location filename="../ADM_userInterfaces/ADM_dialog/about.ui" line="+14"/>
         <source>About Avidemux</source>
         <translation>Σχετικά με το Avidemux</translation>
     </message>
     <message>
-        <location line="+123"/>
+        <location line="+122"/>
+        <source>© 2001 - 2017  Mean</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+19"/>
         <source>http://www.avidemux.org</source>
         <translation>http://www.avidemux.org</translation>
     </message>
@@ -5333,12 +5338,11 @@ Drop timing informations ?</source>
         <translation>Πολλαπλών Πλατφορμών Επεξεργαστής Βίντεων</translation>
     </message>
     <message>
-        <location line="+10"/>
         <source>© 2001 - 2016  Mean</source>
-        <translation>© 2001 - 2016  Μυιν (Mean)</translation>
+        <translation type="vanished">© 2001 - 2016  Μυιν (Mean)</translation>
     </message>
     <message>
-        <location line="+55"/>
+        <location line="+74"/>
         <source>&amp;License</source>
         <translation>&amp;Άδεια</translation>
     </message>
@@ -7667,6 +7671,19 @@ Installation mismatch</source>
     </message>
 </context>
 <context>
+    <name>admIvtc</name>
+    <message>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+43"/>
+        <source>ADM ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>All in one ivtc.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>aften</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_audioEncoders/aften/audioencoder_aften.cpp" line="+240"/>
@@ -8574,36 +8591,43 @@ Do you want to load it  ?
     <name>cropDialog</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt4/crop.ui" line="+14"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+14"/>
         <source>Crop</source>
         <translation>Περιτομή</translation>
     </message>
     <message>
         <location line="+88"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+88"/>
         <source>Reset</source>
         <translation>Επαναφορά</translation>
     </message>
     <message>
         <location line="-50"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="-50"/>
         <source>Right:</source>
         <translation>Δεξιά:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Top:</source>
         <translation>Κορυφή:</translation>
     </message>
     <message>
         <location line="+64"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+64"/>
         <source>Bottom:</source>
         <translation>Κάτω:</translation>
     </message>
     <message>
         <location line="+7"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+7"/>
         <source>Left:</source>
         <translation>Αριστερά:</translation>
     </message>
     <message>
         <location line="+30"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/crop/qt5/crop.ui" line="+30"/>
         <source>Auto Crop</source>
         <translation>Αυτόματη Περιτομή</translation>
     </message>
@@ -10685,7 +10709,7 @@ I will assume it has and try to continue</source>
 <context>
     <name>ivtcRemover</name>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+86"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+91"/>
         <source>Remove IVTC dupe.</source>
         <translation>Απομάκρυνση του διπλότυπου IVTC.</translation>
     </message>
@@ -10695,37 +10719,49 @@ I will assume it has and try to continue</source>
         <translation>Απομάκρυνση των διπλότυπων στιγμιότυπων που υπάρχουν μετά το ivtc.</translation>
     </message>
     <message>
-        <location line="+296"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/admIvtc/ADM_admIvtc.cpp" line="+134"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+333"/>
         <source>_Noise:</source>
         <translation>_Θόρυβος:</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>_Show:</source>
         <translation>_Προβολή:</translation>
     </message>
     <message>
+        <location line="+1"/>
+        <source>_Remove duplicate:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location line="+4"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+4"/>
         <source>Full</source>
         <translation>Πλήρες</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>Fast</source>
         <translation>Γρήγορο</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+1"/>
         <source>VeryFast</source>
         <translation>ΠολύΓρήγορη</translation>
     </message>
     <message>
         <location line="+5"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+5"/>
         <source>_Frame rate change:</source>
         <translation>Αλλαγή _ταχύτητας στιγμιότυπων:</translation>
     </message>
     <message>
         <location line="+3"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/ivtcDupeRemover/ADM_ivtcDupeRemover.cpp" line="+3"/>
         <source>DupeRemover</source>
         <translation>ΑπομάκρυνσηΔιπλότυπου</translation>
     </message>
@@ -11249,7 +11285,7 @@ I will assume it has and try to continue</source>
         <translation>Τοποθέτηση ενός λογότυπου πάνω από το βίντεο, με ομαλή μείξη διαφάνειας.</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+104"/>
+        <location filename="../../../avidemux_plugins/ADM_videoFilters6/logo/qt4/Q_logo.cpp" line="+110"/>
         <source>Select Logo Image</source>
         <translation>Επιλογή Εικόνας Λογότυπου</translation>
     </message>
@@ -11649,14 +11685,12 @@ I will assume it has and try to continue</source>
     <name>mp4demuxer</name>
     <message>
         <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp" line="+791"/>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Analyzer.cpp.orig" line="+735"/>
         <source>Problem reading SVQ3 headers</source>
         <translation>Πρόβλημα στην ανάγνωση των κεφαλίδων SVQ3</translation>
     </message>
     <message>
-        <location filename="../../../avidemux_plugins/ADM_demuxers/Mp4/ADM_mp4Indexer.cpp.orig" line="+343"/>
         <source>No stts table</source>
-        <translation>Κανένας πίνακας stts</translation>
+        <translation type="vanished">Κανένας πίνακας stts</translation>
     </message>
 </context>
 <context>
@@ -12336,12 +12370,12 @@ Please delete the idx2 file and reopen.</source>
 <context>
     <name>qgui2</name>
     <message>
-        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+210"/>
+        <location filename="../ADM_userInterfaces/ADM_gui/Q_gui2.cpp" line="+211"/>
         <source>&lt;b&gt;New version available&lt;/b&gt;&lt;br&gt; Version %1&lt;br&gt;Released on %2.&lt;br&gt;You can download it here&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; You can disable autoupdate in preferences.&lt;/small&gt;</source>
         <translation>&lt;b&gt;Διαθέσιμη νέα έκδοση&lt;/b&gt;&lt;br&gt; Έκδοση %1&lt;br&gt;Εκδόθηκε στις %2.&lt;br&gt;Μπορείς να το κατεβάσεις από εδώ&lt;br&gt; &lt;a href=&apos;%3&apos;&gt;%3&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;small&gt; Μπορείς να απενεργοποιήσεις την αυτόματη ενημέρωση στις προτιμήσεις.&lt;/small&gt;</translation>
     </message>
     <message>
-        <location line="+218"/>
+        <location line="+230"/>
         <source>Recent Files</source>
         <translation>Πρόσφατα Αρχεία</translation>
     </message>
@@ -12351,7 +12385,7 @@ Please delete the idx2 file and reopen.</source>
         <translation>Πρόσφατες Εργασίες</translation>
     </message>
     <message>
-        <location line="+610"/>
+        <location line="+627"/>
         <source>Play/Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -12416,7 +12450,7 @@ Please delete the idx2 file and reopen.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+607"/>
+        <location line="+605"/>
         <source>The application has encountered a fatal problem
 The current editing has been saved and will be reloaded at next start</source>
         <translation>Η εφαρμογή αντιμετώπισε ένα μοιραίο πρόβλημα
@@ -12616,7 +12650,7 @@ The current editing has been saved and will be reloaded at next start</source>
         <translation>Να γίνει μερικό</translation>
     </message>
     <message>
-        <location line="+220"/>
+        <location line="+224"/>
         <source>Load video filters..</source>
         <translation>Φόρτωση μεταμορφωτών βίντεου...</translation>
     </message>
@@ -13408,7 +13442,7 @@ Ready.
         <translation type="vanished">επόμενο</translation>
     </message>
     <message>
-        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+75"/>
+        <location filename="../ADM_UIs/src/DIA_flyDialog.cpp" line="+74"/>
         <source>Back one minute</source>
         <translation type="unfinished"></translation>
     </message>
