@@ -8,21 +8,21 @@
 <body>
     <div id="inner">
         <h1>Changes in Avidemux v2.6.20/21 – v2.7.0</h1>
-        <ul>
-            <li><strong>Core:</strong><br><tab>FFmpeg switched to the 3.3.x branch</tab></li>
-            <li><strong>Editing:</strong><br><tab>Fixed frame computation bug that led to bad cutting (euma)</tab></li>
-            <li><strong>i18n:</strong><br><tab>Korean translation (sheppaul)</tab></li>
-            <li><strong>win32:</strong><br><tab>Put log files into the local folder (achim71)</tab></li>
-            <li><strong>Jobs:</strong><br><tab>Fix name of the executable search</tab></li>
-            <li><strong>UI:</strong><br><tab>Steplessly zoom paused video when the window is resized (euma)</tab></li>
-            <li><strong>UI:</strong><br><tab>Added Ctrl+Shift+C shortcut to copy the current PTS to clipboard (euma)</tab></li>
-            <li><strong>Filter:</strong><br><tab>eq2: UI improvements (euma)</tab></li>
-            <li><strong>Decoding:</strong><br><tab>Fix VP9 decoding</tab></li>
-            <li><strong>Filter:</strong><br><tab>Using rubber bands for crop too (me+euma)</tab></li>
-            <li><strong>Build:</strong><br><tab>Redone packaging on macOS</tab></li>
-            <li><strong>Decoding:</strong><br><tab>HEVC decoding via DXVA2 blacklisted on win32, active on win64</tab></li>
-            <li><strong>New Filter:</strong><br><tab>ADM ivtc</tab></li>
-            <li><strong>Audio:</strong><br><tab>Distinguish between AC3 and EAC3 when importing</tab></li>
+        <table>
+            <tr><td>Core:</td><td>FFmpeg switched to the 3.3.x branch</td></tr>
+            <tr><td>Editing:</td><td>Fixed frame computation bug that led to bad cutting (euma)</td></tr>
+            <tr><td>i18n:</td><td>Korean translation (sheppaul)</td></tr>
+            <tr><td>win32:</td><td>Put log files into the local folder (achim71)</td></tr>
+            <tr><td>Jobs:</td><td>Fix name of the executable search</td></tr>
+            <tr><td>UI:</td><td>Steplessly zoom paused video when the window is resized (euma)</td></tr>
+            <tr><td>UI:</td><td>Added Ctrl+Shift+C shortcut to copy the current PTS to clipboard (euma)</td></tr>
+            <tr><td>Filter:</td><td>eq2: UI improvements (euma)</td></tr>
+            <tr><td>Decoding:</td><td>Fix VP9 decoding</td></tr>
+            <tr><td>Filter:</td><td>Using rubber bands for crop too (me+euma)</td></tr>
+            <tr><td>Build:</td><td>Redone packaging on macOS</td></tr>
+            <tr><td>Decoding:</td><td>HEVC decoding via DXVA2 blacklisted on win32, active on win64</td></tr>
+            <tr><td>New Filter:</td><td>ADM ivtc</td></tr>
+            <tr><td>Audio:</td><td>Distinguish between AC3 and EAC3 when importing</td></tr>
         </ul>
     </div>
 </body>
