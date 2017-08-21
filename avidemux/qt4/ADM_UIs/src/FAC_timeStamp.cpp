@@ -27,15 +27,31 @@
 #include "ADM_vidMisc.h"
 
 extern const char *shortkey(const char *);
+
+class fixedNumDigitsSpinBox : public QSpinBox
+{
+public:
+    int numDigits;
+    fixedNumDigitsSpinBox(QWidget *parent) : QSpinBox(parent)
+    {
+        numDigits=2;
+    }
+
+    virtual QString textFromValue(int value) const
+    {
+        return QString("%1").arg(value, numDigits, 10, QChar('0'));
+    }
+};
+
 /**
  *      \struct myTimeWidget
  */
 typedef struct
 {
-    QSpinBox *hours;
-    QSpinBox *minutes;
-    QSpinBox *seconds;
-    QSpinBox *mseconds;
+    fixedNumDigitsSpinBox *hours;
+    fixedNumDigitsSpinBox *minutes;
+    fixedNumDigitsSpinBox *seconds;
+    fixedNumDigitsSpinBox *mseconds;
 }myTimeWidget;
 
 namespace ADM_Qt4Factory
@@ -90,19 +106,20 @@ diaElemTimeStamp::~diaElemTimeStamp()
 void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
 {
   myTimeWidget *myTWidget = new myTimeWidget;
-  myTWidget->hours=new QSpinBox((QWidget *)dialog);
-  myTWidget->minutes=new QSpinBox((QWidget *)dialog);
-  myTWidget->seconds=new QSpinBox((QWidget *)dialog);
-  myTWidget->mseconds=new QSpinBox((QWidget *)dialog);
+  myTWidget->hours=new fixedNumDigitsSpinBox((QWidget *)dialog);
+  myTWidget->minutes=new fixedNumDigitsSpinBox((QWidget *)dialog);
+  myTWidget->seconds=new fixedNumDigitsSpinBox((QWidget *)dialog);
+  myTWidget->mseconds=new fixedNumDigitsSpinBox((QWidget *)dialog);
   myWidget=(void *)myTWidget; 
-  
+
   myTWidget->minutes->setRange(0,59);
   myTWidget->seconds->setRange(0,59);
   myTWidget->mseconds->setRange(0,999);
-  
-  QLabel *textSemiColumn=new QLabel( "h:");
-  QLabel *textSemiColumn2=new QLabel( "m:");
-  QLabel *textComma=new QLabel( "s,");
+  myTWidget->mseconds->numDigits=3;
+
+  QLabel *textSemicolon1=new QLabel(":");
+  QLabel *textSemicolon2=new QLabel(":");
+  QLabel *textComma=new QLabel(",");
   
   QGridLayout *layout=(QGridLayout*) opaque;
   QHBoxLayout *hboxLayout = new QHBoxLayout();
@@ -115,23 +132,35 @@ void diaElemTimeStamp::setMe(void *dialog, void *opaque,uint32_t line)
   myTWidget->minutes->setValue(mm);
   myTWidget->seconds->setValue(ss);
   myTWidget->mseconds->setValue(msec);
- 
+
+  myTWidget->hours->setSuffix(QT_TRANSLATE_NOOP("timestamp"," h"));
+  myTWidget->minutes->setSuffix(QT_TRANSLATE_NOOP("timestamp"," m"));
+  myTWidget->seconds->setSuffix(QT_TRANSLATE_NOOP("timestamp"," s"));
+
+  myTWidget->hours->setAlignment(Qt::AlignRight);
+  myTWidget->minutes->setAlignment(Qt::AlignRight);
+  myTWidget->seconds->setAlignment(Qt::AlignRight);
+  myTWidget->mseconds->setAlignment(Qt::AlignRight);
+
  QLabel *text=new QLabel(myQtTitle,(QWidget *)dialog);
  text->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
  text->setBuddy(myTWidget->hours);
 
+    myTWidget->hours->selectAll();
+
  QSpacerItem *spacer = new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
  hboxLayout->addWidget(myTWidget->hours);
- hboxLayout->addWidget(textSemiColumn);
- 
+ hboxLayout->addWidget(textSemicolon1);
+
  hboxLayout->addWidget(myTWidget->minutes);
- hboxLayout->addWidget(textSemiColumn2);
- 
+ hboxLayout->addWidget(textSemicolon2);
+
  hboxLayout->addWidget(myTWidget->seconds);
+
  hboxLayout->addWidget(textComma);
  hboxLayout->addWidget(myTWidget->mseconds);
- 
+
  hboxLayout->addItem(spacer);
 
  layout->addWidget(text,line,0);
