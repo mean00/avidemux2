@@ -44,8 +44,6 @@ uint8_t DIA_Preferences(void)
 {
 uint32_t olddevice,newdevice;
 
-bool     use_odml=0;
-uint32_t autosplit=0;
 uint32_t render;
 
 bool     useSwap=0;
@@ -188,13 +186,6 @@ std::string currentSdlDriver=getSdlDriverName();
         if(!prefs->get(PRIORITY_PLAYBACK, &playbackPriority))
         playbackPriority=0;
 
-        // VCD/SVCD split point
-        if(!prefs->get(MPEGSPLIT_AUTOSPLIT, &autosplit))
-                autosplit=690;
-
-        // Open DML (Gmv)
-        if(!prefs->get(FEATURES_USE_ODML, &use_odml))
-          use_odml=0;
 #if defined(ALSA_SUPPORT) || defined (OSS_SUPPORT)
 		// Master or PCM for audio
         if(!prefs->get(FEATURES_AUDIOBAR_USES_MASTER, &useMaster))
@@ -225,7 +216,6 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         diaElemToggle allowAnyMpeg(&mpeg_no_limit,QT_TRANSLATE_NOOP("adm","_Accept non-standard audio frequency for DVD"));
-        diaElemToggle openDml(&use_odml,QT_TRANSLATE_NOOP("adm","Create _OpenDML files"));
         diaElemToggle resetEncoder(&loadDefault,QT_TRANSLATE_NOOP("adm","_Revert to saved default output settings on video load"));
         diaElemToggle enableAltShortcuts(&altKeyboardShortcuts,QT_TRANSLATE_NOOP("adm","_Enable alternative keyboard shortcuts"));
         diaElemToggle swapUpDownKeys(&swapUpDown,QT_TRANSLATE_NOOP("adm","Re_verse UP and DOWN arrow keys for navigation"));
@@ -284,9 +274,7 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuIndexPriority);
         framePriority.swallow(&menuPlaybackPriority);
 
-        diaElemUInteger autoSplit(&autosplit,QT_TRANSLATE_NOOP("adm","_Split MPEG files every (MB):"),10,4096);
-
-        diaElemToggle   togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
+        diaElemToggle togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
 
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
 
@@ -439,8 +427,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&autoSplit,&openDml,&allowAnyMpeg,&togTagMp3,&useLastReadAsTarget};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),5,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&allowAnyMpeg,&togTagMp3,&useLastReadAsTarget};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),3,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -594,10 +582,6 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(UPDATE_ENABLED,doAutoUpdate);
             // Video render
             prefs->set(VIDEODEVICE,render);
-            // Odml
-            prefs->set(FEATURES_USE_ODML, use_odml);
-                            // Split
-            prefs->set(MPEGSPLIT_AUTOSPLIT, autosplit);
 
             // number of threads
             prefs->set(FEATURES_THREADING_LAVC, lavcThreads);
