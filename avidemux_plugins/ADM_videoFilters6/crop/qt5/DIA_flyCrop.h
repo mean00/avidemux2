@@ -24,5 +24,6 @@ protected:
     int         autoRunV(uint8_t *in,int w,int h, int increment);
 private:
     int _ox,_oy,_ow,_oh;
+    void dimensions();
 };
 
