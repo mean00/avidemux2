@@ -251,6 +251,7 @@ uint8_t flyCrop::upload(bool redraw, bool toRubber)
     w->spinBoxRight->setValue(right);
     w->spinBoxTop->setValue(top);
     w->spinBoxBottom->setValue(bottom);
+    dimensions();
 
     if(toRubber)
     {
@@ -310,7 +311,22 @@ Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
         rubber->nestedIgnore--;
         blockChanges(false);
     }
+    dimensions();
     return true;
+}
+
+/**
+ * \fn dimensions
+ * \brief Fill in label displaying video size
+ */
+void flyCrop::dimensions(void)
+{
+    Ui_cropDialog *w=(Ui_cropDialog *)_cookie;
+    QString dim=QString(QT_TRANSLATE_NOOP("crop","Size: "));
+    dim+=QString::number(_w-left-right);
+    dim+=QString(" x ");
+    dim+=QString::number(_h-top-bottom);
+    w->label_5->setText(dim);
 }
 
 //
