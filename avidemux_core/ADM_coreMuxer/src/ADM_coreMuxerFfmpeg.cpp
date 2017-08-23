@@ -353,10 +353,20 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                               par->frame_size=1152;
                               par->codec_id = AV_CODEC_ID_MP3;
                               break;
+                  case WAV_LPCM:
                   case WAV_PCM:
+                                if(audioheader->encoding==WAV_LPCM)
+                                {
+                                  // One chunk is 10 ms (1/100 of fq)
+                                  par->frame_size=4;
+                                  par->codec_id = AV_CODEC_ID_PCM_S16BE;break;
+                                }
+                                else
+                                {
                                   // One chunk is 10 ms (1/100 of fq)
                                   par->frame_size=4;
                                   par->codec_id = AV_CODEC_ID_PCM_S16LE;break;
+                                }
                   case WAV_AAC:
                                   ffmpuxerSetExtradata(par,audioextraSize,audioextraData);
                                   par->codec_id = AV_CODEC_ID_AAC;
