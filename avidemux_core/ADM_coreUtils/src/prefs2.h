@@ -9,7 +9,6 @@ struct  {
 	bool swap_if_A_greater_than_B;
 	bool saveprefsonexit;
 	bool ignoresavedmarkers;
-	bool use_odml;
 	bool reuse_2pass_log;
 	bool audiobar_uses_master;
 	uint32_t threading_lavc;
@@ -75,7 +74,6 @@ struct  {
 	std::string language;
 	bool warn_for_fonts;
 }Default;
-uint32_t mpegsplit_autosplit;
 struct  {
 	bool avisynth_always_ask;
 	uint32_t avisynth_defaultport;

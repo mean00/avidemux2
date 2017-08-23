@@ -23,9 +23,12 @@
  */
 class AVDM_Fade : public  ADM_coreVideoFilterCached
 {
+                uint32_t        max;
+                void            boundsCheck(void);
 protected:
                 fade            param;
                 bool            buildLut(void);
+
 public:
                                 AVDM_Fade(ADM_coreVideoFilter *previous,CONFcouple *conf);
                                 ~AVDM_Fade();
@@ -61,7 +64,6 @@ DECLARE_VIDEO_FILTER(AVDM_Fade,
  */
 bool  AVDM_Fade::configure()
 {
-  
   diaMenuEntry menuE[2]={{0,QT_TRANSLATE_NOOP("fadeToBlack","Out"),QT_TRANSLATE_NOOP("fadeToBlack","Fade out")},{1,QT_TRANSLATE_NOOP("fadeToBlack","In"),QT_TRANSLATE_NOOP("fadeToBlack","Fade in")}};
   uint32_t start,end;
   
@@ -72,15 +74,15 @@ while(1)
     
     uint32_t mx=9*3600*1000;
     diaElemMenu     menu(&(eInOut),QT_TRANSLATE_NOOP("fadeToBlack","_Fade type:"), 2,menuE);
-    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeToBlack","_Start time (ms):"),0,mx);
-    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeToBlack","_End time (ms):"),0,mx);
+    diaElemTimeStamp start(&(param.startFade),QT_TRANSLATE_NOOP("fadeToBlack","_Start time:"),0,mx);
+    diaElemTimeStamp end(&(param.endFade),QT_TRANSLATE_NOOP("fadeToBlack","_End time:"),0,mx);
     diaElem *elems[3]={&menu,&start,&end};
   
     if( diaFactoryRun(QT_TRANSLATE_NOOP("fadeToBlack","Fade to black"),3+0*1,elems))
     {
-        
         param.inOut=eInOut;
         buildLut();
+        boundsCheck();
         return 1;
     }else
         return 0;
@@ -107,11 +109,12 @@ const char   *AVDM_Fade::getConfiguration(void)
  */
 AVDM_Fade::AVDM_Fade(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVideoFilterCached(3,in,setup)
 {
+    max=(uint32_t)(in->getInfo()->totalDuration/1000);
     if(!setup || !ADM_paramLoad(setup,fade_param,&param))
     {
         // Default value
-        param.startFade=0; 
-        param.endFade=0;
+        param.startFade=0;
+        param.endFade=max;
         param.inOut=0;
         param.toBlack=true;
 
@@ -126,6 +129,7 @@ AVDM_Fade::AVDM_Fade(ADM_coreVideoFilter *in,CONFcouple *setup) :  ADM_coreVideo
  */
 void AVDM_Fade::setCoupledConf(CONFcouple *couples)
 {
+    boundsCheck();
     ADM_paramLoad(couples, fade_param, &param);
 }
 
@@ -136,6 +140,7 @@ void AVDM_Fade::setCoupledConf(CONFcouple *couples)
  */
 bool         AVDM_Fade::getCoupledConf(CONFcouple **couples)
 {
+    boundsCheck();
     return ADM_paramSave(couples, fade_param,&param);
 }
 
@@ -261,6 +266,23 @@ bool  AVDM_Fade::buildLut(void)
     
   }
   return true;
+}
+/**
+ * \fn boundsCheck
+ * \brief Reset invalid start and end values
+ */
+void AVDM_Fade::boundsCheck(void)
+{
+    if(param.endFade < param.startFade)
+    {
+        uint32_t tmp=param.startFade;
+        param.startFade=param.endFade;
+        param.endFade=tmp;
+    }
+    if(param.endFade > max)
+        param.endFade=max;
+    if(param.startFade > max)
+        param.startFade=0;
 }
 //EOF
 

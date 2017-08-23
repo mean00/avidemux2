@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
+    <width>600</width>
     <height>300</height>
    </rect>
   </property>
@@ -46,10 +46,33 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_2">
+     <item row="1" column="8">
+      <widget class="QPushButton" name="pushButtonReset">
        <property name="text">
-        <string>Right:</string>
+        <string>Reset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <spacer name="horizontalSpacer_1">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>26</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="4">
+      <widget class="QSpinBox" name="spinBoxRight">
+       <property name="maximum">
+        <number>2147483647</number>
        </property>
       </widget>
      </item>
@@ -60,15 +83,15 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
-      <widget class="QSpinBox" name="spinBoxRight">
-       <property name="maximum">
-        <number>2147483647</number>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Right:</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <spacer>
+     <item row="0" column="5">
+      <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -83,37 +106,10 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="5">
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="1" column="6">
-      <widget class="QPushButton" name="pushButtonReset">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Reset</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBoxTop">
-       <property name="maximum">
-        <number>2147483647</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QSpinBox" name="spinBoxBottom">
-       <property name="maximum">
-        <number>2147483647</number>
+        <string>Left:</string>
        </property>
       </widget>
      </item>
@@ -124,28 +120,19 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Left:</string>
+     <item row="1" column="4">
+      <widget class="QSpinBox" name="spinBoxBottom">
+       <property name="maximum">
+        <number>2147483647</number>
        </property>
       </widget>
      </item>
-     <item row="0" column="5">
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="0" column="8">
+      <widget class="QPushButton" name="pushButtonAutoCrop">
+       <property name="text">
+        <string>Auto Crop</string>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::MinimumExpanding</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="spinBoxLeft">
@@ -154,15 +141,15 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="6">
-      <widget class="QPushButton" name="pushButtonAutoCrop">
-       <property name="text">
-        <string>Auto Crop</string>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="spinBoxTop">
+       <property name="maximum">
+        <number>2147483647</number>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
-      <spacer>
+      <spacer name="horizontalSpacer_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -172,6 +159,29 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>26</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="6">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Size: </string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::MinimumExpanding</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
          <height>20</height>
         </size>
        </property>
