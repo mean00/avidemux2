@@ -99,6 +99,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_YV12_10BITS: return AV_PIX_FMT_YUV420P10LE;
     case ADM_COLOR_NV12_10BITS:  return AV_PIX_FMT_P010LE;
     case ADM_COLOR_YUV444_10BITS: return AV_PIX_FMT_YUV444P10LE;
+    case ADM_COLOR_YUV422_10BITS: return AV_PIX_FMT_YUV422P10LE;
     case ADM_COLOR_Y8: return AV_PIX_FMT_GRAY8;
     default : ADM_assert(0); 
   }
