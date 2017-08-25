@@ -350,12 +350,17 @@ uint32_t width,height;
     myCrop->right=param->right;
     myCrop->top=param->top;
     myCrop->bottom=param->bottom;
+    myCrop->rubber_is_hidden=param->rubber_is_hidden;
     myCrop->_cookie=&ui;
     myCrop->addControl(ui.toolboxLayout);
     myCrop->upload(false,true);
     myCrop->sliderChanged();
 
+    ui.checkBoxRubber->setChecked(myCrop->rubber_is_hidden);
+    myCrop->rubber->setVisible(!(myCrop->rubber_is_hidden));
+
     connect( ui.horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(sliderUpdate(int)));
+    connect( ui.checkBoxRubber,SIGNAL(stateChanged(int)),this,SLOT(toggleRubber(int)));
     connect( ui.pushButtonAutoCrop,SIGNAL(clicked(bool)),this,SLOT(autoCrop(bool)));
     connect( ui.pushButtonReset,SIGNAL(clicked(bool)),this,SLOT(reset(bool)));
 #define SPINNER(x) connect( ui.spinBox##x,SIGNAL(valueChanged(int)),this,SLOT(valueChanged(int))); 
@@ -388,7 +393,8 @@ void Ui_cropWindow::gather(crop *param)
     param->right=myCrop->right;
     param->top=myCrop->top;
     param->bottom=myCrop->bottom;
-    }
+    param->rubber_is_hidden=myCrop->rubber_is_hidden;
+}
 /**
  * 
  */
@@ -412,6 +418,17 @@ void Ui_cropWindow::valueChanged( int f )
     myCrop->sameImage();
     myCrop->rubber->nestedIgnore--;
     lock--;
+}
+/**
+ * \fn toggleRubber
+ */
+void Ui_cropWindow::toggleRubber(int checkState)
+{
+    bool visible=true;
+    if(checkState)
+        visible=false;
+    myCrop->rubber->setVisible(visible);
+    myCrop->rubber_is_hidden=!visible;
 }
 /**
  * 

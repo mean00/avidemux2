@@ -187,6 +187,16 @@
        </property>
       </spacer>
      </item>
+     <item row="1" column="6">
+      <widget class="QCheckBox" name="checkBoxRubber">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>&amp;Hide Rubber Band</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -226,6 +236,7 @@
   <tabstop>spinBoxRight</tabstop>
   <tabstop>spinBoxTop</tabstop>
   <tabstop>spinBoxBottom</tabstop>
+  <tabstop>checkBoxRubber</tabstop>
   <tabstop>pushButtonAutoCrop</tabstop>
   <tabstop>pushButtonReset</tabstop>
   <tabstop>horizontalSlider</tabstop>
