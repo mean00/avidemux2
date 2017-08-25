@@ -60,11 +60,9 @@ static void blank(uint8_t *in, int w, int h, int stride)
         uint8_t *green=in+1;
         for(int x=0;x<w;x++)
             green[x<<2]=0xff;
-#ifdef __APPLE__
         uint8_t *alpha=in+3;
         for(int x=0;x<w;x++)
             alpha[x<<2]=0xff;
-#endif
         in+=stride;
     }
 }
