@@ -48,20 +48,25 @@ flyCrop::~flyCrop()
 }
 
 /**
-    \fn blank
-    \brief 
-*/
+ * \fn blank
+ * \brief Green bars
+ */
 
-static void blank(uint8_t *in, int w,int h,int stride)
+static void blank(uint8_t *in, int w, int h, int stride)
 {
     for(int y=0;y<h;y++)
     {
         memset(in,0,4*w);
-        uint8_t *p=in+1;
-        for(int x=0;x<w;x++)        
-            p[x<<2]=0xff;        
+        uint8_t *green=in+1;
+        for(int x=0;x<w;x++)
+            green[x<<2]=0xff;
+#ifdef __APPLE__
+        uint8_t *alpha=in+3;
+        for(int x=0;x<w;x++)
+            alpha[x<<2]=0xff;
+#endif
         in+=stride;
-    }  
+    }
 }
 
 /**
@@ -70,14 +75,14 @@ static void blank(uint8_t *in, int w,int h,int stride)
  * @param imageOut
  * @return 
  */
-uint8_t    flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
+uint8_t flyCrop::processRgb(uint8_t *imageIn, uint8_t *imageOut)
 {
     memcpy(imageOut,imageIn,_w*_h*4);
-    
+
     blank(imageOut,_w,top,4*_w);
     blank(imageOut+(_w*4)*(_h-bottom),_w,bottom,4*_w);
     blank(imageOut,left,_h,4*_w);
-    blank(imageOut+(_w-right-1)*4,right,_h,4*_w);
+    blank(imageOut+(_w-right)*4,right,_h,4*_w);
     return true;
 }
 /**
