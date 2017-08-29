@@ -544,6 +544,16 @@ void HandleAction (Action action)
               {
                   video_body->pasteFromClipBoard(currentPts);
               }
+              if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+              {
+                  if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
+                      "Video saved in copy mode will be corrupted at these points.\n"
+                      "Proceed anyway?")))
+                  {
+                      video_body->undo();
+                      break;
+                  }
+              }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
               if(markA>currentPts)
@@ -561,7 +571,6 @@ void HandleAction (Action action)
               GUI_GoToTime(currentPts);
             }
             break;
-      break;
 
     case ACT_Undo:
     case ACT_Redo:
