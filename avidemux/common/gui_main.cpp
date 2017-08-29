@@ -640,6 +640,26 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
+            if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+            {
+                const char *alert;
+                if(action==ACT_Cut)
+                {
+                    alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
+                        "Video saved in copy mode will be corrupted at this point.\n"
+                        "Proceed anyway?");
+                }else
+                {
+                    alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
+                        "Video saved in copy mode will be corrupted at this point.\n"
+                        "Proceed anyway?");
+                }
+                if(!GUI_Question(alert))
+                {
+                    video_body->undo();
+                    break;
+                }
+            }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff
         
