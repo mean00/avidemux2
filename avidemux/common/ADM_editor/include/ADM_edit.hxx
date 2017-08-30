@@ -254,6 +254,7 @@ public:
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     bool        checkCutsAreOnIntra(void);
+                    bool        checkCutIsOnIntra(uint64_t time);
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );

@@ -52,6 +52,7 @@
 admMutex singleThread;
 
 float currentZoom=ZOOM_1_1;
+static bool cutsNotOnIntraWarned;
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -551,8 +552,10 @@ void HandleAction (Action action)
                       "Proceed anyway?")))
                   {
                       video_body->undo();
+                      cutsNotOnIntraWarned=false;
                       break;
                   }
+                  cutsNotOnIntraWarned=true;
               }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
@@ -649,7 +652,7 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
-            if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+            if(!cutsNotOnIntraWarned && !lastFrame && !UI_getCurrentVCodec() && !video_body->checkCutIsOnIntra(a))
             {
                 const char *alert;
                 if(action==ACT_Cut)
@@ -666,8 +669,10 @@ void HandleAction (Action action)
                 if(!GUI_Question(alert))
                 {
                     video_body->undo();
+                    cutsNotOnIntraWarned=false;
                     break;
                 }
+                cutsNotOnIntraWarned=true;
             }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff
@@ -728,6 +733,7 @@ int A_openVideo (const char *name)
     char *longname;
     uint32_t magic[4];
     uint32_t id = 0;
+    cutsNotOnIntraWarned = false;
 
     if (playing)
         return 0;
