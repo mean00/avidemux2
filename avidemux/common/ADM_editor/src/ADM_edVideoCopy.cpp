@@ -99,7 +99,6 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
     bool fail=false;
     uint32_t segNo;
     uint64_t segTime;
-    uint32_t nbSeg=_segments.getNbSegments();
     fail=!_segments.convertLinearTimeToSeg(time,&segNo,&segTime);
     if(fail)
         return true; // we can't do anything meaningful if we fail to convert time to segment
@@ -126,19 +125,14 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
         {
             ADM_info("Cannot get the 1st frame of segment %d\n",segNo);
         }
-        ADM_info("seg:%d refDTS=%" PRIu64"\n",seg->_reference,seg->_refStartDts);
-        ADM_info("seg:%d imgDTS=%" PRIu64"\n",seg->_reference,img.demuxerDts);
         if(!seg->_refStartDts && !seg->_reference)
         {
             ADM_info("Ignoring first seg (unreliable DTS)\n");
-        }else
+        }else if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && img.demuxerDts!=seg->_refStartDts)
         {
-            if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && img.demuxerDts!=seg->_refStartDts)
-            {
-                ADM_warning("Segment %d does not start on a known DTS (%s)\n",segNo,ADM_us2plain(img.demuxerPts));
-                ADM_warning("expected: %s\n",ADM_us2plain(seg->_refStartDts));
-                fail=true;
-            }
+            ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,img.demuxerPts,ADM_us2plain(img.demuxerPts));
+            ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
+            fail=true;
         }
         if(!fail)
             ADM_info("Segment %d is OK\n",segNo);
