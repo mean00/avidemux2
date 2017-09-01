@@ -91,6 +91,57 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
     return true;
 }
 /**
+    \fn checkCutIsOnIntra
+    \brief Allow to check if a particular delete operation results in a cut being not on an intra
+*/
+bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
+{
+    bool fail=false;
+    uint32_t segNo;
+    uint64_t segTime;
+    fail=!_segments.convertLinearTimeToSeg(time,&segNo,&segTime);
+    if(fail)
+        return true; // we can't do anything meaningful if we fail to convert time to segment
+
+    ADMCompressedImage img;
+    uint8_t *buffer=new uint8_t[1920*1080*3];
+    img.data=buffer;
+    ADM_info("Checking whether cut at %s is on a keyframe...\n",ADM_us2plain(time));
+
+    _SEGMENT *seg=_segments.getSegment(segNo);
+    _VIDEOS *vid=_segments.getRefVideo(seg->_reference);
+    vidHeader *demuxer=vid->_aviheader;
+
+    if(switchToSegment(segNo,true))
+    {
+        if(demuxer->getFrame(vid->lastSentFrame,&img))
+        {
+            if(!img.flags & AVI_KEY_FRAME) // always evaluates to false, img we've got is not the first frame of the segment
+            {
+                ADM_warning("Segment %d does not start on a keyframe (time in ref %s)\n",segNo,ADM_us2plain(img.demuxerPts));
+                fail=true;
+            }
+        }else
+        {
+            ADM_info("Cannot get the 1st frame of segment %d\n",segNo);
+        }
+        if(!seg->_refStartDts && !seg->_reference)
+        {
+            ADM_info("Ignoring first seg (unreliable DTS)\n");
+        }else if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && img.demuxerDts!=seg->_refStartDts)
+        {
+            ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,img.demuxerPts,ADM_us2plain(img.demuxerPts));
+            ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
+            fail=true;
+        }
+        if(!fail)
+            ADM_info("Segment %d is OK\n",segNo);
+    }
+    delete [] buffer;
+    buffer=NULL;
+    return !fail;
+}
+/**
      \fn bFrameDroppable
 */
 static bool bFrameDroppable(uint32_t fcc)

@@ -52,6 +52,7 @@
 admMutex singleThread;
 
 float currentZoom=ZOOM_1_1;
+static bool cutsNotOnIntraWarned;
 #include "DIA_audioTracks.h"
 //***********************************
 //******** A Function ***************
@@ -544,6 +545,18 @@ void HandleAction (Action action)
               {
                   video_body->pasteFromClipBoard(currentPts);
               }
+              if(!UI_getCurrentVCodec() && !video_body->checkCutsAreOnIntra())
+              {
+                  if(!GUI_Question(QT_TRANSLATE_NOOP("adm","The cut points of the pasted video are not on keyframes.\n"
+                      "Video saved in copy mode will be corrupted at these points.\n"
+                      "Proceed anyway?")))
+                  {
+                      video_body->undo();
+                      cutsNotOnIntraWarned=false;
+                      break;
+                  }
+                  cutsNotOnIntraWarned=true;
+              }
               video_body->getVideoInfo (avifileinfo);
               d=video_body->getVideoDuration()-d;
               if(markA>currentPts)
@@ -561,7 +574,6 @@ void HandleAction (Action action)
               GUI_GoToTime(currentPts);
             }
             break;
-      break;
 
     case ACT_Undo:
     case ACT_Redo:
@@ -640,6 +652,28 @@ void HandleAction (Action action)
                 GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),QT_TRANSLATE_NOOP("adm","Error while cutting out."));
                 break;
             }
+            if(!cutsNotOnIntraWarned && !lastFrame && !UI_getCurrentVCodec() && !video_body->checkCutIsOnIntra(a))
+            {
+                const char *alert;
+                if(action==ACT_Cut)
+                {
+                    alert=QT_TRANSLATE_NOOP("adm","The end point of the cut is not on a keyframe.\n"
+                        "Video saved in copy mode will be corrupted at this point.\n"
+                        "Proceed anyway?");
+                }else
+                {
+                    alert=QT_TRANSLATE_NOOP("adm","The end point of the deletion is not on a keyframe.\n"
+                        "Video saved in copy mode will be corrupted at this point.\n"
+                        "Proceed anyway?");
+                }
+                if(!GUI_Question(alert))
+                {
+                    video_body->undo();
+                    cutsNotOnIntraWarned=false;
+                    break;
+                }
+                cutsNotOnIntraWarned=true;
+            }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff
         
@@ -699,6 +733,7 @@ int A_openVideo (const char *name)
     char *longname;
     uint32_t magic[4];
     uint32_t id = 0;
+    cutsNotOnIntraWarned = false;
 
     if (playing)
         return 0;
