@@ -210,6 +210,8 @@ extern void adm2_emms_yasm(void);
  */
 void ADM_emms()
 {
+#ifdef ADM_CPU_X86
     adm2_emms_yasm();
+#endif
 }
 

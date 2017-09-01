@@ -323,6 +323,7 @@ bool ADM_coreQtGl::downloadTextures(ADMImage *image,  QGLFramebufferObject *fbo,
 }
 
 
+#if defined( ADM_CPU_X86) 
 void admTestDownloadTexture()
 {
     adm_glYUV444_Init_mmx();
@@ -359,5 +360,6 @@ void admTestDownloadTexture()
         printf("PASS \n");
     }
 }
+#endif
 
 // EOF
