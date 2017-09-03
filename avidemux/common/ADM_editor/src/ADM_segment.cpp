@@ -607,8 +607,8 @@ bool        ADM_EditorSegment::removeChunk(uint64_t from, uint64_t to)
     {
         segments.erase(segments.begin()+startSeg+1);
     }
-    updateStartTime();
     removeEmptySegments();
+    updateStartTime();
     if(isEmpty())
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","You cannot remove *all* the video\n"));

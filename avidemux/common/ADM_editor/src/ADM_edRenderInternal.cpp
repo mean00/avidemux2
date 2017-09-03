@@ -92,7 +92,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         }
         if(pts>timeToSeek)
         {
-            ADM_info("Image not found,searching %" PRIu64" ms, got  pts=%" PRIu64" ms\n",timeToSeek/1000,pts/1000);
+            ADM_info("Image not found, looked for %" PRIu64" us, got pts=%" PRIu64" us\n",timeToSeek,pts);
             return false;
         }
     }
