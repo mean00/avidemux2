@@ -58,6 +58,8 @@ AUDMEncoder_PCM::AUDMEncoder_PCM(AUDMAudioFilter * instream,bool globalHeader, C
 {
   printf("[PCM] Creating PCM\n");
   wavheader.encoding=WAV_PCM;
+  wavheader.bitspersample=16;
+  
 
 };
 
