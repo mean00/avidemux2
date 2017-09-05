@@ -686,8 +686,18 @@ void HandleAction (Action action)
                 {
                         current-=(b-a);
                 }
-            } 
-            GUI_GoToTime(current);
+            }
+            if(!video_body->goToTimeVideo(current))
+            {
+                // If seek fails, we may crash in admPreview::samePicture()
+                // due to _currentSegment and _currentPts going out of sync.
+                // Rewind to get on firm ground again.
+                A_Rewind();
+            }else
+            {
+                admPreview::samePicture();
+                GUI_setCurrentFrameAndTime();
+            }
         }
     break;
       // set decoder option (post processing ...)
