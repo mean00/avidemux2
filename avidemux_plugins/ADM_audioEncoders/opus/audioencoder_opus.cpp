@@ -1,4 +1,3 @@
-
 /***************************************************************************
     copyright            : (C) 2017 mean
     email                : fixounet@free.fr
@@ -110,7 +109,6 @@ AUDMEncoder_Opus::~AUDMEncoder_Opus()
 */
 bool AUDMEncoder_Opus::initialize(void)
 {
-unsigned long int samples_input, max_bytes_output;
 int ret=0;
 int channels=wavheader.channels;
 
@@ -142,13 +140,17 @@ int channels=wavheader.channels;
           return false;
     }
     //
-    opus_encoder_ctl(_handle,OPUS_SET_BITRATE(_config.bitrate));
+    int r=opus_encoder_ctl(_handle,OPUS_SET_BITRATE(_config.bitrate));
+    if(r<0)
+    {
+        ADM_warning("Failed to set bitrate to %d\n",_config.bitrate);
+        return false;
+    }
     // update
     wavheader.byterate=(_config.bitrate*1000)/8;
-    wavheader.blockalign=4096;
+    wavheader.blockalign=1;
     wavheader.bitspersample=0;
     wavheader.encoding=WAV_OPUS;
-    _chunk=samples_input;
     return true;
 }
 #define SIZE_INTERNAL 64*1024 
@@ -164,7 +166,7 @@ bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
  int channels=wavheader.channels;
  opus_int32 done;
  
- int processedSamples=(60*wavheader.frequency)/1000; // 60 ms worth of data
+ int processedSamples=(20*wavheader.frequency)/1000; // xx ms worth of data
  int sixty=processedSamples*channels;
  
     while(1)
@@ -175,12 +177,22 @@ bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
           return false; 
         }
         ADM_assert(tmptail>=tmphead);
+        
+        
+#if 1        
         done=opus_encode_float(_handle,&(tmpbuffer[tmphead]),
                                 processedSamples,
                                dest,
                                4000);        
-        tmphead+=sixty;        
-        if(done<0) 
+#else
+        dither16 (&(tmpbuffer[tmphead]), processedSamples, channels);
+        done=opus_encode(_handle,(opus_int16 *)&(tmpbuffer[tmphead]),processedSamples,
+                               dest,
+                               4000);        
+#endif        
+        tmphead+=sixty;  
+        //printf("processed sample = %d, output = %d\n",processedSamples,done);        
+        if(done<=0) 
         {
           if(count<20)
               continue;
@@ -241,7 +253,6 @@ bool configure (CONFcouple **setup)
 void getDefaultConfiguration(CONFcouple **c)
 {
 	opus_encoder config = OPUS_DEFAULT_CONF;
-
 	ADM_paramSave(c, opus_encoder_param, &config);
 }
 // EOF
