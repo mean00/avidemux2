@@ -1,6 +1,6 @@
 
 /***************************************************************************
-    copyright            : (C) 2002-6 by mean
+    copyright            : (C) 2017 mean (c)
     email                : fixounet@free.fr
  ***************************************************************************/
 
@@ -14,16 +14,17 @@
  ***************************************************************************/
 #pragma once
 #include "opus_encoder.h"
- //_____________________________________________
+/** \class AUDMEncoder_Opus
+ *  \brief Wrapper around opus encoder library
+ * 
+ */
 class AUDMEncoder_Opus : public ADM_AudioEncoder
 {
 protected:
-         OpusEncoder    *_handle;
-         uint32_t        _chunk;
-         uint8_t        refillBuffer(int minimum);
-         bool           _globalHeader;
-         opus_encoder   _config;
-         float          *ordered;
+        OpusEncoder    *_handle;
+        uint32_t        _chunk;
+        bool           _globalHeader;
+        opus_encoder   _config;
 public:
             bool        initialize(void);
     virtual             ~AUDMEncoder_Opus();
@@ -31,3 +32,4 @@ public:
     virtual bool	encode(uint8_t *dest, uint32_t *len, uint32_t *samples);
 };
 
+// EOF

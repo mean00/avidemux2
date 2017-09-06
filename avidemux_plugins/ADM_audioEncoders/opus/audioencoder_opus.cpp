@@ -1,6 +1,6 @@
 
 /***************************************************************************
-    copyright            : (C) 2002-6 by mean
+    copyright            : (C) 2017 mean
     email                : fixounet@free.fr
 
     Interface to FAAC
@@ -58,7 +58,12 @@ static ADM_audioEncoder encoderDesc = {
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG( );
 
-/******************* / Declare plugin*******************************************************/
+/**
+ * \fn ctor
+ * @param instream
+ * @param globalHeader
+ * @param setup
+ */
 
 AUDMEncoder_Opus::AUDMEncoder_Opus(AUDMAudioFilter * instream,bool globalHeader,
     CONFcouple *setup)  :ADM_AudioEncoder    (instream,setup)
@@ -94,8 +99,6 @@ AUDMEncoder_Opus::~AUDMEncoder_Opus()
     if(_handle)
         opus_encoder_destroy(_handle);
     _handle=NULL;
-    if(ordered) delete [] ordered;
-    ordered=NULL;
     printf("[Opus] Deleting faac\n");
 
 };
@@ -146,63 +149,12 @@ int channels=wavheader.channels;
     wavheader.bitspersample=0;
     wavheader.encoding=WAV_OPUS;
     _chunk=samples_input;
-
-    ordered=new float[_chunk];
-    
     return true;
-}
-/**
-    \fn refillBuffer
-*/
-//_____________________________________________
-//  Need to multiply the float by 32767, can't use
-//  generic fill buffer
-//----------------------------------------------
-uint8_t AUDMEncoder_Opus::refillBuffer(int minimum)
-{
-  uint32_t filler=wavheader.frequency*wavheader.channels;
-  uint32_t nb;
-  AUD_Status status;
-  if(AudioEncoderRunning!=_state) return 0;
-  while(1)
-  {
-    ADM_assert(tmptail>=tmphead);
-    if((tmptail-tmphead)>=minimum) return 1;
-  
-    if(tmphead && tmptail>filler/2)
-    {
-      memmove(&tmpbuffer[0],&tmpbuffer[tmphead],(tmptail-tmphead)*sizeof(float)); 
-      tmptail-=tmphead;
-      tmphead=0;
-    }
-    ADM_assert(filler>tmptail);
-    nb=_incoming->fill( (filler-tmptail)/2,&tmpbuffer[tmptail],&status);
-    if(!nb)
-    {
-      if(status!=AUD_END_OF_STREAM) ADM_assert(0);
-      
-      if((tmptail-tmphead)<minimum)
-      {
-        memset(&tmpbuffer[tmptail],0,sizeof(float)*(minimum-(tmptail-tmphead)));
-        tmptail=tmphead+minimum;
-        _state=AudioEncoderNoInput;  
-        return minimum;
-      }
-      else continue;
-    } else
-    {
-      float *s=&(tmpbuffer[tmptail]);
-      for(int i=0;i<nb;i++)
-      {
-        *s=*s*32767.;
-        s++;
-      }
-      tmptail+=nb;
-    }
-  }
 }
 #define SIZE_INTERNAL 64*1024 
 #define FA_BUFFER_SIZE (SIZE_INTERNAL/4)
+
+
 /**
     \fn encode
 */
@@ -210,27 +162,35 @@ bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
  uint32_t count=0; 
  int channels=wavheader.channels;
-_again:
-        *samples = _chunk/channels;
-        *len = 0;
-
-        if(!refillBuffer(_chunk ))
+ opus_int32 done;
+ 
+ int processedSamples=(60*wavheader.frequency)/1000; // 60 ms worth of data
+ int sixty=processedSamples*channels;
+ 
+    while(1)
+    {
+        count++;
+        if(!refillBuffer(sixty ))
         {
-          return 0; 
+          return false; 
         }
         ADM_assert(tmptail>=tmphead);
-        
-        *len=opus_encode_float(_handle,&(tmpbuffer[tmphead]),_chunk,dest,_chunk);        
-        if(!*len) 
+        done=opus_encode_float(_handle,&(tmpbuffer[tmphead]),
+                                processedSamples,
+                               dest,
+                               4000);        
+        tmphead+=sixty;        
+        if(done<0) 
         {
-          count++;
           if(count<20)
-            goto _again;
-          *samples=0;
+              continue;
+          return false;
         }
-        tmphead+=_chunk;
-        *samples=_chunk;
-        return 1;
+        break;
+    }
+    *len=done;    
+    *samples=processedSamples;
+    return true;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
 #define BITRATE(x) {x,QT_TRANSLATE_NOOP("faac",#x)}
@@ -274,7 +234,10 @@ bool configure (CONFcouple **setup)
     }
     return false;
 }
-
+/**
+ * \fn    getDefaultConfiguration
+ * @param c
+ */
 void getDefaultConfiguration(CONFcouple **c)
 {
 	opus_encoder config = OPUS_DEFAULT_CONF;
