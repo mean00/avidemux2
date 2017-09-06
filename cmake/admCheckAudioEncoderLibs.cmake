@@ -132,6 +132,29 @@ MESSAGE("")
 
 
 ########################################
+# OPUS_ENCODER
+########################################
+OPTION(OPUS_ENCODER "" ON)
+
+MESSAGE(STATUS "Checking for Opus Encoder")
+MESSAGE(STATUS "*************************")
+
+IF (OPUS_ENCODER)
+	FIND_HEADER_AND_LIB(OPUS_ENC opus/opus.h opus opus_encoder_create)
+	PRINT_LIBRARY_INFO("OPUS_ENCODER" OPUS_ENC_FOUND "${OPUS_ENC_INCLUDE_DIR}" "${OPUS_ENC_LIBRARY_DIR}")
+
+	IF (OPUS_ENC_FOUND)
+		SET(USE_OPUS_ENCODER True CACHE BOOL "")
+	ENDIF (OPUS_ENC_FOUND)
+ELSE (OPUS_ENCODER)
+	MESSAGE("${MSG_DISABLE_OPTION}")
+ENDIF (OPUS_ENCODER)
+
+APPEND_SUMMARY_LIST("Audio Encoder" "Opus" "${USE_OPUS_ENCODER}")
+MESSAGE("")
+
+
+########################################
 # FAAC
 ########################################
 OPTION(FAAC "" ON)

@@ -13,7 +13,7 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
-#include ".h"
+#include "opus_encoder.h"
  //_____________________________________________
 class AUDMEncoder_Opus : public ADM_AudioEncoder
 {
@@ -22,7 +22,7 @@ protected:
          uint32_t        _chunk;
          uint8_t        refillBuffer(int minimum);
          bool           _globalHeader;
-         faac_encoder   _config;
+         opus_encoder   _config;
          float          *ordered;
 public:
             bool        initialize(void);

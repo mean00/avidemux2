@@ -24,14 +24,14 @@
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
 
-#include "faac.h"
-#include "audioencoder_Opus.h"
+#include "opus/opus.h"
+#include "audioencoder_opus.h"
 
-#include "faac_encoder_desc.cpp"
+#include "opus_encoder_desc.cpp"
 
-#define FAAC_DEFAULT_CONF {128}
+#define OPUS_DEFAULT_CONF {128}
 
-static faac_encoder defaultConfig = FAAC_DEFAULT_CONF;
+static opus_encoder defaultConfig = OPUS_DEFAULT_CONF;
 
 static bool configure(CONFcouple **setup);
 static void getDefaultConfiguration(CONFcouple **c);
@@ -91,7 +91,7 @@ AUDMEncoder_Opus::AUDMEncoder_Opus(AUDMAudioFilter * instream,bool globalHeader,
   wavheader.encoding=WAV_AAC;
   _config=defaultConfig;
   if(setup) // load config if possible
-    ADM_paramLoad(setup,faac_encoder_param,&_config);
+    ADM_paramLoad(setup,opus_encoder_param,&_config);
 };
 
 /**
