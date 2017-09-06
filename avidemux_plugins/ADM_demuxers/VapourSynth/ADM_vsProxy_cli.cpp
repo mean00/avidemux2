@@ -22,8 +22,16 @@
 
 #include "ADM_vsProxy.h"
 #include <math.h>
+#include <string>
 
 extern uint8_t ADM_InitMemcpy(void);
+
+static void printUsageAndExit()
+{
+    printf("vsProxy [--port PORT_TO_USE] scriptFile\n");
+    exit(-1);
+}
+
 
 #if 0
     #define aprintf printf
@@ -34,14 +42,70 @@ extern uint8_t ADM_InitMemcpy(void);
  */
 int main(int ac, char **av)
 {
-    int port=9999;
-    if(ac!=2)
+    int port = -1;
+    int vsScriptPos = -1;
+    if (ac < 2)
     {
-        printf("vsProxy scriptFile\n");
-        exit(-1); 
+        printUsageAndExit();
     }
+    for (int avPos = 1; avPos < ac; ++avPos)
+    {
+        if (std::string("--port") == av[avPos])
+        {
+            if (++avPos == ac)
+            {
+                printf("Missing port number argument!");
+                exit(-1);
+            }
+            try
+            {
+                size_t resPos;
+                std::string strPort(av[avPos + 1]);
+                port = std::stoi(strPort, &resPos, 0);
+                if (resPos != strPort.size())
+                {
+                    throw 123;
+                }
+            }
+            catch(...)
+            {
+                printf("Invalid port number given '%s'\n", av[avPos]);
+                exit(-1);
+            }
+            if (port < 1 || port > 65535)
+            {
+                printf("Invalid port number. Must be within range [1024;65535]\n");
+                exit (-1);
+            }
+            if (port < 1024 && port > 1)
+            {
+                printf("Given port needs privilege access. This is not supported!\n");
+                exit (-1);
+            }
+        }
+        else
+        {
+            if (vsScriptPos == -1) {
+                vsScriptPos = avPos;
+                continue;
+            }
+            printf("Invalid argument '%s' found!\n", av[avPos]);
+            exit(-1);
+        }
+    }
+
+    // Missing script argument?
+    if (vsScriptPos == -1)
+    {
+        printUsageAndExit();
+    }
+    // Use the default parameter
+    if (port == -1) {
+        port = 9999;
+    }
+
     ADM_InitMemcpy();
-    
+
 #ifdef _WIN32
     WSADATA wsaData;
     int iResult;
@@ -53,14 +117,14 @@ int main(int ac, char **av)
                     printf("Error at WSAStartup()\n");
                     fflush(stdout);
                     exit(-1);
-            }	
+            }
             ADM_info("WinSock ok\n");
 
-#endif    
-    
-    
+#endif
+
+
     vapourSynthProxy proxy;
-    bool r=proxy.run(port,av[1]);
+    bool r=proxy.run(port,av[vsScriptPos]);
     if(r)
     {
         printf("Success\n");
