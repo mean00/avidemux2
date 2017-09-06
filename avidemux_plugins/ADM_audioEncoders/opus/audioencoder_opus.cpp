@@ -44,12 +44,12 @@ static ADM_audioEncoder encoderDesc = {
   create,			// Defined by macro automatically
   destroy,			// Defined by macro automatically
   configure,		//** put your own function here**
-  "Faac",            
-  "AAC (Faac)",      
-  "Faac AAC encoder plugin Mean 2008",             
-  6,                    // Max channels
+  "Opus",            
+  "Opus Encoder",      
+  "Opus encoder plugin Mean 2017",
+  2,                    // Max channels
   1,0,0,                // Version
-  WAV_AAC,
+  WAV_OPUS,
   200,                  // Priority
  
   NULL,         //** put your own function here**
@@ -66,6 +66,7 @@ AUDMEncoder_Opus::AUDMEncoder_Opus(AUDMAudioFilter * instream,bool globalHeader,
   uint32_t channels;
   channels=instream->getInfo()->channels;
   _globalHeader=globalHeader;
+  _handle=NULL;
   switch(channels)
   {
     case 1:
@@ -76,19 +77,10 @@ AUDMEncoder_Opus::AUDMEncoder_Opus(AUDMAudioFilter * instream,bool globalHeader,
     	outputChannelMapping[1] = ADM_CH_FRONT_RIGHT;
       break;
     default :
-
-    CHANNEL_TYPE *f=outputChannelMapping;
-        *f++ = ADM_CH_FRONT_CENTER;
-        *f++ = ADM_CH_FRONT_LEFT;
-        *f++ = ADM_CH_FRONT_RIGHT;
-
-        *f++ = ADM_CH_REAR_LEFT;
-        *f++ = ADM_CH_REAR_RIGHT;
-        *f++ = ADM_CH_LFE;
-        
-
+        ADM_warning("Unsupported channel mapping\n");
+        break;
   }
-  wavheader.encoding=WAV_AAC;
+  wavheader.encoding=WAV_OPUS;
   _config=defaultConfig;
   if(setup) // load config if possible
     ADM_paramLoad(setup,opus_encoder_param,&_config);
@@ -100,11 +92,11 @@ AUDMEncoder_Opus::AUDMEncoder_Opus(AUDMAudioFilter * instream,bool globalHeader,
 AUDMEncoder_Opus::~AUDMEncoder_Opus()
 {
     if(_handle)
-        faacEncClose(_handle);
+        opus_encoder_destroy(_handle);
     _handle=NULL;
     if(ordered) delete [] ordered;
     ordered=NULL;
-    printf("[FAAC] Deleting faac\n");
+    printf("[Opus] Deleting faac\n");
 
 };
 
@@ -116,72 +108,48 @@ AUDMEncoder_Opus::~AUDMEncoder_Opus()
 bool AUDMEncoder_Opus::initialize(void)
 {
 unsigned long int samples_input, max_bytes_output;
-faacEncConfigurationPtr cfg;
 int ret=0;
 int channels=wavheader.channels;
 
-    printf("[FAAC] Incoming Fq :%u\n",wavheader.frequency);
-     _handle = faacEncOpen(wavheader.frequency,
-                                 channels,
-                                 &samples_input,
-                                &max_bytes_output);
+    printf("[Opus] Incoming Fq :%u\n",wavheader.frequency);
+    if(channels>2)
+    {
+        ADM_warning("Unsupported channel configuration\n");
+        return false;
+    }
+    switch(wavheader.frequency)
+    {
+        case 8000:
+        case 12000:
+        case 16000:
+        case 24000:
+        case 48000:
+            break;
+    default:
+            ADM_warning("Unsupported frequency configuration\n");
+            return false;            
+    }
+    
+    //
+    int err=0;
+    _handle = opus_encoder_create(wavheader.frequency,wavheader.channels,OPUS_APPLICATION_AUDIO ,&err);
     if(!_handle)
     {
-          printf("[FAAC]Cannot open faac with fq=%" PRIu32" chan=%" PRIu32" br=%" PRIu32"\n",
-          wavheader.frequency,channels,_config.bitrate);
-          return 0;
+          ADM_warning("[Opus ]Cannot open opus with fq=%d, channel=%d, error=%d\n",wavheader.frequency,wavheader.channels, err);
+          return false;
     }
-    printf(" [FAAC] : Sample input:%" PRIu32", max byte output%" PRIu32" \n",(uint32_t)samples_input,(uint32_t)max_bytes_output);
-    cfg= faacEncGetCurrentConfiguration(_handle);
-    
-    // Set default conf, same as ffmpeg
-    cfg->aacObjectType = LOW;
-    cfg->mpegVersion = MPEG4;
-    cfg->bandWidth= (wavheader.frequency*3)/4; // Should be relevant
-    cfg->useTns = 0;
-    cfg->allowMidside = 0;
-    cfg->bitRate = (_config.bitrate*1000)/channels; // It is per channel
-    cfg->outputFormat = 0; // 0 Raw 1 ADTS
-    cfg->inputFormat = FAAC_INPUT_FLOAT;
-    cfg->useLfe=0;	
-    if (!(ret=faacEncSetConfiguration(_handle, cfg))) 
-    {
-        printf("[FAAC] Cannot set conf for faac with fq=%" PRIu32" chan=%" PRIu32" br=%" PRIu32" (err:%d)\n",
-				wavheader.frequency,channels,_config.bitrate,ret);
-	return 0;
-    }
-     unsigned char *data=NULL;
-     unsigned long size=0;
-     if((ret=faacEncGetDecoderSpecificInfo(_handle, &data,&size)))
-     {
-        printf("FAAC: GetDecoderSpecific info failed (err:%d)\n",ret);
-        return 0;
-     }
-     _extraSize=size;
-     _extraData=new uint8_t[size];
-     memcpy(_extraData,data,size);
-
+    //
+    opus_encoder_ctl(_handle,OPUS_SET_BITRATE(_config.bitrate));
     // update
-     wavheader.byterate=(_config.bitrate*1000)/8;
-//    _wavheader->dwScale=1024;
-//    _wavheader->dwSampleSize=0;
+    wavheader.byterate=(_config.bitrate*1000)/8;
     wavheader.blockalign=4096;
     wavheader.bitspersample=0;
-
+    wavheader.encoding=WAV_OPUS;
     _chunk=samples_input;
 
     ordered=new float[_chunk];
-    printf("[Faac] Initialized :\n");
     
-    printf("[Faac]Version        : %s\n",cfg->name);
-    printf("[Faac]Bitrate        : %" PRIu32"\n",(uint32_t)cfg->bitRate);
-    printf("[Faac]Mpeg2 (1)/4(0) : %u\n",cfg->mpegVersion);
-    printf("[Faac]Use lfe      ) : %u\n",cfg->useLfe);
-    printf("[Faac]Sample output  : %" PRIu32"\n",_chunk / channels);
-    printf("[Faac]Bitrate        : %lu\n",cfg->bitRate*channels);
-
-    
-    return 1;
+    return true;
 }
 /**
     \fn refillBuffer
@@ -240,7 +208,7 @@ uint8_t AUDMEncoder_Opus::refillBuffer(int minimum)
 */
 bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
-  uint32_t count=0;
+ uint32_t count=0; 
  int channels=wavheader.channels;
 _again:
         *samples = _chunk/channels;
@@ -251,8 +219,8 @@ _again:
           return 0; 
         }
         ADM_assert(tmptail>=tmphead);
-        reorder(&(tmpbuffer[tmphead]),ordered,*samples,_incoming->getChannelMapping(),outputChannelMapping);
-        *len = faacEncEncode(_handle, (int32_t *)ordered, _chunk, dest, FA_BUFFER_SIZE);
+        
+        *len=opus_encode_float(_handle,&(tmpbuffer[tmphead]),_chunk,dest,_chunk);        
         if(!*len) 
         {
           count++;
@@ -261,6 +229,7 @@ _again:
           *samples=0;
         }
         tmphead+=_chunk;
+        *samples=_chunk;
         return 1;
 }
 #define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
@@ -272,10 +241,10 @@ _again:
 bool configure (CONFcouple **setup)
 {
  int ret=0;
-    faac_encoder config=defaultConfig;
+    opus_encoder config=defaultConfig;
     if(*setup)
     {
-        ADM_paramLoad(*setup,faac_encoder_param,&config);
+        ADM_paramLoad(*setup,opus_encoder_param,&config);
     }
     diaMenuEntry bitrateM[]={
                               BITRATE(56),
@@ -289,17 +258,17 @@ bool configure (CONFcouple **setup)
                               BITRATE(224),
                               BITRATE(384)
                           };
-    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("faac","_Bitrate:"), SZT(bitrateM),bitrateM);
+    diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("Opus","_Bitrate:"), SZT(bitrateM),bitrateM);
   
     
 
     diaElem *elems[]={&bitrate};
     
-    if ( diaFactoryRun(QT_TRANSLATE_NOOP("faac","Faac Configuration"),1,elems))
+    if ( diaFactoryRun(QT_TRANSLATE_NOOP("faac","Opus Configuration"),1,elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;
-        ADM_paramSave(setup,faac_encoder_param,&config);
+        ADM_paramSave(setup,opus_encoder_param,&config);
         defaultConfig=config;
         return true;
     }
@@ -308,8 +277,8 @@ bool configure (CONFcouple **setup)
 
 void getDefaultConfiguration(CONFcouple **c)
 {
-	faac_encoder config = FAAC_DEFAULT_CONF;
+	opus_encoder config = OPUS_DEFAULT_CONF;
 
-	ADM_paramSave(c, faac_encoder_param, &config);
+	ADM_paramSave(c, opus_encoder_param, &config);
 }
 // EOF

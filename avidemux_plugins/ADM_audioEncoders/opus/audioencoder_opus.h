@@ -18,7 +18,7 @@
 class AUDMEncoder_Opus : public ADM_AudioEncoder
 {
 protected:
-         void           *_handle;
+         OpusEncoder    *_handle;
          uint32_t        _chunk;
          uint8_t        refillBuffer(int minimum);
          bool           _globalHeader;
