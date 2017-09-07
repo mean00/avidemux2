@@ -133,9 +133,9 @@ int channels=wavheader.channels;
     //
     int  ratio=(wavheader.frequency+26)/50; // 20ms frames,  so we have ratio frames per sec
                                             // 48k => 960 ratio
-    if(_config.bitrate < 3*ratio*8)
+    if(_config.bitrate*1000 < 3*ratio*8)
     {
-        ADM_warning("Bitrate is too low\n");
+        ADM_warning("Bitrate is too low (%d vs %d)\n",_config.bitrate*1000,ratio);
         return false;       
     }
     
