@@ -34,6 +34,8 @@
 #define aprintf(...) {}
 #endif
 
+#define ADM_ZERO_OFFSET
+
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 }
@@ -76,16 +78,19 @@ bool        ADM_EditorSegment::updateRefVideo(void)
             ADM_info("First PTS is %s\n",ADM_us2plain(pts));
         }
 
-    updateStartTime();
     //
     n=segments.size();
     if(n)
     {
     _SEGMENT *seg=getSegment(n-1);
     uint64_t dur=ref->_aviheader->getVideoDuration();
+#ifdef ADM_ZERO_OFFSET
+    seg->_refStartTimeUs=pts;
+    seg->_durationUs=dur-pts;
+#endif
     printf("Current duration %" PRIu64" ms real one %" PRIu64" ms\n",dur/1000,seg->_durationUs/1000);
     }
-
+    updateStartTime();
     return true;
 }
 /**
@@ -168,6 +173,10 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         {
             ADM_warning("The first frame has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);
             ref->firstFramePts=pts;
+#ifdef ADM_ZERO_OFFSET
+            seg._refStartTimeUs=pts;
+            seg._durationUs-=pts;
+#endif
         }
 
     segments.push_back(seg);
@@ -641,16 +650,18 @@ bool ADM_EditorSegment::truncateVideo(uint64_t from)
     ListOfSegments tmp=segments;
 
     _SEGMENT *first=getSegment(startSeg);
+    _VIDEOS *vid=getRefVideo(first->_reference);
+    uint64_t padding=vid->timeIncrementInUs/2;
     // shorten the start segment
-    first->_durationUs=startOffset;
+    first->_durationUs=startOffset+padding;
     // remove following segments
     int n=segments.size();
     for(int i=startSeg+1;i<n;i++)
     {
         segments.erase(segments.begin()+startSeg+1);
     }
-    updateStartTime();
     removeEmptySegments();
+    updateStartTime();
     if(isEmpty())
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","You cannot remove *all* the video\n"));
@@ -789,7 +800,9 @@ bool        ADM_EditorSegment::removeEmptySegments(void)
                 _SEGMENT *seg=getSegment(i);
                 _VIDEOS  *vid=this->getRefVideo(seg->_reference);
                 if(seg->_durationUs==0) index=i;
-                if(seg->_refStartTimeUs==0 && seg->_durationUs==vid->firstFramePts) index=i; 
+#ifndef ADM_ZERO_OFFSET
+                if(seg->_refStartTimeUs==0 && seg->_durationUs==vid->firstFramePts) index=i;
+#endif
         }
         if(index==-1) break;
         segments.erase(segments.begin()+index);
