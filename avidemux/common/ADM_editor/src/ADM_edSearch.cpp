@@ -445,11 +445,18 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
           for(int frame=nbFrame-1;frame>=0;frame--)
           {
               uint32_t flags;
+              ADM_info("checking frame %d flags...\n",frame);
               pts=ADM_NO_PTS;    
               v->_aviheader->getFlags(frame,&flags);
               if(!(flags & AVI_KEY_FRAME)) continue;
+              ADM_info("frame %d is an intra, checking whether pts is in range...\n",frame);
               v->_aviheader->getPtsDts(frame,&pts,&dts);
-              if(pts==ADM_NO_PTS) continue;          
+              if(pts==ADM_NO_PTS) continue;
+              if(pts>=endTimeInRef)
+              {
+                  ADM_warning("frame %d pts in ref = %" PRIu64" is not in range, skipping\n",frame,pts);
+                  continue;
+              }
               ADM_info("found last keyframe at %d, time in reference=%s\n",frame,ADM_us2plain(pts));
               break;
           }
