@@ -22,6 +22,7 @@
 
 #include "audioencoder.h"
 #include "audioencoderInternal.h"
+#include "DIA_coreToolkit.h"
 
 #include "opus/opus.h"
 #include "audioencoder_opus.h"
@@ -56,6 +57,14 @@ static ADM_audioEncoder encoderDesc = {
   NULL
 };
 ADM_DECLARE_AUDIO_ENCODER_CONFIG( );
+/**
+ * 
+ * @param s
+ */
+static void OpusError(const char *s)
+{
+    GUI_Error_HIG("Opus",QT_TRANSLATE_NOOP("Opus",s));
+}
 
 /**
  * \fn ctor
@@ -127,7 +136,7 @@ int channels=wavheader.channels;
         case 48000:
             break;
     default:
-            ADM_warning("Unsupported frequency configuration\n");
+            OpusError("Unsupported frequency :\n   Only 8, 12, 16, 24 and 48 kHz are supported.");
             return false;            
     }
     //
@@ -135,6 +144,7 @@ int channels=wavheader.channels;
                                             // 48k => 960 ratio
     if(_config.bitrate*1000 < 3*ratio*8)
     {
+        OpusError("Bitrate is too low for that frequency.");
         ADM_warning("Bitrate is too low (%d vs %d)\n",_config.bitrate*1000,ratio);
         return false;       
     }
@@ -230,16 +240,16 @@ bool configure (CONFcouple **setup)
         ADM_paramLoad(*setup,opus_encoder_param,&config);
     }
     diaMenuEntry bitrateM[]={
-                              BITRATE(56),
-                              BITRATE(64),
-                              BITRATE(80),
-                              BITRATE(96),
-                              BITRATE(112),
-                              BITRATE(128),
-                              BITRATE(160),
-                              BITRATE(192),
-                              BITRATE(224),
-                              BITRATE(384)
+                            BITRATE(24),
+                            BITRATE(32),
+                            BITRATE(48),
+                            BITRATE(56),
+                            BITRATE(64),
+                            BITRATE(80),
+                            BITRATE(96),
+                            BITRATE(112),
+                            BITRATE(128)
+                              
                           };
     diaElemMenu bitrate(&(config.bitrate),   QT_TRANSLATE_NOOP("Opus","_Bitrate:"), SZT(bitrateM),bitrateM);
   
