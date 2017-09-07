@@ -130,6 +130,14 @@ int channels=wavheader.channels;
             ADM_warning("Unsupported frequency configuration\n");
             return false;            
     }
+    //
+    int  ratio=(wavheader.frequency+26)/50; // 20ms frames,  so we have ratio frames per sec
+                                            // 48k => 960 ratio
+    if(_config.bitrate < 3*ratio*8)
+    {
+        ADM_warning("Bitrate is too low\n");
+        return false;       
+    }
     
     //
     int err=0;
@@ -140,12 +148,15 @@ int channels=wavheader.channels;
           return false;
     }
     //
-    int r=opus_encoder_ctl(_handle,OPUS_SET_BITRATE(_config.bitrate));
+    int r=opus_encoder_ctl(_handle,OPUS_SET_BITRATE(_config.bitrate*1000));
     if(r<0)
     {
-        ADM_warning("Failed to set bitrate to %d\n",_config.bitrate);
+        ADM_warning("Failed to set bitrate to %d kbps\n",_config.bitrate);
         return false;
     }
+    int br;
+    opus_encoder_ctl(_handle,OPUS_GET_BITRATE(&br));
+    ADM_info("Bitrate : Asked %d, actually set = %d\n",_config.bitrate,br);
     // update
     wavheader.byterate=(_config.bitrate*1000)/8;
     wavheader.blockalign=1;
@@ -183,7 +194,7 @@ bool	AUDMEncoder_Opus::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
         done=opus_encode_float(_handle,&(tmpbuffer[tmphead]),
                                 processedSamples,
                                dest,
-                               4000);        
+                               4*4000);        
 #else
         dither16 (&(tmpbuffer[tmphead]), processedSamples, channels);
         done=opus_encode(_handle,(opus_int16 *)&(tmpbuffer[tmphead]),processedSamples,
