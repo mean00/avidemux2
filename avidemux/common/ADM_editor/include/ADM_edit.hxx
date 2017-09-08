@@ -107,7 +107,7 @@ class ADM_Composer : public IEditor
                     bool        switchToSegment(uint32_t s,bool dontdecode=false);
                     uint32_t    currentFrame;
 
-                    bool        nextPictureInternal(uint32_t ref,ADMImage *image);
+                    bool        nextPictureInternal(uint32_t ref,ADMImage *image,uint64_t time=0);
                     bool        samePictureInternal(uint32_t ref,ADMImage *image);
                     bool        seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode=false);
                     // Some useful functions...

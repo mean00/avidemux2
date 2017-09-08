@@ -130,13 +130,12 @@ bool ADM_Composer::samePictureInternal(uint32_t ref,ADMImage *out)
     \brief returns the next picture
     @param out : Where to put the decoded image to
     @param ref : Video we are dealing with
+    @param time: Discard the image if pts in ref >= time, ignore if time = 0
     @return true on success, false on failure
 
 */
-bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
+bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
 {
-  ADMImage	*result;
-  
   _VIDEOS *vid=_segments.getRefVideo(ref);
   EditorCache   *cache=vid->_videoCache;
   ADM_assert(vid);
@@ -156,6 +155,11 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out)
         ADMImage *img=cache->getAfter(vid->lastReadPts);
         if(img)
         {
+            if(time && img->Pts!=ADM_NO_PTS && img->Pts>=time)
+            {
+                ADM_warning("Next image PTS in ref is out of range: got %" PRIu64" us, wanted < %" PRIu64" us, discarding the image\n",img->Pts,time);
+                return false;
+            }
             // Duplicate
             if(out)
             {
