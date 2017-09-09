@@ -92,7 +92,7 @@ void                vsWindow::runOrStop()
      std::string fileName=std::string(ui.lineFile->text().toUtf8().constData());
      vapourSynthProxy vs;
                       
-     vs.run(9999,fileName.c_str());
+     vs.run(ui.spinboxPort->value(),fileName.c_str());
      ui.labelStatus->setText(QString("Exited (error ?)"));
 }
 
