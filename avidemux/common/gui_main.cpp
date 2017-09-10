@@ -609,6 +609,7 @@ void HandleAction (Action action)
             video_body->getVideoInfo (avifileinfo);
 
             A_Resync();
+            A_Rewind();
             A_ResetMarkers();
 
             // forget last project file

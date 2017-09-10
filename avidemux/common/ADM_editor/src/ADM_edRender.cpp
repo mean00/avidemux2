@@ -232,7 +232,11 @@ uint64_t tail;
                 goto np_nextSeg;
         }else 
         { // Not in cache, decode next one
-            if(false== nextPictureInternal(seg->_reference,image))
+          // but don't go past the end of the last segment
+            uint64_t maxPts=0;
+            if(_currentSegment+1 == _segments.getNbSegments())
+                maxPts=seg->_refStartTimeUs+seg->_durationUs;
+            if(false== nextPictureInternal(seg->_reference,image,maxPts))
             {
                 goto np_nextSeg;
             }

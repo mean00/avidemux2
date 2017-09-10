@@ -276,6 +276,15 @@ bool        ADM_EditorSegment::resetSegment(void)
         _VIDEOS  *vid=&(videos[i]);
 
         seg._durationUs=vid->_aviheader->getVideoDuration();
+#ifdef ADM_ZERO_OFFSET
+        uint64_t pts=vid->firstFramePts;
+        if(pts!=ADM_NO_PTS && pts)
+        {
+            ADM_warning("The first frame in ref video %d has PTS = %" PRIu64" us, adjusting the segment\n",i,pts);
+            seg._refStartTimeUs=pts;
+            seg._durationUs-=pts;
+        }
+#endif
         seg._reference=i;
         vid->_aviheader->getVideoInfo(&info);
         segments.push_back(seg);

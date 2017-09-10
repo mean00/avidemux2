@@ -445,10 +445,11 @@ uint64_t    ADM_Composer::getLastKeyFramePts(void)
           for(int frame=nbFrame-1;frame>=0;frame--)
           {
               uint32_t flags;
-              ADM_info("checking frame %d flags...\n",frame);
               pts=ADM_NO_PTS;    
               v->_aviheader->getFlags(frame,&flags);
               if(!(flags & AVI_KEY_FRAME)) continue;
+              // if B-frames are present, pts doesn't necessarily become smaller when frame is decremented,
+              // we must check whether pts is still in range and effectively go a full GOP backwards if not
               ADM_info("frame %d is an intra, checking whether pts is in range...\n",frame);
               v->_aviheader->getPtsDts(frame,&pts,&dts);
               if(pts==ADM_NO_PTS) continue;
