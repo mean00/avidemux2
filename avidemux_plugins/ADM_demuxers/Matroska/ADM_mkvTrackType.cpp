@@ -66,6 +66,8 @@ MKVCC mkvCC[]=
   {"V_MPEGH/ISO/HEVC",1,0,"HEVC"},  //H265
   {"V_MS/VFW/FOURCC",1,0,"VFWX"}, // Divx 2.
   {"V_MPEG4/ISO/ASP",1,0,"DIVX"},
+  {"V_MJPEG",1,0,"MJPG"},
+  
   // Filler
   {"AVIDEMUX_RULES",1,0,"DIV2"} // DUMMY
 };
