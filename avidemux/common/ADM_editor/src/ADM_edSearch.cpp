@@ -32,7 +32,7 @@ uint64_t refTime,nkTime,segTime;
 int lastSeg=_segments.getNbSegments();
 uint32_t seg;
 bool switchedSeg=false;
-bool r;
+bool r=false;
     // 1- Convert frameTime to segments
     if(false== _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime))
     {
@@ -46,10 +46,20 @@ again:
     // 2- Now search the previous keyframe in the ref image...
     // The time in reference = relTime+segmentStartTime
     refTime=s->_refStartTimeUs+segTime; // Absolute time in the reference image
-    
-    if(switchedSeg && refTime>0) refTime--; // The next segment may start with a keyframe
 
-    r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
+    if(switchedSeg && !refTime)
+    {
+        _VIDEOS *vid=_segments.getRefVideo(ref);
+        if(!vid->firstFramePts)
+        {
+            nkTime=0;
+            r=true;
+        }
+    }
+    if(switchedSeg && refTime>0)
+        refTime--; // The next segment may start with a keyframe
+    if(r==false)
+        r=searchNextKeyFrameInRef(ref,refTime,&nkTime);
 
     // 3- if it does not belong to the same seg  ....
     if(r==false || nkTime >= (s->_refStartTimeUs+s->_durationUs))
@@ -68,6 +78,7 @@ again:
         seg++;
         switchedSeg=true;
         segTime=0;
+        r=false;
         goto again;
     }
     // Gotit, now convert it to the linear time
@@ -103,10 +114,12 @@ bool r;
           if(!s->_refStartTimeUs)
           {
               uint64_t pts=vid->firstFramePts;
-              //
-              *frameTime+=pts;
-              ADM_warning("This video does not start at 0 but at %" PRIu64" ms, compensating\n",pts/1000);
-              _segments.convertLinearTimeToSeg(  *frameTime, &seg, &segTime);
+              if(pts)
+              {
+                  *frameTime+=pts;
+                  ADM_warning("This video does not start at 0 but at %" PRIu64" ms, compensating\n",pts/1000);
+                  _segments.convertLinearTimeToSeg(*frameTime, &seg, &segTime);
+              }
            }
       }
     // 
