@@ -269,8 +269,8 @@ againGet:
         ADM_info("Failed to get next frame for ref %" PRIu32"\n",seg->_reference);
         goto nextSeg;
     }
-    aprintf("Got frame %d, PTS=%s  ",img->demuxerFrameNo,ADM_us2plain(img->demuxerPts));
-    aprintf("DTS=%s  \n",ADM_us2plain(img->demuxerDts));
+    aprintf("Got frame %d, PTS=%s ",vid->lastSentFrame,ADM_us2plain(img->demuxerPts));
+    aprintf("DTS=%s\n",ADM_us2plain(img->demuxerDts));
     vid->lastSentFrame++;
     //
     aviInfo    info;
@@ -395,7 +395,17 @@ againGet:
                           ADM_us2plain(signedDts),
                           signedDts,(int)vid->timeIncrementInUs,
                           (int)delta);
-                
+                if(img->flags & AVI_KEY_FRAME)
+                {
+                    uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
+                    static char msg[512+1];
+                    snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
+                        "Decode time stamp (DTS) collision affecting a keyframe at %s detected.\n"
+                        "Dropping a keyframe will result in severely corrupted video.\n"
+                        "Proceed anyway?"),ADM_us2plain(linearTime));
+                    if(!GUI_Question(msg))
+                        return false;
+                }
                 goto againGet;
             }
         }
@@ -439,7 +449,7 @@ againGet:
     img->demuxerPts=signedPts+(int64_t)videoDelay;
     aprintf("Final Pts=%s ",ADM_us2plain(img->demuxerPts));
     aprintf("Final Dts=%s ",ADM_us2plain(img->demuxerDts));    
-    aprintf("Delay =%s ",ADM_us2plain(videoDelay));    
+    aprintf("Delay=%s\n",ADM_us2plain(videoDelay));
     return true;
 
 nextSeg:
