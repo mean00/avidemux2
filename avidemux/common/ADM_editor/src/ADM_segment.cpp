@@ -34,8 +34,6 @@
 #define aprintf(...) {}
 #endif
 
-#define ADM_ZERO_OFFSET
-
 ADM_EditorSegment::ADM_EditorSegment(void)
 {
 }
