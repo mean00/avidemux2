@@ -623,6 +623,7 @@ void HandleAction (Action action)
             uint64_t a=video_body->getMarkerAPts();
             uint64_t b=video_body->getMarkerBPts();
             uint64_t current=video_body->getCurrentFramePts();
+            uint64_t before=video_body->getVideoDuration();
             if(a>b)
             {
                 uint64_t p=a;
@@ -677,15 +678,23 @@ void HandleAction (Action action)
             }
             A_ResetMarkers();
             A_Resync(); // total duration & stuff
-        
+
+            // If A was at the first frame of a segment with start time in ref = 0 and ref video
+            // not starting at zero, the part of the segment before the first frame got deleted too,
+            // even if we didn't ask for that explicitely. We must adjust timestamps accordingly
+            // to avoid seek errors. This is not relevant for truncating.
+            uint64_t after=video_body->getVideoDuration();
+            uint64_t c=0;
+            if(!lastFrame)
+                c=before-after+a-b;
             if(current>=a) // else current is before A, so nothing to do
             {
                 if(current<b) // current is between A & B => A
                 {
-                        current=a;
+                        current=a-c;
                 }else // current is after the removed chunk, adjust
                 {
-                        current-=(b-a);
+                        current-=b-a+c;
                 }
             }
             if(!video_body->goToTimeVideo(current))
