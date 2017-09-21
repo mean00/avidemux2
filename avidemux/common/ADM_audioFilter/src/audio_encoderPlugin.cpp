@@ -307,7 +307,7 @@ uint8_t audioCodecSetByName( int dex,const char *name)
 
 		for(uint32_t i=0;i<ListOfAudioEncoder.size();i++)
 		{
-			if(!strcasecmp(name,ListOfAudioEncoder[i]->codecName))
+			if(!strcasecmp(name,ListOfAudioEncoder[i]->codecName) || !strcasecmp(name,ListOfAudioEncoder[i]->menuName))
 			{
 
 				ed->encoderIndex=i;
