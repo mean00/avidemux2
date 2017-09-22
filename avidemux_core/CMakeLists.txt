@@ -30,6 +30,7 @@ include(admCheckFtello)
 include(admAsNeeded)
 INCLUDE(admCheckVDPAU)
 INCLUDE(admCheckLibVA)
+INCLUDE(admCheckVideoToolbox)
 
 #########################################
 # Debug Summary
@@ -68,8 +69,12 @@ MESSAGE("")
 IF(WIN32)# AND NOT MSVC)
    INCLUDE(admCheckDxva2)
 ELSE(WIN32)
+    IF(UNIX AND NOT APPLE)
         checkVDPAU()
         checkLibVA()
+    ELSE(UNIX AND NOT APPLE)
+        checkVideoToolbox()
+    ENDIF(UNIX AND NOT APPLE)
 ENDIF(WIN32)# AND NOT MSVC)
 
 ########################################

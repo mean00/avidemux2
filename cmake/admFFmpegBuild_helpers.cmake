@@ -162,6 +162,7 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
     INSTALL(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
 
     INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h" "${FFMPEG_SOURCE_DIR}/libavcodec/vdpau.h"
+            "${FFMPEG_SOURCE_DIR}/libavcodec/videotoolbox.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/version.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/audioconvert.h"
             DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
