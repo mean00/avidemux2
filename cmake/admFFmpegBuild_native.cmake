@@ -34,6 +34,12 @@ if (USE_LIBVA)
     set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_vaapi hevc_vaapi)
 endif (USE_LIBVA)
 
+if (USE_VIDEOTOOLBOX)
+    xadd(--enable-videotoolbox)
+    set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h263_videotoolbox h264_videotoolbox mpeg1_videotoolbox mpeg2_videotoolbox mpeg4_videotoolbox)
+    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_videotoolbox)
+endif (USE_VIDEOTOOLBOX)
+
 #@@
 ADM_FF_ADD_OPTIONS()
 

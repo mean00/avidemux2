@@ -26,6 +26,8 @@
 #cmakedefine USE_LIBVA
 // use dxva2 hw decoding 
 #cmakedefine USE_DXVA2
+// use videotoolbox hw decoding and encoding
+#cmakedefine USE_VIDEOTOOLBOX
 
 // 'gettimeofday' function is present
 #cmakedefine HAVE_GETTIMEOFDAY
