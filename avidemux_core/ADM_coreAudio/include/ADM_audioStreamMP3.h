@@ -35,6 +35,9 @@ class ADM_audioStreamMP3 : public ADM_audioStreamBuffered
         protected:
                       BVector <MP3_seekPoint *> seekPoints;
         bool            buildTimeMap(void);
+        // Suppress repeated debug messages from getPacket
+        ADMCountdown    *_msg_ratelimit;
+        uint32_t        _msg_counter;
         public:
 /// Default constructor
                        ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access, bool createMap=true);  

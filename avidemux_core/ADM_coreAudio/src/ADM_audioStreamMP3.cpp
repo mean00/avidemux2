@@ -48,8 +48,10 @@ ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access
     }
     // Time based
     durationInUs=access->getDurationInUs();
-    
-
+    // Suppress repeated debug messages
+    _msg_counter=0;
+    _msg_ratelimit=new ADMCountdown(200);
+    _msg_ratelimit->reset();
 }
 
 /**
@@ -64,6 +66,9 @@ ADM_audioStreamMP3::~ADM_audioStreamMP3()
         delete seekPoints[i];
         seekPoints[i]=NULL;
     }
+    if(_msg_ratelimit)
+        delete _msg_ratelimit;
+    _msg_ratelimit = NULL;
 }
 /**
     \fn goToTime
@@ -130,8 +135,22 @@ int nbSyncBytes=0;
         // Do we have enough ? Refill if needed ?
         if(needBytes(ADM_LOOK_AHEAD)==false) 
         {
-            ADM_warning("MP3: Not enough data to lookup header\n");
-                return 0;
+            if(_msg_ratelimit->done())
+            {
+                if(_msg_counter)
+                {
+                    ADM_warning("MP3: Not enough data to lookup header (message repeated %" PRIu32" times)\n",_msg_counter);
+                    _msg_counter=0;
+                }else
+                {
+                    ADM_warning("MP3: Not enough data to lookup header\n");
+                }
+                _msg_ratelimit->reset();
+            }else
+            {
+                _msg_counter++;
+            }
+            return 0;
         }
         // Peek
         peek(ADM_LOOK_AHEAD,data);
@@ -150,6 +169,7 @@ int nbSyncBytes=0;
                 //printf("%"PRId64" , size=%d\n",*dts,*size);
                 if(nbSyncBytes)
                         ADM_info("[MP3 Stream] Sync found after %d bytes...\n",nbSyncBytes);
+                _msg_counter=0;
                 return 1;
             }
             
