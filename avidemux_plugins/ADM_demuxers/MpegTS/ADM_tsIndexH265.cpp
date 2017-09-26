@@ -317,6 +317,7 @@ bool bAppend=false;
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
 
     FP_TYPE append=FP_DONT_APPEND;
+#if 0
     if(true==ADM_probeSequencedFile(file))
     {
         if(true==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
@@ -324,6 +325,7 @@ bool bAppend=false;
     }
     if(bAppend==true)
         append=FP_APPEND;
+#endif
     writeSystem(file,bAppend);
     pkt->open(file,append);
     data.pkt=pkt;
