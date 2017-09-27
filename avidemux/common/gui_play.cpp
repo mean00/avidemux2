@@ -243,6 +243,7 @@ bool GUIPlayback::run(void)
     uint32_t movieTime;
     uint32_t systemTime;
     uint32_t fn;
+    bool gotAudio=true;
     int refreshCounter=0;
     ticktock.reset();
     vuMeterPts=0;
@@ -259,7 +260,8 @@ bool GUIPlayback::run(void)
             printf("[Play] Cancelling playback, nextPicture failed\n");
             break;
         }
-        audioPump(false);
+        if(gotAudio)
+            gotAudio=audioPump(false);
         lastPts=admPreview::getCurrentPts();
         systemTime = ticktock.getElapsedMS();
         movieTime=(uint32_t)((lastPts-firstPts*0)/1000);
@@ -295,12 +297,15 @@ bool GUIPlayback::run(void)
                 
                 if(delta>10)
                 {
-                    if(playbackAudio)
-                        audioPump(true);
+                    if(gotAudio)
+                        gotAudio=audioPump(true);
                     else
                         ADM_usleep(10*1000);
                 }else
-                    audioPump(false);
+                {
+                    if(gotAudio)
+                        gotAudio=audioPump(false);
+                }
 
                 UI_purge();
                 refreshCounter=0;
@@ -322,14 +327,14 @@ abort_play:
 
 bool  GUIPlayback::audioPump(bool wait)
 {
+    if (!playbackAudio)
+        return false;
+
     uint32_t oaf = 0;
     uint32_t load = 0;
     uint8_t channels;
     uint32_t fq;
     static bool errorMet=false;
-
-    if (!playbackAudio)	    return false;
-
 
     channels= playbackAudio->getInfo()->channels;
     fq=playbackAudio->getInfo()->frequency;
@@ -347,6 +352,8 @@ bool  GUIPlayback::audioPump(bool wait)
              AUD_Status status;
              if (! (oaf = playbackAudio->fill(slice,  wavbuf,&status)))
              {
+                  if(status==AUD_END_OF_STREAM)
+                      return false;
                   if(errorMet==false)
                     ADM_warning("[Playback] Error reading audio stream...\n");
                   errorMet=true;
