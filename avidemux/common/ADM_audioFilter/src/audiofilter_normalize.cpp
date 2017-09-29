@@ -35,7 +35,7 @@
 #elif defined(ADM_BSD_FAMILY) || defined(__sun__)
 #define POW10(x) powf(10.0,x)
 #else
-#define POW10(x)  pow10f(x)
+#define POW10(x) exp10f(x)
 #endif
 
 #define LINEAR_TO_DB(x) (20.*log10(x))
