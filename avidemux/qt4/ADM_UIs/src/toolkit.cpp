@@ -9,10 +9,15 @@ static QStack<QWidget*> widgetStack;
 
 void qtRegisterDialog(QWidget *dialog)
 {
-	if (widgetStack.count())
-		dialog->setParent(widgetStack.top(), Qt::Dialog);
-
-	widgetStack.push(dialog);
+    if (widgetStack.count())
+    {
+        if (dialog->parentWidget() != widgetStack.top() || !(dialog->windowFlags() & Qt::Dialog))
+        {
+            dialog->setParent(widgetStack.top(), Qt::Dialog);
+            dialog->show(); // reparenting makes the widget invisible
+        }
+    }
+    widgetStack.push(dialog);
 }
 
 void qtUnregisterDialog(QWidget *dialog)
