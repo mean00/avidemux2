@@ -120,6 +120,16 @@ uint8_t mkvHeader::open(const char *name)
   {
        ADM_ebml_file seekHead( &ebml,alen);
        readSeekHead(&seekHead);
+  }else      
+  { // No valid seek_head, try to find MKV_TRACKS
+      ADM_info("Searching for MKV_TRACKS\n");
+      ebml.seek(_segmentPosition);
+      if(!ebml.find(ADM_MKV_SECONDARY,MKV_SEGMENT,MKV_TRACKS,&alen))
+      {
+        ADM_warning("[MKV] Cannot find tracks MKV_TRACKS\n");
+        return false;
+      }
+      _trackPosition=ebml.tell();
   }
   /* Now find tracks */
   /* And analyze them */
