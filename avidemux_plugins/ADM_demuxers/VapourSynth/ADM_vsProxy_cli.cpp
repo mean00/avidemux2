@@ -60,7 +60,7 @@ int main(int ac, char **av)
             try
             {
                 size_t resPos;
-                std::string strPort(av[avPos + 1]);
+                std::string strPort(av[avPos]);
                 port = std::stoi(strPort, &resPos, 0);
                 if (resPos != strPort.size())
                 {
