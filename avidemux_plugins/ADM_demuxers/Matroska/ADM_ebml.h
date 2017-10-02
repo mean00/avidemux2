@@ -70,6 +70,7 @@ class ADM_ebml_file : public ADM_ebml
                     bool      findSecondaryContainer(ADM_MKV_SEARCHTYPE search,   MKV_ELEM_ID  prim,MKV_ELEM_ID second,bool rewind, uint64_t *pos,int *headerLen,uint64_t *len);
                     bool      simpleFindContainerOf(MKV_ELEM_ID  prim,bool rewind,uint64_t *xpos,int *xheaderLen,uint64_t *xlen);
                     uint64_t  remaining(void);
+                    bool      findContainerOfSecondary(MKV_ELEM_ID  prim,MKV_ELEM_ID second,bool rewind, uint64_t *xpos, int *xheaderLen,uint64_t *xlen);
 };
 
 void bigHexPrint(uint64_t v);

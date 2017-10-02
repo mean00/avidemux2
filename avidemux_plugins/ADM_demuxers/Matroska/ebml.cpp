@@ -382,6 +382,38 @@ bool ADM_ebml_file::finished(void)
   \fn find
   \brief Search for the tag given and returns the corresponding atom
 */
+ bool ADM_ebml_file::findContainerOfSecondary(MKV_ELEM_ID  prim,MKV_ELEM_ID second,bool rewind, uint64_t *xpos, int *xheaderLen,uint64_t *xlen)
+{
+  uint64_t id,pos;
+  ADM_MKV_TYPE type;
+  const char *ss;
+
+    vprintf("[MKV]Searching for tag %llx %llx\n",prim,second);
+    if(rewind) seek(_begin);
+    vprintf("[MKV]Searching primary : %llx\n",prim);
+    if(!simplefind(prim,xlen,rewind))
+    {
+      vprintf("[MKV] Primary find failed for %llx\n",prim);
+      return 0;
+    }
+    // Now we have the father, go inside
+    ADM_ebml_file *son=new ADM_ebml_file(this,*xlen);
+    vprintf("[MKV]Searching secondary : %llx\n",second);
+    if(!son->simpleFindContainerOf(second,false,xpos,xheaderLen,xlen))
+    {
+      vprintf("[MKV] secondary find failed for secondary %llx\n",second);
+      delete son;
+      return false;
+    }
+    pos=son->tell();
+    delete son;
+    seek(pos);
+    return true;
+}
+/**
+  \fn find
+  \brief Search for the tag given and returns the corresponding atom
+*/
 bool ADM_ebml_file::simpleFindContainerOf(MKV_ELEM_ID  prim,bool rewind,uint64_t *xpos,int *xheaderLen,uint64_t *xlen)
 {
   uint64_t id,alen;
