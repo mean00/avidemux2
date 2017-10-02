@@ -67,6 +67,8 @@ class ADM_ebml_file : public ADM_ebml
                     bool      find(ADM_MKV_SEARCHTYPE search,
                                         MKV_ELEM_ID  prim,MKV_ELEM_ID second,uint64_t *len,bool rewind=1);
                     bool      simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind=true);
+                    bool      findSecondaryContainer(ADM_MKV_SEARCHTYPE search,   MKV_ELEM_ID  prim,MKV_ELEM_ID second,bool rewind, uint64_t *pos,int *headerLen,uint64_t *len);
+                    bool      simpleFindContainerOf(MKV_ELEM_ID  prim,bool rewind,uint64_t *xpos,int *xheaderLen,uint64_t *xlen);
                     uint64_t  remaining(void);
 };
 

@@ -340,6 +340,7 @@ bool ADM_ebml_file::finished(void)
   if(tell()>(_begin+_size-2)) return 1;
   return 0;
 }
+
 /**
   \fn find
   \brief Search for the tag given and returns the corresponding atom
@@ -381,19 +382,21 @@ bool ADM_ebml_file::finished(void)
   \fn find
   \brief Search for the tag given and returns the corresponding atom
 */
-bool ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind)
+bool ADM_ebml_file::simpleFindContainerOf(MKV_ELEM_ID  prim,bool rewind,uint64_t *xpos,int *xheaderLen,uint64_t *xlen)
 {
   uint64_t id,alen;
   ADM_MKV_TYPE type;
   const char *ss;
-
+  uint64_t pos;
 
     vprintf("[MKV] Simple Searching for tag %llx\n",prim);
-    if(rewind) seek(_begin);
+    if(rewind) 
+        seek(_begin);
 
       while(!finished())
       {
           //printf("Offset is %d\n",(int)(this->tell()>>10));
+          pos=this->tell();
           readElemId(&id,&alen);
           if(!ADM_searchMkvTag( (MKV_ELEM_ID)id,&ss,&type))
           {
@@ -409,13 +412,27 @@ bool ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind)
           vprintf("Found Tag : %x (%s)\n",id,ss);
           if(id==prim)
           {
-            *len=alen;
-            return 1;
+            *xpos=pos;
+            *xheaderLen=this->tell()-pos;
+            *xlen=alen;
+            return true;
           }else
             skip(alen);
       }
     vprintf("[MKV] Failed to locate %llx\n",prim);
-    return 0;
+    return false;
+}
+/**
+  \fn find
+  \brief Search for the tag given and returns the corresponding atom
+*/
+bool ADM_ebml_file::simplefind(MKV_ELEM_ID  prim,uint64_t *len,bool rewind)
+{
+  uint64_t pos;
+  int headerLen;  
+  bool r= simpleFindContainerOf( prim,rewind,&pos,&headerLen,len)  ;
+  
+  return r;
 }
 /**
     \fn remaining
