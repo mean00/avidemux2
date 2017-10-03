@@ -23,6 +23,10 @@ GPL-v2
 */
 ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access,bool createMap) : ADM_audioStreamBuffered(header,access)
 {
+    // Suppress repeated debug messages
+    _msg_counter=0;
+    _msg_ratelimit=new ADMCountdown(200);
+    _msg_ratelimit->reset();
     // If hinted..., compute the duration ourselves
     if(access->isCBR()==true && access->canSeekOffset()==true)
     {
@@ -48,10 +52,6 @@ ADM_audioStreamMP3::ADM_audioStreamMP3(WAVHeader *header,ADM_audioAccess *access
     }
     // Time based
     durationInUs=access->getDurationInUs();
-    // Suppress repeated debug messages
-    _msg_counter=0;
-    _msg_ratelimit=new ADMCountdown(200);
-    _msg_ratelimit->reset();
 }
 
 /**
