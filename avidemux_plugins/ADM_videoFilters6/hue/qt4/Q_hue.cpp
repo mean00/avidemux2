@@ -51,6 +51,7 @@
           SPINNER(Hue);
           SPINNER(Saturation);
 
+        setModal(true);
         show();
         myCrop->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

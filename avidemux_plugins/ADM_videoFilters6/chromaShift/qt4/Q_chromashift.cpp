@@ -54,6 +54,7 @@ Ui_chromaShiftWindow::Ui_chromaShiftWindow(QWidget* parent, chromashift *param,A
           SPINNER(U);
           SPINNER(V);
 
+        setModal(true);
         show();
         myCrop->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

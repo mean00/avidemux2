@@ -205,7 +205,8 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
         myLogo->sameImage();
         
         myLogo->addControl(ui.toolboxLayout);
-        
+
+        setModal(true);
         show();
         myLogo->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

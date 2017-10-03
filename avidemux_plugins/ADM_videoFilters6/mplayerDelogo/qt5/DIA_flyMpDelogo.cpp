@@ -215,6 +215,7 @@ uint8_t    flyMpDelogo::processYuv(ADMImage* in, ADMImage *out)
         }
         ui.labelHelp->setPixmap(QPixmap(":/images/grips.png"));
 
+        setModal(true);
         show();
         myCrop->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

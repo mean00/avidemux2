@@ -68,6 +68,7 @@ Ui_eq2Window::Ui_eq2Window(QWidget *parent, eq2 *param,ADM_coreVideoFilter *in) 
 
     setResetSliderEnabledState();
 
+    setModal(true);
     show();
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

@@ -51,6 +51,7 @@
           SPINNER(Block);
           connect( ui.checkBox,SIGNAL(stateChanged(int)),this,SLOT(valueChanged2(int))); 
 
+        setModal(true);
         show();
         myCrop->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

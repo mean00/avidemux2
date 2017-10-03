@@ -372,6 +372,7 @@ uint32_t width,height;
       SPINNER(Top);
       SPINNER(Bottom);
 
+    setModal(true);
     show();
     myCrop->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing both ways after the dialog has settled

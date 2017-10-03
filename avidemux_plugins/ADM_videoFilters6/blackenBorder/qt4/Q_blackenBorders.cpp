@@ -48,6 +48,7 @@ Ui_blackenWindow::Ui_blackenWindow(QWidget* parent, blackenBorder *param,ADM_cor
     SPINNER(Top);
     SPINNER(Bottom);
 
+    setModal(true);
     show();
     myBlacken->adjustCanvasPosition();
     canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

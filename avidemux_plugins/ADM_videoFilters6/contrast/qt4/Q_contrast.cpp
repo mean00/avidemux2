@@ -76,6 +76,7 @@
           connect( ui.checkBox_Enabled,SIGNAL(stateChanged(int)),this,SLOT(previewActivated(int)));  
           connect( ui.toolButton__DVD2PC,SIGNAL(pressed()),this,SLOT(dvd2PC()));  
 
+        setModal(true);
         show();
         myCrop->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled

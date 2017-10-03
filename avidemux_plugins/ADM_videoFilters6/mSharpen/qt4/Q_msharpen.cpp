@@ -54,6 +54,7 @@
         SPINNER(Threshold);
         SPINNER(Strength);
 
+        setModal(true);
         show();
         flymsharpen->adjustCanvasPosition();
         canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
