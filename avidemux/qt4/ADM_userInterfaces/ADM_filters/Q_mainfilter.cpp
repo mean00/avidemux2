@@ -276,6 +276,8 @@ void filtermainWindow::preview(bool b)
     previewDialog->setModal(true);
     connect(previewDialog, SIGNAL(accepted()), this, SLOT(closePreview()));
     previewDialog->show();
+    previewDialog->seekablePreview->adjustCanvasPosition();
+    previewDialog->canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 /**
  * \fn closePreview

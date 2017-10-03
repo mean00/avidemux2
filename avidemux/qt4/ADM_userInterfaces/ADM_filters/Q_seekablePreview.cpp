@@ -37,10 +37,6 @@ Ui_seekablePreviewWindow::Ui_seekablePreviewWindow(QWidget *parent, ADM_coreVide
 	seekablePreview->sliderChanged();
 
 	connect(ui.horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-
-        show();
-        seekablePreview->adjustCanvasPosition();
-        canvas->parentWidget()->setMinimumSize(30,30); // allow resizing after the dialog has settled
 }
 
 Ui_seekablePreviewWindow::~Ui_seekablePreviewWindow()
