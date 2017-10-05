@@ -52,7 +52,7 @@ uint8_t Metrics( uint8_t *in, uint32_t width,uint32_t *avg, uint32_t *eqt)
 
 uint32_t x;
 uint32_t sum=0,eq=0;
-uint8_t v;
+int v;
               for(x=0;x<width;x++)
               {
                       sum+=*(in+x);
@@ -77,7 +77,7 @@ uint8_t MetricsV( uint8_t *in,uint32_t width, uint32_t height,uint32_t *avg, uin
 
 uint32_t x;
 uint32_t sum=0,eq=0;
-uint8_t v;
+int v;
     for(x=0;x<height;x++)
     {
             sum+=*(in+x*width);
