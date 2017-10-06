@@ -22,7 +22,7 @@ protected:
     ADM_rubberControl *rubber;
     bool        blockChanges(bool block);
     int         autoRun(uint8_t *in,int w,int h, int increment);
-    int         autoRunV(uint8_t *in,int w,int h, int increment);
+    int         autoRunV(uint8_t *in, int stride, int w, int increment);
 private:
     int _ox,_oy,_ow,_oh;
     void dimensions();

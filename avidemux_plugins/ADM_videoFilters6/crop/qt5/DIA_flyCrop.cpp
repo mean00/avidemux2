@@ -200,13 +200,13 @@ int flyCrop::autoRun(uint8_t *in,int w,int h, int increment)
         y=y-1;
     return y&0xfffe;
 }
-int flyCrop::autoRunV(uint8_t *in,int w,int h, int increment)
+int flyCrop::autoRunV(uint8_t *in, int stride, int w, int increment)
 {
     uint32_t avg,eqt;
     int y;
-    for(y=0;y<h;y++)	
+    for(y=0;y<w;y++)
     {
-        MetricsV(in,w,h,&avg,&eqt);
+        MetricsV(in,stride,_h,&avg,&eqt);
         in+=increment;
         if(avg> THRESH_AVG || eqt > THRESH_EQT)
                 break;
@@ -221,18 +221,14 @@ int flyCrop::autoRunV(uint8_t *in,int w,int h, int increment)
  */
 uint8_t  flyCrop::autocrop(void)
 {
-uint8_t *in;
-uint32_t y,avg,eqt;
-    // Top
-
-
+    uint8_t *in;
     in=_yuvBuffer->GetReadPtr(PLANAR_Y);
     int stride=_yuvBuffer->GetPitch(PLANAR_Y);
-    
+
     top=autoRun(in,_w,((_h>>1)-2),stride);
     bottom=autoRun(in+stride*(_h-1),_w,((_h>>1)-2),-stride);
-    left=autoRunV(in,_w,((_w>>1)-2),1);
-    right=autoRunV(in+_w-1,_w,((_w>>1)-2),-1);
+    left=autoRunV(in,stride,((_w>>1)-2),1);
+    right=autoRunV(in+_w-1,stride,((_w>>1)-2),-1);
     upload(false,true);
     sameImage();
     return 1;
