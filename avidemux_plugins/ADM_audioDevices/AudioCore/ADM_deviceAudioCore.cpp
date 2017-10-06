@@ -29,6 +29,9 @@
 #define BUFFER_SIZE (500*48000)
 #define aprintf(...) {}
 
+#ifndef verify_noerr
+    #define verify_noerr(x) {if((x)!=0) ADM_assert(0);}
+#endif
 
 ADM_DECLARE_AUDIODEVICE(CoreAudio,coreAudioDevice,1,0,2,"Core Audio Plugin  (c) mean");
 
