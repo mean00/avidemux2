@@ -40,6 +40,11 @@ bool ADM_verifyDts(vidHeader *hdr,uint64_t timeIncrementUs)
         hdr->getVideoInfo(&info);
         uint32_t nbFrames=0;
         nbFrames=info.nb_frames;
+        if(!nbFrames)
+        {
+            ADM_warning("The demuxer reports zero frames in this video, can't verify DTS\n");
+            return false;
+        }
         //
         ADM_info("Verifying DTS....\n");
         uint64_t got_dts=0,startDts=0;
