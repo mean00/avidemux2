@@ -544,9 +544,14 @@ bool OpenDMLHeader::removeEmptyFrames(void)
     
     odmlIndex *nwIdx=new odmlIndex[_videostream.dwLength];
     int index=0;
+    bool isFraps=fourCC::check(_videostream.fccHandler,(uint8_t *)"FPS1");
+    
     for(int i=0;i<_videostream.dwLength;i++)
     {
-        if(_idx[i].size)
+        bool skip=false;
+        if(!_idx[i].size) skip=true;
+        if(isFraps && _idx[i].size==8) skip=true;
+        if(!skip)
         {
             nwIdx[index++]=_idx[i];
         }
@@ -559,7 +564,7 @@ bool OpenDMLHeader::removeEmptyFrames(void)
     }
     int delta=_videostream.dwLength-index;
 
-    printf("[openDml] Removed %d empty frames\n",(int)delta);
+    printf("[openDml] Removed %d empty frames, new total is %d\n",(int)delta,(int)index);
     _mainaviheader.dwTotalFrames=_videostream.dwLength=index;
     delete [] _idx;
     _idx=nwIdx;
