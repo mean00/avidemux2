@@ -630,21 +630,40 @@ void HandleAction (Action action)
                 a=b;
                 b=p;
             }
+            // Special case of B being at or beyond the last frame
+            bool lastFrame=false;
+            if(b==before)
+            {
+                lastFrame=true;
+            }else
+            {
+                uint64_t pts=video_body->getLastKeyFramePts();
+                if(pts!=ADM_NO_PTS && b>=pts) // don't waste time if B is before the last keyframe
+                {
+                    GUI_infiniteForward(pts);
+                    uint64_t lastFramePts=video_body->getCurrentFramePts();
+                    if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
+                }
+            }
+            if(!a && lastFrame)
+            {
+                if(action==ACT_Cut)
+                {
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cutting"),
+                                  QT_TRANSLATE_NOOP("adm","It is impossible to cut out the entire video. Please recheck the position of markers A and B."));
+                }else
+                {
+                    GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Deleting"),
+                                  QT_TRANSLATE_NOOP("adm","It is impossible to delete the entire video. Please recheck the position of markers A and B."));
+                }
+                break;
+            }
             if(action==ACT_Cut)
             {
                 video_body->copyToClipBoard(a,b);
             }
             video_body->addToUndoQueue();
-            // Special case of B being at or beyond the last frame
-            bool lastFrame=false;
             bool result=false;
-            uint64_t pts=video_body->getLastKeyFramePts();
-            if(pts!=ADM_NO_PTS && b>=pts) // don't waste time if B is before the last keyframe
-            {
-                GUI_infiniteForward(pts);
-                uint64_t lastFramePts=video_body->getCurrentFramePts();
-                if(b>=lastFramePts) lastFrame=true; // B is at or beyond the last frame
-            }
             if(lastFrame)
                 result= video_body->truncate(a);
             else
