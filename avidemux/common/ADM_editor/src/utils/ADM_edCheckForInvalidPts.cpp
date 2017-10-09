@@ -43,7 +43,10 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     int totalFrames=vid->_aviheader->getVideoStreamHeader()->dwLength;
     
     if(checkRange>totalFrames) checkRange=totalFrames;
-    goToTimeVideo(seg->_startTimeUs);
+    uint64_t from=seg->_startTimeUs;
+    if(!seg->_refStartTimeUs && vid->firstFramePts)
+        from+=vid->firstFramePts;
+    goToTimeVideo(from);
     
     stats.reset();
     ADM_info("Checking file for broken PTS...\n");
@@ -54,7 +57,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         DecodeNextPicture(seg->_reference);
         working->update(i,checkRange);
     }
-    goToTimeVideo(seg->_startTimeUs);
+    goToTimeVideo(from);
     delete working;
     ADM_info("-------- Stats :----------\n");
 #define INFO(x) ADM_info(#x":%d\n",stats.x);
@@ -105,7 +108,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         ADM_info("Cancelled %d pts as unreliable \n",processed);
 
     }
-    goToTimeVideo(seg->_startTimeUs);
+    goToTimeVideo(from);
     return true;
 }
 /**
