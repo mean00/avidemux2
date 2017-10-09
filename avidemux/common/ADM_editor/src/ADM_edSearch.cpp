@@ -348,6 +348,8 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
 
 bool ADM_Composer::searchPreviousKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nkTime)
 {
+    if(!refTime)
+        return false;
     // Search for the current frame with quick search
     _VIDEOS *v = _segments.getRefVideo(ref);
     uint32_t nbFrame = v->_nb_video_frames;
