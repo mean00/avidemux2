@@ -130,10 +130,9 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
 #else
 	ui->comboBoxPriority->setCurrentIndex(priority);
 #endif
-        
-        
-        qtRegisterDialog(this);
+
         setModal(true);
+        qtRegisterDialog(this);
         show();
         tray=NULL;
 }
