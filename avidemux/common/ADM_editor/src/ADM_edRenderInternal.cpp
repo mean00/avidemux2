@@ -56,7 +56,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     {
         if(false==searchPreviousKeyFrameInRef(ref,timeToSeek,&seekTime))
         {
-            ADM_warning("Cannot identify the keyframe before %" PRIu64" ms\n",seekTime/1000);
+            ADM_warning("Cannot identify the keyframe before %" PRIu64" ms\n",timeToSeek/1000);
             return false;
         }
     }
