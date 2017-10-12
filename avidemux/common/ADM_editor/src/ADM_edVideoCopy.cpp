@@ -253,6 +253,11 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
     int64_t signedPts;
     int64_t signedDts;
 
+#define MAX_EXTRA_DELAY 100000
+
+    if(totalExtraDelay>5000)
+        totalExtraDelay-=5000; // gradually reduce extra delay, 5 ms at a time
+
 againGet:
     static uint32_t fn;
     fn++;
@@ -351,6 +356,7 @@ againGet:
     else
     {
             signedDts=(int64_t)img->demuxerDts;
+            signedDts+=totalExtraDelay;
             recalibrateSigned(&(signedDts),seg);
     }
 
@@ -359,6 +365,7 @@ againGet:
     else
     {
             signedPts=(int64_t)img->demuxerPts;
+            signedPts+=totalExtraDelay;
             recalibrateSigned(&(signedPts),seg);
     }
     aprintf("Signed Pts=%s ",ADM_us2plain(signedPts));
@@ -387,26 +394,36 @@ againGet:
             {
                 double delta=_nextFrameDts-signedDts;
                 delta=fabs(delta);
-                ADM_error("Frame %d DTS is going back in time: expected: %s : %d\n",
+                if(totalExtraDelay<MAX_EXTRA_DELAY)
+                {
+                    ADM_warning("Frame %d DTS is going back in time, delaying it for %" PRIu64" us\n",(int)vid->lastSentFrame,(uint64_t)delta);
+                    signedDts=_nextFrameDts;
+                    totalExtraDelay+=(uint64_t)delta;
+                    ADM_info("total extra delay = %" PRIu64" us\n",totalExtraDelay);
+                }else
+                {
+                    ADM_error("Frame %d DTS is going back in time: expected: %s : %d\n",
                           (int)vid->lastSentFrame,
                           ADM_us2plain(_nextFrameDts),
                           (_nextFrameDts));
-                ADM_error("and got %s : %d, timeIncrement=%d us, delta=%d\n",
+                    ADM_error("and got %s : %d, timeIncrement=%d us, delta=%d\n",
                           ADM_us2plain(signedDts),
                           signedDts,(int)vid->timeIncrementInUs,
                           (int)delta);
-                if(img->flags & AVI_KEY_FRAME)
-                {
-                    uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
-                    static char msg[512+1];
-                    snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
-                        "Decode time stamp (DTS) collision affecting a keyframe at %s detected.\n"
-                        "Dropping a keyframe will result in severely corrupted video.\n"
-                        "Proceed anyway?"),ADM_us2plain(linearTime));
-                    if(!GUI_Question(msg))
-                        return false;
+                    if(img->flags & AVI_KEY_FRAME)
+                    {
+                        uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
+                        static char msg[512+1];
+                        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
+                            "Decode time stamp (DTS) collision affecting a keyframe at %s detected.\n"
+                            "Dropping a keyframe will result in severely corrupted video.\n"
+                            "Proceed anyway?"),ADM_us2plain(linearTime));
+                        if(!GUI_Question(msg))
+                            return false;
+                    }
+                    totalExtraDelay=0;
+                    goto againGet;
                 }
-                goto againGet;
             }
         }
         _nextFrameDts=signedDts;
