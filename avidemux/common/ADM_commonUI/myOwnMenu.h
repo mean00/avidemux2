@@ -89,6 +89,7 @@ static const MenuEntry _myMenuVideo[] = {
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Decoder Option"),     NULL,ACT_DecoderOption      ,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","PostProcessing"),     NULL,ACT_SetPostProcessing  ,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Filters"),            NULL,ACT_VIDEO_FILTERS      ,NULL,"Ctrl+Alt+F"},
+            {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Play filtered"),      NULL,ACT_PreviewChanged     ,NULL,NULL}
         };
 
 std::vector<MenuEntry> myMenuVideo(_myMenuVideo, _myMenuVideo + sizeof(_myMenuVideo) / sizeof(_myMenuVideo[0]));

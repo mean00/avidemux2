@@ -304,8 +304,15 @@ void MainWindow::audioToggled(bool checked)
         AVDM_setVolume(0);
 }
 
-void MainWindow::previewModeChanged(int  flop)
+void MainWindow::previewModeChangedFromMenu(bool flop)
 {
+    ui.toolBar->actions().at(5)->setChecked(flop);
+    sendAction(ACT_PreviewChanged);
+}
+
+void MainWindow::previewModeChangedFromToolbar(bool flop)
+{
+    ui.menuVideo->actions().at(3)->setChecked(flop);
     sendAction(ACT_PreviewChanged);
 }
 
@@ -362,8 +369,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #endif
         //
         connect( this,SIGNAL(actionSignal(Action )),this,SLOT(actionSlot(Action )));
-        //
-        connect( ui.checkDisplayOut,SIGNAL(stateChanged(int)),this,SLOT(previewModeChanged(int)));
         //
         connect(this, SIGNAL(updateAvailable(int,std::string,std::string)),this,SLOT(updateAvailableSlot(int,std::string,std::string)));
 
@@ -452,6 +457,8 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     buildCustomMenu(); // action lists are populated (i.e. buildActionLists() called) within buildCustomMenu()
     buildButtonLists();
     // Crash in some cases addScriptReferencesToHelpMenu();
+    connect(ui.menuVideo->actions().at(3),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromMenu(bool)));
+    connect(ui.toolBar->actions().at(5),SIGNAL(toggled(bool)),this,SLOT(previewModeChangedFromToolbar(bool)));
 
     this->installEventFilter(this);
     slider->installEventFilter(this);
@@ -507,6 +514,7 @@ toolBarTranslate toolbar[]=
 {"actionProperties",        ACT_VIDEO_PROPERTIES},
 {"actionLoad_run_project",  ACT_RUN_SCRIPT},
 {"actionSave_project",      ACT_SAVE_PY_SCRIPT},
+{"actionPlayFiltered",      ACT_PreviewChanged},
 
 {NULL,ACT_DUMMY}
 };
@@ -670,6 +678,8 @@ bool MainWindow::buildMyMenu(void)
 
     connect( ui.menuView,SIGNAL(triggered(QAction*)),this,SLOT(searchViewMenu(QAction*)));
     buildMenu(ui.menuView, &myMenuView[0], myMenuView.size());
+
+    ui.menuVideo->actions().at(3)->setCheckable(true);
 
     return true;
 }
@@ -906,6 +916,8 @@ void MainWindow::setMenuItemsEnabledState(void)
         haveRecentItems=true;
     ui.menuRecent->actions().back()->setEnabled(haveRecentItems);
 
+    ui.selectionDuration->setEnabled(vid);
+
     updateCodecWidgetControlsState();
     // actions performed by the code above may result in a window resize event,
     // which in turn may initiate unwanted zoom changes e.g. when stopping playback
@@ -935,6 +947,8 @@ void MainWindow::updateCodecWidgetControlsState(void)
         ui.pushButtonVideoFilter->setEnabled(b);
         // take care of the "Filter" item in the menu "Video" as well
         ui.menuVideo->actions().at(2)->setEnabled(b);
+        ui.menuVideo->actions().at(3)->setEnabled(b);
+        ui.toolBar->actions().at(5)->setEnabled(b);
     }else
     {
         ui.pushButtonVideoFilter->setEnabled(false);
@@ -1688,12 +1702,12 @@ void UI_applySettings(void)
     ((MainWindow *)QuiMainWindows)->volumeWidgetOperational();
 }
 /**
-    \fn UI_getCurrentPreview(void)
-    \brief Read previewmode from comboxbox
+    \fn UI_getCurrentPreview
+    \brief Read previewmode from checkable menu actions
 */
 int UI_getCurrentPreview(void)
 {
-    if(WIDGET(checkDisplayOut)->isChecked()) 
+    if(WIDGET(menuVideo)->actions().at(3)->isChecked() || WIDGET(toolBar)->actions().at(5)->isChecked())
     {
         printf("Output is ON\n");
         return 1;
@@ -1703,12 +1717,13 @@ int UI_getCurrentPreview(void)
 }
 
 /**
-    \fn UI_setCurrentPreview(int ne)
-    \brief Update comboxbox with previewmode
+    \fn UI_setCurrentPreview
+    \brief Update "Play filtered" checkable menu actions with previewmode
 */
 void UI_setCurrentPreview(int ne)
 {
-        WIDGET(checkDisplayOut)->setChecked(!!ne);
+    WIDGET(menuVideo)->actions().at(3)->setChecked(!!ne);
+    WIDGET(toolBar)->actions().at(5)->setChecked(!!ne);
 }
 /**
         \fn FatalFunctionQt
@@ -2083,6 +2098,12 @@ void UI_setMarkers(uint64_t a, uint64_t b)
     ms2time(timems,&hh,&mm,&ss,&ms);
     snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
     WIDGET(pushButtonJumpToMarkerB)->setText(text);
+
+    timems=(uint32_t)(b-a);
+    ms2time(timems,&hh,&mm,&ss,&ms);
+    snprintf(text,79,"%02" PRIu32":%02" PRIu32":%02" PRIu32".%03" PRIu32,hh,mm,ss,ms);
+    QString duration=QString("Selection: ")+QString(text);
+    WIDGET(selectionDuration)->setText(duration);
 
     slider->setMarkers(absoluteA, absoluteB);
 }

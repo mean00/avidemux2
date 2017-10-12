@@ -160,7 +160,8 @@ public slots:
         void sliderWheel(int way);
 	void volumeChange( int u );
 	void audioToggled(bool checked);
-	void previewModeChanged(int status);
+	void previewModeChangedFromMenu(bool status);
+	void previewModeChangedFromToolbar(bool status);
 	void previousIntraFrame(void);
 	void nextIntraFrame(void);
 	void timeChangeFinished(void);

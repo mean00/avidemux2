@@ -109,7 +109,7 @@
      <x>0</x>
      <y>0</y>
      <width>858</width>
-     <height>30</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -194,11 +194,11 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
    <property name="contextMenuPolicy">
     <enum>Qt::PreventContextMenu</enum>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
@@ -210,6 +210,8 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave_video"/>
    <addaction name="actionProperties"/>
+   <addaction name="separator"/>
+   <addaction name="actionPlayFiltered"/>
   </widget>
   <widget class="QDockWidget" name="codecWidget">
    <property name="styleSheet">
@@ -1326,6 +1328,7 @@
            <property name="minimumSize">
             <size>
              <width>100</width>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
@@ -1535,20 +1538,16 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QCheckBox" name="checkDisplayOut">
-           <property name="toolTip">
-            <string>Display output video on playback</string>
+         <item row="3" column="0" colspan="3">
+          <widget class="QLabel" name="selectionDuration">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Play filtered</string>
+            <string>Selection: 000000</string>
            </property>
           </widget>
          </item>
@@ -1604,7 +1603,7 @@
          </property>
          <property name="icon">
           <iconset resource="avidemux.qrc">
-          <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
+           <normaloff>:/new/prefix1/pics/arts.png</normaloff>:/new/prefix1/pics/arts.png</iconset>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -1734,6 +1733,14 @@
    </property>
    <property name="toolTip">
     <string>Save Video</string>
+   </property>
+  </action>
+  <action name="actionPlayFiltered">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Play filtered</string>
    </property>
   </action>
   <action name="actionLoad_run_project">
