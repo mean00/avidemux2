@@ -254,8 +254,10 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
     int64_t signedDts;
 
 #define MAX_EXTRA_DELAY 100000
+#define MAX_DESYNC_SCORE 20*100000
+#define DESYNC_THRESHOLD 20000
 
-    if(totalExtraDelay>5000)
+    if(totalExtraDelay>=5000)
         totalExtraDelay-=5000; // gradually reduce extra delay, 5 ms at a time
 
 againGet:
@@ -394,7 +396,7 @@ againGet:
             {
                 double delta=_nextFrameDts-signedDts;
                 delta=fabs(delta);
-                if(totalExtraDelay<MAX_EXTRA_DELAY)
+                if((uint64_t)delta<MAX_EXTRA_DELAY && totalExtraDelay<MAX_EXTRA_DELAY)
                 {
                     ADM_warning("Frame %d DTS is going back in time, delaying it for %" PRIu64" us\n",(int)vid->lastSentFrame,(uint64_t)delta);
                     signedDts=_nextFrameDts;
@@ -467,12 +469,32 @@ againGet:
     aprintf("Final Pts=%s ",ADM_us2plain(img->demuxerPts));
     aprintf("Final Dts=%s ",ADM_us2plain(img->demuxerDts));    
     aprintf("Delay=%s\n",ADM_us2plain(videoDelay));
+    if(MAX_EXTRA_DELAY && totalExtraDelay>DESYNC_THRESHOLD && desyncScore>=0)
+    {
+        desyncScore+=(vid->timeIncrementInUs)*totalExtraDelay/MAX_EXTRA_DELAY;
+        aprintf("Desync score = %" PRId64"\n",desyncScore);
+    }
+    if(desyncScore>MAX_DESYNC_SCORE)
+    {
+        if(!GUI_Question(QT_TRANSLATE_NOOP("adm",
+        "While saving, some video frames had to be delayed, resulting in temporary loss of A/V sync. "
+        "Would you like to continue nevertheless?")))
+        {
+            desyncScore=0;
+            totalExtraDelay=0;
+            return false;
+        }
+        desyncScore=-1; // ignore future desync
+    }
     return true;
 
 nextSeg:
     if(false==switchToNextSegment(true))
     {
         ADM_warning("Cannot update to new segment\n");
+        totalExtraDelay=0;
+        ADM_info("Accumulated desync score = %" PRId64"\n",desyncScore);
+        desyncScore=0;
         return false;
     }
     // Mark it as drop b frames...

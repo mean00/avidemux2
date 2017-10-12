@@ -257,6 +257,7 @@ public:
                     bool        checkCutIsOnIntra(uint64_t time);
 private:
                     uint64_t    totalExtraDelay=0;
+                    int64_t     desyncScore=0;
 public:
                     uint8_t	    updateVideoInfo(aviInfo *info);
                     uint32_t 	getSpecificMpeg4Info( void );
