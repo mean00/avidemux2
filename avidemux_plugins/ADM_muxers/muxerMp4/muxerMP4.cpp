@@ -132,11 +132,11 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
 
         ADM_info("Timebase codec = %d/%d\n",c->time_base.num,c->time_base.den);
         ADM_info("Timebase stream = %d/%d\n",video_st->time_base.num,video_st->time_base.den);
+        // the reason to round time stamps once we are in ffmpeg ticks is unclear and causes collisions, disable it for now
         if(myTimeBase.den==video_st->time_base.den && video_st->time_base.num==1)
         {
-            roundup=myTimeBase.num;
-            ADM_warning("Timebase roundup = %d\n",roundup);
-
+            //roundup=myTimeBase.num;
+            ADM_info("Timebase roundup would have been %d, ignoring\n",myTimeBase.num);
         }
         av_dict_free(&dict);
         vStream=s;
