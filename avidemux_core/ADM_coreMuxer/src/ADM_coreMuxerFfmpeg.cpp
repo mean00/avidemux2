@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
+#include "ADM_vidMisc.h"
 #include "fourcc.h"
 #include "ADM_coreMuxerFfmpeg.h"
 #include "ADM_muxerUtils.h"
@@ -444,8 +445,8 @@ bool muxerFFmpeg::saveLoop(const char *title)
     uint64_t rawDts;
     uint64_t lastVideoDts=0;
     uint64_t videoIncrement;
-    int ret;
-    int written=0;
+    bool ret;
+    uint32_t written=0;
     bool result=true;
     int missingPts=0;
     
@@ -488,18 +489,29 @@ bool muxerFFmpeg::saveLoop(const char *title)
             rawDts=out.dts;
             if(rawDts==ADM_NO_PTS)
             {
+                ADM_warning("No DTS information for frame %" PRIu32"\n",written);
                 lastVideoDts+=videoIncrement;
+            }else if(lastVideoDts && rawDts<=lastVideoDts)
+            {
+                ADM_warning("Duplicated or going back DTS for frame %" PRIu32", adding %" PRIu64" ms\n",written,(videoIncrement/2)/1000);
+                lastVideoDts+=videoIncrement/2;
+                out.dts=lastVideoDts;
             }else
             {
                 lastVideoDts=out.dts;
             }
+
             if(out.pts==ADM_NO_PTS)
             {
                 ADM_warning("No PTS information for frame %" PRIu32"\n",written);
                 missingPts++;
                 out.pts=lastVideoDts;
             }
-
+            if(out.pts<lastVideoDts)
+            {
+                ADM_warning("Bumping PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
+                out.pts=lastVideoDts;
+            }
 
             encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
@@ -599,9 +611,16 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
     }
     delete [] buffer;
-    if((videoDuration *4)/5 > lastVideoDts)
+    if(false==ret)
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Too short"), QT_TRANSLATE_NOOP("adm","The video has been saved but seems to be incomplete."));
+        char msg[512+1];
+        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
+            "The saved video is incomplete. "
+            "The error occured at %s (%d\%). "
+            "This may happen as result of invalid time stamps in the video."),
+            ADM_us2plain(lastVideoDts),
+            (int)(lastVideoDts*100/videoDuration));
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Too short"),msg);
         result=false;
     }
     ADM_info("[FF] Wrote %d frames, nb audio streams %d\n",written,nbAStreams);
