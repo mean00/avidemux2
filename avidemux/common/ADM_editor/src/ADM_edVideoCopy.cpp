@@ -59,7 +59,7 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
             fail=true;
             break;
         }
-        if(!img.flags & AVI_KEY_FRAME)
+        if(!(img.flags & AVI_KEY_FRAME))
         {
             ADM_warning("Segment %d does not start on a keyframe (%s)\n",i,ADM_us2plain(img.demuxerPts));
             fail=true;
@@ -116,7 +116,7 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
     {
         if(demuxer->getFrame(vid->lastSentFrame,&img))
         {
-            if(!img.flags & AVI_KEY_FRAME) // always evaluates to false, img we've got is not the first frame of the segment
+            if(!(img.flags & AVI_KEY_FRAME)) // always evaluates to false, img we've got is not the first frame of the segment
             {
                 ADM_warning("Segment %d does not start on a keyframe (time in ref %s)\n",segNo,ADM_us2plain(img.demuxerPts));
                 fail=true;
@@ -402,6 +402,7 @@ againGet:
                     signedDts=_nextFrameDts;
                     totalExtraDelay+=(uint64_t)delta;
                     ADM_info("total extra delay = %" PRIu64" us\n",totalExtraDelay);
+                    signedPts+=totalExtraDelay;
                 }else
                 {
                     ADM_error("Frame %d DTS is going back in time: expected: %s : %d\n",
