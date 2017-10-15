@@ -26,6 +26,8 @@
 #define aprintf(...) {}// printf
 #endif
 
+static int warn_cnt=0;
+
 /**
     \fn checkCutsAreOnIntra
     \brief In copy mode, if the cuts are not on intra we will run into trouble :
@@ -256,6 +258,7 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
 #define MAX_EXTRA_DELAY 100000
 #define MAX_DESYNC_SCORE 20*100000
 #define DESYNC_THRESHOLD 20000
+#define ENOUGH 4
 
     if(totalExtraDelay>=5000)
         totalExtraDelay-=5000; // gradually reduce extra delay, 5 ms at a time
@@ -413,18 +416,42 @@ againGet:
                           ADM_us2plain(signedDts),
                           signedDts,(int)vid->timeIncrementInUs,
                           (int)delta);
+                    uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
+                    char msg[512+1];
                     if(img->flags & AVI_KEY_FRAME)
                     {
-                        uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
-                        static char msg[512+1];
                         snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
                             "Decode time stamp (DTS) collision affecting a keyframe at %s detected.\n"
                             "Dropping a keyframe will result in severely corrupted video.\n"
                             "Proceed anyway?"),ADM_us2plain(linearTime));
-                        if(!GUI_Question(msg))
-                            return false;
+                    }else
+                    {
+                        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
+                            "Decode time stamp (DTS) collision affecting a frame at %s detected.\n"
+                            "Dropping a frame may result in some video corruption.\n"
+                            "Proceed anyway?"),ADM_us2plain(linearTime));
                     }
-                    totalExtraDelay=0;
+                    if(warn_cnt>=0)
+                    {
+                        if(!GUI_Question(msg))
+                        {
+                            warn_cnt=0;
+                            desyncScore=0;
+                            totalExtraDelay=0;
+                            return false;
+                        }else
+                        {
+                            warn_cnt++;
+                        }
+                    }
+                    if(warn_cnt>ENOUGH)
+                    { // warn ENOUGH+1 times in a row then suggest going silent
+                        if(GUI_Question(QT_TRANSLATE_NOOP("adm","Do not warn again and drop frames silently while saving this video?")))
+                            warn_cnt=-1; // Yes: don't warn
+                        else
+                            warn_cnt=0; // No: ask again after ENOUGH+1 more warnings
+                    }
+
                     goto againGet;
                 }
             }
@@ -483,6 +510,7 @@ againGet:
         {
             desyncScore=0;
             totalExtraDelay=0;
+            warn_cnt=0;
             return false;
         }
         desyncScore=-1; // ignore future desync
@@ -496,6 +524,7 @@ nextSeg:
         totalExtraDelay=0;
         ADM_info("Accumulated desync score = %" PRId64"\n",desyncScore);
         desyncScore=0;
+        warn_cnt=0;
         return false;
     }
     // Mark it as drop b frames...
