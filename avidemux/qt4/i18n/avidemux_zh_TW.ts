@@ -10369,7 +10369,6 @@ p, li { white-space: pre-wrap; }
     &lt;/樣式&gt;&lt;/頭&gt;&lt;正文樣式=&quot; 字體粗細:400; 字型樣式:正常; 文字修飾:無;&quot;&gt;
     &lt;p 樣式=&quot; 頂邊距:0px; 底邊距:0px; 左邊距:0px; 右邊距:0px; -qt-空格縮進:0; t文字縮進:0px;&quot;&gt;&lt; 跨風格=&quot; 字體大小:8pt; 字體粗細:600;&quot;&gt;經過時間:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
     </message>
->
     <message>
         <location line="+24"/>
         <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
