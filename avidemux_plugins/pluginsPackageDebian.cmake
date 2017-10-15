@@ -15,7 +15,6 @@ ELSE(DO_SETTINGS)
         SET(CPACK_COMPONENTS_ALL plugins)
         SET(CPACK_DEBIAN_PACKAGE_NAME "avidemux3-plugins-${PLUGIN_EXT}")
         SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "Simple video editor, plugins (${PLUGIN_EXT} ")
-ELSE(DO_SETTINGS)
 ENDIF(DO_SETTINGS)
 #
 # Build our deps list
