@@ -129,7 +129,7 @@ ADMVideoHue::ADMVideoHue(  ADM_coreVideoFilter *in,CONFcouple *couples) :
 void ADMVideoHue::update(void)
 {
     _hue=_param.hue*M_PI/180.;
-    _saturation=(100+_param.saturation)/100;
+    _saturation=(100+_param.saturation)/100.;
 }
 /**
     \fn dtor

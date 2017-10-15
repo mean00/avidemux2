@@ -99,7 +99,7 @@ uint8_t flyHue::upload(void)
 {
       Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
 
-        MYSPIN(Saturation)->setValue((int)param.saturation);
+        MYSPIN(Saturation)->setValue((int)(param.saturation*10));
         MYSPIN(Hue)->setValue((int)param.hue);
         return 1;
 }
@@ -107,7 +107,7 @@ uint8_t flyHue::download(void)
 {
        Ui_hueDialog *w=(Ui_hueDialog *)_cookie;
          param.hue=MYSPIN(Hue)->value();
-         param.saturation=MYSPIN(Saturation)->value();
+         param.saturation=MYSPIN(Saturation)->value()/10.;
 return 1;
 }
 

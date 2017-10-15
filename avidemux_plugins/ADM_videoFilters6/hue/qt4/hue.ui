@@ -83,10 +83,10 @@
      <item>
       <widget class="QSlider" name="horizontalSliderSaturation">
        <property name="minimum">
-        <number>-10</number>
+        <number>-100</number>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>100</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
