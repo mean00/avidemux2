@@ -1,7 +1,7 @@
 include(admCheckVapourSynth)
 include(dm_plugin)
 checkVapourSynth()
-
+IF(BLAH)
 IF(USE_VAPOURSYNTH)
    IF(DO_COMMON)
         #ADD_DEFINITIONS("-g3 -O0")
@@ -50,3 +50,4 @@ IF(USE_VAPOURSYNTH)
         ADD_SUBDIRECTORY(qt4)
    ENDIF(DO_QT4)
 ENDIF(USE_VAPOURSYNTH)
+ENDIF(BLAH)
