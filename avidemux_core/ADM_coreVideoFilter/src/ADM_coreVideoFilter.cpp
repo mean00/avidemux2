@@ -83,14 +83,14 @@ FilterInfo  *ADM_coreVideoFilter::getInfo(void)
 bool         ADM_coreVideoFilter::goToTime(uint64_t usSeek)
 {
     ADM_info("%s:Video filter seeking\n",myName);
-    float thisIncrement=info.frameIncrement;
-    float oldIncrement=previousFilter->getInfo()->frameIncrement;
+    double thisIncrement=info.frameIncrement;
+    double oldIncrement=previousFilter->getInfo()->frameIncrement;
     ADM_assert(thisIncrement);
     ADM_assert(oldIncrement);
     nextFrame=0;
 
     if(thisIncrement==oldIncrement) return previousFilter->goToTime(usSeek);
-    float newSeek=usSeek;
+    double newSeek=usSeek;
     newSeek/=thisIncrement;
     newSeek*=oldIncrement;
     return  previousFilter->goToTime((uint64_t)newSeek);
