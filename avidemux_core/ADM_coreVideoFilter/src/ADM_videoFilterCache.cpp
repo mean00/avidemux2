@@ -213,15 +213,14 @@ ADMImage *VideoCache::getImageAs(ADM_HW_IMAGE type,uint32_t frame)
 */
 void VideoCache::dump(void)
 {
-	for(uint32_t i=0;i<nbEntry;i++)
-	{		
-        printf("Entry %d/%d, frameNum %d lock %d lastUse %d\n",
+    for(uint32_t i=0;i<nbEntry;i++)
+    {
+        printf("Entry %" PRIu32"/%" PRIu32", frameNum %" PRIu32" lock %" PRIu32" lastUse %" PRIu32"\n",
                 i,nbEntry,
-                
-                (int)entry[i].frameNum,
-                (int)entry[i].frameLock,
-                (int)entry[i].lastUse);
-	}
+                entry[i].frameNum,
+                entry[i].frameLock,
+                entry[i].lastUse);
+    }
 
 }
 // EOF
