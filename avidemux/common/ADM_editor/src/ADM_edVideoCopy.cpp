@@ -256,12 +256,13 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
     int64_t signedDts;
 
 #define MAX_EXTRA_DELAY 100000
-#define MAX_DESYNC_SCORE 20*100000
+#define CATCH_UP_RATE 1000
+#define MAX_DESYNC_SCORE 40*100000
 #define DESYNC_THRESHOLD 20000
 #define ENOUGH 4
 
-    if(totalExtraDelay>=5000)
-        totalExtraDelay-=5000; // gradually reduce extra delay, 5 ms at a time
+    if(totalExtraDelay>=CATCH_UP_RATE)
+        totalExtraDelay-=CATCH_UP_RATE; // gradually reduce extra delay, CATCH_UP_RATE/1000 ms at a time
 
 againGet:
     static uint32_t fn;
@@ -504,9 +505,12 @@ againGet:
     }
     if(desyncScore>MAX_DESYNC_SCORE)
     {
-        if(!GUI_Question(QT_TRANSLATE_NOOP("adm",
-        "While saving, some video frames had to be delayed, resulting in temporary loss of A/V sync. "
-        "Would you like to continue nevertheless?")))
+        uint64_t linearTime=img->demuxerPts-seg->_refStartTimeUs+seg->_startTimeUs;
+        char msg[512+1];
+        snprintf(msg,512,QT_TRANSLATE_NOOP("adm",
+        "While saving, some video frames prior to %s had to be delayed, resulting in temporary loss of A/V sync. "
+        "Would you like to continue nevertheless?"),ADM_us2plain(linearTime));
+        if(!GUI_Question(msg))
         {
             desyncScore=0;
             totalExtraDelay=0;
