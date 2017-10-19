@@ -42,6 +42,7 @@ bool dct_decimate;
 uint32_t noise_reduction;
 uint32_t noise_reduction_intra;
 uint32_t noise_reduction_inter;
+bool strong_intra_smoothing;
 struct  {
 	uint32_t rc_method;
 	uint32_t qp_constant;

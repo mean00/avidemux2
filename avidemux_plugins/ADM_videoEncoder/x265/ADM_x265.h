@@ -77,6 +77,7 @@ extern "C"
     0, /*    uint32_t noise_reduction */ \
     0, /*    uint32_t noise_reduction_intra */ \
     0, /*    uint32_t noise_reduction_inter */ \
+    true, /*    bool strong_intra_smoothing */ \
 	{ /* Rate Control */ \
 	0,	/* uint32_t rc_method; */ \
 	0,	/* uint32_t qp_constant; */ \

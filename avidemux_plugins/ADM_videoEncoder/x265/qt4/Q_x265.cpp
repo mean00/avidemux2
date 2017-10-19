@@ -409,7 +409,9 @@ bool x265Dialog::upload(void)
     DISABLE(noiseReductionInterSpinBox);
     MK_UINT(noiseReductionSpinBox,noise_reduction);
 #endif
-    
+
+    MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
+
 #if X265_BUILD >= 41
     DISABLE(avgBitrateToleranceSpinBox);
     MK_CHECKBOX(strictCbrCheckBox,ratecontrol.strict_cbr);
@@ -512,7 +514,9 @@ bool x265Dialog::download(void)
 #else
           MK_UINT(noiseReductionSpinBox,noise_reduction);
 #endif
-          
+
+          MK_CHECKBOX(strongIntraSmoothingCheckBox,strong_intra_smoothing);
+
           MK_COMBOBOX_STR(presetComboBox, general.preset, listOfPresets, NB_PRESET);
           MK_COMBOBOX_STR(profileComboBox, general.profile, listOfProfiles, NB_PROFILE);
           MK_COMBOBOX_STR(tuningComboBox, general.tuning, listOfTunings, NB_TUNE);

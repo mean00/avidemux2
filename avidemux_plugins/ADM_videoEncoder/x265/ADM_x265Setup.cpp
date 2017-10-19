@@ -213,6 +213,8 @@ bool x265Encoder::setup(void)
     MKPARAM (noiseReduction,noise_reduction)
 #endif
 
+    MKPARAMB(bEnableStrongIntraSmoothing,strong_intra_smoothing)
+
      //---------------- ratecontrol -------------------
   #undef MKPARAM
   #undef MKPARAMD

@@ -36,6 +36,7 @@ extern const ADM_paramList x265_settings_param[]={
  {"noise_reduction",offsetof(x265_settings,noise_reduction),"uint32_t",ADM_param_uint32_t},
  {"noise_reduction_intra",offsetof(x265_settings,noise_reduction_intra),"uint32_t",ADM_param_uint32_t},
  {"noise_reduction_inter",offsetof(x265_settings,noise_reduction_inter),"uint32_t",ADM_param_uint32_t},
+ {"strong_intra_smoothing",offsetof(x265_settings,strong_intra_smoothing),"bool",ADM_param_bool},
  {"ratecontrol.rc_method",offsetof(x265_settings,ratecontrol.rc_method),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.qp_constant",offsetof(x265_settings,ratecontrol.qp_constant),"uint32_t",ADM_param_uint32_t},
  {"ratecontrol.qp_step",offsetof(x265_settings,ratecontrol.qp_step),"uint32_t",ADM_param_uint32_t},

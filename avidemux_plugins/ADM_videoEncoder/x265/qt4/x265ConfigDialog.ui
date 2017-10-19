@@ -1923,6 +1923,13 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QCheckBox" name="strongIntraSmoothingCheckBox">
+            <property name="text">
+             <string>Strong Intra Smoothing</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
