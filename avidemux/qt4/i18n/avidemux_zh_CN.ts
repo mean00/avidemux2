@@ -10114,14 +10114,6 @@ Do you want to load it  ?
         <translation type="unfinished">未知</translation>
     </message>
     <message>
-        <source>Container:</source>
-        <translation type="obsolete">容器:</translation>
-    </message>
-    <message>
-        <source>Audio Codec:</source>
-        <translation type="obsolete">音讯编译码器:</translation>
-    </message>
-    <message>
         <location line="+155"/>
         <location line="+37"/>
         <location line="+51"/>
@@ -10134,18 +10126,6 @@ Do you want to load it  ?
         <translation type="unfinished">00:00:00</translation>
     </message>
     <message>
-        <source>Elapsed:</source>
-        <translation type="obsolete">已过时间:</translation>
-    </message>
-    <message>
-        <source>Time Remaining:</source>
-        <translation type="obsolete">剩余时间:</translation>
-    </message>
-    <message>
-        <source>Frames/sec:</source>
-        <translation type="obsolete">帧/秒:</translation>
-    </message>
-    <message>
         <location line="-152"/>
         <location line="+7"/>
         <location line="+17"/>
@@ -10153,37 +10133,9 @@ Do you want to load it  ?
         <translation type="unfinished">0 MB</translation>
     </message>
     <message>
-        <source>Total Size:</source>
-        <translation type="obsolete">总大小:</translation>
-    </message>
-    <message>
-        <source>Audio Size:</source>
-        <translation type="obsolete">音讯大小:</translation>
-    </message>
-    <message>
-        <source>Video Size:</source>
-        <translation type="obsolete">视频大小:</translation>
-    </message>
-    <message>
-        <source>Processed Frames:</source>
-        <translation type="obsolete">已处理的帧数:</translation>
-    </message>
-    <message>
-        <source>Total Frames:</source>
-        <translation type="obsolete">总帧数:</translation>
-    </message>
-    <message>
         <location line="+77"/>
         <source>0 kB/s</source>
         <translation type="unfinished">0 kB/s</translation>
-    </message>
-    <message>
-        <source>Average Bitrate:</source>
-        <translation type="obsolete">平均比特率:</translation>
-    </message>
-    <message>
-        <source>Quantiser:</source>
-        <translation type="obsolete">量化值:</translation>
     </message>
     <message>
         <location line="-357"/>
@@ -10232,17 +10184,9 @@ Do you want to load it  ?
     </message>
     <message>
         <location line="+48"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Time Remaining:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;剩余时间:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Time Remaining:</source>
+        <translation type="unfinished">剩余时间:</translation>
     </message>
-
     <message>
         <location line="+90"/>
         <source>Minimize to Tray</source>
@@ -10255,133 +10199,54 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location line="+53"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Codec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;音讯编译码器:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Audio Codec:</source>
+        <translation type="unfinished">音讯编译码器:</translation>
     </message>
-
     <message>
         <location line="+24"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Container:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;内容:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Container:</source>
+        <translation type="unfinished">容器:</translation>
     </message>
-
     <message>
         <location line="+50"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Audio Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;音讯大小:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Audio Size:</source>
+        <translation type="unfinished">音讯大小:</translation>
     </message>
-
     <message>
         <location line="+10"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Total Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;总大小:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Total Size:</source>
+        <translation type="unfinished">总大小:</translation>
     </message>
-
     <message>
         <location line="+24"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Video Size:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;视频大小:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Video Size:</source>
+        <translation type="unfinished">视频大小:</translation>
     </message>
-
     <message>
         <location line="+47"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Average Bitrate:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;平均位:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Average Bitrate:</source>
+        <translation type="unfinished">平均位:</translation>
     </message>
-
     <message>
         <location line="+20"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Processed Frames:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Processed Frames:</source>
+        <translation type="unfinished"></translation>
     </message>
-
     <message>
         <location line="+10"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Quantiser:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;量化器:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Quantiser:</source>
+        <translation type="unfinished">量化器:</translation>
     </message>
-
     <message>
         <location line="+51"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Elapsed:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;经过时间:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Elapsed:</source>
+        <translation type="unfinished">经过时间:</translation>
     </message>
     <message>
         <location line="+24"/>
-        <source>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Frames/sec:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-
-<translation type="unfinished">&lt;html&gt;&lt;头&gt;&lt;meta 名称=&quot;qrich文本&quot; 内容=&quot;1&quot; /&gt;&lt; 样式型=&quot; 文本/css&quot;&gt;
-    p, li { 白色空间： 预包装; }
-    &lt;/样式&gt;&lt;/头&gt;&lt;正文样式=&quot; 文本体粗细:400; 文本型样式:正常; 文本修饰:无;&quot;&gt;
-    &lt;p 样式=&quot; 顶边距:0px; 底边距:0px; 左边距:0px; 右边距:0px; -qt-空格缩进:0; t文本缩进:0px;&quot;&gt;&lt; 跨风格=&quot; 文本体大小:8pt; 文本体粗细:600;&quot;&gt;帧/秒:&lt;/ 跨&gt;&lt;/p&gt;&lt;/ 正文&gt;&lt;/html&gt;</translation>
+        <source>Frames/sec:</source>
+        <translation type="unfinished">帧/秒:</translation>
     </message>
-
 </context>
 <context>
     <name>encodingWindow</name>
