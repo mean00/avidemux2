@@ -394,6 +394,16 @@ bool DIA_encodingQt4::isAlive( void )
         stopRequest=true;
         event->ignore(); // keep window
     }
+
+/**
+ * \fn reject
+ * \brief Prevent dialog from being closed by pressing the Esc key
+ */
+void DIA_encodingQt4::reject(void)
+{
+    stopRequest=true;
+}
+
 /**
         \fn createEncoding
 */

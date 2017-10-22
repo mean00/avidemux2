@@ -66,7 +66,8 @@ public:
     void pauseButtonPressed(void);
     void priorityChanged(int priorityLevel);
     void shutdownChanged(int state);    
-    void closeEvent(QCloseEvent *event) ;
+    void closeEvent(QCloseEvent *event);
+    void reject(void);
 
 };
 #endif	// Q_encoding_h
