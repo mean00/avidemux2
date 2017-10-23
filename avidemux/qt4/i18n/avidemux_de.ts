@@ -8491,7 +8491,7 @@ Läuft er?</translation>
     <message>
         <location line="+4"/>
         <source>If you use Hw decoding, it is better to use the matching display driver</source>
-        <translation type="unfinished">Bei Dekodierung in Hardware verwende den entsprechenden Videoausgabe_treiber</translation>
+        <translation>Bei aktivierter Dekodierung in Hardware ist es ratsam, die entsprechende Video-Anzeige zu verwenden</translation>
     </message>
     <message>
         <location line="+88"/>
