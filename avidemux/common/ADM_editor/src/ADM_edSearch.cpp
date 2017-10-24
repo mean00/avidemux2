@@ -262,12 +262,12 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
             worked = v->_aviheader->getPtsDts(tmpFrame,&pts,&dts);
             if(worked && pts != ADM_NO_PTS)
                 break; // found
-            tmpFrame--;
             if(!tmpFrame)
             {
                 ADM_warning("The whole segment is corrupted. Aborting the search");
                 return false;
             }
+            tmpFrame--;
             skipped++;
         } while(true);
         if(pts == refTime)
@@ -276,7 +276,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
         { // if we slid past the target frame...
             pivotPrintf("skipped %" PRIu32" frames seeking back\n",skipped);
             skipped = 0;
-            tmpFrame = curFrame; // ...go back to the frame where we first encountered corrupted video...
+            tmpFrame = curFrame + 1; // ...go back to the frame where we first encountered corrupted video...
             do
             { // ...and seek forward until we get a valid pts
                 pts = ADM_NO_PTS;
