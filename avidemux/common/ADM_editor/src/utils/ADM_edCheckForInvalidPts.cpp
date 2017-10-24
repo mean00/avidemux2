@@ -143,6 +143,7 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     int good=0,bad=0,skipped=0;
     uint64_t dtsCeil= (timeIncrementUs*18)/10;
     std::vector<uint64_t> dtsList,ptsList;
+    std::vector<int> skippedList;
     ADM_info("Checking for doubled FPS.., time increment ceiling = %d\n",(int)dtsCeil);
     for(int i=0;i<totalFrames;i++)
     {
@@ -152,7 +153,25 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
           if(dts!=ADM_NO_PTS)
                 dtsList.push_back(dts);
           if(pts!=ADM_NO_PTS)
-                ptsList.push_back(pts);          
+                ptsList.push_back(pts);
+
+        if(dts==ADM_NO_PTS || pts==ADM_NO_PTS)
+            skippedList.push_back(i);
+    }
+    skipped=skippedList.size();
+    if(skipped>1)
+    {
+        int min=totalFrames;
+        for(int i=0;i<skipped-1;i++)
+        {
+            if(skippedList[i+1]-skippedList[i]<min)
+                min=skippedList[i+1]-skippedList[i];
+        }
+        if(min<2)
+        {
+            ADM_info("No consecuitive frames with valid timestamps encountered, can't safely halve FPS\n");
+            return false;
+        }
     }
     std::sort (dtsList.begin(), dtsList.end());   
     std::sort (ptsList.begin(), ptsList.end());  
