@@ -264,7 +264,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                 break; // found
             if(!tmpFrame)
             {
-                ADM_warning("The whole segment is corrupted. Aborting the search");
+                ADM_warning("The whole segment is corrupted. Aborting the search\n");
                 return false;
             }
             tmpFrame--;
@@ -286,7 +286,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                 tmpFrame++;
                 if(tmpFrame == nbFrame)
                 {
-                    ADM_warning("The whole segment is corrupted. Aborting the search");
+                    ADM_warning("The whole segment is corrupted. Aborting the search\n");
                     return false;
                 }
                 skipped++;
@@ -296,7 +296,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
                 pivotPrintf("skipped %" PRIu32" frames seeking forward\n",skipped);
                 if(pts > refTime)
                 {
-                    ADM_warning("The video at the specified time in ref is corrupted. Aborting seek");
+                    ADM_warning("The video at the specified time in ref is corrupted. Aborting seek\n");
                     return false;
                 }else
                 {
