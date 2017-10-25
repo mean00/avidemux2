@@ -255,6 +255,7 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
     int64_t signedPts;
     int64_t signedDts;
 
+#define ADM_NO_PTS_SIGNED ADM_NO_PTS>>1
 #define MAX_EXTRA_DELAY 100000
 #define CATCH_UP_RATE 1000
 #define MAX_DESYNC_SCORE 40*100000
@@ -358,32 +359,32 @@ againGet:
     // so the caller can delay everything but recalibrate will clamp the value
     // so we use correctedDts so that the value is ok
     if(img->demuxerDts==ADM_NO_PTS)
-            signedDts=ADM_NO_PTS;
+            signedDts=ADM_NO_PTS_SIGNED;
     else
     {
             signedDts=(int64_t)img->demuxerDts;
             signedDts+=totalExtraDelay;
             recalibrateSigned(&(signedDts),seg);
+            aprintf("Signed Dts=%s ",ADM_us2plain(signedDts));
     }
 
     if(img->demuxerPts==ADM_NO_PTS)
-            signedPts=ADM_NO_PTS;
+            signedPts=ADM_NO_PTS_SIGNED;
     else
     {
             signedPts=(int64_t)img->demuxerPts;
             signedPts+=totalExtraDelay;
             recalibrateSigned(&(signedPts),seg);
+            aprintf("Signed Pts=%s\n",ADM_us2plain(signedPts));
     }
-    aprintf("Signed Pts=%s ",ADM_us2plain(signedPts));
-    aprintf("Signed Dts=%s \n",ADM_us2plain(signedDts));
     // From here we are in linear time, guess DTS if missing...
-    if(signedDts==ADM_NO_PTS)
+    if(signedDts==ADM_NO_PTS_SIGNED)
     {
 	// border case due to rounding we can have pts slighly above dts
-	if(signedPts!=ADM_NO_PTS && _nextFrameDts!=ADM_NO_PTS)
+	if(_nextFrameDts!=ADM_NO_PTS_SIGNED)
 	{
-        signedDts=_nextFrameDts;
-        if(signedPts != ADM_NO_PTS && signedDts>signedPts)
+            signedDts=_nextFrameDts;
+            if(signedPts != ADM_NO_PTS_SIGNED && signedDts>signedPts)
 		{
 			// not sure it is correct. We may want to do it the other way around, i.e. bumping pts
 			ADM_warning("Compensating for rounding error with PTS=%" PRId64"ms DTS=%" PRId64"ms \n",signedPts,signedDts);
@@ -394,7 +395,7 @@ againGet:
     {
 // It means that the incoming image is earlier than the expected time.
 // we add a bit of timeIncrement to compensate for rounding
-        if(_nextFrameDts!=ADM_NO_PTS)
+        if(_nextFrameDts!=ADM_NO_PTS_SIGNED)
         {
             if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/3)))
             {
@@ -460,7 +461,7 @@ againGet:
         _nextFrameDts=signedDts;
     }
     // Increase for next one
-    if(ADM_NO_PTS!=_nextFrameDts)
+    if(ADM_NO_PTS_SIGNED!=_nextFrameDts)
         _nextFrameDts+=vid->timeIncrementInUs;
     // Check the DTS is not too late compared to next seg beginning...
     if(_currentSegment+1<_segments.getNbSegments() && img->demuxerDts!=ADM_NO_PTS)
@@ -494,7 +495,10 @@ againGet:
     }
     img->demuxerDts=finalDts;
     }
-    img->demuxerPts=signedPts+(int64_t)videoDelay;
+    if(signedPts!=ADM_NO_PTS_SIGNED)
+        img->demuxerPts=signedPts+(int64_t)videoDelay;
+    else
+        img->demuxerPts=ADM_NO_PTS;
     aprintf("Final Pts=%s ",ADM_us2plain(img->demuxerPts));
     aprintf("Final Dts=%s ",ADM_us2plain(img->demuxerDts));    
     aprintf("Delay=%s\n",ADM_us2plain(videoDelay));
