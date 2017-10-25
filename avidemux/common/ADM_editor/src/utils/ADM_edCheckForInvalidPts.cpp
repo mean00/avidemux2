@@ -175,7 +175,7 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     }
     if(!proceed)
     {
-        ADM_info("No consecutive frames with valid DTS found, can't safely half FPS\n");
+        ADM_info("No consecutive frames with valid DTS found, can't safely halve FPS\n");
         return false;
     }
     proceed=false;
@@ -192,7 +192,7 @@ bool ADM_Composer::checkForDoubledFps(vidHeader *hdr,uint64_t timeIncrementUs)
     }
     if(!proceed)
     {
-        ADM_info("No consecutive frames with valid PTS found, can't safely half FPS\n");
+        ADM_info("No consecutive frames with valid PTS found, can't safely halve FPS\n");
         return false;
     }
     std::sort (dtsList.begin(), dtsList.end());   
