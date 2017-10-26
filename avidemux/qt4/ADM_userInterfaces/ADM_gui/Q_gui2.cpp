@@ -1275,9 +1275,9 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                         }else
                         {
                             if(!swpud)
-                                sendAction(ACT_NextKFrame);
-                            else
                                 sendAction(ACT_PreviousKFrame);
+                            else
+                                sendAction(ACT_NextKFrame);
                         }
                         return true;
                     case Qt::Key_C:
