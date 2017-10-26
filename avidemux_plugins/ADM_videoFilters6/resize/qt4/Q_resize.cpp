@@ -30,13 +30,17 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
      ui.setupUi(this);
 	 lastPercentage = 100;
      _param=param;
+     ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
+     ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
      ui.spinBoxWidth->setValue(_param->rsz.width);
      ui.spinBoxHeight->setValue(_param->rsz.height);
      ui.horizontalSlider->setValue(100);
 	 ui.comboBoxAlgo->setCurrentIndex(_param->rsz.algo);
      ui.comboBoxSource->setCurrentIndex(_param->rsz.sourceAR);
      ui.comboBoxDestination->setCurrentIndex(_param->rsz.targetAR);
-     updateWidthHeightSpinners();
+     if(_param->rsz.lockAR)
+         updateWidthHeightSpinners();
+     enableControls(_param->rsz.lockAR);
 
 	 connect(ui.comboBoxSource, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
 	 connect(ui.comboBoxDestination, SIGNAL(currentIndexChanged(int)), this, SLOT(aspectRatioChanged(int)));
@@ -54,6 +58,8 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
     _param->rsz.algo=ui.comboBoxAlgo->currentIndex();
     _param->rsz.sourceAR=ui.comboBoxSource->currentIndex();
     _param->rsz.targetAR=ui.comboBoxDestination->currentIndex();
+    _param->rsz.lockAR=ui.lockArCheckBox->isChecked();
+    _param->rsz.roundup=ui.checkBoxRoundup->isChecked();
  }
  
  void resizeWindow::sliderChanged(int value)
@@ -224,6 +230,8 @@ void resizeWindow::lockArToggled(bool toggled)
 		widthSpinBoxChanged(0);
 	else
 		ui.checkBoxRoundup->setChecked(false);
+
+    enableControls(toggled);
 }
 
 void resizeWindow::roundupToggled(bool toggled)
@@ -243,6 +251,24 @@ void resizeWindow::roundupToggled(bool toggled)
 		ui.spinBoxWidth->setSingleStep(2);
 		ui.spinBoxHeight->setSingleStep(2);
 	}
+}
+
+void resizeWindow::enableControls(bool lockArChecked)
+{
+#define ENABLE(x) ui.x->setEnabled(lockArChecked);
+
+    ENABLE(label_3)
+    ENABLE(label_4)
+    ENABLE(label_5)
+    ENABLE(label_8)
+    ENABLE(label_9)
+    ENABLE(label_10)
+    ENABLE(horizontalSlider)
+    ENABLE(percentageSpinBox)
+    ENABLE(checkBoxRoundup)
+    ENABLE(labelErrorXY)
+    ENABLE(comboBoxSource)
+    ENABLE(comboBoxDestination)
 }
 
 void resizeWindow::okButtonClicked()

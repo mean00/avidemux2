@@ -98,6 +98,8 @@ UNUSED_ARG(setup);
         configuration.algo=SWS_BILINEAR;
         configuration.sourceAR=1;
         configuration.targetAR=1;
+        configuration.lockAR=true;
+        configuration.roundup=false;
     }
     resizer=NULL;
 	reset(configuration.width,configuration.height,configuration.algo);

@@ -25,6 +25,7 @@ private:
 	void connectDimensionControls();
 	void disconnectDimensionControls();
 	void roundUp(int xx, int yy);
+	void enableControls(bool enable);
 
 protected:
 	resParam *_param;
