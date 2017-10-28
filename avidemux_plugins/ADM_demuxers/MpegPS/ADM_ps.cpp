@@ -216,7 +216,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
     dmxFrame *pk=ListOfFrames[frame];
-    if(frame==(lastFrame+1) && pk->type!=1)
+    if(frame==(lastFrame+1) && pk->type!=1) // the next frame, not an intra
     {
         lastFrame++;
         bool r=psPacket->read(pk->len,img->data);
@@ -228,7 +228,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              getFlags(frame,&(img->flags));
              return r;
     }
-    if(pk->type==1)
+    if(pk->type==1) // an intra
     {
         if(!psPacket->seek(pk->startAt,pk->index)) return false;
          bool r=psPacket->read(pk->len,img->data);
@@ -240,10 +240,45 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
              lastFrame=frame;
              return r;
-
     }
-    printf(" [PsDemux] lastFrame :%d this frame :%d\n",lastFrame,frame);
-    return false;
+
+    // a random frame: need to rewind first, then seek forward
+    uint32_t startPoint=frame;
+    while(startPoint && !ListOfFrames[startPoint]->startAt)
+        startPoint--;
+    printf("[psDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
+    pk=ListOfFrames[startPoint];
+    if(!psPacket->seek(pk->startAt,pk->index))
+    {
+        printf("[psDemux] Failed to rewind to frame %" PRIu32"\n",startPoint);
+        return false;
+    }
+
+    // now seek forward
+    while(startPoint<frame)
+    {
+        pk=ListOfFrames[startPoint];
+        if(!psPacket->read(pk->len,img->data))
+        {
+            printf("[psDemux] Read failed for frame %" PRIu32"\n",startPoint);
+            lastFrame=0xffffffff;
+            return false;
+        }
+        startPoint++;
+        lastFrame=startPoint;
+    }
+    pk=ListOfFrames[frame];
+    lastFrame++;
+
+    bool r=psPacket->read(pk->len,img->data);
+
+    img->dataLength=pk->len;
+    img->demuxerFrameNo=frame;
+    img->demuxerDts=pk->dts;
+    img->demuxerPts=pk->pts;
+    //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+    getFlags(frame,&(img->flags));
+    return r;
 }
 
 /**
