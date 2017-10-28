@@ -19,10 +19,22 @@
 #include "DIA_coreToolkit.h"
 #include "ADM_toolkitQt.h"
 
-static double aspectRatio[2][3]={
-                              {1.,0.888888,1.19}, // NTSC 1:1 4:3 16:9
-                              {1.,1.066667,1.43} // PAL  1:1 4:3 16:9
-                            };
+static double aspectRatio[2][5]={
+    {
+        1.,
+        0.888889, // NTSC 720x480 DAR 4:3 PAR 8:9
+        0.909091, // NTSC 704x480 DAR 4:3 PAR 10:11
+        1.185185, // NTSC 720:480 DAR 16:9 PAR 32:27
+        1.212121  // NTSC 704:480 DAR 16:9 PAR 40:33
+    },
+    {
+        1.,
+        1.066667, // PAL 720:576 DAR 4:3 PAR 16:15
+        1.090909, // PAL 704:576 DAR 4:3 PAR 12:11
+        1.422222, // PAL 720:576 DAR 16:9 PAR 64:45
+        1.454545  // PAL 704:576 DAR 16:9 PAR 16:11
+    }
+};
 #define aprintf
 
 resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
@@ -30,6 +42,23 @@ resizeWindow::resizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
      ui.setupUi(this);
 	 lastPercentage = 100;
      _param=param;
+
+#define ADD_PAR(x) ui.comboBoxSource->addItem(x); ui.comboBoxDestination->addItem(x);
+
+    if(_param->pal)
+    {
+        ADD_PAR("PAL 720:576 DAR 4:3 PAR 16:15")
+        ADD_PAR("PAL 704:576 DAR 4:3 PAR 12:11")
+        ADD_PAR("PAL 720:576 DAR 16:9 PAR 64:45")
+        ADD_PAR("PAL 704:576 DAR 16:9 PAR 16:11")
+    }else
+    {
+        ADD_PAR("NTSC 720x480 DAR 4:3 PAR 8:9")
+        ADD_PAR("NTSC 704x480 DAR 4:3 PAR 10:11")
+        ADD_PAR("NTSC 720:480 DAR 16:9 PAR 32:27")
+        ADD_PAR("NTSC 704:480 DAR 16:9 PAR 40:33")
+    }
+
      ui.lockArCheckBox->setChecked(_param->rsz.lockAR);
      ui.checkBoxRoundup->setChecked(_param->rsz.roundup);
      ui.spinBoxWidth->setValue(_param->rsz.width);
@@ -156,12 +185,12 @@ void resizeWindow::updateWidthHeightSpinners(bool useHeightAsRef)
 	float ar = 1.;
 
 	if (sar)
-	{  // source is 4/3 or 16/9
+	{  // source pixel aspect ratio is not 1:1
 		sr_mul = aspectRatio[_param->pal][sar];
 	}
 
 	if (dar)
-	{  // dst is 4/3 or 16/9
+	{  // dst pixel aspect ratio is not 1:1
 		dst_mul = 1 / aspectRatio[_param->pal][dar];
 	}
 

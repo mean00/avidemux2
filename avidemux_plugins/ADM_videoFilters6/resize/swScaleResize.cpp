@@ -96,8 +96,8 @@ UNUSED_ARG(setup);
         configuration.width=info.width;
         configuration.height=info.height;
         configuration.algo=SWS_BILINEAR;
-        configuration.sourceAR=1;
-        configuration.targetAR=1;
+        configuration.sourceAR=0;
+        configuration.targetAR=0;
         configuration.lockAR=true;
         configuration.roundup=false;
     }
