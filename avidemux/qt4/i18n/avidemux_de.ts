@@ -14957,7 +14957,7 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+12"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+12"/>
         <source>Lock Aspect Ratio</source>
-        <translation type="unfinished">Seitenverhältnis beibehalten</translation>
+        <translation>Seitenverhältnis sperren</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -14971,8 +14971,8 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment/sampleGl.ui" line="+18"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="+18"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="+18"/>
-        <source>Source:</source>
-        <translation type="unfinished">Quelle:</translation>
+        <source>Source PAR:</source>
+        <translation type="unfinished">PAR der Quelle:</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -15064,8 +15064,8 @@ Ready.
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment/sampleGl.ui" line="-18"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_fragment2/sampleGl.ui" line="-18"/>
         <location filename="../../../avidemux_plugins/ADM_videoFilters6_openGl/sample_vertex/sampleGl.ui" line="-18"/>
-        <source>Destination:</source>
-        <translation type="unfinished">Ziel:</translation>
+        <source>Destination PAR:</source>
+        <translation type="unfinished">PAR des Ziels:</translation>
     </message>
     <message>
         <location line="+44"/>
