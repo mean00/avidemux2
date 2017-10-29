@@ -16,6 +16,7 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 #include "ADM_default.h"
+#include "ADM_vidMisc.h"
 #include "fourcc.h"
 #include "ADM_edit.hxx"
 
@@ -40,8 +41,12 @@ uint64_t    ADM_Composer::getMarkerBPts()
 
 bool        ADM_Composer::setMarkerAPts(uint64_t pts)
 {
-        markerAPts=pts;;
-        return true;
+    if(pts!=markerAPts)
+    {
+        markerAPts=pts;
+        ADM_info("Selection's start point set to %s (%" PRIu64" us)\n",ADM_us2plain(markerAPts),markerAPts);
+    }
+    return true;
 }
 /**
         \fn setMarkerBPts
@@ -49,7 +54,11 @@ bool        ADM_Composer::setMarkerAPts(uint64_t pts)
 
 bool        ADM_Composer::setMarkerBPts(uint64_t pts)
 {
-        markerBPts=pts;;
-        return true;
+    if(pts!=markerBPts)
+    {
+        markerBPts=pts;
+        ADM_info("Selection's end point set to %s (%" PRIu64" us)\n",ADM_us2plain(markerBPts),markerBPts);
+    }
+    return true;
 }
 //EOF
