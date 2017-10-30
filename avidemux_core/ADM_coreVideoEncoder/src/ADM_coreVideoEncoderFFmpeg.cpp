@@ -149,24 +149,6 @@ bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
         default: ADM_assert(0);
 
     }
-
-    // Eval fps
-    uint64_t f=source->getInfo()->frameIncrement;
-    // Let's put 100 us as time  base
-
-#ifdef TIME_TENTH_MILLISEC
-    _context->time_base.num=1;
-    _context->time_base.den=10000LL;
-#else
-
-    int n,d;
-
-    usSecondsToFrac(f,&n,&d);
- //   printf("[ff] Converted a time increment of %d ms to %d /%d seconds\n",f/1000,n,d);
-    _context->time_base.num=n;
-    _context->time_base.den=d;
-#endif
-    timeScaler=1000000.*av_q2d(_context->time_base); // Optimize, can be computed once
     return true;
 }
 /**
@@ -220,7 +202,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     map.internalTS=_frame->pts;
     mapper.push_back(map);
 
-    aprintf("Codec> incoming pts=%" PRIu64"\n",image->Pts);
+    aprintf("Codec> real pts=%" PRIu64", internal pts=%" PRId64"\n",p,_frame->pts);
     //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
     switch(targetColorSpace)
@@ -316,6 +298,17 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
                 _context->flags|=CODEC_FLAG_GLOBAL_HEADER;
     }
    prolog(image);
+    uint64_t inc=source->getInfo()->frameIncrement;
+#ifdef TIME_TENTH_MILLISEC
+    _context->time_base.num=1;
+    _context->time_base.den=10000LL;
+#else
+    int n,d;
+    usSecondsToFrac(inc,&n,&d);
+    _context->time_base.num=n;
+    _context->time_base.den=d;
+#endif
+    timeScaler=1000.*av_q2d(_context->time_base);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
    if(_hasSettings && LAVS(MultiThreaded))
     {
