@@ -582,6 +582,16 @@ bool ADM_coreVideoEncoderFFmpeg::presetContext(FFcodecSettings *set)
   _context->p_masking = 0.0;
 
   // Set frame rate den/num
+  uint64_t inc=source->getInfo()->frameIncrement;
+#ifdef TIME_TENTH_MILLISEC
+  _context->time_base.num=1;
+  _context->time_base.den=10000LL;
+#else
+  int n,d;
+  usSecondsToFrac(inc,&n,&d);
+  _context->time_base.num=n;
+  _context->time_base.den=d;
+#endif
   prolog(image);
   return true;
 }

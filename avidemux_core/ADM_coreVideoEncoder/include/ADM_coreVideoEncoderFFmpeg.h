@@ -45,7 +45,6 @@ protected:
                bool             _isMT; // True if multithreaded
                bool             _globalHeader;
                double           timeScaler;
-               bool             _closeCodec;
                bool             _hasSettings;
                int64_t          lastLavPts;
 
