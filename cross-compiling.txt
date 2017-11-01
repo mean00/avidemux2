@@ -42,7 +42,7 @@ to the settings.mk file.
 3. Build required MXE packages for the targets specified above with
 
     cd /opt/mxe
-    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264
+    make qttools qtwinextras sdl2 ogg vorbis lame a52dec faad2 fdk-aac libmad opus fribidi libass xvidcore x264 x265
 
 This pulls in all the dependencies and can take a couple of hours. The final
 total size of the /opt/mxe folder may be about 2.2G. Please note that twolame
@@ -50,53 +50,7 @@ is not available as a shared library and x265 has not been packaged for MXE as
 of this writing.
 
 
-4. Download x265_2.4.tar.gz from
-
-    https://bitbucket.org/multicoreware/x265/downloads
-
-extract the content of the tarball, enter the 'x265_2.4/build' directory,
-create a new subdirectory, e.g. 'mingw-w32', enter this subdirectory, create
-a 'build.cmake' file there with
-
-SET(CMAKE_SYSTEM_NAME Windows)
-SET(CMAKE_C_COMPILER i686-w64-mingw32.shared-gcc)
-SET(CMAKE_CXX_COMPILER i686-w64-mingw32.shared-g++)
-SET(CMAKE_RC_COMPILER i686-w64-mingw32.shared-windres)
-SET(CMAKE_ASM_YASM_COMPILER yasm)
-
-as content, ensure that /opt/mxe/usr/bin is in $PATH and run
-
-    cmake -DCMAKE_TOOLCHAIN_FILE=build.cmake -DCMAKE_INSTALL_PREFIX=/opt/mxe/usr/i686-w64-mingw32.shared -DENABLE_CLI=OFF ../../source
-    make -j $(nproc)
-    make install
-
-(the last command has to be run as root or using sudo if the directory
-'/opt/mxe/usr/i686-w64-mingw32.shared' is not writable by the user).
-
-To build and install 64 bit x265, create e.g. 'mingw-w64' as a subdirectory of
-'x265_2.4/build', enter this subdirectory, create a 'build.cmake' file there
-with
-
-SET(CMAKE_SYSTEM_NAME Windows)
-SET(CMAKE_C_COMPILER x86_64-w64-mingw32.shared-gcc)
-SET(CMAKE_CXX_COMPILER x86_64-w64-mingw32.shared-g++)
-SET(CMAKE_RC_COMPILER x86_64-w64-mingw32.shared-windres)
-SET(CMAKE_ASM_YASM_COMPILER yasm)
-
-as content, again ensure that /opt/mxe/usr/bin is in $PATH  and run
-
-    cmake -DCMAKE_TOOLCHAIN_FILE=build.cmake -DCMAKE_INSTALL_PREFIX=/opt/mxe/usr/x86_64-w64-mingw32.shared -DENABLE_CLI=OFF ../../source
-    make -j $(nproc)
-    make install
-
-(the last command has to be run as root or using sudo if the directory
-'/opt/mxe/usr/x86_64-w64-mingw32.shared' is not writable by the user).
-
-Please note that you need yasm >= 1.3 to build a 64 bit x265 library, this
-requirement is not met on Debian 8.
-
-
-5. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
+4. To enable hardware-accelerated encoding provided by NVIDIA graphics cards of
 the Kepler generation and later, download the file "nvEncodeAPI.h" e.g. from
 
     https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/compat/nvenc/nvEncodeAPI.h
@@ -105,11 +59,11 @@ and copy it to /opt/mxe/usr/i686-w64-mingw32.shared/include/ or
 /opt/mxe/usr/x86_64-w64-mingw32.shared/include/ correspondingly.
 
 
-6. Create a user-writable directory 'out' in '/opt/mxe/usr/x86_64-w64-mingw32.shared'
+5. Create a user-writable directory 'out' in '/opt/mxe/usr/x86_64-w64-mingw32.shared'
 and in '/opt/mxe/usr/i686-w64-mingw32.shared' respectively.
 
 
-7. Enter the Avidemux top source directory and run
+6. Enter the Avidemux top source directory and run
 
     bash bootStrapCrossMingwQt5_mxe.sh
 
@@ -127,8 +81,8 @@ file from the 'packaged_mingw_build_YYMMDD-hhmmss' directory to a Windows
 partition, extract it on Windows and run 'avidemux.exe' from there.
 
 
-8. Issues:
+7. Issues:
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2017-06-13 UTC 23:00
+2017-11-01 UTC 23:05
