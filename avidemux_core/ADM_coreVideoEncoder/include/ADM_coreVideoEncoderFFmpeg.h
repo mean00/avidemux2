@@ -47,7 +47,8 @@ protected:
                double           timeScaler;
                bool             _closeCodec;
                bool             _hasSettings;
-              
+               int64_t          lastLavPts;
+
 protected:
                           int              encodeWrapper(AVFrame *in,ADMBitstream *out); // Returns encoded size of <0 for error
     virtual               bool             prolog(ADMImage *img); 

@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_default.h"
+#include "ADM_vidMisc.h"
 #include "ADM_coreVideoEncoderFFmpeg.h"
 #include "prefs.h"
 #include "ADM_coreUtils.h"
@@ -79,7 +80,7 @@ _hasSettings=false;
      else
             encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
-
+    lastLavPts=0;
 }
 /**
     \fn ADM_coreVideoEncoderFFmpeg
@@ -196,6 +197,12 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     p+=getEncoderDelay();
     _frame->pts= timingToLav(p);    //
     if(!_frame->pts) _frame->pts=AV_NOPTS_VALUE;
+    if(_frame->pts!=AV_NOPTS_VALUE && lastLavPts!=AV_NOPTS_VALUE && _frame->pts==lastLavPts)
+    {
+        ADM_warning("Lav PTS collision at frame %" PRIu32", lav PTS=%" PRId64", time %s\n",nb,_frame->pts,ADM_us2plain(p));
+        _frame->pts++;
+    }
+    lastLavPts=_frame->pts;
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
@@ -308,7 +315,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(AVCodec *codec)
     _context->time_base.num=n;
     _context->time_base.den=d;
 #endif
-    timeScaler=1000.*av_q2d(_context->time_base);
+    timeScaler=1000000.*av_q2d(_context->time_base);
    printf("[ff] Time base %d/%d\n", _context->time_base.num,_context->time_base.den);
    if(_hasSettings && LAVS(MultiThreaded))
     {
