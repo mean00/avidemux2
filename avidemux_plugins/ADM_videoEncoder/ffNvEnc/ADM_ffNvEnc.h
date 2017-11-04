@@ -29,10 +29,21 @@ enum FF_NVencPreset
   NV_FF_PRESET_LLHQ=6
 };
 
+enum FF_NVencProfile
+{
+  NV_FF_PROFILE_BASELINE=1,
+  NV_FF_PROFILE_MAIN=2,
+  NV_FF_PROFILE_HIGH=3
+};
+
+
 
 #define NVENC_CONF_DEFAULT \
 { \
 		NV_FF_PRESET_HQ, \
+		NV_FF_PROFILE_HIGH, \
+		100, \
+		0, \
                 10000, \
                 20000,\
 	}
@@ -49,7 +60,8 @@ class ADM_ffNvEncEncoder : public ADM_coreVideoEncoderFFmpeg
 protected:
 
                uint8_t      *nv12;
-               int          nv12Stride;               
+               int          nv12Stride;
+               uint64_t     frameIncrement;
 public:
 
                            ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeader);
@@ -58,7 +70,7 @@ virtual        bool        configureContext(void);
 virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void) {return "H264";}
-
+virtual        uint64_t     getEncoderDelay(void);
 virtual        bool         isDualPass(void) ;
 
 };

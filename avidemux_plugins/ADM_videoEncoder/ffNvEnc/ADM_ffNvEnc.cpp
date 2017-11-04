@@ -42,7 +42,7 @@ ADM_ffNvEncEncoder::ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
     //targetColorSpace=ADM_COLOR_YUV422P;
     ADM_info("[ffNvEncEncoder] Creating.\n");
     nv12=NULL;
-
+    frameIncrement=src->getInfo()->frameIncrement;
 
 }
 
@@ -60,11 +60,27 @@ bool ADM_ffNvEncEncoder::configureContext(void)
      MIAOU(LL,"ll")   
      MIAOU(LLHP,"llhp")   
      MIAOU(LLHQ,"llhq")   
-     MIAOU(HQ,"hq")                
+     MIAOU(HQ,"hq")
 default:break;
-    }
+#undef MIAOU
+    };
+
+    switch(NvEncSettings.profile)
+    {
+        int res;
+#define MIAOU(x,y) case NV_FF_PROFILE_##x: ADM_assert(!av_opt_set(_context->priv_data,"profile",y,0)); break;
+
+        MIAOU(BASELINE,"baseline")
+        MIAOU(MAIN,"main")
+        MIAOU(HIGH,"high")
+        default:break;
+#undef MIAOU
+    };
+
     _context->bit_rate=NvEncSettings.bitrate*1000;
     _context->rc_max_rate=NvEncSettings.max_bitrate*1000;
+    _context->gop_size=NvEncSettings.gopsize;
+    _context->max_b_frames=NvEncSettings.bframes;
 #ifdef USE_NV12    
     _context->pix_fmt=  AV_PIX_FMT_NV12;        
 #else    
@@ -100,6 +116,16 @@ bool ADM_ffNvEncEncoder::setup(void)
     return true;
 }
 
+/**
+    \fn getEncoderDelay
+*/
+uint64_t ADM_ffNvEncEncoder::getEncoderDelay(void)
+{
+    uint64_t delay=0;
+    if(NvEncSettings.bframes)
+        delay=frameIncrement*2;
+    return delay;
+}
 
 /**
     \fn ~ADM_ffNvEncEncoder
@@ -128,7 +154,8 @@ again:
         sz=encodeWrapper(NULL,out);
         if (sz<= 0)
         {
-            ADM_info("[ffnvenc] Error %d encoding video\n",sz);
+            if(sz<0)
+                ADM_info("[ffnvenc] Error %d encoding video\n",sz);
             return false;
         }
         ADM_info("[ffnvenc] Popping delayed bframes (%d)\n",sz);
@@ -197,17 +224,33 @@ diaMenuEntry mePreset[]={
   {NV_FF_PRESET_LLHQ,QT_TRANSLATE_NOOP("ffnvenc","Low Latency (HQ)")}
 };
 
+diaMenuEntry meProfile[]={
+  {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline")},
+  {NV_FF_PROFILE_MAIN,QT_TRANSLATE_NOOP("ffnvenc","Main")},
+  {NV_FF_PROFILE_HIGH,QT_TRANSLATE_NOOP("ffnvenc","High")}
+};
+
         ffnvenc_encoder *conf=&NvEncSettings;
 
 #define PX(x) &(conf->x)
 
-        diaElemMenu      qzPreset(PX(preset),QT_TRANSLATE_NOOP("ffnvenc","Preset:"),6,mePreset);        
+        diaElemMenu      qzPreset(PX(preset),QT_TRANSLATE_NOOP("ffnvenc","Preset:"),6,mePreset);
+        diaElemMenu      profile(PX(profile),QT_TRANSLATE_NOOP("ffnvenc","Profile:"),3,meProfile);
         diaElemUInteger  bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,50000);
         diaElemUInteger  maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,50000);
-          /* First Tab : encoding mode */
-        diaElem *diamode[]={&qzPreset,&bitrate,&maxBitrate};
+        diaElemUInteger  gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),8,250);
+        diaElemUInteger  maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,4);
+        diaElemFrame     rateControl(QT_TRANSLATE_NOOP("ffnvenc","Rate Control"));
+        diaElemFrame     frameControl(QT_TRANSLATE_NOOP("ffnvenc","Frame Control"));
 
-        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),3,diamode))
+        rateControl.swallow(&bitrate);
+        rateControl.swallow(&maxBitrate);
+        frameControl.swallow(&gopSize);
+        frameControl.swallow(&maxBframes);
+          /* First Tab : encoding mode */
+        diaElem *diamode[]={&qzPreset,&profile,&rateControl,&frameControl};
+
+        if( diaFactoryRun(QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),4,diamode))
         {
           
           return true;
