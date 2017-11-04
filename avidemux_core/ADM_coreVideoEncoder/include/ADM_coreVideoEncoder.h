@@ -71,7 +71,7 @@ virtual const  char         *getFourcc(void) =0;
                uint32_t    getFrameIncrement(void) {return source->getInfo()->frameIncrement;}
                uint64_t    getTotalDuration(void) {return source->getInfo()->totalDuration;}
 virtual        bool        setPassAndLogFile(int pass,const char *name) {return false;}
-               uint64_t    getEncoderDelay(void){return encoderDelay;}
+virtual        uint64_t    getEncoderDelay(void){return encoderDelay;}
                uint64_t    lastDts; //
 };
 ADM_COREVIDEOENCODER6_EXPORT bool usSecondsToFrac(uint64_t useconds, int *n,int *d);

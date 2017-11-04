@@ -142,9 +142,9 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
             return true;
         }
     }
-    ADM_warning("Cannot find PTS : %s \n",ADM_us2plain(val));
+    ADM_warning("Cannot find PTS : %" PRIu64" \n",val);
     for(int i=0;i<n;i++) 
-        ADM_warning("%d : %s\n",i,ADM_us2plain(mapper[i].internalTS));
+        ADM_warning("%d : %" PRIu64", %s\n",i,mapper[i].internalTS,ADM_us2plain(mapper[i].realTS));
     ADM_assert(0);
     return false;
 

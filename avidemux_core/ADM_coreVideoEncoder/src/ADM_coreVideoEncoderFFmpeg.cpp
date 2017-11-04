@@ -283,6 +283,7 @@ int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstr
             ADM_warning("Encoder produced no data\n");
             pkt.size=0;
         }
+        lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
         return pkt.size;            
 }
 /**
@@ -467,8 +468,15 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 
     } else
     {
-        if(!getRealPtsFromInternal(_context->coded_frame->pts,&(out->dts),&(out->pts)))
-                return false;
+        int64_t lavPts;
+        if(_context->coded_frame->pts!=AV_NOPTS_VALUE)
+            lavPts=_context->coded_frame->pts;
+        else if(lavPtsFromPacket!=AV_NOPTS_VALUE)
+            lavPts=lavPtsFromPacket;
+        else
+            return false;
+        if(!getRealPtsFromInternal(lavPts,&(out->dts),&(out->pts)))
+            return false;
     }
     // update lastDts
     lastDts=out->dts;

@@ -47,6 +47,7 @@ protected:
                double           timeScaler;
                bool             _hasSettings;
                int64_t          lastLavPts;
+               int64_t          lavPtsFromPacket;
 
 protected:
                           int              encodeWrapper(AVFrame *in,ADMBitstream *out); // Returns encoded size of <0 for error
