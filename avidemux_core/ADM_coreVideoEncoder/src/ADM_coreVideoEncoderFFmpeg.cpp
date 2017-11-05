@@ -284,6 +284,7 @@ int              ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstr
             pkt.size=0;
         }
         lavPtsFromPacket=pkt.pts; // some encoders don't set pts in coded_frame
+        packetFlags=pkt.flags;
         return pkt.size;            
 }
 /**
@@ -436,13 +437,14 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
     if(_context->coded_frame)
     {
         pict_type=_context->coded_frame->pict_type;
-        keyframe=_context->coded_frame->key_frame;
     }else
     {
         out->len=0;
         ADM_warning("No picture...\n");
         return false;
     }
+    if(packetFlags & AV_PKT_FLAG_KEY)
+        keyframe=true;
     aprintf("[ffMpeg4] Out Quant :%d, pic type %d keyf %d %p\n",out->out_quantizer,pict_type,keyframe,_context->coded_frame);
     out->len=size;
     out->flags=0;
@@ -468,14 +470,9 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 
     } else
     {
-        int64_t lavPts;
-        if(_context->coded_frame->pts!=AV_NOPTS_VALUE)
-            lavPts=_context->coded_frame->pts;
-        else if(lavPtsFromPacket!=AV_NOPTS_VALUE)
-            lavPts=lavPtsFromPacket;
-        else
+        if(lavPtsFromPacket==AV_NOPTS_VALUE)
             return false;
-        if(!getRealPtsFromInternal(lavPts,&(out->dts),&(out->pts)))
+        if(!getRealPtsFromInternal(lavPtsFromPacket,&(out->dts),&(out->pts)))
             return false;
     }
     // update lastDts
