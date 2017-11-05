@@ -67,7 +67,6 @@ default:break;
 
     switch(NvEncSettings.profile)
     {
-        int res;
 #define MIAOU(x,y) case NV_FF_PROFILE_##x: ADM_assert(!av_opt_set(_context->priv_data,"profile",y,0)); break;
 
         MIAOU(BASELINE,"baseline")
