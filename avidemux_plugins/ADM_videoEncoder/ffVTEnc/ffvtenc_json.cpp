@@ -2,9 +2,12 @@
 #include "ADM_default.h"
 #include "ADM_paramList.h"
 #include "ADM_coreJson.h"
-#include "../avidemux_plugins/ADM_videoEncoder/ffVTEnc/ffvtenc.h"
+#include "ffvtenc.h"
 bool  ffvtenc_jserialize(const char *file, const ffvtenc *key){
 admJson json;
+json.addUint32("profile",key->profile);
+json.addUint32("gopsize",key->gopsize);
+json.addUint32("bframes",key->bframes);
 json.addUint32("bitrate",key->bitrate);
 json.addUint32("max_bitrate",key->max_bitrate);
 return json.dumpToFile(file);
