@@ -27,7 +27,7 @@ typedef struct
 typedef BVector <psAudioTrackInfo*> listOfPsAudioTracks;
 
 /// Returns a list of audio tracks found in the file.
-listOfPsAudioTracks *psProbeAudio(const char *fileName);
+listOfPsAudioTracks *psProbeAudio(const char *fileName, FP_TYPE appendType);
 bool DestroyListOfPsAudioTracks(listOfPsAudioTracks *list);
 
 

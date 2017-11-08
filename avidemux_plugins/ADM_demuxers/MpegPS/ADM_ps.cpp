@@ -36,7 +36,6 @@ uint8_t psHeader::open(const char *name)
     char *idxName=(char *)malloc(strlen(name)+6);
     bool r=false;
     FP_TYPE appendType=FP_DONT_APPEND;
-    uint32_t append;
     char *type;
     uint64_t startDts;
     uint32_t version=0;
@@ -67,7 +66,7 @@ uint8_t psHeader::open(const char *name)
         printf("[psDemux] Incorrect or not found type\n");
         goto abt;
     }
-    append=index.getAsUint32("Append");
+    append=(bool)index.getAsUint32("Append");
     printf("[psDemux] Append=%" PRIu32"\n",append);
     if(append) appendType=FP_APPEND;
     if(!parser.open(name,&appendType))

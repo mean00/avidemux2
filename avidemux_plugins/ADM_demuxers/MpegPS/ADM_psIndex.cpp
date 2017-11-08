@@ -213,7 +213,7 @@ bool bAppend=false;
     writeSystem(file,bAppend);
     pkt=new psPacketLinearTracker(0xE0);
 
-    audioTracks=psProbeAudio(file);
+    audioTracks=psProbeAudio(file,append);
     if(audioTracks)
     {
         for(int i=0;i<audioTracks->size();i++)

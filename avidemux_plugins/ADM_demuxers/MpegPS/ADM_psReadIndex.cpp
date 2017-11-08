@@ -246,7 +246,7 @@ bool    psHeader::readAudio(indexFile *index,const char *name)
             hdr.byterate=br;
             hdr.channels=chan;
             hdr.encoding=codec;
-        ADM_psAccess *access=new ADM_psAccess(name,pid,true);
+        ADM_psAccess *access=new ADM_psAccess(name,pid,append);
             ADM_psTrackDescriptor *desc=new ADM_psTrackDescriptor;
             desc->stream=NULL;
             desc->access=access;

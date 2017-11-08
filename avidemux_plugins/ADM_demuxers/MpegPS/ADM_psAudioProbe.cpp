@@ -42,7 +42,7 @@ static bool psCheckMp2Audio(WAVHeader *hdr, uint8_t *data, uint32_t dataSize);
     \brief returns a list of audio track found, null if none found
 
 */
-listOfPsAudioTracks *psProbeAudio(const char *fileName)
+listOfPsAudioTracks *psProbeAudio(const char *fileName, FP_TYPE appendType)
 {
     uint32_t size;
     uint64_t dts,pts,startAt;
@@ -54,7 +54,7 @@ listOfPsAudioTracks *psProbeAudio(const char *fileName)
 
     printf("[MpegPS] Probing audio for %s\n",fileName);
 
-    if(!packet->open(fileName,FP_APPEND)) goto end;
+    if(!packet->open(fileName,appendType)) goto end;
     fileSize=packet->getSize();
 
     packet->setPos(fileSize/2); // Jump in the middle of the stream
