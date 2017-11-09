@@ -105,9 +105,14 @@ protected:
 
     uint8_t                     goToBlock(uint32_t x);
     bool                        initLaces(uint32_t nbLaces,uint64_t time);
-     int              readAndRepeat(uint8_t *buffer, uint32_t len)
+     int              readAndRepeat(uint8_t *buffer, uint32_t len, uint32_t max)
                         {
                              uint32_t rpt=_track->headerRepeatSize;
+                             if(rpt+len>max)
+                               {
+                                 ADM_error("Overflow in reading  mkv audio : %u (%u) max was %d\n",rpt+len,rpt,max);
+                                 ADM_assert(0);
+                               }
                               _parser->readBin(buffer+rpt,len);
                               if(rpt)
                                 memcpy(buffer,_track->headerRepeat,rpt);

@@ -226,7 +226,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
     // Have we still lace to go ?
     if(_currentLace<_maxLace)
     {
-      *packlen= readAndRepeat(dest, _Laces[_currentLace]);
+      *packlen= readAndRepeat(dest, _Laces[_currentLace],maxSize);
       ADM_assert(*packlen<maxSize);
       vprintf("Continuing lacing : %u bytes, lacing %u/%u\n",*packlen,_currentLace,_maxLace);
       *timecode=_lastDtsBase+_laceIncrementUs*_currentLace;
@@ -254,7 +254,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
               case 0 : // no lacing
 
                       vprintf("No lacing :%d bytes\n",(int)size);
-                      *packlen= readAndRepeat(dest,size);              
+                      *packlen= readAndRepeat(dest,size,maxSize);              
                       _currentLace=_maxLace=0;
                       _currentBlock++;
                       return 1;
@@ -279,7 +279,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                         }
 
                         // The first one has Dts
-                        *packlen= readAndRepeat(dest, _Laces[0]);              
+                        *packlen= readAndRepeat(dest, _Laces[0],maxSize);              
                         _Laces[nbLaces-1]=size;
 
                         initLaces(nbLaces,time);
@@ -298,7 +298,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                         {
                           _Laces[i]=bsize;
                         }
-                        *packlen= readAndRepeat(dest, bsize);              
+                        *packlen= readAndRepeat(dest, bsize,maxSize);              
                         // The first one has Dts
                         initLaces(nbLaces,time);
                        
@@ -336,7 +336,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                         _Laces[nbLaces-1]=consumed-sum;
 
                           // Take the 1st laces, it has timestamp
-                          *packlen= readAndRepeat(dest, _Laces[0]);              
+                          *packlen= readAndRepeat(dest, _Laces[0],maxSize);              
                           ADM_assert(*packlen<maxSize);
                           vprintf("Continuing lacing : dts : %lu %u bytes, lacing %u/%u\n",time,*packlen,_currentLace,_maxLace);
                           initLaces(nbLaces,time);
