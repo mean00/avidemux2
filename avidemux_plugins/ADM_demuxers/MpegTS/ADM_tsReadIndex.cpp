@@ -355,7 +355,8 @@ bool    tsHeader::readAudio(indexFile *index,const char *name)
         {
             ADM_info("No extradata (%s)\n",body);
         }
-        ADM_tsAccess *access=new ADM_tsAccess(name,pid,true,(ADM_TS_MUX_TYPE)muxing,extraLen,extraData);
+        bool append=(bool)index->getAsUint32("Append");
+        ADM_tsAccess *access=new ADM_tsAccess(name,pid,append,(ADM_TS_MUX_TYPE)muxing,extraLen,extraData);
         if(extraData) delete [] extraData;
         extraData=NULL;
         ADM_tsTrackDescriptor *desc=new ADM_tsTrackDescriptor;
