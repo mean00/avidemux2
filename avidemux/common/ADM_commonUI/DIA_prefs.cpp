@@ -63,6 +63,7 @@ char     *alsaDevice=NULL;
 
 bool     balternate_mp3_tag=true;
 bool     lastReadDirAsTarget=false;
+bool     copyModeSanitizeDts=false;
 bool     altKeyboardShortcuts=false;
 bool     swapUpDown=false;
 
@@ -165,6 +166,11 @@ std::string currentSdlDriver=getSdlDriverName();
 
         // Make users happy who prefer the output dir to be the same as the input dir
         prefs->get(FEATURES_USE_LAST_READ_DIR_AS_TARGET,&lastReadDirAsTarget);
+
+        // Some muxers may bail with irregular DTS and some devices may fail to play such videos.
+        // Don't let DTS get too close to each other by delaying frames, drop frames if necessary.
+        // This results in more videos that can't be saved in copy mode.
+        prefs->get(FEATURES_COPY_MODE_SANITIZE_DTS,&copyModeSanitizeDts);
 
         // PgUp and PgDown are cumbersome to reach on some laptops, offer alternative kbd shortcuts
         prefs->get(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,&altKeyboardShortcuts);
@@ -274,8 +280,8 @@ std::string currentSdlDriver=getSdlDriverName();
         framePriority.swallow(&menuPlaybackPriority);
 
         diaElemToggle togTagMp3(&balternate_mp3_tag,QT_TRANSLATE_NOOP("adm","_Use alternative tag for MP3 in .mp4"));
-
         diaElemToggle useLastReadAsTarget(&lastReadDirAsTarget,QT_TRANSLATE_NOOP("adm","_Default to the directory of the last read file for saving"));
+        diaElemToggle sanitizeDtsInCopyMode(&copyModeSanitizeDts,QT_TRANSLATE_NOOP("adm","_Sanitize decode time stamps (DTS) in copy mode"));
 
         diaMenuEntry videoMode[]={
                              {RENDER_GTK, getNativeRendererDesc(0), NULL}
@@ -426,8 +432,8 @@ std::string currentSdlDriver=getSdlDriverName();
 
 
         /* Output */
-        diaElem *diaOutput[]={&allowAnyMpeg,&togTagMp3,&useLastReadAsTarget};
-        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),3,(diaElem **)diaOutput);
+        diaElem *diaOutput[]={&allowAnyMpeg,&togTagMp3,&sanitizeDtsInCopyMode,&useLastReadAsTarget};
+        diaElemTabs tabOutput(QT_TRANSLATE_NOOP("adm","Output"),4,(diaElem **)diaOutput);
 
         /* Audio */
 
@@ -610,6 +616,8 @@ std::string currentSdlDriver=getSdlDriverName();
             prefs->set(FEATURES_ALTERNATE_MP3_TAG,balternate_mp3_tag);
             // Make users happy who prefer the output dir to be the same as the input dir
             prefs->set(FEATURES_USE_LAST_READ_DIR_AS_TARGET,lastReadDirAsTarget);
+            // Don't let DTS get too close to each other by delaying frames, drop frames if necessary.
+            prefs->set(FEATURES_COPY_MODE_SANITIZE_DTS,copyModeSanitizeDts);
             // Enable alternate keyboard shortcuts
             prefs->set(KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS,altKeyboardShortcuts);
             // Allow to use the UP key to navigate back, DOWN to navigate forward
