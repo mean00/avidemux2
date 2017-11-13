@@ -248,7 +248,7 @@ bool        ADM_Composer::getNonClosedGopDelay(uint64_t time,uint32_t *delay)
 
 
 */
-bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressedImage *img)
+bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,bool sanitize,ADMCompressedImage *img)
 {
     uint64_t tail;
     //
@@ -256,8 +256,8 @@ bool        ADM_Composer::getCompressedPicture(uint64_t videoDelay,ADMCompressed
     int64_t signedDts;
 
 #define MAX_EXTRA_DELAY 100000
-#define CATCH_UP_RATE 1000
-#define MAX_DESYNC_SCORE 40*100000
+#define CATCH_UP_RATE 5000
+#define MAX_DESYNC_SCORE 20*100000
 #define DESYNC_THRESHOLD 20000
 #define ENOUGH 4
 
@@ -394,7 +394,7 @@ againGet:
     {
 // It means that the incoming image is earlier than the expected time.
 // we add a bit of timeIncrement to compensate for rounding
-        if(_nextFrameDts!=ADM_NO_PTS)
+        if(sanitize && _nextFrameDts!=ADM_NO_PTS)
         {
             if(_nextFrameDts>(signedDts+(int64_t)(vid->timeIncrementInUs/3)))
             {
@@ -540,7 +540,7 @@ nextSeg:
     _SEGMENT *thisseg=_segments.getSegment(_currentSegment);
     thisseg->_dropBframes=_SEGMENT::ADM_DROP_MAYBE_AFER_SWITCH;
     ADM_info("Retrying for next segment\n");
-    return getCompressedPicture(videoDelay,img);
+    return getCompressedPicture(videoDelay,sanitize,img);
    
 }
 

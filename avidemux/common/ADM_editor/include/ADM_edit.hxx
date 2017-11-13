@@ -250,7 +250,7 @@ public:
                     bool        rewind(void);
 // Used for stream copy
                     bool        GoToIntraTime_noDecoding(uint64_t time,uint32_t *toframe=NULL);
-                    bool        getCompressedPicture(uint64_t delay,ADMCompressedImage *img);     //COPYMODE
+                    bool        getCompressedPicture(uint64_t delay,bool sanitizeDts,ADMCompressedImage *img);     //COPYMODE
                     // Use only for debug purpose !!!
                     bool        getDirectImageForDebug(uint32_t frameNum,ADMCompressedImage *img);
                     bool        checkCutsAreOnIntra(void);

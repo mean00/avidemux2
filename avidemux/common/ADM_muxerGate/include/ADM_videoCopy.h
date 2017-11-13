@@ -18,6 +18,7 @@ protected:
             uint32_t currentFrame;
             ADMCompressedImage image;
             bool eofMet;
+            bool sanitizeDts;
             uint64_t  rescaleTs(uint64_t in);
             uint64_t  rewindTime;
 
