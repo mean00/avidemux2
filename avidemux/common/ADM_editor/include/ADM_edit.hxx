@@ -124,7 +124,7 @@ protected:
                                 /// compressed image->yb12 image image and do postproc/colorconversion
                     bool        decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref);
                                 /// Decode next image
-                    bool        DecodeNextPicture(uint32_t ref);
+                    bool        DecodeNextPicture(uint32_t ref,bool ignorePts=false);
                                 /// Get the next decoded picture
                     bool     	getNextPicture(ADMImage *out,uint32_t ref);
                                 /// Get again last decoded picture
