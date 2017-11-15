@@ -49,6 +49,7 @@
 
 #define ADM_EDITOR_AUDIO_BUFFER_SIZE (128*1024*6*sizeof(float))
 #define AVS_PROXY_DUMMY_FILE "::ADM_AVS_PROXY::"
+#define WORK_AROUND_BAD_PTS
 /**
     \enum _ENV_EDITOR_FLAGS
 */
@@ -124,7 +125,7 @@ protected:
                                 /// compressed image->yb12 image image and do postproc/colorconversion
                     bool        decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t ref);
                                 /// Decode next image
-                    bool        DecodeNextPicture(uint32_t ref,bool ignorePts=false);
+                    bool        DecodeNextPicture(uint32_t ref);
                                 /// Get the next decoded picture
                     bool     	getNextPicture(ADMImage *out,uint32_t ref);
                                 /// Get again last decoded picture

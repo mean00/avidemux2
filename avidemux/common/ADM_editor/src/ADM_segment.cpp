@@ -117,7 +117,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
   // Probe the real time increment as the value determined from FPS may be incorrect due to interlace
   uint64_t firstNonZeroDts=ADM_NO_PTS,pts,dts;
   int firstNonZeroDtsFrame;
-  ADM_info("[editor] Original frame increment %s %d\n",ADM_us2plain(ref->timeIncrementInUs),(int)ref->timeIncrementInUs);
+  ADM_info("Original frame increment %s = %" PRIu64" us\n",ADM_us2plain(ref->timeIncrementInUs),ref->timeIncrementInUs);
   uint64_t minDelta=100000;
   uint64_t maxDelta=0;
   for (int frame=0; frame<info.nb_frames; frame++)
@@ -138,14 +138,14 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
           firstNonZeroDtsFrame=frame;
       }
   }
-  ADM_info("[Editor] min increment %s - %d\n",ADM_us2plain(minDelta),(int)minDelta);
-  ADM_info("[Editor] max increment %s - %d\n",ADM_us2plain(maxDelta),(int)maxDelta);
+  ADM_info("min increment %s = %" PRIu64" us\n",ADM_us2plain(minDelta),minDelta);
+  ADM_info("max increment %s = %" PRIu64" us\n",ADM_us2plain(maxDelta),maxDelta);
   
   //if (minDelta==ref->timeIncrementInUs*2)
               //ref->timeIncrementInUs=minDelta;
 
   
-  ADM_info("[Editor] About %" PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
+  ADM_info("About %" PRIu64" microseconds per frame\n",ref->timeIncrementInUs);
   ref->_nb_video_frames = info.nb_frames;
   //
   //  And automatically create the segment
@@ -167,6 +167,8 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
         demuxer->getPtsDts(0,&pts,&dts);
         ref->firstFramePts=0;
         if(pts==ADM_NO_PTS) ADM_warning("First frame has unknown PTS\n");
+        if(dts==ADM_NO_PTS) ADM_warning("The first frame DTS is not set\n");
+        else ADM_info("The first frame DTS = %" PRIu64" ms\n",dts/1000);
         if(pts!=ADM_NO_PTS &&pts)
         {
             ADM_warning("The first frame has a PTS >0, adjusting to %" PRIu64" ms\n",pts/1000);

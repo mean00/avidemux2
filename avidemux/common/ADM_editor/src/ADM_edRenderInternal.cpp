@@ -139,9 +139,6 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
   _VIDEOS *vid=_segments.getRefVideo(ref);
   EditorCache   *cache=vid->_videoCache;
   ADM_assert(vid);
-  bool distrustPts=false;
-  if(stats.nbPtsgoingBack>1)
-        distrustPts=true;
 
    uint32_t loop=20; // Try 20 frames ahead
 
@@ -149,7 +146,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
     while(loop--)
     {
         // first decode a picture, cannot hurt...
-        if(DecodeNextPicture(ref,distrustPts)==false)
+        if(DecodeNextPicture(ref)==false)
         {
             ADM_warning("Next picture failed\n");
             continue;
@@ -196,7 +193,7 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
             fail on error
 
 */
-bool ADM_Composer::DecodeNextPicture(uint32_t ref,bool badpts)
+bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 {
 uint8_t ret = 0;
   EditorCache   *cache;
@@ -245,13 +242,13 @@ uint8_t ret = 0;
         aprintf("Got image with PTS=%s\n",ADM_us2plain(result->Pts));
      uint64_t pts=result->Pts;
      uint64_t old=vid->lastDecodedPts;
-        if(pts==ADM_COMPRESSED_NO_PTS || badpts) // No PTS available ?
+        if(pts==ADM_COMPRESSED_NO_PTS || vid->dontTrustBFramePts) // No PTS available ?
         {
                 aprintf("[Editor] No PTS, guessing value\n");
                 aprintf("Image Pts : %s\n",ADM_us2plain(img.demuxerPts));
                 aprintf("Image Dts : %s\n",ADM_us2plain(img.demuxerDts));
                 vid->lastDecodedPts+=vid->timeIncrementInUs;
-                if(img.demuxerDts!=ADM_NO_PTS && (badpts || vid->_aviheader->providePts()==false))
+                if(img.demuxerDts!=ADM_NO_PTS && (vid->dontTrustBFramePts || vid->_aviheader->providePts()==false))
                 {
                     if(img.demuxerDts>vid->lastDecodedPts)
                     {
@@ -259,7 +256,6 @@ uint8_t ret = 0;
                         vid->lastDecodedPts=img.demuxerDts;
                     }
                 }
-               
                 result->Pts=vid->lastDecodedPts;
         }else
            {

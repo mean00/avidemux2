@@ -412,7 +412,7 @@ bool ADM_Composer::addFile (const char *name)
         }
      }
     int lastVideo=_segments.getNbSegments();
-    if(lastVideo && video._aviheader->unreliableBFramePts()&& isH264Compatible(info.fcc))
+    if(lastVideo && isH264Compatible(info.fcc))
     {
         ADM_info("H264 in mp4 sometimes has invalid timestamps which confuse avidemux, checking\n");
         checkForValidPts(_segments.getSegment(lastVideo-1)); 
