@@ -444,6 +444,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
     uint8_t *buffer=new uint8_t[bufSize];
     uint64_t rawDts;
     uint64_t lastVideoDts=0;
+    uint64_t lastVideoDtsLav=0;
     uint64_t videoIncrement;
     bool ret;
     uint32_t written=0;
@@ -515,7 +516,18 @@ bool muxerFFmpeg::saveLoop(const char *title)
 
             encoding->pushVideoFrame(out.len,out.out_quantizer,lastVideoDts);
             muxerRescaleVideoTimeDts(&(out.dts),lastVideoDts);
+            if(!roundup && lastVideoDtsLav && out.dts==lastVideoDtsLav)
+            {
+                ADM_warning("Bumping lav DTS to avoid collision for frame %" PRIu32"\n",written);
+                out.dts++;
+            }
+            lastVideoDtsLav=out.dts;
             muxerRescaleVideoTime(&(out.pts));
+            if(out.dts>out.pts)
+            {
+                ADM_warning("Bumping lav PTS to keep PTS >= DTS for frame %" PRIu32"\n",written);
+                out.pts=out.dts;
+            }
             aprintf("[FF:V] RawDts:%lu Scaled Dts:%lu\n",rawDts,out.dts);
             aprintf("[FF:V] Rescaled: Len : %d flags:%x Pts:%" PRIu64" Dts:%" PRIu64"\n",out.len,out.flags,out.pts,out.dts);
 
