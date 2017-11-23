@@ -253,6 +253,7 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
     if(!fail) return true; // Have all PTS, ok...
     ADM_info("Some PTS are missing, try to guess them...\n");
     fail=0;
+    bool interlaced=false;
     //
     for(int i=0;i<nbFrames-1;i+=1)
     {
@@ -268,6 +269,7 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
         {
             continue;
         }
+        interlaced=true;
         // TOP / BOTTOM
         if(pts==ADM_NO_PTS)
         {
@@ -276,7 +278,7 @@ bool ADM_setH264MissingPts(vidHeader *hdr,uint64_t timeIncrementUs,uint64_t *del
         }
     }
     ADM_info("H264 AVC scheme: %" PRIu32"/%" PRIu32" failures.\n",fail,nbFrames/2);
-    if(fail) goto nextScheme;
+    if(!interlaced || fail) goto nextScheme;
     {
     ADM_info("Filling 2nd field PTS\n");
     uint32_t fixed=0;
