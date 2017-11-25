@@ -49,6 +49,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
         from+=vid->firstFramePts;
     goToTimeVideo(from);
     vid->lastSentFrame=0;
+    vid->dontTrustBFramePts=false;
     
     stats.reset();
     ADM_info("Checking file for broken PTS...\n");
