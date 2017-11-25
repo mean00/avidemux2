@@ -29,9 +29,6 @@
 #endif
 
 #include "ADM_pp.h"
-// FIXME BADLY !!!
-// This should be in a context somewhere
-static uint8_t compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3];
 
 /**
     \fn seektoFrame
@@ -195,7 +192,6 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
 */
 bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 {
-uint8_t ret = 0;
   EditorCache   *cache;
   ADMImage	*result;
   uint32_t  flags;
