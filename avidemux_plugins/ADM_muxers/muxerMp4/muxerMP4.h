@@ -25,6 +25,13 @@ typedef enum
     MP4_MUXER_PSP
 }MP4_MUXER_TYPE;
 
+typedef enum
+{
+    STANDARD,
+    WIDE,
+    UNI,
+    CINEMA
+}MP4_MUXER_DAR;
 #include "mp4_muxer.h"
 extern mp4_muxer muxerConfig;
 

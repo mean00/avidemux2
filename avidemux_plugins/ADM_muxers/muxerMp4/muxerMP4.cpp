@@ -32,7 +32,9 @@
 mp4_muxer muxerConfig=
 {
     MP4_MUXER_MP4,
-    true
+    true,
+    false,
+    WIDE
 };
 
 
@@ -99,6 +101,37 @@ bool muxerMP4::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,A
         myTimeBase=video_st->time_base=c->time_base;
         ADM_info("Video stream time base :%d,%d\n",video_st->time_base.num,video_st->time_base.den);
         c->gop_size=15;
+
+        if(true==muxerConfig.forceAspectRatio)
+        {
+            float h=(float)(s->getHeight());
+            float w=h;
+            switch (muxerConfig.aspectRatio)
+            {
+                case 0:
+                    w*=4.;
+                    w/=3.;
+                    break;
+                case 1:
+                    w*=16.;
+                    w/=9.;
+                    break;
+                case 2:
+                    w*=2.;
+                    break;
+                case 3:
+                    w*=64.;
+                    w/=27.;
+                    break;
+            }
+            int num=1,den=1;
+            av_reduce(&num, &den, (uint32_t)w, s->getWidth(),65535);
+            par->sample_aspect_ratio.num=num;
+            par->sample_aspect_ratio.den=den;
+            video_st->sample_aspect_ratio.num=num;
+            video_st->sample_aspect_ratio.den=den;
+            ADM_info("Forcing pixel aspect ratio of %d:%d\n",den,num);
+        }
 
         if(initAudio(nbAudioTrack,a)==false)
         {
