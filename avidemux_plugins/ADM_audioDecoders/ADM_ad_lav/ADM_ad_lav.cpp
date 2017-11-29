@@ -416,6 +416,9 @@ bool ADM_AudiocoderLavcodec::decodeToFloatPlanar(float **outptr,uint32_t *nbOut)
     \fn run
 
 */
+
+#define CHECK_CONTENT(n)
+
 uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr, uint32_t *nbOut)
 {
 
@@ -450,6 +453,22 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             }
             _head+=out; // consumed bytes
             if(!gotData)
+                continue;
+            bool invalid=false;
+            int  toCheck=1;
+            if(_context->sample_fmt==AV_SAMPLE_FMT_FLTP || _context->sample_fmt==AV_SAMPLE_FMT_S32P)
+                toCheck=channels;
+            
+
+            for(int i=0;i<toCheck;i++)
+            {
+                if(!_frame->data[i]) // no data inside, abort
+                {
+                    invalid=true;
+                    break;
+                }
+            }
+            if(invalid) 
                 continue;
             switch(_context->sample_fmt)
             {
