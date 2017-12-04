@@ -62,7 +62,7 @@ public:
         _sizeInBytes=0;
         _defaultFrameDuration=0;
         language=ADM_UNKNOWN_LANGUAGE;
-        _needBuffering=false;
+        _needBuffering=0;
   }
   /* Index in mkv */
   uint32_t  streamIndex;
@@ -84,7 +84,7 @@ public:
   uint32_t  _sizeInBytes; // Approximate size in bytes of that stream
   uint32_t  _defaultFrameDuration; // Duration of ONE frame in us!
   std::string language;
-  bool      _needBuffering;
+  int       _needBuffering;
 };
 
 #define MKV_MAX_LACES 101 // ?
@@ -179,7 +179,7 @@ class mkvHeader         :public vidHeader
     bool                    readSeekHead(ADM_ebml_file *body);
     //
     //                      
-    bool                    isBufferingNeeded(mkvTrak *trk); // Split audio blocks into smaller pieces if needed
+    int                     isBufferingNeeded(mkvTrak *trk); // Split audio blocks into smaller pieces if needed
     uint8_t                 reformatVorbisHeader(mkvTrak *trk);
     // Indexers
 

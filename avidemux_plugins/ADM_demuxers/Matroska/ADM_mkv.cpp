@@ -1134,19 +1134,23 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
  *          ~ 40ms worth of data are good enough
  * @return 
  */
-bool mkvHeader::isBufferingNeeded(mkvTrak *trk)
+int mkvHeader::isBufferingNeeded(mkvTrak *trk)
 {
    int n=trk->index.size();
+   int max=0;
    for(int i=0;i<n;i++)
    {
        int sz=trk->index[i].size;
-       if(sz>64*1024)
-       {
-           ADM_warning("Huge PCM packet detected : %d bytes\n",sz);
-           return true;
-       }
+       if(max<sz) max=sz;
    }
-   return false; 
+   if(max<64*1024)
+   {
+       ADM_info("No big packet detected\n");
+       return 0;
+   }
+   max=((max>>10)+1)<<10;
+   ADM_warning("Big packet detected : %d kBytes \n",max>>10);
+   return max;
 }
 //****************************************
 //EOF
