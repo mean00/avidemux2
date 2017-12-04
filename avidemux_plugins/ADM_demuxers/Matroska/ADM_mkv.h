@@ -176,8 +176,6 @@ class mkvHeader         :public vidHeader
     int                     searchTrackFromTid(uint32_t tid);
     bool                    readSeekHead(ADM_ebml_file *body);
     //
-    //                      
-    bool                    splitPcmChunk(mkvTrak *trk); // Split audio blocks into smaller pieces if needed
     uint8_t                 reformatVorbisHeader(mkvTrak *trk);
     // Indexers
 

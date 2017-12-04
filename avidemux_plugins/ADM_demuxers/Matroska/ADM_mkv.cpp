@@ -259,23 +259,11 @@ uint8_t mkvHeader::open(const char *name)
           for(int i=0;i<_nbAudioTrack;i++)
           {
             rescaleTrack(&(_tracks[1+i]),duration32);
-            switch(_tracks[1+i].wavHeader.encoding)
+            if(_tracks[1+i].wavHeader.encoding==WAV_OGG_VORBIS)
             {
-                case WAV_OGG_VORBIS:            
-                    ADM_info("[MKV] Reformatting vorbis header for track %u\n",i);
-                    reformatVorbisHeader(&(_tracks[1+i]));
-                    break;
-                case WAV_PCM:
-                case WAV_LPCM:
-                    ADM_info("[MKV] Checking PCM block size for track %i\n",i);
-                    splitPcmChunk(&(_tracks[i+1]));
-                    break;
-                default:
-                    break;
-                
+                printf("[MKV] Reformatting vorbis header for track %u\n",i);
+                reformatVorbisHeader(&(_tracks[1+i]));
             }
-            
-            
           }
     }
     _access=new mkvAccess *[_nbAudioTrack];
@@ -965,6 +953,7 @@ static int xypheLacingRead(uint8_t **hd)
       *hd=p;
       return x;
 }
+
 /**
     \fn mkreformatVorbisHeader
     \brief reformat oggvorbis header to avidemux style
@@ -1127,17 +1116,5 @@ bool    mkvHeader::readSeekHead(ADM_ebml_file *body)
     return true;
 }
 
-/**
- * 
- * @param trk
- * \brief  Make sure the one chunk is not too big, split it else
- *          ~ 40ms worth of data are good enough
- * @return 
- */
-bool mkvHeader::splitPcmChunk(mkvTrak *trk)
-{
-    
-   return true; 
-}
 //****************************************
 //EOF
