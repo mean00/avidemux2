@@ -108,6 +108,8 @@ protected:
             mkvAccess   *_son;
             int         _maxSize;
             uint8_t     *_buffer;
+            int         _inBuffer;
+            int         _offset;
 };
 
 /**

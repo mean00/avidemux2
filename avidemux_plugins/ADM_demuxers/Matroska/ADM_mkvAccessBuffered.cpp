@@ -22,9 +22,9 @@
 
 #include "ADM_vidMisc.h"
 #if 0
-#define vprintf printf
+#define aprintf ADM_info
 #else
-#define vprintf(...) {}
+#define aprintf(...) {}
 #endif
 
 /**
@@ -37,12 +37,14 @@ mkvAccessBuffered::mkvAccessBuffered(mkvAccess *access, int maxSize)
     _maxSize=maxSize;
     _son=access;
     _buffer=new uint8_t[maxSize];
+    _inBuffer=0;
+    _offset=0;
 }
 
 mkvAccessBuffered::~mkvAccessBuffered()
 {
     if(_buffer) delete [] _buffer;
-    if(_son) delete [] _son;
+    if(_son) delete  _son;
     _buffer=NULL;
     _son=NULL;
 }
@@ -63,6 +65,7 @@ uint64_t  mkvAccessBuffered::getDurationInUs(void)
 */
 bool      mkvAccessBuffered::goToTime(uint64_t timeUs)
 {
+    _inBuffer=_offset=0;
     return _son->goToTime(timeUs);
 }
 /**
@@ -70,6 +73,35 @@ bool      mkvAccessBuffered::goToTime(uint64_t timeUs)
 */
 bool    mkvAccessBuffered::getPacket(uint8_t *dest, uint32_t *packLen, uint32_t maxSize,uint64_t *timecode)
 {
-   return _son->getPacket(dest,packLen,maxSize,timecode);
+    if(_offset==_inBuffer)
+    {
+        _offset=_inBuffer=0;
+    }
+    if(!_inBuffer)
+    {
+        uint32_t len=0;
+        if(!_son->getPacket(_buffer,&len,_maxSize,timecode))
+        {
+            return false;
+        }
+        _inBuffer=len;
+        int rnd=_inBuffer;
+        if(rnd>maxSize) rnd=maxSize;
+        memcpy(dest,_buffer,rnd);
+        _offset=rnd;
+        *packLen=rnd;
+        aprintf("New block size=%d, time=%s\n",rnd,ADM_us2plain(*timecode));
+        return true;
+    }
+    // flush buffer
+    int rnd=_inBuffer-_offset;
+    if(rnd>maxSize) rnd=maxSize;
+    memcpy(dest,_buffer+_offset,rnd);
+    _offset+=rnd;
+    *timecode=ADM_NO_PTS;
+    *packLen=rnd;
+    aprintf("old block size=%d, time=%s\n",rnd,ADM_us2plain(*timecode));
+    return true;
+   
 }
 //EOF
