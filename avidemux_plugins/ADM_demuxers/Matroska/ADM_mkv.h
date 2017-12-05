@@ -89,6 +89,28 @@ public:
 
 #define MKV_MAX_LACES 101 // ?
 /**
+ */
+class mkvAccess;
+class mkvAccessBuffered : public ADM_audioAccess
+{
+public:
+            mkvAccessBuffered(mkvAccess *ac,int maxSize);
+            ~mkvAccessBuffered();
+                virtual bool      isCBR(void) { return false;}
+                virtual bool      canSeekTime(void) {return true;};
+                virtual bool      canSeekOffset(void) {return false;};
+                virtual bool      canGetDuration(void) {return true;};
+                virtual uint64_t  getDurationInUs(void);
+                virtual bool      goToTime(uint64_t timeUs);
+                virtual bool      getPacket(uint8_t *buffer, uint32_t *size, uint32_t maxSize,uint64_t *dts);
+                virtual bool      getExtraData(uint32_t *l, uint8_t **d);  
+protected:
+            mkvAccess   *_son;
+            int         _maxSize;
+            uint8_t     *_buffer;
+};
+
+/**
     \class mkvAccess
     \brief Matroska audio demuxer
 */
@@ -152,7 +174,7 @@ class mkvHeader         :public vidHeader
 {
   protected:
     uint64_t                 _timeBase;  // Time base in us, default is 1000=1 ms
-    mkvAccess               **_access;
+    ADM_audioAccess         **_access;
     ADM_audioStream         **_audioStreams;
     ADM_ebml_file           *_parser;
     char                    *_filename;

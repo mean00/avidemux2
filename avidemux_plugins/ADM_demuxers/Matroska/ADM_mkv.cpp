@@ -278,11 +278,19 @@ uint8_t mkvHeader::open(const char *name)
             
           }
     }
-    _access=new mkvAccess *[_nbAudioTrack];
+    _access=new ADM_audioAccess *[_nbAudioTrack];
     _audioStreams=new ADM_audioStream *[_nbAudioTrack];
     for(int i=0;i<_nbAudioTrack;i++)
     {
-        _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
+        if(_tracks[i+1]._needBuffering)
+        {
+            mkvAccess *access=new mkvAccess(_filename,&(_tracks[i+1]));
+            _access[i]=new mkvAccessBuffered(access,_tracks[i+1]._needBuffering);
+        }
+        else
+        {
+               _access[i]=new mkvAccess(_filename,&(_tracks[i+1]));
+        }
         _audioStreams[i]=ADM_audioCreateStream(&(_tracks[1+i].wavHeader), _access[i]);;
         _audioStreams[i]->setLanguage(_tracks[1+i].language);
     }
