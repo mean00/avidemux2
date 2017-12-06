@@ -1928,9 +1928,11 @@ Check path and filename.</source>
         <source>Move the cursor to the previous line</source>
         <translation>移動游標到前一行</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%n file(s)</source>
-        <translation>%n 個檔案</translation>
+        <translation>
+            <numerusform>%n 個檔案</numerusform>
+        </translation>
     </message>
     <message>
         <source>Left edge</source>
@@ -3156,9 +3158,11 @@ Please verify the correct file name was given.</source>
         <source>%1 is not a valid numeric literal.</source>
         <translation>%1 不是合法的數值。</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%1 takes at most %n argument(s). %2 is therefore invalid.</source>
-        <translation>%1 最多只能有 %n 個參數，因此 %2 是不合法的。</translation>
+        <translation>
+            <numerusform>%1 最多只能有 %n 個參數，因此 %2 是不合法的。</numerusform>
+        </translation>
     </message>
     <message>
         <source>Circularity detected</source>
@@ -3224,9 +3228,11 @@ Please verify the correct file name was given.</source>
         <source>The encoding %1 is invalid. It must contain Latin characters only, must not contain whitespace, and must match the regular expression %2.</source>
         <translation>編碼 %1 不合法。必須只能包含拉丁字元，不含空白，並且要符合正規表示式 %2。</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%1 requires at least %n argument(s). %2 is therefore invalid.</source>
-        <translation>%1 至少需要 %n 個參數，因此 %2 是不合法的。</translation>
+        <translation>
+            <numerusform>%1 至少需要 %n 個參數，因此 %2 是不合法的。</numerusform>
+        </translation>
     </message>
     <message>
         <source>The target name in a processing instruction cannot be %1 in any combination of upper and lower case. Therefore, is %2 invalid.</source>

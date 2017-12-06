@@ -76,7 +76,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>Home</source>
@@ -88,7 +88,7 @@
     </message>
     <message>
         <source>Menu</source>
-        <translation>选单</translation>
+        <translation>菜单</translation>
     </message>
     <message>
         <source>Meta</source>
@@ -268,7 +268,7 @@
     </message>
     <message>
         <source>NumLock</source>
-        <translation>数文本锁定</translation>
+        <translation>数字锁定</translation>
     </message>
     <message>
         <source>ScrollLock</source>
@@ -344,11 +344,11 @@
     </message>
     <message>
         <source>Num Lock</source>
-        <translation>数文本锁定</translation>
+        <translation>数字锁定</translation>
     </message>
     <message>
         <source>Number Lock</source>
-        <translation>数文本锁定</translation>
+        <translation>数字锁定</translation>
     </message>
     <message>
         <source>Favorites</source>
@@ -695,13 +695,13 @@ Do you want to overwrite it?</source>
         <source>%1 is a directory.
 Please choose a different file name.</source>
         <translation>%1 是一个目录。
-请选择其他文件名。</translation>
+请选择其他档名。</translation>
     </message>
     <message>
         <source>File %1 is not writable.
 Please choose a different file name.</source>
         <translation>文件 %1 无法写入。
-请选择其它文件名。</translation>
+请选择其它档名。</translation>
     </message>
     <message>
         <source>B3 (353 x 500 mm)</source>
@@ -747,7 +747,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -759,7 +759,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Defaults</source>
-        <translation>预设</translation>
+        <translation>默认</translation>
     </message>
 </context>
 <context>
@@ -801,7 +801,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>Open</source>
@@ -888,7 +888,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>Show Details...</source>
@@ -908,7 +908,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>&lt;h3&gt;About Qt&lt;/h3&gt;%1&lt;p&gt;Qt is a C++ toolkit for cross-platform application development.&lt;/p&gt;&lt;p&gt;Qt provides single-source portability across MS&amp;nbsp;Windows, Mac&amp;nbsp;OS&amp;nbsp;X, Linux, and all major commercial Unix variants. Qt is also available for embedded devices as Qt for Embedded Linux and Qt for Windows CE.&lt;/p&gt;&lt;p&gt;Qt is a Nokia product. See &lt;a href=&quot;http://qtsoftware.com/qt/&quot;&gt;qtsoftware.com/qt/&lt;/a&gt; for more information.&lt;/p&gt;</source>
-        <translation>&lt;h3&gt;关于 Qt&lt;/h3&gt;%1&lt;p&gt;Qt 为一个跨平台的 C++ 开发工具。&lt;/p&gt;&lt;p&gt;Qt 提供各平台兼容机制，只要写一份程序代码，就可以在 MS&amp;nbsp;Windows、Mac&amp;nbsp;OS&amp;nbsp;X、Linux 与各主要的商业 Unix 平台上编译。Qt 也有用于嵌入式 Linux 与 Windows CE 的版本。&lt;/p&gt;&lt;p&gt;Qt 为 Nokia 的产品。详情请参考 &lt;a href=&quot;http://qtsoftware.com/qt/&quot;&gt;qtsoftware.com/qt/&lt;/a&gt;。&lt;/p&gt;</translation>
+        <translation>&lt;h3&gt;关于 Qt&lt;/h3&gt;%1&lt;p&gt;Qt 为一个跨平台的 C++ 开发工具。&lt;/p&gt;&lt;p&gt;Qt 提供各平台兼容机制，只要写一份程序码，就可以在 MS&amp;nbsp;Windows、Mac&amp;nbsp;OS&amp;nbsp;X、Linux 与各主要的商业 Unix 平台上编译。Qt 也有用于嵌入式 Linux 与 Windows CE 的版本。&lt;/p&gt;&lt;p&gt;Qt 为 Nokia 的产品。详情请参考 &lt;a href=&quot;http://qtsoftware.com/qt/&quot;&gt;qtsoftware.com/qt/&lt;/a&gt;。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;This program uses Qt version %1.&lt;/p&gt;</source>
@@ -1006,7 +1006,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Output Settings</source>
-        <translation>输出设定</translation>
+        <translation>输出设置</translation>
     </message>
     <message>
         <source>Reverse</source>
@@ -1081,11 +1081,11 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Page Setup</source>
-        <translation>页面设定</translation>
+        <translation>页面设置</translation>
     </message>
     <message>
         <source>Page setup</source>
-        <translation>打印设定</translation>
+        <translation>打印设置</translation>
     </message>
     <message>
         <source>Show overview of all pages</source>
@@ -1105,7 +1105,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Export to PDF</source>
-        <translation>导出到 PDF 文件</translation>
+        <translation>汇出到 PDF 檔</translation>
     </message>
     <message>
         <source>Previous page</source>
@@ -1121,7 +1121,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Export to PostScript</source>
-        <translation>导出到 PostScript 文件</translation>
+        <translation>汇出到 PostScript 檔</translation>
     </message>
 </context>
 <context>
@@ -1220,7 +1220,7 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>File &amp;name:</source>
-        <translation>文件&amp;名:</translation>
+        <translation>檔&amp;名:</translation>
     </message>
     <message>
         <source>Delete %1</source>
@@ -1280,11 +1280,11 @@ Please choose a different file name.</source>
     </message>
     <message>
         <source>Show &amp;hidden files</source>
-        <translation>显示&amp;隐藏文件</translation>
+        <translation>显示&amp;隐藏档</translation>
     </message>
     <message>
         <source>Save As</source>
-        <translation>另存为</translation>
+        <translation>另存新檔</translation>
     </message>
     <message>
         <source>Inaccessible</source>
@@ -1364,7 +1364,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Create New Folder</source>
-        <translation>创建新文件夹</translation>
+        <translation>建立新文件夹</translation>
     </message>
     <message>
         <source>Symlink to File</source>
@@ -1395,7 +1395,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Debug Message:</source>
-        <translation>除错讯息:</translation>
+        <translation>调试讯息:</translation>
     </message>
     <message>
         <source>Warning:</source>
@@ -1648,7 +1648,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Fonts</source>
-        <translation>文本型</translation>
+        <translation>字型</translation>
     </message>
     <message>
         <source>Paste</source>
@@ -1676,7 +1676,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Look Up In Dictionary</source>
-        <translation>在文本典里搜寻</translation>
+        <translation>在字典里搜寻</translation>
     </message>
     <message>
         <source>Search The Web</source>
@@ -1684,15 +1684,15 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Check Spelling While Typing</source>
-        <translation>打文本时立即检查拼文本</translation>
+        <translation>打字时立即检查拼字</translation>
     </message>
     <message>
         <source>Add To Dictionary</source>
-        <translation>新增到文本典</translation>
+        <translation>新增到字典</translation>
     </message>
     <message>
         <source>Delete to the start of the word</source>
-        <translation>删除到此单文本的起头</translation>
+        <translation>删除到此单字的起头</translation>
     </message>
     <message>
         <source>Recent searches</source>
@@ -1700,7 +1700,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Move the cursor to the next word</source>
-        <translation>移动光标到下一个单文本</translation>
+        <translation>移动光标到下一个单字</translation>
     </message>
     <message>
         <source>Move the cursor to the next line</source>
@@ -1772,7 +1772,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Spelling</source>
-        <translation>拼文本</translation>
+        <translation>拼字</translation>
     </message>
     <message>
         <source>Outline</source>
@@ -1780,7 +1780,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Check Grammar With Spelling</source>
-        <translation>检查拼文本与文法</translation>
+        <translation>检查拼字与文法</translation>
     </message>
     <message>
         <source>No file selected</source>
@@ -1809,11 +1809,11 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Move the cursor to the start of the document</source>
-        <translation>移动光标到这一个文件的起头</translation>
+        <translation>移动光标到这一个文檔的起头</translation>
     </message>
     <message>
         <source>Move the cursor to the next character</source>
-        <translation>移动光标到下一个文本元</translation>
+        <translation>移动光标到下一个字符</translation>
     </message>
     <message>
         <source>JavaScript Prompt - %1</source>
@@ -1829,23 +1829,23 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Select to the previous word</source>
-        <translation>选择到前一个单文本</translation>
+        <translation>选择到前一个单字</translation>
     </message>
     <message>
         <source>Check Spelling</source>
-        <translation>检查拼文本</translation>
+        <translation>检查拼字</translation>
     </message>
     <message>
         <source>Select to the next character</source>
-        <translation>选择到下一个文本元</translation>
+        <translation>选择到下一个字符</translation>
     </message>
     <message>
         <source>Show Spelling and Grammar</source>
-        <translation>显示拼文本与文法</translation>
+        <translation>显示拼字与文法</translation>
     </message>
     <message>
         <source>Delete to the end of the word</source>
-        <translation>删除到此单文本的结尾</translation>
+        <translation>删除到此单字的结尾</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -1874,11 +1874,11 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Select to the start of the document</source>
-        <translation>选择到这一个文件的起头</translation>
+        <translation>选择到这一个文檔的起头</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation>预设</translation>
+        <translation>默认</translation>
     </message>
     <message>
         <source>Underline</source>
@@ -1886,7 +1886,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Move the cursor to the previous character</source>
-        <translation>移动光标到前一个文本元</translation>
+        <translation>移动光标到前一个字符</translation>
     </message>
     <message>
         <source>Copy Image</source>
@@ -1894,7 +1894,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Select to the end of the document</source>
-        <translation>选择到这一个文件的结尾</translation>
+        <translation>选择到这一个文檔的结尾</translation>
     </message>
     <message>
         <source>Select to the end of the block</source>
@@ -1922,15 +1922,17 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Move the cursor to the previous word</source>
-        <translation>移动光标到前一个单文本</translation>
+        <translation>移动光标到前一个单字</translation>
     </message>
     <message>
         <source>Move the cursor to the previous line</source>
         <translation>移动光标到前一行</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%n file(s)</source>
-        <translation>%n 个文件</translation>
+        <translation>
+            <numerusform>%n 个文件</numerusform>
+        </translation>
     </message>
     <message>
         <source>Left edge</source>
@@ -1950,11 +1952,11 @@ Check path and filename.</source>
     </message>
     <message>
         <source>This is a searchable index. Enter search keywords: </source>
-        <translation>这是可搜寻的索引。请输入关键文本: </translation>
+        <translation>这是可搜寻的索引。请输入关键词: </translation>
     </message>
     <message>
         <source>Select to the previous character</source>
-        <translation>选择到前一个文本元</translation>
+        <translation>选择到前一个字符</translation>
     </message>
     <message>
         <source>Go Back</source>
@@ -1974,7 +1976,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Hide Spelling and Grammar</source>
-        <translation>隐藏拼文本与文法</translation>
+        <translation>隐藏拼字与文法</translation>
     </message>
     <message>
         <source>%1 (%2x%3 pixels)</source>
@@ -1982,7 +1984,7 @@ Check path and filename.</source>
     </message>
     <message>
         <source>Select to the next word</source>
-        <translation>选择到下一个单文本</translation>
+        <translation>选择到下一个单字</translation>
     </message>
     <message>
         <source>Select to the next line</source>
@@ -2113,7 +2115,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>File &amp;name:</source>
-        <translation>文件&amp;名:</translation>
+        <translation>檔&amp;名:</translation>
     </message>
     <message>
         <source>New Folder</source>
@@ -2133,7 +2135,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>My Computer</source>
-        <translation>我的计算机</translation>
+        <translation>我的计算器</translation>
     </message>
     <message>
         <source>Look in:</source>
@@ -2149,7 +2151,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Show &amp;hidden files</source>
-        <translation>显示&amp;隐藏文件</translation>
+        <translation>显示&amp;隐藏档</translation>
     </message>
     <message>
         <source>Are sure you want to delete &apos;%1&apos;?</source>
@@ -2157,7 +2159,7 @@ Do you want to delete it anyway?</source>
     </message>
     <message>
         <source>Save As</source>
-        <translation>另存为</translation>
+        <translation>另存新檔</translation>
     </message>
     <message>
         <source>%1
@@ -2223,7 +2225,7 @@ Do you want to replace it?</source>
     </message>
     <message>
         <source>Create New Folder</source>
-        <translation>创建新文件夹</translation>
+        <translation>建立新文件夹</translation>
     </message>
     <message>
         <source>Detail View</source>
@@ -2235,7 +2237,7 @@ File not found.
 Please verify the correct file name was given.</source>
         <translation>%1
 找不到文件。
-请检查文件名是否正确。</translation>
+请检查档名是否正确。</translation>
     </message>
 </context>
 <context>
@@ -2369,11 +2371,11 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;帮助</translation>
+        <translation>&amp;说明</translation>
     </message>
     <message>
         <source>&amp;Next</source>
@@ -2503,18 +2505,18 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Advanced</source>
-        <translation>进阶</translation>
+        <translation>高级</translation>
     </message>
 </context>
 <context>
     <name>QMdiSubWindow</name>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>说明</translation>
     </message>
     <message>
         <source>Menu</source>
-        <translation>选单</translation>
+        <translation>菜单</translation>
     </message>
     <message>
         <source>&amp;Move</source>
@@ -2679,23 +2681,23 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>&lt;b&gt;The name &quot;%1&quot; can not be used.&lt;/b&gt;&lt;p&gt;Try using another name, with fewer characters or no punctuations marks.</source>
-        <translation>&lt;b&gt;无法使用名称 &quot;%1&quot;。&lt;/b&gt;&lt;p&gt;请使用其它名称，文本元数少一点，或是不要有标点符号。</translation>
+        <translation>&lt;b&gt;无法使用名称 &quot;%1&quot;。&lt;/b&gt;&lt;p&gt;请使用其它名称，字符数少一点，或是不要有标点符号。</translation>
     </message>
     <message>
         <source>%1 bytes</source>
-        <translation>%1 字节</translation>
+        <translation>%1 比特组</translation>
     </message>
     <message>
         <source>My Computer</source>
-        <translation>我的计算机</translation>
+        <translation>我的计算器</translation>
     </message>
     <message>
         <source>Computer</source>
-        <translation>计算机</translation>
+        <translation>计算器</translation>
     </message>
     <message>
         <source>Invalid filename</source>
-        <translation>不合法的文件名</translation>
+        <translation>不合法的檔名</translation>
     </message>
     <message>
         <source>Date Modified</source>
@@ -2836,11 +2838,11 @@ Please verify the correct file name was given.</source>
     <name>QSslSocket</name>
     <message>
         <source>Error creating SSL session: %1</source>
-        <translation>创建 SSL 会话时发生错误：%1</translation>
+        <translation>建立 SSL 会话时发生错误：%1</translation>
     </message>
     <message>
         <source>Error creating SSL session, %1</source>
-        <translation>创建 SSL 会话时发生错误：%1</translation>
+        <translation>建立 SSL 会话时发生错误：%1</translation>
     </message>
     <message>
         <source>Cannot provide a certificate with no key, %1</source>
@@ -2868,7 +2870,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Error creating SSL context (%1)</source>
-        <translation>创建 SSL 内文时发生错误（%1）</translation>
+        <translation>建立 SSL 内文时发生错误（%1）</translation>
     </message>
     <message>
         <source>Error while reading: %1</source>
@@ -2938,7 +2940,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The root node of the second argument to function %1 must be a document node. %2 is not a document node.</source>
-        <translation>函式 %1 的第二个参数的根节点必须是文件节点。%2 不是文檔节点。</translation>
+        <translation>函式 %1 的第二个参数的根节点必须是文檔节点。%2 不是文檔节点。</translation>
     </message>
     <message>
         <source>The parameter %1 is required, but no corresponding %2 is supplied.</source>
@@ -2954,7 +2956,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The namespace URI cannot be the empty string when binding to a prefix, %1.</source>
-        <translation>要与前置文本串 %1 结合的命名空间网址不能是空文本串。</translation>
+        <translation>要与前置字符串 %1 结合的命名空间网址不能是空字符串。</translation>
     </message>
     <message>
         <source>A comment cannot end with a %1.</source>
@@ -2982,7 +2984,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>A value of type %1 must contain an even number of digits. The value %2 does not.</source>
-        <translation>型态 %1 的值必须包含偶数个数文本。数值 %2 未符合此条件。</translation>
+        <translation>型态 %1 的值必须包含偶数个数字。数值 %2 未符合此条件。</translation>
     </message>
     <message>
         <source>Modulus division (%1) by zero (%2) is undefined.</source>
@@ -2994,15 +2996,15 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>None of the pragma expressions are supported. Therefore, a fallback expression must be present</source>
-        <translation>未支援 pragma 叙述。因次，必须有预设的叙述</translation>
+        <translation>未支援 pragma 叙述。因次，必须有默认的叙述</translation>
     </message>
     <message>
         <source>In the replacement string, %1 can only be used to escape itself or %2, not %3</source>
-        <translation>在取代文本串中，%1 只能用于自身或 %2 的脱逸，而非 %3</translation>
+        <translation>在取代字符串中，%1 只能用于自身或 %2 的脱逸，而非 %3</translation>
     </message>
     <message>
         <source>The codepoint %1, occurring in %2 using encoding %3, is an invalid XML character.</source>
-        <translation>在 %2 内的代码点 %1（编码 %3）是一个不合法的 XML 文本元。</translation>
+        <translation>在 %2 内的代码点 %1（编码 %3）是一个不合法的 XML 字符。</translation>
     </message>
     <message>
         <source>Network timeout.</source>
@@ -3026,7 +3028,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>If the first argument is the empty sequence or a zero-length string (no namespace), a prefix cannot be specified. Prefix %1 was specified.</source>
-        <translation>如果第一个参数是空序列，或是长度为 0 的文本串（没有命名空间），则无法指定前置文本串。但是您指定了 %1。</translation>
+        <translation>如果第一个参数是空序列，或是长度为 0 的字符串（没有命名空间），则无法指定前置字符串。但是您指定了 %1。</translation>
     </message>
     <message>
         <source>In an XSL-T pattern, the first argument to function %1 must be a literal or a variable reference, when used for matching.</source>
@@ -3038,11 +3040,11 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>In a namespace constructor, the value for a namespace value cannot be an empty string.</source>
-        <translation>在命名空间建构子中，命名空间的值不能是空文本串。</translation>
+        <translation>在命名空间建构子中，命名空间的值不能是空字符串。</translation>
     </message>
     <message>
         <source>An attribute by name %1 has already been created.</source>
-        <translation>名为 %1 的属性已被创建。</translation>
+        <translation>名为 %1 的属性已被建立。</translation>
     </message>
     <message>
         <source>An argument by name %1 has already been declared. Every argument name must be unique.</source>
@@ -3078,7 +3080,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>%1 matches newline characters</source>
-        <translation>%1 符合了换行文本元</translation>
+        <translation>%1 符合了换行字符</translation>
     </message>
     <message>
         <source>Year %1 is invalid because it begins with %2.</source>
@@ -3138,15 +3140,15 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The prefix %1 cannot be bound.</source>
-        <translation>前置文本串 %1 不能被结合。</translation>
+        <translation>前置字符串 %1 不能被结合。</translation>
     </message>
     <message>
         <source>The prefix must be a valid %1, which %2 is not.</source>
-        <translation>前置文本串必须是合法的 %1，但 %2 不是。</translation>
+        <translation>前置字符串必须是合法的 %1，但 %2 不是。</translation>
     </message>
     <message>
         <source>The keyword %1 cannot occur with any other mode name.</source>
-        <translation>关键文本 %1 不能与任何其它模式名称一起存在。</translation>
+        <translation>关键词 %1 不能与任何其它模式名称一起存在。</translation>
     </message>
     <message>
         <source>Type error in cast, expected %1, received %2.</source>
@@ -3156,9 +3158,11 @@ Please verify the correct file name was given.</source>
         <source>%1 is not a valid numeric literal.</source>
         <translation>%1 不是合法的数值。</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%1 takes at most %n argument(s). %2 is therefore invalid.</source>
-        <translation>%1 最多只能有 %n 个参数，因此 %2 是不合法的。</translation>
+        <translation>
+            <numerusform>%1 最多只能有 %n 个参数，因此 %2 是不合法的。</numerusform>
+        </translation>
     </message>
     <message>
         <source>Circularity detected</source>
@@ -3170,7 +3174,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The prefix %1 can not be bound. By default, it is already bound to the namespace %2.</source>
-        <translation>前置文本串 %1 不能被结合。预设它已与命名空间 %2 结合。</translation>
+        <translation>前置字符串 %1 不能被结合。默认它已与命名空间 %2 结合。</translation>
     </message>
     <message>
         <source>An %1-attribute must have a valid %2 as value, which %3 isn&apos;t.</source>
@@ -3222,11 +3226,13 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The encoding %1 is invalid. It must contain Latin characters only, must not contain whitespace, and must match the regular expression %2.</source>
-        <translation>编码 %1 不合法。必须只能包含拉丁文本元，不含空白，并且要符合正规表示式 %2。</translation>
+        <translation>编码 %1 不合法。必须只能包含拉丁字符，不含空白，并且要符合正规表示式 %2。</translation>
     </message>
-    <message>
+    <message numerus="yes">
         <source>%1 requires at least %n argument(s). %2 is therefore invalid.</source>
-        <translation>%1 至少需要 %n 个参数，因此 %2 是不合法的。</translation>
+        <translation>
+            <numerusform>%1 至少需要 %n 个参数，因此 %2 是不合法的。</numerusform>
+        </translation>
     </message>
     <message>
         <source>The target name in a processing instruction cannot be %1 in any combination of upper and lower case. Therefore, is %2 invalid.</source>
@@ -3246,7 +3252,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>In the replacement string, %1 must be followed by at least one digit when not escaped.</source>
-        <translation>在取代文本串中，在未脱逸的情形下 %1 必须至少跟着一位数文本。</translation>
+        <translation>在取代字符串中，在未脱逸的情形下 %1 必须至少跟着一位数字。</translation>
     </message>
     <message>
         <source>In an XSL-T pattern, axis %1 cannot be used, only axis %2 or %3 can.</source>
@@ -3254,7 +3260,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The namespace for a user defined function cannot be empty (try the predefined prefix %1 which exists for cases like this)</source>
-        <translation>使用者定义函式的命名空间不能为空白（请试着用预先定义的前置文本串 %1）</translation>
+        <translation>用户定义函式的命名空间不能为空白（请试着用预先定义的前置字符串 %1）</translation>
     </message>
     <message>
         <source>The first operand in an integer division, %1, cannot be infinity (%2).</source>
@@ -3354,11 +3360,11 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The default collection is undefined</source>
-        <translation>预设的收藏未定义</translation>
+        <translation>默认的收藏未定义</translation>
     </message>
     <message>
         <source>Only the prefix %1 can be bound to %2 and vice versa.</source>
-        <translation>只有前置文本串 %1 能与 %2 结合。反之亦然。</translation>
+        <translation>只有前置字符串 %1 能与 %2 结合。反之亦然。</translation>
     </message>
     <message>
         <source>Value %1 of type %2 exceeds maximum (%3).</source>
@@ -3366,7 +3372,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Whitespace characters are removed, except when they appear in character classes</source>
-        <translation>空白文本元已移除，除非它们出现在文本元类别</translation>
+        <translation>空格符已移除，除非它们出现在字符类别</translation>
     </message>
     <message>
         <source>Casting to %1 is not possible because it is an abstract type, and can therefore never be instantiated.</source>
@@ -3378,7 +3384,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The namespace %1 is reserved; therefore user defined functions may not use it. Try the predefined prefix %2, which exists for these cases.</source>
-        <translation>命名空间 %1 已被保留，因此使用者定义函式不能使用它。请试试预定义前置文本串 %2。</translation>
+        <translation>命名空间 %1 已被保留，因此用户定义函式不能使用它。请试试预定义前置字符串 %2。</translation>
     </message>
     <message>
         <source>The target namespace of a %1 cannot be empty.</source>
@@ -3386,7 +3392,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>%1 must be followed by %2 or %3, not at the end of the replacement string.</source>
-        <translation>%1 后面必须跟着 %2 或 %3，而非取代文本串的结尾。</translation>
+        <translation>%1 后面必须跟着 %2 或 %3，而非取代字符串的结尾。</translation>
     </message>
     <message>
         <source>%1 is an invalid namespace URI.</source>
@@ -3422,7 +3428,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>In an XSL-T pattern, the first argument to function %1 must be a string literal, when used for matching.</source>
-        <translation>在 XSL-T 样式内，函式 %1 的第一个参数必须是文本串，以便用于比对。</translation>
+        <translation>在 XSL-T 样式内，函式 %1 的第一个参数必须是字符串，以便用于比对。</translation>
     </message>
     <message>
         <source>Text nodes are not allowed at this location.</source>
@@ -3450,11 +3456,11 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The normalization form %1 is unsupported. The supported forms are %2, %3, %4, and %5, and none, i.e. the empty string (no normalization).</source>
-        <translation>未支持常态化窗体 %1。支持的窗体有 %2、%3、%4、%5，以及无（也就是空文本串，未常态化）。</translation>
+        <translation>未支持常态化窗体 %1。支持的窗体有 %2、%3、%4、%5，以及无（也就是空字符串，未常态化）。</translation>
     </message>
     <message>
         <source>When casting to %1 or types derived from it, the source value must be of the same type, or it must be a string literal. Type %2 is not allowed.</source>
-        <translation>转换为型态 %1 或其衍生型态时，来源数值必须是相同型态，或者是文本串。型态 %2 是不被允许的。</translation>
+        <translation>转换为型态 %1 或其衍生型态时，来源数值必须是相同型态，或者是字符串。型态 %2 是不被允许的。</translation>
     </message>
     <message>
         <source>A parameter in a function cannot be declared to be a tunnel.</source>
@@ -3486,7 +3492,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>It is not possible to redeclare prefix %1.</source>
-        <translation>无法重宣告前置文本串 %1。</translation>
+        <translation>无法重宣告前置字符串 %1。</translation>
     </message>
     <message>
         <source>exactly one</source>
@@ -3550,7 +3556,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Prefix %1 is already declared in the prolog.</source>
-        <translation>前置文本串 %1 已在 prolog 中宣告。</translation>
+        <translation>前置字符串 %1 已在 prolog 中宣告。</translation>
     </message>
     <message>
         <source>Ambiguous rule match.</source>
@@ -3566,7 +3572,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>A default namespace declaration must occur before function, variable, and option declarations.</source>
-        <translation>预设的命名空间宣告必须在函式、变量与选项宣告之前。</translation>
+        <translation>默认的命名空间宣告必须在函式、变量与选项宣告之前。</translation>
     </message>
     <message>
         <source>Operator %1 cannot be used on atomic values of type %2 and %3.</source>
@@ -3586,7 +3592,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The data of a processing instruction cannot contain the string %1</source>
-        <translation>处理指令的数据不能包含文本串 %1</translation>
+        <translation>处理指令的数据不能包含字符串 %1</translation>
     </message>
     <message>
         <source>Time 24:%1:%2.%3 is invalid. Hour is 24, but minutes, seconds, and milliseconds are not all 0; </source>
@@ -3598,7 +3604,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>It is not possible to bind to the prefix %1</source>
-        <translation>无法与前置文本串 %1 结合</translation>
+        <translation>无法与前置字符串 %1 结合</translation>
     </message>
     <message>
         <source>Value %1 of type %2 is below minimum (%3).</source>
@@ -3614,7 +3620,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>The name of an option must have a prefix. There is no default namespace for options.</source>
-        <translation>选项名称必须有前置文本串。没有选项的默认命名空间。</translation>
+        <translation>选项名称必须有前置字符串。没有选项的默认命名空间。</translation>
     </message>
     <message>
         <source>Element %1 must come last.</source>
@@ -3626,7 +3632,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>No namespace binding exists for the prefix %1 in %2</source>
-        <translation>在 %2 的前置文本串 %1 没有结合命名空间</translation>
+        <translation>在 %2 的前置字符串 %1 没有结合命名空间</translation>
     </message>
     <message>
         <source>The name %1 does not refer to any schema type.</source>
@@ -3634,7 +3640,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Prefix %1 can only be bound to %2 (and it is, in either case, pre-declared).</source>
-        <translation>前置文本串 %1 只能与 %2 结合（也就是说，要预先定义）。</translation>
+        <translation>前置字符串 %1 只能与 %2 结合（也就是说，要预先定义）。</translation>
     </message>
     <message>
         <source>The initialization of variable %1 depends on itself</source>
@@ -3654,7 +3660,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>No namespace binding exists for the prefix %1</source>
-        <translation>前置文本串 %1 没有结合命名空间</translation>
+        <translation>前置字符串 %1 没有结合命名空间</translation>
     </message>
     <message>
         <source>An %1-attribute with value %2 has already been declared.</source>
@@ -3674,7 +3680,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>When function %1 is used for matching inside a pattern, the argument must be a variable reference or a string literal.</source>
-        <translation>当函式 %1 用于样式比对时，参数必须是变量参考或文本串。</translation>
+        <translation>当函式 %1 用于样式比对时，参数必须是变量参考或字符串。</translation>
     </message>
     <message>
         <source>%1 is an invalid template mode name.</source>
@@ -3698,7 +3704,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>%1 is not a valid XML 1.0 character.</source>
-        <translation>%1 不是合法的 XML 1.0 文本元。</translation>
+        <translation>%1 不是合法的 XML 1.0 字符。</translation>
     </message>
     <message>
         <source>The first argument to %1 cannot be of type %2. It must be of type %3, %4, or %5.</source>
@@ -3753,7 +3759,7 @@ Please verify the correct file name was given.</source>
     <name>QFontDialog</name>
     <message>
         <source>&amp;Font</source>
-        <translation>&amp;文本型</translation>
+        <translation>&amp;字型</translation>
     </message>
     <message>
         <source>&amp;Size</source>
@@ -3765,7 +3771,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Font st&amp;yle</source>
-        <translation>文本型样&amp;式</translation>
+        <translation>字型样&amp;式</translation>
     </message>
     <message>
         <source>Wr&amp;iting System</source>
@@ -3773,7 +3779,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Select Font</source>
-        <translation>选择文本型</translation>
+        <translation>选择字型</translation>
     </message>
     <message>
         <source>&amp;Underline</source>
@@ -3792,7 +3798,7 @@ Please verify the correct file name was given.</source>
     <name>Q3Wizard</name>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;帮助</translation>
+        <translation>&amp;说明</translation>
     </message>
     <message>
         <source>&amp;Cancel</source>
@@ -3937,7 +3943,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>%1: create size is less then 0</source>
-        <translation>%1：创建大小小于 0</translation>
+        <translation>%1：建立大小小于 0</translation>
     </message>
     <message>
         <source>%1: already exists</source>
@@ -3957,7 +3963,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>%1: unable to set key on lock</source>
-        <translation>%1：无法设定键值</translation>
+        <translation>%1：无法设置键值</translation>
     </message>
     <message>
         <source>%1: unable to unlock</source>
@@ -3996,7 +4002,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Unexpected character &apos;%1&apos; in public id literal.</source>
-        <translation>在公开代码文本元中&apos;%1&apos;遇到非预期的文本元 %1。</translation>
+        <translation>在公开代码字符中&apos;%1&apos;遇到非预期的字符 %1。</translation>
     </message>
     <message>
         <source>Illegal namespace declaration.</source>
@@ -4004,11 +4010,11 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Invalid XML character.</source>
-        <translation>不合法的 XML 文本元。</translation>
+        <translation>不合法的 XML 字符。</translation>
     </message>
     <message>
         <source>Expected character data.</source>
-        <translation>预期的文本元数据。</translation>
+        <translation>预期的字符数据。</translation>
     </message>
     <message>
         <source>Standalone accepts only yes or no.</source>
@@ -4016,7 +4022,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Invalid XML version string.</source>
-        <translation>不合法的 XML 版本文本串。</translation>
+        <translation>不合法的 XML 版本字符串。</translation>
     </message>
     <message>
         <source>Invalid processing instruction name.</source>
@@ -4024,7 +4030,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Namespace prefix &apos;%1&apos; not declared</source>
-        <translation>命名空间的前置文本串&apos;%1&apos;未宣告</translation>
+        <translation>命名空间的前置字符串&apos;%1&apos;未宣告</translation>
     </message>
     <message>
         <source>Entity &apos;%1&apos; not declared.</source>
@@ -4056,7 +4062,7 @@ Please verify the correct file name was given.</source>
     </message>
     <message>
         <source>Invalid character reference.</source>
-        <translation>不合法的文本元参考。</translation>
+        <translation>不合法的字符参考。</translation>
     </message>
     <message>
         <source>Reference to external entity &apos;%1&apos; in attribute value.</source>
@@ -4435,7 +4441,7 @@ Please verify the correct file name was given.</source>
     <message>
         <source>Could not create directory
 %1</source>
-        <translation>无法创建目录
+        <translation>无法建立目录
 %1</translation>
     </message>
     <message>
@@ -4578,7 +4584,7 @@ to
     </message>
     <message>
         <source>The protocol `%1&apos; does not support creating new directories</source>
-        <translation>协议 %1 未支持创建新目录</translation>
+        <translation>协议 %1 未支持建立新目录</translation>
     </message>
 </context>
 <context>
@@ -4592,7 +4598,7 @@ to
     <message>
         <source>Creating directory failed:
 %1</source>
-        <translation>创建目录时失败：
+        <translation>建立目录时失败：
 %1</translation>
     </message>
     <message>
@@ -4694,7 +4700,7 @@ to
     </message>
     <message>
         <source>Unable to set autocommit</source>
-        <translation>无法设定自动提交</translation>
+        <translation>无法设置自动提交</translation>
     </message>
     <message>
         <source>Unable to connect</source>
@@ -4788,7 +4794,7 @@ to
     </message>
     <message>
         <source>Unable to create BLOB</source>
-        <translation>无法创建 BLOB</translation>
+        <translation>无法建立 BLOB</translation>
     </message>
     <message>
         <source>Unable to read BLOB</source>
@@ -5021,7 +5027,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>The plugin &apos;%1&apos; uses incompatible Qt library. (Cannot mix debug and release libraries.)</source>
-        <translation>插件 &apos;%1&apos; 使用不兼容的 Qt 函式库。（不能将除错与释出版的函式库混在一起。）</translation>
+        <translation>插件 &apos;%1&apos; 使用不兼容的 Qt 函式库。（不能将调试与释出版的函式库混在一起。）</translation>
     </message>
     <message>
         <source>The file &apos;%1&apos; is not a valid Qt plugin.</source>
@@ -5140,7 +5146,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>No server set to connect to</source>
-        <translation>没有设定要联机到哪个服务器</translation>
+        <translation>没有设置要联机到哪个服务器</translation>
     </message>
     <message>
         <source>Server closed connection unexpectedly</source>
@@ -5195,7 +5201,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>unexpected character</source>
-        <translation>非预期的文本元</translation>
+        <translation>非预期的字符</translation>
     </message>
     <message>
         <source>tag mismatch</source>
@@ -5227,7 +5233,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>letter is expected</source>
-        <translation>预期应为文本母</translation>
+        <translation>预期应为字母</translation>
     </message>
     <message>
         <source>unexpected end of file</source>
@@ -5331,7 +5337,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>Insert Unicode control character</source>
-        <translation>插入万国码控制文本元</translation>
+        <translation>插入万国码控制字符</translation>
     </message>
     <message>
         <source>LRO Start of left-to-right override</source>
@@ -5409,7 +5415,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>bad char class syntax</source>
-        <translation>错误的文本元类别语法</translation>
+        <translation>错误的字符类别语法</translation>
     </message>
     <message>
         <source>disabled feature used</source>
@@ -5487,7 +5493,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>Unable to bind column for batch execute</source>
-        <translation>无法结合字段以做批次执行</translation>
+        <translation>无法结合字段以做批执行</translation>
     </message>
     <message>
         <source>Unable to execute select statement</source>
@@ -5499,7 +5505,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>Unable to execute batch statement</source>
-        <translation>无法执行批次叙述</translation>
+        <translation>无法执行批叙述</translation>
     </message>
     <message>
         <source>Unable to bind value</source>
@@ -5591,7 +5597,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>QODBCResult::reset: Unable to set &apos;SQL_CURSOR_STATIC&apos; as statement attribute. Please check your ODBC driver configuration</source>
-        <translation>QODBCResult::reset: 无法设定  &apos;SQL_CURSOR_STATIC&apos; 做为叙述属性。请检查您的 ODBC 驱动程序的设定</translation>
+        <translation>QODBCResult::reset: 无法设置  &apos;SQL_CURSOR_STATIC&apos; 做为叙述属性。请检查您的 ODBC 驱动程序的设置</translation>
     </message>
     <message>
         <source>Unable to fetch first</source>
@@ -5833,7 +5839,7 @@ libgstreamer-plugins-base 套件。</translation>
     <name>QMultiInputContextPlugin</name>
     <message>
         <source>Multiple input method switcher that uses the context menu of the text widgets</source>
-        <translation>使用文本组件中的内文选单的多重输入法切换器</translation>
+        <translation>使用文本组件中的内文菜单的多重输入法切换器</translation>
     </message>
     <message>
         <source>Multiple input method switcher</source>
@@ -5858,7 +5864,7 @@ libgstreamer-plugins-base 套件。</translation>
     <name>QFile</name>
     <message>
         <source>Cannot create %1 for output</source>
-        <translation>无法创建 %1 以输出</translation>
+        <translation>无法建立 %1 以输出</translation>
     </message>
     <message>
         <source>Failure to write block</source>
@@ -5952,7 +5958,7 @@ libgstreamer-plugins-base 套件。</translation>
     </message>
     <message>
         <source>Unable to create query</source>
-        <translation>无法创建查询</translation>
+        <translation>无法建立查询</translation>
     </message>
 </context>
 <context>
@@ -5989,7 +5995,7 @@ libgstreamer-plugins-base 套件。</translation>
     <name>Q3NetworkProtocol</name>
     <message>
         <source>Operation stopped by the user</source>
-        <translation>使用者已中止操作</translation>
+        <translation>用户已中止操作</translation>
     </message>
 </context>
 <context>
