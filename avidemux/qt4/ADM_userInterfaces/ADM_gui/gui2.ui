@@ -1736,6 +1736,10 @@
    </property>
   </action>
   <action name="actionPlayFiltered">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/play_filtered.png</normaloff>:/new/prefix1/pics/play_filtered.png</iconset>
+   </property>
    <property name="checkable">
     <bool>true</bool>
    </property>
