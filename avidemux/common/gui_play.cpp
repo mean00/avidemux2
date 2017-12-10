@@ -70,6 +70,7 @@ private :
 public:
         bool run(void);
         bool initialize(void);
+        uint64_t getLastPts(void) { return lastPts; }
         GUIPlayback();
         ~GUIPlayback();
 
@@ -108,7 +109,7 @@ void GUI_PlayAvi(void)
 
     uint32_t framelen,flags;
     uint32_t max,err;
-    uint64_t oldTimeFrame;
+    uint64_t oldTimeFrame,newTimeFrame;
     aviInfo info;
     float oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
@@ -138,7 +139,7 @@ void GUI_PlayAvi(void)
     GUIPlayback *playLoop=new GUIPlayback;
     playLoop->initialize();
     playLoop->run();
-
+    newTimeFrame=oldTimeFrame+playLoop->getLastPts();
     delete playLoop;
     playing = 0;
 
@@ -153,12 +154,11 @@ void GUI_PlayAvi(void)
     // In copy mode, we can keep the current position
     if(getPreviewMode()!=ADM_PREVIEW_NONE)
         admPreview::seekToTime(oldTimeFrame);
-   UI_purge();
-   
-   admPreview::samePicture();
-   GUI_setCurrentFrameAndTime();
-   UI_purge();
-
+    else
+        admPreview::seekToTime(newTimeFrame);
+    UI_purge();
+    GUI_setCurrentFrameAndTime();
+    UI_purge();
 
 }
 /**
@@ -255,6 +255,7 @@ bool GUIPlayback::run(void)
 
         admPreview::displayNow();;
         GUI_setCurrentFrameAndTime(firstPts);
+        lastPts=admPreview::getCurrentPts();
         if(false==videoFilter->getNextFrameAs(hwImageFormat,&fn,previewBuffer))
         {
             printf("[Play] Cancelling playback, nextPicture failed\n");
@@ -262,9 +263,8 @@ bool GUIPlayback::run(void)
         }
         if(gotAudio)
             gotAudio=audioPump(false);
-        lastPts=admPreview::getCurrentPts();
         systemTime = ticktock.getElapsedMS();
-        movieTime=(uint32_t)((lastPts-firstPts*0)/1000);
+        movieTime=(uint32_t)(lastPts/1000);
         movieTime+=audioLatency;
         //printf("[Playback] systemTime: %lu movieTime : %lu audioLatency=%lu \r",systemTime,movieTime,(uint32_t)audioLatency);
         //printf("[LastPTS]=%s \n",ADM_us2plain(lastPts));
