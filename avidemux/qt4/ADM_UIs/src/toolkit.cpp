@@ -4,6 +4,7 @@
 
 #include "ADM_toolkitQt.h"
 #include "ADM_assert.h"
+#include "ADM_default.h"
 
 static QStack<QWidget*> widgetStack;
 
@@ -13,6 +14,7 @@ void qtRegisterDialog(QWidget *dialog)
     {
         if (dialog->parentWidget() != widgetStack.top() || !(dialog->windowFlags() & Qt::Dialog))
         {
+            ADM_info("reparenting widget %s\n",dialog->objectName().toUtf8().constData());
             dialog->setParent(widgetStack.top(), Qt::Dialog);
             dialog->show(); // reparenting makes the widget invisible
         }
