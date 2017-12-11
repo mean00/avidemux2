@@ -155,7 +155,10 @@ void GUI_PlayAvi(void)
     if(getPreviewMode()!=ADM_PREVIEW_NONE)
         admPreview::seekToTime(oldTimeFrame);
     else
-        admPreview::seekToTime(newTimeFrame);
+    {
+        if(false==admPreview::seekToTime(newTimeFrame))
+            admPreview::samePicture();
+    }
     UI_purge();
     GUI_setCurrentFrameAndTime();
     UI_purge();
