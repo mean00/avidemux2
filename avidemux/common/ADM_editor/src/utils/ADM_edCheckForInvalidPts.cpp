@@ -70,7 +70,7 @@ bool ADM_Composer::checkForValidPts (_SEGMENT *seg)
     INFO(  nbNoImage);
     INFO(  nbPtsgoingBack);
     ADM_info("-------- /Stats ----------\n");
-    if(stats.nbPtsgoingBack>1)
+    if(stats.nbPtsgoingBack>1 || (stats.nbBFrames && hdr->providePts()==false))
     {
 #ifdef WORK_AROUND_BAD_PTS
         if(!GUI_Question(QT_TRANSLATE_NOOP("ADM_Composer",

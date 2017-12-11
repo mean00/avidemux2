@@ -121,8 +121,8 @@ virtual     uint64_t                estimatePts(uint32_t frame); // Returns or g
 virtual   uint64_t                   getTime(uint32_t frameNum)=0;
 virtual   uint64_t                   getVideoDuration(void)=0;
 
-// Return true if the container provides pts informations
-virtual   bool                       providePts(void) {return false;};
+// Return false if the container doesn't provide pts information
+virtual   bool                       providePts(void) {return true;};
 //
 virtual   bool                       getPtsDts(uint32_t frame,uint64_t *pts,uint64_t *dts)=0;
 virtual   bool                       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts)=0;
