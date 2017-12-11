@@ -8,7 +8,7 @@ FMT_UNKNOWN=-3
 
 AR_1_1=0
 AR_4_3=1
-AR_16_9=3
+AR_16_9=2
 #
 #
 #
@@ -91,8 +91,14 @@ class image:
      # 
     def apply_resize(self,resize):
          adm=Avidemux()
-         if(self.width!=resize.width or self.height!=resize.height): 
-             adm.addVideoFilter("swscale","width="+str(resize.width),"height="+str(resize.height),"algo=1","sourceAR="+str(self.ar),"targetAR="+str(resize.ar),"lockAR=True","roundup=False")
+         sar=self.ar
+         tar=resize.ar
+         if(self.width!=resize.width or self.height!=resize.height):
+             if(sar==2):
+                 sar=3
+             if(tar==2):
+                 tar=3
+             adm.addVideoFilter("swscale","width="+str(resize.width),"height="+str(resize.height),"algo=1","sourceAR="+str(sar),"targetAR="+str(tar),"lockAR=True","roundup=False")
          if(resize.topbottom!=0 or resize.leftright!=0):
              l=str(resize.leftright)
              t=str(resize.topbottom)
