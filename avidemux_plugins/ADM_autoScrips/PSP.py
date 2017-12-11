@@ -58,7 +58,7 @@ adm.audioClearTracks()
 adm.audioAddTrack(0)
 adm.audioSetResample(0,48000)
 adm.audioSetMixer(0,"STEREO")
-adm.audioCodec(0,"Faac","bitrate=160")
+adm.audioCodec(0,"LavAAC","bitrate=160")
 ##################################
 #  Video
 ##################################
@@ -75,9 +75,9 @@ adm.videoCodec("x264", "general.params=CBR=500", "general.threads=99", "general.
 "ratecontrol.aq_strength=1.000000", "ratecontrol.mb_tree=True", "ratecontrol.lookahead=40")
 
 ###################################
-# Container = Mpeg PS/DVD
+# Container = MP4
 ###################################
 #
 #
-adm.setContainer("MP4", "muxerType=1", "useAlternateMp3Tag=True")
+adm.setContainer("MP4", "muxerType=1", "useAlternateMp3Tag=True", "forceAspectRatio=False", "aspectRatio=1")
     
