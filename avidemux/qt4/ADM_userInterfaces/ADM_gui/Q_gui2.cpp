@@ -953,6 +953,8 @@ void MainWindow::updateCodecWidgetControlsState(void)
     {
         ui.pushButtonVideoFilter->setEnabled(false);
         ui.menuVideo->actions().at(2)->setEnabled(false);
+        ui.menuVideo->actions().at(3)->setEnabled(false);
+        ui.toolBar->actions().at(5)->setEnabled(false);
     }
 
     b=false;
