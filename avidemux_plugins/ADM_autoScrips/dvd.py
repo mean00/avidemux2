@@ -84,7 +84,7 @@ for i in range(0,tracks):
   if(True==reencode):
       if(channels!=2):
           adm.audioSetMixer(i,"STEREO")
-      adm.audioCodec(i,"Aften","bitrate=224","mode=0")
+      adm.audioCodec(i,"LavAC3","bitrate=224")
 ##################################
 #  Video
 ##################################
