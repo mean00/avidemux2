@@ -29,7 +29,7 @@ const char *i2state(int a)
     return "?????";
 
 }
-#define CHANGE_STATE(x) { printf("%s -> %s\n",i2state(stopRequest),i2state(x));stopRequest=x;}
+#define CHANGE_STATE(x) { ADM_info("%s -> %s\n",i2state(stopRequest),i2state(x));stopRequest=x;}
 /**
     \fn audioDeviceThreaded
     \brief constructor
