@@ -84,7 +84,8 @@ bool coreAudioDevice::localStop(void)
 		verify_noerr(AudioOutputUnitStop(theOutputUnit));
 
 	// Clean up
-	CloseComponent(theOutputUnit);
+    verify_noerr(AudioUnitUninitialize(theOutputUnit));
+    verify_noerr(AudioComponentInstanceDispose(theOutputUnit));
 	_inUse=0;
         ADM_usleep(10*1000);
 	return 1;
@@ -138,6 +139,7 @@ void coreAudioDevice::sendData()
         if(avail>sizeOf10ms*5) // buffer filling up, sleep a bit
         {
                 mutex.unlock();
+                if(stopRequest!=AUDIO_DEVICE_STARTED) return;
                 ADM_usleep(20*1000);
                 goto again;
         }
