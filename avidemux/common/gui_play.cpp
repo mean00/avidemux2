@@ -411,9 +411,7 @@ bool  GUIPlayback::initializeAudio(void)
     AUD_Status status;
     small_ = playbackAudio->fill(channels, wavbuf,&status);
     fill+=small_;
-    // Call it twice to be sure it is properly setup
-     state = AVDM_AudioSetup(frequency,  channels ,playbackAudio->getChannelMapping());
-     AVDM_AudioClose();
+
      state = AVDM_AudioSetup(frequency,  channels ,playbackAudio->getChannelMapping());
      latency=AVDM_GetLayencyMs();
      printf("[Playback] Latency : %d ms\n",latency);
