@@ -166,7 +166,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>You can click in the image to set the logo approximatively</string>
+      <string>You can click in the image to approximately position the logo</string>
      </property>
     </widget>
    </item>
