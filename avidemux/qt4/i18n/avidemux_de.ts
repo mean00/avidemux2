@@ -13107,7 +13107,7 @@ der Halbbilder (deinterlaceing)</translation>
     </message>
     <message>
         <location line="+131"/>
-        <source>You can click in the image to set the logo approximatively</source>
+        <source>You can click in the image to approximately position the logo</source>
         <translation>In die Vorschau klicken, um die Position der linken oberen Ecke des Logos festzulegen</translation>
     </message>
     <message>

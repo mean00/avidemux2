@@ -10370,7 +10370,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+65"/>
-        <source>You can click in the image to set the logo approximatively</source>
+        <source>You can click in the image to approximately position the logo</source>
         <translation type="unfinished">Щелкните на изображение для установки логотипа</translation>
     </message>
 </context>

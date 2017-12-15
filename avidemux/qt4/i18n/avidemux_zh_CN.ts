@@ -4145,7 +4145,7 @@ Expect problems.</source>
         <translation>选择</translation>
     </message>
     <message>
-        <source>You can click in the image to set the logo approximatively</source>
+        <source>You can click in the image to approximately position the logo</source>
         <translation>您可以单击图像去设置近似的标志</translation>
     </message>
     <message>

@@ -6309,7 +6309,7 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+65"/>
-        <source>You can click in the image to set the logo approximatively</source>
+        <source>You can click in the image to approximately position the logo</source>
         <translation>로고를 대략적으로 설정하기 위해 이미지에서 클릭할 수 있습니다</translation>
     </message>
 </context>
