@@ -97,9 +97,6 @@
          </item>
          <item>
           <widget class="QLabel" name="label_4">
-           <property name="toolTip">
-            <string>Alpha will be ignored if the image has alpha channel (png in RGB)</string>
-           </property>
            <property name="text">
             <string>Alpha</string>
            </property>
