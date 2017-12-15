@@ -88,7 +88,7 @@ bool addLogopFilter::getNextFrame(uint32_t *fn,ADMImage *image)
     if(myImage)
     {
         if(myImage->GetReadPtr(PLANAR_ALPHA))
-            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y);
+            myImage->copyWithAlphaChannel(image,configuration.x,configuration.y,configuration.alpha);
         else
             myImage->copyToAlpha(image,configuration.x,configuration.y,configuration.alpha);
     }

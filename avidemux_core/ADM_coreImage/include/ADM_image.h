@@ -159,7 +159,7 @@ public:
         bool    blacken(void);
         bool    copyTo(ADMImage *target, uint32_t x, uint32_t y);
         bool    copyToAlpha(ADMImage *target, uint32_t x, uint32_t y,uint32_t alpha);
-        bool    copyWithAlphaChannel(ADMImage *target, uint32_t x, uint32_t y);
+        bool    copyWithAlphaChannel(ADMImage *target, uint32_t x, uint32_t y, uint32_t opacity=255);
         bool    copyLeftSideTo(ADMImage *dest);
         /* Some utilitarian functions */
         bool    saveAsBmp(const char *filename);

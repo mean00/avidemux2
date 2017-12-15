@@ -135,13 +135,9 @@ bool                Ui_logoWindow::tryToLoadimage(const char *imageName)
             imageHeight=image->GetHeight(PLANAR_Y);            
             this->imageName=std::string(imageName);
             ui.labelImage->setText(this->imageName.c_str());
-            
             if(image->GetReadPtr(PLANAR_ALPHA))
-                ui.spinAlpha->setEnabled(false);
-            else
-                ui.spinAlpha->setEnabled(true);
-            status=true;    
-           
+                ADM_info("We have alpha\n");
+            status=true;
         }
     }
     enableLowPart(status);
@@ -368,10 +364,7 @@ uint8_t    flyLogo::processYuv(ADMImage* in, ADMImage *out)
 
     ADMImage *myImage=parent->image;
     if(myImage->GetReadPtr(PLANAR_ALPHA))
-    {
-        ADM_info("We have alpha\n");
-        myImage->copyWithAlphaChannel(out,param.x,param.y);
-    }
+        myImage->copyWithAlphaChannel(out,param.x,param.y,param.alpha);
     else
         myImage->copyToAlpha(out,param.x,param.y,param.alpha);
     return true;

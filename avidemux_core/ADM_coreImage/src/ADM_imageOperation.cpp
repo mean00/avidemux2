@@ -229,13 +229,18 @@ bool ADMImage::copyToAlpha(ADMImage *dest, uint32_t x,uint32_t y,uint32_t alpha)
  * @return 
  */
 
-static bool blitWithAlpha(uint8_t *dst, uint8_t *src, uint8_t *alpha,int dstStride, int srcStride,int alphaStride,int w,int h, int mul)
+static bool blitWithAlpha(uint8_t *dst, uint8_t *src, uint8_t *alpha, int dstStride, int srcStride, int alphaStride, int w, int h, int mul, uint32_t opacity)
 {
     for(int k=0;k<h;k++)
     {
         for(int j=0;j<w;j++)
         {
             int a=alpha[mul*j];
+            if(opacity<255)
+            {
+                a*=opacity;
+                a>>=8;
+            }
             uint32_t x=(255-a)*dst[j]+a*src[j];
             dst[j]=x>>8;
         }
@@ -245,9 +250,8 @@ static bool blitWithAlpha(uint8_t *dst, uint8_t *src, uint8_t *alpha,int dstStri
     }
     return true;
 }
-bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y)
+bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y,uint32_t opacity)
 {
-
     uint32_t box_w=_width, box_h=_height;
     // Clip if needed
     if(y>dest->_height)
@@ -293,7 +297,7 @@ bool ADMImage::copyWithAlphaChannel(ADMImage *dest, uint32_t x,uint32_t y)
                         dstPitches[i], 
                         srcPitches[i], 
                         alphaStride,
-                        ww,hh,mul);
+                        ww,hh,mul,opacity);
     }
     return 1;
 }
