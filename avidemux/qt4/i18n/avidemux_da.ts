@@ -6346,8 +6346,8 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     </message>
     <message>
         <location line="+65"/>
-        <source>You can click in the image to set the logo approximatively</source>
-        <translation>Du kan klikke i billedet for at sætte logoet approximatively</translation>
+        <source>You can click in the image to approximately position the logo</source>
+        <translation>Du kan klikke på billedet for at placere logoet</translation>
     </message>
 </context>
 <context>
