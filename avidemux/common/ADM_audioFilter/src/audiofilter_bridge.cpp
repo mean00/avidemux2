@@ -27,6 +27,9 @@ using std::string;
 #else
 #define aprintf printf
 #endif
+
+static int _held; // we need to restore the original value of _hold on rewind
+
 /**
  * 
  * @param in
@@ -55,7 +58,7 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
   _startTimeUs=_ms2us(startInMs);
   _shiftUs=_ms2us(shiftMs);
   
-  _hold=0;
+  _held=_hold=0;
   rewind();
   
   ADM_info("[Bridge] Starting with time %s , shift %" PRIi32" ms\n",ADM_us2plain(startInMs*1000LL),-shiftMs);
@@ -83,8 +86,8 @@ AUDMAudioFilter_Bridge::AUDMAudioFilter_Bridge(ADM_edAudioTrack *incoming,
       dNbSample/=1000000.;
       dNbSample*=_wavHeader.channels;
       _hold=(int32_t)dNbSample;
+      _held=_hold;
     }
-    
   }
   ADM_info("[Bridge] Ending with time %s, sample %u\n",ADM_us2plain(_startTimeUs),_hold);
   rewind();
@@ -105,6 +108,7 @@ uint8_t AUDMAudioFilter_Bridge::rewind(void)
   ADM_info("[AudioBridge] Going to time %s\n",ADM_us2plain(_startTimeUs));
   uint8_t r= _incoming->goToTime(_startTimeUs);
   if(!r) ADM_warning("[AudioBridge] Failed!\n");
+  _hold=_held;
   return r;
 }
 /**
@@ -158,6 +162,10 @@ uint8_t AUDMAudioFilter_Bridge::fillIncomingBuffer(AUD_Status *status)
           got=0;
           dts=ADM_NO_PTS;
       }
+      // silence the audio before the specified delay is over
+      if(got && _hold>0)
+        memset(_incomingBuffer.at(_tail),0,got*_wavHeader.channels*sizeof(float));
+
       uint64_t endDts=dts+got*sampleToUs;
       aprintf("StartTime : %s\n",ADM_us2plain(_startTimeUs));
       aprintf("packet start : %s\n",ADM_us2plain(dts));
