@@ -60,16 +60,16 @@ bool x265Encoder::setup(void)
 #if X265_BUILD < 47
   switch(x265Settings.general.poolThreads)
   {
-    case 0: case 1: case 2: param.poolNumThreads = x265Settings.general.poolThreads;break;
-    case 99:break; //auto
+    case 1: case 2: case 4: param.poolNumThreads = x265Settings.general.poolThreads;break;
+    case 0: case 99: break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }
 #endif
 
   switch(x265Settings.general.frameThreads)
   {
-    case 0: case 1: case 2: param.frameNumThreads = x265Settings.general.frameThreads;break;
-    case 99:break; //auto
+    case 1: case 2: case 4: param.frameNumThreads = x265Settings.general.frameThreads;break;
+    case 0: case 99: break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }
   param.sourceWidth = getWidth();
@@ -282,7 +282,7 @@ bool x265Encoder::setup(void)
 void dumpx265Setup(x265_param *param)
 {
 #define PI(x) printf(#x"\t:%d\n",(int)param->x)
-#define PD(x) printf(#x"\t:%d\n",(double)param->x)
+#define PD(x) printf(#x"\t:%f\n",(double)param->x)
 #define PS(x) printf(#x"\t:%s\n",param->x)
     printf("*************************************\n");
     printf("***      Encoder Environment      ***\n");
