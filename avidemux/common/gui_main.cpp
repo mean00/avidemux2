@@ -304,7 +304,11 @@ void HandleAction (Action action)
     case ACT_AUDIO_FILTERS:
         {
             EditableAudioTrack *ed=video_body->getDefaultEditableAudioTrack();
-            if(ed) ed->audioEncodingConfig.audioFilterConfigure();
+            if(ed)
+            {
+                ed->audioEncodingConfig.audioFilterConfigure();
+                UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled,ed->audioEncodingConfig.shiftInMs);
+            }
         }
       return;
     case ACT_PREFERENCES:
