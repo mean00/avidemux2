@@ -88,8 +88,8 @@ bool x264Encoder::setup(void)
   // Threads..
   switch(x264Settings.general.threads)
   {
-    case 0: case 1: case 2:  param.i_threads = x264Settings.general.threads;break;
-    case 99:break; //auto
+    case 1: case 2: case 4: param.i_threads = x264Settings.general.threads;break;
+    case 0: case 99: break; //auto
     default: ADM_error("UNKNOWN NB OF THREADS\n");break;
   }
   param.i_width = getWidth();
