@@ -72,6 +72,7 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
         {
             videoDelay+=delta-ptsStart;
             dtsStart=0;
+            endTime+=videoDelay;
             ADM_info("Dts is too early, delaying everything by %" PRIu64" us\n",videoDelay);
         }else
         {
