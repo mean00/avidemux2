@@ -599,6 +599,7 @@ bool           ADM_hwAccelEntryLibVA::canSupportThis(struct AVCodecContext *avct
                return false;
                break;
            }
+           break;
 #endif       
        case AV_CODEC_ID_VC1: profile= VAProfileVC1Advanced;break;
 #ifdef LIBVA_VP9_DEC

@@ -275,12 +275,21 @@ static bool checkProfile(const VAProfile &profile,VAConfigID *cid,const char *na
     *cid=-1;
     VAConfigAttrib attrib;
     attrib.type = VAConfigAttribRTFormat;
+    ADM_info("--Probing %s ...\n",name);
     CHECK_ERROR(vaGetConfigAttributes(ADM_coreLibVA::display, profile, VAEntrypointVLD, &attrib, 1));
     if(xError)
     {
-         ADM_warning("Cannot get attribute for %s \n",name);
+         ADM_warning("Cannot get attribute  for VAEntrypointVLD %s \n",name);
          return false;
     }
+    ADM_info("RT Format =0x%x\n",attrib.value);
+#define CHECK_RT(x)    if(attrib.value & VA_RT_FORMAT_##x ) ADM_info("\t" #x " supported\n");
+    CHECK_RT(YUV420);
+    CHECK_RT(YUV422);
+    CHECK_RT(YUV444);
+    CHECK_RT(YUV420_10BPP);
+    CHECK_RT(RGB32);
+    
     CHECK_ERROR(vaCreateConfig( ADM_coreLibVA::display, profile, VAEntrypointVLD,&attrib, 1,cid));
     if(xError)
     {
@@ -454,6 +463,11 @@ bool admLibVA::init(GUI_WindowInfo *x)
     ADM_coreLibVA::decoders::h264=false;
     ADM_coreLibVA::directOperation=true;
     ADM_coreLibVA::transferMode=ADM_LIBVA_NONE;
+    
+    ADM_coreLibVA::configH265=-1;
+    ADM_coreLibVA::configH26510Bits=-1;
+    ADM_coreLibVA::configVP9=-1;
+    
 
     myWindowInfo=*x;
     VAStatus xError;
@@ -565,7 +579,11 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
                 break;
 
     }
-
+    if(cid==-1)
+    {
+        ADM_warning("No VA support for that\n");
+        return VA_INVALID;
+    }
     CHECK_ERROR(vaCreateContext ( ADM_coreLibVA::display, cid,
                 width,    height,
                 VA_PROGRESSIVE, // ?? NOT SURE ??
