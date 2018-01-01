@@ -1,4 +1,5 @@
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(INIT_VIDEO_FILTER_GTK  lib  _srcsGtk )
 
 IF (DO_GTK)

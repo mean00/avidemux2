@@ -1,6 +1,7 @@
 include(plugin_qt4)
 include(admAsNeeded)
 include(admOpenGl)    
+include(admPluginLocation)
 MACRO(INIT_VIDEO_FILTER_GLQT4  lib  _srcsQt _headersQt _srcQt_ui  )
                 ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_openGL)
                 ADM_ADD_QT_INCLUDE_DIR(${QT_EXTENSION} ADM_UIs)

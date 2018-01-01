@@ -2,6 +2,7 @@
 #  Macro to declare an audio encoder plugin
 #
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(INIT_AUDIO_ENCODER _lib)
     ADD_DEFINITIONS("-DADM_MINIMAL_UI_INTERFACE")
 ENDMACRO(INIT_AUDIO_ENCODER)

@@ -2,6 +2,7 @@
 #  Macro to declare an video encoder plugin
 #
 include(admCmakeParseArgument)
+include(admPluginLocation)
 SET(VE_SETTINGS_DIR "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/pluginSettings/")
 
 MACRO(INSTALL_VIDEO_ENCODER_SETTINGS PLUGIN)

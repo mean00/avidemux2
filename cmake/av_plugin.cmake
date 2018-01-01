@@ -1,4 +1,5 @@
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(INIT_AUDIO_DEVICE _lib)
 ENDMACRO(INIT_AUDIO_DEVICE)
 

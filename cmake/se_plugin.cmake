@@ -1,4 +1,5 @@
 include(admAsNeeded)
+include(admPluginLocation)
 
 macro (ADD_SCRIPT_ENGINE name)
     ADM_ADD_SHARED_LIBRARY(${name} ${ARGN})

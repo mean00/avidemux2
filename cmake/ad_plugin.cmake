@@ -1,4 +1,5 @@
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(INIT_AUDIO_PLUGIN _lib)
 	INCLUDE_DIRECTORIES("${ADM_HEADER_DIR}/ADM_audioCodec")
 ENDMACRO(INIT_AUDIO_PLUGIN)

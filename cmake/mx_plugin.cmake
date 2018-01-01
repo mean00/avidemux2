@@ -1,4 +1,5 @@
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(INIT_MUXER _lib)
 ENDMACRO(INIT_MUXER)
 

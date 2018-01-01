@@ -3,6 +3,7 @@
 #
 include(plugin_qt4)
 include(admAsNeeded)
+include(admPluginLocation)
 MACRO(ADD_VIDEO_ENCODER_QT4 name srcQ headerQ uiQ)
         #INIT_VIDEO_ENCODER(${name})
         INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDE_DIR})

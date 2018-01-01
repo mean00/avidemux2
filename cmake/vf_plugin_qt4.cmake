@@ -1,5 +1,6 @@
 include(plugin_qt4)
 include(admAsNeeded)
+include(admPluginLocation)
 
 MACRO(INIT_VIDEO_FILTER_QT4  lib  _srcsQt _headersQt _srcQt_ui  )
     IF (DO_QT4)
