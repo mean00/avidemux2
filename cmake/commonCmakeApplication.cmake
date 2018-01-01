@@ -10,12 +10,7 @@ SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 # Common definitions...
 SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
 MESSAGE(STATUS "Cmake module path = ${CMAKE_MODULE_PATH}")
-IF (WIN32)
-	SET(ADM_PLUGIN_DIR "plugins")
-ELSE (WIN32)
-	SET(ADM_PLUGIN_DIR "ADM_plugins6")
-ENDIF (WIN32)
-
+include(admPluginLocation)
 include(admConfigSummary)
 INITIALISE_SUMMARY_LISTS()
 
