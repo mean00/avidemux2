@@ -70,17 +70,24 @@ OPTION(VERBOSE "" OFF)
 # Now really define our plugin...
 ###############################################
 
-include(mx_plugin)
-SUBDIRS(libmkv)
+INCLUDE(mx_plugin)
+INCLUDE_DIRECTORIES(libmkv/include)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+SET(libmkv  libmkv/src/attachments.c libmkv/src/chapters.c
+            libmkv/src/ebml.c        libmkv/src/ebml.h
+            libmkv/src/Makefile.am   libmkv/src/matroska.c
+            libmkv/src/matroska.h    libmkv/src/md5.c
+            libmkv/src/md5.h         libmkv/src/tags.c
+            libmkv/src/tracks.c
+)
 SET(ADM_lmkv_SRCS
 	muxerLmkvPlugin.cpp
 	muxerLmkv.cpp
 	muxerLmkvAudio.cpp
 	muxerLmkvVideo.cpp
 	muxerLmkvConfig.cpp
+    ${libmkv}
 )
 ADD_MUXER(ADM_mx_libmkv SHARED ${ADM_lmkv_SRCS})
-TARGET_LINK_LIBRARIES(ADM_mx_libmkv  ADMlibmkv)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 INIT_MUXER(ADM_mx_libmkv)
 INSTALL_MUXER(ADM_mx_libmkv)
