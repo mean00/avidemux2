@@ -2,7 +2,7 @@
                     \file     shaderLoader
                     \brief    Rotate picture
 
-   
+
                     copyright            : (C) 2011 by mean
 
  ***************************************************************************/
@@ -15,6 +15,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <string>
 #include "ADM_openGl.h"
 #define ADM_LEGACY_PROGGY
 #include "ADM_default.h"
@@ -24,6 +25,7 @@
 #include "DIA_factory.h"
 #include "shaderLoader.h"
 #include "shaderLoader_desc.cpp"
+#include "DIA_coreToolkit.h"
 /**
     \class shaderLoader
 */
@@ -39,6 +41,9 @@ protected:
 
 protected:
                 bool        render(ADMImage *image,ADM_PLANE plane,QGLFramebufferObject *fbo);
+                bool        loadShader(const char *src);
+                bool        reload( void);
+    static      void        cb(void *c);
 public:
                              shaderLoader(ADM_coreVideoFilter *previous,CONFcouple *conf);
                             ~shaderLoader();
@@ -51,16 +56,65 @@ public:
 };
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   shaderLoader,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE(   shaderLoader,   // Class
                         1,0,0,              // Version
                         ADM_UI_QT4+ADM_FEATURE_OPENGL,         // UI
                         VF_OPENGL,            // Category
                         "shaderLoader",            // internal name (must be uniq!)
-                        "Shader Loader",            // Display name
-                        "Run an external shader program." // Description
+                        QT_TRANSLATE_NOOP("glShader","Shader Loader"),            // Display name
+                        QT_TRANSLATE_NOOP("glShader","Run an external shader program.") // Description
                     );
 
-// Now implements the interesting parts
+
+/**
+ * \fn loadShader
+ * @param src
+ * @return 
+ */
+bool shaderLoader::loadShader(const char *src)
+{
+    
+    if(!ADM_fileExist(src))
+    {
+        ADM_warning("Shader file does not exist (%s)\n",src);
+        return false;
+    }
+    
+    int sourceSize=ADM_fileSize(src);
+    if(sourceSize<5)
+    {
+        ADM_warning("Shader file is too short(%s)\n",src);
+        return false;
+    }
+    
+    uint8_t *buffer=(uint8_t *)admAlloca(sourceSize+1);
+    FILE *f=fopen(params.shaderFile.c_str(),"rt");
+    if(!f)
+    {
+        ADM_warning("Cannot open file %s\n",src);
+        return false;
+    }
+        
+    fread(buffer,sourceSize,1,f);
+    buffer[sourceSize]=0;
+    fclose(f);
+    f=NULL;
+
+    if(glProgramY)
+    {
+        delete glProgramY;
+        glProgramY=NULL;
+    }
+    glProgramY =    createShaderFromSource(QGLShader::Fragment,(char *)buffer);
+    if(!glProgramY)
+    {
+        ADM_error("Shader compiling failed\n");
+        return false;
+    }
+    ADM_info("Shader %s successfully loaded an compiled\n",src);
+    return true;
+}
+
 /**
     \fn shaderLoader
     \brief constructor
@@ -74,32 +128,17 @@ shaderLoader::shaderLoader(  ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_co
         original=new ADMImageDefault(in->getInfo()->width,in->getInfo()->height);
         _parentQGL->makeCurrent();
         fboY->bind();
-        ready=true;
-       
-        printf("Compiling shader \n");
-        glProgramY = new QGLShaderProgram(_context);
-        ADM_assert(glProgramY);
-        if ( !glProgramY->addShaderFromSourceFile(QGLShader::Fragment, params.shaderFile))
-        {
-            ready=false;
-            erString="Compiling shader failed"+std::string(glProgramY->log().toUtf8().constData());
-        }
-        if ( ready && !glProgramY->link())
-        {
-            ready=false;
-            erString=std::string( glProgramY->log().toUtf8().constData());
-        }
+        ready=false;
 
-        if ( ready && ! glProgramY->bind())
-        {
-                ready=false;
-                erString=std::string("OpenGl bind failed");
-        }
+        ADM_info("Compiling shader %s \n",params.shaderFile.c_str());
+
+        // Load the file info memory
+        ready=loadShader(params.shaderFile.c_str());
+        
         glList=glGenLists(1);
         genQuad();
         fboY->release();
         _parentQGL->doneCurrent();
-
 }
 /**
     \fn shaderLoader
@@ -129,6 +168,7 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     {
         ADM_info("OpenGl shader not loaded (%s)\n",erString.c_str());
         image->duplicateFull(original);
+        image->printString(2,2,"Shader not loaded");
         image->printString(2,2,erString.c_str());
         return true;
     }
@@ -137,10 +177,12 @@ bool shaderLoader::getNextFrame(uint32_t *fn,ADMImage *image)
     // size is the last one...
     fboY->bind();
 
-    glProgramY->setUniformValue("myTextureU", 1); 
-    glProgramY->setUniformValue("myTextureV", 2); 
-    glProgramY->setUniformValue("myTextureY", 0); 
-    glProgramY->setUniformValue("pts", (GLfloat)original->Pts); 
+    glProgramY->setUniformValue("myTextureU", 1);
+    glProgramY->setUniformValue("myTextureV", 2);
+    glProgramY->setUniformValue("myTextureY", 0);
+    glProgramY->setUniformValue("myResolution", (GLfloat)info.width,(GLfloat)info.height);
+
+    glProgramY->setUniformValue("pts", (GLfloat)original->Pts);
 
     uploadAllPlanes(original);
 
@@ -175,39 +217,69 @@ void shaderLoader::setCoupledConf(CONFcouple *couples)
 const char *shaderLoader::getConfiguration(void)
 {
     static char st[200];
-    snprintf(st,199,"Shader Loader %s",params.shaderFile);
+    snprintf(st,199,"Shader Loader %s",params.shaderFile.c_str());
     return st;
 }
 
-/**
-    \fn configure
-*/
-bool shaderLoader::configure( void) 
+void shaderLoader::cb(void *c)
 {
-    char *name=strdup(params.shaderFile);
-    diaElemFile shader(0,&name,"ShaderFile to load");
-     
-     diaElem *elems[]={&shader};
-     
-     if(diaFactoryRun(QT_TR_NOOP("ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
-     {
-                params.shaderFile=strdup(name); // memleak
-                return true;
-     }
-     free(name); 
-     return false;
+    shaderLoader *sl=(shaderLoader *)c;
+    sl->ready=sl->reload();
 }
 /**
  * 
  * @return 
+ */
+bool shaderLoader::reload( void)
+{
+        _parentQGL->makeCurrent();
+        fboY->bind();
+        ADM_info("Compiling shader %s \n",params.shaderFile.c_str());
+        // Load the file info memory
+        ready=loadShader(params.shaderFile.c_str());        
+        glList=glGenLists(1);
+        genQuad();
+        fboY->release();
+        _parentQGL->doneCurrent();
+        if(!ready)
+        {
+             GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","Cannot compile shader"), NULL);
+             return false;
+        }
+        return true;
+}
+/**
+    \fn configure
+*/
+bool shaderLoader::configure( void)
+{
+again:
+    diaElemFile shader(0,params.shaderFile,QT_TRANSLATE_NOOP("glShader","ShaderFile to load"));    
+    diaElemButton reloadButton(QT_TR_NOOP("Reload shader"),cb,this);
+    diaElem *elems[]={&shader,&reloadButton};
+    
+     if(diaFactoryRun(QT_TRANSLATE_NOOP("glShader","ShaderLoader"),sizeof(elems)/sizeof(diaElem *),elems))
+     {
+        ready=reload();
+        if(!ready)
+        {
+             goto again;
+        }
+        return true;                
+     }
+     return false;
+}
+/**
+ *
+ * @return
  */
 bool shaderLoader::genQuad(void)
 {
   int width=info.width;
   int height=info.height;
 
-#define POINT(a,b)  glTexCoord2i(a, b);glVertex2i(a, b);  
-  
+#define POINT(a,b)  glTexCoord2i(a, b);glVertex2i(a, b);
+
   glDeleteLists(glList,1);
   glNewList(glList,GL_COMPILE);
   glBegin(GL_QUADS);
