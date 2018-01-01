@@ -47,7 +47,7 @@ extern int ff_h264_info(AVCodecParserContext *parser,ffSpsInfo *ndo);
 #define check(...) {}
 #endif
 
-#define MAX_NALU_PER_CHUNK 20
+#define MAX_NALU_PER_CHUNK 60
 
 
 /**
@@ -1001,9 +1001,8 @@ int ADM_convertFromAnnexBToMP4(uint8_t *inData,uint32_t inSize,
                                                       uint8_t *outData,uint32_t outMaxSize)
 {
     uint8_t *tgt=outData;
-    NALU_descriptor desc[MAX_NALU_PER_CHUNK];
-    int nbNalu=ADM_splitNalu(inData,inData+inSize,
-                        MAX_NALU_PER_CHUNK,desc);
+    NALU_descriptor desc[MAX_NALU_PER_CHUNK+1];
+    int nbNalu=ADM_splitNalu(inData,inData+inSize, MAX_NALU_PER_CHUNK,desc);
     int nalHeaderSize=4;
     int outputSize=0;
 
