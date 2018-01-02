@@ -35,7 +35,7 @@ SET(ADM_JOB_SRCS
 # Version Info
 ###########################################
 if (WIN32)
-        WINDRESIFY(src) 
+        WINDRESIFY(../../admWin32.rc.in src) 
         SET(ADM_JOB_SRCS ${ADM_JOB_SRCS} ${src})
 endif (WIN32)
 
