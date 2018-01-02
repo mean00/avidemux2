@@ -1,0 +1,31 @@
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION     ${FILEVERSION}
+ PRODUCTVERSION  ${PRODUCTVERSION}
+ FILEFLAGSMASK   0x3fL
+ FILEFLAGS       0x0L
+ FILEOS          0x4L
+ FILETYPE        0x1L
+ FILESUBTYPE     0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName",      "Free Software Foundation"
+            VALUE "FileDescription",  "Avidemux ${PRODUCTVERSION_STRING}"
+            VALUE "FileVersion",      "${FILEVERSION_STRING}"
+            VALUE "InternalName",     "avidemux"
+            VALUE "LegalCopyright",   "Copyright © 2001-2011 Free Software Foundation"
+            VALUE "OriginalFilename", ""
+            VALUE "ProductName",      "Avidemux"
+            VALUE "ProductVersion",   "${PRODUCTVERSION_STRING}"
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+100 ICON "${AVIDEMUX_TOP_SOURCE_DIR}/avidemux/common/xpm/${AVIDEMUX_ICON}"

@@ -71,7 +71,7 @@ ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 # Version Info
 ###########################################
 if (WIN32)
-        WINDRESIFY(src) 
+        WINDRESIFY(admWin32.rc.in  src) 
         SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif (WIN32)
 
