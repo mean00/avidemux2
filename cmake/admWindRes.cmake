@@ -5,7 +5,7 @@
         ENDIF(CROSS)
 include(admTimeStamp)
 #
-MACRO(WINDRESIFY input src)
+MACRO(WINDRESIFY input icon src)
         # add icon and version info
         SET(FILEVERSION_STRING "${AVIDEMUX_VERSION}")
         SET(PRODUCTVERSION_STRING "${AVIDEMUX_VERSION}")
@@ -21,7 +21,15 @@ MACRO(WINDRESIFY input src)
 	        SET(WIN_RES_TARGET "pe-i386")
         ENDIF (ADM_CPU_X86_64)
 
-        SET(AVIDEMUX_ICON "adm.ico")
+        #SET(AVIDEMUX_ICON "adm.ico")
+        #SET(FULL_PATH "${CMAKE_CURRENT_SOURCE_DIR}//avidemux/common/xpm/${AVIDEMUX_ICON}")
+        # Convert to native absolute path
+        SET(FULL_PATH "${icon}")
+        get_filename_component(abs "${FULL_PATH}" ABSOLUTE)
+        file(TO_NATIVE_PATH ${abs} ICON_PATH)
+        # replace c:\foo by c:\\foo
+        STRING(REPLACE "\\" "\\\\" ICON_PATH ${ICON_PATH})
+        
         CONFIGURE_FILE(${input} ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc IMMEDIATE)
 
         if (MINGW)
@@ -31,4 +39,4 @@ MACRO(WINDRESIFY input src)
         else (MINGW) # MSVC
             SET(${src}  ${CMAKE_CURRENT_BINARY_DIR}/admWin.rc )
         endif (MINGW)
-ENDMACRO(WINDRESIFY input src)
+ENDMACRO(WINDRESIFY input icon src)
