@@ -36,7 +36,7 @@
 /**
     \class ADMVideoEq2
 */
-class  ADMVideoEq2:public ADM_coreVideoFilterCached
+class  ADMVideoEq2:public ADM_coreVideoFilter
 {
 
   protected:
@@ -56,7 +56,7 @@ class  ADMVideoEq2:public ADM_coreVideoFilterCached
 }     ;
 
 // Add the hook to make it valid plugin
-DECLARE_VIDEO_FILTER(   ADMVideoEq2,   // Class
+DECLARE_VIDEO_FILTER_PARTIALIZABLE( ADMVideoEq2, // Class
                         1,0,0,              // Version
                         ADM_UI_TYPE_BUILD,         // UI
                         VF_COLORS,            // Category
@@ -90,7 +90,7 @@ const char   *ADMVideoEq2::getConfiguration(void)
     \fn ctor
 */
 ADMVideoEq2::ADMVideoEq2(ADM_coreVideoFilter *in,CONFcouple *couples) 
-        : ADM_coreVideoFilterCached(1,in,couples)
+        : ADM_coreVideoFilter(in,couples)
 {
   if(!couples || !ADM_paramLoad(couples,eq2_param,&_param))
   {
@@ -139,31 +139,23 @@ void ADMVideoEq2::setCoupledConf(CONFcouple *couples)
 */
  bool         ADMVideoEq2::getNextFrame(uint32_t *fn,ADMImage *image)
 {
-
-  ADMImage *mysrc=NULL;
-  
-  mysrc=vidCache->getImage(nextFrame);
-  if(!mysrc) return 0;
-  *fn=nextFrame++;
-  image->copyInfo(mysrc);
+  if(!previousFilter->getNextFrame(fn,image)) return false;
 
 #ifdef CAN_DO_INLINE_X86_ASM
   if(CpuCaps::hasMMX())
   {
-        affine_1d_MMX(&(settings.param[0]),mysrc,image,PLANAR_Y);
-        affine_1d_MMX(&(settings.param[2]),mysrc,image,PLANAR_U);
-        affine_1d_MMX(&(settings.param[1]),mysrc,image,PLANAR_V);
+        affine_1d_MMX(&(settings.param[0]),image,image,PLANAR_Y);
+        affine_1d_MMX(&(settings.param[2]),image,image,PLANAR_U);
+        affine_1d_MMX(&(settings.param[1]),image,image,PLANAR_V);
    }
    else
 #endif
    {
-        apply_lut(&(settings.param[0]),mysrc,image,PLANAR_Y);
-        apply_lut(&(settings.param[2]),mysrc,image,PLANAR_U);
-        apply_lut(&(settings.param[1]),mysrc,image,PLANAR_V);
+        apply_lut(&(settings.param[0]),image,image,PLANAR_Y);
+        apply_lut(&(settings.param[2]),image,image,PLANAR_U);
+        apply_lut(&(settings.param[1]),image,image,PLANAR_V);
     }
-  vidCache->unlockAll();
-  
-  
+
   return 1;
 }
 /**
