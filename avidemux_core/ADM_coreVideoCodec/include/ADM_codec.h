@@ -76,6 +76,16 @@ public:
   {
     return false;
   }
+  virtual bool endOfStreamReached(void)
+  {
+    return false;
+  }
+  virtual void setEndOfStream(bool reached) { };
+  virtual bool getDrainingState(void)
+  {
+    return 0;
+  }
+  virtual void setDrainingState(bool drain) { };
   virtual bool flush(void)
     {
         return true;

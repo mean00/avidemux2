@@ -496,16 +496,25 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
-    int ret = avcodec_decode_video2 (_context, frame, &got_picture, &pkt);
-    
-    if(ret<0)
+    if(_parent->getDrainingState())
     {
-        char er[2048]={0};
-        av_make_error_string(er, sizeof(er)-1, ret);
-        ADM_warning("Error %d in lavcodec (%s)\n",ret,er);
-        out->refType=ADM_HW_NONE;
-        return false;
+        if(_parent->getDrainingInitiated()==false)
+        {
+            avcodec_send_packet(_context, NULL);
+            _parent->setDrainingInitiated(true);
+        }
+    }else
+    {
+        avcodec_send_packet(_context, &pkt);
     }
+
+    int ret = avcodec_receive_frame(_context, frame);
+
+    if(!ret)
+        _parent->setEndOfStream(false);
+    if(!_parent->decodeErrorHandler(ret))
+        return false;
+
     if(frame->pict_type==AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture=true;

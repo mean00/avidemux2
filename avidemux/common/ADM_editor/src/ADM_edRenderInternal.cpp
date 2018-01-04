@@ -42,12 +42,20 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 	EditorCache   *cache =vid->_videoCache;
 	ADM_assert(cache);
     bool found=false;
+    ADMImage *image=cache->getByPts(timeToSeek);
+    if(image)
+    {
+        vid->lastReadPts=timeToSeek;
+        ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
+        endOfStream=false;
+        return true;
+    }
    // Search the previous keyframe for segment....
     uint64_t seekTime;
     if(_segments.isKeyFrameByTime(ref,timeToSeek))
     {
         seekTime=timeToSeek;
-        ADM_info("First frame of the new segment is a keyframe at %" PRIu32"ms\n",seekTime/1000);
+        ADM_info("Seeking to a keyframe at %" PRIu64" ms\n",seekTime/1000);
         found=true;
     }else   
     {
@@ -58,6 +66,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         }
     }
     uint32_t frame=_segments.intraTimeToFrame(ref,seekTime);
+    ADM_info("Seeking to frame %" PRIu32" at %" PRIu64" ms\n",frame,seekTime/1000);
     if(dontdecode==true)
     {
         vid->lastSentFrame=frame;
@@ -68,7 +77,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
     
     if(false==DecodePictureUpToIntra(ref,frame))
     {
-        ADM_warning("Cannot decode up to intra %" PRIu64" at %" PRIu64" ms\n",frame,seekTime/1000);
+        ADM_warning("Cannot decode up to intra %" PRIu32" at %" PRIu64" ms\n",frame,seekTime/1000);
         return false;
     }
     if(found==true) return true;
@@ -142,6 +151,11 @@ bool ADM_Composer::nextPictureInternal(uint32_t ref,ADMImage *out,uint64_t time)
 	// Try decoding loop rames ahead, if not we can consider it fails
     while(loop--)
     {
+        if(endOfStream)
+        {
+           ADM_warning("End of stream, skipping decoding the next picture\n");
+           return false;
+        }
         // first decode a picture, cannot hurt...
         if(DecodeNextPicture(ref)==false)
         {
@@ -194,12 +208,16 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
 {
   EditorCache   *cache;
   ADMImage	*result;
+  bool drain=false;
   uint32_t  flags;
-  ADMCompressedImage img;
    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
-	cache=vid->_videoCache;
+    ADM_assert(vid->decoder);
+    if(vid->decoder->endOfStreamReached())
+        return false;
+    cache=vid->_videoCache;
     // PlaceHolder...
+    ADMCompressedImage img;
     img.data=compBuffer;
     img.cleanup(vid->lastSentFrame+1);
 
@@ -210,31 +228,42 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
     aprintf("[EditorRender] DecodeNext %u ref:%u\n",frame,ref);
     // Fetch frame
      aprintf("[Editor] Decoding frame %u\n",frame);
-     if (!demuxer->getFrame (frame,&img))
-     {
+    drain=vid->decoder->getDrainingState();
+    if(!drain)
+    {
+        if(!demuxer->getFrame(frame,&img))
+        {
             ADM_warning("getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
-            return false;
-     }
-
-     // Now uncompress it...
-     result=cache->getFreeImage();
-     if(!result)
-     {
-            ADM_warning(" Cache full for frame %" PRIu32"\n",vid->lastSentFrame);
-            return false;
-      }
+            drain=true;
+            vid->decoder->setDrainingState(true);
+        }else
+        {
+            endOfStream=false;
+        }
+    }
+    // Now uncompress it...
+    result=cache->getFreeImage();
+    if(!result)
+    {
+        ADM_warning(" Cache full for frame %" PRIu32"\n",vid->lastSentFrame);
+        return false;
+    }
+    if(!drain)
+    {
         aprintf("Demuxed frame %" PRIu32" with pts=%" PRId64" us, %" PRId64" ms\n",
             frame,
             img.demuxerPts,
             img.demuxerPts/1000);
-    
-      if(!decompressImage(result,&img,ref))
-      {
-         ADM_info("Decoding error for frame %" PRIu32", not necessarily a problem\n",vid->lastSentFrame);
-         stats.nbNoImage++;
-         cache->invalidate(result);
+    }
+    if(!decompressImage(result,&img,ref))
+    {
+        ADM_info("Decoding error for frame %" PRIu32", not necessarily a problem\n",vid->lastSentFrame);
+        stats.nbNoImage++;
+        cache->invalidate(result);
+        if(drain)
+            endOfStream=true;
          return true; // Not an error in itself
-      }
+    }
         aprintf("Got image with PTS=%s\n",ADM_us2plain(result->Pts));
      uint64_t pts=result->Pts;
      uint64_t old=vid->lastDecodedPts;
@@ -389,7 +418,6 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
 */
 bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
 {
-  uint8_t ret = 0;
   EditorCache   *cache;
   ADMImage	*result;
   uint32_t  flags,flagsNext=0;
@@ -399,11 +427,11 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     img.data=compBuffer;
     img.cleanup(frame);
 
-    ADM_info(" DecodeUpToInta %u ref:%u\n",frame,ref);
-	_VIDEOS *vid=_segments.getRefVideo(ref);
+    ADM_info("Decoding up to intra frame %u, ref: %u\n",frame,ref);
+    _VIDEOS *vid=_segments.getRefVideo(ref);
     vidHeader *demuxer=vid->_aviheader;
-	cache=vid->_videoCache;
-	ADM_assert(cache);
+    cache=vid->_videoCache;
+    ADM_assert(cache);
     // Make sure frame is an intra, or the next field is intra
     demuxer->getFlags(frame,&flags);
     demuxer->getFlags(frame+1,&flagsNext);
@@ -419,12 +447,18 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     aprintf("[EditorRender] DecodeUpToIntra flushing cache & codec\n");
     cache->flush();
     vid->decoder->flush();
+    vid->decoder->setEndOfStream(false);
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=demuxer->estimatePts(frame);
     uint32_t tries=15+7; // Max Ref frames for H264 + MaxRecovery , let's say 7 is ok for recovery
     bool syncFound=false;
     while(found==false && tries--)
     {
+        if(vid->decoder->endOfStreamReached())
+        {
+            ADM_warning("End of stream reached\n");
+            break;
+        }
         // Last frame ? if so repeat
         if(vid->lastSentFrame>=nbFrames-1) vid->lastSentFrame=nbFrames-1;
         // Fetch frame
@@ -434,7 +468,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
          {
                 ADM_warning(" getFrame failed for frame %" PRIu32"\n",vid->lastSentFrame);
                 //cache->flush();
-                return false;
+                vid->decoder->setDrainingState(true);
          }
          // Now uncompress it...
          result=cache->getFreeImage();

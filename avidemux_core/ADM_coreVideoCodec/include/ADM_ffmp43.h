@@ -57,6 +57,9 @@ protected:
 
            uint8_t      _allowNull;
            bool         hurryUp;
+           bool         _drain;
+           bool         _done;
+           bool         _endOfStream;
            bool         _setBpp;
            bool         _setFcc;
            int          codecId;
@@ -72,15 +75,12 @@ protected:
            uint32_t     _threads;
            ADM_acceleratedDecoderFF *hwDecoder;
            decoderFF_param_t decoderFF_params;
-   
 
 protected:
            uint32_t     frameType (void);
            uint8_t      clonePic (AVFrame * src, ADMImage * out);
            void         decoderMultiThread ();
            uint32_t     admFrameTypeFromLav (AVFrame *pic);
-	
-
 
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
@@ -107,7 +107,14 @@ public:
       //  virtual uint32_t getSpecificMpeg4Info (void);
         virtual uint8_t getPARWidth (void);
         virtual uint8_t getPARHeight (void);
-        virtual bool    flush(void);
+        virtual bool decodeErrorHandler(int code, bool headerOnly=false);
+        virtual bool endOfStreamReached(void) { return _endOfStream; }
+        virtual void setEndOfStream(bool reached) { _endOfStream=reached; }
+        virtual bool getDrainingState(void) { return _drain; }
+        virtual void setDrainingState(bool OnOff) { _drain=OnOff; }
+        virtual bool getDrainingInitiated(void) { return _done; }
+        virtual void setDrainingInitiated(bool initiated) { _done=initiated; }
+        virtual bool flush(void);
         virtual const char *getDecoderName(void) 
                           {
                               if(hwDecoder)

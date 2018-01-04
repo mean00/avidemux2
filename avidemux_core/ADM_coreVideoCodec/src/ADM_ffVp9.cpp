@@ -57,9 +57,11 @@ bool    decoderFFVP9::uncompress (ADMCompressedImage * in, ADMImage * out)
     xlog("Parse %d\n",in->dataLength);
     while(offset<in->dataLength)
     {
+        int bufSize=in->dataLength-offset;
+        if(_drain) bufSize=0;
         int r=av_parser_parse2( _parserContext, _context,
                                         &parsedPointer, &parsedLen, 
-                                        in->data+offset, in->dataLength-offset,
+                                        in->data+offset, bufSize,
                                         in->demuxerPts, in->demuxerDts, -1);
         if(r<=0 || !parsedPointer)
             break;

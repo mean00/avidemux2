@@ -164,6 +164,9 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
 	resetConfiguration();
 
   hurryUp=false;
+  _drain=false;
+  _done=false;
+  _endOfStream=false;
   _setBpp=false;
   _setFcc=false;
   codecId = 0;
@@ -309,15 +312,51 @@ bool    decoderFF::flush(void)
 {
     if(_context)
         avcodec_flush_buffers(_context);
+    _drain=false;
+    _done=false;
     return true;
 }
+
+/**
+    \fn decodeErrorHandler
+    \brief Evaluate return value of avcodec_receive_frame
+*/
+bool decoderFF::decodeErrorHandler(int code, bool headerOnly)
+{
+    if(code<0)
+    {
+        switch(code)
+        {
+            case AVERROR_EOF:
+                ADM_warning("[lavc] End of video stream reached\n");
+                setEndOfStream(true);
+                flush();
+                return false;
+            case AVERROR(EAGAIN):
+                ADM_info("[lavc] The decoder expects more input before output can be produced\n");
+                return false;
+            case AVERROR(EINVAL):
+                ADM_error("[lavc] Codec not opened\n");
+                return false;
+            default:
+                if(!headerOnly)
+                {
+                    char er[2048]={0};
+                    av_make_error_string(er, sizeof(er)-1, code);
+                    ADM_warning("Error %d in lavcodec (%s)\n",code,er);
+                    return false;
+                }
+        }
+    }
+    return true;
+}
+
 /**
     \fn uncompress
     \brief Actually decode an image
 */
 bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-  int got_picture = 0;
   uint8_t *oBuff[3];
   int ret = 0;
   out->_noPicture = 0;
@@ -365,29 +404,49 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     _context->reordered_opaque=in->demuxerPts;
   //_frame.opaque=(void *)out->Pts;
   //printf("Incoming Pts :%"PRId64"\n",out->Pts);
-  AVPacket pkt;
-  av_init_packet(&pkt);
-  pkt.data=in->data;
-  pkt.size=in->dataLength;
-  if(in->flags&AVI_KEY_FRAME)
-    pkt.flags=AV_PKT_FLAG_KEY;
-  else
-    pkt.flags=0;
+    if(_drain)
+    {
+        if(!_done)
+        {
+            avcodec_send_packet(_context, NULL);
+            _done=true;
+        }
+    }else
+    {
+        AVPacket pkt;
+        av_init_packet(&pkt);
+        pkt.data=in->data;
+        pkt.size=in->dataLength;
+        if(in->flags&AVI_KEY_FRAME)
+            pkt.flags=AV_PKT_FLAG_KEY;
+        else
+            pkt.flags=0;
 
-  ret = avcodec_decode_video2 (_context, _frame, &got_picture, &pkt);
+        avcodec_send_packet(_context, &pkt);
+    }
+
+    ret = avcodec_receive_frame(_context, _frame);
+
+    if(!ret)
+        _endOfStream=false;
+    if(!decodeErrorHandler(ret,hurryUp))
+        return false;
+
   if(!bFramePossible())
   {
     // No delay, the value is sure, no need to hide it in opaque
     _context->reordered_opaque=(int64_t)in->demuxerPts;
   }
   out->_qStride = 0;		//Default = no quant
+#if 0
   if (0 > ret && !hurryUp)
     {
       printf ("\n[lavc] error in lavcodec decoder!\n");
       printf ("[lavc] Err: %d, size :%d\n", ret, in->dataLength);
       return 0;
     }
-  if (!got_picture && !hurryUp)
+#endif
+  if (ret && !hurryUp)
     {
       // Some encoder code a vop header with the
       // vop flag set to 0
@@ -419,7 +478,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 	    {
 	      out->_noPicture = 1;
 	    }
-	  printf ("\n[lavc] ignoring got pict ==0\n");
+	  printf ("\n[lavc] ignoring that we got no picture\n");
 	  return 1;
 
 	}
@@ -544,7 +603,7 @@ decoderFF (w, h,fcc,extraDataLen,extraData,bpp)
 bool decoderFFMpeg4::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
     // For pseudo startcode
-    if(in->dataLength)
+    if(!_drain && in->dataLength)
     {
         in->data[in->dataLength]=0;
         in->data[in->dataLength+1]=0;

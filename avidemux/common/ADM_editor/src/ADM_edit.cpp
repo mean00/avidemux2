@@ -422,6 +422,7 @@ bool ADM_Composer::addFile (const char *name)
         ADM_info("Halving Fps...\n");
         _segments.halfFps();
     }
+    endOfStream=false;
   return 1;
 }
 #if 0
