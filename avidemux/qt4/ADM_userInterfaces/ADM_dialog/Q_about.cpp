@@ -24,36 +24,44 @@ extern uint8_t DIA_license(void);
 
 Ui_aboutWindow::Ui_aboutWindow(QWidget* parent) : QDialog(parent)
 {
-	Q_INIT_RESOURCE(about);
+    Q_INIT_RESOURCE(about);
 
-	ui.setupUi(this);
+    ui.setupUi(this);
 
-	connect(ui.licenseButton, SIGNAL(clicked(bool)), this, SLOT(licenseButton_clicked(bool)));
+    connect(ui.licenseButton, SIGNAL(clicked(bool)), this, SLOT(licenseButton_clicked(bool)));
 
-	char subversion[128]={0};
+    char subversion[128]={0};
+    const char *compiler="";
+#ifdef WIN32
+        #ifdef _MSC_VER
+            compiler="-VC++";
+        #else
+            compiler="-Gcc";
+        #endif
+#endif
 #if defined(ADM_SUBVERSION)
-        sprintf(subversion,"%s <br><small>(%s-fflibs %s)</small>", ADM_VERSION, ADM_SUBVERSION, ADM_FFMPEG_VERSION);
+        sprintf(subversion,"%s <br><small>(%s-fflibs %s%s)</small>", ADM_VERSION, ADM_SUBVERSION, ADM_FFMPEG_VERSION,compiler);
 #else
         sprintf(subversion,"%s - Release",ADM_VERSION);
 #endif
         QString  sv(subversion);
-        ui.versionLabel->setTextFormat(Qt::RichText);
-	ui.versionLabel->setText(ui.versionLabel->text() + sv);
+    ui.versionLabel->setTextFormat(Qt::RichText);
+    ui.versionLabel->setText(ui.versionLabel->text() + sv);
 }
 
 void Ui_aboutWindow::licenseButton_clicked(bool)
 {
-	DIA_license();
+    DIA_license();
 }
 
 uint8_t DIA_about(void)
 {
-	Ui_aboutWindow dialog(qtLastRegisteredDialog());
-	qtRegisterDialog(&dialog);
+    Ui_aboutWindow dialog(qtLastRegisteredDialog());
+    qtRegisterDialog(&dialog);
 
-	dialog.exec();
+    dialog.exec();
 
-	qtUnregisterDialog(&dialog);
+    qtUnregisterDialog(&dialog);
 
-	return 1;
+    return 1;
 }
