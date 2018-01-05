@@ -42,13 +42,16 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 	EditorCache   *cache =vid->_videoCache;
 	ADM_assert(cache);
     bool found=false;
-    ADMImage *image=cache->getByPts(timeToSeek);
-    if(image)
+    if(timeToSeek>vid->firstFramePts)
     {
-        vid->lastReadPts=timeToSeek;
-        ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
-        endOfStream=false;
-        return true;
+        ADMImage *image=cache->getByPts(timeToSeek);
+        if(image)
+        {
+            vid->lastReadPts=timeToSeek;
+            ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
+            endOfStream=false;
+            return true;
+        }
     }
    // Search the previous keyframe for segment....
     uint64_t seekTime;
