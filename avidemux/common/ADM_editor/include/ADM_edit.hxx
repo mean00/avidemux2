@@ -150,6 +150,7 @@ protected:
                     int64_t     _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
                                                     // Warning, it is actually the DTS of the NEXT frame to fetch
                     uint8_t     compBuffer[MAXIMUM_SIZE * MAXIMUM_SIZE * 3]; // Buffer used for decoding
+                    bool        endOfStream; // The decoder has been flushed and no more compressed images from demuxer
 //****************************** Audio **********************************
                     // _audiooffset points to the offset / the total segment
                     // not the used part !

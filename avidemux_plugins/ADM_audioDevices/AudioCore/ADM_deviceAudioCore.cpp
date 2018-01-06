@@ -80,12 +80,13 @@ coreAudioDevice::~coreAudioDevice()
 */
 bool coreAudioDevice::localStop(void) 
 {
-	if (_inUse)
-		verify_noerr(AudioOutputUnitStop(theOutputUnit));
-
-	// Clean up
-    verify_noerr(AudioUnitUninitialize(theOutputUnit));
-    verify_noerr(AudioComponentInstanceDispose(theOutputUnit));
+    if (_inUse)
+    {
+        verify_noerr(AudioOutputUnitStop(theOutputUnit));
+        // Clean up
+        verify_noerr(AudioUnitUninitialize(theOutputUnit));
+        verify_noerr(AudioComponentInstanceDispose(theOutputUnit));
+    }
 	_inUse=0;
         ADM_usleep(10*1000);
 	return 1;
