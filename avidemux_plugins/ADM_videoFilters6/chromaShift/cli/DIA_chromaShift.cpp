@@ -21,7 +21,7 @@
 #include "../chromashift.h"
 #include "DIA_factory.h"
 
-uint8_t DIA_getChromaShift( ADM_coreVideoFilter *instream,chromashift    *param )
+bool DIA_getChromaShift( ADM_coreVideoFilter *instream,chromashift    *param )
 {
         return true;
 }

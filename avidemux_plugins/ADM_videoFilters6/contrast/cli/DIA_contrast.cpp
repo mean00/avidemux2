@@ -19,7 +19,7 @@
 #include "DIA_factory.h"
 class ADM_coreVideoFilter;
 
-uint8_t DIA_getContrast( ADM_coreVideoFilter *instream,contrast    *param )
+bool DIA_getContrast( ADM_coreVideoFilter *instream,contrast    *param )
 {
     return true;
 }
