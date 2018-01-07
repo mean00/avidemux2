@@ -451,6 +451,7 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
     cache->flush();
     vid->decoder->flush();
     vid->decoder->setEndOfStream(false);
+    endOfStream=false;
     // The PTS associated with our frame is the one we are looking for
     uint64_t wantedPts=demuxer->estimatePts(frame);
     uint32_t tries=15+7; // Max Ref frames for H264 + MaxRecovery , let's say 7 is ok for recovery
