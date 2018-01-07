@@ -42,7 +42,7 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
 	EditorCache   *cache =vid->_videoCache;
 	ADM_assert(cache);
     bool found=false;
-    if(timeToSeek>vid->firstFramePts)
+    if(timeToSeek>vid->firstFramePts && !dontdecode)
     {
         ADMImage *image=cache->getByPts(timeToSeek);
         if(image)

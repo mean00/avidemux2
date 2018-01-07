@@ -70,8 +70,8 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
         // After a seg switch we are at the keyframe before or equal to where we want to go
         // if the dts do not match, it means we went back too much
         // When re-encoding, it's not a problem, it is when copying.
-        ADM_info("seg:%d refDTS=%" PRIu64"\n",seg->_reference,seg->_refStartDts);
-        ADM_info("seg:%d imgDTS=%" PRIu64"\n",seg->_reference,img.demuxerDts);
+        ADM_info("seg %d: ref %d, refDTS=%" PRIu64"\n",i,seg->_reference,seg->_refStartDts);
+        ADM_info("seg %d: ref %d, imgDTS=%" PRIu64"\n",i,seg->_reference,img.demuxerDts);
         if(!seg->_refStartDts && !seg->_reference)
         {
             ADM_info("Ignoring first seg (unreliable DTS)\n");
@@ -80,7 +80,7 @@ bool ADM_Composer::checkCutsAreOnIntra(void)
         if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && 
             img.demuxerDts!=seg->_refStartDts)
         {
-            ADM_warning("Segment %d does not start on a known DTS (%s)\n",i,ADM_us2plain(img.demuxerPts));
+            ADM_warning("Segment %d does not start on a known DTS (%s)\n",i,ADM_us2plain(img.demuxerDts));
             ADM_warning("expected (%s)\n",ADM_us2plain(seg->_refStartDts));
             fail=true;
             break;
@@ -132,7 +132,7 @@ bool ADM_Composer::checkCutIsOnIntra(uint64_t time)
             ADM_info("Ignoring first seg (unreliable DTS)\n");
         }else if(img.demuxerDts!=ADM_NO_PTS && seg->_refStartDts!=ADM_NO_PTS && img.demuxerDts!=seg->_refStartDts)
         {
-            ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,img.demuxerPts,ADM_us2plain(img.demuxerPts));
+            ADM_warning("Segment %d does not start on a known DTS (%" PRIu64" us = %s)\n",segNo,img.demuxerDts,ADM_us2plain(img.demuxerDts));
             ADM_warning("expected: %" PRIu64" us = %s\n",seg->_refStartDts,ADM_us2plain(seg->_refStartDts));
             fail=true;
         }
