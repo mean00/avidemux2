@@ -40,7 +40,7 @@ RequestExecutionLevel user
 !define COMPANY "Free Software Foundation"
 !define URL "http://www.avidemux.org"
 
-OutFile "${EXEDIR}/avidemux_${CORE_VERSION}.${POINT_RELEASE}_r${REVISION}_win${BUILD_BITS}.exe"
+OutFile "${BINARY_FOLDER}/avidemux_${CORE_VERSION}.${POINT_RELEASE}_r${REVISION}_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME}"
 
 ##########################
@@ -52,7 +52,7 @@ Name "${PRODUCT_FULLNAME}"
 ##########################
 # MUI defines
 ##########################
-!define MUI_ICON "${NSIDIR}/../common/xpm/adm.ico"
+!define MUI_ICON "${SOURCE_FOLDER}/avidemux/common/xpm/adm.ico"
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_BITMAP "${NSIDIR}/PageHeader.bmp"
@@ -63,7 +63,7 @@ Name "${PRODUCT_FULLNAME}"
 !define MUI_STARTMENUPAGE_NODISABLE
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
-!define MUI_UNICON "${NSIDIR}/../common/xpm/adm.ico"
+!define MUI_UNICON "${SOURCE_FOLDER}/avidemux/common/xpm/adm.ico"
 !define MUI_COMPONENTSPAGE_NODESC
 
 ##########################
@@ -270,70 +270,70 @@ Section  "User interfaces" SecGrpUI
         SectionIn  1 2 RO
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/avidemux_cli.exe
-        ${File} ${ROOT_FOLDER}/avidemux.exe
-        ${File} ${ROOT_FOLDER}/avidemux_jobs.exe
+        ${File} ${BINARY_FOLDER}/avidemux_cli.exe
+        ${File} ${BINARY_FOLDER}/avidemux.exe
+        ${File} ${BINARY_FOLDER}/avidemux_jobs.exe
         SetOutPath $INSTDIR\qt5\i18n
-        ${File} ${ROOT_FOLDER}/qt5/i18n/*.qm
+        ${File} ${BINARY_FOLDER}/qt5/i18n/*.qm
 SectionEnd
 # !!
 Section "Plugins" SecGrpPlugins
         SectionIn 1 2 RO
         SetOverwrite on
         SetOutPath $INSTDIR\plugins\audioDevices
-        ${File} ${ROOT_FOLDER}/plugins/audioDevices/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/audioDevices/*.dll
         SetOutPath $INSTDIR\plugins\audioDecoder
-        ${File} ${ROOT_FOLDER}/plugins/audioDecoder/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/audioDecoder/*.dll
         SetOutPath $INSTDIR\plugins\audioEncoders
-        ${File} ${ROOT_FOLDER}/plugins/audioEncoders/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/audioEncoders/*.dll
         SetOutPath $INSTDIR\plugins\demuxers
-        ${File} ${ROOT_FOLDER}/plugins/demuxers/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/demuxers/*.dll
         SetOutPath $INSTDIR\plugins\muxers
-        ${File} ${ROOT_FOLDER}/plugins/muxers/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/muxers/*.dll
         SetOutPath $INSTDIR\plugins\scriptEngines
-        ${File} ${ROOT_FOLDER}/plugins/scriptEngines/libADM_script_tinyPy.dll
+        ${File} ${BINARY_FOLDER}/plugins/scriptEngines/libADM_script_tinyPy.dll
         SetOutPath $INSTDIR\plugins\autoScripts
-        ${Folder} ${ROOT_FOLDER}/plugins/autoScripts
+        ${Folder} ${BINARY_FOLDER}/plugins/autoScripts
         SetOutPath $INSTDIR\plugins\videoEncoders
-        ${File} ${ROOT_FOLDER}/plugins/videoEncoders/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/videoEncoders/*.dll
         SetOutPath $INSTDIR\plugins\videoEncoders\qt5
-        ${File} ${ROOT_FOLDER}/plugins/videoEncoders/qt5/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/videoEncoders/qt5/*.dll
         #SetOutPath $INSTDIR\plugins\videoEncoders\cli
-        #${File} ${ROOT_FOLDER}/plugins/videoEncoders/cli/*.dll
+        #${File} ${BINARY_FOLDER}/plugins/videoEncoders/cli/*.dll
         SetOutPath $INSTDIR\plugins\videoFilters
-        ${File} ${ROOT_FOLDER}/plugins/videoFilters/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/videoFilters/*.dll
         SetOutPath $INSTDIR\plugins\videoFilters\qt5
-        ${File} ${ROOT_FOLDER}/plugins/videoFilters/qt5/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/videoFilters/qt5/*.dll
         SetOutPath $INSTDIR\plugins\videoFilters\cli
-        ${File} ${ROOT_FOLDER}/plugins/videoFilters/cli/*.dll
+        ${File} ${BINARY_FOLDER}/plugins/videoFilters/cli/*.dll
         # Fonts
         SetOutPath $INSTDIR\etc\fonts
-        ${Folder} ${ROOT_FOLDER}/etc/fonts
+        ${Folder} ${BINARY_FOLDER}/etc/fonts
 SectionEnd
 Section "PluginsSettings" SecGrpPluginsSettings
         SectionIn 1 2 RO
         SetOverwrite on
         SetOutPath $INSTDIR\plugins\pluginSettings\x264\3
-        ${File} ${ROOT_FOLDER}/plugins/pluginSettings/x264/3/*.json
+        ${File} ${BINARY_FOLDER}/plugins/pluginSettings/x264/3/*.json
         #SetOutPath $INSTDIR\plugins\pluginSettings\x264\3
-        #${File} ${ROOT_FOLDER}/plugins/pluginSettings/x264/3/*.json
+        #${File} ${BINARY_FOLDER}/plugins/pluginSettings/x264/3/*.json
 SectionEnd
 # !!
 Section "Avisynth_VapourSynth" SecGrpAvisynth
         SectionIn 2
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/avsproxy.exe
-        ${File} ${ROOT_FOLDER}/avsproxy_gui.exe
-        # TMP ${File} ${ROOT_FOLDER}/vsProxy.exe
-        # TMP ${File} ${ROOT_FOLDER}/vsProxy_gui_qt5.exe
+        ${File} ${BINARY_FOLDER}/avsproxy.exe
+        ${File} ${BINARY_FOLDER}/avsproxy_gui.exe
+        # TMP ${File} ${BINARY_FOLDER}/vsProxy.exe
+        # TMP ${File} ${BINARY_FOLDER}/vsProxy_gui_qt5.exe
 SectionEnd
 #
 Section "ShaderDemo" SecShaderDemo
         SectionIn  1 2 RO
         SetOutPath $INSTDIR\shaderDemo
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/plugins/shaderDemo/1/*.shader # FIXME
+        ${File} ${BINARY_FOLDER}/plugins/shaderDemo/1/*.shader # FIXME
 SectionEnd
 #
 #
@@ -341,7 +341,7 @@ Section "Support libs" SecGrpSupport
         SectionIn  1 2 RO
         SetOutPath $INSTDIR
         SetOverwrite on
-        ${File} ${ROOT_FOLDER}/*.dll
+        ${File} ${BINARY_FOLDER}/*.dll
 SectionEnd
 #
 Section "SDK (to write plugins)" SecGrpDev
