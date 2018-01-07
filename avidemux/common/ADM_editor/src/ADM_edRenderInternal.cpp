@@ -47,10 +47,26 @@ bool ADM_Composer::seektoTime(uint32_t ref,uint64_t timeToSeek,bool dontdecode)
         ADMImage *image=cache->getByPts(timeToSeek);
         if(image)
         {
+            bool match=false;
             vid->lastReadPts=timeToSeek;
-            ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
-            endOfStream=false;
-            return true;
+            int nb=demuxer->getMainHeader()->dwTotalFrames;
+            for(int i=0;i<nb;i++)
+            {
+                uint64_t pts,dts;
+                demuxer->getPtsDts(i,&pts,&dts);
+                if(pts==timeToSeek)
+                {
+                    vid->lastSentFrame=i;
+                    match=true;
+                    break;
+                }
+            }
+            if(match)
+            {
+                ADM_info("Image found in cache, pts=%" PRIu64" ms\n",timeToSeek/1000);
+                endOfStream=false;
+                return true;
+            }
         }
     }
    // Search the previous keyframe for segment....
