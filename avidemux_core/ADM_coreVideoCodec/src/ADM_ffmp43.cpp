@@ -264,6 +264,9 @@ uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
                 if (pic->key_frame)
                         aprintf ("\n But keyframe is set\n");
                 break;
+        case AV_PICTURE_TYPE_NONE:
+                if(codecId == AV_CODEC_ID_HUFFYUV || codecId == AV_CODEC_ID_FFVHUFF)
+                    SET(AVI_KEY_FRAME)
         default:
                 break;
     }
