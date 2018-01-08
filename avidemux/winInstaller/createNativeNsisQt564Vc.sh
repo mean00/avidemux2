@@ -2,8 +2,8 @@
 set -x
 export REV="0"
 export NSIS="/c/Program Files (x86)/NSIS/makensis.exe"
-export TOP_FOLDER="/z/vs/"
-export INSTALLER_FOLDER="/z/vs/avidemux/winInstaller"
+export TOP_FOLDER="$1"
+export INSTALLER_FOLDER="${TOP_FOLDER}/avidemux/winInstaller"
 # SetCompressor /SOLID lzma
 mkdir -p install
 rm -f install/*
@@ -22,5 +22,5 @@ rm -f install/*
 #touch "Build Info.txt"
 #touch "ChangeLog.html"
 #touch "change.css"
-"${NSIS}"  -DAPI_VERSION=2.7   -DNSIDIR=${INSTALLER_FOLDER} -DSOURCE_FOLDER=${TOP_FOLDER}  -DDEV_FOLDER="/z/runVs_dev" -DBINARY_DIR="/z/runVs" ${INSTALLER_FOLDER}/avidemux_nativeVcQt5.nsi -V4
+"${NSIS}"  -DAPI_VERSION=2.7   -DNSIDIR=${INSTALLER_FOLDER} -DSOURCE_FOLDER=${TOP_FOLDER}  -DDEV_FOLDER="" -DBINARY_FOLDER="$2" ${INSTALLER_FOLDER}/avidemux_nativeVcQt5.nsi -V4
 echo "Done"
