@@ -390,7 +390,7 @@ bool         ADM_EditorSegment::updateStartTime(void)
         {
             uint64_t pts2,dts2;
             demuxer->getPtsDts(0,&pts2,&dts2);
-            if(pts2!=ADM_NO_PTS)
+            if(pts2 && pts2!=ADM_NO_PTS)
             {
                 ADM_info("Using pts2=%s to get dts, as this video does not start at zero\n",ADM_us2plain(pts2));
                 pts=pts2;
