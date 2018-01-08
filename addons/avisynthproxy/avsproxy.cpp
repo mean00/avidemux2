@@ -6,8 +6,6 @@
 // (at your option) any later version.
 
 
-#define __int64_t long long int
-#define uint64_t long long unsigned int
 
 #include "internal.h"
 #include "sket.h"
@@ -49,7 +47,7 @@ int __cdecl main(int argc, const char* argv[])
 	char *audioBuffer=new char[48000*6*2];
 	char *audioBufferData=audioBuffer+sizeof(avsAudioFrame);
 
-	printf("AvsSocket Proxy, derivated from avs2yuv by  Loren Merritt "MY_VERSION" \n");
+	printf("AvsSocket Proxy, derivated from avs2yuv by  Loren Merritt " MY_VERSION" \n");
 	fflush(stdout);
 	
 	uint32_t port = DEFAULT_PORT_TO_USE;
@@ -80,7 +78,7 @@ int __cdecl main(int argc, const char* argv[])
 		}
 		else
 		{
-			infile="toto.avs";
+            infile = NULL;
 		}
 	if(!infile) {
 		fprintf(stderr, MY_VERSION "\n"
