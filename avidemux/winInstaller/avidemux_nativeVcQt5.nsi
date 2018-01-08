@@ -58,7 +58,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\ADM_coreAudioFilterAPI6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreDemuxer6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreDemuxerMpeg6.dll
-    ${File} ${BINARY_FOLDER}\ADM_coreDxva26.dll
+    #${File} ${BINARY_FOLDER}\ADM_coreDxva26.dll
     ${File} ${BINARY_FOLDER}\ADM_coreImage6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreImageLoader6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreJobs.dll
@@ -72,12 +72,12 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\ADM_coreVideoCodec6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreVideoEncoder6.dll
     ${File} ${BINARY_FOLDER}\ADM_coreVideoFilter6.dll
-    ${File} ${BINARY_FOLDER}\ADM_openGLQT56.dll
-    ${File} ${BINARY_FOLDER}\ADM_render6_cli.dll
-    ${File} ${BINARY_FOLDER}\ADM_render6_QT5.dll
-    ${File} ${BINARY_FOLDER}\ADM_UI_Cli6.dll
-    ${File} ${BINARY_FOLDER}\ADM_UIQT56.dll
-    ${File} ${BINARY_FOLDER}\libADM_coreDxva26.dll
+    ${File} ${BINARY_FOLDER}\*ADM_openGLQT56.dll
+    ${File} ${BINARY_FOLDER}\*ADM_render6_cli.dll
+    ${File} ${BINARY_FOLDER}\*ADM_render6_QT5.dll
+    ${File} ${BINARY_FOLDER}\*ADM_UI_Cli6.dll
+    ${File} ${BINARY_FOLDER}\*ADM_UIQT56.dll
+    ${File} ${BINARY_FOLDER}\*ADM_coreDxva26.dll
     ${File} ${BINARY_FOLDER}\libADM_openGLQT56.dll
     ${File} ${BINARY_FOLDER}\libADM_render6_cli.dll
     ${File} ${BINARY_FOLDER}\libADM_render6_QT5.dll
