@@ -8,8 +8,12 @@ export INSTALLER_FOLDER="${TOP_FOLDER}/avidemux/winInstaller"
 mkdir -p install
 rm -f install/*
 # Except 
+export tmp="/tmp/tmp.$$"
+export tmp2="/tmp/tmp2.$$"
 cat ${INSTALLER_FOLDER}/avidemux_crossQt5.nsi  
-cat ${INSTALLER_FOLDER}/avidemux_crossQt5.nsi  | sed 's/\//\\/g'  | sed 's/\\SOLID/\/SOLID/g' | sed 's/dll\.a/lib/g' > ${INSTALLER_FOLDER}/avidemux_nativeQt5Common.nsi
+cat ${INSTALLER_FOLDER}/avidemux_crossQt5.nsi  | sed 's/\//\\/g'  | sed 's/\\SOLID/\/SOLID/g' | sed 's/dll\.a/lib/g' > $tmp
+cat $tmp | sed 's/^.*autoScripts.*$//g' | sed 's/^.*etc.fonts.*$//g' > $tmp2
+cat $tmp2 | sed 's/^.*avsproxy.exe.*$//g' | sed 's/^.*vs[pP]roxy.*.exe.*$//g' > ${INSTALLER_FOLDER}/avidemux_nativeQt5Common.nsi
 #cp  ${INSTALLER_FOLDER}/avidemux_nativeVcQt5.nsi avidemux_nativeVcQt5r.nsi 
 cp  ${INSTALLER_FOLDER}/avidemux_nativeQt5Tail.nsi .
 #cp  ${INSTALLER_FOLDER}/*.nsh .
