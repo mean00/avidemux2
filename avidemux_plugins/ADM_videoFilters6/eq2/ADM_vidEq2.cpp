@@ -78,13 +78,14 @@ bool  ADMVideoEq2::configure()
 /**
     \fn getConfiguration
 */
-const char   *ADMVideoEq2::getConfiguration(void)   
+const char   *ADMVideoEq2::getConfiguration(void)
 {
     static char s[256];
-    snprintf(s,255," Eq2 :Cont:%1.2f Brigh:%1.2f Sat:%1.2f",
-                _param.contrast,_param.brightness,_param.saturation);
+    snprintf(s,255,"Eq2: Contrast: %1.2f; Brightness: %1.2f; Saturation: %1.2f; Gamma: %1.2f; Gamma Weight: %1.2f; Red: %1.2f; Green: %1.2f; Blue: %1.2f",
+            _param.contrast,_param.brightness,_param.saturation,
+            _param.gamma,_param.gamma_weight,
+            _param.rgamma,_param.ggamma,_param.bgamma);
     return s;
-        
 }
 /**
     \fn ctor
