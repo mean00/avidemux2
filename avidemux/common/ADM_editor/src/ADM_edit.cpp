@@ -521,6 +521,7 @@ uint8_t ADM_Composer::cleanup (void)
   
   _segments.deleteAll();
   _currentPts = 0;
+  _currentSegment = 0;
   markerAPts = 0;
   markerBPts = 0;
   audioTrackPool.clear();
