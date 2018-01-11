@@ -78,8 +78,8 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
                     for(j = 0; j < _w; j++) // 32 32 32 32
                     {
                             ptr[0] = buf[1]; // remove alpha channel + reorder. IT would be more efficient to do it in colorspace...
-                            ptr[1] = buf[0];
-                            ptr[2] = buf[2];
+                            ptr[1] = buf[2];
+                            ptr[2] = buf[3];
                             ptr += 3;
                             buf += 4;
                     }
