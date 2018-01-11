@@ -509,7 +509,6 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
     {
         // We need to do some colorspace conversion
         // Is there already one ?
-        printf("need colorspace conversion, colorspace=%d\n",(int)src->_colorspace);
         if(!vid->color)
         {
             vid->color=new ADMColorScalerSimple(src->_width,src->_height,src->_colorspace,ADM_COLOR_YV12);
