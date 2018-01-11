@@ -92,6 +92,7 @@ static AVPixelFormat ADMColor2LAVColor(ADM_colorspace fromColor_)
     case ADM_COLOR_YV12: return AV_PIX_FMT_YUV420P;
     case ADM_COLOR_YUV422P: return AV_PIX_FMT_YUV422P;
     case ADM_COLOR_RGB555: return AV_PIX_FMT_RGB555LE;
+    case ADM_COLOR_BGR555: return AV_PIX_FMT_BGR555LE;
     case ADM_COLOR_RGB32A: return AV_PIX_FMT_RGBA;
     case ADM_COLOR_BGR32A: return AV_PIX_FMT_RGBA; // Faster that way...AV_PIX_FMT_BGR32;
     case ADM_COLOR_RGB24: return AV_PIX_FMT_RGB24;
