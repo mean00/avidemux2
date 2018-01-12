@@ -20,7 +20,6 @@
 class ADM_audioStream;
 class ADM_Audiocodec;
 class decoders;
-class COL_Generic2YV12;
 class EditorCache;
 #include "ADM_Video.h"
 /**
