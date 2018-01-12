@@ -24,14 +24,14 @@ RequestExecutionLevel user
 !define EXEDIR "${NSIDIR}/install"
 
 !define PRODUCT_VERSION "${CORE_VERSION}.${POINT_RELEASE}.${SVN_VERSION}"
-!define PRODUCT_NAME "Avidemux ${CORE_VERSION} - ${BUILD_BITS} bits"
-!define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bit Release)"
+!define PRODUCT_NAME "Avidemux ${CORE_VERSION} - ${BUILD_BITS} bits${EXTRA}"
+!define PRODUCT_FULLNAME "Avidemux ${PRODUCT_VERSION} (${BUILD_BITS}-bits${EXTRA} Release)"
 
 !if ${BUILD_BITS} == 64
     !define SHORTCUT_NAME "${PRODUCT_NAME}"
-    !define REG_GROUPNAME "${PRODUCT_NAME} (${BUILD_BITS}-bit)"
+    !define REG_GROUPNAME "${PRODUCT_NAME} (${BUILD_BITS}-bit${EXTRA})"
 !else
-    !define SHORTCUT_NAME "${PRODUCT_NAME} (${BUILD_BITS}-bit)"
+    !define SHORTCUT_NAME "${PRODUCT_NAME} (${BUILD_BITS}-bit${EXTRA})"
     !define REG_GROUPNAME "${PRODUCT_NAME}"
 !endif
 
@@ -40,7 +40,7 @@ RequestExecutionLevel user
 !define COMPANY "Free Software Foundation"
 !define URL "http://www.avidemux.org"
 
-OutFile "${BINARY_FOLDER}/avidemux_${CORE_VERSION}.${POINT_RELEASE}_r${REVISION}_win${BUILD_BITS}.exe"
+OutFile "${BINARY_FOLDER}/avidemux_${CORE_VERSION}.${POINT_RELEASE}${EXTRA}r${REVISION}_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME}"
 
 ##########################
@@ -59,7 +59,7 @@ Name "${PRODUCT_FULLNAME}"
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
 !define MUI_STARTMENUPAGE_REGISTRY_KEY "${REGKEY}"
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Avidemux (${BUILD_BITS} bits)"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "Avidemux (${BUILD_BITS} bits${EXTRA})"
 !define MUI_STARTMENUPAGE_NODISABLE
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "${NSIDIR}/WelcomeFinishStrip.bmp"
