@@ -40,7 +40,7 @@ RequestExecutionLevel user
 !define COMPANY "Free Software Foundation"
 !define URL "http://www.avidemux.org"
 
-OutFile "${BINARY_FOLDER}/avidemux_${CORE_VERSION}.${POINT_RELEASE}${EXTRA}r${REVISION}_win${BUILD_BITS}.exe"
+OutFile "${BINARY_FOLDER}/avidemux_${CORE_VERSION}.${POINT_RELEASE}${EXTRA} r${REVISION}_win${BUILD_BITS}.exe"
 Name "${PRODUCT_FULLNAME}"
 
 ##########################
