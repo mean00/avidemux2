@@ -13,5 +13,5 @@ export TOP_FOLDER="$t/../../"
 echo "Revision : $REV"
 echo "Version  : $Bits"
 echo "Creating NSIS Package"
-makensis -DBINARY_FOLDER=/mingw/avidemux_${BITS} -DDEV_FOLDER=/mingw_dev/mingw/Release -DSOURCE_FOLDER=$TOP_FOLDER -DAPI_VERSION=2.7 -DNSIDIR=$PWD avidemux_cross${BITS}Qt5.nsi
+makensis -DEXTRA="" -DBINARY_FOLDER=/mingw/avidemux_${BITS} -DDEV_FOLDER=/mingw_dev/mingw/Release -DSOURCE_FOLDER=$TOP_FOLDER -DAPI_VERSION=2.7 -DNSIDIR=$PWD avidemux_cross${BITS}Qt5.nsi
 echo "Done"
