@@ -16,7 +16,7 @@
 /*
    	The maximum width/height is MAXIMUM_SIZE 768*768 for now
 */
-#define MAXIMUM_SIZE 2048
+#define MAXIMUM_SIZE 3840
 
 typedef unsigned char ADM_filename;
 
