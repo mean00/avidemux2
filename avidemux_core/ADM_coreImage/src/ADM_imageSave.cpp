@@ -79,8 +79,23 @@ bool  ADMImage::saveAsBmpInternal(const char *filename)
 //            ADM_dealloc(out);
             return 0;
         }
-        ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12,ADM_COLOR_RGB24);
-        converter.convertImage(this,out);
+
+        // swap U & V planes first
+        int xss[3], xds[3];
+        uint8_t *xsp[3], *xdp[3];
+        xss[0] = this->GetPitch(PLANAR_Y);
+        xss[1] = this->GetPitch(PLANAR_V);
+        xss[2] = this->GetPitch(PLANAR_U);
+        xsp[0] = this->GetReadPtr(PLANAR_Y);
+        xsp[1] = this->GetReadPtr(PLANAR_V);
+        xsp[2] = this->GetReadPtr(PLANAR_U);
+        xds[0] = bmph.biWidth*3;
+        xds[1] = xds[2] = 0;
+        xdp[0] = out;
+        xdp[1] = xdp[2] = NULL;
+
+        ADMColorScalerSimple converter(bmph.biWidth, bmph.biHeight, ADM_COLOR_YV12, ADM_COLOR_BGR24);
+        converter.convertPlanes(xss,xds,xsp,xdp);
         uint32_t ww=bmph.biWidth;
         uint32_t hh=bmph.biHeight;
         uint8_t *swap = new uint8_t[ww*3];
