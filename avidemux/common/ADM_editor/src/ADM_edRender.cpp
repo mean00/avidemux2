@@ -524,7 +524,7 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
         // The src image has U & V already swapped, so that YUV420P output by sws_scale
         // has swapped colors, meaning correct colors when interpreted as YV12.
         // If all the data is in Y we have to swap planes here.
-        if(src->_colorspace==ADM_COLOR_RGB32A)
+        if(src->_colorspace==ADM_COLOR_RGB32A || src->_colorspace==ADM_COLOR_BGR24 || src->_colorspace==ADM_COLOR_RGB555)
             needToSwapUV=true;
 
         src->GetPitches(srcStrides);

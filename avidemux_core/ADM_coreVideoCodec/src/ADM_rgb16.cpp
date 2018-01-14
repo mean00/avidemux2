@@ -53,11 +53,11 @@ bool decoderRGB16::uncompress(ADMCompressedImage * in, ADMImage * out)
         {
                 case 16:
                         // FIXME - 16-bit could use a BGR555 or BGR565 colour mask
-                        colorspace = ADM_COLOR_BGR555;
+                        colorspace = ADM_COLOR_RGB555;
                         break;
                 case 24:
                 case 32:
-                        colorspace = ADM_COLOR_RGB24;
+                        colorspace = ADM_COLOR_BGR24;
                         break;
                 default:
                         printf("bpp %d not supported\n", _bpp);
