@@ -19,6 +19,7 @@ using std::string;
 #include "ADM_videoCopy.h"
 #include "ADM_edit.hxx"
 #include "ADM_coreUtils.h"
+#include "ADM_vidMisc.h"
 #include "prefs.h"
 extern ADM_Composer *video_body; // Fixme!
 
@@ -36,7 +37,8 @@ ADM_videoStreamCopy::ADM_videoStreamCopy(uint64_t startTime,uint64_t endTime)
     aviInfo info;
     uint64_t ptsStart=startTime+1;
     uint64_t dtsStart;
-    ADM_info("Creating copy video stream, start time=%2.2f s\n",(float)startTime/1000000.);
+    ADM_info("Creating copy video stream, start time: %s\n",ADM_us2plain(startTime));
+    ADM_info("End time: %s\n",ADM_us2plain(endTime));
     video_body->getVideoInfo(&info);
     width=info.width;
     height=info.height;
@@ -190,7 +192,7 @@ again:
 uint64_t        ADM_videoStreamCopy::getVideoDuration(void)
 {
     //return video_body->getVideoDuration();
-    return endTimePts-startTimePts;
+    return endTimePts-startTimeDts;
 }
 
 /**
