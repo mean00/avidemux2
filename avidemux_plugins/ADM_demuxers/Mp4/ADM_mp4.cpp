@@ -529,8 +529,9 @@ uint8_t    MP4Header::open(const char *name)
         if(duration2!=ADM_NO_PTS && duration2>duration1)
         {
             ADM_warning("Last PTS is after movie duration, increasing movie duration\n");
-            _movieDuration=(duration2/1000)+1;
+            _movieDuration=(duration2/1000);
         }
+        _movieDuration+=1; // video duration must be > max PTS, otherwise we drop the last frame
         if(nb>1 && !lastFrame)
             lastFrame=nb-1;
         ADM_info("Nb images       : %d\n",nb);
