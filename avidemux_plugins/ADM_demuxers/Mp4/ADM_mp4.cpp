@@ -513,18 +513,30 @@ uint8_t    MP4Header::open(const char *name)
         fseeko(_fd,0,SEEK_SET);
         refineFps();
         uint64_t duration1=_movieDuration*1000LL;
-        uint64_t duration2=_tracks[0].index[nb-1].pts;
-        
+        uint64_t duration2=0;
+        uint32_t lastFrame=0;
+        for(int i=nb-32;i<nb;i++)
+        {
+            if(i<0) continue;
+            if(_tracks[0].index[i].pts==ADM_NO_PTS) continue;
+            if(duration2<_tracks[0].index[i].pts)
+            {
+                duration2=_tracks[0].index[i].pts;
+                lastFrame=i;
+            }
+        }
         ADM_info("3gp/mov file successfully read..\n");
         if(duration2!=ADM_NO_PTS && duration2>duration1)
         {
             ADM_warning("Last PTS is after movie duration, increasing movie duration\n");
-            _movieDuration=(_tracks[0].index[nb-1].pts/1000)+1;
+            _movieDuration=(duration2/1000)+1;
         }
-        ADM_info("Nb images      : %d\n",nb);
-        ADM_info("Movie duration : %s\n",ADM_us2plain(_movieDuration*1000LL));
-        ADM_info("Last video PTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].pts));
-        ADM_info("Last video DTS : %s\n",ADM_us2plain(_tracks[0].index[nb-1].dts));
+        if(nb>1 && !lastFrame)
+            lastFrame=nb-1;
+        ADM_info("Nb images       : %d\n",nb);
+        ADM_info("Movie duration  : %s\n",ADM_us2plain(_movieDuration*1000LL));
+        ADM_info("Last video PTS  : %s\n",ADM_us2plain(_tracks[0].index[lastFrame].pts));
+        ADM_info("Last video DTS  : %s\n",ADM_us2plain(_tracks[0].index[nb-1].dts));
 
         checkDuplicatedPts();
         
