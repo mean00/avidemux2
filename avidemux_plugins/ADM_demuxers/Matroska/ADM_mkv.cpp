@@ -180,24 +180,22 @@ uint8_t mkvHeader::open(const char *name)
     for(int i=0;i<1+_nbAudioTrack;i++)
         ADM_info("Track %" PRIu32" has an index size of %d entries\n",i,_tracks[i].index.size());
 
+    int last=_tracks[0].index.size();
+    if(isVC1Compatible(_videostream.fccHandler))
+    {
+        mkvTrak *vid=_tracks;
 
-  if(isVC1Compatible(_videostream.fccHandler))
-  {
-      int       nb=_tracks[0].index.size();
-      mkvTrak   *vid=_tracks;
-
-      ADM_warning("Deleting  timestamps. For VC1, they are often wrong\n");
-      for(int i=1;i<nb-1;i++)
-          vid->index[i].Pts=ADM_NO_PTS;
-  }
+        ADM_warning("Deleting timestamps. For VC1, they are often wrong\n");
+        for(int i=1;i<last-1;i++)
+            vid->index[i].Pts=ADM_NO_PTS;
+    }
   // Delay frames + recompute frame duration
 // now that we have a good frameduration and max pts dts difference, we can set a proper DTS for all video frame
     uint32_t ptsdtsdelta, mindelta;
-    bool hasBframe;
-  ComputeDeltaAndCheckBFrames(&mindelta, &ptsdtsdelta,&hasBframe);
+    bool hasBframe=false;
+    if(last>1)
+        ComputeDeltaAndCheckBFrames(&mindelta, &ptsdtsdelta, &hasBframe);
 
-
-  int last=_tracks[0].index.size();
   uint64_t increment=_tracks[0]._defaultFrameDuration;
   uint64_t lastDts=0;
   _tracks[0].index[0].Dts=0;
@@ -248,13 +246,17 @@ uint8_t mkvHeader::open(const char *name)
 
   if(last)
   {
-          float duration=_tracks[0].index[last-1].Pts;
-          duration/=1000;
-          uint32_t duration32=(uint32_t)duration;
-          printf("[MKV] Video Track duration for %u ms\n",duration32);
-          // Useless.....
-
-
+      for(int i=last-32;i<last;i++)
+      {
+          if(i<0) continue;
+          if(_tracks[0].index[i].Pts==ADM_NO_PTS) continue;
+          if(_tracks[0].duration<_tracks[0].index[i].Pts)
+              _tracks[0].duration=_tracks[0].index[i].Pts;
+      }
+      _tracks[0].duration+=increment;
+      uint32_t duration32=(uint32_t)((_tracks[0].duration+500)/1000);
+      printf("[MKV] Video track duration: %s (%u ms)\n",ADM_us2plain(_tracks[0].duration),duration32);
+      // Useless.....
 
           for(int i=0;i<_nbAudioTrack;i++)
           {
@@ -907,7 +909,7 @@ uint64_t mkvHeader::getVideoDuration(void)
 {
     uint32_t limit=_tracks[0].index.size();
     if(!limit) return 0;
-    return _tracks[0].index[limit-1].Pts+_tracks[0]._defaultFrameDuration;
+    return _tracks[0].duration;
 }
 
 /**
