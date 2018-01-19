@@ -217,12 +217,14 @@ ADM_byteBuffer   byteBuffer;
         return false;
     }
     // Setup our image & stuff....
-        
+        frame->width=_width;
+        frame->height=_height;
+        frame->format=AV_PIX_FMT_YUV420P;
 
-        frame->linesize[0] = GetPitch(PLANAR_Y); 
-        frame->linesize[1] = GetPitch(PLANAR_U); 
-        frame->linesize[2] = GetPitch(PLANAR_V); 
-        
+        frame->linesize[0] = GetPitch(PLANAR_Y);
+        frame->linesize[2] = GetPitch(PLANAR_U);
+        frame->linesize[1] = GetPitch(PLANAR_V);
+
         frame->data[0] = GetWritePtr(PLANAR_Y);
         frame->data[2] = GetWritePtr(PLANAR_U);
         frame->data[1] = GetWritePtr(PLANAR_V);
@@ -282,8 +284,8 @@ jpgCleanup:
 
 
 /**
-    \fn saveAsBmp
-    \brief save current image into filename, into bmp format
+    \fn saveAsJpg
+    \brief save current image into filename, into JPEG format
 */
 bool  ADMImage::saveAsJpg(const char *filename)
 {
