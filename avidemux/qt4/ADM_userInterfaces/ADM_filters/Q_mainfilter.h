@@ -109,5 +109,6 @@ private:
     void setupFilters(void);
     void updateContextMenu(QMenu *contextMenu);
     bool eventFilter(QObject* watched, QEvent* event);
+    uint64_t originalTime;
 };
 
