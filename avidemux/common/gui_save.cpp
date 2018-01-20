@@ -35,6 +35,7 @@
 #include "DIA_factory.h"
 #include "ADM_coreJobs.h"
 #include "ADM_audioWrite.h"
+#include "ADM_filterChain.h"
 // Local prototypes
 #include "A_functions.h"
 #include "ADM_script2/include/ADM_script.h"
@@ -316,22 +317,40 @@ int A_saveAudioProcessed (const char *name)
         \fn A_saveJpg
         \brief Save a Jpg image from current display buffer
 */
-int A_saveJpg (const char *name)
+bool A_saveJpg (const char *name)
 {
-  uint8_t fl;
-    ADMImage *image=admPreview::getBuffer();
-    if(!image)
+    bool result=true;
+    uint64_t current=video_body->getCurrentFramePts();
+    uint64_t end=video_body->getVideoDuration();
+    ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
+    ADM_videoFilterChain *chain;
+    if(getPreviewMode()==ADM_PREVIEW_NONE)
+        chain=createEmptyVideoFilterChain(current,end);
+    else
+        chain=createVideoFilterChain(current,end);
+    if(chain && chain->size())
     {
-        printf("[SaveJpeg] No image\n");
-        return false;
-
+        ADM_coreVideoFilter *filter;
+        filter=chain->back();
+        FilterInfo *info=filter->getInfo();
+        uint32_t width=info->width;
+        uint32_t height=info->height;
+        ADMImage *image=new ADMImageDefault(width,height);
+        uint32_t fn;
+        if(!filter->getNextFrameAs(hw,&fn,image))
+        {
+            ADM_error("No image\n");
+            result=false;
+        }
+        if(result && !image->saveAsJpg (name))
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Jpeg"),QT_TRANSLATE_NOOP("adm","Failed to save as JPEG"));
+            result=false;
+        }
+        delete image;
+        image=NULL;
     }
-    if(!image->saveAsJpg (name))
-    {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Jpeg"),QT_TRANSLATE_NOOP("adm","Fail to save as jpeg"));
-        return false;
-    }
-    return true ;
+    return result;
 }
 
 
@@ -342,48 +361,82 @@ int A_saveJpg (const char *name)
 */
 int A_saveBunchJpg(const char *name)
 {
-  ADMImage *src=NULL;
-  uint32_t curImg;
-  char	 fullName[2048],*ext;
-  char *baseName;
-  DIA_workingBase *working;
-  uint8_t success=0;
+    int success=0;
+    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t start=video_body->getMarkerAPts();
+    uint64_t end=video_body->getMarkerBPts();
+    uint64_t inc=video_body->getFrameIncrement();
+    uint64_t original=pts;
+    pts=start;
 
-    ADM_error("Broken\n");
-    return 0;
-#if 0
+    admPreview::deferDisplay(true);
+    admPreview::seekToTime(start);
 
-        // Split name into base + extension
-        ADM_PathSplit(name,&baseName,&ext);
+    ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
+    ADM_videoFilterChain *chain;
+    if(getPreviewMode()==ADM_PREVIEW_NONE)
+        chain=createEmptyVideoFilterChain(start,end);
+    else
+        chain=createVideoFilterChain(start,end);
+    if(!chain || chain->empty())
+    {
+        admPreview::seekToTime(original);
+        admPreview::deferDisplay(false);
+        return 0;
+    }
 
-        src=new ADMImageDefault(avifileinfo->width,avifileinfo->height);
-        ADM_assert(src);
+    ADM_coreVideoFilter *filter;
+    filter=chain->back();
+    FilterInfo *info=filter->getInfo();
+    uint32_t width=info->width;
+    uint32_t height=info->height;
+    ADMImage *src=new ADMImageDefault(width,height);
+    uint32_t fn;
 
-        working=createWorking(QT_TRANSLATE_NOOP("adm","Saving as set of jpegs"));
-        for(curImg=frameStart;curImg<=frameEnd;curImg++)
+    char fullName[2048];
+    std::string baseName,ext;
+    uint32_t range=(uint32_t)((end-start)/1000);
+    DIA_workingBase *working;
+
+    // Split name into base + extension
+    ADM_PathSplit(std::string(name),baseName,ext);
+
+    working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
+    while(pts<=end)
+    {
+        uint32_t current=(uint32_t)((pts-start)/1000);
+        working->update(current,range);
+        if(!filter->getNextFrameAs(hw,&fn,src))
         {
-                working->update(curImg-frameStart,frameEnd-frameStart);
-                if (!GUI_getFrameContent (src,curImg ))
-                {
-                  GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
-                        goto _bunch_abort;
-                }
-                if(!working->isAlive()) goto _bunch_abort;
-                sprintf(fullName,"%s%04d.jpg",baseName,curImg-frameStart);
-                if(!src->saveAsJpg(fullName)) goto _bunch_abort;
+            //GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
+            break;
         }
-        success=1;
-
-_bunch_abort:
-        if(success)
-            GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm", "Saved %d images."), curImg-frameStart);
+        if(src->Pts==ADM_NO_PTS)
+            pts+=inc;
         else
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm", "Could not save all images."));
-        delete working	;
-        delete src;
-        return success;
-#endif
+            pts=src->Pts;
+        success++;
+        if(!working->isAlive()) break;
+        sprintf(fullName,"%s-%04d.jpg",baseName.c_str(),success);
+        if(!src->saveAsJpg(fullName)) break;
+        if(success==9999)
+        {
+            GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Warning"),QT_TRANSLATE_NOOP("adm","Maximum number of 9999 images reached, aborting."));
+            break;
+        }
+    }
 
+    if(success)
+        GUI_Info_HIG(ADM_LOG_INFO,QT_TRANSLATE_NOOP("adm","Done"),QT_TRANSLATE_NOOP("adm","Saved %d images."),success);
+    else
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Saving images failed."));
+    delete working;
+    working=NULL;
+    delete src;
+    src=NULL;
+    admPreview::seekToTime(original);
+    admPreview::deferDisplay(false);
+    return success;
 }
 /**
       \fn A_saveImg

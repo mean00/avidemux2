@@ -38,6 +38,7 @@ static const MenuEntry _myMenuFile[] = {
             {MENU_SUBMENU,QT_TRANSLATE_NOOP("adm","Save as Image"),     NULL,ACT_DUMMY    ,NULL,NULL},
             {MENU_SUBACTION,QT_TRANSLATE_NOOP("adm","Save as BMP"),     NULL,ACT_SAVE_BMP ,NULL,"Ctrl+M"},
             {MENU_SUBACTION,QT_TRANSLATE_NOOP("adm","Save as JPEG"),    NULL,ACT_SAVE_JPG ,NULL,"Ctrl+E"},
+            {MENU_SUBACTION,QT_TRANSLATE_NOOP("adm","Save Selection as JPEG"),NULL,ACT_SAVE_BUNCH_OF_JPG,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Close"),              NULL,ACT_CLOSE          ,NULL,                "Ctrl+W"},
             {MENU_SEPARATOR,QT_TRANSLATE_NOOP("adm","-"),               NULL,ACT_DUMMY             ,NULL,NULL},
             {MENU_ACTION,QT_TRANSLATE_NOOP("adm","Information"),        NULL,ACT_VIDEO_PROPERTIES,                 MKICON(info),NULL},
