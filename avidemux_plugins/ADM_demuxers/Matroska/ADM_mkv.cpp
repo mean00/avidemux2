@@ -407,11 +407,12 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
             }
             if(delta<minDelta) minDelta=delta;
             if(delta>maxDelta) maxDelta=delta;
-            //printf("\/=%" PRId64" Min %" PRId64" MAX %" PRId64"\n",delta,minDelta,maxDelta);
+           // ADM_warning("Delta=%d,  MinDelta=%d MaxDelta=%d\n",delta,minDelta,maxDelta);
         }
     }
     if(nbBFrame) *bFramePresent=true;
 
+    ADM_warning(">>> MinDelta=%d MaxDelta=%d\n",minDelta,maxDelta);
     int stdFrameRate=getStdFrameRate(track->_defaultFrameDuration);
 
     int num= _videostream.dwScale;
@@ -450,13 +451,18 @@ bool mkvHeader::ComputeDeltaAndCheckBFrames(uint32_t *minDeltaX, uint32_t *maxDe
         ADM_info("Deviation        = %d\n",deviation);
         ADM_info("DeviationMinDelta = %d\n",deviationMinDelta);
         ADM_info("Deviation skip    = %d\n",minDeltaSkip);
-    
-        if(minDeltaSkip>skipped*3) // we are skipping a lot more frame, fps too high
+        bool skipValid=true;
+        if(track->_defaultFrameDuration)
         {
-            ADM_info("Too many skipped frames, dropping candidates\n");
+            ADM_info("MinDelta=%d, defaultFrameDuation=%d\n",minDelta,track->_defaultFrameDuration);
+            if((minDelta*2)<=track->_defaultFrameDuration)
+                skipValid=false;
+        }
+        if(minDeltaSkip>skipped*3  && skipValid) // we are skipping a lot more frame, fps too high
+        {
+            ADM_info("Too many skipped frames, dropping candidates (skipped=%d, min delta skip=%d)\n",skipped,minDeltaSkip);
             deviationMinDelta=deviation*2;
         }
-                
         if(minDelta)
         {
             bool preferMinDelta=false;
