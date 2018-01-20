@@ -314,42 +314,87 @@ int A_saveAudioProcessed (const char *name)
 }
 
 /**
+
+*/
+static ADMImage *getCurrentFilteredImage(void)
+{
+    uint64_t current=admPreview::getCurrentPts();
+    // resync last sent frame & stuff
+    admPreview::deferDisplay(true);
+    video_body->rewind();
+    admPreview::seekToTime(current);
+    admPreview::deferDisplay(false);
+
+    uint64_t end=video_body->getVideoDuration();
+    ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
+    ADM_videoFilterChain *chain;
+    chain=NULL;
+    ADM_coreVideoFilter *filter;
+    filter=NULL;
+
+    if(getPreviewMode()==ADM_PREVIEW_NONE)
+        chain=createEmptyVideoFilterChain(current,end);
+    else
+        chain=createVideoFilterChain(current,end);
+    if(!chain)
+    {
+        ADM_error("Cannot create video filter chain\n");
+        return NULL;
+    }
+
+    filter=chain->back();
+    FilterInfo *info=filter->getInfo();
+    uint32_t width=info->width;
+    uint32_t height=info->height;
+    ADMImage *image=new ADMImageDefault(width,height);
+    if(!image)
+    {
+        ADM_error("No buffer\n");
+        destroyVideoFilterChain(chain);
+        chain=NULL;
+        filter=NULL;
+        return NULL;
+    }
+
+    uint32_t fn;
+    if(!filter->getNextFrameAs(hw,&fn,image))
+    {
+        ADM_error("No image\n");
+        delete image;
+        image=NULL;
+    }
+
+    destroyVideoFilterChain(chain);
+    chain=NULL;
+    filter=NULL;
+
+    // resync last sent frame & stuff again
+    admPreview::deferDisplay(true);
+    video_body->rewind();
+    admPreview::seekToTime(current);
+    admPreview::deferDisplay(false);
+
+    return image;
+}
+
+/**
         \fn A_saveJpg
         \brief Save a Jpg image from current display buffer
 */
 bool A_saveJpg (const char *name)
 {
     bool result=true;
-    uint64_t current=video_body->getCurrentFramePts();
-    uint64_t end=video_body->getVideoDuration();
-    ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
-    ADM_videoFilterChain *chain;
-    if(getPreviewMode()==ADM_PREVIEW_NONE)
-        chain=createEmptyVideoFilterChain(current,end);
-    else
-        chain=createVideoFilterChain(current,end);
-    if(chain && chain->size())
+    ADMImage *image;
+    image=NULL;
+    image=getCurrentFilteredImage();
+    if(!image || !image->saveAsJpg(name))
     {
-        ADM_coreVideoFilter *filter;
-        filter=chain->back();
-        FilterInfo *info=filter->getInfo();
-        uint32_t width=info->width;
-        uint32_t height=info->height;
-        ADMImage *image=new ADMImageDefault(width,height);
-        uint32_t fn;
-        if(!filter->getNextFrameAs(hw,&fn,image))
-        {
-            ADM_error("No image\n");
-            result=false;
-        }
-        if(result && !image->saveAsJpg (name))
-        {
-            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Jpeg"),QT_TRANSLATE_NOOP("adm","Failed to save as JPEG"));
-            result=false;
-        }
-        delete image;
-        image=NULL;
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Jpeg"),QT_TRANSLATE_NOOP("adm","Failed to save as JPEG"));
+        result=false;
     }
+    if(image)
+        delete image;
+    image=NULL;
     return result;
 }
 
@@ -362,26 +407,27 @@ bool A_saveJpg (const char *name)
 int A_saveBunchJpg(const char *name)
 {
     int success=0;
-    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t original=admPreview::getCurrentPts();
     uint64_t start=video_body->getMarkerAPts();
     uint64_t end=video_body->getMarkerBPts();
+    if(start>end)
+    {
+        uint64_t swap=end;
+        end=start;
+        start=swap;
+    }
     uint64_t inc=video_body->getFrameIncrement();
-    uint64_t original=pts;
-    pts=start;
-
-    admPreview::deferDisplay(true);
-    admPreview::seekToTime(start);
-
+    uint64_t pts=0;
     ADM_HW_IMAGE hw=admPreview::getPreferedHwImageFormat();
+
     ADM_videoFilterChain *chain;
     if(getPreviewMode()==ADM_PREVIEW_NONE)
         chain=createEmptyVideoFilterChain(start,end);
     else
         chain=createVideoFilterChain(start,end);
-    if(!chain || chain->empty())
+    if(!chain)
     {
-        admPreview::seekToTime(original);
-        admPreview::deferDisplay(false);
+        ADM_error("Cannot create video filter chain\n");
         return 0;
     }
 
@@ -391,21 +437,30 @@ int A_saveBunchJpg(const char *name)
     uint32_t width=info->width;
     uint32_t height=info->height;
     ADMImage *src=new ADMImageDefault(width,height);
-    uint32_t fn;
+    if(!src)
+    {
+        ADM_error("No buffer\n");
+        destroyVideoFilterChain(chain);
+        chain=NULL;
+        filter=NULL;
+        return 0;
+    }
+
+    admPreview::deferDisplay(true);
+    admPreview::seekToTime(start);
 
     char fullName[2048];
     std::string baseName,ext;
     uint32_t range=(uint32_t)((end-start)/1000);
+    uint32_t fn;
     DIA_workingBase *working;
 
     // Split name into base + extension
     ADM_PathSplit(std::string(name),baseName,ext);
 
     working=createWorking(QT_TRANSLATE_NOOP("adm","Saving selection as set of JPEG images"));
-    while(pts<=end)
+    while(true)
     {
-        uint32_t current=(uint32_t)((pts-start)/1000);
-        working->update(current,range);
         if(!filter->getNextFrameAs(hw,&fn,src))
         {
             //GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Cannot decode frame"), QT_TRANSLATE_NOOP("adm","Aborting."));
@@ -415,6 +470,8 @@ int A_saveBunchJpg(const char *name)
             pts+=inc;
         else
             pts=src->Pts;
+        pts/=1000;
+        working->update((uint32_t)pts,range);
         success++;
         if(!working->isAlive()) break;
         sprintf(fullName,"%s-%04d.jpg",baseName.c_str(),success);
@@ -434,6 +491,10 @@ int A_saveBunchJpg(const char *name)
     working=NULL;
     delete src;
     src=NULL;
+    destroyVideoFilterChain(chain);
+    chain=NULL;
+    filter=NULL;
+
     admPreview::seekToTime(original);
     admPreview::deferDisplay(false);
     return success;
@@ -442,20 +503,21 @@ int A_saveBunchJpg(const char *name)
       \fn A_saveImg
       \brief Save current displayed image as a BMP file
 */
-int A_saveImg (const char *name)
+bool A_saveImg (const char *name)
 {
-  ADMImage *image=admPreview::getBuffer();
-    if(!image)
+    bool result=true;
+    ADMImage *image;
+    image=NULL;
+    image=getCurrentFilteredImage();
+    if(!image || !image->saveAsBmp(name))
     {
-        ADM_warning("[SaveBmp] No image\n");
-        return 0;
-
-    }
-    int r=image->saveAsBmp(name);
-    if(!r)
         GUI_Error_HIG (QT_TRANSLATE_NOOP("adm","BMP op failed"),QT_TRANSLATE_NOOP("adm", "Saving %s as a BMP file failed."), ADM_getFileName(name).c_str());
-    return r;
-
+        result=false;
+    }
+    if(image)
+        delete image;
+    image=NULL;
+    return result;
 }
 
 /**
