@@ -47,6 +47,8 @@
 extern ADM_audioStream  *audioCreateEncodingStream(EditableAudioTrack *ed,bool globalHeader,uint64_t startTime);
 extern ADM_audioStream  *audioCreateCopyStream(uint64_t startTime,int32_t shift,ADM_audioStream *input, bool needPerfectAudio);
 
+extern void A_Rewind(void);
+extern bool GUI_GoToTime(uint64_t time);
 /**
     \class admSaver
     \brief Wrapper for saving
@@ -86,10 +88,13 @@ public:
 */
 int A_Save(const char *name)
 {
+    uint64_t current=video_body->getCurrentFramePts();
     admSaver *save=new admSaver(name);
     bool r=save->save();
     delete save;
     ADM_slaveSendResult(r);
+    A_Rewind();
+    GUI_GoToTime(current);
     return (int)r;
 }
 

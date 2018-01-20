@@ -160,7 +160,7 @@ int      clus=-1;
             ADM_info("[MKVAUDIO] Asked for %s , go to block %d\n",ADM_us2plain(timeUs),clus);
             ADM_info("[MKVAUDIO] This block starts at %s\n",ADM_us2plain((*dex)[clus].Dts));
             targetUs-=(*dex)[clus].Dts; // now the time is relative
-            ADM_info("[MKVAUDIO] Offset=%" PRIu64" us\n",targetUs);
+            ADM_info("[MKVAUDIO] Offset=%" PRId64" us\n",(int64_t)targetUs);
             goToBlock(clus);
 
             

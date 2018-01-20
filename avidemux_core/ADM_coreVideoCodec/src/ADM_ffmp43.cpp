@@ -503,20 +503,25 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
     case AV_PIX_FMT_YUV411P:
       out->_colorspace = ADM_COLOR_YUV411;
+      aprintf("colorspace is AV_PIX_FMT_YUV411P --> ADM_COLOR_YUV411\n");
       break;
     case AV_PIX_FMT_YUYV422:
       out->_colorspace = ADM_COLOR_YUV422;
+      aprintf("colorspace is AV_PIX_FMT_YUYV422 --> ADM_COLOR_YUV422\n");
       break;
     case AV_PIX_FMT_YUV422P:
     case AV_PIX_FMT_YUVJ422P:
       out->_colorspace = ADM_COLOR_YUV422P;
+      aprintf("colorspace is AV_PIX_FMT_YUV422P or AV_PIX_FMT_YUVJ422P --> ADM_COLOR_YUV422P\n");
       break;
     case AV_PIX_FMT_GRAY8:
-       out->_colorspace = ADM_COLOR_Y8;
-       break;
+      out->_colorspace = ADM_COLOR_Y8;
+      aprintf("colorspace is AV_PIX_FMT_GRAY8 --> ADM_COLOR_Y8\n");
+      break;
     case AV_PIX_FMT_YUV444P:
     case AV_PIX_FMT_YUVJ444P:
       out->_colorspace = ADM_COLOR_YUV444;
+      aprintf("colorspace is AV_PIX_FMT_YUV444P or AV_PIX_FMT_YUVJ444P --> ADM_COLOR_YUV444\n");
       break;
     case AV_PIX_FMT_YUV420P:
     case AV_PIX_FMT_YUVJ420P:
@@ -525,20 +530,28 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
       // In that case depending on swap u/v
       // we do it or not
       out->_colorspace = ADM_COLOR_YV12;
+      aprintf("colorspace is AV_PIX_FMT_YUV420P, AV_PIX_FMT_YUVJ420P or AV_PIX_FMT_YUVA420P --> ADM_COLOR_YV12\n");
       break;
-   case AV_PIX_FMT_BGR24:
-   case AV_PIX_FMT_RGB24:
-	  out->_colorspace = ADM_COLOR_BGR24;
-	  break;
+    case AV_PIX_FMT_BGR24:
+      out->_colorspace = ADM_COLOR_BGR24;
+      aprintf("colorspace is AV_PIX_FMT_BGR24 --> ADM_COLOR_BGR24\n");
+      break;
+    case AV_PIX_FMT_RGB24:
+      out->_colorspace = ADM_COLOR_RGB24;
+      aprintf("colorspace is AV_PIX_FMT_RGB24 --> ADM_COLOR_RGB24\n");
+      break;
     case AV_PIX_FMT_BGR0:
     case AV_PIX_FMT_BGRA:
       out->_colorspace = ADM_COLOR_BGR32A;
+      aprintf("colorspace is AV_PIX_FMT_BGR0 or AV_PIX_FMT_BGRA --> ADM_COLOR_BGR32A\n");
       break;
     case AV_PIX_FMT_RGBA: // ???PIX_FMT_RGBA32:
       out->_colorspace = ADM_COLOR_RGB32A;
+      aprintf("colorspace is AV_PIX_FMT_RGBA --> ADM_COLOR_RGB32A\n");
       break;
     case AV_PIX_FMT_RGB555:
       out->_colorspace = ADM_COLOR_RGB555;
+      aprintf("colorspace is AV_PIX_FMT_RGB555 --> ADM_COLOR_RGB555\n");
       break;
 #if 0
     case AV_PIX_FMT_VDPAU_MPEG1:

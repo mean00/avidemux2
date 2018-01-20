@@ -42,6 +42,7 @@ using std::string;
 #include "ADM_videoFilterApi.h"
 #include "ADM_videoFilters.h"
 #include "ADM_toolkitQt.h"
+#include "ADM_preview.h"
 
 #include "prefs.h"
 #include "ADM_edScriptGenerator.h"
@@ -682,6 +683,7 @@ filtermainWindow::filtermainWindow(QWidget* parent) : QDialog(parent)
     connect(activeList,SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(activeListContextMenu(const QPoint &)));
 
     this->installEventFilter(this);
+    originalTime = admPreview::getCurrentPts();
 }
 
 /**
@@ -692,7 +694,7 @@ filtermainWindow::~filtermainWindow()
     if(previewDialog) 
         delete previewDialog;
     previewDialog=NULL;
-
+    admPreview::seekToTime(originalTime);
 }
 
 /**

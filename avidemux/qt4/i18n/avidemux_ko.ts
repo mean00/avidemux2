@@ -945,11 +945,11 @@ Drop timing informations ?</source>
     <message>
         <location line="+10"/>
         <source>© 2001 - 2017  Mean</source>
-        <translation>© 2001 - 2017  Mean</translation>
+        <translation>© 2001 - 2018  Mean</translation>
     </message>
     <message>
         <source>© 2001 - 2016  Mean</source>
-        <translation>© 2001 - 2016  Mean</translation>
+        <translation>© 2001 - 2018  Mean</translation>
     </message>
     <message>
         <location line="+19"/>
@@ -1186,22 +1186,22 @@ Drop timing informations ?</source>
     <message>
         <location line="+6"/>
         <source>Zoom 1:4</source>
-        <translation>줌 1:4</translation>
+        <translation>배율 1:4</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zoom 1:2</source>
-        <translation>줌 1:2</translation>
+        <translation>배율 1:2</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zoom 1:1</source>
-        <translation>줌 1:1</translation>
+        <translation>배율 1:1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Zoom 2:1</source>
-        <translation>줌 2:1</translation>
+        <translation>배율 2:1</translation>
     </message>
     <message>
         <location filename="../../common/ADM_commonUI/DIA_audioFilter.cpp" line="+33"/>
@@ -1940,7 +1940,7 @@ Drop timing informations ?</source>
     <message>
         <location line="+16"/>
         <source>Pr&amp;eferences</source>
-        <translation>환경 설정(&amp;E)</translation>
+        <translation>환경 설정</translation>
     </message>
     <message>
         <location line="+29"/>
@@ -6310,7 +6310,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+65"/>
         <source>You can click in the image to approximately position the logo</source>
-        <translation>로고를 대략적으로 설정하기 위해 이미지에서 클릭할 수 있습니다</translation>
+        <translation>로고를 대략 배치하기 위해 이미지에서 클릭할 수 있습니다</translation>
     </message>
 </context>
 <context>
@@ -7007,7 +7007,7 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+28"/>
         <source>ExtraDataSize:</source>
-        <translation>추가날짜크기:</translation>
+        <translation>추가데이터크기:</translation>
     </message>
     <message>
         <location line="+14"/>

@@ -38,7 +38,7 @@ void 	A_saveAVI		(const char *name);
 void 	A_playAvi		(void);
 void    A_queueJob      (void);
 int  A_saveAudioCopy (const char *name);
-int  A_saveJpg (const char *name);
+bool A_saveJpg (const char *name);
 int  A_saveBunchJpg(const char *name);
 int  A_saveImg (const char *name);
 int  ADM_saveRaw (const char *name);
