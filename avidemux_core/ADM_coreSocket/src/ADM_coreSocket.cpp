@@ -183,8 +183,8 @@ int enable = 1;
 if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
     ADM_error("Oops : setsockopt(SO_REUSEADDR) failed\n");
 #endif
-
-  ADM_info("Binding on %s:%d\n",BIND_ADR,*port);
+  *port = 0; // Always any port, not only by chance!
+  ADM_info("Binding on %s:%u\n",BIND_ADR,(unsigned int)*port);
   sockaddr_in service;
   service.sin_family = AF_INET;
   service.sin_addr.s_addr = inet_addr(BIND_ADR);
