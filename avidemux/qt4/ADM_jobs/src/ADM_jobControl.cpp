@@ -164,6 +164,11 @@ jobWindow::jobWindow(void) : QDialog()
    connect(ui.pushButtonRunAll,SIGNAL(pressed()),this,SLOT(runAllJob()));
    connect(ui.pushButtonCleanup,SIGNAL(pressed()),this,SLOT(cleanup()));
 
+    QAction *bye = new QAction(QString("Quit"),this);
+    bye->setShortcut(Qt::Key_Q | Qt::CTRL);
+    connect(bye,SIGNAL(triggered()),this,SLOT(quit()));
+    this->addAction(bye);
+
     // Start our socket
     localPort=0;
     if(false==mySocket.createBindAndAccept(&localPort))
