@@ -184,7 +184,7 @@ if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
     ADM_error("Oops : setsockopt(SO_REUSEADDR) failed\n");
 #endif
 
-  ADM_info("Binding on %s:%d\n",BIND_ADR,*port);
+  ADM_info("Binding on %s:%" PRIu32"\n",BIND_ADR,*port);
   sockaddr_in service;
   service.sin_family = AF_INET;
   service.sin_addr.s_addr = inet_addr(BIND_ADR);
@@ -209,7 +209,7 @@ if (setsockopt(mySocket, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
     *port= ntohs ( ((SADDR_IN *)&service)->sin_port ); 
      
    // Set high buffer + low delay
-    ADM_info("Socket bound to port %u\n",(unsigned int)*port);
+    ADM_info("Socket bound to port %" PRIu32"\n",*port);
 
     int er=listen(mySocket,1);
 	if(er)

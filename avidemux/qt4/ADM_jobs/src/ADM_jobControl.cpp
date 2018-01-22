@@ -165,12 +165,13 @@ jobWindow::jobWindow(void) : QDialog()
    connect(ui.pushButtonCleanup,SIGNAL(pressed()),this,SLOT(cleanup()));
 
     // Start our socket
-   if(false==mySocket.createBindAndAccept(&localPort))
+    localPort=0;
+    if(false==mySocket.createBindAndAccept(&localPort))
     {
         popup("Cannot bind socket");
         exit(-1);
     }
-    ADM_info("Socket bound to %d\n",(int)localPort);
+    ADM_info("Socket bound to %" PRIu32"\n",localPort);
     //ADM_socket *n=mySocket.waitForConnect(5000);
     refreshList();
     dialog=NULL;
