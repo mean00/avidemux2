@@ -6533,8 +6533,8 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+3"/>
-        <source>use QT4 version</source>
-        <translation>QT4 verzió használandó</translation>
+        <source>use Qt version</source>
+        <translation>Qt verzió használandó</translation>
     </message>
     <message>
         <location line="+20"/>

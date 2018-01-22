@@ -5967,8 +5967,8 @@ Jeg vil antage at den har og prøve at fortsætte</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>use QT4 version</source>
-        <translation>brug QT4-version</translation>
+        <source>use Qt version</source>
+        <translation>brug Qt-version</translation>
     </message>
     <message>
         <location line="+20"/>

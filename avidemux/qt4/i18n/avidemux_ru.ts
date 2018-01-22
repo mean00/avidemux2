@@ -9835,8 +9835,8 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+3"/>
-        <source>use QT4 version</source>
-        <translation type="unfinished">использовать версию QT4</translation>
+        <source>use Qt version</source>
+        <translation type="unfinished">использовать версию Qt</translation>
     </message>
     <message>
         <location line="+20"/>

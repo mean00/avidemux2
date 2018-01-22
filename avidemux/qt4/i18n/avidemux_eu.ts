@@ -10329,8 +10329,8 @@ I will assume it has and try to continue</source>
     </message>
     <message>
         <location line="+3"/>
-        <source>use QT4 version</source>
-        <translation>erabili QT4 bertsioa</translation>
+        <source>use Qt version</source>
+        <translation>erabili Qt bertsioa</translation>
     </message>
     <message>
         <location line="+20"/>

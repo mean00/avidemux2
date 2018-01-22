@@ -6486,12 +6486,12 @@ I will assume it has and try to continue</source>
     <message>
         <location line="+7"/>
         <source>If you use VDPAU you cannot use CLI version</source>
-        <translation type="unfinished">Si vous utilisez VDAU, la version CLI ne marchera pas</translation>
+        <translation type="unfinished">Si vous utilisez VDPAU, la version CLI ne marchera pas</translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>use QT4 version</source>
-        <translation type="unfinished">Utiliser la version Qt4</translation>
+        <source>use Qt version</source>
+        <translation type="unfinished">Utiliser la version Qt</translation>
     </message>
     <message>
         <location line="+20"/>

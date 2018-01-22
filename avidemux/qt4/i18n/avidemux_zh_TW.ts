@@ -6552,8 +6552,8 @@ This message will not be displayed again.</source>
         <translation>清理</translation>
     </message>
     <message>
-        <source>use QT4 version</source>
-        <translation>使用 QT4 版本</translation>
+        <source>use Qt version</source>
+        <translation>使用 Qt 版本</translation>
     </message>
     <message>
         <source>Run jobs</source>
