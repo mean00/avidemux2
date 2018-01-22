@@ -3,12 +3,10 @@
 #include <QtCore/QLocale>
 #include <QtCore/QTranslator>
 #include <QApplication>
-#include <QWidget>
 #include <QtCore/QString>
 #include "ADM_default.h"
 #include "ADM_inttype.h"
 #include "ADM_files.h"
-#include "DIA_uiTypes.h"
 #include "ADM_coreTranslator.h"
 #include "prefs.h"
 

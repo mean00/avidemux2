@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <QtCore/QUrl>
-#include <QApplication>
 #include <QDesktopServices>
 #include <QWidget>
 #include <QtCore/QString>
@@ -16,7 +15,7 @@
 #include "ADM_files.h"
 #include "DIA_uiTypes.h"
 #include "translator.cpp"
-#include "prefs.h"
+
 extern QWidget *QuiMainWindows;
 
 void getUIDescription(char* desc)
