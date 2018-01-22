@@ -26,6 +26,7 @@ SET(ADM_JOB_SRCS
                 ADM_jobControl.cpp
                 ADM_runOneJob.cpp
 		ADM_jobProgress.cpp
+		../../ADM_userInterfaces/translator.cpp
                 ${ADM_JOBS_headers}
                 ${ADM_JOBS_source}
                	${resource} 
